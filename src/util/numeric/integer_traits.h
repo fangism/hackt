@@ -2,7 +2,7 @@
 	\file "numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.3 2005/02/27 22:54:29 fang Exp $
+	$Id: integer_traits.h,v 1.4 2005/02/28 18:28:19 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -89,11 +89,21 @@ struct sqrt_floor {
 private:
 	// can cause internal compiler error on instantiation
 	// static const size_t	value = size_t(sqrt(N));
+#if 1
 	enum {
 		mid = (L + H + 1) >> 1		// average, round up
 	};
+#else
+	// this causes gcc-3.2 to ICE:
+	static const size_t mid = (L + H + 1) >> 1;
+//	../numeric/integer_traits.h:98: Internal compiler error in 
+//	instantiate_decl, at cp/pt.c:10052
+#endif
 
 public:
+	// CAUTION: gcc-3.2 seems to treat enum values as signed, 
+	// in which case the resulting comparison is between signed 
+	// and unsigned, in which case compilation will die a horrible death.  
 	typedef	typename ifthenelse_type<
 				(N < mid*mid), 
 				sqrt_floor<N,L,mid-1>,

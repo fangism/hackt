@@ -1,5 +1,5 @@
 # Doxyfile 1.3.6
-# $Id: art++.doxygen.config.in,v 1.7 2005/02/27 22:54:04 fang Exp $
+# $Id: art++.doxygen.config.in,v 1.8 2005/02/28 18:28:15 fang Exp $
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -904,7 +904,7 @@ SEARCH_INCLUDES        = YES
 # contain include files that are not input files but should be processed by 
 # the preprocessor.
 
-INCLUDE_PATH           = 
+INCLUDE_PATH           = src/lexer src/parser src/AST src/Object src/util
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard 
 # patterns (like *.h and *.hpp) to filter out the header-files in the 

@@ -1,14 +1,14 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.10 2005/02/27 22:54:10 fang Exp $
+	$Id: art_object_definition_base.h,v 1.11 2005/02/28 18:28:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
 #define	__ART_OBJECT_DEFINITION_BASE_H__
 
-// #include "STL/list.h"
 #include <vector>
+#include <string>		// needed by gcc-3.2 :S
 
 #include "macros.h"
 #include "art_object_base.h"
