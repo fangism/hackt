@@ -1,0 +1,8 @@
+# "Makefile.BSD"
+# for bsdmake-specific features
+# bsdmake has a different recursive invocation method than GNUmake
+
+# shouldn't need MAKEFLAGS?
+RECURSIVE_MAKE = $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
+	LDFLAGS="$(LDFLAGS)" CDEFS="$(CDEFS)"
+

@@ -33,9 +33,12 @@ LD = g++
 # hint: may need to add this to environment for dynamic linked libraries...
 # setenv LD_LIBRARY_PATH /usr/local/compiler/lib
 
-# don't need MAKEFLAGS, already included in MAKE
-RECURSIVE_MAKE = $(MAKE) $(MAKEFLAGS) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
-	LDFLAGS="$(LDFLAGS)" CDEFS="$(CDEFS)"
+# depending on whether you're using BSDmake or GNUmake, 
+# the recursive invocation differs.  
+# set Make.inc to include the right variant: Makefile.BSD or Makefile.GNU.  
+# eventually configure this automatically... 
+# note: currently I can't get gmake to work correctly with parallel builds
+include Make.inc
 
 # use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...

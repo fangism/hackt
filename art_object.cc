@@ -12,7 +12,7 @@
 // hash<string>.  
 
 #include "hash_specializations.h"		// substitute for the following
-#include "hashlist_template_methods.h"
+// #include "hashlist_template_methods.h"
 
 #include "art_object.h"
 #include "art_object_expr.h"
@@ -169,9 +169,6 @@ object_list::make_formal_dense_range_list(void) const {
 			ret->push_back(const_range(n));
 		}
 		return ret;
-//		return index_collection_item_ptr_type(
-//			new static_collection_addition(const_ret));
-//		assert(!const_ret);
 	} else if (is_initialized) {
 		const_iterator j = begin();
 		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
@@ -181,14 +178,10 @@ object_list::make_formal_dense_range_list(void) const {
 				new pint_range(j->is_a<pint_expr>())));
 		}
 		return ret;
-//		excl_const_ptr<dynamic_range_list> const_ret(ret);
-//		return index_collection_item_ptr_type(
-//			new dynamic_collection_addition(const_ret));
 	} else {
 		cerr << "Failed to construct a formal dense range list!  "
 			<< endl;
 		return count_ptr<range_expr_list>(NULL);
-//		return index_collection_item_ptr_type(NULL);
 	}
 }
 
@@ -220,27 +213,10 @@ object_list::make_sparse_range_list(void) const {
 		}
 		count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		// may be pint_const or pint_literal
-#if 0
-		if (i->is_a<pint_const>()) {		// sanity?
-			cerr << "pint_const => pint_expr" << endl;
-			assert(i->is_a<pint_expr>());
-			assert((*i).is_a<pint_expr>());
-		}
-		if (i->is_a<const_range>()) {		// sanity?
-			cerr << "const_range => range_expr" << endl;
-			assert(i->is_a<range_expr>());
-			assert((*i).is_a<range_expr>());
-		}
-#endif
 		count_ptr<range_expr> r(i->is_a<range_expr>());
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
-#if 0
-			if (p.is_a<pint_const>()) {		// sanity?
-				cerr << "yup, is a pint_const." << endl;
-			}
-#endif
 			if (p->is_static_constant()) {
 				continue;
 			} else {
@@ -279,7 +255,6 @@ object_list::make_sparse_range_list(void) const {
 			}
 		} else {
 			// is neither pint_expr nor range_expr
-			assert(!p && !r);
 			assert(!i->is_a<pint_const>());
 			assert(!i->is_a<const_range>());
 			is_valid_range = false;
@@ -294,7 +269,6 @@ object_list::make_sparse_range_list(void) const {
 		cerr << "Failed to construct a sparse range list!  "
 			<< endl;
 		return count_ptr<range_expr_list>(NULL);
-//		return index_collection_item_ptr_type(NULL);
 	} else if (is_static_constant) {
 		const_iterator j = begin();
 		count_ptr<const_range_list> ret(new const_range_list);
@@ -336,12 +310,6 @@ object_list::make_sparse_range_list(void) const {
 			}
 		}
 		return ret;
-//		excl_const_ptr<const_range_list> const_ret(ret);
-//		assert(const_ret);
-//		assert(!ret);
-//		return index_collection_item_ptr_type(
-//			new static_collection_addition(const_ret));
-//		assert(!const_ret);
 	} else if (is_initialized) {
 		const_iterator j = begin();
 		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
@@ -356,16 +324,156 @@ object_list::make_sparse_range_list(void) const {
 			}
 		}
 		return ret;
-//		excl_const_ptr<dynamic_range_list> const_ret(ret);
-//		return index_collection_item_ptr_type(
-//			new dynamic_collection_addition(const_ret));
 	} else {
 		cerr << "Failed to construct a sparse range list!  "
 			<< endl;
 		return count_ptr<range_expr_list>(NULL);
-//		return index_collection_item_ptr_type(NULL);
 	}
 }
+
+/**
+	First half should be similar to make_sparse_range_list.  
+	At the end build an index_list instead.  
+ */
+excl_ptr<index_list>
+object_list::make_index_list(void) const {
+	// initialize some bools to true
+	// and set them false approriately in iterations
+	bool err = false;
+	bool is_valid_index = true;
+	bool is_static_constant = true;
+	bool is_initialized = true;
+	const_iterator i = begin();
+	int k = 1;
+	for ( ; i!=end(); i++, k++) {
+		if (!*i) {
+			cerr << "Error in dimension " << k <<
+				" of array indices.  " << endl;
+			continue;
+		}
+		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		// may be pint_const or pint_literal
+		count_ptr<range_expr> r(i->is_a<range_expr>());
+		// may be const_range or pint_range
+		if (p) {
+			// later modularize to some method function...
+			if (p->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (p->is_initialized()) {	// definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.  
+				cerr << "int expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;	// where?
+				err = true;
+			}
+			// can it be initialized, but non-const?
+			// yes, if a dimension depends on another formal param
+			// can be loop-independent, do we need to track?
+			// can be conditional, do we need to track?
+		} else if (r) {
+			// same thing... copy
+			if (r->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (r->is_initialized()) {	// definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.  
+				cerr << "range expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;	// where?
+				err = true;
+			}
+		} else {
+			// is neither pint_expr nor range_expr
+			assert(!i->is_a<pint_const>());
+			assert(!i->is_a<const_range>());
+			is_valid_index = false;
+			(*i)->what(cerr << "Expected integer or range "
+				"expression but got a ") << 
+				" in dimension " << k << " of array ranges.  "
+				"ERROR!  " << endl;	// where?
+			err = true;
+		}
+	}
+	if (err || !is_valid_index) {
+		cerr << "Failed to construct an index list!  "
+			<< endl;
+		return excl_ptr<index_list>(NULL);
+	} else if (is_static_constant) {
+		const_iterator j = begin();
+		excl_ptr<const_index_list> ret(new const_index_list);
+		for ( ; j!=end(); j++) {
+			// should be safe to do this, since we checked above
+			count_ptr<pint_expr> p(j->is_a<pint_expr>());
+			count_ptr<range_expr> r(j->is_a<range_expr>());
+			// don't forget to range check
+			if (p) {
+				const int n = p->static_constant_int();
+				if (n < 0) {
+					cerr << "Integer for an index must "
+						"be non-negative, but got: "
+						<< n << ".  ERROR!  " << endl;
+					// where? let caller figure out
+					return excl_ptr<index_list>(NULL);
+				}
+				ret->push_back(count_ptr<pint_const>(
+					new pint_const(n)));
+			} else {
+				assert(r);
+				if (!r->is_sane()) {
+					cerr << "Index-range is not valid.  "
+						"ERROR!  " << endl;
+					return excl_ptr<index_list>(NULL);
+				}
+				count_ptr<const_range> cr(
+					r.is_a<const_range>());
+				if (cr) {
+					// need deep copy, b/c not pointer list
+					ret->push_back(
+						count_ptr<const_index>(
+							new const_range(*cr)));
+				} else {
+					count_ptr<pint_range> pr(
+						r.is_a<pint_range>());
+					assert(pr);
+					assert(pr->is_static_constant());
+					ret->push_back(count_ptr<const_index>(
+						new const_range(
+						pr->static_constant_range())));
+				}
+			}
+		}
+		return excl_ptr<index_list>(ret);
+	} else if (is_initialized) {
+		const_iterator j = begin();
+		excl_ptr<dynamic_index_list> ret(new dynamic_index_list);
+		for ( ; j!=end(); j++) {
+			if (j->is_a<pint_expr>()) {
+				// convert N to 0..N-1
+				ret->push_back(j->is_a<pint_expr>());
+			} else {
+				assert(j->is_a<pint_range>());
+				ret->push_back(j->is_a<pint_range>());
+			}
+		}
+		return excl_ptr<index_list>(ret);
+	} else {
+		cerr << "Failed to construct a index list!  "
+			<< endl;
+		return excl_ptr<index_list>(NULL);
+	}
+}
+
 
 //=============================================================================
 #if 0
@@ -1344,9 +1452,13 @@ name_space::lookup_namespace(const qualified_id_slice& id) const {
  */
 inline
 definition_base::definition_base(const string& n,
-		never_const_ptr<name_space> p, 
-		template_formals_set* tf) : 
-		scopespace(n, p), template_formals(tf), defined(false) {
+		never_const_ptr<name_space> p) :
+//		template_formals_set* tf : 
+		scopespace(n, p),
+//		template_formals(tf),
+		template_formals_map(), 
+		template_formals_list(), 
+		defined(false) {
 	// synchronize template formals with used_id_map
 }
 
@@ -1354,9 +1466,22 @@ inline
 definition_base::~definition_base() {
 }
 
+/**
+	Only dumps the basic template information of the definition.  
+ */
 ostream&
 definition_base::dump(ostream& o) const {
-	return what(o) << " " << key;
+	what(o) << " " << key;
+	if (!template_formals_list.empty()) {
+		o << "<" << endl;
+		template_formals_list_type::const_iterator i =
+			template_formals_list.begin();
+		for ( ; i!=template_formals_list.end(); i++) {
+			(*i)->dump(o) << endl;
+		}
+		o << ">" << endl;
+	}
+	return o;
 }
 
 /**
@@ -1366,15 +1491,13 @@ definition_base::dump(ostream& o) const {
  */
 bool
 definition_base::check_null_template_argument(void) const {
-	if (!template_formals)
-		return true;
-	else if (template_formals->empty())
+	if (template_formals_list.empty())
 		return true;
 	else {
 		// make sure each formal has a default parameter value
-		template_formals_set::const_iterator i =
-			template_formals->begin();
-		for ( ; i!=template_formals->end(); i++) {
+		template_formals_list_type::const_iterator i =
+			template_formals_list.begin();
+		for ( ; i!=template_formals_list.end(); i++) {
 			never_const_ptr<param_instantiation> p(*i);
 			assert(p);
 		// if any formal is missing a default value, then this 
@@ -1393,10 +1516,11 @@ definition_base::check_null_template_argument(void) const {
  */
 never_const_ptr<param_instantiation>
 definition_base::lookup_template_formal(const string& id) const {
-	if (template_formals) {
-		return never_const_ptr<param_instantiation>(
-			(static_cast<const template_formals_set&>
-			(*template_formals))[id]);
+	if (!template_formals_list.empty()) {
+		never_const_ptr<param_instantiation> ret(
+			(static_cast<const template_formals_map_type&>
+			(template_formals_map))[id]);
+		return ret;
 	} else {
 		return never_const_ptr<param_instantiation>(NULL);
 	}
@@ -1449,10 +1573,12 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 	never_const_ptr<param_instantiation> pf(
 		f.is_a<param_instantiation>());
 	assert(pf);
+#if 0
 	if (!template_formals) {
 		template_formals = new template_formals_set();
 		assert(template_formals);
 	}
+#endif
 	// check and make sure identifier wasn't repeated in formal list!
 	never_const_ptr<object> probe(lookup_object_here(pf->get_name()));
 	if (probe) {
@@ -1460,16 +1586,25 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 		return never_const_ptr<instantiation_base>(NULL);
 	}
 
+#if 0
 	const never_const_ptr<param_instantiation>* ret =
 		template_formals->append(pf->hash_string(),
 			never_const_ptr<param_instantiation>(pf));
 	assert(!ret);
+#else
+	template_formals_list.push_back(pf);
+	template_formals_map[pf->hash_string()] = pf;
+#endif
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the template_formals_list!
+	// template_formals_list and _map are strict subsets of used_id_map
 
 	// COMPILE: pf is const, but used_id_map members are not
 	// wrap around with object_handle?
 	used_id_map[pf->hash_string()] = f;
+
+	// sanity check
+	assert(lookup_template_formal(pf->hash_string()));
 	// later return a never_ptr<>
 	return pf;
 }
@@ -1963,9 +2098,10 @@ instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
 inline
 datatype_definition::datatype_definition(
 		never_const_ptr<name_space> o,
-		const string& n, 
-		template_formals_set* tf) :
-		definition_base(n, o, tf) {
+		const string& n) :
+//		template_formals_set* tf :
+//		definition_base(n, o, tf)
+		definition_base(n, o) {
 }
 
 inline
@@ -1990,9 +2126,10 @@ datatype_definition::set_context_fundamental_type(context& c) const {
 inline
 channel_definition::channel_definition(
 		never_const_ptr<name_space> o, 
-		const string& n, 
-		template_formals_set* tf) :
-		definition_base(n, o, tf) {
+		const string& n) :
+//		template_formals_set* tf :
+//		definition_base(n, o, tf)
+		definition_base(n, o) {
 }
 
 channel_definition::~channel_definition() {
@@ -2012,7 +2149,8 @@ channel_definition::set_context_fundamental_type(context& c) const {
 // class user_def_chan method definitions
 
 user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
-		const string& name) : channel_definition(o, name) {
+		const string& name) :
+		channel_definition(o, name) {
 	// FINISH ME
 }
 
@@ -2038,9 +2176,10 @@ user_def_chan::what(ostream& o) const {
 type_alias::type_alias(
 		never_const_ptr<name_space> o, 
 		const string& n, 
-		never_const_ptr<definition_base> t, 
-		template_formals_set* tf) :
-		definition_base(n, o, tf),
+		never_const_ptr<definition_base> t) :
+//		template_formals_set* tf :
+//		definition_base(n, o, tf),
+		definition_base(n, o),
 		canonical(t->resolve_canonical()) {
 	assert(canonical);
 	// just in case t is not a canonical type, i.e. another alias...
@@ -2292,8 +2431,9 @@ enum_datatype_def::add_member(const token_identifier& em) {
 user_def_datatype::user_def_datatype(
 		never_const_ptr<name_space> o,
 		const string& name) :
-		datatype_definition(o, name), 
-		template_params(), members() {
+		datatype_definition(o, name)
+//		template_params(), members()
+		{
 }
 
 ostream&
@@ -2376,10 +2516,14 @@ datatype_instantiation::make_instance_reference(context& c) const {
  */
 process_definition::process_definition(
 		never_const_ptr<name_space> o, 
-		const string& s,
-		template_formals_set* tf) : 
-		definition_base(s, o, tf),
-		port_formals() {
+		const string& s) :
+//		template_formals_set* tf : 
+//		definition_base(s, o, tf),
+		definition_base(s, o),
+//		port_formals()
+		port_formals_list(), 
+		port_formals_map()
+		{
 	// fill me in...
 }
 
@@ -2390,6 +2534,39 @@ process_definition::~process_definition() {
 ostream&
 process_definition::what(ostream& o) const {
 	return o << "process-definition";
+}
+
+/**
+	Spill contents of the used_id_map.
+	\param o the output stream.
+	\return the same output stream.
+ */
+ostream&
+process_definition::dump(ostream& o) const {
+	definition_base::dump(o);	// dump template signature first
+
+	// now dump ports
+	{
+		o << "(" << endl;
+		port_formals_list_type::const_iterator i =
+			port_formals_list.begin();
+		for ( ; i!=port_formals_list.end(); i++) {
+			(*i)->dump(o) << endl;
+		}
+		o << ")" << endl;
+	}
+
+	// now dump rest of contents
+	o << "{" << endl;
+	used_id_map_type::const_iterator i;
+//	list<never_const_ptr<...> > bin;		// later sort
+	o << "In definition \"" << key << "\", we have: {" << endl;
+	for (i=used_id_map.begin(); i!=used_id_map.end(); i++) {
+		o << "  " << i->first << " = ";
+//		i->second->what(o) << endl;		// 1 level for now
+		i->second->dump(o) << endl;
+	}
+	return o << "}" << endl;
 }
 
 never_const_ptr<fundamental_type_reference>
@@ -2409,6 +2586,7 @@ never_const_ptr<instantiation_base>
 process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
 	assert(f);
 	assert(!f.is_a<param_instantiation>());
+	never_const_ptr<instantiation_base> pf(f);
 	// check and make sure identifier wasn't repeated in formal list!
 	never_const_ptr<object> probe(lookup_object_here(f->get_name()));
 	if (probe) {
@@ -2417,19 +2595,22 @@ process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
 	}
 
 	{
+#if 0
 	const never_const_ptr<instantiation_base>* ret =
 		port_formals.append(f->hash_string(),
 			never_const_ptr<instantiation_base>(f));
 	assert(!ret);
+#else
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
+	port_formals_list.push_back(pf);
+	port_formals_map[f->get_name()] = pf;
+#endif
 	}
 
-	never_const_ptr<instantiation_base> ret(f);
-	assert(ret);
 	used_id_map[f->hash_string()] = f;
 	assert(!f);		// ownership transferred
-	return ret;
+	return pf;
 }
 
 //=============================================================================
@@ -2533,7 +2714,7 @@ param_instantiation::is_initialized(void) const {
 		return false;
 	} else if (is_template_formal()) {
 	// first check whether or not this is a template formal parameter
-		return false;
+		return true;
 	} else {
 		// then is not a formal, default_value field is 
 		// interpreted as an initial value.  

@@ -445,6 +445,15 @@ range_list::~range_list() { }
 
 	Should we take this opportunity to const-ify as much as possible?
 
+	IMPORTANT:
+	Only puts an object_list onto object_stack.  
+	It is up to caller to interpret either as a sparse_range list
+	in the case of an array declaration or as an index_list in the
+	case of an indexed instance reference.  
+
+	This is called by instance_array::check_build and 
+	index_expr::check_build.  
+
 	\return NULL, useless.
  */
 never_const_ptr<object>
@@ -477,7 +486,10 @@ range_list::check_build(never_ptr<context> c) const {
 			<< where() << endl;
 		c->push_object_stack(count_ptr<object>(NULL));
 	} else {
-		c->push_object_stack(ol->make_sparse_range_list());
+//		c->push_object_stack(ol->make_sparse_range_list());
+		// don't necessarily want to interpret as sparse_range
+		// may want it as an index!
+		c->push_object_stack(ol);
 	}
 	return never_const_ptr<object>(NULL);
 }
@@ -658,6 +670,7 @@ CONSTRUCTOR_INLINE
 index_expr::index_expr(const expr* l, const range_list* i) :
 		postfix_expr(l, NULL),
 		ranges(i) {
+	assert(ranges);
 }
 
 DESTRUCTOR_INLINE
@@ -675,6 +688,7 @@ index_expr::rightmost(void) const {
 
 /**
 	TO DO: FINISH ME
+	Check index expression first, must be an integer type.  
 	Checking identifier should place an instance_reference 
 	on the context's object stack.  
 	For an indexed instance reference, we need to take it off the 
@@ -684,10 +698,42 @@ never_const_ptr<object>
 index_expr::check_build(never_ptr<context> c) const {
 	cerr << "index_expr::check_build(): FINISH ME!" << endl;
 //	never_const_ptr<object> o;
-	e->check_build(c);		// useless return value
-	// should result in an instance_reference on the stack
-	// in particular a pint_instance_reference.
-	count_ptr<object> o(c->pop_top_object_stack());
+
+	ranges->check_build(c);		// useless return value
+	// should result in a ART::entity::index_list on the stack
+	count_ptr<object> index_obj(c->pop_top_object_stack());
+	// see range_list::check_build()
+	if (!index_obj) {
+		cerr << "ERROR in indices!  " << ranges->where() << endl;
+		exit(1);
+	}
+	count_ptr<object_list> ol(index_obj.is_a<object_list>());
+	assert(ol);
+	// would rather have excl_ptr...
+	excl_ptr<index_list> index_list_obj = ol->make_index_list();
+	if (!index_list_obj) {
+		cerr << "ERROR in index list!  "
+			<< ranges->where() << endl;
+		exit(1);
+	}
+	assert(index_list_obj);
+
+	e->check_build(c);
+	// should result in an instance_reference on the stack.  
+	count_ptr<object> base_obj(c->pop_top_object_stack());
+	if (!base_obj) {
+		cerr << "ERROR in base instance_reference!  "
+			<< e->where() << endl;
+		exit(1);
+	}
+	count_ptr<simple_instance_reference>
+		base_inst(base_obj.is_a<simple_instance_reference>());
+	assert(base_inst);
+
+//	FINISH ME
+//	base_inst->attach_indices(index_list_obj);
+
+#if 0
 	if (o) {
 		count_ptr<simple_instance_reference>
 			ir(o.is_a<simple_instance_reference>());
@@ -711,7 +757,7 @@ index_expr::check_build(never_ptr<context> c) const {
 //		c->type_error_count++;	// protected...
 		exit(1);
 	}
-
+#endif
 #if 0
 	// expect: collective_type_reference
 	never_const_ptr<collective_instance_reference> cir(

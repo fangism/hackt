@@ -19,6 +19,7 @@ using namespace std;
 // forward declarations (table of contents)
 class param_expr;
 class index_expr;
+class const_index;
 class pbool_expr;
 class pint_expr;
 class param_expr_collective;
@@ -43,6 +44,9 @@ class dynamic_range_list;
 class unconditional_range_list;
 class conditional_range_list;
 class loop_range_list;
+class index_list;
+class const_index_list;
+class dynamic_index_list;
 
 //=============================================================================
 // class param_expr method_definitions
@@ -52,11 +56,18 @@ param_expr::param_expr() : object() { }
 param_expr::~param_expr() { }
 
 //=============================================================================
-// class index_expr method_definitions
+// class index_expr method definitions
 
 index_expr::index_expr() : object() { }
 
 index_expr::~index_expr() { }
+
+//-----------------------------------------------------------------------------
+// class const_index method definitions
+
+const_index::const_index() : index_expr() { }
+
+const_index::~const_index() { }
 
 //=============================================================================
 // class index_expr_collective method defintions
@@ -857,7 +868,8 @@ pint_range::pint_range(count_const_ptr<pint_expr> l,
 	assert(upper);
 }
 
-pint_range::pint_range(const pint_range& pr) : object(), range_expr(), 
+pint_range::pint_range(const pint_range& pr) :
+		object(), index_expr(), range_expr(), 
 		// virtual base object() needs to be explicitly invoked
 		// in this copy constructor
 		lower(pr.lower), upper(pr.upper) {
@@ -952,7 +964,10 @@ const_range::const_range(const int l, const int u) :
 
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
-		object(), range_expr(), 
+		object(), 
+		index_expr(),
+		range_expr(), 
+		const_index(), 
 #if 0
 		lower(r.lower), upper(r.upper)
 #else
@@ -1026,7 +1041,7 @@ const_range::is_sane(void) const {
 //=============================================================================
 // class range_expr method definitions
 
-range_expr::range_expr() : object(), index_expr() {
+range_expr::range_expr() : index_expr() {
 }
 
 range_expr::~range_expr() {
@@ -1151,25 +1166,32 @@ dynamic_range_list::static_overlap(const range_expr_list& r) const {
 //=============================================================================
 // class index_list method definitions
 
-index_list::index_list() : object(), indices() { }
+index_list::index_list() : object() { }
 
 index_list::~index_list() { }
 
+//=============================================================================
+// class const_index_list method definitions
+
+const_index_list::const_index_list() : index_list(), parent() { }
+
+const_index_list::~const_index_list() { }
+
 ostream&
-index_list::what(ostream& o) const {
-	return o << "index-list";
+const_index_list::what(ostream& o) const {
+	return o << "const-index-list";
 }
 
 ostream&
-index_list::dump(ostream& o) const {
+const_index_list::dump(ostream& o) const {
 	return o << hash_string();
 }
 
 string
-index_list::hash_string(void) const {
+const_index_list::hash_string(void) const {
 	string ret;
-	list_type::const_iterator i = indices.begin();
-	for ( ; i!=indices.end(); i++) {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
 		assert(*i);
 		ret += "[";
 		ret += (*i)->hash_string();
@@ -1179,23 +1201,86 @@ index_list::hash_string(void) const {
 }
 
 size_t
-index_list::size(void) const {
-	return indices.size();
+const_index_list::size(void) const {
+	return parent::size();
 }
 
 /**
 	Need to count which dimensions are collapsed.  
  */
 size_t
-index_list::dimensions(void) const {
+const_index_list::dimensions(void) const {
 	// THIS IS WRONG, just temporary
-	return size();
+	return parent::size();
 }
 
 bool
-index_list::is_initialized(void) const {
-	list_type::const_iterator i = indices.begin();
-	for ( ; i!=indices.end(); i++) {
+const_index_list::is_initialized(void) const {
+	return true;
+}
+
+bool
+const_index_list::is_static_constant(void) const {
+	return true;
+}
+
+bool
+const_index_list::is_loop_independent(void) const {
+	return true;
+}
+
+bool
+const_index_list::is_unconditional(void) const {
+	return true;
+}
+//=============================================================================
+// class dynamic_index_list method definitions
+
+dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
+
+dynamic_index_list::~dynamic_index_list() { }
+
+ostream&
+dynamic_index_list::what(ostream& o) const {
+	return o << "dynamic-index-list";
+}
+
+ostream&
+dynamic_index_list::dump(ostream& o) const {
+	return o << hash_string();
+}
+
+string
+dynamic_index_list::hash_string(void) const {
+	string ret;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		ret += "[";
+		ret += (*i)->hash_string();
+		ret += "]";
+	}
+	return ret;
+}
+
+size_t
+dynamic_index_list::size(void) const {
+	return parent::size();
+}
+
+/**
+	Need to count which dimensions are collapsed.  
+ */
+size_t
+dynamic_index_list::dimensions(void) const {
+	// THIS IS WRONG, just temporary
+	return parent::size();
+}
+
+bool
+dynamic_index_list::is_initialized(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
 		assert(*i);
 		if (!(*i)->is_initialized())
 			return false;
@@ -1204,9 +1289,9 @@ index_list::is_initialized(void) const {
 }
 
 bool
-index_list::is_static_constant(void) const {
-	list_type::const_iterator i = indices.begin();
-	for ( ; i!=indices.end(); i++) {
+dynamic_index_list::is_static_constant(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
 		assert(*i);
 		if (!(*i)->is_static_constant())
 			return false;
@@ -1215,9 +1300,9 @@ index_list::is_static_constant(void) const {
 }
 
 bool
-index_list::is_loop_independent(void) const {
-	list_type::const_iterator i = indices.begin();
-	for ( ; i!=indices.end(); i++) {
+dynamic_index_list::is_loop_independent(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
 		assert(*i);
 		if (!(*i)->is_loop_independent())
 			return false;
@@ -1226,16 +1311,15 @@ index_list::is_loop_independent(void) const {
 }
 
 bool
-index_list::is_unconditional(void) const {
-	list_type::const_iterator i = indices.begin();
-	for ( ; i!=indices.end(); i++) {
+dynamic_index_list::is_unconditional(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
 		assert(*i);
 		if (!(*i)->is_unconditional())
 			return false;
 	}
 	return true;
 }
-
 
 //=============================================================================
 }	// end namepace entity

@@ -7,9 +7,6 @@
 
 #include "hashlist.h"
 
-// phased out pointer specializations
-// #include "list_of_ptr_template_methods.h"	// obsolete
-
 //=============================================================================
 // class methods for hashlist<K,T>
 
@@ -24,14 +21,12 @@
  */
 template <class K, class T>
 T*
-hashlist<K,T>::
-append(const K& k, const T& x) {
-	iterator i;
+hashlist<K,T>::append(const K& k, const T& x) {
+	reverse_iterator i;
 	T* old;
 	push_back(x);
-	i = end();
-	i--;
-	old = itermap[k];
+	i = rend();
+	old = itermap[k];		// need not be const lookup
 	itermap[k] = &(*i);
 	return old;
 }
@@ -44,7 +39,6 @@ append(const K& k, const T& x) {
 		will be NULL if not found
  */
 template <class K, class T>
-inline
 T*
 hashlist<K,T>::operator [] (const K& k) {
 	return itermap[k];
@@ -58,12 +52,10 @@ hashlist<K,T>::operator [] (const K& k) {
 		will be NULL if not found
  */
 template <class K, class T>
-inline
 const T*
 hashlist<K,T>::operator [] (const K& k) const {
 	typename map_type::const_iterator i = itermap.find(k);
 	return (i != itermap.end()) ? i->second : NULL;
-//	return itermap[k];		// discards qualifiers
 }
 
 //=============================================================================

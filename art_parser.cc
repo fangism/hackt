@@ -1478,6 +1478,8 @@ instance_array::rightmost(void) const {
 /**
 	Instantiates an array of instances.  
 	Dimensions may be dense or sparse.  
+	See also template_formal_id::check_build, 
+		port_formal_id::check_build.  
  */
 never_const_ptr<object>
 instance_array::check_build(never_ptr<context> c) const {
@@ -1496,8 +1498,20 @@ instance_array::check_build(never_ptr<context> c) const {
 				ranges->where() << endl;
 			exit(1);
 		}
+#if 0
 		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
 		assert(d);
+#else
+		count_ptr<object_list> ol(o.is_a<object_list>());
+		assert(ol);
+		// would rather have excl_ptr...
+		count_ptr<range_expr_list> d(ol->make_sparse_range_list());
+		if (!d) {
+			cerr << "ERROR in building sparse range list!  "
+				<< ranges->where() << endl;
+			exit(1);
+		}
+#endif
 		t = c->add_instance(*id, d);
 		// if there was error, would've exit(1)'d (temporary)
 		return t;
@@ -1959,6 +1973,7 @@ template_formal_id::rightmost(void) const {
 /**
 	Should be very similar to instance_base's check_build.  
 	TO DO: register default value in building
+	See also make_dense_range_list.  
  */
 never_const_ptr<object>
 template_formal_id::check_build(never_ptr<context> c) const {
@@ -2172,6 +2187,8 @@ process_signature::get_name(void) const {
 /**
 	FINISH ME.
 	Creates and returns a process definition objects with signature.
+	Works in temporary space of new definition, then compares with
+	previous signature if found.  
 	\param c context is modifiable in case new concrete-types update
 		the type-cache.  
  */
@@ -2195,6 +2212,7 @@ process_signature::check_build(never_ptr<context> c) const {
 			exit(1);
 		}
 	}
+	// this checks for conflicts in definitions.  
 	return c->add_declaration(c->get_current_prototype());
 //	return c->set_current_prototype(ret);
 }

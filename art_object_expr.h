@@ -46,6 +46,7 @@ namespace entity {
 // forward declarations of classes defined here (table of contents)
 	class param_expr;
 	class index_expr;		// BEWARE also in ART::parser!
+	class const_index;
 	class pbool_expr;
 	class pint_expr;
 //	class param_expr_collective;
@@ -71,6 +72,8 @@ namespace entity {
 //	class conditional_range_list;
 //	class loop_range_list;
 	class index_list;
+	class const_index_list;
+	class dynamic_index_list;
 
 //============================================================================= 
 /**
@@ -126,11 +129,22 @@ virtual bool is_initialized(void) const = 0;
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
+
+// additional virtual functions for dimensionality...
 };	// end class index_expr
 
 //-----------------------------------------------------------------------------
+/**
+	Abstract interface for constant indices and index ranges.  
+ */
+class const_index : virtual public index_expr {
+protected:
+public:
+	const_index();
+virtual	~const_index();
 
-// const_index_expr interface?
+// same pure virtual functions
+};	// end class const_index
 
 //-----------------------------------------------------------------------------
 /**
@@ -154,7 +168,7 @@ virtual bool static_constant_bool(void) const = 0;
 /**
 	Abstract expression checked to be a single integer.  
  */
-class pint_expr : virtual public param_expr, public index_expr {
+class pint_expr : virtual public param_expr, virtual public index_expr {
 public:
 	pint_expr() : param_expr(), index_expr() { }
 virtual	~pint_expr() { }
@@ -368,11 +382,11 @@ public:
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  
  */
-class pint_const : public pint_expr {
+class pint_const : public pint_expr, public const_index {
 protected:
 	const long			val;
 public:
-	pint_const(const long v) : pint_expr(), val(v) { }
+	pint_const(const long v) : pint_expr(), const_index(), val(v) { }
 	~pint_const() { }
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -582,7 +596,7 @@ public:
 	x[0..N-1], we will need to explicitly convert from the former 
 	to the latter.  
  */
-class range_expr : virtual public object, public index_expr {
+class range_expr : virtual public index_expr {
 protected:
 public:
 	range_expr();
@@ -646,7 +660,7 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 /**
 	Constant version of range expression.  
  */
-class const_range : public range_expr {
+class const_range : public range_expr, public const_index {
 protected:
 	/** implementation type for range */
 	typedef	discrete_interval_set<int>	impl_type;
@@ -697,6 +711,8 @@ public:
 	Make interface like std::list.  
 	Instance collection stack item?
 	Replace instance_collection_stack_item with this!
+	Elements of range_expr_list must be range_expr, 
+	i.e. fully expanded, no shorthand ranges.  
  */
 class range_expr_list : public object {
 protected:
@@ -808,20 +824,48 @@ class loop_range_list : public dynamic_range_list {
 	whereas range_expr preserves dimension, even if range is one.  
  */
 class index_list : public object {
-protected:
-	typedef	list<count_ptr<index_expr> >	list_type;
-protected:
-	list_type				indices;
-//	size_t					dim;
 public:
 	index_list();
 	~index_list();
 
 // copy over most param_expr interface functions...
+virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const = 0;
+virtual	string hash_string(void) const = 0;
+
+/** NOT THE SAME **/
+virtual	size_t size(void) const = 0;
+virtual	size_t dimensions(void) const = 0;
+
+virtual	bool is_initialized(void) const = 0;
+virtual	bool is_static_constant(void) const = 0;
+virtual	bool is_loop_independent(void) const = 0;
+virtual	bool is_unconditional(void) const = 0;
+};	// end class index_list
+
+//-----------------------------------------------------------------------------
+/**
+	Index list whose indices are all constant.
+	This means we need a const_index interface to objects.  
+ */
+class const_index_list : public index_list, 
+		public list<count_ptr<const_index> > {
+protected:
+	/** need list of pointers b/c const_index is abstract */
+	typedef	list<count_ptr<const_index> >	parent;
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	const_index_list();
+	~const_index_list();
+
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 
+/** NOT THE SAME **/
 	size_t size(void) const;
 	size_t dimensions(void) const;
 
@@ -829,7 +873,37 @@ public:
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
-};	// end class index_list
+};	// end class const_index_list
+
+//-----------------------------------------------------------------------------
+/**
+	Elements of this index list are no necessarily static constants.  
+ */
+class dynamic_index_list : public index_list, 
+		public list<count_ptr<index_expr> > {
+protected:
+	typedef	list<count_ptr<index_expr> >	parent;
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	dynamic_index_list();
+	~dynamic_index_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	string hash_string(void) const;
+
+/** NOT THE SAME **/
+	size_t size(void) const;
+	size_t dimensions(void) const;
+
+	bool is_initialized(void) const;
+	bool is_static_constant(void) const;
+	bool is_loop_independent(void) const;
+	bool is_unconditional(void) const;
+};	// end class dynamic_index_list
 
 //=============================================================================
 }	// end namespace ART

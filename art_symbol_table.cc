@@ -520,6 +520,9 @@ never_const_ptr<scopespace>
 context::get_current_scope(void) const {
 	if (current_dynamic_scope)
 		return current_dynamic_scope;
+	else if (current_prototype)	// careful, is excl_ptr<>
+		return never_const_ptr<definition_base>(current_prototype);
+			// .as_a<scopespace>();
 	else if (current_open_definition)
 		return current_open_definition.as_a<scopespace>();
 	else
@@ -685,7 +688,7 @@ context::push_object_stack(count_ptr<object> o) {
 		// can we go back to not using maked pointer for check?
 		if (!(IS_A(const param_expr*, oself) ||
 			IS_A(const ART::entity::index_expr*, oself) ||
-//			IS_A(const object_list*, oself) ||
+			IS_A(const object_list*, oself) ||
 //			IS_A(const pint_const*, oself) ||
 				// eliminate object_list after making others
 			IS_A(const range_expr_list*, oself) ||
@@ -696,7 +699,7 @@ context::push_object_stack(count_ptr<object> o) {
 		}
 		assert(IS_A(const param_expr*, oself) ||
 			IS_A(const ART::entity::index_expr*, oself) ||
-//			IS_A(const object_list*, oself) ||
+			IS_A(const object_list*, oself) ||
 //			IS_A(const pint_const*, oself) ||
 				// eliminate object_list after making others
 			IS_A(const range_expr_list*, oself) ||

@@ -11,7 +11,7 @@
 
 #include "qmap.h"
 #include "hash_qmap.h"
-#include "hashlist.h"
+// #include "hashlist.h"
 #include "ptrs.h"
 #include "count_ptr.h"
 #include "multidimensional_sparse_set.h"
@@ -237,10 +237,8 @@ public:
 		make_formal_dense_range_list(void) const;
 	count_ptr<range_expr_list>
 		make_sparse_range_list(void) const;
-/** forthcoming:
 	excl_ptr<index_list>
 		make_index_list(void) const;
-**/
 };	// end class object_list
 
 //=============================================================================
@@ -677,10 +675,16 @@ public:
 			It'd be nice to be able to swap instance arguments
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
-	 */
-	typedef	hashlist<string, never_const_ptr<param_instantiation> >
-					template_formals_set;
-protected:
+	**/
+//	typedef	hashlist<string, never_const_ptr<param_instantiation> >
+//					template_formals_set;
+
+	// double-maintenance...
+	typedef	hash_qmap<string, never_const_ptr<param_instantiation> >
+					template_formals_map_type;
+	typedef	list<never_const_ptr<param_instantiation> >
+					template_formals_list_type;
+private:
 	// never_const_ptr<scopespace>	parent;		// inherited
 	// string			key;		// inherited
 	// used_id_map_type		used_id_map;	// inherited
@@ -691,8 +695,13 @@ protected:
 		Going to add later? can't be const then...
 		Ownership?
 		convert later...
-	 */
 	template_formals_set*		template_formals;
+	**/
+
+	/** subset of used_id_map, must be coherent with list */
+	template_formals_map_type	template_formals_map;
+	/** subset of used_id_map, must be coherent with map */
+	template_formals_list_type	template_formals_list;
 
 	/**
 		Whether or not this definition is complete or only declared.  
@@ -702,8 +711,8 @@ protected:
 	bool				defined;
 public:
 	definition_base(const string& n,
-		never_const_ptr<name_space> p, 
-		template_formals_set* tf = NULL);
+		never_const_ptr<name_space> p);
+//		template_formals_set* tf = NULL
 virtual	~definition_base();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -1030,6 +1039,7 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
+	bool attach_indices(excl_ptr<index_list> i);
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -1188,27 +1198,38 @@ public:
 		either base-types or user-defined types.  
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
-	 */
 	typedef hashlist<string, never_const_ptr<instantiation_base> >
 							port_formals_set;
+	**/
+
+	typedef list<never_const_ptr<instantiation_base> >
+						port_formals_list_type;
+	typedef hash_qmap<string, never_const_ptr<instantiation_base> >
+						port_formals_map_type;
 
 	// List of language bodies, separate or merged?
 
 protected:
 //	string			key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
+#if 0
 	port_formals_set	port_formals;
+#else
+	port_formals_list_type			port_formals_list;
+	port_formals_map_type			port_formals_map;
+#endif
 	// list language bodies
 	
 public:
 	process_definition(never_const_ptr<name_space> o, 
-		const string& s,
-		template_formals_set* tf = NULL);
-virtual	~process_definition();
+		const string& s); 
+//		template_formals_set* tf = NULL
+	~process_definition();
 
-virtual	ostream& what(ostream& o) const;
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 
-virtual	never_const_ptr<fundamental_type_reference>
+	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
 
 never_const_ptr<instantiation_base>
@@ -1244,6 +1265,7 @@ public:
 	~process_instantiation();
 
 	ostream& what(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
@@ -1259,8 +1281,8 @@ protected:
 public:
 	datatype_definition(
 		never_const_ptr<name_space> o, 
-		const string& n, 
-		template_formals_set* tf = NULL);
+		const string& n);
+//		template_formals_set* tf = NULL;
 virtual	~datatype_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -1370,6 +1392,8 @@ public:
  */
 class user_def_datatype : public datatype_definition {
 private:
+#if 0
+TEMPORARY... later replace
 	/**
 		Members will be kept as a hashlist
 		because their order matters, or don't they?
@@ -1382,10 +1406,14 @@ private:
 	 */
 	typedef	hashlist<string, never_const_ptr<datatype_definition> >
 						temp_param_list;
+#endif
 protected:
 	// list of other type definitions
+#if 0
+	TEMPORARY
 	temp_param_list		template_params;
 	type_members		members;
+#endif
 public:
 	user_def_datatype(never_const_ptr<name_space> o, const string& name);
 	~user_def_datatype() { }
@@ -1403,8 +1431,8 @@ class channel_definition : public definition_base {
 protected:
 //	string			key;		// inherited
 public:
-	channel_definition(never_const_ptr<name_space> o, const string& n, 
-		template_formals_set* tf = NULL);
+	channel_definition(never_const_ptr<name_space> o, const string& n);
+//		template_formals_set* tf = NULL;
 virtual	~channel_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -1420,6 +1448,8 @@ virtual	never_const_ptr<fundamental_type_reference>
  */
 class user_def_chan : public channel_definition {
 private:
+#if 0
+TEMPORARY
 	/**
 		Members will be kept as a list for ordered checking.  
 	 */
@@ -1432,10 +1462,15 @@ private:
 	 */
 	typedef	hashlist<string, never_const_ptr<datatype_definition> >
 						temp_param_list;
+		// template params already inherited...
+#endif
 protected:
 	// list of other type definitions
+#if 0
+	// temporary
 	temp_param_list		template_params;
 	type_members		members;
+#endif
 public:
 	user_def_chan(never_const_ptr<name_space> o, const string& name);
 	~user_def_chan();
@@ -1459,8 +1494,8 @@ public:
 	type_alias(
 		never_const_ptr<name_space> o,
 		const string& n, 
-		never_const_ptr<definition_base> t,
-		template_formals_set* tf = NULL);
+		never_const_ptr<definition_base> t);
+//		template_formals_set* tf = NULL;
 virtual	~type_alias();
 	// never delete canonical (can't, it's const!)
 

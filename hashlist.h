@@ -3,8 +3,6 @@
 // needed for when data needs to be kept in an ordered list
 // with rapid acesss to its elements by a key
 
-// phased out pointer specializations...
-
 #ifndef	__HASHLIST_H__
 #define	__HASHLIST_H__
 
@@ -19,20 +17,25 @@ using std::list;
 	Derived from standard list<> but maintains a hash of pointers for
 	constant time associative access.  
 	Interface is limited to a few access methods.  
+	Most useful when T is a pointer-class.  
 */
 template <class K, class T>
 class hashlist : protected list<T> {
+protected:
+	typedef list<T>					parent;
 public:
-	typedef	typename list<T>::iterator		iterator;
-	typedef	typename list<T>::const_iterator	const_iterator;
+	typedef	typename parent::iterator		iterator;
+	typedef	typename parent::const_iterator		const_iterator;
+	typedef	typename parent::reverse_iterator	reverse_iterator;
+	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 protected:
 	typedef	hash_map<K,T*> 				map_type;
 
 protected:
 	/// maps a key to an iterator in the list
-	map_type		itermap;
+	map_type					itermap;
 public:
-	hashlist() : list<T>(), itermap() { }
+	hashlist() : parent(), itermap() { }
 virtual	~hashlist() { }
 
 // we limit the interface to only a few methods
