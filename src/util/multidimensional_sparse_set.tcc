@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.1 2004/12/05 05:07:24 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.2 2004/12/06 07:13:02 fang Exp $
  */
 
 #ifndef	__MULTIDIMENSIONAL_SPARSE_SET_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "sstream.h"		// used by the dumo method
 #include "multidimensional_sparse_set.h"
+#include "qmap.tcc"
 #include "discrete_interval_set.tcc"
 
 namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE {
