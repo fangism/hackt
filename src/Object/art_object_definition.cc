@@ -68,20 +68,6 @@ definition_base::pair_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// historical artifact
-/**
-	Useless return value, for the sake of avoiding void-return 
-	specialization when passed as a member functor.  
- */
-bool
-definition_base::dump_cerr(void) const {
-	pair_dump(cerr);
-	return true;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
 	// sanity check
@@ -391,21 +377,8 @@ definition_base::make_default_template_arguments(void) const {
  */
 never_const_ptr<instance_collection_base>
 definition_base::add_template_formal(
-#if 0
-		excl_ptr<instance_collection_base> f
-#else
 		never_ptr<instantiation_statement> i, 
-		const token_identifier& id
-#endif
-		) {
-#if 0
-	never_const_ptr<param_instance_collection>
-		pf(f.is_a<param_instance_collection>());
-	assert(pf);
-#else
-		// DOESN'T EXIST YET!  NEED TO CONSTRUCT!!!
-		// pf(i->get_inst_base());
-#endif
+		const token_identifier& id) {
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -427,31 +400,18 @@ definition_base::add_template_formal(
 	// this construction is ugly, TO DO: define clean interface
 	scopespace* ss = IS_A(scopespace*, this);
 	assert(ss);
-#if 0
-	ss->add_instance(f);		// now needs an instantiation_statement
-#else
 	// this creates and adds to the definition
 	// and bi-links statement to collection
 	never_const_ptr<param_instance_collection>
 		pf(ss->add_instance(i, id).is_a<param_instance_collection>());
 	assert(pf);
-#endif
 	assert(pf->get_name() == id);	// consistency check
 
 	template_formals_list.push_back(pf);
-#if 0
-	template_formals_map[pf->hash_string()] = pf;
-#else
 	template_formals_map[id] = pf;
-#endif
-
 
 	// sanity check
-#if 0
-	assert(lookup_template_formal(pf->hash_string()));
-#else
 	assert(lookup_template_formal(id));
-#endif
 	// later return a never_ptr<>
 	return pf;
 }
@@ -464,13 +424,8 @@ definition_base::add_template_formal(
  */
 never_const_ptr<instance_collection_base>
 definition_base::add_port_formal(
-#if 0
-		excl_ptr<instance_collection_base> f
-#else
 		never_ptr<instantiation_statement> f, 
-		const token_identifier& i
-#endif
-		) {
+		const token_identifier& i) {
 	assert(0);
 	return never_const_ptr<instance_collection_base>(NULL);
 }
@@ -634,19 +589,11 @@ definition_base::make_fundamental_type_reference(void) const {
 //=============================================================================
 // class datatype_definition_base method definitions
 
-// make sure that this constructor is never invoked outside this file
-#if 0
-inline
-datatype_definition_base::datatype_definition_base(const string& n) :
-		definition_base(n) {
-}
-#else
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 datatype_definition_base::datatype_definition_base() :
 		definition_base() {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
@@ -837,13 +784,7 @@ if (!m.flag_visit(this)) {
 void
 user_def_chan::load_used_id_map_object(excl_ptr<object> o) {
 	if (o.is_a<instance_collection_base>()) {
-#if 1
 		add_instance(o.is_a_xfer<instance_collection_base>());
-#else
-		excl_ptr<instance_collection_base>
-		inst_base = o.is_a_xfer<instance_collection_base>();
-		used_id_map[inst_base->get_name()] = inst_base;
-#endif
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to user-def channel definition." << endl;
@@ -968,13 +909,7 @@ channel_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
 	cerr << "WARNING: didn't expect to call "
 		"channel_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
-#if 1
 		add_instance(o.is_a_xfer<instance_collection_base>());
-#else
-		excl_ptr<instance_collection_base>
-		inst_base = o.is_a_xfer<instance_collection_base>();
-		used_id_map[inst_base->get_name()] = inst_base;
-#endif
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to channel typedef." << endl;
@@ -1902,54 +1837,31 @@ process_definition::make_fundamental_type_reference(
  */
 never_const_ptr<instance_collection_base>
 process_definition::add_port_formal(
-#if 0
-		excl_ptr<instance_collection_base> f
-#else
 		never_ptr<instantiation_statement> f, 
-		const token_identifier& id
-#endif
-		) {
+		const token_identifier& id) {
 	assert(f);
-#if 0
-	assert(!f.is_a<param_instance_collection>());
-	never_const_ptr<instance_collection_base> pf(f);
-#else
 	assert(!f.is_a<param_instantiation_statement>());
-#endif
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	never_const_ptr<object>
-#if 0
-	probe(lookup_object_here(f->get_name()));
-#else
 	probe(lookup_object_here(id));
-#endif
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return never_const_ptr<instance_collection_base>(NULL);
 	}
 	}
 
-#if 0
-	used_id_map[f->hash_string()] = f;
-	assert(!f);		// ownership transferred
-#else
 	never_const_ptr<instance_collection_base>
 		pf(add_instance(f, id));
 	assert(pf);
 	assert(pf->get_name() == id);
-#endif
 
 	{
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
 	port_formals_list.push_back(pf);
-#if 0
-	port_formals_map[f->get_name()] = pf;
-#else
 	port_formals_map[id] = pf;
 	assert(lookup_port_formal(id));
-#endif
 	}
 
 	return pf;

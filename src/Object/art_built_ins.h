@@ -30,11 +30,6 @@ extern	name_space built_in_namespace;
 extern	const built_in_param_def	pbool_def;
 extern	const built_in_param_def	pint_def;
 
-#if 0
-extern	const param_type_reference	pbool_type;
-extern	const param_type_reference	pint_type;
-#endif
-
 extern	const count_const_ptr<param_type_reference>	pbool_type_ptr;
 extern	const count_const_ptr<param_type_reference>	pint_type_ptr;
 

@@ -64,12 +64,7 @@ public:
 	process_instance_collection(const scopespace& o, 
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
+		const size_t d);
 	~process_instance_collection();
 
 	ostream& what(ostream& o) const;
@@ -98,12 +93,7 @@ public:
 	datatype_instance_collection(const scopespace& o, 
 		count_const_ptr<data_type_reference> t,
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
+		const size_t d);
 	~datatype_instance_collection();
 
 	ostream& what(ostream& o) const;
@@ -135,12 +125,7 @@ public:
 	channel_instance_collection(const scopespace& o, 
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
+		const size_t d);
 	~channel_instance_collection();
 
 	ostream& what(ostream& o) const;
@@ -174,12 +159,7 @@ protected:
 	param_instance_collection();
 public:
 	param_instance_collection(const scopespace& o, const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
+		const size_t d);
 virtual	~param_instance_collection();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -264,19 +244,7 @@ private:
 public:
 	pbool_instance_collection(const scopespace& o, const string& n);
 	pbool_instance_collection(const scopespace& o, const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
-#if 0
-	pbool_instance_collection(const scopespace& o, const string& n, 
-		count_const_ptr<pbool_expr> i);
-	pbool_instance_collection(const scopespace& o, const string& n, 
-		index_collection_item_ptr_type d, 
-		count_const_ptr<pbool_expr> i);
-#endif
+		const size_t d);
 
 	ostream& what(ostream& o) const;
 
@@ -321,24 +289,12 @@ private:
 public:
 	pint_instance_collection(const scopespace& o, const string& n);
 	pint_instance_collection(const scopespace& o, const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		);
-#if 1
+		const size_t d);
 	// keep these for built-in int datatype initialization
 	pint_instance_collection(const scopespace& o, const string& n, 
 		count_const_ptr<pint_expr> i);
 	pint_instance_collection(const scopespace& o, const string& n, 
-#if 0
-		index_collection_item_ptr_type d, 
-#else
-		const size_t d, 
-#endif
-		count_const_ptr<pint_expr> i);
-#endif
+		const size_t d, count_const_ptr<pint_expr> i);
 
 	ostream& what(ostream& o) const;
 

@@ -94,12 +94,7 @@ private:
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			) const;
+			const size_t d) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class data_type_reference
@@ -136,12 +131,7 @@ private:
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			) const;
+			const size_t d) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class channel_type_reference
@@ -180,12 +170,7 @@ private:
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			) const;
+			const size_t d) const;
 public:
 	// macro expand to method prototypes
 	ART_OBJECT_IO_METHODS
@@ -222,30 +207,7 @@ private:
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			) const;
-public:
-#if 0
-static	excl_ptr<instance_collection_base>
-		make_template_formal(
-			count_const_ptr<param_type_reference> t, 
-			never_const_ptr<definition_base> s, 
-			const token_identifier& id, 
-			index_collection_item_ptr_type d, 
-			count_const_ptr<param_expr> def);
-#elif 0
-static	excl_ptr<instantiation_statement>
-		make_template_formal(
-			count_const_ptr<param_type_reference> t, 
-			never_const_ptr<definition_base> s, 
-			const token_identifier& id, 
-			index_collection_item_ptr_type d, 
-			count_const_ptr<param_expr> def);
-#endif
+			const size_t d) const;
 
 };	// end class param_type_reference
 

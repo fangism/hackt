@@ -256,25 +256,6 @@ persistent_object_manager::~persistent_object_manager() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	The first non-NULL object is special: it is the root namespace.  
-	Returning an excl_ptr guarantees that memory will
-	be managed properly.
-	When the excl_ptr hits the end of a scope, unless ownership
-	has been transferred, the memory should be recursively reclaimed.  
-	Thus, this is not a const method.  
- */
-excl_ptr<name_space>
-persistent_object_manager::get_root_namespace(void) {
-	assert(root);		// necessary?
-	return root;
-	// this relinquishes ownership and responsibility for deleting
-	// to whomever consumes the returned excl_ptr
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The first non-NULL object is special: it is the root module.  
 	Returning an excl_ptr guarantees that memory will
@@ -445,33 +426,6 @@ persistent_object_manager::lookup_read_buffer(const ptr_type* ptr) const {
 #endif
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Doesn't actually write out the pointer, but the index representing
-	the object represented by the pointer.  
-	Precondition: pointer must already be registered.  
-	\param f output (file) stream.
-	\param ptr the pointer (class) object to translate and write out.
- */
-void
-persistent_object_manager::write_pointer(ostream& f, const object* ptr) const {
-	write_value(f, lookup_ptr_index(ptr));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	ALERT: this intentially and coercively discards const-ness!
- */
-template <template <class> class P, class T>
-void
-persistent_object_manager::read_pointer(istream& f, const P<T>& ptr) const {
-	long i;
-	read_value(f, i);
-	const_cast<P<T>& >(ptr) = P<T>(lookup_obj_ptr(i));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -747,15 +701,8 @@ persistent_object_manager::load_object_from_file(const string& s) {
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// debugging only
 	// Oh no, partially initialized objects!
-#if 1
 	pom.load_objects();
 	return pom.get_root_module();
-#else
-	// Set their values before anyone observes them!
-	pom.load_objects();
-	// must acquire root object in some owned pointer!
-	return pom.get_root_namespace();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -802,12 +749,8 @@ persistent_object_manager::self_test_no_file(const module& m) {
 
 	pom.load_objects();
 	// must acquire root object in some owned pointer!
-#if 0
-	return pom.get_root_namespace();
-#else
 	return pom.get_root_module();
 	// will get de-allocated after return statement is evaluated
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -373,25 +373,11 @@ context::get_current_process_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Resets the current type definition to NULL.
- */
-void
-context::reset_current_definition_reference(void) {
-	if (current_definition_reference) {
-//		indent--;	// we never indented to begin with!
-		current_definition_reference = 
-			never_const_ptr<definition_base>(NULL);
-	}
-}
-#else
 void
 context::pop_current_definition_reference(void) {
 	assert(current_definition_reference);
 	definition_stack.pop();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -403,7 +389,6 @@ context::reset_current_fundamental_type(void) {
 	if (current_fundamental_type) {
 		indent--;
 		current_fundamental_type =
-//			never_const_ptr<fundamental_type_reference>(NULL);
 			count_const_ptr<fundamental_type_reference>(NULL);
 	} else {
 		cerr << "warning: current_fundamental_type was already NULL."
@@ -418,60 +403,6 @@ context::set_current_prototype(excl_ptr<definition_base> d) {
 	current_prototype = d;
 	return current_prototype;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-context::reset_current_prototype(void) {
-	assert(current_prototype);
-	current_prototype = excl_ptr<definition_base>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Using the current definition, and current set of template arguments, 
-	check whether template arguments are consistent with definition.  
-	If so, create a valid type reference, and set
-	current_fundamental_type to it.  
-	Called from concrete_type_ref::check_build.
-	\return the new type reference if it was valid, else NULL.  
- */
-never_const_ptr<fundamental_type_reference>
-context::set_current_fundamental_type(void) {
-	assert(!current_fundamental_type);		// redundant
-		// otherwise, someone forgot to reset it!
-	assert(current_definition_reference);
-	// current_template_arguments is optional
-	// if it exists, then it is already checked.
-
-	// check type cache, per major scope... PUNT
-	// uses current_template_parameters
-	never_const_ptr<fundamental_type_reference> ret =
-		current_definition_reference->
-			set_context_fundamental_type(*this);
-		// changes current_fundamental_type
-	if (ret)
-		indent++;
-	// else failed to make type reference
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Check current_namespace's used_id_map for previously existing 
-	matched fundamental_type_reference before adding?
-	TO DO: later... encapsulate in a function
- */
-never_const_ptr<fundamental_type_reference>
-context::set_current_fundamental_type(const fundamental_type_reference& tr) {
-	assert(!current_fundamental_type);
-	current_fundamental_type = 
-		never_const_ptr<fundamental_type_reference>(&tr);
-	return current_fundamental_type;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -494,21 +425,6 @@ context::get_current_fundamental_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Sets the current template arguments in a list.  
-	\param tl is newly allocated template paramater list.
- */
-void
-context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
-	assert(!current_template_arguments);
-	current_template_arguments = tl;
-	assert(current_template_arguments);
-	assert(!tl);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO FIX: when checking a prototype, current scope should be 
 	updated to that prototype's definition.  
@@ -516,14 +432,10 @@ context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
  */
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
-#if 0
-	return get_current_named_scope()->lookup_object(id);
-#else
 	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -549,9 +461,6 @@ context::alias_definition(never_const_ptr<definition_base> d,
  */
 void
 context::add_connection(excl_const_ptr<instance_reference_connection> c) {
-#if 0
-	get_current_named_scope()->add_connection_to_scope(c);
-#else
 	never_ptr<sequential_scope>
 		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	excl_const_ptr<instance_management_base> imb(c);
@@ -560,7 +469,6 @@ context::add_connection(excl_const_ptr<instance_reference_connection> c) {
 	} else {
 		master_instance_list.push_back(imb);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -573,9 +481,6 @@ context::add_connection(excl_const_ptr<instance_reference_connection> c) {
  */
 void
 context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
-#if 0
-	get_current_named_scope()->add_assignment_to_scope(c);
-#else
 	never_ptr<sequential_scope>
 		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	excl_const_ptr<instance_management_base> imb(c);
@@ -584,7 +489,6 @@ context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
 	} else {
 		master_instance_list.push_back(imb);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -595,14 +499,10 @@ context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
 never_const_ptr<definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	assert(current_namespace);
-#if 0
-	return current_namespace->lookup_object(id).is_a<definition_base>();
-#else
 	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<definition_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -613,42 +513,30 @@ context::lookup_definition(const token_identifier& id) const {
 never_const_ptr<definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	assert(current_namespace);
-#if 0
-	return current_namespace->lookup_object(id).is_a<definition_base>();
-#else
 	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<definition_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
-#if 0
-	return current_namespace->lookup_object(id).is_a<instance_collection_base>();
-#else
 	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<instance_collection_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
-#if 0
-	return current_namespace->lookup_object(id).is_a<instance_collection_base>();
-#else
 	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<instance_collection_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -662,11 +550,6 @@ context::lookup_instance(const qualified_id& id) const {
  */
 never_const_ptr<scopespace>
 context::get_current_named_scope(void) const {
-#if 0
-// WRONG
-	if (current_sequential_scope)
-		return current_sequential_scope;
-#endif
 	if (current_prototype)	// careful, is excl_ptr<>
 		return never_const_ptr<definition_base>(current_prototype);
 			// .as_a<scopespace>();
@@ -676,13 +559,6 @@ context::get_current_named_scope(void) const {
 			ret(current_open_definition.is_a<scopespace>());
 		assert(ret);
 		return ret;
-#if 0
-	} else if (current_definition_reference) {
-		never_const_ptr<scopespace>
-			ret(current_definition_reference.is_a<scopespace>());
-		assert(ret);
-		return ret;
-#endif
 	} else
 		return current_namespace.as_a<scopespace>();
 }
@@ -698,11 +574,6 @@ context::get_current_named_scope(void) const {
  */
 never_ptr<scopespace>
 context::get_current_named_scope(void) {
-#if 0
-	// WRONG
-	if (current_sequential_scope)
-		return current_sequential_scope;
-#endif
 	// what about current_prototype?
 	if (current_open_definition) {
 		// used to be static cast
@@ -756,21 +627,12 @@ context::add_instance(const token_identifier& id,
 		index_collection_item_ptr_type dim) {
 	typedef	never_const_ptr<instance_collection_base>	return_type;
 	assert(current_fundamental_type);
-
-#if 1
-// NEW REWORKED CODE STAGING AREA
 	never_ptr<scopespace> current_named_scope(get_current_named_scope());
 	assert(current_named_scope);
 
-#if 0
-	excl_ptr<instantiation_statement>
-		inst_stmt(new instantiation_statement(
-			current_fundamental_type, dim));
-#else
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
-#endif
 	assert(inst_stmt);
 	never_const_ptr<instance_collection_base>
 		inst_base(current_named_scope->add_instance(inst_stmt, id));
@@ -787,59 +649,6 @@ context::add_instance(const token_identifier& id,
 	assert(current_sequential_scope);
 	current_sequential_scope->append_instance_management(imb);
 	return inst_base;
-
-#else
-// OLD CODE as of tag 0.1.3-c
-	never_ptr<scopespace> current_named_scope = get_current_named_scope();
-		// .top_static_scope();
-	assert(current_named_scope);
-
-	// "ptrs.h" complains if the following is written as a constructor:
-#if 0
-	cerr << "In context::add_instance, before make_instance_collection: " << endl;
-	current_named_scope->dump(cerr);
-#endif
-
-	excl_ptr<instance_collection_base> new_inst = 
-		fundamental_type_reference::make_instance_collection(
-			current_fundamental_type, 
-			current_named_scope, id, dim);
-	assert(new_inst);
-#if 0
-	cerr << "In context::add_instance, before add_instance: " << endl;
-	current_named_scope->dump(cerr);
-#endif
-
-	excl_const_ptr<instance_management_base>
-		imb(new instantiation_statement(new_inst, dim));
-	never_ptr<sequential_scope>
-		seq_scope(current_named_scope.is_a<sequential_scope>());
-	if (seq_scope) {
-		// is a definition, or other control-flow scope, 
-		// so append to that.
-		seq_scope->append_instance_management(imb);
-	} else {
-		// never add sequential action item to namespace
-		// is order-dependent item.
-		master_instance_list.push_back(imb);
-	}
-	// this just adds instances to the pre-unrolled
-	// object data, and is not kept in any global order
-	never_const_ptr<instance_collection_base>
-		ret(current_named_scope->add_instance(new_inst));
-	assert(!new_inst);		// ownership transferred
-
-#if 0
-	cerr << "In context::add_instance, after add_instance: " << endl;
-	current_named_scope->dump(cerr);
-#endif
-	if (!ret) {
-		cerr << id.where() << endl;
-		type_error_count++;
-		exit(1);
-	}
-	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -865,27 +674,9 @@ context::add_template_formal(const token_identifier& id,
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
-#if 0
-	never_const_ptr<instance_collection_base>
-		ret(current_prototype->add_template_formal(
-			param_type_reference::make_template_formal(
-				ptype, current_prototype, id, dim, d)));
-	if (!ret) {
-		cerr << id.where() << endl;
-		type_error_count++;
-		exit(1);
-	}
-	return ret;
-#else
-
-#if 0
-	excl_ptr<instantiation_statement>
-		inst_stmt(new instantiation_statement(ptype, dim));
-#else
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
-#endif
 	assert(inst_stmt);
 	// instance is constructed and added in add_instance
 	never_const_ptr<instance_collection_base>
@@ -924,7 +715,6 @@ context::add_template_formal(const token_identifier& id,
 	seq_scope->append_instance_management(imb);
 
 	return inst_base;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -954,20 +744,6 @@ context::add_port_formal(const token_identifier& id,
 	assert(current_prototype);	// valid definition_base
 	assert(!current_fundamental_type.is_a<param_type_reference>());
 		// valid port type to instantiate
-#if 0
-	never_const_ptr<instance_collection_base> ret(
-		current_prototype->add_port_formal(
-			fundamental_type_reference::make_instance_collection(
-				current_fundamental_type, 
-				current_prototype.is_a<scopespace>(),
-				id, dim)));
-	if (!ret) {
-		cerr << id.where() << endl;
-		type_error_count++;
-		exit(1);
-	}
-	return ret;
-#else
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
@@ -993,7 +769,6 @@ context::add_port_formal(const token_identifier& id,
 	seq_scope->append_instance_management(imb);
 
 	return inst_base;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

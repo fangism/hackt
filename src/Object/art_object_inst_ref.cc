@@ -62,12 +62,6 @@ simple_instance_reference::dimensions(void) const {
 	if (array_indices) {
 		const size_t c = array_indices->dimensions_collapsed();
 		assert(c <= dim);
-#if 0
-		cerr << "{ ";
-		array_indices->dump(cerr) << endl;
-		cerr << "(dimensions collapsed = " << c << ")";
-		cerr << " }" << endl;
-#endif
 		return dim -c;
 	}
 	else return dim;
@@ -101,21 +95,13 @@ simple_instance_reference::is_static_constant_collection(void) const {
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
 		const count_const_ptr<dynamic_range_list>
-#if 0
-			drl(iter->is_a<dynamic_range_list>());
-#else
 			drl((*iter)->get_indices().is_a<dynamic_range_list>());
-#endif
 		if (drl) {
 			if (!drl->is_static_constant())
 				return false;
 			// unconditional false is too conservative
 		}
-#if 0
-		else	assert(iter->is_a<const_range_list>());
-#else
 		else	assert((*iter)->get_indices().is_a<const_range_list>());
-#endif
 	}
 	return true;
 }
@@ -651,21 +637,13 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	assert(cov);
 	for ( ; iter!=end; iter++) {
-#if 0
-		if (iter->is_a<dynamic_range_list>())
-#else
 		if ((*iter)->get_indices().is_a<dynamic_range_list>())
-#endif
 		{
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
 		} else {
 			count_const_ptr<const_range_list>
-#if 0
-				crlp(iter->is_a<const_range_list>());
-#else
 				crlp((*iter)->get_indices().is_a<const_range_list>());
-#endif
 			assert(crlp);
 			const_range_list crl(*crlp);	// make deep copy
 			// dimension-trimming
@@ -794,23 +772,6 @@ param_instance_reference::param_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	For single instances references, check whether it is initialized.  
-	For collective instance references, and indexed references, 
-	just conservatively say that it hasn't been initialized yet; 
-	so don't bother checking until unroll time.  
- */
-bool
-param_instance_reference::is_initialized(void) const {
-	never_const_ptr<instance_collection_base> i(get_inst_base());
-	assert(i);
-	if (i->dimensions() > 0)
-		return false;
-	else 
-		return i.is_a<param_instance_collection>()->is_initialized();
-}
-#else
 bool
 param_instance_reference::may_be_initialized(void) const {
 	never_const_ptr<instance_collection_base> i(get_inst_base());
@@ -825,7 +786,6 @@ param_instance_reference::must_be_initialized(void) const {
 	assert(i);
 	return i.is_a<param_instance_collection>()->must_be_initialized();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

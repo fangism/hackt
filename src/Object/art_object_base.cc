@@ -744,52 +744,19 @@ object_list::make_param_assignment(void) {
 	Objects may be null, but all others must be param_expr.  
 	For now always return a dynamic list.
  */
-// excl_ptr<param_expr_list>
 excl_ptr<dynamic_param_expr_list>
 object_list::make_param_expr_list(void) const {
 	// first walk to determine if it qualified as a const_param_expr_list
 	const_iterator i = begin();
-#if 0
-	bool is_all_const = true;
+	excl_ptr<dynamic_param_expr_list>
+		ret(new dynamic_param_expr_list);
 	for ( ; i!=end(); i++) {
 		count_const_ptr<object> o(*i);
 		count_const_ptr<param_expr> pe(o.is_a<param_expr>());
-		if (o) {
-			assert(pe);
-			if (!pe.is_a<const_param>())
-				is_all_const = false;
-		} else {
-			is_all_const = false;
-		}
+		if (o)	assert(pe);
+		ret->push_back(pe);	// NULL is ok.  
 	}
-	
-	i = begin();
-	if (is_all_const) {
-		excl_ptr<const_param_expr_list>
-			ret(new const_param_expr_list);
-		for ( ; i!=end(); i++) {
-			count_const_ptr<object> o(*i);
-			count_const_ptr<param_expr> pe(o.is_a<param_expr>());
-			assert(pe);
-			// can't be NULL, already checked above
-			ret->push_back(pe.is_a<const_param>());
-		}
-		return ret.is_a_xfer<param_expr_list>();
-	} else {
-#endif
-		excl_ptr<dynamic_param_expr_list>
-			ret(new dynamic_param_expr_list);
-		for ( ; i!=end(); i++) {
-			count_const_ptr<object> o(*i);
-			count_const_ptr<param_expr> pe(o.is_a<param_expr>());
-			if (o)	assert(pe);
-			ret->push_back(pe);	// NULL is ok.  
-		}
-		return ret;
-#if 0
-		return ret.is_a_xfer<param_expr_list>();
-	}
-#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -866,14 +833,8 @@ object_list::make_port_connection(
 
 //=============================================================================
 // class scopespace method definitions
-scopespace::scopespace() : object(),
-		used_id_map()
-#if 0
-		connect_assign_list(), 
-		assign_list(), 
-		connect_list()
-#endif
-{
+scopespace::scopespace() : 
+		object(), used_id_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -904,15 +865,7 @@ scopespace::lookup_object_here(const string& id) const {
  */
 never_ptr<object>
 scopespace::lookup_object_here_with_modify(const string& id) const {
-#if 1
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#else
-	// sanity checking
-	some_ptr<object> ret(
-		static_cast<const used_id_map_type&>(used_id_map)[id]);
-	assert(!ret.owned());
-	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1003,25 +956,14 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
  */
 never_const_ptr<instance_collection_base>
 scopespace::add_instance(
-#if 0
-		excl_ptr<instance_collection_base> i
-#else
 		never_ptr<instantiation_statement> inst_stmt, 
-		const token_identifier& id
-#endif
-		) {
+		const token_identifier& id) {
 	typedef never_const_ptr<instance_collection_base>	return_type;
 	assert(id != "");
-#if 0
-	assert(i);
-	const string id(i->get_name());
-	const size_t dim = i->dimensions();
-#else
 	assert(inst_stmt);
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
-#endif
 #if 0
 	// DEBUG
 	cerr << "In scopespace::add_instance with this = " << this << endl;
@@ -1051,14 +993,7 @@ scopespace::add_instance(
 			count_const_ptr<fundamental_type_reference>
 				old_type(probe_inst->get_type_ref());
 			count_const_ptr<fundamental_type_reference>
-#if 0
-				new_type(i->get_type_ref());
-#else
 				new_type(inst_stmt->get_type_ref());
-#endif
-#if 0
-			probe_inst->dump(cerr << "lookup found: ") << endl;
-#endif
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
 			if (!old_type->may_be_equivalent(*new_type)) {
@@ -1089,17 +1024,10 @@ scopespace::add_instance(
 				return return_type(NULL);
 			}	// else dimensions match apropriately
 
-#if 0
-			assert(i);	// sanity
-#endif
 			// here, we know we're referring to the same collection
 			// check for overlap with existing static-const indices
 			const_range_list
-#if 0
-			overlap(probe_inst->merge_index_ranges(i));
-#else
 			overlap(probe_inst->add_instantiation_statement(inst_stmt));
-#endif
 			if (!overlap.empty()) {
 				// returned true if there is definite overlap
 				cerr << "Detected overlap in the "
@@ -1113,10 +1041,8 @@ scopespace::add_instance(
 			// We discard the new instantiation, i, 
 			// and let it delete itself at the end of this scope.  
 			// ... happy ending, or is it?
-#if 1
 			// attach non-const back-reference
 			inst_stmt->attach_collection(probe_inst);
-#endif
 			return probe_inst;
 		} else {
 			probe->what(cerr << id << " is already declared ")
@@ -1125,33 +1051,20 @@ scopespace::add_instance(
 		}
 	} else {
 		// didn't exist before, just create and add new instance
-#if 0
-		never_const_ptr<instance_collection_base> ret(i);
-		used_id_map[id] = i;		// transfer ownership
-#else
 		excl_ptr<instance_collection_base> new_inst =
 			fundamental_type_reference::make_instance_collection(
 				inst_stmt->get_type_ref(), 
 				never_const_ptr<scopespace>(this), 
-				id,
-				dim	// should really be this
-//				inst_stmt->get_indices()	// temporary
-				);
+				id, dim);
 		// attach non-const back-reference
 		inst_stmt->attach_collection(new_inst);
 		new_inst->add_instantiation_statement(inst_stmt);
 		assert(inst_stmt->get_name() == id);
 		assert(new_inst);
-#if 0
-		never_const_ptr<instance_collection_base> ret(new_inst);
-		used_id_map[id] = new_inst;		// transfer ownership
-#else
 		never_const_ptr<instance_collection_base>
 		ret(add_instance(new_inst));
-#endif
 		assert(!new_inst.owned());
 		assert(ret);
-#endif
 #if 0
 		ret->dump(cerr << "just added: ") << endl;
 		never_const_ptr<object> probe(
@@ -1225,20 +1138,9 @@ scopespace::exclude_object_val(const used_id_map_type::value_type i) const {
  */
 size_t
 scopespace::exclude_population(void) const {
-#if 0
-	size_t ret = 0;
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
-	for ( ; m_iter!=m_end; m_iter++) {
-		if (exclude_object(*m_iter))
-			ret++;
-	}
-	return ret;
-#else
 	return count_if(used_id_map.begin(), used_id_map.end(), 
 		bind1st(mem_fun(&scopespace::exclude_object_val), this)
 	);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1270,7 +1172,6 @@ scopespace::write_object_used_id_map(persistent_object_manager& m) const {
 	assert(f.good());
 
 	// filter any objects out? yes
-#if 1
 	// how many objects to exclude? need to subtract
 	size_t s = used_id_map.size();
 	size_t ex = exclude_population();
@@ -1285,10 +1186,6 @@ scopespace::write_object_used_id_map(persistent_object_manager& m) const {
 			m.write_pointer(f, m_obj);
 		}
 	}
-#else
-	// otherwise, without filtering, we could use this method
-	m.write_pointer_map(f, used_id_map);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1513,17 +1410,9 @@ name_space::get_parent(void) const {
  */
 string
 name_space::get_qualified_name(void) const {
-#if 0
-	if (parent) {
-		if (parent->parent)
-			return parent->get_qualified_name() +scope +key;
-		else	return key;
-	} else return "<global>";		// global
-#else
 	if (parent)
 		return parent->get_qualified_name() +scope +key;
 	else return "";			// global e.g. ::foo
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1633,34 +1522,6 @@ name_space::dump(ostream& o) const {
 		);
 	}
 
-#if 0
-	if (!assign_list.empty()) {
-		cerr << "Assignments: " << endl;
-		assign_list_type::const_iterator
-			a_iter = assign_list.begin();
-		const assign_list_type::const_iterator
-			a_end = assign_list.end();
-		for ( ; a_iter!=a_end; a_iter++) {
-			never_const_ptr<param_expression_assignment>
-				ap(*a_iter);
-			assert(ap);
-			ap->dump(o << '\t') << endl;
-		}
-	}
-	if (!connect_list.empty()) {
-		cerr << "Connections: " << endl;
-		connect_list_type::const_iterator
-			a_iter = connect_list.begin();
-		const connect_list_type::const_iterator
-			a_end = connect_list.end();
-		for ( ; a_iter!=a_end; a_iter++) {
-			never_const_ptr<instance_reference_connection>
-				ap(*a_iter);
-			assert(ap);
-			ap->dump(o << '\t') << endl;
-		}
-	}
-#endif
 	return o << "}" << endl;
 }
 
@@ -2189,77 +2050,6 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	This overriding method does nothing.  
-	No sequential instance_management_base items may be added 
-	to a namespace; they may only be added to scopes
-	with sequencing (such as definitions).  
- */
-void
-name_space::append_instance(excl_ptr<instance_management_base> imb) {
-	cerr << "Never supposed to call name_space::append_instance()!" << endl;
-	assert(0);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE???
-/**
-	Adds a fundamental_type_reference to the used_id_map, using
-	the hash_string as the key.  
-	Memory management: will delete tb if it is redundant!
-	So tb is created before this method call.  
-	Inefficiency: have to create and delete type_reference.
-	TO DO: be able to lookup type in advance before creating...
-	\param tb the fundamental_type_reference to lookup and add --
-		MAY BE DELETED if a matching reference is found.
-	\return the same fundamental_type_reference if none was previously 
-		found, otherwise the existing matching reference.  
- */
-never_const_ptr<fundamental_type_reference>
-name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
-	never_const_ptr<object> o;
-	never_const_ptr<fundamental_type_reference> trb;
-	assert(tb);
-	string k = tb->hash_string();
-	o = lookup_object_here(k);
-	// see what is already there...
-	trb = o.is_a<fundamental_type_reference>();
-
-	if (o)	assert(trb);
-	// else a non-type-reference hashed into the used_id_map
-	// using a hash for a type-reference!!!
-
-	if (trb) {
-		// then found a match!, we can delete tb
-		// since tb is an excl_ptr, it will delete itself
-		return trb;
-	} else {
-		// if tb contains parameter literals that are only
-		// local to this scope, we must add it here, 
-		// else if tb contains only constants and resolved
-		// parameters, then we have two options:
-		// 1) search up parents' namespace until one is found.  
-		//	if not found, add it locally.
-		// 2) jump to the global namespace, to search for type
-		//	if found, use that, else add it to global.
-		//	problem: parent/global namespace is const, 
-		//	so we can't modify it with dirty hack.  
-		// 3) just add it locally to this namespace regardless...
-		//	who gives a rat's a** about redundancy?
-		// 3:
-		never_const_ptr<fundamental_type_reference> ret(tb);
-		assert(tb);
-		used_id_map[k] = tb;
-		assert(!tb);
-		return ret;
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Overrides scopespace::lookup_namespace.
 	\param id is the entire name of the namespace.
@@ -2282,53 +2072,6 @@ name_space::lookup_open_alias(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-OBSOLETE: unrolling is done outside of namespaces
-/**
-	This pass walks through all parameter assignments, expanding
-	parameter instantiations as needed.  
- */
-void
-name_space::unroll_params(void) {
-	// need the modifiable bin_sort
-	bin_sort bins;
-	bin_sort& bins_ref = bins;
-	// consider using predicated iterators
-	bins_ref =
-	for_each_if(used_id_map.begin(), used_id_map.end(), 
-		not1(bind1st(mem_fun(&name_space::exclude_object_val), this)),
-		bins_ref
-	);
-
-	// unroll parameters first?
-	// what if parameters initialized in other namespaces?
-	// some parameters depend on assignments, etc...
-	// unroll assignments?
-	// dependencies across namespaces?
-
-	// no need to walk param_bin
-
-	assign_list_type::iterator a_i = assign_list.begin();
-	const assign_list_type::const_iterator a_e = assign_list.end();
-#if 0
-	for_each(a_i, a_e, 
-		mem_fun(&param_expression_assignment::unroll_params)
-	);
-#endif
-
-	if (!bins.ns_bin.empty()) {
-		// not transform
-		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
-			unary_compose(
-				mem_fun(&name_space::unroll_params, 
-					never_ptr<name_space>()), 
-				_Select2nd<bin_sort::ns_bin_type::value_type>()
-			)
-		);
-	}
-
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 name_space::unroll_instances(void) {
 
@@ -2338,15 +2081,6 @@ name_space::unroll_instances(void) {
 void
 name_space::unroll_connections(void) {
 
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// not used
-type_index_enum
-name_space::get_type_index(void) const {
-	return NAMESPACE_TYPE;
 }
 #endif
 
@@ -2362,10 +2096,6 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 		<< this << endl;
 #endif
 	collect_used_id_map_pointers(m);
-#if 0
-	collect_assign_list_pointers(m);
-	collect_connect_list_pointers(m);
-#endif
 }
 // else already visited
 }
@@ -2409,10 +2139,6 @@ name_space::write_object(persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	write_object_used_id_map(m);
-#if 0
-	write_object_assign_list(m);
-	write_object_connect_list(m);
-#endif
 
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -2439,10 +2165,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	load_object_used_id_map(m);
-#if 0
-	load_object_assign_list(m);
-	load_object_connect_list(m);
-#endif
 
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -2470,18 +2192,15 @@ name_space::load_used_id_map_object(excl_ptr<object> o) {
 	else if (o.is_a<definition_base>())
 		add_definition(o.is_a_xfer<definition_base>());
 	// ownership restored here!
-#if 0
-	else if (o.is_a<instance_collection_base>())
-		add_instance(o.is_a_xfer<instance_collection_base>());
-#else
 	else if (o.is_a<instance_collection_base>()) {
+		add_instance(o.is_a_xfer<instance_collection_base>());
+#if 0
 		excl_ptr<instance_collection_base>
 			inst_base = o.is_a_xfer<instance_collection_base>();
-//		add_instance(inst_base);
 		assert(inst_base);
 		used_id_map[inst_base->get_name()] = inst_base;
-	}
 #endif
+	}
 	else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;

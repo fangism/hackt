@@ -51,21 +51,11 @@ instance_collection_base::instance_collection_base() : object(),
 // inline
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n,
-//		index_collection_item_ptr_type d
-//		index_collection_type::value_type d
 		const size_t d) : 
 		object(), owner(never_const_ptr<scopespace>(&o)),
 		key(n),
 		index_collection(), 
-//		depth(d ? d->dimensions() : 0)
 		depth(d) {
-#if 0
-if (d) {
-	index_collection.push_front(d);
-} else {
-	// push a NULL pointer?
-}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,8 +168,6 @@ instance_collection_base::detect_static_overlap(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
-// REWORK INSTANTIATION
 /**
 	TO DO: this can only be done with non-formals.  Check this.  
 	If this instance is a collection, add the new range of indices
@@ -213,69 +201,6 @@ instance_collection_base::add_instantiation_statement(
 	index_collection.push_back(r);
 	return overlap;
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TO DO: this can only be done with non-formals.  Check this.  
-	If this instance is a collection, add the new range of indices
-	which may be sparse or dense.  
-	This is only applicable if this instantiation was initialized
-	as a collective.  
-	Pre-condition: The dimensions better damn well match!  
-	\param r the index ranges to be added.  
-	\return Overlapping range (true) if error condition. 
-	\sa detect_static_overlap
- */
-const_range_list
-instance_collection_base::add_index_range(index_collection_item_ptr_type r) {
-	assert(r);
-	assert(depth);
-	assert(depth == r->dimensions());
-#if 0
-	// DEBUG
-	cerr << "In instance_collection_base::add_index_range with this = "
-		<< this << endl;
-	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
-#endif
-	const_range_list overlap(detect_static_overlap(r));
-	index_collection.push_back(r);
-#if 1
-	cerr << "add_index_range(): size = " << index_collection.size() << endl;
-#endif
-	return overlap;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Merges index ranges from another instantiation base, 
-	such as a redeclaration with more indices of the same collection.  
-	Pre-condition: dimensions of i must match this!
-	The only type of error caught from here are overlap errors.  
-	\return true if there is definite overlap, signaling an error.  
- */
-const_range_list
-instance_collection_base::merge_index_ranges(never_const_ptr<instance_collection_base> i) {
-	assert(i);
-	assert(dimensions() == i->dimensions());
-#if 0
-	// DEBUG
-	cerr << "In instance_collection_base::merge_index_range with this = " <<
-		this << endl;
-	i->dump(cerr << "never_const_ptr<instance_collection_base> i = ") << endl;
-#endif
-	// check type equality here, or push responsibility to caller?
-	index_collection_type::const_reverse_iterator iter =
-		i->index_collection.rbegin();
-	for ( ; iter!=i->index_collection.rend(); iter++) {
-		const_range_list ret(add_index_range(*iter));
-		if (!ret.empty())
-			return ret;
-		// else keep checking...
-	}
-	return const_range_list();
-}
-// REWORK INSTANTIATION
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -398,17 +323,10 @@ instance_collection_base::formal_size_equivalent(
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
 		// former template formals list when visited with the second.  
-#if 0
-		count_const_ptr<const_range_list>
-			ic(i->is_a<const_range_list>());
-		count_const_ptr<const_range_list>
-			jc(j->is_a<const_range_list>());
-#else
 		count_const_ptr<const_range_list>
 			ic((*i)->get_indices().is_a<const_range_list>());
 		count_const_ptr<const_range_list>
 			jc((*j)->get_indices().is_a<const_range_list>());
-#endif
 		if (ic && jc) {
 			// compare dense ranges in each dimension
 			// must be equal!
@@ -448,13 +366,8 @@ instance_collection_base::check_expression_dimensions(const param_expr& pe) cons
 		// make sure sizes in each dimension
 		index_collection_type::const_iterator i =
 			index_collection.begin();
-#if 0
-		count_const_ptr<const_range_list>
-			crl(i->is_a<const_range_list>());
-#else
 		count_const_ptr<const_range_list>
 			crl((*i)->get_indices().is_a<const_range_list>());
-#endif
 		if (crl) {
 			if (pe.has_static_constant_dimensions()) {
 				const_range_list
@@ -550,12 +463,7 @@ datatype_instance_collection::datatype_instance_collection() :
 datatype_instance_collection::datatype_instance_collection(const scopespace& o, 
 		count_const_ptr<data_type_reference> t, 
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) : 
+		const size_t d) : 
 		instance_collection_base(o, n, d), type(t) {
 	assert(type);
 }
@@ -595,10 +503,6 @@ datatype_instance_collection::make_instance_reference(void) const {
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
-#if 0
-	c.push_object_stack(new_ir);
-	return never_const_ptr<instance_reference_base>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -617,10 +521,6 @@ datatype_instance_collection::make_member_instance_reference(
 			b, never_const_ptr<datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
-#if 0
-	c.push_object_stack(new_mir);
-	return return_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -671,12 +571,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, type);
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
-#if 0
-	if (index_collection.empty())
-		depth = 0;
-	else
-		depth = (*index_collection.begin())->dimensions();
-#endif
 }
 // else already visited
 }
@@ -696,12 +590,7 @@ process_instance_collection::process_instance_collection() :
 process_instance_collection::process_instance_collection(const scopespace& o, 
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) : 
+		const size_t d) : 
 		instance_collection_base(o, n, d), type(pt) {
 	assert(type);
 }
@@ -741,10 +630,6 @@ process_instance_collection::make_instance_reference(void) const {
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
 		// may attach in parser::instance_array::check_build()
-#if 0
-	c.push_object_stack(new_ir);
-	return never_const_ptr<instance_reference_base>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -763,10 +648,6 @@ process_instance_collection::make_member_instance_reference(
 			b, never_const_ptr<process_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
-#if 0
-	c.push_object_stack(new_mir);
-	return return_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -811,12 +692,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, type);
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
-#if 0
-	if (index_collection.empty())
-		depth = 0;
-	else
-		depth = (*index_collection.begin())->dimensions();
-#endif
 }
 // else already visited
 }
@@ -834,12 +709,7 @@ param_instance_collection::param_instance_collection() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instance_collection::param_instance_collection(const scopespace& o, 
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) : 
+		const size_t d) : 
 		instance_collection_base(o, n, d) {
 }
 
@@ -1021,12 +891,7 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) :
+		const size_t d) :
 		param_instance_collection(o, n, d), ival(NULL) {
 }
 
@@ -1147,10 +1012,6 @@ pbool_instance_collection::make_instance_reference(void) const {
 			const_cast<pbool_instance_collection*>(this)), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if 0
-	c.push_object_stack(new_ir);
-	return never_const_ptr<instance_reference_base>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1215,12 +1076,6 @@ if (!m.flag_visit(this)) {
 	load_index_collection_pointers(m);
 	m.read_pointer(f, ival);
 	STRIP_OBJECT_FOOTER(f);
-#if 0
-	if (index_collection.empty())
-		depth = 0;
-	else
-		depth = (*index_collection.begin())->dimensions();
-#endif
 }
 // else already visited
 }
@@ -1246,12 +1101,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) :
+		const size_t d) :
 		param_instance_collection(o, n, d), ival(NULL) {
 }
 
@@ -1268,11 +1118,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d, 
-#else
 		const size_t d, 
-#endif
 		count_const_ptr<pint_expr> i) :
 		param_instance_collection(o, n, d), ival(i) {
 	assert(type_check_actual_param_expr(*i));
@@ -1370,10 +1216,6 @@ pint_instance_collection::make_instance_reference(void) const {
 			const_cast<pint_instance_collection*>(this)), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if 0
-	c.push_object_stack(new_ir);
-	return never_const_ptr<instance_reference_base>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1438,12 +1280,6 @@ if (!m.flag_visit(this)) {
 	load_index_collection_pointers(m);
 	m.read_pointer(f, ival);
 	STRIP_OBJECT_FOOTER(f);
-#if 0
-	if (index_collection.empty())
-		depth = 0;
-	else
-		depth = (*index_collection.begin())->dimensions();
-#endif
 }
 // else already visited
 }
@@ -1463,12 +1299,7 @@ channel_instance_collection::channel_instance_collection() :
 channel_instance_collection::channel_instance_collection(const scopespace& o, 
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) : 
+		const size_t d) : 
 		instance_collection_base(o, n, d), type(ct) {
 }
 
@@ -1508,10 +1339,6 @@ channel_instance_collection::make_instance_reference(void) const {
 			never_const_ptr<channel_instance_collection>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if 0
-	c.push_object_stack(new_ir);
-	return never_const_ptr<instance_reference_base>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1530,10 +1357,6 @@ channel_instance_collection::make_member_instance_reference(
 			b, never_const_ptr<channel_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
-#if 0
-	c.push_object_stack(new_mir);
-	return return_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1578,12 +1401,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, type);
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
-#if 0
-	if (index_collection.empty())
-		depth = 0;
-	else
-		depth = (*index_collection.begin())->dimensions();
-#endif
 }
 // else already visited
 }
@@ -1613,14 +1430,6 @@ instantiation_statement::~instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-instantiation_statement::what(ostream& o) const {
-	return o << "instantiation-statement";
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_statement::dump(ostream& o) const {
 	count_const_ptr<fundamental_type_reference>
@@ -1638,41 +1447,6 @@ instantiation_statement::dump(ostream& o) const {
 		indices->dump(o);
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
-	assert(!inst_base);		// one-time assign only
-	inst_base = i;
-	assert(inst_base);
-	if (dimensions() != inst_base->dimensions()) {
-		cerr << "instantiation_statement dimensions = "
-			<< dimensions() << endl;
-		cerr << "instance_collection_base dimensions = "
-			<< inst_base->dimensions() << endl;
-		inst_base->dump(cerr << "inst_base: ") << endl;
-		assert(dimensions() == inst_base->dimensions());
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-never_ptr<instance_collection_base>
-instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
-	return inst_base;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
-instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
-	return inst_base;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
@@ -1700,71 +1474,6 @@ instantiation_statement::dimensions(void) const {
 		return indices->dimensions();
 	else return 0;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-PURE VIRTUAL
-/**
-	This is just a place-holder until this method becomes
-	pure-virtual.  
-	\return reference-counted pointer to the actual instantiating type.  
- */
-count_const_ptr<fundamental_type_reference>
-instantiation_statement::get_type_ref(void) const {
-	assert(type_base);
-	return type_base;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-instantiation_statement::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, INSTANTIATION_STATEMENT_TYPE)) {
-	assert(inst_base);
-	type_base->collect_transient_info(m);
-		// what if is special built-in param type? shouldn't visit
-	inst_base->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
-}	// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-instantiation_statement::construct_empty(void) {
-	return new instantiation_statement();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-instantiation_statement::write_object(persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
-	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer(f, inst_base);
-	m.write_pointer(f, type_base);
-		// what if is special built-in param type? shouldn't visit
-	m.write_pointer(f, indices);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
-	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, inst_base);
-	m.read_pointer(f, type_base);
-		// what if is special built-in param type? shouldn't visit
-	m.read_pointer(f, indices);
-	STRIP_OBJECT_FOOTER(f);
-}
-}
-#endif
 
 //=============================================================================
 // class param_instantiation_statement method definitions

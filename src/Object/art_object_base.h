@@ -221,23 +221,6 @@ namespace entity {
 	typedef	index_collection_type::const_iterator
 					instantiation_state;
 
-#if 0
-typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
-
-/**
-	The container type for template parameters.  
-	Temporarily allows any entity::object, however, 
-	should definitely not contain subclasses
-	of scopespace; intended for instantiations of constant
-	parameters, (and when things get fancy) other types, 
-	(even fancier) other template arguments.  
-	These parameter expressions are not owned!  
-	(because they are cached?)
- */
-typedef	list<param_expr_ptr_type>			template_param_list;
-#endif
-
-
 //=============================================================================
 // general non-member functions
 
@@ -424,28 +407,6 @@ protected:	// typedefs -- keep these here for re-use
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
 
-#if 0
-	/**
-		Ordered list of connections and assignments.  
-	 */
-	typedef	list<excl_const_ptr<connection_assignment_base> >
-						connect_assign_list_type;
-	/**
-		PHASE OUT:
-		This doesn't not belong in a namespace.  
-		Ordered list of parameter assignments.  
-	 */
-	typedef	list<excl_const_ptr<param_expression_assignment> >
-						assign_list_type;
-	/**
-		PHASE OUT:
-		This doesn't not belong in a namespace.  
-		Ordered list of instance connections.  
-	 */
-	typedef	list<excl_const_ptr<instance_reference_connection> >
-						connect_list_type;
-#endif
-
 	/** convenience struct for dumping */
 	class bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
@@ -521,20 +482,6 @@ protected:	// members
 	 */
 	used_id_map_type	used_id_map;
 
-	/**
-		This list is for maintaining items and actions
-		whose order must be preserved.  
-		Assignments and connection statements are 
-		maintained in this list.  
-		Conditional and loop scopes are kept in program order
-		in this list.
-	 */
-#if 0
-//	connect_assign_list_type	connect_assign_list;
-	assign_list_type		assign_list;
-	connect_list_type		connect_list;
-#endif
-
 public:
 	scopespace();
 virtual	~scopespace();
@@ -554,17 +501,14 @@ virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) cons
 virtual	never_const_ptr<scopespace>
 		lookup_namespace(const qualified_id_slice& id) const;
 
-#if 1
 protected:
 	never_const_ptr<instance_collection_base>
 		add_instance(excl_ptr<instance_collection_base> i);
-// #else
 public:
 	// need id because instantiation statement won't be named yet!
 	never_const_ptr<instance_collection_base>
 		add_instance(never_ptr<instantiation_statement> i, 
 			const token_identifier& id);
-#endif
 	bool add_definition_alias(never_const_ptr<definition_base> d, 
 		const string& a);
 
@@ -671,16 +615,6 @@ public:
 never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
 
 // convert me to pointer-class:
-#if 0
-datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
-#endif
-
-#if 0
-OBSOLETE???
-// for generic concrete types, built-in and user-defined
-never_const_ptr<fundamental_type_reference>
-		add_type_reference(excl_ptr<fundamental_type_reference> tb);
-#endif
 
 // returns type if unique match found, else NULL
 never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
@@ -865,38 +799,19 @@ virtual	bool require_signature_match(
 	TO DO: This function should be pure virtual and belong 
 		to a different interface!
  */
-#if 0
-virtual	never_const_ptr<instance_collection_base>
-		add_template_formal(excl_ptr<instance_collection_base> f);
-#else
 virtual	never_const_ptr<instance_collection_base>
 		add_template_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
-#endif
 
 /**
 	Really, only some definitions should have ports...
  */
-#if 0
-virtual	never_const_ptr<instance_collection_base>
-		add_port_formal(excl_ptr<instance_collection_base> f);
-#else
 virtual	never_const_ptr<instance_collection_base>
 		add_port_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
-#endif
 
 #if 0
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
-#endif
-
-#if 0
-// but built-in types shouldn't have to implement this.  
-public:
-// persistent object I/O interface
-virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
-virtual	void write_object(persistent_object_manager& m) const = 0;
-virtual	void load_object(persistent_object_manager& m) = 0;
 #endif
 
 protected:
@@ -983,12 +898,7 @@ static	excl_ptr<instance_collection_base>
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			);
+			const size_t d);
 
 private:
 /**
@@ -1001,12 +911,7 @@ virtual	excl_ptr<instance_collection_base>
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-#if 0
-			index_collection_item_ptr_type d
-#else
-			const size_t d
-#endif
-			) const = 0;
+			const size_t d) const = 0;
 
 public:
 	bool may_be_equivalent(const fundamental_type_reference& t) const;
@@ -1114,19 +1019,8 @@ virtual	count_const_ptr<fundamental_type_reference>
 	const_range_list
 	detect_static_overlap(index_collection_item_ptr_type r) const;
 
-#if 0
-	const_range_list
-	add_index_range(index_collection_item_ptr_type r);
-
-	const_range_list
-	merge_index_ranges(never_const_ptr<instance_collection_base> i);
-#else
 	const_range_list
 	add_instantiation_statement(index_collection_type::value_type r);
-
-//	const_range_list
-//	merge_index_ranges(never_const_ptr<instance_collection_base> i);
-#endif
 
 private:
 	bool formal_size_equivalent(

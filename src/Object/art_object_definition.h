@@ -183,14 +183,10 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 
-#if 0
-	never_const_ptr<instance_collection_base>
-		add_port_formal(excl_ptr<instance_collection_base> p);
-#else
 	never_const_ptr<instance_collection_base>
 		add_port_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
-#endif
+
 	bool certify_port_actuals(const object_list& ol) const;
 
 	bool equivalent_port_formals(
@@ -200,13 +196,6 @@ public:
 // methods for object file I/O
 public:
 	ART_OBJECT_IO_METHODS
-#if 0
-	void write_object(persistent_object_manager& m) const;
-static	process_definition* construct_empty(void);	// can't do this
-		// b/c invalid conversion of function pointer type
-	void load_object(persistent_object_manager& m);
-	void collect_transient_info(persistent_object_manager& m) const;
-#endif
 
 	void load_used_id_map_object(excl_ptr<object> o);
 	void write_object_port_formals(persistent_object_manager& m) const;
@@ -305,14 +294,9 @@ public:
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
-#if 1
+
 	never_const_ptr<instance_collection_base>
 		add_template_formal(excl_ptr<instance_collection_base> f);
-#elif 0
-	never_const_ptr<instance_collection_base>
-		add_template_formal(never_ptr<instantiation_statement> i, 
-			const token_identifier& id);
-#endif
 
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const

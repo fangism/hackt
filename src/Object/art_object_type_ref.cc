@@ -99,6 +99,7 @@ fundamental_type_reference::get_copy_template_params(void) const {
 	else	return excl_ptr<param_expr_list>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 UNVEIL LATER
 /**
@@ -169,12 +170,7 @@ fundamental_type_reference::make_instance_collection(
 		count_const_ptr<fundamental_type_reference> t,
 		never_const_ptr<scopespace> s,
 		const token_identifier& id,
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) {
+		const size_t d) {
 	return t->make_instance_collection_private(t, s, id, d);
 }
 
@@ -410,12 +406,7 @@ data_type_reference::make_instance_collection_private(
 		count_const_ptr<fundamental_type_reference> t, 
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) const {
+		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new datatype_instance_collection(*s,
 			t.is_a<data_type_reference>(), id, d));
@@ -549,12 +540,7 @@ channel_type_reference::make_instance_collection_private(
 		count_const_ptr<fundamental_type_reference> t, 
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) const {
+		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new channel_instance_collection(*s, 
 			t.is_a<channel_type_reference>(), id, d));
@@ -671,12 +657,7 @@ process_type_reference::make_instance_collection_private(
 		count_const_ptr<fundamental_type_reference> t, 
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) const {
+		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new process_instance_collection(*s, 
 			t.is_a<process_type_reference>(), id, d));
@@ -787,12 +768,7 @@ param_type_reference::make_instance_collection_private(
 		count_const_ptr<fundamental_type_reference> t, 
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
-#if 0
-		index_collection_item_ptr_type d
-#else
-		const size_t d
-#endif
-		) const {
+		const size_t d) const {
 	// hard coded... yucky, but efficient.  
 	assert(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr))
@@ -809,70 +785,6 @@ param_type_reference::make_instance_collection_private(
 		return excl_ptr<instance_collection_base>(NULL);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE ???
-/**
-	Special case of make_instance_collection, designated for making
-	template formals.  
-	Only reason for failure: if default expression doesn't type-check.  
-
-	TO DO: bi-link instantiation_statement to instance_collection.
-
-	\param s must be a definition, formals cannot be outside defs.  
-	\return valid constructed formal instantiation if successful, 
-		else NULL.  
- */
-#if 0
-excl_ptr<instance_collection_base>
-#else
-excl_ptr<instantiation_statement>
-#endif
-param_type_reference::make_template_formal(
-		count_const_ptr<param_type_reference> t,
-		never_const_ptr<definition_base> s,
-		const token_identifier& id,
-		index_collection_item_ptr_type d,
-		count_const_ptr<param_expr> def) {
-	// not sure if this is correct, what if is typedef?
-#if 0
-	typedef excl_ptr<instance_collection_base>	return_type;
-#else
-	typedef excl_ptr<instantiation_statement>	return_type;
-#endif
-	never_const_ptr<scopespace>
-		defscope(s.is_a<scopespace>());
-	assert(defscope);
-	if (t->must_be_equivalent(*pbool_type_ptr)) {
-		excl_ptr<pbool_instance_collection>
-			ret(new pbool_instance_collection(*defscope, id, d));
-		if (def) {
-			if (!ret->assign_default_value(def)) {
-				// error: type-check fail
-				// useful error message?
-				return return_type(NULL);
-			}
-		} 
-		return return_type(ret);
-	} else if (t->must_be_equivalent(*pint_type_ptr)) {
-		excl_ptr<pint_instance_collection>
-			ret(new pint_instance_collection(*defscope, id, d));
-		if (def) {
-			if (!ret->assign_default_value(def)) {
-				// error: type-check fail
-				// useful error message?
-				return return_type(NULL);
-			}
-		} 
-		return return_type(ret);
-	} else {
-		assert(0);	// WTF?
-		return return_type(NULL);
-	}
-}
-OBSOLETE ???
-#endif
 
 //=============================================================================
 }	// end namespace entity

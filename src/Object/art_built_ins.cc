@@ -34,18 +34,6 @@ const built_in_param_def
 pint_def = built_in_param_def(
 	never_const_ptr<name_space>(&built_in_namespace), "pint");
 
-#if 0
-/** built-in parameter pbool type reference */
-const param_type_reference
-pbool_type = param_type_reference(
-	never_const_ptr<built_in_param_def>(&pbool_def));
-
-/** built-in parameter pint type reference */
-const param_type_reference
-pint_type = param_type_reference(
-	never_const_ptr<built_in_param_def>(&pint_def));
-#endif
-
 /** built-in parameter pbool type reference */
 const count_const_ptr<param_type_reference> pbool_type_ptr =
 	count_const_ptr<param_type_reference>(new param_type_reference(
