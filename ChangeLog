@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	* FIXED: issue with __PRETTY_FUNCTION__ (linux-gcc only).
+	  In src/Object/art_built_ins.cc, an innocent assert statement
+	  (commented out) created an undefined reference to the 
+	  __PRETTY_FUNCTION__ symbol, which is NEVER SUPPOSED TO EXIST, 
+	  because it is a reserved MACRO internal to the compiler.
+	  Removing the assertion statement suppressed the faulty symbol.  
+	  Can you say, 'WTF'?
+
+
 2005-01-15	David Fang	<fangism@users.sourceforge.net>
 
 	* Added macros for convenient default use of list_vector_pool, 

@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.14 2005/01/13 05:28:27 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15 2005/01/16 21:47:10 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
@@ -80,11 +80,17 @@ static excl_ptr<instance_collection_base>
 int_def_width(new pint_scalar(int_def, "width", int_def_width_default));
 
 static const never_ptr<const instance_collection_base>
-__int_def_width__ =
+int_def_width_ref =
 const_cast<built_in_datatype_def&>(int_def).add_template_formal(int_def_width);
 
-// can't hurt to keep this initialization check.
-static int check = (assert(__int_def_width__), assert(int_def_width), 0);
+#if 0
+// can't hurt to keep this initialization check...
+static const int check = (assert(int_def_width_ref), assert(int_def_width), 0);
+// ODDBALL ALERT: on gcc-3.3.3 SuSE linux, this statement generates a reference
+//	to a __PRETTY_FUNCTION__ symbol, which is the name of a reserved
+//	built-in compiler macro.  
+// This problem doesn't occur on OSX/FreeBSD, AFAICT.
+#endif
 
 #if 0
 static ostream&
