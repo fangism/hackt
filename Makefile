@@ -36,8 +36,8 @@ default: all
 
 all: $(TARGETS)
 
-ART_OBJ = art.yy.o y.tab.o art_parser.o art_symbol_table.o art_main.o \
-	art_utils.o
+ART_OBJ = art.yy.o y.tab.o art_parser.o art_parser_prs.o art_parser_hse.o \
+	art_symbol_table.o art_main.o art_utils.o art_object.o
 artc: $(ART_OBJ)
 	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
 

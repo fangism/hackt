@@ -25,13 +25,23 @@ using namespace __gnu_cxx;
 #include "art_macros.h"
 #include "art_switches.h"
 #include "art_utils.h"
+#include "art_symbol_table.h"
+// #include "art_object.h"
 #include "list_of_ptr.h"	// includes <list>
-
-using namespace std;
 
 /// This is the general namespace for all ART-related classes.  
 namespace ART {
+//=============================================================================
+using namespace std;
 
+// forward declaration of outside namespace and classes
+namespace entity {
+	class object;
+};
+
+using namespace entity;
+
+//=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
 /**
 	This contains all of the classes for the abstract syntax tree (AST).  
@@ -42,7 +52,7 @@ namespace ART {
  */
 namespace parser {
 //=============================================================================
-// forward declarations
+// forward declarations in this namespace
 class token_char;
 class token_string;
 
@@ -85,8 +95,8 @@ virtual	line_position rightmost(void) const = 0;
 virtual	line_range where(void) const
 		{ return line_range(leftmost(), rightmost()); }
 
-// will type-check and return a usable ART::object
-// virtual object* check_build(const context* c) const = 0;
+// will type-check and return a usable ART::entity::object
+virtual	object* check_build(context* c) const;
 };
 
 //=============================================================================
@@ -126,6 +136,8 @@ virtual	line_position rightmost(void) const = 0;
 };
 
 //=============================================================================
+#define	NODE_LIST_BASE_TEMPLATE_SPEC					\
+	template <class T>
 /**
 	This is the general class for list structures of nodes in the
 	syntax tree.  What is unique about this implementation is that
@@ -134,7 +146,7 @@ virtual	line_position rightmost(void) const = 0;
 	The specifier T, a derived class from node, is only used for 
 	type-checking.  
  */
-template <class T>
+NODE_LIST_BASE_TEMPLATE_SPEC
 class node_list_base : public nonterminal, public list_of_ptr<node> {
 private:
 	typedef		list_of_ptr<node>		list_parent;
@@ -144,15 +156,7 @@ public:
 public:
 	node_list_base() : nonterminal(), list_of_ptr<node>() { }
 // initializing with first element, T must be subclass of node!
-	node_list_base(node* n) : node_list_base() {
-//		assert(dynamic_cast<T*>(n));		// unfriendly
-		if(n && !dynamic_cast<T*>(n)) {
-			// throw type exception
-			n->what(cerr << "unexpected type: ") << endl;
-			exit(1);
-		}
-		push_back(n);
-	}
+	node_list_base(node* n);
 
 virtual	~node_list_base() { }
 
@@ -160,7 +164,7 @@ using	list_parent::begin;
 using	list_parent::end;
 
 // later, use static functions (operator <<) to determine type name...
-virtual	ostream& what(ostream& o) const { return o << "(node_list_base)"; }
+virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 };
@@ -193,16 +197,8 @@ protected:
 	terminal*	close;		///< wrapping string, such as ")"
 public:
 	node_list() : node_list_base<T>(), open(NULL), close(NULL) { }
-	node_list(node* n) : node_list_base<T>(), open(NULL), close(NULL) {
-//		if (n) assert(dynamic_cast<T*>(n));	// unfriendly
-		if(n && !dynamic_cast<T*>(n)) {
-			// throw type exception
-			n->what(cerr << "unexpected type: ") << endl;
-			exit(1);
-		}
-		push_back(n);
-	}
-virtual	~node_list() { SAFEDELETE(open); SAFEDELETE(close); }
+	node_list(node* n);
+virtual	~node_list();
 
 using	parent::begin;
 using	parent::end;
@@ -220,69 +216,16 @@ virtual	node_list<T,D>* wrap(node* b, node* e);		// not inlined
  */
 virtual	node_list<T,D>* append(node* d, node* n);
 
+// the following methods are defined in "art_parser_template_methods.h"
+
 /// prints out type of first element in list, if not null
 // later, use static functions (operator <<) to determine type name...
-virtual	ostream& what(ostream& o) const {
-		// print first item to get type
-		const_iterator i = begin();
-		o << "(node_list): ";
-		if (*i) (*i)->what(o) << " ";
-		return o << "...";
-	}
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 
-virtual	line_position leftmost(void) const {
-	const_iterator i = begin();
-	if (open)
-		return open->leftmost();
-	for( ; i!=end(); i++) {
-		if (*i) return (*i)->leftmost();
-	}
-	return line_position();
-}
-
-virtual	line_position rightmost(void) const {
-	const_iterator i = end();
-	if (close)
-		return close->rightmost();
-	for(i-- ; i!=begin(); i--) {
-		if (*i) return (*i)->rightmost();
-	}
-	return line_position();
-}
-};
-
-// non-inline methods... will these be possibly multiply-defined?
-NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>*
-node_list<T,D>::wrap(node* b, node* e) {
-	open = dynamic_cast<terminal*>(b);
-	assert(open);
-	assert(dynamic_cast<token_char*>(open) || 
-		dynamic_cast<token_string*>(open));
-	close = dynamic_cast<terminal*>(e);
-	assert(close);
-	assert(dynamic_cast<token_char*>(close) || 
-		dynamic_cast<token_string*>(close));
-	return this;
-}
-
-NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>*
-node_list<T,D>::append(node* d, node* n) {
-	if (d) {
-		// check for delimiter character match
-		terminal* t = dynamic_cast<terminal*>(d);
-		assert(t);		// throw exception
-		// will fail if incorrect type is passed
-		assert(!(t->string_compare(D)));
-		push_back(d);
-	} else {
-		assert(D == none);	// no delimiter was expected
-	}
-	assert(dynamic_cast<T*>(n));	// type-check
-	push_back(n);			// n may be null
-	return this;
-}
+virtual	object* check_build(context* c) const;
+};	// end of class node_list<>
 
 //=============================================================================
 /**
@@ -423,6 +366,8 @@ virtual	~token_string() { }
 virtual	int string_compare(const char* d) const { return compare(d); }
 virtual	ostream& what(ostream& o) const
 		{ return o << "token: " << (const string&) (*this); }
+virtual	line_position rightmost(void) const
+		{ return line_position(pos.line, pos.col +length() -1); }
 };
 
 //-----------------------------------------------------------------------------
@@ -435,7 +380,8 @@ virtual	~token_identifier() { }
 virtual	ostream& what(ostream& o) const 
 		{ return o << "identifier: " << (const string&) (*this); }
 virtual	line_position leftmost(void) const { return terminal::leftmost(); }
-virtual	line_position rightmost(void) const { return terminal::rightmost(); }
+virtual	line_position rightmost(void) const
+		{ return token_string::rightmost(); }
 };
 
 /// generalized scoped identifier expression
@@ -465,7 +411,8 @@ virtual	~token_bool() { }
 virtual	ostream& what(ostream& o) const
 		{ return o << "bool: " << *((const string*) this); }
 virtual	line_position leftmost(void) const { return terminal::leftmost(); }
-virtual	line_position rightmost(void) const { return terminal::rightmost(); }
+virtual	line_position rightmost(void) const
+		{ return token_string::rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -918,24 +865,14 @@ protected:
 	terminal*		rb;
 	terminal*		semi;		///< semicolon token
 public:
-	namespace_body(node* s, node* n, node* l, node* b, node* r, node* c) : 
-		root_item(), 
-		ns(dynamic_cast<token_keyword*>(s)), 
-		name(dynamic_cast<token_identifier*>(n)), 
-		lb(dynamic_cast<terminal*>(l)), 
-		body(dynamic_cast<token_identifier*>(b)), 
-		rb(dynamic_cast<terminal*>(r)), 
-		semi(dynamic_cast<terminal*>(c)) {
-			assert(ns); assert(name); assert(lb);
-			// body may be NULL
-			assert(rb); assert(semi);
-		}
-virtual	~namespace_body() { SAFEDELETE(name); SAFEDELETE(lb);
-		SAFEDELETE(body); SAFEDELETE(rb); }
+	namespace_body(node* s, node* n, node* l, node* b, node* r, node* c);
+virtual	~namespace_body();
 
 virtual	ostream& what(ostream& o) const { return o << "(namespace-body)"; }
 virtual	line_position leftmost(void) const { return ns->leftmost(); }
 virtual	line_position rightmost(void) const { return semi->rightmost(); }
+
+virtual	object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -948,19 +885,9 @@ protected:
 	token_identifier*	alias;
 	token_string*		semi;
 public:
-	using_namespace(node* o, node* i, node* a, node* n, node* s) : 
-		root_item(), 
-		open(dynamic_cast<token_keyword*>(o)),
-		id(dynamic_cast<id_expr*>(i)),
-		as(dynamic_cast<token_keyword*>(a)),		// optional
-		alias(dynamic_cast<token_identifier*>(n)), 	// optional
-		semi(dynamic_cast<token_string*>(s)) {
-			assert(open); assert(id);
-			if (a && !as) delete a;
-			if (n && !alias) delete n;
-		}
-virtual	~using_namespace() { SAFEDELETE(open); SAFEDELETE(id);
-		SAFEDELETE(as); SAFEDELETE(alias); }
+	using_namespace(node* o, node* i, node* a, node* n, node* s);
+		// a "AS" and n (alias) are optional
+virtual	~using_namespace();
 
 virtual	ostream& what(ostream& o) const { return o << "(using-namespace)"; }
 virtual	line_position leftmost(void) const { return open->leftmost(); }

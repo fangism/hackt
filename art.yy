@@ -43,7 +43,7 @@ extern "C" {
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
  */
-	node* n;
+	ART::parser::node* n;
 // let the various constructors perform optional dynamic type-cast checks
 }
 
@@ -785,7 +785,7 @@ prs_expr
 
 paren_expr
 	: '(' expr ')'
-		{ $$ = $2; }
+		{ $$ = new paren_expr($1, $2, $3); }
 	;
 
 /***
@@ -794,7 +794,7 @@ primary_expr
 	: literal
 // split out, so member_index_expr doesn't recur, 
 // now unary_expr must accept paren_expr
-//	| '(' expr ')'		
+//	| '(' expr ')'
 	| id_expr
 	;
 ***/
@@ -809,8 +809,8 @@ literal
 	;
 
 id_expr
-	// all default actions: $$ = $1;
-	: ID				// or wrap in id_expr?
+	: ID
+		{ $$ = new id_expr($1); }	// wrap in id_expr
 	| qualified_id
 	;
 

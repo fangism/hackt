@@ -6,11 +6,25 @@
 
 #include <stdlib.h>
 
+#include <list>
 #include <stack>
 #include <map>
 
+// #include "art_object.h"
+
 namespace ART {
+
+//=============================================================================
+// forward declarations from another namespace
+namespace entity {
+	class name_space;
+};
+using namespace entity;
+
 namespace parser {
+//=============================================================================
+using namespace std;
+
 //=============================================================================
 // forward declarations
 class namespace_symtab;
@@ -92,18 +106,30 @@ class formals_symtab : public symbol_table {
 // a reference to:
 //	1) the current stack of visible scopes (goes up to global)
 //	2) the list of available outside scopes
+//	3) exception / error stack
+//	4) for namespace-qualified identifiers, the chain of scopes
+//	5) for index/member identifiers, the current search scope
+//	6) a certain type that is to be expected
 
 /// the contect object is what is passed down the type-checker routines
+// the context is updated in the order of the syntax tree traversal
 class context {
 protected:
-
+	stack<name_space*>	namespace_scope;
+// are we in some expression? what depth?
 public:
+	context() :
+		namespace_scope()	// empty stack
+		{ }
+
+
+// object*	lookup_namespace(const token_identifier& n);
 
 };
 
 //=============================================================================
-};
-};
+};	// end namespace parser
+};	// end namespace ART
 
 #endif	// __ART_SYMBOL_TABLE_H__
 

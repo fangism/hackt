@@ -4,7 +4,7 @@
 #include <unistd.h>			// for getopt()
 
 #include "art_parser.h"
-using namespace ART::parser;
+using namespace ART;
 #include "art_switches.h"
 #include "y.tab.h"
 
@@ -17,7 +17,8 @@ extern "C" {
 }
 
 int main(int argc, char* argv[]) {
-	node* root;
+	parser::node* root;	///< root of the syntax tree
+	entity::object* top;	///< root of type-checked and bound object
 	try {
 		yyparse();
 	} catch (...) {
@@ -30,9 +31,13 @@ int main(int argc, char* argv[]) {
 		root->what(cerr) << endl;	// what's our top root?
 
 	// type-check, build a useful manipulable art object, and return it
+	// the symbol tables will selectively retain info from the syntax tree
+	// need to build global table first, then pass it in context
+	top = root->check_build(NULL);
 
-	// massive recursive deletion of syntax tree
+	// massive recursive deletion of syntax tree, reclaim memory
 	SAFEDELETE(root);
+
 	return 0;
 }
 

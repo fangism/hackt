@@ -20,6 +20,8 @@ public:
 	long		col;
 public:
 	line_position() : line(0), col(0) { }
+	line_position(const long l, const long c) : line(l), col(c)
+		{ assert(line>0); assert(col>0); }
 	line_position(const line_position& lp) : 
 		line(lp.line), col(lp.col) { }		// no assertion yet
 	line_position(const token_position& tp) : 
