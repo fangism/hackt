@@ -4,16 +4,18 @@ state	value
 	(null) 
 0	keyword: template [3:1..8]
 8	< [3:10]
-82	paramtype: pint [3:11..14]
-140	(node_list): (template-formal-id): identifier: milk ... [3:16..19]
-194	, [3:20]
-225	identifier: tea [3:22..24]
-193	keyword: defproc [4:1..7]
-in state 193, possible rules are:
-	template_formal_id : ID . optional_range_list_in_brackets  (36)
-	optional_range_list_in_brackets : .  (235)
+85	paramtype: pint [3:11..14]
+144	(node_list): (template-formal-id): identifier: milk ... [3:16..19]
+201	, [3:20]
+234	identifier: tea [3:22..24]
+200	keyword: defproc [4:1..7]
+in state 200, possible rules are:
+	template_formal_id : ID . optional_range_list_in_brackets  (38)
+	template_formal_id : ID . optional_range_list_in_brackets '=' shift_expr  (39)
+	optional_range_list_in_brackets : .  (244)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)
+	'=' (reduce)
 	'>' (reduce)
 	'[' (shift)

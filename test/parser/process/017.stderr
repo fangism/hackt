@@ -4,15 +4,17 @@ state	value
 	(null) 
 0	keyword: template [3:1..8]
 8	< [3:10]
-82	(node_list): (template-formal-decl) ... [3:11..24]
-138	; [3:25]
-192	paramtype: pbool [3:27..31]
-140	(node_list): (template-formal-id): identifier: water with (node_list): (range) ... ... [3:33..44]
-194	keyword: defproc [4:1..7]
-in state 194, possible rules are:
-	template_formal_decl : base_param_type template_formal_id_list .  (33)
-	template_formal_id_list : template_formal_id_list . ',' template_formal_id  (34)
+85	(node_list): (template-formal-decl) ... [3:11..24]
+142	; [3:25]
+199	paramtype: pbool [3:27..31]
+144	identifier: water [3:33..37]
+200	(node_list): (range) ... [3:38..44]
+232	keyword: defproc [4:1..7]
+in state 232, possible rules are:
+	template_formal_id : ID optional_range_list_in_brackets .  (38)
+	template_formal_id : ID optional_range_list_in_brackets . '=' shift_expr  (39)
 acceptable tokens are: 
-	',' (shift)
+	',' (reduce)
 	';' (reduce)
+	'=' (shift)
 	'>' (reduce)
