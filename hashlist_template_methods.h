@@ -67,7 +67,7 @@ hashlist<K,T>::operator [] (const K& k) const {
 
 /// Standard default constructor, sets ownership flag to true.
 template <class K, class T>
-hashlist_of_ptr<K,T>::hashlist_of_ptr<K,T>() : 
+hashlist_of_ptr<K,T>::hashlist_of_ptr() : 
 	list_of_ptr<T>(), hashlist<K,T*>() {
 }
 
@@ -78,7 +78,7 @@ hashlist_of_ptr<K,T>::hashlist_of_ptr<K,T>() :
 	will be properly invoked.  Defined here to prevent inlining.  
  */
 template <class K, class T>
-hashlist_of_ptr<K,T>::~hashlist_of_ptr<K,T>() {
+hashlist_of_ptr<K,T>::~hashlist_of_ptr() {
 }
 
 //=============================================================================
@@ -86,7 +86,7 @@ hashlist_of_ptr<K,T>::~hashlist_of_ptr<K,T>() {
 
 /// Standard default constructor.
 template <class K, class T>
-hashlist_of_const_ptr<K,T>::hashlist_of_const_ptr<K,T>() : 
+hashlist_of_const_ptr<K,T>::hashlist_of_const_ptr() : 
 	list_of_const_ptr<T>(), hashlist<K, const T*>() {
 }
 
@@ -97,7 +97,7 @@ hashlist_of_const_ptr<K,T>::hashlist_of_const_ptr<K,T>() :
 	will be properly invoked.  Defined here to prevent inlining.  
  */
 template <class K, class T>
-hashlist_of_const_ptr<K,T>::~hashlist_of_const_ptr<K,T>() {
+hashlist_of_const_ptr<K,T>::~hashlist_of_const_ptr() {
 }
 
 //=============================================================================

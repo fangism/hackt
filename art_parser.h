@@ -146,9 +146,12 @@ virtual	line_position rightmost(void) const;
 	Then dynamically casting elements may be a pain?
  */
 template <class T>
-class node_list_base : virtual public node, public list<excl_const_ptr<T> > {
+class node_list_base : virtual public node, public list<some_const_ptr<T> > {
 private:
-	typedef		list<excl_const_ptr<T> >	list_parent;
+	/**
+		Base class.  (was derived from excl_const_ptr<>)
+	 */
+	typedef		list<some_const_ptr<T> >	list_parent;
 	// read-only, but transferrable ownership
 public:
 	typedef	typename list_parent::iterator		iterator;
@@ -200,7 +203,7 @@ public:
 	typedef	typename parent::const_iterator	const_iterator;
 	typedef	typename parent::reverse_iterator	reverse_iterator;
 	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
-	typedef	list<excl_const_ptr<terminal> >	delim_list;
+	typedef	list<some_const_ptr<terminal> >	delim_list;
 protected:
 	excl_const_ptr<terminal>	open;	///< wrapping string, e.g. "("
 	excl_const_ptr<terminal>	close;	///< wrapping string, e.g. ")"
@@ -535,9 +538,9 @@ friend	ostream& operator << (ostream& o, const qualified_id& id);
 	IS_A(qualified_id*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class qualified_id_slice : public sublist<excl_const_ptr<token_identifier> > {
+class qualified_id_slice : public sublist<some_const_ptr<token_identifier> > {
 protected:
-	typedef	sublist<excl_const_ptr<token_identifier> >	parent;
+	typedef	sublist<some_const_ptr<token_identifier> >	parent;
 protected:
 	const bool	 absolute;
 public:

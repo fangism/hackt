@@ -57,7 +57,7 @@ public:
 	 */
 	const T operator [] (const K& k) const {
 		const_iterator i = find(k);	// uses find() const;
-		return (i != end()) ? i->second : T();
+		return (i != this->end()) ? i->second : T();
 		// if T is a pointer class, should be equivalent to NULL
 		// or whatever the default constructor is
 	}

@@ -62,7 +62,8 @@ node_list_base<T>::node_list_base() : node(), list_parent() {
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
-	push_back(excl_const_ptr<T>(n));
+//	push_back(excl_const_ptr<T>(n));	// implicit
+	push_back(some_const_ptr<T>(excl_const_ptr<T>(n)));
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
@@ -142,10 +143,12 @@ node_list_base<T>::check_build(context* c) const {
 NODE_LIST_BASE_TEMPLATE_SPEC
 void
 node_list_base<T>::release_append(node_list_base<T>& dest) {
-	iterator i = begin();
-	for ( ; i!=end(); i++) {
+	iterator i = this->begin();
+	for ( ; i!=this->end(); i++) {
 		// will release each element
-		push_back(excl_const_ptr<T>(*i));
+		push_back(*i);		// will this actually release?
+//		push_back(excl_const_ptr<T>(*i));	// implicit
+//		push_back(some_const_ptr<T>(excl_const_ptr<T>(*i)));
 	}
 }
 
@@ -208,13 +211,20 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 		// will fail if incorrect token is passed
 		assert(!(d->string_compare(D)));
 		// now use separate list for delimiters
-		delim.push_back(excl_const_ptr<terminal>(d));
+		delim.push_back(some_const_ptr<terminal>(
+			excl_const_ptr<terminal>(d)));
+		// explicit conversion
 	} else {
 		// consider using template specialization for this
 		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-	push_back(excl_const_ptr<T>(n));	// n may be null, is ok
+	// push_back(const T&), but excl_const_ptr<T> is destructive :/
+	// either use different pointer class or introduce 
+	// list sub-class, with new push_back operation.  
+	// n may be null, is ok
+//	push_back(excl_const_ptr<T>(n));	// if implicit constructor allowed
+	push_back(some_const_ptr<T>(excl_const_ptr<T>(n)));
 	return this;
 }
 
@@ -250,11 +260,11 @@ node_list<T,D>::leftmost(void) const {
 NODE_LIST_TEMPLATE_SPEC
 line_position
 node_list<T,D>::rightmost(void) const {
-	const_reverse_iterator i = rbegin();
+	const_reverse_iterator i = this->rbegin();
 	delim_list::const_reverse_iterator j = delim.rbegin();
 	if (close)
 		return close->rightmost();
-	for( ; i!=rend(); i++) {
+	for( ; i!=this->rend(); i++) {
 		if (*i) return (*i)->rightmost();
 		else if (j != delim.rend()) {
 			if (*j) return (*j)->rightmost();

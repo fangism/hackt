@@ -27,13 +27,21 @@ CVS = cvs
 THISMAKEFILE = Makefile
 
 CC = gcc
-LD = $(CC)
+CXX = g++
+
+LD = g++
+# for C++ programs, need LD = g++ for certain libraries to link
+
+# may need to add this to environment for dynamic linked libraries...
+# setenv LD_LIBRARY_PATH /usr/local/compiler/lib
+
 # use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...
 #	will eventually get around to self-configuring
 
 # other potentially anal warnings not covered by -Wall, how far can we go?
-MORE_WARN = -Wcast-qual -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes
+MORE_WARN = -Wcast-qual -Wpointer-arith 
+# -Wstrict-prototypes -Wmissing-prototypes (only appropriate for C)
 # "traditional" is for C
 # -Wtraditional -Wwrite-strings \
 # "shadow" and "write-strings" affects y.tab.o, depending on yacc version
@@ -45,9 +53,12 @@ NO_WARN = -Wno-unused
 # extremely anal about warnings... report as errors!
 WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
 
-CFLAGS = -O2 $(WARN_FLAGS) -g -pipe $(CDEFS)
+CFLAGS = -O2 -g -pipe
+# -static ?
 # -fkeep-inline-functions
 # turn on -O4 later...
+ALL_CFLAGS = $(CFLAGS) $(WARN_FLAGS) $(CDEFS)
+
 LDFLAGS = -lc -lstdc++
 #	-lfl: don't need this for flex, because classes are self-contained
 #	NOTE: -lc MUST appear before -lstdc++ on darwin gcc-3.3!!!
@@ -69,7 +80,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 .BEGIN:	.depend
 
 .cc.o:
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(ALL_CFLAGS) -c $< -o $@
 
 .cc.d:
 	$(MAKEDEPEND) $< > $@
@@ -81,7 +92,7 @@ force:
 makeinfo:
 	@$(ECHO) "###############################################################################"
 	@$(ECHO) "#	MAKE = $(MAKE) $(MAKEFLAGS)"
-	@$(ECHO) "#	CC = $(CC) $(CFLAGS)"
+	@$(ECHO) "#	CC = $(CC) $(ALL_CFLAGS)"
 	@$(ECHO) "#	MAKEDEPEND = $(MAKEDEPEND)"
 	@$(ECHO) "#	LD = $(LD) $(LDFLAGS)"
 	@$(ECHO) "#	LEX = $(LEX) $(LFLAGS)"
@@ -145,8 +156,10 @@ include test/Make.inc
 
 regression: makeinfo clobber regression-target regression-norebuild
 
+# MAKEFLAGS is redundant for gmake?
 regression-target:
-	$(MAKE) $(MAKEFLAGS) CC="$(CC)" CDEFS="-DREGRESSION_TEST_MODE=1" all
+	$(MAKE) $(MAKEFLAGS) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
+		LDFLAGS="$(LDFLAGS)" CDEFS="-DREGRESSION_TEST_MODE=1" all
 
 TEST_FILTER = $(AWK) -f test/state_enum_filter.awk
 TEST_REPORT = test-report.txt

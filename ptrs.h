@@ -160,6 +160,8 @@ template <class T>
 class base_const_ptr : public abstract_ptr {
 friend class never_ptr<T>;
 friend class never_const_ptr<T>;
+friend class some_ptr<T>;
+friend class some_const_ptr<T>;
 
 protected:
 	const T*	cptr;
@@ -276,8 +278,8 @@ protected:
 	\return a pointer that must be deleted by it consumer if not NULL.  
  */
 T*	release(void) throw() {
-		T* ret = ptr;
-		ptr = NULL;
+		T* ret = this->ptr;
+		this->ptr = NULL;
 		return ret;
 	}
 
@@ -288,11 +290,12 @@ T*	release(void) throw() {
 	\param p non-const pointer that is exclusively owned.  
  */
 void	reset(T* p = NULL) throw() {
-		if (ptr) {
-			assert (ptr != p);	// violation of exclusion!
-			delete ptr;
+		if (this->ptr) {
+			assert (this->ptr != p);
+			// violation of exclusion!
+			delete this->ptr;
 		}
-		ptr = p;
+		this->ptr = p;
 	}
 
 public:
@@ -381,7 +384,7 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 
 	template <class S>
 	never_ptr<S>	as_a(void) const {
-		return static_cast<S*>(ptr);
+		return static_cast<S*>(this->ptr);
 	}
 
 // permissible assignments
@@ -409,17 +412,18 @@ friend class never_const_ptr<T>;
 
 protected:
 const T*	release(void) throw() {
-		const T* ret = cptr;
-		cptr = NULL;
+		const T* ret = this->cptr;
+		this->cptr = NULL;
 		return ret;
 	}
 
 void	reset(const T* p = NULL) throw() {
-		if (cptr) {
-			assert (cptr != p);	// violation of exclusion!
-			delete cptr;
+		if (this->cptr) {
+			assert (this->cptr != p);
+			// violation of exclusion!
+			delete this->cptr;
 		}
-		cptr = p;
+		this->cptr = p;
 	}
 
 public:
@@ -563,14 +567,14 @@ virtual	~never_ptr() { }
 
 // also want cross-type versions?
 never_ptr<T>& operator = (const base_ptr<T>& e) throw() {
-		ptr = e.ptr;
+		this->ptr = e.ptr;
 		return *this;
 	}
 
 	never_ptr(base_ptr_ref<T> r) throw() : base_ptr<T>(r.ptr) { }
 
 	never_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
-			ptr = r.ptr;
+			this->ptr = r.ptr;
 			return *this;
 		}
 
@@ -579,7 +583,7 @@ never_ptr<T>& operator = (const base_ptr<T>& e) throw() {
 	// safe type-casting
 	template <class S>
 	operator base_ptr_ref<S>() throw() {
-		return base_ptr_ref<S>(ptr);
+		return base_ptr_ref<S>(this->ptr);
 	}
 
 // non-member functions
@@ -626,12 +630,12 @@ explicit never_const_ptr(const base_const_ptr<T>& p) throw() :
 virtual	~never_const_ptr() { }
 
 never_const_ptr<T>& operator = (const base_ptr<T>& e) throw() {
-		cptr = e.ptr;
+		this->cptr = e.ptr;
 		return *this;
 	}
 
 never_const_ptr<T>& operator = (const base_const_ptr<T>& e) throw() {
-		cptr = e.cptr;
+		this->cptr = e.cptr;
 		return *this;
 	}
 
@@ -639,20 +643,20 @@ never_const_ptr<T>& operator = (const base_const_ptr<T>& e) throw() {
 		base_const_ptr<T>(r.cptr) { }
 
 never_const_ptr<T>& operator = (base_const_ptr_ref<T> r) throw() {
-		cptr = r.cptr;
+		this->cptr = r.cptr;
 		return *this;
 	}
 
 	// safe type-casting
 	template <class S>
 	operator base_const_ptr_ref<S>() throw() {
-		return base_const_ptr_ref<S>(cptr);
+		return base_const_ptr_ref<S>(this->cptr);
 	}
 
 	// dynamic type-casting
 	template <class S>
 	operator never_const_ptr<S> () throw() {
-		return never_const_ptr<S>(dynamic_cast<const S*>(cptr));
+		return never_const_ptr<S>(dynamic_cast<const S*>(this->cptr));
 	}
 
 // non-member functions
@@ -686,7 +690,7 @@ explicit some_ptr(excl_ptr<T>& p) : base_ptr<T>(p.release()), own(true) { }
 	/**
 		Conditional destructor.  De-allocates only if it owns.  
 	 */
-	~some_ptr(void) { if (ptr && own) delete ptr; }
+	~some_ptr(void) { if (this->ptr && this->own) delete this->ptr; }
 
 // cannot accept naked pointer, must wrap with excl or never pointer
 // explicit some_ptr(T* p) : base_ptr<T>(ptr), own(true) { }
@@ -697,9 +701,9 @@ explicit some_ptr(excl_ptr<T>& p) : base_ptr<T>(p.release()), own(true) { }
 		base_ptr<T>(r.ptr), own(r.o) { }
 
 some_ptr<T>& operator = (base_some_ptr_ref<T> r) throw() {
-		own = r.own;
+		this->own = r.own;
 		r.own = false;
-		ptr = r.ptr;
+		this->ptr = r.ptr;
 		return *this;
 	}
 
@@ -708,9 +712,14 @@ some_ptr<T>& operator = (base_some_ptr_ref<T> r) throw() {
 	operator base_some_ptr_ref<S>() throw() {
 		bool o = own;
 		own = false;
-		return base_some_ptr_ref<S>(ptr, o);
+		return base_some_ptr_ref<S>(this->ptr, o);
 	}
 
+	/**
+		Dynamic type-cast.  
+	 */
+	template <class S>
+	never_ptr<S>	is_a(void) const;
 
 };	// end class some_ptr
 
@@ -730,29 +739,39 @@ public:
 explicit some_const_ptr(const base_const_ptr<T>& p) :
 		base_const_ptr<T>(p.cptr), own(false) { }
 
+	/**
+		Can this be implicit?
+	 */
 explicit some_const_ptr(excl_const_ptr<T>& p) :
 		base_const_ptr<T>(p.release()), own(true) { }
 
 	/**
 		Conditional destructor.  De-allocates only if it owns.  
 	 */
-	~some_const_ptr(void) { if (cptr && own) delete cptr; }
+	~some_const_ptr(void) { if (this->cptr && this->own) delete this->cptr; }
 
 // copied from auto_ptr_ref
-	some_const_ptr(base_const_ptr_ref<T> r) throw() :
-		base_const_ptr<T>(r.cptr) { }
+	some_const_ptr(base_some_const_ptr_ref<T> r) throw() :
+		base_const_ptr<T>(r.cptr), own(r.own) { }
 
 some_const_ptr<T>& operator = (base_const_ptr_ref<T> r) throw() {
-		reset(r.cptr);
-		r.cptr = NULL;
+		this->own = r.own;
+		r.own = false;
+		this->cptr = r.cptr;
 		return *this;
 	}
 
 	// safe type-casting
 	template <class S>
-	operator base_const_ptr_ref<S>() throw() {
-		return base_const_ptr_ref<S>(this->release());
+	operator base_some_const_ptr_ref<S>() throw() {
+		return base_some_const_ptr_ref<S>(this->cptr, this->own);
 	}
+
+	/**
+		Dynamic type-cast.  
+	 */
+	template <class S>
+	never_const_ptr<S>	is_a(void) const;
 
 
 };	// end class some_const_ptr
@@ -771,7 +790,7 @@ template <class T>
 template <class S>
 never_ptr<S>
 excl_ptr<T>::is_a(void) const {
-	return never_ptr<S>(dynamic_cast<S*>(ptr));
+	return never_ptr<S>(dynamic_cast<S*>(this->ptr));
 	// uses cross-type pointer constructor with dynamic cast
 }
 
@@ -780,7 +799,23 @@ template <class T>
 template <class S>
 never_const_ptr<S>
 excl_const_ptr<T>::is_a(void) const {
-	return never_const_ptr<S>(cptr);
+	return never_const_ptr<S>(this->cptr);
+}
+
+template <class T>
+template <class S>
+never_ptr<S>
+some_ptr<T>::is_a(void) const {
+	return never_ptr<S>(dynamic_cast<S*>(this->ptr));
+	// uses cross-type pointer constructor with dynamic cast
+}
+
+
+template <class T>
+template <class S>
+never_const_ptr<S>
+some_const_ptr<T>::is_a(void) const {
+	return never_const_ptr<S>(this->cptr);
 }
 
 //=============================================================================

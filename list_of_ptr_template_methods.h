@@ -28,7 +28,7 @@ list_of_ptr<T>::list_of_ptr(const list_of_ptr<T>& l) : list<T*>(l), own(false) {
 	cerr << "list_of_ptr<T>::list_of_ptr(const list_of_ptr<T>&);" << endl;
 #endif
 	// f-cked up patch, copy constructor not always invoked?
-	if (size() < l.size()) {
+	if (this->size() < l.size()) {
 		const_iterator i = l.begin();
 		for ( ; i!=l.end(); i++)
 			push_back(*i);
@@ -50,7 +50,7 @@ template <class T>
 void
 list_of_ptr<T>::pop_back(void) {
 	if (own) {
-		reverse_iterator e = rbegin();
+		reverse_iterator e = this->rbegin();
 		if (*e) {
 			delete (*e);
 			*e = NULL;
@@ -64,7 +64,7 @@ template <class T>
 void
 list_of_ptr<T>::pop_front(void) {
 	if (own) {
-		iterator e = begin();
+		iterator e = this->begin();
 		if (*e) {
 			delete (*e);
 			*e = NULL;
@@ -83,7 +83,7 @@ void
 list_of_ptr<T>::clear(void) {
 	if (own) {
 		iterator i;
-		for (i=begin(); i!=end(); i++) {
+		for (i=this->begin(); i!=this->end(); i++) {
 			if (*i) {
 				delete (*i);
 				*i = NULL;
@@ -106,7 +106,7 @@ template <class T>
 void
 list_of_ptr<T>::release_append(list_of_ptr<T>& dest) {
 	iterator i;
-	for (i=begin(); i!=end(); i++)
+	for (i=this->begin(); i!=this->end(); i++)
 		dest.push_back(*i);
 	assert(dest.own);
 	own = false;
