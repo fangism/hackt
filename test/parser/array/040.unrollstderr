@@ -1,0 +1,73 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3302a04	module__	0	0	68
+	2	 0x3300170	namespc_	0	68	96
+	3	 0x3302b34	pintcoll	3	96	305
+	4	 0x3803004	pintinst	0	305	321
+	5	 0x3302a24	crnglst_	0	321	357
+	6	 0x3803018	pintinst	0	357	373
+	7	 0x3302a34	crnglst_	0	373	409
+	8	 0x380302c	pintinst	0	409	425
+	9	 0x3302a44	crnglst_	0	425	461
+	10	 0x3803040	pintinst	0	461	477
+	11	 0x3302b94	crnglst_	0	477	513
+	12	 0x3803054	pintinst	0	513	529
+	13	 0x3302ba4	crnglst_	0	529	565
+	14	 0x3302bb4	pintcoll	3	565	774
+	15	 0x3803068	pintinst	0	774	790
+	16	 0x3302c14	crnglst_	0	790	826
+	17	 0x380307c	pintinst	0	826	842
+	18	 0x3302c24	crnglst_	0	842	878
+	19	 0x3803090	pintinst	0	878	894
+	20	 0x3302c34	crnglst_	0	894	930
+	21	 0x38030a4	pintinst	0	930	946
+	22	 0x3302c44	crnglst_	0	946	982
+	23	 0x38030b8	pintinst	0	982	998
+	24	 0x3302c54	crnglst_	0	998	1034
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  2 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    y = pint^3 y with indices: {
+      [1..1][1..1][1..1]
+      [0..0][0..0][0..0]
+      [0..1][0..0][1..1]
+      [1..1][0..1][0..0]
+      [0..0][1..1][0..1]
+    }
+      unrolled index-value pairs: {
+        [0][0][0] = ?
+        [0][0][1] = ?
+        [0][1][0] = ?
+        [0][1][1] = ?
+        [1][0][0] = ?
+        [1][0][1] = ?
+        [1][1][0] = ?
+        [1][1][1] = ?
+      }
+    z = pint^3 z with indices: {
+      [0..0][1..1][0..1]
+      [1..1][0..1][0..0]
+      [0..1][0..0][1..1]
+      [0..0][0..0][0..0]
+      [1..1][1..1][1..1]
+    }
+      unrolled index-value pairs: {
+        [0][0][0] = ?
+        [0][0][1] = ?
+        [0][1][0] = ?
+        [0][1][1] = ?
+        [1][0][0] = ?
+        [1][0][1] = ?
+        [1][1][0] = ?
+        [1][1][1] = ?
+      }
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr.h,v 1.20 2005/02/27 22:54:11 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -31,8 +31,7 @@ USING_LIST
 using std::string;
 using std::ostream;
 USING_UTIL_OPERATIONS
-using QMAP_NAMESPACE::qmap;
-using namespace MULTIKEY_NAMESPACE;
+using util::qmap;
 
 //=============================================================================
 /**
@@ -41,6 +40,7 @@ using namespace MULTIKEY_NAMESPACE;
 class dynamic_param_expr_list : public param_expr_list, 
 		public list<count_ptr<const param_expr> > {
 friend class const_param_expr_list;
+	typedef	dynamic_param_expr_list			this_type;
 protected:
 	typedef	list<count_ptr<const param_expr> >	parent_type;
 public:
@@ -105,7 +105,7 @@ private:
 	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -114,6 +114,7 @@ public:
  */
 class dynamic_index_list : public index_list, 
 		private list<count_ptr<index_expr> > {
+	typedef	dynamic_index_list			this_type;
 protected:
 	typedef	list<count_ptr<index_expr> >	parent_type;
 public:
@@ -169,10 +170,17 @@ public:
 
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
+
+	const_index_list
+	unroll_resolve(const unroll_context&) const;
+
+	bool
+	must_be_equivalent_indices(const index_list& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_index_list
 
 //=============================================================================
@@ -190,6 +198,7 @@ public:
  */
 class dynamic_range_list : public range_expr_list,
 		public list<count_ptr<pint_range> > {
+	typedef	dynamic_range_list			this_type;
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
@@ -201,7 +210,8 @@ public:
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_range_list();
-virtual	~dynamic_range_list();
+
+	~dynamic_range_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -220,8 +230,12 @@ virtual	~dynamic_range_list();
 		// false, will be empty
 	bool
 	resolve_ranges(const_range_list& r) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr_list& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_range_list
 
 //=============================================================================
@@ -229,6 +243,7 @@ public:
 	Only possibilities, unary negation, bit-wise negation.  
  */
 class pint_unary_expr : public pint_expr {
+	typedef	pint_unary_expr			this_type;
 public:
 	typedef	pint_value_type		value_type;
 	typedef	char			op_type;
@@ -282,7 +297,13 @@ public:
 	static_constant_int(void) const;
 
 	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -294,7 +315,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -303,6 +324,7 @@ public:
 	Character may be '~' or '!'.  
  */
 class pbool_unary_expr : public pbool_expr {
+	typedef	pbool_unary_expr		this_type;
 public:
 	typedef	pbool_value_type	value_type;
 	typedef	char			op_type;
@@ -354,7 +376,13 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -366,7 +394,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -374,6 +402,7 @@ public:
 	Binary arithmetic expression accepts ints and returns an int.  
  */
 class arith_expr : public pint_expr {
+	typedef	arith_expr			this_type;
 public:
 	typedef	pint_value_type			arg_type;
 	typedef	pint_value_type			value_type;
@@ -452,7 +481,13 @@ public:
 	static_constant_int(void) const;
 
 	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -464,7 +499,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -472,6 +507,7 @@ public:
 	Binary relational expression accepts ints and returns a bool.  
  */
 class relational_expr : public pbool_expr {
+	typedef	relational_expr			this_type;
 public:
 	typedef	pbool_value_type		value_type;
 	typedef	pint_value_type			arg_type;
@@ -551,7 +587,13 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -563,7 +605,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -571,6 +613,7 @@ public:
 	Binary logical expression accepts bools and returns a bool.  
  */
 class logical_expr : public pbool_expr {
+	typedef	logical_expr				this_type;
 public:
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
@@ -645,7 +688,13 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -657,7 +706,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class logical_expr
 
 //=============================================================================
@@ -667,6 +716,7 @@ public:
 	Derive from object or param_expr?
  */
 class pint_range : public range_expr {
+	typedef	pint_range				this_type;
 protected:
 	// need to be const, or modifiable?
 	count_ptr<const pint_expr>	lower;
@@ -727,8 +777,14 @@ public:
 	bool
 	resolve_range(const_range& r) const;
 
+	bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_range
 
 //=============================================================================

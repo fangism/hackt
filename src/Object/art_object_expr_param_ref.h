@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.5 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.6 2005/02/27 22:54:11 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -52,6 +52,7 @@ class pbool_instance_reference : public param_instance_reference,
 public:
 	typedef	pbool_value_type			value_type;
 private:
+	typedef	pbool_instance_reference		this_type;
 	typedef param_instance_reference		parent_type;
 	typedef	pbool_expr				interface_type;
 public:
@@ -121,7 +122,13 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -161,13 +168,17 @@ public:
 		}
 	};	// end class assigner
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -181,6 +192,7 @@ class pint_instance_reference : public param_instance_reference,
 public:
 	typedef	pint_value_type				value_type;
 private:
+	typedef	pint_instance_reference			this_type;
 	typedef	param_instance_reference		parent_type;
 	typedef	pint_expr				interface_type;
 public:
@@ -248,7 +260,13 @@ public:
 	static_constant_int(void) const;
 
 	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -259,8 +277,8 @@ public:
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
-protected:
-//	bool assign(const list<int>& l) const;
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 public:
 	/**
@@ -291,13 +309,17 @@ public:
 		}
 	};	// end class assigner
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_instance_reference
 
 //=============================================================================

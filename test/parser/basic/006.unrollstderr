@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3302494	module__	0	0	40
+	1	 0x3302470	module__	0	0	40
 	2	 0x3300170	namespc_	0	40	68
-	3	 0x33024b4	dintcoll	1	68	210
-	4	 0x3804604	datainst	0	210	230
-	5	 0x3302504	datatprf	0	230	246
-	6	 0x3302510	datadefn	0	246	277
-	7	 0x3302564	dprmlst_	0	277	293
-	8	 0x263f024	cnstpi__	0	293	305
-	9	 0x3302574	crnglst_	0	305	325
-	10	 0x33001a4	namespc_	0	325	364
-	11	 0x3302584	dintcoll	3	364	1529
-	12	 0x3804620	datainst	0	1529	1549
-	13	 0x33025d4	datatprf	0	1549	1565
-	14	 0x33025e4	dprmlst_	0	1565	1581
-	15	 0x33025f4	crnglst_	0	1581	1617
-	16	 0x3302634	dintcoll	2	1617	2020
-	17	 0x380463c	datainst	0	2020	2040
-	18	 0x3302604	datatprf	0	2040	2056
-	19	 0x3302614	dprmlst_	0	2056	2072
-	20	 0x3302624	crnglst_	0	2072	2100
+	3	 0x3302494	dintcoll	1	68	175
+	4	 0x3804800	datainst	0	175	195
+	5	 0x33024e0	datatprf	0	195	211
+	6	 0x33024f0	datadefn	0	211	243
+	7	 0x3302554	dprmlst_	0	243	259
+	8	 0x2708024	cnstpi__	0	259	271
+	9	 0x3302564	crnglst_	0	271	291
+	10	 0x33001a4	namespc_	0	291	330
+	11	 0x33025a4	dintcoll	3	330	1215
+	12	 0x3804818	datainst	0	1215	1235
+	13	 0x3302570	datatprf	0	1235	1251
+	14	 0x3302584	dprmlst_	0	1251	1267
+	15	 0x3302594	crnglst_	0	1267	1303
+	16	 0x33025f4	dintcoll	2	1303	1601
+	17	 0x3804830	datainst	0	1601	1621
+	18	 0x3302640	datatprf	0	1621	1637
+	19	 0x3302654	dprmlst_	0	1637	1653
+	20	 0x3302664	crnglst_	0	1653	1681
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -38,19 +38,82 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        fancier_array = int<32> fancier_array with indices: {
+        fancier_array = int<32>^3 fancier_array with indices: {
           [0..3][0..4][1..2]
         }
-
-        fancy_array = int<32> fancy_array with indices: {
+          unrolled indices: {
+            [0][0][1] = ::more_arrays::fancier_array[0][0][1]
+            [0][0][2] = ::more_arrays::fancier_array[0][0][2]
+            [0][1][1] = ::more_arrays::fancier_array[0][1][1]
+            [0][1][2] = ::more_arrays::fancier_array[0][1][2]
+            [0][2][1] = ::more_arrays::fancier_array[0][2][1]
+            [0][2][2] = ::more_arrays::fancier_array[0][2][2]
+            [0][3][1] = ::more_arrays::fancier_array[0][3][1]
+            [0][3][2] = ::more_arrays::fancier_array[0][3][2]
+            [0][4][1] = ::more_arrays::fancier_array[0][4][1]
+            [0][4][2] = ::more_arrays::fancier_array[0][4][2]
+            [1][0][1] = ::more_arrays::fancier_array[1][0][1]
+            [1][0][2] = ::more_arrays::fancier_array[1][0][2]
+            [1][1][1] = ::more_arrays::fancier_array[1][1][1]
+            [1][1][2] = ::more_arrays::fancier_array[1][1][2]
+            [1][2][1] = ::more_arrays::fancier_array[1][2][1]
+            [1][2][2] = ::more_arrays::fancier_array[1][2][2]
+            [1][3][1] = ::more_arrays::fancier_array[1][3][1]
+            [1][3][2] = ::more_arrays::fancier_array[1][3][2]
+            [1][4][1] = ::more_arrays::fancier_array[1][4][1]
+            [1][4][2] = ::more_arrays::fancier_array[1][4][2]
+            [2][0][1] = ::more_arrays::fancier_array[2][0][1]
+            [2][0][2] = ::more_arrays::fancier_array[2][0][2]
+            [2][1][1] = ::more_arrays::fancier_array[2][1][1]
+            [2][1][2] = ::more_arrays::fancier_array[2][1][2]
+            [2][2][1] = ::more_arrays::fancier_array[2][2][1]
+            [2][2][2] = ::more_arrays::fancier_array[2][2][2]
+            [2][3][1] = ::more_arrays::fancier_array[2][3][1]
+            [2][3][2] = ::more_arrays::fancier_array[2][3][2]
+            [2][4][1] = ::more_arrays::fancier_array[2][4][1]
+            [2][4][2] = ::more_arrays::fancier_array[2][4][2]
+            [3][0][1] = ::more_arrays::fancier_array[3][0][1]
+            [3][0][2] = ::more_arrays::fancier_array[3][0][2]
+            [3][1][1] = ::more_arrays::fancier_array[3][1][1]
+            [3][1][2] = ::more_arrays::fancier_array[3][1][2]
+            [3][2][1] = ::more_arrays::fancier_array[3][2][1]
+            [3][2][2] = ::more_arrays::fancier_array[3][2][2]
+            [3][3][1] = ::more_arrays::fancier_array[3][3][1]
+            [3][3][2] = ::more_arrays::fancier_array[3][3][2]
+            [3][4][1] = ::more_arrays::fancier_array[3][4][1]
+            [3][4][2] = ::more_arrays::fancier_array[3][4][2]
+          }
+        fancy_array = int<32>^2 fancy_array with indices: {
           [0..4][0..2]
         }
-
+          unrolled indices: {
+            [0][0] = ::more_arrays::fancy_array[0][0]
+            [0][1] = ::more_arrays::fancy_array[0][1]
+            [0][2] = ::more_arrays::fancy_array[0][2]
+            [1][0] = ::more_arrays::fancy_array[1][0]
+            [1][1] = ::more_arrays::fancy_array[1][1]
+            [1][2] = ::more_arrays::fancy_array[1][2]
+            [2][0] = ::more_arrays::fancy_array[2][0]
+            [2][1] = ::more_arrays::fancy_array[2][1]
+            [2][2] = ::more_arrays::fancy_array[2][2]
+            [3][0] = ::more_arrays::fancy_array[3][0]
+            [3][1] = ::more_arrays::fancy_array[3][1]
+            [3][2] = ::more_arrays::fancy_array[3][2]
+            [4][0] = ::more_arrays::fancy_array[4][0]
+            [4][1] = ::more_arrays::fancy_array[4][1]
+            [4][2] = ::more_arrays::fancy_array[4][2]
+          }
     }
   Instances:
-    good_array = int<32> good_array with indices: {
+    good_array = int<32>^1 good_array with indices: {
       [0..4]
     }
-
+      unrolled indices: {
+        0 = ::good_array[0]
+        1 = ::good_array[1]
+        2 = ::good_array[2]
+        3 = ::good_array[3]
+        4 = ::good_array[4]
+      }
 }
 

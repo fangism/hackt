@@ -2,14 +2,19 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.9 2005/01/28 19:58:31 fang Exp $
+	$Id: artobjunroll.cc,v 1.10 2005/02/27 22:54:07 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <fstream>
 #include "art++.h"			// has everything you need
 
-using namespace std;
+#include "stacktrace.h"
+
+#include "using_ostream.h"
+USING_STACKTRACE
 
 int
 main(int argc, char* argv[]) {
@@ -49,8 +54,8 @@ main(int argc, char* argv[]) {
 
 	excl_ptr<entity::module> the_module;
 try {
-	the_module = persistent_object_manager::load_object_from_file
-			<entity::module>(ifname);
+	the_module = persistent_object_manager::load_object_from_file(ifname)
+			.is_a_xfer<entity::module>();
 }
 catch (...) {
 	// possibly empty file error from
@@ -63,6 +68,7 @@ catch (...) {
 		cerr << "Module is already unrolled, skipping..." << endl;
 	} else {
 		try {
+			STACKTRACE("main: try unrolling.");
 			the_module->unroll_module();
 		}
 		catch (...) {
@@ -79,4 +85,6 @@ catch (...) {
 	// global will delete itself (recursively)
 	return 0;
 }
+
+#undef	ENABLE_STACKTRACE
 

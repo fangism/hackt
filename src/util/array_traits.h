@@ -1,11 +1,11 @@
 /**
 	\file "array_traits.h"
 	Compile-time traits for multidimensional structures.  
-	$Id: array_traits.h,v 1.1 2004/12/15 23:31:13 fang Exp $
+	$Id: array_traits.h,v 1.2 2005/02/27 22:54:19 fang Exp $
  */
 
-#ifndef	__ARRAY_TRAITS_H__
-#define	__ARRAY_TRAITS_H__
+#ifndef	__UTIL_ARRAY_TRAITS_H__
+#define	__UTIL_ARRAY_TRAITS_H__
 
 namespace util {
 
@@ -20,11 +20,11 @@ struct array_traits {
 	typedef	T		array_type;
 
 	// or default to 0 unless formerly specialized?
-	static const size_t	dimensions = array_type::dimensions;
+	enum { dimensions = array_type::dimensions };
 
 };	// end class array_traits
 
 }	// end namespace util
 
-#endif	// __ARRAY_TRAITS_H__
+#endif	// __UTIL_ARRAY_TRAITS_H__
 

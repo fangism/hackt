@@ -1,23 +1,25 @@
 /**
 	\file "packed_array_fwd.h"
 	Forward declarations for packed array template class.
-	$Id: packed_array_fwd.h,v 1.2 2005/01/28 19:58:47 fang Exp $
+	$Id: packed_array_fwd.h,v 1.3 2005/02/27 22:54:26 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_FWD_H__
 #define	__UTIL_PACKED_ARRAY_FWD_H__
 
 #define PACKED_ARRAY_TEMPLATE_SIGNATURE					\
-template <size_t D, class T>
+template <size_t D, class K, class T>
 
 #define PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE				\
-template <class T>
+template <class K, class T>
 
 
 namespace util {
 
+#if USE_PACKED_ARRAY_BASE
 template <class T>
 class packed_array_base;
+#endif
 
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 class packed_array;

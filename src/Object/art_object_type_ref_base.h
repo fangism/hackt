@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.5 2005/01/28 19:58:45 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.6 2005/02/27 22:54:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -22,10 +22,22 @@ using util::persistent_object_manager;
 using namespace util::memory;
 
 //=============================================================================
-class type_reference_base : public object, public persistent {
+/**
+	Ultimate base class of all type-references, don't know if this
+	is actually useful...
+ */
+class type_reference_base : 
+#if 0
+		public object, 
+#endif
+		public persistent {
 protected:
 public:
-	type_reference_base() : object(), persistent() { }
+	type_reference_base() : 
+#if 0
+		object(), 
+#endif
+		persistent() { }
 virtual	~type_reference_base() { }
 
 };	// end class type_reference_base
@@ -148,7 +160,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class fundamental_type_reference
 

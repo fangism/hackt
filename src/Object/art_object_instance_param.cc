@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.9 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.10 2005/02/27 22:54:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -61,21 +61,7 @@ param_instance_collection::dump(ostream& o) const {
 #if 0
 	STACKTRACE("param_instance_collection::dump()");
 #endif
-#if 0
-	get_type_ref()->dump(o) << " " << key;
-	// collection of indices to instantiate sequentially during unroll
-	index_collection_type::const_iterator i = index_collection.begin();
-	const index_collection_type::const_iterator e = index_collection.end();
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		const index_collection_item_ptr_type
-			ind((*i)->get_indices());
-		if (ind)
-			ind->dump(o) << endl;
-	}
-#else
 	parent_type::dump(o);
-#endif
 	const count_ptr<const param_expr>
 		init_def(default_value());
 	if (init_def) {
@@ -105,6 +91,8 @@ param_instance_collection::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE, using parent_type's definition
 /**
 	To determine whether or not this is a formal parameter, 
 	look itself up in the owning namespace.  
@@ -123,6 +111,7 @@ param_instance_collection::is_template_formal(void) const {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -220,10 +209,10 @@ param_instance_collection::is_loop_independent(void) const {
 	2) Thus they cannot even be referenced.  
 	3) This is just a placeholder that should never be called.  
  */
-count_ptr<member_instance_reference_base>
+param_instance_collection::member_inst_ref_ptr_type
 param_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	typedef	count_ptr<member_instance_reference_base>	return_type;
+		const inst_ref_ptr_type& b) const {
+	typedef	member_inst_ref_ptr_type	return_type;
 	NEVER_NULL(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
 	DIE;

@@ -3,6 +3,28 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-02-17:
+	TODO
+	Target: 0.1.5
+	After improving parser... (after second convergence -00-01-04-main-01)
+	Must re-do object stack for type-checking!
+		Make one stack for values and parameters, 
+		another stack for physical instances, 
+		and let the context restrict which one may be used!
+	{chan, proc, bool, int, enum, struct, param}
+	port-like connections require a generic stack, though...
+	3 classes: alias, port, assign (expression)
+		their uses should never mix!
+	During alias-parse/type-checking, one type of list
+		should "lock-out" the use of the others.  
+	This will eliminate the need for any generic object list!
+		And perhaps generic "objects" in general!
+	In general, context interface could be more like stacktrace 
+		interface: automatic stack-like management upon destruction.
+
+
+
+//=============================================================================
 2005-01-05:
 CRITICAL BUG: util/memory/pointer_classes:
 	some destructors (excl_ptr) use release instead of reset, 

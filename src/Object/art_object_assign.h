@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.10 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_assign.h,v 1.11 2005/02/27 22:54:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -19,6 +19,7 @@ USING_LIST
 USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
+class unroll_context;
 
 //=============================================================================
 /**
@@ -91,8 +92,11 @@ protected:
 /**
 	pbool-specific version of expression assignments.  
  */
-class pbool_expression_assignment : public param_expression_assignment, 
-		public object {
+class pbool_expression_assignment : public param_expression_assignment
+#if 0
+		, public object
+#endif
+		{
 private:
 	typedef	pbool_expression_assignment		this_type;
 public:
@@ -129,7 +133,7 @@ public:
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	/** helper class for printing dump of list */
@@ -146,7 +150,7 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -157,8 +161,11 @@ public:
 /**
 	pint-specific version of expression assignments.  
  */
-class pint_expression_assignment : public param_expression_assignment, 
-		public object {
+class pint_expression_assignment : public param_expression_assignment
+#if 0
+		, public object
+#endif
+{
 private:
 	typedef	pint_expression_assignment		this_type;
 public:
@@ -195,7 +202,7 @@ public:
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	/** helper class for printing dump of list */
@@ -212,7 +219,7 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS

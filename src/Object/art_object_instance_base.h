@@ -1,19 +1,20 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_base.h,v 1.12 2005/02/27 22:54:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
 #define	__ART_OBJECT_INSTANCE_BASE_H__
 
+#include <string>
 #include <deque>
 #include "STL/list.h"
 
 #include "macros.h"
 #include "art_object_base.h"
 #include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
+	// includes <iosfwd>
 
 #include "memory/pointer_classes.h"
 	// need complete definition (never_ptr members)
@@ -61,6 +62,13 @@ typedef index_collection_type::const_iterator
 class instance_collection_base : public object, public persistent {
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
+	// should be consistent with 
+	//	member_instance_reference_base::base_inst_ptr_type
+	typedef	count_ptr<const instance_reference_base>
+						inst_ref_ptr_type;
+	// needs to be of a type that can be pushed onto object stack
+	typedef	count_ptr<instance_reference_base>
+						member_inst_ref_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -123,11 +131,21 @@ virtual	~instance_collection_base();
 	size_t
 	get_dimensions(void) const { return dimensions; }
 
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
 virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
 	dump(ostream& o) const;	// temporary
+
+	/**
+		Depending on whether the collection is partially unrolled, 
+		print the type.  
+	 */
+virtual	ostream&
+	type_dump(ostream& o) const = 0;
 
 	ostream&
 	pair_dump(ostream& o) const;
@@ -146,9 +164,12 @@ virtual	string
 	all over the place, so we reference count all type references.  
 	Unfortunately this forces us to do the same with static 
 	built-in types.  
+
+	Note: that this doesn't return the unrolled actual type, 
+	need a different method for that.  
  */
-virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
@@ -173,7 +194,7 @@ private:
 	formal_size_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
 public:
-	bool
+	size_t
 	is_template_formal(void) const;
 
 	bool
@@ -199,9 +220,9 @@ public:
 virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
-virtual	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const = 0;
+// return type may become generic...
+virtual	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
 	void
@@ -214,7 +235,7 @@ private:
 
 	void
 	load_index_collection_pointers(
-		persistent_object_manager& m, istream&);
+		const persistent_object_manager& m, istream&);
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -224,7 +245,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 public:
 	/** just for convenience */

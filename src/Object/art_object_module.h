@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.11 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_module.h,v 1.12 2005/02/27 22:54:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__
@@ -27,16 +27,9 @@ using util::persistent_object_manager;
 	1) order-independent data
 	2) source-order-dependent data
  */
-class module :
-	public object, public persistent
-#if 0
-	// changing this to private or protected crashes on darwin-gcc-3.3!?
-	, private sequential_scope
-#else
-	, public sequential_scope
-#endif
-	{
+class module : public persistent , public sequential_scope {
 friend class context;
+	typedef	module				this_type;
 protected:
 	/**
 		Name of the file.
@@ -87,7 +80,7 @@ explicit	module(const string& s);
 	unroll_module(void);
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class module
 
@@ -101,6 +94,7 @@ public:
 	Need a better name for this guy...
  */
 class multi_module : public sequential_scope {
+	typedef	multi_module		this_type;
 protected:
 	// set of file/module names?
 

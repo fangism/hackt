@@ -1,12 +1,12 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.6 2004/12/15 23:31:13 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.7 2005/02/27 22:54:23 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
-#ifndef	__MULTIDIMENSIONAL_SPARSE_SET_H__
-#define	__MULTIDIMENSIONAL_SPARSE_SET_H__
+#ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_H__
+#define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_H__
 
 #include <iosfwd>
 #include "macros.h"
@@ -17,113 +17,32 @@
 // includes <map> and <iostream>
 
 #include "qmap.h"		// queryable maps
-#include "memory/pointer_classes.h"
-// #include "sublist.h"		// list slices
+#include "memory/count_ptr.h"
 
 /**
 	Namespace containing multidimensional-sparse-set classes.  
  */
-namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE {
+namespace util {
 //=============================================================================
 using std::ostream;
 using std::string;
-using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
-// using util::sublist;
-using QMAP_NAMESPACE::qmap;
+using util::discrete_interval_set;
+using util::qmap;
 using namespace util::memory;
 
 //=============================================================================
 // forward declarations in "multidimensional_sparse_set_fwd.h"
 
-//=============================================================================
-/**
-	Abstract base-class, for multidimensional sparse set.  
-	T is the key type, like an integer.  
-	R is the range-type which must be like a pair of integers, 
-		and have the same interface as std::pair<T,T>, 
-		namely, first and second members.  
-	L must be like a list or list-slice with partial list interface,
-		such as sublist.  Only need to be able to pop_front, pop_back.  
-		Difference lies in whether or not a deep copy is desired. 
-	\todo employ nested_iterators.... oooooh!
- */
-BASE_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class base_multidimensional_sparse_set {
-public:
+SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
+struct multidimensional_sparse_set_traits {
 	typedef	R				range_type;
 	/** format for a list of ranges to be added, list is also acceptable */
 	typedef	L<range_type>			range_list_type;
-	typedef	base_multidimensional_sparse_set<T,R,L>
-						this_type;
-public:
-	static const size_t			LIMIT = 4;
 
-public:
-virtual	~base_multidimensional_sparse_set() { }
-
-virtual	size_t
-	dimensions(void) const = 0;
-
-virtual	bool
-	empty(void) const = 0;
-
-virtual	void
-	clear(void) = 0;
-
-virtual range_list_type
-	query_compact_dimensions(const range_list_type& r) const = 0;
-
-virtual range_list_type
-	compact_dimensions(void) const = 0;
-
-virtual	bool
-	contains(const range_list_type& r) const = 0;
-
-virtual	bool
-	add_ranges(const range_list_type& r) = 0;
-
-virtual	bool
-	delete_ranges(const range_list_type& r) = 0;
-
-virtual	bool
-	join_sparse_set(const this_type& s) = 0;
-
-virtual	bool
-	meet_sparse_set(const this_type& s) = 0;
-
-virtual	bool
-	subtract_sparse_set(const this_type& s) = 0;
-#if 0
-	// expensive but sometimes necessary
-	deep_copy();
-	// to add dimension
-	promote();
-	// to lose a dimension
-	demote();
-#endif
-
-protected:
-virtual	ostream&
-	dump(ostream& o, const string& pre) const = 0;
-
-public:
-virtual	ostream&
-	dump(ostream& o) const = 0;
-
-// static functions
-	/** virtually, a virtual constructor */
-	static
-	this_type* 
-	make_multidimensional_sparse_set(const size_t d);
-#if 0
-	static
-	this_type* 
-	make_multidimensional_sparse_set(const range_list_type& r);
-#endif
 	static
 	bool
 	match_range_list(const range_list_type& s, const range_list_type& t);
-};	// end class base_multidimensional_sparse_set
+};	// end struct multidimensional_sparse_set_traits
 
 //=============================================================================
 /**
@@ -146,24 +65,34 @@ virtual	ostream&
 		template <class> class V = count_ptr<child_type>, 
 		template <class, class> class map_type = qmap<T, V>
 		> class multidimensional_sparse_set;
+
+	\param T is the key type, like an integer.  
+	\param R is the range-type which must be like a pair of integers, 
+		and have the same interface as std::pair<T,T>, 
+		namely, first and second members.  
+	\param L must be like a list or list-slice with partial list interface,
+		such as sublist.  Only need to be able to pop_front, pop_back.  
+		Difference lies in whether or not a deep copy is desired. 
+	\todo employ nested_iterators.... oooooh!
  */
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class multidimensional_sparse_set :
-		public base_multidimensional_sparse_set<T, R, L> {
+class multidimensional_sparse_set {
 friend class multidimensional_sparse_set<D+1,T,R,L>;
 
 protected:
-	typedef	base_multidimensional_sparse_set<T,R,L>	parent;
 	typedef	multidimensional_sparse_set<D,T,R,L>	this_type;
-	typedef	typename parent::range_list_type		range_list_type;
 	typedef multidimensional_sparse_set<D-1,T,R,L>	child_type;
 	/** need count_ptr to be copy-constructable */
 	typedef	count_ptr<child_type>			map_value_type;
 	typedef	qmap<T, map_value_type>			map_type;
+	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
+public:
+	typedef	typename traits_type::range_type	range_type;
+	typedef	typename traits_type::range_list_type	range_list_type;
 
 public:
 	// for array_traits<>
-	static const size_t dim = D;
+	enum { dim = D };
 
 protected:
 	map_type					index_map;
@@ -249,36 +178,6 @@ public:
 	bool
 	subtract(const this_type& s);
 
-	/**
-		Join operator with run-type type-check.  
-	 */
-	bool
-	join_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return join(*t);
-	}
-
-	/**
-		Meet operator with run-type type-check.  
-	 */
-	bool
-	meet_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return meet(*t);
-	}
-
-	/**
-		Subtract operator with run-type type-check.  
-	 */
-	bool
-	subtract_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return subtract(*t);
-	}
-
 	// write a generic walker for this bad boy?
 
 protected:
@@ -321,20 +220,21 @@ public:
 /**
 	Specialization of a one-dimensional array.  
  */
-BASE_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class multidimensional_sparse_set<1,T,R,L> :
-		public base_multidimensional_sparse_set<T,R,L> {
+SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
+class multidimensional_sparse_set<1,T,R,L> {
 friend class multidimensional_sparse_set<2,T,R,L>;
 
 protected:
-	typedef	base_multidimensional_sparse_set<T,R,L>	parent;
 	typedef	multidimensional_sparse_set<1,T,R,L>	this_type;
-	typedef	typename parent::range_list_type	range_list_type;
 	typedef	discrete_interval_set<T>		map_type;
+	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
+public:
+	typedef	typename traits_type::range_type	range_type;
+	typedef	typename traits_type::range_list_type	range_list_type;
 
 public:
 	// for array_traits<>
-	static const size_t dim = 1;
+	enum { dim = 1 };
 
 protected:
 	/**
@@ -390,33 +290,6 @@ public:
 		return index_map.subtract(s.index_map);
 	}
 
-	/**
-		Join operator with run-type type-check.  
-	 */
-	bool join_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return join(*t);
-	}
-
-	/**
-		Meet operator with run-type type-check.  
-	 */
-	bool meet_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return meet(*t);
-	}
-
-	/**
-		Subtract operator with run-type type-check.  
-	 */
-	bool subtract_sparse_set(const parent& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return subtract(*t);
-	}
-
 protected:
 	/**
 		Prints out list of all members recursively.  
@@ -428,7 +301,8 @@ protected:
 	dump(ostream& o, const string& pre) const;
 
 public:
-	ostream& dump(ostream& o) const { return dump(o, ""); }
+	ostream&
+	dump(ostream& o) const { return dump(o, ""); }
 
 	/**
 		1-D sparse set is dense if there is only one element
@@ -450,20 +324,17 @@ public:
 };	// end class multidimensional_sparse_set
 
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
+}	// end namespace util
 
 namespace util {
 
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-struct array_traits<
-	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
-		multidimensional_sparse_set<D,T,R,L> > {
-	typedef	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
-		multidimensional_sparse_set<D,T,R,L>	array_type;
-	static const size_t		dimensions = array_type::dim;
+struct array_traits<util::multidimensional_sparse_set<D,T,R,L> > {
+	typedef	util::multidimensional_sparse_set<D,T,R,L>	array_type;
+	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 
-}
+}	// end namespace util
 
-#endif	// __MULTIDIMENSIONAL_SPARSE_SET_H__
+#endif	// __UTIL_MULTIDIMENSIONAL_SPARSE_SET_H__
 

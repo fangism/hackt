@@ -1,0 +1,67 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3301714	module__	0	0	40
+	2	 0x3300170	namespc_	0	40	72
+	3	 0x3301734	pintcoll	1	72	165
+	4	 0x3803004	pintinst	0	165	181
+	5	 0x3301794	crnglst_	0	181	201
+	6	 0x33006a4	pintcoll	1	201	330
+	7	 0x3803018	pintinst	0	330	346
+	8	 0x3300704	crnglst_	0	346	366
+	9	 0x3301864	pintcoll	1	366	555
+	10	 0x380302c	pintinst	0	555	571
+	11	 0x3300714	crnglst_	0	571	591
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  3 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    x = pint^1 x with indices: {
+      [0..4]
+    }
+      unrolled index-value pairs: {
+        0 = ?
+        1 = ?
+        2 = ?
+        3 = ?
+        4 = ?
+      }
+    y = pint^1 y with indices: {
+      [5..12]
+    }
+      unrolled index-value pairs: {
+        5 = ?
+        6 = ?
+        7 = ?
+        8 = ?
+        9 = ?
+        10 = ?
+        11 = ?
+        12 = ?
+      }
+    z = pint^1 z with indices: {
+      [-6..6]
+    }
+      unrolled index-value pairs: {
+        -6 = ?
+        -5 = ?
+        -4 = ?
+        -3 = ?
+        -2 = ?
+        -1 = ?
+        0 = ?
+        1 = ?
+        2 = ?
+        3 = ?
+        4 = ?
+        5 = ?
+        6 = ?
+      }
+}
+

@@ -1,13 +1,12 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.10 2005/02/27 22:54:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
 #define	__ART_OBJECT_INST_STMT_H__
 
-#include "art_object_instance_management_base.h"
 #include "art_object_inst_stmt_base.h"
 #include "memory/count_ptr.h"
 #include "memory/list_vector_pool_fwd.h"
@@ -18,8 +17,6 @@ namespace entity {
 USING_LIST
 USING_CONSTRUCT
 using namespace util::memory;	// for experimental pointer classes
-using namespace MULTIKEY_NAMESPACE;
-using namespace MULTIKEY_MAP_NAMESPACE;
 
 //=============================================================================
 /**
@@ -47,8 +44,7 @@ protected:
 /**
 	Boolean parameter instantiation statement.
  */
-class pbool_instantiation_statement : public object, 
-		public param_instantiation_statement {
+class pbool_instantiation_statement : public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
 	typedef	pbool_instantiation_statement	this_type;
@@ -85,10 +81,10 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -99,8 +95,7 @@ public:
 /**
 	Integer parameter instantiation statement.
  */
-class pint_instantiation_statement : public object, 
-		public param_instantiation_statement {
+class pint_instantiation_statement : public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
 	typedef	pint_instantiation_statement	this_type;
@@ -137,10 +132,10 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -151,9 +146,9 @@ public:
 /**
 	Process instantiation statement.
  */
-class process_instantiation_statement : public object, 
-		public instantiation_statement {
+class process_instantiation_statement : public instantiation_statement {
 private:
+	typedef	process_instantiation_statement	this_type;
 	typedef	instantiation_statement		parent_type;
 public:
 	typedef	process_instance_collection	collection_type;
@@ -187,8 +182,11 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
+	void
+	unroll(unroll_context& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class process_instantiation_statement
 
@@ -196,9 +194,9 @@ public:
 /**
 	Channel instantiation statement.
  */
-class channel_instantiation_statement : public object, 
-		public instantiation_statement {
+class channel_instantiation_statement : public instantiation_statement {
 private:
+	typedef	channel_instantiation_statement	this_type;
 	typedef	instantiation_statement		parent_type;
 public:
 	typedef	channel_instance_collection	collection_type;
@@ -233,7 +231,7 @@ public:
 	get_type_ref(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class channel_instantiation_statement
 
@@ -241,8 +239,7 @@ public:
 /**
 	Data-type instantiation statement.
  */
-class data_instantiation_statement : public object, 
-		public instantiation_statement {
+class data_instantiation_statement : public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
 	typedef	data_instantiation_statement	this_type;
@@ -285,11 +282,11 @@ public:
 #if 1
 	// almost ready to unveil...
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 #endif
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 
 public:

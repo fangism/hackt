@@ -1,11 +1,11 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5 2005/01/28 19:58:46 fang Exp $
+	$Id: multikey.tcc,v 1.6 2005/02/27 22:54:23 fang Exp $
  */
 
-#ifndef	__MULTIKEY_TCC__
-#define	__MULTIKEY_TCC__
+#ifndef	__UTIL_MULTIKEY_TCC__
+#define	__UTIL_MULTIKEY_TCC__
 
 #include "multikey.h"
 
@@ -16,7 +16,7 @@
 #include "IO_utils.tcc"
 
 
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using util::write_value;
 using util::read_value;
 #include "using_ostream.h"
@@ -27,31 +27,21 @@ using std::lexicographical_compare;
 using std::ptr_fun;
 
 //=============================================================================
-// class multikey_base method definitions
-
-BASE_MULTIKEY_TEMPLATE_SIGNATURE
-multikey_base<K>*
-multikey_base<K>::make_multikey(const size_t d) {
-	INVARIANT(d > 0 && d <= LIMIT);
-	// there may be some clever way to make a call table to
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multikey<1,K>();
-		case 2: return new multikey<2,K>();
-		case 3: return new multikey<3,K>();
-		case 4: return new multikey<4,K>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-
-//-----------------------------------------------------------------------------
 // class multikey method definitions
 
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K>::multikey(const K i) :
-		base_type() {
-	fill(indices, &indices[D], i);
+multikey<D,K>::multikey(const K i) {
+	fill(this->begin(), this->end(), i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param k generic multikey, whose dimensions MUST match this!
+ */
+MULTIKEY_TEMPLATE_SIGNATURE
+multikey<D,K>::multikey(const multikey_generic<K>& k) {
+	INVARIANT(k.dimensions() == D);
+	copy(k.begin(), k.end(), this->begin());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -60,27 +50,13 @@ template <size_t D2>
 multikey<D,K>::multikey(const multikey<D2,K>& k, const K i) {
 	// depends on <algorithm>
 	if (D <= D2) {
-		copy(k.indices, &k.indices[D], indices);
+		// if D == D2? won't k[D] be out of bounds?
+		copy(k.begin(), &k[D-1] +1, this->begin());
 	} else {
-		copy(k.indices, &k.indices[D2], indices);
-		fill(&indices[D2], &indices[D], i);
+		copy(k.begin(), k.end(), this->begin());
+		fill(&(*this)[D2], this->end(), i);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K>::multikey(const multikey_base<K>& k) {
-	// depends on <algorithm>
-	const size_t D2 = k.dimensions();
-	if (D <= D2) {
-		copy(k.indices, &k.indices[D], indices);
-	} else {
-		copy(k.indices, &k.indices[D2], indices);
-		fill(&indices[D2], &indices[D], init);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
@@ -91,10 +67,10 @@ multikey<D,K>::multikey(const S<K>& s, const K i) {
 		size_t i = 0;
 		typename S<K>::const_iterator iter = s.begin();
 		for ( ; i<sz; i++)
-			indices[i] = *iter;
+			(*this)[i] = *iter;
 	} else {
-		copy(s.begin(), s.end(), indices);
-		fill(&indices[sz], &indices[D], i);
+		copy(s.begin(), s.end(), this->begin());
+		fill(&(*this)[sz-1] +1, this->end(), i);
 	}
 }
 
@@ -140,23 +116,6 @@ multikey<D,K>::multikey(const S<K>& s, const K i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey_base<K>&
-multikey<D,K>::operator = (const multikey_base<K>& s) {
-	const size_t sz = s.dimensions();
-	if (D < sz) {
-		size_t i = 0;
-		const_iterator iter = s.begin();
-		for ( ; i<sz; i++)
-			indices[i] = *iter;
-	} else {
-		copy(s.begin(), s.end(), indices);
-		fill(&indices[sz], &indices[D], default_value());
-	}
-	return *this;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_TEMPLATE_SIGNATURE
 multikey<D,K>&
 multikey<D,K>::operator = (const this_type& s) {
 	copy(s.begin(), s.end(), this->begin());
@@ -187,8 +146,8 @@ ostream&
 multikey<D,K>::write(ostream& o) const {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(o.good());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i = this->begin();
+	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
 		write_value(o, *i);
 	return o;
@@ -200,7 +159,7 @@ istream&
 multikey<D,K>::read(istream& f) {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(f.good());
-	iterator i = begin();
+	iterator i = this->begin();
 	size_t j = 0;
 	for ( ; j < D; j++, i++)
 		read_value(f, *i);
@@ -281,21 +240,9 @@ multikey<D,K>::ones = multikey<D,K,1>();
 //=============================================================================
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 template <size_t D>
-multikey_generic<K>::multikey_generic(const multikey<D,K>& m) :
-		interface_type(), impl_type(D) {
+multikey_generic<K>::multikey_generic(const multikey<D,K>& m) : impl_type(D) {
 	// valarray doesn't have a sequence-copy constructor like vector
 	copy(m.begin(), m.end(), begin());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
-multikey_base<K>&
-multikey_generic<K>::operator = (const multikey_base<K>& k) {
-	const size_t k_size = k.dimensions();
-	if (k_size != size());
-		impl_type::resize(k_size);
-	copy(k.begin(), k.end(), this->begin());
-	return *this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -359,92 +306,27 @@ multikey_generic<K>::read(istream& i) {
 	return i;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if 0
-template <class K>
-class multikey_generic : public multikey_base<K>, public valarray<K> {
-protected:
-	typedef	multikey_base<K>			interface_type;
-	typedef	valarray<K>				impl_type;
-public:
-	typedef	typename interface_type::value_type	value_type;
-	typedef	typename interface_type::iterator	iterator;
-	typedef	typename interface_type::const_iterator	const_iterator;
-	typedef	typename impl_type::reference		reference;
-	typedef	typename impl_type::const_reference	const_reference;
-public:
-	multikey_generic() : interface_type(), impl_type() { }
-
-	multikey_generic(const size_t d) : interface_type(), impl_type(d) { }
-
-	~multikey_generic() { }
-
-	using impl_type::size;
-
-	size_t
-	dimensions(void) const { return size(); }
-
-	K
-	default_value(void) const { return 0; }
-
-	iterator
-	begin(void) { return &impl_type::operator[](0); }
-
-	const_iterator
-	begin(void) const { return &impl_type::operator[](0); }
-
-	iterator
-	end(void) { return &impl_type::operator[](size()); }
-
-	const_iterator
-	end(void) const { return &impl_type::operator[](size()); }
-
-	multikey_base<K>&
-	operator = (const multikey_base<K>& k) {
-		const size_t k_size = k.dimensions();
-		if (k_size != size());
-			impl_type::resize(k_size);
-		copy(k.begin(), k.end(), this->begin());
-		return *this;
-	}
-
-	reference
-	operator [] (const size_t i) {
-		return impl_type::operator[](i);
-	}
-
-	const_reference
-	operator [] (const size_t i) const {
-		return impl_type::operator[](i);
-	}
-
-};	// end class multikey_generic
-#endif
-
 //=============================================================================
 
-BASE_MULTIKEY_TEMPLATE_SIGNATURE
+MULTIKEY_TEMPLATE_SIGNATURE
 ostream&
-operator << (ostream& o, const multikey_base<K>& k) {
-	typename multikey_base<K>::const_iterator i = k.begin();
-	const typename multikey_base<K>::const_iterator e = k.end();
+operator << (ostream& o, const multikey<D,K>& k) {
+	typename multikey<D,K>::const_iterator i = k.begin();
+	const typename multikey<D,K>::const_iterator e = k.end();
 	for ( ; i!=e; i++)
 		o << '[' << *i << ']';
 	return o;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <size_t D, class K>
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
-operator << (ostream& o, const multikey<D,K>& k) {
-	register size_t i = 0;
-	for ( ; i<D; i++)
-		o << '[' << k.indices[i] << ']';
+operator << (ostream& o, const multikey_generic<K>& k) {
+	typename multikey_generic<K>::const_iterator i = k.begin();
+	const typename multikey_generic<K>::const_iterator e = k.end();
+	for ( ; i!=e; i++)
+		o << '[' << *i << ']';
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
@@ -480,28 +362,9 @@ operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dimensions must match!
- */
-template <class K>
-bool
-operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
-	if (l.dimensions() != r.dimensions())
-		return false;
-	return std::equal(l.begin(), l.end(), r.begin());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 bool
 operator != (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return !(l == r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class K>
-bool
-operator != (const multikey_base<K>& l, const multikey_base<K>& r) {
 	return !(l == r);
 }
 
@@ -532,31 +395,12 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 }
 
 //=============================================================================
-// class multikey_generator_base method definitions
-
-BASE_MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
-multikey_generator_base<K>*
-multikey_generator_base<K>::make_multikey_generator(const size_t d) {
-	INVARIANT(d > 0 && d <= multikey_base<K>::LIMIT);
-	// there may be some clever way to make a call table to
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multikey_generator<1,K>();
-		case 2: return new multikey_generator<2,K>();
-		case 3: return new multikey_generator<3,K>();
-		case 4: return new multikey_generator<4,K>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-
-//-----------------------------------------------------------------------------
 // class multikey_generator method definitions
 
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 template <template <class> class L, template <class, class> class P>
-multikey_generator<D,K>::multikey_generator(const L<P<K,K> >& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+multikey_generator<D,K>::multikey_generator(const L<P<K,K> >& l) :
+		base_type(), lower_corner(), upper_corner() {
 	typedef	L<P<K,K> >	sequence_type;
 	INVARIANT(l.size() <= D);	// else error on user!
 	iterator li = lower_corner.begin();
@@ -572,8 +416,8 @@ multikey_generator<D,K>::multikey_generator(const L<P<K,K> >& l) : base_type(),
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 template <class LP>
-multikey_generator<D,K>::multikey_generator(const LP& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+multikey_generator<D,K>::multikey_generator(const LP& l) :
+		base_type(), lower_corner(), upper_corner() {
 	typedef	LP	sequence_type;
 	INVARIANT(l.size() <= D);	// else error on user!
 	iterator li = lower_corner.begin();
@@ -623,16 +467,16 @@ multikey_generator<D,K>::initialize(void) {
 	const_iterator
 	end(void) const { return base_type::end(); }
 
-	multikey_base<K>&
+	corner_type&
 	get_lower_corner(void) { return lower_corner; }
 
-	const multikey_base<K>&
+	const corner_type&
 	get_lower_corner(void) const { return lower_corner; }
 
-	multikey_base<K>&
+	corner_type&
 	get_upper_corner(void) { return upper_corner; }
 
-	const multikey_base<K>&
+	const corner_type&
 	get_upper_corner(void) const { return upper_corner; }
 #endif
 
@@ -642,7 +486,7 @@ multikey_generator<D,K>::initialize(void) {
 	\return reference to self.  
  */
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
-multikey_base<K>&
+typename multikey_generator<D,K>::corner_type&
 multikey_generator<D,K>::operator ++ (int) {
 #if 0
 	iterator inc = &this->indices[D-1];
@@ -677,25 +521,13 @@ multikey_generator<D,K>::operator ++ (int) {
 	// all other methods inherited
 
 //-----------------------------------------------------------------------------
-#if 0
-template <class K>
-ostream&
-operator << (ostream& o, const multikey_generator_base<K>& k) {
-	const multikey_base<K>* mk =
-		dynamic_cast<const multikey_base<K>*>(&k);
-	INVARIANT(mk);
-	return o << *mk;
-}
-#endif
-
-//-----------------------------------------------------------------------------
 // class multikey_generator_generic method definitions
 
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 template <template <class> class L, template <class, class> class P>
 multikey_generator_generic<K>::multikey_generator_generic(
 		const L<P<K,K> >& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+		lower_corner(), upper_corner() {
 	typedef	L<P<K,K> >	sequence_type;
 	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
@@ -712,7 +544,7 @@ multikey_generator_generic<K>::multikey_generator_generic(
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 template <class LP>
 multikey_generator_generic<K>::multikey_generator_generic(const LP& l) :
-		base_type(), interface_type(), lower_corner(), upper_corner() {
+		base_type(), lower_corner(), upper_corner() {
 	typedef	LP	sequence_type;
 	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
@@ -752,7 +584,7 @@ multikey_generator_generic<K>::initialize(void) {
 	\return reference to self.  
  */
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
-multikey_base<K>&
+typename multikey_generator_generic<K>::corner_type&
 multikey_generator_generic<K>::operator ++ (int) {
 	reverse_iterator inc = this->rbegin();
 	const const_reverse_iterator msp = this->rend();
@@ -769,10 +601,28 @@ multikey_generator_generic<K>::operator ++ (int) {
 	return *this;
 }
 
+//=============================================================================
+// specializations
+
+template <class K>
+void
+value_writer<multikey_generic<K> >::operator () (const value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	write_array(os, AS_A(const valarray<K>&, v));
+}
+
+//-----------------------------------------------------------------------------
+
+template <class K>
+void
+value_reader<multikey_generic<K> >::operator () (value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	read_sequence_resize(is, AS_A(valarray<K>&, v));
+}
 
 //=============================================================================
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
 
 
-#endif	//	__MULTIKEY_TCC__
+#endif	// __UTIL_MULTIKEY_TCC__
 

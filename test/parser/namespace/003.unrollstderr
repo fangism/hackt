@@ -2,24 +2,24 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300714	module__	0	0	40
+	1	 0x3300710	module__	0	0	40
 	2	 0x3300170	namespc_	0	40	68
 	3	 0x33001a4	namespc_	0	68	99
-	4	 0x3302124	dintcoll	0	99	146
-	5	 0x3804604	datainst	0	146	166
-	6	 0x3302174	datatprf	0	166	182
-	7	 0x3302180	datadefn	0	182	213
-	8	 0x33021d4	dprmlst_	0	213	229
-	9	 0x263f024	cnstpi__	0	229	241
-	10	 0x33021e4	dintcoll	0	241	289
-	11	 0x3804620	datainst	0	289	309
-	12	 0x3302234	datatprf	0	309	325
-	13	 0x3302244	dprmlst_	0	325	341
-	14	 0x33001d8	namespc_	0	341	368
-	15	 0x3302254	dintcoll	0	368	416
-	16	 0x380463c	datainst	0	416	436
-	17	 0x33022a4	datatprf	0	436	452
-	18	 0x33022b4	dprmlst_	0	452	468
+	4	 0x3302124	dintcoll	0	99	139
+	5	 0x3804800	datainst	0	139	159
+	6	 0x3302180	datatprf	0	159	175
+	7	 0x3302190	datadefn	0	175	207
+	8	 0x33021f4	dprmlst_	0	207	223
+	9	 0x2708024	cnstpi__	0	223	235
+	10	 0x3302204	dintcoll	0	235	276
+	11	 0x3804818	datainst	0	276	296
+	12	 0x3302260	datatprf	0	296	312
+	13	 0x3302274	dprmlst_	0	312	328
+	14	 0x33001d8	namespc_	0	328	355
+	15	 0x3302284	dintcoll	0	355	396
+	16	 0x3804830	datainst	0	396	416
+	17	 0x33022e0	datatprf	0	416	432
+	18	 0x33022f4	dprmlst_	0	432	448
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -36,7 +36,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        meow = int<32> meow
+        meow = int<32>^0 meow (instantiated) = ::cat::meow
     }
     dog =     In namespace "dog", we have: {
       0 parameter-collections
@@ -45,8 +45,8 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        moo = int<32> moo
-        woof = int<32> woof
+        moo = int<32>^0 moo (instantiated) = ::dog::moo
+        woof = int<32>^0 woof (instantiated) = ::dog::woof
     }
 }
 

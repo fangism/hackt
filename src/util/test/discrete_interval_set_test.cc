@@ -1,14 +1,15 @@
 /**
 	\file "discrete_interval_set_test.cc"
 	Testing discrete_interval_set data structure.  
-	$Id: discrete_interval_set_test.cc,v 1.3 2004/12/05 05:08:28 fang Exp $
+	$Id: discrete_interval_set_test.cc,v 1.4 2005/02/27 22:54:30 fang Exp $
  */
 
 #include <iostream>
 #include "discrete_interval_set.tcc"
 
 #include "using_ostream.h"
-using namespace DISCRETE_INTERVAL_SET_NAMESPACE;
+using std::map;
+using util::discrete_interval_set;
 
 typedef	discrete_interval_set<long>		long_ranges;
 

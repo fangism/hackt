@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.11 2005/01/17 06:28:05 fang Exp $
+#	$Id: Makefile.am,v 1.12 2005/02/27 22:54:04 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -21,7 +21,7 @@ libtool: $(LIBTOOL_DEPS)
 
 # see configure.in for adding libtool flags
 
-CLEANFILES = art++.doxygen.config art++.doxygen.log
+CLEANFILES = art++.doxygen.config art++.doxygen.log DevelopmentPlan.ps
 
 DISTCLEANFILES = config.in.h~
 
@@ -30,6 +30,7 @@ DISTCLEANDIRS = autom4te.cache
 EXTRA_DIST = Make.stddef \
 	bootstrap maintainerclobber \
 	$(DOXYGEN_CONFIG).in \
+	DevelopmentPlan.dot \
 	readable_gcc_errors.sed \
 	balance_indent.awk
 
@@ -39,6 +40,14 @@ $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 else
 $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
+endif
+
+if HAVE_DOT
+DevelopmentPlan.ps: DevelopmentPlan.dot
+	$(DOT) -Tps $? -o$@
+else
+DevelopmentPlan.ps: DevelopmentPlan.dot
+	@$(ECHO) No dot found in path.  
 endif
 
 if HAVE_DOXYGEN

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.13 2005/02/27 22:54:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -28,11 +28,18 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+//=============================================================================
+// stat of static initializations
+
+STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -41,8 +48,10 @@
 namespace util {
 using ART::entity::pbool_instance;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Write out pbool_instance binary after compressing bits into char.
+	Consider replacing with value_writer functor.  
  */
 template <>
 void
@@ -56,9 +65,11 @@ write_value(ostream& o, const pbool_instance& b) {
 	write_value(o, c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reads in pbool_instance binary, decompressing char to bits.
 	Yeah, I know, this could be more efficient.  
+	Consider replacing with value_reader functor.  
  */
 template <>
 void
@@ -71,15 +82,26 @@ read_value(istream& i, pbool_instance& b) {
 	b.valid = c & 4;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_collection, 
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
 }	// end namespace util
 
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace ADS;		// for composition functors
-using std::dereference;
+#include "using_ostream.h"
+USING_UTIL_COMPOSE
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::indent;
+using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // struct pbool_instance method definitions
@@ -104,9 +126,6 @@ operator << (ostream& o, const pbool_instance& p) {
 
 //=============================================================================
 // class pbool_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection, 
-	PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -151,6 +170,12 @@ pbool_instance_collection::~pbool_instance_collection() {
 ostream&
 pbool_instance_collection::what(ostream& o) const {
 	return o << "pbool-inst";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pbool_instance_collection::type_dump(ostream& o) const {
+	return o << "pbool^" << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -270,7 +295,7 @@ void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
@@ -321,7 +346,7 @@ pbool_instance_collection::write_object_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::load_object_base(persistent_object_manager& m, 
+pbool_instance_collection::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
@@ -394,8 +419,8 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (!i->resolve_ranges(ranges)) {
 		// ranges is passed and returned by reference
 		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
+		cerr << "ERROR: unable to resolve indices of " <<
+			get_qualified_name() << " for instantiation: ";
 		i->dump(cerr) << endl;
 		THROW_EXIT;
 	}
@@ -408,15 +433,16 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<int>::const_iterator ci = key_gen.begin();
+		multikey_index_type::const_iterator
+			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
 		cerr << endl;
 #endif
 		pbool_instance& pi = collection[key_gen];
 		if (pi.instantiated) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen << 
+			cerr << "ERROR: Index " << key_gen << " of " <<
+				get_qualified_name() <<
 				"already instantiated!" << endl;
 			THROW_EXIT;
 		}
@@ -453,13 +479,13 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,
@@ -479,9 +505,10 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pbool_instance& pi(collection[i]);
+	const key_type index(i);
+	const pbool_instance& pi(collection[index]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -511,10 +538,12 @@ pbool_array<D>::lookup_value_collection(
 		const pbool_instance& pi(collection[key_gen]);
 		// INVARIANT(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pbool index "
+			cerr << "FATAL: reference to uninstantiated pbool "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
 		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pbool index "
+			cerr << "ERROR: reference to uninitialized pbool "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
 		ret &= (pi.valid && pi.instantiated);
 		l.push_back(pi.value);
@@ -531,38 +560,37 @@ pbool_array<D>::lookup_value_collection(
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
-pbool_array<D>::assign(const multikey_base<pint_value_type>& k,
+pbool_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
-	pbool_instance& pi = collection[k];
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const key_type index(k);
+	pbool_instance& pi = collection[index];
 	return !(pi = i);	// yes, assignment is intended
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
-pbool_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pbool_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
+#if 1
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
-pbool_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
+#if 1
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -651,7 +679,8 @@ pbool_array<0>::resolve_indices(const const_index_list& l) const {
 bool
 pbool_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) { 
-		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
+		cerr << "ERROR: Reference to uninstantiated pbool " <<
+			get_qualified_name() << "!" << endl;
 		return false;
 	}
 	if (the_instance.valid) {
@@ -681,8 +710,8 @@ pbool_array<0>::lookup_value_collection(
  */
 bool
 pbool_array<0>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
-	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
+		const multikey_index_type& i) const {
+	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return false;
@@ -703,10 +732,10 @@ pbool_array<0>::assign(const value_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_array<0>::assign(const multikey_base<pint_value_type>& k,
+pbool_array<0>::assign(const multikey_index_type& k,
 		const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
+	cerr << "FATAL: pbool_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return true;
@@ -714,28 +743,19 @@ pbool_array<0>::assign(const multikey_base<pint_value_type>& k,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_array<0>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pbool_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -752,6 +772,8 @@ template class pbool_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance_pbool")
 
 #endif	// __ART_OBJECT_INSTANCE_PBOOL_CC__
 

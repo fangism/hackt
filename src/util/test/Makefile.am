@@ -36,12 +36,19 @@ noinst_PROGRAMS = \
 	multi_pool_module_test \
 	multidimensional_sparse_set_test \
 	multidimensional_qmap_test \
+	maplikeset_test \
 	multikey_qmap_test \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
-	packed_array_test
+	multikey_set_test \
+	multikey_set_derived_test \
+	packed_array_test \
+	ring_node_test
+
 
 noinst_LTLIBRARIES = libfangutil.la
+
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -56,9 +63,12 @@ list_vector_pool_test_LDADD = libfangutil.la
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
+maplikeset_test_SOURCES = maplikeset_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
 multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
+multikey_set_test_SOURCES = multikey_set_test.cc
+multikey_set_derived_test_SOURCES = multikey_set_derived_test.cc
 integer_traits_test_SOURCES = integer_traits_test.cc
 packed_array_test_SOURCES = packed_array_test.cc
 exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
@@ -77,6 +87,7 @@ multi_pool_module_test_SOURCES = multi_pool_module_test.cc \
 multi_pool_module_test_LDADD = libfangutil.la
 static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
 static_count_ptr_test_LDADD = libfangutil.la
+ring_node_test_SOURCES = ring_node_test.cc
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
 
@@ -108,6 +119,11 @@ PREFILTER_FILES = \
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
 EMPTY_STDERR_FILES = friend_function_formal_bug.stderr
 
+multikey_set_derived_test.stderr: multikey_set_test.stderr
+	$(CP) $< $@
+
+AUTO_STDERR_FILES = multikey_set_derived_test.stderr
+
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
 
@@ -136,7 +152,7 @@ TESTS = $(noinst_PROGRAMS:=.test)
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
 AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
-	$(EMPTY_STDERR_FILES) $(PREFILTER_FILES)
+	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES) $(PREFILTER_FILES)
 
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
@@ -147,9 +163,10 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 
 .cvsignore: Makefile.am Makefile.in
 
-all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES)
+all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 clean-local:
+	-$(RM) $(BUILT_SOURCES)
 	-$(RM) *.core core.*
 	-$(RM) *.diff *.test *.out *.filter
 

@@ -1,20 +1,19 @@
 /**
 	\file "hash_qmap_test.cc"
 	Test for queryable hash map.
-	$Id: hash_qmap_test.cc,v 1.5 2004/12/05 05:08:28 fang Exp $
+	$Id: hash_qmap_test.cc,v 1.6 2005/02/27 22:54:30 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "hash_qmap.tcc"
-#include "memory/pointer_classes.h"
+#include "memory/excl_ptr.h"
 #include "hash_specializations.h"
 
 #include "using_ostream.h"
 using std::string;
-using namespace HASH_QMAP_NAMESPACE;
-// using namespace PTRS_NAMESPACE;
+using util::hash_qmap;
 using namespace util::memory;
 
 typedef	hash_qmap<string, some_ptr<string> > 	test_map_type;

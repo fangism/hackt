@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.12 2005/02/27 22:12:00 fang Exp $
+	$Id: art++-parse.yy,v 1.13 2005/02/27 22:54:18 fang Exp $
  */
 
 %{
@@ -228,7 +228,7 @@ extern const char* const yyrule[];
 	data_param_decl_list*	_data_param_decl_list;
 	instance_management*	_instance_management;
 	instance_base*		_instance_base;
-	instance_array*		_instance_array;
+	ART::parser::instance_array*	_instance_array;
 	instance_declaration*	_instance_declaration;
 	instance_id_list*	_instance_id_list;
 	definition_body*	_definition_body;
@@ -239,7 +239,7 @@ extern const char* const yyrule[];
 	instance_connection*	_instance_connection;
 	connection_statement*	_connection_statement;
 	statement*		_statement;
-	instance_alias*		_instance_alias;
+	ART::parser::instance_alias*	_instance_alias;
 	alias_list*		_alias_list;
 
 	expr*			_expr;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.5 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.6 2005/02/27 22:54:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -67,7 +67,8 @@ virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
 // should be pure virtual eventually
-virtual	void unroll(void) const;
+virtual	void
+	unroll(unroll_context& ) const;
 
 /***
 	case: A top-level instantiation is called.
@@ -84,7 +85,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class instantiation_statement
 

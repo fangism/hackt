@@ -1,13 +1,14 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.9 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_definition_base.h,v 1.10 2005/02/27 22:54:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
 #define	__ART_OBJECT_DEFINITION_BASE_H__
 
-#include "STL/list.h"
+// #include "STL/list.h"
+#include <vector>
 
 #include "macros.h"
 #include "art_object_base.h"
@@ -35,13 +36,13 @@ using parser::token_identifier;
  */
 namespace entity {
 //=============================================================================
-USING_LIST
+// USING_LIST
 using std::string;
 using std::istream;
+using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**
@@ -75,7 +76,12 @@ public:
 	// double-maintenance...
 	typedef	hash_qmap<string, template_formals_value_type>
 					template_formals_map_type;
-	typedef	list<template_formals_value_type>
+
+	/**
+		Using vector instead of list, for constant-time
+		position computation, via iterator distance.  
+	 */
+	typedef	std::vector<template_formals_value_type>
 					template_formals_list_type;
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
@@ -97,8 +103,9 @@ protected:
 		to allow self-recursive template definitions.  
 	 */
 	bool				defined;
-public:
+protected:
 	definition_base();
+public:
 
 virtual	~definition_base();
 
@@ -134,6 +141,9 @@ virtual	never_ptr<const scopespace>
 
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
+
+	size_t
+	lookup_template_formal_position(const string& id) const;
 
 /** should be pure virtual, but let's default to NULL */
 virtual	never_ptr<const instance_collection_base>
@@ -233,7 +243,7 @@ private:
 		ostream&) const;
 
 	void
-	load_object_template_formals(persistent_object_manager& m, 
+	load_object_template_formals(const persistent_object_manager& m, 
 		istream&);
 
 protected:
@@ -248,7 +258,7 @@ protected:
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
 	static const never_ptr<const definition_base>	null;

@@ -1,13 +1,16 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.13 2005/02/27 22:11:59 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.14 2005/02/27 22:54:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
 #define	__ART_OBJECT_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
 
 #include <iostream>
 #include <fstream>
@@ -50,7 +53,22 @@
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
+//=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// these are pretty much OBSOLETE, remove them some time
 
 #define		DEBUG_NAMESPACE			1 && DEBUG_CHECK_BUILD
 #define		TRACE_QUERY			0	// bool, ok to change
@@ -95,20 +113,30 @@
 // #define	USE_UNDEFINED_OBJECTS		1
 
 //=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::name_space, NAMESPACE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 
 #include "using_ostream.h"
-using HASH_QMAP_NAMESPACE::hash_map;
-using QMAP_NAMESPACE::qmap;
+using util::hash_map;
+using util::qmap;
 using parser::scope;
 using std::_Select2nd;
 using namespace util::memory;
-using namespace ADS;		// for function compositions
+USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // general non-member function definitions
@@ -531,7 +559,8 @@ scopespace::write_object_base_fake(const persistent_object_manager& m,
 	That is intentional since we don't intend to keep around aliases.  
  */
 void
-scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
+scopespace::load_object_used_id_map(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
@@ -547,7 +576,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 					<< index << endl;
 			}
 		} else {
-			m_obj->load_object(m);	// recursion!!!
+			m.load_object_once(m_obj);	// recursion!!!
 			// need to reconstruct it to get its key, 
 			// then add this object to the used_id_map
 			load_used_id_map_object(m_obj);	// pure virtual
@@ -557,7 +586,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::load_object_base(persistent_object_manager& m, istream& f) {
+scopespace::load_object_base(const persistent_object_manager& m, istream& f) {
 	load_object_used_id_map(m, f);
 }
 
@@ -667,8 +696,6 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 
 //=============================================================================
 // class name_space method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
 
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
 
@@ -1385,7 +1412,7 @@ never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base>& db) {
 	typedef	never_ptr<definition_base>	return_type;
 	NEVER_NULL(db);
-	string k = db->get_name();
+	const string k = db->get_name();
 	const never_ptr<const object> probe(lookup_object_here(k));
 	if (probe) {
 		const never_ptr<const definition_base>
@@ -1397,7 +1424,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 				// can discard new declaration
 				// to delete db, we steal ownership, 
 				// and deallocate it with a local excl_ptr
-				excl_ptr<definition_base>
+				const excl_ptr<definition_base>
 					release_db(db);
 				return return_type(release_db);
 			} else {
@@ -1452,7 +1479,8 @@ name_space::lookup_open_alias(const string& id) const {
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
@@ -1487,13 +1515,7 @@ name_space::construct_empty(const int i) {
 		only modifies the flagged state of the entries.  
  */
 void
-name_space::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-
-	// First, write out the index number associated with this address.  
-	WRITE_POINTER_INDEX(f, m);
-
+name_space::write_object(const persistent_object_manager& m, ostream& f) const {
 	// Second, write out the name of this namespace.
 	// name MUST be available for use by other visitors right away
 	write_string(f, key);
@@ -1502,8 +1524,6 @@ name_space::write_object(const persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	scopespace::write_object_base(m, f);
-
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1513,15 +1533,8 @@ name_space::write_object(const persistent_object_manager& m) const {
 	was only partially initialized on allocation.  
  */
 void
-name_space::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+name_space::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE("namespace::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-
-	// First, strip away the index number associated with this address.
-	STRIP_POINTER_INDEX(f, m);
-
 	// Second, read in the name of the namespace.  
 	read_string(f, const_cast<string&>(key));	// coercive cast
 
@@ -1529,10 +1542,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	scopespace::load_object_base(m, f);
-
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited, don't reload
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.2 2005/01/28 19:04:02 fang Exp $
+	$Id: integer_traits.h,v 1.3 2005/02/27 22:54:29 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -238,10 +238,10 @@ struct prev_prime<1> {	typedef	enum { value = 2 } value_type;	};
 template <>
 struct prev_prime<0> {	typedef	enum { value = 2 } value_type;	};
 
-#if 0
+#if 1
 /**
 	Stops when N is prime.
-	\param N is not prime, must be odd.
+	\param N is not prime, must be odd (except 2).
  */
 template <size_t N>
 struct next_prime {
@@ -250,6 +250,12 @@ struct next_prime {
 			size_t, N+2, next_prime<N+2>::value>::value
 	};
 };
+
+template <>
+struct next_prime<0> {	typedef	enum { value = 2 } value_type;	};
+
+template <>
+struct next_prime<1> {	typedef	enum { value = 2 } value_type;	};
 
 template <>
 struct next_prime<2> {	typedef	enum { value = 3 } value_type;	};
@@ -282,28 +288,50 @@ struct prime_before_prime<3> { enum { value = 2 }; };
 	\param Q the next prime factor to try.
  */
 template <size_t N, size_t Q>
-struct prime_test_loop {
+struct reverse_prime_test_loop {
 	/**
 		Value is false if there are factors.  
 	 */
 	enum {
 		// order of evaluation should be switched...
 		value = (N % Q) &&
-			prime_test_loop<N, prime_before_prime<Q>::value
+			reverse_prime_test_loop<
+				N, prime_before_prime<Q>::value
 			>::value
 	};
 };
 
 // specialization terminate counting down
 template <size_t N>
-struct prime_test_loop<N, 2> {
+struct reverse_prime_test_loop<N, 2> {
 	enum {	value = (N % 2) };
 };
+
+#if 0
+/**
+	Forward (incremental) test loop.
+ */
+template <size_t N, size_t Q>
+struct prime_test_loop<N, 2> {
+	enum {
+		value = (N % Q) &&
+			prime_test_loop<
+				// ideally, next_prime<Q>
+				N, next_odd<Q>::value
+			>::value
+	};
+};
+
+template <size_t N>
+struct prime_test_loop<N, last_prime_to_check<N>::value> {
+	enum {	value = (N % last_prime_to_check<N>::value) };
+};
+#endif
 
 template <size_t N>
 struct is_prime {
 	// start with first prime less than or equal to...
-	enum {	value = prime_test_loop<N, 
+	enum {	value = reverse_prime_test_loop<N, 
 			prev_prime<
 				next_odd<sqrt_floor<N>::value>::value
 			>::value

@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.7 2005/01/28 20:40:25 fang Exp $
+#	$Id: Make.test,v 1.8 2005/02/27 22:54:34 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -99,9 +99,21 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
-#	$(LN_S) $< $@
 
 .cvsignore: Makefile.am Makefile.in $(top_srcdir)/test/Make.test
+
+# extra prefix ". " needed for shell script interpretation
+# note: cd $$d; make ... will not work!
+clean-cvsignore:
+	-$(RM) .cvsignore
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d clean-cvsignore ; \
+			fi ; \
+		fi ; \
+	done
+
 
 # automatically removes $(CLEANFILES)
 clean-local:

@@ -1,28 +1,32 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.h,v 1.13 2005/02/27 22:54:26 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
-#include <iosfwd>
+#include <iosfwd>			// include stringstream
+#include <vector>
 #include "persistent.h"
 
 #include "hash_qmap.h"
-#include "sstream.h"			// reduce to forward decl?
 #include "memory/pointer_classes.h"
 #include "IO_utils.h"			// for read and write to streams
 
 //=============================================================================
 // macros
 
+#if 0
 /**
 	Default manner for static persistent type registration.  
+	Using this macro will invoke type registration per object
+	during global static initialization.  
  */
 #define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
 static const util::persistent_traits<T> __persistent_traits_ ## T ## __(str);
+#endif
 
 //=============================================================================
 namespace util {
@@ -35,7 +39,7 @@ using std::stringstream;
 using std::ofstream;
 using std::ifstream;
 using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
+using util::hash_qmap;
 
 //=============================================================================
 /**
@@ -74,7 +78,10 @@ private:
 
 		/** reference count for counter pointers */
 	mutable	size_t*			ref_count;
-		/** scratch flag, general purpose flag */
+		/**
+			scratch flag, general purpose flag,
+			consider making mutable
+		 */
 		bool			scratch;
 		/** start of stream position */
 		streampos		buf_head;
@@ -241,6 +248,7 @@ public:
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a = 0);
 
+private:
 	bool
 	flag_visit(const persistent* ptr);
 
@@ -253,9 +261,11 @@ public:
 	long
 	lookup_ptr_index(const persistent* ptr) const;
 
+public:
 	persistent*
 	lookup_obj_ptr(const long i) const;
 
+private:
 	size_t*
 	lookup_ref_count(const long i) const;
 
@@ -370,27 +380,38 @@ public:
 	write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
 #endif
 
+	template <class P>
+	void
+	load_object_once(const P& p) const;
+
+private:
+	void
+	__load_object_once(persistent* p, raw_pointer_tag) const;
+
+	template <class P>
+	void
+	__load_object_once(const P& p, pointer_class_base_tag) const;
+
+public:
 
 // two interface functions suffice for file interaction:
 	static
 	void
 	save_object_to_file(const string& s, const persistent& m);
 
-	template <class T>
+//	template <class T>
 	static
-	excl_ptr<T>
+	excl_ptr<persistent>
 	load_object_from_file(const string& s);
 
 // self-test functions
-	template <class T>
 	static
-	excl_ptr<T>
-	self_test(const string& s, const T& m);
+	excl_ptr<persistent>
+	self_test(const string& s, const persistent& m);
 
-	template <class T>
 	static
-	excl_ptr<T>
-	self_test_no_file(const T& m);
+	excl_ptr<persistent>
+	self_test_no_file(const persistent& m);
 
 private:
 	void
@@ -420,8 +441,7 @@ private:
 	void
 	reconstruct(void);
 
-	template <class T>
-	excl_ptr<T>
+	excl_ptr<persistent>
 	get_root(void);
 
 	void
@@ -430,7 +450,7 @@ private:
 };	// end class persistent_object_manager
 
 //=============================================================================
-
+#if 0
 /**
 	Using per-class traits removes the burden of adding
 	static const members to persistent classes.  
@@ -481,7 +501,12 @@ public:
 
 	// default destructor
 
+	static
+	const persistent::hash_key&
+	get_type_key(void);
+
 };	// end class persistent_traits
+#endif
 
 //=============================================================================
 }	// end namespace util

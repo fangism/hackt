@@ -1,0 +1,44 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2c02d00	module__	0	0	52
+	2	 0x2c00170	namespc_	0	52	84
+	3	 0x2c02d24	dintcoll	0	84	131
+	4	 0x4004800	datainst	0	131	151
+	5	 0x2c02d80	datatprf	0	151	167
+	6	 0x2c02d90	datadefn	0	167	199
+	7	 0x2c02df4	dprmlst_	0	199	215
+	8	 0x297e024	cnstpi__	0	215	227
+	9	 0x2c02e04	dintcoll	0	227	272
+	10	 0x4004818	datainst	0	272	292
+	11	 0x2c02e60	datatprf	0	292	308
+	12	 0x2c02e74	dprmlst_	0	308	324
+	13	 0x2c02e84	dintcoll	0	324	371
+	14	 0x4004830	datainst	0	371	391
+	15	 0x2c02ee0	datatprf	0	391	407
+	16	 0x2c02ef4	dprmlst_	0	407	423
+	17	 0x2c02f00	dialias_	0	423	443
+	18	 0x2c02f2c	sdiref__	0	443	463
+	19	 0x2c02f4c	sdiref__	0	463	483
+	20	 0x2c02f50	dialias_	0	483	507
+	21	 0x2c02f7c	sdiref__	0	507	527
+	22	 0x2c02f9c	sdiref__	0	527	547
+	23	 0x2c02fbc	sdiref__	0	547	567
+	24	 0x2c02fc0	dialias_	0	567	587
+	25	 0x2c02fec	sdiref__	0	587	607
+	26	 0x2c0300c	sdiref__	0	607	627
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    blah = int<32>^0 blah (instantiated) = ::sneeze
+    copier = int<32>^0 copier (instantiated) = ::blah
+    sneeze = int<32>^0 sneeze (instantiated) = ::copier
+}
+

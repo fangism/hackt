@@ -1,0 +1,37 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x33006c0	module__	0	0	28
+	2	 0x3300170	namespc_	0	28	52
+	3	 0x33019f0	procdefn	0	52	113
+	4	 0x3301a64	dboolcol	0	113	149
+	5	 0x3804800	datainst	0	149	169
+	6	 0x33006e0	datatprf	0	169	185
+	7	 0x3301ac0	datadefn	0	185	218
+	8	 0x3301b24	dintcoll	0	218	259
+	9	 0x3804818	datainst	0	259	279
+	10	 0x33006f0	datatprf	0	279	295
+	11	 0x3301b80	datadefn	0	295	327
+	12	 0x3300704	dprmlst_	0	327	343
+	13	 0x2708024	cnstpi__	0	343	355
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    fang = process-definition (declared) fang      (
+        int<32> food
+        bool<> now
+      )
+      In definition "fang", we have: {
+        now = bool<> now
+        food = int<32> food
+      }
+
+}
+

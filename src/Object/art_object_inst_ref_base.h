@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.7 2005/02/27 22:54:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -11,7 +11,6 @@
 #include "persistent.h"
 #include "art_object_instance_base.h"
 #include "memory/pointer_classes.h"
-#include "multidimensional_sparse_set.h"
 
 namespace ART {
 namespace entity {
@@ -20,7 +19,6 @@ using std::ostream;
 using std::istream;
 USING_LIST
 using namespace util::memory;
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
 /**
@@ -28,11 +26,17 @@ using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?
+
+	Why derived from object? to be pushable onto an object stack... arg!
+	We need separate stacks...
+	See NOTES.
  */
-class instance_reference_base : virtual public object, 
+class instance_reference_base : 
+		virtual public object, 
 		virtual public persistent {
 public:
 	instance_reference_base() : object(), persistent() { }
+
 virtual	~instance_reference_base() { }
 
 virtual	ostream&
@@ -76,6 +80,19 @@ virtual	bool
 
 virtual	bool
 	must_be_type_equivalent(const instance_reference_base& i) const = 0;
+
+	/**
+		Start an aliases connection list based on the referenced type.  
+		We have the option of adding the first element to the list...
+	 */
+	static
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection(
+		const count_ptr<const instance_reference_base>&);
+
+private:
+virtual	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -155,9 +172,12 @@ private:
 	/**
 		Helper class for evaluating sparse, multidimensional
 		collections.  
+		Virtual base class wrapper around sparse set.  
 	 */
-	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
-						mset_base;
+	class mset_base;
+
+	template <size_t>
+	class mset;
 protected:
 	/**
 		The indices (optional) for this particular reference.
@@ -217,7 +237,7 @@ virtual	~simple_instance_reference();
 	implicit_static_constant_indices(void) const;
 
 	bool
-	attach_indices(excl_ptr<index_list> i);
+	attach_indices(excl_ptr<index_list>& i);
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -261,50 +281,16 @@ protected:		// for children only
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& i);
+	load_object_base(const persistent_object_manager& m, istream& i);
 
 private:
 	// need help with instantiation state, count?
-	void write_instance_collection_state(ostream& f) const;
-	void load_instance_collection_state(istream& f);
+	void
+	write_instance_collection_state(ostream& f) const;
+
+	void
+	load_instance_collection_state(istream& f);
 };	// end class simple_instance_reference
-
-//=============================================================================
-/**
-	Abstract interface class for member instance references.  
-	Make type-specific {process,data,channel}?
-	Don't need instantiation_state because members, can only
-	refer to ports, which cannot be appended with more instances
-	and indices.  
- */
-class member_instance_reference_base : virtual public instance_reference_base {
-protected:
-	/**
-		The owning base instance reference, 
-		must have dimension-0, scalar... for now
-		Is type limiter to simple? or can it be nested member?
-	 */
-	const count_ptr<const simple_instance_reference>	base_inst_ref;
-protected:
-	member_instance_reference_base();
-public:
-	explicit
-	member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b);
-
-virtual	~member_instance_reference_base();
-
-protected:	// for children only
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(persistent_object_manager&, istream&);
-
-};	// end class member_instance_reference_base
 
 //=============================================================================
 /**
@@ -316,18 +302,11 @@ protected:
 	typedef	simple_instance_reference	parent_type;
 //	excl_ptr<index_list>			array_indices;	// inherited
 
-// virtualized
-//	never_ptr<param_instance_collection>		param_inst_ref;
 protected:
 	param_instance_reference();
 public:
 	explicit
 	param_instance_reference(const instantiation_state& st);
-
-#if 0
-	param_instance_reference(excl_ptr<index_list>& i, 
-		const instantiation_state& st);
-#endif
 
 virtual	~param_instance_reference() { }
 

@@ -1,0 +1,95 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3303d80	module__	0	0	60
+	2	 0x3300170	namespc_	0	60	84
+	3	 0x3303da4	dintcoll	1	84	550
+	4	 0x3804800	datainst	0	550	570
+	5	 0x3303df0	datatprf	0	570	586
+	6	 0x3303e00	datadefn	0	586	618
+	7	 0x3303e64	dprmlst_	0	618	634
+	8	 0x2708024	cnstpi__	0	634	646
+	9	 0x3303e74	crnglst_	0	646	666
+	10	 0x3804818	datainst	0	666	686
+	11	 0x3303e80	datatprf	0	686	702
+	12	 0x3303e94	dprmlst_	0	702	718
+	13	 0x3303ea4	crnglst_	0	718	738
+	14	 0x3804830	datainst	0	738	758
+	15	 0x3303eb0	datatprf	0	758	774
+	16	 0x3303ec4	dprmlst_	0	774	790
+	17	 0x3303ed4	crnglst_	0	790	810
+	18	 0x3804848	datainst	0	810	830
+	19	 0x3303ee0	datatprf	0	830	846
+	20	 0x3303ef4	dprmlst_	0	846	862
+	21	 0x3303f04	crnglst_	0	862	882
+	22	 0x3804860	datainst	0	882	902
+	23	 0x3303f10	datatprf	0	902	918
+	24	 0x3303f24	dprmlst_	0	918	934
+	25	 0x3303f34	crnglst_	0	934	954
+	26	 0x3804878	datainst	0	954	974
+	27	 0x3303f40	datatprf	0	974	990
+	28	 0x3303f54	dprmlst_	0	990	1006
+	29	 0x3303f64	crnglst_	0	1006	1026
+	30	 0x3804890	datainst	0	1026	1046
+	31	 0x3303f70	datatprf	0	1046	1062
+	32	 0x3303f84	dprmlst_	0	1062	1078
+	33	 0x3303f94	crnglst_	0	1078	1098
+	34	 0x38048a8	datainst	0	1098	1118
+	35	 0x3303fa0	datatprf	0	1118	1134
+	36	 0x3303fb4	dprmlst_	0	1134	1150
+	37	 0x3303fc4	crnglst_	0	1150	1170
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    foo = int<32>^1 foo with indices: {
+      [0..3]
+      [40..42]
+      [6..12]
+      [15..20]
+      [25..29]
+      [21..24]
+      [4..4]
+      [5..5]
+    }
+      unrolled indices: {
+        0 = ::foo[0]
+        1 = ::foo[1]
+        2 = ::foo[2]
+        3 = ::foo[3]
+        4 = ::foo[4]
+        5 = ::foo[5]
+        6 = ::foo[6]
+        7 = ::foo[7]
+        8 = ::foo[8]
+        9 = ::foo[9]
+        10 = ::foo[10]
+        11 = ::foo[11]
+        12 = ::foo[12]
+        15 = ::foo[15]
+        16 = ::foo[16]
+        17 = ::foo[17]
+        18 = ::foo[18]
+        19 = ::foo[19]
+        20 = ::foo[20]
+        21 = ::foo[21]
+        22 = ::foo[22]
+        23 = ::foo[23]
+        24 = ::foo[24]
+        25 = ::foo[25]
+        26 = ::foo[26]
+        27 = ::foo[27]
+        28 = ::foo[28]
+        29 = ::foo[29]
+        40 = ::foo[40]
+        41 = ::foo[41]
+        42 = ::foo[42]
+      }
+}
+

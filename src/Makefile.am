@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.43 2005/02/27 22:11:56 fang Exp $
+#	$Id: Makefile.am,v 1.44 2005/02/27 22:54:07 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -123,6 +123,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
+	Object/art_object_classification_details.cc \
 	Object/art_object_expr.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
@@ -156,15 +157,23 @@ OBJECT_CC_NO_H_FILES = \
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
+	Object/art_object_classification_tags.h \
+	Object/art_object_connect.tcc \
 	Object/art_object_definition_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
+	Object/art_object_instance_alias.h \
+	Object/art_object_instance_collection.h \
+	Object/art_object_instance_collection.tcc \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_ref_base.h \
+	Object/art_object_inst_ref.tcc \
+	Object/art_object_member_inst_ref.h \
+	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h
 
@@ -176,6 +185,8 @@ UTIL_HEADER_FILES = \
 	util/STL/construct_fwd.h \
 	util/STL/deque_fwd.h \
 	util/STL/functional_fwd.h \
+	util/STL/hash_map_fwd.h \
+	util/STL/hash_map.h \
 	util/STL/list_fwd.h \
 	util/STL/list.h \
 	util/STL/list.tcc \
@@ -185,17 +196,24 @@ UTIL_HEADER_FILES = \
 	util/STL/namespace.h \
 	util/STL/pair_fwd.h \
 	util/STL/reverse_iterator.h \
+	util/STL/set_fwd.h \
 	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
 	util/STL/vector_fwd.h \
+	util/IO_utils_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
+	util/assoc_traits_fwd.h \
+	util/assoc_traits.h \
+	util/const_assoc_query.h \
+	util/const_assoc_query.tcc \
+	util/const_traits.h \
+	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/discrete_interval_set.h \
 	util/discrete_interval_set.tcc \
 	util/getopt_portable.h \
-	util/hash_map.h \
 	util/hash_qmap_fwd.h \
 	util/hash_qmap.h \
 	util/hash_qmap.tcc \
@@ -206,6 +224,7 @@ UTIL_HEADER_FILES = \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
+	util/maplikeset.h \
 	util/memory/chunk_map_pool_fwd.h \
 	util/memory/chunk_map_pool.h \
 	util/memory/chunk_map_pool.tcc \
@@ -230,13 +249,20 @@ UTIL_HEADER_FILES = \
 	util/multikey_fwd.h \
 	util/multikey.h \
 	util/multikey.tcc \
+	util/multikey_assoc_fwd.h \
+	util/multikey_assoc.h \
+	util/multikey_assoc.tcc \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
 	util/multikey_map.tcc \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
 	util/multikey_qmap.tcc \
+	util/multikey_set_fwd.h \
+	util/multikey_set.h \
+	util/multikey_set.tcc \
 	util/nested_iterator.h \
+	util/null_construct.h \
 	util/numeric/integer_traits.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
@@ -248,6 +274,9 @@ UTIL_HEADER_FILES = \
 	util/qmap_fwd.h \
 	util/qmap.h \
 	util/qmap.tcc \
+	util/ring_node_fwd.h \
+	util/ring_node.h \
+	util/ring_node.tcc \
 	util/sstream.h \
 	util/stacktrace.h \
 	util/static_trace.h \

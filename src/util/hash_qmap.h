@@ -1,20 +1,23 @@
 /**
 	\file "hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
-	$Id: hash_qmap.h,v 1.7 2004/12/15 23:31:13 fang Exp $
+	$Id: hash_qmap.h,v 1.8 2005/02/27 22:54:21 fang Exp $
  */
 
-#ifndef	__HASH_QMAP_H__
-#define	__HASH_QMAP_H__
+#ifndef	__UTIL_HASH_QMAP_H__
+#define	__UTIL_HASH_QMAP_H__
 
 #include "macros.h"
+#include "STL/hash_map.h"
 #include "hash_qmap_fwd.h"		// forward declarations only
+#include "const_assoc_query.h"
 
-namespace HASH_QMAP_NAMESPACE {
+namespace util {
 using HASH_MAP_NAMESPACE::hash_map;
 using std::pair;
 
 //-----------------------------------------------------------------------------
+#if 1
 /**
 	Extension of Standard Template Library's map container.  
 	Adds an lookup operator with constant semantics for querying
@@ -27,36 +30,42 @@ using std::pair;
 	\param A the allocator.  
  */
 HASH_QMAP_TEMPLATE_SIGNATURE
+class hash_qmap : public const_assoc_query<hash_map<K,T,H,E,A> > {
+};
+
+#else
+//-----------------------------------------------------------------------------
+HASH_QMAP_TEMPLATE_SIGNATURE
 class hash_qmap {
 private:
-	typedef hash_map<K,T,H,E,A>			parent;
-	parent						the_map;
+	typedef hash_map<K,T,H,E,A>			parent_type;
+	parent_type					the_map;
 public:
 	/// key type is K
-	typedef typename parent::key_type		key_type;
+	typedef typename parent_type::key_type		key_type;
 	/// data type is T
-	typedef typename parent::data_type		data_type;
+	typedef typename parent_type::data_type		data_type;
 	/// mapped type is T
-	typedef typename parent::mapped_type		mapped_type;
+	typedef typename parent_type::mapped_type	mapped_type;
 	/// value_type is pair<const K, T>
-	typedef typename parent::value_type		value_type;
+	typedef typename parent_type::value_type	value_type;
 
-	typedef typename parent::hasher			hasher;
-	typedef typename parent::key_equal		key_equal;
-	typedef typename parent::allocator_type		allocator_type;
+	typedef typename parent_type::hasher		hasher;
+	typedef typename parent_type::key_equal		key_equal;
+	typedef typename parent_type::allocator_type	allocator_type;
 
 	/// this is not T&, depends on implementation type (hashtable)
-	typedef typename parent::reference		reference;
+	typedef typename parent_type::reference		reference;
 	/// this is not const T&, depends on implementation type (hashtable)
-	typedef typename parent::const_reference	const_reference;
+	typedef typename parent_type::const_reference	const_reference;
 
-	typedef typename parent::iterator		iterator;
-	typedef typename parent::const_iterator		const_iterator;
-	typedef typename parent::size_type		size_type;
-	typedef typename parent::difference_type	difference_type;
-	typedef typename parent::pointer		pointer;
-	typedef typename parent::const_pointer		const_pointer;
-	typedef typename parent::allocator_type		allocator_type;
+	typedef typename parent_type::iterator		iterator;
+	typedef typename parent_type::const_iterator	const_iterator;
+	typedef typename parent_type::size_type		size_type;
+	typedef typename parent_type::difference_type	difference_type;
+	typedef typename parent_type::pointer		pointer;
+	typedef typename parent_type::const_pointer	const_pointer;
+	typedef typename parent_type::allocator_type	allocator_type;
 
 	// note: no reverse iterator
 
@@ -143,11 +152,11 @@ public:
 	find(const key_type& __key) const;
 
 	/**
-		Just wrapper to the parent's lookup operation, 
+		Just wrapper to the parent_type's lookup operation, 
 		which modifies the map even when querying for a
 		non-existent entry.  
 		Explicitly written here so the const version below
-		doesn't overshadow the parent's non-const version.  
+		doesn't overshadow the parent_type's non-const version.  
 		\param k the key used to lookup.  
 		\return modifiable reference to the object if found, 
 			else a freshly constructed object.  
@@ -226,31 +235,31 @@ public:
 HASH_QMAP_TEMPLATE_SIGNATURE
 class hash_qmap<K,T*,H,E,A> {
 private:
-	typedef hash_map<K,T*,H,E,A>			parent;
-	parent						the_map;
+	typedef hash_map<K,T*,H,E,A>			parent_type;
+	parent_type					the_map;
 public:
 	/// key type is K
-	typedef typename parent::key_type		key_type;
+	typedef typename parent_type::key_type		key_type;
 	/// data type is T
-	typedef typename parent::data_type		data_type;
+	typedef typename parent_type::data_type		data_type;
 	/// mapped type is T
-	typedef typename parent::mapped_type		mapped_type;
+	typedef typename parent_type::mapped_type	mapped_type;
 	/// value_type is pair<const K, T>
-	typedef typename parent::value_type		value_type;
+	typedef typename parent_type::value_type	value_type;
 
-	typedef typename parent::hasher			hasher;
-	typedef typename parent::key_equal		key_equal;
-	typedef typename parent::allocator_type		allocator_type;
+	typedef typename parent_type::hasher		hasher;
+	typedef typename parent_type::key_equal		key_equal;
+	typedef typename parent_type::allocator_type	allocator_type;
 
-	typedef typename parent::reference		reference;
-	typedef typename parent::const_reference	const_reference;
-	typedef typename parent::iterator		iterator;
-	typedef typename parent::const_iterator		const_iterator;
-	typedef typename parent::size_type		size_type;
-	typedef typename parent::difference_type	difference_type;
-	typedef typename parent::pointer		pointer;
-	typedef typename parent::const_pointer		const_pointer;
-	typedef typename parent::allocator_type		allocator_type;
+	typedef typename parent_type::reference		reference;
+	typedef typename parent_type::const_reference	const_reference;
+	typedef typename parent_type::iterator		iterator;
+	typedef typename parent_type::const_iterator	const_iterator;
+	typedef typename parent_type::size_type		size_type;
+	typedef typename parent_type::difference_type	difference_type;
+	typedef typename parent_type::pointer		pointer;
+	typedef typename parent_type::const_pointer	const_pointer;
+	typedef typename parent_type::allocator_type	allocator_type;
 
 	// note: no reverse iterator
 
@@ -340,11 +349,11 @@ public:
 	find(const key_type& __key) const;
 
 	/**
-		Just wrapper to the parent's lookup operation, 
+		Just wrapper to the parent_type's lookup operation, 
 		which modifies the map even when querying for a
 		non-existent entry.  
 		Explicitly written here so the const version below
-		doesn't overshadow the parent's non-const version.  
+		doesn't overshadow the parent_type's non-const version.  
 		\param k the key used to lookup.  
 		\return modifiable reference to the object if found, 
 			else a freshly constructed object.  
@@ -415,10 +424,11 @@ public:
 	clean(void);
 
 };	// and class hash_qmap specialization
+#endif
 
 //-----------------------------------------------------------------------------
 
-}	// end namespace HASH_QMAP_NAMESPACE
+}	// end namespace util
 
-#endif	//	__HASH_QMAP_H__
+#endif	//	__UTIL_HASH_QMAP_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.15 2005/02/27 22:54:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -24,6 +24,7 @@
 #include "what.h"
 #include "binders.h"
 #include "compose.h"
+#include "dereference.h"
 #include "ptrs_functional.h"
 
 //=============================================================================
@@ -32,15 +33,23 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_expression_assignment,
 		"pint-expression-assignment")
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_expression_assignment, 
 		"pbool-expression-assignment")
-}
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_expression_assignment,
+		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_expression_assignment,
+		PINT_EXPR_ASSIGNMENT_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace ADS;		// from "compose.h"
+USING_UTIL_COMPOSE
 using std::mem_fun_ref;
-using std::dereference;
+using util::dereference;
 using std::bind2nd_argval;
+using util::persistent_traits;
 
 //=============================================================================
 // class param_expression_assignment method definitions
@@ -113,9 +122,6 @@ param_expression_assignment::validate_reference_is_uninitialized(
 
 //=============================================================================
 // class pbool_expression_assignment method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_expression_assignment,
-	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_expression_assignment, 32)
@@ -238,7 +244,7 @@ pbool_expression_assignment::append_param_instance_reference(
 	Assigns src value to each dest, after unpacking instances.  
  */
 void
-pbool_expression_assignment::unroll(void) const {
+pbool_expression_assignment::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pbool_instance_reference::assigner the_assigner(*src);
@@ -261,13 +267,14 @@ pbool_expression_assignment::unroll(void) const {
 void
 pbool_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
 			&pbool_instance_reference::collect_transient_info), m), 
-		dereference<count_ptr, const pbool_instance_reference>()
+		dereference<count_ptr<const pbool_instance_reference> >()
 	)
 	);
 }
@@ -283,34 +290,21 @@ pbool_expression_assignment::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_expression_assignment::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_expression_assignment::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_expression_assignment::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
 // class pint_expression_assignment method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_expression_assignment,
-	PINT_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_expression_assignment, 64)
@@ -424,7 +418,7 @@ pint_expression_assignment::append_param_instance_reference(
 	Assigns src value to each dest, after unpacking instances.  
  */
 void
-pint_expression_assignment::unroll(void) const {
+pint_expression_assignment::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pint_instance_reference::assigner the_assigner(*src);
@@ -442,13 +436,14 @@ pint_expression_assignment::unroll(void) const {
 void
 pint_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
 			&pint_instance_reference::collect_transient_info), m), 
-		dereference<count_ptr, const pint_instance_reference>()
+		dereference<count_ptr<const pint_instance_reference> >()
 	)
 	);
 }
@@ -464,27 +459,17 @@ pint_expression_assignment::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_expression_assignment::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_expression_assignment::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pint_expression_assignment::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================

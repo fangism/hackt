@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.14 2005/02/27 22:54:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -34,6 +34,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
@@ -50,6 +51,10 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
 
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_collection, 
+		PINT_INSTANCE_COLLECTION_TYPE_KEY)
+
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
 }	// end namespace memory
@@ -62,12 +67,16 @@ STATIC_TRACE_BEGIN("instance_pint")
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace ADS;		// for composition functors
-using std::dereference;
+#include "using_ostream.h"
+USING_UTIL_COMPOSE
+using util::dereference;
 using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::persistent_traits;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -96,9 +105,6 @@ operator << (ostream& o, const pint_instance& p) {
 
 //=============================================================================
 // class pint_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection, 
-	PINT_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -146,6 +152,12 @@ pint_instance_collection::~pint_instance_collection() {
 ostream&
 pint_instance_collection::what(ostream& o) const {
 	return o << "pint-inst<" << dimensions << ">";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_instance_collection::type_dump(ostream& o) const {
+	return o << "pint^" << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -285,7 +297,7 @@ void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
-		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
@@ -342,7 +354,7 @@ pint_instance_collection::write_object_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_instance_collection::load_object_base(persistent_object_manager& m, 
+pint_instance_collection::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("pint_inst_coll::load_object_base()");
 	parent_type::load_object_base(m, f);
@@ -407,8 +419,8 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (!i->resolve_ranges(ranges)) {
 		// ranges is passed and returned by reference
 		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
+		cerr << "ERROR: unable to resolve indices of " <<
+			get_qualified_name() << " for instantiation: ";
 		i->dump(cerr) << endl;
 		THROW_EXIT;
 	} 
@@ -421,7 +433,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<pint_value_type>::const_iterator
+		multikey_index_type::const_iterator
 			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
@@ -429,9 +441,9 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 #endif
 		pint_instance& pi = collection[key_gen];
 		if (pi.instantiated) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen << 
-				"already instantiated!" << endl;
+			cerr << "ERROR: Index " << key_gen << " of " <<
+				get_qualified_name() <<
+				" already instantiated!" << endl;
 			THROW_EXIT;
 		}
 		pi.instantiated = true;
@@ -467,13 +479,13 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l, 
@@ -492,9 +504,10 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pint_instance& pi = collection[i];
+	const key_type index(i);
+	const pint_instance& pi = collection[index];
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -523,12 +536,16 @@ pint_array<D>::lookup_value_collection(
 	do {
 		const pint_instance& pi = collection[key_gen];
 		// INVARIANT(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pint index "
+		if (!pi.instantiated) {
+			// this should NOT happen
+			cerr << "FATAL: reference to uninstantiated pint "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
-		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pint index "
+		} else if (!pi.valid) {
+			cerr << "ERROR: reference to uninitialized pint "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
+		}
 		ret &= (pi.valid && pi.instantiated);
 		l.push_back(pi.value);
 		key_gen++;
@@ -544,38 +561,37 @@ pint_array<D>::lookup_value_collection(
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::assign(const multikey_base<pint_value_type>& k,
+pint_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
-	pint_instance& pi = collection[k];
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const key_type index(k);
+	pint_instance& pi = collection[index];
 	return !(pi = i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pint_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
+#if 1
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
+#if 1
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -662,7 +678,8 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 bool
 pint_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
-		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
+		cerr << "ERROR: Reference to uninstantiated pint " <<
+			get_qualified_name() << "!" << endl;
 		return false;
 	}
 	if (the_instance.valid) {
@@ -693,8 +710,8 @@ pint_array<0>::lookup_value_collection(
  */
 bool
 pint_array<0>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
-	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey_base) "
+		const multikey_index_type& i) const {
+	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return false;
@@ -715,10 +732,10 @@ pint_array<0>::assign(const value_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_array<0>::assign(const multikey_base<pint_value_type>& k, 
+pint_array<0>::assign(const multikey_index_type& k, 
 		const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pint_array<0>::assign(multikey_base, int) "
+	cerr << "FATAL: pint_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return true;
@@ -726,30 +743,21 @@ pint_array<0>::assign(const multikey_base<pint_value_type>& k,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_array<0>::write_object(const persistent_object_manager& m) const {
+pint_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	STACKTRACE("pint_scalar::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+pint_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE("pint_scalar::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================

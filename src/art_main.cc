@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.10 2005/02/27 22:11:56 fang Exp $
+	$Id: art_main.cc,v 1.11 2005/02/27 22:54:07 fang Exp $
  */
 
 #include <iostream>
@@ -68,18 +68,26 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
 
 //	global->dump(cerr);
-	{
+try {
 #if 0
 	STACKTRACE("MAIN-QUARANTINE");
 	persistent_object_manager::dump_reconstruction_table = true;
 #endif
 #if 1
-	const excl_ptr<entity::module> module_copy =
-		persistent_object_manager::self_test_no_file(the_module);
+	const excl_ptr<entity::module>
+		module_copy =
+		persistent_object_manager::self_test_no_file(the_module)
+			.is_a_xfer<entity::module>();
 	NEVER_NULL(module_copy);
 #endif
 //	the_module.dump(cerr);
-	}
+}
+catch(...) {
+	// can get a run-time type mismatch.  
+	cerr << "Unhandled exception in "
+		"persistent_object_manager::self_test_no_file()." << endl;
+	return -1;
+}
 
 	// massive recursive deletion of syntax tree, reclaim memory
 	// root will delete itself (also recursively)

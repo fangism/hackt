@@ -1,0 +1,41 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3300690	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	64
+	3	 0x33001a4	namespc_	0	64	85
+	4	 0x33001d8	namespc_	0	85	106
+	5	 0x33006b4	dintcoll	0	106	144
+	6	 0x3804800	datainst	0	144	164
+	7	 0x3300710	datatprf	0	164	180
+	8	 0x33015a0	datadefn	0	180	212
+	9	 0x3300724	dprmlst_	0	212	228
+	10	 0x2708024	cnstpi__	0	228	240
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  2 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    A =     In namespace "A", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+    }
+    B =     In namespace "B", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+    }
+  Instances:
+    x = int<32>^0 x (instantiated) = ::x
+}
+

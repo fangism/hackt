@@ -1,1 +1,1 @@
-x is already declared int-scalar, ERROR! [5:6]
+x is already declared int_scalar, ERROR! [5:6]

@@ -1,13 +1,16 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39 2005/01/28 19:58:42 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.40 2005/02/27 22:54:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
 #define	__ART_OBJECT_INSTANCE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
 
 #include <iostream>
 #include <algorithm>
@@ -27,19 +30,37 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
+
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
 
 //=============================================================================
 namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
-using std::dereference;
+using util::dereference;
+#include "using_ostream.h"
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -84,7 +105,7 @@ instance_collection_base::instance_collection_base(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {
-	STACKTRACE("~instance_collection_base()");
+	STACKTRACE_DTOR("~instance_collection_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,7 +114,15 @@ instance_collection_base::~instance_collection_base() {
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
-	get_type_ref()->dump(o) << " " << key;
+	// but we need a version for unrolled and resolved parameters.  
+	if (is_partially_unrolled()) {
+		type_dump(o);		// pure virtual
+	} else {
+		// this dump is appropriate for pre-unrolled, unresolved dumping
+		// get_type_ref just grabs the type of the first statement
+		get_type_ref()->dump(o);
+	}
+	o << " " << key;
 
 	if (dimensions) {
 		INVARIANT(!index_collection.empty());
@@ -144,6 +173,13 @@ instance_collection_base::get_qualified_name(void) const {
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+instance_collection_base::get_type_ref(void) const {
+	INVARIANT(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -249,14 +285,23 @@ instance_collection_base::add_instantiation_statement(
 /**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  
+	\return 0 (false) if is not a template formal, 
+		otherwise returns the position (1-indexed)
+		of the instance referenced, 
+		useful for determining template parameter equivalence.  
  */
-bool
+size_t
 instance_collection_base::is_template_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def)
-		return def->lookup_template_formal(key);
-	else return false;		// owner is not a definition
+		return def->lookup_template_formal_position(key);
+	else {
+		// owner is not a definition
+		INVARIANT(owner.is_a<const name_space>());
+		// is owned by a namespace, i.e. actually instantiated
+		return 0;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,7 +336,8 @@ instance_collection_base::template_formal_equivalent(
 		this_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(*b_type)) {
+	// used to be may_be_equivalent...
+	if (!this_type->must_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -366,18 +412,18 @@ instance_collection_base::formal_size_equivalent(
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
 		// former template formals list when visited with the second.  
-		const count_ptr<const const_range_list>
-			ic((*i)->get_indices().is_a<const const_range_list>());
-		const count_ptr<const const_range_list>
-			jc((*j)->get_indices().is_a<const const_range_list>());
-		if (ic && jc) {
-			// compare dense ranges in each dimension
-			// must be equal!
-			return (*ic == *jc);
-		} else {
-			// one of them is dynamic, thus we must conservatively
-			return true;
-		}
+
+		// NEW (2005-01-30):
+		// For template, need notion of positional parameter 
+		// equivalence -- expressions referring to earlier
+		// formal parameters.  
+		// is count_ptr<range_expr_list>
+		const index_collection_item_ptr_type ii = (*i)->get_indices();
+		const index_collection_item_ptr_type ji = (*j)->get_indices();
+		if (ii && ji) {
+			return ii->must_be_formal_size_equivalent(*ji);
+		} else 	return (!ii && !ji);
+			// both NULL is ok too
 	} else {
 		// both are scalar, single instances
 		return true;
@@ -455,13 +501,13 @@ inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
-//	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
+//	STACKTRACE_PERSISTENT("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
 	index_collection_type::const_iterator i = index_collection.begin();
 	const index_collection_type::const_iterator e = index_collection.end();
 	for ( ; i!=e; i++) {
-		STACKTRACE("for all index_collection:");
+		STACKTRACE_PERSISTENT("for all index_collection:");
 		NEVER_NULL(*i);
 #if 0
 		(*i)->what(STACKTRACE_STREAM << "at " << &**i << ", ") << endl;
@@ -473,7 +519,7 @@ instance_collection_base::collect_index_collection_pointers(
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
-		dereference<never_ptr, const instance_management_base>()
+		dereference<never_ptr<const instance_management_base> >()
 	)
 	);
 #endif
@@ -483,7 +529,7 @@ instance_collection_base::collect_index_collection_pointers(
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-//	STACKTRACE("instance_collection_base::collect_transient_info_base()");
+//	STACKTRACE_PERSISTENT("instance_collection_base::collect_transient_info_base()");
 	collect_index_collection_pointers(m);
 }
 
@@ -497,7 +543,7 @@ inline
 void
 instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE("inst_coll_base::write_index_collection_pointers()");
+	STACKTRACE_PERSISTENT("inst_coll_base::write_index_collection_pointers()");
 	m.write_pointer(o, owner);
 	write_string(o, key);
 	m.write_pointer_list(o, index_collection);
@@ -520,8 +566,8 @@ instance_collection_base::write_object_base(
 inline
 void
 instance_collection_base::load_index_collection_pointers(
-		persistent_object_manager& m, istream& i) {
-	STACKTRACE("inst_coll_base::load_index_collection_pointers()");
+		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT("inst_coll_base::load_index_collection_pointers()");
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -529,10 +575,43 @@ instance_collection_base::load_index_collection_pointers(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, owner);
 	read_string(i, const_cast<string&>(key));
 	load_index_collection_pointers(m, i);
+}
+
+//=============================================================================
+// class physical_instance_collection method definitions
+
+physical_instance_collection::physical_instance_collection(
+		const scopespace& o, const string& n, const size_t d) :
+		parent_type(o, n, d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+physical_instance_collection::~physical_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+physical_instance_collection::dump(ostream& o) const {
+	parent_type::dump(o);
+	if (is_partially_unrolled()) {
+		if (dimensions) {
+			indent indenter(o);
+			o << auto_indent << "unrolled indices: {" << endl;
+			{
+				indent indenter(o);
+				dump_unrolled_instances(o);
+			}
+			o << auto_indent << "}";        // << endl;
+		} else {
+			// else nothing to say, just one scalar instance
+			dump_unrolled_instances(o << " (instantiated)");
+		}
+	}
+	return o;
 }
 
 //=============================================================================
@@ -544,7 +623,7 @@ instance_collection_base::load_object_base(
 	Private empty constructor.
  */
 datatype_instance_collection::datatype_instance_collection() :
-		instance_collection_base() {
+		parent_type() {
 	// no assert
 }
 #endif
@@ -552,7 +631,7 @@ datatype_instance_collection::datatype_instance_collection() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::datatype_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
-		instance_collection_base(o, n, d) {
+		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -560,29 +639,13 @@ datatype_instance_collection::~datatype_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a datatype, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-datatype_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<datatype_member_instance_reference>(
-		new datatype_member_instance_reference(b,
-			never_ptr<const datatype_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -595,251 +658,6 @@ never_ptr<const const_param_expr_list>
 datatype_instance_collection::get_actual_param_list(void) const {
 	return never_ptr<const const_param_expr_list>(NULL);
 }
-
-//=============================================================================
-// class process_instance_collection method definitions
-
-// relocated to "art_object_instance_proc.cc"
-#if 0
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection, 
-	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-process_instance_collection::process_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_collection::process_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_collection::~process_instance_collection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// pure virtual
-ostream&
-process_instance_collection::what(ostream& o) const {
-	return o << "process-inst";
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
-process_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a process reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-process_instance_collection::make_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-	return count_ptr<process_instance_reference>(
-		new process_instance_reference(
-			never_ptr<const process_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
-		// omitting index argument
-		// may attach in parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a process, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-process_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<process_member_instance_reference>(
-		new process_member_instance_reference(
-			b, never_ptr<const process_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE_KEY)) {
-	// don't bother visit the owner, assuming that's the caller
-	// go through index_collection
-	parent_type::collect_transient_info_base(m);
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-process_instance_collection::construct_empty(const int i) {
-	return new process_instance_collection();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
-
-//=============================================================================
-// class channel_instance_collection method definitions
-
-#if 0
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection, 
-	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.  
- */
-channel_instance_collection::channel_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_collection::channel_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_collection::~channel_instance_collection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-channel_instance_collection::what(ostream& o) const {
-	return o << "channel-inst";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
-channel_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a channel reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-channel_instance_collection::make_instance_reference(void) const {
-	cerr << "channel_instance_collection::make_instance_reference() "
-		"INCOMPLETE, FINISH ME!" << endl;
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-	return count_ptr<channel_instance_reference>(
-		new channel_instance_reference(
-			never_ptr<const channel_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
-		// omitting index argument
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a channel, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-channel_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<channel_member_instance_reference>(
-		new channel_member_instance_reference(
-			b, never_ptr<const channel_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)) {
-	// don't bother visit the owner, assuming that's the caller
-	// go through index_collection
-	parent_type::collect_transient_info_base(m);
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-channel_instance_collection::construct_empty(const int i) {
-	return new channel_instance_collection();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.12 2005/02/27 22:54:26 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -19,8 +19,8 @@
 #include "stacktrace.h"
 #include "IO_utils.tcc"
 
-#if ENABLE_STACKTRACE
 #include "what.tcc"
+#if ENABLE_STACKTRACE
 #include "sstream.h"
 #endif
 
@@ -29,31 +29,13 @@
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
 
-/**
-	Application specific explicit static template method instantiation
-	for persistent object IO.
-	Include "persistent_object_manager.tcc" before calling this macro.
-	Make sure to instantiate these in the util namespace.  
- */
-#define EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(T)			\
-template excl_ptr<T>							\
-persistent_object_manager::load_object_from_file<T>(const string&);	\
-template excl_ptr<T>							\
-persistent_object_manager::self_test<T>(const string&, const T&);	\
-template excl_ptr<T>							\
-persistent_object_manager::self_test_no_file<T>(const T& m);		\
-template excl_ptr<T>							\
-persistent_object_manager::get_root<T>(void);
-
-
-
 namespace util {
 //=============================================================================
 #include "using_ostream.h"
 USING_STACKTRACE
 using namespace util::memory;
-#if ENABLE_STACKTRACE
 using util::what;
+#if ENABLE_STACKTRACE
 using std::ostringstream;
 #endif
 
@@ -73,6 +55,7 @@ int
 persistent_object_manager::register_persistent_type(void) {
 	reconstruction_function_map_type& m = reconstruction_function_map();
 	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
+	INVARIANT(type_key != persistent::hash_key::null);
 	const reconstruct_function_ptr_type probe = m[type_key];
 #if WELCOME_TO_TYPE_REGISTRATION
 	cerr << "Welcome to persistent type registration, "
@@ -94,6 +77,13 @@ persistent_object_manager::register_persistent_type(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates a raw pointer into an integer index and writes
+	it out to binary.  
+	\param ptr pointer need NOT be statically derived from
+		util::persistent, but must at least be dynamically
+		cast-able to util::persistent.  
+ */
 template <class P>
 inline
 void
@@ -102,7 +92,16 @@ persistent_object_manager::__write_pointer(ostream& o,
 	// P is a bare pointer type (T*), according to the raw_pointer_tag
 	if (ptr) {
 		const persistent* t = IS_A(const persistent*, ptr);
-		NEVER_NULL(t);
+		// really should write a concept check
+		if (!t) {
+			cerr << "Pointer @ " << ptr << " of type " <<
+				util::what<typename util::memory::
+					pointer_traits<P>::element_type
+				>::name() << " is not derived from "
+				"util::persistent, and thus is unusable "
+				"by write_pointer." << endl;
+			THROW_EXIT;
+		}
 		write_value(o, lookup_ptr_index(t));
 	} else	write_value(o, lookup_ptr_index(NULL));
 }
@@ -299,6 +298,7 @@ persistent_object_manager::write_pointer_map(ostream& f, const M& m) const {
 // specialized list methods?
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	The first non-NULL object is special: it is the root module.
 	Returning an excl_ptr guarantees that memory will
@@ -316,75 +316,34 @@ persistent_object_manager::get_root(void) {
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-        Loads hierarchical object collection from file.
-	\returns a dynamically cast owned pointer to the root object.
+	\param P is generic pointer to a persistent type.  
  */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::load_object_from_file(const string& s) {
-	ifstream f(s.c_str(), ios_base::binary);
-	persistent_object_manager pom;
-	// don't initialize_null, will be loaded in from table
-	pom.load_header(f);
-	pom.finish_load(f);
-	f.close();				// done with file
-	pom.reconstruct();			// allocate-only pass
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-	// Oh no, partially initialized objects!
-	pom.load_objects();
-	return pom.get_root<T>();
+template <class P>
+void
+persistent_object_manager::load_object_once(const P& p) const {
+	__load_object_once(p, __pointer_category(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Write the reconstruction table, and loads it back, without
-	going through an intermediate file.
-	Should essentially make a deep copy of the hierarchical object
-	rooted at the global namespace.
+	\param P is generic pointer to a persistent type.  
  */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::self_test_no_file(const T& m) {
-	STACKTRACE("pom::self_test_no_file()");
-	persistent_object_manager pom;
-	pom.initialize_null();			// reserved 0th entry
-	m.collect_transient_info(pom);		// recursive visitor
-	pom.collect_objects();			// buffers output in segments
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// for debugging
-
-	// need to set start of objects? no
-	// pretend we wrote it out and read it back in...
-	pom.reset_for_loading();
-	pom.reconstruct();			// allocate-only pass
-
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-
-	pom.load_objects();
-	// must acquire root object in some owned pointer!
-	return pom.get_root<T>();		// only this is templated
-	// will get de-allocated after return statement is evaluated
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes out and reads back in, through an intermediate file.
- */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::self_test(const string& s, const T& m) {
-	save_object_to_file(s, m);
-	return load_object_from_file<T>(s);
+template <class P>
+void
+persistent_object_manager::__load_object_once(const P& p, 
+		pointer_class_base_tag) const {
+	NEVER_NULL(p);
+	__load_object_once(&*p, __pointer_category(&*p));
 }
 
 //=============================================================================
 // class persistent_traits method definitions (default)
 
+#if 0
 /**
 	Initially null.
 	Will be set by constructing an object.  
@@ -407,11 +366,19 @@ persistent_traits<T>::null = static_cast<T*>(NULL);
 
 template <class T>
 persistent_traits<T>::persistent_traits(const string& s) {
-	assert(!type_id);
-	assert(type_key == persistent::hash_key::null);
+	INVARIANT(!type_id);
+	INVARIANT(type_key == persistent::hash_key::null);
 	type_key = s;
+	INVARIANT(get_type_key() == s);
 	type_id = persistent_object_manager::register_persistent_type<T>();
 }
+
+template <class T>
+const persistent::hash_key&
+persistent_traits<T>::get_type_key(void) {
+	return type_key;
+}
+#endif
 
 //=============================================================================
 }	// end namespace util

@@ -1,4 +1,4 @@
 ERROR: reference to uninitialized pint ::n at index: [0][0]
 ERROR: resolving left operand of: pint-inst-ref n[0][0]-1
-ERROR: unable to resolve indices for instantiation: [0..::n[0][0]-1]
+ERROR: unable to resolve indices of ::m for instantiation: [0..::n[0][0]-1]
 ERROR in unrolling.  Aborting.

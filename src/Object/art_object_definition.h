@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.24 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_definition.h,v 1.25 2005/02/27 22:54:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -140,6 +140,8 @@ protected:
  */
 class process_definition : public process_definition_base, public scopespace, 
 	public sequential_scope {
+private:
+	typedef	process_definition		this_type;
 public:
 	typedef	never_ptr<const instance_collection_base>
 						port_formals_value_type;
@@ -212,17 +214,19 @@ public:
 
 // methods for object file I/O
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
 protected:
 	void
-	write_object_port_formals(const persistent_object_manager& m) const;
+	write_object_port_formals(const persistent_object_manager& m, 
+		ostream& o) const;
 
 	void
-	load_object_port_formals(persistent_object_manager& m);
+	load_object_port_formals(const persistent_object_manager& m,
+		istream& i);
 
 };	// end class process_definition
 
@@ -237,6 +241,8 @@ protected:
  */
 class process_definition_alias : public process_definition_base, 
 		public typedef_base {
+private:
+	typedef	process_definition_alias		this_type;
 protected:
 	const string					key;
 	/** parent can be namespace or definition */
@@ -270,7 +276,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -329,6 +335,8 @@ protected:
  */
 class built_in_datatype_def : public datatype_definition_base, 
 		public scopespace {
+private:
+	typedef	built_in_datatype_def			this_type;
 protected:
 	const string					key;
 	const never_ptr<const name_space>		parent;
@@ -378,7 +386,7 @@ public:
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object
-	PERSISTENT_METHODS		// dummy methods
+	PERSISTENT_METHODS_DECLARATIONS
 	// thus we need only collect and write...
 //	void collect_transient_info(persistent_object_manager& m) const;
 //	void write_object(const persistent_object_manager& m) const;
@@ -392,6 +400,8 @@ private:
 	Member of an enumeration, just an identifier.  
  */
 class enum_member : public object {
+private:
+	typedef	enum_member		this_type;
 protected:
 	const string			id;
 public:
@@ -413,6 +423,8 @@ public:
 	There are no built in enumerations, all are user-defined.  
  */
 class enum_datatype_def : public datatype_definition_base, public scopespace {
+private:
+	typedef	enum_datatype_def			this_type;
 protected:
 	const string					key;
 	const never_ptr<const name_space>		parent;
@@ -450,7 +462,7 @@ public:
 	bool
 	add_member(const token_identifier& em);
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -473,6 +485,7 @@ private:
 class built_in_param_def : public definition_base {
 private:
 	typedef	definition_base			parent_type;
+	typedef	built_in_param_def		this_type;
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
@@ -499,7 +512,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 private:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class built_in_param_def
 
@@ -510,6 +523,8 @@ private:
  */
 class user_def_datatype : public datatype_definition_base, public scopespace, 
 		public sequential_scope {
+private:
+	typedef	user_def_datatype		this_type;
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
@@ -548,7 +563,7 @@ public:
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -561,6 +576,8 @@ private:
  */
 class datatype_definition_alias : public datatype_definition_base, 
 		public typedef_base {
+private:
+	typedef	datatype_definition_alias	this_type;
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
@@ -598,7 +615,7 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -639,6 +656,7 @@ protected:
 class user_def_chan : public channel_definition_base, public scopespace,
 		public sequential_scope {
 private:
+	typedef	user_def_chan			this_type;
 	typedef channel_definition_base		definition_parent_type;
 	typedef	scopespace			scope_parent_type;
 	typedef	sequential_scope		sequential_parent_type;
@@ -675,7 +693,7 @@ public:
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -689,6 +707,8 @@ private:
  */
 class channel_definition_alias : public channel_definition_base, 
 		public typedef_base {
+private:
+	typedef	channel_definition_alias	this_type;
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
@@ -721,7 +741,7 @@ public:
 #endif
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void

@@ -3,7 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.5 2004/11/30 01:25:22 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.6 2005/02/27 22:54:26 fang Exp $
  */
 
 #ifndef	__PTRS_FUNCTIONAL_H__
@@ -12,40 +12,6 @@
 #include <functional>
 
 namespace std {
-//=============================================================================
-template <template <class> class P, class T>
-class dereference_t : public unary_function<P<T>, T&> {
-public:
-	T& operator() (const P<T>& p) const { return *p; }
-};	// end class dereference_t
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <template <class> class P, class T>
-class const_dereference_t : public unary_function<P<T>, const T&> {
-public:
-	const T& operator() (const P<T>& p) const { return *p; }
-};	// end class const_dereference_t
-#endif
-
-//-----------------------------------------------------------------------------
-template <template <class> class P, class T>
-inline
-dereference_t<P,T>
-dereference () {
-	return dereference_t<P,T>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <template <class> class P, class T>
-inline
-const_dereference_t<P,T>
-const_dereference () {
-	return const_dereference_t<P,T>();
-}
-#endif
-
 //=============================================================================
 // adapters for pointer-class member functors
 //=============================================================================
