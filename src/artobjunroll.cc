@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.7 2004/11/02 07:51:32 fang Exp $
+	$Id: artobjunroll.cc,v 1.8 2004/12/02 01:38:38 fang Exp $
  */
 
 #include <iostream>
@@ -32,7 +32,7 @@ main(int argc, char* argv[]) {
 		// test if out file is valid (permissions, etc.)
 		ofstream f(argv[2], ios_base::binary);
 		if (!f.good()) {
-			cerr << "Error opening object file \"" << argv[1]
+			cerr << "Error opening object file \"" << argv[2]
 				<< "\"." << endl;
 			exit(1);
 		}
@@ -52,13 +52,10 @@ main(int argc, char* argv[]) {
 			<entity::module>(ifname);
 
 //	the_module->dump(cerr);
-
-//	the_module->unroll();
 	the_module->unroll_module();
+	the_module->dump(cerr);
 
-#if 0
-	persistent_object_manager::save_object_to_file(ofname, global);
-#endif
+	persistent_object_manager::save_object_to_file(ofname, *the_module);
 
 	// global will delete itself (recursively)
 	return 0;
