@@ -2,6 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.9
 
+# this directory first, to clean the test-report
 SUBDIRS = . parser
 
 clean-test:
@@ -15,12 +16,14 @@ TESTS = clean-test
 DISTCLEANFILES = $(TESTS)
 
 CLEANFILES = 
-EXTRA_DIST = Make.test artc-expect.sh state_enum_filter.awk
+EXTRA_DIST = Make.test artc-expect.sh artobj-diff.sh \
+	state_enum_filter.awk address_filter.sed
 
+# template test Makefile
 include $(top_srcdir)/test/Make.test
 
 # remove extraneous auto-generated files
 dist-hook:
-	rm -rf `find $(distdir) -name subdir.not_a_test`
-	rm -rf `find $(distdir) -name clean-test`
+	-$(RM) -r `find $(distdir) -name subdir.not_a_test`
+	-$(RM) -r `find $(distdir) -name clean-test`
 
