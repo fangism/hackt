@@ -16,6 +16,7 @@
 #include "hash_specializations.h"		// substitute for the following
 
 #include "art_object_definition.h"
+#include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
 

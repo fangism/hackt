@@ -1,4 +1,4 @@
-#! /usr/bin/awk -f
+#! `which awk` -f
 # "yacc-output-to-C.awk"
 # by Fang
 
@@ -19,12 +19,20 @@ BEGIN {
 	print "#ifndef\t__Y_OUTPUT_H__";
 	print "#define\t__Y_OUTPUT_H__";
 	print "";
-	print "typedef struct {";
+	print "typedef struct _yy_output_state_string_ {";
 	print "\tconst int n;";
 	print "\tconst char* const* rule;";
-	print "} yy_output_state_string;"
+
+# NOTE: a constructor was added because gcc-3.2 requires a constructor
+#	for structs with non-static const members.
+#	gcc-3.3 and up don't require it.  
+	print "\t_yy_output_state_string_(const int k, const char* const* r) :";
+	print "\t\tn(k), rule(r) { }";
+
+	print "} yy_output_state_string;\t\t/* end struct */"
 	print "";
 #	print "typedef const char* const*\t\tconst_string_array;";
+
 
 # NOTE:
 #	can't use const char* const rule[] because compilers complain
@@ -68,9 +76,14 @@ END {
 	print "const int yynss = " state_count ";\t\t/* number of states */";
 	print "const yy_output_state_string yysss[] = {";
 	for (i=0; i<state_count; i++) {
-		print "  { " rule_count[i] ", yy_rule_string_set_" i " },"
+#		print "  { " rule_count[i] ", yy_rule_string_set_" i " },"
+#		gcc-3.2 doesn't like struct-style initialization
+#		and requires constructor-style initialization.  
+		print "\tyy_output_state_string(" rule_count[i] \
+			", yy_rule_string_set_" i "),";
+		# trailing comma is ok
 	}
-	print "};";
+	print "};\t\t/* end yysss */";
 	print "";
 	print "#endif // __Y_OUTPUT_H__";
 	print "";

@@ -63,9 +63,9 @@ using namespace ART::parser;
 #define	STRING_MAX_LEN		1024
 
 /* line and position tracking data for tokens */
-	token_position current = { 1, 0, 1, 0};	/* globally accessible */
-static	token_position comment_pos = { 1, 0, 1, 0 };
-static	token_position string_pos = { 1, 0, 1, 0 };
+	token_position current(1, 0, 1, 0);	/* globally accessible */
+static	token_position comment_pos(1, 0, 1, 0);
+static	token_position string_pos(1, 0, 1, 0);
 	/* even though strings may not be multi-line */
 
 /* for string matching */

@@ -1,4 +1,4 @@
-#!/usr/bin/awk -f
+#! `which awk` -f
 # "yacc-union-type-.awk"
 # David Fang, 2004
 
@@ -103,6 +103,11 @@ BEGIN {
         print "\tconst int state;\t\t/* state number to match */";
         print "\tconst int type_enum;\t\t/* enumerated type */";
         print "\tconst yy_state_map_link* next;";
+
+#	gcc-3.2 requires constructor-style with non-static consts
+	print "\t_yy_state_map_link_(const int s, const int e, const yy_state_map_link* n) :";
+	print "\t\tstate(s), type_enum(e), next(n) { }";
+
 	print "};";
 	print "";
 
@@ -231,11 +236,12 @@ function string_char_to_int(char,
 		# collect shift actions
 	if (NF == 3) {
 	if ($2 == "shift") {
+# struct-style assignment is deprecated, use constructor instead.
 		printf("static const yy_state_map_link yysml_" state_count \
-			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
+			"_" sc "(" $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "}; /* shift */";
+		print "); /* shift */";
 		sc++;
 	}	# else ignore reduce
 	} else if (NF == 2) {
@@ -254,11 +260,12 @@ function string_char_to_int(char,
 	}	# end while
 	while (getline && NF == 3 && $2 == "goto") {
 		# collect goto actions
+# struct-style assignment is deprecated, use constructor instead.
 		printf("static const yy_state_map_link yysml_" state_count \
-			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
+			"_" sc "(" $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "}; /* goto */";
+		print "); /* goto */";
 		sc++;
 	}
 	print "";

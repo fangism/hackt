@@ -11,6 +11,15 @@ typedef struct _token_position_ {
 	long leng;		///< length, applies for single-line tokens
 	long col;		///< column position of start of token
 	const long off;		///< offset: where yymore actually starts
+
+	/**
+		gcc-3.2 requires explicit constructor for class with
+		non-static const members, gcc-3.3 and up don't require.
+	 */
+	_token_position_(const long a, const long b,
+		const long c, const long d) :
+		line(a), leng(b), col(c), off(d) {
+	}
 } token_position;
 
 
