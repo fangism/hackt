@@ -1,2 +1,2 @@
 ERROR: type of redeclaration of x does not match previous declaration: 
-	was: bool<>, got: int<> ERROR!  [6:5]
+	was: bool<>, got: int<32> ERROR!  [6:5]

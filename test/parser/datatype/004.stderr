@@ -1,1 +1,1 @@
-int<> b was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!  [5:11]
+int<32> b was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!  [5:11]
