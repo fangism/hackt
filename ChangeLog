@@ -2,6 +2,11 @@
 
 2005-01-27	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-object-00-13:
+	  Specialized read/write_value of pbool_instance, which contains
+	  bit-fields, same story as bool -- 3 bools "compressed" to 1 char.  
+	  (A few tests updated.)
+
 	* ARTXX-00-01-04-object-00-12:
 	  In util/IO_utils.{h,cc}, specialized write_value and read_value
 	  with <bool> to use write/read_value <char> to ensure that

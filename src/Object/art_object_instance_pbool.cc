@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.11.4.3 2005/01/21 20:52:09 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.11.4.4 2005/01/28 02:08:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -33,6 +33,45 @@
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+//=============================================================================
+// specializations in other namespace (local to this file)
+// ok to specialize here, ONLY IF nothing else references it externally
+
+namespace util {
+using ART::entity::pbool_instance;
+
+/**
+	Write out pbool_instance binary after compressing bits into char.
+ */
+template <>
+void
+write_value(ostream& o, const pbool_instance& b) {
+	char c;		// sign doesn't matter
+	c = b.valid;
+	c <<= 1;
+	c |= b.instantiated;
+	c <<= 1;
+	c |= b.value;
+	write_value(o, c);
+}
+
+/**
+	Reads in pbool_instance binary, decompressing char to bits.
+	Yeah, I know, this could be more efficient.  
+ */
+template <>
+void
+read_value(istream& i, pbool_instance& b) {
+	char c;
+	read_value(i, c);
+	// read off bitmask
+	b.value = c & 1;
+	b.instantiated = c & 2;
+	b.valid = c & 4;
+}
+
+}	// end namespace util
 
 //=============================================================================
 namespace ART {

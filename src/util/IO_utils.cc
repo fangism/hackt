@@ -1,13 +1,13 @@
 /**
 	\file "IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.1.4.1 2005/01/28 01:15:44 fang Exp $
+	$Id: IO_utils.cc,v 1.1.4.2 2005/01/28 02:08:11 fang Exp $
  */
 
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "IO_utils.h"
+#include "IO_utils.tcc"		// need to explicitly instantiate for char
 
 
 //=============================================================================
@@ -47,6 +47,11 @@ read_value(istream& f, bool& b) {
 	read_value(f, c);
 	b = c;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// explicit instantiation needed for some compilers
+template void write_value(ostream&, const char&);
+template void read_value(istream&, char&);
 
 //-----------------------------------------------------------------------------
 /**
