@@ -45,6 +45,8 @@ main(int argc, char* argv[]) {
 
 //	the_module->dump(cerr);
 
+	the_module->unroll();
+
 #if 0
 // ALL WRONG
 	// what to do in case of error?  exit?
