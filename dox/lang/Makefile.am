@@ -26,6 +26,7 @@ ps-local: $(PSS)
 # have to add these by hand? :S
 EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	artxx.bib artxx.tex \
+	chapters/preface.tex \
 	chapters/intro.tex \
 	chapters/types.tex \
 	chapters/expressions.tex \
@@ -38,6 +39,8 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	chapters/typedefs.tex \
 	chapters/connections.tex \
 	chapters/linkage.tex \
+	chapters/CHP.tex \
+	chapters/PRS.tex \
 	TODO
 
 # need GNU make for the following:
