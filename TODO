@@ -13,9 +13,14 @@ Current series: 0.1.3 -- main trunk of development line.
 	Hold off on parameter assignments until after restructuring
 		parameter_assignment classes.  
 		(Yeah, I know, useless without assignments!)
+		(*done* -- 10/09/04)
 	keep definitions around as back-references in unpacked objects.
 	unpack instantiation_bases into live instances
 		using multidimensional_qmap, or now, multikey_qmap.  
+	
+	Documentation: add documentation headers to beginning of
+		every source file, so doxygen will create file
+		inclusion dependence graphs! (*done* -- 10/09/04)
 
 0.1.5 Goals:
 	unrolling parameter expression assignments
@@ -30,8 +35,24 @@ Current series: 0.1.3 -- main trunk of development line.
 	Introduce PRS object classes, based on old prsim.
 	Unrolling production rules
 
+At any point, preferably ASAP:
+*	In object file format, identify which VERSION/REVISION of the ART
+	compiler generated the object file.  
+	Will be critical in future version systems.
+
+*	CHANGE the check_build framework in AST parser classes.
+	Namely, make specific signatures for type-checking, 
+		so that return values may be of some use in most cases.  
+		Presently, most return values are useless.  
+	Limit the use of the context object.  
+	Rework may drastically shrink the role of the context object,
+		will still be useful for scope stacks and the likes.  
+	User should not have to create a context, that should be
+		hidden in a top-level check_build function call.
+
 and beyond...
-	cflatprsim backwards compatibility mode
+	cflat -prsim backwards compatibility mode
+		(and other tools)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation statement needs to check template arguments of type!
@@ -122,11 +143,6 @@ type-check and build typedefs
 	partially done, 
 	still too conservative with resective to template argument matching
 	Need to be able to pass parameter context down recursively first...
-
-CHANGE the check_build framework.
-make specific signatures for type-checking, so that return values
-may be of some use.  
-Limit the use of the context object.  
 
 count_ptr (pointer-classes)
 	make .deep_copy method?

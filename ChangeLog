@@ -1,5 +1,32 @@
 "ChangeLog"
 
+2004-10-09	David Fang	<fangism@users.sourceforge.net>
+
+	* Sub-typed param_expression_assignment (now abstract) class into 
+	  pbool- and pint- specific versions, porting over old
+	  functionality.  
+	  Also distinguished right-hand-side expression (source) from the 
+	  remaining (instance references) in the list (destinations).  
+	  Greatly simplified object_list::make_param_assignment as a result.  
+	  Moved type-check for parameter initialization from 
+	  pint/pbool_expr::initialize into ::append_param_instance_refence.  
+	  Much old code commented out, expunge in next revision.  
+
+	* Minor update of a few old error messages; 3 test expectations
+	  files in regression suite were updated, first time any of them 
+	  were touched in a long time!
+
+	* Added doxygen file header to most header and source files.  
+	  As a reward, Doxygen generates really nice file dependency graphs.  
+	  Also did some general header clean-up while I was at it.  
+	  Updated namespaces, eliminating all references to `fang', 
+	  which was only intended to be temporary.
+
+	* Added some standard typedefs to pointer-classes:
+	  value_type, pointer, reference, const_...
+	  Now they may be referenced, and used for concept checking.  
+
+
 2004-10-08	David Fang	<fangism@users.sourceforge.net>
 
 	* NEWS: Returned from long hiatus working on conference paper.  
