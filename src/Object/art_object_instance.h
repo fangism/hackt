@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.2.1 2005/02/20 09:08:13 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.2.2 2005/02/20 20:59:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -32,6 +32,7 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef	proc_instance_alias		instance_alias_type;
+	typedef	process_alias_connection	alias_connection_type;
 	typedef never_ptr<instance_alias_type>	instance_ptr_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
@@ -196,6 +197,7 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef chan_instance_alias		instance_alias_type;
+	typedef	channel_alias_connection	alias_connection_type;
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	

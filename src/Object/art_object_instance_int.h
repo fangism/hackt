@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.2 2005/02/20 09:08:15 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.3 2005/02/20 20:59:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -219,6 +219,7 @@ public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	int_instance_alias_base			instance_alias_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	int_alias_connection			alias_connection_type;
 	typedef	pint_value_type				param_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
