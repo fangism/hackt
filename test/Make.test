@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.5.4.4 2005/01/21 06:09:58 fang Exp $
+#	$Id: Make.test,v 1.5.4.4.4.1 2005/01/27 08:13:54 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -86,17 +86,21 @@ DISTCLEANFILES += .cvsignore subdir.not_a_test
 all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
+# consider using CLEANFILES
+AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr)
+
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
 # might as well include this for non-maintainers too
-# consider using CLEANFILES
 # again, can't append to file with cat redirection because distclean
 # sets permissions of new files as read-only
 .cvsignore: $(top_srcdir)/test/test.cvsignore
-	@$(ECHO) $(ARTC_TEST_PASSES:=.stderr) | $(SPACES_TO_NEWLINE) > $@.temp
+	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
 #	$(LN_S) $< $@
+
+.cvsignore: Makefile.am Makefile.in $(top_srcdir)/test/Make.test
 
 # automatically removes $(CLEANFILES)
 clean-local:
