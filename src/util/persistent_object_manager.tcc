@@ -248,7 +248,8 @@ template <class T>
 excl_ptr<T>
 persistent_object_manager::get_root(void) {
 	assert(root);		// necessary?
-	return root.is_a_xfer<T>();
+	// the template keyword is required for gcc-3.3.x, but not for 3.4.x
+	return root.template is_a_xfer<T>();
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr
 }
