@@ -1,0 +1,27 @@
+first
+first, second
+first, second, third
+first, second, third, fourth
+walking forward with each iterator: 
+first
+second
+first
+third
+second
+first
+fourth
+third
+second
+first
+walking forward with each iterator: 
+second
+third
+second
+fourth
+third
+second
+walking forward with each iterator: 
+third
+fourth
+third
+done.

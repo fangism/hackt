@@ -1,12 +1,20 @@
 .deps
 .libs
 Makefile
+Makefile.in
 *.lo
 core.*
 *.core
 *.test
 *.out
 *.diff
+ptrs_test
+count_ptr_test
+sublist_test
+deque_iterator_test
+discrete_interval_set_test
+hash_qmap_test
+multidimensional_sparse_set_test
 multidimensional_qmap_test
 multikey_qmap_test
 

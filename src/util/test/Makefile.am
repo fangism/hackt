@@ -13,11 +13,25 @@ include $(top_srcdir)/Make.stddef
 	@$(ECHO) $(TEST_EXPECT_SH) $* $(srcdir) >> $@
 	@$(CHMOD) +x $@
 
-noinst_PROGRAMS = multidimensional_qmap_test \
+noinst_PROGRAMS = \
+	ptrs_test \
+	count_ptr_test \
+	sublist_test \
+	deque_iterator_test \
+	hash_qmap_test \
+	discrete_interval_set_test \
+	multidimensional_sparse_set_test \
+	multidimensional_qmap_test \
 	multikey_qmap_test
 
+ptrs_test_SOURCES = ptrs_test.cc var.h func.h
+count_ptr_test_SOURCES = count_ptr_test.cc var.h
+sublist_test_SOURCES = sublist_test.cc
+deque_iterator_test_SOURCES = deque_iterator_test.cc
+hash_qmap_test_SOURCES = hash_qmap_test.cc
+discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
+multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
-
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 
 # the util/ source directory

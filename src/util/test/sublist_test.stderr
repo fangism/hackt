@@ -1,0 +1,57 @@
+26: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+26: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+26: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+25: b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+25: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y
+24: c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+24: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x
+23: d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+23: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w
+22: e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+22: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v
+21: f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+21: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u
+20: g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+20: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t
+19: h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+19: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s
+18: i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+18: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r
+17: j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+17: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q
+16: k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+16: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p
+15: l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+15: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o
+14: m, n, o, p, q, r, s, t, u, v, w, x, y, z
+14: a, b, c, d, e, f, g, h, i, j, k, l, m, n
+13: n, o, p, q, r, s, t, u, v, w, x, y, z
+13: a, b, c, d, e, f, g, h, i, j, k, l, m
+12: o, p, q, r, s, t, u, v, w, x, y, z
+12: a, b, c, d, e, f, g, h, i, j, k, l
+11: p, q, r, s, t, u, v, w, x, y, z
+11: a, b, c, d, e, f, g, h, i, j, k
+10: q, r, s, t, u, v, w, x, y, z
+10: a, b, c, d, e, f, g, h, i, j
+9: r, s, t, u, v, w, x, y, z
+9: a, b, c, d, e, f, g, h, i
+8: s, t, u, v, w, x, y, z
+8: a, b, c, d, e, f, g, h
+7: t, u, v, w, x, y, z
+7: a, b, c, d, e, f, g
+6: u, v, w, x, y, z
+6: a, b, c, d, e, f
+5: v, w, x, y, z
+5: a, b, c, d, e
+4: w, x, y, z
+4: a, b, c, d
+3: x, y, z
+3: a, b, c
+2: y, z
+2: a, b
+1: z
+1: a
+0: 
+0: 
+0: 
+0: 
