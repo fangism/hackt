@@ -154,7 +154,7 @@ if (size() > 0) {		// non-empty
 			exit(1);
 		} else {
 			c->add_assignment(
-				excl_const_ptr<connection_assignment_base>(
+				excl_const_ptr<param_expression_assignment>(
 					exass));
 			// and transfer ownership
 			assert(!exass.owned());
@@ -175,7 +175,7 @@ if (size() > 0) {		// non-empty
 			exit(1);
 		} else {
 			c->add_connection(
-				excl_const_ptr<connection_assignment_base>(
+				excl_const_ptr<instance_reference_connection>(
 					connection));
 			assert(!connection.owned());
 		}
@@ -531,7 +531,7 @@ instance_connection::check_build(never_ptr<context> c) const {
 		exit(1);
 	} else {
 		c->add_connection(
-			excl_const_ptr<connection_assignment_base>(
+			excl_const_ptr<instance_reference_connection>(
 				port_con));
 		assert(!port_con.owned());	// explicit transfer
 	}
@@ -608,7 +608,7 @@ connection_statement::check_build(never_ptr<context> c) const {
 		exit(1);
 	} else {
 		c->add_connection(
-			excl_const_ptr<connection_assignment_base>(
+			excl_const_ptr<instance_reference_connection>(
 				port_con));
 		assert(!port_con.owned());	// explicit transfer
 	}
