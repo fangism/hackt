@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.4.4.1 2005/01/20 22:00:15 fang Exp $
+	$Id: multikey.tcc,v 1.4.4.2 2005/01/21 20:52:43 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -24,6 +24,7 @@ using std::copy;
 using std::fill;
 using std::transform;
 using std::lexicographical_compare;
+using std::ptr_fun;
 
 //=============================================================================
 // class multikey_base method definitions

@@ -1,10 +1,10 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.8 2005/01/14 19:40:13 fang Exp $
+	$Id: packed_array.tcc,v 1.8.4.1 2005/01/21 20:52:43 fang Exp $
  */
 
-#ifndef	__PACKED_ARRAY_TCC__
-#define	__PACKED_ARRAY_TCC__
+#ifndef	__UTIL_PACKED_ARRAY_TCC__
+#define	__UTIL_PACKED_ARRAY_TCC__
 
 #include <iostream>
 #include <numeric>
@@ -437,13 +437,14 @@ packed_array_generic<T>::packed_array_generic(
 		values(sizes_product(sizes)), offset(dim, 0), coeffs(dim-1, 1) {
 	// offset remains 0
 	reset_coeffs();
-	multikey_generator_generic<T> key_gen(l, u);
+	multikey_generator_generic<size_t> key_gen(l, u);
 	key_gen.initialize();
 	INVARIANT(values.size() == sizes_product(sizes));
 	register size_t i = 0;
 	do {
 		// write valarray directly
-		values[i++] = a[key_gen++];
+		values[i++] = a[key_gen];
+		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 }
 
@@ -616,5 +617,5 @@ packed_array_generic<T>::read(istream& i) {
 //=============================================================================
 }	// end namespace util
 
-#endif	// __PACKED_ARRAY_TCC__
+#endif	// __UTIL_PACKED_ARRAY_TCC__
 
