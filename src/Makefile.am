@@ -142,7 +142,9 @@ libart___la_SOURCES = \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
+	Object/art_object_IO.tcc \
 	Object/art_object.h \
+	Object/art_object_type_enum.h \
 	util/art_utils.cc \
 	$(UTIL_HEADER_FILES) \
 	art++.h
