@@ -1,4 +1,9 @@
+*.core
 *.test
 *.diff
 *.filter
+*.artctest
+Makefile
+subdir.not_a_test
+ignore
 
