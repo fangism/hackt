@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.5.2.2.2.1 2005/02/23 21:21:25 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.5.2.2.2.2 2005/02/24 02:03:44 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -143,6 +143,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object.h \
 	Object/art_object_classification_tags.h \
 	Object/art_object_classification_details.h \
+	Object/art_object_connect.tcc \
 	Object/art_object_definition_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \

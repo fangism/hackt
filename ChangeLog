@@ -16,6 +16,10 @@
 	  Next: alias_connections, then ... instance collections, 
 	  the final frontier!
 
+	* -instance-03:
+	  alias_connections converted to class_traits, muahahaha...
+	  Code needs some serious clean-up before proceeding.  
+
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 

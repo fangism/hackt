@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.7 2005/02/22 05:05:46 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.7.2.1 2005/02/24 02:03:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "art_object_connect.h"
+#include "art_object_connect.tcc"
 #include "art_object_inst_ref.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_instance_int.h"
@@ -34,17 +35,21 @@
 #include "compose.h"
 #include "dereference.h"
 
-// conditional defines, after including "stactrace.h"
+// conditional defines, after including "stacktrace.h"
+#ifndef	STACKTRACE_DTOR
 #if STACKTRACE_DESTRUCTORS
 	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
 #else
 	#define	STACKTRACE_DTOR(x)
 #endif
+#endif
 
+#ifndef	STACKTRACE_PERSISTENT
 #if STACKTRACE_PERSISTENTS
 	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
 #else
 	#define	STACKTRACE_PERSISTENT(x)
+#endif
 #endif
 
 
@@ -228,7 +233,7 @@ aliases_connection_base::load_object(
 #endif	// SUBTYPE_ALIASES_CONNECTION
 
 //=============================================================================
-#if SUBTYPE_ALIASES_CONNECTION
+#if 0
 // class alias_connection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -371,6 +376,7 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 }
 
 #endif	// SUBTYPE_ALIASES_CONNECTION
+
 //=============================================================================
 // class port_connection method definitions
 
@@ -493,7 +499,14 @@ port_connection::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 #if SUBTYPE_ALIASES_CONNECTION
-
+#if USE_CLASSIFICATION_TAGS
+template class alias_connection<int_tag>;
+template class alias_connection<bool_tag>;
+template class alias_connection<enum_tag>;
+template class alias_connection<datastruct_tag>;
+template class alias_connection<channel_tag>;
+template class alias_connection<process_tag>;
+#else
 template class alias_connection<
 	int_instance_reference, data_alias_connection_base>;
 template class alias_connection<
@@ -506,6 +519,7 @@ template class alias_connection<
 	channel_instance_reference, aliases_connection_base>;
 template class alias_connection<
 	process_instance_reference, aliases_connection_base>;
+#endif
 #endif
 
 //=============================================================================

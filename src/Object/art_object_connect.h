@@ -1,8 +1,7 @@
 /**
 	\file "art_object_connect.h"
-	Declarations for classes related to connection of physical
-	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.6 2005/02/22 03:00:54 fang Exp $
+	Declarations for classes related to connection of physical entities. 
+	$Id: art_object_connect.h,v 1.15.16.1.10.6.2.1 2005/02/24 02:03:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -13,6 +12,7 @@
 #include "memory/pointer_classes.h"
 
 #define	SUBTYPE_ALIASES_CONNECTION			1
+#define	USE_CLASSIFICATION_TAGS				1
 
 namespace ART {
 namespace entity {
@@ -124,34 +124,64 @@ virtual	~data_alias_connection_base() { }
 };	// end class data_aliases_connection_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_CLASSIFICATION_TAGS
+#define	ALIAS_CONNECTION_TEMPLATE_SIGNATURE				\
+template <class Tag>
+
+#define	ALIAS_CONNECTION_CLASS						\
+alias_connection<Tag>
+#else
 #define	ALIAS_CONNECTION_TEMPLATE_SIGNATURE				\
 template <class InstRef, class Parent>
 
 #define	ALIAS_CONNECTION_CLASS						\
 alias_connection<InstRef,Parent>
+#endif
 
 /**
 	Re-usable pattern for type-specific alias connection lists, 
 	intended for leaf classes because methods are non-virtual.
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
-class alias_connection : public Parent {
-	typedef	alias_connection<InstRef,Parent>
-						this_type;
+class alias_connection :
+#if USE_CLASSIFICATION_TAGS
+	public class_traits<Tag>::alias_connection_parent_type
+#else
+	public Parent
+#endif
+{
+	typedef	ALIAS_CONNECTION_CLASS		this_type;
 public:
+#if USE_CLASSIFICATION_TAGS
+	/// the base alias connection type, such as aliases_connection_base
+	typedef	typename class_traits<Tag>::alias_connection_parent_type
+						parent_type;
+	/// the instance reference type used by this connection
+	typedef	typename class_traits<Tag>::instance_reference_type
+						instance_reference_type;
+	/// the instance collection type referenced
+	typedef	typename class_traits<Tag>::instance_collection_type
+						instance_collection_type;
+	/// the instance alias type resolved by unrolling
+	typedef	typename class_traits<Tag>::instance_alias_type
+						instance_alias_type;
+#else
 	/// the base alias connection type, such as aliases_connection_base
 	typedef	Parent				parent_type;
 	/// the instance reference type used by this connection
 	typedef	InstRef				instance_reference_type;
-	typedef	typename parent_type::generic_inst_ptr_type
-						generic_inst_ptr_type;
 	/// the instance collection type referenced
 	typedef	typename instance_reference_type::instance_collection_type
 						instance_collection_type;
 	/// the instance alias type resolved by unrolling
 	typedef	typename instance_collection_type::instance_alias_type
 						instance_alias_type;
-	typedef	count_ptr<const InstRef>	inst_ref_ptr_type;
+#endif
+
+	typedef	typename parent_type::generic_inst_ptr_type
+						generic_inst_ptr_type;
+	typedef	count_ptr<const instance_reference_type>
+						inst_ref_ptr_type;
 	typedef	list<inst_ref_ptr_type>		inst_list_type;
 	typedef	typename inst_list_type::iterator
 						iterator;
