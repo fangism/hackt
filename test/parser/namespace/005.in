@@ -1,0 +1,9 @@
+// nested namespace with same name, should this be allowed?
+
+namespace yo {
+	namespace yo {
+		namespace yo {
+			int whazzup;
+		};
+	};
+};
