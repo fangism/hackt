@@ -1,23 +1,20 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.1 2005/03/11 20:50:30 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.2 2005/03/11 21:12:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_TCC__
 #define	__ART_OBJECT_ASSIGN_TCC__
 
+#ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL		0
+#endif
 
 #include <iostream>
-#include <exception>
 #include <numeric>
 
 #include "art_object_assign.h"
-#include "art_object_expr_param_ref.h"
-#include "art_object_value_reference.h"
-#include "art_object_classification_details.h"
-#include "art_object_type_hash.h"
 
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"

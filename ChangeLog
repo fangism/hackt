@@ -7,6 +7,8 @@
 	  Updated DevelopmentPlan.dot.
 	  Updated a few artc test outputs' error messages.  
 
+		+ -main-00-21: Just cleaned up conditional code.  
+
 	* ARTXX-00-01-04-main-00-19-merged-inststmt-09:
 	  Merged all revisions from -inststmt branch (-09) to main trunk.  
 

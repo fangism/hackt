@@ -2,13 +2,11 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.15 2005/03/11 20:50:29 fang Exp $
+	$Id: art_object_assign.h,v 1.16 2005/03/11 21:12:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
 #define	__ART_OBJECT_ASSIGN_H__
-
-#define	USE_EXPR_ASSIGNMENT_TEMPLATE		1
 
 #include "boolean_types.h"
 #include "art_object_instance_management_base.h"
@@ -169,139 +167,6 @@ public:
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
 };	// end cllass expression_assignment
-
-//-----------------------------------------------------------------------------
-#if !USE_EXPR_ASSIGNMENT_TEMPLATE
-/**
-	pbool-specific version of expression assignments.  
- */
-class pbool_expression_assignment : public param_expression_assignment {
-private:
-	typedef	pbool_expression_assignment		this_type;
-public:
-	typedef	param_expression_assignment		parent_type;
-	typedef	count_ptr<pbool_instance_reference>	dest_ptr_type;
-	typedef	count_ptr<const pbool_instance_reference>
-							dest_const_ptr_type;
-	typedef	list<dest_const_ptr_type>		dest_list_type;
-	typedef	count_ptr<pbool_expr>			src_ptr_type;
-	typedef	count_ptr<const pbool_expr>		src_const_ptr_type;
-protected:
-	/** right-hand-side expression */
-	src_const_ptr_type				src;
-	/** left-hand-side destinations, where to assign expr. */
-	dest_list_type					dests;
-private:
-	pbool_expression_assignment();
-public:
-	explicit
-	pbool_expression_assignment(const src_const_ptr_type& s);
-
-	~pbool_expression_assignment();
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	size_t
-	size(void) const;
-
-	bad_bool
-	append_param_instance_reference(const parent_type::dest_ptr_type& e);
-
-	void
-	unroll(unroll_context& ) const;
-
-public:
-	/** helper class for printing dump of list */
-	class dumper {
-	private:
-		size_t index;
-		ostream& os;
-	public:
-		explicit
-		dumper(ostream& o, const size_t i = 0);
-
-		void
-		operator () (const dest_list_type::value_type& i);
-	};	// end class dumper
-
-public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS
-
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
-
-};	// end class pbool_expression_assignment
-
-//-----------------------------------------------------------------------------
-/**
-	pint-specific version of expression assignments.  
- */
-class pint_expression_assignment : public param_expression_assignment {
-private:
-	typedef	pint_expression_assignment		this_type;
-public:
-	typedef	param_expression_assignment		parent_type;
-	typedef	count_ptr<pint_instance_reference>	dest_ptr_type;
-	typedef	count_ptr<const pint_instance_reference>
-							dest_const_ptr_type;
-	typedef	list<dest_const_ptr_type>		dest_list_type;
-	typedef	count_ptr<pint_expr>			src_ptr_type;
-	typedef	count_ptr<const pint_expr>		src_const_ptr_type;
-protected:
-	/** right-hand-side expression */
-	src_const_ptr_type				src;
-	/** left-hand-side destinations, where to assign expr. */
-	dest_list_type					dests;
-private:
-	pint_expression_assignment();
-public:
-	explicit
-	pint_expression_assignment(const src_const_ptr_type& s);
-
-	~pint_expression_assignment();
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	size_t
-	size(void) const;
-
-	bad_bool
-	append_param_instance_reference(const parent_type::dest_ptr_type& e);
-
-	void
-	unroll(unroll_context& ) const;
-
-public:
-	/** helper class for printing dump of list */
-	class dumper {
-	private:
-		size_t index;
-		ostream& os;
-	public:
-		explicit
-		dumper(ostream& o, const size_t i = 0);
-
-		void
-		operator () (const dest_list_type::value_type& i);
-	};	// end class dumper
-
-public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS
-
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
-};	// end class pint_expression_assignment
-#endif	// USE_EXPR_ASSIGNMENT_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.9 2005/03/11 20:50:30 fang Exp $
+	$Id: art_object_fwd.h,v 1.10 2005/03/11 21:12:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -130,17 +130,12 @@ namespace entity {
 
 	class instance_management_base;
 	class param_expression_assignment;
-#if 0
-	class pint_expression_assignment;
-	class pbool_expression_assignment;
-#else
 	template <class>
 	class expression_assignment;
 	typedef	expression_assignment<pbool_tag>
 		pbool_expression_assignment;
 	typedef	expression_assignment<pint_tag>
 		pint_expression_assignment;
-#endif
 
 	// defined in "art_object_connect.h"
 	class instance_reference_connection;
