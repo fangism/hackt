@@ -7,6 +7,7 @@ artc
 art++2obj
 artobjdump
 artobjunroll
+art_persistent_table
 core.*
 *.core
 *.artobj

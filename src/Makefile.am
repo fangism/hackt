@@ -39,6 +39,8 @@ endif
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 
+noinst_PROGRAMS = art_persistent_table
+
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
@@ -55,6 +57,9 @@ artobjdump_LDADD = libart++.la
 
 artobjunroll_SOURCES = artobjunroll.cc
 artobjunroll_LDADD = libart++.la
+
+art_persistent_table_SOURCES = test/art_persistent_table.cc
+art_persistent_table_LDADD = libart++.la
 
 # convenience libraries
 noinst_LTLIBRARIES = libart++.la libbogus.la
