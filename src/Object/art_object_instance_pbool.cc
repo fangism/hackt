@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.3 2005/02/06 07:34:33 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.4 2005/02/06 08:33:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -28,6 +28,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
@@ -83,7 +84,7 @@ STATIC_TRACE_BEGIN("instance_pbool")
 namespace ART {
 namespace entity {
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
 
@@ -466,13 +467,13 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,

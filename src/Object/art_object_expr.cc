@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.2.2.1 2005/02/06 05:32:01 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.2.2.2 2005/02/06 08:33:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -50,6 +50,7 @@
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
+#include "dereference.h"
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -133,7 +134,7 @@ using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
 using std::_Select1st;
 using std::_Select2nd;
 using std::mem_fun_ref;
-using std::dereference;
+using util::dereference;
 using std::ostringstream;
 USING_STACKTRACE
 
@@ -4926,7 +4927,7 @@ const_index_list::lower_multikey(void) const {
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return ret;
@@ -4941,7 +4942,7 @@ const_index_list::upper_multikey(void) const {
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return ret;
@@ -4955,7 +4956,7 @@ const_index_list::lower_multikey(void) const {
 	transform(begin(), end(), ret.begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return ret;
@@ -4969,7 +4970,7 @@ const_index_list::upper_multikey(void) const {
 	transform(begin(), end(), ret.begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return ret;
@@ -4991,8 +4992,8 @@ const_index_list::equal_dimensions(const const_index_list& l) const {
 		mem_fun_ref(&count_ptr<const_index>::is_a<const const_range>), 
 		binary_compose(
 			mem_fun_ref(&const_index::range_size_equivalent), 
-			dereference<count_ptr, const const_index>(), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >(), 
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 }
@@ -5006,8 +5007,8 @@ const_index_list::must_be_equivalent_indices(const index_list& l) const {
 		return std::equal(begin(), end(), cl->begin(), 
 		binary_compose(
 			mem_fun_ref(&const_index::must_be_equivalent_index), 
-			dereference<count_ptr, const const_index>(), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >(), 
+			dereference<count_ptr<const const_index> >()
 		)
 		);
 	} else {
@@ -5259,8 +5260,8 @@ dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
 		return std::equal(begin(), end(), cl->begin(), 
 		binary_compose(
 			mem_fun_ref(&index_expr::must_be_equivalent_index), 
-			dereference<count_ptr, const index_expr>(), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const index_expr> >(), 
+			dereference<count_ptr<const const_index> >()
 		)
 		);
 	} else {
@@ -5270,8 +5271,8 @@ dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
 		return std::equal(begin(), end(), dl->begin(), 
 		binary_compose(
 			mem_fun_ref(&index_expr::must_be_equivalent_index), 
-			dereference<count_ptr, const index_expr>(), 
-			dereference<count_ptr, const index_expr>()
+			dereference<count_ptr<const index_expr> >(), 
+			dereference<count_ptr<const index_expr> >()
 		)
 		);
 	}

@@ -49,6 +49,12 @@
 	  Replaced unroll_index_type with multikey_index_type, 
 	  both are multikey_generic<pint_value_type>.
 
+	+ -set-06: changed signature of dereference functor
+	  to take a generic class argument, and using pointer_traits
+	  (internal_reference<T>::type).
+	  Relocated "dereference_t" and hellper to "dereference.h".
+	  Updated all affected source files.  
+
 
 2005-02-04	David Fang	<fangism@users.sourceforge.net>
 

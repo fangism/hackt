@@ -2,7 +2,7 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.4.10.1 2005/02/06 02:22:11 fang Exp $
+	$Id: pointer_traits.h,v 1.4.10.2 2005/02/06 08:33:41 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
@@ -14,6 +14,10 @@
 #endif
 
 #define	USING_UTIL_MEMORY_POINTER_TRAITS				\
+using util::memory::pointee;						\
+using util::memory::internal_reference;					\
+using util::memory::internal_pointer;					\
+using util::memory::indirections;					\
 using util::memory::pointer_category;					\
 using util::memory::pointer_traits;					\
 using util::memory::not_a_pointer_tag;					\

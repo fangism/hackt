@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.3.2.1 2005/02/06 02:22:08 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.3.2.2 2005/02/06 08:33:32 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -183,6 +183,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_select.h \
 	util/const_assoc_query.h \
 	util/const_assoc_query.tcc \
+	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/discrete_interval_set.h \
 	util/discrete_interval_set.tcc \

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.8.2.1 2005/02/03 03:34:53 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.8.2.1.2.1 2005/02/06 08:33:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "compose.h"
 #include "binders.h"
 
@@ -41,7 +42,7 @@
 namespace ART {
 namespace entity {
 using std::mem_fun_ref;
-using std::dereference;
+using util::dereference;
 using std::istream;
 #include "using_ostream.h"
 USING_UTIL_COMPOSE
@@ -110,8 +111,7 @@ sequential_scope::unroll(unroll_context& c) const {
 	unary_compose_void(
 		bind2nd_argval_void(
 			mem_fun_ref(&instance_management_base::unroll), c), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
+		dereference<sticky_ptr<const instance_management_base> >()
 	)
 	);
 }
@@ -143,8 +143,7 @@ sequential_scope::collect_object_pointer_list(
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
+		dereference<sticky_ptr<const instance_management_base> >()
 	)
 	);
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.1.2.1 2005/02/06 07:34:31 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.1.2.2 2005/02/06 08:33:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -35,6 +35,7 @@
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
+#include "dereference.h"
 
 STATIC_TRACE_BEGIN("instance-bool")
 
@@ -54,7 +55,7 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
 
@@ -280,13 +281,13 @@ bool_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,

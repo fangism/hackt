@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.2.2.1 2005/02/06 07:34:33 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.2.2.2 2005/02/06 08:33:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -30,6 +30,7 @@
 #include "indent.h"
 #include "stacktrace.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "compose.h"
 #include "binders.h"
 
@@ -39,7 +40,7 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE;
 
@@ -467,13 +468,13 @@ proc_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,
