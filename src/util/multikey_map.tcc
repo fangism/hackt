@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.16.1 2005/02/09 04:14:17 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.16.1.4.1 2005/02/14 05:41:40 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -445,7 +445,7 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 ostream&
 multikey_map<D,K,T,M>::write(ostream& f) const {
 	INVARIANT(f.good());
-	write_value(f, population());
+	write_value(f, this->population());
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++) {
@@ -461,7 +461,7 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 istream&
 multikey_map<D,K,T,M>::read(istream& f) {
 	INVARIANT(f.good());
-	INVARIANT(empty());
+	INVARIANT(this->empty());
 	size_t size, i=0;
 	read_value(f, size);
 	for ( ; i<size; i++) {
@@ -608,7 +608,7 @@ multikey_map<1,K,T,M>::write(ostream& f) const {
 	write_map(f, static_cast<const map_type&>(*this));
 #else
 	INVARIANT(f.good());
-	write_value(f, population());
+	write_value(f, this->population());
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++) {
@@ -634,7 +634,7 @@ multikey_map<1,K,T,M>::read(istream& f) {
 	read_map(f, static_cast<map_type&>(*this));
 #else
 	INVARIANT(f.good());
-	INVARIANT(empty());
+	INVARIANT(this->empty());
 	size_t size, i=0;
 	read_value(f, size);
 	for ( ; i<size; i++) {

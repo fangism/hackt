@@ -1,14 +1,14 @@
 /**
 	\file "hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
-	$Id: hash_qmap.h,v 1.7.16.2 2005/02/09 04:14:14 fang Exp $
+	$Id: hash_qmap.h,v 1.7.16.2.4.1 2005/02/14 05:41:38 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_H__
 #define	__UTIL_HASH_QMAP_H__
 
 #include "macros.h"
-#include "hash_map.h"
+#include "STL/hash_map.h"
 #include "hash_qmap_fwd.h"		// forward declarations only
 #include "const_assoc_query.h"
 

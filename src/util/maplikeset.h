@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1 2005/02/09 04:14:14 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.4.1 2005/02/14 05:41:39 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -79,7 +79,6 @@ public:
 	typedef	typename set_type::difference_type	difference_type;
 	typedef	typename set_type::pointer		pointer;
 	typedef	typename set_type::const_pointer	const_pointer;
-	typedef	typename set_type::allocator_type	allocator_type;
 protected:
 	typedef	typename value_type::value_type		impl_value_type;
 
@@ -181,10 +180,12 @@ public:
 	reference
 	operator [] (const key_type& k) {
 		iterator i = lower_bound(k);
-		if (i == set_type::end() || key_comp()(value_type(k), *i))
+		if (i == set_type::end() || this->key_comp()(value_type(k), *i))
 			i = insert(i, k);
 		// else lower bound points to first element equal
-		return *i;
+		// gcc-4.0 const reference conflict
+		// return *i;
+		return const_cast<reference>(*i);
 	}
 
 #if 0
