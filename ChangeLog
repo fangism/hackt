@@ -7,6 +7,11 @@
 	  templates, this has been punted for way too long. 
 	  Need to rename some methods to conform to standard interface.  
 
+	* -expr-02:
+	  Ported pint_const_collection to const_collection_template.
+	  Renamed {may,must}_be_equivalent method functions of many
+	  pint and pbool class derivatives.  
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
 	  Porting parameter instance collections to use new value_collection
 	  template, similar to instance_collection class template.  
