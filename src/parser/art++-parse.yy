@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.7 2004/12/06 07:11:42 fang Exp $
+	$Id: art++-parse.yy,v 1.8 2004/12/07 02:22:43 fang Exp $
  */
 
 %{
@@ -308,7 +308,14 @@ extern const char* const yyrule[];
  * for a particular "yyerror_bison_hack.awk" to work.  
  */
 extern	int yylex(void);		// ancient compiler rejects
+
+namespace ART {
+namespace lexer {
 extern	int at_eof(void);		// from "art++-lex.ll"
+}
+}
+using ART::lexer::at_eof;
+
 extern "C" {
 	int yyparse(void);		// parser routine to call
 	void yyerror(const char* msg);	// ancient compiler rejects
