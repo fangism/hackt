@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.17 2005/03/06 22:45:52 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.17.2.1 2005/03/09 05:21:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -423,6 +423,7 @@ pbool_array<D>::key_value_dumper::operator () (
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates integer parameters at the specified indices.
+	Functionalty of resolving ranges should be in base class...
 	\param i fully-specified range of indices to instantiate.
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE

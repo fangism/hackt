@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.5 2005/03/04 07:00:07 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.5.6.1 2005/03/09 05:21:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -637,6 +637,7 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates integer parameters at the specified indices.
+	TODO: change argument to take a const_range_list.  
 	\param i fully-specified range of indices to instantiate.
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE

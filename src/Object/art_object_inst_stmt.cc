@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.2 2005/03/07 23:28:47 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.3 2005/03/09 05:21:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -31,9 +31,9 @@
 
 #if USE_INST_STMT_TEMPLATE
 #include "art_object_inst_stmt_param.h"
-// #include "art_object_inst_stmt_data.h"
-// #include "art_object_inst_stmt_chan.h"
-// #include "art_object_inst_stmt_proc.h"
+#include "art_object_inst_stmt_data.h"
+#include "art_object_inst_stmt_chan.h"
+#include "art_object_inst_stmt_proc.h"
 #endif
 
 #include "what.tcc"
@@ -161,6 +161,33 @@ index_collection_item_ptr_type
 instantiation_statement_base::get_indices(void) const {
 	return indices;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	\pre Only call this if indices is NOT null.  
+ */
+good_bool
+instantiation_statement_base::resolve_instantiation_range(
+		const_range_list& r, const unroll_context& c) const {
+	NEVER_NULL(indices);
+	INVARIANT(r.empty());	// not already constructed
+	const good_bool ret(crl.resolve_ranges(c));
+	if (!ret.good) {
+		// ranges is passed and returned by reference
+		// fail
+#if 0
+		cerr << "ERROR: unable to resolve indices of " <<
+			get_qualified_name() << " for instantiation: ";
+#else
+		cerr << "ERROR: unable to resolve indices for instantiation: ";
+#endif
+		indices->dump(cerr) << endl;
+		THROW_EXIT;	// temporary non-error-handling
+	}
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t

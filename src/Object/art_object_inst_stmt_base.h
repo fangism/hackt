@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.6.12.1 2005/03/07 01:29:23 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.6.12.2 2005/03/09 05:21:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -62,6 +62,10 @@ virtual	never_ptr<const instance_collection_base>
 
 	index_collection_item_ptr_type
 	get_indices(void) const;
+
+	good_bool
+	resolve_instantiation_range(const_range_list&, 
+		const unroll_context&) const;
 
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;

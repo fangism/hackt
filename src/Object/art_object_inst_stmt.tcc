@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.1 2005/03/07 23:28:48 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.2 2005/03/09 05:21:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -157,7 +157,31 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
-	inst_base->instantiate_indices(indices);
+#if 1
+	inst_base->instantiate_indices(this->indices);
+#else
+	const good_bool
+		tc(type_ref_parent_type::unroll_type_check(*this->inst_base));
+	// should be optimized away where there is no type-checkto be done
+	if (!tc.good) {
+		cerr << "ERROR: type-mismatch during instantiation_statment::unroll." << endl;
+		THROW_EXIT;
+	}
+	// this will require some serious specialization
+	// indices can be resolved to constants with unroll context.  
+	// still implicit until expanded by the collection itself.  
+	const_index_list cil;
+	if (this->indices) {
+		cil = this->indices->unroll_resolve(c);
+		if (cil.empty()) {
+			cerr << "ERROR: resolving indices." << endl;
+			THROW_EXIT;
+		}
+	}
+	resolve_instantiation_range(r, c);
+	const const_range_list crl(cil);
+	this->inst_base->instantiate_indices(crl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -171,6 +195,7 @@ if (!m.register_transient_object(this,
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
+	type_ref_parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -181,6 +206,7 @@ INSTANTIATION_STATEMENT_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, this->inst_base);
 	parent_type::write_object_base(m, f);
+	type_ref_parent_type::write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,6 +216,7 @@ INSTANTIATION_STATEMENT_CLASS::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, this->inst_base);
 	parent_type::load_object_base(m, f);
+	type_ref_parent_type::load_object_base(m, f);
 }
 
 //=============================================================================

@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-03-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03:
+	  More details on class_traits<>::instantiation_statement_type_ref_ptr
+	  interface, also provided a default empty class implementation.  
+	  Need to rework instantiation statement framework: which methods
+	  are responsible for type-checking, index/range-resolving, 
+	  sparse-instance populating, etc...
+	  but _after_ fixing interface for range_expr_lists.
+
+
 2005-03-06	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-18-inststmt-02:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.12.2.2 2005/03/07 23:28:48 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.12.2.3 2005/03/09 05:21:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -327,6 +327,7 @@ public:
 };	// end class channel_instantiation_statement
 
 //=============================================================================
+#if !USE_INST_STMT_TEMPLATE || 1
 /**
 	Data-type instantiation statement.
  */
@@ -386,6 +387,7 @@ public:
 // private:
 
 };	// end class data_instantiation_statement
+#endif	// USE_INST_STMT_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

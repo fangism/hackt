@@ -2,20 +2,28 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.2.12.1 2005/03/07 23:28:47 fang Exp $
+	$Id: art_object_classification_details.h,v 1.2.12.2 2005/03/09 05:21:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
 #define	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
 
+#include <iosfwd>
 #include "art_object_fwd.h"
 #include "packed_array_fwd.h"
 #include "ring_node_fwd.h"
 
+namespace util {
+	class persistent_object_manager;
+}
+
 namespace ART {
 namespace entity {
+using std::istream;
+using std::ostream;
 using util::packed_array_generic;
 using util::ring_node_derived;
+using util::persistent_object_manager;
 
 /**
 	Default definition is empty, must specialize for each class.  
@@ -453,6 +461,33 @@ struct class_traits<pbool_tag> {
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<pbool_tag>
 
+
+//=============================================================================
+// useful base templates
+
+/**
+	Handy empty class that does nothing but meet a convenient interface
+	for persistent object management of type references.  
+ */
+class empty_instantiation_statement_type_ref_base {
+public:
+
+	void 
+	collect_transient_info_base(persistent_object_manager&) const {
+		// nothing to collect
+	}
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const {
+		// nothing to write
+	}
+
+	void
+	load_object_base(const persistent_object_manager&, istream&) {
+		// nothing to load
+	} 
+
+};	// end class empty_instantiation_statement_type_ref_base
 
 //=============================================================================
 }	// end namespace entity
