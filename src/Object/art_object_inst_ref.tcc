@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.2 2005/02/27 22:54:12 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.2.2.1 2005/03/01 04:40:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_TCC__
@@ -70,7 +70,7 @@ INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	\return true on error, else false.
  */
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
+bad_bool
 INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
 		alias_collection_type& a) const {
 	// possibly factor this part out into simple_instance_reference?
@@ -81,7 +81,7 @@ if (this->inst_collection_ref->get_dimensions()) {
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;
-			return true;
+			return bad_bool(true);
 		}
 	}
 	// else empty, implicitly refer to whole collection if it is dense
@@ -91,7 +91,7 @@ if (this->inst_collection_ref->get_dimensions()) {
 	if (full_indices.empty()) {
 		// more descriptive error message later...
 		cerr << "ERROR: failed to resolve indices." << endl;
-		return true;
+		return bad_bool(true);
 	}
 	// resize the array according to the collapsed dimensions, 
 	// before passing it to unroll_aliases.
@@ -110,10 +110,10 @@ if (this->inst_collection_ref->get_dimensions()) {
 	// this will set the size and dimensions of packed_array a
 	if (this->inst_collection_ref->unroll_aliases(lower, upper, a)) {
 		cerr << "ERROR: unrolling aliases." << endl;
-		return true;
+		return bad_bool(true);
 	}
 	// success!
-	return false;
+	return bad_bool(false);
 } else {
 	// is a scalar instance
 	// size the alias_collection_type appropriately
@@ -121,9 +121,9 @@ if (this->inst_collection_ref->get_dimensions()) {
 	const multikey_index_type bogus;
 	if (this->inst_collection_ref->unroll_aliases(bogus, bogus, a)) {
 		cerr << "ERROR: unrolling aliases." << endl;
-		return true;
+		return bad_bool(true);
 	}
-	return false;
+	return bad_bool(false);
 }
 }
 

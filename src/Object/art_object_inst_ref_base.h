@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.7 2005/02/27 22:54:12 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.7.2.1 2005/03/01 04:40:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -236,7 +236,7 @@ virtual	~simple_instance_reference();
 	const_index_list
 	implicit_static_constant_indices(void) const;
 
-	bool
+	good_bool
 	attach_indices(excl_ptr<index_list>& i);
 
 virtual	ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.16 2005/02/27 22:54:12 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.16.2.1 2005/03/01 04:40:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -82,7 +82,7 @@ virtual	~instance_reference();
 	get_inst_base(void) const;
 
 	// overridden by member_instance_reference
-virtual	bool
+virtual	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
 
 private:

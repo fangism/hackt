@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.15.2.2 2005/02/28 03:11:30 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.15.2.3 2005/03/01 04:40:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -227,7 +227,7 @@ pbool_expression_assignment::append_param_instance_reference(
 		cerr << "ERROR: Cannot initialize a bool parameter with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
-	} else if (!pb->initialize(src)) {	// type check
+	} else if (!pb->initialize(src).good) {	// type check
 		// if scalar, initialize for static analysis
 		err.bad = true;
 	}
@@ -404,7 +404,7 @@ pint_expression_assignment::append_param_instance_reference(
 		cerr << "ERROR: Cannot initialize an int parameter with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
-	} else if (!pi->initialize(src)) {	// type check
+	} else if (!pi->initialize(src).good) {	// type check
 		// if scalar, initialize for static analysis
 		err.bad = true;
 	}

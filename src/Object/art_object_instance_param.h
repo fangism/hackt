@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.13.2.3 2005/03/01 02:28:38 fang Exp $
+	$Id: art_object_instance_param.h,v 1.13.2.4 2005/03/01 04:40:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -96,8 +96,8 @@ virtual	count_ptr<const param_expr>
 	bool
 	must_be_initialized(void) const;
 
-virtual	bool
-	assign_default_value(count_ptr<const param_expr> p) = 0;
+virtual	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p) = 0;
 
 // used by definition_base::certify_template_arguments
 virtual	good_bool
@@ -239,11 +239,11 @@ virtual	ostream&
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& e);
 
-	bool
-	assign_default_value(count_ptr<const param_expr> p);
+	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p);
 
 	count_ptr<const param_expr>
 	default_value(void) const;
@@ -566,11 +566,11 @@ virtual	ostream&
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& e);
 
-	bool
-	assign_default_value(count_ptr<const param_expr> p);
+	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p);
 
 	count_ptr<const param_expr>
 	default_value(void) const;

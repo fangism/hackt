@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.12 2005/01/13 05:28:27 fang Exp $
+	$Id: art_context.h,v 1.12.44.1 2005/03/01 04:40:38 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -14,6 +14,7 @@
 #include "STL/list.h"
 #include "memory/pointer_classes.h"
 #include "art_object_fwd.h"
+#include "boolean_types.h"
 
 namespace ART {
 
@@ -26,6 +27,8 @@ using std::ostream;
 using std::stack;
 using std::string;
 USING_LIST
+using util::good_bool;
+using util::bad_bool;
 using namespace util::memory;		// for pointer classes
 
 //=============================================================================
@@ -57,6 +60,7 @@ class token_paramtype;
 	upon construction and destruction.  
 
 	TODO: replace indent with util/indent implementation.  
+	TODO: rename this parse_context.
  */
 class context {
 protected:
@@ -221,7 +225,7 @@ public:
 	void
 	open_enum_definition(const token_identifier& en);
 
-	bool
+	good_bool
 	add_enum_member(const token_identifier& em);
 
 	void
@@ -236,7 +240,7 @@ public:
 	void
 	close_chantype_definition(void);
 
-	bool
+	good_bool
 	alias_definition(const never_ptr<const definition_base> d, 
 		const token_identifier& id);
 

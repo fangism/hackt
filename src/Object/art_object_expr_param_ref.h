@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.6.2.2 2005/03/01 02:28:37 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.6.2.3 2005/03/01 04:40:39 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -94,7 +94,7 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& i);
 
 	string
@@ -236,7 +236,7 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& i);
 
 	string

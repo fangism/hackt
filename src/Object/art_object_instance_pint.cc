@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.14.2.3 2005/03/01 02:28:38 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.14.2.4 2005/03/01 04:40:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -189,19 +189,19 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa may_be_initialized
 	\sa must_be_initialized
  */
-bool
+good_bool
 pint_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {
 		if (type_check_actual_param_expr(*e).good) {
 			ival = e;
-			return true;
+			return good_bool(true);
 		} else {
-			return false;
+			return good_bool(false);
 		}
 	}
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -209,14 +209,15 @@ pint_instance_collection::initialize(const init_arg_type& e) {
 	Assigning default value(s) to parameters is only valid
 	in the context of template-formal parameters.  
  */
-bool
-pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
+good_bool
+pint_instance_collection::assign_default_value(
+		const count_ptr<const param_expr>& p) {
 	const count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
 	if (i && type_check_actual_param_expr(*i).good) {
 		ival = i;
-		return true;
+		return good_bool(true);
 	}
-	else return false;
+	else return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

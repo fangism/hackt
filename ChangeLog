@@ -22,6 +22,12 @@
 	  param value instance collection methods.  
 	  Actually caught an old (wrong error message) bug in the process!
 
+	* -bool-06:
+	  Final revisions upgrading bools.
+	  Upgraded some class methods in context, definitions, 
+	  param assignments, connections, instance_references, namespace.
+	  This is ready to merge to trunk.  
+
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 

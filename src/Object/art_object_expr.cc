@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.38.2.3 2005/03/01 02:28:35 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.38.2.4 2005/03/01 04:40:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1095,7 +1095,7 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 	not the actual initialization that takes place during unrolling.  
 	\return true if sucessfully initialized with valid expression.  
  */
-bool
+good_bool
 pbool_instance_reference::initialize(const init_arg_type& i) {
 	return pbool_inst_ref->initialize(i);
 }
@@ -1656,7 +1656,7 @@ pint_instance_reference::static_constant_dimensions(void) const {
 	not the actual initialization that takes place during unrolling.  
 	\return true if successfully initialized with valid expression.  
  */
-bool
+good_bool
 pint_instance_reference::initialize(const init_arg_type& i) {
 	return pint_inst_ref->initialize(i);
 }
