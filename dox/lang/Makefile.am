@@ -59,12 +59,12 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	@if $(GREP) "TeX capacity" $*.log; \
 		then $(ECHO) SHIT ; \
 	fi
-	@$(BIBTEX) $*
-	@$(MAKEINDEX) $*.idx
+	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
+	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
 	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(LATEX) $< > /dev/null < /dev/null; \
-		$(MAKEINDEX) $*.idx; \
+		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
 		if $(GREP) "TeX capacity" $*.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
@@ -81,12 +81,12 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	@if $(GREP) "TeX capacity" $*.log; \
 		then $(ECHO) SHIT ; \
 	fi
-	@$(BIBTEX) $*
-	@$(MAKEINDEX) $*.idx
+	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
+	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
 	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(PDFLATEX) $< > /dev/null < /dev/null; \
-		$(MAKEINDEX) $*.idx; \
+		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
 		if $(GREP) "TeX capacity" $*.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
