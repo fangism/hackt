@@ -7,6 +7,8 @@ MAKE = make
 SHELL = /bin/sh
 
 CC = gcc
+# to use ccache, override with: make CC="ccache gcc"
+# to use distcc, can even prefix compile command with "distcc"
 LD = $(CC)
 CFLAGS = -O3 -Wall -c -g
 # turn on -O4 later...

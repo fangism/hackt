@@ -6,7 +6,10 @@
 #include "art_symbol_table.h"
 #include "art_object.h"
 
+//=============================================================================
 namespace ART {
+using namespace entity;
+
 namespace parser {
 using namespace std;
 
@@ -21,6 +24,7 @@ context::context() :
 		current_ns(new name_space("",NULL)) {
 	assert(current_ns);		// make sure allocated
 	// add to the global namespace all built-in types and definitions
+	
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,12 +37,12 @@ context::~context() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// opens up namespace, error occurs if name conflicts
 name_space*
-context::open_namespace(const string& id) {
+context::open_namespace(const token_identifier& id) {
 	indent++;
 	current_ns = current_ns->add_open_namespace(id);
 	if (!current_ns) {
 		type_error_count++;
-		cerr << id << endl;		// where?
+		cerr << id.where() << endl;
 		exit(1);			// temporary
 	}
 	else return current_ns;

@@ -25,7 +25,7 @@ using namespace __gnu_cxx;
 #include "art_macros.h"
 #include "art_switches.h"
 #include "art_utils.h"
-#include "art_symbol_table.h"
+// #include "art_symbol_table.h"
 // #include "art_object.h"
 #include "list_of_ptr.h"	// includes <list>
 
@@ -53,6 +53,7 @@ using namespace entity;
 namespace parser {
 //=============================================================================
 // forward declarations in this namespace
+class context;			// defined in art_symbol_table.h
 class token_char;
 class token_string;
 

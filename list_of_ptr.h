@@ -11,7 +11,7 @@
 
 #include <list>
 
-using namespace std;
+using std::list;
 
 //=============================================================================
 /// A list of exclusively owned pointers, based on std::list.  

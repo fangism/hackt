@@ -3,6 +3,7 @@
 #include "art_parser.h"
 #include "art_object.h"
 #include "list_of_ptr_template_methods.h"
+#include "map_of_ptr_template_methods.h"
 
 namespace ART {
 namespace entity {
@@ -15,8 +16,10 @@ namespace entity {
 	\param p pointer to the parent namespace.  
  */
 name_space::name_space(const string& n, name_space* p) : 
-		object(), parent(p), key(n), subns(), 
-		open_spaces(), open_aliases() {
+		object(), parent(p), key(n), 
+		subns(), open_spaces(), open_aliases(), 
+		type_defs(), type_insts(),
+		proc_defs(), proc_insts() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -26,16 +29,15 @@ name_space::name_space(const string& n, name_space* p) :
 	their respective owners.  
  */
 name_space::~name_space() {
-	ns_map_type::iterator i;
+	// no longer need to explicitly delete pointers belonging
+	// to map_of_ptr<> types because their default destructors, 
+	// that take care of them, will be invoked automatically.  
 
-	open_spaces.clear();		// without deleting, don't own
-	open_aliases.clear();		// without deleting, don't own
+	// default destructor for lists and maps of un-owned pointers
+	// will already clear those respective sets without deleting.  
+//	open_spaces.clear();		// without deleting, don't own
+//	open_aliases.clear();		// without deleting, don't own
 
-	// iterate through and delete subnamespaces, this object owns them
-	for (i=subns.begin(); i!=subns.end(); i++) {
-		SAFEDELETE((*i).second);
-	}
-	subns.clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -349,7 +351,7 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) {
 
 /// constructor for user defined type
 user_type_def::user_type_def(const string& name) :
-	type_definition(), key(name), members() {
+	type_definition(name), template_params(), members() {
 }
 
 //=============================================================================

@@ -5,6 +5,8 @@
 
 #include "art_parser.h"
 #include "list_of_ptr_template_methods.h"
+#include "art_symbol_table.h"
+	// for class context
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -33,7 +35,7 @@
 
 namespace ART {
 namespace parser {
-
+//=============================================================================
 // TEMPLATE METHOD DEFINITIONS
 //=============================================================================
 // for class node_list_base<>
