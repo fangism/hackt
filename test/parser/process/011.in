@@ -1,0 +1,6 @@
+// should die on incomplete defproc or prototype
+
+defproc barbar<pint milk, tea; pbool water[4]>() {
+
+// death
+

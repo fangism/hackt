@@ -1,0 +1,3 @@
+// should still die on incomplete defproc
+
+defproc foo <pint bar

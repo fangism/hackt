@@ -1,0 +1,3 @@
+// should die on incomplete defproc
+
+defproc barbar<pint milk, tea

@@ -1,0 +1,6 @@
+// should pass, complete, albeit empty definition
+
+defproc barbar<pint milk, tea; pbool water[4]>(){
+// empty definition
+}
+

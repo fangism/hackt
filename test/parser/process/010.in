@@ -1,0 +1,4 @@
+// should pass, is complete prototype
+
+defproc barbar<pint milk, tea; pbool water[4]>();
+

@@ -1,0 +1,4 @@
+// should die: incomplete process definition again
+
+defproc bad_fang <pint
+
