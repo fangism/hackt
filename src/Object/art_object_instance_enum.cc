@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.1 2005/02/03 03:34:52 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.1.2.1 2005/02/06 07:34:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -287,11 +287,12 @@ enum_array<D>::resolve_indices(const const_index_list& l) const {
  */
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 typename enum_array<D>::instance_ptr_type
-enum_array<D>::lookup_instance(const unroll_index_type& i) const {
+enum_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
+	const multikey<D, pint_value_type> index(i);
 	const enum_instance_alias&
-		b(collection[i]);
+		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
@@ -430,7 +431,7 @@ enum_array<0>::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 enum_array<0>::instance_ptr_type
-enum_array<0>::lookup_instance(const unroll_index_type& i) const {
+enum_array<0>::lookup_instance(const multikey_index_type& i) const {
 	if (!the_instance.valid()) {
 		cerr << "ERROR: Reference to uninstantiated enum!" << endl;
 		return instance_ptr_type(NULL);

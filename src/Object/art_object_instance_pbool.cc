@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.2 2005/02/06 05:32:03 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.3 2005/02/06 07:34:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -694,7 +694,7 @@ pbool_array<0>::lookup_value_collection(
 bool
 pbool_array<0>::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
-	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
+	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return false;
@@ -718,7 +718,7 @@ bool
 pbool_array<0>::assign(const multikey_index_type& k,
 		const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
+	cerr << "FATAL: pbool_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return true;

@@ -45,6 +45,10 @@
 	  To do: continue similar changes with "unroll_index_type".
 	  Possibly specialize multikey<1> as plain value instead of [1].
 
+	+ -set-05: no more references to multikey_base remaining.
+	  Replaced unroll_index_type with multikey_index_type, 
+	  both are multikey_generic<pint_value_type>.
+
 
 2005-02-04	David Fang	<fangism@users.sourceforge.net>
 
