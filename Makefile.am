@@ -57,7 +57,7 @@ dist-hook:
 cvsdiffs: force
 	-$(CVS) diff > $@
 
-commit: distcheck
+commit: cvsdiffs distcheck
 	$(CVS) commit
 
 force:

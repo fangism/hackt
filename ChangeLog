@@ -1,5 +1,40 @@
 "ChangeLog"
 
+2004-09-14	David Fang	<fangism@users.sourceforge.net>
+
+	* Completely redone instantiation_base and subclasses, 
+	  now called instance_collection_*.  
+	  (~5000 lines diff)
+	  instantiation_statement and instance_collection classes
+	  are *tightly* coupled now.  
+	  Instead of containing list of indices directly, 
+	  contains list of instantiation_statements, which contain indices.  
+	  Instantiation_statements need a back-reference to the
+	  containing instance_collection.  
+	  As a result, re-implemented handling of 
+	  scopespace::add_instance and context::add_instance.  
+	  Miraculously, all regression tests still pass.  
+
+	* In class context, introduced sequential scope stack for 
+	  appending sequentially managed items (instances, assignments, 
+	  connections) to the right list.  
+	  Remember that everything outside of definitions (even in 
+	  namespaces) is in the globally sequenced list.  
+
+	* Fundamental_type_reference now creates instantiation_statements
+	  in addition to instance_collections (static methods).  
+
+	* Multidimensional data structure interface improvements.  
+
+	* A few more safety checks in persistent_object_manager
+	  pointer I/O manipulation.  
+
+	* Expressions objects now load (de-serialize) recursively.  
+
+	* Code is littered with #if code blocks -- next commit will
+	  be a mandatory clean-up.  
+
+
 2004-09-10	David Fang	<fangism@users.sourceforge.net>
 
 	* Major reworking of instance management: all instantiations, 
