@@ -123,7 +123,7 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES)
 
 .cvsignore: Makefile.am Makefile.in
 
-all-local: .cvsignore
+all-local: .cvsignore $(TESTS)
 
 clean-local:
 	-$(RM) *.core core.*

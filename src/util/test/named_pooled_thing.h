@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_thing.h"
 	Named, pooled object for testing.  
-	$Id: named_pooled_thing.h,v 1.1.4.1 2005/01/23 01:34:04 fang Exp $
+	$Id: named_pooled_thing.h,v 1.1.4.1.4.1 2005/01/27 02:48:00 fang Exp $
  */
 
 #ifndef	__NAMED_POOLED_THING_H__
@@ -19,6 +19,7 @@
 using util::what;
 using std::string;
 using namespace util::memory;
+USING_CONSTRUCT
 
 #if 1
 class named_thing {
@@ -29,6 +30,9 @@ public:
 	~named_thing();
 
 #if ENABLE_POOL
+	// needed by gcc-3.3, but not 3.4
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
 };
@@ -43,6 +47,7 @@ public:
 	named_thing(const named_thing& n);
 	~named_thing();
 #if ENABLE_POOL
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
 };
@@ -59,6 +64,7 @@ public:
 	named_thing(const named_thing& n);
 	~named_thing();
 #if ENABLE_POOL
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 #endif
 };	// end class named_thing

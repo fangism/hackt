@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.3 2005/01/25 22:33:46 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.3.2.1 2005/01/27 02:47:58 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -81,7 +81,9 @@ public:									\
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
 	friend class list_vector_pool<this_type>;			\
-	friend void _Construct<this_type>(this_type*);
+	friend void _Construct<this_type>(this_type*);			\
+	friend void _Construct<this_type, this_type>(			\
+		this_type*, const this_type&);
 
 namespace util {
 //=============================================================================
