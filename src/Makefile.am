@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2005/01/13 07:22:47 fang Exp $
+#	$Id: Makefile.am,v 1.40 2005/01/13 18:59:40 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -332,7 +332,8 @@ AM_CPPFLAGS = -DREGRESSION_TEST_MODE \
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-MORE_CFLAGS = -pipe -W -Wall -Wno-unused -Werror
+WARN_CFLAGS = -W -Wall -Wno-unused -Werror
+MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CFLAGS)
