@@ -8,15 +8,11 @@ int
 main(int argc, char* argv[]) {
 	excl_ptr<parser::node> root;		///< root of the syntax tree
 	never_const_ptr<entity::object> top;	///< root type-checked object
-#if 0
-	excl_ptr<entity::name_space> global(new name_space(""));
-	excl_ptr<parser::context> the_context(new context(global));
-#else
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
-#endif
 
-		artxx_parse();
+	artxx_parse();
+
 DEBUG(DEBUG_BASIC, 
 	cerr << "parsing successful... tree built, on to type-checking!" 
 		<< endl;
