@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.9 2004/11/05 02:38:51 fang Exp $
+	$Id: multikey_map.h,v 1.10 2004/11/06 06:27:14 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -581,8 +581,8 @@ public:
 	write(ostream& f) const {
 		assert(f.good());
 		write_value(f, population());
-		const_iterator i = begin();
-		const const_iterator e = end();
+		const_iterator i = this->begin();
+		const const_iterator e = this->end();
 		for ( ; i!=e; i++) {
 			i->first.write(f);
 			write_value(f, i->second);
@@ -789,8 +789,8 @@ public:
 #else
 		assert(f.good());
 		write_value(f, population());
-		const_iterator i = begin();
-		const const_iterator e = end();
+		const_iterator i = this->begin();
+		const const_iterator e = this->end();
 		for ( ; i!=e; i++) {
 #if 0
 			i->first.write(f);	// invalid for D=1

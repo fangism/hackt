@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.1 2004/11/05 02:38:34 fang Exp $
+	$Id: IO_utils.tcc,v 1.2 2004/11/06 06:27:14 fang Exp $
  */
 
 #ifndef __IO_UTILS_TCC__
@@ -63,7 +63,7 @@ template <template <class> class S, class T>
 void
 write_sequence(ostream& f, const S<T>& l) {
 	typedef S<T>	sequence_type;
-	f.write_value(f, l.size());
+	write_value(f, l.size());
 #if 0
 	for_each(l.begin(), l.end(), 
 		bind1st_argval(ptr_fun(write_value<T>), f)
