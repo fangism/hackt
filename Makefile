@@ -1,5 +1,5 @@
 # "Makefile"
-# I insist on keeping this Makefile standard-make compatible!
+# I insist on keeping this Makefile BSD-make compatible!
 # I'm trying to make this as self-contained as possible to avoid 
 # ugly dependencies.  
 
@@ -23,9 +23,10 @@ THISMAKEFILE = Makefile
 
 CC = gcc
 LD = $(CC)
+# use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...
 #	will eventually get around to self-configuring
-CFLAGS = -O2 -Wall -c -g -pipe
+CFLAGS = -O2 -Wall -c -g -pipe $(CDEFS)
 # -fkeep-inline-functions
 # turn on -O4 later...
 LDFLAGS = -lc -lstdc++
@@ -44,7 +45,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 
 .SUFFIXES: .cc .o .l .yy .d
 
-# careful using this...
+# careful using this..., only bsdmake uses .BEGIN
 .BEGIN:	makeinfo .depend
 
 .cc.o:
@@ -56,9 +57,20 @@ DOXYGEN_CONFIG = art.doxygen.config
 default: all
 
 makeinfo:
-	@$(ECHO) "MAKE = $(MAKE) $(MAKEFLAGS)"
+	@$(ECHO) "############################################################"
+	@$(ECHO) "#	MAKE = $(MAKE) $(MAKEFLAGS)"
+	@$(ECHO) "#	CC = $(CC) $(CFLAGS)"
+	@$(ECHO) "#	MAKEDEPEND = $(MAKEDEPEND)"
+	@$(ECHO) "#	LD = $(LD) $(LDFLAGS)"
+	@$(ECHO) "#	LEX = $(LEX) $(LFLAGS)"
+	@$(ECHO) "#	YACC = $(YACC) $(YFLAGS)"
+	@$(ECHO) "############################################################"
 
 all: .depend $(TARGETS)
+
+# figure out how to pass in regression flags
+# TO DO: regression test Makefile targets in subdirectories
+regression: clobber .depend $(TARGETS)
 
 ART_OBJ = y.tab.o art.yy.o art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \
@@ -149,6 +161,7 @@ tarball: clobber
 	$(TAR) $(TARBALL) ./*
 
 # temporary files are ignored by .cvsignore
+# add regression tests!
 commit: clobberdepend
 	cvs commit
 

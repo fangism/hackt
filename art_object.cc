@@ -12,14 +12,59 @@
 	// includes "list_of_ptr_template_methods.h"
 #include "art_object.h"
 
-
-//=============================================================================
-// template specialization, needed by some compilers
-
 //=============================================================================
 namespace ART {
 namespace entity {
-//-----------------------------------------------------------------------------
+
+//=============================================================================
+// class scopespace methods
+scopespace::scopespace(const string& n, const scopespace* p) : 
+		object(), parent(p), key(n), 
+		used_id_map() {
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+scopespace::~scopespace() {
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This lookup function returns a pointer to some object that belongs to 
+	this scope, be it a namespace, process, definition, or instantiation.
+	This query will not look in higher namespaces or imported namespaces.
+	we want to forbid reuse of identifiers among different classes
+	in the same namespace, but allow local names to overshadow
+	identifiers in other namespaces.  
+	\param id the hash key.  
+	\return const pointer to object indexed by hash key, otherwise NULL 
+		if object there doesn't already exist.  
+ */
+inline
+const object*
+scopespace::
+what_is(const string& id) {		// const?
+	return used_id_map[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This lookup function returns a reference to some object that belongs to 
+	this scope, be it a namespace, process, definition, or instantiation.
+	Useful for assignments.  
+	\param id the hash key.  
+	\return pointer to object indexed by hash key, otherwise NULL 
+		if object there doesn't already exist.  
+ */
+inline
+const object*&
+scopespace::
+assign_id(const string& id) {
+	return used_id_map[id];
+}
+
+//=============================================================================
 // class name_space methods
 
 /**
@@ -30,8 +75,9 @@ namespace entity {
 	\param p pointer to the parent namespace.  
 	\sa inherit_built_in_types
  */
-name_space::name_space(const string& n, name_space* p) : 
-		object(), parent(p), key(n), 
+name_space::name_space(const string& n, const name_space* p) : 
+		scopespace(n, p), 
+		parent(p), 	// doubly-initialized? override?
 		subns(), open_spaces(), open_aliases(), 
 		type_defs(), type_insts(),
 		proc_defs(), proc_insts() {
@@ -91,11 +137,11 @@ name_space::what(ostream& o) const {
 name_space*
 name_space::add_open_namespace(const string& n) {
 	name_space* ret;
-	object* probe = used_id_map[n];
+	const object* probe = what_is(n);
 	if (probe) {
-		ret = IS_A(name_space*, probe);
+		const name_space* probe_ns = IS_A(const name_space*, probe);
 		// an alias may return with valid pointer!
-		if (!ret) {
+		if (!probe_ns) {
 			probe->what(cerr << " ... already taken as a ")
 				<< ", ERROR! ";
 			return NULL;
@@ -105,11 +151,13 @@ name_space::add_open_namespace(const string& n) {
 			cerr << " ... already an open alias, ERROR! ";
 			return NULL;
 		} else {
-		// therefore, ret is a pointer to a valid sub-namespace
+		// therefore, probe_ns is a pointer to a valid sub-namespace
 			cerr << " ... already exists as subspace, re-opening";
-			assert(ret == subns[n]);
+			assert(probe_ns == subns[n]);
+			ret = subns[n];		// return modifiable pointer
 			// we can return this
 		}
+		assert(ret);
 	} else {
 		// consistency check: 
 		// since we're keeping subns and used_id_map consistent, 
@@ -119,12 +167,12 @@ name_space::add_open_namespace(const string& n) {
 		// create it, linking this as its parent
 		cerr << " ... creating new";
 		ret = new name_space(n, this);
+		assert(ret);
 		subns[n] = ret;		// store it in map of sub-namespaces
-		used_id_map[n] = ret;	// register it as a used id
+		assign_id(n) = ret;	// register it as a used id
 	}
 
 	// silly sanity checks
-	assert(ret);
 	assert(ret->parent == this);
 	assert(ret->key == n);
 	cerr << " with parent: " << ret->parent->key;
@@ -144,10 +192,10 @@ name_space::add_open_namespace(const string& n) {
 	\return pointer to the parent namespace, should never be NULL.  
 	\sa add_open_namespace
  */
-name_space*
+const name_space*
 name_space::leave_namespace(void) {
 	// for all open_aliases, release their names from used-map
-	subns_map_type::iterator i = open_aliases.begin();
+	alias_map_type::const_iterator i = open_aliases.begin();
 	for ( ; i!=open_aliases.end(); i++) {
 		used_id_map.erase(used_id_map.find((*i).first));
 	}
@@ -165,10 +213,10 @@ name_space::leave_namespace(void) {
 	\sa add_using_alias
  */
 // idea: use ::id[::id]* as a way of specifying absolute namespace path
-name_space*
+const name_space*
 name_space::add_using_directive(const id_expr& n) {
-	name_space* ret;
-	namespace_list::iterator i;
+	const name_space* ret;
+	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
 	cerr << endl << "adding using-directive in space: " 
@@ -223,21 +271,21 @@ name_space::add_using_directive(const id_expr& n) {
 	This allows one to overshadow identifiers in higher namespaces.  
 	\sa add_using_directive
  */
-name_space*
+const name_space*
 name_space::add_using_alias(const id_expr& n, const string& a) {
-	object* probe;
-	name_space* ret;
-	namespace_list::iterator i;
+	const object* probe;
+	const name_space* ret;
+	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
 	cerr << endl << "adding using-alias in space: " 
 		<< get_qualified_name() << " as " << a;
 
-	probe = used_id_map[a];
+	probe = what_is(a);
 	if (probe) {
 		// then already, it conflicts with some other id
 		// we report the conflict precisely as follows:
-		ret = IS_A(name_space*, probe);
+		ret = IS_A(const name_space*, probe);
 		if (ret) {
 			if(subns[a]) {
 				cerr << " ... already a sub-namespace, ERROR! ";
@@ -266,7 +314,7 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 		case 1: {
 			ret = (*i);
 			open_aliases[a] = ret;
-			used_id_map[a] = ret;
+			assign_id(a) = ret;
 			break;
 			}
 		case 0:	{
@@ -296,31 +344,42 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
-name_space*
-name_space::query_namespace_match(const id_expr& id) {
+const name_space*
+name_space::query_namespace_match(const id_expr& id) const {
 	// recall that id_expr is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
 	cerr << "query_namespace_match: " << id 
 		<< " in " << get_qualified_name() << endl;
 
 	id_expr::const_iterator i = id.begin();	assert(*i);
-	token_identifier* tid = IS_A(token_identifier*, *i);
+	const token_identifier* tid = IS_A(const token_identifier*, *i);
 	assert(tid);
 	cerr << "\ttesting: " << *tid;
-	name_space* ns = this;
+	const name_space* ns = this;
 	if (ns->key.compare(*tid)) {
 		// if names differ, already failed, try alias spaces
 		return NULL;
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
-			name_space* next;
+			const name_space* next;
 			i++;	// remember to skip scope tokens
 			tid = IS_A(token_identifier*, *i); assert(tid);
 			cerr << scope << *tid;
+			// the [] operator of map<> doesn't have const 
+			// semantics, even if looking up an entry!
 			next = ns->subns[*tid];
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-			ns = (next) ? next : ns->open_aliases[*tid];
+
+//			ns = (next) ? next : ns->open_aliases[*tid];
+			if (next) {
+				ns = next;
+			} else {
+				alias_map_type::const_iterator i = 
+					ns->open_aliases.find(*tid);
+				ns = (i != open_aliases.end()) ?
+					i->second : NULL;
+			}
 		}
 
 	// for loop terminates when ns is NULL or i is at the end
@@ -341,10 +400,10 @@ name_space::query_namespace_match(const id_expr& id) {
 	(at most one precise match)
 	This will treat open aliased namespaces as valid subspaces for search.
 	This variation excludes the invoking namespace in the pattern match.  
-	\param the qualified/scoped name of the namespace to match
+	\param id the qualified/scoped name of the namespace to match
  */
-name_space*
-name_space::query_subnamespace_match(const id_expr& id) {
+const name_space*
+name_space::query_subnamespace_match(const id_expr& id) const {
 	// recall that id_expr is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
 	cerr << endl << "query_subnamespace_match: " << id 
@@ -353,17 +412,30 @@ name_space::query_subnamespace_match(const id_expr& id) {
 	token_identifier* tid = IS_A(token_identifier*, *i);
 	assert(tid);
 	cerr << "\ttesting: " << *tid;
-	name_space* ns = subns[*tid];		// lookup map of sub-namespaces
-	if (!ns) ns = open_aliases[*tid];	// else lookup in aliases
+	const name_space* ns = subns[*tid];	// lookup map of sub-namespaces
+	if (!ns) {				// else lookup in aliases
+//		ns = open_aliases[*tid];	// replaced for const semantics
+		alias_map_type::const_iterator i = open_aliases.find(*tid);
+		ns = (i != open_aliases.end()) ? i->second : NULL;
+	}
 	// remember to skip scope tokens
 	for (i++; ns && i!=id.end(); i++) {
-		name_space* next;
+		const name_space* next;
 		i++;
 		tid = IS_A(token_identifier*, *i); assert(tid);
 		cerr << scope << *tid;
 		next = ns->subns[*tid];
 		// if not found in subspaces, check aliases list
-		ns = (next) ? next : ns->open_aliases[*tid];
+
+//		ns = (next) ? next : ns->open_aliases[*tid];
+		if (next) {
+			ns = next;
+		} else {
+			alias_map_type::const_iterator i = 
+				ns->open_aliases.find(*tid);
+			ns = (i != open_aliases.end()) ?
+				i->second : NULL;
+		}
 	}
 	// for loop terminates when ns is NULL or i is at the end
 	// if i is not at the end, then we didn't find a matched namespace
@@ -387,18 +459,19 @@ name_space::query_subnamespace_match(const id_expr& id) {
  */
 void
 name_space::
-query_import_namespace_match(namespace_list& m, const id_expr& id) {
+query_import_namespace_match(namespace_list& m, const id_expr& id) const {
 	cerr << endl << "query_import_namespace_match: " << id 
 		<< " in " << get_qualified_name();
 	{
-		name_space* ret = query_subnamespace_match(id);
+		const name_space* ret = query_subnamespace_match(id);
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			name_space* ret = (*i)->query_subnamespace_match(id);
+			const name_space* ret = 
+				(*i)->query_subnamespace_match(id);
 			if (ret) m.push_back(ret);
 		}
 	}
@@ -427,11 +500,11 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 	\param tid the name of type to search for.  
  */
 void
-name_space::query_type_def_match(type_def_list& m, const string& tid) {
+name_space::query_type_def_match(type_def_list& m, const string& tid) const {
 	cerr << endl << "query_type_def_match: " << tid
 		<< " in " << get_qualified_name();
 	{
-		type_definition* ret = type_defs[tid];
+		const type_definition* ret = type_defs[tid];
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
@@ -439,7 +512,7 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) {
 		// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			type_definition* ret = (*i)->type_defs[tid];
+			const type_definition* ret = (*i)->type_defs[tid];
 			if (ret) m.push_back(ret);
 		}
 		// don't search aliased imports
@@ -454,32 +527,13 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This lookup function returns a pointer to some object that belongs to 
-	this scope, be it a namespace, process, definition, or instantiation.
-	This query will not look in higher namespaces or imported namespaces.
-	we want to forbid reuse of identifiers among different classes
-	in the same namespace, but allow local names to overshadow
-	identifiers in other namespaces.  
-	\param id the hash key.  
-	\return pointer to object indexed by hash key, otherwise NULL 
-		if object there doesn't already exist.  
- */
-inline
-object*
-name_space::
-what_is(const string& id) {
-	return used_id_map[id];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Finds a namespace ending with a (optionally) scoped identifier
 	(allows multiple matches, hence the use of a list reference).
 	Currently not used.  
  */
 void
 name_space::
-find_namespace_ending_with(namespace_list& m, const id_expr& id) {
+find_namespace_ending_with(namespace_list& m, const id_expr& id) const {
 	// should we return first match, or all matches?
 	//	for now: first match
 	//	later, we'll complain about ambiguities that need resolving
@@ -491,7 +545,7 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) {
 	// 3) upward a namespace scope, which will search its 1,2
 	//	including the global scope, if reached
 	// terminates (returning NULL) if not found
-	name_space* ret = query_subnamespace_match(id);
+	const name_space* ret = query_subnamespace_match(id);
 	if (ret)	m.push_back(ret);
 	query_import_namespace_match(m, id);
 	if (parent)
@@ -512,13 +566,13 @@ if (parent) {
 } else {
 	assert(d);
 	string k = d->get_name();
-	object* probe = used_id_map[k];
+	const object* probe = what_is(k);
 	assert(!probe);
 	// else "ERROR: identifier already taken, failed to add built-in type!";
 
 	// type_defs owns this type is reponsible for deleting it
 	type_defs[k] = d;
-	used_id_map[k] = d;
+	assign_id(k) = d;
 	return d;
 }
 }
@@ -536,7 +590,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 	cerr << endl << "adding type-alias in space: " 
 		<< get_qualified_name() << " as " << a;
 
-	probe = used_id_map[a];
+	probe = what_is(a);
 	if (probe) {
 		// then already, it conflicts with some other id
 		probe->what(cerr << " ... already declared ")
@@ -556,7 +610,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 		case 1: {
 			ret = (*i);
 			type_defs[a] = ret;
-			used_id_map[a] = ret;
+			assign_id(a) = ret;
 			break;
 			}
 		case 0:	{
@@ -591,10 +645,10 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
  */
 
 // const?
-type_definition*
-name_space::lookup_unique_type(const string& id) {
+const type_definition*
+name_space::lookup_unique_type(const string& id) const {
 	// const
-	type_definition* ret;
+	const type_definition* ret;
 	type_def_list::iterator i;
 	type_def_list candidates;
 
@@ -636,9 +690,9 @@ name_space::lookup_unique_type(const string& id) {
 type_instantiation*
 name_space::add_type_instantiation(const type_definition& t, 
 		const string& id) {
-	object* probe;
+	const object* probe;
 	type_instantiation* new_inst;
-	probe = used_id_map[id];
+	probe = what_is(id);
 	if (probe) {
 		probe->what(cerr << " ... already declared ")
 			<< ", ERROR! ";
@@ -650,7 +704,7 @@ name_space::add_type_instantiation(const type_definition& t,
 	new_inst = new type_instantiation(this, &t, id);
 	assert(new_inst);
 	type_insts[id] = new_inst;
-	used_id_map[id] = new_inst;
+	assign_id(id) = new_inst;
 	return new_inst;
 }
 
@@ -665,18 +719,15 @@ name_space::add_type_instantiation(const type_definition& t,
 void
 name_space::inherit_built_in_types(void) {
 if (parent) {
-	type_def_set::iterator i = parent->type_defs.begin();
+	type_def_set::const_iterator i = parent->type_defs.begin();
 	for ( ; i!=parent->type_defs.end(); i++) {
 		const type_definition* t;
 		t = (*i).second;
 		assert(t);
+		t = t->resolve_canonical();	// resolve
+		assert(t);
 
-		// is t is an alias, resolve first
-		const type_alias* a = IS_A(const type_alias*, t);
-		if (a) {
-			t = a->resolve_canonical();
-		}	// else proceed
-
+		// detect built-in types
 		if (IS_A(const built_in_type_def*, t)) {
 			assert(!used_id_map[(*i).first]);
 			type_alias* new_alias = 
@@ -690,23 +741,80 @@ if (parent) {
 }
 
 //=============================================================================
-// class type_definition method definitions
+// class definition method definitions
 
+// p is parent
 inline
-type_definition::type_definition(const name_space* o, const string& n) :
-	definition(o), key(n) {
+definition::definition(const string& n, const name_space* p) : 
+		scopespace(n, p) {
 }
 
+inline
+definition::~definition() {
+}
+
+//=============================================================================
+// class instantiation method definitions
+
+inline
+instantiation::instantiation(const name_space* o) : object(), owner(o) {
+}
+
+inline
+instantiation::~instantiation() {
+}
+
+//=============================================================================
+// class type_definition method definitions
+
+// make sure that this constructor is never invoked outside this file
+inline
+type_definition::type_definition(const name_space* o, const string& n) :
+	definition(n, o) {
+}
+
+inline
 type_definition::~type_definition() {
 }
 
 string
 type_definition::get_qualified_name(void) const {
-	return owner->get_qualified_name() +scope +key;
+	return parent->get_qualified_name() +scope +key;
 }
 
 string
 type_definition::get_name(void) const {
+	return key;
+}
+
+/**
+	Call this to automatically resolve type, if type referenced
+	is an alias or typedef.  
+ */
+const type_definition*
+type_definition::resolve_canonical(void) const {
+	return this;
+}
+
+//=============================================================================
+// class channel_definition method definitions
+
+// make sure that this constructor is never invoked outside this file
+inline
+channel_definition::channel_definition(const name_space* o, const string& n) :
+	definition(n, o) {
+}
+
+channel_definition::~channel_definition() {
+}
+
+string
+channel_definition::get_qualified_name(void) const {
+	return parent->get_qualified_name() +scope +key;
+}
+
+string
+channel_definition::get_name(void) const {
 	return key;
 }
 
@@ -752,7 +860,6 @@ type_alias::what(ostream& o) const {
 	return o << "aliased-type: " << key;
 }
 
-
 //=============================================================================
 // class built_in_type_def method definitions
 
@@ -770,15 +877,15 @@ built_in_type_def::what(ostream& o) const {
 }
 
 //=============================================================================
-// class user_type_def methods
+// class user_def_type methods
 
 /// constructor for user defined type
-user_type_def::user_type_def(const name_space* o, const string& name) :
+user_def_type::user_def_type(const name_space* o, const string& name) :
 	type_definition(o, name), template_params(), members() {
 }
 
 ostream&
-user_type_def::what(ostream& o) const {
+user_def_type::what(ostream& o) const {
 	return o << "used-defined-type: " << key;
 }
 
@@ -800,8 +907,10 @@ type_instantiation::what(ostream& o) const {
 //=============================================================================
 // class process_definition method definitions
 
-process_definition::process_definition(const name_space* o) : 
-		definition(o) {
+process_definition::process_definition(const name_space* o, 
+		const string& s, const bool d) : 
+		definition(s, o), def(d),
+		temp_formals(), port_formals(), used_id_map() {
 	// fill me in...
 }
 
@@ -832,6 +941,6 @@ process_instantiation::what(ostream& o) const {
 }
 
 //=============================================================================
-};
-};
+};	// end namespace entity
+};	// end namespace ART
 

@@ -78,7 +78,7 @@ virtual	line_position rightmost(void) const = 0;
 virtual	line_range where(void) const;
 
 // will type-check and return a usable ART::entity::object
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //=============================================================================
@@ -198,7 +198,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };	// end of class node_list<>
 
 //=============================================================================
@@ -403,7 +403,7 @@ virtual	id_expr* append(node* d, node* n);
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-// virtual	object* check_build(context* c) const;
+// virtual	const object* check_build(context* c) const;
 
 friend	ostream& operator << (ostream& o, const id_expr& id);
 };
@@ -663,7 +663,7 @@ virtual	~data_type_base();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 /// list of base data types
@@ -813,7 +813,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -835,7 +835,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //=============================================================================
@@ -859,7 +859,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	line_range where(void) const;
-virtual	object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 typedef	node_list<declaration_base,comma>	declaration_id_list;
@@ -909,7 +909,7 @@ virtual	~instance_declaration();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual object* check_build(context* c) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

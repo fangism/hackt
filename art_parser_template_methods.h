@@ -174,9 +174,9 @@ node_list<T,D>::rightmost(void) const {
 
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
-object*
+const object*
 node_list<T,D>::check_build(context* c) const {
-	object* ret = NULL;
+	const object* ret = NULL;
 	const_iterator i = begin();
 	if (*i) {
 		(*i)->what(cerr << c->auto_indent() << "checking a ");

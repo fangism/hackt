@@ -53,12 +53,13 @@ node::where(void) const {
 	Default type-checker and object builder does nothing.  
 	Should be re-implemented in all terminal subclasses.  
  */
-object*
+const object*
 node::check_build(context* c) const {
 	cerr << c->auto_indent() << 
 		"check_build() not fully-implmented yet for ";
 	what(cerr);
-	return NULL;
+//	return NULL;
+	return c->top_namespace();
 }
 
 //=============================================================================
@@ -167,7 +168,7 @@ data_type_base::rightmost(void) const {
 	else            return type->rightmost();
 }
 
-object*
+const object*
 data_type_base::check_build(context* c) const {
 // where do we report the error? in c?
 /**
@@ -584,7 +585,7 @@ namespace_body::rightmost(void) const {
 }
 
 // recursive type-checker
-object*
+const object*
 namespace_body::
 check_build(context* c) const {
 	cerr << c->auto_indent() << "entering namespace: " << *name;
@@ -599,7 +600,7 @@ check_build(context* c) const {
 	cerr << c->auto_indent() << "leaving namespace: " << *name;
 	c->close_namespace();
 	// if no errors, return pointer to the namespace just processed
-	return NULL;
+	return c->top_namespace();
 }
 
 
@@ -666,17 +667,18 @@ using_namespace::rightmost(void) const {
 }
 
 /// returns a pointer to a valid namespace that's now mapped in this scope
-object*
+const object*
 using_namespace::
 check_build(context* c) const {
 	if (alias) {
 		cerr << c->auto_indent() << "aliasing namespace: " << *id;
-		return c->alias_namespace(*id, *alias);
+		c->alias_namespace(*id, *alias);
 	} else {
 		cerr << c->auto_indent() << "using namespace: " << *id;
 		// if aliased... print all, report as error (done inside)
-		return c->using_namespace(*id);
+		c->using_namespace(*id);
 	}
+	return c->top_namespace();
 }
 
 //=============================================================================
@@ -729,10 +731,11 @@ declaration_base::where(void) const {
 	return node::where();
 }
 
-object*
+const object*
 declaration_base::check_build(context* c) const {
 //	what(cerr << c->auto_indent()) << ": ";
-	return c->add_type_instance(*id);
+	c->add_type_instance(*id);		// ignored return value
+	return c->top_namespace();
 }
 
 //=============================================================================
@@ -815,16 +818,17 @@ instance_declaration::rightmost(void) const {
 	return semi->rightmost();
 }
 
-object*
+const object*
 instance_declaration::check_build(context* c) const {
-	object* t;
+	const object* t;
 	what(cerr << c->auto_indent()) << ": ";
 	t = type->check_build(c);
 	if (t) {
 		ids->check_build(c);
 	} 
 	c->unset_type_def();
-	return t;
+//	return t;
+	return c->top_namespace();
 }
 
 //=============================================================================

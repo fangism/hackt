@@ -26,29 +26,42 @@ using std::map;
  */
 template <class K, class T>
 class map_of_ptr : public map<K,T*> {
+private:
+	typedef map<K,T*>				parent;
 public:
-	typedef	typename map<K,T*>::iterator		iterator;
-	typedef	typename map<K,T*>::const_iterator	const_iterator;
-	typedef	typename map<K,T*>::reverse_iterator	reverse_iterator;
-	typedef	typename map<K,T*>::const_reverse_iterator
-							const_reverse_iterator;
+	typedef	typename parent::iterator		iterator;
+	typedef	typename parent::const_iterator		const_iterator;
+	typedef	typename parent::reverse_iterator	reverse_iterator;
+	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 protected:
 	int			own;		///< ownership flag
 public:
 
 /// The default constructor just creates an empty map.  
-explicit map_of_ptr() : map<K,T*>(), own(1) { }
+explicit map_of_ptr() : parent(), own(1) { }
 // copy constructor copies pointers without transferring ownership
 	map_of_ptr(const map_of_ptr<K,T>& l);
 
 /// The destructor frees memory to non-NULL pointers in the map.  
 virtual	~map_of_ptr();		// don't want to inline this
 
+/**
+	Re-use parent's index operator.  Explicitly written here to 
+	disambiguate the const version below, making both versions available
+	to the public.  
+	\param k the index key.
+	\return the indexed pointer element.
+ */
+T*& operator [] (const K& k) {
+	return parent::operator[](k);
+}
+
+const T* operator [] (const K& k) const;
+
+using	parent::begin;
+using	parent::end;
+
 // non-essential add-on methods
-
-using	map<K,T*>::begin;
-using	map<K,T*>::end;
-
 };
 
 #endif	// __MAP_OF_PTR_H__

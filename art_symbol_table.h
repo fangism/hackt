@@ -8,8 +8,8 @@
 #include <string>
 
 // add as they are needed
+#include <stack>
 // #include <list>
-// #include <stack>
 // #include <map>
 
 namespace ART {
@@ -18,10 +18,13 @@ namespace ART {
 // forward declarations from another namespace, from "art_object.h"
 // avoids having to include "art_object.h"
 namespace entity {
-	// and more as they are needed
+	// ... and more as they are needed
 	class name_space;
 	class built_in_type_def;
+	class user_def_chan;
 	class user_def_type;
+	class channel_definition;
+	class channel_instantiation;
 	class type_definition;
 	class type_instantiation;
 	class process_definition;
@@ -49,8 +52,11 @@ class token_identifier;
 //	5) for index/member identifiers, the current search scope
 //	6) a certain type that is to be expected
 
-/// the contect object is what is passed down the type-checker routines
-// the context is updated in the order of the syntax tree traversal
+/**
+	The context object is what is passed down the type-checker routines, 
+	and is updated in the order of the syntax tree traversal.  
+	No virtual functions.  
+ */
 class context {
 protected:
 //	stack<name_space*>	namespace_scope;
@@ -59,44 +65,65 @@ protected:
 
 	long			indent;		///< for formatted output
 	long			type_error_count;	///< error count
+
 	/**
-		A pointer to the current namespace scope.
+		Explicit namespace stack.  
+		Maintained here instead of using pointers returned by
+		leave_namespace() to keep const parent (namespace) pointer
+		semantics.  
+		Also may be useful in debugging to see state of namespace
+		stack more easily.  
+	 */
+	stack<name_space*>	ns_stack;
+	/*
+		OBSOLETE: A pointer to the current namespace scope.
 		Do not delete.  
 	 */
-	name_space*		current_ns;
+//	name_space*		current_ns;
+#define current_ns		ns_stack.top()
 
 	/**
 		Pointer to current data type, useful in list declarations.  
+		Do not delete.  
+		No stack needed, as definitions may not be nested.  
 	 */
-	type_definition*	current_dt;
+	const type_definition*	current_dt;
 
-	/// Reference to the current open process definition.  
+	/**
+		Reference to the current open process definition.
+		Do not delete.
+	 */
 	process_definition*	current_proc_def;
-	/// Reference to the current open data type definition.  
+
+	/**
+		Reference to the current open data type definition.  
+		Do not delete.
+	 */
+
 	user_def_type*		current_type_def;
-	// Reference to the current open channel definition.  
-	// user_chan_def*	current_chan_def;
+
+	/**
+		Reference to the current open channel definition.
+		Do not delete.
+	 */
+	user_def_chan*		current_chan_def;
 
 public:
-	/// the number of semantic errors to accumulate before bailing out
+	/// The number of semantic errors to accumulate before bailing out.  
 	static const long	type_error_limit = 3;
 
 public:
-	/**
-		Constructing a context should only be done once (per source
-		file).  It initializes a global namespace with the 
-		appropriate built-in types defined.  
-	 */
-	context();
+	context(name_space* g);
 	~context();
 
-name_space*	open_namespace(const token_identifier& id);
-void		close_namespace(void);
-name_space*	using_namespace(const id_expr& id);
-name_space*	alias_namespace(const id_expr& id, const string& a);
+void	open_namespace(const token_identifier& id);
+void	close_namespace(void);
+void	using_namespace(const id_expr& id);
+void	alias_namespace(const id_expr& id, const string& a);
+const name_space*	top_namespace(void) const;
 
-type_definition*	set_type_def(const id_expr& tid);
-type_definition*	set_type_def(const token_string& tid);
+const type_definition*	set_type_def(const id_expr& tid);
+const type_definition*	set_type_def(const token_string& tid);
 	// for keyword: int or bool
 type_definition*	set_type_def(const token_string& tid, const expr& w);
 	// for int<width>, for now only accept token_int... later expressions
@@ -107,7 +134,7 @@ type_instantiation*	add_type_instance(const token_identifier& id);
 
 string		auto_indent(void) const;
 
-};
+};	// end class context
 
 //=============================================================================
 };	// end namespace parser
