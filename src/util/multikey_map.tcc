@@ -1,11 +1,11 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.24.2 2005/02/06 18:25:35 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.24.3 2005/02/06 21:31:07 fang Exp $
  */
 
-#ifndef	__MULTIKEY_MAP_TCC__
-#define	__MULTIKEY_MAP_TCC__
+#ifndef	__UTIL_MULTIKEY_MAP_TCC__
+#define	__UTIL_MULTIKEY_MAP_TCC__
 
 #include "multikey_map.h"
 #include "multikey.tcc"
@@ -30,7 +30,6 @@ using util::write_value;
 using util::read_value;
 using util::write_map;
 using util::read_map;
-using MULTIKEY_NAMESPACE::multikey_generator_base;
 using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
@@ -211,14 +210,13 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	}
 #endif
 
-	multikey_generator_generic<K>
-		key_gen(l_size);
+	multikey_generator_generic<K> key_gen(l_size);
 	copy(l.begin(), l.end(), key_gen.get_lower_corner().begin());
 	copy(u.begin(), u.end(), key_gen.get_upper_corner().begin());
 	key_gen.initialize();
 	key_list_type list_key(key_gen.begin(), key_gen.end());
 
-	const return_type s = is_compact_slice(list_key);
+	const return_type s(is_compact_slice(list_key));
 	if (s.first.empty()) {
 		INVARIANT(s.second.empty());
 #if DEBUG_SLICE
@@ -240,7 +238,7 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	for ( ; key_gen != key_gen.get_lower_corner(); key_gen++) {
 		const key_list_type
 			for_list_key(key_gen.begin(), key_gen.end());
-		const return_type t = is_compact_slice(for_list_key);
+		const return_type t(is_compact_slice(for_list_key));
 		if (t.first.empty()) {
 			INVARIANT(t.second.empty());
 			return return_type();
@@ -646,5 +644,5 @@ multikey_map<1,K,T,M>::read(istream& f) {
 
 #undef	DEBUG_SLICE
 
-#endif	// __MULTIKEY_MAP_TCC__
+#endif	// __UTIL_MULTIKEY_MAP_TCC__
 

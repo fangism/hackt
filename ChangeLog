@@ -12,6 +12,14 @@
 	  Expurgated any and all references to the virtual base types
 	  involving multikey and multikey_map.  
 
+	+ -set-09:
+	  Factored out multikey implementation into seperate struct, 
+	  for the sake of specializing the <1> case.  
+	  Implements standard sequence/iterator interface.
+	  Replaced direct references to indices[] array with iterators.  
+	  Removed (comment) specialization of multikey_map using qmap
+	  as the implementation type, no longer needed.  
+
 
 2005-02-05	David Fang	<fangism@users.sourceforge.net>
 

@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.3 2005/02/06 18:25:35 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.4 2005/02/06 21:31:07 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -163,12 +163,12 @@ public:
 	erase(const K i);
 
 	T&
-	operator [] (const typename map_type::key_type& k) {
+	operator [] (const key_type& k) {
 		return map_type::operator[](k);
 	}
 
 	T
-	operator [] (const typename map_type::key_type& k) const {
+	operator [] (const key_type& k) const {
 		return map_type::operator[](k);
 	}
 

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.10.3 2005/02/06 18:25:35 fang Exp $
+	$Id: multikey.h,v 1.19.10.4 2005/02/06 21:31:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -37,66 +37,49 @@ using std::ostream;
 using std::istream;
 
 //=============================================================================
-/**
-	Just a wrapper class for a fixed-size array.  
-	Useful for emulating a multidimensional map using a flat map
-	with a multidimensional key.  
-	Saves the author from the trouble of writing a multidimensional
-	iterator.  
-	We choose to use a plain static array, because we don't need the 
-	overhead from vector or valarray.  
-	Perhaps add another field for default value?
- */
-MULTIKEY_TEMPLATE_SIGNATURE
-class multikey {
-	template <size_t, class C>
-	friend class multikey;
-public:
+template <class K>
+struct multikey_traits {
 	typedef	K					value_type;
-	typedef	multikey<D,K>				this_type;
+	typedef	K&					reference;
+	typedef	const K&				const_reference;
 	typedef	K*					iterator;
 	typedef	const K*				const_iterator;
 	typedef	std::reverse_iterator<iterator>		reverse_iterator;
-	typedef	std::reverse_iterator<const_iterator>
+	typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;
+};	// end struct multikey_traits
+
+//=============================================================================
+/**
+	Default underlying implementation of multikey.
+	Intended for dimensions > 1.
+ */
+MULTIKEY_TEMPLATE_SIGNATURE
+class multikey_implementation_base {
+private:
+	typedef	multikey_implementation_base<D,K>	this_type;
+protected:
+	typedef	multikey_traits<K>			traits_type;
+public:
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::reference		reference;
+	typedef	typename traits_type::const_reference	const_reference;
+	typedef	typename traits_type::iterator		iterator;
+	typedef	typename traits_type::const_iterator	const_iterator;
+	typedef	typename traits_type::reverse_iterator	reverse_iterator;
+	typedef	typename traits_type::const_reverse_iterator
 							const_reverse_iterator;
-	typedef	K&					reference;
-	typedef	const K&				const_reference;
 
-#if 0
-public:
-	static const this_type				ones;
-#endif
-public:
-	K indices[D];
+protected:
+	K	indices[D];
 
 public:
-	/**
-		Default constructor.  
-		Requires key type K to be assignable and copiable.  
-		\param i the default value with which to fill indices.  
-			Plain-old-data types will default to 0.
-	 */
-	explicit
-	multikey(const K i = K());
+	multikey_implementation_base() {
+		std::fill(this->begin(), this->end(), K());
+	}
 
-	explicit
-	multikey(const multikey_generic<K>& k);
-
-	/**
-		Copy constructor compatible with other dimensions.  
-		If this is larger than argument, fill remaining
-		dimensions with 0.  
-	 */
-	template <size_t D2>
-	multikey(const multikey<D2,K>& k, const K i = K());
-
-	/**
-		\param S is sequence type container.
-		\param s is const reference to sequence object.
-	 */
-	template <template <class> class S>
-	explicit
-	multikey(const S<K>& s, const K i = K());
+	multikey_implementation_base(const this_type& k) {
+		std::copy(k.begin(), k.end(), this->begin());
+	}
 
 	size_t
 	dimensions(void) const { return D; }
@@ -158,6 +141,178 @@ public:
 		INVARIANT(i < D);
 		return indices[i];
 	}
+
+};	// end class multikey_implementation_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization of size 1 multikey, reduced to single element.  
+ */
+template <class K>
+class multikey_implementation_base<1,K> {
+private:
+	typedef	multikey_implementation_base<1,K>	this_type;
+protected:
+	typedef	multikey_traits<K>			traits_type;
+public:
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::reference		reference;
+	typedef	typename traits_type::const_reference	const_reference;
+	typedef	typename traits_type::iterator		iterator;
+	typedef	typename traits_type::const_iterator	const_iterator;
+	typedef	typename traits_type::reverse_iterator	reverse_iterator;
+	typedef	typename traits_type::const_reverse_iterator
+							const_reverse_iterator;
+
+protected:
+	K	index;
+
+public:
+	multikey_implementation_base() : index(0) { }
+
+	multikey_implementation_base(const this_type& k) : index(k.index) { }
+
+	size_t
+	dimensions(void) const { return 1; }
+
+	K
+	default_value(void) const { return K(); }
+
+	iterator
+	begin(void) { return &index; }
+
+	const_iterator
+	begin(void) const { return &index; }
+
+	iterator
+	end(void) { return &index +1; }
+
+	const_iterator
+	end(void) const { return &index +1; }
+
+	reverse_iterator
+	rbegin(void) { return reverse_iterator(&index +1); }
+
+	const_reverse_iterator
+	rbegin(void) const { return const_reverse_iterator(&index +1); }
+
+	reverse_iterator
+	rend(void) { return reverse_iterator(&index); }
+
+	const_reverse_iterator
+	rend(void) const { return const_reverse_iterator(&index); }
+
+	reference
+	front(void) { return index; }
+
+	const_reference
+	front(void) const { return index; }
+
+	reference
+	back(void) { return index; }
+
+	const_reference
+	back(void) const { return index; }
+
+	/**
+		Convenient implicit conversion to plain scalar type.  
+		Non-const reference.  
+	 */
+	operator K& () { return index; }
+
+	/**
+		Convenient implicit conversion to plain scalar type.  
+		Const reference.  
+	 */
+	operator const K& () const { return index; }
+
+	/**
+		Safe indexing with array-bound check.  
+		indices is public, so one can always access it directly...
+		\pre i must be 0.
+	 */
+	reference
+	operator [] (const size_t i) {
+		INVARIANT(!i);
+		return index;
+	}
+
+	/**
+		Const version of array indexing.  
+		\pre i must be 0.
+	 */
+	const_reference
+	operator [] (const size_t i) const {
+		INVARIANT(!i);
+		return index;
+	}
+
+};	// end class multikey_implementation_base specialization
+
+//=============================================================================
+/**
+	Just a wrapper class for a fixed-size array.  
+	Useful for emulating a multidimensional map using a flat map
+	with a multidimensional key.  
+	Saves the author from the trouble of writing a multidimensional
+	iterator.  
+	We choose to use a plain static array, because we don't need the 
+	overhead from vector or valarray.  
+	Perhaps add another field for default value?
+ */
+MULTIKEY_TEMPLATE_SIGNATURE
+class multikey : public multikey_implementation_base<D,K> {
+	template <size_t, class C>
+	friend class multikey;
+
+	typedef	multikey<D,K>				this_type;
+	typedef	multikey_implementation_base<D,K>	impl_type;
+public:
+	typedef	typename impl_type::value_type		value_type;
+	typedef	typename impl_type::reference		reference;
+	typedef	typename impl_type::const_reference	const_reference;
+	typedef	typename impl_type::iterator		iterator;
+	typedef	typename impl_type::const_iterator	const_iterator;
+	typedef	typename impl_type::reverse_iterator	reverse_iterator;
+	typedef	typename impl_type::const_reverse_iterator
+							const_reverse_iterator;
+
+#if 0
+public:
+	static const this_type				ones;
+#endif
+
+public:
+	/**
+		Default constructor.  
+		Requires key type K to be assignable and copiable.  
+		\param i the default value with which to fill indices.  
+			Plain-old-data types will default to 0.
+	 */
+	explicit
+	multikey(const K i = K());
+
+	explicit
+	multikey(const multikey_generic<K>& k);
+
+	/// copy-constructor
+	multikey(const this_type& k) : impl_type(k) { }
+
+	/**
+		Copy constructor compatible with other dimensions.  
+		If this is larger than argument, fill remaining
+		dimensions with 0.  
+	 */
+	template <size_t D2>
+	multikey(const multikey<D2,K>& k, const K i = K());
+
+	/**
+		\param S is sequence type container.
+		\param s is const reference to sequence object.
+	 */
+	template <template <class> class S>
+	explicit
+	multikey(const S<K>& s, const K i = K());
 
 	this_type&
 	operator = (const this_type& s);
@@ -603,13 +758,6 @@ public:
 	// all other methods inherited
 
 };	// end class multikey_generator_generic
-
-//-----------------------------------------------------------------------------
-#if 0
-template <class K>
-ostream&
-operator << (ostream& o, const multikey_generator_base<K>& k);
-#endif
 
 //=============================================================================
 }	// end namespace MULTIKEY_NAMESPACE
