@@ -8,6 +8,10 @@
 	  Use of value_reference template is now enabled.  
 	  After cleanup, we can retire this baby branch...
 
+	* -expr-05:
+	  Cleaned up USE_VALUE_REFERENCE_TEMPLATE and 
+	  USE_CONST_COLLECTION_TEMPLATE.  Ready to merge to parent.  
+
 
 2005-03-08	David Fang	<fangism@users.sourceforge.net>
 
