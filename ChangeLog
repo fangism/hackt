@@ -18,6 +18,10 @@
 		class_traits<Tag>::instantiation_statement_type_ref_base::
 			unroll_type_check().  
 
+	* -inststmt-06:
+	  Applied same changes to proc,chan,data types, but haven't
+	  applied instantiation_statement template to them yet.
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-03:
 	  Cleaned up conditional code with USE_VALUE_COLLECTION_TEMPLATE.  
 	  Resulting in 2000 fewer LOC.  :)
