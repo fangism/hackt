@@ -2,6 +2,59 @@ to do list:
 
 this TODO list is way outdated... clean TODO list.
 
+REVISION TARGETS:
+
+Current series: 0.1.3 -- main trunk of development line.
+
+0.1.4 Goals:
+	BASIC parameter unrolling only (scalars)
+	MAJOR ISSUES with parameter unrolling and assignment ordering
+		(resolved: ordered items are decoupled from scopes)
+	Hold off on parameter assignments until after restructuring
+		parameter_assignment classes.  
+		(Yeah, I know, useless without assignments!)
+	keep definitions around as back-references in unpacked objects.
+	unpack instantiation_bases into live instances
+		using multidimensional_qmap, or now, multikey_qmap.  
+
+0.1.5 Goals:
+	unrolling parameter expression assignments
+	for 0.1.5 unrolling with collections
+	Parameters MUST be fully implemented before proceeding with
+		other physical entities.  
+	Decide whether to support loops and conditional scopes 
+		in this series.
+
+0.1.6 Goals:
+	General language support for PRS needs to catch up.  
+	Introduce PRS object classes, based on old prsim.
+	Unrolling production rules
+
+and beyond...
+	cflatprsim backwards compatibility mode
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+instantiation statement needs to check template arguments of type!
+
+Object serialization rework:
+	sub-type instance collections by dimension, using size_t template
+	extend reconstruction table entry to contain additional
+		field for dimension subtype (another index)
+	modify construct_empty() to take another argument (index)
+		for subtype, 2nd level table of constructors
+	factor out serial_object interface out of object
+		into own IO interface class.
+
+param_expression_assignment: sub-type into pint vs. pbool
+	maybe even subtype by dimension.
+	will need to update object_list::make_param_assignment...
+param_expression_assignment: split apart rhs from rest
+	lhs must be references.
+
+Type-scope for unrolling.  
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 REDO: instantiation creation: (done! 2004-09-14)
 	can keep track of index collection in instantiation classes, 
 	but each creation should get its own instantiation_statement.  
@@ -10,11 +63,7 @@ REDO: instantiation creation: (done! 2004-09-14)
 	Name will be tracked in instantiation_base, 
 	instantiation_statement will have back-reference to base.
 
-Distinguish between name-scope and sequence-scope.
-
-Type-scope for unrolling.  
-
-instantiation statement needs to check template arguments of type!
+Distinguish between name-scope and sequence-scope. (done)
 
 before unrolling: need major rework (done! 2004-09-14)
 put instance management items in the top-level in some
@@ -32,15 +81,6 @@ put instance management items in the top-level in some
 
 psuedo code high level linking and unrolling, etc...
 
-UNROLL that sh--
-	keep definitions around
-	unpack instantiation_bases into live instances
-		using multidimensional_qmap
-	target for release 0.1.4 -- basic instance unrolling
-		MAJOR ISSUES with parameter unrolling and assignment ordering
-	for 0.1.5 unrolling with collections
-	0.1.6 unrolling production rules
-	0.1.8 cflatprsim backwards compatibility mode
 
 type-specific and dimension-specific param_expression_assignment?
 	also apply to instantiations, instance_references?

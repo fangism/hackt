@@ -1,5 +1,26 @@
 "ChangeLog"
 
+2004-10-08	David Fang	<fangism@users.sourceforge.net>
+
+	* NEWS: Returned from long hiatus working on conference paper.  
+
+	* Tailored some multidimensional data structures
+	  (multikey, and multikey_[q]map) for near-future use in
+	  instance-collection classes.  
+
+	* TODO list is somewhat more structured and comprehensible.
+	  (Important!)
+
+	* Initial attempt at unrolling parameters (pints only).  
+	  Seems straightforward enough for scalars (0-D), but may
+	  take some redesign for robust multidimensional support.  
+	  No tests written for `artobjunroll' yet, just spot checks.  
+
+	* Next thing to do: restructure param_expr_assignments to
+	  be type-specific (only pints and pbools).  
+	  Implement basic parameter assignments.  
+
+
 2004-09-14	David Fang	<fangism@users.sourceforge.net>
 
 	* Completely redone instantiation_base and subclasses, 
