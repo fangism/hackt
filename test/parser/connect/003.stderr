@@ -1,0 +1,3 @@
+Types do not match! got: int<32> and: bool<>.
+ERROR: type/size of instance reference 2 of alias list doesn't match the type/size of the first instance reference!  
+HALT: at least one error in connection list.  [6:1..18]
