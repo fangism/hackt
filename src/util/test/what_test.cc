@@ -1,9 +1,11 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.1 2005/01/12 03:20:13 fang Exp $
+	$Id: what_test.cc,v 1.2 2005/01/14 06:29:42 fang Exp $
  */
 
 #include <iostream>
+
+#define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	1
 #include "what.tcc"
 
 #define	DEBUG_LIST_VECTOR_POOL		1	// pre-define to enable debug
@@ -46,6 +48,27 @@ main(int argc, char* argv) {
 	cerr << what<Foo>::name << endl;
 	cerr << what<Ick>::name << endl;
 	cerr << what<Yum>::name << endl;
+	cerr << what<const Yum>::name << endl;
+	cerr << what<Yum*>::name << endl;
+	cerr << what<Yum&>::name << endl;
+	cerr << what<Yum**>::name << endl;
+	cerr << what<Yum*&>::name << endl;
+	cerr << what<Yum const*>::name << endl;
+	cerr << what<const Yum*>::name << endl;
+	cerr << what<Yum* const>::name << endl;
+	cerr << what<Yum const* const>::name << endl;
+	cerr << what<const Yum* const>::name << endl;
+	cerr << what<Yum const&>::name << endl;
+	cerr << what<const Yum&>::name << endl;
+	cerr << endl;
+	cerr << what<Yum const**>::name << endl;
+	cerr << what<Yum* const*>::name << endl;
+	cerr << what<Yum** const>::name << endl;
+	cerr << what<Yum const* const*>::name << endl;
+	cerr << what<Yum const** const>::name << endl;
+	cerr << what<Yum * const* const>::name << endl;
+	cerr << what<Yum const* const* const>::name << endl;
+	cerr << endl;
 	cerr << what<Bar<Foo> >::name << endl;
 	cerr << what<Bar<Ick> >::name << endl;
 	cerr << what<Bar<Yum> >::name << endl;

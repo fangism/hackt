@@ -1,18 +1,39 @@
 3Foo
 ick
 yum
+yum const
+yum*
+yum&
+yum**
+yum*&
+yum const*
+yum const*
+yum* const
+yum const* const
+yum const* const
+yum const&
+yum const&
+
+yum const**
+yum* const*
+yum** const
+yum const* const*
+yum const** const
+yum* const* const
+yum const* const* const
+
 3BarI3FooE
 Bar<Ick>
 3BarI3YumE
 3Foo
 ick
 yum
-Reserved 3Foo chunk of size 8*1 starting at 0x400150
-Reserved ick chunk of size 8*1 starting at 0x400158
-Reserved yum chunk of size 8*1 starting at 0x400160
-Reserved 3BarI3FooE chunk of size 8*1 starting at 0x400168
-Reserved Bar<Ick> chunk of size 8*1 starting at 0x400170
-Reserved 3BarI3YumE chunk of size 8*1 starting at 0x400178
+Reserved 3Foo chunk of size 8*1 starting at 0x1800478
+Reserved ick chunk of size 8*1 starting at 0x18011e0
+Reserved yum chunk of size 8*1 starting at 0x18011e8
+Reserved 3BarI3FooE chunk of size 8*1 starting at 0x18011f0
+Reserved Bar<Ick> chunk of size 8*1 starting at 0x18011f8
+Reserved 3BarI3YumE chunk of size 8*1 starting at 0x1801200
 ~list_vector_pool<3BarI3YumE>()
 1 chunks of 8*1 3BarI3YumE have been allocated.
 Free-list has 0 entries available.
