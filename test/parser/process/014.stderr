@@ -4,13 +4,13 @@ state	value
 	(null) 
 0	keyword: template [3:1..8]
 8	< [3:10]
-85	paramtype: pint [3:11..14]
-144	identifier: bar [3:16..18]
-200	keyword: defproc [4:1..7]
-in state 200, possible rules are:
-	template_formal_id : ID . optional_range_list_in_brackets  (38)
-	template_formal_id : ID . optional_range_list_in_brackets '=' shift_expr  (39)
-	optional_range_list_in_brackets : .  (244)
+87	paramtype: pint [3:11..14]
+150	identifier: bar [3:16..18]
+208	keyword: defproc [4:1..7]
+in state 208, possible rules are:
+	template_formal_id : ID . optional_dense_range_list  (38)
+	template_formal_id : ID . optional_dense_range_list '=' shift_expr  (39)
+	optional_dense_range_list : .  (251)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

@@ -1,0 +1,17 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: template [3:1..8]
+8	< [3:10]
+87	(node_list): (template-formal-decl) ... [3:11..24]
+148	; [3:25]
+207	paramtype: pbool [3:27..31]
+150	identifier: water [3:33..37]
+208	[ [3:38]
+239	(namespace-id): H [3:39]
+299	, [3:40]
+in state 299, possible rules are:
+	bracketed_dense_range : '[' expr . ']'  (256)
+acceptable tokens are: 
+	']' (shift)

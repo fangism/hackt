@@ -24,7 +24,8 @@ TEST_SUBJECTS += \
 	$(PROCESS_PARSER_TEST_DIR)/019 \
 	$(PROCESS_PARSER_TEST_DIR)/020 \
 	$(PROCESS_PARSER_TEST_DIR)/021 \
-	$(PROCESS_PARSER_TEST_DIR)/022
+	$(PROCESS_PARSER_TEST_DIR)/022 \
+	$(PROCESS_PARSER_TEST_DIR)/023
 
 # gmake would allow addprefix macro, but bsdmake is lame and can't
 

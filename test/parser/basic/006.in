@@ -1,12 +1,15 @@
 // this should pass, good array declaration
+// an example of rejected cast-style arrays is in 010.in
+
+// eventually type checker will reject this...
 
 int good_array[5];
 
 namespace more_arrays {
 
-int fancy_array[5,3];
+int fancy_array[5][3];
 
-int fancier_array[N,0..N,1..M];
+int fancier_array[N][0..N][1..M];
 
 };
 
