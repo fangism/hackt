@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.10 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_token.cc,v 1.11 2005/01/12 04:14:16 fang Exp $
  */
 
 #include <iostream>
@@ -115,7 +115,6 @@ token_char::pool(1024);
  */
 void*
 token_char::operator new (size_t s) {
-//	cerr << "pool-alloc token_char" << endl;
 	return pool.allocate();
 }
 
@@ -127,7 +126,6 @@ token_char::operator new (size_t s) {
 inline
 void*
 token_char::operator new (size_t s, void*& p) {
-//	cerr << "place token_char" << endl;
 	NEVER_NULL(p);
 	return p;
 }
@@ -138,7 +136,6 @@ token_char::operator new (size_t s, void*& p) {
  */
 void
 token_char::operator delete (void* p) {
-//	cerr << "pool-free token_char" << endl;
 	// safety check for type?
 	NEVER_NULL(p);
 	token_char* t = reinterpret_cast<token_char*>(p);
@@ -156,7 +153,7 @@ token_char::operator delete (void* p) {
  */
 int
 token_char::string_compare(const char* d) const {
-	char cs[2] = { c, 0 }; return strcmp(cs,d);
+	const char cs[2] = { c, 0 }; return strcmp(cs,d);
 }
 
 ostream&

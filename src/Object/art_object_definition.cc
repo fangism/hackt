@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.24 2005/01/12 03:19:36 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.25 2005/01/12 04:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -85,10 +85,7 @@ definition_base::pair_dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
-#if 1
 	STACKTRACE("definition_base::dump_template_formals()");
-//	STACKTRACE_STREAM << " @" << this << endl;
-#endif
 	// sanity check
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
@@ -100,20 +97,8 @@ definition_base::dump_template_formals(ostream& o) const {
 		for ( ; i!=e; i++) {
 			// sanity check
 			NEVER_NULL(*i);
-#if 0
-			cerr << "iter: @" << &*i << endl;
-#endif
 			INVARIANT((*i)->is_template_formal());
-#if 0
-			o << "oooga, ";
-			(*i)->what(o);
-			o << " sugar, ";
-#endif
-			// death here: pure virtual method called?
 			(*i)->dump(o) << endl;
-#if 0
-			o << "booga!" << endl;
-#endif
 		}
 		o << ">" << endl;
 	}
@@ -197,16 +182,8 @@ definition_base::lookup_object_here(const string& id) const {
 bool
 definition_base::check_null_template_argument(void) const {
 	STACKTRACE("definition_base::check_null_template_argument()");
-#if 0
-	indent cerr_ind(cerr);
-	cerr << auto_indent <<
-		"In definition_base::check_null_template_argument()" << endl;
-#endif
 	if (template_formals_list.empty())
 		return true;
-#if 0
-	cerr << auto_indent << "1" << endl;
-#endif
 	// else make sure each formal has a default parameter value
 	template_formals_list_type::const_iterator i =
 		template_formals_list.begin();
@@ -216,34 +193,11 @@ definition_base::check_null_template_argument(void) const {
 		p.must_be_a<const param_instance_collection>();
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
-#if 0
-		cerr << auto_indent << "2a" << endl;
-#endif
-#if 0
-		p->what(cerr) << endl;
-		p->dump(cerr) << endl;
-		cerr << auto_indent << "2a-2" << endl;
-#endif
-
-#if 0
-		// death here
-		p->default_value();
-		cerr << auto_indent << "2a-2" << endl;
-#endif
 		if (!(*p).default_value()) {
-#if 0
-			cerr << auto_indent << "2b" << endl;
-#endif
 			return false;
 		}
 		// else continue;	// keep checking
-#if 0
-		cerr << auto_indent << "2c" << endl;
-#endif
 	}
-#if 0
-	cerr << auto_indent << "3" << endl;
-#endif
 	// if we've reached end of list, we're good!
 	return true;
 }
@@ -1086,11 +1040,7 @@ built_in_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::dump(ostream& o) const {
-#if 1
 	return datatype_definition_base::dump(o);
-#else
-	return definition_base::dump(o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

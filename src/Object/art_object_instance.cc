@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.33 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.34 2005/01/12 04:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -429,24 +429,6 @@ void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
 	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
-#if 0
-//	STACKTRACE_STREAM << "size = " << index_collection.size() << endl;
-	index_collection_type::const_iterator i = index_collection.begin();
-	const index_collection_type::const_iterator e = index_collection.end();
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-#if 0
-		STACKTRACE_STREAM << "oooga @" << &**i;
-//		(*i)->what(STACKTRACE_STREAM);		// DEATH
-		(*i)->dump(STACKTRACE_STREAM);
-		STACKTRACE_STREAM << "sugar ";
-#endif
-		(*i)->collect_transient_info(m);
-#if 0
-		STACKTRACE_STREAM << "booga!" << endl;
-#endif
-	}
-#else
 	for_each(index_collection.begin(), index_collection.end(), 
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
@@ -454,7 +436,6 @@ instance_collection_base::collect_index_collection_pointers(
 		dereference<never_ptr, const instance_management_base>()
 	)
 	);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

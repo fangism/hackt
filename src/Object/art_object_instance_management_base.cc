@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.3 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.4 2005/01/12 04:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -56,20 +56,11 @@ sequential_scope::append_instance_management(
 	// _M_create_node takes only const value_type& as argument, 
 	// thus preventing transfer...
 	// we need a mechanism for explicit transfer, see excl_ptr_ref
-#if 0
-	STACKTRACE_STREAM << "before push_back" << endl;
-#endif
+	// SOLUTION: we specialized std::_Construct for sticky_ptr's
+	// see "util/memory/pointer_classes.h"
 	instance_management_list.push_back(i);
-	// accidental deallocation of i here?
-#if 0
-	STACKTRACE_STREAM << "after push_back" << endl;
-#endif
-
+	// accidental deallocation of i here?  not anymore
 	NEVER_NULL(instance_management_list.back());
-#if 0
-	STACKTRACE_STREAM << "back = " <<
-		&*instance_management_list.back() << endl;
-#endif
 	INVARIANT(!i);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.31 2005/01/12 03:19:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.32 2005/01/12 04:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -1242,24 +1242,13 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-	// could try to use sticky_ptr here, they are, after all, locally owned
-#if 0
-	const excl_ptr<const multikey_base<int> > lower = dim.lower_multikey();
-	const excl_ptr<const multikey_base<int> > upper = dim.upper_multikey();
-	NEVER_NULL(lower);
-	NEVER_NULL(upper);
-#endif
 	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	NEVER_NULL(key_gen);
-#if 0
-	key_gen->get_lower_corner() = *lower;
-	key_gen->get_upper_corner() = *upper;
-#else
+	// automatic and temporarily allocated
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
-#endif
 	key_gen->initialize();
 	list<bool>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
@@ -1699,24 +1688,13 @@ pint_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-	// could use sticky_ptr here for local managemen (auto_ptr works too)
-#if 0
-	const excl_ptr<const multikey_base<int> > lower = dim.lower_multikey();
-	const excl_ptr<const multikey_base<int> > upper = dim.upper_multikey();
-	NEVER_NULL(lower);
-	NEVER_NULL(upper);
-#endif
 	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	NEVER_NULL(key_gen);
-#if 0
-	key_gen->get_lower_corner() = *lower;
-	key_gen->get_upper_corner() = *upper;
-#else
+	// automatic and temporarily allocated
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
-#endif
 	key_gen->initialize();
 	list<int>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.4 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.5 2005/01/12 04:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -57,12 +57,8 @@ instantiation_statement::instantiation_statement(void) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation_statement::instantiation_statement(
-//		never_ptr<instance_collection_base> b, 
-//		count_ptr<const fundamental_type_reference> t, 
 		const index_collection_item_ptr_type& i) :
-//		inst_base(NULL), type_base(t), 
 		indices(i) {
-//	assert(inst_base);		// attach later...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

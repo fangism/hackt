@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.6 2005/01/12 03:20:02 fang Exp $
+	$Id: pointer_classes.h,v 1.7 2005/01/12 04:14:21 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -42,12 +42,6 @@
 
 //=============================================================================
 // debugging stuff
-
-// for debugging strange behavior when excl_ptr destructor is "correct"
-// predefine as 1 to override
-#ifndef	FIX_RESET
-#define	FIX_RESET	1
-#endif
 
 //=============================================================================
 
@@ -429,11 +423,7 @@ public:
 	to pointer-classes.
  */
 	// virtual
-#if FIX_RESET
 	~excl_ptr() { this->reset(); }
-#else
-	~excl_ptr() { this->release(); }	// release is wrong!
-#endif
 
 public:
 	/**
@@ -701,11 +691,7 @@ public:
 	template <class S>
 	sticky_ptr(excl_ptr<S>& p) : ptr(p.release()) { INVARIANT(!p); }
 
-#if FIX_RESET
 	~sticky_ptr() { this->reset(); }
-#else
-	~sticky_ptr() { this->release(); }
-#endif
 
 	reference
 	operator * () const { NEVER_NULL(ptr); return *ptr; }
