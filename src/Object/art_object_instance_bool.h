@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.3 2005/02/24 19:34:39 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.4 2005/02/24 20:35:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -199,7 +199,7 @@ public:
 };	// end class bool_instance
 
 //-----------------------------------------------------------------------------
-#if !USE_INSTANCE_COLLECTION_TEMPLATE || 1
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Extends a bool_instance_alias_base with a multikey, to be used
 	in a set.  
@@ -429,7 +429,12 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	typedef	typename class_traits<bool_tag>::instance_alias<D>::type
+							element_type;
+#else
 	typedef	bool_instance_alias<D>			element_type;
+#endif
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
@@ -548,7 +553,12 @@ public:
 	/**
 		Instance type is a ring-connectible (key-less) alias.  
 	 */
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	typedef	class_traits<bool_tag>::instance_alias<0>::type
+						instance_type;
+#else
 	typedef	bool_instance_alias<0>		instance_type;
+#endif
 private:
 	instance_type				the_instance;
 

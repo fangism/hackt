@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.3 2005/02/24 19:34:39 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.4 2005/02/24 20:35:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -332,6 +332,11 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+#if 0
+	// soon...
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+#endif
 };	// end class instance_array (specialized)
 
 //=============================================================================

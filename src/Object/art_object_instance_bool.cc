@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.2 2005/02/24 18:36:37 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.3 2005/02/24 20:35:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -86,6 +86,7 @@ namespace memory {
 }	// end namespace memory
 }	// end namespace util
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 namespace std {
 using ART::entity::bool_instance_alias;
 
@@ -100,6 +101,7 @@ struct _Select2nd<bool_instance_alias<D> > :
 };
 
 }	// end namespace std
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 namespace ART {
@@ -216,6 +218,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 }
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class bool_instance_alias method definitions
 
 template <size_t D>
@@ -413,6 +416,7 @@ bool_instance_alias<0>::load_object(const persistent_object_manager& m,
 		load_next_connection(m, i);
 	}
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class bool_instance_collection method definitions
@@ -511,6 +515,7 @@ bool_instance_collection::construct_empty(const int i) {
 //=============================================================================
 // class bool_instance_alias method definitions
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 template <size_t D>
 ostream&
 operator << (ostream& o, const bool_instance_alias<D>& b) {
@@ -518,6 +523,7 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 	// show all aliases?
 	return o << "(bool-alias-" << D << ")";
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class bool_array method definitions

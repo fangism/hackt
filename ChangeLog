@@ -13,6 +13,11 @@
 	  and provide template-typedef-like naming interface
 	  with class_traits for dimension-specific classes.  
 
+	* -instance-07:
+	  Ported bool_instance_alias_info, bool_instance_alias_base, 
+	  and bool_instance_alias<D> to class_traits template version.  
+	  All test still intact!  Next: porting instance_collections.
+
 
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 
