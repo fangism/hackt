@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.1 2005/01/31 04:16:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -139,11 +139,11 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-	bool
-	is_partially_unrolled(void) const;
-
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
+
+	bool
+	is_partially_unrolled(void) const;
 
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);

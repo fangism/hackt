@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.1 2005/01/29 21:38:09 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.2 2005/01/31 04:16:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -73,8 +73,11 @@ virtual	count_ptr<instance_reference_base>
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
 
+#if 0
+	OBSOLETE
 	bool
 	is_template_formal(void) const;
+#endif
 
 /**
 	A parameter is considered "usable" if it is either initialized

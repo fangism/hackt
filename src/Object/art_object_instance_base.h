@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.1 2005/01/31 04:16:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -173,7 +173,7 @@ private:
 	formal_size_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
 public:
-	bool
+	size_t
 	is_template_formal(void) const;
 
 	bool

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.9.2.1 2005/01/29 21:38:09 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.9.2.2 2005/01/31 04:16:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -91,6 +91,8 @@ param_instance_collection::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE, using parent_type's definition
 /**
 	To determine whether or not this is a formal parameter, 
 	look itself up in the owning namespace.  
@@ -109,6 +111,7 @@ param_instance_collection::is_template_formal(void) const {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

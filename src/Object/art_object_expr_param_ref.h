@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.5 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.5.2.1 2005/01/31 04:16:33 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -119,6 +119,9 @@ public:
 
 	value_type
 	static_constant_bool(void) const;
+
+	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
 
 	bool
 	resolve_value(value_type& i) const;
@@ -246,6 +249,9 @@ public:
 
 	value_type
 	static_constant_int(void) const;
+
+	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
 
 	bool
 	resolve_value(value_type& i) const;

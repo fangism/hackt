@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.1 2005/01/29 02:52:11 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.2 2005/01/31 04:16:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -88,7 +88,7 @@ definition_base::~definition_base() {
 ostream&
 definition_base::dump(ostream& o) const {
 	const string key = get_key();
-	what(o) << " " << key;
+	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
 	dump_template_formals(o);
 	return o;
 }
@@ -114,8 +114,8 @@ definition_base::dump_template_formals(ostream& o) const {
 	// sanity check
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
-		o << "<" << endl;	// continued from last print
 		indent tfl_ind(o);
+		o << "<" << endl;	// continued from last print
 		template_formals_list_type::const_iterator
 			i = template_formals_list.begin();
 		const template_formals_list_type::const_iterator
@@ -185,6 +185,23 @@ never_ptr<const param_instance_collection>
 definition_base::lookup_template_formal(const string& id) const {
 	return static_cast<const template_formals_map_type&>
 		(template_formals_map)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the (1-indexed) position of the referenced parameter 
+		in the list if found, else 0 if not found.
+ */
+size_t
+definition_base::lookup_template_formal_position(const string& id) const {
+	const never_ptr<const param_instance_collection>
+		pp(lookup_template_formal(id));
+	const template_formals_list_type::const_iterator
+		pb = template_formals_list.begin();
+	// default, uses pointer comparison
+	return (pp) ? distance(pb,
+			std::find(pb, template_formals_list.end(), pp)) +1
+		: 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2002,29 +2019,41 @@ process_definition::what(ostream& o) const {
 ostream&
 process_definition::dump(ostream& o) const {
 	definition_base::dump(o);	// dump template signature first
-
+	const indent __proc_indent__(o);
 	// now dump ports
 	{
-		o << "(" << endl;
-		port_formals_list_type::const_iterator i =
-			port_formals_list.begin();
-		for ( ; i!=port_formals_list.end(); i++) {
-			(*i)->dump(o) << endl;
+		o << auto_indent << "(" << endl;
+		{
+			const indent __indent__(o);
+			port_formals_list_type::const_iterator
+				i = port_formals_list.begin();
+			const port_formals_list_type::const_iterator
+				e = port_formals_list.end();
+			for ( ; i!=e; i++) {
+				(*i)->dump(o << auto_indent) << endl;
+			}
 		}
-		o << ")" << endl;
+		o << auto_indent << ")" << endl;
 	}
 
 	// now dump rest of contents
-	o << "{" << endl;
-	used_id_map_type::const_iterator i;
 //	list<never_ptr<const ...> > bin;		// later sort
-	o << "In definition \"" << key << "\", we have: " << endl;
-	for (i=used_id_map.begin(); i!=used_id_map.end(); i++) {
-		o << "  " << i->first << " = ";
-//		i->second->what(o) << endl;		// 1 level for now
-		i->second->dump(o) << endl;
-	}
-	return o << "}" << endl;
+	o << auto_indent <<
+		"In definition \"" << key << "\", we have: {" << endl;
+	{	// begin indent level
+		const indent __indent__(o);
+		used_id_map_type::const_iterator
+			i = used_id_map.begin();
+		const used_id_map_type::const_iterator
+			e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			// pair_dump?
+			o << auto_indent << i->first << " = ";
+			// i->second->what(o) << endl;	// 1 level for now
+			i->second->dump(o) << endl;
+		}
+	}	// end indent scope
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.1 2005/01/29 21:38:08 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.2 2005/01/31 04:16:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -51,7 +51,11 @@ virtual	~process_instance_collection();
 virtual	ostream&
 	what(ostream& o) const = 0;
 
-//	ostream& dump(ostream& o) const;
+	ostream&
+	dump(ostream& o) const;
+
+virtual ostream&
+	dump_unrolled_instances(ostream& o) const = 0;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

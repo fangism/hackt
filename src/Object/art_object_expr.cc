@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.1 2005/01/31 04:16:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -204,10 +204,15 @@ bool
 pbool_expr::must_be_equivalent(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
+#if 0
 		if (is_static_constant() && b->is_static_constant())
 			return static_constant_bool() ==
 				b->static_constant_bool();
+		// else check template formals?  more cases needed
 		else	return false;
+#else
+		return must_be_equivalent_pbool(*b);
+#endif
 	}
 	else	return false;
 }
@@ -258,10 +263,14 @@ bool
 pint_expr::must_be_equivalent(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
+#if 0
 		if (is_static_constant() && i->is_static_constant())
 			return static_constant_int() ==
 				i->static_constant_int();
 		else	return false;
+#else
+		return must_be_equivalent_pint(*i);
+#endif
 	}
 	else	return false;
 }
@@ -300,6 +309,17 @@ pint_expr::resolve_index(void) const {
 	return (resolve_value(i)) ? 
 		return_type(new pint_const(i)) :
 		return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_expr::must_be_equivalent_index(const index_expr& i) const {
+	const pint_expr* const p = IS_A(const pint_expr*, &i);
+	if (p) {
+		return must_be_equivalent_pint(*p);
+	} else {
+		return false;
+	}
 }
 
 //=============================================================================
@@ -882,22 +902,18 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class index_expr method definitions
 
-#if 0
 index_expr::index_expr() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_expr::~index_expr() { }
-#endif
 
 //-----------------------------------------------------------------------------
 // class const_index method definitions
 
-#if 0
 const_index::const_index() : index_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index::~const_index() { }
-#endif
 
 //=============================================================================
 // class param_expr_collective method defintions
@@ -1067,6 +1083,47 @@ bool
 pbool_instance_reference::static_constant_bool(void) const {
 	INVARIANT(is_static_constant());
 	return pbool_inst_ref->initial_value()->static_constant_bool();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If both this and argument are instance references, 
+	we consider them equvalent if they reference the same position
+	parameter in the template formals list.  
+	This allows us to correctly compare the equivalence of 
+	template signatures whose member depend on template parameters.  
+	\return true if boolean instance references are equivalent.  
+ */
+bool
+pbool_instance_reference::must_be_equivalent_pbool(const pbool_expr& b) const {
+	const pbool_instance_reference* const
+		br = IS_A(const pbool_instance_reference*, &b);
+	if (br) {
+		// compare template formal parameter positions for equivalence!
+		// INVARIANT (2005-01-30): if they are both template formals, 
+		// then they refer to equivalent owners.  
+		// This will not be true if the language allows nested 
+		// templates, so beware in the distant future!
+
+		// check owner pointer equivalence? not pointer equality!
+		// same qualified name, namespace path...
+		const size_t lpos = pbool_inst_ref->is_template_formal();
+		const size_t rpos = br->pbool_inst_ref->is_template_formal();
+		if (lpos && rpos && (lpos == rpos)) {
+			if (array_indices && br->array_indices) {
+				return array_indices->
+					must_be_equivalent_indices(
+						*br->array_indices);
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	} else {
+		// conservatively
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1568,6 +1625,44 @@ pint_instance_reference::static_constant_int(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	If both this and argument are instance references, 
+	we consider them equvalent if they reference the same position
+	parameter in the template formals list.  
+	This allows us to correctly compare the equivalence of 
+	template signatures whose member depend on template parameters.  
+	\return true if boolean instance references are equivalent.  
+ */
+bool
+pint_instance_reference::must_be_equivalent_pint(const pint_expr& i) const {
+	const pint_instance_reference* const
+		ir = IS_A(const pint_instance_reference*, &i);
+	if (ir) {
+		// compare template formal parameter positions for equivalence!
+		// INVARIANT (2005-01-30): if they are both template formals, 
+		// then they refer to equivalent owners.  
+		// This will not be true if the language allows nested 
+		// templates, so beware in the distant future!
+		const size_t lpos = pint_inst_ref->is_template_formal();
+		const size_t rpos = ir->pint_inst_ref->is_template_formal();
+		if (lpos && rpos && (lpos == rpos)) {
+			if (array_indices && ir->array_indices) {
+				return array_indices->
+					must_be_equivalent_indices(
+						*ir->array_indices);
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
@@ -2003,6 +2098,12 @@ pint_const::operator == (const const_range& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const::must_be_equivalent_pint(const pint_expr& p) const {
+	return p.is_static_constant() && (val == p.static_constant_int());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const::value_type
 pint_const::lower_bound(void) const {
 	return val;
@@ -2189,6 +2290,7 @@ pint_const_collection::static_constant_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Given constant values, this should be precise, i.e. may <=> must.
 	\return true if expressions may be equivalent (conservative).
  */
 bool
@@ -2208,6 +2310,7 @@ pint_const_collection::may_be_equivalent(const param_expr& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Given constant values, this should be precise, i.e. may <=> must.
 	\return true if the expressions must be equivalent, 
 		conservatively false.
  */
@@ -2220,6 +2323,24 @@ pint_const_collection::must_be_equivalent(const param_expr& e) const {
 		return (values.dimensions() == p->values.dimensions() &&
 			values.size() == p->values.size() &&
 			values == p->values);
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Identical to the regular must_be_equivalent method.  
+ */
+bool
+pint_const_collection::must_be_equivalent_pint(const pint_expr& p) const {
+	const pint_const_collection* const
+		pcc = IS_A(const pint_const_collection*, &p);
+	if (pcc) {
+		return (values.dimensions() == pcc->values.dimensions() &&
+			values.size() == pcc->values.size() &&
+			values == pcc->values);
 	} else {
 		// conservatively
 		return false;
@@ -2396,6 +2517,12 @@ pbool_const::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_const::must_be_equivalent_pbool(const pbool_expr& b) const {
+	return b.is_static_constant() && (val == b.static_constant_bool());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_const::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, CONST_PBOOL_TYPE_KEY);
@@ -2497,6 +2624,18 @@ pint_unary_expr::value_type
 pint_unary_expr::static_constant_int(void) const {
 	// depends on op
 	return - ex->static_constant_int();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_unary_expr::must_be_equivalent_pint(const pint_expr& p) const {
+	const pint_unary_expr* const ue = IS_A(const pint_unary_expr*, &p);
+	if (ue) {
+		return op == ue->op && ex->must_be_equivalent_pint(*ue->ex);
+	} else {
+		// conservatively
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2663,6 +2802,18 @@ pbool_unary_expr::is_unconditional(void) const {
 bool
 pbool_unary_expr::static_constant_bool(void) const {
 	return !ex->static_constant_bool();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_unary_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+	const pbool_unary_expr* const be = IS_A(const pbool_unary_expr*, &b);
+	if (be) {
+		return ex->must_be_equivalent_pbool(*be->ex);
+	} else {
+		// conservatively
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2884,6 +3035,22 @@ arith_expr::static_constant_int(void) const {
 	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+arith_expr::must_be_equivalent_pint(const pint_expr& p) const {
+	const arith_expr* const ae = IS_A(const arith_expr*, &p);
+	if (ae) {
+		// for now structural equivalence only,
+		return (op == ae->op) &&
+			lx->must_be_equivalent(*ae->lx) &&
+			rx->must_be_equivalent(*ae->rx);
+		// later, symbolic equivalence, Ooooh!
+	} else {
+		// conservatively
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3154,6 +3321,22 @@ relational_expr::static_constant_bool(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+relational_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+	const relational_expr* const re = IS_A(const relational_expr*, &b);
+	if (re) {
+		return (op == re->op) &&
+			lx->must_be_equivalent_pint(*re->lx) &&
+			rx->must_be_equivalent_pint(*re->rx);
+		// this is also conservative, 
+		// doesn't check symbolic equivalence... yet
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
 relational_expr::resolve_dimensions(void) const {
 	return const_index_list();
@@ -3387,6 +3570,22 @@ logical_expr::static_constant_bool(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+logical_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+	const logical_expr* const re = IS_A(const logical_expr*, &b);
+	if (re) {
+		return (op == re->op) &&
+			lx->must_be_equivalent_pbool(*re->lx) &&
+			rx->must_be_equivalent_pbool(*re->rx);
+		// this is also conservative, 
+		// doesn't check symbolic equivalence... yet
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
 logical_expr::resolve_dimensions(void) const {
 	return const_index_list();
@@ -3576,6 +3775,9 @@ pint_range::is_static_constant(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre both upper and lower MUST be is_static_constant().
+ */
 const_range
 pint_range::static_constant_range(void) const {
 	return const_range(lower->static_constant_int(), 
@@ -3588,6 +3790,23 @@ pint_range::resolve_range(const_range& r) const {
 	if (!lower->resolve_value(r.first))	return false;
 	if (!upper->resolve_value(r.second))	return false;
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_range::must_be_formal_size_equivalent(const range_expr& re) const {
+	const const_range* const cr = IS_A(const const_range*, &re);
+	if (cr) {
+		if (!is_static_constant())
+			return false;
+		else return lower->static_constant_int() == cr->first &&
+			upper->static_constant_int() == cr->second;
+	} else  {
+		const pint_range* const pr = IS_A(const pint_range*, &re);
+		INVARIANT(pr);
+		return lower->must_be_equivalent(*pr->lower) &&
+			upper->must_be_equivalent(*pr->upper);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3777,6 +3996,19 @@ const_range::operator == (const const_range& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_range::must_be_formal_size_equivalent(const range_expr& re) const {
+	const const_range* const cr = IS_A(const const_range*, &re);
+	if (cr) {
+		return (*this) == *cr;
+	} else {
+		const pint_range* const pr = IS_A(const pint_range*, &re);
+		INVARIANT(pr);
+		return pr->must_be_formal_size_equivalent(*this);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Presumably if this was successfully constructed, then it
 	passed the assertion.  No need to recheck.  
@@ -3863,14 +4095,12 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class range_expr method definitions
 
-#if 0
 range_expr::range_expr() : index_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range_expr::~range_expr() {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3889,6 +4119,18 @@ range_expr::resolve_index(void) const {
 	return (resolve_range(tmp)) ?
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+range_expr::must_be_equivalent_index(const index_expr& i) const {
+	const range_expr* const r = IS_A(const range_expr*, &i);
+	if (r) {
+		return must_be_formal_size_equivalent(*r);
+	} else {
+		// conservatively
+		return false;
+	}
 }
 
 //=============================================================================
@@ -4171,6 +4413,21 @@ const_range_list::operator == (const const_range_list& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
+const_range_list::must_be_formal_size_equivalent(
+		const range_expr_list& rl) const {
+	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
+	if (crl) {
+		return is_size_equivalent(*crl);
+	} else {
+		const dynamic_range_list* const
+			drl = IS_A(const dynamic_range_list*, &rl);
+		INVARIANT(drl);
+		return drl->must_be_formal_size_equivalent(*this);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
 const_range_list::resolve_ranges(const_range_list& r) const {
 	r = *this;
 	return true;
@@ -4387,6 +4644,41 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 			return false;
 		}
 	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_range_list::must_be_formal_size_equivalent(
+		const range_expr_list& rl) const {
+	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
+	if (crl) {
+		INVARIANT(size() == crl->size());
+		const_iterator i = begin();
+		const const_iterator e = end();
+		const_range_list::const_iterator j = crl->begin();
+		// use some std:: algorithm ... later
+		for ( ; i!=e; i++, j++) {
+			// NEVER_NULL(...)
+			if (!(*i)->must_be_formal_size_equivalent(*j))
+				return false;
+		}
+	} else {
+		const dynamic_range_list* const
+			drl = IS_A(const dynamic_range_list*, &rl);
+		INVARIANT(drl);
+		INVARIANT(size() == drl->size());
+		const_iterator i = begin();
+		const const_iterator e = end();
+		const_iterator j = drl->begin();
+		// use some std:: algorithm ... later
+		for ( ; i!=e; i++, j++) {
+			// NEVER_NULL(...)
+			if (!(*i)->must_be_formal_size_equivalent(**j))
+				return false;
+		}
+	}
+	// else no errors found
 	return true;
 }
 
@@ -4716,7 +5008,8 @@ const_index_list::upper_multikey(void) const {
 /**
 	Given two resolved lists of constant indices, determine
 	whether they are dimensionally equal.  
-	Bear in mind that collapsed dimensions are to be ignored. 
+	Bear in mind that collapsed dimensions are to be ignored
+		in the two argument lists. 
  */
 bool
 const_index_list::equal_dimensions(const const_index_list& l) const {
@@ -4730,6 +5023,26 @@ const_index_list::equal_dimensions(const const_index_list& l) const {
 			dereference<count_ptr, const const_index>()
 		)
 	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_index_list::must_be_equivalent_indices(const index_list& l) const {
+	const const_index_list* const cl = IS_A(const const_index_list*, &l);
+	if (cl) {
+		// here, we DO NOT skip collapsed dimensions for comparison
+		return std::equal(begin(), end(), cl->begin(), 
+		binary_compose(
+			mem_fun_ref(&const_index::must_be_equivalent_index), 
+			dereference<count_ptr, const const_index>(), 
+			dereference<count_ptr, const const_index>()
+		)
+		);
+	} else {
+		const dynamic_index_list* const
+			dl = IS_A(const dynamic_index_list*, &l);
+		return dl->must_be_equivalent_indices(*this);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4969,6 +5282,34 @@ dynamic_index_list::resolve_index_list(void) const {
 		}
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
+	const const_index_list* const cl = IS_A(const const_index_list*, &l);
+	if (cl) {
+		INVARIANT(size() == cl->size());
+		// heterogenous comparison between const_index, index_expr
+		return std::equal(begin(), end(), cl->begin(), 
+		binary_compose(
+			mem_fun_ref(&index_expr::must_be_equivalent_index), 
+			dereference<count_ptr, const index_expr>(), 
+			dereference<count_ptr, const const_index>()
+		)
+		);
+	} else {
+		const dynamic_index_list* const
+			dl = IS_A(const dynamic_index_list*, &l);
+		INVARIANT(size() == dl->size());
+		return std::equal(begin(), end(), dl->begin(), 
+		binary_compose(
+			mem_fun_ref(&index_expr::must_be_equivalent_index), 
+			dereference<count_ptr, const index_expr>(), 
+			dereference<count_ptr, const index_expr>()
+		)
+		);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

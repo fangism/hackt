@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.1 2005/01/31 04:16:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -1384,7 +1384,7 @@ never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base>& db) {
 	typedef	never_ptr<definition_base>	return_type;
 	NEVER_NULL(db);
-	string k = db->get_name();
+	const string k = db->get_name();
 	const never_ptr<const object> probe(lookup_object_here(k));
 	if (probe) {
 		const never_ptr<const definition_base>
@@ -1396,7 +1396,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 				// can discard new declaration
 				// to delete db, we steal ownership, 
 				// and deallocate it with a local excl_ptr
-				excl_ptr<definition_base>
+				const excl_ptr<definition_base>
 					release_db(db);
 				return return_type(release_db);
 			} else {

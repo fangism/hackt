@@ -1,5 +1,45 @@
 "ChangeLog"
 
+2005-01-30	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-02:
+	  Major contributions in this release, improving template 
+	  signature equivalence checking to be more precise.  
+
+		+ Refined definition_base::dump to also report whether a 
+		  definition object is merely declared or fully defined.  
+
+		+ new: definition_base::lookup_template_formal_position()
+		  to determine whether or not two formal parameter
+		  instance references are equivalent (useful for comparison
+		  during re-declarations).
+
+		+ Changed template_formals_list implementation to vector, 
+		  for constant-time formal position distance evaluation.  
+		  (Can probably use vectors more for this reason...)
+
+		+ instance_collection_base::is_template_formal():
+		  now returns the 1-indexed position of the referenced
+		  parameter instance collection, 0 if not found.  
+		  formal_size_equivalence is updated to check for 
+		  template parameter equivalence.  
+
+		+ art_object_expr* (important):
+		  Equivalence checking refined with pbool/pint/index/range
+		  -specific versions to allow comparison by structural 
+		  equivalence which is far more precise (but not perfect)
+		  than what was in place before, which was over-conservative
+		  w.r.t. constants and non-constants.  
+		  Only the "must_be_equivalent" family of method functions
+	 	  was improved.  
+		  De-inlined some empty constructors and destructors.  
+
+		+ Implemented part of process instance unrolling.  
+		  Dumping-related functions improved.  
+		  Added full set of checks in test/parser/process/.
+		  Updated some old artc tests.  
+
+
 2005-01-29	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-01:

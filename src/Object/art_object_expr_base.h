@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.5 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr_base.h,v 1.5.2.1 2005/01/31 04:16:33 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -164,10 +164,10 @@ virtual	excl_ptr<const_param_expr_list>
  */
 class index_expr : virtual public object, virtual public persistent {
 protected:
-public:
-	index_expr() : object(), persistent() { }
+	index_expr();
 
-virtual	~index_expr() { }
+public:
+virtual	~index_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -198,6 +198,9 @@ virtual bool
 
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
+
+virtual	bool
+	must_be_equivalent_index(const index_expr& ) const = 0;
 
 // additional virtual functions for dimensionality...
 };	// end class index_expr
@@ -260,6 +263,9 @@ virtual	const_index_list
 virtual	bool
 	resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
 #endif
+
+virtual	bool
+	must_be_equivalent_indices(const index_list& ) const = 0;
 };	// end class index_list
 
 //=============================================================================
@@ -293,6 +299,9 @@ virtual	const_range_list
 
 virtual	bool
 	resolve_ranges(const_range_list& r) const = 0;
+
+virtual	bool
+	must_be_formal_size_equivalent(const range_expr_list& ) const = 0;
 
 };	// end class range_expr_list
 
@@ -344,6 +353,9 @@ virtual bool
 	bool
 	must_be_equivalent(const param_expr& p) const;
 
+virtual	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const = 0;
+
 virtual bool
 	is_static_constant(void) const = 0;
 
@@ -383,9 +395,10 @@ public:
 		using templates to extend to other parameter types.  
 	 */
 	typedef	pint_value_type			value_type;
-public:
+protected:
 	pint_expr() : param_expr(), index_expr() { }
 
+public:
 	// temporary de-inline for debugging purposes
 virtual	~pint_expr();
 
@@ -418,6 +431,12 @@ virtual bool
 
 	bool
 	must_be_equivalent(const param_expr& p) const;
+
+virtual	bool
+	must_be_equivalent_pint(const pint_expr& ) const = 0;
+
+	bool
+	must_be_equivalent_index(const index_expr& ) const;
 
 virtual bool
 	is_static_constant(void) const = 0;
@@ -465,10 +484,10 @@ protected:
  */
 class range_expr : virtual public index_expr {
 protected:
-public:
-	range_expr() : index_expr() { }
+	range_expr();
 
-virtual	~range_expr() { }
+public:
+virtual	~range_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -516,6 +535,13 @@ virtual bool
 
 virtual	bool
 	resolve_range(const_range& r) const = 0;
+
+virtual	bool
+	must_be_formal_size_equivalent(const range_expr& ) const = 0;
+
+	bool
+	must_be_equivalent_index(const index_expr& ) const;
+
 };	// end class range_expr
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.1 2005/01/29 21:38:08 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.2 2005/01/31 04:16:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -249,14 +249,23 @@ instance_collection_base::add_instantiation_statement(
 /**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  
+	\return 0 (false) if is not a template formal, 
+		otherwise returns the position (1-indexed)
+		of the instance referenced, 
+		useful for determining template parameter equivalence.  
  */
-bool
+size_t
 instance_collection_base::is_template_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def)
-		return def->lookup_template_formal(key);
-	else return false;		// owner is not a definition
+		return def->lookup_template_formal_position(key);
+	else {
+		// owner is not a definition
+		INVARIANT(owner.is_a<const name_space>());
+		// is owned by a namespace, i.e. actually instantiated
+		return 0;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,7 +300,8 @@ instance_collection_base::template_formal_equivalent(
 		this_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(*b_type)) {
+	// used to be may_be_equivalent...
+	if (!this_type->must_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -366,6 +376,12 @@ instance_collection_base::formal_size_equivalent(
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
 		// former template formals list when visited with the second.  
+
+		// NEW (2005-01-30):
+		// For template, need notion of positional parameter 
+		// equivalence -- expressions referring to earlier
+		// formal parameters.  
+#if 0
 		const count_ptr<const const_range_list>
 			ic((*i)->get_indices().is_a<const const_range_list>());
 		const count_ptr<const const_range_list>
@@ -378,6 +394,15 @@ instance_collection_base::formal_size_equivalent(
 			// one of them is dynamic, thus we must conservatively
 			return true;
 		}
+#else
+		// is count_ptr<range_expr_list>
+		const index_collection_item_ptr_type ii = (*i)->get_indices();
+		const index_collection_item_ptr_type ji = (*j)->get_indices();
+		if (ii && ji) {
+			return ii->must_be_formal_size_equivalent(*ji);
+		} else 	return (!ii && !ji);
+			// both NULL is ok too
+#endif
 	} else {
 		// both are scalar, single instances
 		return true;

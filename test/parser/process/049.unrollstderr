@@ -1,0 +1,31 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3300684	module__	0	0	28
+	2	 0x3300170	namespc_	0	28	52
+	3	 0x33006a0	procdefn	0	52	101
+	4	 0x3301434	dintcoll	0	101	150
+	5	 0x3804604	datainst	0	150	170
+	6	 0x3300714	datatprf	0	170	186
+	7	 0x3301480	datadefn	0	186	218
+	8	 0x3300724	dprmlst_	0	218	234
+	9	 0x2690024	cnstpi__	0	234	246
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    food = process-definition (declared) food      (
+        int<32> sleep
+      )
+      In definition "food", we have: {
+        sleep = int<32> sleep
+      }
+
+}
+

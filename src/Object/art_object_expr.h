@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr.h,v 1.19.2.1 2005/01/31 04:16:32 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -171,6 +171,10 @@ public:
 	bool
 	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 #endif
+
+	bool
+	must_be_equivalent_indices(const index_list& ) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class dynamic_index_list
@@ -201,7 +205,8 @@ public:
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_range_list();
-virtual	~dynamic_range_list();
+
+	~dynamic_range_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -220,6 +225,10 @@ virtual	~dynamic_range_list();
 		// false, will be empty
 	bool
 	resolve_ranges(const_range_list& r) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr_list& ) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class dynamic_range_list
@@ -280,6 +289,9 @@ public:
 
 	value_type
 	static_constant_int(void) const;
+
+	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
 
 	bool
 	resolve_value(value_type& i) const;
@@ -352,6 +364,9 @@ public:
 
 	value_type
 	static_constant_bool(void) const;
+
+	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
 
 	bool
 	resolve_value(value_type& i) const;
@@ -450,6 +465,9 @@ public:
 
 	value_type
 	static_constant_int(void) const;
+
+	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
 
 	bool
 	resolve_value(value_type& i) const;
@@ -551,6 +569,9 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
 
 	const_index_list
@@ -645,6 +666,9 @@ public:
 	static_constant_bool(void) const;
 
 	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
+
+	bool
 	resolve_value(value_type& i) const;
 
 	const_index_list
@@ -726,6 +750,9 @@ public:
 
 	bool
 	resolve_range(const_range& r) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr& ) const;
 
 public:
 	PERSISTENT_METHODS

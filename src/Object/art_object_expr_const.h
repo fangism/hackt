@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.1 2005/01/31 04:16:33 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -172,10 +172,10 @@ public:
  */
 class const_index : virtual public index_expr {
 protected:
-public:
-	const_index() : index_expr() { }
+	const_index();
 
-virtual	~const_index() { }
+public:
+virtual	~const_index();
 
 // same pure virtual functions, and more...
 
@@ -283,6 +283,9 @@ public:
 	bool
 	equal_dimensions(const const_index_list& ) const;
 
+	bool
+	must_be_equivalent_indices(const index_list& ) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class const_index_list
@@ -329,7 +332,9 @@ public:
 
 	bool
 	is_size_equivalent(const const_range_list& il) const;
+	// see also must_be_formal_size_equivalent, declared below
 
+	// may be obsolete by must_be_formal_size_equivalent...
 	bool
 	operator == (const const_range_list& c) const;
 
@@ -350,6 +355,9 @@ public:
 	// is a pint_const_collection::array_type::key_type
 	multikey_generic<size_t>
 	resolve_sizes(void) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr_list& ) const;
 
 public:
 	PERSISTENT_METHODS
@@ -421,6 +429,9 @@ public:
 	// may chop '_int' off for templating
 	value_type
 	static_constant_int(void) const { return val; }
+
+	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -539,6 +550,9 @@ public:
 	must_be_equivalent(const param_expr& ) const;
 
 	bool
+	must_be_equivalent_pint(const pint_expr& ) const;
+
+	bool
 	is_loop_independent(void) const { return true; }
 
 	bool
@@ -630,6 +644,9 @@ public:
 
 	bool
 	static_constant_bool(void) const { return val; }
+
+	bool
+	must_be_equivalent_pbool(const pbool_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -768,6 +785,10 @@ public:
 
 	count_ptr<const_index>
 	resolve_index(void) const;
+
+	bool
+	must_be_formal_size_equivalent(const range_expr& ) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class const_range

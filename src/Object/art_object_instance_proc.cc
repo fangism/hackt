@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.1 2005/01/31 04:16:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -53,6 +53,27 @@ process_instance_collection::process_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_collection::~process_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+process_instance_collection::dump(ostream& o) const {
+	parent_type::dump(o);
+	if (is_partially_unrolled()) {
+		if (dimensions) {
+			indent indenter(o);
+			o << auto_indent << "unrolled indices: {" << endl;
+			{
+				indent indenter(o);
+				dump_unrolled_instances(o);
+			}
+			o << auto_indent << "}";        // << endl;
+		} else {
+			// else nothing to say, just one scalar instance
+			o << " (instantiated)";
+		}
+	}
+        return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
