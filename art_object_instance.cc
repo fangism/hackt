@@ -314,6 +314,7 @@ param_instantiation::is_template_formal(void) const {
 	}
 }
 
+#if 0
 /**
 	Checks whether or not instance has been assigned.
 	Collectives -- conservatively return false.  
@@ -343,6 +344,60 @@ param_instantiation::is_initialized(void) const {
 		else return false;
 	}
 }
+#else
+/**
+	For multidimensional instances, we don't keep track of initialization
+	of individual elements at compile-time, just conservatively 
+	return true, that the instance MAY be initialized.  
+	Template formals are considered initialized because concrete
+	types will always have supplied parameters.  
+	The counterpart must_be_initialized will check at unroll time
+	whether or not an instance is definitely initialized.  
+	\return true if the instance may be initialized.  
+	\sa must_be_initialized
+ */
+bool
+param_instantiation::may_be_initialized(void) const {
+	if (dimensions() || is_template_formal())
+		return true;
+	else {
+		// is not a template formal, thus we interpret
+		// the "default_value" field as a one-time initialization
+		// value.  
+		count_const_ptr<param_expr> ret(default_value());
+		if (ret)
+			return ret->may_be_initialized();
+		// if there's no initial value, then it is definitely
+		// NOT already initialized.  
+		else return false;
+	}
+}
+
+/**
+	At compile time, we don't keep track of arrays, thus
+	one cannot conclude that a member of an array is definitely 
+	initialized.  
+	\sa may_be_initialized
+ */
+bool
+param_instantiation::must_be_initialized(void) const {
+	if (dimensions())
+		return false;
+	else if (is_template_formal())
+		return true;
+	else {
+		// is not a template formal, thus we interpret
+		// the "default_value" field as a one-time initialization
+		// value.  
+		count_const_ptr<param_expr> ret(default_value());
+		if (ret)
+			return ret->must_be_initialized();
+		// if there's no initial value, then it is definitely
+		// NOT already initialized.  
+		else return false;
+	}
+}
+#endif
 
 bool
 param_instantiation::is_static_constant(void) const {
@@ -405,18 +460,25 @@ pbool_instantiation::get_type_ref(void) const {
 
 /**
 	Initializes a parameter instance with an expression.
+	Parameter instance collections cannot be initialized statically
+	at compile-time because we're too lazy to keep track of 
+	individual elements until unroll-time.  
 	The ival may only be initialized once, enforced by assertions.  
-	Note: a parameter is considered "usable" if it is 
-	initialized OR it is a template formal.  
+	Note: a parameter is considered "usable" or initialized if it is 
+	has a valid initial value expression OR it is a template formal.  
+	Later, deal with loop indices.
 	\param e the rvalue expression.
-	\return true if properly initialized.  
-	\sa is_initialized
+	\return true.  
+	\sa may_be_initialized
+	\sa must_be_initialized
  */
 bool
 pbool_instantiation::initialize(count_const_ptr<pbool_expr> e) {
 	assert(e);
 	assert(!ival);		// must not already be initialized
-	ival = e;
+	if (dimensions() == 0) {
+		ival = e;
+	} 
 	return true;
 }
 
@@ -507,13 +569,17 @@ pint_instantiation::get_type_ref(void) const {
 	Note: a parameter is considered "usable" if it is 
 	initialized OR it is a template formal.  
 	\param e the rvalue expression.
-	\sa is_initialized
+	\return true.
+	\sa may_be_initialized
+	\sa must_be_initialized
  */
 bool
 pint_instantiation::initialize(count_const_ptr<pint_expr> e) {
 	assert(e);
 	assert(!ival);
-	ival = e;
+	if (dimensions() == 0) {
+		ival = e;
+	}
 	return true;
 }
 

@@ -49,6 +49,7 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
+virtual	size_t dimensions(void) const = 0;
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -218,7 +219,12 @@ virtual	never_const_ptr<param_instantiation>
 
 	// consider moving these functions into instance_reference_base
 	//	where array_indices are inherited from.  
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;

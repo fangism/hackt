@@ -151,10 +151,22 @@ pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
 	}
 }
 
+#if 0
 bool
 pbool_instance_reference::is_initialized(void) const {
 	return param_instance_reference::is_initialized();
 }
+#else
+bool
+pbool_instance_reference::may_be_initialized(void) const {
+	return param_instance_reference::may_be_initialized();
+}
+
+bool
+pbool_instance_reference::must_be_initialized(void) const {
+	return param_instance_reference::must_be_initialized();
+}
+#endif
 
 bool
 pbool_instance_reference::is_static_constant(void) const {
@@ -232,10 +244,22 @@ pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
 	}
 }
 
+#if 0
 bool
 pint_instance_reference::is_initialized(void) const {
 	return param_instance_reference::is_initialized();
 }
+#else
+bool
+pint_instance_reference::may_be_initialized(void) const {
+	return param_instance_reference::may_be_initialized();
+}
+
+bool
+pint_instance_reference::must_be_initialized(void) const {
+	return param_instance_reference::must_be_initialized();
+}
+#endif
 
 bool
 pint_instance_reference::is_static_constant(void) const {
@@ -325,10 +349,25 @@ pint_unary_expr::hash_string(void) const {
 	return ex->hash_string() +op;
 }
 
+#if 0
 bool
 pint_unary_expr::is_initialized(void) const {
 	return ex->is_initialized();
 }
+#else
+#if 0
+	INLINED
+bool
+pint_unary_expr::may_be_initialized(void) const {
+	return ex->may_be_initialized();
+}
+
+bool
+pint_unary_expr::must_be_initialized(void) const {
+	return ex->must_be_initialized();
+}
+#endif
+#endif
 
 bool
 pint_unary_expr::is_static_constant(void) const {
@@ -376,10 +415,12 @@ pbool_unary_expr::hash_string(void) const {
 	return ex->hash_string() +op;
 }
 
+#if 0
 bool
 pbool_unary_expr::is_initialized(void) const {
 	return ex->is_initialized();
 }
+#endif
 
 bool
 pbool_unary_expr::is_static_constant(void) const {
@@ -426,10 +467,12 @@ arith_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+#if 0
 bool
 arith_expr::is_initialized(void) const {
 	return lx->is_initialized() && rx->is_initialized();
 }
+#endif
 
 bool
 arith_expr::is_static_constant(void) const {
@@ -485,10 +528,12 @@ relational_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+#if 0
 bool
 relational_expr::is_initialized(void) const {
 	return lx->is_initialized() && rx->is_initialized();
 }
+#endif
 
 bool
 relational_expr::is_static_constant(void) const {
@@ -541,10 +586,12 @@ logical_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+#if 0
 bool
 logical_expr::is_initialized(void) const {
 	return lx->is_initialized() && rx->is_initialized();
 }
+#endif
 
 bool
 logical_expr::is_static_constant(void) const {
@@ -571,9 +618,6 @@ logical_expr::static_constant_bool(void) const {
 	// switch
 	return false;
 }
-
-//=============================================================================
-
 
 //=============================================================================
 // class pint_range method definitions
@@ -617,10 +661,12 @@ pint_range::hash_string(void) const {
 	return lower->hash_string() + ".." +upper->hash_string();
 }
 
+#if 0
 bool
 pint_range::is_initialized(void) const {
 	return lower->is_initialized() && upper->is_initialized();
 }
+#endif
 
 /**
 	Range is sane if lower <= upper.
@@ -754,10 +800,12 @@ const_range::static_overlap(const const_range& r) const {
 	return const_range(temp);		// private constructor
 }
 
+#if 0
 bool
 const_range::is_initialized(void) const {
 	return !empty();
 }
+#endif
 
 /**
 	Presumably if this was successfully constructed, then it
@@ -960,18 +1008,41 @@ const_index_list::size(void) const {
 }
 
 /**
-	Need to count which dimensions are collapsed.  
+	A dimension is collapsed if the index is a single integer, 
+	and otherwise not collapsed if it's a range.  
+	A non-collapsed dimension of size 1 is indicated
+	as a range [i..i].  
+	\return the number of dimensions are collapsed.  
  */
 size_t
-const_index_list::dimensions(void) const {
-	// THIS IS WRONG, just temporary
-	return parent::size();
+const_index_list::dimensions_collapsed(void) const {
+	size_t ret = 0;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		if (i->is_a<pint_const>())
+			ret++;
+		else assert(i->is_a<const_range>());
+			// sanity check
+	}
+	return ret;
 }
 
+#if 0
 bool
 const_index_list::is_initialized(void) const {
 	return true;
 }
+#else
+bool
+const_index_list::may_be_initialized(void) const {
+	return true;
+}
+
+bool
+const_index_list::must_be_initialized(void) const {
+	return true;
+}
+#endif
 
 bool
 const_index_list::is_static_constant(void) const {
@@ -987,6 +1058,7 @@ bool
 const_index_list::is_unconditional(void) const {
 	return true;
 }
+
 //=============================================================================
 // class dynamic_index_list method definitions
 
@@ -1023,14 +1095,23 @@ dynamic_index_list::size(void) const {
 }
 
 /**
-	Need to count which dimensions are collapsed.  
+	Counts which dimensions are collapsed.  
+	See description in const_index_list::dimensions_collapsed().  
  */
 size_t
-dynamic_index_list::dimensions(void) const {
-	// THIS IS WRONG, just temporary
-	return parent::size();
+dynamic_index_list::dimensions_collapsed(void) const {
+	size_t ret = 0;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		if (i->is_a<pint_const>())
+			ret++;
+		else assert(i->is_a<const_range>());
+			// sanity check
+	}
+	return ret;
 }
 
+#if 0
 bool
 dynamic_index_list::is_initialized(void) const {
 	const_iterator i = begin();
@@ -1041,6 +1122,29 @@ dynamic_index_list::is_initialized(void) const {
 	}
 	return true;
 }
+#else
+bool
+dynamic_index_list::may_be_initialized(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		if (!(*i)->may_be_initialized())
+			return false;
+	}
+	return true;
+}
+
+bool
+dynamic_index_list::must_be_initialized(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		if (!(*i)->must_be_initialized())
+			return false;
+	}
+	return true;
+}
+#endif
 
 bool
 dynamic_index_list::is_static_constant(void) const {

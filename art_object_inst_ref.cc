@@ -41,14 +41,16 @@ simple_instance_reference::~simple_instance_reference() {
 	are not x[i..j].  
 	A fully collapsed index list is equivalent to a 0-d array
 	or a single instance.  
+	An expression without indices has dimensionality equal
+	to the of the instance collection.  
 	\return the dimensions of the referenced array.  
  */
 size_t
 simple_instance_reference::dimensions(void) const {
-	// THIS NEEDS FIXING
+	size_t dim = get_inst_base()->dimensions();
 	if (array_indices)
-		return array_indices->dimensions();
-	else return get_inst_base()->dimensions();
+		return dim -array_indices->dimensions_collapsed();
+	else return dim;
 }
 
 ostream&
@@ -95,60 +97,67 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 			"-dimensionally!  ";
 			// caller will say where
 		return false;
-	} else {
-		// allow under-specified dimensions?  yeah for now...
-		// if indices are constant, check for total overlap
-		// with existing instances from the point of reference.
+	} 
+	// else proceed...
 
-		typedef base_multidimensional_sparse_set<int, const_range>
-								mset_base;
-		// overriding default implementation with pair<int, int>
-		assert(max_dim <= mset_base::LIMIT);
-		never_const_ptr<index_list> il(i);
-		never_const_ptr<const_index_list>
-			cil(il.is_a<const_index_list>());
-		if (!cil)	// is dynamic, conservatively covers anything
-			return false;
-		// else is constant index list, can compute coverage
-		//	using multidimensional_sparse_set
-		instantiation_state iter = inst_state;
-		const instantiation_state
-			end(inst_base->collection_state_end());
-		excl_ptr<mset_base> cov(
-			mset_base::make_multidimensional_sparse_set(max_dim));
-		assert(cov);
-		{
-			const_range_list crl(*cil);
-			cov->add_ranges(crl);
-		}
-		for ( ; iter!=end; iter++) {
-			if (iter->is_a<dynamic_range_list>()) {
-				// all we can do conservatively...
-				cov->clear();
-				// empty means indices have been covered
-				break;
-			} else {
-				count_const_ptr<const_range_list>
-					crlp(iter->is_a<const_range_list>());
-				assert(crlp);
-				cov->delete_ranges(*crlp);
-			}
-		}
-		// if this point reached, then all instance additions
-		// were static constants.
-		// now, covered set must completely contain indices
-		if (!cov->empty()) {
-			// empty means covered.  
-			cerr << "ERROR: The following referenced indices "
-				"have definitely not been instantiated: {";
-			cov->dump(cerr << endl) << "} ";
-			// cerr << where() << endl;	// caller
-			// fancy: list indices not instantiated?
-			return false;
-		}
+	// allow under-specified dimensions?  yeah for now...
+	// if indices are constant, check for total overlap
+	// with existing instances from the point of reference.
+
+	typedef base_multidimensional_sparse_set<int, const_range>
+							mset_base;
+	// overriding default implementation with pair<int, int>
+	assert(max_dim <= mset_base::LIMIT);
+	never_const_ptr<index_list> il(i);
+	never_const_ptr<const_index_list>
+		cil(il.is_a<const_index_list>());
+	if (!cil) {	// is dynamic, conservatively covers anything
+		never_const_ptr<dynamic_index_list>
+			dil(il.is_a<dynamic_index_list>());
+		assert(dil);
 		array_indices = i;
 		return true;
 	}
+	// else is constant index list, can compute coverage
+	//	using multidimensional_sparse_set
+
+	instantiation_state iter = inst_state;
+	const instantiation_state
+		end(inst_base->collection_state_end());
+	excl_ptr<mset_base> cov(
+		mset_base::make_multidimensional_sparse_set(max_dim));
+	assert(cov);
+	{
+		const_range_list crl(*cil);
+		cov->add_ranges(crl);
+	}
+	for ( ; iter!=end; iter++) {
+		if (iter->is_a<dynamic_range_list>()) {
+			// all we can do conservatively...
+			cov->clear();
+			// empty means indices have been covered
+			break;
+		} else {
+			count_const_ptr<const_range_list>
+				crlp(iter->is_a<const_range_list>());
+			assert(crlp);
+			cov->delete_ranges(*crlp);
+		}
+	}
+	// if this point reached, then all instance additions
+	// were static constants.
+	// now, covered set must completely contain indices
+	if (!cov->empty()) {
+		// empty means covered.  
+		cerr << "ERROR: The following referenced indices "
+			"have definitely not been instantiated: {";
+		cov->dump(cerr << endl) << "} ";
+		// cerr << where() << endl;	// caller
+		// fancy: list indices not instantiated?
+		return false;
+	}
+	array_indices = i;
+	return true;
 }
 
 //=============================================================================
@@ -203,6 +212,7 @@ param_instance_reference::param_instance_reference(
 		simple_instance_reference(i, st) {
 }
 
+#if 0
 /**
 	For single instances references, check whether it is initialized.  
 	For collective instance references, and indexed references, 
@@ -218,6 +228,21 @@ param_instance_reference::is_initialized(void) const {
 	else 
 		return i.is_a<param_instantiation>()->is_initialized();
 }
+#else
+bool
+param_instance_reference::may_be_initialized(void) const {
+	never_const_ptr<instantiation_base> i(get_inst_base());
+	assert(i);
+	return i.is_a<param_instantiation>()->may_be_initialized();
+}
+
+bool
+param_instance_reference::must_be_initialized(void) const {
+	never_const_ptr<instantiation_base> i(get_inst_base());
+	assert(i);
+	return i.is_a<param_instantiation>()->must_be_initialized();
+}
+#endif
 
 /**
 	Under what conditions is a reference to a param instance

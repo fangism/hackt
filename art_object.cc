@@ -131,7 +131,7 @@ object_list::make_formal_dense_range_list(void) const {
 			} else {
 				is_static_constant = false;
 			}
-			if (p->is_initialized()) {
+			if (p->may_be_initialized()) {
 				continue;
 			} else {
 				is_initialized = false;
@@ -220,7 +220,7 @@ object_list::make_sparse_range_list(void) const {
 			} else {
 				is_static_constant = false;
 			}
-			if (p->is_initialized()) {	// definite
+			if (p->may_be_initialized()) {	// definite
 				continue;
 			} else {
 				is_initialized = false;
@@ -241,7 +241,7 @@ object_list::make_sparse_range_list(void) const {
 			} else {
 				is_static_constant = false;
 			}
-			if (r->is_initialized()) {	// definite
+			if (r->may_be_initialized()) {	// definite
 				continue;
 			} else {
 				is_initialized = false;
@@ -360,7 +360,7 @@ object_list::make_index_list(void) const {
 			} else {
 				is_static_constant = false;
 			}
-			if (p->is_initialized()) {	// definite
+			if (p->may_be_initialized()) {	// definite
 				continue;
 			} else {
 				is_initialized = false;
@@ -381,7 +381,7 @@ object_list::make_index_list(void) const {
 			} else {
 				is_static_constant = false;
 			}
-			if (r->is_initialized()) {	// definite
+			if (r->may_be_initialized()) {	// definite
 				continue;
 			} else {
 				is_initialized = false;
@@ -510,7 +510,7 @@ object_list::make_param_assignment(void) {
 		// last term must be initialized or be
 		// dependent on formals
 		// if collective, conservative: may-be-initialized
-		if (!rhse->is_initialized()) {
+		if (!rhse->may_be_initialized()) {
 			rhse->dump(cerr << "ERROR: rhs of expr-"
 				"assignment is not initialized or "
 				"dependent on formals: ") << endl;
@@ -541,7 +541,7 @@ object_list::make_param_assignment(void) {
 			// make this body into subroutine...
 			// a single parameter instance reference
 			// make sure not already initialized!
-			if (ir->is_initialized()) {
+			if (ir->must_be_initialized()) {
 				// definitely initialized or formal
 				cerr << "ERROR: expression " << k+1 <<
 					"is already initialized!"

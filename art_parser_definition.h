@@ -4,16 +4,7 @@
 #ifndef __ART_PARSER_DEFINITION_H__
 #define __ART_PARSER_DEFINITION_H__
 
-#include <iosfwd>
-#include <string>
-
 #include "art_parser_base.h"
-
-#include "art_macros.h"
-#include "art_utils.h"		// for token_position
-#include "sublist.h"		// for efficient list slices
-#include "ptrs.h"		// experimental pointer classes
-#include "count_ptr.h"		// reference-counted pointers
 
 /**
 	This is the general namespace for all ART-related classes.  

@@ -12,7 +12,7 @@ include Make.vars
 # define bsdmake-specific recursive make invocation
 # shouldn't need MAKEFLAGS?
 RECURSIVE_MAKE = $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
-	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)"
+	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" YACC=$(YACC)
 
 default: all
 

@@ -3,7 +3,7 @@
 #ifndef __ART_OBJECT_EXPR_H__
 #define __ART_OBJECT_EXPR_H__
 
-#include "art_object_inst_ref.h"		// include "art_object_base.h"
+#include "art_object_inst_ref.h"		// includes "art_object_base.h"
 #include "discrete_interval_set_fwd.h"
 
 //=============================================================================
@@ -91,7 +91,12 @@ virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
 
 /** is initialized if is resolved to constant or some other formal */
+#if 0
 virtual bool is_initialized(void) const = 0;
+#else
+virtual bool may_be_initialized(void) const = 0;
+virtual bool must_be_initialized(void) const = 0;
+#endif
 
 /** can be resolved to static constant value */
 virtual bool is_static_constant(void) const = 0;
@@ -122,7 +127,12 @@ virtual	~index_expr();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+#if 0
 virtual bool is_initialized(void) const = 0;
+#else
+virtual bool may_be_initialized(void) const = 0;
+virtual bool must_be_initialized(void) const = 0;
+#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
@@ -155,7 +165,12 @@ virtual	~pbool_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+#if 0
 virtual bool is_initialized(void) const = 0;
+#else
+virtual bool may_be_initialized(void) const = 0;
+virtual bool must_be_initialized(void) const = 0;
+#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
@@ -173,7 +188,12 @@ virtual	~pint_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+#if 0
 virtual bool is_initialized(void) const = 0;
+#else
+virtual bool may_be_initialized(void) const = 0;
+virtual bool must_be_initialized(void) const = 0;
+#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
@@ -224,7 +244,15 @@ public:
 	bool initialize(count_const_ptr<param_expr> i);
 	string hash_string(void) const;
 	// implement later.
+#if 0
 	bool is_initialized(void) const;
+#else
+	// try these
+	// using param_instance_reference::may_be_initialized;
+	// using param_instance_reference::must_be_initialized;
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
@@ -255,7 +283,12 @@ public:
 	bool initialize(count_const_ptr<param_expr> i);
 	string hash_string(void) const;
 	// implement later.
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
@@ -276,7 +309,12 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const { return true; }
+#else
+	bool may_be_initialized(void) const { return true; }
+	bool must_be_initialized(void) const { return true; }
+#endif
 	bool is_static_constant(void) const { return true; }
 	int static_constant_int(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -296,7 +334,12 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const { return true; }
+#else
+	bool may_be_initialized(void) const { return true; }
+	bool must_be_initialized(void) const { return true; }
+#endif
 	bool is_static_constant(void) const { return true; }
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -317,7 +360,14 @@ public:
 
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const
+		{ return ex->may_be_initialized(); }
+	bool must_be_initialized(void) const
+		{ return ex->must_be_initialized(); }
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -338,7 +388,14 @@ public:
 
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const
+		{ return ex->may_be_initialized(); }
+	bool must_be_initialized(void) const
+		{ return ex->must_be_initialized(); }
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -362,7 +419,16 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const
+		{ return lx->may_be_initialized() && 
+			rx->may_be_initialized(); }
+	bool must_be_initialized(void) const
+		{ return lx->must_be_initialized() && 
+			rx->must_be_initialized(); }
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -387,7 +453,16 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const
+		{ return lx->may_be_initialized() && 
+			rx->may_be_initialized(); }
+	bool must_be_initialized(void) const
+		{ return lx->must_be_initialized() && 
+			rx->must_be_initialized(); }
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -412,7 +487,16 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const
+		{ return lx->may_be_initialized() && 
+			rx->may_be_initialized(); }
+	bool must_be_initialized(void) const
+		{ return lx->must_be_initialized() && 
+			rx->must_be_initialized(); }
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -441,7 +525,12 @@ virtual	ostream& dump(ostream& o) const;		// temporary
 virtual	string hash_string(void) const = 0;
 
 /** is initialized if is resolved to constant or some other formal */
+#if 0
 virtual bool is_initialized(void) const = 0;
+#else
+virtual bool may_be_initialized(void) const = 0;
+virtual bool must_be_initialized(void) const = 0;
+#endif
 
 /** is sane if range makes sense */
 virtual	bool is_sane(void) const = 0;
@@ -481,7 +570,18 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;		// unused?
 
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const {
+		return lower->may_be_initialized() &&
+			upper->may_be_initialized();
+	}
+	bool must_be_initialized(void) const {
+		return lower->must_be_initialized() &&
+			upper->must_be_initialized();
+	}
+#endif
 	bool is_sane(void) const;
 	bool is_static_constant(void) const;
 	// for now just return false, don't bother checking recursively...
@@ -534,7 +634,12 @@ public:
 	string hash_string(void) const;
 
 	const_range static_overlap(const const_range& r) const;
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const { return !empty(); }
+	bool must_be_initialized(void) const { return !empty(); }
+#endif
 	bool is_sane(void) const;
 	bool is_static_constant(void) const { return !empty(); }
 	bool is_loop_independent(void) const { return !empty(); }
@@ -655,6 +760,12 @@ class loop_range_list : public dynamic_range_list {
 	Don't forget their interpretation differs!
 	pint_expr is interpreted as a dimension collapse, 
 	whereas range_expr preserves dimension, even if range is one.  
+
+	Doesn't make sense to ask how many dimensions are in an index_list
+	because it depends on the instance_reference to which it is 
+	attached.  
+	Instead the index list can tell one how may dimensions
+	are *collapsed* by the element types.  
  */
 class index_list : public object {
 public:
@@ -668,9 +779,14 @@ virtual	string hash_string(void) const = 0;
 
 /** NOT THE SAME **/
 virtual	size_t size(void) const = 0;
-virtual	size_t dimensions(void) const = 0;
+virtual	size_t dimensions_collapsed(void) const = 0;
 
+#if 0
 virtual	bool is_initialized(void) const = 0;
+#else
+virtual	bool may_be_initialized(void) const = 0;
+virtual	bool must_be_initialized(void) const = 0;
+#endif
 virtual	bool is_static_constant(void) const = 0;
 virtual	bool is_loop_independent(void) const = 0;
 virtual	bool is_unconditional(void) const = 0;
@@ -701,9 +817,14 @@ public:
 
 /** NOT THE SAME **/
 	size_t size(void) const;
-	size_t dimensions(void) const;
+	size_t dimensions_collapsed(void) const;
 
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -732,9 +853,14 @@ public:
 
 /** NOT THE SAME **/
 	size_t size(void) const;
-	size_t dimensions(void) const;
+	size_t dimensions_collapsed(void) const;
 
+#if 0
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;

@@ -143,6 +143,8 @@ virtual	bool initialize(count_const_ptr<param_expr> e) = 0;
 virtual	count_const_ptr<param_expr> default_value(void) const = 0;
 
 	bool is_template_formal(void) const;
+
+#if 0
 /**
 	A parameter is considered "usable" if it is either initialized
 	to another expression, or it is a template formal.  
@@ -157,6 +159,11 @@ virtual	count_const_ptr<param_expr> default_value(void) const = 0;
 	\sa initialize
  */
 	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+//	bool is_initialized(void) const { return must_be_initialized(); }
+#endif
 
 /**
 	whether or not this can be resolved to some static constant value.
