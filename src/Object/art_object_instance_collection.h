@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.1 2005/02/23 21:21:28 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.2 2005/02/24 18:36:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -12,7 +12,6 @@
 
 #include <set>
 #include "multikey_set.h"
-// #include "ring_node.h"
 #include "packed_array_fwd.h"
 
 
@@ -179,15 +178,18 @@ instance_array<Tag,0>
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 class instance_array :
-	public typename class_traits<Tag>::instance_collection_type {
+	public class_traits<Tag>::instance_collection_type {
 friend class instance_collection;
 	typedef	instance_array<Tag,D>			this_type;
 	typedef	typename class_traits<Tag>::instance_collection_type
 							parent_type;
 public:
-	typedef	typename parent_type::instance_alias_ptr_type
+	typedef	typename class_traits<Tag>::instance_alias_type
+							instance_alias_type;
+//	typedef	typename parent_type::instance_alias_ptr_type
+	typedef	typename class_traits<Tag>::instance_alias_ptr_type
 							instance_alias_ptr_type;
-	typedef	typename parent_type::alias_collection_type
+	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	instance_alias<Tag,D>			element_type;
 	/**
@@ -277,15 +279,17 @@ public:
 //-----------------------------------------------------------------------------
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 class instance_array<Tag,0> :
-		public typename class_traits<Tag>::instance_collection_type {
+		public class_traits<Tag>::instance_collection_type {
 friend class instance_collection<Tag>;
 	typedef	typename class_traits<Tag>::instance_collection_type
 							parent_type;
-	typedef	instance_array<Tag,0>			this_type;
+	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename parent_type::instance_alias_ptr_type
+	typedef	typename class_traits<Tag>::instance_alias_type
+							instance_alias_type;
+	typedef	typename class_traits<Tag>::instance_alias_ptr_type
 							instance_alias_ptr_type;
-	typedef	typename parent_type::alias_collection_type
+	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	instance_alias<Tag,0>			instance_type;
 private:
@@ -328,7 +332,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-};	// end class array (specialized)
+};	// end class instance_array (specialized)
 
 //=============================================================================
 }	// end namespace entity

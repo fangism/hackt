@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.1 2005/02/23 21:21:27 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.2 2005/02/24 18:36:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -11,12 +11,16 @@
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool_fwd.h"
-#include "art_object_classification_details.h"
+#include "art_object_classification_details.h"		// temporary
 
 #include <set>
 #include "multikey_set.h"
 #include "ring_node.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_alias.h"
+#include "art_object_instance_collection.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -41,6 +45,7 @@ template <size_t>
 class bool_array;
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Information structure for a heirarchical name for a bool.  
 	This may be extended arbitrarily to contain attributes.  
@@ -155,6 +160,7 @@ public:
 	};	// end class transient_info_collector
 
 };	// end class bool_instance_alias_info
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
 #if 0

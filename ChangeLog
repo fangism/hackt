@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-05:
+	  Chose bool_instance_alias_info as the first guinea pig class
+	  to use instance_alias_info class template, 
+	  based on class_traits<Tag>.  
+	  Nothing blew up, all tests still intact.
+
+
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-01:

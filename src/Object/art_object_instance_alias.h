@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.4.1 2005/02/23 21:21:27 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.4.2 2005/02/24 18:36:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -27,12 +27,10 @@ using util::multikey_set_element_derived;
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
-#if 0
-class instance;
+// class instance;
 
-template <size_t>
-class array;
-#endif
+template <class, size_t>
+class instance_array;
 
 //=============================================================================
 #define	INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE				\
@@ -156,7 +154,7 @@ public:
 			manager(m) { }
 
 		void
-		operator () (const instance_alias_info&);
+		operator () (const INSTANCE_ALIAS_INFO_CLASS&);
 	};	// end class transient_info_collector
 
 };	// end class instance_alias_info
@@ -177,29 +175,6 @@ template <class Tag>
 ostream&
 operator << (ostream&,
 	const typename instance_alias_info<Tag>::instance_alias_base&);
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	An actual instantiated instance of a bool, 
-	what used to be called "node".
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
-	This is like PrsNode from prsim.  
-
-	Should be pool allocated for efficiency.  
- */
-class instance : public persistent {
-	// need one back-reference to one alias (connected in a ring)
-	never_ptr<const instance_alias_base>	back_ref;
-public:
-	instance();
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class instance
-#endif
 
 //-----------------------------------------------------------------------------
 #define	INSTANCE_ALIAS_TEMPLATE_SIGNATURE				\
@@ -231,6 +206,15 @@ public:
 	typedef	multikey_set_element_derived<D, pint_value_type, 
 		typename instance_alias_info<Tag>::instance_alias_base>
 							parent_type;
+	/**
+		Dimension-generic container type.  
+	 */
+	typedef	typename class_traits<Tag>::instance_collection_type
+						instance_collection_type;
+	/**
+		Dimension-specific container type, 
+		should be sub-type of instance_collection_type;
+	 */
 	typedef	instance_array<Tag,D>			container_type;
 private:
 	/**
@@ -254,7 +238,7 @@ public:
 	instance_alias(const key_type& k) : parent_type(k) { }
 
 	instance_alias(const key_type& k, 
-		const never_ptr<const instance_collection> p) :
+		const never_ptr<const instance_collection_type> p) :
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
 
@@ -315,7 +299,7 @@ public:
  */
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 class instance_alias<Tag,0> :
-	public typename instance_alias_info<Tag>::instance_alias_base {
+	public instance_alias_info<Tag>::instance_alias_base {
 private:
 	typedef	instance_alias<Tag,0>			this_type;
 	typedef	typename instance_alias_info<Tag>::instance_alias_base

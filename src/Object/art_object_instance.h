@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.2.3 2005/02/22 03:00:56 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.2.3.2.1 2005/02/24 18:36:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
+
+#define	USE_INSTANCE_COLLECTION_TEMPLATE		1
 
 #include "art_object_instance_base.h"
 #include "art_object_index.h"

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.1 2005/02/23 21:21:27 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.2 2005/02/24 18:36:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -28,6 +28,9 @@
 #include "art_built_ins.h"
 
 #include "art_object_classification_details.h"
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.tcc"
+#endif
 
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
@@ -121,6 +124,7 @@ using util::persistent_traits;
 //=============================================================================
 // class bool_instance_alias_info method definitions
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // inline
 bool_instance_alias_info::~bool_instance_alias_info() { }
 
@@ -201,6 +205,7 @@ bool_instance_alias_info::transient_info_collector::operator () (
 		const bool_instance_alias_info& b) {
 	b.collect_transient_info_base(manager);
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // typedef bool_instance_alias_base function definitions

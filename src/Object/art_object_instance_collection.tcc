@@ -1,18 +1,22 @@
 /**
-	\file "art_object_instance_int.cc"
+	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.1 2005/02/23 21:21:28 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.2 2005/02/24 18:36:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
 #define	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
 
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #include <exception>
 #include <iostream>
 #include <algorithm>
@@ -28,6 +32,7 @@
 #include "ring_node.tcc"
 #include "packed_array.tcc"
 
+// #include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
 #include "stacktrace.h"
@@ -125,10 +130,26 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Virtually pure virtual.  Never supposed to be called, 
+	yet this definition must exist to allow construction
+	of the types that immedately derived from this type.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 		const persistent_object_manager&, ostream&) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really, pure virtual.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
+		const persistent_object_manager&, istream&) {
 	DIE;
 }
 
@@ -359,6 +380,7 @@ INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 		return false;
 	}
 #endif
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -476,19 +498,19 @@ operator << (ostream& o, const instance_alias<Tag,D>& b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::array() : parent_type(D), collection() {
+INSTANCE_ARRAY_CLASS::instance_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::array(const scopespace& o, const string& n) :
+INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::~array() { }
+INSTANCE_ARRAY_CLASS::~instance_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -618,27 +640,29 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_ptr_type
+typename INSTANCE_ARRAY_CLASS::instance_alias_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
+	typedef	typename INSTANCE_ARRAY_CLASS::instance_alias_ptr_type
+							return_type;
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
 	const const_iterator it(this->collection.find(index));
 	if (it == collection.end()) {
 		cerr << "ERROR: reference to uninstantiated int " <<
 			get_qualified_name() << " at index: " << i << endl;
-		return instance_ptr_type(NULL);
+		return return_type(NULL);
 	}
 	const element_type& b(*it);
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
-		return instance_ptr_type(const_cast<element_type*>(&b));
+		return return_type(const_cast<element_type*>(&b));
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
 		cerr << "ERROR: reference to uninstantiated int " <<
 			get_qualified_name() << " at index: " << i << endl;
-		return instance_ptr_type(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -652,7 +676,8 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		list<instance_ptr_type>& l, const const_range_list& r) const {
+		list<instance_alias_ptr_type>& l,
+		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 //	multikey_generator<D, pvalue_type> key_gen;
 	key_generator_type key_gen;
@@ -664,7 +689,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 		if (it == collection.end()) {
 			cerr << "FATAL: reference to uninstantiated int index "
 				<< key_gen << endl;
-			l.push_back(instance_ptr_type(NULL));
+			l.push_back(instance_alias_ptr_type(NULL));
 			ret = false;
 		} else {
 		const element_type& pi(*it);
@@ -675,7 +700,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 		} else {
 			cerr << "FATAL: reference to uninstantiated int index "
 				<< key_gen << endl;
-			l.push_back(instance_ptr_type(NULL));
+			l.push_back(instance_alias_ptr_type(NULL));
 			ret = false;
 		}
 		}
@@ -747,7 +772,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_base* const next = e.get_next();
+	const instance_alias_type* const next = e.get_next();
 	this->next->write_next_connection(pom, os);
 }
 
@@ -907,13 +932,15 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_ptr_type
+typename INSTANCE_SCALAR_CLASS::instance_alias_ptr_type
 INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
+	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_ptr_type
+						return_type;
 	if (!this->the_instance.valid()) {
 		cerr << "ERROR: Reference to uninstantiated int!" << endl;
-		return instance_ptr_type(NULL);
-	} else	return instance_ptr_type(
-		const_cast<instance_type*>(&this->the_instance));
+		return return_type(NULL);
+	} else	return return_type(
+		const_cast<instance_alias_type*>(&this->the_instance));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
 }
@@ -926,7 +953,8 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		list<instance_ptr_type>& l, const const_range_list& r) const {
+		list<instance_alias_ptr_type>& l,
+		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;
 	INVARIANT(r.empty());
@@ -942,8 +970,8 @@ bool
 INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
 	if (this->the_instance.valid()) {
-		*(a.begin()) = never_ptr<instance_type>(
-			const_cast<instance_type*>(&this->the_instance));
+		*(a.begin()) = instance_alias_ptr_type(
+			const_cast<instance_alias_type*>(&this->the_instance));
 		return false;
 	} else {
 		cerr << "ERROR: Reference to uninstantiated int!" << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.2 2005/02/24 01:03:13 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.3 2005/02/24 18:36:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -108,7 +108,12 @@ struct class_traits {
 //=============================================================================
 // some useful forward declarations, because I can't find a better place...
 
+#if 0
 class bool_instance_alias_info;
+#else
+typedef	instance_alias_info<bool_tag>	bool_instance_alias_info;
+#endif
+
 class int_instance_alias_info;
 class enum_instance_alias_info;
 class datastruct_instance_alias_info;
