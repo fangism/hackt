@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.2 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_identifier.h,v 1.2.18.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef __ART_PARSER_IDENTIFIER_H__
@@ -16,7 +16,11 @@ using namespace util::memory;		// for experimental pointer classes
 
 namespace parser {
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const token_identifier>	qualified_id_base;
+#else
 typedef	node_list<const token_identifier,scope>	qualified_id_base;
+#endif
 
 /**
 	Generalized scoped identifier, referring to a type or instance.  

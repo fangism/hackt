@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.9 2005/02/27 22:11:58 fang Exp $
+	$Id: art_parser_instance.h,v 1.9.18.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -57,13 +57,18 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
+#if USE_NEW_NODE_LIST
+typedef	node_list<const expr>			alias_list_base;
+#else
+typedef	node_list<const expr,alias>		alias_list_base;
+#endif
+
 /**
 	A list of lvalue expressions aliased/connected together.  
  */
-class alias_list : public instance_management, 
-		public node_list<const expr,alias> {
+class alias_list : public instance_management, public alias_list_base {
 private:
-	typedef node_list<const expr,alias>		alias_list_base;
+	typedef alias_list_base			parent_type;
 public:
 	explicit
 	alias_list(const expr* e);
@@ -139,14 +144,18 @@ virtual	never_ptr<const object>
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NEW_NODE_LIST
+typedef	node_list<const instance_base>		instance_id_list_base;
+#else
 typedef	node_list<const instance_base,comma>	instance_id_list_base;
+#endif
 
 /**
 	Instance identifier list.  
  */
 class instance_id_list : public instance_id_list_base {
 protected:
-	typedef	instance_id_list_base		parent;
+	typedef	instance_id_list_base		parent_type;
 public:
 	explicit
 	instance_id_list(const instance_base* i);
@@ -371,15 +380,20 @@ public:
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NEW_NODE_LIST
+typedef	node_list<const guarded_definition_body>
+		guarded_definition_body_list_base;
+#else
 typedef	node_list<const guarded_definition_body,thickbar>
 		guarded_definition_body_list_base;
+#endif
 
 /**
 	Conditional (guarded) body inside definition.  
  */
 class guarded_definition_body_list : public guarded_definition_body_list_base {
 protected:
-	typedef	guarded_definition_body_list_base		parent;
+	typedef	guarded_definition_body_list_base		parent_type;
 public:
 	explicit
 	guarded_definition_body_list(const guarded_definition_body* g);

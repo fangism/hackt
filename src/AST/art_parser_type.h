@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.2 2005/02/25 07:23:56 fang Exp $
+	$Id: art_parser_type.h,v 1.2.18.1 2005/03/12 03:43:08 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_H__
@@ -47,14 +47,18 @@ virtual	never_ptr<const object>
 };	// end class type_id
 
 //-----------------------------------------------------------------------------
+#if USE_NEW_NODE_LIST
+typedef node_list<const concrete_type_ref>		data_type_ref_list_base;
+#else
 typedef node_list<const concrete_type_ref,comma>	data_type_ref_list_base;
+#endif
 	// consider making concrete_datatype_ref sub-class
 	// or overriding class's check_build
 
 /// list of base data types
 class data_type_ref_list : public data_type_ref_list_base {
 protected:
-	typedef	data_type_ref_list_base			parent;
+	typedef	data_type_ref_list_base			parent_type;
 public:
 	explicit
 	data_type_ref_list(const concrete_type_ref* c);

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.9 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_expr.h,v 1.9.18.1 2005/03/12 03:43:06 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -305,7 +305,12 @@ public:
 };	// end class logical_expr
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const expr>			array_concatenation_base;
+#else
 typedef	node_list<const expr,pound>		array_concatenation_base;
+#endif
+
 /**
 	Concatenation of arrays to make bigger arrays.  
  */

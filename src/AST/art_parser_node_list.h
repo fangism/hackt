@@ -1,13 +1,11 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.5 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_node_list.h,v 1.5.8.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
 #define __ART_PARSER_NODE_LIST_H__
-
-#define	USE_NEW_NODE_LIST		0
 
 #include "STL/list.h"
 #include "art_parser_fwd.h"
@@ -24,6 +22,7 @@ using util::memory::count_ptr;
 //=============================================================================
 // replacement node list
 
+// defined in "art_parser_fwd.h"
 #if USE_NEW_NODE_LIST
 
 class node_position;

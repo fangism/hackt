@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.17 2005/03/11 08:47:24 fang Exp $
+	$Id: art_parser_expr.cc,v 1.17.2.1 2005/03/12 03:43:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -526,7 +526,7 @@ range::check_build(context& c) const {
 //=============================================================================
 // class range_list method definitions
 
-range_list::range_list(const range* r) : parent(r) {
+range_list::range_list(const range* r) : parent_type(r) {
 }
 
 range_list::~range_list() { }
@@ -597,7 +597,7 @@ range_list::check_build(context& c) const {
 //=============================================================================
 // class dense_range_list method definitions
 
-dense_range_list::dense_range_list(const expr* r) : parent(r) {
+dense_range_list::dense_range_list(const expr* r) : parent_type(r) {
 }
 
 dense_range_list::~dense_range_list() {

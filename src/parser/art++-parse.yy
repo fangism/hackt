@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.15 2005/03/02 05:27:49 fang Exp $
+	$Id: art++-parse.yy,v 1.15.14.1 2005/03/12 03:43:08 fang Exp $
  */
 
 %{
@@ -173,6 +173,7 @@ extern const char* const yyrule[];
 	This is done using yacc-union-type.awk.  
 ***/
 	terminal*		_terminal;
+	node_position*		_node_position;
 	token_keyword*		_token_keyword;
 	token_string*		_token_string;
 	token_char*		_token_char;

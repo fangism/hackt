@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.9 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_hse.cc,v 1.9.8.1 2005/03/12 03:43:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -233,7 +233,7 @@ selection::~selection() { }
 
 CONSTRUCTOR_INLINE
 det_selection::det_selection(const guarded_command* n) :
-		selection(), det_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -243,12 +243,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
 line_position
 det_selection::leftmost(void) const {
-	return det_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 det_selection::rightmost(void) const {
-	return det_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -262,7 +262,7 @@ det_selection::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 nondet_selection::nondet_selection(const guarded_command* n) :
-		selection(), nondet_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -272,12 +272,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
 line_position
 nondet_selection::leftmost(void) const {
-	return nondet_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 nondet_selection::rightmost(void) const {
-	return nondet_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>

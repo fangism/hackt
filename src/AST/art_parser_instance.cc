@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.20 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_instance.cc,v 1.20.8.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -93,7 +93,7 @@ instance_management::~instance_management() {
  */
 CONSTRUCTOR_INLINE
 alias_list::alias_list(const expr* e) :
-		instance_management(), alias_list_base(e) {
+		instance_management(), parent_type(e) {
 }
 
 DESTRUCTOR_INLINE
@@ -413,7 +413,7 @@ instance_array::check_build(context& c) const {
 //=============================================================================
 // class instance_id_list method definitions
 
-instance_id_list::instance_id_list(const instance_base* i) : parent(i) { }
+instance_id_list::instance_id_list(const instance_base* i) : parent_type(i) { }
 
 instance_id_list::~instance_id_list() { }
 
@@ -775,7 +775,7 @@ guarded_definition_body::check_build(context& c) const {
 
 guarded_definition_body_list::guarded_definition_body_list(
 		const guarded_definition_body* g) :
-		parent(g) { }
+		parent_type(g) { }
 
 guarded_definition_body_list::~guarded_definition_body_list() { }
 

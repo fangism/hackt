@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.7 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_chp.h,v 1.7.8.1 2005/03/12 03:43:05 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -45,8 +45,6 @@ virtual	never_ptr<const object>
 	check_build(context& ) const = 0;
 #endif
 };
-
-// typedef	node_list<const statement,semicolon>	stmt_list;
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -238,6 +236,10 @@ class communication : public statement {
 protected:
 	const excl_ptr<const expr>		chan;
 	const excl_ptr<const token_char>	dir;
+#if USE_NEW_NODE_LIST
+public:
+	static const char			separator[];	// comma
+#endif
 public:
 	communication(const expr* c, const token_char* d);
 
@@ -248,10 +250,19 @@ virtual	~communication();
 };
 
 //-----------------------------------------------------------------------------
-class comm_list : public statement,
-		public node_list<const communication,comma> {
+/// base type for CHP communication list
+#if USE_NEW_NODE_LIST
+typedef	node_list<const communication>			comm_list_base;
+#else
+typedef	node_list<const communication,comma>		comm_list_base;
+#endif
+
+/**
+	CHP concurrent communication list.  
+ */
+class comm_list : public statement, public comm_list_base {
 private:
-	typedef	node_list<const communication,comma>		comm_list_base;
+	typedef	comm_list_base				parent_type;
 public:
 	explicit
 	comm_list(const communication* c);
@@ -334,11 +345,16 @@ virtual	ostream&
 };
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const guarded_command>		det_selection_list_base;
+#else
+typedef	node_list<const guarded_command,thickbar>	det_selection_list_base;
+#endif
+
 /// container for deterministic selection statement
-class det_selection : public selection, 
-		public node_list<const guarded_command,thickbar> {
+class det_selection : public selection, public det_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
+	typedef	det_selection_list_base			parent_type;
 public:
 	explicit
 	det_selection(const guarded_command* n);
@@ -354,7 +370,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	det_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>
@@ -363,11 +379,16 @@ using	det_sel_base::where;
 };
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const guarded_command>	nondet_selection_list_base;
+#else
+typedef	node_list<const guarded_command,colon>	nondet_selection_list_base;
+#endif
+
 /// container for non-deterministic selection statement
-class nondet_selection : public selection, 
-		public node_list<const guarded_command,colon> {
+class nondet_selection : public selection, public nondet_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
+	typedef	nondet_selection_list_base		parent_type;
 public:
 	explicit
 	nondet_selection(const guarded_command* n);
@@ -383,7 +404,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	nondet_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>
@@ -392,11 +413,16 @@ using	nondet_sel_base::where;
 };
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const guarded_command>	prob_selection_list_base;
+#else
+typedef	node_list<const guarded_command,thickbar>	prob_selection_list_base;
+#endif
+
 /// container for probablistic selection statement
-class prob_selection : public selection, 
-		public node_list<const guarded_command,thickbar> {
+class prob_selection : public selection, public prob_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,thickbar>	prob_sel_base;
+	typedef	prob_selection_list_base		parent_type;
 public:
 	explicit
 	prob_selection(const guarded_command* n);
@@ -412,7 +438,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	prob_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>

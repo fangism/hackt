@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.15 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_formal.cc,v 1.15.8.1 2005/03/12 03:43:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -94,7 +94,8 @@ data_param_id::check_build(context& c) const {
 //=============================================================================
 // class data_param_id_list method definitions
 
-data_param_id_list::data_param_id_list(const data_param_id* d) : parent(d) { }
+data_param_id_list::data_param_id_list(const data_param_id* d) :
+		parent_type(d) { }
 
 data_param_id_list::~data_param_id_list() { }
 
@@ -133,7 +134,7 @@ data_param_decl::check_build(context& c) const {
 // class data_param_decl_list method definitions
 
 data_param_decl_list::data_param_decl_list(const data_param_decl* d) :
-		parent(d) { }
+		parent_type(d) { }
 
 data_param_decl_list::~data_param_decl_list() { }
 
@@ -209,7 +210,7 @@ port_formal_id::check_build(context& c) const {
 // class port_formal_id_list method definitions
 
 port_formal_id_list::port_formal_id_list(const port_formal_id* p) :
-		parent(p) { }
+		parent_type(p) { }
 
 port_formal_id_list::~port_formal_id_list() { }
 
@@ -272,10 +273,10 @@ port_formal_decl::check_build(context& c) const {
 //=============================================================================
 // class port_formal_decl_list method definitions
 
-port_formal_decl_list::port_formal_decl_list() : parent() { }
+port_formal_decl_list::port_formal_decl_list() : parent_type() { }
 
 port_formal_decl_list::port_formal_decl_list(const port_formal_decl* p) :
-		parent(p) { }
+		parent_type(p) { }
 
 port_formal_decl_list::~port_formal_decl_list() { }
 
@@ -383,7 +384,7 @@ template_formal_id::check_build(context& c) const {
 // class template_formal_id_list method definitions
 
 template_formal_id_list::template_formal_id_list(const template_formal_id* t) :
-		parent(t) { }
+		parent_type(t) { }
 
 template_formal_id_list::~template_formal_id_list() { }
 
@@ -448,7 +449,7 @@ template_formal_decl::check_build(context& c) const {
 
 template_formal_decl_list::template_formal_decl_list(
 		const template_formal_decl* t) :
-		parent(t) { }
+		parent_type(t) { }
 
 template_formal_decl_list::~template_formal_decl_list() { }
 

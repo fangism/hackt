@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.17 2005/03/06 22:45:48 fang Exp $
+	$Id: art_parser_base.cc,v 1.17.8.1 2005/03/12 03:43:05 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -789,50 +789,9 @@ concrete_type_ref::check_build(context& c) const {
 // class data_type_ref_list method definitions
 
 data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
-		parent(c) { }
+		parent_type(c) { }
 
 data_type_ref_list::~data_type_ref_list() { }
-
-//=============================================================================
-#if 0
-// moved to "art_parser_instance.cc"
-// class guarded_definition_body method definitions
-
-CONSTRUCTOR_INLINE
-guarded_definition_body::guarded_definition_body(const expr* e, 
-		const terminal* a, const definition_body* b) :
-		instance_management(), guard(e), arrow(a), body(b) {
-	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
-}
-
-DESTRUCTOR_INLINE
-guarded_definition_body::~guarded_definition_body() {
-}
-
-ostream&
-guarded_definition_body::what(ostream& o) const {
-	return o << "(guarded-def-body)";
-}
-
-line_position
-guarded_definition_body::leftmost(void) const {
-	return guard->leftmost();
-}
-
-line_position
-guarded_definition_body::rightmost(void) const {
-	return body->rightmost();
-}
-
-//=============================================================================
-// class guarded_definition_body_list method definitions
-
-guarded_definition_body_list::guarded_definition_body_list(
-		const guarded_definition_body* g) :
-		parent(g) { }
-
-guarded_definition_body_list::~guarded_definition_body_list() { }
-#endif
 
 //=============================================================================
 }	// end namespace parser

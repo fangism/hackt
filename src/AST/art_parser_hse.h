@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.8 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_hse.h,v 1.8.8.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -45,7 +45,11 @@ virtual	never_ptr<const object>
 #endif
 };	// end class statement
 
+#if USE_NEW_NODE_LIST
+typedef	node_list<const statement>		stmt_list;
+#else
 typedef	node_list<const statement,semicolon>	stmt_list;
+#endif
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -217,11 +221,16 @@ virtual	ostream&
 };	// end class selection
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef	node_list<const guarded_command>		det_selection_list_base;
+#else
+typedef	node_list<const guarded_command,thickbar>	det_selection_list_base;
+#endif
+
 /// container for deterministic selection statement
-class det_selection : public selection, 
-		public node_list<const guarded_command,thickbar> {
+class det_selection : public selection, public det_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
+	typedef	det_selection_list_base			parent_type;
 public:
 	explicit
 	det_selection(const guarded_command* n);
@@ -237,7 +246,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	det_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>
@@ -246,11 +255,16 @@ using	det_sel_base::where;
 };	// end class det_selection
 
 //=============================================================================
+#if USE_NEW_NODE_LIST
+typedef node_list<const guarded_command>	nondet_selection_list_base;
+#else
+typedef node_list<const guarded_command,colon>	nondet_selection_list_base;
+#endif
+
 /// container for non-deterministic selection statement
-class nondet_selection : public selection, 
-		public node_list<const guarded_command,colon> {
+class nondet_selection : public selection, public nondet_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
+	typedef	nondet_selection_list_base		parent_type;
 public:
 	explicit
 	nondet_selection(const guarded_command* n);
@@ -266,7 +280,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	nondet_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>

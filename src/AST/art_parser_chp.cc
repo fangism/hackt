@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.9 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_chp.cc,v 1.9.8.1 2005/03/12 03:43:05 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
@@ -292,7 +292,7 @@ communication::leftmost(void) const {
 
 CONSTRUCTOR_INLINE
 comm_list::comm_list(const communication* c) :
-		statement(), comm_list_base(c) {
+		statement(), parent_type(c) {
 }
 
 DESTRUCTOR_INLINE
@@ -303,12 +303,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(comm_list)
 
 line_position
 comm_list::leftmost(void) const {
-	return comm_list_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 comm_list::rightmost(void) const {
-	return comm_list_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -382,7 +382,7 @@ selection::~selection() { }
 
 CONSTRUCTOR_INLINE
 det_selection::det_selection(const guarded_command* n) :
-		selection(), det_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -392,12 +392,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
 line_position
 det_selection::leftmost(void) const {
-	return det_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 det_selection::rightmost(void) const {
-	return det_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -411,7 +411,7 @@ det_selection::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 nondet_selection::nondet_selection(const guarded_command* n) :
-		selection(), nondet_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -421,12 +421,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
 line_position
 nondet_selection::leftmost(void) const {
-	return nondet_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 nondet_selection::rightmost(void) const {
-	return nondet_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -439,8 +439,8 @@ nondet_selection::check_build(context& c) const {
 // class prob_selection method definitions
 
 CONSTRUCTOR_INLINE
-prob_selection::prob_selection(const guarded_command* n) : selection(),
-		prob_sel_base(n) {
+prob_selection::prob_selection(const guarded_command* n) :
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -450,12 +450,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
 
 line_position
 prob_selection::leftmost(void) const {
-	return prob_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 prob_selection::rightmost(void) const {
-	return prob_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>

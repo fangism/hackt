@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse_fwd.h"
 	Forward declarations for the HSE namespace.  
-	$Id: art_parser_hse_fwd.h,v 1.1 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_hse_fwd.h,v 1.1.8.1 2005/03/12 03:43:07 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_FWD_H__
@@ -16,7 +16,11 @@ namespace HSE {
 
 class body;
 class statement;
+#if USE_NEW_NODE_LIST
+typedef	node_list<const statement>		stmt_list;
+#else
 typedef	node_list<const statement,semicolon>	stmt_list;
+#endif
 class skip;
 class loop;
 class do_until;

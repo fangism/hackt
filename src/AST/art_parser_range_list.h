@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.2 2005/02/25 07:23:56 fang Exp $
+	$Id: art_parser_range_list.h,v 1.2.18.1 2005/03/12 03:43:08 fang Exp $
  */
 
 #ifndef __ART_PARSER_RANGE_LIST_H__
@@ -14,7 +14,7 @@ namespace ART {
 namespace parser {
 //=============================================================================
 /// base class for range_list
-typedef node_list<const range,none>	range_list_base;
+typedef node_list<const range>		range_list_base;
 
 /**
 	All sparse range lists are no C-style x[N][M], 
@@ -22,7 +22,7 @@ typedef node_list<const range,none>	range_list_base;
  */
 class range_list : public range_list_base {
 protected:
-	typedef	range_list_base				parent;
+	typedef	range_list_base				parent_type;
 	// no additional members
 public:
 	range_list(const range* r);
@@ -35,7 +35,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /// base class for dense_range_list
-typedef node_list<const expr,none>	dense_range_list_base;
+typedef node_list<const expr>		dense_range_list_base;
 
 /**
 	All dense range lists are no C-style x[N][M], 
@@ -43,7 +43,7 @@ typedef node_list<const expr,none>	dense_range_list_base;
  */
 class dense_range_list : public dense_range_list_base {
 protected:
-	typedef	dense_range_list_base			parent;
+	typedef	dense_range_list_base			parent_type;
 	// no additional members
 public:
 	explicit

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.3 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.3.18.1 2005/03/12 03:43:06 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
@@ -37,9 +37,9 @@ virtual	never_ptr<const object>
 };	// end class def_body_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// definition body is just a list of definition items
 typedef	node_list<const def_body_item>	def_body_item_list;
 
+/// definition body is just a list of definition items
 class definition_body : public def_body_item_list {
 protected:
 	typedef	def_body_item_list		parent;
