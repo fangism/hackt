@@ -1,0 +1,4 @@
+// should fail, dying on undefined type
+
+undefined_type id;
+

@@ -1,0 +1,5 @@
+This directory is reserved for testing the type-checking semantics
+for data types.  
+Inevitably, the features tested overlaps with those of namespaces, 
+however, we'll try to keep it to a minimum for now.  
+
