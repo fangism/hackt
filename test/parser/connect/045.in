@@ -1,0 +1,24 @@
+// should fail: see comment
+
+defproc egg(bool white; int yolk);
+defproc basket(egg egg_array[12]);
+defproc bundle(basket a, b, c[6]);
+
+bundle load;
+
+basket a_basket = load.a = load.c[2];
+
+load.a.egg_array[0] = load.c[4].egg_array[11];
+
+egg golden;
+
+load.a.egg_array[0..2] = load.b.egg_array[2..4];
+
+load.c[0].egg_array[1] = golden;
+
+int count = golden.yolk;
+bool crack = golden.white;
+
+int uncount = a_basket.egg_array[3].yolk.bogus;		// yolk is int!
+bool uncrack = a_basket.egg_array[5].white;
+

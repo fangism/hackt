@@ -1,0 +1,1 @@
+ERROR: int ::int has no public member named "bogus" at [22:42..46]

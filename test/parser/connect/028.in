@@ -1,0 +1,11 @@
+// should fail: sizes don't match
+
+int foo;
+
+defproc bar(int a, b[2]);
+
+bar none;
+
+none.a = foo;
+foo = none.b;		// scalar to array, wrong
+
