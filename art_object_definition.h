@@ -71,8 +71,7 @@ namespace entity {
 	scope space for template parameters.  
 	Awkward?
  */
-class typedef_base : virtual public definition_base, 
-		public scopespace {
+class typedef_base : virtual public definition_base, public scopespace {
 protected:
 	// no new members
 public:

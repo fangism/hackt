@@ -42,6 +42,7 @@ namespace entity {
 
 // forward declarations of classes defined here (table of contents)
 	class param_expr;
+	class const_param;
 	class param_expr_list;
 	class index_expr;		// BEWARE also in ART::parser!
 	class const_index;
@@ -106,6 +107,9 @@ virtual bool must_be_equivalent(const param_expr& p) const = 0;
 /** can be resolved to static constant value */
 virtual bool is_static_constant(void) const = 0;
 
+virtual	count_const_ptr<const_param>
+		static_constant_param(void) const = 0;
+
 /** doesn't depend on loop variables */
 virtual bool is_loop_independent(void) const = 0;
 
@@ -144,6 +148,9 @@ virtual bool may_be_equivalent(const param_expr& p) const = 0;
 virtual bool must_be_equivalent(const param_expr& p) const = 0;
 
 	bool is_static_constant(void) const { return true; }
+virtual	count_const_ptr<const_param>
+		static_constant_param(void) const = 0;
+
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 };	// end class const_param
@@ -154,14 +161,6 @@ virtual bool must_be_equivalent(const param_expr& p) const = 0;
 	Consider splitting into dynamic vs. const?
  */
 class param_expr_list : public object {
-//		public list<count_const_ptr<param_expr> >
-protected:
-	typedef	list<count_const_ptr<param_expr> >	parent;
-public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	param_expr_list();
 virtual	~param_expr_list();
@@ -170,6 +169,9 @@ virtual	size_t size(void) const = 0;
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
+
+virtual	excl_ptr<param_expr_list>
+		make_copy(void) const = 0;
 
 virtual	bool may_be_initialized(void) const = 0;
 virtual	bool must_be_initialized(void) const = 0;
@@ -203,12 +205,17 @@ public:
 	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_param_expr_list();
+// lazy: use default copy constructor
+//	const_param_expr_list(const const_param_expr_list& pl);
 	~const_param_expr_list();
 
 	size_t size(void) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+
+	excl_ptr<param_expr_list>
+		make_copy(void) const;
 
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -247,12 +254,17 @@ public:
 	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_param_expr_list();
+// lazy: use default copy constructor
+//	dynamic_param_expr_list(const dynamic_param_expr_list& pl);
 	~dynamic_param_expr_list();
 
 	size_t size(void) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+
+	excl_ptr<param_expr_list>
+		make_copy(void) const;
 
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -333,7 +345,7 @@ virtual	~const_index();
 class index_list : public object {
 public:
 	index_list();
-	~index_list();
+virtual	~index_list();
 
 // copy over most param_expr interface functions...
 virtual	ostream& what(ostream& o) const = 0;
@@ -379,6 +391,8 @@ public:
 /** NOT THE SAME **/
 	size_t size(void) const;
 	size_t dimensions_collapsed(void) const;
+
+	const_range_list collapsed_dimension_ranges(void) const;
 
 	using parent::begin;
 	using parent::end;
@@ -472,6 +486,9 @@ explicit const_range_list(const const_index_list& i);
 	size_t size(void) const;
 	const_range_list static_overlap(const range_expr_list& r) const;
 
+	void collapse_dimensions_wrt_indices(const const_index_list& il);
+
+	bool is_size_equivalent(const const_range_list& il) const;
 	bool operator == (const const_range_list& c) const;
 };	// end class const_range_list
 
@@ -525,6 +542,8 @@ virtual bool must_be_initialized(void) const = 0;
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
 virtual bool is_static_constant(void) const = 0;
+virtual	count_const_ptr<const_param>
+		static_constant_param(void) const;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
 };	// end class pbool_expr
@@ -549,6 +568,8 @@ virtual bool must_be_initialized(void) const = 0;
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
 virtual bool is_static_constant(void) const = 0;
+virtual	count_const_ptr<const_param>
+		static_constant_param(void) const;
 virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual int static_constant_int(void) const = 0;
@@ -679,6 +700,8 @@ public:
 	bool must_be_equivalent(const param_expr& e) const
 		{ return pint_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
+	count_const_ptr<const_param>
+		static_constant_param(void) const;
 	int static_constant_int(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
@@ -710,6 +733,8 @@ public:
 	bool must_be_equivalent(const param_expr& e) const
 		{ return pbool_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
+	count_const_ptr<const_param>
+		static_constant_param(void) const;
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }

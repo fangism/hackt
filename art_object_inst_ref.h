@@ -111,12 +111,20 @@ virtual	string hash_string(void) const;
  */
 class simple_instance_reference : public instance_reference_base {
 private:
+	/**
+		Helper class for evaluating sparse, multidimensional
+		collections.  
+	 */
 	typedef	base_multidimensional_sparse_set<int, const_range>
 						mset_base;
 protected:
-	/** The indices (optional) for this particular reference. */
+	/**
+		The indices (optional) for this particular reference.
+		Why modifiable pointer?
+		May need method to deep-copy the indices, unless
+		this pointer becomes counted.  
+	 */
 	excl_ptr<index_list>			array_indices;
-	// may have to be count_ptr...
 	/**
 		The current state of the instantiation collection
 		at the point of reference.

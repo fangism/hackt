@@ -88,6 +88,18 @@ public:
 	}
 
 	/**
+		Ditches pointer without returning it, 
+		maintaining reference count, deleting when appropriate.  
+	 */
+virtual	void abandon(void) = 0;
+	/**
+		Alias for abandon.
+	 */
+	void nullify(void) { abandon(); }
+	void ditch(void) { abandon(); }
+	void scrap(void) { abandon(); }
+
+	/**
 		Test for nullity.  
 		Will overriding in sub-classes be faster, 
 		without virtual call?
@@ -204,6 +216,8 @@ public:
 		last reference.  
 	 */
 	~count_ptr() { release(); }
+
+	void abandon(void) { release(); }
 
 	/**
 		Dereference.  
@@ -377,6 +391,8 @@ public:
 		last reference.  
 	 */
 	~count_const_ptr() { release(); }
+
+	void abandon(void) { release(); }
 
 	/**
 		Dereference.  

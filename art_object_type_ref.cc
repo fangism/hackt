@@ -63,7 +63,7 @@ fundamental_type_reference::template_param_string(void) const {
 			template_params->begin();
 		count_const_ptr<param_expr> e(*i);
 		if (e)	ret += e->hash_string();
-		for (i++ ; i!=template_params->end(); i++) {
+		for (i++; i!=template_params->end(); i++) {
 			ret += ",";		// add commas?
 			e = *i;
 			if (e)	ret += e->hash_string();
@@ -83,6 +83,62 @@ string
 fundamental_type_reference::get_qualified_name(void) const {
 	return get_base_def()->get_qualified_name() +template_param_string();
 }
+
+excl_ptr<param_expr_list>
+fundamental_type_reference::get_copy_template_params(void) const {
+	if (template_params)
+		return template_params->make_copy();
+	else	return excl_ptr<param_expr_list>(NULL);
+}
+
+#if 0
+UNVEIL LATER
+/**
+	Resolve canonical type.  Flattens the type through typedefs.  
+	Precondition: all template parameters must have been resolved to 
+	constants.  Other formals acceptable, as non-constants?
+	Passes its template_params top-down.  
+	Implementation: converts list of template parameters into 
+	a hash_map from param_instantiation (identifier) to 
+	actual parameter expression.  Effectively does substitution.  
+	\return the base equivalent type, unraveling parameters
+		through typedefs.  If base definition is not a typedef, 
+		simply returns a deep copy of itself.  
+ */
+excl_const_ptr<fundamental_type_reference>
+fundamental_type_reference::resolve_canonical_type(void) const {
+	typedef	excl_const_ptr<fundamental_type_reference>	return_type;
+	never_const_ptr<definition_base>
+		base_def(get_base_def());
+	assert(base_def);
+if (base_def.is_a<typedef_base>()) {
+	// then we need to resolve it recursively
+	// precondition: actuals' and formals' types already checked
+	// first, construct the actuals map (yes, on the stack)
+	template_actuals_map_type actuals_map;
+	if (template_params) {
+		base_def->fill_template_actuals_map(
+			actuals_map, *template_params);
+		// Make a deep copy of the typedef's template parameters, 
+		// substituting appropriately in the parameter expressions.
+
+		// How shall we substitute?  major dilemma... PUNT
+	} else {
+		// else leave it empty, no further context should be required 
+		// for the referenced type.  
+	}
+	// FINISH ME
+} else {
+	// is not a typedef, just return a deep-copy of itself.
+	if (template_params)
+		return return_type(base_def->make_fundamental_type_reference(
+			template_params->make_copy()));
+	else
+		return return_type(base_def->make_fundamental_type_reference());
+}
+}
+#endif
+
 
 /**
 	Please explain.  
@@ -115,19 +171,44 @@ fundamental_type_reference::may_be_equivalent(
 	never_const_ptr<definition_base> left(get_base_def());
 	never_const_ptr<definition_base> right(t.get_base_def());
 
-#if 0
+	bool have_typedef = false;
+
 	// TO resolve typedefs and aliases
 	// self-recursive call to expand parameters...
+	// or PUNT unrolling actual parameters until later...
 	never_const_ptr<typedef_base> ltdb(left.is_a<typedef_base>());
-	if (ltdb) {
-
-	}
 	never_const_ptr<typedef_base> rtdb(right.is_a<typedef_base>());
+	while (ltdb) {
+		have_typedef = true;
+		left = ltdb->get_base_type_ref()->get_base_def();
+		ltdb = left.is_a<typedef_base>();
+	}
+	while (rtdb) {
+		have_typedef = true;
+		right = rtdb->get_base_type_ref()->get_base_def();
+		rtdb = right.is_a<typedef_base>();
+	}
+#if 0
+	if (ltdb) {
+		ltdb->resolve_complete_type(template_params);
+	}
 	if (rtdb) {
-
+		rtdb->resolve_complete_type(t.template_params);
 	}
 	assert(!ltdb && !rtdb);		// down to canonical definitions
 #endif
+	if (have_typedef) {
+		if (left != right)
+			return false;
+		// overly conservative: doesn't even examine template params
+		// unrolling of actual template param actuals will
+		// eventually be checked.  
+		// In other words, I'm punting this for now.  
+		else	return true;
+		// should compare flattened unrolled param lists
+		// after substitutions (ideally)
+	}
+	// else continue normal type-check comparison
 
 	if (left != right) {
 #if 0

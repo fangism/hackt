@@ -201,19 +201,23 @@ simple_instance_reference::must_be_densely_packed(void) const {
 /**
 	Repacks the instance collection form the point of reference 
 	into a dense array, if possible.  
+	No dimension-collapsing in this routine!
+	Just checks for coverage and compactness.  
 	If fails, returns empty list.  
 	Prerequisites: must already satisfy:
 		non-zero dimensions
 		must_be_densely_packed (or not)
 		has_static_constant_dimensions
+	\return dense range list representation of the instance collection
+		if it is indeed compact, else returns an empty list.  
  */
 const_range_list
 simple_instance_reference::static_constant_dimensions(void) const {
 	const size_t base_dim = get_inst_base()->dimensions();
-	assert(base_dim);
+	assert(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
-		never_const_ptr<index_list> il(array_indices);
-		never_const_ptr<const_index_list>
+		const never_const_ptr<index_list> il(array_indices);
+		const never_const_ptr<const_index_list>
 			cil(il.is_a<const_index_list>());
 		if (!cil)	// is dynamic
 			return const_range_list();
@@ -221,13 +225,16 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		excl_ptr<mset_base> fui =
 			unroll_static_instances(base_dim);
 		assert(fui);
-		// convert index to ranges
+		// convert index to ranges, but DON'T COLLAPSE dimensions yet!
+		// should collapse dimensions AFTER checking coverage
+		// and compactness of the range.  
 		const const_range_list crl(*cil);
 		const mset_base::range_list_type
 			rl(fui->query_compact_dimensions(crl));
 		return rl;	// will probably have to convert
 	} else {
 		// not indexed, implicitly refers to entire collection
+		// no dimensions will be collapsed
 		excl_ptr<mset_base> fui = unroll_static_instances(base_dim);
 		assert(fui);
 		const mset_base::range_list_type
@@ -371,18 +378,19 @@ simple_instance_reference::may_be_type_equivalent(
 
 	// TO DO: factor this section code out to a method for re-use.  
 	// note: is dimensions of the *reference* not the instantiation!
-	if (dimensions() != i.dimensions()) {
+	const size_t lid = dimensions();
+	const size_t rid = i.dimensions();
+	if (lid != rid) {
 		cerr << "Dimensions do not match! got: " << dimensions()
 			<< " and: " << i.dimensions() << "." << endl;
 		return false;
 	}
-	// catch simple 0-dimensional case, based on the inst_bases
-	if (lib->dimensions() == 0) {
-		assert(rib->dimensions() == 0);
-		// otherwise should've been caught by dimension comparison
+	// catch cases where one of them is scalar (zero-dimensional)
+	if (!lid) {
+		assert(!rid);
 		return true;
 	}
-	// fall-through handle multidimensional case
+	// else fall-through handle multidimensional case
 	if (has_static_constant_dimensions() &&
 			i.has_static_constant_dimensions()) {
 
@@ -391,8 +399,15 @@ simple_instance_reference::may_be_type_equivalent(
 		// multidimensional indices, and don't preserve
 		// the dimension-collapsing information of indices.
 		// compare the array_indices directly
-		const const_range_list ldim(static_constant_dimensions());
-		const const_range_list rdim(i.static_constant_dimensions());
+		const_range_list ldim(static_constant_dimensions());
+		const_range_list rdim(i.static_constant_dimensions());
+		assert(!ldim.empty());
+		assert(!rdim.empty());
+
+#if 0
+		ldim.dump(cerr) << endl;
+		rdim.dump(cerr) << endl;
+#endif
 
 		// examine array_indices:
 		// walk the index lists, skipping collapsed dimensions
@@ -404,6 +419,7 @@ simple_instance_reference::may_be_type_equivalent(
 		if (!sir) {
 			// then is not a simple_instance_reference, 
 			// is complex-aggregate, which is not handled yet
+			// eventually get around to this
 			return true;
 		}
 		never_const_ptr<const_index_list>
@@ -421,17 +437,31 @@ simple_instance_reference::may_be_type_equivalent(
 		}
 		// lil and ril may still be NULL, 
 		// meaning implicit references to their entire collections
-		// now ready to compare non-collapsed dimensions...
-		// walk the const_range_lists
+
+		if (lil)
+			ldim.collapse_dimensions_wrt_indices(*lil);
+		if (ril)
+			rdim.collapse_dimensions_wrt_indices(*ril);
+
+#if 0
+		// move this code into const_range_list::is_size_equivalent()
 		const_range_list::const_iterator liter = ldim.begin();
 		const_range_list::const_iterator riter = rdim.begin();
+		// we know they're not empty...
+
+		// how do we handle case where no indices are given, 
+		// referencing entire collection?
+
+
 		// Is there a better way to write this?  I hate do-while...
 		int dim = 1;
-		do {
+		for (;; liter++, riter++) {
 			// dimension is collapsed if index is just a pint
-			while (liter!=ldim.end() && IS_A(const pint_const*, &*liter))
+			while (liter!=ldim.end() &&
+					IS_A(const pint_const*, &*liter))
 				liter++;
-			while (riter!=rdim.end() && IS_A(const pint_const*, &*riter))
+			while (riter!=rdim.end() &&
+					IS_A(const pint_const*, &*riter))
 				riter++;
 			if (liter == ldim.end() || riter == rdim.end())
 				break;
@@ -450,11 +480,20 @@ simple_instance_reference::may_be_type_equivalent(
 			}
 			// else continue checking...
 			dim++;
-		} while(1);
+		}
 		assert(liter == ldim.end() && riter == rdim.end());
 		// assertion, based on the dimensions matching
 		// if we've made it this far, all dimensions match
 		return true;
+#else
+		// will report error if mismatch
+		const bool ret = ldim.is_size_equivalent(rdim);
+		if (!ret) {
+			ldim.dump(cerr << "got: ") << " and: ";
+			rdim.dump(cerr) << endl;
+		}
+		return ret;
+#endif
 	} else {
 		// cannot deduce size/shape equivalence at this time
 		return true;
@@ -502,7 +541,8 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 			// dimension-trimming
 			while(crl.size() > dim)
 				crl.pop_back();
-			cov->add_ranges(crl);
+			const bool overlap = cov->add_ranges(crl);
+			assert(!overlap);		// sanity check!
 		}
 	}
 	return cov;

@@ -226,17 +226,10 @@ instantiation_base::template_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
-#if 0
-	never_const_ptr<fundamental_type_reference>
-		this_type(get_type_ref());
-	never_const_ptr<fundamental_type_reference>
-		b_type(b->get_type_ref());
-#else
 	count_const_ptr<fundamental_type_reference>
 		this_type(get_type_ref());
 	count_const_ptr<fundamental_type_reference>
 		b_type(b->get_type_ref());
-#endif
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
@@ -257,17 +250,10 @@ instantiation_base::port_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
-#if 0
-	never_const_ptr<fundamental_type_reference>
-		this_type(get_type_ref());
-	never_const_ptr<fundamental_type_reference>
-		b_type(b->get_type_ref());
-#else
 	count_const_ptr<fundamental_type_reference>
 		this_type(get_type_ref());
 	count_const_ptr<fundamental_type_reference>
 		b_type(b->get_type_ref());
-#endif
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
@@ -378,16 +364,6 @@ instantiation_base::check_expression_dimensions(const param_expr& pe) const {
 		// depth == 0 means instantiation is a single instance.  
 		assert(index_collection.size() == 0);
 		return (pe.dimensions() == 0);
-#if 0
-		if (pe.has_static_constant_dimensions()) {
-			const_range_list d(pe.static_constant_dimensions());
-			// better be empty for a scalar instance.  
-			return (d.empty());
-		} else {
-			// expression's dimension may be dynamic, conservatively
-			return true;
-		}
-#endif
 	}
 }
 
@@ -478,8 +454,10 @@ process_instantiation::get_type_ref(void) const {
  */
 never_const_ptr<instance_reference_base>
 process_instantiation::make_instance_reference(context& c) const {
+#if 0
 	cerr << "process_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
+#endif
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<process_instance_reference> new_ir(
@@ -529,37 +507,6 @@ param_instantiation::is_template_formal(void) const {
 	}
 }
 
-#if 0
-/**
-	Checks whether or not instance has been assigned.
-	Collectives -- conservatively return false.  
-	In this context, "default_value" refers to the initialized
-	value.  
-	Should check whether or not this is a template formal first!
-
-	Later distinguish between may_be_init_ and definitely_init_...
- */
-bool
-param_instantiation::is_initialized(void) const {
-//	return default_value();		// used to be just this
-
-	if (dimensions()) {
-		// for may_be_initialized, return true, 
-		// for definitely_initialized, return false.  
-		return false;
-	} else if (is_template_formal()) {
-	// first check whether or not this is a template formal parameter
-		return true;
-	} else {
-		// then is not a formal, default_value field is 
-		// interpreted as an initial value.  
-		count_const_ptr<param_expr> ret(default_value());
-		if (ret)
-			return ret->is_initialized();
-		else return false;
-	}
-}
-#else
 /**
 	For multidimensional instances, we don't keep track of initialization
 	of individual elements at compile-time, just conservatively 
@@ -612,7 +559,6 @@ param_instantiation::must_be_initialized(void) const {
 		else return false;
 	}
 }
-#endif
 
 bool
 param_instantiation::is_static_constant(void) const {
@@ -682,19 +628,11 @@ pbool_instantiation::what(ostream& o) const {
 	return o << "pbool-inst";
 }
 
-#if 0
-never_const_ptr<fundamental_type_reference>
-pbool_instantiation::get_type_ref(void) const {
-	return never_const_ptr<fundamental_type_reference>(&pbool_type);
-		// defined in "art_built_ins.h"
-}
-#else
 count_const_ptr<fundamental_type_reference>
 pbool_instantiation::get_type_ref(void) const {
 	return pbool_type_ptr;
 		// defined in "art_built_ins.h"
 }
-#endif
 
 /**
 	Initializes a parameter instance with an expression.
@@ -778,19 +716,6 @@ pbool_instantiation::make_instance_reference(context& c) const {
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
-#if 0
-bool
-pbool_instantiation::is_initialized(void) const {
-	if (ival)
-		return ival->is_initialized();
-	else	return false;
-#if 0
-	// used to be just this...
-	return ival;
-#endif
-}
-#endif
-
 /**
 	Checks whether or not a pbool was passed to a formal 
 	pbool parameter in a template.  
@@ -847,19 +772,11 @@ pint_instantiation::what(ostream& o) const {
 	return o << "pint-inst";
 }
 
-#if 0
-never_const_ptr<fundamental_type_reference>
-pint_instantiation::get_type_ref(void) const {
-	return never_const_ptr<fundamental_type_reference>(&pint_type);
-		// defined in "art_built_ins.h"
-}
-#else
 count_const_ptr<fundamental_type_reference>
 pint_instantiation::get_type_ref(void) const {
 	return pint_type_ptr;
 		// defined in "art_built_ins.h"
 }
-#endif
 
 /**
 	Initializes a parameter instance with an expression.

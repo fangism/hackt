@@ -431,6 +431,10 @@ public:
 	/**
 		Determines whether or not the sub-array indexed
 		is dense/compact.  
+		\param r the multidimensional range list to check.  
+		\return a multidimensional range list representing
+			the dense sub-array, if it is indeed dense, 
+			otherwise just returns an empty list.  
 	 */
 	range_list_type query_compact_dimensions(
 			const range_list_type& r) const {

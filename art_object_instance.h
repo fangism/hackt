@@ -64,11 +64,7 @@ public:
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
-#if 0
-	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#else
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#endif
 	// why is this a never_ptr?
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
@@ -89,11 +85,7 @@ public:
 virtual	~datatype_instantiation();
 
 virtual	ostream& what(ostream& o) const;
-#if 0
-virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#else
 virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#endif
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
@@ -120,11 +112,7 @@ public:
 virtual	~channel_instantiation();
 
 virtual	ostream& what(ostream& o) const;
-#if 0
-virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#else
 virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-#endif
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
 };	// end class channel_instantiation
@@ -152,28 +140,17 @@ virtual	~param_instantiation();
 virtual	ostream& what(ostream& o) const = 0;
 // virtual	ostream& dump(ostream& o) const;
 
-#if 0
-virtual	never_const_ptr<fundamental_type_reference>
-		get_type_ref(void) const = 0;
-#else
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
-#endif
 	// why is this never?
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
-
-#if 0
-// replacing sub-classes with type-specific initializations
-virtual	bool initialize(count_const_ptr<param_expr> e) = 0;
-#endif
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_const_ptr<param_expr> default_value(void) const = 0;
 
 	bool is_template_formal(void) const;
 
-#if 0
 /**
 	A parameter is considered "usable" if it is either initialized
 	to another expression, or it is a template formal.  
@@ -187,12 +164,8 @@ virtual	count_const_ptr<param_expr> default_value(void) const = 0;
 	\return true if initialized to an expression.  
 	\sa initialize
  */
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-//	bool is_initialized(void) const { return must_be_initialized(); }
-#endif
 
 virtual	bool assign_default_value(count_const_ptr<param_expr> p) = 0;
 
@@ -249,14 +222,9 @@ public:
 
 	ostream& what(ostream& o) const;
 
-#if 0
-	never_const_ptr<fundamental_type_reference>
-		get_type_ref(void) const;
-#else
 	// PROBLEM: built-in? needs to be consistent
 	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const;
-#endif
 	// why never?
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
@@ -300,13 +268,8 @@ public:
 
 	ostream& what(ostream& o) const;
 
-#if 0
-	never_const_ptr<fundamental_type_reference>
-		get_type_ref(void) const;
-#else
 	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const;
-#endif
 	// why never?
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;

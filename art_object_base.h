@@ -591,12 +591,16 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-
+	typedef	never_const_ptr<param_instantiation>
+					template_formals_value_type;
 	// double-maintenance...
-	typedef	hash_qmap<string, never_const_ptr<param_instantiation> >
+	typedef	hash_qmap<string, template_formals_value_type>
 					template_formals_map_type;
-	typedef	list<never_const_ptr<param_instantiation> >
+	typedef	list<template_formals_value_type>
 					template_formals_list_type;
+	/** map from param_instantiation to actual value passed */
+	typedef	hash_qmap<string, count_const_ptr<param_expr> >
+					template_actuals_map_type;
 
 protected:
 //	const string			key;
@@ -629,6 +633,9 @@ virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
 
 	bool is_defined(void) const { return defined; }
 	void mark_defined(void) { assert(!defined); defined = true; }
+
+	void fill_template_actuals_map(template_actuals_map_type& am, 
+		const param_expr_list& al) const;
 
 	never_const_ptr<param_instantiation>
 		lookup_template_formal(const string& id) const;
@@ -730,6 +737,10 @@ virtual	~type_reference_base() { }
 	definitions of the specific classes.  
  */
 class fundamental_type_reference : public type_reference_base {
+public:
+	/** map from param_instantiation to actual value passed */
+	typedef	definition_base::template_actuals_map_type
+						template_actuals_map_type;
 protected:
 	/**
 		Optional set of template parameters with which a
@@ -754,11 +765,17 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 	string get_qualified_name(void) const;
 	string hash_string(void) const;
 
+	excl_ptr<param_expr_list>
+		get_copy_template_params(void) const;
+
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
 	bool is_dynamically_parameter_dependent(void) const;
 
 	// later add dimensions and indices?
+
+excl_const_ptr<fundamental_type_reference>
+	resolve_canonical_type(void) const;
 
 /** wrapper for the next private function */
 static	excl_ptr<instantiation_base>
@@ -852,6 +869,12 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
 
+/**
+	Why is this a count_ptr?  because type_references can be reused
+	all over the place, so we reference count all type references.  
+	Unfortunately this forces us to do the same with static 
+	built-in types.  
+ */
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
 

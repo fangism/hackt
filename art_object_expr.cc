@@ -93,6 +93,16 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 	else	return false;
 }
 
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+ */
+count_const_ptr<const_param>
+pbool_expr::static_constant_param(void) const {
+	return count_const_ptr<const_param>(
+		new pbool_const(static_constant_bool()));
+}
+
 //-----------------------------------------------------------------------------
 // class pint_expr method definitions
 
@@ -118,6 +128,16 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 		else	return false;
 	}
 	else	return false;
+}
+
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+ */
+count_const_ptr<const_param>
+pint_expr::static_constant_param(void) const {
+	return count_const_ptr<const_param>(
+		new pint_const(static_constant_int()));
 }
 
 //-----------------------------------------------------------------------------
@@ -194,6 +214,13 @@ const_param_expr_list::dump(ostream& o) const {
 size_t
 const_param_expr_list::size(void) const {
 	return parent::size();
+}
+
+excl_ptr<param_expr_list>
+const_param_expr_list::make_copy(void) const {
+	return excl_ptr<param_expr_list>(
+		new const_param_expr_list(*this));
+	// use default copy constructor
 }
 
 bool
@@ -333,6 +360,13 @@ dynamic_param_expr_list::dump(ostream& o) const {
 size_t
 dynamic_param_expr_list::size(void) const {
 	return parent::size();
+}
+
+excl_ptr<param_expr_list>
+dynamic_param_expr_list::make_copy(void) const {
+	return excl_ptr<param_expr_list>(
+		new dynamic_param_expr_list(*this));
+	// use default copy constructor
 }
 
 bool
@@ -750,6 +784,17 @@ pint_const::hash_string(void) const {
 	return o.str();
 }
 
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+	Just copy-constructs.  
+ */
+count_const_ptr<const_param>
+pint_const::static_constant_param(void) const {
+	return count_const_ptr<const_param>(
+		new pint_const(val));
+}
+
 //=============================================================================
 // class pbool_const method definitions
 
@@ -766,6 +811,17 @@ pbool_const::dump(ostream& o) const {
 string
 pbool_const::hash_string(void) const {
 	return (val) ? "true" : "false";
+}
+
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+	Just copy-constructs.  
+ */
+count_const_ptr<const_param>
+pbool_const::static_constant_param(void) const {
+	return count_const_ptr<const_param>(
+		new pbool_const(val));
 }
 
 //=============================================================================
@@ -1346,6 +1402,61 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 }
 
 /**
+	Collapses the multidimensional range list using an
+	reference index list as an argument.  
+	For each index element of the argument that is an int, 
+	not a range, shorten the range list in that dimension.  
+	Make sure that the range is unity, as a sanity check.  
+ */
+void
+const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
+	assert(size() == il.size());
+	iterator i = begin();
+	const_index_list::const_iterator j = il.begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<pint_const>	// or pint_const
+			pi(j->is_a<pint_const>());
+		if (pi) {
+			assert(i->first == i->second);
+			erase(i);
+		} else {
+			const count_const_ptr<const_range>
+				pr(j->is_a<const_range>());
+			assert(pr);
+			assert(pr->first == i->first);
+			assert(pr->second == i->second);
+		}
+	}
+	assert(j == il.end());
+}
+
+/**
+	Size equality of two multidimensional ranges.  
+	Also reports error in size mismatch to stderr.  
+ */
+bool
+const_range_list::is_size_equivalent(const const_range_list& c) const {
+	if (size() != c.size())
+		return false;
+	// else check
+	int dim = 1;
+	const_iterator i = begin();
+	const_iterator j = c.begin();
+	for ( ; i!=end(); i++, j++, dim++) {
+		const int ldiff = i->second -i->first;
+		const int rdiff = j->second -j->first;
+		if (ldiff != rdiff) {
+			cerr << "Size of dimension " << dim <<
+				" does not match!  got: " << ldiff+1 <<
+				" and " << rdiff+1 << "." << endl;
+			return false;
+		}
+	}
+	assert(j == c.end());
+	return true;
+}
+
+/**
 	Whether two multidimensional range lists are identical.  
 	Not just whether or not the size of the spanned ranges are equal.  
  */
@@ -1360,6 +1471,7 @@ const_range_list::operator == (const const_range_list& c) const {
 		if (*i != *j)
 			return false;
 	}
+	assert(j == c.end());
 	return true;
 }
 
@@ -1458,6 +1570,21 @@ const_index_list::dimensions_collapsed(void) const {
 			ret++;
 		else assert(i->is_a<const_range>());
 			// sanity check
+	}
+	return ret;
+}
+
+const_range_list
+const_index_list::collapsed_dimension_ranges(void) const {
+	const_range_list ret;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		const count_const_ptr<const_range>
+			cr(i->is_a<const_range>());
+		if (cr)
+			ret.push_back(*cr);	// will copy
+		else assert(i->is_a<pint_const>());
+		// continue
 	}
 	return ret;
 }

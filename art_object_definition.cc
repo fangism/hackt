@@ -68,6 +68,52 @@ definition_base::dump_template_formals(ostream& o) const {
 }
 
 /**
+	Creates a map from template formals to actual values.  
+	Precondition: list passed by reference must be initially empty.
+	Considering making appropriate virtual call interface in 
+		param_expr_list?
+ */
+void
+definition_base::fill_template_actuals_map(
+		template_actuals_map_type& am, 
+		const param_expr_list& al) const {
+	assert(am.empty());
+	assert(template_formals_list.size() == al.size());
+	// convert to virtual call interface to param_expr_list?
+	const const_param_expr_list* cpl =
+		IS_A(const const_param_expr_list*, &al);
+	const dynamic_param_expr_list* dpl =
+		IS_A(const dynamic_param_expr_list*, &al);
+	template_formals_list_type::const_iterator f_iter =
+		template_formals_list.begin();
+if (cpl) {
+	const_param_expr_list::const_iterator i = cpl->begin();
+	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
+		// const-reference saves unnecessary copying
+		const template_formals_value_type& tf(*f_iter);
+		// reminder: value type is pointer to param_instantiation
+		assert(tf);
+		// reminder: actuals map is of count_ptr
+		assert(*i);
+		am[tf->get_name()] = *i;
+	}
+} else {
+	assert(dpl);
+	dynamic_param_expr_list::const_iterator i = dpl->begin();
+	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
+		// const-reference saves unnecessary copying
+		const template_formals_value_type& tf(*f_iter);
+		// reminder: value type is pointer to param_instantiation
+		assert(tf);
+		// reminder: actuals map is of count_ptr
+		assert(*i);
+		am[tf->get_name()] = *i;
+	}
+}
+}
+
+/**
+	Only looks up the identifier in the set of template formals.  
  */
 never_const_ptr<param_instantiation>
 definition_base::lookup_template_formal(const string& id) const {
@@ -240,7 +286,7 @@ if (ta) {
 		// if this point is reached, then fill-in was successfull
 		return true;
 	}
-	param_expr_list::iterator p_iter = ta->begin();
+	dynamic_param_expr_list::iterator p_iter = ta->begin();
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
 		// need method to check param_instantiation against param_expr
 		// eventually also work for complex aggregate types!
@@ -383,6 +429,7 @@ typedef_base::dump(ostream& o) const {
 #if 0
 UNVEIL LATER
 /**
+	Should this recursively resolve typedefs?
 	\param pa the actual parameters passed.  
 		Should we require that it be "initialized" i.e. constant or 
 		dependent on other template formals (in the case of typedefs
@@ -390,9 +437,50 @@ UNVEIL LATER
 		If dependent on template formals, this type cannot be 
 		fully resolved.  
 		Only accept const_param_expr_list?  Yeah.  
+	\return fully expanded type ONLY IF all parameters are bound
+		to static scalar constants, otherwise NULL.  
+		Non-scalars and formal values are only resolved at unroll-time.
+		Returning NULL is not error, is just conservative w.r.t.
+		type-checking.  
  */
 excl_const_ptr<fundamental_type_reference>
 typedef_base::resolve_complete_type(never_const_ptr<param_expr_list> pa) const {
+	typedef	excl_const_ptr<fundamental_type_reference>	return_type;
+	never_const_ptr<fundamental_type_ref>
+		btr(get_base_type_ref());
+	never_const_ptr<definition_base>
+		bd(btr->get_base_def());
+	// what if base definition is another typedef?
+	excl_ptr<param_expr_list>
+		pl(btr->get_copy_template_params());
+if (pa) {
+	// precondition: all arguments are already supplied, 
+	// perform recursive expression substitutions as necessary.
+} else {
+	// assuming it was type-checked before
+	// this is a valid null-template type.  
+	// need to return a private exclusive copy of the type-reference
+	// no substitution necessary, should already be a complete type
+	if (pl) {
+		if (pl->is_static_constant()) {
+			excl_ptr<dynamic_param_expr_list>
+				dpl(pl.is_a_xfer<dynamic_param_expr_list>());
+			assert(dpl);	// temporary
+			count_const_ptr<fundamental_type_reference>
+				cftr(bd->make_fundamental_type_reference(dpl));
+			assert(cftr.refs() == 1);
+			return return_type(cftr.exclusive_release());
+		} else {
+			// not static constant scalar, conservatively, 
+			return return_type(NULL);
+		}
+	} else {
+		count_const_ptr<fundamental_type_reference>
+			cftr(bd->make_fundamental_type_reference());
+		assert(cftr.refs() == 1);
+		return return_type(cftr.exclusive_release());
+	}
+}
 }
 #endif
 

@@ -1,4 +1,5 @@
 // "art_parser_template_methods.h"
+// eventually rename this to "art_parser.tcc"
 
 #ifndef	__ART_PARSER_TEMPLATE_METHODS_H__
 #define	__ART_PARSER_TEMPLATE_METHODS_H__
