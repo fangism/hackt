@@ -2,7 +2,7 @@
 	\file "indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.1 2004/12/01 05:16:17 fang Exp $
+	$Id: indent.cc,v 1.2 2004/12/02 01:40:35 fang Exp $
  */
 
 #include <iostream>
@@ -123,44 +123,78 @@ operator << (ostream& o, const indent_string& s) {
 //=============================================================================
 // class indent method definitions
 
+/**
+	This constructor indents the stream using its default 
+	indentation string, such as a tab.  
+ */
 indent::indent(const ostream& o) : os(o) {
 	// will construct a new entry automatically
 	++ostream_indent_map[&os];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This constructor indents the stream with a custom string, 
+	so that indent may be used like a prompt that displays a path.  
+ */
 indent::indent(const ostream& o, const string& s) : os(o) {
 	ostream_indent_map[&os] += s;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The destructor automatically removes the last indentation added
+	in the scope where the indenter was constructed.  
+ */
 indent::~indent() {
 	--ostream_indent_map[&os];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Force-enables indentation in a scope.  
+ */
 enable_indent::enable_indent(const ostream& o) : os(o) {
 	ostream_indent_map[&os].enable();
 }
 
+/**
+	Restores the indentation flag of the parent scope.
+ */
 enable_indent::~enable_indent() {
 	ostream_indent_map[&os].restore_status();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Force-disables indentation in a scope.  
+ */
 disable_indent::disable_indent(const ostream& o) : os(o) {
 	ostream_indent_map[&os].disable();
 }
 
+/**
+	Restores the indentation flag of the parent scope.
+ */
 disable_indent::~disable_indent() {
 	ostream_indent_map[&os].restore_status();
 }
 
 //=============================================================================
+/**
+	The global ostream auto-indenting manipulator.  
+	Indentation is done by calling (ostream) << auto_indent.
+ */
+auto_indenter				auto_indent;
+
+//=============================================================================
 // function definitions
 
+/**
+	\param a is bogus, unused.
+ */
 ostream&
-auto_indent(ostream& o) {
+operator << (ostream& o, const auto_indenter& a) {
 	return o << ostream_indent_map[&o];
 }
 

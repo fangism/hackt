@@ -2,7 +2,7 @@
 	\file "indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.1 2004/12/01 05:16:17 fang Exp $
+	$Id: indent.h,v 1.2 2004/12/02 01:40:35 fang Exp $
  */
 
 #ifndef	__INDENT_H__
@@ -18,6 +18,15 @@ using std::ostream;
 //=============================================================================
 /**
 	Per stream indentation manager.  
+	To use it: declare an indent object for the ostream you want to 
+	indent.  
+	The indentation is effective in the scope of the indent object's
+	declaration, so you never have to manually balance the indentation
+	yourself -- it is done in the destructor.  
+	Indentation is done by o << auto_indent, 
+	where o is an ostream object (like cerr, cout)
+	and auto_indent is the global object magic indentation manager
+	that behaves like a stream manipulator.  
  */
 class indent {
 private:
@@ -53,10 +62,16 @@ public:
 };	// end struct disable_indent
 
 //=============================================================================
+class auto_indenter { };
+
+// use this like an IO-manipulator like endl
+extern	auto_indenter	auto_indent;
+
+//=============================================================================
 // public interface functions
 
 ostream&
-auto_indent(ostream& o);
+operator << (ostream& o, const auto_indenter&);
 
 /**
 	Though explicit registration is unnecessary, 
