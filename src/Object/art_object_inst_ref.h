@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.3 2005/02/20 20:59:19 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.4 2005/02/21 19:48:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -10,12 +10,15 @@
 #include "art_object_inst_ref_base.h"
 #include "art_object_instance_base.h"
 #include "memory/pointer_classes.h"
+#include "packed_array.h"
 
 namespace ART {
 namespace entity {
+class unroll_context;
 using std::ostream;
 using std::istream;
 using namespace util::memory;
+using util::packed_array_generic;
 
 //=============================================================================
 #define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
@@ -38,13 +41,20 @@ class instance_reference : public Parent {
 protected:
 	typedef	Parent					parent_type;
 public:
+	/// the instance collection base type
 	typedef	Collection			instance_collection_type;
+	/// the type of alias element contained by instance collections
 	typedef	typename instance_collection_type::instance_alias_type
 						instance_alias_type;
+	/// the type of connections formed by the alias type
 	typedef	typename instance_collection_type::alias_connection_type
 						alias_connection_type;
+	/// pointer type for instance collections
 	typedef	never_ptr<const instance_collection_type>
 						instance_collection_ptr_type;
+	/// type used to unroll collections of instance aliases
+	typedef	packed_array_generic<never_ptr<instance_alias_type> >
+						alias_collection_type;
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:
@@ -67,6 +77,10 @@ virtual	~instance_reference();
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+	// overridden by member_instance_reference
+virtual	bool
+	unroll_references(unroll_context&, alias_collection_type&) const;
 
 private:
 	excl_ptr<aliases_connection_base>

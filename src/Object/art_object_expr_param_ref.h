@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.5.2.2.10.1 2005/02/20 09:08:11 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.5.2.2.10.2 2005/02/21 19:48:08 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -126,6 +126,9 @@ public:
 
 	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -262,6 +265,9 @@ public:
 	bool
 	resolve_value(value_type& i) const;
 
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
+
 	const_index_list
 	resolve_dimensions(void) const;
 
@@ -271,8 +277,8 @@ public:
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
-protected:
-//	bool assign(const list<int>& l) const;
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 public:
 	/**

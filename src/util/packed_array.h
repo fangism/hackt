@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.8.2.1.2.1 2005/02/17 22:41:38 fang Exp $
+	$Id: packed_array.h,v 1.8.2.1.2.2 2005/02/21 19:48:10 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -25,6 +25,7 @@ using std::istream;
 using std::ostream;
 
 //=============================================================================
+#if USE_PACKED_ARRAY_BASE
 /**
 	Common abstract base class for packed array class family.
  */
@@ -37,6 +38,7 @@ public:
 virtual	~packed_array_base() { }
 
 };	// end class packed_array_base
+#endif
 
 //=============================================================================
 /**
@@ -44,9 +46,15 @@ virtual	~packed_array_base() { }
 	implemented as a valarray with dimension coefficients.  
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
-class packed_array : public packed_array_base<T> {
+class packed_array
+#if USE_PACKED_ARRAY_BASE
+	: public packed_array_base<T>
+#endif
+{
 private:
+#if USE_PACKED_ARRAY_BASE
 	typedef	packed_array_base<T>			parent_type;
+#endif
 	typedef	std::valarray<T>			impl_type;
 public:
 	typedef	T					value_type;
@@ -181,9 +189,15 @@ public:
 	which, itself, is specialized.
  */
 PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-class packed_array<D, bool> : public packed_array_base<bool> {
+class packed_array<D, bool>
+#if USE_PACKED_ARRAY_BASE
+	: public packed_array_base<bool>
+#endif
+{
 private:
+#if USE_PACKED_ARRAY_BASE
 	typedef	packed_array_base<bool>			parent_type;
+#endif
 	typedef	std::vector<bool>			impl_type;
 public:
 	typedef	bool					value_type;
@@ -320,11 +334,18 @@ public:
 	This is however, generally "unsafer" and is more prone to misuse, 
 	unless the user takes the necessary extra precautions.  
 	Key type is polymorphic, any sequence of size_t will do.  
+	TODO: replace size_t with generic index type, K, like with multikey.  
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
-class packed_array_generic : public packed_array_base<T> {
+class packed_array_generic
+#if USE_PACKED_ARRAY_BASE
+	: public packed_array_base<T>
+#endif
+{
 private:
+#if USE_PACKED_ARRAY_BASE
 	typedef	packed_array_base<T>			parent_type;
+#endif
 	typedef	std::vector<T>				impl_type;
 	typedef	packed_array_generic<T>			this_type;
 public:
@@ -423,7 +444,15 @@ public:
 	sizes_product(const key_type& k);
 
 	void
+	resize(void);
+
+	void
 	resize(const key_type& s);
+
+#if 0
+	void
+	resize_bounds(const key_type& l, const key_type& u);
+#endif
 
 	bool
 	range_check(const key_type& k) const;

@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.9.2.1 2005/02/17 00:10:21 fang Exp $
+	$Id: packed_array.tcc,v 1.9.2.1.2.1 2005/02/21 19:48:11 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -171,6 +171,10 @@ packed_array<D,T>::operator [] (const key_type& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the size of the packed array, 
+	but does not clear existing entries.  
+ */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 void
 packed_array<D,T>::resize(const key_type& s) {
@@ -571,11 +575,27 @@ packed_array_generic<T>::operator == (const this_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resizes to 0-dimensions, i.e. one scalar element.  
+ */
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+void
+packed_array_generic<T>::resize(void) {
+	dim = 0;
+	sizes = key_type(0);
+	values.resize(1);
+	// offsets? = key_type(0)?
+	reset_coeffs();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 void
 packed_array_generic<T>::resize(const key_type& s) {
-	values.resize(sizes_product(s));
+	dim = s.size();
 	sizes = s;
+	values.resize(sizes_product(s));
+	// offsets?
 	reset_coeffs();
 }
 

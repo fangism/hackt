@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.3 2005/02/20 09:08:12 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.4 2005/02/21 19:48:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -301,18 +301,26 @@ member_instance_reference<InstRef>
 
 /**
 	Re-usable type-specific member_instance_reference class template.  
+	This class is final, nothing else derives from it, 
+	no need for virtual functions.  
 	\param InstRef must be a type derived from simple_instance_reference.
+	Consider moving this class definition to "art_object_inst_ref.h"?
  */
 template <class InstRef>
 class member_instance_reference : public InstRef {
 private:
 	typedef	member_instance_reference<InstRef>	this_type;
 public:
+	/// the underlying type of the member instance referenced
 	typedef	InstRef					parent_type;
-	// consider changing this to instance_reference_base?
+	/// the containing type, whose member is referenced
 	typedef	instance_reference_base			base_inst_type;
+	/// the instance alias collection type
 	typedef	typename parent_type::instance_collection_type
 						instance_collection_type;
+	/// the type used to unroll collections of instance aliases
+	typedef	typename parent_type::alias_collection_type
+						alias_collection_type;
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
@@ -323,7 +331,7 @@ protected:
 		Is type limited to simple? or can it be nested member?
 	 */
 	const base_inst_ptr_type			base_inst_ref;
-protected:
+private:
 	member_instance_reference();
 public:
 	member_instance_reference(const base_inst_ptr_type& b, 
@@ -336,6 +344,10 @@ public:
 
 // already implicit
 //	using parent_type::make_aliases_connection_private;
+
+	// overrides parent's implementation.  
+	bool
+	unroll_references(unroll_context&, alias_collection_type&) const;
 
 public:
 	// final, non-virtual

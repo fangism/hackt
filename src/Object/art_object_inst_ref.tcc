@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.1.4.1 2005/02/20 20:59:19 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.1.4.2 2005/02/21 19:48:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include "art_object_inst_ref.h"
+#include "art_object_expr_const.h"	// for const_index_list
 #include "what.h"
 #include "persistent_object_manager.tcc"
 
@@ -57,6 +58,55 @@ INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the reference into aliases.  
+	\param c the context of unrolling.
+	\param a the destination collection in which to return
+		resolved instance aliases.  
+	\return true on error, else false.
+ */
+INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
+		alias_collection_type& a) const {
+	// possibly factor this part out into simple_instance_reference?
+	if (this->array_indices) {
+		const const_index_list
+			cil(this->array_indices->unroll_resolve(c));
+		if (cil.empty()) {
+			cerr << "ERROR: Failed to resolve indices at "
+				"unroll-time!" << endl;
+			return true;
+		}
+		// else we have resolve constant indices
+		const const_index_list
+			full_indices(this->inst_collection_ref->resolve_indices(cil));
+		if (cil.empty()) {
+			// more descriptive error message later...
+			cerr << "ERROR: failed to resolve indices." << endl;
+			return true;
+		}
+		// construct the range of aliases to collect
+		const multikey_index_type lower(full_indices.lower_multikey());
+		const multikey_index_type upper(full_indices.upper_multikey());
+		// this will set the size and dimensions of packed_array a
+#if 0
+		if (this->inst_collection_ref->unroll_aliases(lower, upper, a)) {
+			cerr << "ERROR: unrolling aliases." << endl;
+			return true;
+		}
+#endif
+		// success!
+		return false;
+	} else if (this->inst_collection_ref->get_dimensions()) {
+		// return the whole instance collection
+		// if it's non-scalar, see if it's compact...
+	}
+	// TODO: FINISH ME!
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

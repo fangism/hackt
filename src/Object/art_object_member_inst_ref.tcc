@@ -1,7 +1,7 @@
 /**
 	\file "art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.1 2005/02/20 09:08:16 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.2 2005/02/21 19:48:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -50,6 +50,18 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error.  
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
+		unroll_context& c, alias_collection_type& a) const {
+	cerr << "FANG: write member_instanace_reference<>::unroll_references()!" << endl;
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

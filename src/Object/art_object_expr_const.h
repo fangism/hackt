@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.4.2.1 2005/02/20 09:08:10 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.4.2.2 2005/02/21 19:48:07 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -186,6 +186,9 @@ virtual	~const_index();
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
 
+virtual	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const = 0;
+
 virtual	pint_value_type
 	lower_bound(void) const = 0;
 
@@ -275,6 +278,9 @@ public:
 
 	const_index_list
 	resolve_index_list(void) const;
+
+	const_index_list
+	unroll_resolve(const unroll_context&) const;
 
 #if 0
 	bool
@@ -462,6 +468,9 @@ public:
 	bool
 	resolve_value(value_type& i) const;
 
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
+
 	count_ptr<const_index>
 	resolve_index(void) const;
 
@@ -473,6 +482,9 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -575,6 +587,9 @@ public:
 	bool
 	resolve_value(value_type& ) const;
 
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
+
 	const_index_list
 	resolve_dimensions(void) const;
 
@@ -665,6 +680,9 @@ public:
 
 	bool
 	resolve_value(value_type& i) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -793,8 +811,14 @@ public:
 	bool
 	resolve_range(const_range& r) const;
 
+	bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const;
+
 	count_ptr<const_index>
 	resolve_index(void) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 	bool
 	must_be_formal_size_equivalent(const range_expr& ) const;

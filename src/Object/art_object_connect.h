@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.4 2005/02/20 09:08:08 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.5 2005/02/21 19:48:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -11,7 +11,6 @@
 #include "art_object_fwd.h"
 #include "art_object_instance_management_base.h"
 #include "memory/pointer_classes.h"
-#include "packed_array.h"
 
 #define	SUBTYPE_ALIASES_CONNECTION			1
 
@@ -20,7 +19,6 @@ namespace entity {
 
 USING_LIST
 using std::ostream;
-using util::packed_array_generic;
 using namespace util::memory;	// for experimental pointer classes
 class unroll_context;
 
@@ -141,12 +139,16 @@ class alias_connection : public Parent {
 	typedef	alias_connection<InstRef,Parent>
 						this_type;
 public:
+	/// the base alias connection type, such as aliases_connection_base
 	typedef	Parent				parent_type;
+	/// the instance reference type used by this connection
 	typedef	InstRef				instance_reference_type;
 	typedef	typename parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;
+	/// the instance collection type referenced
 	typedef	typename instance_reference_type::instance_collection_type
 						instance_collection_type;
+	/// the instance alias type resolved by unrolling
 	typedef	typename instance_collection_type::instance_alias_type
 						instance_alias_type;
 	typedef	count_ptr<const InstRef>	inst_ref_ptr_type;
@@ -155,7 +157,12 @@ public:
 						iterator;
 	typedef	typename inst_list_type::const_iterator
 						const_iterator;
+	/// the type of collection for unrolled aliases
+#if 0
 	typedef	packed_array_generic<never_ptr<instance_alias_type> >
+#else
+	typedef	typename instance_reference_type::alias_collection_type
+#endif
 						alias_collection_type;
 protected:
 	inst_list_type				inst_list;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.2 2005/02/20 09:08:09 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.3 2005/02/21 19:48:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -357,6 +357,21 @@ pint_expr::make_param_expression_assignment_private(
 	INVARIANT(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<const pint_expr>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return deep copy of resolve constant integer value, 
+	if it is successfully resolved.  
+ */
+count_ptr<const_index>
+pint_expr::unroll_resolve_index(const unroll_context& c) const {
+	STACKTRACE("pint_expr::unroll_resolve_index()");
+	typedef count_ptr<const_index> return_type;
+	value_type i;
+	return (unroll_resolve_value(c, i)) ? 
+		return_type(new pint_const(i)) :
+		return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1171,6 +1186,42 @@ pbool_instance_reference::must_be_equivalent_pbool(const pbool_expr& b) const {
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
+	This code is grossly replicated... damn copy-paste...
+	\return true if resolution succeeds, else false.
+ */
+bool
+pbool_instance_reference::unroll_resolve_value(
+		const unroll_context& c, value_type& i) const {
+	// lookup pbool_instance_collection
+	if (array_indices) {
+		const const_index_list
+			indices(array_indices->unroll_resolve(c));
+		if (!indices.empty()) {
+			const multikey_index_type
+				lower(indices.lower_multikey());
+			const multikey_index_type
+				upper(indices.upper_multikey());
+			if (lower != upper) {
+				cerr << "ERROR: upper != lower" << endl;
+				return false;
+			}
+			return pbool_inst_ref->lookup_value(i, lower);
+		} else {
+			cerr << "Unable to unroll-resolve array_indices!" << endl;
+			return false;
+		}
+	} else {
+		const never_ptr<pbool_scalar>
+			scalar_inst(pbool_inst_ref.is_a<pbool_scalar>());
+		NEVER_NULL(scalar_inst);
+		return scalar_inst->lookup_value(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version specifically asks for one integer value, 
+	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
  */
 bool
@@ -1180,19 +1231,10 @@ pbool_instance_reference::resolve_value(value_type& i) const {
 		const const_index_list
 			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
-#if 0
-			const excl_ptr<multikey_index_type>
-				lower = indices.lower_multikey();
-			const excl_ptr<multikey_index_type>
-				upper = indices.upper_multikey();
-			NEVER_NULL(lower);
-			NEVER_NULL(upper);
-#else
 			const multikey_index_type
 				lower(indices.lower_multikey());
 			const multikey_index_type
 				upper(indices.upper_multikey());
-#endif
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
@@ -1723,6 +1765,44 @@ pint_instance_reference::must_be_equivalent_pint(const pint_expr& i) const {
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
+	Grossly replicated code... ugh...
+	\return true if resolution succeeds, else false.
+ */
+bool
+pint_instance_reference::unroll_resolve_value(
+		const unroll_context& c, value_type& i) const {
+	// lookup pint_instance_collection
+	if (array_indices) {
+		const const_index_list
+			indices(array_indices->unroll_resolve(c));
+		if (!indices.empty()) {
+			// really should pass indices into ->lookup_values();
+			// fix this later...
+			const multikey_index_type
+				lower(indices.lower_multikey());
+			const multikey_index_type
+				upper(indices.upper_multikey());
+			if (lower != upper) {
+				cerr << "ERROR: upper != lower" << endl;
+				return false;
+			}
+			return pint_inst_ref->lookup_value(i, lower);
+		} else {
+			cerr << "Unable to unroll-resolve array_indices!" << endl;
+			return false;
+		}
+	} else {
+		const never_ptr<pint_scalar>
+			scalar_inst(pint_inst_ref.is_a<pint_scalar>());
+		NEVER_NULL(scalar_inst);
+		return scalar_inst->lookup_value(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version specifically asks for one integer value, 
+	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
  */
 bool
@@ -1734,19 +1814,10 @@ pint_instance_reference::resolve_value(value_type& i) const {
 		if (!indices.empty()) {
 			// really should pass indices into ->lookup_values();
 			// fix this later...
-#if 0
-			const excl_ptr<multikey_index_type>
-				lower = indices.lower_multikey();
-			const excl_ptr<multikey_index_type>
-				upper = indices.upper_multikey();
-			NEVER_NULL(lower);
-			NEVER_NULL(upper);
-#else
 			const multikey_index_type
 				lower(indices.lower_multikey());
 			const multikey_index_type
 				upper(indices.upper_multikey());
-#endif
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
@@ -1899,6 +1970,18 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 		} else
 			return return_type(new pint_const(_val));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Short-cut for now...
+ */
+count_ptr<const_index>
+pint_instance_reference::unroll_resolve_index(const unroll_context& c) const {
+	typedef	count_ptr<const_index>	return_type;
+	count_ptr<const_param>
+		cp(unroll_resolve(c));
+	return cp.is_a<const_index>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2240,9 +2323,22 @@ pint_const::make_param_expression_assignment_private(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+	i = val;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>
 pint_const::unroll_resolve(const unroll_context& c) const {
 	return count_ptr<const_param>(new pint_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const_index>
+pint_const::unroll_resolve_index(const unroll_context& c) const {
+	return count_ptr<const_index>(new pint_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2409,6 +2505,16 @@ pint_const_collection::must_be_equivalent_pint(const pint_expr& p) const {
 		// conservatively
 		return false;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const_collection::unroll_resolve_value(
+		const unroll_context&, value_type& ) const {
+	cerr << "Never supposed to call "
+		"pint_const_collection::unroll_resolve_value()." << endl;
+	THROW_EXIT;
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2683,6 +2789,20 @@ pint_unary_expr::must_be_equivalent_pint(const pint_expr& p) const {
 		// conservatively
 		return false;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if succssfully resolved.
+ */
+bool
+pint_unary_expr::unroll_resolve_value(const unroll_context& c, 
+		value_type& i) const {
+	value_type j;
+	NEVER_NULL(ex);
+	const bool ret = ex->unroll_resolve_value(c, j);
+	i = -j;		// regardless of ret
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3140,6 +3260,25 @@ arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 const_index_list
 arith_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if resolved.
+ */
+bool
+arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	value_type lval, rval;
+	const bool lex(lx->unroll_resolve_value(c, lval));
+	const bool rex(rx->unroll_resolve_value(c, rval));
+	if (lex && rex) {
+		i = (*op)(lval, rval);
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3785,6 +3924,18 @@ pint_range::static_constant_range(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if successfully resolved at unroll-time.
+ */
+bool
+pint_range::unroll_resolve_range(const unroll_context& c, 
+		const_range& r) const {
+	if (!lower->unroll_resolve_value(c, r.first))	return false;
+	if (!upper->unroll_resolve_value(c, r.second))	return false;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_range::resolve_range(const_range& r) const {
 	if (!lower->resolve_value(r.first))	return false;
@@ -4026,11 +4177,26 @@ const_range::upper_bound(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
+const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
+	r = *this;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
 const_range::resolve_range(const_range& r) const {
 	r = *this;
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return deep copy of this constant range, always succeeds.  
+ */
+count_ptr<const_index>
+const_range::unroll_resolve_index(const unroll_context& c) const {
+	return count_ptr<const_index>(new const_range(*this));
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return deep copy of this constant range, always succeeds.  
@@ -4094,6 +4260,19 @@ range_expr::~range_expr() {
 ostream&
 range_expr::dump(ostream& o) const {
 	return o << hash_string();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a resolve constant range, or NULL if resolution fails.  
+ */
+count_ptr<const_index>
+range_expr::unroll_resolve_index(const unroll_context& c) const {
+	typedef	count_ptr<const_index>	return_type;
+	const_range tmp;
+	return (unroll_resolve_range(c, tmp)) ?
+		return_type(new const_range(tmp)) :
+		return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4933,6 +5112,12 @@ const_index_list::resolve_index_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+const_index_list::unroll_resolve(const unroll_context& c) const {
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Each index should be a scalar integer.  
@@ -5317,6 +5502,39 @@ dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
 		)
 		);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Similar to resolve_index except that this takes a context 
+	argument for unroll-time resolution.  
+	\return populated const_index_list if all indices have been 
+		successful resolved, else an empty list.
+ */
+const_index_list
+dynamic_index_list::unroll_resolve(const unroll_context& c) const {
+	const_index_list ret;
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<index_expr> ind(*i);
+		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
+		if (c_ind) {
+			// direct reference copy
+			ret.push_back(c_ind);
+		} else {
+			const count_ptr<const_index>
+				r_ind(ind->unroll_resolve_index(c));
+			if (r_ind) {
+				ret.push_back(r_ind);
+			} else {
+				// failed to resolve as constant!
+				return const_index_list();
+			}
+		}
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

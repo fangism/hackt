@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.3 2005/02/20 20:59:20 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.4 2005/02/21 19:48:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -14,6 +14,7 @@
 #include <set>
 #include "multikey_set.h"
 #include "ring_node.h"
+#include "packed_array_fwd.h"
 
 
 namespace ART {
@@ -25,6 +26,7 @@ using namespace util::memory;
 using util::ring_node_derived;
 using util::multikey_set;
 using util::multikey_set_element_derived;
+using util::packed_array_generic;
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
@@ -219,6 +221,8 @@ public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	int_instance_alias_base			instance_alias_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	// duplicated in instance_reference, by the way...
+	typedef	packed_array_generic<instance_ptr_type>	alias_collection_type;
 	typedef	int_alias_connection			alias_connection_type;
 	typedef	pint_value_type				param_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
@@ -286,6 +290,10 @@ virtual	const_index_list
 virtual int
 	connect(const multikey_index_type& k, const int_instance_alias& b) = 0;
 #endif
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const = 0;
+
 public:
 
 	static
@@ -308,6 +316,10 @@ protected:
 //-----------------------------------------------------------------------------
 #define	INT_ARRAY_TEMPLATE_SIGNATURE		template <size_t D>
 
+/**
+	Multidimensional collection of int instance aliases.  
+	\param D the number of dimensions (max. 4).  
+ */
 INT_ARRAY_TEMPLATE_SIGNATURE
 class int_array : public int_instance_collection {
 friend class int_instance_collection;
@@ -315,11 +327,14 @@ friend class int_instance_collection;
 	typedef	int_instance_collection			parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
+	typedef	parent_type::alias_collection_type	alias_collection_type;
 	typedef	int_instance_alias<D>			element_type;
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
-protected:
+private:
+	typedef	typename util::multikey<D, pint_value_type>::generator_type
+							key_generator_type;
 	typedef	element_type&				reference;
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator
@@ -350,9 +365,14 @@ public:
 	instance_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
+	// is this used? or can it be replaced by unroll_aliases?
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
 		const const_range_list& r) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 	class element_writer {
 		ostream& os;
@@ -398,6 +418,8 @@ friend class int_instance_collection;
 	typedef	int_array<0>			this_type;
 public:
 	typedef	parent_type::instance_ptr_type	instance_ptr_type;
+	typedef	parent_type::alias_collection_type
+						alias_collection_type;
 	typedef	int_instance_alias<0>		instance_type;
 private:
 	instance_type				the_instance;
@@ -427,6 +449,10 @@ public:
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
 		const const_range_list& r) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;

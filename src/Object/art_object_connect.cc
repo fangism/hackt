@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.4 2005/02/20 09:08:08 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.5 2005/02/21 19:48:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -9,13 +9,13 @@
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		1 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		1 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <iostream>
+#include <vector>
 
 #include "art_object_connect.h"
-// #include "art_object_inst_ref_base.h"
 #include "art_object_inst_ref.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_instance_int.h"
@@ -90,6 +90,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 USING_IO_UTILS
+using std::vector;
 using util::persistent_traits;
 #include "using_ostream.h"
 using std::mem_fun_ref;
@@ -275,22 +276,39 @@ ALIAS_CONNECTION_CLASS::append_instance_reference(
 	const inst_ref_ptr_type
 		irp(i.template is_a<const instance_reference_type>());
 		// gcc-3.3 slightly crippled, needs template keyword :(
-#if 0
-	// dynamic cast assertion is failing on member referencecs?
-	if (!irp) {
-		i->what(cerr) << endl;
-		THROW_EXIT;
-	}
-#endif
 	NEVER_NULL(irp);
 	inst_list.push_back(irp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Connects the referenced instance aliases.  
+ */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 void
 ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
+	typedef	vector<alias_collection_type>	alias_collection_array_type;
 	cerr << "Fang, finish alias_connection<>::unroll()!" << endl;
+//	Create a vector of alias_collection_type (packed_array_generic)
+	alias_collection_array_type ref_array(inst_list.size());
+	const_iterator iter = inst_list.begin();
+	const const_iterator end = inst_list.end();
+	typename alias_collection_array_type::iterator
+		ref_iter = ref_array.begin();
+	bool err = false;
+	for ( ; iter != end; iter++, ref_iter++) {
+		NEVER_NULL(*iter);
+		(*iter)->unroll_references(c, *ref_iter);
+		// error condition?
+	}
+/***
+	Make sure each packed array has the same dimensions.  
+	Type-check.
+		Collectible vs. connectible!  Different semantics!
+		Collectible !=> connectible!  Must check each reference!
+	Use vector of iterators to walk?
+	Fancy: cache type-checking...
+***/
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

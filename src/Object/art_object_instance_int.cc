@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.1 2005/02/20 09:08:15 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.2 2005/02/21 19:48:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -20,6 +20,7 @@
 #include "art_object_instance_int.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_connect.h"
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
@@ -31,6 +32,7 @@
 // #include "multikey_qmap.tcc"
 #include "multikey_set.tcc"
 #include "ring_node.tcc"
+#include "packed_array.tcc"
 
 #include "persistent_object_manager.tcc"
 #include "indent.h"
@@ -482,13 +484,9 @@ int_array<D>::dump_unrolled_instances(ostream& o) const {
 INT_ARRAY_TEMPLATE_SIGNATURE 
 ostream&
 int_array<D>::key_dumper::operator () (const value_type& p) {
-#if 0
-	return os << auto_indent << p.first << endl;
-#else
 	os << auto_indent << _Select1st<value_type>()(p) << " = ";
 	p.get_next()->dump_alias(os);
 	return os << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -522,29 +520,12 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	bool err = false;
 	do {
-#if 0
-		// will create if necessary
-		int_instance_alias& pi(collection[key_gen]);
-		if (pi.valid()) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen <<
-				" of " << get_qualified_name() <<
-				" already instantiated!" << endl;
-			// a useful error returned would be nice...
-			THROW_EXIT;
-		}
-		pi.instantiate();
-#else
 		const_iterator iter = collection.find(key_gen);
 		if (iter == collection.end()) {
 			// then we can insert a new one
 			// create with back-ref!
 			collection.insert(element_type(key_gen,
 				never_ptr<const this_type>(this)));
-#if 0
-			const_iterator iter = collection.find(key_gen);
-			INVARIANT(iter->valid());
-#endif
 		} else {
 			// found one that already exists!
 			// more detailed message, please!
@@ -553,7 +534,6 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 				" already instantiated!" << endl;
 			err = true;
 		}
-#endif
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	if (err)
@@ -608,14 +588,7 @@ INT_ARRAY_TEMPLATE_SIGNATURE
 typename int_array<D>::instance_ptr_type
 int_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	// will create and return an "uninstantiated" instance if not found
-//	const typename multikey<D, pint_value_type>::simple_type index(i);
 	const key_type index(i);
-#if 0
-	const int_instance_alias&
-		b(collection[index]);
-//		b(AS_A(const collection_type&, collection)[i]);
-#else
 	const const_iterator it(collection.find(index));
 	if (it == collection.end()) {
 		cerr << "ERROR: reference to uninstantiated int " <<
@@ -623,7 +596,6 @@ int_array<D>::lookup_instance(const multikey_index_type& i) const {
 		return instance_ptr_type(NULL);
 	}
 	const element_type& b(*it);
-#endif
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
@@ -649,7 +621,8 @@ bool
 int_array<D>::lookup_instance_collection(
 		list<instance_ptr_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, pint_value_type> key_gen;
+//	multikey_generator<D, pint_value_type> key_gen;
+	key_generator_type key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -675,6 +648,50 @@ int_array<D>::lookup_instance_collection(
 		}
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Packs resolved range of aliases into a collection.  
+	\return true on error, else false.  
+ */
+INT_ARRAY_TEMPLATE_SIGNATURE
+bool
+int_array<D>::unroll_aliases(const multikey_index_type& l, 
+		const multikey_index_type& u, alias_collection_type& a) const {
+	typedef	typename alias_collection_type::key_type
+						collection_key_type;
+	typedef	typename alias_collection_type::iterator
+						alias_collection_iterator;
+	const key_type lower(l);	// this will assert dimension match!
+	const key_type upper(u);	// this will assert dimension match!
+	key_generator_type key_gen(lower, upper);
+	key_gen.initialize();
+	bool ret = false;
+	const collection_key_type
+		array_size = u - l +alias_collection_type::ones(D);
+	a.resize(array_size);		// create
+	alias_collection_iterator a_iter(a.begin());
+	const const_iterator collection_end(collection.end());
+	do {
+		// really is a monotonic incremental search, 
+		// don't need log(N) lookup each time, fix later...
+		const const_iterator it(collection.find(key_gen));
+		if (it == collection_end) {
+			cerr << "FATAL: reference to uninstantiated int index "
+				<< key_gen << endl;
+			*a_iter = never_ptr<element_type>(NULL);
+			ret = true;
+		} else {
+			const element_type& pi(*it);
+			*a_iter = never_ptr<element_type>(
+				const_cast<element_type*>(&pi));
+		}
+		a_iter++;
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+	INVARIANT(a_iter == a.end());
 	return ret;
 }
 
@@ -869,6 +886,24 @@ int_array<0>::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error, false on success.
+ */
+bool
+int_array<0>::unroll_aliases(const multikey_index_type& l, 
+		const multikey_index_type& u, alias_collection_type& a) const {
+	a.resize();	// no-arguments, scalar
+	if (the_instance.valid()) {
+		*(a.begin()) = never_ptr<instance_type>(
+			const_cast<instance_type*>(&the_instance));
+		return false;
+	} else {
+		cerr << "ERROR: Reference to uninstantiated int!" << endl;
+		return true;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
