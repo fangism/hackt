@@ -13,7 +13,7 @@
 
 namespace QMAP_NAMESPACE {
 using std::map;
-
+//-----------------------------------------------------------------------------
 /**
 	Extension of Standard Template Library's map container.  
 	Adds an lookup operator with constant semantics for querying
@@ -112,6 +112,63 @@ public:
 
 };	// end class qmap
 
+//-----------------------------------------------------------------------------
+
+#ifndef NULL
+#define NULL    0
+#endif
+
+/**
+	Specialization for qmap that contains bare pointers.  
+	Since pointers, by default, are not initialized, 
+	this ensures that NULL is returned for pointers not found.  
+	This class could specialize map directly, 
+	and need not only apply to qmap.
+	NOTE: that this make it impossible to distinguish between
+	a pointer whose value is actually NULL and a pointer that doesn't 
+	exist in the map.  
+	The clean() function removes NULL pointers from the hash-map.  
+ */
+template <class K, class T>
+class qmap<K,T*> : public map<K,T*> {
+private:
+	typedef map<K,T*>				parent;
+public:
+	typedef typename parent::iterator		iterator;
+	typedef typename parent::const_iterator		const_iterator;
+public:
+	// use default constructor and destructors
+
+	T*& operator [] (const K& k) { return parent::operator[](k); }
+
+	T* operator [] (const K& k) const {
+		const_iterator i = find(k);	// uses find() const;
+		return (i != this->end()) ? i->second : NULL;
+		// if T is a pointer class, should be equivalent to NULL
+		// or whatever the default constructor is
+	}
+
+	/**
+		For all entries whose value is the default, remove them.
+	 */
+	void clean(void) {
+		iterator i = this->begin();
+		const const_iterator e = this->end();
+		for ( ; i!=e; ) {
+			if (i->second == NULL) {
+				iterator j = i;
+				j++;
+				this->erase(i);
+				i = j;  
+			} else {
+				i++;
+			}
+		}
+	}
+
+};      // and class qmap specialization
+
+//-----------------------------------------------------------------------------
 }	// end namespace QMAP_NAMESPACE
 
 #endif	//	__QMAP_H__
