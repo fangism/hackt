@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.12 2004/12/10 22:02:16 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.13 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -30,34 +30,19 @@ private:
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 
-#if 0
-	// PHASING OUT:
-	const never_ptr<const datatype_instance_collection>	data_inst_ref;
-#endif
-
 protected:
 	datatype_instance_reference();
-#if 0
-public:
-	datatype_instance_reference(
-		never_ptr<const datatype_instance_collection> di, 
-		excl_ptr<index_list> i);
-#else
+
 	datatype_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& s);
-#endif
 
 public:
 virtual	~datatype_instance_reference();
 
-#if 0
-virtual	ostream& what(ostream& o) const;
-#else
 virtual	ostream& what(ostream& o) const = 0;
-#endif
+
 //	ostream& dump(ostream& o) const;
 
-// becoming pure virtual
 virtual	never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
 
@@ -66,11 +51,6 @@ protected:
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 public:
-#if 0
-	// need to be virtual? for member_instance_reference?
-	PERSISTENT_STATIC_MEMBERS_DECL
-	PERSISTENT_METHODS
-#endif
 };	// end class datatype_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -104,7 +84,6 @@ protected:
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class channel_instance_reference
 
@@ -138,7 +117,6 @@ protected:
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class process_instance_reference
 
@@ -170,7 +148,6 @@ public:
 // can also attach indices!
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class process_member_instance_reference
 
@@ -206,7 +183,6 @@ public:
 	get_inst_base(void) const;
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class datatype_member_instance_reference
@@ -238,7 +214,6 @@ public:
 // can also attach indices!
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class channel_member_instance_reference

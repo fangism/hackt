@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.6 2004/12/07 02:22:06 fang Exp $
+	$Id: art_object_assign.h,v 1.7 2004/12/11 06:22:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -121,7 +121,6 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class pbool_expression_assignment
@@ -172,7 +171,6 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class pint_expression_assignment

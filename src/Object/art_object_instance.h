@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.25 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance.h,v 1.26 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -60,7 +60,6 @@ public:
 			count_ptr<const simple_instance_reference> b) const;
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class process_instance_collection
@@ -134,7 +133,6 @@ public:
 		make_member_instance_reference(
 			count_ptr<const simple_instance_reference> b) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class channel_instance_collection
 

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.9 2004/12/05 05:07:25 fang Exp $
+	$Id: persistent_object_manager.h,v 1.10 2004/12/11 06:22:44 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -22,9 +22,19 @@
 	Default manner for static persistent type registration.  
  */
 #define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
-	const persistent::hash_key T::persistent_type_key(str);		\
-	const int T::persistent_type_id = 				\
-		persistent_object_manager::register_persistent_type<T>();
+static const util::persistent_traits<T> __persistent_traits_ ## T ## __(str);
+
+#if 0
+	const util::persistent*						\
+		util::persistent_traits<T>::null = static_cast<T*>(NULL);\
+	const reconstruct_function_ptr_type				\
+		util::persistent_traits<T>::reconstructor(		\
+			&T::construct_empty);				\
+	const util::persistent::hash_key				\
+		util::persistent_traits<T>::persistent_type_key(str);	\
+	const int util::persistent_traits<T>::persistent_type_id = 	\
+		util::persistent_object_manager::register_persistent_type<T>();
+#endif
 
 //=============================================================================
 namespace util {
@@ -392,6 +402,60 @@ private:
 	void reset_for_loading(void);
 
 };	// end class persistent_object_manager
+
+//=============================================================================
+
+/**
+	Using per-class traits removes the burden of adding
+	static const members to persistent classes.  
+	This may be specialized for classes that need more than the default
+	type registration.  
+	To register a type, create one instance of the traits in the source
+	file, preferably where the class methods are defined.  
+ */
+template <class T>
+class persistent_traits {
+friend class persistent_object_manager;
+public:
+	typedef	T				type;
+private:
+	/**
+		Unique hash string identifier for a type.  
+	 */
+	static persistent::hash_key	type_key;
+
+	/**
+		Value is determined at run-time, and is dependent on
+		the global ordering of static globals, so do not count
+		on the number being consistent across compilers
+		and platforms.  
+	 */
+	static int			type_id;
+
+	/**
+		Default static method for allocating.  
+	 */
+	static reconstruct_function_ptr_type reconstructor;
+
+	/**
+		To guarantee that type T is derived somehow from persistent.
+	 */
+	static persistent* null;
+
+public:
+	/**
+		Construct one static instance of the traits to 
+		set the type_key with a designated string.  
+		Check to make sure it wasn't already set.
+		i.e. only one instance of the traits is allowed globally.  
+		\param s the hash string for type T.
+	 */
+	explicit
+	persistent_traits(const string& s);
+
+	// default destructor
+
+};	// end class persistent_traits
 
 //=============================================================================
 }	// end namespace util

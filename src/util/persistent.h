@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.5 2004/12/10 22:02:52 fang Exp $
+	$Id: persistent.h,v 1.6 2004/12/11 06:22:44 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__
@@ -43,16 +43,14 @@ static	persistent* construct_empty(const int);
 	PERSISTENT_METHODS_NO_POINTERS					\
 	void collect_transient_info(persistent_object_manager& m) const;
 
-/**
-	Since these are constant, should be safe to declare these
-	in a sub-class's public domain.  
- */
-#define	PERSISTENT_STATIC_MEMBERS_DECL					\
-	static const persistent::hash_key	persistent_type_key;	\
-	static const int			persistent_type_id;
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+/**
+	Some classes just need to satisfy the persistent requirements without
+	actually implementing them, because no objects of their type will
+	actually ever be saved at run-time.  
+	This macro supplies default no-op definitions for them.  
+ */
 #define	PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(T)			\
 persistent* T::construct_empty(const int i) { return NULL; }		\
 void T::collect_transient_info(persistent_object_manager& m) const { }	\

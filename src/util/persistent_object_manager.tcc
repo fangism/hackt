@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.9 2004/12/05 05:07:25 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.10 2004/12/11 06:22:44 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
@@ -55,21 +55,18 @@ template <class T>
 int
 persistent_object_manager::register_persistent_type(void) {
 	reconstruction_function_map_type& m = get_reconstruction_function_map();
-	const reconstruct_function_ptr_type probe = m[T::persistent_type_key];
+	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
+	const reconstruct_function_ptr_type probe = m[type_key];
 #if WELCOME_TO_TYPE_REGISTRATION
 	cerr << "Welcome to persistent type registration, "
-		<< T::persistent_type_key << "!  ";
+		<< type_key << "!  ";
 #endif
 	if (probe) {
 		cerr << "FATAL: Persistent type with key \"" <<
-			T::persistent_type_key << "\" already taken!" << endl;
+			type_key << "\" already taken!" << endl;
 		exit(1);
 	} else {
-		m[T::persistent_type_key] = &T::construct_empty;
-#if 0
-		m[T::persistent_type_key] =
-			reconstruction_functor(T::construct_empty);
-#endif
+		m[type_key] = persistent_traits<T>::reconstructor;
 	}
 	// get a unique id
 	const size_t s = m.size();
@@ -168,16 +165,7 @@ persistent_object_manager::__read_pointer(istream& f,
 template <class P>
 void
 persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
-#if 0
-	// this extracts the naked pointer
-	if (ptr) {
-		const persistent* o_ptr = IS_A(const persistent*, &*ptr);
-		assert(o_ptr);
-		write_value(f, lookup_ptr_index(o_ptr));
-	} else	write_value(f, lookup_ptr_index(NULL));
-#else
 	__write_pointer(f, ptr, __pointer_category(ptr));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,17 +176,7 @@ persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
 template <class P>
 void
 persistent_object_manager::read_pointer(istream& f, const P& ptr) const {
-#if 0
-	unsigned long i;
-	read_value(f, i);
-	assert(i < reconstruction_table.size());
-	persistent* o(lookup_obj_ptr(i));
-	T* t = dynamic_cast<T*>(o);
-	if (o) assert(t);
-	const_cast<P<T>& >(ptr) = P<T>(t);
-#else
 	__read_pointer(f, ptr, __pointer_category(ptr));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -218,42 +196,6 @@ persistent_object_manager::pointer_reader::operator() (const P& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Partial specialization of read_pointer for 
-	reference-counted pointers.
- */
-template <class T>
-void
-persistent_object_manager::read_pointer(
-		istream& f, const count_ptr<const T>& ptr) const {
-	long i;
-	read_value(f, i);
-	persistent* o(lookup_obj_ptr(i));
-	if (o) {
-		T* t = dynamic_cast<T*>(o);
-#if 0
-		if (!t) {
-			// to catch type mismatch errors!
-			// if the below assert(t) should fail
-			o->what(cerr << "persistent* o = " << o << " ") << endl;
-		}
-#endif
-		size_t* c = lookup_ref_count(i);
-			// will allocate if NULL
-		assert(t);
-		assert(c);
-		// uses the unsafe constructor
-		const_cast<count_ptr<const T>& >(ptr) =
-			count_ptr<const T>(t, c);
-	} else {
-		const_cast<count_ptr<const T>& >(ptr) =
-			count_ptr<const T>(NULL);
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes a sequence of pointers, mapped to indices.
 	Container only needs a simple forward iterator interface.  
@@ -267,14 +209,7 @@ persistent_object_manager::write_pointer_list(ostream& f, const L& l) const {
 	// write number of elements to expect first
 	const typename L::size_type s = l.size();
 	write_value(f, s);
-#if 0
-	typename L::const_iterator iter = l.begin();
-	const typename L::const_iterator end = l.end();
-	for ( ; iter!=end; iter++)
-		write_pointer(f, *iter);
-#else
 	for_each(l.begin(), l.end(), pointer_writer(*this, f));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -292,15 +227,9 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	read_value(f, s);
 	size_type i = 0;
 	for ( ; i<s; i++) {
-#if 0
-		// won't work for sticky pointer!
-		P<T> ptr;
-		read_pointer(f, ptr);
-		l.push_back(ptr);
-#else
+		// this should work for sticky pointer!
 		l.push_back(pointer_type());
 		read_pointer(f, l.back());		// in-place
-#endif
 	}
 }
 
@@ -411,6 +340,37 @@ excl_ptr<T>
 persistent_object_manager::self_test(const string& s, const T& m) {
 	save_object_to_file(s, m);
 	return load_object_from_file<T>(s);
+}
+
+//=============================================================================
+// class persistent_traits method definitions (default)
+
+/**
+	Initially null.
+	Will be set by constructing an object.  
+ */
+template <class T>
+persistent::hash_key
+persistent_traits<T>::type_key;
+
+template <class T>
+int
+persistent_traits<T>::type_id = 0;
+
+template <class T>
+reconstruct_function_ptr_type
+persistent_traits<T>::reconstructor = &T::construct_empty;
+
+template <class T>
+persistent*
+persistent_traits<T>::null = static_cast<T*>(NULL);
+
+template <class T>
+persistent_traits<T>::persistent_traits(const string& s) {
+	assert(!type_id);
+	assert(type_key == persistent::hash_key::null);
+	type_key = s;
+	type_id = persistent_object_manager::register_persistent_type<T>();
 }
 
 //=============================================================================

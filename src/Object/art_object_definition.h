@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.16 2004/12/10 22:02:16 fang Exp $
+	$Id: art_object_definition.h,v 1.17 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -176,7 +176,6 @@ public:
 
 // methods for object file I/O
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -219,7 +218,6 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -359,7 +357,6 @@ public:
 
 	bool add_member(const token_identifier& em);
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -438,7 +435,6 @@ public:
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -476,7 +472,6 @@ public:
 	bool require_signature_match(
 		never_ptr<const definition_base> d) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -533,7 +528,6 @@ public:
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);
@@ -567,7 +561,6 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 	void load_used_id_map_object(excl_ptr<persistent>& o);

@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.2 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.3 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -178,7 +178,6 @@ virtual bool
 	connect(const unroll_index_type& k, const bool_instance_alias& b) = 0;
 #endif
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 
 	static
 	bool_instance_collection*

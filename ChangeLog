@@ -1,5 +1,26 @@
 "ChangeLog"
 
+2004-12-11	David Fang	<fangism@users.sourceforge.net>
+
+	* Tagging this snapshot as ARTXX-00-01-03-u
+
+	* UPDATED persistent_object management slightly.
+	  Rather than force user to include static const members
+	  within a class, I switched to a less intrusive technique
+	  using a new persistent_traits template class.  
+	  Now a type is registered by creating an instance of
+	  persistent_traits<T>, which is done through a macro.  
+	  A single instance of such an object will register the 
+	  type (with a supplied hash-string) for the duration of the 
+	  program.  (The macro call is unchanged.)  The maintainer 
+	  need not declare any additional static members, not even
+	  through the old PERSISTENT_STATIC_MEMBERS_DECL.  
+	  The persistent_traits template definition may be specialized
+	  arbitrarily, so the user need not conform to the same pattern, 
+	  although it would save time for specialized maintenance.  
+	  Any less effort for the maintainers helps.  
+
+
 2004-12-10	David Fang	<fangism@users.sourceforge.net>
 
 	* Massively extended the data-type instance collection and reference

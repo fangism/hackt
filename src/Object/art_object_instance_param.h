@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.3 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_param.h,v 1.4 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -255,7 +255,6 @@ virtual	bool
 	assign(const multikey_base<int>& k, const bool b) = 0;
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 
 	static pbool_instance_collection*
 	make_pbool_array(const scopespace& o, const string& n, const size_t d);
@@ -544,7 +543,6 @@ virtual	bool assign(const multikey_base<int>& k, const int i) = 0;
 
 public:
 	// subclasses will share this persistent type entry
-	PERSISTENT_STATIC_MEMBERS_DECL
 
 	static pint_instance_collection*
 	make_pint_array(const scopespace& o, const string& n, const size_t d);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.14 2004/12/10 22:02:18 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.15 2004/12/11 06:22:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -90,7 +90,6 @@ private:
 	make_instance_collection(never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class data_type_reference
 
@@ -130,7 +129,6 @@ private:
 	make_instance_collection(never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class channel_type_reference
 
@@ -174,7 +172,6 @@ private:
 		const token_identifier& id, const size_t d) const;
 public:
 	// macro expand to method prototypes
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class process_type_reference
 

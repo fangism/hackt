@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.2 2004/12/07 02:22:07 fang Exp $
+	$Id: art_object_expr_const.h,v 1.3 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -111,7 +111,6 @@ private:
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_param_expr_list
 
@@ -190,7 +189,6 @@ public:
 
 	bool equal_dimensions(const const_index_list& ) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_index_list
 
@@ -247,7 +245,6 @@ explicit const_range_list(const const_index_list& i);
 	template <size_t D>
 	void make_multikey_generator(multikey_generator<D, int>& k) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_range_list
 
@@ -300,7 +297,6 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pint_const
 
@@ -347,7 +343,6 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pbool_const
 
@@ -411,7 +406,6 @@ public:
 	bool resolve_range(const_range& r) const;
 	count_ptr<const_index> resolve_index(void) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_range
 

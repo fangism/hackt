@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.16 2004/12/07 02:22:07 fang Exp $
+	$Id: art_object_expr.h,v 1.17 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -82,7 +82,6 @@ private:
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_param_expr_list
 
@@ -128,7 +127,6 @@ public:
 	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 #endif
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_index_list
 
@@ -168,7 +166,6 @@ virtual	~dynamic_range_list();
 		// false, will be empty
 	bool resolve_ranges(const_range_list& r) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_range_list
 
@@ -209,7 +206,6 @@ public:
 	const_index_list resolve_dimensions(void) const;
 	bool resolve_values_into_flat_list(list<int>& l) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pint_unary_expr
 
@@ -251,7 +247,6 @@ public:
 	const_index_list resolve_dimensions(void) const;
 	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pbool_unary_expr
 
@@ -317,7 +312,6 @@ public:
 	const_index_list resolve_dimensions(void) const;
 	bool resolve_values_into_flat_list(list<int>& l) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class arith_expr
 
@@ -382,7 +376,6 @@ public:
 	const_index_list resolve_dimensions(void) const;
 	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class relational_expr
 
@@ -444,7 +437,6 @@ public:
 	const_index_list resolve_dimensions(void) const;
 	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class logical_expr
 
@@ -492,7 +484,6 @@ explicit pint_range(count_ptr<const pint_expr> n);
 
 	bool resolve_range(const_range& r) const;
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pint_range
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.8 2004/12/07 02:22:09 fang Exp $
+	$Id: art_object_module.h,v 1.9 2004/12/11 06:22:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__
@@ -80,7 +80,6 @@ explicit	module(const string& s);
 #endif
 
 public:
-	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 
 };	// end class module
