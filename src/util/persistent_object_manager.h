@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.7 2004/11/30 01:25:22 fang Exp $
+	$Id: persistent_object_manager.h,v 1.8 2004/12/02 06:33:58 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -227,6 +227,37 @@ public:
 	long lookup_ptr_index(const persistent* ptr) const;
 	persistent*	lookup_obj_ptr(const long i) const;
 	size_t*	lookup_ref_count(const long i) const;
+	size_t*	lookup_ref_count(const persistent* i) const;
+
+private:
+	/// private helper method for writing plain pointers
+	template <class P>
+	void
+	__write_pointer(ostream& f, const P& ptr, raw_pointer_tag) const;
+
+	/// private helper method for any pointer class
+	template <class P>
+	void
+	__write_pointer(ostream& f, const P& ptr, pointer_class_base_tag) const;
+
+	/// private helper method for reading plain pointers
+	template <class P>
+	void
+	__read_pointer(istream& f, const P& ptr, raw_pointer_tag) const;
+
+	/// private helper method for reading non-reference-counted pointers
+	template <class P>
+	void
+	__read_pointer(istream& f, const P& ptr, 
+		single_owner_pointer_tag) const;
+
+	/// private helper method for reading reference-counted pointers
+	template <class P>
+	void
+	__read_pointer(istream& f, const P& ptr,
+		shared_owner_pointer_tag) const;
+
+public:
 
 	// the following template methods are defined in "art_object_IO.tcc"
 	/**
@@ -237,61 +268,101 @@ public:
 		\param ptr the pointer (class) object to translate and 
 			write out.
 	 */
-	template <template <class> class P, class T>
-	void write_pointer(ostream& f, const P<T>& ptr) const;
+	template <class P>
+	void write_pointer(ostream& f, const P& ptr) const;
 
 	/**
 		ALERT: this intentially and coercively discards const-ness!
 		Need to specialize for reference counter pointers!
 	 */
-	template <template <class> class P, class T>
-	void read_pointer(istream& f, const P<T>& ptr) const;
+	template <class P>
+	void read_pointer(istream& f, const P& ptr) const;
 
+#if 0
 	/**
 		Partial specialization of read_pointer for 
 		reference-counted pointers.
 	 */
 	template <class T>
 	void read_pointer(istream& f, const count_ptr<T>& ptr) const;
+#endif
 
+private:
+	/**
+		Helper functor for writing sequences of pointers.  
+	 */
+	class pointer_writer {
+	private:
+		const persistent_object_manager&	pom;
+		ostream& 				os;
+	public:
+		pointer_writer(const persistent_object_manager& m, 
+			ostream& o) : pom(m), os(o) { }
+
+		template <class P>
+		void
+		operator () (const P& p);
+	};	// end class pointer_writer
+
+	/// is this ever used?
+	class pointer_reader {
+	private:
+		const persistent_object_manager&	pom;
+		istream& 				is;
+	public:
+		pointer_reader(const persistent_object_manager& m, 
+			istream& i) : pom(m), is(i) { }
+
+		template <class P>
+		void
+		operator () (const P& p);
+	};	// end class pointer_reader
+
+public:
 	/**
 		Writes a sequence of pointers, mapped to indices.
 		Container only needs a simple forward iterator interface.  
 	 */
-	template <template <class> class L, template <class> class P, class T >
-	void write_pointer_list(ostream& f, const L<P<T> >& l) const;
+	template <class L>
+	void write_pointer_list(ostream& f, const L& l) const;
 
 	/**
 		Reconstructs a sequence of pointers, mapped to indices.  
 		Container only needs a simple forward iterator interface.  
 	 */
-	template <template <class> class L, template <class> class P, class T >
-	void read_pointer_list(istream& f, L<P<T> >& l) const;
+	template <class L>
+	void read_pointer_list(istream& f, L& l) const;
 
+#if 0
 	/**
 		Writes a map of pointers in some order, ignoring the keys.
 	 */
-	template <template <class, class> class M, class K, 
-		template <class> class P, class T >
-	void write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
+	template <class M>
+	void
+	write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
+#endif
 
 
 // two interface functions suffice for file interaction:
-	static void	save_object_to_file(const string& s, 
-				const persistent& m);
+	static
+	void
+	save_object_to_file(const string& s, const persistent& m);
 
 	template <class T>
-	static excl_ptr<T>
-			load_object_from_file(const string& s);
+	static
+	excl_ptr<T>
+	load_object_from_file(const string& s);
 
 // self-test functions
 	template <class T>
-	static excl_ptr<T>
-			self_test(const string& s, const T& m);
+	static
+	excl_ptr<T>
+	self_test(const string& s, const T& m);
 
 	template <class T>
-	static excl_ptr<T>
-			self_test_no_file(const T& m);
+	static
+	excl_ptr<T>
+	self_test_no_file(const T& m);
 
 private:
 	void initialize_null(void);
@@ -307,7 +378,9 @@ private:
 	void reconstruct(void);
 
 	template <class T>
-	excl_ptr<T>	get_root(void);
+	excl_ptr<T>
+	get_root(void);
+
 	void reset_for_loading(void);
 
 };	// end class persistent_object_manager

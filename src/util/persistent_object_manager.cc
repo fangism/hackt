@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.8 2004/11/05 02:38:53 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.9 2004/12/02 06:33:57 fang Exp $
  */
 
 #include <fstream>
@@ -306,6 +306,15 @@ size_t*
 persistent_object_manager::lookup_ref_count(const long i) const {
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return e.count();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up reference count by pointer.
+ */
+size_t*
+persistent_object_manager::lookup_ref_count(const persistent* p) const {
+	return lookup_ref_count(lookup_ptr_index(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.7 2004/11/30 01:25:22 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.8 2004/12/02 06:33:58 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
@@ -80,6 +80,83 @@ persistent_object_manager::register_persistent_type(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::__write_pointer(ostream& o, 
+		const P& ptr, raw_pointer_tag) const {
+	// P is a bare pointer type (T*), according to the raw_pointer_tag
+	if (ptr) {
+		const persistent* t = IS_A(const persistent*, ptr);
+		NEVER_NULL(t);
+		write_value(o, lookup_ptr_index(t));
+	} else	write_value(o, lookup_ptr_index(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::__write_pointer(ostream& o, 
+		const P& ptr, pointer_class_base_tag) const {
+	const typename pointer_traits<P>::pointer&
+		p = pointer_manipulator::get_pointer(ptr);
+	__write_pointer(o, p, __pointer_category(p));
+		// should be raw_pointer_tag
+		// should not get infinite recursion at compile time b/c
+		// P::pointer should be a raw_pointer
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::__read_pointer(istream& f, 
+		const P& ptr, raw_pointer_tag) const {
+	typedef typename pointer_traits<P>::pointer	pointer_type;
+	unsigned long i;
+	read_value(f, i);
+	INVARIANT(i < reconstruction_table.size());
+	persistent* o(lookup_obj_ptr(i));
+	// for this to work, pointer_type must be a raw_pointer
+	const_cast<P&>(ptr) = dynamic_cast<pointer_type>(o);
+	if (o) NEVER_NULL(ptr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::__read_pointer(istream& f, 
+		const P& ptr, single_owner_pointer_tag) const {
+	const typename pointer_traits<P>::pointer&
+		p = pointer_manipulator::get_pointer(ptr);
+	__read_pointer(f, p, __pointer_category(p));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::__read_pointer(istream& f, 
+		const P& ptr, shared_owner_pointer_tag) const {
+	typedef typename pointer_traits<P>::pointer	pointer_type;
+	// not reference here, use a local copy first!
+	const pointer_type p = pointer_manipulator::get_pointer(ptr);
+	__read_pointer(f, p, __pointer_category(p));
+	if (p) {
+		size_t* c = lookup_ref_count(p);
+		NEVER_NULL(c);
+		// uses the unsafe constructor
+		const_cast<P&>(ptr) = P(p, c);
+		// the reference-count pointer is responsible for
+		// deleting the size_t*
+	} else {
+		const_cast<P&>(ptr) = P(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Doesn't actually write out the pointer, but the index 
 	representing the object represented by the pointer.
@@ -88,15 +165,19 @@ persistent_object_manager::register_persistent_type(void) {
 	\param ptr the pointer (class) object to translate and 
 		write out.
  */
-template <template <class> class P, class T>
+template <class P>
 void
-persistent_object_manager::write_pointer(ostream& f, const P<T>& ptr) const {
+persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
+#if 0
 	// this extracts the naked pointer
 	if (ptr) {
 		const persistent* o_ptr = IS_A(const persistent*, &*ptr);
 		assert(o_ptr);
 		write_value(f, lookup_ptr_index(o_ptr));
 	} else	write_value(f, lookup_ptr_index(NULL));
+#else
+	__write_pointer(f, ptr, __pointer_category(ptr));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,10 +185,10 @@ persistent_object_manager::write_pointer(ostream& f, const P<T>& ptr) const {
 	ALERT: this intentially and coercively discards const-ness!
 	Need to specialize for reference counter pointers!
  */
-template <template <class> class P, class T>
+template <class P>
 void
-persistent_object_manager::read_pointer(
-		istream& f, const P<T>& ptr) const {
+persistent_object_manager::read_pointer(istream& f, const P& ptr) const {
+#if 0
 	unsigned long i;
 	read_value(f, i);
 	assert(i < reconstruction_table.size());
@@ -115,38 +196,25 @@ persistent_object_manager::read_pointer(
 	T* t = dynamic_cast<T*>(o);
 	if (o) assert(t);
 	const_cast<P<T>& >(ptr) = P<T>(t);
+#else
+	__read_pointer(f, ptr, __pointer_category(ptr));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Partial specialization of read_pointer for 
-	reference-counted pointers.
- */
-template <class T>
+template <class P>
+inline
 void
-persistent_object_manager::read_pointer(
-		istream& f, const count_ptr<T>& ptr) const {
-	long i;
-	read_value(f, i);
-	persistent* o(lookup_obj_ptr(i));
-	if (o) {
-		T* t = dynamic_cast<T*>(o);
-#if 0
-		if (!t) {
-			// to catch type mismatch errors!
-			// if the below assert(t) should fail
-			o->what(cerr << "persistent* o = " << o << " ") << endl;
-		}
-#endif
-		size_t* c = lookup_ref_count(i);
-			// will allocate if NULL
-		assert(t);
-		assert(c);
-		// uses the unsafe constructor
-		const_cast<count_ptr<T>& >(ptr) = count_ptr<T>(t, c);
-	} else {
-		const_cast<count_ptr<T>& >(ptr) = count_ptr<T>(NULL);
-	}
+persistent_object_manager::pointer_writer::operator() (const P& p) {
+	pom.write_pointer(os, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::pointer_reader::operator() (const P& p) {
+	pom.read_pointer(is, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,17 +258,23 @@ persistent_object_manager::read_pointer(
 	Writes a sequence of pointers, mapped to indices.
 	Container only needs a simple forward iterator interface.  
  */
-template <template <class> class L, template <class> class P, class T >
+template <class L>
 void
-persistent_object_manager::write_pointer_list(
-		ostream& f, const L<P<T> >& l) const {
+persistent_object_manager::write_pointer_list(ostream& f, const L& l) const {
+	// concept requirements:
+	// L is a sequence-type container, has begin and end
+	// pointer_traits<L::value_type> is raw_pointer or pointer class
 	// write number of elements to expect first
-	size_t s = l.size();
+	const typename L::size_type s = l.size();
 	write_value(f, s);
-	typename L<P<T> >::const_iterator iter = l.begin();
-	const typename L<P<T> >::const_iterator end = l.end();
+#if 0
+	typename L::const_iterator iter = l.begin();
+	const typename L::const_iterator end = l.end();
 	for ( ; iter!=end; iter++)
 		write_pointer(f, *iter);
+#else
+	for_each(l.begin(), l.end(), pointer_writer(*this, f));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,35 +282,50 @@ persistent_object_manager::write_pointer_list(
 	Reconstructs a sequence of pointers, mapped to indices.  
 	Container only needs a simple forward iterator interface.  
  */
-template <template <class> class L, template <class> class P, class T >
+template <class L>
 void
-persistent_object_manager::read_pointer_list(istream& f, L<P<T> >& l) const {
-	size_t s = 0;
+persistent_object_manager::read_pointer_list(istream& f, L& l) const {
+	typedef	typename L::size_type	size_type;
+	typedef	typename L::value_type	pointer_type;
+	// assert(l.empty()); ?
+	size_type s = 0;
 	read_value(f, s);
-	size_t i = 0;
+	size_type i = 0;
 	for ( ; i<s; i++) {
+#if 0
+		// won't work for sticky pointer!
 		P<T> ptr;
 		read_pointer(f, ptr);
 		l.push_back(ptr);
+#else
+		l.push_back(pointer_type());
+		read_pointer(f, l.back());		// in-place
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Writes a map of pointers without their keys.  
+	Not used yet.  Enable when it becomes useful...
  */
-template <template <class, class> class M, class K, 
-		template <class> class P, class T >
+template <class M>
 void
-persistent_object_manager::write_pointer_map(
-		ostream& f, const M<K, P<T> >& m) const {
-	size_t s = m.size();
+persistent_object_manager::write_pointer_map(ostream& f, const M& m) const {
+	typedef typename M::key_type	key_type;
+	typedef typename M::value_type	value_type;
+	typedef typename M::mapped_type	mapped_type;
+	typedef typename M::size_type	size_type;
+	typedef typename M::const_iterator	const_iterator;
+	size_type s = m.size();
 	write_value(f, s);
-	typename M<K, P<T> >::const_iterator iter = m.begin();
-	const typename M<K, P<T> >::const_iterator end = m.end();
+	const_iterator iter = m.begin();
+	const const_iterator end = m.end();
 	for ( ; iter!=end; iter++)
 		write_pointer(f, iter->second);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // specialized list methods?

@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.4 2004/12/02 02:09:13 fang Exp $
+	$Id: TODO,v 1.5 2004/12/02 06:33:57 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -22,6 +22,15 @@ Issues: may have to copy-fudge standard headers
 Possible convention:
 #define inclusions to intentionally interfere with STL headers.  
 	Very hackish and not portable across compilers / versions.  
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+hash_qmap, qmap: replace inheritance from hash_map and map
+	and wrap-adapt instead (containership).  
+	Will be some hassle of replicating/wrapping every public method...
+	But I feel it's worth it.  
+
+Do this with hash_qmap, qmap, multikey_qmap, etc. first to see benefit.
 
 -------------------------------------------------------------------------------
 
@@ -54,11 +63,6 @@ Regarding pointer-classes:
 
 	what about allocator_traits?
 
-UPDATE:
-	persistent_object_manager to take advantage of 
-	pointer_traits and pointer_classes.
-	Make it a friend class to pointer_manipulator.  
-
 -------------------------------------------------------------------------------
 
 vectorization:
@@ -84,5 +88,14 @@ algorithms:
 debug utils:
 	File: stacktrace.h
 
--------------------------------------------------------------------------------
+===============================================================================
+DONE
+	(so we have some sense of accomplishment)
 
+regarding pointer-classes:
+	persistent_object_manager to take advantage of 
+		pointer_traits and pointer_classes.  (done)
+	Make it a friend class to pointer_manipulator.  (done)
+
+
+-------------------------------------------------------------------------------
