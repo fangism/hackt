@@ -5,7 +5,7 @@
 #define	__HASH_QMAP_FWD_H__
 
 #ifndef	HASH_QMAP_NAMESPACE
-#define	HASH_QMAP_NAMESPACE		fang
+#define	HASH_QMAP_NAMESPACE		hash_qmap_namespace
 #endif
 
 namespace HASH_QMAP_NAMESPACE {

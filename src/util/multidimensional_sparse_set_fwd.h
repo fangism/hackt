@@ -6,11 +6,11 @@
 #ifndef	__MULTIDIMENSIONAL_SPARSE_SET_FWD_H__
 #define	__MULTIDIMENSIONAL_SPARSE_SET_FWD_H__
 
-#include <map>		// for pair<>
+#include <utility>		// for pair<>
 #include <list>
 
 #ifndef	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
-#define	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE	fang
+#define	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE	multidim_sparse_set_ns
 #endif
 
 // full description in "multidimensional_sparse_set.h"
@@ -20,10 +20,16 @@ using namespace std;
 
 //=============================================================================
 // forward declarations
+
+// should param R be a template <class, class>?
+// or just any class that satisfies the pair interface, 
+// not necessarily template?
+
 template <class T = int,
 		class R = pair<T,T>, 
 		template <class> class L = list >
 	class base_multidimensional_sparse_set;
+
 template <size_t, class T = int,
 		class R = pair<T,T>,
 		template <class> class L = list >

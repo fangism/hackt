@@ -21,10 +21,24 @@ class qmap : public map<K,T> {
 private:
 	typedef	map<K,T>			parent;
 public:
+        typedef typename parent::key_type		key_type;
+        typedef typename parent::mapped_type		mapped_type;   
+        typedef typename parent::value_type		value_type;
+        typedef typename parent::key_compare		key_compare;
+	typedef typename parent::allocator_type		allocator_type;
+
+	typedef typename parent::reference		reference;
+	typedef typename parent::const_reference	const_reference;
 	typedef typename parent::iterator		iterator;
 	typedef typename parent::const_iterator		const_iterator;
 	typedef typename parent::reverse_iterator	reverse_iterator;
-	typedef typename parent::const_reverse_iterator	const_reverse_iterator;
+	typedef typename parent::const_reverse_iterator	const_reverse_iterator; 
+	typedef typename parent::size_type		size_type;
+	typedef typename parent::difference_type	difference_type;
+	typedef typename parent::pointer		pointer;
+	typedef typename parent::const_pointer		const_pointer;
+	typedef typename parent::allocator_type		allocator_type;
+
 public:
 	/** Default constructor. */
 	qmap() : map<K,T>() { }
@@ -51,18 +65,50 @@ public:
 		which is what map<K,T> does.  
 		\param k the key used to lookup.  
 		\return read-only COPY of the object if found, 
-			else a freshly constructed object.  
+			else a freshly constructed object, 
+			such as a wrapper NULL pointer.  
 	 */
-	const T operator [] (const K& k) const {
+	T operator [] (const K& k) const {
 		const_iterator i = find(k);	// uses find() const;
 		return (i != this->end()) ? i->second : T();
 		// if T is a pointer class, should be equivalent to NULL
 		// or whatever the default constructor is
 	}
 
+	/**
+		For all entries whose value is the default, remove them.  
+	 */
+	void clean(void) {
+		const T def;	// default value
+#if 0
+		// won't work because of pair<> b.s.
+		remove_if(index_map.begin(), index_map.end(),
+			unary_compose(     
+				bind2nd(equal_to<T>(), def),       
+				_Select2nd<typename map_type::value_type>()
+				// some error involving operator =
+				// with const first type.
+			)
+		);
+#else
+		iterator i = this->begin();
+		const const_iterator e = this->end();
+		for ( ; i!=e; ) {
+			if (i->second == def) {
+				iterator j = i;
+				j++;
+				this->erase(i);
+				i = j;
+			} else {
+				i++;
+			}
+		}
+#endif
+	}
+
 };	// end class qmap
 
-}	// end namespace
+}	// end namespace QMAP_NAMESPACE
 
 #endif	//	__QMAP_H__
 

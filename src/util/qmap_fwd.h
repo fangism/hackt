@@ -6,7 +6,7 @@
 #define	__QMAP_FWD_H__
 
 #ifndef	QMAP_NAMESPACE
-#define	QMAP_NAMESPACE		fang
+#define	QMAP_NAMESPACE		qmap_namespace
 #endif
 
 namespace QMAP_NAMESPACE {
