@@ -1,7 +1,7 @@
 /**
 	\file "pooled_thing.h"
 	Example of a simple pool-allocated class, using the util library.  
-	$Id: pooled_thing.h,v 1.1 2005/01/16 02:44:27 fang Exp $
+	$Id: pooled_thing.h,v 1.1.52.1 2005/03/06 04:19:33 fang Exp $
  */
 
 #ifndef	__POOLED_THING_H__
@@ -21,7 +21,7 @@ public:
 	pooled_thing(const int d = 0) : value(d) { }
 	~pooled_thing() { }
 
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 };
 
 #endif	// __POOLED_THING_H__

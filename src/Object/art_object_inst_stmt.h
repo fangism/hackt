@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.11 2005/03/04 06:19:56 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.11.4.1 2005/03/06 04:19:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -88,7 +88,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 // private:
 };	// end class pbool_instantiation_statement
 
@@ -140,7 +140,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 // private:
 };	// end class pint_instantiation_statement
 
@@ -295,7 +295,7 @@ public:
 
 public:
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 // private:
 
 };	// end class data_instantiation_statement

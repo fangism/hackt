@@ -21,6 +21,16 @@
 	  in the free-list before destruction of the pool.  
 	  Cleaned up files a bit.  Will apply these concepts to chunk_map_pool.
 
+	* -chunkmap-03:
+	  Wrote CHUNK_MAP_POOL declaration and definition macros, 
+	  in the style ripped from list_vector_pool.  
+	  Updated LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS macro name.  
+	  Corrected little pointer arithmetic bug in 
+	  typeless_memory_chunk::__deallocate.
+	  Ported ART::parser::token_char to using chunk_map_pool now.  
+	  Everything still works.  Going to check with gcc4 before
+	  marking ready to merge to trunk.  
+
 
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 

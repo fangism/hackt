@@ -1,7 +1,7 @@
 /**
 	\file "memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.2.10.1 2005/03/06 00:52:05 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.2.10.2 2005/03/06 04:19:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -14,6 +14,8 @@
 #include "numeric/integer_traits.h"
 #include "memory/destruction_policy.tcc"
 #include "what.tcc"
+
+#define	FORMAT_HEX_POINTER(x)	reinterpret_cast<void*>(size_t(x))
 
 namespace util {
 namespace memory {
@@ -38,6 +40,10 @@ TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
 	register const size_t alloc_position =
 		MSB_position<bit_map_type>()(alloc_bit);
 	INVARIANT(alloc_position < chunk_size);
+#if 0
+	cerr << "free_mask = " << FORMAT_HEX_POINTER(free_mask);
+	cerr << ", alloc_bit = " << FORMAT_HEX_POINTER(alloc_bit) << endl;
+#endif
 	free_mask = after_alloc;
 	return &elements[alloc_position];
 }
@@ -50,12 +56,25 @@ TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
 TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE
 void
 TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
+	// For shame! pointer-arithmetic!
+	// worry about portability later...
+	const size_t
+		diff = reinterpret_cast<size_t>(p)
+			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
-		divide_by_constant<element_size, size_t>(
-			reinterpret_cast<storage_type*>(p) -elements);
+		divide_by_constant<element_size, size_t>(diff);
 	INVARIANT(offset < chunk_size);	// else doesn't belong to this chunk!
 	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
 	// was actually allocated and not already freed
+#if 0
+	cerr << "start = " << start_address();
+	cerr << ", p = " << p;
+	cerr << ", free_mask = " << FORMAT_HEX_POINTER(free_mask);
+	cerr << ", dealloc_mask = " << FORMAT_HEX_POINTER(dealloc_mask) << endl;
+	if (!(free_mask & dealloc_mask)) {
+		cerr << "PANIC!" << endl;
+	}
+#endif
 	INVARIANT(free_mask & dealloc_mask);
 	free_mask -= dealloc_mask;
 }
@@ -107,7 +126,7 @@ CHUNK_MAP_POOL_CHUNK_CLASS::status(ostream& o) const {
 //	const std::ios_base::fmtflags f = o.flags();
 //	o.flags(f | std::ios_base::hex);
 	// interpreting for getting hexadecimal formatting
-	o << reinterpret_cast<void*>(size_t(this->free_mask)) << endl;
+	o << FORMAT_HEX_POINTER(this->free_mask) << endl;
 //	o.flags(f);
 	return o;
 }

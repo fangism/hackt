@@ -1,7 +1,7 @@
 /**
 	\file "memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.2.10.1 2005/03/06 00:52:05 fang Exp $
+	$Id: chunk_map_pool.h,v 1.2.10.2 2005/03/06 04:19:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -19,7 +19,76 @@ chunk_map_pool_chunk<T,C>
 #define	CHUNK_MAP_POOL_CLASS						\
 chunk_map_pool<T,C,Threaded>
 
+//=============================================================================
+/**
+	Normal definition of new and delete using chunk_map_pool as 
+	the underlying allocator for a class.  
+	Note: if T is a template, then will need typename keyword... arg.
+ */
+#define	CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(T)			\
+T::pool_type T::pool;							\
+void*									\
+T::operator new (size_t s) {						\
+	INVARIANT(sizeof(T) == s);					\
+	return pool.allocate();						\
+}									\
+void*									\
+T::operator new (size_t s, void*& p) {					\
+	INVARIANT(sizeof(T) == s);					\
+	NEVER_NULL(p); return p;					\
+}									\
+void									\
+T::operator delete (void* p) {						\
+	T* t = reinterpret_cast<T*>(p);					\
+	NEVER_NULL(t);							\
+	pool.deallocate(t);						\
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Macro for explicitly requiring orderly memory pool static 
+	initialization.  
+	\param T any type that is not a template-id, damn preprocessor.
+ */
+#define	REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(T)				\
+static const T::pool_ref_type						\
+__pool_ref_ ## T ## __ (T::get_pool());
+
+
+/**
+	Initialization-ordering-safe version fo chunk_map_pool-enabled
+	overloads of new and delete.  
+ */
+#define	CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(T)			\
+REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(T)					\
+									\
+T::pool_ref_ref_type							\
+T::get_pool(void) {							\
+	static pool_type*	pool = new pool_type();			\
+	static size_t*		count = new size_t(0);			\
+	return pool_ref_ref_type(pool, count);				\
+}									\
+void*									\
+T::operator new (size_t s) {						\
+	static pool_type& pool(*get_pool());				\
+	INVARIANT(sizeof(T) == s);					\
+	return pool.allocate();						\
+}	/* implicitly calls default ctor thereafter */			\
+void*									\
+T::operator new (size_t s, void*& p) {					\
+	INVARIANT(sizeof(T) == s);					\
+	NEVER_NULL(p);							\
+	return p;							\
+}	/* automatically calls copy-ctor thereafter */			\
+void									\
+T::operator delete (void* p) {						\
+	static pool_type& pool(*get_pool());				\
+	T* t = reinterpret_cast<T*>(p);					\
+	NEVER_NULL(t);							\
+	pool.deallocate(t);						\
+}	/* implicitly calls dtor thereafter */
+
+//=============================================================================
 namespace util {
 namespace memory {
 using std::ostream;
