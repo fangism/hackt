@@ -181,6 +181,7 @@ BAD_ESCAPE	"\\"[0-9]+
 NAMESPACE	"namespace"
 OPEN		"open"
 AS		"as"
+TEMPLATE	"template"
 DEFINE		"define"
 DEFCHAN		"defchan"
 DEFTYPE		"deftype"
@@ -241,6 +242,7 @@ FALSE		"false"
 {NAMESPACE}	{ KEYWORD_UPDATE; return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE; return OPEN; }
 {AS}		{ KEYWORD_UPDATE; return AS; }
+{TEMPLATE}	{ KEYWORD_UPDATE; return TEMPLATE; }
 {DEFINE}	{ KEYWORD_UPDATE; return DEFINE; }
 {DEFCHAN}	{ KEYWORD_UPDATE; return DEFCHAN; }
 {DEFTYPE}	{ KEYWORD_UPDATE; return DEFTYPE; }

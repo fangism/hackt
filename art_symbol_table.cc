@@ -6,6 +6,7 @@
 #include "art_parser.h"
 #include "art_symbol_table.h"
 #include "art_object.h"
+#include "art_object_expr.h"
 
 //=============================================================================
 namespace ART {
@@ -27,52 +28,122 @@ using namespace std;
 context::context(name_space* g) : 
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
-		ns_stack(), 
+		namespace_stack(), 
+
+		current_open_definition(NULL), 
+		check_against_previous_definition_signature(false), 
+#if 0
 		current_chan_def(NULL), 
 		check_against_prev_chan(false), 
 		current_type_def(NULL), 
 		check_against_prev_type(false), 
 		current_proc_def(NULL), 
 		check_against_prev_process(false), 
+#endif
+		current_definition_reference(NULL), 
+#if 0
+		inst_param_def(NULL), 
 		inst_proc_def(NULL), 
 		inst_data_def(NULL),
 		inst_chan_def(NULL), 
-		inst_param_def(NULL) {
-	// perhaps verify that g is indeed global?
-	ns_stack.push(g);
+#endif
+		current_fundamental_type(NULL), 
+#if 0
+		inst_param_type_ref(NULL), 
+		inst_proc_type_ref(NULL), 
+		inst_data_type_ref(NULL),
+		inst_chan_type_ref(NULL), 
+#endif
+		current_instance_to_connect(NULL), 
+		current_template_arguments(NULL), 
+		current_array_dimensions(NULL), 
+		dynamic_scope_stack(), 
+		global_namespace(g) {
 
-	// "current_namespace" is macro-defined to ns_stack.top()
-	assert(current_namespace);		// make sure allocated properly
+	// perhaps verify that g is indeed global?  can't be any namespace
+	namespace_stack.push(g);
+	dynamic_scope_stack.push(NULL);	// else top() will seg-fault
 
-	// Add to the global namespace all built-in types and definitions.  
+	// "current_namespace" is macro-defined to namespace_stack.top()
+	assert(current_namespace);	// make sure allocated properly
+	assert(global_namespace);	// same pointer
+
+	// write-able pointer to global namespace
+	name_space* modify_global = current_namespace;
+
+	// should built-ins be in a super namespace about the globals?
+	// some static global set?  shared among all objects?
+	// thinking of merging object hierarchies in the future for linking...
+	// want to avoid multiple definitions in the global namespace.  
+
+	// must do parameter definitions first, "int" depends on "pint"
+	built_in_param_def* pbool_pd = 
+		new built_in_param_def(modify_global, "pbool");
+//	assert(modify_global->add_built_in_param_definition(pbool_pd));
+	assert(pbool_pd == modify_global->add_definition(pbool_pd));
+	built_in_param_def* pint_pd = 
+		new built_in_param_def(modify_global, "pint");
+	assert(pint_pd == modify_global->add_definition(pint_pd));
+//	assert(modify_global->add_built_in_param_definition(pint_pd));
+
+	// then add built-in param type *references*
+	param_type_reference* pbool_pr =
+		new param_type_reference(pbool_pd);	// "pbool"
+	assert(pbool_pr == modify_global->add_type_reference(pbool_pr));
+	param_type_reference* pint_pr =
+		new param_type_reference(pint_pd);	// "pint"
+	assert(pint_pr == modify_global->add_type_reference(pint_pr));
+
+
+	// Add to the global namespace all built-in types definitions.  
 	// Lookups of built-in type always goes to global namespace.  
-	assert(current_namespace->add_built_in_datatype_definition(
-		new built_in_datatype_def(current_namespace, "bool")));
-	assert(current_namespace->add_built_in_datatype_definition(
-		new built_in_datatype_def(current_namespace, "int")));
+	built_in_datatype_def* bool_dd =
+		new built_in_datatype_def(modify_global, "bool");
+//	assert(modify_global->add_built_in_datatype_definition(bool_dd));
+	assert(bool_dd == modify_global->add_definition(bool_dd));
+	built_in_datatype_def* int_dd =
+		new built_in_datatype_def(modify_global, "int");
+	assert(int_dd);
+	int_dd->add_template_formal(
+		new param_instantiation(*modify_global, *pint_pr, "width", 
+			new param_const_int(32)));
+		// effectively: template <pint width=32> deftype int;
+//	assert(modify_global->add_built_in_datatype_definition(int_dd));
+	assert(int_dd == modify_global->add_definition(int_dd));
+	// "int" is parameterized by width, but don't need to do anything
+	//	differently here... or should we construct it properly?
+	// using template <pint width [=32]>?
 
-	assert(current_namespace->add_built_in_param_definition(
-		new built_in_param_def(current_namespace, "pbool")));
-	assert(current_namespace->add_built_in_param_definition(
-		new built_in_param_def(current_namespace, "pint")));
-}
+
+	// add built-in data type *references*
+	// remember to hash using template arguments, if applicable
+	data_type_reference* bool_dr = 
+		new data_type_reference(bool_dd);	// "bool"
+	assert(bool_dr);
+	assert(bool_dr == modify_global->add_type_reference(bool_dr));
+	// somewhere we need to check consistency between supplied
+	//	template arguments and template formals!!!
+	// recall that "int" is a template
+	// shall we temporarily de-template it?
+
+}	// end of context constructor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Context destructor.  Need not explicitly clear structure members, 
 	as their default destructors are automatically invoked.  
-	Reminder, that the global namespace in the ns_stack is not owned
+	Reminder, that the global namespace in the namespace_stack is not owned
 	by this context, and thus should not be deleted.  
  */
 context::~context() {
-//	ns_stack.pop();			// redundant
+//	namespace_stack.pop();			// redundant
 // possible sanity check: the remaining namespace is the global
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Attempts to open up namespace, modifying the context, 
-	and pushes the new namespace onto ns_stack.
+	and pushes the new namespace onto namespace_stack.
 	Error occurs if name conflicts, as defined by the implementation
 	within add_open_namespace.  
 	\param id is the name of the namespace to enter.  
@@ -92,7 +163,7 @@ context::open_namespace(const token_identifier& id) {
 
 	if (insub) {
 //		current_namespace = insub;
-		ns_stack.push(insub);
+		namespace_stack.push(insub);
 		indent++;
 	} else {
 		// leave current_namespace as it is
@@ -116,10 +187,9 @@ context::close_namespace(void) {
 	indent--;
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
-//	current_namespace = current_namespace->leave_namespace();	// obsolete
 	new_top = current_namespace->leave_namespace();
-	ns_stack.pop();
-	assert(ns_stack.top() == new_top);
+	namespace_stack.pop();
+	assert(current_namespace == new_top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,7 +197,7 @@ context::close_namespace(void) {
 // error possible
 void
 // const name_space*
-context::using_namespace(const id_expr& id) {
+context::using_namespace(const qualified_id& id) {
 	const name_space* ret = current_namespace->add_using_directive(id);
 	if (!ret) {
 		type_error_count++;
@@ -141,7 +211,7 @@ context::using_namespace(const id_expr& id) {
 /// adds a using namespace directive under a different local name
 void
 // const name_space*
-context::alias_namespace(const id_expr& id, const string& a) {
+context::alias_namespace(const qualified_id& id, const string& a) {
 	const name_space* ret = current_namespace->add_using_alias(id, a);
 	if (!ret) {
 		type_error_count++;
@@ -170,16 +240,20 @@ context::top_namespace(void) const {
  */
 void
 context::declare_process(const token_identifier& pname) {
-	check_against_prev_process = 
+//	check_against_prev_process = 
+	check_against_previous_definition_signature = 
 		(current_namespace->probe_process(pname) != NULL);
 	process_definition* p = current_namespace->add_proc_declaration(pname);
 	if (p) {
-		assert(!current_proc_def);	// sanity check
-		current_proc_def = p;
+// OBSOLETE:
+//		assert(!current_proc_def);	// sanity check
+//		current_proc_def = p;
+		assert(!current_open_definition);	// sanity check
+		current_open_definition = p;
 		indent++;
 	} else {
 		// no real reason why this should ever fail...
-		// leave current_proc_def as it is
+		// leave current_open_definition as it is
 		type_error_count++;
 		cerr << pname.where() << endl;
 		exit(1);			// temporary
@@ -199,12 +273,15 @@ context::declare_process(const token_identifier& pname) {
  */
 void
 context::open_process(const token_identifier& pname) {
-	check_against_prev_process = 
+//	check_against_prev_process = 
+	check_against_previous_definition_signature = 
 		(current_namespace->probe_process(pname) != NULL);
 	process_definition* p = current_namespace->add_proc_definition(pname);
 	if (p) {
-		assert(!current_proc_def);	// sanity check
-		current_proc_def = p;
+//		assert(!current_proc_def);	// sanity check
+//		current_proc_def = p;
+		assert(!current_open_definition);	// sanity check
+		current_open_definition = p;
 		indent++;
 	} else {
 		// no real reason why this should ever fail...
@@ -218,32 +295,90 @@ context::open_process(const token_identifier& pname) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Just sets current_open_definition to NULL, 
+	and resets the check_against_previous_definition_signature flag.  
+	Doesn't check what pointer is before nullifying.  
+ */
+inline
+void
+context::close_current_definition(void) {
+//	current_proc_def = NULL;
+//	current_type_def = NULL;
+	current_open_definition = NULL;
+	check_against_previous_definition_signature = false;
+	indent--;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Closes a process definition in the context.  
-	Just sets current_proc_def to NULL.  
+	Just sets current_open_definition to NULL.  
  */
 void
-context::close_process(void) {
-	assert(current_proc_def);		// sanity check
-	check_against_prev_process = false;
-	indent--;
-	current_proc_def = NULL;
+context::close_process_definition(void) {
+//	assert(current_proc_def);
+	// sanity check
+	MUST_BE_A(process_definition*, current_open_definition);
+	close_current_definition();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Closes a user-defined data type definition in the context.  
-	Just sets current_type_def to NULL.  
+	Just sets current_open_definition to NULL.  
  */
 void
-context::close_datatype(void) {
-	assert(current_type_def);
-	indent--;
-	current_type_def = NULL;
+context::close_datatype_definition(void) {
+//	assert(current_type_def);
+	// sanity check
+	MUST_BE_A(datatype_definition*, current_open_definition);
+	close_current_definition();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_data_def) 
+	Closes a user-defined channel type definition in the context.  
+	Just sets current_open_definition to NULL.  
+ */
+void
+context::close_chantype_definition(void) {
+	MUST_BE_A(channel_definition*, current_open_definition);
+	close_current_definition();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const built_in_param_def*
+context::get_current_param_definition(void) const {
+	return IS_A(const built_in_param_def*, current_definition_reference);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const datatype_definition*
+context::get_current_datatype_definition(void) const {
+	return IS_A(const datatype_definition*, current_definition_reference);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const channel_definition*
+context::get_current_channel_definition(void) const {
+	return IS_A(const channel_definition*, current_definition_reference);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+const process_definition*
+context::get_current_process_definition(void) const {
+	return IS_A(const process_definition*, current_definition_reference);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE
+/**
+	Modifies the context's current_definition_reference, 
 	if the referenced type is resolved without error.  
 	\param id the name of the type (unqualified).  
 	\return pointer to defined or declared type if unique found, 
@@ -260,8 +395,10 @@ context::set_datatype_def(const token_string& id) {
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_data_def);		// sanity check
-		inst_data_def = ret;
+//		assert(!inst_data_def);		// sanity check
+//		inst_data_def = ret;
+		assert(!current_definition_reference);	// sanity check
+		current_definition_reference = ret;
 		indent++;
 	}
 	return ret;
@@ -269,18 +406,20 @@ context::set_datatype_def(const token_string& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_data_def) 
+	Modifies the context's current_definition_reference, 
 	if the referenced type is resolved without error.  
 	TODO: Currently doesn't check template specialization type. 
 	Punting on this until template mechanism is more generalized.  
 	Propose to do template-checking outside of this function, 
 	do it as it is encountered in tree-traversal.  
+	Template arguments should not be checked here...
+	TO DO: common code in if-else, factor out...
 	\param tid the name of the type (unqualified).  
 	\return pointer to defined or declared type if unique found, 
 		else NULL of no match or ambiguous.  
  */
 const datatype_definition*
-context::set_datatype_def(const id_expr& tid) {
+context::set_datatype_def(const qualified_id& tid) {
 	// lookup type (will be built-in int or bool)
 	assert(current_namespace);
 	const datatype_definition* ret = 
@@ -291,17 +430,20 @@ context::set_datatype_def(const id_expr& tid) {
 		cerr << tid.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_data_def);		// sanity check
-		inst_data_def = ret;
+//		assert(!inst_data_def);		// sanity check
+//		inst_data_def = ret;
+		assert(!current_definition_reference);	// sanity check
+		current_definition_reference = ret;
 		indent++;
 	}
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_data_def) 
-	if the referenced type is resolved without error.  
+	Modifies the context's current_definition_reference, 
+	using a built-in data-type definition.  
 	(Approach: don't treat int<> as a corner case of a built-in
 		template; follow a standard framework)
 	\param id the name of the type (unqualified).  
@@ -312,6 +454,8 @@ const datatype_definition*
 context::set_datatype_def(const token_datatype& id) {
 	// lookup type (will be built-in int or bool)
 	assert(current_namespace);
+
+	// should always lookup in global namespace... fix this?
 	const datatype_definition* ret = 
 		current_namespace->lookup_built_in_datatype(id);
 	if (!ret) {
@@ -319,8 +463,10 @@ context::set_datatype_def(const token_datatype& id) {
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_data_def);		// sanity check
-		inst_data_def = ret;
+//		assert(!inst_data_def);		// sanity check
+//		inst_data_def = ret;
+		assert(!current_definition_reference);	// sanity check
+		current_definition_reference = ret;
 		indent++;
 	}
 	// to do elsewhere: set template width using w
@@ -329,9 +475,50 @@ context::set_datatype_def(const token_datatype& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Sets the current instantiating data type definition.
+	Checks for NULL first.  
+	\param dd the data type definition.  
+	\return the data type definition.
+ */
+const datatype_definition*
+context::set_inst_data_def(const datatype_definition& dd) {
+	assert(!current_definition_reference);
+	current_definition_reference = &dd;
+	return &dd;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resets the current type definition to NULL.
+ */
+void
+context::reset_current_definition_reference(void) {
+	if (current_definition_reference) {
+		indent--;
+		current_definition_reference = NULL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the current type to instantiate to NULL.
 	TODO: Also resets template arguments.  
  */
+void
+context::reset_current_fundamental_type(void) {
+	if (current_fundamental_type) {
+		indent--;
+		current_fundamental_type = NULL;
+	} else {
+		cerr << "warning: current_fundamental_type was already NULL."
+			<< endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Resets the current type definition to NULL.
+	TODO: Also resets template arguments.  
 void
 context::unset_datatype_def(void) {
 	if (inst_data_def) {
@@ -339,6 +526,7 @@ context::unset_datatype_def(void) {
 		inst_data_def = NULL;
 	}
 }
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -348,7 +536,8 @@ context::unset_datatype_def(void) {
 const built_in_param_def*
 context::set_param_def(const token_paramtype& pt) {
 	assert(current_namespace);
-	assert(!inst_param_def);
+//	assert(!inst_param_def);
+	assert(!current_definition_reference);
 	// always just lookup in global namespace
 	const built_in_param_def* ret = 
 		current_namespace->lookup_built_in_paramtype(pt);
@@ -357,8 +546,10 @@ context::set_param_def(const token_paramtype& pt) {
 		cerr << pt.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_param_def);		// sanity check
-		inst_param_def = ret;
+//		assert(!inst_param_def);		// sanity check
+//		inst_param_def = ret;
+		assert(!current_definition_reference);	// sanity check
+		current_definition_reference = ret;
 		indent++;
 	}
 	return ret;
@@ -366,9 +557,22 @@ context::set_param_def(const token_paramtype& pt) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Sets the current instantiating param type definition.
+	Checks for NULL first.  
+	\param pd the param type definition.  
+	\return the param type definition.
+ */
+const built_in_param_def*
+context::set_inst_param_def(const built_in_param_def& pd) {
+	assert(!current_definition_reference);
+	current_definition_reference = &pd;
+	return &pd;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** OBSOLETE
 	Resets the current parameter type to NULL.
 	TODO: Also resets template arguments.  
- */
 void
 context::unset_paramtype_def(void) {
 	if (inst_param_def) {
@@ -376,19 +580,254 @@ context::unset_paramtype_def(void) {
 		inst_param_def = NULL;
 	}
 }
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the current instantiating channel type definition.
+	Checks for NULL first.  
+	\param cd the channel type definition.  
+	\return the channel type definition.
+ */
+const channel_definition*
+context::set_inst_chan_def(const channel_definition& cd) {
+	assert(!current_definition_reference);
+	current_definition_reference = &cd;
+	return &cd;
+}
 
-datatype_instantiation*
-context::add_type_instance(const token_identifier& id) {
-	datatype_instantiation* ret;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the current instantiating process type definition.
+	Checks for NULL first.  
+	\param pd the process type definition.  
+	\return the process type definition.
+ */
+const process_definition*
+context::set_inst_proc_def(const process_definition& pd) {
+	assert(!current_definition_reference);
+	current_definition_reference = &pd;
+	return &pd;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const data_type_reference*
+context::set_inst_data_type_ref(const data_type_reference& dr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = &dr;
+	return &dr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const param_type_reference*
+context::set_inst_param_type_ref(const param_type_reference& dr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = &dr;
+	return &dr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const channel_type_reference*
+context::set_inst_chan_type_ref(const channel_type_reference& cr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = &cr;
+	return &cr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const process_type_reference*
+context::set_inst_proc_type_ref(const process_type_reference& pr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = &pr;
+	return &pr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Using the current definition, and current set of template arguments, 
+	check whether template arguments are consistent with definition.  
+	If so, create a valid type reference, and set
+	current_fundamental_type to it.  
+	Called from concrete_type_ref::check_build.
+	\return the new type reference if it was valid, else NULL.  
+ */
+const fundamental_type_reference*
+context::set_current_fundamental_type(void) {
+	assert(!current_fundamental_type);		// redundant
+		// otherwise, someone forgot to reset it!
+	assert(current_definition_reference);
+	// current_template_arguments is optional
+	// if it exists, then it is already checked.
+
+	// check type cache, per major scope
+	const fundamental_type_reference* ret =
+		current_definition_reference->
+			set_context_fundamental_type(*this);
+		// changes current_fundamental_type
+	if (ret)
+		indent++;
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Check current_namespace's used_id_map for previously existing 
+	matched fundamental_type_reference before adding?
+	TO DO: later... encapsulate in a function
+ */
+const fundamental_type_reference*
+context::set_current_fundamental_type(const fundamental_type_reference& tr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = &tr;
+	return &tr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const object*
+context::lookup_object(const qualified_id& id) const {
+	return get_current_scope()->lookup_object(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ok to start search in namespace, because definitions
+	can only be found in namespaces, not other types of scopes.  
+ */
+const definition_base*
+context::lookup_definition(const token_identifier& id) const {
 	assert(current_namespace);
-	assert(inst_data_def);
+	return current_namespace->lookup_definition(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ok to start search in namespace, because definitions
+	can only be found in namespaces, not other types of scopes.  
+ */
+const definition_base*
+context::lookup_definition(const qualified_id& id) const {
+	assert(current_namespace);
+	return current_namespace->lookup_definition(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const instantiation_base*
+context::lookup_instance(const token_identifier& id) const {
+	assert(current_namespace);
+	return current_namespace->lookup_instance(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const instantiation_base*
+context::lookup_instance(const qualified_id& id) const {
+	assert(current_namespace);
+	return current_namespace->lookup_instance(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the current scope, be it namespace, or definition.  
+	Namespaces are kept on a stack, 
+	Definitions may not be nested, but loops and conditionals
+	may be nested.  
+	Loops and conditionals may not contain any other types of scopes.  
+	Constant semantics.  
+ */
+const scopespace*
+context::get_current_scope(void) const {
+	if (current_dynamic_scope)
+		return current_dynamic_scope;
+	else if (current_open_definition)
+		return current_open_definition;
+	else
+		return current_namespace;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the current scope, be it namespace, or definition.  
+	Namespaces (which may be nested) are kept on a stack, 
+	definitions may not be nested, but loops and conditionals
+	may be nested.  
+	Loops and conditionals may not contain any other types of scopes.  
+	Non-constant semantics.  
+ */
+scopespace*
+context::get_current_scope(void) {
+	if (current_dynamic_scope)
+		return current_dynamic_scope;
+	else if (current_open_definition)
+		return current_open_definition;
+	else
+		return current_namespace;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds an instance of the current_fundamental_type
+	to the current_scope.  
+ */
+const instantiation_base*
+context::add_instance(const token_identifier& id) {
+	assert(current_fundamental_type);
+	scopespace* current_scope = get_current_scope();
+	assert(current_scope);
+	// virtual
+	return current_fundamental_type->add_instance_to_scope(
+		*current_scope, id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds an instance of the current data-type with a particular
+	identifier.  Array instantiation is handled in a separate method.  
+	\param id name of instance.  
+	\return valid pointer to instance object.  
+ */
+datatype_instantiation*
+context::add_datatype_instance(const token_identifier& id) {
+	datatype_instantiation* ret;
+	const data_type_reference* dtr = 
+		IS_A(const data_type_reference*, current_fundamental_type);
+	assert(current_namespace);
+	assert(dtr);
+
 	// TO DO: need not just definition, but type_reference
 	// for now, ignore template parameters, add them later
 	ret = current_namespace->add_datatype_instantiation(
-		*new data_type_reference(inst_data_def), id);
-//	ret = current_namespace->add_datatype_instantiation(*inst_data_def, id);
+		*dtr, 
+//		*inst_data_type_ref, 
+//		*new data_type_reference(inst_data_def), 
+		id);
+
+	if (!ret) {
+		type_error_count++;
+		cerr << id.where() << endl;
+		exit(1);			// temporary
+	} 
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds an instance of the current param-type with a particular
+	identifier.  Array instantiation is handled in a separate method.  
+	\param id name of instance.  
+	\return valid pointer to instance object.  
+ */
+param_instantiation*
+context::add_paramtype_instance(const token_identifier& id) {
+	param_instantiation* ret;
+	const param_type_reference* ptr = 
+		IS_A(const param_type_reference*, current_fundamental_type);
+	assert(current_namespace);
+	assert(ptr);
+
+	// TO DO: need not just definition, but type_reference
+	// for now, ignore template parameters, add them later
+	ret = current_namespace->
+		add_paramtype_instantiation(*ptr, id);
+
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -402,7 +841,7 @@ context::add_type_instance(const token_identifier& id) {
 	Using the current set type definition, adds a template formal 
 	parameter.  
 	If already exists, then checks against previous formal declaration.  
-	TO DO: write it, finish it.  
+	TO DO: write it, finish it -- what about arrays?
 	\param id the name of the formal instance.  
  */
 const datatype_instantiation*
@@ -411,7 +850,7 @@ context::add_template_formal(const token_identifier& id) {
 	const datatype_instantiation* ret;
 	assert(inst_data_def);
 	assert(current_namespace);
-//	ret = inst_data_def->add_template_formal();
+//	ret = current_definition_reference->add_template_formal();
 #else
 	return NULL;
 #endif

@@ -17,6 +17,7 @@
 #include "art_parser_template_methods.h"
 #include "art_symbol_table.h"
 #include "art_object.h"
+#include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -24,8 +25,12 @@
 #define	DESTRUCTOR_INLINE		
 
 //=============================================================================
+// debug section
+
+//=============================================================================
 namespace ART {
 namespace parser {
+// using ART::entity::param_expr;
 
 //=============================================================================
 // global constants
@@ -53,13 +58,14 @@ node::where(void) const {
 /**
 	Default type-checker and object builder does nothing.  
 	Should be re-implemented in all terminal subclasses.  
+	Eventually make this pure virtual.  
+	Should really take a context&...
  */
 const object*
 node::check_build(context* c) const {
 	// We DO want to print this message, even in regression testing. 
-	cerr << c->auto_indent() << 
-		"check_build() not fully-implemented yet for ";
-	what(cerr);
+	what(cerr << c->auto_indent() << 
+		"check_build() not implemented yet for ");
 //	return NULL;
 	return c->top_namespace();
 }
@@ -84,6 +90,103 @@ instance_management::instance_management() : def_body_item(), root_item() {
 
 DESTRUCTOR_INLINE
 instance_management::~instance_management() {
+}
+
+//=============================================================================
+// class template_argument_list method definition
+
+CONSTRUCTOR_INLINE
+template_argument_list::template_argument_list(expr_list* e) : expr_list() {
+	e->release_append(*this);
+}
+
+DESTRUCTOR_INLINE
+template_argument_list::~template_argument_list() {
+}
+
+ostream&
+template_argument_list::what(ostream& o) const {
+	return o << "(template-arg-list)";
+}
+
+/**
+	Type checks a expression list in the template argument context.  
+	First builds a list of parameter expression objects.  
+	Should expr_list do this automatically?
+	Can it be used for both template and port arguments?
+	TO DO: manipulate context using definition_base.  
+	\param c the context object -- its current_definition_reference
+		must be set to a valid definition, because this
+		uses that definition to type-check.  
+	\return NULL always?  How does caller know something went wrong?
+ */
+const object*
+template_argument_list::check_build(context* c) const {
+	template_param_list* targs = new template_param_list();
+	assert(targs);
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"template_argument_list::check_build(...): " << endl;
+	)
+	// enter the template argument context
+	// o = expr_list::check_build(c);	// DON'T USE, override
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		const expr* e = *i;
+		assert(e);			// ever blank expression?
+		const object* eret = e->check_build(c);
+		if (eret) {
+			const param_expr* exref = 
+				IS_A(const param_expr*, eret);
+			assert(exref);
+			targs->push_back(exref);
+		} else {
+			// failed!!!  better error handling later
+			cerr << "BAD template argument (not an expression)!";
+			exit(1);
+		}
+	}
+	// set context's template arguments
+	c->set_current_template_arguments(*targs);
+	// leave the template argument context
+	return NULL;
+	// set the current_fundamental_type upon returning from this
+}
+
+//=============================================================================
+// class connection_argument_list method definition
+
+CONSTRUCTOR_INLINE
+connection_argument_list::connection_argument_list(expr_list* e) : expr_list() {
+	e->release_append(*this);
+}
+
+DESTRUCTOR_INLINE
+connection_argument_list::~connection_argument_list() {
+}
+
+ostream&
+connection_argument_list::what(ostream& o) const {
+	return o << "(connection-arg-list)";
+}
+
+/**
+	Type checks a expression list in the connection argument context.  
+	TO DO: manipulate context using definition_base.  
+	\param c the context object.
+	\return 
+ */
+const object*
+connection_argument_list::check_build(context* c) const {
+	const object* o;
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"connection_argument_list::check_build(...): " << endl;
+	)
+	// enter the connection argument context
+	o = expr_list::check_build(c);
+	// leave the connection argument context
+	return o;
 }
 
 //=============================================================================
@@ -115,6 +218,38 @@ alias_list::rightmost(void) const {
 	return alias_list_base::rightmost();
 }
 
+/**
+	Context-sensitive type-checking for parameter expression assignment
+	lists and other instance elements.  
+	Checks type consistency of elements.  
+	\param c the context of the current position in the syntax tree.
+	\return pointer to rightmost instance corresponding to the 
+		final element in the assignment / alias list
+		(if all is consistent, else returns NULL)
+ */
+const object*
+alias_list::check_build(context* c) const {
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"alias_list::check_build(...): " << endl;
+	)
+if (size()) {
+	const object* ret = NULL;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		const object* o = NULL;
+		if (*i) {
+			o = (*i)->check_build(c);
+			// check type of o for consistency
+			// could use context object for modification...
+		}
+	}
+	return ret;
+} else {
+	// will this ever happen?  will be caught as error for now.
+	return NULL;
+}
+}
 
 //=============================================================================
 // template class node_list<> method definitions
@@ -136,25 +271,24 @@ type_base::~type_base() { }
 //=============================================================================
 // class type_id method definitions
 
+/**
+	Builds a type-identifier.  
+	Also deletes expression list argument after transfering list.  
+ */
 CONSTRUCTOR_INLINE
-type_id::type_id(id_expr* b, expr_list* t) : type_base(),
-		base(b),
-		temp_spec(t)  // may be NULL
-		{
+type_id::type_id(qualified_id* b) : node(),
+		base(b) {
 	assert(base);
-	if (t) assert(temp_spec);
 }
 
 DESTRUCTOR_INLINE
 type_id::~type_id() {
-	SAFEDELETE(base); SAFEDELETE(temp_spec);
+	SAFEDELETE(base);
 }
 
 ostream&
 type_id::what(ostream& o) const {
-	base->what(o << "(type-id): ");
-	if (temp_spec) temp_spec->what(o);
-	return o;
+	return base->what(o << "(type-id): ");
 }
 
 line_position
@@ -164,53 +298,69 @@ type_id::leftmost(void) const {
 
 line_position
 type_id::rightmost(void) const {
-	if (temp_spec)
-		return temp_spec->rightmost();
-	else return base->rightmost();
+	return base->rightmost();
 }
 
+/**
+	The base name of the type can refer to either user-defined
+	data, channel, or process type for instantiation.  
+	Use context object to lookup the actual type.  
+	\return pointer to type reference.  
+ */
 const object*
 type_id::check_build(context* c) const {
 	const object* o;
-	o = c->set_datatype_def(*base);		// will handle errors
-	if (temp_spec)
-		o = temp_spec->check_build(c);
-	return o;
+	const definition_base* d;
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"type_id::check_build(...): " << endl;
+	)
+//	o = base->check_build(c);
+	o = c->lookup_definition(*base);
+	d = IS_A(const definition_base*, o);
+	if (!d) {
+//		cerr << "type_id::check_build(context*) : ERROR!" << endl;
+		return NULL;
+	}
+	// set type definition reference
+	d = d->set_context_definition(*c);	// pure virtual
+	// c->set_definition(d);		// don't care which kind...
+	return d;
 }
 
+/*** OBSOLETE
 const id_expr&
 type_id::get_base_type(void) const {
 	assert(base);
 	return *base;
 }
+***/
 
-const expr_list*
-type_id::get_template_spec(void) const {
-	return temp_spec;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// non-member functions
+ostream& operator << (ostream& o, const type_id& id) {
+	return o << *id.base;
 }
 
 //=============================================================================
+#if 0
+// OBSOLETE
 // class data_type_base method definitions
 
+/**
+	After transferring list members, 
+	also deletes expression list argument.  
+ */
 CONSTRUCTOR_INLINE
-data_type_base::data_type_base(token_type* t, 
-//	token_char* l, token_int* w, token_char* r, 	// OBSOLETE
-	expr_list* w) :
+data_type_base::data_type_base(token_type* t) :
 		type_base(),
-		type(t), 
-//		la(l), width(w), ra(r) 
-		width(w) {
+		type(t) {
 	assert(type); 
-//	assert(la); assert(width); assert(ra);
-	if (w) assert(width);
 }
 
 DESTRUCTOR_INLINE
 data_type_base::~data_type_base() {
 	SAFEDELETE(type);
-//	SAFEDELETE(la);
-	SAFEDELETE(width);
-//	SAFEDELETE(ra);
 }
 
 ostream&
@@ -225,58 +375,39 @@ data_type_base::leftmost(void) const {
 
 line_position
 data_type_base::rightmost(void) const {
-//	if (ra)         return ra->rightmost();
-	if (width)	return width->rightmost();
-//	if (la)  	return la->rightmost();
-	else            return type->rightmost();
+	return type->rightmost();
 }
 
 /**
-	Type checks a single data type.  
-	Remember to unset_datatype_def after the list is done.  
-	TO DO: set template arguments if applicable
+	Looks up a built-in datatype definition.  
+	Remember to reset_current_definition_reference after the list is done.  
  */
 const object*
 data_type_base::check_build(context* c) const {
 	const object* o;
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"data_type_base::check_build(...): ";
+	)
 	assert(type);
+	// here, we know it's a data type
 	o = c->set_datatype_def(*type);
-#if 0
-	if (width)
-		c->set_template_args(*width);
-	OR	width->check_build(c);	// expr_list has no context
-		// perhaps sub-type off expr_list? template args...
-#endif
 	return o;
 }
-
-//=============================================================================
-// class user_data_type_def method definitions
-
-CONSTRUCTOR_INLINE
-user_data_type_signature::user_data_type_signature(
-		token_keyword* df, token_identifier* n, token_string* dp, 
-		data_type_base* b, data_param_list* p) :
-		def(df), name(n), dop(dp), bdt(b), params(p) {
-	assert(def); assert(name); assert(dop);
-	assert(bdt); assert(params); 
-}
-
-DESTRUCTOR_INLINE
-user_data_type_signature::~user_data_type_signature() {
-	SAFEDELETE(def); SAFEDELETE(name); SAFEDELETE(dop);
-	SAFEDELETE(bdt); SAFEDELETE(params); 
-}
+#endif
 
 //=============================================================================
 // class user_data_type_prototype method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_prototype::user_data_type_prototype(token_keyword* df, 
-	token_identifier* n, token_string* dp, data_type_base* b, 
+user_data_type_prototype::user_data_type_prototype(
+	template_formal_decl_list* tf, token_keyword* df, 
+	token_identifier* n, token_string* dp, 
+//	data_type_base* b, 
+	concrete_type_ref* b, 
 	data_param_list* p, token_char* s) :
 		prototype(), 
-		user_data_type_signature(df, n, dp, b, p), 
+		user_data_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
 	assert(semi);
 }
@@ -294,7 +425,7 @@ user_data_type_prototype::what(ostream& o) const {
 line_position
 user_data_type_prototype::leftmost(void) const {
 	if (def)	return def->leftmost();
-	else		return name->leftmost();
+	else		return id->leftmost();
 }
 
 line_position
@@ -305,6 +436,10 @@ user_data_type_prototype::rightmost(void) const {
 
 const object*
 user_data_type_prototype::check_build(context* c) const {
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"user_data_type_prototype::check_build(...): " << endl;
+	)
 #if 0
 	const object* o;
 	c->declare_datatype(*this);	// really only need name
@@ -312,7 +447,7 @@ user_data_type_prototype::check_build(context* c) const {
 	assert(o);
 	o = params->check_build(c);
 	assert(o);
-	c->close_datatype();
+	c->close_datatype_definition();
 #else
 	cerr << "TO DO: user_data_type_prototype::check_build();" << endl;
 #endif
@@ -323,18 +458,23 @@ user_data_type_prototype::check_build(context* c) const {
 // class user_data_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_def::user_data_type_def(token_keyword* df, token_identifier* n, 
-	token_string* dp, data_type_base* b, data_param_list* p, 
+user_data_type_def::user_data_type_def(template_formal_decl_list* tf, 
+	token_keyword* df, token_identifier* n, 
+	token_string* dp, 
+//	data_type_base* b, 
+	concrete_type_ref* b, 
+	data_param_list* p, 
 	token_char* l, language_body* s, language_body* g, token_char* r) :
 		definition(), 
-		user_data_type_signature(df, n, dp, b, p), 
+		user_data_type_signature(tf, df, n, dp, b, p), 
 		lb(l), setb(s), getb(g), rb(r) {
 	assert(lb); assert(setb); assert(getb); assert(rb);
 }
 
 DESTRUCTOR_INLINE
 user_data_type_def::~user_data_type_def() {
-	SAFEDELETE(lb); SAFEDELETE(setb); SAFEDELETE(getb); SAFEDELETE(rb);
+	SAFEDELETE(lb); SAFEDELETE(setb);
+	SAFEDELETE(getb); SAFEDELETE(rb);
 }
 
 ostream&
@@ -345,7 +485,7 @@ user_data_type_def::what(ostream& o) const {
 line_position
 user_data_type_def::leftmost(void) const {
 	if (def)	return def->leftmost();
-	else		return name->leftmost();
+	else		return id->leftmost();
 }
 
 line_position
@@ -358,6 +498,10 @@ user_data_type_def::rightmost(void) const {
 const object*
 user_data_type_def::check_build(context* c) const {
 	const object* o;
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"user_data_type_def::check_build(...): " << endl;
+	)
 	c->open_datatype(*this);	// really only need name
 	o = bdt->check_build(c);
 	assert(o);
@@ -365,7 +509,7 @@ user_data_type_def::check_build(context* c) const {
 	assert(o);
 //	setb->check_build(c);
 //	getb->check_build(c);
-	c->close_datatype();
+	c->close_datatype_definition();
 	return c->top_namespace();
 }
 ***/
@@ -375,7 +519,7 @@ user_data_type_def::check_build(context* c) const {
 
 CONSTRUCTOR_INLINE
 chan_type::chan_type(token_keyword* c, token_char* d, 
-		base_data_type_list* t) : type_base(),
+		data_type_ref_list* t) : type_base(),
 		chan(c), dir(d), dtypes(t) {
 	assert(c);
 	if(d) assert(dir);
@@ -412,11 +556,17 @@ chan_type::rightmost(void) const {
 	\param t is the type list for the channel.  
  */
 chan_type*
-chan_type::attach_data_types(base_data_type_list* t) {
+chan_type::attach_data_types(data_type_ref_list* t) {
 	assert(t); assert(!dtypes);     // sanity check    
 	dtypes = t;
 	assert(dtypes);
 	return this;
+}
+
+const object*
+chan_type::check_build(context* c) const {
+	cerr << "chan_type::check_build(): FINISH ME!";
+	return NULL;
 }
 
 //=============================================================================
@@ -424,16 +574,18 @@ chan_type::attach_data_types(base_data_type_list* t) {
 
 CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
+		template_formal_decl_list* tf, 
 		token_keyword* df, token_identifier* n, token_string* dp, 
 		chan_type* b, data_param_list* p) :
-		def(df), name(n), dop(dp), bct(b), params(p) {
-	assert(def); assert(name); assert(dop);
+		signature_base(tf, n), 
+		def(df), dop(dp), bct(b), params(p) {
+	assert(def); assert(dop);
 	assert(bct); assert(params);
 }
 
 DESTRUCTOR_INLINE
 user_chan_type_signature::~user_chan_type_signature() {
-	SAFEDELETE(def); SAFEDELETE(name); SAFEDELETE(dop);
+	SAFEDELETE(def); SAFEDELETE(dop);
 	SAFEDELETE(bct); SAFEDELETE(params);
 }
 
@@ -442,10 +594,11 @@ user_chan_type_signature::~user_chan_type_signature() {
 
 CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
+	template_formal_decl_list* tf, 
 	token_keyword* df, token_identifier* n, token_string* dp, 
 	chan_type* b, data_param_list* p, token_char* s) :
 		prototype(), 
-		user_chan_type_signature(df, n, dp, b, p), 
+		user_chan_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
 	assert(semi);
 }
@@ -463,7 +616,7 @@ user_chan_type_prototype::what(ostream& o) const {
 line_position
 user_chan_type_prototype::leftmost(void) const {
 	if (def)	return def->leftmost();
-	else		return name->leftmost();
+	else		return id->leftmost();
 }
 
 line_position
@@ -476,11 +629,12 @@ user_chan_type_prototype::rightmost(void) const {
 // class user_chan_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_chan_type_def::user_chan_type_def(token_keyword* df, token_identifier* n, 
+user_chan_type_def::user_chan_type_def(template_formal_decl_list* tf, 
+	token_keyword* df, token_identifier* n, 
 	token_string* dp, chan_type* b, data_param_list* p, token_char* l, 
 	language_body* s, language_body* g, token_char* r) :
 		definition(), 
-		user_chan_type_signature(df, n, dp, b, p), 
+		user_chan_type_signature(tf, df, n, dp, b, p), 
 		lb(l), sendb(s), recvb(g), rb(r) {
 	assert(lb); assert(sendb); assert(recvb); assert(rb);
 }
@@ -498,7 +652,7 @@ user_chan_type_def::what(ostream& o) const {
 line_position
 user_chan_type_def::leftmost(void) const {
 	if (def)	return def->leftmost();
-	else		return name->leftmost();
+	else		return id->leftmost();
 }
 
 line_position
@@ -693,8 +847,10 @@ namespace_body::rightmost(void) const {
 const object*
 namespace_body::
 check_build(context* c) const {
-	DEBUG(TRACE_CHECK_BUILD, 
-		cerr << c->auto_indent() << "entering namespace: " << *name)
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() << 
+			"namespace_body::check_build(...): " << *name;
+	)
 	// use context lookup: see if namespace already exists in super-scope
 		// name_space* ns = c->lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
@@ -703,13 +859,53 @@ check_build(context* c) const {
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
-	DEBUG(TRACE_CHECK_BUILD, 
-		cerr << c->auto_indent() << "leaving namespace: " << *name)
+//	TRACE_CHECK_BUILD(
+//		cerr << c->auto_indent() << "leaving namespace: " << *name;
+//	)
 	c->close_namespace();
 	// if no errors, return pointer to the namespace just processed
 	return c->top_namespace();
 }
 
+//=============================================================================
+// class namespace_id method definitions
+
+namespace_id::namespace_id(qualified_id* i) : node(), qid(i) {
+	assert(qid);
+}
+
+namespace_id::~namespace_id() {
+	SAFEDELETE(qid);
+}
+
+ostream&
+namespace_id::what(ostream& o) const {
+	return o << "(namespace-id): " << *qid;
+}
+
+line_position
+namespace_id::leftmost(void) const {
+	return qid->leftmost();
+}
+
+line_position
+namespace_id::rightmost(void) const {
+	return qid->rightmost();
+}
+
+/*** NOT USED... yet
+const object*
+namespace_id::check_build(context* c) const {
+}
+***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// non-member functions
+
+ostream&
+operator << (ostream& o, const namespace_id& id) {
+	return o << *id.qid;
+}
 
 //=============================================================================
 // class using_namespace method definitions
@@ -722,7 +918,7 @@ check_build(context* c) const {
  */
 CONSTRUCTOR_INLINE
 using_namespace::
-using_namespace(token_keyword* o, id_expr* i, token_char* s) :
+using_namespace(token_keyword* o, namespace_id* i, token_char* s) :
 		root_item(),
 		open(o), id(i), as(NULL), alias(NULL), semi(s) {
 	assert(open); assert(id); assert(semi);
@@ -738,7 +934,7 @@ using_namespace(token_keyword* o, id_expr* i, token_char* s) :
  */
 CONSTRUCTOR_INLINE
 using_namespace::
-using_namespace(token_keyword* o, id_expr* i, token_keyword* a, 
+using_namespace(token_keyword* o, namespace_id* i, token_keyword* a, 
 	token_identifier* n, token_char* s) :
 		root_item(),
 		open(o), id(i), as(a), alias(n), semi(s) {
@@ -771,18 +967,22 @@ using_namespace::rightmost(void) const {
 const object*
 using_namespace::
 check_build(context* c) const {
-	if (alias) {
-		DEBUG(TRACE_CHECK_BUILD, 
-			cerr << c->auto_indent() << 
-				"aliasing namespace: " << *id)
-		c->alias_namespace(*id, *alias);
-	} else {
-		DEBUG(TRACE_CHECK_BUILD, 
-			cerr << c->auto_indent() << 
-				"using namespace: " << *id)
-		// if aliased... print all, report as error (done inside)
-		c->using_namespace(*id);
-	}
+if (alias) {
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() << 
+			"using_namespace::check_build(...) (alias): "
+			<< *id;
+	)
+	c->alias_namespace(*id->get_id(), *alias);
+} else {
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() << 
+			"using_namespace::check_build(...) (using): "
+			<< *id;
+	)
+	// if aliased... print all, report as error (done inside)
+	c->using_namespace(*id->get_id());
+}
 	return c->top_namespace();
 }
 
@@ -829,18 +1029,41 @@ instance_base::rightmost(void) const {
 	return id->rightmost();
 }
 
-/***
-line_range
-instance_base::where(void) const {
-	return node::where();
-}
-***/
-
 const object*
 instance_base::check_build(context* c) const {
-	DEBUG(TRACE_CHECK_BUILD, 
-		what(cerr << c->auto_indent()) << ": ")
-	c->add_type_instance(*id);		// ignored return value
+	const instantiation_base* inst;
+//	const fundamental_type_reference* trb;
+//	const datatype_definition* dd;
+//	const built_in_param_def* pd;
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "instance_base::check_build(...): ";
+	)
+
+	// ACTUALLY: need current_fundamental_type()
+	// context dependence: check pointers to see what is being instantiated
+	// TO DO: let context figure it out...
+//	trb = get_current_fundamental_type();
+//	trb->add_instance(c);
+	// uses c->current_fundamental_type
+	inst = c->add_instance(*id);		// check return value?
+	if (!inst) {
+		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+		return NULL;
+	}
+	// need current_instance?  no, not using as reference.
+#if 0
+	dd = c->get_current_datatype_definition();
+	pd = c->get_current_param_definition();
+	if (dd) {
+		assert(!pd);
+		c->add_datatype_instance(*id);	// ignored return value?
+	} else {
+		assert(pd);
+		c->add_paramtype_instance(*id);
+	}
+#endif
+	// return inst;
 	return c->top_namespace();
 }
 
@@ -868,6 +1091,20 @@ instance_array::rightmost(void) const {
 	return ranges->rightmost();
 }
 
+/**
+TO DO:
+const object*
+instance_array::check_build(context* c) const {
+	const object* o;
+	TRACE_CHECK_BUILD(
+		cerr << c->auto_indent() <<
+			"instance_array::check_build(...): " << endl;
+	)
+	o = instance_base::check_build(c);		// re-use
+	// then add array dimensions to instance
+}
+**/
+
 //=============================================================================
 // class instance_declaration method definitions
 
@@ -879,13 +1116,12 @@ instance_array::rightmost(void) const {
 	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
-instance_declaration::instance_declaration(type_base* t, 
+instance_declaration::instance_declaration(concrete_type_ref* t, 
 	instance_id_list* i, terminal* s) :
 		instance_management(),
 		type(t), ids(i), semi(s) {
 	assert(type);
 	assert(ids);
-	if(s) assert(semi);
 }
 
 DESTRUCTOR_INLINE
@@ -911,15 +1147,25 @@ instance_declaration::rightmost(void) const {
 const object*
 instance_declaration::check_build(context* c) const {
 	const object* t;
-	DEBUG(TRACE_CHECK_BUILD, 
-		what(cerr << c->auto_indent()) << ": ")
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"instance_declaration::check_build(...): ";
+	)
 	t = type->check_build(c);
+		// should set the current_fundamental_type
+	c->reset_current_definition_reference();
 	if (t) {
-		ids->check_build(c);
-	} 
+		assert(ids);
+		ids->check_build(c);		// return value?
+	} else {
+		cerr << "ERROR with concrete-type to instantiate at "
+			<< type->where() << endl;
+		return NULL;
+	}
 	// instance could be ANY type
-	c->unset_datatype_def();
-	c->unset_paramtype_def();
+	c->reset_current_fundamental_type();	// the type to instantiate
+//	c->unset_datatype_def();
+//	c->unset_paramtype_def();
 //	return t;
 	return c->top_namespace();
 }
@@ -966,6 +1212,10 @@ instance_connection::where(void) const {
 
 const object*
 instance_connection::check_build(context* c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"instance_connection::check_build(...): ";
+	)
 	return node::check_build(c);
 }
 
@@ -1029,15 +1279,43 @@ instance_alias::leftmost(void) const {
 
 line_position
 instance_alias::rightmost(void) const {
-	return semi->rightmost();
+	if (semi) return semi->rightmost();
+	else if (aliases) return aliases->rightmost();
+	else return instance_base::rightmost();
 }
 
-/***
-line_range
-instance_alias::where(void) const {
-	return node::where();
+/**
+	Type-checking for an instance declaration with an assignment
+	or alias list.  
+	First register the declared indentifier as an instance.  
+	TO DO: PUNT until collective type-references are implemented.  
+	Instantiation of an alias chain MUST be a single instance?
+	or can it be collective?
+	For aliasing, can be collective.
+ */
+const object*
+instance_alias::check_build(context* c) const {
+	const object* o;
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"instance_alias::check_build(...): ";
+	)
+	o = instance_base::check_build(c);
+	// should return reference to the new INSTANCE, not its type
+
+	// should actually check instance-REFERENCES
+	const fundamental_type_reference* tr =
+		IS_A(const fundamental_type_reference*, o);
+	assert(tr);
+	// set the instance to match or just set current instantiation
+//	tr = tr->set_context_fundamental_type_reference(*c);
+	tr = c->set_current_fundamental_type(*tr);
+
+	if (aliases)
+		o = aliases->check_build(c);
+	// unset instance
+	return o;
 }
-***/
 
 //=============================================================================
 // class loop_instantiation method definitions
@@ -1115,7 +1393,8 @@ port_formal_id::rightmost(void) const {
 // class port_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_decl::port_formal_decl(type_base* t, port_formal_id_list* i) : 
+port_formal_decl::port_formal_decl(concrete_type_ref* t, 
+		port_formal_id_list* i) : 
 		node(), type(t), ids(i) {
 	assert(type); assert(ids);
 }
@@ -1185,6 +1464,10 @@ const object*
 template_formal_id::check_build(context* c) const {
 	const object* o;
 	const datatype_instantiation* t;
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"template_formal_id::check_build(...): ";
+	)
 	// type should already be set in the context
 	t = c->add_template_formal(*name);
 	if (dim) {
@@ -1233,68 +1516,114 @@ template_formal_decl::rightmost(void) const {
 const object*
 template_formal_decl::check_build(context* c) const {
 	const object* o;
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"template_formal_decl::check_build(...): ";
+	)
 	o = type->check_build(c);
 	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
-	c->unset_paramtype_def();	// don't forget to unset!
+//	c->unset_paramtype_def();	// don't forget to unset!
+	c->reset_current_definition_reference();
 	return o;
 }
 
 //=============================================================================
-// class def_type_id method definitions
+// class concrete_type_ref method definitions
 
 CONSTRUCTOR_INLINE
-def_type_id::def_type_id(token_identifier* n, template_formal_decl_list* t) : 
-		type_base(), name(n), temp_spec(t) {
-	assert(name);
-	if (t) assert(temp_spec);
+concrete_type_ref::concrete_type_ref(type_base* n, template_argument_list* t) : 
+		node(), base(n), temp_spec(t) {
+	assert(base);
 }
 
 DESTRUCTOR_INLINE
-def_type_id::~def_type_id() {
-	SAFEDELETE(name); SAFEDELETE(temp_spec);
+concrete_type_ref::~concrete_type_ref() {
+	SAFEDELETE(base); SAFEDELETE(temp_spec);
 }
 
 ostream&
-def_type_id::what(ostream& o) const {
-	return o << "(def-type-id)";
+concrete_type_ref::what(ostream& o) const {
+	return o << "(type-ref)";
 }
 
 line_position
-def_type_id::leftmost(void) const {
-	return name->leftmost();
+concrete_type_ref::leftmost(void) const {
+	return base->leftmost();
 }
 
 line_position
-def_type_id::rightmost(void) const {
+concrete_type_ref::rightmost(void) const {
 	if (temp_spec) return temp_spec->rightmost();
-	else return name->rightmost();
+	else return base->rightmost();
 }
 
+/*** OBSOLETE
 const token_identifier&
-def_type_id::get_name(void) const {
-	assert(name);
-	return *name;
+concrete_type_ref::get_name(void) const {
+	assert(base);
+	return *base;
 }
 
 const template_formal_decl_list*
-def_type_id::get_template_formals(void) const {
+concrete_type_ref::get_template_formals(void) const {
 	return temp_spec;
 }
+***/
 
+/**
+	Type-check a type reference, a definition with optional template
+	arguments.  The type reference is used for creating instantiations.  
+	If successful, this sets the current_fundamental_type in the context.  
+	\return the current fundamental type reference if successful,
+		else NULL.
+ */
 const object*
-def_type_id::check_build(context* c) const {
+concrete_type_ref::check_build(context* c) const {
 	const object* o;
-//	const type_definition* t;
-	assert(name);
-// don't check name again, should already be checked by process_proto, etc...
-//	t = c->set_datatype_def(*name);
-//	assert(t);
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"concrete_type_ref::check_build(...): ";
+	)
+
+	// sets context's current definition
+	o = base->check_build(c);
+	const definition_base* d = IS_A(const definition_base*, o);
+	// and should return reference to definition
+	if (!d) {
+		cerr << "concrete_type_ref: bad definition reference!  "
+			"ERROR! " << base->where() << endl;
+		return NULL;
+	}
+
+	// check template arguments, if given
 	if (temp_spec) {
 		o = temp_spec->check_build(c);
-		assert(o);
+		// remember to check the list of template formals
+		// which aren't yet tied to a definition!
+		// each iteration should add one more formal to the
+		// current_template_formals list.  
+
+		// should return pointer to template arguments, 
+		// which is not an object yet...
+		if (!o)	{
+			cerr << "concrete_type_ref: "
+				"bad template args!  ERROR" << endl;
+			return NULL;
+		}
+	} else {
+		// if no args are supplied, 
+		// make sure that the definition doesn't require template args!
+		// Now allows default values for unsupplied arguments.  
+		if(!d->check_null_template_argument()) {
+			cerr << "definition expecting template arguments "
+				"where none were given!" << endl;
+			return NULL;
+		}
 	}
-	return NULL;
+
+	// we've made it!  set the fundamental_type_reference for instantiation
+	return c->set_current_fundamental_type();
 }
 
 //=============================================================================
@@ -1309,28 +1638,38 @@ definition::~definition() {
 }
 
 //=============================================================================
+// class signature_base method definitions
+
+DESTRUCTOR_INLINE
+signature_base::~signature_base() {
+	SAFEDELETE(temp_spec);
+	SAFEDELETE(id);
+}
+
+//=============================================================================
 // class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_signature::process_signature(token_keyword* d, def_type_id* i, 
-	port_formal_decl_list* p) :
-		node(), def(d), idt(i), ports(p) {
-	assert(def); assert(idt); assert(ports);
+process_signature::process_signature(template_formal_decl_list* tf, 
+		token_keyword* d, token_identifier* i, 
+		port_formal_decl_list* p) :
+		signature_base(tf,i), def(d), ports(p) {
+	assert(def); assert(ports);
 }
 
 DESTRUCTOR_INLINE
 process_signature::~process_signature() {
-	SAFEDELETE(def); SAFEDELETE(idt); SAFEDELETE(ports);
+	SAFEDELETE(def); SAFEDELETE(ports);
 }
 
 const token_identifier&
 process_signature::get_name(void) const {
-	return idt->get_name();
+	return *id;
 }
 
 const template_formal_decl_list*
 process_signature::get_template_formals(void) const {
-	return idt->get_template_formals();
+	return temp_spec;
 }
 
 const port_formal_decl_list*
@@ -1342,10 +1681,11 @@ process_signature::get_port_formals(void) const {
 // class process_prototype method definitions
 
 CONSTRUCTOR_INLINE
-process_prototype::process_prototype(token_keyword* d, def_type_id* i, 
-	port_formal_decl_list* p, token_char* s) :
+process_prototype::process_prototype(template_formal_decl_list* tf, 
+		token_keyword* d, token_identifier* i, 
+		port_formal_decl_list* p, token_char* s) :
 		prototype(),
-		process_signature(d, i, p), 
+		process_signature(tf, d, i, p), 
 		semi(s) {
 	assert(semi);
 }
@@ -1362,6 +1702,7 @@ process_prototype::what(ostream& o) const {
 
 line_position
 process_prototype::leftmost(void) const {
+	// temp_spec->leftmost()?
 	return def->leftmost();
 }
 
@@ -1373,13 +1714,18 @@ process_prototype::rightmost(void) const {
 const object*
 process_prototype::check_build(context* c) const {
 	const object* o;
-	DEBUG(TRACE_CHECK_BUILD, 
-		idt->what(cerr << c->auto_indent() << "process prototype: "))
-	c->declare_process(get_name());		// will handle errors
-	o = idt->check_build(c);		// always returns NULL
+	TRACE_CHECK_BUILD(
+		id->what(cerr << c->auto_indent() << 
+			"process_prototype::check_build(...): ");
+	)
+//	c->declare_process(get_name());		// will handle errors
+	c->declare_process(*id);		// will handle errors
+//	o = id->check_build(c);			// always returns NULL
+
 	o = ports->check_build(c);		// ignore return value
-	c->unset_datatype_def();			// unset port type
-	c->close_process();
+//	c->unset_datatype_def();		// unset port type
+	c->reset_current_definition_reference();
+	c->close_process_definition();
 	// nothing better to do
 	return c->top_namespace();
 }
@@ -1388,10 +1734,11 @@ process_prototype::check_build(context* c) const {
 // class process_def method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(token_keyword* d, def_type_id* i, 
-	port_formal_decl_list* p, definition_body* b) :
+process_def::process_def(template_formal_decl_list* tf, 
+		token_keyword* d, token_identifier* i, 
+		port_formal_decl_list* p, definition_body* b) :
 		definition(),
-		process_signature(d, i, p), 
+		process_signature(tf, d, i, p), 
 		body(b) {
 	assert(body);		// body may be empty, is is not NULL
 }
@@ -1420,8 +1767,10 @@ process_def::rightmost(void) const {
 const object*
 process_def::check_build(context* c) const {
 	const object* o;
-	DEBUG(TRACE_CHECK_BUILD, 
-		idt->what(cerr << c->auto_indent() << "process prototype: "))
+	TRACE_CHECK_BUILD(
+		idt->what(cerr << c->auto_indent() << 
+			"process_def::check_build(...): ");
+	)
 	c->open_process(get_name());		// will handle errors
 	o = idt->check_build(c);
 	assert(o);
@@ -1429,12 +1778,30 @@ process_def::check_build(context* c) const {
 	assert(o);
 	o = body->check_build(c);
 	assert(o);
-	c->close_process();
+	c->close_process_definition();
 	// nothing better to do
 	return c->top_namespace();
 }
 ***/
 
+//=============================================================================
+// class user_data_type_signature method definitions
+
+user_data_type_signature::user_data_type_signature(
+		template_formal_decl_list* tf, 
+		token_keyword* df, token_identifier* n, 
+		token_string* dp, 
+//		data_type_base* b, 
+		concrete_type_ref* b, 
+		data_param_list* p) :
+		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {
+	assert(def); assert(dop); assert(bdt); assert(params);
+}
+
+user_data_type_signature::~user_data_type_signature() {
+	SAFEDELETE(def); SAFEDELETE(dop);
+	SAFEDELETE(bdt); SAFEDELETE(params);
+}
 
 //=============================================================================
 // class guarded_definition_body method definitions
@@ -1510,7 +1877,8 @@ prototype::~prototype() { }
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 template class node_list<root_item>;			// root_body
-template class node_list<data_type_base,comma>;		// base_data_type_list
+// template class node_list<data_type_base,comma>;	// base_data_type_list
+template class node_list<concrete_type_ref,comma>;	// data_type_ref_list
 template class node_list<def_body_item>;		// definition_body
 template class node_list<instance_base,comma>;		// instance_id_list
 template 

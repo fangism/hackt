@@ -21,7 +21,7 @@ using namespace std;
 extern  YYSTYPE yyval;			// root token
 extern "C" {
 	int yyparse(void);              // in "y.tab.cc"
-	void yyerror(const char*);	// ancient compiler rejects
+//	void yyerror(const char*);	// ancient compiler rejects
 //	void yyerror(char*);	// replace with this if necessary
 }
 
@@ -32,11 +32,12 @@ int main(int argc, char* argv[]) {
 	entity::name_space* global = new name_space("",NULL);
 	parser::context* the_context = new context(global);
 
-	try {
+//	try {
 		yyparse();
-	} catch (...) {
-		yyerror("uncaught exception in parsing");
-	}
+//	} catch (...) {
+//		cerr << "uncaught exception in parsing";
+//		exit(1);
+//	}
 DEBUG(DEBUG_BASIC, 
 	cerr << "parsing successful... tree built, on to type-checking!" 
 		<< endl;

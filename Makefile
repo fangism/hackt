@@ -22,6 +22,7 @@ MV = mv -f
 TOUCH = touch
 TAR = tar -czvf
 
+CVS = cvs
 # defined with intention of self-modification...
 THISMAKEFILE = Makefile
 
@@ -60,6 +61,8 @@ DOXYGEN_CONFIG = art.doxygen.config
 	$(MAKEDEPEND) $< > $@
 
 default: all
+
+force:
 
 makeinfo:
 	@$(ECHO) "###############################################################################"
@@ -134,7 +137,21 @@ regression-target:
 TEST_FILTER = $(AWK) -f test/state_enum_filter.awk
 TEST_REPORT = test-report.txt
 
-regression-norebuild: cleantests
+# just to make sure nothing crashes
+regression-preliminary: cleantests
+	@$(ECHO) "Running regression preliminaries...";
+	@for f in $(TEST_SUBJECTS); do \
+		$(ECHO) "Trying $$f.in ..."; \
+		$(ARTC) < $$f.in 2>&1 | $(CAT) > /dev/null ; \
+	done 2>&1 | $(CAT) > $(TEST_REPORT); 
+	@if grep -v ^Trying $(TEST_REPORT) ; then \
+		$(ECHO) "Uh oh!  Something crashed..."; \
+		$(ECHO) "See \"$(TEST_REPORT)\" for failed tests."; \
+		exit 1; \
+	fi
+
+regression-norebuild: regression-preliminary
+	$(MAKE) cleantests
 	@$(ECHO) "Running regression tests...";
 	@for f in $(TEST_SUBJECTS); do \
 		$(ARTC) < $$f.in 2>&1 | $(CAT) > $$f.test ; \
@@ -216,7 +233,11 @@ tarball: clobber
 # strongly suggest running with ccache to speedup re-build
 commit: regression
 	$(MAKE) clobberdepend
-	cvs commit
+	$(MAKE) cvsdiffs
+	$(CVS) commit
+
+cvsdiffs: force
+	$(CVS) diff > $@
 
 # header file dependencies generated with gcc -MM, saved to .depend
 

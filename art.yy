@@ -172,6 +172,7 @@ extern const char* const yyrule[];
 	root_item*		_root_item;
 	namespace_body*		_namespace_body;
 	using_namespace*	_using_namespace;
+	namespace_id*		_namespace_id;
 	ART::parser::definition*	_definition;
 	def_body_item*		_def_body_item;
 	language_body*		_language_body;
@@ -179,7 +180,7 @@ extern const char* const yyrule[];
 	process_prototype*	_process_prototype;
 	process_def*		_process_def;
 	type_base*		_type_base;
-	def_type_id*		_def_type_id;
+	concrete_type_ref*	_concrete_type_ref;
 	type_id*		_type_id;
 	port_formal_decl_list*	_port_formal_decl_list;
 	port_formal_decl*	_port_formal_decl;
@@ -189,8 +190,8 @@ extern const char* const yyrule[];
 	template_formal_decl*	_template_formal_decl;
 	template_formal_id_list*	_template_formal_id_list;
 	template_formal_id*	_template_formal_id;
-	data_type_base*		_data_type_base;
-	base_data_type_list*	_base_data_type_list;
+/*	data_type_base*		_data_type_base;	*/
+	data_type_ref_list*	_data_type_ref_list;
 	user_data_type_prototype*	_user_data_type_prototype;
 	user_data_type_def*	_user_data_type_def;
 	chan_type*		_chan_type;
@@ -215,6 +216,7 @@ extern const char* const yyrule[];
 
 	expr*			_expr;
 	paren_expr*		_paren_expr;
+	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
 /*** not used
@@ -228,6 +230,10 @@ extern const char* const yyrule[];
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
+	template_argument_list*	_template_argument_list;
+/** not used
+	connection_argument_list*	_connection_argument_list;
+**/
 	range*			_range;
 	range_list*		_range_list;
 
@@ -342,6 +348,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<_token_keyword>	SET GET SEND RECV
 %token	<_token_keyword>	CHANNEL
+%token	<_token_keyword>	TEMPLATE
 
 %token	<_token_else>		ELSE
 
@@ -357,15 +364,16 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_root_item>	body_item
 %type	<_root_item>	namespace_item
 %type	<_root_item>	namespace_management
+%type	<_namespace_id>	namespace_id
 %type	<_definition>	definition
 %type	<_process_def>	defproc
-%type	<_def_type_id>	def_type_id
 %type	<_token_keyword>	def_or_proc
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
-%type	<_user_data_type_prototype>	declare_type_proto
+%type	<_user_data_type_prototype>	declare_datatype_proto
 %type	<_user_chan_type_prototype>	declare_chan_proto
-%type	<_template_formal_decl_list>	optional_template_formal_decl_list_in_angles template_formal_decl_list
+%type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
+%type	<_template_formal_decl_list>	template_specification optional_template_specification
 %type	<_template_formal_decl>	template_formal_decl
 %type	<_template_formal_id_list>	template_formal_id_list
 %type	<_template_formal_id>	template_formal_id
@@ -373,21 +381,23 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
-%type	<_type_base>	type_id
-/* %type	<_data_type_base>	base_template_type */
-%type	<_token_paramtype>	base_template_type
+%type	<_concrete_type_ref>	physical_type_ref
+%type	<_concrete_type_ref>	data_type_ref
+%type	<_concrete_type_ref>	type_id
+/* %type	<_data_type_base>	base_param_type */
+%type	<_token_paramtype>	base_param_type
 /* %type	<n>	formal_id */
 %type	<_chan_type>	base_chan_type chan_or_port
-%type	<_base_data_type_list>	base_data_type_list_in_parens base_data_type_list
-%type	<_data_type_base>	base_data_type
-%type	<_user_data_type_def>	deftype
+%type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
+%type	<_token_datatype>	base_data_type
+%type	<_user_data_type_def>	defdatatype
 %type	<_user_chan_type_def>	defchan
 %type	<_chp_body>	set_body get_body send_body recv_body
 %type	<_data_param_list>	data_param_list data_param_list_in_parens
 %type	<_instance_declaration>	data_param
 %type	<_instance_id_list>	data_param_id_list
 %type	<_instance_base>	data_param_id
-%type	<_definition_body>	definition_body
+%type	<_definition_body>	definition_body optional_definition_body
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
@@ -441,7 +451,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 /* %type	<n>	primary_expr */
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
-%type	<_id_expr>	qualified_id absolute_id relative_id
+%type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_expr_list>	member_index_expr_list
 %type	<_expr>	member_index_expr unary_expr
 %type	<_expr>	multiplicative_expr additive_expr shift_expr
@@ -452,7 +462,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_assign_stmt>	binary_assignment
 %type	<_incdec_stmt>	unary_assignment
 /* %type	<n>	conditional_expr optional_expr_in_braces */
-%type	<_expr_list>	optional_member_index_expr_list_in_angles
+%type	<_template_argument_list>	optional_template_arguments_in_angles
 %type	<_expr_list>	member_index_expr_list_in_angles
 %type	<_expr_list>	member_index_expr_list_in_parens
 %type	<_expr_list>	expr_list_in_parens expr_list
@@ -505,25 +515,41 @@ namespace_management
 	: NAMESPACE ID '{' top_root '}' ';'
 		{ $$ = new namespace_body($1, $2, $3, $4, $5, $6); }
 	/* or C++ style: using namespace blah; */
-	| OPEN id_expr AS ID ';'
+	| OPEN namespace_id AS ID ';'
 		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
-	| OPEN id_expr ';'
+	| OPEN namespace_id ';'
 		{ $$ = new using_namespace($1, $2, $3); }
 	/* ever close namespace? */
+	;
+
+namespace_id
+	: relative_id
+		{ $$ = new namespace_id($1); }
 	;
 
 /* Process, datatype, and channel definition. */
 definition
 	: defproc { $$ = $1; }
-	| deftype { $$ = $1; }
+	| defdatatype { $$ = $1; }
 	| defchan { $$ = $1; }
 	;
 
 /* declaration prototypes, like forward declarations */
 prototype_declaration
 	: declare_proc_proto { $$ = $1; }
-	| declare_type_proto { $$ = $1; }
+	| declare_datatype_proto { $$ = $1; }
 	| declare_chan_proto { $$ = $1; }
+	;
+
+template_specification
+	: TEMPLATE template_formal_decl_list_in_angles
+		/* too damn lazy to keep around keyword... */
+		{ delete $1; $$ = $2; }
+	;
+
+optional_template_specification
+	: template_specification
+	| { $$ = NULL; }
 	;
 
 /******************************************************************************
@@ -536,23 +562,19 @@ def_or_proc
 	;
 
 declare_proc_proto
-	: def_or_proc def_type_id
+	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens ';'
-		{ $$ = new process_prototype($1, $2, $3, $4); }
+		{ $$ = new process_prototype($1, $2, $3, $4, $5); }
 	;
 
 defproc
-	/* using <> to follow C+ template parameters in def_type_id */
-	: def_or_proc def_type_id
-	  optional_port_formal_decl_list_in_parens '{' definition_body '}'
-	{ $$ = new process_def($1, $2, $3, 
-		definition_body_wrap($4, $5, $6));
-	}
-	| def_or_proc def_type_id
-	  optional_port_formal_decl_list_in_parens '{' '}'
-	{ $$ = new process_def($1, $2, $3, 
-		definition_body_wrap($4, new definition_body(), $5));
-	}
+	/* C++ style template declaration */
+	: optional_template_specification def_or_proc ID
+	  optional_port_formal_decl_list_in_parens
+	  '{' optional_definition_body '}'
+		{ $$ = new process_def($1, $2, $3, $4, 
+			definition_body_wrap($5, $6, $7));
+		}
 	;
 
 optional_port_formal_decl_list_in_parens
@@ -560,21 +582,30 @@ optional_port_formal_decl_list_in_parens
 	: '(' port_formal_decl_list ')'
 		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
 	| '(' ')'
-		{ $$ = (new port_formal_decl_list(NULL))->wrap($1, $2); }
+		{ $$ = (new port_formal_decl_list())->wrap($1, $2); }
 	;
 
-def_type_id
-	: ID optional_template_formal_decl_list_in_angles
-		{ $$ = new def_type_id($1, $2); }
+/***
+// already captured by physical_type_ref
+concrete_type_ref
+	: type_id optional_template_arguments_in_angles
+		{ $$ = new concrete_type_ref($1, $2); }
 	;
+***/
 
 /******** Meta (template) language parameters ********/
 
-optional_template_formal_decl_list_in_angles
+template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
 		{ $$ = template_formal_decl_list_wrap($1, $2, $3); }
+	;
+
+/** OBSOLETE
+optional_template_formal_decl_list_in_angles
+	: template_formal_decl_list_in_angles
 	| { $$ = NULL; }
 	;
+**/
 
 template_formal_decl_list
 	: template_formal_decl_list ';' template_formal_decl
@@ -586,7 +617,7 @@ template_formal_decl_list
 template_formal_decl
 /* changing to C-style formal parameters, allowing comma-lists
 	is there any need for user-defined types in template argument? */
-	: base_template_type template_formal_id_list
+	: base_param_type template_formal_id_list
 		{ $$ = new template_formal_decl($1, $2); }
 	;
 
@@ -612,7 +643,7 @@ port_formal_decl_list
 
 port_formal_decl
 	/* must switch to C-style formals, eliminate id_list */
-	: type_id port_formal_id_list
+	: physical_type_ref port_formal_id_list
 		{ $$ = new port_formal_decl($1, $2); }
 	;
 
@@ -628,13 +659,29 @@ port_formal_id
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
-type_id
-	: id_expr optional_member_index_expr_list_in_angles
+physical_type_ref
+	: relative_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
-		{ $$ = new type_id($1, $2); }
-	| base_chan_type { $$ = $1; }
-	| base_data_type { $$ = $1; }
-	| base_template_type { $$ = $1; }
+		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+	| absolute_id optional_template_arguments_in_angles
+		/* for userdef or chan type, and templating */
+		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+	| base_chan_type
+		/* what would template channel type ref look like? */
+		{ $$ = new concrete_type_ref($1, NULL); }
+	| data_type_ref
+		{ $$ = $1; }
+	;
+
+data_type_ref
+	: base_data_type optional_template_arguments_in_angles
+		{ $$ = new concrete_type_ref($1, $2); }
+	;
+
+type_id
+	: physical_type_ref { $$ = $1; }
+	| base_param_type
+		{ $$ = new concrete_type_ref($1, NULL); }
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;
@@ -643,7 +690,7 @@ type_id
 //	base types
 ******************************************************************************/
 
-base_template_type
+base_param_type
 	: PINT_TYPE 		/* integer parameter */
 		{ $$ = $1; }
 	| PBOOL_TYPE		/* boolean parameter */
@@ -653,7 +700,7 @@ base_template_type
 /* channel type: channel, inport, outport, and data types */
 base_chan_type
 	/* eliminate defaulting? (to int?), use <template> style? */
-	: chan_or_port base_data_type_list_in_parens
+	: chan_or_port data_type_ref_list_in_parens
 		{ $$ = chan_type_attach_data_types($1, $2); }
 	;
 
@@ -666,16 +713,19 @@ chan_or_port
 		{ $$ = new chan_type($1, $2); }
 	;
 
-base_data_type_list_in_parens
-	: '(' base_data_type_list ')'
-		{ $$ = base_data_type_list_wrap($1, $2, $3); }
+data_type_ref_list_in_parens
+	: '(' data_type_ref_list ')'
+		{ $$ = data_type_ref_list_wrap($1, $2, $3); }
 	;
 
-base_data_type_list
-	: base_data_type_list ',' base_data_type
-		{ $$ = base_data_type_list_append($1, $2, $3); }
-	| base_data_type
-		{ $$ = new base_data_type_list($1); }
+/* why only base data types? why not user-defined ones? */
+data_type_ref_list
+/*	: data_type_ref_list ',' base_data_type	*/
+	: data_type_ref_list ',' data_type_ref
+		{ $$ = data_type_ref_list_append($1, $2, $3); }
+/*	| base_data_type	*/
+	| data_type_ref
+		{ $$ = new data_type_ref_list($1); }
 	;
 
 /* actual data: int<width> or bool */
@@ -683,29 +733,37 @@ base_data_type
 /* ever need user-defined types? eventually...
 	optional parens get confused with template-parameters
 	going to use angle brackets <> in the template-fashion */
+/* BAD: eliminate this special case, let type-checker handle */
+/***
 	: INT_TYPE '<' INT '>'
 		{ $$ = new data_type_base($1, 
 			(new expr_list($3))->wrap($2, $4));
 		}
-	| INT_TYPE
-		{ $$ = new data_type_base($1); }
+***/
+	: INT_TYPE
+		{ $$ = $1; }
 	| BOOL_TYPE
-		{ $$ = new data_type_base($1); }
+		{ $$ = $1; }
 	;
 
 /* definition types */
-declare_type_proto
-	: DEFTYPE ID DEFINEOP base_data_type 
+declare_datatype_proto
+	: optional_template_specification DEFTYPE ID DEFINEOP
+/*	  base_data_type */
+	  data_type_ref		/* base? */
           data_param_list_in_parens ';'
-		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6); }
+		{ $$ = new user_data_type_prototype(
+			$1, $2, $3, $4, $5, $6, $7); }
 	;
 
-deftype
-	: DEFTYPE ID DEFINEOP base_data_type 
+defdatatype
+	: optional_template_specification DEFTYPE ID DEFINEOP
+/*	  base_data_type */
+	  data_type_ref		/* base? */
           data_param_list_in_parens
 	  '{' set_body get_body '}'
 		{ $$ = new user_data_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10); }
 	;
 
 set_body
@@ -719,17 +777,18 @@ get_body
 	;
 
 declare_chan_proto
-	: DEFCHAN ID DEFINEOP base_chan_type 
+	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
 	  data_param_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6); }
+		{ $$ = new user_chan_type_prototype(
+			$1, $2, $3, $4, $5, $6, $7); }
 	;
 	
 defchan
-	: DEFCHAN ID DEFINEOP base_chan_type 
+	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
           data_param_list_in_parens
 	  '{' send_body recv_body '}'
 		{ $$ = new user_chan_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10); }
 	;
 
 send_body
@@ -763,7 +822,7 @@ data_param
 	thinking of forbidding list, restricting to single
 	semicolon-delimited declarations
 */
-	: base_data_type data_param_id_list
+	: data_type_ref data_param_id_list
 		{ $$ = new instance_declaration($1, $2); }
 	;
 
@@ -791,6 +850,13 @@ definition_body
 		{ $$ = definition_body_append($1, NULL, $2); }
 	| language_body
 		{ $$ = new definition_body($1); }
+	;
+
+optional_definition_body
+	: definition_body
+	| { $$ = new definition_body(); }
+		/* returns empty definition body instead of NULL
+			because it needs to be wrapped in braces */
 	;
 
 /*
@@ -880,8 +946,8 @@ alias_list
 		{ $$ = new alias_list($1); }
 	;
 
-/* this rule is sort of redundant, oh well... */
 connection_actuals_list
+	/* down-cast to more specific type?  internal to consumer */
 	: member_index_expr_list_in_parens
 	;
 
@@ -1229,8 +1295,10 @@ literal
 id_expr
 		/* for identfiers that need to be searched upwards */
 	: relative_id
+		{ $$ = new id_expr($1); }
 		/* for specifying unambiguous type from global scope */
 	| absolute_id
+		{ $$ = new id_expr($1); }
 	;
 
 absolute_id
@@ -1241,14 +1309,15 @@ absolute_id
 relative_id
 	: qualified_id
 	| ID
-		{ $$ = new id_expr($1); }	/* wrap in id_expr */
+		/* wrap in qualified_id */
+		{ $$ = new qualified_id($1); }
 	;
 
 qualified_id
 	: qualified_id SCOPE ID
-		{ $$ = id_expr_append($1, $2, $3); }
+		{ $$ = qualified_id_append($1, $2, $3); }
 	| ID SCOPE ID
-		{ $$ = (new id_expr($1))->append($2, $3); }
+		{ $$ = (new qualified_id($1))->append($2, $3); }
 	;
 
 member_index_expr_list
@@ -1261,7 +1330,7 @@ member_index_expr_list
 member_index_expr
 /*	: primary_expr */
 	: id_expr { $$ = $1; }
-	/* array index */
+	/* array index: should forbid C-style id[N][M]? current allows... */
 	| member_index_expr range_list_in_brackets
 		{ $$ = new index_expr($1, $2); }
 	| member_index_expr '.' ID
@@ -1269,6 +1338,14 @@ member_index_expr
 	/*			or id_expr? */
 	/* no function calls in expressions... yet */
 	;
+
+/*
+consider:
+list_of_bracketed_ranges
+	: list_of_bracketed_ranges '[' range ']'
+	| list_of_bracketed_ranges
+	;
+*/
 
 unary_expr
 	: member_index_expr
@@ -1423,8 +1500,9 @@ optional_expr_in_braces
 	;
 **/
 
-optional_member_index_expr_list_in_angles
-	: member_index_expr_list_in_angles { $$ = $1; }
+optional_template_arguments_in_angles
+	: member_index_expr_list_in_angles
+		{ $$ = new template_argument_list($1); }
 	| { $$ = NULL; }
 	;
 

@@ -17,8 +17,9 @@
 // is there a way to use typeid() to infer type (even statically)
 // to make dynamic_casts more convenient?
 
-#define	IS_A(type, id)	dynamic_cast<type>(id)
+#define	IS_A(type, id)		dynamic_cast<type>(id)
 #define	MUST_BE_A(type, id)	assert(IS_A(type,id))
+#define	AS_A(type, id)		static_cast<type>(id)
 
 // various assertions, debug statements...
 

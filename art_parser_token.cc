@@ -9,10 +9,12 @@
 
 #include "art_macros.h"		// actually not needed
 #include "art_switches.h"
+#include "art_parser_debug.h"
 #include "art_parser.h"
 // #include "art_parser_template_methods.h"	// no templates here
 #include "art_symbol_table.h"
 #include "art_object.h"
+#include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -127,6 +129,13 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+const object*
+token_int::check_build(context* c) const {
+	cerr << "token_int::check_build(): not quite done yet!" << endl;
+	return new param_const_int(val);
+}
+
+
 //=============================================================================
 // class token_float method definitions
 
@@ -162,6 +171,15 @@ token_float::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+/**
+	Need built-in float type first.  
+ */
+const object*
+token_float::check_build(context* c) const {
+	cerr << "token_float::check_build(): not quite done yet!" << endl;
+	return NULL;
+}
+
 //=============================================================================
 // class token_string method definitions
 
@@ -176,7 +194,7 @@ token_string::string_compare(const char* d) const { return compare(d); }
 
 ostream&
 token_string::what(ostream& o) const {
-	return o << "token: " << (const string&) (*this);
+	return o << "token: " << AS_A(const string&, *this);
 }
 
 line_position
@@ -195,7 +213,7 @@ token_identifier::~token_identifier() { }
 
 ostream&
 token_identifier::what(ostream& o) const {
-	return o << "identifier: " << (const string&) (*this);
+	return o << "identifier: " << AS_A(const string&, *this);
 }
 
 line_position
@@ -206,6 +224,32 @@ token_identifier::leftmost(void) const {
 line_position
 token_identifier::rightmost(void) const {
 	return token_string::rightmost();
+}
+
+/**
+	MESS ALERT:
+	Type-checking for expression literals, 
+	not to be used for instantiation and declaration.  
+	The identifier must have been instantiated or declared formally
+	to pass type-check.  
+	Not intended for use of user-defined type identifiers... yet.
+	SOLUTION: reserve token_identifier for ONLY instantiations
+		and definitions, whereas
+		relative and absolute (qualified) identifiers
+		should be used in the grammar for all *references*
+		to instances.  
+	\param c the context of the current position in the syntax tree.  
+	\return pointer to the instance named if found, else NULL.  
+ */
+const object*
+token_identifier::check_build(context* c) const {
+//	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_identifier::check_build(...): FINISH ME!";
+//	)
+
+	// don't look up, instantiate (checked) in the context's current scope!
+	return c->lookup_instance(*this);
 }
 
 //=============================================================================
@@ -219,7 +263,7 @@ token_keyword::~token_keyword() { }
 
 ostream& 
 token_keyword::what(ostream& o) const {
-	return o << "keyword: " << *((const string*) this);
+	return o << "keyword: " << AS_A(const string&, *this);
 }
 
 //=============================================================================
@@ -240,7 +284,7 @@ token_bool:: ~token_bool() { }
 
 ostream&
 token_bool::what(ostream& o) const {
-	return o << "bool: " << *((const string*) this);
+	return o << "bool: " << AS_A(const string&, *this);
 }
 
 line_position
@@ -251,6 +295,11 @@ token_bool::leftmost(void) const {
 line_position
 token_bool::rightmost(void) const {
 	return token_string::rightmost();
+}
+const object*
+token_bool::check_build(context* c) const {
+	cerr << "token_bool::check_build(): not quite done yet!" << endl;
+	return new param_const_bool(strcmp(c_str(),"true") == 0);
 }
 
 
@@ -272,7 +321,7 @@ token_else:: ~token_else() { }
 
 ostream&
 token_else::what(ostream& o) const {
-	return o << "keyword: " << *((const string*) this);
+	return token_keyword::what(o);
 }
 
 line_position
@@ -283,6 +332,12 @@ token_else::leftmost(void) const {
 line_position
 token_else::rightmost(void) const {
 	return token_string::rightmost();
+}
+
+const object*
+token_else::check_build(context* c) const {
+	cerr << "token_else::check_build(): Don't call me!";
+	return NULL;
 }
 
 //=============================================================================
@@ -310,6 +365,15 @@ token_quoted_string::leftmost(void) const {
 line_position
 token_quoted_string::rightmost(void) const {
 	return terminal::rightmost();
+}
+
+/**
+	Can't do this until we have a built-in type for strings.  
+ */
+const object*
+token_quoted_string::check_build(context* c) const {
+	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
+	return NULL;
 }
 
 //=============================================================================
@@ -342,11 +406,15 @@ token_datatype::~token_datatype() { }
 
 ostream&
 token_datatype::what(ostream& o) const {
-	return o << "datatype: " << *((const string*) this);
+	return o << "datatype: " << AS_A(const string&, *this);
 }
 
 const object*
 token_datatype::check_build(context* c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_datatype::check_build(...): ";
+	)
 	return c->set_datatype_def(*this);
 }
 
@@ -361,11 +429,15 @@ token_paramtype::~token_paramtype() { }
 
 ostream&
 token_paramtype::what(ostream& o) const {
-	return o << "paramtype: " << *((const string*) this);
+	return o << "paramtype: " << AS_A(const string&, *this);
 }
 
 const object*
 token_paramtype::check_build(context* c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_paramtype::check_build(...): ";
+	)
 	return c->set_param_def(*this);
 }
 

@@ -87,6 +87,50 @@ node_list_base<T>::node_list_base(const node_list_base<T>& l) :
 #endif
 }
 
+//-----------------------------------------------------------------------------
+/**
+	Sequentially type-checks and builds list of elements in order.  
+	No longer need to skip every other delimiter token because
+	delimiters are now in separate list.  
+	\return useless pointer, which only reflects the error status of the
+		last object in the list, and thus should be disregarded.  
+		The context object collects the necessary error information.  
+ */
+NODE_LIST_BASE_TEMPLATE_SPEC
+const object*
+node_list_base<T>::check_build(context* c) const {
+	const object* ret = NULL;
+	const_iterator i = begin();
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent() <<
+			"node_list_base<T>::check_build(...): ");
+	)
+	for( ; i!=end(); i++) {
+	if (*i) {
+		// check returned value for failure
+		ret = (*i)->check_build(c);
+		// context will be updated if there is an error
+	}
+	// What if null argument needs to be checked, say, against a list?
+	// especially for optional argument placeholders, need the following:
+	// c->null_check_build();
+	// Alternatively, use template specialization to fix special cases.  
+	// port connectivity checking is a key example...
+	}
+	return ret;
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Releases memory owned by the list and copies over to the destination
+	list.  
+ */
+NODE_LIST_BASE_TEMPLATE_SPEC
+void
+node_list_base<T>::release_append(node_list_base<T>& dest) {
+	list_parent::release_append(dest);
+}
+
 //=============================================================================
 // for class node_list<>
 
@@ -222,33 +266,14 @@ node_list<T,D>::rightmost(void) const {
 
 //-----------------------------------------------------------------------------
 /**
-	Sequentially type-checks and builds list of elements in order.  
-	No longer need to skip every other delimiter token because
-	delimiters are now in separate list.  
-	\return useless pointer, which only reflects the error status of the
-		last object in the list, and thus should be disregarded.  
-		The context object collects the necessary error information.  
+	Releases memory owned by the list and copies over to the destination
+	list.  
  */
 NODE_LIST_TEMPLATE_SPEC
-const object*
-node_list<T,D>::check_build(context* c) const {
-	const object* ret = NULL;
-	const_iterator i = begin();
-	for( ; i!=end(); i++) {
-	if (*i) {
-		DEBUG(TRACE_CHECK_BUILD, 
-			(*i)->what(cerr << c->auto_indent() << "checking a "))
-		// check returned value for failure
-		ret = (*i)->check_build(c);
-		// context will be updated if there is an error
-	}
-	// What if null argument needs to be checked, say, against a list?
-	// especially for optional argument placeholders, need the following:
-	// c->null_check_build();
-	// Alternatively, use template specialization to fix special cases.  
-	// port connectivity checking is a key example...
-	}
-	return ret;
+void
+node_list<T,D>::release_append(node_list<T,D>& dest) {
+	parent::release_append(dest);
+	delim.release_append(dest.delim);
 }
 
 //=============================================================================

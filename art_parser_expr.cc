@@ -10,7 +10,8 @@
 
 // will need these come time for type-checking
 // #include "art_symbol_table.h"
-// #include "art_object.h"
+#include "art_object.h"
+#include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -65,20 +66,25 @@ paren_expr::rightmost(void) const {
 	return rp->rightmost();
 }
 
+const object*
+paren_expr::check_build(context* c) const {
+	return e->check_build(c);
+}
 
 //=============================================================================
-// class id_expr method definitions
+// class qualified_id method definitions
 
 CONSTRUCTOR_INLINE
-id_expr::id_expr(token_identifier* n) : 
-	id_expr_base(n), expr(), absolute(NULL) {
+qualified_id::qualified_id(token_identifier* n) : 
+	qualified_id_base(n), absolute(NULL) {
 }
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
-id_expr::id_expr(const id_expr& i) : id_expr_base(i), expr(), absolute(NULL) {
+qualified_id::qualified_id(const qualified_id& i) :
+		qualified_id_base(i), absolute(NULL) {
 #if DEBUG_ID_EXPR
-	cerr << "id_expr::id_expr(const id_expr&);" << endl;
+	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
 	if (i.absolute) {
 		absolute = new token_string(*i.absolute);
@@ -88,19 +94,19 @@ id_expr::id_expr(const id_expr& i) : id_expr_base(i), expr(), absolute(NULL) {
 }
 
 DESTRUCTOR_INLINE
-id_expr::~id_expr() {
+qualified_id::~qualified_id() {
 	SAFEDELETE(absolute);
 }
 
 /**
 	Call this function in the parser to mark an un/qualified identifier
 	as absolute, as oppposed to relative.  
-	See class definition of id_expr for an explanation.  
+	See class definition of qualified_id for an explanation.  
 	\param s should be a scope (::) token.  
 	\return pointer to this object
  */
-id_expr*
-id_expr::force_absolute(token_string* s) {
+qualified_id*
+qualified_id::force_absolute(token_string* s) {
 //	absolute = IS_A(token_string*, s);
 	absolute = s;
 	assert(absolute);
@@ -108,28 +114,32 @@ id_expr::force_absolute(token_string* s) {
 }
 
 ostream&
-id_expr::what(ostream& o) const {
+qualified_id::what(ostream& o) const {
 	return o << "(id-expr)";
 }
 
-id_expr*
-id_expr::append(terminal* d, token_identifier* n) {
-	return IS_A(id_expr*, id_expr_base::append(d,n));
+qualified_id*
+qualified_id::append(terminal* d, token_identifier* n) {
+	return IS_A(qualified_id*, qualified_id_base::append(d,n));
 }
 
 line_position
-id_expr::leftmost(void) const {
-	return id_expr_base::leftmost();
+qualified_id::leftmost(void) const {
+	return qualified_id_base::leftmost();
 }
 
 line_position
-id_expr::rightmost(void) const {
-	return id_expr_base::rightmost();
+qualified_id::rightmost(void) const {
+	return qualified_id_base::rightmost();
 }
 
-id_expr
-id_expr::copy_namespace_portion(void) const {
-	id_expr ret(*this);		// copy, not-owned
+/***
+	Future: instead of copying, give an iterator range.
+***/
+
+qualified_id
+qualified_id::copy_namespace_portion(void) const {
+	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_back();		// remove last element
 	if (!ret.delim.empty())
@@ -137,16 +147,42 @@ id_expr::copy_namespace_portion(void) const {
 	return ret;
 }
 
+qualified_id
+qualified_id::copy_beheaded(void) const {
+	qualified_id ret(*this);		// copy, not-owned
+	if (!ret.empty())
+		ret.pop_front();		// remove last element
+	if (!ret.delim.empty())
+		ret.delim.pop_front();
+	return ret;
+}
+
+/**
+	Finds an object referenced by the name, be it type or instance.  
+	Remember to check the return type in the caller, even virtual
+	calls through the abstract expr class.  
+	\param c the context from which the search starts.  
+	\return a pointer to a definition_base or an instantiation_base 
+		with the matching [un]qualified identifier if found, else NULL.
+		Other possibilities: namespace?
+		Consumer should wrap in instance_reference?
+			might be collective, in the case of an array
+ */
+const object*
+qualified_id::check_build(context* c) const {
+	return c->lookup_object(*this);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 
 // friend operator
-ostream& operator << (ostream& o, const id_expr& id) {
+ostream& operator << (ostream& o, const qualified_id& id) {
 //	o << "(size = " << id.size() << ", empty = " << id.empty() << ")";
 	if (id.empty()) {
-		return o << "<null id_expr>";
+		return o << "<null qualified_id>";
 	} else {
-		id_expr::const_iterator i = id.begin();
+		qualified_id::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
 		token_identifier* tid = *i;
@@ -162,18 +198,88 @@ ostream& operator << (ostream& o, const id_expr& id) {
 }
 
 //=============================================================================
+// class id_expr method definitions
+
+id_expr::id_expr(qualified_id* i) : expr(), qid(i) {
+	assert(qid);
+}
+
+id_expr::id_expr(const id_expr& i) : expr(), qid(new qualified_id(*i.qid)) {
+	assert(qid);
+}
+
+id_expr::~id_expr() {
+	SAFEDELETE(qid);
+}
+
+ostream&
+id_expr::what(ostream& o) const {
+        return o << "(namespace-id): " << *qid;
+}
+
+line_position     
+id_expr::leftmost(void) const {
+        return qid->leftmost();
+}
+
+line_position
+id_expr::rightmost(void) const {
+        return qid->rightmost();  
+}
+
+/**
+	The qualified_id member's check build can return a definition 
+	or instance pointer.  
+	\param c the context where to begin searching for named object.  
+	\return newly allocated param_literal containing reference to the
+		instance if found, else NULL.
+	FIX ME: should return instance_reference!, not instance!
+ */
+const object*
+id_expr::check_build(context* c) const {
+	const object* o;
+	const instantiation_base* inst = NULL;
+	o = qid->check_build(c);		// will lookup_object
+	if (o) {
+		inst = IS_A(const instantiation_base*, o);
+		if (inst) {
+			// c->?
+			return inst->make_instance_reference(*c);
+			// doesn't have to be a parameter, does it?
+			// return new param_literal(*inst);
+		} else {
+			cerr << "object " << *qid <<
+				" is not an instance, ERROR!";
+		}
+	} else {
+		cerr << "object " << *qid << " not found, ERROR!";
+	}
+	return NULL;
+//	return c->lookup_instance(*qid);
+// also accomplishes same thing?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// non-member functions
+ostream& operator << (ostream& o, const id_expr& id) {
+	return o << *id.qid;
+}
+
+//=============================================================================
 // class range method definitions
 
 CONSTRUCTOR_INLINE
-range::range(expr* l) : expr(), 
-		lower(l), op(NULL), upper(NULL) {
+range::range(expr* l) : lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
+	assert(!IS_A(range*, lower));
 }
 
 CONSTRUCTOR_INLINE
-range::range(expr* l, terminal* o, expr* u) : expr(),
+range::range(expr* l, terminal* o, expr* u) : 
 		lower(l), op(o), upper(u) {
 	assert(lower); assert(op); assert(u);
+	assert(!IS_A(range*, lower));
+	assert(!IS_A(range*, upper));
 }
 
 DESTRUCTOR_INLINE
@@ -198,6 +304,28 @@ range::rightmost(void) const {
         else            return lower->rightmost();
 }
 
+/**
+	Both expressions of the range should be of type pint.  
+	TO DO: finish me
+	\param c the context where to start resolving identifiers.  
+	\return I don't know.
+ */
+const object*
+range::check_build(context* c) const {
+	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
+	const object* o;
+	const param_type_reference* pint_type = 
+		IS_A(const param_type_reference*, 
+			c->global_namespace->lookup_object("pint"));
+	assert(pint_type);
+	o = lower->check_build(c);
+	assert(o);
+	if (upper)
+		o = upper->check_build(c);
+	// not done yet
+	return o;
+}
+
 //=============================================================================
 // class unary_expr method definitions
 
@@ -209,8 +337,6 @@ range::rightmost(void) const {
 CONSTRUCTOR_INLINE
 unary_expr::unary_expr(expr* n, terminal* o) : expr(), 
 		e(n), op(o) {
-	if (n && !e) delete n;  // or use assert?
-	if (o && !op) delete o;
 }
 
 DESTRUCTOR_INLINE
@@ -240,6 +366,13 @@ prefix_expr::leftmost(void) const {
 line_position
 prefix_expr::rightmost(void) const {
 	return e->rightmost();
+}
+
+const object*
+prefix_expr::check_build(context* c) const {
+	cerr << "prefix_expr::check_build(): I'm not done yet!" << endl;
+	e->check_build(c);
+	return NULL;
 }
 
 //=============================================================================
@@ -283,6 +416,36 @@ member_expr::rightmost(void) const {
 	return member->rightmost();
 }
 
+/**
+	Type-check of member reference.  
+ */
+const object*
+member_expr::check_build(context* c) const {
+	const object* o;
+
+	o = e->check_build(c);
+	// expect: fundamental_type_reference
+
+	// this should return a reference to an instance
+	// of some type that has members, such as data, channel, process.  
+	// l should resolve to a *single* instance of something, 
+	// cannot be an array.  
+
+	// use that instance_reference, get its referenced definition_base, 
+	// and make sure it has a member m.
+
+	// what should this return?  the same thing it expects:
+	// a reference to an instance of some type.  
+	// Problem: instances aren't concrete until they are unrolled.
+	// What is available in type-check phase?
+	// Maybe we don't care about the instances themselves, 
+	// rather the *type* returned.  
+	// after all this is type-checking, not range checking.  
+
+	assert(0);
+	return NULL;
+}
+
 //=============================================================================
 // class index_expr method definitions
 
@@ -302,6 +465,23 @@ index_expr::what(ostream& o) const {
 line_position
 index_expr::rightmost(void) const {
 	return ranges->rightmost();
+}
+
+/**
+	TO DO: finish me
+ */
+const object*
+index_expr::check_build(context* c) const {
+	cerr << "index_expr::check_build(): FINISH ME!" << endl;
+	const object* o;
+	o = e->check_build(c);
+	// expect: collective_type_reference
+	const collective_instance_reference* cir = 
+		IS_A(const collective_instance_reference*, o);
+	// check each of the ranges from left to right
+
+	assert(cir);			// temporary
+	return NULL;
 }
 
 //=============================================================================
@@ -326,6 +506,18 @@ binary_expr::leftmost(void) const {
 line_position
 binary_expr::rightmost(void) const {
 	return r->rightmost();
+}
+
+const object*
+binary_expr::check_build(context* c) const {
+	const object *lo, *ro;
+	cerr << "binary_expr::check_build(): FINISH ME!";
+	lo = l->check_build(c);		// expect some object expression
+	assert(lo);			// temporary
+	ro = r->check_build(c);		// expect some object expression
+	assert(ro);			// temporary
+	// switch on operation
+	return NULL;
 }
 
 //=============================================================================
@@ -380,7 +572,7 @@ logical_expr::what(ostream& o) const {
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 template class node_list<expr,comma>;			// expr_list
-template class node_list<token_identifier,scope>;	// id_expr_base
+template class node_list<token_identifier,scope>;	// qualified_id_base
 template class node_list<range,comma>;			// range_list
 
 

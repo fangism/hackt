@@ -40,21 +40,29 @@ public:
 
 /// The default constructor just creates an empty list.  
 explicit list_of_ptr() : parent(), own(true) { }
+/// non-transfer copy constructor
 	list_of_ptr(const list_of_ptr<T>& l);
 
 /// The destructor frees memory to non-NULL pointers in the list.  
 virtual	~list_of_ptr();		// don't want to inline this
 
 // overriding methods
-void	pop_back(void);
-void	clear(void);
+virtual	void	pop_back(void);
+virtual	void	pop_front(void);
+virtual	void	clear(void);
 
 // non-essential add-on methods
-
+/*** already available
 using	parent::push_back;
+using	parent::push_front;
 using	parent::begin;
 using	parent::end;
+using	parent::rbegin;
+using	parent::rend;
+***/
 
+/// Releases memory to the destination list, transfering ownership.  
+virtual	void release_append(list_of_ptr<T>& dest);
 };	// end of class list_of_ptr
 
 //=============================================================================
@@ -86,9 +94,14 @@ explicit list_of_const_ptr() : parent() { }
 
 virtual	~list_of_const_ptr();
 
+/*** already available
 using	parent::push_back;
+using	parent::push_front;
 using	parent::begin;
 using	parent::end;
+using	parent::rbegin;
+using	parent::rend;
+***/
 };	// end of class list_of_const_ptr
 
 //=============================================================================

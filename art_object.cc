@@ -3,6 +3,7 @@
 #include <iostream>
 #include "art_parser_debug.h"
 #include "art_parser.h"
+#include "art_symbol_table.h"
 #include "map_of_ptr_template_methods.h"
 #include "hash_map_of_ptr_template_methods.h"
 
@@ -72,19 +73,19 @@ static bool temp_formal_set_equals(
 	const process_definition::temp_formal_set& ts,       
 	const template_formal_decl_list* tl);
 
-static bool port_formal_set_equals(
-	const process_definition::port_formal_set& ps,             
+static bool port_formals_set_equals(
+	const process_definition::port_formals_set& ps,             
 	const port_formal_decl_list* pl);        
 ***/
 
 //=============================================================================
-// class scopespace methods
+// class scopespace method definitions
 scopespace::scopespace(const string& n, const scopespace* p) : 
 		object(), parent(p), key(n), 
 		used_id_map()
-//		type_template_cache()
+//		type_ref_cache(), 
+//		param_expr_cache()
 		{
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,43 +93,166 @@ scopespace::~scopespace() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	This lookup function returns a pointer to some object that belongs to 
-	this scope, be it a namespace, process, definition, or instantiation.
-	This query will not look in higher namespaces or imported namespaces.
-	we want to forbid reuse of identifiers among different classes
-	in the same namespace, but allow local names to overshadow
-	identifiers in other namespaces.  
-	\param id the hash key.  
-	\return const pointer to object indexed by hash key, otherwise NULL 
-		if object there doesn't already exist.  
-inline
+	When reading from used_id_map, always automatically indirect
+	in case object actually is a handle.  
+ */
 const object*
-scopespace::
-what_is(const string& id) {		// const?
+scopespace::operator [] (const string& id) const {
+	const object* ret = used_id_map[id];
+	if (ret) return &ret->self();
+	else return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	When writing, don't indirect, just return reference to the 
+	pointer stored in used_id_map.  
+	Any potential memory problems?
+	What if an owned pointer gets overwritten?
+ */
+object*&
+scopespace::operator [] (const string& id) {
+	object*& ret = used_id_map[id];
+	if (!IS_A(object_handle*, ret))
+		delete ret;
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+scopespace::used_id_map_type::iterator
+scopespace::find(const string& id) {
+	return used_id_map.find(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+scopespace::used_id_map_type::const_iterator
+scopespace::find(const string& id) const {
+	return used_id_map.find(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::erase(used_id_map_type::iterator it) {
+	used_id_map.erase(it);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic object lookup for unqualified identifier.  
+ */
+const object*
+scopespace::lookup_object_here(const token_identifier& id) const {
 	return used_id_map[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic object lookup for unqualified identifier.  
+ */
+const object*
+scopespace::lookup_object(const token_identifier& id) const {
+	const object* o = used_id_map[id];
+	if (o) return o;
+	else if (parent) return parent->lookup_object(id);
+	else return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic object lookup for a qualified identifier.
+	If id is only a single identifier, and it is not absolute, 
+	then it is considered an unqualified identifier.  
+ */
+const object*
+scopespace::lookup_object(const qualified_id& id) const {
+if (id.is_absolute()) {
+	if (parent)
+		return parent->lookup_object(id);
+	else {	// we are the ROOT, start looking down namespaces
+		const name_space* ns = IS_A(const name_space*, 
+			lookup_namespace(id.copy_namespace_portion()));
+		if (ns)
+			return ns->lookup_object(**id.rend());
+		else return NULL;
+	}
+} else if (id.size() <= 1) {
+	return lookup_object(**id.begin());
+} else {
+	// else need to resolve namespace portion first
+	const name_space* ns = IS_A(const name_space*, 
+		lookup_namespace(id.copy_namespace_portion()));
+	if (ns)
+		return ns->lookup_object(**id.rend());
+	else return NULL;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The search for a namespace should always start at the 
+	outermost namespace given the current context.  
+	Since the outermost context can be something else, such as a loop, 
+	we default to parent's lookup namespace if this is not a namespace. 
+	The name_space::lookup_namespace will override this.  
+	\param id is the entire name of the namespace.
+ */
+
+const scopespace*
+scopespace::lookup_namespace(const qualified_id& id) const {
+	return parent->lookup_namespace(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks in used_id_map for a registered instance name.  
+	\param id name of instance to lookup, an unqualified name.  
+	\return pointer to instance with matching name.  
+ */
+const instantiation_base*
+scopespace::lookup_instance(const token_identifier& id) const {
+	return IS_A(const instantiation_base*, used_id_map[id]);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** NOT READY TO BE UNLEASHED YET ... or ever
+const instantiation_base*
+scopespace::lookup_instance(const qualified_id& id) const {
+	// check absolute-ness of identifier
+	...
 }
 **/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	OBSOLETE.  
-	This lookup function returns a reference to some object that belongs to 
-	this scope, be it a namespace, process, definition, or instantiation.
-	Useful for assignments.  
-	\param id the hash key.  
-	\return pointer to object indexed by hash key, otherwise NULL 
-		if object there doesn't already exist.  
-inline
-const object*&
-scopespace::
-assign_id(const string& id) {
-	return used_id_map[id];
+
+const instantiation_base*
+scopespace::add_instance(instantiation_base& i) {
+	used_id_map[i.get_name()] = &i;
+	return &i;
 }
-**/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Searches ONLY this namespace for a instance.  
+	then if not found locally, searches imported (unaliased) namespaces.  
+	\param m the list of accumulated matches (also returned).  
+	\param tid the name of type to search for.  
+ */
+void
+scopespace::query_instance_match(instance_list& m, const string& tid) const {
+	DEBUG(TRACE_DATATYPE_QUERY, 
+		cerr << endl << "scopespace::query_instance_match: " << tid
+			<< " in " << get_qualified_name())
+
+	const instantiation_base* ret = 
+		IS_A(const instantiation_base*, used_id_map[tid]);
+	if (ret) m.push_back(ret);
+}
 
 //=============================================================================
-// class name_space methods
+// class name_space method definitions
 
 /**
 	Constructor for a new namespace.  
@@ -140,18 +264,21 @@ assign_id(const string& id) {
 name_space::name_space(const string& n, const name_space* p) : 
 		scopespace(n, p), 
 		parent(p), 	// doubly-initialized? override?
-		subns(), open_spaces(), open_aliases(), 
-		type_defs(), type_insts(),
-		param_defs(), param_insts(),
-		proc_defs(), proc_insts() {
+//		subns(), 
+		open_spaces(), open_aliases()
+//		data_defs(), data_insts(),
+//		param_defs(), param_insts(),
+//		proc_defs(), proc_insts()
+		{
 //	inherit_built_in_types();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	The only only memory we need to delete is that owned by this namespace, 	namely, the subns subnamespace map.  We created, thus we delete.  
-	All other pointers are shared pointers, and will be deleted by
-	their respective owners.  
+	The only only memory we need to delete is that owned by 
+	this namespace.  We created, thus we delete.  
+	All other pointers are shared non-owned pointers, 
+	and will be deleted by their respective owners.  
  */
 name_space::~name_space() {
 	// no longer need to explicitly delete pointers belonging
@@ -227,22 +354,22 @@ name_space::add_open_namespace(const string& n) {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
 			DEBUG(TRACE_NAMESPACE_NEW, 
 				cerr << n << " is already exists as subspace, re-opening")
-			assert(probe_ns == subns[n]);
-			ret = subns[n];		// return modifiable pointer
-			// we can return this
+//			assert(probe_ns == subns[n]);
+//			ret = subns[n];		// return modifiable pointer
+			ret = IS_A(name_space*, used_id_map[n]);
 		}
 		assert(ret);
 	} else {
 		// consistency check: 
 		// since we're keeping subns and used_id_map consistent, 
 		// not finding it in used_id_map => must not exist in subns!
-		assert(!subns[n]);
+//		assert(!subns[n]);
 
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
 		ret = new name_space(n, this);
 		assert(ret);
-		subns[n] = ret;		// store it in map of sub-namespaces
+//		subns[n] = ret;		// store it in map of sub-namespaces
 		used_id_map[n] = ret;	// register it as a used id
 	}
 
@@ -289,7 +416,7 @@ name_space::leave_namespace(void) {
  */
 // idea: use ::id[::id]* as a way of specifying absolute namespace path
 const name_space*
-name_space::add_using_directive(const id_expr& n) {
+name_space::add_using_directive(const qualified_id& n) {
 	const name_space* ret;
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
@@ -298,7 +425,7 @@ name_space::add_using_directive(const id_expr& n) {
 		cerr << endl << "adding using-directive in space: " 
 			<< get_qualified_name())
 	// see if namespace has already been declared within scope of search
-	// remember: the id_expr is a suffix to be appended onto root
+	// remember: the qualified_id is a suffix to be appended onto root
 	// find it/them, record to list
 	query_import_namespace_match(candidates, n);
 	i = candidates.begin();
@@ -349,7 +476,7 @@ name_space::add_using_directive(const id_expr& n) {
 	\sa add_using_directive
  */
 const name_space*
-name_space::add_using_alias(const id_expr& n, const string& a) {
+name_space::add_using_alias(const qualified_id& n, const string& a) {
 	const object* probe;
 	const name_space* ret;
 	namespace_list::const_iterator i;
@@ -360,22 +487,31 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 			<< get_qualified_name() << " as " << a)
 
 	probe = used_id_map[a];
+	if (probe)
+		probe = &probe->self();		// resolve handles
 	if (probe) {
 		// then already, it conflicts with some other id
 		// we report the conflict precisely as follows:
 		ret = IS_A(const name_space*, probe);
 		if (ret) {
-			if(subns[a]) {
-				cerr << a << " is already a sub-namespace, ERROR! ";
-			} else if(open_aliases[a]) {
+//			if(subns[a])
+//			if(used_id_map[a]) {
+//				used_id_map[a]->what(
+//					cerr << a << " is already a ")
+//					<< ", ERROR! ";
+//			} else
+			if(open_aliases[a]) {
 				cerr << a << " is already an open alias, ERROR! ";
 			} else {
-				// cannot possibly be anything else!
-				cerr << a << "WTF!!???";
+				cerr << a << " is already a sub-namespace, ERROR! ";
 			}
 		} else {
 			probe->what(cerr << a << " is already declared ") 
 				<< ", ERROR! ";
+			// if is another namespace, could be an alias
+			//	which looks like an alias
+			// perhaps make a namespace_alias class
+			// to replace handle...
 		}
 		return NULL;
 	}
@@ -392,7 +528,9 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 		case 1: {
 			ret = (*i);
 			open_aliases[a] = ret;
-			used_id_map[a] = ret;
+			// remember that open_aliases owns ret, 
+			// not used_id_map, thus we use a const_handle.  
+			used_id_map[a] = new object_handle(ret);
 			break;
 			}
 		case 0:	{
@@ -419,15 +557,15 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	(at most one precise match)
 	This will serach both true subnamespaces and aliased subspaces.  
 	This variation includes the invoking namespace in the pattern match.  
-	Now honors the absolute flag of the id_expr to start search
+	Now honors the absolute flag of the qualified_id to start search
 	from global namespace.  
 	TO DO: re-use quey_subnamespace_match
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
 const name_space*
-name_space::query_namespace_match(const id_expr& id) const {
-	// recall that id_expr is a node_list<token_identifier,scope>
+name_space::query_namespace_match(const qualified_id& id) const {
+	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << "query_namespace_match: " << id 
@@ -436,7 +574,7 @@ name_space::query_namespace_match(const id_expr& id) const {
 	if (id.empty())	{	// what if it's absolute and empty?
 		return (id.is_absolute()) ? get_global_namespace() : this;
 	}
-	id_expr::const_iterator i = id.begin();	assert(*i);
+	qualified_id::const_iterator i = id.begin();	assert(*i);
 	const token_identifier* tid = *i;
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
@@ -453,7 +591,8 @@ name_space::query_namespace_match(const id_expr& id) const {
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
-			next = ns->subns[*tid];
+//			next = ns->subns[*tid];
+			next = IS_A(const name_space*, ns->used_id_map[*tid]);
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
 			ns = (next) ? next : ns->open_aliases[*tid];
@@ -480,8 +619,8 @@ name_space::query_namespace_match(const id_expr& id) const {
 	\param id the qualified/scoped name of the namespace to match
  */
 const name_space*
-name_space::query_subnamespace_match(const id_expr& id) const {
-	// recall that id_expr is a node_list<token_identifier,scope>
+name_space::query_subnamespace_match(const qualified_id& id) const {
+	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << endl << "query_subnamespace_match: " << id 
@@ -489,13 +628,16 @@ name_space::query_subnamespace_match(const id_expr& id) const {
 	if (id.empty())	{	// what if it's absolute and empty?
 		return (id.is_absolute()) ? get_global_namespace() : this;
 	}
-	id_expr::const_iterator i = id.begin();	// id may be empty!
+	qualified_id::const_iterator i = id.begin();	// id may be empty!
 	const token_identifier* tid = *i;
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	const name_space* ns = 
-		((id.is_absolute()) ? get_global_namespace() : this)
-		->subns[*tid];	// lookup map of sub-namespaces
+		IS_A(const name_space*, 
+			((id.is_absolute()) ? get_global_namespace() : this)
+				->used_id_map[*tid]);
+//		((id.is_absolute()) ? get_global_namespace() : this)
+//			->subns[*tid];	// lookup map of sub-namespaces
 	if (!ns) {				// else lookup in aliases
 		ns = open_aliases[*tid];	// replaced for const semantics
 	}
@@ -504,7 +646,8 @@ name_space::query_subnamespace_match(const id_expr& id) const {
 		const name_space* next;
 		tid = IS_A(token_identifier*, *i); assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-		next = ns->subns[*tid];
+//		next = ns->subns[*tid];
+		next = IS_A(const name_space*, ns->used_id_map[*tid]);
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->open_aliases[*tid];
 	}
@@ -530,7 +673,7 @@ name_space::query_subnamespace_match(const id_expr& id) const {
  */
 void
 name_space::
-query_import_namespace_match(namespace_list& m, const id_expr& id) const {
+query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << endl << "query_import_namespace_match: " << id 
 			<< " in " << get_qualified_name())
@@ -563,6 +706,91 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Searches this namespace for a definition, 
+	then if not found locally, searches imported (unaliased) namespaces.  
+	If match list is still empty, then searches parents' namespace
+	until one (grand) parent finds results.  
+	Does not search down subnamespaces, 
+	or aliased imported namespaces.  Searching in those places
+	requires that the identifier be qualified with scope.  
+	The primary difference between this and other type-specific query
+	methods is that this uses only the used_id_map for searching.  
+	\param m the list of accumulated matches (also returned).  
+	\param tid the name of type to search for.  
+ */
+void
+name_space::query_definition_match(definition_list& m, const string& tid) const {
+	DEBUG(TRACE_DATATYPE_QUERY, 
+		cerr << endl << "query_definition_match: " << tid
+			<< " in " << get_qualified_name())
+	{
+		const definition_base* ret = 
+			IS_A(const definition_base*, used_id_map[tid]);
+		if (ret) m.push_back(ret);
+	}
+	// always search these unconditionally? or only if not found so far?
+	if (m.empty()) {
+		// with open namespaces list
+		namespace_list::const_iterator i = open_spaces.begin();
+		for ( ; i!=open_spaces.end(); i++) {
+			assert(*i);
+			const definition_base* ret = 
+				IS_A(const definition_base*,
+					(*i)->used_id_map[tid]);
+			if (ret) m.push_back(ret);
+		}
+		// don't search aliased imports
+	}
+
+	// until list is not empty, keep querying parents
+	// thus, names in deeper spaces will overshadow names in outer spaces
+	if (m.empty() && parent)
+		parent->query_definition_match(m, tid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Searches this namespace for a instance, 
+	then if not found locally, searches imported (unaliased) namespaces.  
+	If match list is still empty, then searches parents' namespace
+	until one (grand) parent finds results.  
+	Does not search down subnamespaces, 
+	or aliased imported namespaces.  Searching in those places
+	requires that the identifier be qualified with scope.  
+	The primary difference between this and other type-specific query
+	methods is that this uses only the used_id_map for searching.  
+	\param m the list of accumulated matches (also returned).  
+	\param tid the name of type to search for.  
+ */
+void
+name_space::query_instance_match(instance_list& m, const string& tid) const {
+	DEBUG(TRACE_DATATYPE_QUERY, 
+		cerr << endl << "name_space::query_instance_match: " << tid
+			<< " in " << get_qualified_name())
+
+	scopespace::query_instance_match(m, tid);
+	// always search these unconditionally? or only if not found so far?
+	if (m.empty()) {
+		// with open namespaces list
+		namespace_list::const_iterator i = open_spaces.begin();
+		for ( ; i!=open_spaces.end(); i++) {
+			assert(*i);
+			const instantiation_base* ret = 
+				IS_A(const instantiation_base*,
+					(*i)->used_id_map[tid]);
+			if (ret) m.push_back(ret);
+		}
+		// don't search aliased imports
+	}
+
+	// until list is not empty, keep querying parents
+	// thus, names in deeper spaces will overshadow names in outer spaces
+	if (m.empty() && parent)
+		parent->query_instance_match(m, tid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Searches this namespace for a matched type, 
 	then if not found locally, searches imported (unaliased) namespaces.  
 	If match list is still empty, then searches parents' namespace
@@ -574,12 +802,14 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) const {
 	\param tid the name of type to search for.  
  */
 void
-name_space::query_datatype_def_match(type_def_list& m, const string& tid) const {
+name_space::query_datatype_def_match(data_def_list& m, const string& tid) const {
 	DEBUG(TRACE_DATATYPE_QUERY, 
 		cerr << endl << "query_datatype_def_match: " << tid
 			<< " in " << get_qualified_name())
 	{
-		const datatype_definition* ret = type_defs[tid];
+//		const datatype_definition* ret = data_defs[tid];
+		const datatype_definition* ret =
+			IS_A(const datatype_definition*, used_id_map[tid]);
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
@@ -587,18 +817,18 @@ name_space::query_datatype_def_match(type_def_list& m, const string& tid) const 
 		// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			const datatype_definition* ret = (*i)->type_defs[tid];
+//			const datatype_definition* ret = (*i)->data_defs[tid];
+			const datatype_definition* ret = 
+				IS_A(const datatype_definition*, 
+					(*i)->used_id_map[tid]);
 			if (ret) m.push_back(ret);
 		}
 		// don't search aliased imports
 	}
 
 	// until list is not empty, keep querying parents
-#if 1
+	// thus, names in deeper spaces will overshadow names in outer spaces
 	if (m.empty() && parent)
-#else
-	if (parent)
-#endif
 		parent->query_datatype_def_match(m, tid);
 }
 
@@ -610,7 +840,7 @@ name_space::query_datatype_def_match(type_def_list& m, const string& tid) const 
  */
 void
 name_space::
-find_namespace_ending_with(namespace_list& m, const id_expr& id) const {
+find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	// should we return first match, or all matches?
 	//	for now: first match
 	//	later, we'll complain about ambiguities that need resolving
@@ -631,6 +861,33 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Adds a definition to this namespace.  
+	Definition is newly created, so used_id_map is responsible
+	for deleting it.  
+	On failure, however, pointer is not added, so need to handle
+	memory in the caller.  
+	\param db the definition to add, newly created.
+	\return definition added if successful, else NULL.  
+ */
+definition_base*
+name_space::add_definition(definition_base* db) {
+	assert(db);
+	string k = db->get_name();
+	const object* probe = used_id_map[k];
+	if (probe) {
+		probe->what(cerr << "ERROR: identifier already taken by ")
+			<< "  Failed to add definition!";
+		return NULL;
+	} else {
+		// used_id_map owns this type is reponsible for deleting it
+		used_id_map[k] = db;
+		return db;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
 	Adds a built-in datatype definition, generally reserved only for use 
 	with the global scope.  
  */
@@ -647,8 +904,8 @@ if (parent) {
 	assert(!probe);
 	// else "ERROR: identifier already taken, failed to add built-in type!";
 
-	// type_defs owns this type is reponsible for deleting it
-	type_defs[k] = d;
+	// used_id_map owns this type is reponsible for deleting it
+//	data_defs[k] = d;
 	used_id_map[k] = d;
 	return d;
 }
@@ -672,16 +929,17 @@ if (parent) {
 	assert(!probe);
 	// else "ERROR: identifier already taken, failed to add built-in type!";
 
-	// type_defs owns this type is reponsible for deleting it
-	param_defs[k] = d;
+	// used_id_map owns this type is reponsible for deleting it
+//	param_defs[k] = d;
 	used_id_map[k] = d;
 	return d;
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition*
-name_space::add_type_alias(const id_expr& t, const string& a) {
+name_space::add_type_alias(const qualified_id& t, const string& a) {
 	return NULL;
 /*** not done yet
 	datatype_definition* ret;
@@ -711,7 +969,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 	// else we've narrowed it down to one
 		case 1: {
 			ret = (*i);
-			type_defs[a] = ret;
+//			data_defs[a] = ret;
 			used_id_map[a] = ret;
 			break;
 			}
@@ -737,6 +995,136 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Adds a fundamental_type_reference to the used_id_map, using
+	the hash_string as the key.  
+	Memory management: will delete tb if it is redundant!
+	So tb is created before this method call.  
+	Inefficiency: have to create and delete type_reference.
+	TO DO: be able to lookup type in advance before creating...
+	\param tb the fundamental_type_reference to lookup and add --
+		MAY BE DELETED if a matching reference is found.
+	\return the same fundamental_type_reference if none was previously found, 
+		otherwise the existing matching reference.  
+ */
+const fundamental_type_reference*
+name_space::add_type_reference(fundamental_type_reference* tb) {
+	const object* o;
+	const fundamental_type_reference* trb;
+	assert(tb);
+	string k = tb->hash_string();
+	o = used_id_map[k];
+	// see what is already there...
+	trb = IS_A(const fundamental_type_reference*, o);
+
+	if (o)	assert(trb);
+	// else a non-type-reference hashed into the used_id_map
+	// using a hash for a type-reference!!!
+
+	if (trb) {
+		// then found a match!, we can delete tb
+		delete tb;
+		return trb;
+	} else {
+		// if tb contains parameter literals that are only
+		// local to this scope, we must add it here, 
+		// else if tb contains only constants and resolved
+		// parameters, then we have two options:
+		// 1) search up parents' namespace until one is found.  
+		//	if not found, add it locally.
+		// 2) jump to the global namespace, to search for type
+		//	if found, use that, else add it to global.
+		//	problem: parent/global namespace is const, 
+		//	so we can't modify it with dirty hack.  
+		// 3) just add it locally to this namespace regardless...
+		//	who gives a rat's a** about redundancy?
+		// 3:
+		used_id_map[k] = tb;
+		return tb;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overrides scopespace::lookup_namespace.
+ */
+const scopespace*
+name_space::lookup_namespace(const qualified_id& id) const {
+	return query_subnamespace_match(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public interface to lookup a single definition_base.  
+	This version takes a single identifier string (unqualified).  
+	\param id the unqualified name of the definition to seek.  
+	\return pointer to matched definition_base, only if it unique, 
+		otherwise returns NULL.  
+	\sa lookup_unqualified_datatype
+ */
+
+const definition_base*
+name_space::lookup_definition(const token_identifier& id) const {
+	definition_list::iterator i;
+	definition_list candidates;
+
+	// only want to query if type was unqualified
+	query_definition_match(candidates, id);
+
+	i = candidates.begin();
+	switch (candidates.size()) {
+		case 1: { return (*i); }	// unique match
+		case 0:	{	// no matches
+			cerr << "type " << id << " ... not found, ERROR! ";
+			return NULL;
+			}
+		default: {	// too many matches
+			cerr << " ERROR: ambiguous definition, "
+				"need to be more specific.  candidates are: ";
+				for ( ; i!=candidates.end(); i++)
+					cerr << endl << "\t" << 
+						(*i)->get_qualified_name();
+			return NULL;
+			}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public interface to lookup a single definition_base.  
+	This version takes a qualified expression.  
+	The main difference between this and other type-specific lookup
+	methods is that this only searches used_id_map.  
+	\param id the qualified name of the type.  
+	\return pointer to matched definition_base, only if it unique, 
+		otherwise returns NULL.  
+	\sa lookup_qualified_datatype
+ */
+const definition_base*
+name_space::lookup_definition(const qualified_id& id) const {
+	qualified_id nsname = id.copy_namespace_portion();
+//	cerr << "nsname = " << " " << nsname << endl;
+	// what if nsname is empty? start search here
+	const name_space* root = 
+		((id.is_absolute()) ? get_global_namespace() : this)
+		->query_subnamespace_match(nsname);
+	if (root) {
+		const definition_base* ret;
+		qualified_id::const_reverse_iterator e = id.rbegin();
+		assert(*e);
+		ret = IS_A(const definition_base*, root->used_id_map[**e]);
+		if (!ret)
+			cerr << "definition " << id <<
+				" ... not found, ERROR!" << endl;
+		return ret;
+	} else {
+		cerr << " ERROR: namespace " << nsname <<
+			" not found!" << endl;
+		return NULL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Public interface to lookup a single datatype_definition.  
 	This version takes a single identifier string (unqualified).  
 	Will need to make sure that template params of matched type is null.  
@@ -749,10 +1137,9 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 
 const datatype_definition*
 name_space::lookup_unqualified_datatype(const string& id) const {
-	// const
 	const datatype_definition* ret;
-	type_def_list::iterator i;
-	type_def_list candidates;
+	data_def_list::iterator i;
+	data_def_list candidates;
 
 	// only want to query if type was unqualified
 	query_datatype_def_match(candidates, id);
@@ -764,7 +1151,7 @@ name_space::lookup_unqualified_datatype(const string& id) const {
 			break;
 			}
 		case 0:	{
-			cerr << "type " << id << " ... not found, ERROR! ";
+			cerr << "type " << id << " ... not found, ERROR!";
 			ret = NULL;
 			break;	// no matches
 			}
@@ -791,8 +1178,8 @@ name_space::lookup_unqualified_datatype(const string& id) const {
 	\sa query_datatype_def_match
  */
 const datatype_definition*
-name_space::lookup_qualified_datatype(const id_expr& id) const {
-	id_expr nsname = id.copy_namespace_portion();
+name_space::lookup_qualified_datatype(const qualified_id& id) const {
+	qualified_id nsname = id.copy_namespace_portion();
 //	cerr << "nsname = " << " " << nsname << endl;
 	// what if nsname is empty? start search here
 	const name_space* root = 
@@ -800,11 +1187,12 @@ name_space::lookup_qualified_datatype(const id_expr& id) const {
 		->query_subnamespace_match(nsname);
 	if (root) {
 		const datatype_definition* ret;
-		id_expr::const_reverse_iterator e = id.rbegin();
+		qualified_id::const_reverse_iterator e = id.rbegin();
 		assert(*e);
-		ret = root->type_defs[**e];
+//		ret = root->data_defs[**e];
+		ret = IS_A(const datatype_definition*, root->used_id_map[**e]);
 		if (!ret)
-			cerr << "type " << id << " ... not found, ERROR! ";
+			cerr << "data-type " << id << " ... not found, ERROR! ";
 		return ret;
 	} else {
 		cerr << " ERROR: namespace " << nsname << " not found!";
@@ -819,8 +1207,10 @@ name_space::lookup_qualified_datatype(const id_expr& id) const {
  */
 const datatype_definition*
 name_space::lookup_built_in_datatype(const token_datatype& id) const {
-	const datatype_definition* ret;
-	ret = get_global_namespace()->type_defs[id];
+	const built_in_datatype_def* ret;
+//	ret = get_global_namespace()->data_defs[id];
+	ret = IS_A(const built_in_datatype_def*, 
+			get_global_namespace()->used_id_map[id]);
 	assert(ret);		// better already be there!
 	return ret;
 }
@@ -833,9 +1223,44 @@ name_space::lookup_built_in_datatype(const token_datatype& id) const {
 const built_in_param_def*
 name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
 	const built_in_param_def* ret;
-	ret = get_global_namespace()->param_defs[id];
+//	ret = get_global_namespace()->param_defs[id];
+	ret = IS_A(const built_in_param_def*, 
+		get_global_namespace()->used_id_map[id]);
 	assert(ret);		// better already be there!
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public interface to lookup a single instantiation_base.  
+	This version takes a qualified expression.  
+	The main difference between this and other type-specific lookup
+	methods is that this only searches used_id_map.  
+	\param id the qualified name of the type.  
+	\return pointer to matched instantiation_base, only if it unique, 
+		otherwise returns NULL.  
+ */
+const instantiation_base*
+name_space::lookup_instance(const qualified_id& id) const {
+	qualified_id nsname = id.copy_namespace_portion();
+//	cerr << "nsname = " << " " << nsname << endl;
+	// what if nsname is empty? start search here
+	const name_space* root = 
+		((id.is_absolute()) ? get_global_namespace() : this)
+		->query_subnamespace_match(nsname);
+	if (root) {
+		const instantiation_base* ret;
+		qualified_id::const_reverse_iterator e = id.rbegin();
+		assert(*e);
+//		ret = IS_A(const instantiation_base*, root->used_id_map[**e]);
+		ret = root->lookup_instance(**e);
+		if (!ret)
+			cerr << "instance " << id << " ... not found, ERROR! ";
+		return ret;
+	} else {
+		cerr << " ERROR: namespace " << nsname << " not found!";
+		return NULL;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -846,12 +1271,11 @@ name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
 	Doesn't check ever other namespace (imports, parents...)
 	because local identifiers are allowed to overshadow.  
 	\param t the type of the instance.
-	\param id the names of the instance.  
+	\param id the name of the instance.  
  */
 datatype_instantiation*
 name_space::add_datatype_instantiation(
-//		const data_type_reference& t, 
-		data_type_reference& t, 	// temporary, until const
+		const data_type_reference& t, 
 		const string& id) {
 	const object* probe;
 	datatype_instantiation* new_inst;
@@ -862,12 +1286,47 @@ name_space::add_datatype_instantiation(
 		return NULL;
 	}
 	// consistency check
-	assert(!type_insts[id]);
+//	assert(!data_insts[id]);
 	// else safe to proceed
 
-	new_inst = new datatype_instantiation(this, &t, id);
+	new_inst = new datatype_instantiation(*this, t, id);
 	assert(new_inst);
-	type_insts[id] = new_inst;
+	// new_inst will be owned by used_id_map
+//	data_insts[id] = new_inst;
+	used_id_map[id] = new_inst;
+	return new_inst;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create an instance of a param type and add it local symbol table.  
+	First checks to see if name is already taken in the used_id_map.  
+	If it collides with anything, then error.  
+	Doesn't check ever other namespace (imports, parents...)
+	because local identifiers are allowed to overshadow.  
+	\param t the type of the instance.
+	\param id the name of the instance.  
+ */
+param_instantiation*
+name_space::add_paramtype_instantiation(
+		const param_type_reference& t,
+		const string& id) {
+	const object* probe;
+	param_instantiation* new_inst;
+	probe = used_id_map[id];
+	if (probe) {
+		probe->what(cerr << id << " is already declared ")
+			<< ", ERROR! ";
+		return NULL;
+	}
+	// consistency check
+//	assert(!param_insts[id]);
+	// else safe to proceed
+
+	new_inst = new param_instantiation(*this, t, id);
+	assert(new_inst);
+	// new_inst will be owned by used_id_map
+//	param_insts[id] = new_inst;
 	used_id_map[id] = new_inst;
 	return new_inst;
 }
@@ -883,6 +1342,8 @@ name_space::add_datatype_instantiation(
 const process_definition*
 name_space::probe_process(const string& s) const {
 	const object* probe = used_id_map[s];
+#if 0
+	// OBSOLETE
 	if (probe) {
 		const process_definition* probe_pd = 
 			IS_A(const process_definition*, probe);
@@ -899,6 +1360,8 @@ name_space::probe_process(const string& s) const {
 		assert(!proc_defs[s]);
 		return NULL;
 	}
+#endif
+	return IS_A(const process_definition*, probe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -913,7 +1376,7 @@ name_space::probe_process(const string& s) const {
 process_definition*
 name_space::add_proc_declaration(const token_identifier& pname) {
 	process_definition* pd = NULL;
-	const object* probe = used_id_map[pname];	// looks up used_id_map
+	const object* probe = used_id_map[pname];
 	if (probe) {
 		// something already exists with name...
 		const process_definition* probe_pd = 
@@ -922,9 +1385,10 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 			// see if this declaration matches EXACTLY
 			// or punt check until check_build() on the templates
 			//	and ports?
-			pd = proc_defs[pname];
-			assert(pd == probe_pd);
-			return pd;
+//			pd = proc_defs[pname];
+//			assert(pd == probe_pd);
+//			return pd;
+			return IS_A(process_definition*, used_id_map[pname]);
 		} else {
 			// already declared as something else in this scope.
 			probe->what(cerr << pname << " is already declared as ")
@@ -935,7 +1399,7 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, false);
 		assert(pd);
-		proc_defs[pname] = pd;
+//		proc_defs[pname] = pd;
 		used_id_map[pname] = pd;
 	}
 	return pd;
@@ -965,9 +1429,10 @@ name_space::add_proc_definition(const token_identifier& pname) {
 			} else {
 			// probably already declared
 			// punt check, until traversing templates/ports
-			pd = proc_defs[pname];
-			assert(pd == probe_pd);
-			return pd;
+//				pd = proc_defs[pname];
+//				assert(pd == probe_pd);
+//				return pd;
+				return IS_A(process_definition*, used_id_map[pname]);
 			}
 		} else {
 			// already declared as something else in this scope.
@@ -979,7 +1444,7 @@ name_space::add_proc_definition(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, true);
 		assert(pd);
-		proc_defs[pname] = pd;
+//		proc_defs[pname] = pd;
 		used_id_map[pname] = pd;
 	}
 	return pd;
@@ -996,8 +1461,8 @@ name_space::add_proc_definition(const token_identifier& pname) {
 void
 name_space::inherit_built_in_types(void) {
 if (parent) {
-	type_def_set::const_iterator i = parent->type_defs.begin();
-	for ( ; i!=parent->type_defs.end(); i++) {
+	type_def_set::const_iterator i = parent->data_defs.begin();
+	for ( ; i!=parent->data_defs.end(); i++) {
 		const datatype_definition* t;
 		t = (*i).second;
 		assert(t);
@@ -1010,7 +1475,7 @@ if (parent) {
 			type_alias* new_alias = 
 				new type_alias(this, (*i).first, t);
 			assert(new_alias);
-			type_defs[(*i).first] = new_alias;
+			data_defs[(*i).first] = new_alias;
 		} 
 		// else don't add
 	}
@@ -1023,12 +1488,42 @@ if (parent) {
 
 // p is parent
 inline
-definition_base::definition_base(const string& n, const name_space* p) : 
-		scopespace(n, p) {
+definition_base::definition_base(const string& n, const name_space* p, 
+		template_formals_set* tf) : 
+		scopespace(n, p), template_formals(tf) {
 }
 
 inline
 definition_base::~definition_base() {
+}
+
+/**
+	Used for checking when a type should have null template arguments.  
+	\return true if this definition is not templated, 
+		or the template formals signature is empty.  
+ */
+bool
+definition_base::check_null_template_argument(void) const {
+	if (!template_formals)
+		return true;
+	else if (template_formals->empty())
+		return true;
+	else {
+		// make sure each formal has a default parameter value
+		template_formals_set::const_iterator i =
+			template_formals->begin();
+		for ( ; i!=template_formals->end(); i++) {
+			const param_instantiation* p = *i;
+			assert(p);
+		// if any formal is missing a default value, then this 
+		// definition cannot have null template arguments
+			if (!p->default_value())
+				return false;
+			// else continue;	// keep checking
+		}
+		// if we've reached end of list, we're good!
+		return true;
+	}
 }
 
 string
@@ -1036,23 +1531,113 @@ definition_base::get_name(void) const {
 	return key;
 }
 
+string
+definition_base::get_qualified_name(void) const {
+	if (parent)
+		return parent->get_qualified_name() +scope +key;
+	else return key;
+}
+
+/**
+	Adds an instantiation to the current definition's scope, and 
+	also registers it in the list of template formals for 
+	template argument checking.  
+	What if template formal is an array, or collective?
+	\param f needs to be a param_instantiation... what about array?
+		need to be non-const? storing to hash_map_of_ptr...
+ */
+const instantiation_base*
+definition_base::add_template_formal(instantiation_base* f) {
+	param_instantiation* pf = 
+		IS_A(param_instantiation*, f);
+	assert(pf);
+	if (!template_formals) {
+		template_formals = new template_formals_set();
+		assert(template_formals);
+	}
+	// check and make sure identifier wasn't repeated in formal list!
+	const object* probe = used_id_map[pf->get_name()];
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return NULL;
+	}
+
+	const param_instantiation** ret =
+		template_formals->append(pf->hash_string(), pf);
+		// unchecked pointer dereference
+	assert(!ret);
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the template_formals_list!
+
+	// COMPILE: pf is const, but used_id_map members are not
+	// wrap around with object_handle?
+	used_id_map[pf->hash_string()] = pf;
+	return pf;
+}
 
 //=============================================================================
-// class type_reference_base method definitions
+// class fundamental_type_reference method definitions
 
-type_reference_base::type_reference_base(template_param_list* pl) : object(), 
+fundamental_type_reference::fundamental_type_reference(template_param_list* pl) : type_reference_base(), 
 		template_params(pl) {
 }
 
-type_reference_base::~type_reference_base() {
+fundamental_type_reference::~fundamental_type_reference() {
 	SAFEDELETE(template_params);
+}
+
+/**
+	Evaluates type reference as a flat string, for caching purposes.  
+	We unconditionally add the <> to the key even if there is no template
+	specifier to guarantee that hash_string for a type-reference 
+	cannot collide with the hash string for the non-templated definition.  
+	\return string to be used for hashing.  
+ */
+string
+fundamental_type_reference::hash_string(void) const {
+	// TO DO: should be fully qualified name!
+	string ret(get_base_def()->get_qualified_name());
+	ret += "<";
+	if (template_params) {
+		template_param_list::const_iterator i =
+			template_params->begin();
+		// add commas?
+		for ( ; i!=template_params->end(); i++) {
+			const param_expr* e = *i;
+			if (e)
+				ret += e->hash_string();
+			// can e ever be NULL?
+			ret += ",";
+			// extra comma at the end, who cares?
+		}
+	}
+	ret += ">";
+	return ret;
+}
+
+//=============================================================================
+// class collective_type_reference method definitions
+
+collective_type_reference::collective_type_reference(
+		const type_reference_base& b, 
+		const array_dim_list* d) :
+		type_reference_base(), base(&b), dim(d) {
+}
+
+collective_type_reference::~collective_type_reference() {
+	// we don't own the members
+}
+
+ostream&
+collective_type_reference::what(ostream& o) const {
+	return o << "collective-type-ref";
 }
 
 //=============================================================================
 // class data_type_reference method definitions
 
 data_type_reference::data_type_reference(const datatype_definition* td, 
-		template_param_list* pl) : type_reference_base(pl), 
+		template_param_list* pl) : fundamental_type_reference(pl), 
 		base_type_def(td) {
 }
 
@@ -1069,11 +1654,44 @@ data_type_reference::get_base_def(void) const {
 	return base_type_def;
 }
 
+/**
+	PHASE THIS OUT.
+ */
+const fundamental_type_reference*
+data_type_reference::set_context_type_reference(context& c) const {
+	return c.set_inst_data_type_ref(*this);
+}
+
+/**
+	Creates an instance of a data type, 
+	and adds it to a scope.
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
+const instantiation_base*
+data_type_reference::add_instance_to_scope(scopespace& s,
+		const token_identifier& id) const {
+	// make sure doesn't collide with something in s.
+	// what if s is a loop-scope, not a namespace?  PUNT!
+	const object* probe = s.lookup_object_here(id);
+	if (probe) {
+		probe->what(cerr << id << " is already declared ") <<
+			", ERROR! " << id.where() << endl;
+		return NULL;
+	}
+	// else proceed
+	datatype_instantiation* di = 
+		new datatype_instantiation(s, *this, id);
+	assert(di);
+	return s.add_instance(*di);
+}
+
 //=============================================================================
 // class channel_type_reference method definitions
 
 channel_type_reference::channel_type_reference(const channel_definition* cd, 
-		template_param_list* pl) : type_reference_base(pl), 
+		template_param_list* pl) : fundamental_type_reference(pl), 
 		base_chan_def(cd) {
 }
 
@@ -1090,11 +1708,33 @@ channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
 }
 
+const fundamental_type_reference*
+channel_type_reference::set_context_type_reference(context& c) const {
+	return c.set_inst_chan_type_ref(*this);
+}
+
+/**
+	Creates an instance of a channel type, 
+	and adds it to a scope.
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
+const instantiation_base*
+channel_type_reference::add_instance_to_scope(scopespace& s,
+		const token_identifier& id) const {
+	// make sure doesn't collide with something in s.
+	channel_instantiation* ci = 
+		new channel_instantiation(s, *this, id);
+	assert(ci);
+	return s.add_instance(*ci);
+}
+
 //=============================================================================
 // class process_type_reference method definitions
 
 process_type_reference::process_type_reference(const process_definition* pd, 
-		template_param_list* pl) : type_reference_base(pl), 
+		template_param_list* pl) : fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 }
 
@@ -1111,19 +1751,104 @@ process_type_reference::get_base_def(void) const {
 	return base_proc_def;
 }
 
+const fundamental_type_reference*
+process_type_reference::set_context_type_reference(context& c) const {
+	return c.set_inst_proc_type_ref(*this);
+}
+
+/**
+	Creates an instance of a process type, 
+	and adds it to a scope.
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
+const instantiation_base*
+process_type_reference::add_instance_to_scope(scopespace& s,
+		const token_identifier& id) const {
+	// make sure doesn't collide with something in s.
+	process_instantiation* ci = 
+		new process_instantiation(s, *this, id);
+	assert(ci);
+	return s.add_instance(*ci);
+}
+
+//=============================================================================
+// class param_type_reference method definitions
+
+param_type_reference::param_type_reference(const built_in_param_def* pd) : 
+		fundamental_type_reference(NULL), 
+		base_param_def(pd) {
+}
+
+param_type_reference::~param_type_reference() {
+}
+
+ostream&
+param_type_reference::what(ostream& o) const {
+	return o << "param-type-reference";
+}
+
+const definition_base*
+param_type_reference::get_base_def(void) const {
+	return base_param_def;
+}
+
+const fundamental_type_reference*
+param_type_reference::set_context_type_reference(context& c) const {
+	return c.set_inst_param_type_ref(*this);
+}
+
+/**
+	Creates an instance of a parameter type, 
+	and adds it to a scope.
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
+const instantiation_base*
+param_type_reference::add_instance_to_scope(scopespace& s,
+		const token_identifier& id) const {
+	// make sure doesn't collide with something in s.
+	param_instantiation* ci = 
+		new param_instantiation(s, *this, id);
+	assert(ci);
+	return s.add_instance(*ci);
+}
+
 //=============================================================================
 // class instantiation_base method definitions
 
 inline
-instantiation_base::instantiation_base(const name_space* o, 
+instantiation_base::instantiation_base(const scopespace& o, 
 		const string& n, array_dim_list* d) : 
-		object(), owner(o), key(n), array_dimensions(d) {
+		object(), owner(&o), key(n), array_dimensions(d) {
 }
 
 inline
 instantiation_base::~instantiation_base() {
 	SAFEDELETE(array_dimensions);
 }
+
+string
+instantiation_base::get_qualified_name(void) const {
+	if (owner)
+		return owner->get_qualified_name() +scope +key;
+	else return key;
+}
+
+/*** TO DO, if necessary
+// reserve for instance_reference
+string
+instantiation_base::hash_string(void) const {
+	// don't need get_type_ref()->hash_string().
+	string ret(get_qualified_name());
+	// TO DO: do array dimensions matter, or is name sufficient?
+//	if (array_dimensions) {
+//	}
+	return ret;
+}
+***/
 
 void
 instantiation_base::set_array_dimensions(array_dim_list* d) {
@@ -1134,7 +1859,7 @@ instantiation_base::set_array_dimensions(array_dim_list* d) {
 
 /**
 	Determines whether or not the dimensions of two instantiation_base
-	arrays are equivalent, and hance compatible.  
+	arrays are equivalent, and hence compatible.  
 	\param i the second instantiation_base to compare against.
 	\return false for now.
  */
@@ -1150,17 +1875,27 @@ instantiation_base::array_dimension_match(const instantiation_base& i) const {
 
 // make sure that this constructor is never invoked outside this file
 inline
-datatype_definition::datatype_definition(const name_space* o, const string& n) :
-	definition_base(n, o) {
+datatype_definition::datatype_definition(const name_space* o, const string& n, 
+		template_formals_set* tf) :
+		definition_base(n, o, tf) {
 }
 
 inline
 datatype_definition::~datatype_definition() {
 }
 
-string
-datatype_definition::get_qualified_name(void) const {
-	return parent->get_qualified_name() +scope +key;
+const definition_base*
+datatype_definition::set_context_definition(context& c) const {
+	return c.set_inst_data_def(*this);
+}
+
+const fundamental_type_reference*
+datatype_definition::set_context_fundamental_type(context& c) const {
+	data_type_reference* dtr = new data_type_reference(this,
+		c.get_current_template_arguments());
+	assert(dtr);
+	// type reference check checking? where?
+	return c.set_current_fundamental_type(*dtr);
 }
 
 /**
@@ -1177,22 +1912,28 @@ datatype_definition::resolve_canonical(void) const {
 
 // make sure that this constructor is never invoked outside this file
 inline
-channel_definition::channel_definition(const name_space* o, const string& n) :
-	definition_base(n, o) {
+channel_definition::channel_definition(const name_space* o, const string& n, 
+		template_formals_set* tf) :
+		definition_base(n, o, tf) {
 }
 
 channel_definition::~channel_definition() {
 }
 
-string
-channel_definition::get_qualified_name(void) const {
-	return parent->get_qualified_name() +scope +key;
+const definition_base*
+channel_definition::set_context_definition(context& c) const {
+	return c.set_inst_chan_def(*this);
 }
 
-string
-channel_definition::get_name(void) const {
-	return key;
+const fundamental_type_reference*
+channel_definition::set_context_fundamental_type(context& c) const {
+	channel_type_reference* dtr = new channel_type_reference(this,
+		c.get_current_template_arguments());
+	assert(dtr);
+	// type reference check checking? where?
+	return c.set_current_fundamental_type(*dtr);
 }
+
 
 //=============================================================================
 // class type_alias method definitions
@@ -1205,8 +1946,9 @@ channel_definition::get_name(void) const {
 	\param t pointer to the actual type being aliased.  
  */
 type_alias::type_alias(const name_space* o, const string& n, 
-		const datatype_definition* t) :
-		datatype_definition(o, n), canonical(t) {
+		const definition_base* t, 
+		template_formals_set* tf) :
+		definition_base(n, o, tf), canonical(t) {
 	assert(canonical);
 	// just in case t is not a canonical type, i.e. another alias...
 	const type_alias* a = IS_A(const type_alias*, canonical);
@@ -1226,7 +1968,7 @@ type_alias::~type_alias() { }
 	\return the canonical pointer.  
  */
 inline
-const datatype_definition*
+const definition_base*
 type_alias::resolve_canonical(void) const {
 	return canonical;
 }
@@ -1236,16 +1978,18 @@ type_alias::what(ostream& o) const {
 	return o << "aliased-type: " << key;
 }
 
+/** NOT USED, ever
 bool
 type_alias::type_equivalent(const datatype_definition& t) const {
 	return resolve_canonical()->type_equivalent(t);
 }
+**/
 
 //=============================================================================
 // class built_in_datatype_def method definitions
 
 // doesn't like inlining this, linker can't find definition on gcc-3.3
-// inline
+// is used in "art_symbol_table.cc", unless you -fkeep-inline-functions
 built_in_datatype_def::built_in_datatype_def(const name_space* o, const string& n) :
 	datatype_definition(o, n) {
 }
@@ -1255,6 +1999,20 @@ built_in_datatype_def::~built_in_datatype_def() { }
 ostream&
 built_in_datatype_def::what(ostream& o) const {
 	return o << key;
+}
+
+const definition_base*
+built_in_datatype_def::set_context_definition(context& c) const {
+	return c.set_inst_data_def(*this);
+}
+
+const fundamental_type_reference*
+built_in_datatype_def::set_context_fundamental_type(context& c) const {
+	data_type_reference* dtr = new data_type_reference(this,
+		c.get_current_template_arguments());
+	assert(dtr);
+	// type reference check checking? where?
+	return c.set_current_fundamental_type(*dtr);
 }
 
 /**
@@ -1289,11 +2047,24 @@ built_in_param_def::~built_in_param_def() {
 
 ostream&
 built_in_param_def::what(ostream& o) const {
-	return o << "(built-in param type)";
+	return o << key;
+}
+
+const definition_base*
+built_in_param_def::set_context_definition(context& c) const {
+	return c.set_current_definition_reference(*this);
+}
+
+const fundamental_type_reference*
+built_in_param_def::set_context_fundamental_type(context& c) const {
+	param_type_reference* dtr = new param_type_reference(this);
+	assert(dtr);
+	// type reference check checking? where?
+	return c.set_current_fundamental_type(*dtr);
 }
 
 //=============================================================================
-// class user_def_datatype methods
+// class user_def_datatype method definitions
 
 /// constructor for user defined type
 user_def_datatype::user_def_datatype(const name_space* o, const string& name) :
@@ -1302,7 +2073,7 @@ user_def_datatype::user_def_datatype(const name_space* o, const string& name) :
 
 ostream&
 user_def_datatype::what(ostream& o) const {
-	return o << "used-defined-type: " << key;
+	return o << "used-defined-datatype: " << key;
 }
 
 /**
@@ -1329,22 +2100,24 @@ user_def_datatype::type_equivalent(const datatype_definition& t) const {
 //=============================================================================
 // class datatype_instantiation method definitions
 
-datatype_instantiation::datatype_instantiation(const name_space* o, 
-//		const data_type_reference* t, 
-		data_type_reference* t, 
+datatype_instantiation::datatype_instantiation(const scopespace& o, 
+		const data_type_reference& t, 
 		const string& n) : 
-		instantiation_base(o, n), type(t) {
+		instantiation_base(o, n), type(&t) {
 	assert(type);
 }
 
 datatype_instantiation::~datatype_instantiation() {
-	// temporary, until type is const, compiler should complain
-	SAFEDELETE(type);
 }
 
 ostream&
 datatype_instantiation::what(ostream& o) const {
-	return o << "type-inst";
+	return o << "datatype-inst";
+}
+
+const fundamental_type_reference*
+datatype_instantiation::get_type_ref(void) const {
+	return type;
 }
 
 /**
@@ -1363,6 +2136,7 @@ datatype_instantiation::equals_template_formal(
 }
 
 /**
+	OBSOLETE.
 	Takes a port formal, resolves its type first, looking up
 	through parents' scopes if necessary.  
 	If successful, compares for type-equivalence, 
@@ -1370,11 +2144,32 @@ datatype_instantiation::equals_template_formal(
 	TO DO:
 	\param tf the port formal from the syntax tree.
 	\return true if type and identifier match exactly.  
- */
 bool
 datatype_instantiation::equals_port_formal(
 		const port_formal_decl& pf) const {
 	return false;
+}
+**/
+
+/**
+	Create a datatype reference object.
+	See if it's already registered in the current context.  
+	If so, delete the new one (inefficient), 
+	and return the one found.  
+	Else, register the new one in the context, and return it.  
+	Depends on context's method for checking references in used_id_map.  
+ */
+instance_reference_base*
+datatype_instantiation::make_instance_reference(context& c) const {
+	cerr << "datatype_instantiation::make_instance_reference() "
+		"INCOMPLETE, FINISH ME!" << endl;
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+	datatype_instance_reference* ret = 
+		new datatype_instance_reference(*this);
+		// omitting index argument
+	assert(ret);
+	return ret;
 }
 
 //=============================================================================
@@ -1384,9 +2179,10 @@ datatype_instantiation::equals_port_formal(
 	Constructor for a process definition symbol table entry.  
  */
 process_definition::process_definition(const name_space* o, 
-		const string& s, const bool d) : 
-		definition_base(s, o), def(d),
-		temp_formals(), port_formals() {
+		const string& s, const bool d,
+		template_formals_set* tf) : 
+		definition_base(s, o, tf), def(d),
+		port_formals() {
 	// fill me in...
 }
 
@@ -1397,6 +2193,20 @@ process_definition::~process_definition() {
 ostream&
 process_definition::what(ostream& o) const {
 	return o << "process-definition";
+}
+
+const definition_base*
+process_definition::set_context_definition(context& c) const {
+	return c.set_inst_proc_def(*this);
+}
+
+const fundamental_type_reference*
+process_definition::set_context_fundamental_type(context& c) const {
+	process_type_reference* dtr = new process_type_reference(this,
+		c.get_current_template_arguments());
+	assert(dtr);
+	// type reference check checking? where?
+	return c.set_current_fundamental_type(*dtr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1417,7 +2227,7 @@ process_definition::equals_signature(const process_signature& ps) const {
 	if (!temp_formal_set_equals(temp_formals, ps.get_template_formals()))
 		return false;
 	// continue comparing port formals
-	if (!port_formal_set_equals(port_formals, ps.get_port_formals()))
+	if (!port_formals_set_equals(port_formals, ps.get_port_formals()))
 		return false;
 	return true;
 }
@@ -1467,17 +2277,17 @@ temp_formal_set_equals(const process_definition::temp_formal_set& ts,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	OBSOLETE.  
-	Compares a port_formal_set against a port_formal_decl_list from
+	Compares a port_formals_set against a port_formal_decl_list from
 	the syntax tree.  
 	\param ps the already type-checked port formal list.
 	\param pl the syntax tree port formal list to be checked.
 	\return true if port formal lists are equivalent.  
 bool
-port_formal_set_equals(const process_definition::port_formal_set& ps,
+port_formals_set_equals(const process_definition::port_formals_set& ps,
 	const port_formal_decl_list* pl) {
 	if (pl) {
 		port_formal_decl_list::const_iterator i = pl->begin();
-		process_definition::port_formal_set::const_iterator 
+		process_definition::port_formals_set::const_iterator 
 			j = ps.begin();
 		for ( ; i != pl->end() && j != ps.end(); i++, j++) {
 			const port_formal_decl* pi = 
@@ -1506,22 +2316,23 @@ port_formal_set_equals(const process_definition::port_formal_set& ps,
 //=============================================================================
 // class process_instantiation method definitions
 
-process_instantiation::process_instantiation(const name_space* o, 
-//		const process_type_reference* pt,
-		process_type_reference* pt,
+process_instantiation::process_instantiation(const scopespace& o, 
+		const process_type_reference& pt,
 		const string& n) : 
-		instantiation_base(o, n), type(pt) {
-	assert(type);
+		instantiation_base(o, n), type(&pt) {
 }
 
 process_instantiation::~process_instantiation() {
-	// this is temporary; remove this when type is const
-	SAFEDELETE(type);
 }
 
 ostream&
 process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
+}
+
+const fundamental_type_reference*
+process_instantiation::get_type_ref(void) const {
+	return type;
 }
 
 /*** OBSOLETE
@@ -1532,16 +2343,38 @@ process_instantiation::equals_port_formal(const port_formal_decl& pf) const {
 }
 ***/
 
+/**
+	Create a process reference object.
+	See if it's already registered in the current context.  
+	If so, delete the new one (inefficient), 
+	and return the one found.  
+	Else, register the new one in the context, and return it.  
+	Depends on context's method for checking references in used_id_map.  
+ */
+instance_reference_base*
+process_instantiation::make_instance_reference(context& c) const {
+	cerr << "process_instantiation::make_instance_reference() "
+		"INCOMPLETE, FINISH ME!" << endl;
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+	process_instance_reference* ret = 
+		new process_instance_reference(*this);
+		// omitting index argument
+	assert(ret);
+	return ret;
+}
+
 //=============================================================================
 // class param_instantiation method definitions
 
-param_instantiation::param_instantiation(const name_space* o, 
-		const built_in_param_def* pt, const string& n) :
-		instantiation_base(o, n), type(pt) {
-	assert(pt);
+param_instantiation::param_instantiation(const scopespace& o, 
+		const param_type_reference& pt, const string& n, 
+		const param_expr* i) :
+		instantiation_base(o, n), type(&pt), ival(i) {
 }
 
 param_instantiation::~param_instantiation() {
+	SAFEDELETE(ival);
 }
 
 ostream&
@@ -1549,25 +2382,201 @@ param_instantiation::what(ostream& o) const {
 	return o << "param-inst";
 }
 
+const fundamental_type_reference*
+param_instantiation::get_type_ref(void) const {
+	return type;
+}
+
+/**
+	Initializes a parameter instance with an expression.
+	The ival may only be initialized once, enforced by assertions.  
+	Note: a parameter is considered "usable" if it is 
+	initialized OR it is a template formal.  
+	\param e the rvalue expression.
+	\sa is_initialized
+ */
+void
+param_instantiation::initialize(const param_expr* e) {
+	assert(!ival);
+	assert(e);
+	ival = e;
+}
+
+/**
+	Create a param reference object.
+	See if it's already registered in the current context.  
+	If so, delete the new one (inefficient), 
+	and return the one found.  
+	Else, register the new one in the context, and return it.  
+	Depends on context's method for checking references in used_id_map.  
+ */
+instance_reference_base*
+param_instantiation::make_instance_reference(context& c) const {
+	cerr << "param_instantiation::make_instance_reference() "
+		"INCOMPLETE, FINISH ME!" << endl;
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+	param_instance_reference* ret = 
+		new param_instance_reference(*this);
+		// omitting index argument
+	assert(ret);
+	return ret;
+}
+
 //=============================================================================
 // class channel_instantiation method definitions
 
-channel_instantiation::channel_instantiation(const name_space* o, 
-//		const channel_type_reference* ct,
-		channel_type_reference* ct,
+channel_instantiation::channel_instantiation(const scopespace& o, 
+		const channel_type_reference& ct,
 		const string& n) :
-		instantiation_base(o, n), type(ct) {
-	assert(type);
+		instantiation_base(o, n), type(&ct) {
 }
 
 channel_instantiation::~channel_instantiation() {
-	// temporary until type is const
-	SAFEDELETE(type);
 }
 
 ostream&
 channel_instantiation::what(ostream& o) const {
 	return o << "channel-inst";
+}
+
+const fundamental_type_reference*
+channel_instantiation::get_type_ref(void) const {
+	return type;
+}
+
+/**
+	Create a channel reference object.
+	See if it's already registered in the current context.  
+	If so, delete the new one (inefficient), 
+	and return the one found.  
+	Else, register the new one in the context, and return it.  
+	Depends on context's method for checking references in used_id_map.  
+ */
+instance_reference_base*
+channel_instantiation::make_instance_reference(context& c) const {
+	cerr << "channel_instantiation::make_instance_reference() "
+		"INCOMPLETE, FINISH ME!" << endl;
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+	channel_instance_reference* ret = 
+		new channel_instance_reference(*this);
+		// omitting index argument
+	assert(ret);
+	return ret;
+}
+
+//=============================================================================
+// class single_instance_reference method definitions
+
+single_instance_reference::~single_instance_reference() {
+	SAFEDELETE(array_indices);
+}
+
+string
+single_instance_reference::hash_string(void) const {
+	string ret(get_inst_base()->get_qualified_name());
+	if (array_indices) {
+		array_index_list::const_iterator i;
+		ret += "[";
+		for (i=array_indices->begin(); i!=array_indices->end(); i++) {
+			assert(*i);
+			ret += (*i)->hash_string();
+			ret += ",";		// extra comma at end
+		}
+		ret += "]";
+	}
+	return ret;
+}
+
+//=============================================================================
+// class collective_instance_reference method definitions
+
+collective_instance_reference::collective_instance_reference(
+		const instance_reference_base* b, 
+		const param_expr* l, const param_expr* r) :
+		instance_reference_base(), 
+		lower_index(l), upper_index(r) {
+}
+
+collective_instance_reference::~collective_instance_reference() {
+}
+
+ostream&
+collective_instance_reference::what(ostream& o) const {
+	return o << "collective-inst-ref";
+}
+
+/*** don't need
+const instantiation_base*
+collective_instance_reference::get_inst_base(void) const {
+	return base_array->get_inst_base();
+}
+***/
+
+string
+collective_instance_reference::hash_string(void) const {
+	string ret(base_array->hash_string());
+	ret += "[";
+	ret += lower_index->hash_string();
+	if (upper_index) {
+		ret += "..";
+		ret += upper_index->hash_string();
+	}
+	ret += "]";
+	return ret;
+}
+
+//=============================================================================
+// class param_instance_reference method definitions
+
+const instantiation_base*
+param_instance_reference::get_inst_base(void) const {
+	return param_inst_ref;
+}
+
+ostream&
+param_instance_reference::what(ostream& o) const {
+	return o << "param-inst-ref";
+}
+
+//=============================================================================
+// class process_instance_reference method definitions
+
+const instantiation_base*
+process_instance_reference::get_inst_base(void) const {
+	return process_inst_ref;
+}
+
+ostream&
+process_instance_reference::what(ostream& o) const {
+	return o << "process-inst-ref";
+}
+
+//=============================================================================
+// class datatype_instance_reference method definitions
+
+const instantiation_base*
+datatype_instance_reference::get_inst_base(void) const {
+	return data_inst_ref;
+}
+
+ostream&
+datatype_instance_reference::what(ostream& o) const {
+	return o << "datatype-inst-ref";
+}
+
+//=============================================================================
+// class channel_instance_reference method definitions
+
+const instantiation_base*
+channel_instance_reference::get_inst_base(void) const {
+	return channel_inst_ref;
+}
+
+ostream&
+channel_instance_reference::what(ostream& o) const {
+	return o << "channel-inst-ref";
 }
 
 //=============================================================================

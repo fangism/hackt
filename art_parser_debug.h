@@ -12,14 +12,24 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 // use this to turn on/off
-#define DEBUG_CHECK_BUILD	1		// bool, ok to change
+#define DEBUG_CHECK_BUILD	1		// {0,1,2}, ok to change
+	// 0: off, 1: depends on MASTER_DEBUG_LEVEL, 2: force on
+	// force on overrides all other conditions
 
-#if	DEBUG_CHECK_BUILD
-#define TRACE_CHECK_BUILD	5		// ok to change
-#else
+#if	(DEBUG_CHECK_BUILD == 1)
+  #define	TRACE_CHECK_BUILD_LEVEL	5	// ok to change, default 5
+  #define	TRACE_CHECK_BUILD(stmt)	DEBUG(TRACE_CHECK_BUILD_LEVEL,stmt)
+#elif	(DEBUG_CHECK_BUILD == 2)
+// force on
+  #define	TRACE_CHECK_BUILD(stmt)	stmt
+#elif	(DEBUG_CHECK_BUILD == 0)
 // turn off
-#define TRACE_CHECK_BUILD	MASTER_DEBUG_LEVEL
+  #define	TRACE_CHECK_BUILD_LEVEL	MASTER_DEBUG_LEVEL
+  #define	TRACE_CHECK_BUILD(stmt)
+#else
+  #error	"invalid DEBUG_CHECK_BUILD value."
 #endif
+
 
 //=============================================================================
 
