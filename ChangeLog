@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2004-12-01	David Fang	<fangism@users.sourceforge.net>
+
+	* art_object_instance.{h,cc}: Subclassed pbool_instance_collection
+	  into dimension-specific variants.  Currently wrapped 
+	  with SUBCLASS_PBOOL_ARRAY, but next revisions will 
+	  clean out conditional compilation.  
+
+	* util/indent.{h,cc}: Nifty little auto-indentation library.
+
+
 2004-11-29	David Fang	<fangism@users.sourceforge.net>
 
 	* Miraculously swapped out old pointer-class system with 
