@@ -13,7 +13,8 @@
 	  upon allocation off of the free-list.  
 
 	* Fixed premature memory deallocation of assignment and 
-	  connection objects in context::add_assignment and ::add_connection.
+	  connection objects in context::add_assignment and ::add_connection, 
+	  in "art_context.cc".
 
 	* Updated src/util/test/test-expect.sh:
 	  uses test/address_filter.sed to filter out addresses which will
@@ -38,6 +39,17 @@
 	  to accomplish simple, yet safe, termination.  
 	  In "macros.h", THROW_EXIT means "throw generic exception
 	  with intention of exit(1)-ing."
+
+	* Fixed yet another problem with pointer-classes.
+	  There was an implicit conversion from never_ptr to excl_ptr
+	  through excl_ptr_ref, which should not have existed, 
+	  and no longer exists.  pointer_classes_test is updated
+	  to reflect this.  No other compiler code is affected by this, 
+	  fortunately.  (Also cleaned up much obsolete code in
+	  "pointer_classes.h")
+
+	* To fix: why do I get undefined references to __PRETTY_FUNCTION__
+	  when compiling for linux?  (something to do with std::alloc?)
 
 
 2005-01-14	David Fang	<fangism@users.sourceforge.net>
