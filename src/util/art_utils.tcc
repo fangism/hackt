@@ -2,6 +2,9 @@
 // template methods from art_utils.h
 // include this to use them
 
+#ifndef __ART_UTILS_TCC__
+#define __ART_UTILS_TCC__
+
 #include <iostream>
 
 #include "art_utils.h"
@@ -18,4 +21,6 @@ inline
 void    read_value(istream& f, T& v) {
 	f.read((char*) &v, sizeof(T));
 }
+
+#endif	// __ART_UTILS_TCC__
 
