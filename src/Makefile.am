@@ -162,6 +162,7 @@ libart___la_SOURCES = \
 	parser/art++-union.cc \
 	parser/art++-parse.output.h \
 	lexer/art++-lex-prefix.cc \
+	lexer/art_lex.cc \
 	lexer/art_lex.h \
 	$(AST_CC_FILES) $(AST_H_FILES) \
 	AST/art_parser.h \
@@ -276,7 +277,8 @@ EXTRA_DIST = \
 	parser/bison-output-to-C.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
-	parser/yyerror_bison_hack.awk
+	parser/yyerror_bison_hack.awk \
+	wc-l
 
 TESTS = art_persistent_table
 
