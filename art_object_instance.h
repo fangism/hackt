@@ -68,6 +68,10 @@ public:
 	// why is this a never_ptr?
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
+	never_const_ptr<member_instance_reference_base>
+		make_member_instance_reference(
+			count_const_ptr<simple_instance_reference> b, 
+			context& c) const;
 };	// end class process_instantiation
 
 //=============================================================================
@@ -92,6 +96,10 @@ virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 	// why is this never?
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
+virtual	never_const_ptr<member_instance_reference_base>
+		make_member_instance_reference(
+			count_const_ptr<simple_instance_reference> b, 
+			context& c) const;
 };	// end class datatype_instantiation
 
 //=============================================================================
@@ -115,6 +123,10 @@ virtual	ostream& what(ostream& o) const;
 virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
+virtual	never_const_ptr<member_instance_reference_base>
+		make_member_instance_reference(
+			count_const_ptr<simple_instance_reference> b, 
+			context& c) const;
 };	// end class channel_instantiation
 
 //=============================================================================
@@ -145,6 +157,11 @@ virtual	count_const_ptr<fundamental_type_reference>
 	// why is this never?
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
+	/** should just assert fail, forbid reference to param members */
+	never_const_ptr<member_instance_reference_base>
+		make_member_instance_reference(
+			count_const_ptr<simple_instance_reference> b, 
+			context& c) const;
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_const_ptr<param_expr> default_value(void) const = 0;

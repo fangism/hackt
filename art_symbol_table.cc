@@ -32,7 +32,11 @@ context::context(never_ptr<name_space> g) :
 		namespace_stack(), 
 		current_open_definition(NULL), 
 		current_prototype(NULL), 
+#if 0
 		current_definition_reference(NULL), 
+#else
+		definition_stack(), 
+#endif
 		current_fundamental_type(NULL), 
 //		current_template_arguments(NULL), 
 //		current_array_dimensions(NULL), 
@@ -45,11 +49,8 @@ context::context(never_ptr<name_space> g) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
-	{
-	count_ptr<object> bogus;
-//	excl_ptr<object> bogus;
-	object_stack.push(bogus);
-	}
+	object_stack.push(count_ptr<object>(NULL));
+	definition_stack.push(never_const_ptr<definition_base>(NULL));
 	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
@@ -328,7 +329,6 @@ context::close_datatype_definition(void) {
  */
 void
 context::close_chantype_definition(void) {
-//	current_open_definition.must_be_a<channel_definition>();
 	current_open_definition.must_be_a<channel_definition_base>();
 	close_current_definition();
 }
@@ -342,43 +342,45 @@ context::get_current_param_definition(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// never_const_ptr<datatype_definition>
 never_const_ptr<datatype_definition_base>
 context::get_current_datatype_definition(void) const {
-//	return current_definition_reference.is_a<datatype_definition>();
 	return current_definition_reference.is_a<datatype_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// never_const_ptr<channel_definition>
 never_const_ptr<channel_definition_base>
 context::get_current_channel_definition(void) const {
-//	return current_definition_reference.is_a<channel_definition>();
 	return current_definition_reference.is_a<channel_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// never_const_ptr<process_definition>
 never_const_ptr<process_definition_base>
 context::get_current_process_definition(void) const {
-//	return current_definition_reference.is_a<process_definition>();
 	return current_definition_reference.is_a<process_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Resets the current type definition to NULL.
  */
 void
 context::reset_current_definition_reference(void) {
 	if (current_definition_reference) {
-		indent--;
+//		indent--;	// we never indented to begin with!
 		current_definition_reference = 
 			never_const_ptr<definition_base>(NULL);
 	}
 }
+#else
+void
+context::pop_current_definition_reference(void) {
+	assert(current_definition_reference);
+	definition_stack.pop();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -625,6 +627,13 @@ context::get_current_scope(void) const {
 			ret(current_open_definition.is_a<scopespace>());
 		assert(ret);
 		return ret;
+#if 0
+	} else if (current_definition_reference) {
+		never_const_ptr<scopespace>
+			ret(current_definition_reference.is_a<scopespace>());
+		assert(ret);
+		return ret;
+#endif
 	} else
 		return current_namespace.as_a<scopespace>();
 }

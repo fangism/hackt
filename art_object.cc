@@ -1056,11 +1056,17 @@ name_space::get_parent(void) const {
  */
 string
 name_space::get_qualified_name(void) const {
+#if 0
 	if (parent) {
 		if (parent->parent)
 			return parent->get_qualified_name() +scope +key;
 		else	return key;
 	} else return "<global>";		// global
+#else
+	if (parent)
+		return parent->get_qualified_name() +scope +key;
+	else return "";			// global e.g. ::foo
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

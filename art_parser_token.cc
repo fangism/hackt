@@ -509,7 +509,11 @@ token_bool_type::check_build(never_ptr<context> c) const {
 			<< "token_bool_type::check_build(...): ";
 	)
 	// bool_def declared in "art_built_ins.h"
+#if 0
 	return c->set_current_definition_reference(bool_def);
+#else
+	return c->push_current_definition_reference(bool_def);
+#endif
 }
 
 //=============================================================================
@@ -535,7 +539,11 @@ token_int_type::check_build(never_ptr<context> c) const {
 			<< "token_int_type::check_build(...): ";
 	)
 	// int_def declared in "art_built_ins.h"
+#if 0
 	return c->set_current_definition_reference(int_def);
+#else
+	return c->push_current_definition_reference(int_def);
+#endif
 }
 
 //=============================================================================
@@ -568,8 +576,11 @@ token_pbool_type::check_build(never_ptr<context> c) const {
 			<< "token_pbool_type::check_build(...): ";
 	)
 	// pbool_def declared in "art_built_ins.h"
-//	return c->set_current_fundamental_type(pbool_type);
+#if 0
 	return c->set_current_definition_reference(pbool_def);
+#else
+	return c->push_current_definition_reference(pbool_def);
+#endif
 }
 
 //=============================================================================
@@ -600,8 +611,11 @@ token_pint_type::check_build(never_ptr<context> c) const {
 			<< "token_pint_type::check_build(...): ";
 	)
 	// pint_def declared in "art_built_ins.h"
-//	return c->set_current_fundamental_type(pint_type);
+#if 0
 	return c->set_current_definition_reference(pint_def);
+#else
+	return c->push_current_definition_reference(pint_def);
+#endif
 }
 
 //=============================================================================

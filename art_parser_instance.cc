@@ -423,7 +423,11 @@ instance_declaration::check_build(never_ptr<context> c) const {
 	count_const_ptr<fundamental_type_reference>
 		ftr(c->get_current_fundamental_type());
 		// should set the current_fundamental_type
+#if 0
 	c->reset_current_definition_reference();
+#else
+	c->pop_current_definition_reference();
+#endif
 		// no longer need the base definition
 	if (ftr) {
 		ids->check_build(c);		// return value?

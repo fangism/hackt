@@ -93,6 +93,7 @@ namespace entity {
 
 	class instance_reference_base;
 	class simple_instance_reference;
+	class member_instance_reference_base;
 	class datatype_instance_reference;
 	class channel_instance_reference;
 	class process_instance_reference;
@@ -657,6 +658,8 @@ protected:
 	bool equivalent_template_formals(
 		never_const_ptr<definition_base> d) const;
 
+#if 0
+OBSOLETE
 public:
 	/**
 		sub-classes shouldn't have to re-implement this,
@@ -664,6 +667,7 @@ public:
 	 */
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
+#endif
 
 protected:
 	bool certify_template_arguments(
@@ -878,6 +882,8 @@ virtual	string hash_string(void) const { return key; }
  */
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
+	never_const_ptr<definition_base>
+		get_base_def(void) const;
 
 	never_const_ptr<scopespace> get_owner(void) const { return owner; }
 	size_t dimensions(void) const { return depth; }
@@ -905,9 +911,16 @@ protected:
 	bool check_expression_dimensions(const param_expr& pr) const;
 
 public:
-/** currently always returns NULL, useless */
+/**
+	always pushes onto context's object_stack, 
+	currently always returns NULL, useless
+ */
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
+virtual	never_const_ptr<member_instance_reference_base>
+		make_member_instance_reference(
+			count_const_ptr<simple_instance_reference> b, 
+			context& c) const = 0;
 };	// end class instantiation_base
 
 //=============================================================================

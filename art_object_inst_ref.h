@@ -92,6 +92,23 @@ virtual	string hash_string(void) const;
 #endif
 
 //=============================================================================
+#if 0
+// EXPERIMENTAL
+
+class indexable_instance_reference : virtual public instance_reference_base {
+
+};	// end class indexable_instance_reference
+
+//=============================================================================
+class process_instance_reference_base : virtual public instance_reference_base {
+protected:
+	never_const_ptr<process_instantiation>	proc_inst;
+public:
+
+};	// end class process_instance_reference_base
+#endif
+
+//=============================================================================
 /**
 	PHASE THIS back into instance_reference_base.
 	OR... call this "simple_instance_reference" instead.  
@@ -109,7 +126,7 @@ virtual	string hash_string(void) const;
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_instance_reference : public instance_reference_base {
+class simple_instance_reference : virtual public instance_reference_base {
 private:
 	/**
 		Helper class for evaluating sparse, multidimensional
@@ -156,6 +173,8 @@ virtual	~simple_instance_reference();
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_const_ptr<definition_base> get_base_def(void) const;
 virtual	string hash_string(void) const;
 	// need not be virtual
 	bool may_be_type_equivalent(const instance_reference_base& i) const;
@@ -166,7 +185,47 @@ private:
 	excl_ptr<mset_base> unroll_static_instances(const size_t dim) const;
 };	// end class simple_instance_reference
 
-//-----------------------------------------------------------------------------
+//=============================================================================
+/**
+	Abstract interface class for member instance references.  
+	Make type-specific {process,data,channel}?
+	Don't need instantiation_state because members, can only
+	refer to ports, which cannot be appended with more instances
+	and indices.  
+ */
+class member_instance_reference_base : virtual public instance_reference_base {
+protected:
+	/** The owning base instance, 
+		must have dimension-0, scalar... for now
+	 */
+	const count_const_ptr<simple_instance_reference>	base;
+public:
+	member_instance_reference_base(
+		count_const_ptr<simple_instance_reference> b);
+virtual	~member_instance_reference_base();
+
+#if 0
+	size_t dimensions(void) const;
+	bool may_be_densely_packed(void) const;
+	bool must_be_densely_packed(void) const;
+	bool is_static_constant_collection(void) const;
+	bool has_static_constant_dimensions(void) const;
+	const_range_list static_constant_dimensions(void) const;
+	const_index_list implicit_static_constant_indices(void) const;
+
+	bool attach_indices(excl_ptr<index_list> i);
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	never_const_ptr<instantiation_base> get_inst_base(void) const;
+//	string hash_string(void) const;
+	bool may_be_type_equivalent(const instance_reference_base& i) const;
+	bool must_be_type_equivalent(const instance_reference_base& i) const;
+#endif
+
+};	// end class member_instance_reference
+
+//=============================================================================
 /**
 	A reference to a simple instance of datatype.  
  */
@@ -178,9 +237,9 @@ protected:
 public:
 	datatype_instance_reference(never_const_ptr<datatype_instantiation> di, 
 		excl_ptr<index_list> i);
-	~datatype_instance_reference();
+virtual	~datatype_instance_reference();
 
-	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class datatype_instance_reference
@@ -199,7 +258,7 @@ public:
 		excl_ptr<index_list> i);
 	~channel_instance_reference();
 
-	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class channel_instance_reference
@@ -216,11 +275,80 @@ protected:
 public:
 	process_instance_reference(never_const_ptr<process_instantiation> pi, 
 		excl_ptr<index_list> i);
-	~process_instance_reference();
+virtual	~process_instance_reference();
 
-	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class process_instance_reference
+
+//=============================================================================
+/**
+	Reference to a process instance member of something else.
+	Derive from some generic member_instance_reference?
+ */
+class process_member_instance_reference :
+		public member_instance_reference_base, 
+		public process_instance_reference {
+protected:
+// inherited:
+//	excl_ptr<index_list>			array_indices;
+//	const never_const_ptr<process_instantiation>	process_inst_ref;
+//	const count_const_ptr<simple_instance_reference>	base;
+public:
+	process_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<process_instantiation> m);
+	~process_member_instance_reference();
+
+	ostream& what(ostream& o) const;
+// can also attach indices!
+};	// end class process_member_instance_reference
+
+//=============================================================================
+/**
+	Reference to a datatype instance member of another struct.  
+ */
+class datatype_member_instance_reference : 
+		public member_instance_reference_base, 
+		public datatype_instance_reference {
+protected:
+// inherited:
+//	excl_ptr<index_list>			array_indices;
+//	const never_const_ptr<datatype_instantiation>	data_inst_ref;
+//	const count_const_ptr<simple_instance_reference>	base;
+public:
+	datatype_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<datatype_instantiation> m);
+	~datatype_member_instance_reference();
+
+	ostream& what(ostream& o) const;
+// can also attach indices!
+
+};	// end class datatype_member_instance_reference
+
+//=============================================================================
+/**
+	Reference to a channel instance member of another struct.  
+ */
+class channel_member_instance_reference : 
+		public member_instance_reference_base, 
+		public channel_instance_reference {
+protected:
+// inherited:
+//	excl_ptr<index_list>			array_indices;
+//	const never_const_ptr<channel_instantiation>	channel_inst_ref;
+//	const count_const_ptr<simple_instance_reference>	base;
+public:
+	channel_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<channel_instantiation> m);
+	~channel_member_instance_reference();
+
+	ostream& what(ostream& o) const;
+// can also attach indices!
+
+};	// end class channel_member_instance_reference
 
 //=============================================================================
 /**

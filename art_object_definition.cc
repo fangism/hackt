@@ -234,14 +234,20 @@ definition_base::get_qualified_name(void) const {
 	else return key;
 }
 
+#if 0
 /**
 	Sub-classes only need to re-implement if behavior is different.  
 	e.g. an assertion fail for built-in types.  
  */
 never_const_ptr<definition_base>
 definition_base::set_context_definition(context& c) const {
+#if 0
 	return c.set_current_definition_reference(*this);
+#else
+	return c.push_current_definition_reference(*this);
+#endif
 }
+#endif
 
 /**
 	Certifies the template arguments against this definition's

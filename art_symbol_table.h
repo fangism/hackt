@@ -145,7 +145,12 @@ protected:
 		The definition will be combined with optional 
 		template parameters to form a type reference (below).  
 	 */
+#if 0
 	never_const_ptr<definition_base>	current_definition_reference;
+#else
+	stack<never_const_ptr<definition_base> >	definition_stack;
+#define	current_definition_reference		definition_stack.top()
+#endif
 
 	/**
 		Pointer to the concrete type to instantiate.  
@@ -242,11 +247,12 @@ never_const_ptr<name_space>
 			return current_namespace;
 		}
 
-// sets context's definition for instantiation
+// sets context's definition for instantiation, or for member lookup
 never_const_ptr<definition_base>	
 		get_current_definition_reference(void) const
 			{ return current_definition_reference; }
 
+#if 0
 /**
 	To do: change prototype to use pointer class.  
  */
@@ -256,6 +262,15 @@ never_const_ptr<definition_base>
 				never_const_ptr<definition_base>(&d);
 			return current_definition_reference;
 		}
+#else
+// pointer instead of reference?
+never_const_ptr<definition_base>
+		push_current_definition_reference(const definition_base& d) {
+			definition_stack.push(
+				never_const_ptr<definition_base>(&d));
+			return current_definition_reference;
+		}
+#endif
 
 // never_const_ptr<fundamental_type_reference>
 count_const_ptr<fundamental_type_reference>
@@ -275,7 +290,11 @@ never_const_ptr<datatype_definition_base>
 		get_current_datatype_definition(void) const;
 
 // should be called by parser after done using definitions
+#if 0
 void	reset_current_definition_reference(void);
+#else
+void	pop_current_definition_reference(void);
+#endif
 void	reset_current_fundamental_type(void);
 
 never_const_ptr<built_in_param_def>

@@ -73,6 +73,14 @@ instantiation_base::get_qualified_name(void) const {
 }
 
 /**
+	Return's the type's base definition.
+ */
+never_const_ptr<definition_base>
+instantiation_base::get_base_def(void) const {
+	return get_type_ref()->get_base_def();
+}
+
+/**
 	Grabs the current top of the deque of the index collection, 
 	so the encapsulating instance reference know what
 	instances were visible at the time of reference.  
@@ -403,20 +411,37 @@ datatype_instantiation::get_type_ref(void) const {
  */
 never_const_ptr<instance_reference_base>
 datatype_instantiation::make_instance_reference(context& c) const {
-#if 0
-	cerr << "datatype_instantiation::make_instance_reference() "
-		"INCOMPLETE, FINISH ME!" << endl;
-#endif
 	// depends on whether this instance is collective, 
 	//	check array dimensions -- when attach_indices() invoked
-	count_ptr<datatype_instance_reference> new_ir(
-		new datatype_instance_reference(
+	count_ptr<datatype_instance_reference>
+		new_ir(new datatype_instance_reference(
 			never_const_ptr<datatype_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+}
+
+/**
+	Creates a member reference to a datatype, 
+	and pushes it onto the context's object_stack.  
+	\param b is the parent owner of this instantiation referenced.  
+ */
+never_const_ptr<member_instance_reference_base>
+datatype_instantiation::make_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		context& c) const {
+	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+	assert(b);
+	// maybe verify that b contains this, as sanity check
+	count_ptr<datatype_member_instance_reference>
+		new_mir(new datatype_member_instance_reference(
+			b, never_const_ptr<datatype_instantiation>(this)));
+		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
+	c.push_object_stack(new_mir);
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -468,6 +493,27 @@ process_instantiation::make_instance_reference(context& c) const {
 		// may attach in parser::instance_array::check_build()
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+}
+
+/**
+	Creates a member reference to a process, 
+	and pushes it onto the context's object_stack.  
+	\param b is the parent owner of this instantiation referenced.  
+ */
+never_const_ptr<member_instance_reference_base>
+process_instantiation::make_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		context& c) const {
+	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+	assert(b);
+	// maybe verify that b contains this, as sanity check
+	count_ptr<process_member_instance_reference>
+		new_mir(new process_member_instance_reference(
+			b, never_const_ptr<process_instantiation>(this)));
+		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
+	c.push_object_stack(new_mir);
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -589,6 +635,22 @@ param_instantiation::is_loop_independent(void) const {
 	
 }
 #endif
+
+/**
+	1) Parameters cannot be in public ports.  
+	2) Thus they cannot even be referenced.  
+	3) This is just a placeholder that should never be called.  
+ */
+never_const_ptr<member_instance_reference_base>
+param_instantiation::make_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		context& c) const {
+	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+	assert(b);
+	cerr << "Referencing parameter members is strictly forbidden!" << endl;
+	assert(0);
+	return return_type(NULL);
+}
 
 //=============================================================================
 // class pbool_instantiation method definitions
@@ -920,6 +982,27 @@ channel_instantiation::make_instance_reference(context& c) const {
 		// omitting index argument
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+}
+
+/**
+	Creates a member reference to a channel, 
+	and pushes it onto the context's object_stack.  
+	\param b is the parent owner of this instantiation referenced.  
+ */
+never_const_ptr<member_instance_reference_base>
+channel_instantiation::make_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		context& c) const {
+	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+	assert(b);
+	// maybe verify that b contains this, as sanity check
+	count_ptr<channel_member_instance_reference>
+		new_mir(new channel_member_instance_reference(
+			b, never_const_ptr<channel_instantiation>(this)));
+		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
+	c.push_object_stack(new_mir);
+	return return_type(NULL);
 }
 
 //=============================================================================

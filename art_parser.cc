@@ -216,28 +216,27 @@ type_id::rightmost(void) const {
 	The base name of the type can refer to either user-defined
 	data, channel, or process type for instantiation.  
 	Use context object to lookup the actual type.  
-	\return pointer to type reference.  
+	\return pointer to type reference, else NULL if failure.  
  */
 never_const_ptr<object>
 type_id::check_build(never_ptr<context> c) const {
-//	never_const_ptr<object> o;
-//	const definition_base* d;
 	never_const_ptr<definition_base> d;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"type_id::check_build(...): " << endl;
 	)
 	d = c->lookup_definition(*base);
-//	o = c->lookup_definition(*base);
-//	d = IS_A(const definition_base*, o);
 	if (!d) {
 //		cerr << "type_id::check_build(never_ptr<context>) : ERROR!" << endl;
 		return never_const_ptr<object>(NULL);
 	}
 	// set type definition reference
-	d = d->set_context_definition(*c);	// pure virtual
-	// c->set_definition(d);		// don't care which kind...
+#if 0
+	d = d->set_context_definition(*c);	// retarded
 	return d;
+#else
+	return c->push_current_definition_reference(*d);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

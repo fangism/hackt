@@ -53,6 +53,16 @@ simple_instance_reference::dimensions(void) const {
 	else return dim;
 }
 
+count_const_ptr<fundamental_type_reference>
+simple_instance_reference::get_type_ref(void) const {
+	return get_inst_base()->get_type_ref();
+}
+
+never_const_ptr<definition_base>
+simple_instance_reference::get_base_def(void) const {
+	return get_inst_base()->get_base_def();
+}
+
 /**
 	Queries whether or not there were any dynamic instances added
 	to the collection from the initial instantiation up to the
@@ -524,26 +534,10 @@ simple_instance_reference::may_be_type_equivalent(
 	const const_index_list rindex(sir->implicit_static_constant_indices());
 
 	// or just collapse these to ranges directly?
-#if 1
 	const const_range_list ldim = 
 		lindex.collapsed_dimension_ranges();
 	const const_range_list rdim = 
 		rindex.collapsed_dimension_ranges();
-
-#else
-
-	const_range_list lrange(lindex);
-	const_range_list rrange(rindex);
-#if 0
-	lrange.collapse_dimensions_wrt_indices(lindex);
-	rrange.collapse_dimensions_wrt_indices(rindex);
-#else
-	const const_range_list ldim = 
-		lrange.collapsed_dimension_ranges(lindex);
-	const const_range_list rdim = 
-		rrange.collapsed_dimension_ranges(rindex);
-#endif
-#endif
 
 	const bool ret = ldim.is_size_equivalent(rdim);
 	if (!ret) {
@@ -599,6 +593,19 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 		}
 	}
 	return cov;
+}
+
+//=============================================================================
+// class member_instance_reference_base method definitions
+
+member_instance_reference_base::member_instance_reference_base(
+		count_const_ptr<simple_instance_reference> b) :
+		base(b) {
+	assert(base);
+	assert(!base->dimensions());	// must be scalar! (for now)
+}
+
+member_instance_reference_base::~member_instance_reference_base() {
 }
 
 //=============================================================================
@@ -957,6 +964,60 @@ channel_instance_reference::dump(ostream& o) const {
 	return what(o);
 }
 #endif
+
+//=============================================================================
+// class process_member_instance_reference method definitions
+
+process_member_instance_reference::process_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<process_instantiation> m) :
+		member_instance_reference_base(b), 
+		process_instance_reference(m, excl_ptr<index_list>(NULL)) {
+}
+
+process_member_instance_reference::~process_member_instance_reference() {
+}
+
+ostream&
+process_member_instance_reference::what(ostream& o) const {
+	return o << "process-member-instance-ref";
+}
+
+//=============================================================================
+// class datatype_member_instance_reference method definitions
+
+datatype_member_instance_reference::datatype_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<datatype_instantiation> m) :
+		member_instance_reference_base(b), 
+		datatype_instance_reference(m, excl_ptr<index_list>(NULL)) {
+}
+
+datatype_member_instance_reference::~datatype_member_instance_reference() {
+}
+
+ostream&
+datatype_member_instance_reference::what(ostream& o) const {
+	return o << "datatype-member-instance-ref";
+}
+
+//=============================================================================
+// class channel_member_instance_reference method definitions
+
+channel_member_instance_reference::channel_member_instance_reference(
+		count_const_ptr<simple_instance_reference> b, 
+		never_const_ptr<channel_instantiation> m) :
+		member_instance_reference_base(b), 
+		channel_instance_reference(m, excl_ptr<index_list>(NULL)) {
+}
+
+channel_member_instance_reference::~channel_member_instance_reference() {
+}
+
+ostream&
+channel_member_instance_reference::what(ostream& o) const {
+	return o << "channel-member-instance-ref";
+}
 
 //=============================================================================
 }	// end namespace entity

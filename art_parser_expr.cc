@@ -303,12 +303,14 @@ id_expr::is_absolute(void) const {
 }
 
 /**
+	UPDATE DOCUMENTATION.
 	The qualified_id member's check build can return a definition 
-	or instance pointer.  
+	or instance pointer.  (Only instance pointer now.)
 	\param c the context where to begin searching for named object.  
-	\return newly allocated param_literal containing reference to the
-		instance if found, else NULL.
+	\return pointer to the found instantiation base instance if found,
+		else NULL.
 	FIX ME: should return instance_reference!, not instance!
+	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
 never_const_ptr<object>
 id_expr::check_build(never_ptr<context> c) const {
@@ -328,11 +330,15 @@ id_expr::check_build(never_ptr<context> c) const {
 
 			// doesn't have to be a parameter, does it?
 		} else {
-			cerr << "object " << *qid <<
-				" is not an instance, ERROR!";
+			cerr << "object \"" << *qid <<
+				"\" is not an instance, ERROR!  "
+				<< qid->where() << endl;
+			exit(1);
 		}
 	} else {
-		cerr << "object " << *qid << " not found, ERROR!";
+		cerr << "object \"" << *qid << "\" not found, ERROR!  "
+			<< qid->where() << endl;
+		exit(1);
 	}
 	return never_const_ptr<object>(NULL);
 //	return c->lookup_instance(*qid);
@@ -774,21 +780,63 @@ member_expr::rightmost(void) const {
 
 /**
 	Type-check of member reference.  
+	Current restriction: left expression must be scalar 0-dimensional.
+	\return NULL, but places an instance_reference object on the
+		context's object stack.  
  */
 never_const_ptr<object>
 member_expr::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+	e->check_build(c);
+	// useless return value
+	// expect: simple_instance_reference on object stack
+	count_const_ptr<object> o(c->pop_top_object_stack());
+	if (!o) {
+		cerr << "ERROR in base instance reference of member expr at "
+			<< e->where() << endl;
+		exit(1);
+	}
+	count_const_ptr<simple_instance_reference>
+		inst_ref(o.is_a<simple_instance_reference>());
+	assert(inst_ref);
+	if (inst_ref->dimensions()) {
+		cerr << "ERROR: cannot take the member of a " <<
+			inst_ref->dimensions() << "-dimension array, "
+			"must be scalar!  (for now...)  " <<
+			e->where() << endl;
+		exit(1);
+	}
 
-	o = e->check_build(c);
-	// expect: fundamental_type_reference
-
+	never_const_ptr<definition_base>
+		base_def(inst_ref->get_base_def());
+	assert(base_def);
+	c->push_current_definition_reference(*base_def);
 	// this should return a reference to an instance
 	// of some type that has members, such as data, channel, process.  
-	// l should resolve to a *single* instance of something, 
+	// should resolve to a *single* instance of something, 
 	// cannot be an array.  
 
 	// use that instance_reference, get its referenced definition_base, 
-	// and make sure it has a member m.
+	// and make sure it has a member m, lookup ports only in the 
+	// current_definition_reference, don't lookup anywhere else!
+
+	// don't use context's general lookup
+	never_const_ptr<instantiation_base>
+		member_inst(base_def->lookup_port_formal(*member));
+	// LATER: check and make sure definition is signed, 
+	//	after we introduce forward template declarations
+	if (!member_inst) {
+		base_def->what(cerr << "ERROR: ") << " " <<
+			base_def->get_qualified_name() << 
+			" has no public member named \"" << *member <<
+			"\" at " << member->where() << endl;
+		exit(1);
+	}
+	member_inst->make_member_instance_reference(inst_ref, *c);
+	// useless return value: NULL
+	// will result in member_instance_reference on object_stack
+
+	// reset definition reference in context
+	c->pop_current_definition_reference();
 
 	// what should this return?  the same thing it expects:
 	// a reference to an instance of some type.  
@@ -798,7 +846,6 @@ member_expr::check_build(never_ptr<context> c) const {
 	// rather the *type* returned.  
 	// after all this is type-checking, not range checking.  
 
-	assert(0);
 	return never_const_ptr<object>(NULL);
 }
 
@@ -865,6 +912,10 @@ index_expr::check_build(never_ptr<context> c) const {
 			<< e->where() << endl;
 		exit(1);
 	}
+
+	// later this may be a member_instance_reference...
+	// should cast to instance_reference_base instead, 
+	// abstract attach_indices
 	count_ptr<simple_instance_reference>
 		base_inst(base_obj.is_a<simple_instance_reference>());
 	assert(base_inst);
