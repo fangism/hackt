@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.8.4.1 2005/01/20 19:02:15 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.8.4.2 2005/01/21 01:55:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -14,7 +14,11 @@
 #include "art_object_instance_bool.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_built_ins.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
@@ -45,6 +49,21 @@ bool_instance_collection::bool_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_collection::~bool_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	During unroll phase, this determines the type, except that
+	this type is a built-in primary type, bool.  
+	\return false normally, signaling no error.  
+	\pre this is the first statement unrolled in this collection.  
+ */
+bool
+bool_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	// INVARIANT(!is_partially_unrolled());
+	INVARIANT(t->get_base_def() == &bool_def);
+	// shouldn't have any parameters, NULL or empty list
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

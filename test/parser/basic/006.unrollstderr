@@ -1,0 +1,58 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3100224	module__	0	0	43
+	2	 0x31025a0	namespc_	0	43	71
+	3	 0x31025b4	dintcoll	1	71	213
+	4	 0x3805004	datainst	0	213	233
+	5	 0x3100244	datatprf	0	233	249
+	6	 0x3102600	datadefn	0	249	284
+	7	 0x3102654	pintcoll	0	284	321
+	8	 0x31026b0	cnstpi__	0	321	333
+	9	 0x3100254	dprmlst_	0	333	349
+	10	 0x31026d0	cnstpi__	0	349	361
+	11	 0x31026e4	crnglst_	0	361	381
+	12	 0x3102740	namespc_	0	381	420
+	13	 0x3102754	dintcoll	3	420	1585
+	14	 0x3805020	datainst	0	1585	1605
+	15	 0x31026f4	datatprf	0	1605	1621
+	16	 0x3102704	dprmlst_	0	1621	1637
+	17	 0x31027a4	crnglst_	0	1637	1673
+	18	 0x31027b4	dintcoll	2	1673	2076
+	19	 0x380503c	datainst	0	2076	2096
+	20	 0x3102804	datatprf	0	2096	2112
+	21	 0x3102814	dprmlst_	0	2112	2128
+	22	 0x3102824	crnglst_	0	2128	2156
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    more_arrays =     In namespace "more_arrays", we have: {
+      0 parameter-collections
+      2 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        fancier_array = int<32> fancier_array with indices: {
+          [0..3][0..4][1..2]
+        }
+
+        fancy_array = int<32> fancy_array with indices: {
+          [0..4][0..2]
+        }
+
+    }
+  Instances:
+    good_array = int<32> good_array with indices: {
+      [0..4]
+    }
+
+}
+

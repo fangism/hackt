@@ -1,0 +1,54 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x31021e4	module__	0	0	43
+	2	 0x3100250	namespc_	0	43	71
+	3	 0x3102230	namespc_	0	71	102
+	4	 0x3102244	dintcoll	0	102	149
+	5	 0x3805004	datainst	0	149	169
+	6	 0x3102294	datatprf	0	169	185
+	7	 0x31022a0	datadefn	0	185	220
+	8	 0x31022f4	pintcoll	0	220	257
+	9	 0x3102350	cnstpi__	0	257	269
+	10	 0x3102364	dprmlst_	0	269	285
+	11	 0x3102380	cnstpi__	0	285	297
+	12	 0x3102394	dintcoll	0	297	345
+	13	 0x3805020	datainst	0	345	365
+	14	 0x31023e4	datatprf	0	365	381
+	15	 0x31023f4	dprmlst_	0	381	397
+	16	 0x3102430	namespc_	0	397	424
+	17	 0x3102444	dintcoll	0	424	472
+	18	 0x380503c	datainst	0	472	492
+	19	 0x3102494	datatprf	0	492	508
+	20	 0x31024a4	dprmlst_	0	508	524
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  2 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    cat =     In namespace "cat", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        meow = int<32> meow
+    }
+    dog =     In namespace "dog", we have: {
+      0 parameter-collections
+      2 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        moo = int<32> moo
+        woof = int<32> woof
+    }
+}
+

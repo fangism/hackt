@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.4.4.1 2005/01/17 22:08:30 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.4.4.2 2005/01/21 01:55:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -92,6 +92,13 @@ virtual never_ptr<const definition_base>
 
 	excl_ptr<param_expr_list>
 	get_copy_template_params(void) const;
+
+	/**
+		Returns a shallow (pointer) copy or reference to
+		the template parameter list.  
+	 */
+	never_ptr<const param_expr_list>
+	get_template_params(void) const { return template_params; }
 
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.2 2005/01/20 18:43:52 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.3 2005/01/21 01:55:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -9,7 +9,7 @@
 
 // for debugging only, before inclusion of header file
 // #define	DEBUG_LIST_VECTOR_POOL		1
-#define	ENABLE_STACKTRACE		1
+// #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <algorithm>
@@ -22,6 +22,7 @@
 #include "art_object_expr_base.h"
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
+#include "art_object_unroll_context.h"
 
 #include "what.tcc"
 #include "memory/list_vector_pool.h"
@@ -741,35 +742,52 @@ data_instantiation_statement::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
-// almost ready to unveil
+/**
+	TODO: add context argument.
+ */
 void
 data_instantiation_statement::unroll(void) const {
 	STACKTRACE("data_instantiation_statement::unroll()");
 	NEVER_NULL(inst_base);
 	// we need to type-check against template parameters!
 	// perhaps this should be made virtual...
-//	type->unroll_resolve();
-#if 1
+	unroll_context c;
+	const count_ptr<const data_type_reference>
+		final_type_ref(type->unroll_resolve(c));
+	if (!final_type_ref) {
+		cerr << "ERROR resolving data type reference during unroll."
+			<< endl;
+		return;
+	}
+#if 0
 	if (inst_base->is_partially_unrolled()) {
 		// then we must check type-consistency
 		// need a method for obtaining the parameter list
 		cerr << "Someone was here first." << endl;
+		// use existing type check
 	} else {
 		// is first instance, which will determine the type
 		// set the actual parameters
-		cerr << "I'm first!" << endl;
+		const bool err = inst_base->commit_type(final_type_ref);
+		INVARIANT(!err);
+		// nothing can possibly go wrong with the first type
+	}
+#else
+	const bool err = inst_base->commit_type(final_type_ref);
+	if (err) {
+		cerr << "ERROR during data_instantiation_statement::unroll()"
+			<< endl;
+		THROW_EXIT;
 	}
 #endif
 	inst_base->instantiate_indices(indices);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-STACKTRACE("data_instantiation_statement::collect_transient_info()");
+// STACKTRACE("data_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);

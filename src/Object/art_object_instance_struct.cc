@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.8.4.1 2005/01/20 19:02:16 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.8.4.2 2005/01/21 01:55:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -16,10 +16,14 @@
 #include "art_object_instance_struct.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
+#include "stacktrace.h"
 
 #include "ptrs_functional.h"
 #include "compose.h"
@@ -32,6 +36,7 @@ using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
 using std::dereference;
 using std::mem_fun_ref;
+USING_STACKTRACE
 
 //=============================================================================
 // class struct_instance_collection method definitions
@@ -47,6 +52,22 @@ struct_instance_collection::struct_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct_instance_collection::~struct_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This sets the actual type for the instance collection.  
+	\param t the struct type reference, containing resolved
+		template parameters if applicable.  
+	\return false if type is set without error, else true.  
+ */
+bool
+struct_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	STACKTRACE("struct_instance_collection::commit_type()");
+//	INVARIANT(!is_partially_unrolled());
+	cerr << "FANG: finish struct_instance_collection::commit_type()!"
+		<< endl;
+	return true;	// temporary: always return error
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.33.4.2 2005/01/20 19:02:15 fang Exp $
+	$Id: art_object_instance.h,v 1.33.4.3 2005/01/21 01:55:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -112,6 +112,8 @@ class datatype_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
 protected:
+	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
+protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
 public:
@@ -132,6 +134,10 @@ virtual bool
 
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
+
+	// a better return type?
+virtual	bool
+	commit_type(const type_ref_ptr_type& ) = 0;
 
 // methods for connection and aliasing?
 

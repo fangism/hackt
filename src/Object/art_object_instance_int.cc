@@ -3,11 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11.4.2 2005/01/20 19:02:16 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11.4.3 2005/01/21 01:55:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
+
+// #define	ENABLE_STACKTRACE		1
 
 #include <exception>
 #include <iostream>
@@ -16,7 +18,11 @@
 #include "art_object_instance_int.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_built_ins.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
@@ -50,6 +56,43 @@ int_instance_collection::int_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_collection::~int_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	During unroll phase, this commits the type of the collection.  
+	\param t the data integer type reference, containing width, 
+		must already be resolved to a const_param_expr_list.  
+	\return false on success, true on error.  
+	\post the integer width is fixed for the rest of the program.  
+ */
+bool
+int_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	STACKTRACE("int_instance_collection::commit_type()");
+	INVARIANT(t->get_base_def() == &int_def);
+	const never_ptr<const param_expr_list>
+		params(t->get_template_params());
+	NEVER_NULL(params);
+	// extract first and only parameter, the integer width
+	const never_ptr<const const_param_expr_list>
+		cparams(params.is_a<const const_param_expr_list>());
+	NEVER_NULL(cparams);
+	INVARIANT(cparams->size() == 1);
+	const count_ptr<const const_param>&
+		param1(cparams->front());
+	NEVER_NULL(param1);
+	const count_ptr<const pint_const>
+		pwidth(param1.is_a<const pint_const>());
+	NEVER_NULL(pwidth);
+	const pint_value_type new_width = pwidth->static_constant_int();
+	INVARIANT(new_width);
+	if (is_partially_unrolled()) {
+		INVARIANT(int_width);
+		return (new_width != int_width);
+	} else {
+		int_width = new_width;
+		return false;
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -232,7 +275,9 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		if (pi.valid()) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
+				" of " << get_qualified_name() <<
 				" already instantiated!" << endl;
+			// a useful error returned would be nice...
 			THROW_EXIT;
 		}
 		pi.instantiate();

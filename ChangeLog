@@ -8,6 +8,15 @@
 	  in "art_object_index.h".  Other minor changes like renaming
 	  parent to parent_type.  
 
+	* ARTXX-00-01-04-object-00-05:
+	  FINALLY wrote a prototype unroll system for the built-in 
+	  datatypes.  Successfully tested basic int<32> instantiations.
+	  Created placeholder class unroll_context for use in unrolling.  
+	  Not all unroll methods have been adapted to use it yet.  
+	  Expressions are unrolled into pint_const_collections
+	  (pbool_const_collection to be created).  
+	  Also updated util/multikey.* to provide reverse iterator interface.  
+
 
 2005-01-19	David Fang	<fangism@users.sourceforge.net>
 

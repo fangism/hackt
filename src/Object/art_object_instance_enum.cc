@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.8.4.1 2005/01/20 19:02:15 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.8.4.2 2005/01/21 01:55:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -16,7 +16,10 @@
 #include "art_object_instance_enum.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_object_definition.h"
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
@@ -47,6 +50,22 @@ enum_instance_collection::enum_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance_collection::~enum_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This determines the type during the unroll phase.  
+	Enums are never templated, and thus require no template parameters.  
+	The only information needed is the reference to the
+	enumeration definition.  
+	\return false, signaling no error.  
+ */
+bool
+enum_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	// INVARIANT(!is_partially_unrolled());
+	INVARIANT(t->get_base_def().is_a<const enum_datatype_def>());
+	// do something with the definition base?
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22.4.2 2005/01/20 21:59:42 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22.4.3 2005/01/21 01:55:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -58,7 +58,7 @@ fundamental_type_reference::~fundamental_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
-	STACKTRACE("fundamental_type_reference::dump()");
+//	STACKTRACE("fundamental_type_reference::dump()");
 	return o << hash_string();
 }
 
@@ -73,7 +73,7 @@ fundamental_type_reference::dump(ostream& o) const {
  */
 string
 fundamental_type_reference::hash_string(void) const {
-	STACKTRACE("fundamental_type_reference::hash_string()");
+//	STACKTRACE("fundamental_type_reference::hash_string()");
 	// use fully qualified?  for hashing, no.
 	// possible collision case?
 	return get_base_def()->get_name() +template_param_string();

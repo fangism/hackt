@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.8.4.2 2005/01/20 19:02:17 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.8.4.3 2005/01/21 01:55:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -117,6 +117,7 @@ class struct_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
 public:
+	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	never_ptr<struct_instance_alias>	instance_ptr_type;
 	// typedef	param_type			vector<...>
 protected:
@@ -139,6 +140,9 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 #endif
+
+	bool
+	commit_type(const type_ref_ptr_type& );
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
