@@ -1,5 +1,7 @@
-// "multidimensional_sparse_set.h"
-// a fixed depth/dimension tree representing sparsely instantiated indices
+/**
+	\file "multidimensional_sparse_set.h"
+	Fixed depth/dimension tree representing sparsely instantiated indices.
+ */
 // David Fang, Cornell University, 2004
 
 #ifndef	__MULTIDIMENSIONAL_SPARSE_SET_H__

@@ -1,4 +1,9 @@
-// "art_debug.h"
+/**
+	\file "art_debug.h"
+	Master debug flags.  
+	All other module-specific debugging flags should derive
+	from this.  
+ */
 
 #ifndef	__ART_DEBUG_H__
 #define	__ART_DEBUG_H__

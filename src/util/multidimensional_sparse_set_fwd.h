@@ -1,6 +1,7 @@
-// "multidimensional_sparse_set_fwd.h"
-// forward declarations only
-// a fixed depth/dimension tree representing sparsely instantiated indices
+/**
+	\file "multidimensional_sparse_set_fwd.h"
+	Forward declarations for a fixed depth/dimension tree-set.
+ */
 // David Fang, Cornell University, 2004
 
 #ifndef	__MULTIDIMENSIONAL_SPARSE_SET_FWD_H__

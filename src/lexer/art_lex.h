@@ -1,5 +1,8 @@
-// "art.l.h"
-// header for a few simple structures
+/**
+	"art.l.h"
+	Header for a few simple structures, useful to the 
+	language front-end.  
+ */
 
 #ifndef	__ART_L_H__
 #define	__ART_L_H__

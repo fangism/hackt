@@ -1,12 +1,14 @@
-// "ptrs_fwd.h"
-// forward declarations for "ptrs.h"
+/**
+	\file "ptrs_fwd.h"
+	Forward declarations for non-counted pointer classes in "ptrs.h".
+ */
 
 #ifndef	__PTRS_FWD_H__
 #define	__PTRS_FWD_H__
 
 // overrideable namespace
 #ifndef	PTRS_NAMESPACE
-#define	PTRS_NAMESPACE			fang
+#define	PTRS_NAMESPACE			ptrs_ns
 #endif
 
 namespace PTRS_NAMESPACE {

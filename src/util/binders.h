@@ -1,6 +1,5 @@
-// "binders.h"
-
 /**
+ *	\file "binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
  */

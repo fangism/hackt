@@ -1,5 +1,7 @@
-// "multikey_fwd.h"
-// multidimensional key class, forward declarations
+/**
+	\file "multikey_fwd.h"
+	Forward declarations or multidimensional key class.  
+ */
 
 #ifndef	__MULTIKEY_H_FWD__
 #define	__MULTIKEY_H_FWD__

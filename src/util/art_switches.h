@@ -1,5 +1,7 @@
-// "art_switches.h"
-// global variables for art-related programs
+/**
+	\file "art_switches.h"
+	Global variables for ART front-end.  
+ */
 
 #ifndef	__ART_SWITCHES_H__
 #define	__ART_SWITCHES_H__

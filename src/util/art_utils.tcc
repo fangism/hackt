@@ -1,6 +1,7 @@
-// "art_utils.tcc"
-// template methods from art_utils.h
-// include this to use them
+/**
+	\file "art_utils.tcc"
+	Template function definitions from "art_utils.h".
+ */
 
 #ifndef __ART_UTILS_TCC__
 #define __ART_UTILS_TCC__

@@ -1,4 +1,7 @@
-// "multikey_map.h"
+/**
+	\file "multikey_map_fwd.h"
+	Forward declarations for multidimensional map.  
+ */
 
 #ifndef	__MULTIKEY_MAP_FWD_H__
 #define	__MULTIKEY_MAP_FWD_H__

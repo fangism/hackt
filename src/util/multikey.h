@@ -1,5 +1,8 @@
-// "multikey.h"
-// multidimensional key class
+/**
+	\file "multikey.h"
+	Multidimensional key class, use to emulate true multiple dimensions
+	with a standard map class.
+ */
 
 #ifndef	__MULTIKEY_H__
 #define	__MULTIKEY_H__

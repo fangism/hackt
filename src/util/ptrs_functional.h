@@ -1,7 +1,7 @@
-// "ptrs_functional.h"
-
 /**
- *	This file contains specializations for member function adaptors
+ *	\file "ptrs_functional.h"
+ *	This file contains specializations and extensions
+ *	for member function adaptors
  *	base on the standard set found in <functional>.
  */
 

@@ -1,5 +1,7 @@
-// "sublist.h"
-// list slices
+/**
+	\file "sublist.h"
+	Wrapper class interface for list slices, that behave like lists.  
+ */
 
 #ifndef	__SUBLIST_H__
 #define	__SUBLIST_H__

@@ -1,7 +1,9 @@
-// "hash_specializations.h"
-
-// Include this file before using any hash_map for specializations
-// to take effect.
+/**
+	\file "hash_specializations.h"
+	Contains hash function specializations.  
+	Include this file before using any hash_map for specializations
+	to take effect.
+ */
 
 #ifndef	__HASH_SPECIALIZATIONS_H__
 #define	__HASH_SPECIALIZATIONS_H__

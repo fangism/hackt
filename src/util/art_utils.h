@@ -1,5 +1,7 @@
-// "art_utils.h"
-// handy utilities
+/**
+	\file "art_utils.h"
+	General-purpose handy utilities.
+ */
 
 #ifndef __ART_UTILS_H__
 #define __ART_UTILS_H__

@@ -1,18 +1,19 @@
-// "compose.h"
+/**
+	\file "compose.h"
+	Unary and binary functor compositors.  
+	This file is taken from Sean Mauch's Algorithms and 
+	Data Structures class.  
+	From California Institute of Technology, 2003-2004.  
+	We've kept the original namespace to attribute credit to its source.  
+	The original source can be found at:
+	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
+ */
 
 #ifndef	__COMPOSE_H__
 #define	__COMPOSE_H__
 
 #include <functional>
 
-/**
-	"compose.h"
-	is taken from Sean Mauch's Algorithms and Data Structures class.  
-	From California Institute of Technology, 2003-2004.  
-	We've kept the original namespace to attribute credit to its source.  
-	The original source can be found at:
-	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
- */
 namespace ADS {
 //=============================================================================
 using namespace std;

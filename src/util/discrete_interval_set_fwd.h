@@ -1,10 +1,7 @@
-// "discrete_interval_set_fwd.h"
-// forward declarations
-
-// Class for a set of intervals over the set of integers
-//	or discrete, integer-like values.  
-
-// will be built-upon to make "multidimensional_sparse_set"
+/**
+	\file "discrete_interval_set_fwd.h"
+	Forward declarations for interval set class over integer-like values.
+ */
 
 // by David Fang, Cornell University, 2004
 
@@ -14,7 +11,7 @@
 #include <iosfwd>
 
 #ifndef DISCRETE_INTERVAL_SET_NAMESPACE
-#define DISCRETE_INTERVAL_SET_NAMESPACE		fang
+#define DISCRETE_INTERVAL_SET_NAMESPACE		intvl_set_ns
 #endif
 
 //=============================================================================

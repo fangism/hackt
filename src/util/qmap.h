@@ -1,5 +1,9 @@
-// "qmap.h"
-// queryable map with non-modifying (const) lookup method
+/**
+	\file "qmap.h"
+	Queryable map with non-modifying (const) lookup method.  
+	Non-modifying lookup guarantees that no extraneous empty
+	elements are added by lookup.  
+ */
 
 #ifndef	__QMAP_H__
 #define	__QMAP_H__

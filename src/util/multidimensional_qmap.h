@@ -1,5 +1,7 @@
-// "multidimensional_qmap.h"
-// a fixed depth/dimension tree representing sparsely instantiated indices
+/**
+	\file "multidimensional_qmap.h"
+	Fixed depth/dimension tree representing sparsely instantiated indices.
+ */
 // David Fang, Cornell University, 2004
 
 #ifndef	__MULTIDIMENSIONAL_QMAP_H__

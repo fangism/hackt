@@ -1,5 +1,7 @@
-// "conditional.h"
-// functor compositions for conditional or predicated execution
+/**
+	\file "conditional.h"
+	Functor compositions for conditional or predicated execution.  
+ */
 
 #ifndef	__CONDITIONAL_H__
 #define	__CONDITIONAL_H__

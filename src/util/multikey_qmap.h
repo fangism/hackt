@@ -1,4 +1,7 @@
-// "multikey_qmap.h"
+/**
+	\file "multikey_qmap.h"
+	Multidimensional queryable map.  
+ */
 
 #ifndef	__MULTIKEY_QMAP_H__
 #define	__MULTIKEY_QMAP_H__

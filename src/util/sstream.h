@@ -1,14 +1,17 @@
-// "sstream.h"
-// header-wrapper for gcc-version-specific placement of <sstream>
+/**
+	\file "sstream.h"
+	Header-wrapper for gcc-version-specific placement of <sstream>
 
-// IMPORTANT NOTE:
-// The deprecated <strstream> in older versions of some compilers is 
-// known to suck, because of error-prone memory non-management.  
+	IMPORTANT NOTE:
+	The deprecated <strstream> in older versions of some compilers is 
+	known to suck, because of error-prone memory non-management.  
+ */
+
 
 #ifndef	__SSTREAM_H__
 #define	__SSTREAM_H__
 
-// compiler-version dependent location of hash_map
+// compiler-version dependent location of sstream
 #ifdef  __GNUC__
 #if	(__GNUC__ >= 3)
 #include <sstream>

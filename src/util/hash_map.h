@@ -1,5 +1,7 @@
-// "hash_map.h"
-// header-wrapper for gcc-version-specific placement of <hash_map>
+/**
+	\file "hash_map.h"
+	Header-wrapper for gcc-version-specific placement of <hash_map>.
+ */
 
 #ifndef	__HASH_MAP_H__
 #define	__HASH_MAP_H__

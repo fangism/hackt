@@ -1,6 +1,7 @@
-// "multidimensional_qmap_fwd.h"
-// forward declarations for
-// a fixed depth/dimension tree representing sparsely instantiated indices
+/**
+	\file "multidimensional_qmap_fwd.h"
+	Forward declarations for a fixed depth/dimension sparse tree.
+ */
 // David Fang, Cornell University, 2004
 
 #ifndef	__MULTIDIMENSIONAL_QMAP_FWD_H__
@@ -9,7 +10,7 @@
 #include <list>
 
 #ifndef	MULTIDIMENSIONAL_QMAP_NAMESPACE
-#define	MULTIDIMENSIONAL_QMAP_NAMESPACE		fang
+#define	MULTIDIMENSIONAL_QMAP_NAMESPACE		md_qmap_ns
 #endif
 
 // full description in "multidimensional_qmap.h"

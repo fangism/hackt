@@ -1,9 +1,9 @@
-// "discrete_interval_set.h"
-
-// Class for a set of intervals over the set of integers
-//	or discrete, integer-like values.  
-
-// will be built-upon to make "multidimensional_sparse_set"
+/**
+	\file "discrete_interval_set.h"
+	Class for a set of intervals over the set of integers
+	or discrete, integer-like values.  
+	This class is used to build the "multidimensional_sparse_set" class.  
+ */
 
 // by David Fang, Cornell University, 2004
 

@@ -1,4 +1,8 @@
-// "multikey_map.h"
+/**
+	\file "multikey_map.h"
+	Multidimensional map implemented as plain map with 
+	multidimensional key.  
+ */
 
 #ifndef	__MULTIKEY_MAP_H__
 #define	__MULTIKEY_MAP_H__

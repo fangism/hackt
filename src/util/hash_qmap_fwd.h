@@ -1,5 +1,7 @@
-// "hash_qmap_fwd.h"
-// forward declarations only, see full description in "hash_qmap.h"
+/**
+	\file "hash_qmap_fwd.h"
+	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
+ */
 
 #ifndef	__HASH_QMAP_FWD_H__
 #define	__HASH_QMAP_FWD_H__

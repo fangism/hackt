@@ -1,4 +1,7 @@
-// "art_utils.cc"
+/**
+	\file "art_utils.cc"
+	Utility function definitions (for non-templates only). 
+ */
 
 #include <assert.h>
 #include <iostream>

@@ -1,5 +1,9 @@
-// "ptrs.h" -- need better name?
-// library of pointers for explicit memory management
+/**
+	\file "ptrs.h"
+	Library of pointers for explicit memory management.  
+	The pointer classes contained herein are all non-counted.  
+	For reference-counted classes, see "count_ptr.h". 
+ */
 // all methods in this file are to be defined here, to be inlined
 
 // to do: references! (as non-null pointers)
@@ -112,6 +116,13 @@ template <class> friend class never_const_ptr;
 template <class> friend class some_ptr;
 template <class> friend class some_const_ptr;
 
+public:
+	typedef	T			value_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
+
 protected:
 	T*	ptr;
 
@@ -180,6 +191,13 @@ template <class> friend class never_ptr;
 template <class> friend class never_const_ptr;
 template <class> friend class some_ptr;
 template <class> friend class some_const_ptr;
+
+public:
+	typedef	T			value_type;
+//	typedef	T&			reference;
+//	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
 
 protected:
 	const T*	cptr;
@@ -293,6 +311,13 @@ template <class> friend class never_ptr;
 template <class> friend class never_const_ptr;
 template <class> friend class some_ptr;
 template <class> friend class some_const_ptr;
+
+public:
+	typedef	T			value_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
 
 protected:
 /**
@@ -529,6 +554,13 @@ template <class> friend class excl_const_ptr;
 template <class> friend class never_const_ptr;
 template <class> friend class some_const_ptr;
 
+public:
+	typedef	T			value_type;
+//	typedef	T&			reference;
+//	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
+
 protected:
 const T*	release(void) throw() {
 		const T* ret = this->cptr;
@@ -707,6 +739,13 @@ template <class> friend class excl_const_ptr;
 template <class> friend class never_const_ptr;
 
 public:
+	typedef	T			value_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
+
+public:
 // protected:
 /**
 	Constructors that use naked pointers *should* be restricted.  
@@ -823,6 +862,13 @@ template <class> friend class excl_ptr;
 template <class> friend class never_ptr;
 template <class> friend class excl_const_ptr;
 template <class> friend class never_const_ptr;
+
+public:
+	typedef	T			value_type;
+//	typedef	T&			reference;
+//	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
 
 public:
 /**
@@ -965,6 +1011,13 @@ template <class> friend class excl_ptr;
 template <class> friend class excl_const_ptr;
 template <class> friend class never_ptr;
 template <class> friend class never_const_ptr;
+
+public:
+	typedef	T			value_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
 
 protected:
 	bool	own;
@@ -1118,6 +1171,13 @@ template <class> friend class excl_ptr;
 template <class> friend class excl_const_ptr;
 template <class> friend class never_ptr;
 template <class> friend class never_const_ptr;
+
+public:
+	typedef	T			value_type;
+//	typedef	T&			reference;
+//	typedef	T*			pointer;
+	typedef	const T&		const_reference;
+	typedef	const T*		const_pointer;
 
 protected:
 	bool	own;

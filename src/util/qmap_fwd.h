@@ -1,6 +1,8 @@
-// "qmap_fwd.h"
-// forward declarations only
-// full description in "qmap.h"
+/**
+	\file "qmap_fwd.h"
+	Forward declarations for queryable map.  
+	Full description in "qmap.h".
+ */
 
 #ifndef	__QMAP_FWD_H__
 #define	__QMAP_FWD_H__

@@ -1,4 +1,7 @@
-// "hash_qmap.h"
+/**
+	\file "hash_qmap.h"
+	Queryable hash_map that doesn't add empty elements on lookup.  
+ */
 
 #ifndef	__HASH_QMAP_H__
 #define	__HASH_QMAP_H__

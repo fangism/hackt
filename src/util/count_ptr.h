@@ -1,15 +1,11 @@
-// "count_ptr.h"
-// reference counting pointer class
-
 /**
-	Generally not intended for mixed use with pointers from
-	"ptrs.h": excl_ptr, some_ptr, never_ptr.  
+	\file "count_ptr.h"
+	Reference-counting pointer class templates.
 
-	proposals:
-		Allow release of naked pointer when there is only 
-		one sole reference remaining, otherwise return NULL.
-		Will make it interfaceable with excl_ptr, and some_ptr.  
-**/
+	Generally not intended for mixed use with pointers from
+	the non-counted pointer classes in "ptrs.h":
+		excl_ptr, some_ptr, never_ptr.  
+ */
 
 #ifndef	__COUNT_PTR_H__
 #define	__COUNT_PTR_H__
@@ -119,6 +115,12 @@ template <class> friend class count_ptr;
 template <class> friend class count_const_ptr;
 protected:
 	typedef	abstract_base_count_ptr		parent;
+public:
+	typedef T			value_type;
+	typedef T&			reference;
+	typedef T*			pointer;
+	typedef const T&		const_reference;
+	typedef const T*		const_pointer;
 
 protected:
 	/**
@@ -297,6 +299,13 @@ public:
 template <class T>
 class count_const_ptr : public abstract_base_count_ptr {
 template <class> friend class count_const_ptr;
+
+public:
+	typedef T			value_type;
+//	typedef T&			reference;
+//	typedef T*			pointer;
+	typedef const T&		const_reference;
+	typedef const T*		const_pointer;
 
 protected:
 	typedef	abstract_base_count_ptr		parent;
