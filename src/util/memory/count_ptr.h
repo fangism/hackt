@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.1.2.1 2005/01/24 19:46:09 fang Exp $
+	$Id: count_ptr.h,v 1.1.2.2 2005/01/24 20:51:43 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -25,7 +25,7 @@
 //=============================================================================
 // debugging stuff
 
-#if 1
+#if 0
 #include <iostream>
 #include "using_ostream.h"
 #endif
@@ -53,14 +53,37 @@ namespace memory {
 	Unsafe copy of a reference-count pointer, intended for
 	transfer use, and places where you know what you're doing.  
 	(Ok, where *I* know what I'm doing.)
+
+	Note this never deletes anything.  
  */
 template <class T>
 struct raw_count_ptr {
+	typedef T			element_type;
+	typedef T&			reference;
+	typedef T*			pointer;
+
 // template <class> friend class count_ptr;
-	T*	ptr;
+	pointer	ptr;
 	size_t*	ref_count;
 
-	raw_count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) { }
+	/**
+		Never transfers invalid pointers and reference counts.  
+	 */
+	raw_count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
+		NEVER_NULL(ptr);
+		NEVER_NULL(ref_count);
+	}
+
+	template <class S>
+	raw_count_ptr(S* p, size_t* c) : ptr(p), ref_count(c) {
+		NEVER_NULL(ptr);
+		NEVER_NULL(ref_count);
+	}
+
+	template <class S>
+	raw_count_ptr(const raw_count_ptr<S>& r) :
+			ptr(r.ptr), ref_count(r.ref_count) {
+	}
 
 	// plain copy-construction
 
@@ -68,7 +91,26 @@ struct raw_count_ptr {
 
 	// plain assignment
 
-};	// helper class for 
+	/**
+		Dereference.  
+	 */
+	reference
+	operator * (void) const throw() { return *ptr; }
+
+	/**
+		Dereference to member or method.  
+	 */
+	pointer
+	operator -> (void) const throw() { return ptr; }
+
+	operator bool() const { return ptr != NULL; }
+
+	size_t
+	refs(void) const {
+		return *ref_count;
+	}
+
+};	// end struct raw_count_ptr
 
 //=============================================================================
 /**
@@ -117,6 +159,19 @@ public:
 
 	explicit
 	count_ptr(const raw_count_ptr<T>& r) :
+			ptr(r.ptr), ref_count(r.ref_count) {
+		if (this->ref_count) {
+			(*this->ref_count)++;
+			NEVER_NULL(ptr);
+			REASONABLE_REFERENCE_COUNT;
+		} else {
+			INVARIANT(!ptr);
+		}
+	}
+
+	template <class S>
+	explicit
+	count_ptr(const raw_count_ptr<S>& r) :
 			ptr(r.ptr), ref_count(r.ref_count) {
 		if (this->ref_count) {
 			(*this->ref_count)++;
@@ -198,7 +253,7 @@ protected:
 			if (!*this->ref_count) {
 				NEVER_NULL(ptr);
 				delete ptr;
-#if 1
+#if 0
 				cerr << "count_ptr<>::release() @ "
 					<< this << endl;
 				char c; std::cin >> c;
@@ -227,7 +282,7 @@ protected:
 			if (!*this->ref_count) {
 				NEVER_NULL(ptr);
 				delete ptr;
-#if 1
+#if 0
 				cerr << "count_ptr<>::reset() @ "
 					<< this << endl;
 				char c; std::cin >> c;

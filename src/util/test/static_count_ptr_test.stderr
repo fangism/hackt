@@ -1,20 +1,20 @@
 \- list_vector_pool::list_vector_pool()
-Reserved named_thing chunk of size 16*1 starting at 0x80521a0
+Reserved named_thing chunk of size 16*1 starting at 0x8056230
 /- list_vector_pool::list_vector_pool()
 \- int main(int, char**)
 | \- operator new
 | | \- list_vector_pool::allocate()
 | | | \- empty ctor
-0xbfffe360
+0xbfffee70
 | | | /- empty ctor
 | | | \- dtor
-0xbfffe360
+0xbfffee70
 | | | /- dtor
-Allocated named_thing from pool @ 0x80521a0
+Allocated named_thing from pool @ 0x8056230
 | | /- list_vector_pool::allocate()
 | /- operator new
 | \- empty ctor
-0x80521a0
+0x8056230
 | /- empty ctor
 | \- for-loop
 count = 3
@@ -31,20 +31,20 @@ count = 3
 count = 2
 /- int main(int, char**)
 \- dtor
-0x80521a0
+0x8056230
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x80521a0 to free-list.
+Returned named_thing @ 0x8056230 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- list_vector_pool::~list_vector_pool()
-~list_vector_pool<named_thing>() at 0x8052050
-\- list_vector_pool::status()
+~list_vector_pool<named_thing>() at 0x8056110
+| \- list_vector_pool::status()
 	1 chunks of 16*1 named_thing allocated.
 	Peak usage: 1 elements, free-list has 1 remaining.
-/- list_vector_pool::status()
+| /- list_vector_pool::status()
 /- list_vector_pool::~list_vector_pool()
 \- dtor
-0x80521a0
+0x8056230
 /- dtor

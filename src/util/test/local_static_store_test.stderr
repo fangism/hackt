@@ -1,32 +1,32 @@
 \- list_vector_pool::list_vector_pool()
-Reserved named_thing chunk of size 16*1 starting at 0x80531a0
+Reserved named_thing chunk of size 16*1 starting at 0x8057230
 /- list_vector_pool::list_vector_pool()
 \- dummy ctor
-0x80523d4
+0x8056814
 /- dummy ctor
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- empty ctor
-0xbfffdc20
+0xbfffefa0
 | | /- empty ctor
 | | \- dtor
-0xbfffdc20
+0xbfffefa0
 | | /- dtor
-Allocated named_thing from pool @ 0x80531a0
+Allocated named_thing from pool @ 0x8057230
 | /- list_vector_pool::allocate()
 /- operator new
 \- dummy ctor
-0x80531a0
+0x8057230
 /- dummy ctor
 \- main()
-anon_static sitting at 0x80523d4
-anon_dynamic sitting at 0x80531a0
+anon_static sitting at 0x8056814
+anon_dynamic sitting at 0x8057230
 | \- actually_called_one()
 | | \- dummy ctor
-0x8052408
+0x8056848
 | | /- dummy ctor
 | | \- dummy ctor
-0x8052409
+0x8056849
 | | /- dummy ctor
 | /- actually_called_one()
 | \- actually_called_one()
@@ -35,81 +35,81 @@ anon_dynamic sitting at 0x80531a0
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- empty ctor
-0xbfffdc50
+0xbfffefd0
 | | | | /- empty ctor
 | | | | \- dtor
-0xbfffdc50
+0xbfffefd0
 | | | | /- dtor
-Allocated named_thing from pool @ 0x80531a1
+Allocated named_thing from pool @ 0x8057231
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- dummy ctor
-0x80531a1
+0x8057231
 | | /- dummy ctor
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- empty ctor
-0xbfffdc50
+0xbfffefd0
 | | | | /- empty ctor
 | | | | \- dtor
-0xbfffdc50
+0xbfffefd0
 | | | | /- dtor
-Allocated named_thing from pool @ 0x80531a2
+Allocated named_thing from pool @ 0x8057232
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- dummy ctor
-0x80531a2
+0x8057232
 | | /- dummy ctor
 | /- actually_called_two()
 | \- actually_called_two()
 | /- actually_called_two()
 /- main()
 \- dtor
-0x80531a2
+0x8057232
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x80531a2 to free-list.
+Returned named_thing @ 0x8057232 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x80531a1
+0x8057231
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x80531a1 to free-list.
+Returned named_thing @ 0x8057231 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x8052409
+0x8056849
 /- dtor
 \- dtor
-0x8052408
+0x8056848
 /- dtor
 \- dtor
-0x80531a0
+0x8057230
 /- dtor
 \- operator delete
-\- list_vector_pool::deallocate()
-Returned named_thing @ 0x80531a0 to free-list.
-/- list_vector_pool::deallocate()
+| \- list_vector_pool::deallocate()
+Returned named_thing @ 0x8057230 to free-list.
+| /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x80523d4
+0x8056814
 /- dtor
 \- list_vector_pool::~list_vector_pool()
-~list_vector_pool<named_thing>() at 0x8053050
-\- list_vector_pool::status()
+~list_vector_pool<named_thing>() at 0x8057110
+| \- list_vector_pool::status()
 	1 chunks of 16*1 named_thing allocated.
 	Peak usage: 3 elements, free-list has 3 remaining.
-/- list_vector_pool::status()
+| /- list_vector_pool::status()
 /- list_vector_pool::~list_vector_pool()
 \- dtor
-0x80531a0
+0x8057230
 /- dtor
 \- dtor
-0x80531a1
+0x8057231
 /- dtor
 \- dtor
-0x80531a2
+0x8057232
 /- dtor

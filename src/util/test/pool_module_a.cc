@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.1.4.1.2.1 2005/01/24 19:47:58 fang Exp $
+	$Id: pool_module_a.cc,v 1.1.4.1.2.2 2005/01/24 20:51:46 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -21,12 +21,13 @@ USING_STACKTRACE
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
 
+REQUIRES_STACKTRACE_STATIC_INIT
 
 #if ENABLE_STACKTRACE
-static const stacktrace __init_st__("start static init of module A.");
+static const stacktrace __init_st__("start static init of module twiddle_dum.");
 #else
 static const ostream&
-	__init_st__(cerr << "start static init of module A." << endl);
+	__init_st__(cerr << "start static init of module twiddle_dum." << endl);
 #endif
 
 namespace util {
@@ -37,8 +38,6 @@ namespace util {
 REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dee);
 REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum);
 #endif
-
-REQUIRES_STACKTRACE_STATIC_INIT
 
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dee);
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(twiddle_dum, 8)
@@ -70,9 +69,9 @@ twiddle_dum::~twiddle_dum() {
 }
 
 #if ENABLE_STACKTRACE
-static const stacktrace __end_st__("end static init of module A.");
+static const stacktrace __end_st__("end static init of module twiddle_dum.");
 #else
 static const ostream&
-	__end_st__(cerr << "end static init of module A." << endl);
+	__end_st__(cerr << "end static init of module twiddle_dum." << endl);
 #endif
 

@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.5.4.1.2.1 2005/01/24 19:46:01 fang Exp $
+	$Id: stacktrace.cc,v 1.5.4.1.2.2 2005/01/24 20:51:40 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -24,7 +24,7 @@ using QMAP_NAMESPACE::qmap;
 using std::stack;
 using std::ostream_iterator;
 #include "using_ostream.h"
-using util::memory::count_ptr;
+using util::memory::raw_count_ptr;
 
 // macro to guarantee proper orderly initialization
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -62,10 +62,10 @@ public:
 	typedef	stacktrace::stack_echo_type	stack_echo_type;
 	typedef	stacktrace::stack_streams_type	stack_streams_type;
 
-	static count_ptr<stack_text_type>	get_stack_text(void);
-	static count_ptr<stack_text_type>	get_stack_indent(void);
-	static count_ptr<stack_echo_type>	get_stack_echo(void);
-	static count_ptr<stack_streams_type>	get_stack_streams(void);
+	static raw_count_ptr<stack_text_type>	get_stack_text(void);
+	static raw_count_ptr<stack_text_type>	get_stack_indent(void);
+	static raw_count_ptr<stack_echo_type>	get_stack_echo(void);
+	static raw_count_ptr<stack_streams_type>	get_stack_streams(void);
 
 #endif
 private:
@@ -80,7 +80,7 @@ public:
 	ostream&
 	print_auto_indent(ostream& o) {
 		// static? no, get fresh copy!
-		static const count_ptr<const stack_text_type>
+		static const raw_count_ptr<const stack_text_type>
 			si(manager::get_stack_indent());
 		NEVER_NULL(si);
 		INVARIANT(si.refs() < 10000);
@@ -114,9 +114,9 @@ stacktrace::manager::get_stack_text(void) {
 	return stack_text;
 }
 #else
-count_ptr<stacktrace::stack_text_type>
+raw_count_ptr<stacktrace::stack_text_type>
 stacktrace::manager::get_stack_text(void) {
-	typedef	count_ptr<stacktrace::stack_text_type>	return_type;
+	typedef	raw_count_ptr<stacktrace::stack_text_type>	return_type;
 	static stack_text_type* ptr = new stack_text_type;
 	static size_t* count = new size_t(0);
 	static const int check = (INVARIANT(ptr->empty()), 0);
@@ -156,9 +156,9 @@ stacktrace::manager::get_stack_indent(void) {
 	return stack_indent;
 }
 #else
-count_ptr<stacktrace::stack_text_type>
+raw_count_ptr<stacktrace::stack_text_type>
 stacktrace::manager::get_stack_indent(void) {
-	typedef	count_ptr<stacktrace::stack_text_type>	return_type;
+	typedef	raw_count_ptr<stacktrace::stack_text_type>	return_type;
 	static stack_text_type* const ptr = new stack_text_type;
 	static size_t* const count = new size_t(0);
 	static const int check =
@@ -169,7 +169,7 @@ stacktrace::manager::get_stack_indent(void) {
 	static const return_type do_not_return(ptr, count);
 	NEVER_NULL(ptr);
 	NEVER_NULL(count);
-#if 1
+#if 0
 	cerr << "get_stack_indent() visits = " << visits <<
 		", ptr = " << ptr <<
 		", count = " << count <<
@@ -226,9 +226,9 @@ stacktrace::manager::get_stack_echo(void) {
 	return stack_echo;
 }
 #else
-count_ptr<stacktrace::stack_echo_type>
+raw_count_ptr<stacktrace::stack_echo_type>
 stacktrace::manager::get_stack_echo(void) {
-	typedef	count_ptr<stacktrace::stack_echo_type>	return_type;
+	typedef	raw_count_ptr<stacktrace::stack_echo_type>	return_type;
 	static stack_echo_type* stack_echo = new stack_echo_type;
 	static const int init_once = (stack_echo->push(1), 1);
 	static size_t* count = new size_t(0);
@@ -260,9 +260,9 @@ stacktrace::manager::get_stack_streams(void) {
 	return stack_streams;
 }
 #else
-count_ptr<stacktrace::stack_streams_type>
+raw_count_ptr<stacktrace::stack_streams_type>
 stacktrace::manager::get_stack_streams(void) {
-	typedef	count_ptr<stacktrace::stack_streams_type>	return_type;
+	typedef	raw_count_ptr<stacktrace::stack_streams_type>	return_type;
 	static stack_streams_type* stack_streams = new stack_streams_type;
 	static const int init_once = (stack_streams->push(&cerr), 1);
 	static size_t* count = new size_t(0);
@@ -304,25 +304,23 @@ stacktrace::stacktrace(const string& s) : local_str(s) {
 		stack_streams(*manager::get_stack_streams());
 #else
 	// must be static or else, new ref_counts will be locally released
-	static
-//	const
-	count_ptr<stack_text_type>
+	static const raw_count_ptr<stack_text_type>
 		stack_indent(manager::get_stack_indent());
-	static const count_ptr<const stack_echo_type>
+	static const raw_count_ptr<const stack_echo_type>
 		stack_echo(manager::get_stack_echo());
-	static const count_ptr<const stack_streams_type>
+	static const raw_count_ptr<const stack_streams_type>
 		stack_streams(manager::get_stack_streams());
 	// fresh copy?
-	const count_ptr<stack_text_type>
+	static const raw_count_ptr<stack_text_type>
 		stack_text(manager::get_stack_text());
-#if 1
+#if 0
 	static int visits = 0;
 	visits++;
 	cerr << "stacktrace() visits = " << visits << endl;
 #endif
 	NEVER_NULL(&s);
 	NEVER_NULL(stack_text);
-#if 1
+#if 0
 	if (!stack_indent) {
 		// probably because module is destroyed, 
 		// along with function-local statics
@@ -384,13 +382,13 @@ stacktrace::~stacktrace() {
 	static const stack_streams_type&
 		stack_streams(*manager::get_stack_streams());
 #else
-	static const count_ptr<stack_text_type>
+	static const raw_count_ptr<stack_text_type>
 		stack_text(manager::get_stack_text());
-	static const count_ptr<stack_text_type>
+	static const raw_count_ptr<stack_text_type>
 		stack_indent(manager::get_stack_indent());
-	static const count_ptr<const stack_echo_type>
+	static const raw_count_ptr<const stack_echo_type>
 		stack_echo(manager::get_stack_echo());
-	static const count_ptr<const stack_streams_type>
+	static const raw_count_ptr<const stack_streams_type>
 		stack_streams(manager::get_stack_streams());
 	NEVER_NULL(stack_text);
 	NEVER_NULL(stack_indent);
@@ -445,7 +443,7 @@ stacktrace::require_static_init(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 stacktrace::full_dump(void) {
-	static const count_ptr<stack_text_type>
+	static const raw_count_ptr<stack_text_type>
 		stack_text(manager::get_stack_text());
 	NEVER_NULL(stack_text);
 	ostream& current_stream(stream());

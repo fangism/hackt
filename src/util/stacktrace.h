@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.5.4.1.2.1 2005/01/24 19:46:02 fang Exp $
+	$Id: stacktrace.h,v 1.5.4.1.2.2 2005/01/24 20:51:40 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -150,10 +150,10 @@ public:
 class stacktrace::init_token {
 	friend class stacktrace;
 private:
-	const count_ptr<stack_text_type>	stack_text_ref;
-	const count_ptr<stack_text_type>	stack_indent_ref;
-	const count_ptr<stack_echo_type>	stack_echo_ref;
-	const count_ptr<stack_streams_type>	stack_streams_ref;
+	const count_ptr<const stack_text_type>		stack_text_ref;
+	const count_ptr<const stack_text_type>		stack_indent_ref;
+	const count_ptr<const stack_echo_type>		stack_echo_ref;
+	const count_ptr<const stack_streams_type>	stack_streams_ref;
 public:
 	init_token();
 

@@ -1,7 +1,7 @@
 /**
 	'static_count_ptr_test.cc"
 	Testing "unsafe" uses of count_ptr.  
-	$Id: static_count_ptr_test.cc,v 1.1.2.1 2005/01/24 19:47:59 fang Exp $
+	$Id: static_count_ptr_test.cc,v 1.1.2.2 2005/01/24 20:51:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
@@ -32,7 +32,7 @@ factory_func(void) {
 int
 main(int argc, char* argv[]) {
 	STACKTRACE_VERBOSE;
-#if 0
+#if 1
 	static const ref_type static_ref = factory_func();
 
 	const ref_type local_ref = factory_func();
