@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.3 2004/11/30 01:25:21 fang Exp $
+	$Id: TODO,v 1.4 2004/12/02 02:09:13 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -53,6 +53,11 @@ Regarding pointer-classes:
 		(DONE)
 
 	what about allocator_traits?
+
+UPDATE:
+	persistent_object_manager to take advantage of 
+	pointer_traits and pointer_classes.
+	Make it a friend class to pointer_manipulator.  
 
 -------------------------------------------------------------------------------
 
