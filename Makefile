@@ -33,13 +33,14 @@ LD = $(CC)
 #	will eventually get around to self-configuring
 
 # other potentially anal warnings not covered by -Wall, how far can we go?
-MORE_WARN = -Wcast-qual -Wpointer-arith -Wtraditional -Wwrite-strings \
-	-Wstrict-prototypes -Wmissing-prototypes
-# "shadow" affects y.tab.o
+MORE_WARN = -Wcast-qual -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes
+# "traditional" is for C
+# -Wtraditional -Wwrite-strings \
+# "shadow" and "write-strings" affects y.tab.o, depending on yacc version
 # -Wshadow -Woverloaded-virtual
 
 NO_WARN = -Wno-unused
-# "no-unused" affects art.yy.o
+# "no-unused" affects art.yy.o, from flex
 
 # extremely anal about warnings... report as errors!
 WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
