@@ -27,6 +27,7 @@ AM_INIT_AUTOMAKE([1.9 -W -Wall -Werror])
 
 AC_PROG_LIBTOOL
 # This takes care of many standard C[++] compiler configuration checks.  
+AC_PROG_RANLIB
 
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
@@ -44,6 +45,7 @@ AC_C_CONST
 AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
+
 
 # library functions
 AC_FUNC_ERROR_AT_LINE
