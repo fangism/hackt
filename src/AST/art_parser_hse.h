@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.6.40.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_hse.h,v 1.6.40.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -37,6 +37,11 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& c) const = 0;
+#endif
 };	// end class statement
 
 typedef	node_list<const statement,semicolon>	stmt_list;
@@ -62,6 +67,11 @@ using	language_body::leftmost;
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class body
 
 //=============================================================================
@@ -85,6 +95,11 @@ virtual	ostream&
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class guarded_command
 
 //=============================================================================
@@ -97,6 +112,11 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class else_clause
 
 //=============================================================================
@@ -124,6 +144,11 @@ public:
 	rightmost(void) const;
 
 using	token_keyword::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class skip
 
 //=============================================================================
@@ -146,6 +171,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class wait
 
 //=============================================================================
@@ -171,6 +201,11 @@ public:
 	rightmost(void) const;
 
 using	incdec_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class assignment
 
 //=============================================================================
@@ -207,6 +242,11 @@ public:
 	rightmost(void) const;
 
 using	det_sel_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class det_selection
 
 #define hse_det_selection_wrap(b,l,e)					\
@@ -236,6 +276,11 @@ public:
 	rightmost(void) const;
 
 using	nondet_sel_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class nondet_selection
 
 #define hse_nondet_selection_wrap(b,l,e)				\
@@ -288,6 +333,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class loop
 
 //=============================================================================
@@ -311,6 +361,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class do_until
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.17.20.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_instance.cc,v 1.17.20.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -806,6 +806,12 @@ loop_instantiation::rightmost(void) const {
 	else return rng->rightmost();
 }
 
+never_ptr<const object>
+loop_instantiation::check_build(context& c) const {
+	cerr << "Fang, write loop_instantiation::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class guarded_definition_body method definitions
       
@@ -837,6 +843,12 @@ guarded_definition_body::leftmost(void) const {
 line_position
 guarded_definition_body::rightmost(void) const {
 	return body->rightmost();
+}
+
+never_ptr<const object>
+guarded_definition_body::check_build(context& c) const {
+	cerr << "Fang, finish guarded_definition_body::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -880,6 +892,14 @@ line_position
 conditional_instantiation::rightmost(void) const {
 	return gd->rightmost();
 }
+
+#if 1
+never_ptr<const object>
+conditional_instantiation::check_build(context& c) const {
+	cerr << "Fang, write conditional_instantiation::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+#endif
 
 //=============================================================================
 }	// end namespace parser

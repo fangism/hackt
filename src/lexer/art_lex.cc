@@ -1,13 +1,14 @@
 /**
 	\file "art_lex.cc"
 	Utility lexer function definitions.
-	$Id: art_lex.cc,v 1.2 2004/11/02 07:51:53 fang Exp $
+	$Id: art_lex.cc,v 1.2.42.1 2005/02/24 06:17:13 fang Exp $
  */
 
 #include <ostream>
 #include "art_lex.h"
 
 namespace ART {
+namespace lexer {
 
 // inline
 ostream& operator << (ostream& o, const line_range& l) {
@@ -23,5 +24,6 @@ ostream& operator << (ostream& o, const line_range& l) {
 	return o;
 }
 
+}	// end namespace lexer
 }	// end namespace ART
 

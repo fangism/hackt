@@ -1,12 +1,13 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.8.26.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_prs.cc,v 1.8.26.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
 #define	__ART_PARSER_PRS_CC__
 
+#include <iostream>
 #include "art_parser.tcc"
 #include "art_parser_prs.h"
 #include "art_parser_expr.h"		// for id_expr
@@ -29,6 +30,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "op-loop")
 namespace ART {
 namespace parser {
 namespace PRS {
+#include "using_ostream.h"
+
 //=============================================================================
 // class body_item method definitions
 
@@ -74,6 +77,12 @@ rule::rightmost(void) const {
 	return dir->rightmost();
 }
 
+never_ptr<const object>
+rule::check_build(context& c) const {
+	cerr << "Fang, finish PRS::rule::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class loop method definitions
 
@@ -112,6 +121,13 @@ loop::rightmost(void) const {
 	else		return rules->rightmost();
 }
 
+never_ptr<const object>
+loop::check_build(context& c) const {
+	cerr << "Fang, finish PRS::loop::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+
 //=============================================================================
 // class body method definitions
 
@@ -140,6 +156,12 @@ body::leftmost(void) const {
 line_position
 body::rightmost(void) const {
 	return rules->rightmost();
+}
+
+never_ptr<const object>
+body::check_build(context& c) const {
+	cerr << "Fang, finish PRS::body::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -183,7 +205,8 @@ op_loop::rightmost(void) const {
 /** temporary: FINISH ME */
 never_ptr<const object>
 op_loop::check_build(context& c) const {
-	return node::check_build(c);
+	cerr << "Fang, finish op_loop::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

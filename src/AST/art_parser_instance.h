@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.8.40.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_instance.h,v 1.8.40.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -350,6 +350,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class loop_instantiation
 
 //=============================================================================
@@ -373,6 +378,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -416,6 +426,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class conditional_instantiation
 
 //=============================================================================

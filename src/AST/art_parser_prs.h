@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.6.40.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_prs.h,v 1.6.40.2 2005/02/24 06:17:07 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -33,6 +33,10 @@ public:
 
 virtual	~body_item();
 
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& c) const = 0;
+#endif
 };	// end class body_item
 
 typedef node_list<const body_item>		rule_list;
@@ -66,7 +70,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -103,7 +107,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -128,6 +132,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class body
 
 //=============================================================================

@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2005-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-02:
+	  Started to re-organize parser code base some.
+	  check_build is no longer in ART::parser_node, because we only ever
+	  call it from main through root_body.  
+	  Later, each sub-class may have its own prototype, 
+	  especially for return types -- makes much more sense
+	  and waill actually make some use of the return value, which 
+	  is currently ignored in most cases.  
+	  Some lexer structs moved into the ART::lexer namespace.
+	  Supplied "Fang, write me!" to many unimplemented 
+	  check_build()'s temporarily, causing a few updates to
+	  test suite expected outputs.  
+	  Coming soon: replacement code for node_list class template.
+
+
 2005-02-22	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-parser-01-01:

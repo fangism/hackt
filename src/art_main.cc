@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.9 2005/01/28 19:58:31 fang Exp $
+	$Id: art_main.cc,v 1.9.6.1 2005/02/24 06:16:42 fang Exp $
  */
 
 #include <iostream>
@@ -20,7 +20,7 @@ USING_STACKTRACE
 int
 main(int argc, char* argv[]) {
 	STACKTRACE_VERBOSE;
-	excl_ptr<parser::node> root;		///< root of the syntax tree
+	excl_ptr<parser::root_body> root;		///< root of the syntax tree
 	never_ptr<const entity::object> top;	///< root type-checked object
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
@@ -38,7 +38,7 @@ DEBUG(DEBUG_BASIC,
 		<< endl;
 )
 #if USING_YACC
-	root = excl_ptr<parser::node>(artxx_val._root_body);
+	root = excl_ptr<parser::root_body>(artxx_val._root_body);
 #elif USING_BISON
 	root = AST_root;
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.14.26.1 2005/02/22 08:15:17 fang Exp $
+	$Id: art_parser_base.cc,v 1.14.26.2 2005/02/24 06:17:04 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -100,6 +100,7 @@ node::where(void) const {
 	return line_range(leftmost(), rightmost());
 }
 
+#if 0
 /**
 	Default type-checker and object builder does nothing.  
 	Should be re-implemented in all terminal subclasses.  
@@ -113,6 +114,7 @@ node::check_build(context& c) const {
 		"check_build() not implemented yet for ");
 	return c.top_namespace();
 }
+#endif
 
 //=============================================================================
 // class root_item method definitions

@@ -2,7 +2,7 @@
 	\file "art++2obj.cc"
 	Converts ART source code to an object file (pre-unrolled).
 
-	$Id: art++2obj.cc,v 1.8 2005/01/16 02:44:15 fang Exp $
+	$Id: art++2obj.cc,v 1.8.24.1 2005/02/24 06:16:42 fang Exp $
  */
 
 #include <iostream>
@@ -41,7 +41,7 @@ main(int argc, char* argv[]) {
 	}
 
 
-	excl_ptr<parser::node> root;		///< root of the syntax tree
+	excl_ptr<parser::root_body> root;	///< root of the syntax tree
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
 
@@ -54,7 +54,7 @@ catch (...) {
 }
 	fclose(artxx_in);
 #if USING_YACC
-	root = excl_ptr<parser::node>(artxx_val._root_body);
+	root = excl_ptr<parser::root_body>(artxx_val._root_body);
 #elif USING_BISON
 	root = AST_root;
 #endif

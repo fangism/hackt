@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.13.26.1 2005/02/22 08:15:19 fang Exp $
+	$Id: art_parser_formal.cc,v 1.13.26.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -90,6 +90,13 @@ data_param_id::rightmost(void) const {
 	else		return id->rightmost();
 }
 
+never_ptr<const object>
+data_param_id::check_build(context& c) const {
+	cerr << "Fang, finish data_param_id::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+
 //=============================================================================
 // class data_param_id_list method definitions
 
@@ -127,6 +134,12 @@ data_param_decl::leftmost(void) const {
 line_position
 data_param_decl::rightmost(void) const {
 	return ids->rightmost();
+}
+
+never_ptr<const object>
+data_param_decl::check_build(context& c) const {
+	cerr << "Fang, finish data_param_decl::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

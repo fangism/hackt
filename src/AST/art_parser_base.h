@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.19.26.1 2005/02/22 08:15:18 fang Exp $
+	$Id: art_parser_base.h,v 1.19.26.2 2005/02/24 06:17:05 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -37,6 +37,8 @@ namespace entity {
 using std::ostream;
 using entity::object;
 using util::memory::never_ptr;
+using lexer::line_position;
+using lexer::line_range;
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -122,13 +124,16 @@ virtual	line_position
 virtual	line_range
 	where(void) const;
 
+#if 0
 /**
 	Type-check and return a usable ART::entity::object, which 
 	contains a hierarchical symbol table.  
+	TODO: this should really be different for each node type.  
 	\return pointer to resulting object.  
  */
 virtual	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 };	// end class node
 
 //=============================================================================

@@ -1,12 +1,13 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.7.40.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_hse.cc,v 1.7.40.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
 #define	__ART_PARSER_HSE_CC__
 
+#include <iostream>
 #include "art_parser.tcc"
 #include "art_parser_hse.h"
 #include "art_parser_token.h"
@@ -38,6 +39,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::HSE::do_until, "(hse-do-until)")
 namespace ART {
 namespace parser {
 namespace HSE {
+#include "using_ostream.h"
+
 //=============================================================================
 // class statement method definitions
 
@@ -74,6 +77,12 @@ body::rightmost(void) const {
 	return stmts->rightmost();
 }
 
+never_ptr<const object>
+body::check_build(context& c) const {
+	cerr << "Fang, finish HSE::body::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class guarded_command method definitions
 
@@ -108,6 +117,12 @@ guarded_command::leftmost(void) const {
 line_position
 guarded_command::rightmost(void) const {
 	return command->rightmost();
+}
+
+never_ptr<const object>
+guarded_command::check_build(context& c) const {
+	cerr << "Fang, finish HSE::guarded_command::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -165,6 +180,12 @@ skip::rightmost(void) const {
 	return token_keyword::rightmost();
 }
 
+never_ptr<const object>
+skip::check_build(context& c) const {
+	cerr << "Fang, finish HSE::skip::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class wait method definitions
 
@@ -194,6 +215,12 @@ wait::leftmost(void) const {
 line_position
 wait::rightmost(void) const {
 	return rb->rightmost();
+}
+
+never_ptr<const object>
+wait::check_build(context& c) const {
+	cerr << "Fang, finish HSE::wait::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -226,6 +253,12 @@ assignment::leftmost(void) const {
 line_position
 assignment::rightmost(void) const {
 	return incdec_stmt::rightmost();
+}
+
+never_ptr<const object>
+assignment::check_build(context& c) const {
+	cerr << "Fang, finish HSE::assignment::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -267,6 +300,12 @@ det_selection::rightmost(void) const {
 	return det_sel_base::rightmost();
 }
 
+never_ptr<const object>
+det_selection::check_build(context& c) const {
+	cerr << "Fang, finish HSE::det_selection::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class nondet_selection method definitions
 
@@ -295,6 +334,12 @@ nondet_selection::leftmost(void) const {
 line_position
 nondet_selection::rightmost(void) const {
 	return nondet_sel_base::rightmost();
+}
+
+never_ptr<const object>
+nondet_selection::check_build(context& c) const {
+	cerr << "Fang, finish HSE::nondet_selection::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -358,6 +403,12 @@ loop::rightmost(void) const {
 	return commands->rightmost();
 }
 
+never_ptr<const object>
+loop::check_build(context& c) const {
+	cerr << "Fang, finish HSE::loop::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class do_until method definitions
 
@@ -385,6 +436,12 @@ do_until::leftmost(void) const {
 line_position
 do_until::rightmost(void) const {
 	return sel->rightmost();
+}
+
+never_ptr<const object>
+do_until::check_build(context& c) const {
+	cerr << "Fang, finish HSE::do_until::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

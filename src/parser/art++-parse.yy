@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.11 2005/01/28 19:58:45 fang Exp $
+	$Id: art++-parse.yy,v 1.11.26.1 2005/02/24 06:17:14 fang Exp $
  */
 
 %{
@@ -22,6 +22,7 @@
 #endif
 
 using namespace std;
+using namespace ART::lexer;
 using namespace ART::parser;
 
 #if YYBISON
@@ -134,7 +135,7 @@ extern const char* const yyname[];
  */
 extern const char* const yyrule[];
 
-};	// end namespace yacc
+}	// end namespace yacc
 
 %}
 
@@ -154,6 +155,7 @@ extern const char* const yyrule[];
 	Let the constructors bear the burden.  
  */
 	ART::parser::node*	n;
+
 /***
 	It is not safe to refer to the node* n member of the union
 	even if all of the below members of the union are 

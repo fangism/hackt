@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.5.40.1 2005/02/22 08:15:18 fang Exp $
+	$Id: art_parser_chp.h,v 1.5.40.2 2005/02/24 06:17:05 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -38,6 +38,11 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& ) const = 0;
+#endif
 };
 
 typedef	node_list<const statement,semicolon>	stmt_list;
@@ -64,6 +69,11 @@ using	language_body::leftmost;
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -87,6 +97,11 @@ virtual	ostream&
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -125,6 +140,11 @@ public:
 	rightmost(void) const;
 
 using	token_keyword::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -147,6 +167,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -173,6 +198,11 @@ public:
 	rightmost(void) const;
 
 using	assign_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //-----------------------------------------------------------------------------
@@ -199,6 +229,11 @@ public:
 	rightmost(void) const;
 
 using	incdec_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -237,6 +272,11 @@ public:
 	rightmost(void) const;
 
 using	comm_list_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 #define chp_comm_list_wrap(b,l,e)					\
@@ -260,6 +300,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //-----------------------------------------------------------------------------
@@ -277,6 +322,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -314,6 +364,11 @@ public:
 	rightmost(void) const;
 
 using	det_sel_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 #define chp_det_selection_wrap(b,l,e)					\
@@ -343,6 +398,11 @@ public:
 	rightmost(void) const;
 
 using	nondet_sel_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 #define chp_nondet_selection_wrap(b,l,e)				\
@@ -372,6 +432,11 @@ public:
 	rightmost(void) const;
 
 using	prob_sel_base::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 #define chp_prob_selection_wrap(b,l,e)					\
@@ -398,6 +463,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -421,6 +491,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -442,6 +517,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================

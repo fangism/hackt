@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.10 2005/01/28 19:58:45 fang Exp $
+ *	$Id: art++-lex.ll,v 1.10.26.1 2005/02/24 06:17:13 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -75,7 +75,6 @@ namespace ART {
 	Namespace for the lexer variables and functions.  
  */
 namespace lexer {
-using ART::token_position;
 
 #define	STRING_MAX_LEN		1024
 

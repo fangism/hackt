@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_formal.h,v 1.8.40.1 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -22,6 +22,7 @@ protected:
 	const excl_ptr<const dense_range_list>	dim;
 public:
 	data_param_id(const token_identifier* i, const dense_range_list* d);
+
 	~data_param_id();
 
 	ostream&
@@ -32,6 +33,10 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& ) const;
+
 };	// end class data_param_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,6 +86,10 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& ) const;
+
 };	// end class data_param_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

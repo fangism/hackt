@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.8.40.1 2005/02/22 08:15:18 fang Exp $
+	$Id: art_parser_definition.h,v 1.8.40.2 2005/02/24 06:17:05 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -232,6 +232,13 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 0
+	using user_data_type_signature::check_build;
+#else
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_data_type_def
 
 //-----------------------------------------------------------------------------
@@ -374,6 +381,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_chan_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -407,6 +419,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_chan_type_def
 
 //=============================================================================
