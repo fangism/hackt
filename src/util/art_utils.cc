@@ -33,6 +33,26 @@ ostream& operator << (ostream& o, const line_range& l) {
 };	// end namespace ART
 
 //=============================================================================
+/**
+	String specialization of binary writing.
+ */
+template <>
+void
+write_value(ostream& f, const string& s) {
+	write_string(f, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	String specialization of binary writing.
+ */
+template <>
+void
+read_value(istream& f, string& s) {
+	read_string(f, s);
+}
+
+//=============================================================================
 
 /**
 	Write a string to an output file stream (binary).  

@@ -63,6 +63,14 @@ void	write_value(ostream& f, const T& v);
 template <class T>
 void	read_value(istream& f, T& v);
 
+
+template <>
+void	write_value(ostream& f, const string& v);
+
+template <>
+void	read_value(istream& f, string& v);
+
+
 extern
 void	write_string(ostream& f, const string& s);
 
