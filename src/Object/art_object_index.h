@@ -1,7 +1,7 @@
 /**
 	\file "art_object_index.h"
 	Typedef for index types.  
-	$Id: art_object_index.h,v 1.1.2.1 2005/01/20 06:46:53 fang Exp $
+	$Id: art_object_index.h,v 1.1.2.2 2005/01/20 17:32:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INDEX_H__
@@ -15,6 +15,7 @@ namespace entity {
 
 typedef	util::multikey_base<pint_value_type>		multikey_index_type;
 typedef	util::multikey_generator_base<pint_value_type>	index_generator_type;
+typedef	util::multikey_base<pint_value_type>		unroll_index_type;
 
 }	// end namespace entity
 }	// end namespace ART

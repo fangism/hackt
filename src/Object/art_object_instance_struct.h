@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.8.4.1.2.1 2005/01/20 04:43:55 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.8.4.1.2.2 2005/01/20 17:32:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -118,7 +118,6 @@ private:
 	typedef	datatype_instance_collection		parent_type;
 public:
 	typedef	never_ptr<struct_instance_alias>	instance_ptr_type;
-	typedef	multikey_base<pint_value_type>		unroll_index_type;
 	// typedef	param_type			vector<...>
 protected:
 	explicit
@@ -189,7 +188,6 @@ private:
 friend class struct_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	struct_instance_alias			element_type;
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
@@ -245,7 +243,6 @@ private:
 friend class struct_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type	instance_ptr_type;
-	typedef	parent_type::unroll_index_type	unroll_index_type;
 private:
 	struct_instance_alias			the_instance;
 

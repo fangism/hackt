@@ -1,16 +1,16 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.33.8.1 2005/01/20 04:43:53 fang Exp $
+	$Id: art_object_instance.h,v 1.33.8.2 2005/01/20 17:32:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
 
 #include "art_object_instance_base.h"
+#include "art_object_index.h"
 #include "memory/pointer_classes.h"
 
-#include "multikey_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -32,7 +32,6 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<proc_instance_alias>	instance_ptr_type;
-	typedef multikey_base<pint_value_type>	unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references
@@ -161,7 +160,6 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
-	typedef multikey_base<pint_value_type>	unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references
