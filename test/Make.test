@@ -1,15 +1,17 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.5 2004/11/02 07:52:26 fang Exp $
+#	$Id: Make.test,v 1.5.4.1 2005/01/17 22:08:55 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 ARTC_EXE = $(top_builddir)/src/artc
 ART2OBJ_EXE = $(top_builddir)/src/art++2obj
-ARTODUMP_EXE = $(top_builddir)/src/artobjdump
+ARTOBJDUMP_EXE = $(top_builddir)/src/artobjdump
+ARTOBJUNROLL_EXE = $(top_builddir)/src/artobjunroll
 
 ARTC_TEST_SH = $(top_srcdir)/test/artc-expect.sh
 ARTOBJ_TEST_SH = $(top_srcdir)/test/artobj-diff.sh
+ARTOBJUNROLL_TEST_SH = $(top_srcdir)/test/artobjunroll-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
 ARTOBJ_DIFF_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
@@ -17,7 +19,7 @@ ARTOBJ_DIFF_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 
 # This needs to be specified in Makefile.am to take effect
-# SUFFIXES = .in .artctest .artobjtest
+# SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 .in.stderr:
 	@$(TOUCH) $@
@@ -25,26 +27,34 @@ TEST_REPORT = $(top_builddir)/test/test-report.txt
 subdir.not_a_test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "echo \"In $(subdir):\" >> $(TEST_REPORT)" >> $@
-	@$(CHMOD) a+x $@
+	@$(CHMOD) +x $@
 
 .in.artctest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTC_TEST_SH) $(ARTC_EXE) $(srcdir) $* \
 		"\"$(STATE_ENUM_FILTER)\"" $(TEST_REPORT) >> $@
-	@$(CHMOD) a+x $@
+	@$(CHMOD) +x $@
 
 .in.artobjtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(ARTOBJ_TEST_SH) $(ART2OBJ_EXE) $(ARTODUMP_EXE) $(srcdir) \
+	@$(ECHO) $(ARTOBJ_TEST_SH) $(ART2OBJ_EXE) $(ARTOBJDUMP_EXE) $(srcdir) \
 		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
-	@$(CHMOD) a+x $@
+	@$(CHMOD) +x $@
 
-# must be previously defined
-EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) $(ARTC_TEST_SUBJECTS:=.stderr) \
-	$(BISON_OUTPUTS:=.stderr.bison)
+.in.artobjunrolltest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(ARTOBJUNROLL_TEST_SH) $(ARTOBJUNROLL_EXE) $(ARTOBJDUMP_EXE) \
+		$(srcdir) $* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
+	@$(CHMOD) +x $@
+
+# must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
+EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) $(ARTC_TEST_SUBJECTS:=.stderr) \
+	$(BISON_OUTPUTS:=.stderr.bison) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr)
 
 # must be previously defined
 CLEANFILES += $(TESTS) subdir.not_a_test \
@@ -59,9 +69,13 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump.filter) \
 	$(ARTOBJ_TEST_SUBJECTS:=.indump.filter) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobj) \
-	$(ARTOBJ_TEST_SUBJECTS:=.objdiff)
+	$(ARTOBJ_TEST_SUBJECTS:=.objdiff) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
 
-DISTCLEANFILES += Makefile
+# is this really needed?
+# DISTCLEANFILES += Makefile
 
 all-local: .cvsignore subdir.not_a_test $(TESTS)
 

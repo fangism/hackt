@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.8 2004/12/02 01:38:38 fang Exp $
+	$Id: artobjunroll.cc,v 1.8.4.1 2005/01/17 22:08:15 fang Exp $
  */
 
 #include <iostream>
@@ -44,7 +44,7 @@ main(int argc, char* argv[]) {
 	// the following is needed to force linkage of modules from libart++
 	{ entity::module bogus("please link modules from libart++.la"); }
 
-	persistent_object_manager::dump_reconstruction_table = true;
+	persistent_object_manager::dump_reconstruction_table = false;
 	persistent::warn_unimplemented = true;	// for verbosity
 
 	excl_ptr<entity::module> the_module =
@@ -52,9 +52,14 @@ main(int argc, char* argv[]) {
 			<entity::module>(ifname);
 
 //	the_module->dump(cerr);
-	the_module->unroll_module();
-	the_module->dump(cerr);
+	if (the_module->is_unrolled()) {
+		cerr << "Module is already unrolled, skipping..." << endl;
+	} else {
+		the_module->unroll_module();
+//		the_module->dump(cerr);
+	}
 
+	persistent_object_manager::dump_reconstruction_table = false;
 	persistent_object_manager::save_object_to_file(ofname, *the_module);
 
 	// global will delete itself (recursively)

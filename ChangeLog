@@ -21,6 +21,11 @@
 
 	* Added LEX and YACC to configure.in with AC_ARG_VAR.
 
+	* ARTXX-00-01-04-object:
+	  Revised test *.sh check test-scripts.  
+	  Introduced (preliminary) unrolling test, finally!  
+	  Need to write {bool,int}_instance_collection::unroll().  
+
 
 2005-01-16	David Fang	<fangism@users.sourceforge.net>
 

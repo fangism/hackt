@@ -1,9 +1,9 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2004/11/02 07:52:28 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.1 2005/01/17 22:08:59 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
-SUFFIXES = .in .artctest .artobjtest
+SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_SUBJECTS = \
 	000 001 002 003 004 005 006 007 008 009 \
@@ -13,8 +13,15 @@ ARTC_TEST_SUBJECTS = \
 ARTOBJ_TEST_SUBJECTS = \
 	000 001 002 003 006
 
+# should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
+ARTOBJUNROLL_TEST_SUBJECTS = \
+	000
+
+#	001 002 003 006		# need int_instantiation_statement::unroll()
+
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest)
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS = 004 005 008 010
