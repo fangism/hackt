@@ -1,6 +1,6 @@
 % "chapters/connections.tex"
 
-%	$Id: connections.tex,v 1.4 2004/12/08 03:48:39 fang Exp $
+%	$Id: connections.tex,v 1.5 2005/02/27 22:06:04 fang Exp $
 
 \chapter{Connections}
 \label{sec:connections}
@@ -11,24 +11,24 @@ Instance references refer to specific entities at unroll-time.
 Instance references fall into two categories: implicit and explicit.  
 See Chapter~\ref{sec:arrays}.  
 
-What does \ttt{a = b} mean in the namespace or definition context?
+What does \verb|a = b| mean in the namespace or definition context?
 
 \begin{itemize}
 \item Parameters: the value of b is assigned to a.
-	This is only valid if \ttt{b} is instantiated and initialized, 
-	and \ttt{a} is instantiated and uninitialized.  
+	This is only valid if \verb|b| is instantiated and initialized, 
+	and \verb|a| is instantiated and uninitialized.  
 \item Datatypes (both built-in and user-defined), channels and processes:
-	\ttt{a} and \ttt{b} refer to the same instance, in other words, 
+	\verb|a| and \verb|b| refer to the same instance, in other words, 
 	they are \emph{aliases}.
 \end{itemize}
 
 If the types are user-defined, then aliasing is recursive.  
-For example, if the type of \ttt{a} and \ttt{b} has 
-members (either public or private) \ttt{x} and \ttt{y} internally aliased, 
-the \ttt{a.x}, \ttt{a.y}, \ttt{b.x}, and \ttt{b,y} are all 
-valid references to the same instance of \ttt{x} and \ttt{y}'s type.  
+For example, if the type of \verb|a| and \verb|b| has 
+members (either public or private) \verb|x| and \verb|y| internally aliased, 
+the \verb|a.x|, \verb|a.y|, \verb|b.x|, and \verb|b,y| are all 
+valid references to the same instance of \verb|x| and \verb|y|'s type.  
 (Implementation:
-This can simply be accomplished by mapping \ttt{a} and \ttt{b}
+This can simply be accomplished by mapping \verb|a| and \verb|b|
 to the same instance, saving the trouble of recursive aliasing, 
 and generating the combinations of names, 
 not that that is ever a problem.)
@@ -38,11 +38,11 @@ are not created until all connections have been processed.
 
 Compiler options (proposed to support):
 \begin{itemize}
-\item \ttt{-Wprocess-alias}:
+\item \verb|-Wprocess-alias|:
 	warning for connections between process
 	(since the semantics seem arbitrary at this point and 
 	are prone to future change), 
-\item \ttt{-Wchannel-connections}: 
+\item \verb|-Wchannel-connections|: 
 	warning for suspicious wrong connections with channels
 	(multiple senders or multiple receivers)
 \end{itemize}
