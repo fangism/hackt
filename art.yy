@@ -23,7 +23,7 @@ extern "C" {
 
 // useful typedefs, delimiter strings are defined in "art_parser.cc"
 typedef	node_list<token_string,scope>	id_expr;
-typedef	node_list<expr,comma>		expr_list;
+typedef	node_list<expr,comma>		expr_list;	// use for postfix too
 typedef	node_list<range,comma>		range_list;
 
 // macros
@@ -78,7 +78,7 @@ typedef	node_list<range,comma>		range_list;
 %type	<n>	'{' '}' '[' ']' '(' ')' '<' '>'
 %type	<n>	',' '.' ';' ':'
 %type	<n>	'=' '+' '-' '*' '/' '%'
-%type	<n>	'!' '?' '~' '&' '|'
+%type	<n>	'!' '?' '~' '&' '|' '^'
 
 /*
 	the following tokens are defined below because they consist of
@@ -551,6 +551,7 @@ chp_assignment
 	;
 
 chp_comm_list
+	// gives comma-separated communications precedence
 	: chp_comm_list ',' chp_comm_action
 	| chp_comm_action
 	;
@@ -646,7 +647,6 @@ single_prs
 	;
 
 prs_arrow
-	// single pr
 	: RARROW 
 	// generates combinatorial inverse
 	| IMPLIES
@@ -674,6 +674,7 @@ prs_expr
 
 paren_expr
 	: '(' expr ')'
+		{ $$ = $2; }
 	;
 
 primary_expr
@@ -686,8 +687,9 @@ primary_expr
 	;
 
 literal
-	// all default actions: $$ = $1;
+	// all default actions, all are expr subclasses
 	: INT
+	| FLOAT
 	| STRING
 	| BOOL_TRUE
 	| BOOL_FALSE
@@ -708,17 +710,18 @@ qualified_id
 
 postfix_expr_list
 	: postfix_expr_list ',' postfix_expr
-	| postfix_expr
+		{ $$ = $1; expr_list_append($$, $2, $3); }
+	| postfix_expr { $$ = new expr_list($1); }
 	;
 
 // this is what we want for expression arguments, without operators
 postfix_expr
 	: primary_expr
 	// array index
-	// | postfix_expr '[' expr ']'
 	| postfix_expr range_list_in_brackets
-	// member (just ID?)
+		{ $$ = new index_expr($1, $2); }
 	| postfix_expr '.' id_expr
+		{ $$ = new member_expr($1, $2, $3); }
 	// no function calls in expressions... yet
 	;
 
@@ -729,38 +732,54 @@ unary_expr
 	| paren_expr
 	// no prefix operations, moved to assignment
 	| '-' unary_expr
+		{ $$ = new prefix_expr($1, $2); }
 	| '!' unary_expr
+		{ $$ = new prefix_expr($1, $2); }
 	| '~' unary_expr
+		{ $$ = new prefix_expr($1, $2); }
 	;
 
 multiplicative_expr
 	: unary_expr
 	| multiplicative_expr '*' unary_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	| multiplicative_expr '/' unary_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	| multiplicative_expr '%' unary_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
 additive_expr
 	: multiplicative_expr
 	| additive_expr '+' multiplicative_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	| additive_expr '-' multiplicative_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
 
 shift_expr
 	: additive_expr
 	| shift_expr EXTRACT additive_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	| shift_expr INSERT additive_expr
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
 relational_equality_expr
 	: shift_expr
 	| shift_expr '<' shift_expr
-	| shift_expr '>' shift_expr		// this makes s/r-conflict?
+		{ $$ = new relational_expr($1, $2, $3); }
+	| shift_expr '>' shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
 	| shift_expr LE shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
 	| shift_expr GE shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
 	| shift_expr EQUAL shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
 	| shift_expr NOTEQUAL shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr
 	;
@@ -768,26 +787,31 @@ relational_equality_expr
 and_expr
 	: relational_equality_expr
 	| and_expr '&' relational_equality_expr
+		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
 exclusive_or_expr
 	: and_expr
 	| exclusive_or_expr '^' and_expr
+		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
 inclusive_or_expr
 	: exclusive_or_expr
 	| inclusive_or_expr '|' exclusive_or_expr
+		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
 logical_and_expr
 	: inclusive_or_expr
 	| logical_and_expr LOGICAL_AND inclusive_or_expr
+		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
 logical_or_expr
 	: logical_and_expr
 	| logical_or_expr LOGICAL_OR logical_and_expr
+		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
 /** forget conditional expressions for now
@@ -798,10 +822,10 @@ conditional_expr
 **/
 
 assignment_expr
-//	: conditional_expr
-	: logical_or_expr
-//	| logical_or_expr '=' assignment_expr
+//	: conditional_expr		// not supported
+	: logical_or_expr		// expression-statement, does nothing
 	| postfix_expr '=' assignment_expr
+		{ $$ = new assign_expr($1, $2, $3); }
 	;
 
 // forbid using assignment_expr?
@@ -810,7 +834,7 @@ assignment_expr
 
 // THE EXPRESSION
 expr
-//	: conditional_expr
+//	: conditional_expr		// not supported
 	: assignment_expr
 	;
 
@@ -828,10 +852,12 @@ optional_postfix_expr_list_in_angles
 
 postfix_expr_list_in_angles
 	: '<' postfix_expr_list '>'
+		{ $$ = $2; expr_list_wrap($$, $1, $3); }
 	;
 
 postfix_expr_list_in_parens
 	: '(' postfix_expr_list ')'
+		{ $$ = $2; expr_list_wrap($$, $1, $3); }
 	;
 
 expr_list_in_parens

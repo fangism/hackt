@@ -38,10 +38,13 @@ namespace ART {
  */
 namespace parser {
 //=============================================================================
+// forward declarations
+
+//=============================================================================
 // some constant delimiter strings
-extern	const char comma[];
-extern	const char semicolon[];
-extern	const char scope[];
+extern	const char	comma[];
+extern	const char	semicolon[];
+extern	const char	scope[];
 
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type
@@ -160,22 +163,34 @@ virtual	ostream& what(ostream& o) const { return o << "float: " << val; }
 /**
 	This class also keeps track of the line and column position in a 
 	file for a given token.  
-	For now, this class is used for identifiers.  
+	For now, this class is used for punctuation tokens.  
+	For identifier, use token_identifier.  
 	For quoted strings, use token_quoted_string.  
  */
-class token_string : public string, public terminal, public expr {
+class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
-	token_string(const char* s) : string(s), terminal(), expr() { }
+	token_string(const char* s) : string(s), terminal() { }
 virtual	~token_string() { }
 
 virtual	int string_compare(const char* d) const { return compare(d); }
+virtual	ostream& what(ostream& o) const
+		{ return o << "token: " << (const string&) (*this); }
+};
+
+//-----------------------------------------------------------------------------
+/// class reserved for identifier tokens
+class token_identifier : public token_string, public expr {
+					// consider postfix_expr?
+public:
+	token_identifier(const char* s) : token_string(s), expr() { }
+virtual	~token_identifier() { }
 virtual	ostream& what(ostream& o) const 
 		{ return o << "identifier: " << (const string&) (*this); }
 };
 
-//=============================================================================
-/// keyword version of token_string class
+//-----------------------------------------------------------------------------
+/// keyword version of token_string class, not an expr
 class token_keyword : public token_string {
 public:
 	token_keyword(const char* s) : token_string(s) { }
@@ -185,11 +200,22 @@ virtual	ostream& what(ostream& o) const
 		{ return o << "keyword: " << *((const string*) this); }
 };
 
-//=============================================================================
-/// quoted-string version of token_string class
-class token_quoted_string : public token_string {
+//-----------------------------------------------------------------------------
+/// class for expression keywords, which happen to be only bools
+class token_bool : public token_keyword, public expr {
 public:
-	token_quoted_string(const char* s) : token_string(s) { }
+	token_bool(const char* tf) : token_keyword(tf), expr()
+		{ assert(!strcmp(tf,"true") || !strcmp(tf,"false")); }
+virtual	~token_bool() { }
+virtual	ostream& what(ostream& o) const
+		{ return o << "bool: " << *((const string*) this); }
+};
+
+//-----------------------------------------------------------------------------
+/// quoted-string version of token_string class
+class token_quoted_string : public token_string, public expr {
+public:
+	token_quoted_string(const char* s) : token_string(s), expr() { }
 virtual	~token_quoted_string() { }
 
 virtual	ostream& what(ostream& o) const { 
@@ -281,6 +307,7 @@ virtual	~node_list() { if (begin) delete begin; if (end) delete end; }
 
 //=============================================================================
 /*
+	id_expr has been typedef'd to node_list<token_string,scope>
 	A generalization of identifiers to include those qualified by 
 	scoped namespaces.  
 class id_expr : public expr, public token_string {
@@ -300,7 +327,7 @@ protected:
 class range : public expr {
 protected:
 	expr*		lower;		///< inclusive lower bound
-	token_string*	op;		///< range operator token ".."
+	terminal*	op;		///< range operator token ".."
 	expr*		upper;		///< inclusive upper bound
 public:
 /**
@@ -312,7 +339,7 @@ public:
 	range(node* l, node* o, node* u = NULL) : expr(), 
 		// note: cannot static_cast from a virtual base
 		lower(dynamic_cast<expr*>(l)), 
-		op(dynamic_cast<token_string*>(o)),
+		op(dynamic_cast<terminal*>(o)),
 		upper(dynamic_cast<expr*>(u)) {
 			if (l && !lower) delete l;
 			if (o && !op) delete o;
@@ -328,7 +355,7 @@ virtual	ostream& what(ostream& o) const { return o << "(range)"; }
 class unary_expr : public expr {
 protected:
 	expr*		e;		///< the argument expr
-	token_string*	op;		///< the operator
+	terminal*	op;		///< the operator, may be null
 	// what if is [index]? op2? figure out later...
 public:
 /**
@@ -337,11 +364,10 @@ public:
 	that the arguments exclusively "owned" their memory locations.  
  */
 	unary_expr(node* n, node* o) : expr(), e(dynamic_cast<expr*>(n)), 
-		op(dynamic_cast<token_string*>(o)) {
-			if (n && !e) delete n;
+		op(dynamic_cast<terminal*>(o)) {
+			if (n && !e) delete n;	// or use assert?
 			if (o && !op) delete o;
 		}
-		// need double cast because of multiple-inheritance
 virtual	~unary_expr() { if (e) delete e; if (op) delete op; }
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -365,6 +391,87 @@ public:
 virtual	~postfix_expr() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(postfix-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+/// class for member (of user-defined type) expressions
+class member_expr : public postfix_expr {
+protected:
+	expr*		member;		// should be an id_expr or token_string
+public:
+	member_expr(node* l, node* op, node* m) : postfix_expr(l,op), 
+		member(dynamic_cast<expr*>(m)) { assert(member); }
+virtual	~member_expr() { if (member) delete member; }
+
+virtual	ostream& what(ostream& o) const { return o << "(member-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+class index_expr : public postfix_expr {
+protected:
+	expr*		ranges;			// should be range_list
+public:
+	index_expr(node* l, node* i) : postfix_expr(l, NULL), 
+		ranges(dynamic_cast<expr*>(i)) { }
+virtual	~index_expr() { if (ranges) delete ranges; }
+
+virtual	ostream& what(ostream& o) const { return o << "(index-expr)"; }
+};
+
+//=============================================================================
+class binary_expr : public expr {
+protected:
+	expr* 		l;			///< left-hand side
+	terminal*	op;			///< operator
+	expr*		r;			///< right-hand side
+public:
+	binary_expr(node* left, node* o, node* right) : expr(), 
+		l(dynamic_cast<expr*>(left)), op(dynamic_cast<terminal*>(o)), 
+		r(dynamic_cast<expr*>(right))
+		{ assert(l); assert(op); assert(r); }
+virtual	~binary_expr() { if (l) delete l; if (op) delete op; if (r) delete r; }
+
+virtual	ostream& what(ostream& o) const { return o << "(binary-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+class arith_expr : public binary_expr {
+public:
+	arith_expr(node* left, node* o, node* right) : 
+		binary_expr(left, o, right) { }
+virtual	~arith_expr() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(arith-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+class relational_expr : public binary_expr {
+public:
+	relational_expr(node* left, node* o, node* right) : 
+		binary_expr(left, o, right) { }
+virtual	~relational_expr() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(relational-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+class logical_expr : public binary_expr {
+public:
+	logical_expr(node* left, node* o, node* right) : 
+		binary_expr(left, o, right) { }
+virtual	~logical_expr() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(logical-expr)"; }
+};
+
+//-----------------------------------------------------------------------------
+class assign_expr : public binary_expr {
+public:
+	assign_expr(node* left, node* o, node* right) : 
+		binary_expr(left, o, right) { }
+virtual	~assign_expr() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(assign-expr)"; }
 };
 
 //=============================================================================

@@ -75,6 +75,7 @@ static	char* string_buf_ptr = NULL;
 #define TOKEN_UPDATE	current.col += yyleng;
 #define	NEWLINE_UPDATE	{ current.line++; current.col = 1; }
 #define	KEYWORD_UPDATE	{ yylval.n = new token_keyword(yytext); TOKEN_UPDATE; }
+#define	BOOL_UPDATE	{ yylval.n = new token_bool(yytext); TOKEN_UPDATE; }
 #define	MULTICHAR_UPDATE						\
 			{ yylval.n = new token_string(yytext); TOKEN_UPDATE; }
 #define	STRING_UPDATE	{ TOKEN_UPDATE; 				\
@@ -249,8 +250,8 @@ FALSE		"false"
 {PINT_TYPE}	{ KEYWORD_UPDATE; return PINT_TYPE; }
 {PBOOL_TYPE}	{ KEYWORD_UPDATE; return PBOOL_TYPE; }
 {CHANNEL}	{ KEYWORD_UPDATE; return CHANNEL; }
-{TRUE}		{ KEYWORD_UPDATE; return BOOL_TRUE; }
-{FALSE}		{ KEYWORD_UPDATE; return BOOL_FALSE; }
+{TRUE}		{ BOOL_UPDATE; return BOOL_TRUE; }
+{FALSE}		{ BOOL_UPDATE; return BOOL_FALSE; }
 
 
 {WHITESPACE}	TOKEN_UPDATE;
@@ -299,7 +300,7 @@ FALSE		"false"
 		LINE_COL(current);
 		fprintf(stderr, "\n");
 	}
-	yylval.n = new token_string(yytext);
+	yylval.n = new token_identifier(yytext);
 	TOKEN_UPDATE;
 	return ID;
 }
