@@ -53,6 +53,12 @@ const char alias[] = "=";	///< delimiter for node_list template argument
 //=============================================================================
 // class node method definitions
 
+/** 
+	Destructor kept here because vtable is not generated on 
+	darwin-gcc-3.3 if it is inlined in the header.  
+ */
+node::~node() { }
+
 /// reports location spanned by a node in the source file
 inline
 line_range

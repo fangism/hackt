@@ -75,7 +75,7 @@ extern	const char	alias[];
 class node {
 public:
 /** Standard virtual destructor, mother-of-all virtual destructors */
-virtual	~node() { }
+virtual	~node();
 
 /**
 	Shows representation without recursive descent.  
