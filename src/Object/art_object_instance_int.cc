@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.16 2005/03/04 07:00:08 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.16.8.1 2005/03/10 23:20:25 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -147,7 +147,7 @@ struct collection_type_committer<int_tag> {
 		const count_ptr<const pint_const>
 			pwidth(param1.is_a<const pint_const>());
 		NEVER_NULL(pwidth);
-		const pint_value_type new_width = pwidth->static_constant_int();
+		const pint_value_type new_width = pwidth->static_constant_value();
 		INVARIANT(new_width);
 		if (c.is_partially_unrolled()) {
 			INVARIANT(c.type_parameter);

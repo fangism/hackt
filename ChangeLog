@@ -2,6 +2,41 @@
 
 2005-03-08	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-02-merged-expr-05:
+	  Merged in revisions from -expr child branch (through -05).
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-04:
+	  Fixed problem with error message, mis-carried return statement
+	  turned into bug during copying.  Doh.  
+	  Use of value_reference template is now enabled.  
+	  After cleanup, we can retire this baby branch...
+
+	* -expr-05:
+	  Cleaned up USE_VALUE_REFERENCE_TEMPLATE and 
+	  USE_CONST_COLLECTION_TEMPLATE.  Ready to merge to parent.  
+
+
+2005-03-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-01:
+	  We need to port many expressions classes to follow consistent
+	  templates, this has been punted for way too long. 
+	  Need to rename some methods to conform to standard interface.  
+
+	* -expr-02:
+	  Ported pint_const_collection to const_collection_template.
+	  Renamed {may,must}_be_equivalent method functions of many
+	  pint and pbool class derivatives.  
+
+	* -expr-03:
+	  Added code for porting pint/pbool_instance_reference to
+	  value_reference template class, but kept it disabled for this
+	  revision with USE_VALUE_REFERENCE_TEMPLATE set to 0.  
+	  (Enabling it yielded different error messages in the param test
+	  directory, and haven't figured out why... will need stacktrace?)
+	  Removed (comment) unnecessary
+	  pint_instance_reference::unroll_resolve_index method.  
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
 	  Porting parameter instance collections to use new value_collection
 	  template, similar to instance_collection class template.  

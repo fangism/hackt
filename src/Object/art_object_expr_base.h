@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.7 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_expr_base.h,v 1.7.12.1 2005/03/10 23:20:24 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -63,10 +63,10 @@ virtual bool
 	must_be_initialized(void) const = 0;
 
 virtual bool
-	may_be_equivalent(const param_expr& p) const = 0;
+	may_be_equivalent_generic(const param_expr& p) const = 0;
 
 virtual bool
-	must_be_equivalent(const param_expr& p) const = 0;
+	must_be_equivalent_generic(const param_expr& p) const = 0;
 
 /** can be resolved to static constant value */
 virtual bool
@@ -350,13 +350,13 @@ virtual bool
 	must_be_initialized(void) const = 0;
 
 	bool
-	may_be_equivalent(const param_expr& p) const;
+	may_be_equivalent_generic(const param_expr& p) const;
 
 	bool
-	must_be_equivalent(const param_expr& p) const;
+	must_be_equivalent_generic(const param_expr& p) const;
 
 virtual	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const = 0;
+	must_be_equivalent(const pbool_expr& ) const = 0;
 
 virtual bool
 	is_static_constant(void) const = 0;
@@ -368,7 +368,7 @@ virtual bool
 	is_loop_independent(void) const = 0;
 
 virtual value_type
-	static_constant_bool(void) const = 0;
+	static_constant_value(void) const = 0;
 
 virtual	good_bool
 	resolve_value(value_type& i) const = 0;
@@ -429,13 +429,13 @@ virtual bool
 	must_be_initialized(void) const = 0;
 
 	bool
-	may_be_equivalent(const param_expr& p) const;
+	may_be_equivalent_generic(const param_expr& p) const;
 
 	bool
-	must_be_equivalent(const param_expr& p) const;
+	must_be_equivalent_generic(const param_expr& p) const;
 
 virtual	bool
-	must_be_equivalent_pint(const pint_expr& ) const = 0;
+	must_be_equivalent(const pint_expr& ) const = 0;
 
 	bool
 	must_be_equivalent_index(const index_expr& ) const;
@@ -453,7 +453,7 @@ virtual bool
 	is_loop_independent(void) const = 0;
 
 virtual value_type
-	static_constant_int(void) const = 0;
+	static_constant_value(void) const = 0;
 
 	count_ptr<const_index>
 	resolve_index(void) const;

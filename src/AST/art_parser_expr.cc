@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.16 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_expr.cc,v 1.16.4.1 2005/03/10 23:20:21 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -489,8 +489,8 @@ range::check_build(context& c) const {
 		// later: resolve constant if possible...
 		// modularize this into a method in art_object_expr
 		if (lp->is_static_constant() && up->is_static_constant()) {
-			const int lb = lp->static_constant_int();
-			const int ub = up->static_constant_int();
+			const int lb = lp->static_constant_value();
+			const int ub = up->static_constant_value();
 			if (lb > ub) {
 				// error!  can't construct invalid const_range
 				cerr << "Lower bound of range " <<
@@ -715,8 +715,7 @@ prefix_expr::check_build(context& c) const {
 			if (ie->is_static_constant()) {
 				// constant simplification
 				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(
-						- ie->static_constant_int())));
+					new pint_const(- ie->static_constant_value())));
 			} else {
 				c.push_object_stack(count_ptr<pint_unary_expr>(
 					new pint_unary_expr(ch, ie)));
@@ -735,8 +734,7 @@ prefix_expr::check_build(context& c) const {
 			if (ie->is_static_constant()) {
 				// constant simplification
 				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(
-						! ie->static_constant_int())));
+					new pint_const(! ie->static_constant_value())));
 			} else {
 				c.push_object_stack(count_ptr<pint_unary_expr>(
 					new pint_unary_expr(ch, ie)));
@@ -759,7 +757,7 @@ prefix_expr::check_build(context& c) const {
 				// constant simplification
 				c.push_object_stack(count_ptr<pbool_const>(
 					new pbool_const(
-						!be->static_constant_bool())));
+						!be->static_constant_value())));
 			} else {
 				c.push_object_stack(
 					count_ptr<pbool_unary_expr>(
@@ -1052,8 +1050,8 @@ arith_expr::check_build(context& c) const {
 	// else is safe to make arith_expr object
 	const char ch = op.is_a<const token_char>()->get_char();
 	if (li->is_static_constant() && ri->is_static_constant()) {
-		const int lc = li->static_constant_int();
-		const int rc = ri->static_constant_int();
+		const int lc = li->static_constant_value();
+		const int rc = ri->static_constant_value();
 		switch(ch) {
 			case '+':
 				c.push_object_stack(count_ptr<pint_const>(

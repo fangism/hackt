@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.30 2005/03/01 04:50:54 fang Exp $
+ 	$Id: art_object_base.cc,v 1.30.12.1 2005/03/10 23:20:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -164,7 +164,7 @@ object_list::make_formal_dense_range_list(void) const {
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
 			const int n = j->is_a<const pint_expr>()
-				->static_constant_int();
+				->static_constant_value();
 			if (n <= 0) {
 				cerr << "Integer size for a dense array "
 					"must be positive, but got: "
@@ -303,7 +303,7 @@ object_list::make_sparse_range_list(void) const {
 			const count_ptr<range_expr> r(j->is_a<range_expr>());
 			// don't forget to range check
 			if (p) {
-				const int n = p->static_constant_int();
+				const int n = p->static_constant_value();
 				if (n <= 0) {
 					cerr << "Integer size for a dense array "
 						"must be positive, but got: "
@@ -461,7 +461,7 @@ object_list::make_index_list(void) const {
 			const count_ptr<range_expr> r(j->is_a<range_expr>());
 			// don't forget to range check
 			if (p) {
-				const int n = p->static_constant_int();
+				const int n = p->static_constant_value();
 				if (n < 0) {
 					cerr << "Integer for an index must "
 						"be non-negative, but got: "

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.22 2005/03/04 06:19:55 fang Exp $
+	$Id: art_object_expr.h,v 1.22.8.1 2005/03/10 23:20:24 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -294,10 +294,10 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_int(void) const;
+	static_constant_value(void) const;
 
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const pint_expr& ) const;
 
 	good_bool
 	resolve_value(value_type& i) const;
@@ -374,10 +374,10 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const;
+	must_be_equivalent(const pbool_expr& ) const;
 
 	good_bool
 	resolve_value(value_type& i) const;
@@ -480,10 +480,10 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_int(void) const;
+	static_constant_value(void) const;
 
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const pint_expr& ) const;
 
 	good_bool
 	resolve_value(value_type& i) const;
@@ -587,10 +587,10 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const;
+	must_be_equivalent(const pbool_expr& ) const;
 
 	good_bool
 	resolve_value(value_type& i) const;
@@ -689,10 +689,10 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const;
+	must_be_equivalent(const pbool_expr& ) const;
 
 	good_bool
 	resolve_value(value_type& i) const;

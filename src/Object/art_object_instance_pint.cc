@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.17.8.1 2005/03/09 19:24:55 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.17.8.2 2005/03/10 23:20:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -26,6 +26,7 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#include "art_object_value_reference.h"
 #if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_value_collection.tcc"
 #include "art_object_classification_details.h"
