@@ -1,7 +1,7 @@
 /**
 	\file "multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
-	$Id: multikey_fwd.h,v 1.7 2004/12/16 01:08:53 fang Exp $
+	$Id: multikey_fwd.h,v 1.8 2004/12/20 23:21:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H_FWD__
@@ -23,6 +23,9 @@ class multikey_base;
 
 template <size_t D, class K = int, K init = 0>
 class multikey;
+
+template <class K>
+class multikey_generic;
 
 template <class K>
 class multikey_generator_base;

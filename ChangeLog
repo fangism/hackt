@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2004-12-20	David Fang	<fangism@users.sourceforge.net>
+
+	* Split multikey into declaration and definition files, 
+	  actually reduced object sizes.  Also cleaned up header file
+	  inclusion as a result.  
+
+	* Added multikey_generic for variable dimension interface, 
+	  which just uses valarray functionality.
+
+	* Added packed_array_generic, updated tests to include it.
+
+	* Finished moving structures in the util directory to the
+	  util namespace.  From now on, new definitions in here
+	  should be in the util namespace, or a subnamespace thereof.  
+
+
 2004-12-15	David Fang	<fangism@users.sourceforge.net>
 
 	* Revised multikey_qmap to be a specialization of 

@@ -1,50 +1,104 @@
 /**
 	\file "packed_array_test.cc"
-	$Id: packed_array_test.cc,v 1.3 2004/12/19 07:51:12 fang Exp $
+	$Id: packed_array_test.cc,v 1.4 2004/12/20 23:21:17 fang Exp $
  */
 
 #include "packed_array.tcc"
 
 using util::packed_array;
+using util::packed_array_generic;
 using util::multikey;
 using util::multikey_generator;
 
 #include "using_ostream.h"
 using std::inner_product;
 
-typedef	packed_array<3, float>	float_3d;
-typedef	packed_array<3, bool>	bool_3d;
+typedef	packed_array<3, float>		float_3d;
+typedef	packed_array<3, bool>		bool_3d;
+typedef	packed_array_generic<int>	int_3d;
 
 int
 main(int argc, char* argv[]) {
 {
 	float_3d foo;
-	foo.dump(cerr) << endl;
+	foo.dump(cerr << "foo: ") << endl;
+
+	bool_3d boo;
+	boo.dump(cerr << "boo: ") << endl;
+
+	int_3d iky(3);
+	iky.dump(cerr << "iky: ") << endl;
 }
 
 	float_3d::key_type dim;
 	dim[0] = 3; dim[1] = 4; dim[2] = 5;
 
-	float_3d bar(dim);
-	assert(!bar.range_check(dim));
+	float_3d barf(dim);
+	bool_3d barb(dim);
+	int_3d bari(dim);
 	float_3d::key_type ind(dim);
+{
+	assert(!barf.range_check(dim));
 	ind[0]--;
-	assert(!bar.range_check(ind));
+	assert(!barf.range_check(ind));
 	ind[1]--;
-	assert(!bar.range_check(ind));
+	assert(!barf.range_check(ind));
 	ind[2]--;
-	assert(bar.range_check(ind));
-	bar.dump(cerr) << endl;
+	assert(barf.range_check(ind));
+	barf.dump(cerr << "barf: ") << endl;
 
-	bar.resize(ind);
-	assert(!bar.range_check(ind));
-	bar.dump(cerr) << endl;
+	barf.resize(ind);
+	assert(!barf.range_check(ind));
+	barf.dump(cerr << "barf: ") << endl;
 
 	ind[0]++; ind[1]++;
-	bar.resize(ind);
-	assert(!bar.range_check(ind));
-	bar.dump(cerr) << endl;
+	barf.resize(ind);
+	assert(!barf.range_check(ind));
+	barf.dump(cerr << "barf: ") << endl;
 	// should be 3 x 4 x 4 now
+}
+{
+	ind = dim;
+	assert(!barb.range_check(dim));
+	ind[0]--;
+	assert(!barb.range_check(ind));
+	ind[1]--;
+	assert(!barb.range_check(ind));
+	ind[2]--;
+	assert(barb.range_check(ind));
+	barb.dump(cerr << "barb: ") << endl;
+
+	barb.resize(ind);
+	assert(!barb.range_check(ind));
+	barb.dump(cerr << "barb: ") << endl;
+
+	ind[0]++; ind[1]++;
+	barb.resize(ind);
+	assert(!barb.range_check(ind));
+	barb.dump(cerr << "barb: ") << endl;
+	// should be 3 x 4 x 4 now
+}
+{
+	ind = dim;
+	assert(!bari.range_check(dim));
+	ind[0]--;
+	assert(!bari.range_check(ind));
+	ind[1]--;
+	assert(!bari.range_check(ind));
+	ind[2]--;
+	assert(bari.range_check(ind));
+	bari.dump(cerr << "bari: ") << endl;
+
+	bari.resize(ind);
+	assert(!bari.range_check(ind));
+	bari.dump(cerr << "bari: ") << endl;
+
+	ind[0]++; ind[1]++;
+	bari.resize(ind);
+	assert(!bari.range_check(ind));
+	bari.dump(cerr << "bari: ") << endl;
+	// should be 3 x 4 x 4 now
+}
 
 {
 	float_3d::key_generator_type key_gen;
@@ -56,10 +110,44 @@ main(int argc, char* argv[]) {
 		const size_t val =
 			inner_product(key_gen.begin(), key_gen.end(), 
 			scale.begin(), 0);
-		bar[key_gen] = val;
+		barf[key_gen] = val;
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
-	bar.dump(cerr) << endl;
+	barf.dump(cerr << "barf: ") << endl;
+}
+{
+	float_3d::key_generator_type key_gen;
+	key_gen.upper_corner = ind -float_3d::ones;
+	key_gen.lower_corner = float_3d::key_type();
+	float_3d::key_type scale;
+	scale[0] = 100; scale[1] = 10; scale[2] = 1;
+	do {
+		// inner product is actually defined for bools
+		// use uses multiplication and addition
+		const size_t val =
+			inner_product(key_gen.begin(), key_gen.end(), 
+			scale.begin(), 0);
+		barb[key_gen] = val;
+		key_gen++;
+	} while (key_gen != key_gen.lower_corner);
+	barb.dump(cerr << "barb: ") << endl;
+}
+{
+	float_3d::key_generator_type key_gen;
+	key_gen.upper_corner = ind -float_3d::ones;
+	key_gen.lower_corner = float_3d::key_type();
+	float_3d::key_type scale;
+	scale[0] = 100; scale[1] = 10; scale[2] = 1;
+	do {
+		// inner product is actually defined for bools
+		// use uses multiplication and addition
+		const size_t val =
+			inner_product(key_gen.begin(), key_gen.end(), 
+			scale.begin(), 0);
+		bari[key_gen] = val;
+		key_gen++;
+	} while (key_gen != key_gen.lower_corner);
+	bari.dump(cerr << "bari: ") << endl;
 }
 
 	return 0;

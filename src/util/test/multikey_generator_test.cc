@@ -2,11 +2,11 @@
 	\file "multikey_generator_test.cc"
 	Test for multidimensional key generator, which steps 
 	through rings of values of an N-dimensional cube slice.
-	$Id: multikey_generator_test.cc,v 1.2 2004/11/02 07:52:24 fang Exp $
+	$Id: multikey_generator_test.cc,v 1.3 2004/12/20 23:21:17 fang Exp $
  */
 
 #include <iostream>
-#include "multikey.h"
+#include "multikey.tcc"
 
 using namespace std;
 using namespace MULTIKEY_NAMESPACE;

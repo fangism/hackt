@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.33 2004/12/16 01:08:49 fang Exp $
+#	$Id: Makefile.am,v 1.34 2004/12/20 23:21:11 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -194,6 +194,7 @@ UTIL_HEADER_FILES = \
 	util/multidimensional_sparse_set.tcc \
 	util/multikey_fwd.h \
 	util/multikey.h \
+	util/multikey.tcc \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
 	util/multikey_map.tcc \

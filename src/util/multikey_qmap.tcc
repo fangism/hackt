@@ -2,12 +2,13 @@
 	\file "multikey_qmap.tcc"
 	Template method definitions for queryable multikey map.
 	Almost entirely copied from multikey_map.tcc.
-	$Id: multikey_qmap.tcc,v 1.3 2004/12/16 01:08:53 fang Exp $
+	$Id: multikey_qmap.tcc,v 1.4 2004/12/20 23:21:16 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_TCC__
 #define	__MULTIKEY_QMAP_TCC__
 
+#include "multikey.tcc"
 #include "multikey_qmap.h"
 #include "qmap.tcc"
 

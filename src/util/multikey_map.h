@@ -2,17 +2,17 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.12 2004/12/15 23:31:13 fang Exp $
+	$Id: multikey_map.h,v 1.13 2004/12/20 23:21:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
 #define	__MULTIKEY_MAP_H__
 
 #include "macros.h"
-#include "STL/list.h"
-#include <utility>		// for std::pair
+#include "STL/list_fwd.h"
+#include "STL/pair_fwd.h"
 
-#include "multikey.h"
+#include "multikey_fwd.h"
 #include "multikey_map_fwd.h"
 #include "array_traits.h"
 

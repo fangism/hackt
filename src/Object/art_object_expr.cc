@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.27 2004/12/15 23:31:09 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.28 2004/12/20 23:21:14 fang Exp $
  */
 
 #include <iostream>
@@ -22,7 +22,7 @@
 #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
-#include "multikey.h"
+#include "multikey.tcc"
 #include "persistent_object_manager.tcc"
 
 #include "art_object_type_hash.h"

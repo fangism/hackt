@@ -1,13 +1,14 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.2 2004/12/15 23:31:13 fang Exp $
+	$Id: multikey_map.tcc,v 1.3 2004/12/20 23:21:16 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_TCC__
 #define	__MULTIKEY_MAP_TCC__
 
 #include "multikey_map.h"
+#include "multikey.tcc"
 
 #include <limits>
 #include <functional>
