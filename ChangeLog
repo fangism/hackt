@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-02-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-09:
+	  Support for gcc-3.2 (ix86-linux) dropped.  It *BOMBS* completely.
+	  Wrote some notes in the source on where and why things die.
+	  Don't even bother trying to compile util/test/integer_traits_test.
+	  (If you try, don't say I didn't warn you.)
+	  The art* executables all compile with a little help from this patch,
+	  but all executables die a horrible abort-trap death.
+	  (Something is horked with the global static initialization 
+	  and destruction, I believe.)
+	  (It's a fact of compiler-life: code dies, life goes on.)
+
+
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-08:
