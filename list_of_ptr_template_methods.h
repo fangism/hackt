@@ -8,11 +8,18 @@
 
 #include "list_of_ptr.h"
 
+/// copy constructor with no transfer of ownership semantics
+template <class T>
+list_of_ptr<T>::list_of_ptr(const list_of_ptr<T>& l) : list<T*>(l), own(0) {
+}
+
 template <class T>
 list_of_ptr<T>::~list_of_ptr() {
-	iterator i;
-	for (i=begin(); i!=end(); i++)
-		if (*i) delete (*i);
+	if (own) {
+		iterator i;
+		for (i=begin(); i!=end(); i++)
+			if (*i) delete (*i);
+	}
 	clear();		// may not be necessary
 }
 

@@ -32,12 +32,13 @@ public:
 	typedef	typename list<T*>::reverse_iterator	reverse_iterator;
 	typedef	typename list<T*>::const_reverse_iterator
 							const_reverse_iterator;
-private:
-	// none
+protected:
+	int			own;		///< ownership flag
 public:
 
 /// The default constructor just creates an empty list.  
-	list_of_ptr() : list<T*>() { }
+explicit list_of_ptr() : list<T*>(), own(1) { }
+	list_of_ptr(const list_of_ptr<T>& l);
 
 /// The destructor frees memory to non-NULL pointers in the list.  
 virtual	~list_of_ptr();		// don't want to inline this

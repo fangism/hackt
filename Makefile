@@ -81,8 +81,10 @@ y.tab.o: art_parser.h art_macros.h art_parser_prs.h art_parser_hse.h
 art_utils.o: art_utils.h
 art_symbol_table.o: art_symbol_table.h
 art_object.o: art_object.h
-art_parser.o: art_parser.h art_parser_template_methods.h
-art_parser_prs.o: art_parser_prs.h art_parser_template_methods.h
-art_parser_hse.o: art_parser_hse.h art_parser_template_methods.h
+LIST_TEMPLATE_HEADERS = art_parser.h art_parser_template_methods.h \
+	list_of_ptr.h list_of_ptr_template_methods.h
+art_parser.o: $(LIST_TEMPLATE_HEADERS)
+art_parser_prs.o: art_parser_prs.h $(LIST_TEMPLATE_HEADERS)
+art_parser_hse.o: art_parser_hse.h $(LIST_TEMPLATE_HEADERS)
 
 

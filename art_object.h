@@ -9,21 +9,21 @@
 
 ****/
 
-#include <list>
 #include <map>
 
+#include "list_of_ptr.h"
 #include "art_macros.h"
-#include "art_parser.h"
 
 namespace ART {
 //=============================================================================
-// forward declarations
+// forward declarations from outside namespaces
 namespace parser {
 	// note: methods may specify string as formal types, 
 	// but you can still pass token_identifiers and token_strings
 	// because they are derived from string.
 //	class token_string;
 //	class token_identifier;
+	class id_expr;
 };
 using namespace parser;
 
@@ -45,7 +45,8 @@ class instantiation;
 //=============================================================================
 /// the root object type
 class object {
-
+public:
+virtual ~object() { }
 };
 
 //=============================================================================
@@ -59,8 +60,13 @@ private:
 	/// may become hash_map if need be, for now map suffices (r/b-tree)
 	typedef	map<string, name_space*>	ns_map_type;
 
-	/// container for open namespaces with optional aliases
-	typedef map<string, name_space*>	using_map_type;
+	/**
+		Container for open namespaces with optional aliases.  
+		Doesn't have to be a map because never any need to search
+		by key.  List implementation is sufficient, because
+		whole list will always be searched.  
+	 */
+	typedef list<name_space*>		namespace_list;
 protected:
 	/**
 		Reference to the parent namespace, if applicable.  
@@ -96,17 +102,25 @@ protected:
 		You'll have to add them each time you re-open this
 		namespace if you want them, otherwise, it is a convenient
 		way to reset the namespace alias list.  
-
-		Q: the key for these aliases: should they be the full
-		id_expr, or just the tail end?
-		The whole id_expr, use aliases to reduce the names....?
 	 */
-	using_map_type		open_aliases;
+	namespace_list		open_spaces;
+	/**
+		This is the set of open namespaces that are aliased
+		locally under a different sub-namespaces, 
+		a pseudo subspace.  These, too, are cleared upon leaving
+		this namespace.  These will always be searched just like
+		any other sub-namespace.  The difference is that 
+		these namespace pointers are not owned, and thus are
+		not deleted at destruction time.  
+	 */
+	ns_map_type		open_aliases;
 
 public:
 	name_space(const string& n, name_space* p);
 // explicit name_space();	// for GLOBAL?
 	~name_space();
+
+string	get_qualified_name(void) const;
 
 // update these return types later
 name_space*	add_open_namespace(const string& n);
@@ -118,9 +132,17 @@ name_space*	leave_namespace(void);	// or close_namespace
 private:
 name_space*	query_namespace_match(const id_expr& id);
 name_space*	query_subnamespace_match(const id_expr& id);
-name_space*	query_import_namespace_match(const id_expr& id);
-name_space*	find_namespace_ending_with(const id_expr& id);
+void	query_import_namespace_match(namespace_list& m, const id_expr& id);
+void	find_namespace_ending_with(namespace_list& m, const id_expr& id);
 name_space*	find_namespace_starting_with(const id_expr& id);
+
+
+
+
+
+// will we need generalized versions of queries that return object*
+// if we don't know a priori what an identifier's class is?
+
 };
 
 //=============================================================================

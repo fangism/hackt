@@ -50,11 +50,15 @@ protected:
 // what language context are we in? global? prs, chp, hse?
 
 	long			indent;		///< for formatted output
+	long			type_error_count;	///< error count
 	/**
 		A pointer to the current namespace scope.
 		Do not delete.  
 	 */
 	name_space*		current_ns;
+
+public:
+	static const long	type_error_limit = 3;
 
 public:
 	/**

@@ -50,6 +50,13 @@ node_list_base<T>::node_list_base(node* n) : node_list_base() {
 }
 
 //-----------------------------------------------------------------------------
+/// copy constructor, no transfer of ownership
+NODE_LIST_BASE_TEMPLATE_SPEC
+node_list_base<T>::node_list_base(const list_grandparent& l) : 
+		list_parent(l) {
+}
+
+//-----------------------------------------------------------------------------
 NODE_LIST_BASE_TEMPLATE_SPEC
 ostream&
 node_list_base<T>::what(ostream& o) const {
@@ -59,6 +66,7 @@ node_list_base<T>::what(ostream& o) const {
 //=============================================================================
 // for class node_list<>
 
+/// constructor initialized with first element
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::node_list(node* n) :
 		node_list_base<T>(), open(NULL), close(NULL) {
@@ -68,6 +76,12 @@ node_list<T,D>::node_list(node* n) :
 		exit(1);
 	}
 	push_back(n);
+}
+
+//-----------------------------------------------------------------------------
+NODE_LIST_TEMPLATE_SPEC
+node_list<T,D>::node_list(const parent& l) : 
+		parent(l), open(NULL), close(NULL) {
 }
 
 //-----------------------------------------------------------------------------
@@ -151,13 +165,13 @@ node_list<T,D>::rightmost(void) const {
 NODE_LIST_TEMPLATE_SPEC
 object*
 node_list<T,D>::check_build(context* c) const {
-	object* o = NULL;
+	object* ret = NULL;
 	const_iterator i = begin();
 	if (*i) {
 		(*i)->what(cerr << c->auto_indent() << "checking a ");
 		// check returned value for failure
-		o = (*i)->check_build(c);
-		// update context c with o, should be done inside
+		ret = (*i)->check_build(c);
+		// context will be updated if there is an error
 	}
 	for(i++; i!=end(); i++) {
 		// remember to skip every other token if there was one!
@@ -166,11 +180,13 @@ node_list<T,D>::check_build(context* c) const {
 		if (*i) {
 			(*i)->what(cerr << c->auto_indent() << "checking a ");
 			// check returned value for failure
-			o = (*i)->check_build(c);
-			// update context c with o, should be done inside
+			ret = (*i)->check_build(c);
+			// context will be updated if there is an error
 		}
 	}
-	return NULL;
+	// a generally useless return value, should disregard this
+	// and use context object for error information
+	return ret;
 }
 
 //=============================================================================

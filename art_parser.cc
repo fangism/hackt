@@ -67,12 +67,21 @@ paren_expr::~paren_expr() {
 //=============================================================================
 // class id_expr method definitions
 
-// friend operator
+/// copy constructor, no transfer of ownership
+id_expr::id_expr(const id_expr& i) : id_expr_base(i) {
+}
+
+// friend operator (not a method)
 ostream& operator << (ostream& o, const id_expr& id) {
 	id_expr::const_iterator i = id.begin();
-	for ( ; i!=id.end(); i++) {
-		token_identifier* tid = dynamic_cast<token_identifier*>(*i);
-		o << *tid;
+	token_identifier* tid = dynamic_cast<token_identifier*>(*i);
+	assert(tid);
+	o << *tid;
+	for (i++ ; i!=id.end(); i++) {
+		i++;		// skip scope operator token
+		tid = dynamic_cast<token_identifier*>(*i);
+		assert(tid);
+		o << scope << *tid;
 	}
 	return o;
 }
@@ -169,8 +178,25 @@ check_build(context* c) const {
 	Constructor for using_namespace directive.  
 	\param o the "open" keyword.  
 	\param i the id_expr qualified identifier.  
-	\param a the "as" keyword (optional).  
-	\param n the alias name (optional).  
+	\param s the terminating semicolon.  
+ */
+CONSTRUCTOR_INLINE
+using_namespace::
+using_namespace(node* o, node* i, node* s) :
+		root_item(),
+		open(dynamic_cast<token_keyword*>(o)),
+		id(dynamic_cast<id_expr*>(i)),     
+		as(NULL), alias(NULL), 
+		semi(dynamic_cast<token_char*>(s)) {
+	assert(open); assert(id); assert(semi);
+}
+
+/**
+	Constructor for using_namespace directive.  
+	\param o the "open" keyword.  
+	\param i the id_expr qualified identifier.  
+	\param a the "as" keyword.  
+	\param n the alias name.  
 	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
@@ -181,11 +207,8 @@ using_namespace(node* o, node* i, node* a, node* n, node* s) :
 		id(dynamic_cast<id_expr*>(i)),     
 		as(dynamic_cast<token_keyword*>(a)),		// optional
 		alias(dynamic_cast<token_identifier*>(n)),	// optional
-		semi(dynamic_cast<token_string*>(s)) {
-	assert(open); assert(id);
-	if (a) assert(as);
-	if (n) assert(alias);
-	assert(semi);
+		semi(dynamic_cast<token_char*>(s)) {
+	assert(open); assert(id); assert(as); assert(alias); assert(semi);
 }
 
 /// default destructor
@@ -199,9 +222,14 @@ using_namespace::~using_namespace() {
 object*
 using_namespace::
 check_build(context* c) const {
-	cerr << c->auto_indent() << "using namespace: " << *id;
-	// if aliased... print more
-	return c->using_namespace(*id);
+	if (alias) {
+		cerr << c->auto_indent() << "aliasing namespace: " << *id;
+		return c->alias_namespace(*id, *alias);
+	} else {
+		cerr << c->auto_indent() << "using namespace: " << *id;
+		// if aliased... print all, report as error (done inside)
+		return c->using_namespace(*id);
+	}
 }
 
 //=============================================================================

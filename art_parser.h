@@ -138,6 +138,8 @@ virtual	line_position rightmost(void) const = 0;
 //=============================================================================
 #define	NODE_LIST_BASE_TEMPLATE_SPEC					\
 	template <class T>
+
+typedef	list_of_ptr<node>	node_list_base_parent;
 /**
 	This is the general class for list structures of nodes in the
 	syntax tree.  What is unique about this implementation is that
@@ -147,14 +149,16 @@ virtual	line_position rightmost(void) const = 0;
 	type-checking.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
-class node_list_base : public nonterminal, public list_of_ptr<node> {
+class node_list_base : public nonterminal, public node_list_base_parent {
 private:
+	typedef		list<node*>			list_grandparent;
 	typedef		list_of_ptr<node>		list_parent;
 public:
 	typedef		list_parent::iterator		iterator;
 	typedef		list_parent::const_iterator	const_iterator;
 public:
 	node_list_base() : nonterminal(), list_of_ptr<node>() { }
+	node_list_base(const list_grandparent& l);
 // initializing with first element, T must be subclass of node!
 	node_list_base(node* n);
 
@@ -196,7 +200,8 @@ protected:
 	terminal*	open;		///< wrapping string, such as "("
 	terminal*	close;		///< wrapping string, such as ")"
 public:
-	node_list() : node_list_base<T>(), open(NULL), close(NULL) { }
+	node_list() : parent(), open(NULL), close(NULL) { }
+	node_list(const parent& l);
 	node_list(node* n);
 virtual	~node_list();
 
@@ -389,7 +394,9 @@ public:
 	typedef	id_expr_base::iterator		iterator;
 	typedef	id_expr_base::const_iterator	const_iterator;
 
-	id_expr(node* n) : expr(), id_expr_base(n) { }
+explicit id_expr(node* n) : expr(), id_expr_base(n) { }
+	id_expr(const id_expr& i);
+	
 virtual	~id_expr() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(id-expr)"; }
@@ -894,10 +901,11 @@ protected:
 	id_expr*		id;
 	token_keyword*		as;
 	token_identifier*	alias;
-	token_string*		semi;
+	token_char*		semi;
 public:
-	using_namespace(node* o, node* i, node* a, node* n, node* s);
+	using_namespace(node* o, node* i, node* s);
 		// a "AS" and n (alias) are optional
+	using_namespace(node* o, node* i, node* a, node* n, node* s);
 virtual	~using_namespace();
 
 virtual	ostream& what(ostream& o) const { return o << "(using-namespace)"; }

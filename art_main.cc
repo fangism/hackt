@@ -32,7 +32,9 @@ int main(int argc, char* argv[]) {
 		<< endl;
 	root = yyval.n;
 	if (root)
-		root->what(cerr) << endl;	// what's our top root?
+		root->what(cerr << "root is a ") << endl;
+		// what's our top root?
+	cerr << "----------------------------------------------------";
 
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree

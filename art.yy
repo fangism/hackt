@@ -203,7 +203,7 @@ namespace_management
 	| OPEN id_expr AS ID ';'
 		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
 	| OPEN id_expr ';'
-		{ $$ = new using_namespace($1, $2, NULL, NULL, $3); }
+		{ $$ = new using_namespace($1, $2, $3); }
 	// ever close namespace?
 	;
 
