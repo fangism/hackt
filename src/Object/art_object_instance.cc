@@ -1834,6 +1834,7 @@ if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
+	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
 }
@@ -1859,6 +1860,20 @@ pint_instance_collection::write_object(
 	write_string(f, key);
 	write_index_collection_pointers(m);
 	m.write_pointer(f, ival);
+
+#if 0
+	// what's a good way of writing out multikey_qmaps?
+	{
+	static const size_t zero = 0;
+	if (collection) {
+		write_value(f, zero+1);
+		write_map(f, *collection);
+	} else {
+		// since the first value of write_map is a size_t
+		write_value(f, zero);
+	}
+	}
+#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -1872,6 +1887,16 @@ if (!m.flag_visit(this)) {
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
 	m.read_pointer(f, ival);
+
+#if 0
+	{
+	size_t size;
+	read_value(f, size);
+	if (size) {
+		read_map(f, *collection);
+	}
+	}
+#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited

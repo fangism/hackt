@@ -451,6 +451,7 @@ public:
 		count_const_ptr<pint_expr> i);
 	pint_instance_collection(const scopespace& o, const string& n, 
 		const size_t d, count_const_ptr<pint_expr> i);
+	// default destructor suffices
 
 	ostream& what(ostream& o) const;
 

@@ -2682,7 +2682,8 @@ logical_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 //	write_value(f, op);
-	write_string(f, reverse_op_map[op]);
+//	write_string(f, reverse_op_map[op]);
+	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 	WRITE_OBJECT_FOOTER(f);
@@ -2697,7 +2698,8 @@ if (!m.flag_visit(this)) {
 //	read_value(f, op);
 	{
 	string s;
-	read_string(f, s);
+//	read_string(f, s);
+	read_value(f, s);
 	op = op_map[s];
 	assert(op);
 	}
