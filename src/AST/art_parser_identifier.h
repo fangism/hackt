@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_identifier.h,v 1.2 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_IDENTIFIER_H__
@@ -96,10 +96,6 @@ virtual	qualified_id*
 	ostream&
 	operator << (ostream& o, const qualified_id& id);
 };	// end class qualified_id
-
-// no need for wrap, ever
-#define qualified_id_append(l,d,n)					\
-	IS_A(qualified_id*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class qualified_id_slice {

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.3 2005/02/25 06:12:20 fang Exp $
+	$Id: art_parser_node_list.h,v 1.4 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
@@ -26,9 +26,17 @@ using util::memory::count_ptr;
 
 #if USE_NEW_NODE_LIST
 
+class node_position;
+
 #define	NODE_LIST_TEMPLATE_SIGNATURE					\
 template <class T>
 
+/**
+	To make this print the desired delimiter, 
+	we will define an overrideable template that depends on this, 
+	OR rely on inferring the delimiter from the value_type parameter.  
+	Delimiter is only useful for spitting out source.  
+ */
 class node_list : public node {
 	typedef	node_list<T>				this_type;
 protected:
@@ -38,10 +46,13 @@ protected:
 	typedef	typename list_type::value_type		value_type;
 	typedef	typename list_type::iterator		iterator;
 	typedef	typename list_type::const_iterator	const_iterator;
+	typedef	typename list_type::reverse_iterator	reverse_iterator;
+	typedef	typename list_type::const_reverse_iterator
+							const_reverse_iterator;
 protected:
 	list_type					nodes;
-	line_position					start;
-	line_position					end;
+	excl_ptr<const node_position>			open;
+	excl_ptr<const node_position>			close;
 public:
 	node_list();
 
@@ -62,11 +73,15 @@ public:
 	const_iterator
 	end(void) const { return nodes.end(); }
 
+#if 0
 	this_type*
 	append(const T*);		// basically push_back
+#endif
+	void
+	push_back(const T*);
 
-	this_type*
-	wrap(const line_position&, const line_position&);
+	void
+	wrap(const node_position*, const node_position*);
 
 	ostream&
 	what(ostream&) const;
@@ -77,15 +92,22 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if 0
 	line_range
 	where(void) const;
+#endif
 
+	/**
+		Consider giving this an aggregate return type.  
+		Note that this is NON-VIRTUAL.  
+		Determine the return type from the template paraameter.
+	 */
 	never_ptr<const object>
 	check_build(context&) const;
 
 };	// end class node_list
 
-#else
+#else	// USE_NEW_NODE_LIST
 
 //=============================================================================
 #define	NODE_LIST_BASE_TEMPLATE_SIGNATURE				\

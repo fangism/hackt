@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.2 2005/02/24 06:17:05 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.3 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
@@ -52,11 +52,6 @@ public:
 	~definition_body();
 
 };	// end class definition_body
-
-#define definition_body_wrap(b,l,e)					\
-	IS_A(definition_body*, l->wrap(b,e))
-#define definition_body_append(l,d,n)					\
-	IS_A(definition_body*, l->append(d,n))
 
 //=============================================================================
 /**

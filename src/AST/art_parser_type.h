@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_type.h,v 1.2 2005/02/25 07:23:56 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_H__
@@ -62,12 +62,6 @@ public:
 	~data_type_ref_list();
 };
 
-// construction macros
-#define data_type_ref_list_wrap(b,l,e)					\
-	IS_A(data_type_ref_list*, l->wrap(b,e))
-#define data_type_ref_list_append(l,d,n)				\
-        IS_A(data_type_ref_list*, l->append(d,n))
-
 //-----------------------------------------------------------------------------
 /// full base channel type, including base type list
 class chan_type : public type_base {
@@ -96,9 +90,6 @@ virtual	line_position
 virtual	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class chan_type
-
-#define	chan_type_attach_data_types(ct,t)				\
-	IS_A(chan_type*, ct)->attach_data_types(t)
 
 //=============================================================================
 /**

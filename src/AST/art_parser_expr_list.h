@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_list.h,v 1.1 2005/02/22 08:15:19 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.2 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_LIST_H__
@@ -48,11 +48,6 @@ virtual	ostream&
 virtual	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class expr_list
-
-#define expr_list_wrap(b,l,e)						\
-	IS_A(expr_list*, l->wrap(b,e))
-#define expr_list_append(l,d,n)						\
-	IS_A(expr_list*, l->append(d,n))
 
 //=============================================================================
 }	// end namespace parser

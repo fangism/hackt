@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_root.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root.h,v 1.2 2005/02/24 06:17:07 fang Exp $
+	$Id: art_parser_root.h,v 1.3 2005/02/25 07:23:56 fang Exp $
  */
 
 #ifndef __ART_PARSER_ROOT_H__
@@ -51,11 +51,6 @@ public:
 
 	~root_body();
 };	// end class root_body
-
-#define root_body_wrap(b,l,e)						\
-	IS_A(root_body*, l->wrap(b,e))
-#define root_body_append(l,d,n)						\
-	IS_A(root_body*, l->append(d,n))
 
 //=============================================================================
 }	// end namespace parser
