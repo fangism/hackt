@@ -66,12 +66,24 @@ namespace entity {
 
 //=============================================================================
 /**
+	Common interface for parameterizable (template) definitions.  
+	? Are all definitions with scopespaces templatable ?
+ */
+class templatable_definition {	// : public scopespace?
+public:
+
+};	// end class templatable_definition
+
+//=============================================================================
+/**
 	Abstract base class interface for typedef alias definitions.  
 	All typedefs are templateable, and thus have their own little
 	scope space for template parameters.  
 	Awkward?
+	Why sequential scope? for the template parameters
  */
-class typedef_base : virtual public definition_base, public scopespace {
+class typedef_base : virtual public definition_base, public scopespace, 
+	public sequential_scope {
 protected:
 	// no new members
 public:
@@ -126,7 +138,7 @@ virtual	~process_definition_base();
 class process_definition : public process_definition_base, public scopespace, 
 	public sequential_scope {
 public:
-	typedef	never_const_ptr<instantiation_base>
+	typedef	never_const_ptr<instance_collection_base>
 						port_formals_value_type;
 	/**
 		Table of port formals.
@@ -163,7 +175,7 @@ public:
 	never_const_ptr<scopespace> get_parent(void) const;
 
 	/** overrides definition_base's */
-	never_const_ptr<instantiation_base>
+	never_const_ptr<instance_collection_base>
 		lookup_port_formal(const string& id) const;
 	never_const_ptr<object> lookup_object_here(const string& id) const;
 
@@ -171,8 +183,14 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 
-never_const_ptr<instantiation_base>
-	add_port_formal(excl_ptr<instantiation_base> p);
+#if 0
+	never_const_ptr<instance_collection_base>
+		add_port_formal(excl_ptr<instance_collection_base> p);
+#else
+	never_const_ptr<instance_collection_base>
+		add_port_formal(never_ptr<instantiation_statement> f, 
+			const token_identifier& id);
+#endif
 	bool certify_port_actuals(const object_list& ol) const;
 
 	bool equivalent_port_formals(
@@ -272,7 +290,7 @@ protected:
 public:
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n);
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n, 
-		excl_ptr<param_instantiation> p);
+		excl_ptr<param_instance_collection> p);
 	~built_in_datatype_def();
 
 	ostream& what(ostream& o) const;
@@ -287,8 +305,14 @@ public:
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
-	never_const_ptr<instantiation_base>
-		add_template_formal(excl_ptr<instantiation_base> f);
+#if 1
+	never_const_ptr<instance_collection_base>
+		add_template_formal(excl_ptr<instance_collection_base> f);
+#elif 0
+	never_const_ptr<instance_collection_base>
+		add_template_formal(never_ptr<instantiation_statement> i, 
+			const token_identifier& id);
+#endif
 
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const

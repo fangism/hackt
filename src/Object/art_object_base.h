@@ -65,7 +65,7 @@ static	object* construct_empty(void);					\
 	read_value(f, index);						\
 	if (index != m.lookup_ptr_index(this)) {			\
 		long hohum = m.lookup_ptr_index(this);			\
-		cerr << "process_definition::load_object(): " << endl	\
+		cerr << "<object>::load_object(): " << endl	\
 			<< "\tthis = " << this << ", index = " << index	\
 			<< ", expected: " << hohum << endl;		\
 		assert(index == m.lookup_ptr_index(this));		\
@@ -156,13 +156,15 @@ namespace entity {
 
 //	class instance_collection_stack_item;
 
-	class instantiation_base;
-	class channel_instantiation;
-	class datatype_instantiation;
-	class process_instantiation;
-	class param_instantiation;
-	class pint_instantiation;
-	class pbool_instantiation;
+	class instance_collection_base;
+	class channel_instance_collection;
+	class datatype_instance_collection;
+	class process_instance_collection;
+	class param_instance_collection;
+	class pint_instance_collection;
+	class pbool_instance_collection;
+
+	class instantiation_statement;
 
 	class instance_reference_base;
 	class simple_instance_reference;
@@ -203,9 +205,15 @@ namespace entity {
 	 */
 	typedef	count_const_ptr<range_expr_list>
 					index_collection_item_ptr_type;
-	/** we keep track of the state of instance collections at
-		various program points with this container */
-	typedef	deque<index_collection_item_ptr_type>
+	/**
+		UPDATE: now contains reference to instantiation_statements, 
+		which *contain* the index/range expressions.  
+
+		We keep track of the state of instance collections at
+		various program points with this container.
+	 */
+//	typedef	deque<index_collection_item_ptr_type>
+	typedef	deque<never_const_ptr<instantiation_statement> >
 					index_collection_type;
 
 	/** the state of an instance collection, kept track by each 
@@ -448,9 +456,9 @@ protected:	// typedefs -- keep these here for re-use
 							def_bin_type;
 		typedef qmap<string, never_ptr<typedef_base> >
 							alias_bin_type;
-		typedef qmap<string, never_ptr<instantiation_base> >
+		typedef qmap<string, never_ptr<instance_collection_base> >
 							inst_bin_type;
-		typedef qmap<string, never_ptr<param_instantiation> >
+		typedef qmap<string, never_ptr<param_instance_collection> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -478,9 +486,9 @@ protected:	// typedefs -- keep these here for re-use
 							def_bin_type;
 		typedef qmap<string, never_const_ptr<typedef_base> >
 							alias_bin_type;
-		typedef qmap<string, never_const_ptr<instantiation_base> >
+		typedef qmap<string, never_const_ptr<instance_collection_base> >
 							inst_bin_type;
-		typedef qmap<string, never_const_ptr<param_instantiation> >
+		typedef qmap<string, never_const_ptr<param_instance_collection> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -544,20 +552,21 @@ virtual	never_const_ptr<object>	lookup_object(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) const;
 
 virtual	never_const_ptr<scopespace>
-			lookup_namespace(const qualified_id_slice& id) const;
+		lookup_namespace(const qualified_id_slice& id) const;
 
-/** where overriden? **/
-virtual	never_const_ptr<instantiation_base>
-			add_instance(excl_ptr<instantiation_base> i);
+#if 1
+protected:
+	never_const_ptr<instance_collection_base>
+		add_instance(excl_ptr<instance_collection_base> i);
+// #else
+public:
+	// need id because instantiation statement won't be named yet!
+	never_const_ptr<instance_collection_base>
+		add_instance(never_ptr<instantiation_statement> i, 
+			const token_identifier& id);
+#endif
 	bool add_definition_alias(never_const_ptr<definition_base> d, 
 		const string& a);
-
-#if 0
-	void add_assignment_to_scope(
-		excl_const_ptr<param_expression_assignment> c);
-	void add_connection_to_scope(
-		excl_const_ptr<instance_reference_connection> c);
-#endif
 
 	size_t exclude_population(void) const;
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
@@ -569,16 +578,6 @@ protected:
 	void collect_used_id_map_pointers(persistent_object_manager& m) const;
 	void write_object_used_id_map(persistent_object_manager& m) const;
 	void load_object_used_id_map(persistent_object_manager& m);
-
-#if 0
-	void collect_assign_list_pointers(persistent_object_manager& m) const;
-	void write_object_assign_list(persistent_object_manager& m) const;
-	void load_object_assign_list(persistent_object_manager& m);
-
-	void collect_connect_list_pointers(persistent_object_manager& m) const;
-	void write_object_connect_list(persistent_object_manager& m) const;
-	void load_object_connect_list(persistent_object_manager& m);
-#endif
 
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
@@ -745,7 +744,7 @@ public:
 		and have fast lookup, thus hashlist.  
 		Remember: template formals are accessible to the rest 
 		of the body and to the port formals as well.  
-		For now, the contained type is datatype_instantiation
+		For now, the contained type is datatype_instance_collection
 			which is generalized to include the paramater types
 			pbool and pint, not to be confused with the data 
 			types bool and int.  
@@ -757,14 +756,14 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-	typedef	never_const_ptr<param_instantiation>
+	typedef	never_const_ptr<param_instance_collection>
 					template_formals_value_type;
 	// double-maintenance...
 	typedef	hash_qmap<string, template_formals_value_type>
 					template_formals_map_type;
 	typedef	list<template_formals_value_type>
 					template_formals_list_type;
-	/** map from param_instantiation to actual value passed */
+	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_const_ptr<param_expr> >
 					template_actuals_map_type;
 
@@ -803,10 +802,10 @@ virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
 	void fill_template_actuals_map(template_actuals_map_type& am, 
 		const param_expr_list& al) const;
 
-	never_const_ptr<param_instantiation>
+	never_const_ptr<param_instance_collection>
 		lookup_template_formal(const string& id) const;
 /** should be pure virtual, but let's default to NULL */
-virtual	never_const_ptr<instantiation_base>
+virtual	never_const_ptr<instance_collection_base>
 		lookup_port_formal(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
 
@@ -863,15 +862,29 @@ virtual	bool require_signature_match(
 /**
 	f should be const and owned -- pointer type conflict...  
 	virtual so that types without templates can assert NULL.  
+	TO DO: This function should be pure virtual and belong 
+		to a different interface!
  */
-virtual	never_const_ptr<instantiation_base>
-		add_template_formal(excl_ptr<instantiation_base> f);
+#if 0
+virtual	never_const_ptr<instance_collection_base>
+		add_template_formal(excl_ptr<instance_collection_base> f);
+#else
+virtual	never_const_ptr<instance_collection_base>
+		add_template_formal(never_ptr<instantiation_statement> f, 
+			const token_identifier& id);
+#endif
 
 /**
 	Really, only some definitions should have ports...
  */
-virtual	never_const_ptr<instantiation_base>
-		add_port_formal(excl_ptr<instantiation_base> f);
+#if 0
+virtual	never_const_ptr<instance_collection_base>
+		add_port_formal(excl_ptr<instance_collection_base> f);
+#else
+virtual	never_const_ptr<instance_collection_base>
+		add_port_formal(never_ptr<instantiation_statement> f, 
+			const token_identifier& id);
+#endif
 
 #if 0
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
@@ -915,7 +928,7 @@ virtual	~type_reference_base() { }
  */
 class fundamental_type_reference : public type_reference_base {
 public:
-	/** map from param_instantiation to actual value passed */
+	/** map from param_instance_collection to actual value passed */
 	typedef	definition_base::template_actuals_map_type
 						template_actuals_map_type;
 protected:
@@ -954,13 +967,28 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 excl_const_ptr<fundamental_type_reference>
 	resolve_canonical_type(void) const;
 
+static	excl_ptr<instantiation_statement>
+		make_instantiation_statement(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d);
+
+virtual	excl_ptr<instantiation_statement>
+		make_instantiation_statement_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d) const = 0;
+
 /** wrapper for the next private function */
-static	excl_ptr<instantiation_base>
-		make_instantiation(
+static	excl_ptr<instance_collection_base>
+		make_instance_collection(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d);
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			);
 
 private:
 /**
@@ -968,12 +996,17 @@ private:
 	we can't invoke it and copy the 'this' pointer.  
 	't' is used to invoke.  
  */
-virtual	excl_ptr<instantiation_base>
-		make_instantiation_private(
+virtual	excl_ptr<instance_collection_base>
+		make_instance_collection_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d) const = 0;
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			) const = 0;
 
 public:
 	bool may_be_equivalent(const fundamental_type_reference& t) const;
@@ -998,8 +1031,13 @@ public:
 	2) sparse...
 	Sub-classes must contain const pointers to fundamental_type_reference
 	sub-classes.  
+
+	REWORK:
+	No type_ref member, acquire that from instantiation_statement.  
+	Instead of list of indices in index_collection, 
+	use list of statements that contain indices.  
  */
-class instantiation_base : public object {
+class instance_collection_base : public object {
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -1025,6 +1063,9 @@ protected:
 		Needs to be a grown stack of instances, because
 		of changing collection.  
 		Needs to be a deque so we can use iterators.  
+
+		UPDATE:
+		Is now a container of instantiation_statements.
 	 */
 	index_collection_type			index_collection;
 
@@ -1037,13 +1078,15 @@ protected:
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
 protected:
-explicit instantiation_base();
+explicit instance_collection_base();
 
 public:
 	// o should be reference, not pointer
-	instantiation_base(const scopespace& o, const string& n, 
-		index_collection_item_ptr_type d);
-virtual	~instantiation_base();
+	instance_collection_base(const scopespace& o, const string& n, 
+//		index_collection_item_ptr_type d
+//		index_collection_type::value_type d
+		const size_t d);
+virtual	~instance_collection_base();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;	// temporary
@@ -1067,23 +1110,34 @@ virtual	count_const_ptr<fundamental_type_reference>
 	size_t dimensions(void) const { return depth; }
 	instantiation_state collection_state_end(void) const;
 	instantiation_state current_collection_state(void) const;
-	const_range_list detect_static_overlap(
-		index_collection_item_ptr_type r) const;
-	const_range_list add_index_range(
-		index_collection_item_ptr_type r);
-	const_range_list merge_index_ranges(
-		never_const_ptr<instantiation_base> i);
+
+	const_range_list
+	detect_static_overlap(index_collection_item_ptr_type r) const;
+
+#if 0
+	const_range_list
+	add_index_range(index_collection_item_ptr_type r);
+
+	const_range_list
+	merge_index_ranges(never_const_ptr<instance_collection_base> i);
+#else
+	const_range_list
+	add_instantiation_statement(index_collection_type::value_type r);
+
+//	const_range_list
+//	merge_index_ranges(never_const_ptr<instance_collection_base> i);
+#endif
 
 private:
 	bool formal_size_equivalent(
-		never_const_ptr<instantiation_base> b) const;
+		never_const_ptr<instance_collection_base> b) const;
 public:
 	bool is_template_formal(void) const;
 	bool is_port_formal(void) const;
 	bool template_formal_equivalent(
-		never_const_ptr<instantiation_base> b) const;
+		never_const_ptr<instance_collection_base> b) const;
 	bool port_formal_equivalent(
-		never_const_ptr<instantiation_base> b) const;
+		never_const_ptr<instance_collection_base> b) const;
 
 protected:
 	bool check_expression_dimensions(const param_expr& pr) const;
@@ -1108,8 +1162,8 @@ protected:
 			persistent_object_manager& m);
 public:
 	/** just for convenience */
-	static const never_const_ptr<instantiation_base>	null;
-};	// end class instantiation_base
+	static const never_const_ptr<instance_collection_base>	null;
+};	// end class instance_collection_base
 
 //=============================================================================
 /**

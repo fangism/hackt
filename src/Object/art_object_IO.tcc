@@ -47,8 +47,9 @@ template <template <class> class P, class T>
 void
 persistent_object_manager::read_pointer(
 		istream& f, const P<T>& ptr) const {
-	long i;
+	unsigned long i;
 	read_value(f, i);
+	assert(i < reconstruction_table.size());
 	object* o(lookup_obj_ptr(i));
 	T* t = dynamic_cast<T*>(o);
 	if (o) assert(t);

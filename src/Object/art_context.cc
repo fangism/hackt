@@ -29,12 +29,7 @@ using namespace std;
 	built-in types.  
 	\param g pointer to global namespace.
  */
-#if 0
-context::context(never_ptr<name_space> g, 
-			list<excl_const_ptr<instance_management_base> >& l) : 
-#else
 context::context(module& m) :
-#endif
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -42,22 +37,17 @@ context::context(module& m) :
 		current_prototype(NULL), 
 		definition_stack(), 
 		current_fundamental_type(NULL), 
-		dynamic_scope_stack(), 
+		sequential_scope_stack(), 
 		object_stack(), 
-#if 0
-		global_namespace(g), 
-		master_instance_list(l)
-#else
 		global_namespace(m.get_global_namespace()), 
 		master_instance_list(m.instance_management_list)
-#endif
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
 	namespace_stack.push(global_namespace);
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
-	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
+	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
 	object_stack.push(count_ptr<object>(NULL));
 	definition_stack.push(never_const_ptr<definition_base>(NULL));
 	// initializing stacks else top() will seg-fault
@@ -292,6 +282,7 @@ context::open_process_definition(const token_identifier& pname) {
 		}
 		assert(!current_open_definition);	// sanity check
 		current_open_definition = pd;
+		sequential_scope_stack.push(pd.as_a<sequential_scope>());
 		pd->mark_defined();
 		indent++;
 	} else {
@@ -325,6 +316,7 @@ void
 context::close_process_definition(void) {
 	// sanity check
 	current_open_definition.must_be_a<process_definition>();
+	sequential_scope_stack.pop();
 	close_current_definition();
 }
 
@@ -525,9 +517,9 @@ context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
 #if 0
-	return get_current_scope()->lookup_object(id);
+	return get_current_named_scope()->lookup_object(id);
 #else
-	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o;
@@ -546,7 +538,7 @@ context::lookup_object(const qualified_id& id) const {
 bool
 context::alias_definition(never_const_ptr<definition_base> d,
 		const token_identifier& a) {
-	return get_current_scope()->add_definition_alias(d, a);
+	return get_current_named_scope()->add_definition_alias(d, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -558,10 +550,10 @@ context::alias_definition(never_const_ptr<definition_base> d,
 void
 context::add_connection(excl_const_ptr<instance_reference_connection> c) {
 #if 0
-	get_current_scope()->add_connection_to_scope(c);
+	get_current_named_scope()->add_connection_to_scope(c);
 #else
 	never_ptr<sequential_scope>
-		seq_scope(get_current_scope().is_a<sequential_scope>());
+		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	excl_const_ptr<instance_management_base> imb(c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
@@ -582,10 +574,10 @@ context::add_connection(excl_const_ptr<instance_reference_connection> c) {
 void
 context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
 #if 0
-	get_current_scope()->add_assignment_to_scope(c);
+	get_current_named_scope()->add_assignment_to_scope(c);
 #else
 	never_ptr<sequential_scope>
-		seq_scope(get_current_scope().is_a<sequential_scope>());
+		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	excl_const_ptr<instance_management_base> imb(c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
@@ -606,7 +598,7 @@ context::lookup_definition(const token_identifier& id) const {
 #if 0
 	return current_namespace->lookup_object(id).is_a<definition_base>();
 #else
-	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<definition_base>();
@@ -624,7 +616,7 @@ context::lookup_definition(const qualified_id& id) const {
 #if 0
 	return current_namespace->lookup_object(id).is_a<definition_base>();
 #else
-	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
 	return o.is_a<definition_base>();
@@ -632,30 +624,30 @@ context::lookup_definition(const qualified_id& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
 #if 0
-	return current_namespace->lookup_object(id).is_a<instantiation_base>();
+	return current_namespace->lookup_object(id).is_a<instance_collection_base>();
 #else
-	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
-	return o.is_a<instantiation_base>();
+	return o.is_a<instance_collection_base>();
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
 #if 0
-	return current_namespace->lookup_object(id).is_a<instantiation_base>();
+	return current_namespace->lookup_object(id).is_a<instance_collection_base>();
 #else
-	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	never_const_ptr<object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<object_handle>())
 		o = never_const_ptr<object>(&o->self());
-	return o.is_a<instantiation_base>();
+	return o.is_a<instance_collection_base>();
 #endif
 }
 
@@ -669,10 +661,13 @@ context::lookup_instance(const qualified_id& id) const {
 	Constant semantics.  
  */
 never_const_ptr<scopespace>
-context::get_current_scope(void) const {
-	if (current_dynamic_scope)
-		return current_dynamic_scope;
-	else if (current_prototype)	// careful, is excl_ptr<>
+context::get_current_named_scope(void) const {
+#if 0
+// WRONG
+	if (current_sequential_scope)
+		return current_sequential_scope;
+#endif
+	if (current_prototype)	// careful, is excl_ptr<>
 		return never_const_ptr<definition_base>(current_prototype);
 			// .as_a<scopespace>();
 	else if (current_open_definition) {
@@ -702,10 +697,14 @@ context::get_current_scope(void) const {
 	Non-constant semantics.  
  */
 never_ptr<scopespace>
-context::get_current_scope(void) {
-	if (current_dynamic_scope)
-		return current_dynamic_scope;
-	else if (current_open_definition) {
+context::get_current_named_scope(void) {
+#if 0
+	// WRONG
+	if (current_sequential_scope)
+		return current_sequential_scope;
+#endif
+	// what about current_prototype?
+	if (current_open_definition) {
 		// used to be static cast
 		never_ptr<scopespace>
 			ret(current_open_definition.is_a<scopespace>());
@@ -718,12 +717,12 @@ context::get_current_scope(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds an instance of the current_fundamental_type
-	to the current_scope.  
+	to the current_named_scope.  
 	Note: what we really mean is the current STATIC scope, 
 	since instances are not truly added to dynamic scopes.  
 	Make overloaded version with dimensions.  
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_instance(const token_identifier& id) {
 	// wrapper
 	return add_instance(id, index_collection_item_ptr_type(NULL));
@@ -732,41 +731,89 @@ context::add_instance(const token_identifier& id) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds an instance of the current_fundamental_type
-	to the current_scope.  
+	to the current_named_scope.  
 	Note: what we really mean is the current STATIC scope, 
 	since instances are not truly added to dynamic scopes.  
+
+	THIS NEEDS REWORK.  New pseudo code:
+	In this name scope (namespace, definition...), 
+	see if instantiation entry already exists with same ID.  
+	If not, create one and register it, 
+	otherwise if entry exists, do a limited static type-check.  
+	Make an instantiation_statement, using the fundamental_type
+		with back-reference to the instance_collection_base.  
+	Append the (excl) statement to the current sequence-scope's 
+		(global, definition, loop, conditional) list.  
+	Append the (never) statement to the instance_collection_base, 
+		checking for index collisions.  
+
 	\param id the name of the new instance.  
-	\param dim the dimension specifier.  
+	\param dim the dimension specifier, may be null.  
 	\return pointer to newly created instantiation.  
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_instance(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
+	typedef	never_const_ptr<instance_collection_base>	return_type;
 	assert(current_fundamental_type);
-	never_ptr<scopespace> current_scope = get_current_scope();
+
+#if 1
+// NEW REWORKED CODE STAGING AREA
+	never_ptr<scopespace> current_named_scope(get_current_named_scope());
+	assert(current_named_scope);
+
+#if 0
+	excl_ptr<instantiation_statement>
+		inst_stmt(new instantiation_statement(
+			current_fundamental_type, dim));
+#else
+	excl_ptr<instantiation_statement> inst_stmt =
+		fundamental_type_reference::make_instantiation_statement(
+			current_fundamental_type, dim);
+#endif
+	assert(inst_stmt);
+	never_const_ptr<instance_collection_base>
+		inst_base(current_named_scope->add_instance(inst_stmt, id));
+	// adds non-const back-reference
+
+	if (!inst_base) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+
+	excl_const_ptr<instance_management_base>
+		imb(inst_stmt.as_a_xfer<instance_management_base>());
+	assert(current_sequential_scope);
+	current_sequential_scope->append_instance_management(imb);
+	return inst_base;
+
+#else
+// OLD CODE as of tag 0.1.3-c
+	never_ptr<scopespace> current_named_scope = get_current_named_scope();
 		// .top_static_scope();
-	assert(current_scope);
+	assert(current_named_scope);
 
 	// "ptrs.h" complains if the following is written as a constructor:
 #if 0
-	cerr << "In context::add_instance, before make_instantiation: " << endl;
-	current_scope->dump(cerr);
+	cerr << "In context::add_instance, before make_instance_collection: " << endl;
+	current_named_scope->dump(cerr);
 #endif
 
-	excl_ptr<instantiation_base> new_inst = 
-		fundamental_type_reference::make_instantiation(
+	excl_ptr<instance_collection_base> new_inst = 
+		fundamental_type_reference::make_instance_collection(
 			current_fundamental_type, 
-			current_scope, id, dim);
+			current_named_scope, id, dim);
 	assert(new_inst);
 #if 0
 	cerr << "In context::add_instance, before add_instance: " << endl;
-	current_scope->dump(cerr);
+	current_named_scope->dump(cerr);
 #endif
 
 	excl_const_ptr<instance_management_base>
 		imb(new instantiation_statement(new_inst, dim));
 	never_ptr<sequential_scope>
-		seq_scope(current_scope.is_a<sequential_scope>());
+		seq_scope(current_named_scope.is_a<sequential_scope>());
 	if (seq_scope) {
 		// is a definition, or other control-flow scope, 
 		// so append to that.
@@ -778,13 +825,13 @@ context::add_instance(const token_identifier& id,
 	}
 	// this just adds instances to the pre-unrolled
 	// object data, and is not kept in any global order
-	never_const_ptr<instantiation_base>
-		ret(current_scope->add_instance(new_inst));
+	never_const_ptr<instance_collection_base>
+		ret(current_named_scope->add_instance(new_inst));
 	assert(!new_inst);		// ownership transferred
 
 #if 0
 	cerr << "In context::add_instance, after add_instance: " << endl;
-	current_scope->dump(cerr);
+	current_named_scope->dump(cerr);
 #endif
 	if (!ret) {
 		cerr << id.where() << endl;
@@ -792,6 +839,7 @@ context::add_instance(const token_identifier& id,
 		exit(1);
 	}
 	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -805,7 +853,7 @@ context::add_instance(const token_identifier& id,
 	\param id the name of the formal instance.  
 	\sa add_instance
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		count_const_ptr<param_expr> d) {
@@ -817,8 +865,9 @@ context::add_template_formal(const token_identifier& id,
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
-	never_const_ptr<instantiation_base> ret(
-		current_prototype->add_template_formal(
+#if 0
+	never_const_ptr<instance_collection_base>
+		ret(current_prototype->add_template_formal(
 			param_type_reference::make_template_formal(
 				ptype, current_prototype, id, dim, d)));
 	if (!ret) {
@@ -827,13 +876,62 @@ context::add_template_formal(const token_identifier& id,
 		exit(1);
 	}
 	return ret;
+#else
+
+#if 0
+	excl_ptr<instantiation_statement>
+		inst_stmt(new instantiation_statement(ptype, dim));
+#else
+	excl_ptr<instantiation_statement> inst_stmt =
+		fundamental_type_reference::make_instantiation_statement(
+			ptype, dim);
+#endif
+	assert(inst_stmt);
+	// instance is constructed and added in add_instance
+	never_const_ptr<instance_collection_base>
+		inst_base(current_prototype->add_template_formal(
+			inst_stmt, id));
+		// same as current_named_scope? perhaps assert check?
+
+	if (!inst_base) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+
+	if (d) {
+		// need modifiable pointer to param_instance_collection
+		never_ptr<instance_collection_base>
+			ib(inst_stmt->get_inst_base());
+		never_ptr<param_instance_collection>
+			pic(ib.is_a<param_instance_collection>());
+		assert(pic);
+		if (!pic->assign_default_value(d)) {
+			// error: type check failed
+			cerr << "ERROR assigning default value to " << id <<
+				", type/size mismatch!  " << id.where() << endl;
+			type_error_count++;
+			exit(1);
+		}
+	}
+
+	excl_const_ptr<instance_management_base>
+		imb(inst_stmt.as_a_xfer<instance_management_base>());
+	never_ptr<sequential_scope>
+		seq_scope(current_prototype.is_a<sequential_scope>());
+		// same as current_sequential_scope? perhaps assert check?
+	assert(seq_scope);
+	seq_scope->append_instance_management(imb);
+
+	return inst_base;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper for adding a non-arrayed template formal instantiation.  
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_template_formal(const token_identifier& id, 
 		count_const_ptr<param_expr> d) {
 	return add_template_formal(id, index_collection_item_ptr_type(NULL), d);
@@ -850,15 +948,16 @@ context::add_template_formal(const token_identifier& id,
 	\param id the name of the formal instance.  
 	\sa add_instance
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
 	assert(current_prototype);	// valid definition_base
 	assert(!current_fundamental_type.is_a<param_type_reference>());
 		// valid port type to instantiate
-	never_const_ptr<instantiation_base> ret(
+#if 0
+	never_const_ptr<instance_collection_base> ret(
 		current_prototype->add_port_formal(
-			fundamental_type_reference::make_instantiation(
+			fundamental_type_reference::make_instance_collection(
 				current_fundamental_type, 
 				current_prototype.is_a<scopespace>(),
 				id, dim)));
@@ -868,13 +967,40 @@ context::add_port_formal(const token_identifier& id,
 		exit(1);
 	}
 	return ret;
+#else
+	excl_ptr<instantiation_statement> inst_stmt =
+		fundamental_type_reference::make_instantiation_statement(
+			current_fundamental_type, dim);
+	assert(inst_stmt);
+	// instance is constructed and added in add_instance
+	never_const_ptr<instance_collection_base>
+		inst_base(current_prototype->add_port_formal(
+			inst_stmt, id));
+		// same as current_named_scope? perhaps assert check?
+
+	if (!inst_base) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+
+	excl_const_ptr<instance_management_base>
+		imb(inst_stmt.as_a_xfer<instance_management_base>());
+	never_ptr<sequential_scope>
+		seq_scope(current_prototype.is_a<sequential_scope>());
+		// same as current_sequential_scope? perhaps assert check?
+	assert(seq_scope);
+	seq_scope->append_instance_management(imb);
+
+	return inst_base;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper for adding a non-arrayed port formal instantiation.  
  */
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 context::add_port_formal(const token_identifier& id) {
 	return add_port_formal(id, index_collection_item_ptr_type(NULL));
 }

@@ -32,9 +32,9 @@ namespace entity {
 	class pbool_type_reference;
 	class pint_type_reference;
 
-	class param_instantiation;
-	class pbool_instantiation;
-	class pint_instantiation;
+	class param_instance_collection;
+	class pbool_instance_collection;
+	class pint_instance_collection;
 
 	class param_instance_reference;
 	class pint_instance_reference;
@@ -471,7 +471,7 @@ public:
  */
 class range_expr_list : public object {
 protected:
-//	never_const_ptr<instantiation_base>	owner;
+//	never_const_ptr<instance_collection_base>	owner;
 public:
 	range_expr_list();
 virtual	~range_expr_list() { }
@@ -651,19 +651,19 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
 class pbool_instance_reference : public param_instance_reference, 
 		public pbool_expr {
 protected:
-	never_ptr<pbool_instantiation>		pbool_inst_ref;
+	never_ptr<pbool_instance_collection>		pbool_inst_ref;
 private:
 	pbool_instance_reference();
 public:
-	pbool_instance_reference(never_ptr<pbool_instantiation> pi, 
+	pbool_instance_reference(never_ptr<pbool_instance_collection> pi, 
 		excl_ptr<index_list> i);
 	~pbool_instance_reference() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	using param_instance_reference::dump;
-	never_const_ptr<instantiation_base> get_inst_base(void) const;
-	never_const_ptr<param_instantiation>
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_const_ptr<param_instance_collection>
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;
@@ -694,18 +694,18 @@ public:
 class pint_instance_reference : public param_instance_reference, 
 		public pint_expr {
 protected:
-	never_ptr<pint_instantiation>		pint_inst_ref;
+	never_ptr<pint_instance_collection>		pint_inst_ref;
 private:
 	pint_instance_reference();
 public:
-	pint_instance_reference(never_ptr<pint_instantiation> pi, 
+	pint_instance_reference(never_ptr<pint_instance_collection> pi, 
 		excl_ptr<index_list> i);
 	~pint_instance_reference() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-	never_const_ptr<instantiation_base> get_inst_base(void) const;
-	never_const_ptr<param_instantiation>
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_const_ptr<param_instance_collection>
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;

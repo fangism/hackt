@@ -25,30 +25,31 @@ namespace entity {
 	class module;
 	class object;
 	class scopespace;
+	class sequential_scope;
 	class name_space;
 	class built_in_type_def;
 	class fundamental_type_reference;
-	class instantiation_base;
+	class instance_collection_base;
 	class instance_reference_base;
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
 	class channel_type_reference;
-	class channel_instantiation;
+	class channel_instance_collection;
 	class channel_instance_reference;
 	class datatype_definition_base;
 	class data_type_reference;
-	class datatype_instantiation;
+	class datatype_instance_collection;
 	class datatype_instance_reference;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
-	class process_instantiation;
+	class process_instance_collection;
 	class process_instance_reference;
 	class built_in_param_def;
 	class param_type_reference;
-	class param_instantiation;
+	class param_instance_collection;
 	class param_instance_reference;
 
 	class param_expr;
@@ -167,8 +168,8 @@ protected:
 		These pointers are modifiable, but are not owned.  
 		Remember to push NULL initially.  
 	 */
-	stack<never_ptr<scopespace> >	dynamic_scope_stack;
-#define	current_dynamic_scope		dynamic_scope_stack.top()
+	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
+#define	current_sequential_scope		sequential_scope_stack.top()
 
 #if 0
 // NOT YET
@@ -263,8 +264,13 @@ bool	alias_definition(never_const_ptr<definition_base> d,
 void	add_connection(excl_const_ptr<instance_reference_connection> c);
 void	add_assignment(excl_const_ptr<param_expression_assignment> a);
 
-never_const_ptr<scopespace>	get_current_scope(void) const;
-never_ptr<scopespace>		get_current_scope(void);
+/**
+	Need to make distinctions:
+	call this get_current_named_scope.
+	Make another get_current_sequential_scope.
+ */
+never_const_ptr<scopespace>	get_current_named_scope(void) const;
+never_ptr<scopespace>		get_current_named_scope(void);
 
 never_const_ptr<name_space>
 		get_current_namespace(void) const {
@@ -338,28 +344,28 @@ never_const_ptr<definition_base>
 			lookup_definition(const token_identifier& id) const;
 never_const_ptr<definition_base>
 			lookup_definition(const qualified_id& id) const;
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			lookup_instance(const token_identifier& id) const;
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			lookup_instance(const qualified_id& id) const;
 
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			add_instance(const token_identifier& id);
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			add_instance(const token_identifier& id, 
 				index_collection_item_ptr_type dim);
 
-never_const_ptr<instantiation_base>	// should be param_instantiation
+never_const_ptr<instance_collection_base>	// should be param_instance_collection
 			add_template_formal(const token_identifier& id, 
 				count_const_ptr<param_expr> d);
-never_const_ptr<instantiation_base>	// should be param_instantiation
+never_const_ptr<instance_collection_base>	// should be param_instance_collection
 			add_template_formal(const token_identifier& id, 
 				index_collection_item_ptr_type dim, 
 				count_const_ptr<param_expr> d);
 
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			add_port_formal(const token_identifier& id);
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 			add_port_formal(const token_identifier& id, 
 				index_collection_item_ptr_type dim);
 

@@ -46,11 +46,11 @@ enum type_index_enum {
 	// no need for param type reference
 
 // Instantiations:
-	PROCESS_INSTANTIATION_TYPE, 	// = 13
-	CHANNEL_INSTANTIATION_TYPE, 
-	DATA_INSTANTIATION_TYPE, 
-	PBOOL_INSTANTIATION_TYPE, 	// parameter boolean, or collection
-	PINT_INSTANTIATION_TYPE, 	// parameter integer, or collection
+	PROCESS_INSTANCE_COLLECTION_TYPE, 	// = 13
+	CHANNEL_INSTANCE_COLLECTION_TYPE, 
+	DATA_INSTANCE_COLLECTION_TYPE, 
+	PBOOL_INSTANCE_COLLECTION_TYPE, // parameter boolean, or collection
+	PINT_INSTANCE_COLLECTION_TYPE, 	// parameter integer, or collection
 
 // Instance references:
 	// simple instance reference may contain multidimensional indices
@@ -106,7 +106,12 @@ enum type_index_enum {
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:
 	
-	INSTANTIATION_STATEMENT_TYPE, 	// = 46
+	PROCESS_INSTANTIATION_STATEMENT_TYPE, 	// = 46
+	CHANNEL_INSTANTIATION_STATEMENT_TYPE,
+	DATA_INSTANTIATION_STATEMENT_TYPE,
+	PBOOL_INSTANTIATION_STATEMENT_TYPE,
+	PINT_INSTANTIATION_STATEMENT_TYPE,
+
 	PARAM_EXPR_ASSIGNMENT_TYPE, 	// list of expressions equated
 	ALIAS_CONNECTION_TYPE, 
 	PORT_CONNECTION_TYPE, 

@@ -34,15 +34,19 @@ namespace entity {
 	using namespace fang;		// for experimental pointer classes
 
 //=============================================================================
-// class instantiation_base declared in "art_object_base.h"
+// class instance_collection_base declared in "art_object_base.h"
 
 //=============================================================================
 /**
 	Process instantiation.  
  */
-class process_instantiation : public instantiation_base {
+class process_instance_collection : public instance_collection_base {
 protected:
 	/**
+		PHASE THIS OUT -- in favor of keeping type information
+			in the instantiation_statement list.
+		Eliminate later, doesn't hurt for now.
+
 		The type of process being instantiated.  
 		Need to chance to excl_const_ptr... everywhere.  
 		Or some_ptr, beause built in type_references are static...  
@@ -55,13 +59,18 @@ protected:
 	// list of port actuals
 
 private:
-	process_instantiation();
+	process_instance_collection();
 public:
-	process_instantiation(const scopespace& o, 
+	process_instance_collection(const scopespace& o, 
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
-		index_collection_item_ptr_type d);
-	~process_instantiation();
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+	~process_instance_collection();
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
@@ -76,21 +85,26 @@ public:
 public:
 	ART_OBJECT_IO_METHODS
 
-};	// end class process_instantiation
+};	// end class process_instance_collection
 
 //=============================================================================
 /// Instantiation of a data type, either inside or outside definition.  
-class datatype_instantiation : public instantiation_base {
+class datatype_instance_collection : public instance_collection_base {
 protected:
 	count_const_ptr<data_type_reference>	type;	///< the actual type
 private:
-	datatype_instantiation();
+	datatype_instance_collection();
 public:
-	datatype_instantiation(const scopespace& o, 
+	datatype_instance_collection(const scopespace& o, 
 		count_const_ptr<data_type_reference> t,
 		const string& n, 
-		index_collection_item_ptr_type d);
-	~datatype_instantiation();
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+	~datatype_instance_collection();
 
 	ostream& what(ostream& o) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
@@ -105,24 +119,29 @@ public:
 			count_const_ptr<simple_instance_reference> b) const;
 public:
 	ART_OBJECT_IO_METHODS
-};	// end class datatype_instantiation
+};	// end class datatype_instance_collection
 
 //=============================================================================
 /**
 	Instantiation of a channel type.  
 	Final class?
  */
-class channel_instantiation : public instantiation_base {
+class channel_instance_collection : public instance_collection_base {
 protected:
 	count_const_ptr<channel_type_reference>	type;
 private:
-	channel_instantiation();
+	channel_instance_collection();
 public:
-	channel_instantiation(const scopespace& o, 
+	channel_instance_collection(const scopespace& o, 
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
-		index_collection_item_ptr_type d);
-	~channel_instantiation();
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+	~channel_instance_collection();
 
 	ostream& what(ostream& o) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
@@ -133,15 +152,16 @@ public:
 			count_const_ptr<simple_instance_reference> b) const;
 public:
 	ART_OBJECT_IO_METHODS
-};	// end class channel_instantiation
+};	// end class channel_instance_collection
 
 //=============================================================================
 /**
 	Instance of a built-in parameter type, such as pint and pbool.  
 	Virtualizing.  
 	Going to sub-type into pint and pbool.  
+	TO DO: derive from a interface for template_argument.  
  */
-class param_instantiation : public instantiation_base {
+class param_instance_collection : public instance_collection_base {
 protected:
 	/**
 		OBSOLETE after sub-typing, and hard-wiring.  
@@ -151,11 +171,16 @@ protected:
 	**/
 
 protected:
-	param_instantiation();
+	param_instance_collection();
 public:
-	param_instantiation(const scopespace& o, const string& n, 
-		index_collection_item_ptr_type d);
-virtual	~param_instantiation();
+	param_instance_collection(const scopespace& o, const string& n, 
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+virtual	~param_instance_collection();
 
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
@@ -207,19 +232,19 @@ NOTE: these functions should only be applicable to param_instance_references.
 /**
 	Whether or not this parameter is itself a loop index,
 	or if indexed, its indices depend on some loop index.
-	This may be applicable to instantiation_base in general.  
+	This may be applicable to instance_collection_base in general.  
  */
 	bool is_loop_independent(void) const;
 
 	bool is_unconditional(void) const;
 #endif
-};	// end class param_instantiation
+};	// end class param_instance_collection
 
 //-----------------------------------------------------------------------------
 /**
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
-class pbool_instantiation : public param_instantiation {
+class pbool_instance_collection : public param_instance_collection {
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -235,16 +260,23 @@ protected:
 	 */
 	count_const_ptr<pbool_expr>		ival;
 private:
-	pbool_instantiation();
+	pbool_instance_collection();
 public:
-	pbool_instantiation(const scopespace& o, const string& n);
-	pbool_instantiation(const scopespace& o, const string& n, 
-		index_collection_item_ptr_type d);
-	pbool_instantiation(const scopespace& o, const string& n, 
+	pbool_instance_collection(const scopespace& o, const string& n);
+	pbool_instance_collection(const scopespace& o, const string& n, 
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+#if 0
+	pbool_instance_collection(const scopespace& o, const string& n, 
 		count_const_ptr<pbool_expr> i);
-	pbool_instantiation(const scopespace& o, const string& n, 
+	pbool_instance_collection(const scopespace& o, const string& n, 
 		index_collection_item_ptr_type d, 
 		count_const_ptr<pbool_expr> i);
+#endif
 
 	ostream& what(ostream& o) const;
 
@@ -263,13 +295,13 @@ public:
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 public:
 	ART_OBJECT_IO_METHODS
-};	// end class pbool_instantiation
+};	// end class pbool_instance_collection
 
 //-----------------------------------------------------------------------------
 /**
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
-class pint_instantiation : public param_instantiation {
+class pint_instance_collection : public param_instance_collection {
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -285,16 +317,28 @@ protected:
 	 */
 	count_const_ptr<pint_expr>		ival;
 private:
-	pint_instantiation();
+	pint_instance_collection();
 public:
-	pint_instantiation(const scopespace& o, const string& n);
-	pint_instantiation(const scopespace& o, const string& n, 
-		index_collection_item_ptr_type d);
-	pint_instantiation(const scopespace& o, const string& n, 
+	pint_instance_collection(const scopespace& o, const string& n);
+	pint_instance_collection(const scopespace& o, const string& n, 
+#if 0
+		index_collection_item_ptr_type d
+#else
+		const size_t d
+#endif
+		);
+#if 1
+	// keep these for built-in int datatype initialization
+	pint_instance_collection(const scopespace& o, const string& n, 
 		count_const_ptr<pint_expr> i);
-	pint_instantiation(const scopespace& o, const string& n, 
+	pint_instance_collection(const scopespace& o, const string& n, 
+#if 0
 		index_collection_item_ptr_type d, 
+#else
+		const size_t d, 
+#endif
 		count_const_ptr<pint_expr> i);
+#endif
 
 	ostream& what(ostream& o) const;
 
@@ -312,7 +356,7 @@ public:
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 public:
 	ART_OBJECT_IO_METHODS
-};	// end class pint_instantiation
+};	// end class pint_instance_collection
 
 //=============================================================================
 //=============================================================================
@@ -322,35 +366,203 @@ public:
 	This is what will be unrolled.  
 	No parent, is a globally sequential item.  
  */
-class instantiation_statement : public object, public instance_management_base {
+class instantiation_statement : public instance_management_base {
 protected:
 	/**
-		A reference to an instantiation_base, where the collection
-		will be unrolled.  
+		A back-reference to an instance_collection_base, 
+		where the collection will be unrolled.  
 		Needs to be modifiable for unrolling.  
 		Should this point to an unrolled instance?
 		No, it will be looked up.  
 	 */
-	never_ptr<instantiation_base>		inst_base;
+//	never_ptr<instance_collection_base>	inst_base;
+
+//	count_const_ptr<fundamental_type_reference>	type_base;
 
 	index_collection_item_ptr_type		indices;
-private:
+
+protected:
 	instantiation_statement();
 public:
-	instantiation_statement(never_ptr<instantiation_base> b, 
+	instantiation_statement(
+//		never_ptr<instance_collection_base> b, 
+//		count_const_ptr<fundamental_type_reference> t, 
 		const index_collection_item_ptr_type& i);
-	~instantiation_statement();
+virtual	~instantiation_statement();
 
-	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+
+virtual	void attach_collection(never_ptr<instance_collection_base> i) = 0;
+virtual	never_ptr<instance_collection_base>
+		get_inst_base(void) = 0;
+virtual	never_const_ptr<instance_collection_base>
+		get_inst_base(void) const = 0;
+
+	string get_name(void) const;
+	size_t dimensions(void) const;
+	index_collection_item_ptr_type get_indices(void) const;
+
+	// may eventually virtualize
+virtual	count_const_ptr<fundamental_type_reference>
+		get_type_ref(void) const = 0;
+
 /***
 	case: A top-level instantiation is called.
 	case: won't happen?  instantiation inside definition called
 ***/
 	// unroll (context?)
+};	// end class instantiation_statement
+
+//=============================================================================
+/**
+	Abstract base class for built-in parameter type instantiations.  
+ */
+class param_instantiation_statement : public instantiation_statement {
+protected:
+	param_instantiation_statement();
+public:
+	param_instantiation_statement(const index_collection_item_ptr_type& i);
+virtual	~param_instantiation_statement();
+
+};	// end class param_instantiation_statement
+
+//-----------------------------------------------------------------------------
+class pbool_instantiation_statement : public object, 
+		public param_instantiation_statement {
+public:
+	typedef	pbool_instance_collection	collection_type;
+	typedef	count_const_ptr<param_type_reference>	type_ptr_type;
+protected:
+	// doesn't have a type_ref, hard-coded to built-ins
+	never_ptr<collection_type>		inst_base;
+private:
+	pbool_instantiation_statement();
+public:
+	pbool_instantiation_statement(const index_collection_item_ptr_type& i);
+	~pbool_instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	void attach_collection(never_ptr<instance_collection_base> i);
+	never_ptr<instance_collection_base> get_inst_base(void);
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
 public:
 	ART_OBJECT_IO_METHODS
-};	// end class instantiation_statement
+
+};	// end class pbool_instantiation_statement
+
+//-----------------------------------------------------------------------------
+class pint_instantiation_statement : public object, 
+		public param_instantiation_statement {
+public:
+	typedef	pint_instance_collection	collection_type;
+	typedef	count_const_ptr<param_type_reference>	type_ptr_type;
+protected:
+	// doesn't have a type_ref, hard-coded to built-ins
+	never_ptr<collection_type>		inst_base;
+private:
+	pint_instantiation_statement();
+public:
+	pint_instantiation_statement(const index_collection_item_ptr_type& i);
+	~pint_instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	void attach_collection(never_ptr<instance_collection_base> i);
+	never_ptr<instance_collection_base> get_inst_base(void);
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
+public:
+	ART_OBJECT_IO_METHODS
+
+};	// end class pint_instantiation_statement
+
+//=============================================================================
+class process_instantiation_statement : public object, 
+		public instantiation_statement {
+public:
+	typedef	process_instance_collection	collection_type;
+	typedef	count_const_ptr<process_type_reference>	type_ptr_type;
+protected:
+	const type_ptr_type			type;
+	never_ptr<collection_type>		inst_base;
+private:
+	process_instantiation_statement();
+public:
+	process_instantiation_statement(const type_ptr_type& t, 
+		const index_collection_item_ptr_type& i);
+	~process_instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	void attach_collection(never_ptr<instance_collection_base> i);
+	never_ptr<instance_collection_base> get_inst_base(void);
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
+public:
+	ART_OBJECT_IO_METHODS
+
+};	// end class process_instantiation_statement
+
+//=============================================================================
+class channel_instantiation_statement : public object, 
+		public instantiation_statement {
+public:
+	typedef	channel_instance_collection	collection_type;
+	typedef	count_const_ptr<channel_type_reference>	type_ptr_type;
+protected:
+	const type_ptr_type			type;
+	never_ptr<collection_type>		inst_base;
+private:
+	channel_instantiation_statement();
+public:
+	channel_instantiation_statement(const type_ptr_type& t, 
+		const index_collection_item_ptr_type& i);
+	~channel_instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	void attach_collection(never_ptr<instance_collection_base> i);
+	never_ptr<instance_collection_base> get_inst_base(void);
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
+public:
+	ART_OBJECT_IO_METHODS
+
+};	// end class channel_instantiation_statement
+
+//=============================================================================
+class data_instantiation_statement : public object, 
+		public instantiation_statement {
+public:
+	typedef	datatype_instance_collection	collection_type;
+	typedef	count_const_ptr<data_type_reference>	type_ptr_type;
+protected:
+	const type_ptr_type			type;
+	never_ptr<collection_type>		inst_base;
+private:
+	data_instantiation_statement();
+public:
+	data_instantiation_statement(const type_ptr_type& t, 
+		const index_collection_item_ptr_type& i);
+	~data_instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	void attach_collection(never_ptr<instance_collection_base> i);
+	never_ptr<instance_collection_base> get_inst_base(void);
+	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
+public:
+	ART_OBJECT_IO_METHODS
+
+};	// end class data_instantiation_statement
 
 //=============================================================================
 }	// end namespace entity

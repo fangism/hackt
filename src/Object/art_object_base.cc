@@ -995,43 +995,67 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	Types must match for collective additions of course.  
 	(What if type-parameters depend on variables?  allow?)
 	\param i the new instance, possibly with sparse indices.
+	\param inst_stmt the instantiation statement to process.
+		non-const because we attach the back-reference 
+		to the instance_collection.  
 	\return pointer to newly created instance if successful, 
 		else NULL.  
  */
-never_const_ptr<instantiation_base>
-scopespace::add_instance(excl_ptr<instantiation_base> i) {
+never_const_ptr<instance_collection_base>
+scopespace::add_instance(
+#if 0
+		excl_ptr<instance_collection_base> i
+#else
+		never_ptr<instantiation_statement> inst_stmt, 
+		const token_identifier& id
+#endif
+		) {
+	typedef never_const_ptr<instance_collection_base>	return_type;
+	assert(id != "");
+#if 0
 	assert(i);
+	const string id(i->get_name());
+	const size_t dim = i->dimensions();
+#else
+	assert(inst_stmt);
+	// inst_stmt won't have a name yet!
+	// const string id(inst_stmt->get_name());
+	const size_t dim = inst_stmt->dimensions();
+#endif
 #if 0
 	// DEBUG
 	cerr << "In scopespace::add_instance with this = " << this << endl;
-	i->dump(cerr << "excl_ptr<instantiation_base> i = ") << endl;
+//	i->dump(cerr << "excl_ptr<instance_collection_base> i = ") << endl;
+	inst_stmt->dump(cerr << "never_ptr<instantiation_statement> inst_stmt = ") << endl;
 	dump(cerr);	// dump the entire namespace
 #endif
-	never_ptr<object> probe(
-		lookup_object_here_with_modify(i->get_name()));
+	never_ptr<object> probe(lookup_object_here_with_modify(id));
 	if (probe) {
-		never_ptr<instantiation_base> probe_inst(
-			probe.is_a<instantiation_base>());
+		never_ptr<instance_collection_base> probe_inst(
+			probe.is_a<instance_collection_base>());
 		if (probe_inst) {
 			// make sure is not a template or port formal instance!
 			// can't append to those.  
 			if (probe_inst->is_template_formal()) {
 				cerr << "ERROR: cannot redeclare or append to "
 					"a template formal parameter." << endl;
-				return never_const_ptr<instantiation_base>(
-					NULL);
+				return return_type(NULL);
 			}
 			if (probe_inst->is_port_formal()) {
 				cerr << "ERROR: cannot redeclare or append to "
 					"a port formal instance." << endl;
-				return never_const_ptr<instantiation_base>(
-					NULL);
+				return return_type(NULL);
 			}
 			// compare types, must match!
+			assert(inst_stmt);		// sanity check
 			count_const_ptr<fundamental_type_reference>
 				old_type(probe_inst->get_type_ref());
 			count_const_ptr<fundamental_type_reference>
+#if 0
 				new_type(i->get_type_ref());
+#else
+				new_type(inst_stmt->get_type_ref());
+#endif
 #if 0
 			probe_inst->dump(cerr << "lookup found: ") << endl;
 #endif
@@ -1039,13 +1063,12 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 			// case of dynamic template parameters.  
 			if (!old_type->may_be_equivalent(*new_type)) {
 				cerr << "ERROR: type of redeclaration of "
-					<< i->get_name() << " does not match "
+					<< id << " does not match "
 					"previous declaration: " << endl <<
 					"\twas: ";
 				old_type->dump(cerr) << ", got: ";
 				new_type->dump(cerr) << " ERROR!  ";
-				return never_const_ptr<instantiation_base>(
-					NULL);
+				return return_type(NULL);
 			}	// else good to continue
 			
 			// compare dimensions
@@ -1056,47 +1079,79 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 					"as a single instance, and thus may "
 					"not be extended or re-declared, "
 					"ERROR!  ";
-				return never_const_ptr<instantiation_base>(
-					NULL);
-			} else if (probe_inst->dimensions()!=i->dimensions()) {
+				return return_type(NULL);
+			} else if (probe_inst->dimensions()!=dim) {
 				probe->dump(cerr) << " was originally declared "
 					"as a " << probe_inst->dimensions() <<
 					"-D array, so the new declaration "
-					"cannot add a " << i->dimensions() <<
+					"cannot add a " << dim <<
 					"-D array, ERROR!  ";
-				return never_const_ptr<instantiation_base>(
-					NULL);
+				return return_type(NULL);
 			}	// else dimensions match apropriately
 
+#if 0
 			assert(i);	// sanity
+#endif
 			// here, we know we're referring to the same collection
 			// check for overlap with existing static-const indices
-			const_range_list overlap(
-				probe_inst->merge_index_ranges(i));
+			const_range_list
+#if 0
+			overlap(probe_inst->merge_index_ranges(i));
+#else
+			overlap(probe_inst->add_instantiation_statement(inst_stmt));
+#endif
 			if (!overlap.empty()) {
 				// returned true if there is definite overlap
 				cerr << "Detected overlap in the "
 					"sparse collection for " <<
-					i->get_name() << ", precisely: ";
+					id << ", precisely: ";
 				overlap.dump(cerr);
 				cerr << ".  ERROR!  ";
-				return never_const_ptr<instantiation_base>(
-					NULL);
+				return return_type(NULL);
 			}
 			// else didn't detect static conflict.  
 			// We discard the new instantiation, i, 
 			// and let it delete itself at the end of this scope.  
 			// ... happy ending, or is it?
+#if 1
+			// attach non-const back-reference
+			inst_stmt->attach_collection(probe_inst);
+#endif
 			return probe_inst;
 		} else {
-			probe->what(cerr << i->get_name() <<
-				" is already declared ") << ", ERROR!  ";
-			return never_const_ptr<instantiation_base>(NULL);
+			probe->what(cerr << id << " is already declared ")
+				<< ", ERROR!  ";
+			return return_type(NULL);
 		}
 	} else {
-		// didn't exist before, just add new instance
-		never_const_ptr<instantiation_base> ret(i);
-		used_id_map[i->get_name()] = i;		// transfer ownership
+		// didn't exist before, just create and add new instance
+#if 0
+		never_const_ptr<instance_collection_base> ret(i);
+		used_id_map[id] = i;		// transfer ownership
+#else
+		excl_ptr<instance_collection_base> new_inst =
+			fundamental_type_reference::make_instance_collection(
+				inst_stmt->get_type_ref(), 
+				never_const_ptr<scopespace>(this), 
+				id,
+				dim	// should really be this
+//				inst_stmt->get_indices()	// temporary
+				);
+		// attach non-const back-reference
+		inst_stmt->attach_collection(new_inst);
+		new_inst->add_instantiation_statement(inst_stmt);
+		assert(inst_stmt->get_name() == id);
+		assert(new_inst);
+#if 0
+		never_const_ptr<instance_collection_base> ret(new_inst);
+		used_id_map[id] = new_inst;		// transfer ownership
+#else
+		never_const_ptr<instance_collection_base>
+		ret(add_instance(new_inst));
+#endif
+		assert(!new_inst.owned());
+		assert(ret);
+#endif
 #if 0
 		ret->dump(cerr << "just added: ") << endl;
 		never_const_ptr<object> probe(
@@ -1106,6 +1161,22 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 #endif
 		return ret;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The unsafe version of adding an instance_collection to the 
+	named scope space.  
+ */
+never_const_ptr<instance_collection_base>
+scopespace::add_instance(excl_ptr<instance_collection_base> i) {
+	typedef never_const_ptr<instance_collection_base>	return_type;
+	return_type ret(i);
+	assert(i);
+	const string id(i->get_name());
+	assert(id != "");		// cannot be empty string
+	used_id_map[id] = i;
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1127,22 +1198,6 @@ scopespace::add_definition_alias(never_const_ptr<definition_base> d,
 		return true;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-scopespace::add_assignment_to_scope(
-		excl_const_ptr<param_expression_assignment> c) {
-	assign_list.push_back(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::add_connection_to_scope(
-		excl_const_ptr<instance_reference_connection> c) {
-	connect_list.push_back(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1274,78 +1329,8 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 	}
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETED
-
-void
-scopespace::collect_assign_list_pointers(persistent_object_manager& m) const {
-#if 0
-	for_each(assign_list.begin(), assign_list.end(), 
-	bind1st(mem_fun(
-		&param_expression_assignment::collect_transient_info, m))
-	);
-#else
-	assign_list_type::const_iterator
-		l_iter = assign_list.begin();
-	const assign_list_type::const_iterator
-		l_end = assign_list.end();
-	for ( ; l_iter!=l_end; l_iter++) {
-		assert(*l_iter);
-		(*l_iter)->collect_transient_info(m);
-	}
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::write_object_assign_list(persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
-	m.write_pointer_list(f, assign_list);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::load_object_assign_list(persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
-	m.read_pointer_list(f, assign_list);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::collect_connect_list_pointers(persistent_object_manager& m) const {
-	connect_list_type::const_iterator
-		l_iter = connect_list.begin();
-	const connect_list_type::const_iterator
-		l_end = connect_list.end();
-	for ( ; l_iter!=l_end; l_iter++) {
-		assert(*l_iter);
-		(*l_iter)->collect_transient_info(m);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::write_object_connect_list(persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
-	m.write_pointer_list(f, connect_list);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::load_object_connect_list(persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
-	m.read_pointer_list(f, connect_list);
-}
-// end OBSOLETE
-#endif
-
 //=============================================================================
-// class bin_sort method definitions
+// class scopespace::bin_sort method definitions
 
 scopespace::bin_sort::bin_sort() :
 		ns_bin(), def_bin(), alias_bin(), inst_bin(), param_bin() {
@@ -1365,8 +1350,8 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 		n_b(o_p.is_a<name_space>());
 	const never_ptr<definition_base>
 		d_b(o_p.is_a<definition_base>());
-	const never_ptr<instantiation_base>
-		i_b(o_p.is_a<instantiation_base>());
+	const never_ptr<instance_collection_base>
+		i_b(o_p.is_a<instance_collection_base>());
 	const string& k = i.first;
 	if (n_b) {
 		ns_bin[k] = n_b;
@@ -1377,8 +1362,8 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 			alias_bin[k] = t_b;
 		else	def_bin[k] = d_b;
 	} else if (i_b) {
-		const never_ptr<param_instantiation>
-			p_b(i_b.is_a<param_instantiation>());
+		const never_ptr<param_instance_collection>
+			p_b(i_b.is_a<param_instance_collection>());
 		if (p_b)
 			param_bin[k] = p_b;
 		else	inst_bin[k] = i_b;
@@ -1389,7 +1374,7 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 }
 
 //=============================================================================
-// class const_bin_sort method definitions
+// class scopespace::const_bin_sort method definitions
 
 scopespace::const_bin_sort::const_bin_sort() :
 		ns_bin(), def_bin(), alias_bin(), inst_bin(), param_bin() {
@@ -1404,17 +1389,14 @@ scopespace::const_bin_sort::const_bin_sort() :
 void
 scopespace::const_bin_sort::operator () (
 		const used_id_map_type::value_type& i) {
-#if 0
-	cerr << "In scopespace::const_bin_sort::operator (): " << endl;
-#endif
 	const never_const_ptr<object> o_p(i.second);
 	assert(o_p);
 	const never_const_ptr<name_space>
 		n_b(o_p.is_a<name_space>());
 	const never_const_ptr<definition_base>
 		d_b(o_p.is_a<definition_base>());
-	const never_const_ptr<instantiation_base>
-		i_b(o_p.is_a<instantiation_base>());
+	const never_const_ptr<instance_collection_base>
+		i_b(o_p.is_a<instance_collection_base>());
 	const string& k = i.first;
 	if (n_b) {
 		ns_bin[k] = n_b;		assert(ns_bin[k]);
@@ -1427,8 +1409,8 @@ scopespace::const_bin_sort::operator () (
 			def_bin[k] = d_b;	assert(def_bin[k]);
 		}
 	} else if (i_b) {
-		const never_const_ptr<param_instantiation>
-			p_b(i_b.is_a<param_instantiation>());
+		const never_const_ptr<param_instance_collection>
+			p_b(i_b.is_a<param_instance_collection>());
 		if (p_b) {
 			param_bin[k] = p_b;	assert(param_bin[k]);
 		} else {
@@ -1588,8 +1570,8 @@ name_space::dump(ostream& o) const {
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
-				mem_fun(&instantiation_base::pair_dump, 
-					instantiation_base::null), 
+				mem_fun(&instance_collection_base::pair_dump, 
+					instance_collection_base::null), 
 				o), 
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
@@ -1643,8 +1625,8 @@ name_space::dump(ostream& o) const {
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
-				mem_fun(&instantiation_base::pair_dump,
-					instantiation_base::null),
+				mem_fun(&instance_collection_base::pair_dump,
+					instance_collection_base::null),
 				o), 
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
@@ -2478,16 +2460,28 @@ name_space::exclude_object(const used_id_map_type::value_type& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Specific way of adding objects for a namespace.  
+	\pre object must already be loaded, so its hash key can be used.  
  */
 void
 name_space::load_used_id_map_object(excl_ptr<object> o) {
+	assert(o);
 	if (o.is_a<name_space>())
 		add_namespace(o.is_a_xfer<name_space>());
 	else if (o.is_a<definition_base>())
 		add_definition(o.is_a_xfer<definition_base>());
 	// ownership restored here!
-	else if (o.is_a<instantiation_base>())
-		add_instance(o.is_a_xfer<instantiation_base>());
+#if 0
+	else if (o.is_a<instance_collection_base>())
+		add_instance(o.is_a_xfer<instance_collection_base>());
+#else
+	else if (o.is_a<instance_collection_base>()) {
+		excl_ptr<instance_collection_base>
+			inst_base = o.is_a_xfer<instance_collection_base>();
+//		add_instance(inst_base);
+		assert(inst_base);
+		used_id_map[inst_base->get_name()] = inst_base;
+	}
+#endif
 	else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;
@@ -2536,10 +2530,8 @@ sequential_scope::collect_object_pointer_list(
 	for_each(instance_management_list.begin(), 
 		instance_management_list.end(), 
 	unary_compose_void(
-		bind2nd_argval_void(
-			mem_fun_ref(&instance_management_base::collect_transient_info), 
-			m
-		), 
+		bind2nd_argval_void(mem_fun_ref(
+			&instance_management_base::collect_transient_info), m), 
 		const_dereference<excl_const_ptr, instance_management_base>()
 	)
 	);

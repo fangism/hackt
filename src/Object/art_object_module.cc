@@ -89,10 +89,6 @@ module::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::load_object(persistent_object_manager& m) {
-#if 0
-	// not checking flag_visit because this will be stack allocated
-	// unlike all other objects
-#endif
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());

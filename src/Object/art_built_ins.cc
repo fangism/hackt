@@ -67,8 +67,8 @@ const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_const_ptr<name_space>(&built_in_namespace),
 	"int", 
-	excl_ptr<param_instantiation>(
-		new pint_instantiation(
+	excl_ptr<param_instance_collection>(
+		new pint_instance_collection(
 /***
 			// Really the formal should "belong" to the definition, 
 			// (&int_def) however, the built-in definitions are not

@@ -59,8 +59,17 @@ simple_instance_reference::~simple_instance_reference() {
 size_t
 simple_instance_reference::dimensions(void) const {
 	size_t dim = get_inst_base()->dimensions();
-	if (array_indices)
-		return dim -array_indices->dimensions_collapsed();
+	if (array_indices) {
+		const size_t c = array_indices->dimensions_collapsed();
+		assert(c <= dim);
+#if 0
+		cerr << "{ ";
+		array_indices->dump(cerr) << endl;
+		cerr << "(dimensions collapsed = " << c << ")";
+		cerr << " }" << endl;
+#endif
+		return dim -c;
+	}
 	else return dim;
 }
 
@@ -92,13 +101,21 @@ simple_instance_reference::is_static_constant_collection(void) const {
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
 		const count_const_ptr<dynamic_range_list>
+#if 0
 			drl(iter->is_a<dynamic_range_list>());
+#else
+			drl((*iter)->get_indices().is_a<dynamic_range_list>());
+#endif
 		if (drl) {
 			if (!drl->is_static_constant())
 				return false;
 			// unconditional false is too conservative
 		}
+#if 0
 		else	assert(iter->is_a<const_range_list>());
+#else
+		else	assert((*iter)->get_indices().is_a<const_range_list>());
+#endif
 	}
 	return true;
 }
@@ -438,7 +455,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	assert(!array_indices);
 	assert(i);
 	// dimension-check:
-	const never_const_ptr<instantiation_base> inst_base(get_inst_base());
+	const never_const_ptr<instance_collection_base> inst_base(get_inst_base());
 	// number of indices must be <= dimension of instance collection.  
 	const size_t max_dim = dimensions();	// depends on indices
 	if (i->size() > max_dim) {
@@ -518,9 +535,9 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 bool
 simple_instance_reference::may_be_type_equivalent(
 		const instance_reference_base& i) const {
-	const never_const_ptr<instantiation_base>
+	const never_const_ptr<instance_collection_base>
 		lib(get_inst_base());
-	const never_const_ptr<instantiation_base>
+	const never_const_ptr<instance_collection_base>
 		rib(i.get_inst_base());
 	const count_const_ptr<fundamental_type_reference>
 		ltr(lib->get_type_ref());
@@ -634,12 +651,21 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	assert(cov);
 	for ( ; iter!=end; iter++) {
-		if (iter->is_a<dynamic_range_list>()) {
+#if 0
+		if (iter->is_a<dynamic_range_list>())
+#else
+		if ((*iter)->get_indices().is_a<dynamic_range_list>())
+#endif
+		{
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
 		} else {
 			count_const_ptr<const_range_list>
+#if 0
 				crlp(iter->is_a<const_range_list>());
+#else
+				crlp((*iter)->get_indices().is_a<const_range_list>());
+#endif
 			assert(crlp);
 			const_range_list crl(*crlp);	// make deep copy
 			// dimension-trimming
@@ -659,7 +685,7 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 	To do this we just use the distance from inst_state to the "end".
  */
 void
-simple_instance_reference::write_instantiation_state(ostream& f) const {
+simple_instance_reference::write_instance_collection_state(ostream& f) const {
 	const instantiation_state end =
 		get_inst_base()->collection_state_end();
 	// assuming this is safe, of course...
@@ -673,7 +699,7 @@ simple_instance_reference::write_instantiation_state(ostream& f) const {
 	based on an index from the end, counting backwards.  
  */
 void
-simple_instance_reference::load_instantiation_state(istream& f) {
+simple_instance_reference::load_instance_collection_state(istream& f) {
 	instantiation_state iter =
 		get_inst_base()->collection_state_end();
 	size_t i = 0;
@@ -777,27 +803,27 @@ param_instance_reference::param_instance_reference(
  */
 bool
 param_instance_reference::is_initialized(void) const {
-	never_const_ptr<instantiation_base> i(get_inst_base());
+	never_const_ptr<instance_collection_base> i(get_inst_base());
 	assert(i);
 	if (i->dimensions() > 0)
 		return false;
 	else 
-		return i.is_a<param_instantiation>()->is_initialized();
+		return i.is_a<param_instance_collection>()->is_initialized();
 }
 #else
 bool
 param_instance_reference::may_be_initialized(void) const {
-	never_const_ptr<instantiation_base> i(get_inst_base());
+	never_const_ptr<instance_collection_base> i(get_inst_base());
 	assert(i);
-	return i.is_a<param_instantiation>()->may_be_initialized();
+	return i.is_a<param_instance_collection>()->may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instance_reference::must_be_initialized(void) const {
-	never_const_ptr<instantiation_base> i(get_inst_base());
+	never_const_ptr<instance_collection_base> i(get_inst_base());
 	assert(i);
-	return i.is_a<param_instantiation>()->must_be_initialized();
+	return i.is_a<param_instance_collection>()->must_be_initialized();
 }
 #endif
 
@@ -821,7 +847,7 @@ param_instance_reference::is_static_constant(void) const {
 	//	More thoughts later on how to be more precise...
 	if (array_indices)
 		return false;
-	// or the instantiation_base is collective (not 0-dimensional)
+	// or the instance_collection_base is collective (not 0-dimensional)
 	else if (get_inst_base()->dimensions())
 		return false;
 	// else if singular, whether or not it is initialized once
@@ -847,7 +873,7 @@ param_instance_reference::is_loop_independent(void) const {
 	if (array_indices)
 		return array_indices->is_loop_independent();
 	else 
-		// no array indices, see if instantiation_base is collective
+		// no array indices, see if instance_collection_base is collective
 	if (get_inst_base()->dimensions()) {
 		// if collective, check if the instance_reference itself 
 		// is found within a loop that adds to the collection...
@@ -906,7 +932,7 @@ process_instance_reference::process_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_reference::process_instance_reference(
-		never_const_ptr<process_instantiation> pi,
+		never_const_ptr<process_instance_collection> pi,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, pi->current_collection_state()),
 		process_inst_ref(pi) {
@@ -918,7 +944,7 @@ process_instance_reference::~process_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 process_instance_reference::get_inst_base(void) const {
 	return process_inst_ref;
 }
@@ -969,7 +995,7 @@ process_instance_reference::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, process_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -990,9 +1016,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, process_inst_ref);
 	assert(process_inst_ref);
-	const_cast<process_instantiation&>(*process_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<process_instance_collection&>(*process_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1011,7 +1039,7 @@ datatype_instance_reference::datatype_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_reference::datatype_instance_reference(
-		never_const_ptr<datatype_instantiation> di,
+		never_const_ptr<datatype_instance_collection> di,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, di->current_collection_state()),
 		data_inst_ref(di) {
@@ -1023,7 +1051,7 @@ datatype_instance_reference::~datatype_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 datatype_instance_reference::get_inst_base(void) const {
 	return data_inst_ref;
 }
@@ -1087,7 +1115,7 @@ datatype_instance_reference::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, data_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1108,9 +1136,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, data_inst_ref);
 	assert(data_inst_ref);
-	const_cast<datatype_instantiation&>(*data_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<datatype_instance_collection&>(*data_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1129,7 +1159,7 @@ channel_instance_reference::channel_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance_reference::channel_instance_reference(
-		never_const_ptr<channel_instantiation> ci,
+		never_const_ptr<channel_instance_collection> ci,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, ci->current_collection_state()),
 		channel_inst_ref(ci) {
@@ -1141,7 +1171,7 @@ channel_instance_reference::~channel_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 channel_instance_reference::get_inst_base(void) const {
 	return channel_inst_ref;
 }
@@ -1200,7 +1230,7 @@ channel_instance_reference::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, channel_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1221,9 +1251,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, channel_inst_ref);
 	assert(channel_inst_ref);
-	const_cast<channel_instantiation&>(*channel_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<channel_instance_collection&>(*channel_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1243,7 +1275,7 @@ process_member_instance_reference::process_member_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_member_instance_reference::process_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<process_instantiation> m) :
+		never_const_ptr<process_instance_collection> m) :
 		member_instance_reference_base(b), 
 		process_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
@@ -1300,7 +1332,7 @@ process_member_instance_reference::write_object(persistent_object_manager& m) co
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);
 	m.write_pointer(f, process_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1322,9 +1354,11 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, base);
 	m.read_pointer(f, process_inst_ref);
 	assert(process_inst_ref);
-	const_cast<process_instantiation&>(*process_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<process_instance_collection&>(*process_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1344,7 +1378,7 @@ datatype_member_instance_reference::datatype_member_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_member_instance_reference::datatype_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<datatype_instantiation> m) :
+		never_const_ptr<datatype_instance_collection> m) :
 		member_instance_reference_base(b), 
 		datatype_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
@@ -1401,7 +1435,7 @@ datatype_member_instance_reference::write_object(persistent_object_manager& m) c
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);
 	m.write_pointer(f, data_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1423,9 +1457,11 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, base);
 	m.read_pointer(f, data_inst_ref);
 	assert(data_inst_ref);
-	const_cast<datatype_instantiation&>(*data_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<datatype_instance_collection&>(*data_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1445,7 +1481,7 @@ channel_member_instance_reference::channel_member_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_member_instance_reference::channel_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<channel_instantiation> m) :
+		never_const_ptr<channel_instance_collection> m) :
 		member_instance_reference_base(b), 
 		channel_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
@@ -1502,7 +1538,7 @@ channel_member_instance_reference::write_object(persistent_object_manager& m) co
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);
 	m.write_pointer(f, channel_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1524,9 +1560,11 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, base);
 	m.read_pointer(f, channel_inst_ref);
 	assert(channel_inst_ref);
-	const_cast<channel_instantiation&>(*channel_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<channel_instance_collection&>(*channel_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited

@@ -420,8 +420,12 @@ if (!m.flag_visit(this)) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
-		count_const_ptr<const_param> ip;
+		count_ptr<const_param> ip;
 		m.read_pointer(f, ip);
+#if 1
+		if (ip)
+			ip->load_object(m);
+#endif
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);
@@ -691,8 +695,12 @@ if (!m.flag_visit(this)) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
-		count_const_ptr<param_expr> ip;
+		count_ptr<param_expr> ip;
 		m.read_pointer(f, ip);
+#if 1
+		if (ip)
+			ip->load_object(m);
+#endif
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);
@@ -761,7 +769,7 @@ pbool_instance_reference::pbool_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_reference::pbool_instance_reference(
-		never_ptr<pbool_instantiation> pi,
+		never_ptr<pbool_instance_collection> pi,
 		excl_ptr<index_list> i) :
 		param_instance_reference(i, pi->current_collection_state()),
 		pbool_expr(), 
@@ -769,13 +777,13 @@ pbool_instance_reference::pbool_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 pbool_instance_reference::get_inst_base(void) const {
 	return pbool_inst_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<param_instantiation>
+never_const_ptr<param_instance_collection>
 pbool_instance_reference::get_param_inst_base(void) const {
 	return pbool_inst_ref;
 }
@@ -914,7 +922,7 @@ pbool_instance_reference::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pbool_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -935,9 +943,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, pbool_inst_ref);
 	assert(pbool_inst_ref);
-	const_cast<pbool_instantiation&>(*pbool_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<pbool_instance_collection&>(*pbool_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -955,7 +965,7 @@ pint_instance_reference::pint_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_reference::pint_instance_reference(
-		never_ptr<pint_instantiation> pi,
+		never_ptr<pint_instance_collection> pi,
 		excl_ptr<index_list> i) :
 		param_instance_reference(i, pi->current_collection_state()),
 		pint_expr(), 
@@ -963,13 +973,13 @@ pint_instance_reference::pint_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instantiation_base>
+never_const_ptr<instance_collection_base>
 pint_instance_reference::get_inst_base(void) const {
 	return pint_inst_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<param_instantiation>
+never_const_ptr<param_instance_collection>
 pint_instance_reference::get_param_inst_base(void) const {
 	return pint_inst_ref;
 }
@@ -1107,7 +1117,7 @@ pint_instance_reference::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pint_inst_ref);
-	write_instantiation_state(f);
+	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1128,9 +1138,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, pint_inst_ref);
 	assert(pint_inst_ref);
-	const_cast<pint_instantiation&>(*pint_inst_ref).load_object(m);
-	load_instantiation_state(f);
+	const_cast<pint_instance_collection&>(*pint_inst_ref).load_object(m);
+	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
+	if (array_indices)
+		array_indices->load_object(m);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1373,11 +1385,13 @@ pint_unary_expr::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_unary_expr::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, op);
 	m.read_pointer(f, ex);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -1477,11 +1491,13 @@ pbool_unary_expr::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_unary_expr::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, op);
 	m.read_pointer(f, ex);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -1585,12 +1601,14 @@ arith_expr::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 arith_expr::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, op);
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -1691,12 +1709,14 @@ relational_expr::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 relational_expr::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, op);
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -1797,12 +1817,14 @@ logical_expr::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 logical_expr::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, op);
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -1916,11 +1938,13 @@ pint_range::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_range::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, lower);
 	m.read_pointer(f, upper);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -2082,11 +2106,13 @@ const_range::write_object(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	read_value(f, first);
 	read_value(f, second);
 	STRIP_OBJECT_FOOTER(f);
+}
 }
 
 //=============================================================================
@@ -2558,6 +2584,10 @@ if (!m.flag_visit(this)) {
 	for ( ; i<s; i++) {
 		count_ptr<pint_range> ip;
 		m.read_pointer(f, ip);
+#if 1
+		if (ip)
+			ip->load_object(m);
+#endif
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);
@@ -2758,6 +2788,10 @@ if (!m.flag_visit(this)) {
 	for ( ; i<s; i++) {
 		count_ptr<const_index> ip;
 		m.read_pointer(f, ip);
+#if 1
+		if (ip)
+			ip->load_object(m);
+#endif
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);
@@ -2804,7 +2838,10 @@ dynamic_index_list::hash_string(void) const {
 void
 dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 	assert(i);
-	assert(i->dimensions() == 0);
+	if (i->dimensions() != 0) {
+		cerr << "i->dimensions = " << i->dimensions() << endl;
+		assert(i->dimensions() == 0);
+	}
 	parent::push_back(i);
 }
 
@@ -2955,7 +2992,9 @@ if (!m.flag_visit(this)) {
 	for ( ; i<s; i++) {
 		count_ptr<index_expr> ip;
 		m.read_pointer(f, ip);
-		ip->load_object(m);	// need to load to know dimensions
+		if (ip)
+			ip->load_object(m);
+		// need to load to know dimensions
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);

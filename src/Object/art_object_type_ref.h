@@ -84,12 +84,22 @@ virtual	~data_type_reference();
 	never_const_ptr<definition_base> get_base_def(void) const;
 
 private:
-	excl_ptr<instantiation_base>
-		make_instantiation_private(
+	excl_ptr<instantiation_statement>
+		make_instantiation_statement_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d) const;
+			
+	excl_ptr<instance_collection_base>
+		make_instance_collection_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d) const;
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class data_type_reference
@@ -116,12 +126,22 @@ virtual	~channel_type_reference();
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 private:
-	excl_ptr<instantiation_base>
-		make_instantiation_private(
+	excl_ptr<instantiation_statement>
+		make_instantiation_statement_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d) const;
+			
+	excl_ptr<instance_collection_base>
+		make_instance_collection_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d) const;
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class channel_type_reference
@@ -150,12 +170,22 @@ virtual	~process_type_reference();
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 private:
-	excl_ptr<instantiation_base>
-		make_instantiation_private(
+	excl_ptr<instantiation_statement>
+		make_instantiation_statement_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d) const;
+			
+	excl_ptr<instance_collection_base>
+		make_instance_collection_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d) const;
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			) const;
 public:
 	// macro expand to method prototypes
 	ART_OBJECT_IO_METHODS
@@ -182,20 +212,40 @@ virtual	~param_type_reference();
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 private:
-	excl_ptr<instantiation_base>
-		make_instantiation_private(
+	excl_ptr<instantiation_statement>
+		make_instantiation_statement_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			index_collection_item_ptr_type d) const;
+			
+	excl_ptr<instance_collection_base>
+		make_instance_collection_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
-			index_collection_item_ptr_type d) const;
+#if 0
+			index_collection_item_ptr_type d
+#else
+			const size_t d
+#endif
+			) const;
 public:
-static	excl_ptr<instantiation_base>
+#if 0
+static	excl_ptr<instance_collection_base>
 		make_template_formal(
 			count_const_ptr<param_type_reference> t, 
 			never_const_ptr<definition_base> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d, 
 			count_const_ptr<param_expr> def);
+#elif 0
+static	excl_ptr<instantiation_statement>
+		make_template_formal(
+			count_const_ptr<param_type_reference> t, 
+			never_const_ptr<definition_base> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d, 
+			count_const_ptr<param_expr> def);
+#endif
 
 };	// end class param_type_reference
 

@@ -63,6 +63,7 @@ class conditional_scope : public instance_management_base,
 		public sequential_scope {
 protected:
 	// condition expression
+	never_const_ptr<sequential_scope>		parent;
 public:
 	conditional_scope(const string& n, never_const_ptr<scopespace>);
 		// more args...     

@@ -51,11 +51,11 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&channel_type_reference::construct_empty, 
 	&data_type_reference::construct_empty, 
 
-	&process_instantiation::construct_empty, 
-	&channel_instantiation::construct_empty, 
-	&datatype_instantiation::construct_empty, 
-	&pbool_instantiation::construct_empty, 
-	&pint_instantiation::construct_empty, 
+	&process_instance_collection::construct_empty, 
+	&channel_instance_collection::construct_empty, 
+	&datatype_instance_collection::construct_empty, 
+	&pbool_instance_collection::construct_empty, 
+	&pint_instance_collection::construct_empty, 
 
 	// simple instance references
 	&process_instance_reference::construct_empty, 
@@ -99,8 +99,14 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&relational_expr::construct_empty, 
 	&logical_expr::construct_empty, 
 
+	// sequential instantiations
+	&process_instantiation_statement::construct_empty, 
+	&channel_instantiation_statement::construct_empty, 
+	&data_instantiation_statement::construct_empty, 
+	&pbool_instantiation_statement::construct_empty, 
+	&pint_instantiation_statement::construct_empty, 
+
 	// assignments and connections
-	&instantiation_statement::construct_empty, 
 	&param_expression_assignment::construct_empty, 
 	&aliases_connection::construct_empty, 
 	&port_connection::construct_empty, 
@@ -390,6 +396,7 @@ persistent_object_manager::lookup_ptr_index(const ptr_type* ptr) const {
  */
 object*
 persistent_object_manager::lookup_obj_ptr(const long i) const {
+	assert((unsigned long) i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return const_cast<object*>(e.addr());
 }
