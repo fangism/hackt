@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.8.4.1 2005/01/20 18:43:52 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.8.4.1.4.1 2005/01/24 22:28:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -9,7 +9,7 @@
 
 #include "art_object_instance_management_base.h"
 #include "art_object_inst_stmt_base.h"
-#include "memory/pointer_classes.h"
+#include "memory/count_ptr.h"
 #include "memory/list_vector_pool_fwd.h"
 
 namespace ART {

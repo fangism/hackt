@@ -2,13 +2,13 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.15.4.1 2005/01/23 01:33:53 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15.4.1.2.1 2005/01/24 22:28:38 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
 #define	__ART_BUILT_INS_CC__
 
-// #include <iostream>		// debug only
+#define	DEBUG_ART_BUILT_INS			1
 
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.h"
@@ -17,6 +17,12 @@
 #include "art_object_type_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_expr_const.h"
+
+#if DEBUG_ART_BUILT_INS
+#include "stacktrace.h"
+USING_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 // global static initializations...
 namespace ART {
@@ -65,22 +71,20 @@ const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
 
-#if 0
-OBSOLETE
+
 // needed to ensure that pint_const pool is ready to dish out pints
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const);
 // this holds onto a reference count that will be guaranteed to be
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
-#endif
 
 static const count_ptr<const pint_const>
 int_def_width_default(new pint_const(32));
 
 #if 0
-// OBSERVATION:
-// enabling this causes pbool_const pool to not be destroyed upon
-// program termination.  
+// EXAMPLE:
+// this is the correct way to dynamically allocate during static initialization
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pbool_const);
 static const excl_ptr<const pbool_const>
 dummy_bool(new pbool_const(true));
 #endif
@@ -125,6 +129,8 @@ bool_type = data_type_reference(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#undef	DEBUG_ART_BUILT_INS
 
 #endif	// __ART_BUILT_INS_CC__
 

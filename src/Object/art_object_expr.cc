@@ -1,13 +1,14 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5 2005/01/23 01:33:54 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5.2.1 2005/01/24 22:28:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
-// #define	DEBUG_LIST_VECTOR_POOL		1
+#define	DEBUG_LIST_VECTOR_POOL				1
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 
 #include <exception>
 #include <iostream>
@@ -112,6 +113,10 @@ using std::mem_fun_ref;
 using std::dereference;
 using std::ostringstream;
 USING_STACKTRACE
+
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 //=============================================================================
 // local types (not externally visible)
