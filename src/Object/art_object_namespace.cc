@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.18 2005/03/04 07:00:08 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.19 2005/03/05 02:49:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -481,6 +481,7 @@ scopespace::exclude_population(void) const {
 inline
 void
 scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("scopespace::collect_used_id_map_pointers()");
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
@@ -513,7 +514,7 @@ inline
 void
 scopespace::write_object_used_id_map(const persistent_object_manager& m, 
 		ostream& f) const {
-	STACKTRACE("scopespace::write_object_used_id_map()");
+	STACKTRACE_PERSISTENT("scopespace::write_object_used_id_map()");
 	MUST_BE_A(const persistent*, this);
 	// filter any objects out? yes
 	// how many objects to exclude? need to subtract
@@ -565,19 +566,28 @@ scopespace::write_object_base_fake(const persistent_object_manager& m,
 void
 scopespace::load_object_used_id_map(
 		const persistent_object_manager& m, istream& f) {
-	STACKTRACE("scopespace::load_object_used_id_map()");
+	STACKTRACE_PERSISTENT("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
+#if 0
 		long index;
 		read_value(f, index);
 		excl_ptr<persistent> m_obj(m.lookup_obj_ptr(index));
-//		m.read_pointer(f, m_obj);	// replaced, b/c need index
+#else
+		excl_ptr<persistent> m_obj;
+		m.read_pointer(f, m_obj);	// replaced, b/c need index
+#endif
 		// need to add it back through hash_map.  
 		if (!m_obj) {
+			// this really should never happen...
 			if (warn_unimplemented) {
 				cerr << "Skipping a NULL object at index "
+#if 0
 					<< index << endl;
+#else
+					<< "???" << endl;
+#endif
 			}
 		} else {
 			m.load_object_once(m_obj);	// recursion!!!
@@ -1489,6 +1499,7 @@ void
 name_space::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	STACKTRACE_PERSISTENT("namespace::collect_transients()");
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
@@ -1513,6 +1524,7 @@ void
 name_space::write_object(const persistent_object_manager& m, ostream& f) const {
 	// Second, write out the name of this namespace.
 	// name MUST be available for use by other visitors right away
+	STACKTRACE_PERSISTENT("namespace::write_object()");
 	write_string(f, key);
 
 	m.write_pointer(f, parent);
@@ -1529,7 +1541,7 @@ name_space::write_object(const persistent_object_manager& m, ostream& f) const {
  */
 void
 name_space::load_object(const persistent_object_manager& m, istream& f) {
-	STACKTRACE("namespace::load_object()");
+	STACKTRACE_PERSISTENT("namespace::load_object()");
 	// Second, read in the name of the namespace.  
 	read_string(f, const_cast<string&>(key));	// coercive cast
 

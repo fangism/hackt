@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.14 2005/03/04 07:00:09 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.15 2005/03/05 02:49:59 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -118,7 +118,7 @@ template <class P>
 inline
 void
 persistent_object_manager::__write_pointer(ostream& o, 
-		const P& ptr, raw_pointer_tag) const {
+		const P& ptr, const raw_pointer_tag) const {
 	// P is a bare pointer type (T*), according to the raw_pointer_tag
 	if (ptr) {
 		const persistent* t = IS_A(const persistent*, ptr);
@@ -141,7 +141,7 @@ template <class P>
 inline
 void
 persistent_object_manager::__write_pointer(ostream& o, 
-		const P& ptr, pointer_class_base_tag) const {
+		const P& ptr, const pointer_class_base_tag) const {
 	const typename pointer_traits<P>::pointer&
 		p = pointer_manipulator::get_pointer(ptr);
 	__write_pointer(o, p, __pointer_category(p));
@@ -153,25 +153,34 @@ persistent_object_manager::__write_pointer(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class P>
 inline
-void
+persistent_object_manager::visit_info*
 persistent_object_manager::__read_pointer(istream& f, 
-		const P& ptr, raw_pointer_tag) const {
+		const P& ptr, const raw_pointer_tag) const {
+	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 	unsigned long i;
 	read_value(f, i);
 	INVARIANT(check_reconstruction_table_range(i));
+#if 0
 	persistent* o(lookup_obj_ptr(i));
+#else
+	const std::pair<persistent*, visit_info*> pv(lookup_ptr_visit_info(i));
+	persistent* const o(pv.first);
+#endif
 	// for this to work, pointer_type must be a raw_pointer
 	const_cast<P&>(ptr) = dynamic_cast<pointer_type>(o);
 	if (o) NEVER_NULL(ptr);
+#if 1
+	return pv.second;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class P>
 inline
-void
+persistent_object_manager::visit_info*
 persistent_object_manager::__read_pointer(istream& f, 
-		const P& ptr, single_owner_pointer_tag) const {
+		const P& ptr, const single_owner_pointer_tag) const {
 #if ENABLE_STACKTRACE
 	static ostringstream oss;
 	static const ostream& oss_ref = 
@@ -181,15 +190,19 @@ persistent_object_manager::__read_pointer(istream& f,
 #endif
 	const typename pointer_traits<P>::pointer&
 		p = pointer_manipulator::get_pointer(ptr);
-	__read_pointer(f, p, __pointer_category(p));
+	return __read_pointer(f, p, __pointer_category(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reads a pointer in reference-count mode.  
+ */
 template <class P>
 inline
-void
+persistent_object_manager::visit_info*
 persistent_object_manager::__read_pointer(istream& f, 
-		const P& ptr, shared_owner_pointer_tag) const {
+		const P& ptr, const shared_owner_pointer_tag) const {
+	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 #if ENABLE_STACKTRACE
 	static ostringstream oss;
@@ -200,7 +213,7 @@ persistent_object_manager::__read_pointer(istream& f,
 #endif
 	// not reference here, use a local copy first!
 	const pointer_type p = pointer_manipulator::get_pointer(ptr);
-	__read_pointer(f, p, __pointer_category(p));
+	const return_type ret = __read_pointer(f, p, __pointer_category(p));
 	if (p) {
 		size_t* c = lookup_ref_count(p);
 		NEVER_NULL(c);
@@ -217,6 +230,7 @@ persistent_object_manager::__read_pointer(istream& f,
 	} else {
 		const_cast<P&>(ptr) = P(NULL);
 	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -238,12 +252,19 @@ persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
 /**
 	ALERT: this intentially and coercively discards const-ness!
 	Need to specialize for reference counter pointers!
+
+	Marking and classifying visits is the manager's way of
+	knowing which addresses need to be deleted upon
+	termination of the reconstruction table.  
  */
 template <class P>
 void
 persistent_object_manager::read_pointer(istream& f, const P& ptr) const {
 	STACKTRACE("pom::read_pointer()");
-	__read_pointer(f, ptr, __pointer_category(ptr));
+	visit_info* v = __read_pointer(f, ptr, __pointer_category(ptr));
+	NEVER_NULL(v);
+	// really the value of the pointer is irrelevant, just the ownership
+	v->mark_visit(ptr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -328,27 +349,6 @@ persistent_object_manager::write_pointer_map(ostream& f, const M& m) const {
 // specialized list methods?
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	The first non-NULL object is special: it is the root module.
-	Returning an excl_ptr guarantees that memory will
-	be managed properly.
-	When the excl_ptr hits the end of a scope, unless ownership
-	has been transferred, the memory should be recursively reclaimed.
-	Thus, this is not a const method.
- */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::get_root(void) {
-	assert(root);		// necessary?
-	// the template keyword is required for gcc-3.3.x, but not for 3.4.x
-	return root.template is_a_xfer<T>();
-	// this relinquishes ownership and responsibility for deleting
-	// to whomever consumes the returned excl_ptr
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param P is generic pointer to a persistent type.  
  */
@@ -370,45 +370,88 @@ persistent_object_manager::__load_object_once(const P& p,
 	__load_object_once(&*p, __pointer_category(&*p));
 }
 
-//=============================================================================
-// class persistent_traits method definitions (default)
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
-	Initially null.
-	Will be set by constructing an object.  
+	Wrapper interface to collecting transient objects.
+	\param P pointer or pointer-class type.
+	\param p pointer to persistent object, allowed to be NULL.  
  */
-template <class T>
-persistent::hash_key
-persistent_traits<T>::type_key;
-
-template <class T>
-int
-persistent_traits<T>::type_id = 0;
-
-template <class T>
-reconstruct_function_ptr_type
-persistent_traits<T>::reconstructor = &T::construct_empty;
-
-template <class T>
-persistent*
-persistent_traits<T>::null = static_cast<T*>(NULL);
-
-template <class T>
-persistent_traits<T>::persistent_traits(const string& s) {
-	INVARIANT(!type_id);
-	INVARIANT(type_key == persistent::hash_key::null);
-	type_key = s;
-	INVARIANT(get_type_key() == s);
-	type_id = persistent_object_manager::register_persistent_type<T>();
-}
-
-template <class T>
-const persistent::hash_key&
-persistent_traits<T>::get_type_key(void) {
-	return type_key;
+template <class P>
+void
+persistent_object_manager::collect_transient_object(const P& p) {
+	if (p) {
+		// returns a pointer to the visit_info sub-object
+		// if this was first visit.  
+		visit_info* v = p->register_transient_object(m);
+		if (v) {
+			v->mark_visit(p);
+		}
+	}
 }
 #endif
+
+//=============================================================================
+// class persistent_object_manager::visit_info method definitions
+
+template <class P>
+void
+persistent_object_manager::visit_info::mark_visit(const P& p) {
+	if (p) {
+		__mark_visit(p, __pointer_category(p));
+		total_visits++;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Raw-pointers are classified as un-owned visits.
+ */
+template <class P>
+void
+persistent_object_manager::visit_info::__mark_visit(const P*, 
+		const raw_pointer_tag) {
+	unowned_visits++;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+void
+persistent_object_manager::visit_info::__mark_visit(const P&, 
+		const never_owner_pointer_tag) {
+	unowned_visits++;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Here the pointer is needed to determine dynamic ownership.
+ */
+template <class P>
+void
+persistent_object_manager::visit_info::__mark_visit(const P& p, 
+		const sometimes_owner_pointer_tag) {
+	if (p.owned())
+		owned_visits++;
+	else	unowned_visits++;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+void
+persistent_object_manager::visit_info::__mark_visit(const P&, 
+		const exclusive_owner_pointer_tag) {
+	owned_visits++;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+void
+persistent_object_manager::visit_info::__mark_visit(const P&, 
+		const shared_owner_pointer_tag) {
+	shared_visits++;
+}
 
 //=============================================================================
 }	// end namespace util

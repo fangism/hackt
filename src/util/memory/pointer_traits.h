@@ -2,7 +2,7 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.5 2005/02/27 22:54:29 fang Exp $
+	$Id: pointer_traits.h,v 1.6 2005/03/05 02:49:59 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
@@ -64,6 +64,15 @@ struct pointer_class_base_tag : public some_kind_of_pointer_tag { };
 /// pointer classes with this tag have one owner per object
 struct single_owner_pointer_tag : public pointer_class_base_tag { };
 
+/// category for exclusively owner pointers
+struct exclusive_owner_pointer_tag : public single_owner_pointer_tag { };
+
+/// category for sometimes-owned pointers
+struct sometimes_owner_pointer_tag : public single_owner_pointer_tag { };
+
+/// category for never owned pointers
+struct never_owner_pointer_tag : public single_owner_pointer_tag { };
+
 /// pointer classes with this tag have shared ownership, e.g. reference-count
 struct shared_owner_pointer_tag : public pointer_class_base_tag { };
 
@@ -73,50 +82,6 @@ struct shared_owner_pointer_tag : public pointer_class_base_tag { };
 /// for pointers that manage arrays?  would rather not use them...
 struct pointer_class_array_tag { };
 
-
-//=============================================================================
-#if 0
-// general non-pointer traits
-template <class T>
-struct raw_pointer_traits {
-	/**
-		Sounds silly, but this is useful for writing code that
-		automatically distinguishes pointers and pointer classes
-		from other non-pointer types (built-in or user-defined).  
-	 */
-	typedef	not_a_pointer_tag	pointer_category;
-	static const bool 		is_pointer = false;
-	static const size_t		indirections = 0;
-};	// end struct raw_pointer_traits
-
-// general pointer traits, partially specialized
-template <class T>
-struct raw_pointer_traits<T*> {
-	typedef	raw_pointer_tag		pointer_category;
-	typedef	T			element_type;
-	typedef	T&			reference;
-	typedef	T*			pointer;
-
-	static const bool		is_pointer = true;
-	static const size_t		indirections =
-					raw_pointer_traits<T>::indirections +1;
-	static const bool		is_void_pointer = false;
-};	// end struct raw_pointer_traits
-
-// fully specialized void* pointer traits
-template <>
-struct raw_pointer_traits<void*> {
-	typedef	raw_pointer_tag		pointer_category;
-	typedef	void			element_type;
-//	can't declare reference to void, duh!
-//	typedef	void&			reference;
-	typedef	void*			pointer;
-
-	static const bool		is_pointer = true;
-	static const size_t		indirections = 1;
-	static const bool		is_void_pointer = true;
-};	// end struct raw_pointer_traits
-#endif
 
 //=============================================================================
 /**
@@ -273,45 +238,6 @@ struct pointer_traits {
 	typedef	typename internal_reference<T>::type	reference;
 	typedef	typename internal_pointer<T>::type	pointer;
 	typedef	typename pointer_category<T>::type	pointer_category;
-#if 0
-	static const bool			is_raw_pointer = false;
-
-
-	/**
-		Whether or not the pointer is responsible for an
-		entire array.  
-	 */
-	static const bool	is_array = T::is_array;
-
-	/**
-		Whether or not the pointer class relies on the 
-		referenced object containing information
-		about memory management.  
-	 */
-	static const bool	is_intrusive = T::is_intrusive;
-
-	/**
-		Whether or not the pointer object is refrence counted.  
-		Counted and non-counted pointers may not interact directly, 
-		like oil and water.  
-	 */
-	static const bool	is_counted = T::is_counted;
-
-	/**
-		Whether or not multiple pointers to the same object
-		(regardless of ownership) may coexist.  
-		Otherwise is unique.
-	 */
-	static const bool	is_shared = T::is_shared;
-
-	/**
-		Ownership characteristics.
-		Arguably redundant...
-	 */
-	static const bool	always_owns = T::always_owns;
-	static const bool	sometimes_owns = T::sometimes_owns;
-	static const bool	never_owns = T::never_owns;
-#endif
 
 	/**
 		The default class to return from a non-transferring

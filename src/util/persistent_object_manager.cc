@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.17 2005/03/04 07:00:09 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.18 2005/03/05 02:49:58 fang Exp $
  */
 
 // flags and switches
@@ -14,7 +14,8 @@
 	// for hash specialization to take effect
 #include "hash_qmap.tcc"
 #include "new_functor.tcc"
-#include "persistent_object_manager.h"
+#include "list_vector.tcc"
+#include "persistent_object_manager.tcc"	// for read_pointer
 	// includes "count_ptr.h"
 #include "macros.h"
 #include "IO_utils.tcc"
@@ -112,6 +113,8 @@
 
 namespace util {
 #include "using_ostream.h"
+using std::ios_base;
+using std::stringstream;
 using std::stringbuf;
 using std::streamsize;
 using std::ostringstream;
@@ -123,13 +126,18 @@ USING_STACKTRACE
 	persistent objects associated with a pointer.  
  */
 class persistent_object_manager::reconstruction_table_entry {
+	typedef	reconstruction_table_entry	this_type;
 private:
 	/** constant default ios mode */
 	static const ios_base::openmode	mode;
 private:
 	/** object type enumeration */
 	persistent::hash_key	otype;
-	/** location of reconstruction, consider object*? */
+
+	/**
+		location of reconstruction, consider object*?
+		Technically, this is exclusively (transiently) owned.  
+	 */
 	const persistent*	recon_addr;
 
 	/**
@@ -152,6 +160,8 @@ mutable	size_t*			ref_count;
 	/** stream buffer for temporary storage, count_ptr
 		for transferrable semantics with copy assignment */
 	count_ptr<stringstream>	buffer;
+
+mutable	visit_info		visits;
 public:
 // need default constructor to create an invalid object
 	reconstruction_table_entry();
@@ -167,7 +177,7 @@ public:
 		const persistent::hash_key& t, 
 		const aux_alloc_arg_type a);
 
-	// default copy constructor suffices
+	reconstruction_table_entry(const this_type&);
 
 	~reconstruction_table_entry();
 
@@ -183,8 +193,15 @@ public:
 	size_t*
 	count(void) const;
 
+	visit_info&
+	get_visit_info(void) const { return visits; }
+
 	void
 	assign_addr(persistent* ptr);
+
+	void
+	construct(const persistent*, const persistent::hash_key&, 
+		const aux_alloc_arg_type);
 
 	void
 	reset_addr();
@@ -231,7 +248,9 @@ persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry() :
 		otype(), recon_addr(NULL), alloc_arg(0), ref_count(NULL), 
 		scratch(false), 
-		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
+		buf_head(0), buf_tail(0), buffer(new stringstream(mode)), 
+		visits() {
+	STACKTRACE("reconstruction_table_entry() (ctor)");
 	assert(buffer);
 }
 
@@ -242,7 +261,8 @@ persistent_object_manager::reconstruction_table_entry::
 		const streampos hd, const streampos tl) :
 		otype(t), recon_addr(NULL), alloc_arg(0), ref_count(NULL), 
 		scratch(false), 
-		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)) {
+		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)),
+		visits() {
 	assert(buffer);
 }
 
@@ -254,7 +274,8 @@ persistent_object_manager::reconstruction_table_entry::
 		const streampos hd, const streampos tl) :
 		otype(t), recon_addr(NULL), alloc_arg(a), ref_count(NULL), 
 		scratch(false), 
-		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)) {
+		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)), 
+		visits() {
 	assert(buffer);
 }
 
@@ -266,16 +287,97 @@ persistent_object_manager::reconstruction_table_entry::
 		const aux_alloc_arg_type a) :
 		otype(t), recon_addr(p), alloc_arg(a), ref_count(NULL), 
 		scratch(false), 
-		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
+		buf_head(0), buf_tail(0), buffer(new stringstream(mode)),
+		visits() {
 	assert(buffer);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non trivial copy-copstructor needed because vector allocation
+	will occasionally have to copy-transfer all elements.
+	The source will be destroyed, and thus must not own the recon_addr
+	pointer!
+	Thus copy-constructing is destructive transfer.  
+	This problem can also be avoided by using a list_vector, 
+	which guarantees that data sits in place in all push_back operations.  
+ */
+persistent_object_manager::reconstruction_table_entry::
+	reconstruction_table_entry(const this_type& e) :
+		otype(e.otype), recon_addr(e.recon_addr),
+		alloc_arg(e.alloc_arg), ref_count(e.ref_count), 
+		scratch(e.scratch), 
+		buf_head(e.buf_head), buf_tail(e.buf_tail),
+		buffer(e.buffer), 
+		visits(e.visits) {
+	const_cast<this_type&>(e).recon_addr = NULL;
+	// ref_count is technically not owned, so the following is unnecessary
+	const_cast<this_type&>(e).ref_count = NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sophisticated destructor.  
+ */
 persistent_object_manager::reconstruction_table_entry::
 	~reconstruction_table_entry() {
+	STACKTRACE("~reconstruction_table_entry()");
+#if ENABLE_STACKTRACE
+	cerr << "\t@ " << this << endl;
+#endif
 	// never delete anything manually!
 	// not the object pointer, nor the reference count
 	// buffer is automatically managed by reference-count.
+
+	// MARK AND SWEEP!
+	// check for un-claimed memory.
+#if 1
+if (recon_addr) {
+	bool uh_oh = false;
+	if (visits.total_visits) {
+		if (visits.owned_visits > 1) {
+			cerr << "FATAL: object at " << recon_addr <<
+			" was claimed as owned multiply, "
+			"which will surely result in double-free!"
+			<< endl;
+			uh_oh = true;
+		} else if (visits.owned_visits && visits.shared_visits) {
+			cerr << "FATAL: object at " << recon_addr <<
+			" was claimed as both owned and shared, "
+			"which will surely result in double-free!"
+			<< endl;
+			uh_oh = true;
+		} else if (!visits.owned_visits && !visits.shared_visits) {
+			if (visits.please_delete) {
+				delete recon_addr;
+			} else {
+				cerr << "ERROR: object at " << recon_addr <<
+				" was loaded by non-owner(s), but never by "
+				"exclusive or shared owners, "
+				"which will surely result in a memory-leak!"
+				<< endl;
+				uh_oh = true;
+			}
+		}
+		// nonowned and shared -- dangerous!!!
+		// mixing oil and water...
+	} else {
+		if (!visits.do_not_delete) {
+			cerr << "WARNING: object at " << recon_addr <<
+				" was constructed but never touched, "
+				"so I\'m deleting it." << endl;
+			delete recon_addr;
+		}
+	}
+	if (uh_oh) {
+		recon_addr->what(cerr << "@ " << recon_addr << ": ");
+		cerr << ", unowned: " << visits.unowned_visits <<
+			", owned: " << visits.owned_visits <<
+			", shared: " << visits.shared_visits <<
+			", total: " << visits.total_visits << endl;
+	}
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -303,12 +405,15 @@ persistent_object_manager::reconstruction_table_entry::count(void) const {
 	Resets the reconstruction address, and flags as unvisited.  
 	The persistent::hash_key is preserved.  
 	The state of the buffer is left as is.  
+	Any outstanding delete-exceptions are cleared in the visit_info
+	structure, allowing the load phase to mark-and-sweep.  
  */
 void
 persistent_object_manager::reconstruction_table_entry::reset_addr() {
 	recon_addr = NULL;		// never delete
 	ref_count = NULL;		// never delete
 	unflag();
+	visits.allow_delete();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -317,6 +422,19 @@ persistent_object_manager::reconstruction_table_entry::assign_addr(
 		persistent* ptr) {
 	assert(!recon_addr);
 	recon_addr = ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In-place construction.
+ */
+void
+persistent_object_manager::reconstruction_table_entry::construct(
+		const persistent* p, const persistent::hash_key& t, 
+		const aux_alloc_arg_type a) {
+	recon_addr = p;
+	otype = t;
+	alloc_arg = a;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -352,9 +470,11 @@ persistent_object_manager::reconstruction_table_entry::adjust_offsets(
 
 persistent_object_manager::persistent_object_manager() :
 		addr_to_index_map(),
-		reconstruction_table(), 
+		reconstruction_table(),
 		start_of_objects(0), 
 		root(NULL) {
+ 	// set list_vector(chunk-size)
+	reconstruction_table.set_chunk_size(64);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -378,6 +498,7 @@ bool
 persistent_object_manager::register_transient_object(
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a) {
+	STACKTRACE("pom::register_transient_object()");
 	const long probe = addr_to_index_map[ptr];
 	if (ptr)
 		assert(t != persistent::hash_key::null);
@@ -390,10 +511,20 @@ persistent_object_manager::register_transient_object(
 		assert(e.get_alloc_arg() == a);
 		return true;
 	} else {
+		static const reconstruction_table_entry empty;
 		// else add new entry
 		addr_to_index_map[ptr] = reconstruction_table.size();
+#if 1
 		reconstruction_table.push_back(
 			reconstruction_table_entry(ptr, t, a));
+#else
+		// This causes strange death???
+		// can't pass temporary object because of mark-and-sweep
+		// style destructor of reconstruction_table_entry.  
+		// construct empty, then initialize in place.
+		reconstruction_table.push_back(empty);
+		reconstruction_table.back().construct(ptr, t, a);
+#endif
 			// should transfer ownership of newly 
 			// constructed stringstream
 		return false;
@@ -406,7 +537,9 @@ persistent_object_manager::register_transient_object(
  */
 void
 persistent_object_manager::initialize_null(void) {
-	assert(!reconstruction_table.size());
+	STACKTRACE("pom::initialize_null()");
+	const size_t s = reconstruction_table.size();
+	assert(!s);
 	register_transient_object(NULL, persistent::hash_key::null);
 }
 
@@ -457,6 +590,16 @@ persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+const reconstruction_table_entry&
+persistent_object_manager::lookup_reconstruction_table_entry(
+		const long i) const {
+	assert((unsigned long) i < reconstruction_table.size());
+	return reconstruction_table[i];
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns the pointer corresponding to the indexed
 	reconstruction table entry.  
@@ -469,11 +612,44 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the pointer corresponding to the indexed
+	reconstruction table entry.  
+ */
+std::pair<persistent*, persistent_object_manager::visit_info*>
+persistent_object_manager::lookup_ptr_visit_info(const long i) const {
+	assert((unsigned long) i < reconstruction_table.size());
+	const reconstruction_table_entry& e = reconstruction_table[i];
+	return std::make_pair(
+		const_cast<persistent*>(e.addr()),
+		&e.get_visit_info());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 persistent_object_manager::check_reconstruction_table_range(
 		const size_t i) const {
 	return (i < reconstruction_table.size());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+persistent_object_manager::please_delete(const persistent* p) const {
+	const long i = lookup_ptr_index(p);
+	INVARIANT(check_reconstruction_table_range(i));
+	reconstruction_table[i].get_visit_info().request_delete();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// DISABLED, UNUSED
+void
+persistent_object_manager::do_not_delete(const persistent* p) const {
+	const long i = lookup_ptr_index(p);
+	INVARIANT(check_reconstruction_table_range(i));
+	reconstruction_table[i].get_visit_info().forbid_delete();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -933,8 +1109,14 @@ persistent_object_manager::load_objects(void) {
 	// for deleting all memory, by wrapping the root pointer
 	// to the module containing the global namespace in an excl_ptr
 	// Entry at position 1 is ALWAYS the root module.  
+#if 0
 	persistent* r = lookup_obj_ptr(1);
 	root = excl_ptr<persistent>(r);
+#else
+	stringstream sstr;
+	write_value(sstr, size_t(1));
+	read_pointer(sstr, root);	// requires .tcc
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -971,11 +1153,27 @@ persistent_object_manager::save_object_to_file(const string& s,
 	pom.initialize_null();			// reserved 0th entry
 	m.collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
+	pom.set_write_mode();
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// for debugging
 	pom.write_header(f);		// after knowing size of each segment
 	pom.finish_write(f);			// serialize objects
 	f.close();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets all the reconstruction_table_entries to do_not_delete, 
+	because they are only observed pointers for the sake of
+	deep-copying and saving binary to file.  
+ */
+void
+persistent_object_manager::set_write_mode(void) {
+	const size_t max = reconstruction_table.size();
+	size_t i = 1;		// 0th object is reserved NULL, skip it
+	for ( ; i<max; i++) {
+		reconstruction_table[i].get_visit_info().forbid_delete();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1009,6 +1207,7 @@ persistent_object_manager::self_test_no_file(const persistent& m) {
 	pom.initialize_null();			// reserved 0th entry
 	m.collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
+	pom.set_write_mode();
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// for debugging
 

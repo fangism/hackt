@@ -1,14 +1,14 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.15 2005/03/04 07:00:09 fang Exp $
+	$Id: persistent_object_manager.h,v 1.16 2005/03/05 02:49:59 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>			// include stringstream
-#include <vector>
+#include "list_vector.h"
 #include "persistent.h"
 
 #include "hash_qmap.h"
@@ -17,12 +17,10 @@
 
 //=============================================================================
 namespace util {
-using std::vector;
+using util::list_vector;
 using std::istream;
 using std::ostream;
-using std::ios_base;
 using std::streampos;
-using std::stringstream;
 using std::ofstream;
 using std::ifstream;
 using namespace util::memory;
@@ -36,13 +34,89 @@ using util::hash_qmap;
 	deleting the memory created.  
  */
 class persistent_object_manager {
+private:
+	class reconstruction_table_entry;
 public:
 	// just a char
 	typedef	persistent::aux_alloc_arg_type
 					aux_alloc_arg_type;
-private:
-	class reconstruction_table_entry;
+	/**
+		User-level structure for storing visit and scratch information
+		about an entry.  
+		Useful for mark-and-sweep-style traversals.  
+	 */
+	class visit_info {
+	friend class persistent_object_manager::reconstruction_table_entry;
+	private:
+		int			unowned_visits;
+		int			owned_visits;
+		int			shared_visits;
+		int			total_visits;
+		/// HACKERY, temporary
+		bool			please_delete;
+		/// HACKERY, temporary
+		bool			do_not_delete;
+	public:
+		visit_info() : unowned_visits(0), owned_visits(0), 
+			shared_visits(0), total_visits(0), 
+			please_delete(false), do_not_delete(false) { }
+		
+		template <class P>
+		void
+		mark_visit(const P&);
 
+		void
+		reset_visits(void) {
+			unowned_visits = 0;
+			owned_visits = 0;
+			shared_visits = 0;
+			total_visits = 0;
+		}
+
+		void
+		request_delete(void) {
+			assert(!do_not_delete);
+			please_delete = true;
+		}
+
+		void
+		forbid_delete(void) {
+			assert(!please_delete);
+			do_not_delete = true;
+		}
+
+		void
+		allow_delete(void) {
+			do_not_delete = false;
+		}
+
+	private:
+	// technically, the pointer values are useless arguments here.
+		template <class T>
+		void
+		__mark_visit(const T*, const raw_pointer_tag);
+
+		template <class P>
+		void
+		__mark_visit(const P&, const never_owner_pointer_tag);
+
+#if 0
+		// for now, we forbid the use of some_ptrs
+		template <class P>
+		void
+		__mark_visit(const P&, const sometimes_owner_pointer_tag);
+#endif
+
+		template <class P>
+		void
+		__mark_visit(const P&, const exclusive_owner_pointer_tag);
+
+		template <class P>
+		void
+		__mark_visit(const P&, const shared_owner_pointer_tag);
+	};	// end class visit info
+
+private:
 	/**
 		Out of paranoia, writing this class to guarantee
 		default value of -1.  
@@ -69,7 +143,7 @@ private:
 		fully reconstruct itself.  
 		Is the reverse map of addr_to_index_map_type.  
 	 */
-	typedef	vector<reconstruction_table_entry>
+	typedef	list_vector<reconstruction_table_entry>
 						reconstruction_table_type;
 
 	/**
@@ -154,6 +228,10 @@ public:
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a = 0);
 
+	template <class P>
+	void
+	collect_transient_object(const P& p);
+
 private:
 	bool
 	flag_visit(const persistent* ptr);
@@ -167,14 +245,44 @@ private:
 	long
 	lookup_ptr_index(const persistent* ptr) const;
 
-public:
+	// was public, but this is nor a good idea, use read_pointer only
 	persistent*
 	lookup_obj_ptr(const long i) const;
 
+public:
 	bool
 	check_reconstruction_table_range(const size_t) const;
 
+public:
+	/**
+		I'm deeply ashamed of the following hack:
+		but this is used only one place TEMPORARILY until future
+		code restructuring.
+
+		This tells the manager that it is OK to delete
+		the object loaded at the following pointer, 
+		and suppresses any WARNING messages about mis-managed memory.  
+	 */
+	void
+	please_delete(const persistent*) const;
+
+	/**
+		Counter-hack.
+		Tells manager not to delete a certain object under any
+		circumstances, even if it is unclaimed.  
+	 */
+	void
+	do_not_delete(const persistent*) const;
+
 private:
+#if 0
+	const reconstruction_table_entry&
+	lookup_reconstruction_table_entry(const long) const;
+#endif
+
+	std::pair<persistent*, visit_info*>
+	lookup_ptr_visit_info(const long) const;
+
 	size_t*
 	lookup_ref_count(const long i) const;
 
@@ -185,29 +293,32 @@ private:
 	/// private helper method for writing plain pointers
 	template <class P>
 	void
-	__write_pointer(ostream& f, const P& ptr, raw_pointer_tag) const;
+	__write_pointer(ostream& f, const P& ptr, 
+		const raw_pointer_tag) const;
 
 	/// private helper method for any pointer class
 	template <class P>
 	void
-	__write_pointer(ostream& f, const P& ptr, pointer_class_base_tag) const;
+	__write_pointer(ostream& f, const P& ptr, 
+		const pointer_class_base_tag) const;
 
 	/// private helper method for reading plain pointers
 	template <class P>
-	void
-	__read_pointer(istream& f, const P& ptr, raw_pointer_tag) const;
+	visit_info*
+	__read_pointer(istream& f, const P& ptr, 
+		const raw_pointer_tag) const;
 
 	/// private helper method for reading non-reference-counted pointers
 	template <class P>
-	void
+	visit_info*
 	__read_pointer(istream& f, const P& ptr, 
-		single_owner_pointer_tag) const;
+		const single_owner_pointer_tag) const;
 
 	/// private helper method for reading reference-counted pointers
 	template <class P>
-	void
+	visit_info*
 	__read_pointer(istream& f, const P& ptr,
-		shared_owner_pointer_tag) const;
+		const shared_owner_pointer_tag) const;
 
 public:
 
@@ -325,6 +436,9 @@ public:
 private:
 	void
 	initialize_null(void);
+
+	void
+	set_write_mode(void);
 
 	void
 	collect_objects(void);

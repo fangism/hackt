@@ -2,11 +2,11 @@
 	file "list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.6 2005/02/27 22:54:22 fang Exp $
+	$Id: list_vector.tcc,v 1.7 2005/03/05 02:49:58 fang Exp $
  */
 
-#ifndef	__LIST_VECTOR_TCC__
-#define	__LIST_VECTOR_TCC__
+#ifndef	__UTIL_LIST_VECTOR_TCC__
+#define	__UTIL_LIST_VECTOR_TCC__
 
 #include <iostream>
 #include <numeric>
@@ -194,5 +194,5 @@ list_vector<T,ValAlloc,VecAlloc>::dump_details(ostream& o) const {
 //=============================================================================
 }	// end namespace util
 
-#endif	// __LIST_VECTOR_TCC__
+#endif	// __UTIL_LIST_VECTOR_TCC__
 
