@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.1.2.2 2005/01/24 20:51:43 fang Exp $
+	$Id: count_ptr.h,v 1.1.2.3 2005/01/24 22:29:57 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -13,11 +13,6 @@
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
 #define	__UTIL_MEMORY_COUNT_PTR_H__
 
-#include "config.h"
-#if HAVE_STDDEF_H
-#include <cstddef>			// for size_t
-#endif
-
 #include "macros.h"
 #include "memory/pointer_classes_fwd.h"
 #include "memory/pointer_manipulator.h"
@@ -26,12 +21,11 @@
 // debugging stuff
 
 #if 0
-#include <iostream>
-#include "using_ostream.h"
-#endif
-
 #define	REASONABLE_REFERENCE_COUNT			\
 	INVARIANT(*ref_count < 10000)
+#else
+#define	REASONABLE_REFERENCE_COUNT
+#endif
 
 //=============================================================================
 
@@ -253,11 +247,6 @@ protected:
 			if (!*this->ref_count) {
 				NEVER_NULL(ptr);
 				delete ptr;
-#if 0
-				cerr << "count_ptr<>::release() @ "
-					<< this << endl;
-				char c; std::cin >> c;
-#endif
 				delete this->ref_count;
 			}
 			ptr = NULL;
@@ -282,11 +271,6 @@ protected:
 			if (!*this->ref_count) {
 				NEVER_NULL(ptr);
 				delete ptr;
-#if 0
-				cerr << "count_ptr<>::reset() @ "
-					<< this << endl;
-				char c; std::cin >> c;
-#endif
 				delete this->ref_count;
 			}
 		} else {

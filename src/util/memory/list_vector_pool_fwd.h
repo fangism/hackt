@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.1 2005/01/24 19:46:12 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.2 2005/01/24 22:29:57 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -66,11 +66,12 @@ private:								\
 private:								\
 	static void*	operator new (size_t, void*&);			\
 	typedef	list_vector_pool<this_type>		pool_type;	\
+	typedef	raw_count_ptr<pool_type>	pool_ref_ref_type;	\
 public:									\
-	typedef	count_ptr<pool_type>			pool_ref_type;	\
+	typedef	count_ptr<const pool_type>		pool_ref_type;	\
 									\
 	static								\
-	pool_ref_type							\
+	pool_ref_ref_type						\
 	get_pool(void);
 
 

@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.4.1.2.1 2005/01/24 19:46:11 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.4.1.2.2 2005/01/24 22:29:57 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -132,12 +132,11 @@ __pool_ref_ ## T ## __ (T::get_pool());
 									\
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)				\
 									\
-T::pool_ref_type							\
+T::pool_ref_ref_type							\
 T::get_pool(void) {							\
 	static pool_type*	pool = new pool_type(C);		\
 	static size_t*		count = new size_t(0);			\
-	static const pool_ref_type ret(pool, count);			\
-	return ret;							\
+	return pool_ref_ref_type(pool, count);				\
 }									\
 									\
 void*									\

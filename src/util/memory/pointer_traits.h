@@ -2,11 +2,16 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.3.12.1 2005/01/24 19:46:15 fang Exp $
+	$Id: pointer_traits.h,v 1.3.12.2 2005/01/24 22:29:57 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
 #define	__UTIL_MEMORY_POINTER_TRAITS_H__
+
+#include "config.h"
+#if HAVE_STDDEF_H
+#include <cstddef>			// for size_t
+#endif
 
 /***
 	For hints on implementation: look at std::iterator_traits.  
