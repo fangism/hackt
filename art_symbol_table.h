@@ -28,10 +28,7 @@ using namespace std;
 
 //=============================================================================
 // forward declarations
-class namespace_symtab;
-class definition_symtab;
-class template_symtab;
-class formals_symtab;
+class id_expr;
 
 //=============================================================================
 // what is a context object?
@@ -70,8 +67,8 @@ public:
 
 name_space*	open_namespace(const string& id);
 name_space*	close_namespace(void);
-
-// object*	lookup_namespace(const token_identifier& n);
+name_space*	using_namespace(const id_expr& id);
+name_space*	alias_namespace(const id_expr& id, const string& a);
 
 string		auto_indent(void) const;
 

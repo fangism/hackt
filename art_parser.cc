@@ -34,7 +34,8 @@ const char colon[] = ":";	///< delimiter for node_list template argument
 object*
 node::check_build(context* c) const {
 	cerr << c->auto_indent() << 
-		"node::check_build() not fully-implmented yet.";
+		"check_build() not fully-implmented yet for ";
+	what(cerr);
 	return NULL;
 }
 
@@ -61,6 +62,19 @@ paren_expr::paren_expr(node* l, node* n, node* r) : expr(),
 DESTRUCTOR_INLINE
 paren_expr::~paren_expr() {
 	SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp);
+}
+
+//=============================================================================
+// class id_expr method definitions
+
+// friend operator
+ostream& operator << (ostream& o, const id_expr& id) {
+	id_expr::const_iterator i = id.begin();
+	for ( ; i!=id.end(); i++) {
+		token_identifier* tid = dynamic_cast<token_identifier*>(*i);
+		o << *tid;
+	}
+	return o;
 }
 
 //=============================================================================
@@ -169,8 +183,9 @@ using_namespace(node* o, node* i, node* a, node* n, node* s) :
 		alias(dynamic_cast<token_identifier*>(n)),	// optional
 		semi(dynamic_cast<token_string*>(s)) {
 	assert(open); assert(id);
-	if (a && !as) delete a;
-	if (n && !alias) delete n;
+	if (a) assert(as);
+	if (n) assert(alias);
+	assert(semi);
 }
 
 /// default destructor
@@ -180,6 +195,14 @@ using_namespace::~using_namespace() {
 	SAFEDELETE(as); SAFEDELETE(alias);
 }
 
+/// returns a pointer to a valid namespace that's now mapped in this scope
+object*
+using_namespace::
+check_build(context* c) const {
+	cerr << c->auto_indent() << "using namespace: " << *id;
+	// if aliased... print more
+	return c->using_namespace(*id);
+}
 
 //=============================================================================
 // chan_type methods
@@ -203,7 +226,7 @@ chan_type::attach_data_types(node* t) {
 							// also known as...
 template class node_list<root_item>;			// root_body
 template class node_list<expr,comma>;			// expr_list
-template class node_list<token_identifier,scope>;	// id_expr
+// template class node_list<token_identifier,scope>;	// id_expr
 template class node_list<range,comma>;			// range_list
 template class node_list<data_type_base,comma>;		// base_data_type_list
 template class node_list<def_body_item>;		// definition_body

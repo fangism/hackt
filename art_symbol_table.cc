@@ -34,10 +34,26 @@ context::open_namespace(const string& id) {
 	return current_ns->add_open_namespace(id);
 }
 
+/// closes namespace, leaving the scope
 name_space*
 context::close_namespace(void) {
 	indent--;
+	// null out member pointers to other sub structures: 
+	//	types, definitions...
 	return current_ns->leave_namespace();
+}
+
+/// adds a using namespace directive, adds namespace to search list
+name_space*
+context::using_namespace(const id_expr& id) {
+	return current_ns->add_using_directive(id);
+}
+
+/// adds a using namespace directive under a different local name
+name_space*
+context::alias_namespace(const id_expr& id, const string& a) {
+	// obviously not done
+	return NULL;
 }
 
 string

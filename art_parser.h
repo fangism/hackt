@@ -289,6 +289,7 @@ virtual	ostream& what(ostream& o) const { return o << (char) c; }
 };
 
 //=============================================================================
+/// an expression in parentheses, for all purposes, parens may be ignored
 class paren_expr : public expr {
 protected:
 	token_char*		lp;		///< left parenthesis
@@ -379,9 +380,31 @@ virtual	line_position rightmost(void) const
 		{ return token_string::rightmost(); }
 };
 
-/// generalized scoped identifier expression
-typedef node_list<token_identifier,scope>	id_expr;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	node_list<token_identifier,scope>	id_expr_base;
 
+/// generalized scoped identifier expression
+class id_expr : public expr, public id_expr_base {
+public:
+	typedef	id_expr_base::iterator		iterator;
+	typedef	id_expr_base::const_iterator	const_iterator;
+
+	id_expr(node* n) : expr(), id_expr_base(n) { }
+virtual	~id_expr() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(id-expr)"; }
+virtual	line_position leftmost(void) const { return id_expr_base::leftmost(); }
+virtual	line_position rightmost(void) const
+		{ return id_expr_base::rightmost(); }
+
+// should return a type object, with which one may pointer compare
+//	with typedefs, follow to canonical
+// virtual	object* check_build(context* c) const;
+
+friend	ostream& operator << (ostream& o, const id_expr& id);
+};
+
+// no need for wrap, ever
 #define id_expr_append(l,d,n)						\
 	dynamic_cast<id_expr*>(l)->append(d,n)
 
@@ -880,6 +903,8 @@ virtual	~using_namespace();
 virtual	ostream& what(ostream& o) const { return o << "(using-namespace)"; }
 virtual	line_position leftmost(void) const { return open->leftmost(); }
 virtual	line_position rightmost(void) const { return semi->rightmost(); }
+
+virtual	object* check_build(context* c) const;
 };
 
 //=============================================================================

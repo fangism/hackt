@@ -56,8 +56,11 @@ class name_space : public object {
 	// table of process definitions
 	// table of real instantiations (outside of definitions)
 private:
-	// may become hash_map if need be, for now map suffices (r/b-tree)
+	/// may become hash_map if need be, for now map suffices (r/b-tree)
 	typedef	map<string, name_space*>	ns_map_type;
+
+	/// container for open namespaces with optional aliases
+	typedef map<string, name_space*>	using_map_type;
 protected:
 	/**
 		Reference to the parent namespace, if applicable.  
@@ -85,6 +88,21 @@ protected:
 	 */
 	ns_map_type		subns;
 
+	/**
+		The set of namespaces which are open to search within
+		this namespace's scope.  The imported namespaces may be 
+		re-opened and renamed.  When this namespace closes, however, 
+		the list of open spaces and aliases will be purged.  
+		You'll have to add them each time you re-open this
+		namespace if you want them, otherwise, it is a convenient
+		way to reset the namespace alias list.  
+
+		Q: the key for these aliases: should they be the full
+		id_expr, or just the tail end?
+		The whole id_expr, use aliases to reduce the names....?
+	 */
+	using_map_type		open_aliases;
+
 public:
 	name_space(const string& n, name_space* p);
 // explicit name_space();	// for GLOBAL?
@@ -92,9 +110,17 @@ public:
 
 // update these return types later
 name_space*	add_open_namespace(const string& n);
-void	add_using_directive(const id_expr& n);
-void	add_using_alias(const id_expr& n, const string& a);
+name_space*	add_using_directive(const id_expr& n);
+name_space*	add_using_alias(const id_expr& n, const string& a);
 name_space*	leave_namespace(void);	// or close_namespace
+
+// some private utility functions (may become public later)
+private:
+name_space*	query_namespace_match(const id_expr& id);
+name_space*	query_subnamespace_match(const id_expr& id);
+name_space*	query_import_namespace_match(const id_expr& id);
+name_space*	find_namespace_ending_with(const id_expr& id);
+name_space*	find_namespace_starting_with(const id_expr& id);
 };
 
 //=============================================================================
@@ -136,6 +162,7 @@ class built_int_type_def : public type_definition {
 // no formal name, just type name
 class user_type_def : public type_definition {
 private:
+	/// the members will be kept as a list or map
 	typedef	list<const type_definition*>	type_members;
 protected:
 	string			key;		///< name of type
