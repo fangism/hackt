@@ -31,12 +31,19 @@ LD = $(CC)
 # use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...
 #	will eventually get around to self-configuring
-MORE_WARN = -Wcast-qual
-# other warnings not covered by -Wall
+
+# other potentially anal warnings not covered by -Wall, how far can we go?
+MORE_WARN = -Wcast-qual -Wpointer-arith -Wtraditional -Wwrite-strings \
+	-Wstrict-prototypes -Wmissing-prototypes
+# "shadow" affects y.tab.o
+# -Wshadow -Woverloaded-virtual
+
 NO_WARN = -Wno-unused
-# affects art.yy.o
+# "no-unused" affects art.yy.o
+
+# extremely anal about warnings... report as errors!
 WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
-# extremely anal about warnings...
+
 CFLAGS = -O2 $(WARN_FLAGS) -g -pipe $(CDEFS)
 # -fkeep-inline-functions
 # turn on -O4 later...

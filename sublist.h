@@ -41,6 +41,8 @@ virtual	~sublist() { }
 	bool empty() const { return (head == tail); }
 //	bool empty() const { return (rhead == rtail); }	// equivalent
 
+	size_t size(void) const { return distance(head, tail); }
+
 	const_iterator begin(void) const { return head; }
 	const_iterator end(void) const { return tail; }
 	const_reverse_iterator rbegin(void) const { return rhead; }

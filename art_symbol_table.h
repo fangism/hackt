@@ -10,7 +10,7 @@
 
 // add as they are needed
 #include <stack>
-// #include <list>
+#include "list_of_ptr.h"		// PHASE OUT
 // #include <map>
 
 namespace ART {

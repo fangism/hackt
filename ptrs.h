@@ -9,6 +9,8 @@
 //	pointer classes can't access each other private/protected constructors
 //	because can't template friend classes, no generalization... :(
 
+// lock pointers? non-transferrable exclusive pointers.  
+
 // documentation style is for doxygen
 
 #ifndef	__PTRS_H__
@@ -390,20 +392,23 @@ void	reset(const T* p = NULL) throw() {
 
 public:
 /**
+	Destructive copy constructor, non-const source.  
+	Transfers ownership.  
+	Allowed to be implicit.  
+	Can gcc-2.95.3 find this?
+ */
+	excl_const_ptr(excl_const_ptr<T>& e) throw() :
+		base_const_ptr<T>(e.release()) { }
+
+/**
 	\param p should be a newly allocated pointer, which has not
 		been tampered with or leaked out.  Vulnerability
 		here is that we don't know what else has been done
 		with p.  
-		Can we make new T return an excl_ptr?  No.
+		Defaults to NULL.  
  */
 explicit excl_const_ptr(const T* p) throw() : base_const_ptr<T>(p) { }
 	excl_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
-/**
-	Destructive copy constructor, non-const source.  
-	Transfers ownership.  
- */
-	excl_const_ptr(excl_const_ptr<T>& e) throw() :
-		base_const_ptr<T>(e.release()) { }
 
 // do we ever want to transfer ownership from non-const to const?
 //	probably not, because will never be able to extract as non-const!
@@ -413,16 +418,20 @@ explicit excl_const_ptr(const T* p) throw() : base_const_ptr<T>(p) { }
 /**
 	Bogus copy constructor, const source.  
 	Need this to make some standard containers happy.  
-	Preserves exclusion.  
+	Preserves exclusion, by assigning NULL.  
  */
-#if 1
 explicit excl_const_ptr(const excl_const_ptr<T>& e) throw() :
-			base_const_ptr<T>(e.cptr) {
-	}
-explicit excl_const_ptr(const excl_ptr<T>& e) throw() :
-			base_const_ptr<T>(e.cptr) {
-	}
-#endif
+			base_const_ptr<T>(e.cptr) { }
+				// incorrect, violates exclusion!?
+	// forbid copy constructing?
+//			base_const_ptr<T>(NULL) { }
+
+/**
+	Converting from write-able to read-only pointer.  
+	Permissible, but better damn well be explicit and intentional.  
+ */
+explicit excl_const_ptr(excl_ptr<T>& e) throw() :
+			base_const_ptr<T>(e.release()) { }
 
 /**
 	De-allocates memory.  

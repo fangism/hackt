@@ -8,7 +8,6 @@
 #include "art_parser_debug.h"
 #include "art_macros.h"
 #include "art_parser.h"			// includes "ptrs.h"
-#include "list_of_ptr_template_methods.h"	// PHASE OUT
 #include "art_symbol_table.h"
 	// for class context, uses auto_indent()
 
@@ -63,13 +62,11 @@ node_list_base<T>::node_list_base() : node(), list_parent() {
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
-//	push_back(n);
 	push_back(excl_const_ptr<T>(n));
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::~node_list_base() {
-// is virtual, will invoke list_of_ptr<> destructor
 }
 
 //-----------------------------------------------------------------------------
@@ -145,8 +142,6 @@ node_list_base<T>::check_build(context* c) const {
 NODE_LIST_BASE_TEMPLATE_SPEC
 void
 node_list_base<T>::release_append(node_list_base<T>& dest) {
-	// need to expand out operation in iterations
-//	list_parent::release_append(dest);
 	iterator i = begin();
 	for ( ; i!=end(); i++) {
 		// will release each element
@@ -166,7 +161,6 @@ node_list<T,D>::node_list() : parent(), open(NULL), close(NULL), delim() {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::node_list(const T* n) :
 		node_list_base<T>(n), open(NULL), close(NULL), delim() {
-//	push_back(n);
 //	push_back(excl_const_ptr<T>(n));
 }
 
@@ -197,18 +191,11 @@ node_list<T,D>::~node_list() {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
 node_list<T,D>::wrap(const terminal* b, const terminal* e) {
-#if 0
-	open = b;
-	if (b) assert(IS_A(token_char*, open) || IS_A(token_string*, open));
-	close = e;
-	if (e) assert(IS_A(token_char*, close) || IS_A(token_string*, close));
-#else
 // don't care what they are
 	open = excl_const_ptr<terminal>(b);
 //	if (b) assert(open.is_a<token_char>() || open.is_a<token_string>());
 	close = excl_const_ptr<terminal>(e);
 //	if (e) assert(close.is_a<token_char>() || close.is_a<token_string>());
-#endif
 	return this;
 }
 
@@ -221,14 +208,12 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 		// will fail if incorrect token is passed
 		assert(!(d->string_compare(D)));
 		// now use separate list for delimiters
-//		delim.push_back(d);
 		delim.push_back(excl_const_ptr<terminal>(d));
 	} else {
 		// consider using template specialization for this
 		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-//	push_back(n);			// n may be null, is ok
 	push_back(excl_const_ptr<T>(n));	// n may be null, is ok
 	return this;
 }
@@ -288,7 +273,6 @@ NODE_LIST_TEMPLATE_SPEC
 void
 node_list<T,D>::release_append(node_list<T,D>& dest) {
 	parent::release_append(dest);
-//	delim.release_append(dest.delim);	// delim is now a list<>
 	delim_list::iterator i = delim.begin();
 	for ( ; i!=delim.end(); i++) {
 		dest.delim.push_back(*i);

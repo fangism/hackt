@@ -116,10 +116,15 @@ list_of_ptr<T>::release_append(list_of_ptr<T>& dest) {
 //=============================================================================
 // class list_of_const_ptr method definitions
 
-/// copy constructor
+/**
+	Copy constructor, from a list of non-const pointers.  
+ */
 template <class T>
 list_of_const_ptr<T>::list_of_const_ptr(const list<T*>& l) :
-		parent(l) {
+		parent() {
+	typename list<T*>::const_iterator i = l.begin();
+	for ( ; i!=l.end(); i++)
+		push_back(*i);
 }
 
 /// copy constructor

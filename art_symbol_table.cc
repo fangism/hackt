@@ -8,6 +8,8 @@
 #include "art_object.h"
 #include "art_object_expr.h"
 
+#include "list_of_ptr_template_methods.h"	// PHASE OUT
+
 //=============================================================================
 namespace ART {
 using namespace entity;
@@ -357,7 +359,6 @@ context::set_datatype_def(const token_datatype& id) {
 	const datatype_definition* ret = IS_A(const built_in_datatype_def*, 
 		current_namespace->get_global_namespace()->
 			lookup_object_here(id));
-//		current_namespace->lookup_built_in_datatype(id);
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -425,7 +426,6 @@ context::set_param_def(const token_paramtype& pt) {
 	const built_in_param_def* ret = IS_A(const built_in_param_def*, 
 		current_namespace->get_global_namespace()->
 			lookup_object_here(pt));
-//		current_namespace->lookup_built_in_paramtype(pt);
 	if (!ret) {
 		type_error_count++;
 		cerr << pt.where() << endl;
@@ -568,7 +568,6 @@ context::lookup_definition(const token_identifier& id) const {
 	assert(current_namespace);
 	return IS_A(const definition_base*, 
 		current_namespace->lookup_object(id));
-//	return current_namespace->lookup_definition(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -581,7 +580,6 @@ context::lookup_definition(const qualified_id& id) const {
 	assert(current_namespace);
 	return IS_A(const definition_base*, 
 		current_namespace->lookup_object(id));
-//	return current_namespace->lookup_definition(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,7 +588,6 @@ context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
 	return IS_A(const instantiation_base*, 
 		current_namespace->lookup_object(id));
-//	return current_namespace->lookup_instance(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -599,7 +596,6 @@ context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
 	return IS_A(const instantiation_base*, 
 		current_namespace->lookup_object(id));
-//	return current_namespace->lookup_instance(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -741,6 +737,11 @@ context::auto_indent(void) const {
 	ret += "+-";
 	return ret;
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template class list_of_const_ptr<param_expr>;
 
 //=============================================================================
 };	// end namespace entity

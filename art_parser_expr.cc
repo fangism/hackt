@@ -232,7 +232,7 @@ id_expr::id_expr(const id_expr& i) : expr(), qid(new qualified_id(*i.qid)) {
 }
 
 id_expr::~id_expr() {
-	SAFEDELETE(qid);
+//	SAFEDELETE(qid);
 }
 
 ostream&
@@ -292,22 +292,25 @@ ostream& operator << (ostream& o, const id_expr& id) {
 // class range method definitions
 
 CONSTRUCTOR_INLINE
-range::range(expr* l) : lower(l), op(NULL), upper(NULL) {
+range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
-	assert(!IS_A(range*, lower));
+//	assert(!IS_A(range*, lower));
+	assert(!lower.is_a<range>());
 }
 
 CONSTRUCTOR_INLINE
-range::range(expr* l, terminal* o, expr* u) : 
+range::range(const expr* l, const terminal* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
 	assert(lower); assert(op); assert(u);
-	assert(!IS_A(range*, lower));
-	assert(!IS_A(range*, upper));
+//	assert(!IS_A(range*, lower));
+//	assert(!IS_A(range*, upper));
+	assert(!lower.is_a<range>());
+	assert(!upper.is_a<range>());
 }
 
 DESTRUCTOR_INLINE
 range::~range() {
-	SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper);
+//	SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper);
 }
 
 ostream&
@@ -371,7 +374,7 @@ unary_expr::~unary_expr() {
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(terminal* op, expr* n) : unary_expr(n,op) { }
+prefix_expr::prefix_expr(terminal* o, expr* n) : unary_expr(n,o) { }
 
 DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
@@ -402,7 +405,7 @@ prefix_expr::check_build(context* c) const {
 // class postfix_expr method definitions
 
 CONSTRUCTOR_INLINE
-postfix_expr::postfix_expr(expr* n, terminal* op) : unary_expr(n,op) { }
+postfix_expr::postfix_expr(expr* n, terminal* o) : unary_expr(n,o) { }
 
 DESTRUCTOR_INLINE
 postfix_expr::~postfix_expr() { }

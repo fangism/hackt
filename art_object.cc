@@ -116,13 +116,14 @@ scopespace::lookup_object(const token_string& id) const {
 	then it is considered an unqualified identifier.  
  */
 const object*
-scopespace::lookup_object(const qualified_id& id) const {
+scopespace::lookup_object(const qualified_id_slice& id) const {
 if (id.is_absolute()) {
 	if (parent)
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
-		const name_space* ns = IS_A(const name_space*, 
-			lookup_namespace(id.copy_namespace_portion()));
+		qualified_id_slice idc(id);
+		never_const_ptr<name_space> ns(IS_A(const name_space*, 
+			lookup_namespace(idc.betail())));
 		if (ns)
 			return ns->lookup_object(**id.rend());
 		else return NULL;
@@ -131,8 +132,9 @@ if (id.is_absolute()) {
 	return lookup_object(**id.begin());
 } else {
 	// else need to resolve namespace portion first
-	const name_space* ns = IS_A(const name_space*, 
-		lookup_namespace(id.copy_namespace_portion()));
+	qualified_id_slice idc(id);
+	never_const_ptr<name_space> ns(IS_A(const name_space*, 
+		lookup_namespace(idc.betail())));
 	if (ns)
 		return ns->lookup_object(**id.rend());
 	else return NULL;
@@ -154,28 +156,6 @@ const scopespace*
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	return parent->lookup_namespace(id);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Looks in used_id_map for a registered instance name.  
-	\param id name of instance to lookup, an unqualified name.  
-	\return pointer to instance with matching name.  
-const instantiation_base*
-scopespace::lookup_instance(const token_identifier& id) const {
-	return IS_A(const instantiation_base*, used_id_map[id]);
-}
-**/
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/** NOT READY TO BE UNLEASHED YET ... or ever
-const instantiation_base*
-scopespace::lookup_instance(const qualified_id& id) const {
-	// check absolute-ness of identifier
-	...
-}
-**/
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -483,68 +463,6 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Returns valid pointer to a namespace if a strict match is found.  
-	(at most one precise match)
-	This will serach both true subnamespaces and aliased subspaces.  
-	This variation includes the invoking namespace in the pattern match.  
-	Now honors the absolute flag of the qualified_id to start search
-	from global namespace.  
-	TO DO: re-use query_subnamespace_match
-	\param id the qualified/scoped name of the namespace to match.
-	\return pointer to found namespace.
- */
-const name_space*
-name_space::query_namespace_match(const qualified_id& id) const {
-	// recall that qualified_id is a node_list<token_identifier,scope>
-	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << "query_namespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
-
-	if (id.empty())	{	// what if it's absolute and empty?
-		return (id.is_absolute()) ? get_global_namespace() : this;
-	}
-	qualified_id::const_iterator i = id.begin();	assert(*i);
-//	const token_identifier* tid = *i;
-	never_const_ptr<token_identifier> tid(*i);
-	assert(tid);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-	const name_space* ns = (id.is_absolute()) ? this
-		: get_global_namespace();
-	if (ns->key.compare(*tid)) {
-		// if names differ, already failed, try alias spaces
-		return NULL;
-	} else {
-		for (i++; ns && i!=id.end(); i++) {
-			const name_space* next;
-			// no need to skip scope tokens anymore
-			tid = i->is_a<token_identifier>();
-			assert(tid);
-			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-			// the [] operator of map<> doesn't have const 
-			// semantics, even if looking up an entry!
-			next = IS_A(const name_space*, ns->used_id_map[*tid]);
-			// if not found in subspaces, check aliases list
-			// or should we not search aliases?
-			ns = (next) ? next : ns->open_aliases[*tid];
-		}
-
-	// for loop terminates when ns is NULL or i is at the end
-	// if i is not at the end, then we didn't find a matched namespace
-	//	because there are still scoped id's trailing, 
-	//	therefore ns is NULL, which means no match.  
-	// if ns is not NULL, then i must be at the end, 
-	//	which means that we've matched so far.
-	// In either case, we return ns.  
-
-		return ns;
-	} 
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns valid pointer to a namespace if a strict match is found.  
 	(at most one precise match)
@@ -603,57 +521,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 		return ns;
 	} 
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Returns valid pointer to a namespace if a strict match is found.  
-	(at most one precise match)
-	This will treat open aliased namespaces as valid subspaces for search.
-	This variation excludes the invoking namespace in the pattern match.  
-	\param id the qualified/scoped name of the namespace to match
- */
-const name_space*
-name_space::query_subnamespace_match(const qualified_id& id) const {
-	// recall that qualified_id is a node_list<token_identifier,scope>
-	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << endl << "query_subnamespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
-	if (id.empty())	{	// what if it's absolute and empty?
-		return (id.is_absolute()) ? get_global_namespace() : this;
-	}
-	qualified_id::const_iterator i = id.begin();	// id may be empty!
-	never_const_ptr<token_identifier> tid(*i);
-	assert(tid);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-	const name_space* ns = 
-		IS_A(const name_space*, 
-			((id.is_absolute()) ? get_global_namespace() : this)
-				->used_id_map[*tid]);
-	if (!ns) {				// else lookup in aliases
-		ns = open_aliases[*tid];	// replaced for const semantics
-	}
-	// remember to skip scope tokens
-	for (i++; ns && i!=id.end(); i++) {
-		const name_space* next;
-		tid = i->is_a<token_identifier>();
-		assert(tid);
-		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-		next = IS_A(const name_space*, ns->used_id_map[*tid]);
-		// if not found in subspaces, check aliases list
-		ns = (next) ? next : ns->open_aliases[*tid];
-	}
-	// for loop terminates when ns is NULL or i is at the end
-	// if i is not at the end, then we didn't find a matched namespace
-	//	because there are still scoped id's trailing, 
-	//	therefore ns is NULL, which means no match.  
-	// if ns is not NULL, then i must be at the end, 
-	//	which means that we've matched so far.
-	// In either case, we return ns.  
-	return ns;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1044,217 +911,6 @@ const scopespace*
 name_space::lookup_namespace(const qualified_id_slice& id) const {
 	return query_subnamespace_match(id);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Public interface to lookup a single definition_base.  
-	This version takes a single identifier string (unqualified).  
-	\param id the unqualified name of the definition to seek.  
-	\return pointer to matched definition_base, only if it unique, 
-		otherwise returns NULL.  
- */
-
-const definition_base*
-name_space::lookup_definition(const token_identifier& id) const {
-	definition_list::iterator i;
-	definition_list candidates;
-
-	// only want to query if type was unqualified
-	query_definition_match(candidates, id);
-
-	i = candidates.begin();
-	switch (candidates.size()) {
-		case 1: { return (*i); }	// unique match
-		case 0:	{	// no matches
-			cerr << "type " << id << " ... not found, ERROR! ";
-			return NULL;
-			}
-		default: {	// too many matches
-			cerr << " ERROR: ambiguous definition, "
-				"need to be more specific.  candidates are: ";
-				for ( ; i!=candidates.end(); i++)
-					cerr << endl << "\t" << 
-						(*i)->get_qualified_name();
-			return NULL;
-			}
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Public interface to lookup a single definition_base.  
-	This version takes a qualified expression.  
-	The main difference between this and other type-specific lookup
-	methods is that this only searches used_id_map.  
-	\param id the qualified name of the type.  
-	\return pointer to matched definition_base, only if it unique, 
-		otherwise returns NULL.  
- */
-const definition_base*
-name_space::lookup_definition(const qualified_id& id) const {
-	qualified_id nsname = id.copy_namespace_portion();
-//	cerr << "nsname = " << " " << nsname << endl;
-	// what if nsname is empty? start search here
-	const name_space* root = 
-		((id.is_absolute()) ? get_global_namespace() : this)
-		->query_subnamespace_match(nsname);
-	if (root) {
-		const definition_base* ret;
-		qualified_id::const_reverse_iterator e = id.rbegin();
-		assert(*e);
-		ret = IS_A(const definition_base*, root->used_id_map[**e]);
-		if (!ret)
-			cerr << "definition " << id <<
-				" ... not found, ERROR!" << endl;
-		return ret;
-	} else {
-		cerr << " ERROR: namespace " << nsname <<
-			" not found!" << endl;
-		return NULL;
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Public interface to lookup a single datatype_definition.  
-	This version takes a single identifier string (unqualified).  
-	Will need to make sure that template params of matched type is null.  
-	\param id the unqualified name of the type.  
-	\return pointer to matched datatype_definition, only if it unique, 
-		otherwise returns NULL.  
-	\sa query_datatype_def_match
- */
-
-const datatype_definition*
-name_space::lookup_unqualified_datatype(const string& id) const {
-	const datatype_definition* ret;
-	data_def_list::iterator i;
-	data_def_list candidates;
-
-	// only want to query if type was unqualified
-	query_datatype_def_match(candidates, id);
-
-	i = candidates.begin();
-	switch (candidates.size()) {
-		case 1: {
-			ret = (*i);
-			break;
-			}
-		case 0:	{
-			cerr << "type " << id << " ... not found, ERROR!";
-			ret = NULL;
-			break;	// no matches
-			}
-		default: {	// > 1
-			ret = NULL;
-			cerr << " ERROR: ambiguous type definition, "
-				"need to be more specific.  candidates are: ";
-				for ( ; i!=candidates.end(); i++)
-					cerr << endl << "\t" << 
-						(*i)->get_qualified_name();
-			}
-	}
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Public interface to lookup a single datatype_definition.  
-	This version takes a qualified expression.  
-	Will need to make sure that template params of matched type is null.  
-	\param id the qualified name of the type.  
-	\return pointer to matched datatype_definition, only if it unique, 
-		otherwise returns NULL.  
-	\sa query_datatype_def_match
- */
-const datatype_definition*
-name_space::lookup_qualified_datatype(const qualified_id& id) const {
-	qualified_id nsname = id.copy_namespace_portion();
-//	cerr << "nsname = " << " " << nsname << endl;
-	// what if nsname is empty? start search here
-	const name_space* root = 
-		((id.is_absolute()) ? get_global_namespace() : this)
-		->query_subnamespace_match(nsname);
-	if (root) {
-		const datatype_definition* ret;
-		qualified_id::const_reverse_iterator e = id.rbegin();
-		assert(*e);
-		ret = IS_A(const datatype_definition*, root->used_id_map[**e]);
-		if (!ret)
-			cerr << "data-type " << id << " ... not found, ERROR! ";
-		return ret;
-	} else {
-		cerr << " ERROR: namespace " << nsname << " not found!";
-		return NULL;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Faster lookup of built-in int<> and bool data types, 
-	rooted at the global namespace.  
- */
-const datatype_definition*
-name_space::lookup_built_in_datatype(const token_datatype& id) const {
-	const built_in_datatype_def* ret;
-	ret = IS_A(const built_in_datatype_def*, 
-			get_global_namespace()->used_id_map[id]);
-	assert(ret);		// better already be there!
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Faster lookup of built-in int<> and bool data types, 
-	rooted at the global namespace.  
- */
-const built_in_param_def*
-name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
-	const built_in_param_def* ret;
-	ret = IS_A(const built_in_param_def*, 
-		get_global_namespace()->used_id_map[id]);
-	assert(ret);		// better already be there!
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Public interface to lookup a single instantiation_base.  
-	This version takes a qualified expression.  
-	The main difference between this and other type-specific lookup
-	methods is that this only searches used_id_map.  
-	\param id the qualified name of the type.  
-	\return pointer to matched instantiation_base, only if it unique, 
-		otherwise returns NULL.  
- */
-const instantiation_base*
-name_space::lookup_instance(const qualified_id& id) const {
-	qualified_id nsname = id.copy_namespace_portion();
-//	cerr << "nsname = " << " " << nsname << endl;
-	// what if nsname is empty? start search here
-	const name_space* root = 
-		((id.is_absolute()) ? get_global_namespace() : this)
-		->query_subnamespace_match(nsname);
-	if (root) {
-		const instantiation_base* ret;
-		qualified_id::const_reverse_iterator e = id.rbegin();
-		assert(*e);
-//		ret = IS_A(const instantiation_base*, root->used_id_map[**e]);
-		ret = root->lookup_instance(**e);
-		if (!ret)
-			cerr << "instance " << id << " ... not found, ERROR! ";
-		return ret;
-	} else {
-		cerr << " ERROR: namespace " << nsname << " not found!";
-		return NULL;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
