@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.2.1 2005/02/23 21:12:37 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.1 2005/02/23 21:21:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__

@@ -3,7 +3,7 @@
 	Classification of types in ART.
 	These type tags may be used for specialization of many
 	features of the language.  
-	$Id: art_object_classification_tags.h,v 1.1.2.1 2005/02/23 21:12:35 fang Exp $
+	$Id: art_object_classification_tags.h,v 1.1.4.1 2005/02/23 21:21:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_TAGS_H__

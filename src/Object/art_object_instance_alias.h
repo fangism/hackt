@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.2.1 2005/02/23 21:12:36 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.4.1 2005/02/23 21:21:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__

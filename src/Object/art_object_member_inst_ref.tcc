@@ -1,7 +1,7 @@
 /**
 	\file "art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.3 2005/02/23 21:12:39 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.2.2.1 2005/02/23 21:21:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__

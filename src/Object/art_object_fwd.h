@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.5 2005/02/23 21:12:35 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.4.2.1 2005/02/23 21:21:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.3 2005/02/23 21:12:36 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.2.2.1 2005/02/23 21:21:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__

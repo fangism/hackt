@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.4 2005/02/23 21:12:36 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.1 2005/02/23 21:21:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__

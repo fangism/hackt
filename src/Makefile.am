@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.5.2.3 2005/02/23 21:12:33 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.5.2.2.2.1 2005/02/23 21:21:25 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.4 2005/02/23 21:12:35 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.3.2.1 2005/02/23 21:21:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
