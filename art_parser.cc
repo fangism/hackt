@@ -226,7 +226,7 @@ chan_type::attach_data_types(node* t) {
 							// also known as...
 template class node_list<root_item>;			// root_body
 template class node_list<expr,comma>;			// expr_list
-// template class node_list<token_identifier,scope>;	// id_expr
+template class node_list<token_identifier,scope>;	// id_expr_base
 template class node_list<range,comma>;			// range_list
 template class node_list<data_type_base,comma>;		// base_data_type_list
 template class node_list<def_body_item>;		// definition_body
