@@ -3,25 +3,28 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.4 2004/11/29 02:46:39 fang Exp $
+	$Id: list_vector.h,v 1.5 2004/12/05 05:07:23 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_H__
 #define	__LIST_VECTOR_H__
 
-#include <list>
+
 #include <iosfwd>
 #include <algorithm>
 
 #include "macros.h"
 #include "list_vector_fwd.h"
 
+#include "STL/list.h"
 #include "qmap.h"
 #include "nested_iterator.h"
 
 
 namespace util {
-using namespace std;
+USING_LIST
+using std::vector;
+using std::ostream;
 using QMAP_NAMESPACE::qmap;
 
 //=============================================================================

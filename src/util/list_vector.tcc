@@ -2,7 +2,7 @@
 	file "list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.3 2004/12/03 02:46:42 fang Exp $
+	$Id: list_vector.tcc,v 1.4 2004/12/05 05:07:23 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_TCC__
@@ -10,14 +10,14 @@
 
 #include <iostream>
 #include <numeric>
+#include "STL/list.tcc"
 #include "list_vector.h"
 
 // should we include this automatically?
 #include "qmap.tcc"
 
 namespace util {
-using namespace std;
-
+using std::ostream;
 //=============================================================================
 // class list_vector method definitions
 

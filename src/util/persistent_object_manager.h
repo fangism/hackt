@@ -1,12 +1,13 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.8 2004/12/02 06:33:58 fang Exp $
+	$Id: persistent_object_manager.h,v 1.9 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
 #define	__PERSISTENT_OBJECT_MANAGER_H__
 
+#include <iosfwd>
 #include "persistent.h"
 
 #include "hash_qmap.h"
@@ -27,7 +28,14 @@
 
 //=============================================================================
 namespace util {
-using namespace std;
+using std::vector;
+using std::istream;
+using std::ostream;
+using std::ios_base;
+using std::streampos;
+using std::stringstream;
+using std::ofstream;
+using std::ifstream;
 using namespace util::memory;
 using namespace HASH_QMAP_NAMESPACE;
 

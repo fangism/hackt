@@ -3,20 +3,20 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.1 2004/11/26 23:24:17 fang Exp $
+	$Id: unique_list.h,v 1.2 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef __UNIQUE_LIST__
 #define __UNIQUE_LIST__
 
 #include <assert.h>
-#include <list>
+#include "STL/list.h"
 #include <set>
 #include <algorithm>		// for find
 
 namespace util {
+USING_LIST
 using std::find;
-using std::list;
 using std::set;
 
 /**

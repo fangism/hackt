@@ -7,7 +7,7 @@
 	We've kept the original namespace to attribute credit to its source.  
 	The original source can be found at:
 	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
-	$Id: compose.h,v 1.4 2004/11/02 07:52:12 fang Exp $
+	$Id: compose.h,v 1.5 2004/12/05 05:07:23 fang Exp $
  */
 
 #ifndef	__COMPOSE_H__
@@ -17,7 +17,8 @@
 
 namespace ADS {
 //=============================================================================
-using namespace std;
+using std::unary_function;
+using std::binary_function;
 
 //=============================================================================
 /**

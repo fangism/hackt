@@ -2,44 +2,33 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.10 2004/11/06 06:27:14 fang Exp $
+	$Id: multikey_map.h,v 1.11 2004/12/05 05:07:24 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
 #define	__MULTIKEY_MAP_H__
 
-#include <list>
+#include "macros.h"
+#include "STL/list.h"
 #include <utility>		// for std::pair
-#include <limits>		// for numeric_limits specializations
-#include <functional>
-#include <algorithm>
-
-// for debugging
-#include <iterator>		// for ostream_iterator
-#include <memory>		// for auto_ptr
 
 #include "multikey.h"
-	// includes <iostream>
 #include "multikey_map_fwd.h"
-#include "IO_utils.tcc"
 
 namespace MULTIKEY_MAP_NAMESPACE {
-using namespace std;
-using util::write_value;
-using util::read_value;
-using util::write_map;
-using util::read_map;
+using std::ostream;
+using std::istream;
+using std::pair;
+USING_LIST
 using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_NAMESPACE::multikey;
-using MULTIKEY_NAMESPACE::multikey_generator_base;
-using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
 /**
 	Abstract base class for pseudo-multidimensional map.
 	Implementation-independent.  
  */
-template <class K, class T>
+BASE_MULTIKEY_MAP_TEMPLATE_SIGNATURE
 class multikey_map_base {
 public:
 	typedef	pair<multikey_base<K>, multikey_base<K> >
@@ -88,7 +77,7 @@ static	this_type* make_multikey_map(const size_t d);
 
 	\example multikey_qmap_test.cc
  */
-template <size_t D, class K, class T, template <class, class> class M>
+MULTIKEY_MAP_TEMPLATE_SIGNATURE
 class multikey_map : public M<multikey<D,K>, T>, multikey_map_base<K,T> {
 protected:
 	/** this is the representation-type */
@@ -123,12 +112,12 @@ public:
 	/**
 		Default empty constructor.  
 	 */
-	multikey_map() : map_type(), interface_type() { }
+	multikey_map();
 
 	/**
 		Default destructor.
 	 */
-	~multikey_map() { }
+	~multikey_map();
 
 	/**
 		Whether or not this map contains any elements.
@@ -155,29 +144,13 @@ public:
 		Removes all elements.
 	 */
 	void
-	clear(void) {
-		map_type::clear();
-	}
+	clear(void);
 
 	/**
 		General method for removing default values.  
 	 */
 	void
-	clean(void) {
-		const T def;
-		iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; ) {
-			if (i->second == def) {
-				iterator j = i;
-				j++;
-				map_type::erase(i);
-				i = j;
-			} else {
-				i++;
-			}
-		}
-	}
+	clean(void);
 
 	/**
 		\param k The key of the (key, value) pair to find.  
@@ -185,17 +158,11 @@ public:
 	 */
 	template <size_t D2, K init2>
 	iterator
-	lower_bound(const multikey<D2,K,init2>& k) {
-		key_type x(k, numeric_limits<K>::min());
-		return map_type::lower_bound(x);
-	}
+	lower_bound(const multikey<D2,K,init2>& k);
 
 	template <size_t D2, K init2>
 	const_iterator
-	lower_bound(const multikey<D2,K,init2>& k) const {
-		key_type x(k, numeric_limits<K>::min());
-		return map_type::lower_bound(x);
-	}
+	lower_bound(const multikey<D2,K,init2>& k) const;
 
 	/**
 		\param k The key of the (key, value) pair to find.  
@@ -203,116 +170,58 @@ public:
 	 */
 	template <size_t D2, K init2>
 	iterator
-	upper_bound(const multikey<D2,K,init2>& k) {
-		key_type x(k, numeric_limits<K>::min());
-		return map_type::upper_bound(x);
-	}
+	upper_bound(const multikey<D2,K,init2>& k);
 
 	template <size_t D2, K init2>
 	const_iterator
-	upper_bound(const multikey<D2,K,init2>& k) const {
-		key_type x(k, numeric_limits<K>::min());
-		return map_type::upper_bound(x);
-	}
+	upper_bound(const multikey<D2,K,init2>& k) const;
 
 	/**
 		How many members match the given prefix of sub-dimensions?
 	 */
 	template <size_t D2, K init2>
 	size_type
-	count(const multikey<D2,K,init2>& k) const {
-		key_type l(k);
-		l[D2-1]++;
-		return distance(lower_bound(k), lower_bound(l));
-	}
+	count(const multikey<D2,K,init2>& k) const;
 
 	/** specialization for D2 == 1 */
 	size_type
-	count(const K i) const {
-		multikey<1,K> l;
-		l[0] = i;
-		key_type m(l);
-		m[0]++;
-		return distance(lower_bound(l), lower_bound(m));
-	}
+	count(const K i) const;
 
 	template <size_t D2, K init2>
 	size_type
-	erase(const multikey<D2,K,init2>& k) {
-		if (D2 < D) {
-			multikey<D2,K,init2> m(k);
-			m[D2-1]++;
-			const iterator l(lower_bound(k));
-			const iterator u(lower_bound(m));
-			size_type ret = distance(l,u);
-			if (ret) map_type::erase(l,u);
-			return ret;
-		} else {	// D2 >= D
-			const key_type l(k);
-			const iterator f(map_type::find(l));
-			if (f != this->end()) {
-				map_type::erase(f);
-				return 1;
-			} else	return 0;
-		}
-	}
+	erase(const multikey<D2,K,init2>& k);
 
 	/** specialization of erase() for only 1 dimension specified */
 	size_type
-	erase(const K i) {
-		multikey<1,K> m, k;
-		k[0] = i;
-		m[0] = i+1;
-		const iterator l(lower_bound(k));
-		const iterator u(lower_bound(m));
-		size_type ret = distance(l,u);
-		if (ret) map_type::erase(l,u);
-		return ret;
-	}
+	erase(const K i);
 
-	T& operator [] (const typename map_type::key_type& k) {
+	T&
+	operator [] (const typename map_type::key_type& k) {
 		return map_type::operator[](k);
 	}
 
-	T operator [] (const typename map_type::key_type& k) const {
+	T
+	operator [] (const typename map_type::key_type& k) const {
 		return map_type::operator[](k);
 	}
 
 	/**
 		Check length of list?
 	 */
-	T& operator [] (const list<K>& k) {
-		assert(k.size() == D);
-		multikey<D,K> dk(k);
-		return map_type::operator[](dk);
-	}
+	T&
+	operator [] (const list<K>& k);
 
 	/**
 		Check length of list?
 	 */
-	T operator [] (const list<K>& k) const {
-		assert(k.size() == D);
-		key_type dk(k);
-		return map_type::operator[](dk);
-	}
+	T
+	operator [] (const list<K>& k) const;
 
-	T& operator [] (const multikey_base<K>& k) {
-		// what if initial value is different?
-		const key_type* dk =
-			dynamic_cast<const key_type*>(&k);
-		assert(dk);
-		return map_type::operator[](*dk);
-	}
+	T&
+	operator [] (const multikey_base<K>& k);
 
-	T operator [] (const multikey_base<K>& k) const {
-		// what if initial value is different?
-		const key_type* dk =
-			dynamic_cast<const key_type*>(&k);
-		assert(dk);
-		return map_type::operator[](*dk);
-	}
-
-#define DEBUG_SLICE	0
+	T
+	operator [] (const multikey_base<K>& k) const;
 
 	/**
 		Recursive routine to determine implicit desnsely 
@@ -322,115 +231,7 @@ public:
 			lists if sub-array is not densely packed.
 	 */
 	key_list_pair_type
-	is_compact_slice(const key_list_type& l, const key_list_type& u) const {
-		typedef	key_list_pair_type	return_type;
-		const size_t l_size = l.size();
-		{	// check for consistency
-			typedef typename list<K>::const_iterator
-							list_iterator;
-			assert(l_size == u.size());
-			pair<list_iterator, list_iterator>
-				mm = mismatch(l.begin(), l.end(), u.begin(), 
-					less_equal<K>()
-				);
-			assert(mm.first == l.end() && mm.second == u.end());
-		}
-
-#if DEBUG_SLICE
-		{
-		cerr << "In multikey_map::is_compact_slice(l,u): ";
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "l = {";
-		copy(l.begin(), l.end(), osi);
-		cerr << "}, u = {";
-		copy(u.begin(), u.end(), osi);
-		cerr << "}" << endl;
-		}
-#endif
-
-		auto_ptr<multikey_generator_base<K> >
-			key_gen( multikey_generator_base<K>::
-				make_multikey_generator(l_size));
-		assert(key_gen.get());
-		copy(l.begin(), l.end(), key_gen->get_lower_corner().begin());
-		copy(u.begin(), u.end(), key_gen->get_upper_corner().begin());
-		key_gen->initialize();
-		key_list_type list_key(key_gen->begin(), key_gen->end());
-
-		const return_type s = is_compact_slice(list_key);
-		if (s.first.empty()) {
-			assert(s.second.empty());
-#if DEBUG_SLICE
-			cerr << "foo1: s is empty." << endl;
-#endif
-			return s;
-		}
-		typename key_list_type::const_iterator
-			s_first_start = s.first.begin(), 
-			s_second_start = s.second.begin();
-		{
-			size_t s_skip = 0;
-			for ( ; s_skip < l_size; s_skip++,
-				s_first_start++, s_second_start++
-			);
-		}
-
-		(*key_gen)++;
-		for ( ; *key_gen != key_gen->get_lower_corner(); (*key_gen)++) {
-			key_list_type
-				for_list_key(key_gen->begin(), key_gen->end());
-			const return_type t = is_compact_slice(for_list_key);
-			if (t.first.empty()) {
-				assert(t.second.empty());
-				return return_type();
-			} else {
-				// compare suffixes
-				typename key_list_type::const_iterator
-					t_first_start = t.first.begin(), 
-					t_second_start = t.second.begin();
-				{
-					size_t t_skip = 0;
-					for ( ; t_skip < l_size; t_skip++,
-						t_first_start++,
-						t_second_start++
-					);
-				}
-				if (!equal(t_first_start, t.first.end(), 
-						s_first_start) || 
-					!equal(t_second_start, t.second.end(), 
-						s_second_start)) {
-					return return_type();
-				}
-				// else continue checking
-			}
-		}
-		// if this is reached, then all subdimensions matched
-		const key_list_type ret_l(key_gen->get_lower_corner().begin(), 
-			key_gen->get_lower_corner().end());
-		const key_list_type ret_u(key_gen->get_upper_corner().begin(), 
-			key_gen->get_upper_corner().end());
-		return_type ret(ret_l, ret_u);
-		copy(s_first_start, s.first.end(), back_inserter(ret.first));
-		copy(s_second_start, s.second.end(), back_inserter(ret.second));
-
-#if DEBUG_SLICE
-		{
-		cerr << "End of multikey_map::is_compact_slice(l,u): ";
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "l = {";
-		copy(l.begin(), l.end(), osi);
-		cerr << "}, u = {";
-		copy(u.begin(), u.end(), osi);
-		cerr << "}" << endl;
-		cerr << "ret.first = ";
-		copy(ret.first.begin(), ret.first.end(), osi);
-		cerr << " ret.second = ";
-		copy(ret.second.begin(), ret.second.end(), osi);
-		cerr << endl;
-		}
-#endif
-		return ret;
-	}
+	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
 
 	/**
 		This version queries one set of indices only.  
@@ -439,87 +240,7 @@ public:
 			indices of a dense slice, or empty if failure.  
 	 */
 	key_list_pair_type
-	is_compact_slice(const key_list_type& l) const {
-		typedef	key_list_pair_type	return_type;
-#if DEBUG_SLICE
-		{
-		cerr << "In multikey_map::is_compact_slice(l): ";
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "l = {";
-		copy(l.begin(), l.end(), osi);
-		cerr << "}" << endl;
-		}
-#endif
-		const size_t l_size = l.size();
-		assert(l_size);
-		assert(l_size <= D);
-		// special case for ==?
-		if (l_size == D) {
-			// if value is default, consider it empty
-			return ((*this)[key_type(l)] == T()) ?
-				return_type() :
-				return_type(l,l);
-		}
-
-		// else is under-specified
-		key_list_type lower(l);
-		key_list_type last(l);
-		last.back()++;
-#if DEBUG_SLICE && 0
-		{
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "lower = ";
-		copy(lower.begin(), lower.end(), osi);
-		cerr << " last = ";
-		copy(last.begin(), last.end(), osi);
-		cerr << endl;
-		}
-#endif
-		const_iterator lower_iter = lower_bound(key_type(lower));
-		if (lower_iter == this->end()) {
-			// then sub-range is empty
-			return return_type();
-		}
-		const_iterator last_iter = --upper_bound(key_type(last));
-		if (lower_iter == last_iter) {
-			// then sub-range has one element, therefore is dense
-			return_type ret;
-			copy(lower_iter->first.begin(), lower_iter->first.end(),
- 				back_inserter(ret.first));
-			copy(lower_iter->first.begin(), lower_iter->first.end(),
- 				back_inserter(ret.second));
-			return ret;
-		}
-#if DEBUG_SLICE && 0
-		{
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "lower_iter->first = ";
-		copy(lower_iter->first.begin(), lower_iter->first.end(), osi);
-		cerr << " last_iter->first = ";
-		copy(last_iter->first.begin(), last_iter->first.end(), osi);
-		cerr << endl;
-		}
-#endif
-
-		// get range of next dimension to check
-		K start_index = lower_iter->first[l_size];
-		K end_index = last_iter->first[l_size];
-		key_list_type upper(lower);
-		lower.push_back(start_index);
-		upper.push_back(end_index);
-#if DEBUG_SLICE && 0
-		{
-		ostream_iterator<K> osi(cerr, ",");
-		cerr << "lower = ";
-		copy(lower.begin(), lower.end(), osi);
-		cerr << " upper = ";
-		copy(upper.begin(), upper.end(), osi);
-		cerr << endl;
-		}
-#endif
-		return is_compact_slice(lower, upper);
-	}
-#undef	DEBUG_SLICE
+	is_compact_slice(const key_list_type& l) const;
 
 	/**
 		"Is the entire set compact?"
@@ -527,84 +248,25 @@ public:
 			is indeed compact, otherwise empty.  
 	 */
 	key_list_pair_type
-	is_compact(void) const {
-		typedef key_list_pair_type	return_type;
-		if (empty())
-			return return_type();
-		const_iterator first = this->begin();
-		const_iterator last = --(this->end());
-		key_list_type start, end;
-		start.push_back(first->first.front());
-		end.push_back(last->first.front());
-		return is_compact_slice(start, end);
-	}
+	is_compact(void) const;
 
 	ostream&
-	dump(ostream& o) const {
-		const_iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; i++)
-			o << i->first << " = " << i->second << endl;
-		return o;
-	}
+	dump(ostream& o) const;
 
 	/**
 		Returns the extremities of the indicies in each dimension.
 		If empty, returns empty lists.  
 	 */
 	key_list_pair_type
-	index_extremities(void) const {
-		typedef	key_list_pair_type	return_type;
-		if (this->empty())
-			return return_type();
-		const_iterator iter = this->begin();
-		const_iterator end = this->end();
-#if 0
-		typename key_type::accumulate_extremities ext(iter->first);
-		for_each(iter, end, ext);	// passes a COPY of ext...
-#else
-		key_pair_type ext(iter->first, iter->first);
-		ext = accumulate(iter, end, ext,
-			typename key_type::accumulate_extremities());
-#endif
-		return_type ret;
-		copy(ext.first.begin(), ext.first.end(),
-			back_inserter(ret.first));
-		copy(ext.second.begin(), ext.second.end(),
-			back_inserter(ret.second));
-		return ret;
-	};
+	index_extremities(void) const;
 
 public:
 	// IO methods
 	ostream&
-	write(ostream& f) const {
-		assert(f.good());
-		write_value(f, population());
-		const_iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; i++) {
-			i->first.write(f);
-			write_value(f, i->second);
-		}
-		return f;
-	}
+	write(ostream& f) const;
 
 	istream&
-	read(istream& f) {
-		assert(f.good());
-		assert(empty());
-		size_t size, i=0;
-		read_value(f, size);
-		for ( ; i<size; i++) {
-			key_type key;
-			mapped_type val;
-			key.read(f);
-			read_value(f, val);
-			(*this)[key] = val;
-		}
-		return f;
-	}
+	read(istream& f);
 
 };	// end class multikey_map
 
@@ -612,7 +274,7 @@ public:
 /**
 	Specialization for one-dimension: just use base map type.  
  */
-template <class K, class T, template <class, class> class M>
+SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
 class multikey_map<1,K,T,M> : public M<K,T>, public multikey_map_base<K,T> {
 protected:
 	typedef	multikey_map_base<K,T>			interface_type;
@@ -643,8 +305,8 @@ public:
 	typedef	pair<key_type, key_type>		key_pair_type;
 
 public:
-	multikey_map() : map_type(), interface_type() { }
-	~multikey_map() { }
+	multikey_map();
+	~multikey_map();
 
 	bool
 	empty(void) const {
@@ -652,9 +314,7 @@ public:
 	}
 
 	void
-	clear(void) {
-		map_type::clear();
-	}
+	clear(void);
 
 	size_t
 	dimensions(void) const { return 1; }
@@ -663,71 +323,32 @@ public:
 	population(void) const { return mt::size(); }
 
 	void
-	clean(void) {
-		const T def;
-		iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; ) {
-			if (i->second == def) {
-				iterator j = i;
-				j++;
-				this->erase(i);
-				i = j;
-			} else {
-				i++;
-			}
-		}
-	}
+	clean(void);
 
-	T& operator [] (const typename map_type::key_type& k) {
+	T&
+	operator [] (const typename map_type::key_type& k) {
 		return map_type::operator[](k);
 	}
 
-	T operator [] (const typename map_type::key_type& k) const {
+	T
+	operator [] (const typename map_type::key_type& k) const {
 		return map_type::operator[](k);
 	}
 
-	T& operator [] (const key_list_type& k) {
-		assert(k.size() == 1);
-		return map_type::operator[](k.front());
-	}
+	T&
+	operator [] (const key_list_type& k);
 
-	T operator [] (const key_list_type& k) const {
-		assert(k.size() == 1);
-		return map_type::operator[](k.front());
-	}
+	T
+	operator [] (const key_list_type& k) const;
 
-	T& operator [] (const multikey_base<K>& k) {
-		// what if initial value is different?
-		const multikey<1,K>* dk =
-			dynamic_cast<const multikey<1,K>*>(&k);
-		assert(dk);
-		return map_type::operator[]((*dk)[0]);
-	}
+	T&
+	operator [] (const multikey_base<K>& k);
 
-	T operator [] (const multikey_base<K>& k) const {
-		// what if initial value is different?
-		const multikey<1,K>* dk =
-			dynamic_cast<const multikey<1,K>*>(&k);
-		assert(dk);
-		return map_type::operator[]((*dk)[0]);
-	}
+	T
+	operator [] (const multikey_base<K>& k) const;
 
 	key_list_pair_type
-	is_compact_slice(const key_list_type& l, const key_list_type& u) const {
-		typedef	key_list_pair_type	return_type;
-		assert(l.size() == 1);
-		assert(u.size() == 1);
-		K k = l.front();
-		assert(k <= u.front());
-		for ( ; k <= u.front(); k++) {
-			if ((*this)[k] == T()) {	// static_cast const?
-				return return_type();
-			}
-		}
-		// else success
-		return return_type(l,u);
-	}
+	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
 
 	/**
 		With one argument, is always true.
@@ -739,123 +360,21 @@ public:
 	}
 
 	key_list_pair_type
-	is_compact(void) const {
-		typedef	key_list_pair_type	return_type;
-		if (this->empty()) {
-			return return_type();
-		}
-		const const_iterator first = this->begin();
-		const const_iterator end = this->end();
-		const_iterator last = end;
-		last--;
-#if 0
-		// requires "compose.h"
-		const size_t vcount =
-		count_if(this->begin(), this->end(), 
-			unary_compose(
-				bind2nd(not_equal<T>, T()), 
-				_Select2nd()
-			)
-		);
-#else
-		K k = first->first;
-		for ( ; k <= last->first; k++) {
-			if ((*this)[k] == T()) {	// static_cast const?
-				return return_type();
-			}
-		}
-		return_type ret;
-		ret.first.push_back(first->first);
-		ret.first.push_back(last->first);
-		return ret;
-#endif
-	}
+	is_compact(void) const;
 
 
 	ostream&
-	dump(ostream& o) const {
-		const_iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; i++)
-			o << '[' << i->first << ']' << " = "
-				<< i->second << endl;
-		return o;
-	}
+	dump(ostream& o) const;
 
 	ostream&
-	write(ostream& f) const {
-#if 0
-		write_map(f, static_cast<const map_type&>(*this));
-#else
-		assert(f.good());
-		write_value(f, population());
-		const_iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; i++) {
-#if 0
-			i->first.write(f);	// invalid for D=1
-			write_value(f, i->second);
-#else
-			util::write_key_value_pair(f, *i);
-#endif
-		}
-#endif
-		return f;
-	}
+	write(ostream& f) const;
 
 	istream&
-	read(istream& f) {
-// strange Apple gcc-3.3 (build 1640) bug reporting
-// undefined reference to blah with char_traints (TYPO in name-mangled libs)!
-// when this is fixed, set following to #if 1, same above with write().
-#if 0
-		read_map(f, static_cast<map_type&>(*this));
-#else
-		assert(f.good());
-		assert(empty());
-		size_t size, i=0;
-		read_value(f, size);
-		for ( ; i<size; i++) {
-#if 0
-			key_type key;
-			mapped_type val;
-			key.read(f);		// invalid for D=1
-			read_value(f, val);
-			(*this)[key] = val;
-#else
-			pair<K, T> p;
-			util::read_key_value_pair(f, p);
-			(*this)[p.first] = p.second;
-#endif
-		}
-#endif
-		return f;
-	}
+	read(istream& f);
 
 	// all other methods are the same as general template class
 
 };	// end class multikey_map specialization
-
-//=============================================================================
-// static function definitions
-
-template <class K, class T>
-template <template <class, class> class M>
-multikey_map_base<K,T>*
-multikey_map_base<K,T>::make_multikey_map(const size_t d) {
-	// slow switch-case, but we need constants
-	assert(d > 0 && d <= LIMIT);
-	// there may be some clever way to make a call table to
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multikey_map<1,K,T,M>();
-		case 2: return new multikey_map<2,K,T,M>();
-		case 3: return new multikey_map<3,K,T,M>();
-		case 4: return new multikey_map<4,K,T,M>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
 
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE

@@ -1,13 +1,14 @@
 /**
 	\file "qmap.tcc"
 	Template class method definitions for queryable map.  
-	$Id: qmap.tcc,v 1.1 2004/12/03 02:46:43 fang Exp $
+	$Id: qmap.tcc,v 1.2 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__QMAP_TCC__
 #define	__QMAP_TCC__
 
 #include "qmap.h"
+#include "STL/map.tcc"
 
 namespace QMAP_NAMESPACE {
 //=============================================================================

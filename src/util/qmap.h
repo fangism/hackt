@@ -3,20 +3,20 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: qmap.h,v 1.7 2004/12/03 02:46:43 fang Exp $
+	$Id: qmap.h,v 1.8 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__QMAP_H__
 #define	__QMAP_H__
 
-// wish we could just include the class declaration, leave definitions separate
-#include <map>
-
 #include "macros.h"
 #include "qmap_fwd.h"		// forward declarations only
+#include "STL/map.h"
 
 namespace QMAP_NAMESPACE {
-using std::map;
+USING_MAP
+using std::pair;
+
 //-----------------------------------------------------------------------------
 /**
 	Extension of Standard Template Library's map container.  

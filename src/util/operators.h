@@ -1,7 +1,7 @@
 /**
 	\file "operators.h'
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.2 2004/11/02 07:52:15 fang Exp $
+	$Id: operators.h,v 1.3 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
@@ -29,7 +29,7 @@
 	using util::shift_right;
 
 namespace util {
-using namespace std;
+// using namespace std;
 
 //=============================================================================
 /**

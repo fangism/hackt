@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.10 2004/11/26 23:24:17 fang Exp $
+	$Id: multikey.h,v 1.11 2004/12/05 05:07:24 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -26,9 +26,14 @@
 ***/
 
 namespace MULTIKEY_NAMESPACE {
+using std::pair;
 using util::write_value;
 using util::read_value;
-using namespace std;
+#include "using_ostream.h"
+using std::istream;
+using std::copy;
+using std::fill;
+using std::lexicographical_compare;
 
 //=============================================================================
 /**
@@ -422,7 +427,7 @@ operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
 	if (l.dimensions() != r.dimensions())
 		return false;
 #if USE_STL_ALGORITHM
-	return equal(l.begin(), l.end(), r.begin());
+	return std::equal(l.begin(), l.end(), r.begin());
 #endif
 }
 

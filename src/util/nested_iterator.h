@@ -5,7 +5,7 @@
 
 	\todo Specify all pre-conditions, post-conditions, and semantics.  
 
-	$Id: nested_iterator.h,v 1.3 2004/11/28 23:44:27 fang Exp $
+	$Id: nested_iterator.h,v 1.4 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__NESTED_ITERATOR_H__
@@ -26,7 +26,13 @@
 
 
 namespace util {
-using namespace std;
+using std::iterator;
+using std::accumulate;
+using std::pair;
+
+#if DEBUG_NESTED_ITERATOR
+#include "using_ostream.h"
+#endif
 
 //=============================================================================
 /**

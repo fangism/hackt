@@ -1,7 +1,7 @@
 /**
 	\file "persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.4 2004/11/02 07:52:16 fang Exp $
+	$Id: persistent.cc,v 1.5 2004/12/05 05:07:25 fang Exp $
  */
 
 #include <assert.h>
@@ -13,7 +13,8 @@
 
 namespace util {
 //=============================================================================
-using namespace std;
+#include "using_ostream.h"
+using std::fill;
 
 //=============================================================================
 // class persistent::hash_key method definitions
@@ -79,7 +80,7 @@ persistent::hash_key::hash_key(const string& s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 operator == (const persistent::hash_key& l, const persistent::hash_key& r) {
-	return equal(l.begin(), l.end(), r.begin());
+	return std::equal(l.begin(), l.end(), r.begin());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,7 +93,8 @@ operator != (const persistent::hash_key& l, const persistent::hash_key& r) {
 bool
 operator < (const persistent::hash_key& l, const persistent::hash_key& r) {
 	// should be specialized to strcmp or memcmp by STL
-	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
+	return std::lexicographical_compare(
+		l.begin(), l.end(), r.begin(), r.end());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

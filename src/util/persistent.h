@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.3 2004/11/02 07:52:16 fang Exp $
+	$Id: persistent.h,v 1.4 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__
@@ -137,7 +137,8 @@ void T::load_object(persistent_object_manager& m) { }
  */
 namespace util {
 //=============================================================================
-	using namespace std;
+	using std::ostream;
+	using std::string;
 
 //=============================================================================
 // forward declarations

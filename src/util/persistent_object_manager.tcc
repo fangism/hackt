@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.8 2004/12/02 06:33:58 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.9 2004/12/05 05:07:25 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
@@ -37,7 +37,7 @@ persistent_object_manager::get_root<T>(void);
 
 namespace util {
 //=============================================================================
-using namespace std;
+#include "using_ostream.h"
 using namespace util::memory;
 
 //=============================================================================
