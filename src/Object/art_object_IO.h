@@ -31,6 +31,7 @@ using namespace PTRS_NAMESPACE;
 
 // forward declaration
 class object;
+class module;
 class name_space;
 
 //=============================================================================
@@ -54,6 +55,13 @@ typedef	reconstruct_function_type*
 	deleting the memory created.  
  */
 class persistent_object_manager {
+public:
+	/**
+		Can't use void, b/c can't dynamic cast from void.  
+	 */
+	typedef	object			ptr_type;
+	// void or object
+
 private:
 	/**
 		The class contains the information necessary for reconstructing
@@ -142,7 +150,7 @@ private:
 	/** file position after the header */
 	streampos				start_of_objects;
 	/** temporary place to keep ownership of root pointer */
-	excl_ptr<name_space>			root;
+	excl_ptr<module>			root;
 
 public:
 	static bool				dump_reconstruction_table;
@@ -157,12 +165,12 @@ public:
 // public interface functions to object class hierarchy
 	/** pointer registration interface */
 	bool register_transient_object(
-		const object* ptr, const type_index_enum t);
-	bool flag_visit(const object* ptr);
-	ostream& lookup_write_buffer(const object* ptr) const;
-	istream& lookup_read_buffer(const object* ptr) const;
+		const ptr_type* ptr, const type_index_enum t);
+	bool flag_visit(const ptr_type* ptr);
+	ostream& lookup_write_buffer(const ptr_type* ptr) const;
+	istream& lookup_read_buffer(const ptr_type* ptr) const;
 
-	long lookup_ptr_index(const object* ptr) const;
+	long lookup_ptr_index(const ptr_type* ptr) const;
 	object*	lookup_obj_ptr(const long i) const;
 	size_t*	lookup_ref_count(const long i) const;
 
@@ -217,6 +225,7 @@ public:
 
 
 // two interface functions suffice for file interaction:
+#if 0
 	static void	save_object_to_file(const string& s,
 				never_const_ptr<name_space> g);
 	static excl_ptr<name_space>
@@ -228,6 +237,15 @@ public:
 
 	static excl_ptr<name_space>
 			self_test_no_file(never_const_ptr<name_space> g);
+#else
+	static void	save_object_to_file(const string& s, const module& m);
+	static excl_ptr<module>
+			load_object_from_file(const string& s);
+	static excl_ptr<module>
+			self_test(const string& s, const module& m);
+	static excl_ptr<module>
+			self_test_no_file(const module& m);
+#endif
 
 private:
 	void initialize_null(void);
@@ -241,7 +259,8 @@ private:
 	void finish_load(ifstream& f);
 	/** just allocate objects without initializing */
 	void reconstruct(void);
-	excl_ptr<name_space>	get_root_namespace(void);
+//	excl_ptr<name_space>	get_root_namespace(void);
+	excl_ptr<module>	get_root_module(void);
 	void reset_for_loading(void);
 
 };	// end class persistent_object_manager

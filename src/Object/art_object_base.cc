@@ -867,10 +867,13 @@ object_list::make_port_connection(
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : object(),
-		used_id_map(),
-//		connect_assign_list(), 
+		used_id_map()
+#if 0
+		connect_assign_list(), 
 		assign_list(), 
-		connect_list() {
+		connect_list()
+#endif
+{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1126,6 +1129,7 @@ scopespace::add_definition_alias(never_const_ptr<definition_base> d,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 scopespace::add_assignment_to_scope(
 		excl_const_ptr<param_expression_assignment> c) {
@@ -1138,6 +1142,7 @@ scopespace::add_connection_to_scope(
 		excl_const_ptr<instance_reference_connection> c) {
 	connect_list.push_back(c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1270,6 +1275,9 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETED
+
 void
 scopespace::collect_assign_list_pointers(persistent_object_manager& m) const {
 #if 0
@@ -1333,6 +1341,8 @@ scopespace::load_object_connect_list(persistent_object_manager& m) {
 	assert(f.good());
 	m.read_pointer_list(f, connect_list);
 }
+// end OBSOLETE
+#endif
 
 //=============================================================================
 // class bin_sort method definitions
@@ -1580,7 +1590,7 @@ name_space::dump(ostream& o) const {
 			bind2nd_argval(
 				mem_fun(&instantiation_base::pair_dump, 
 					instantiation_base::null), 
-				cerr), 
+				o), 
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
 		);
@@ -1593,7 +1603,7 @@ name_space::dump(ostream& o) const {
 			bind2nd_argval(
 				mem_fun(&name_space::pair_dump, 
 					name_space::null), 
-				cerr), 
+				o), 
 			_Select2nd<const_bin_sort::ns_bin_type::value_type>()
 		)
 //			This does the following (in pair_dump):
@@ -1609,7 +1619,7 @@ name_space::dump(ostream& o) const {
 			bind2nd_argval(
 				mem_fun(&definition_base::pair_dump,
 					definition_base::null),
-				cerr), 
+				o), 
 			_Select2nd<const_bin_sort::def_bin_type::value_type>()
 		)
 		);
@@ -1622,7 +1632,7 @@ name_space::dump(ostream& o) const {
 			bind2nd_argval(
 				mem_fun(&definition_base::pair_dump,
 					definition_base::null),
-				cerr), 
+				o), 
 			_Select2nd<const_bin_sort::alias_bin_type::value_type>()
 		)
 		);
@@ -1635,12 +1645,13 @@ name_space::dump(ostream& o) const {
 			bind2nd_argval(
 				mem_fun(&instantiation_base::pair_dump,
 					instantiation_base::null),
-				cerr), 
+				o), 
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
 		);
 	}
 
+#if 0
 	if (!assign_list.empty()) {
 		cerr << "Assignments: " << endl;
 		assign_list_type::const_iterator
@@ -1667,6 +1678,7 @@ name_space::dump(ostream& o) const {
 			ap->dump(o << '\t') << endl;
 		}
 	}
+#endif
 	return o << "}" << endl;
 }
 
@@ -2196,6 +2208,21 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+/**
+	This overriding method does nothing.  
+	No sequential instance_management_base items may be added 
+	to a namespace; they may only be added to scopes
+	with sequencing (such as definitions).  
+ */
+void
+name_space::append_instance(excl_ptr<instance_management_base> imb) {
+	cerr << "Never supposed to call name_space::append_instance()!" << endl;
+	assert(0);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 OBSOLETE???
 /**
 	Adds a fundamental_type_reference to the used_id_map, using
@@ -2272,6 +2299,8 @@ name_space::lookup_open_alias(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETE: unrolling is done outside of namespaces
 /**
 	This pass walks through all parameter assignments, expanding
 	parameter instantiations as needed.  
@@ -2318,7 +2347,6 @@ name_space::unroll_params(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 void
 name_space::unroll_instances(void) {
 
@@ -2329,6 +2357,7 @@ void
 name_space::unroll_connections(void) {
 
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -2351,8 +2380,10 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 		<< this << endl;
 #endif
 	collect_used_id_map_pointers(m);
+#if 0
 	collect_assign_list_pointers(m);
 	collect_connect_list_pointers(m);
+#endif
 }
 // else already visited
 }
@@ -2396,8 +2427,10 @@ name_space::write_object(persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	write_object_used_id_map(m);
+#if 0
 	write_object_assign_list(m);
 	write_object_connect_list(m);
+#endif
 
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -2424,8 +2457,10 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	load_object_used_id_map(m);
+#if 0
 	load_object_assign_list(m);
 	load_object_connect_list(m);
+#endif
 
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -2457,6 +2492,88 @@ name_space::load_used_id_map_object(excl_ptr<object> o) {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;
 	}
+}
+
+//=============================================================================
+// class sequential_scope method definitions
+
+sequential_scope::sequential_scope() : instance_management_list() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sequential_scope::~sequential_scope() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+sequential_scope::dump(ostream& o) const {
+	for_each(instance_management_list.begin(), 
+		instance_management_list.end(), 
+		instance_management_base::dumper(o)
+	);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+sequential_scope::append_instance_management(
+		excl_const_ptr<instance_management_base> i) {
+	instance_management_list.push_back(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// NOT YET
+void
+sequential_scope::unroll(...) {
+
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+sequential_scope::collect_object_pointer_list(
+		persistent_object_manager& m) const {
+	for_each(instance_management_list.begin(), 
+		instance_management_list.end(), 
+	unary_compose_void(
+		bind2nd_argval_void(
+			mem_fun_ref(&instance_management_base::collect_transient_info), 
+			m
+		), 
+		const_dereference<excl_const_ptr, instance_management_base>()
+	)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+sequential_scope::write_object_pointer_list(
+		const persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(dynamic_cast<const object*>(this));
+	assert(f.good());
+	m.write_pointer_list(f, instance_management_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+sequential_scope::load_object_pointer_list(const persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(dynamic_cast<const object*>(this));
+	assert(f.good());
+	m.read_pointer_list(f, instance_management_list);
+}
+
+//=============================================================================
+// class instance_management_base::dumper method definitions
+
+instance_management_base::dumper::dumper(ostream& o) : os(o) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <template <class> class P>
+ostream&
+instance_management_base::dumper::operator () (
+		const P<instance_management_base>& i) const {
+	return i->dump(os) << endl;
 }
 
 //=============================================================================

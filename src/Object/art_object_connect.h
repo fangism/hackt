@@ -76,8 +76,8 @@ virtual	~connection_assignment_base() { }
 	Class for saving and managing expression assignments.  
 	Includes both static and dynamic expressions.  
  */
-// class param_expression_assignment : public connection_assignment_base
-class param_expression_assignment : public object {
+class param_expression_assignment : public object, 
+		public instance_management_base {
 protected:
 	typedef	list<count_const_ptr<param_expr> >	ex_list_type;
 	// really should be exclusive pointers
@@ -104,8 +104,8 @@ public:
 	Class for saving and managing expression assignments.  
 	Includes both static and dynamic instance references.  
  */
-// class instance_reference_connection : public connection_assignment_base
-class instance_reference_connection : public object {
+class instance_reference_connection : public object, 
+		public instance_management_base {
 protected:
 	typedef	list<count_const_ptr<instance_reference_base> >	inst_list_type;
 protected:

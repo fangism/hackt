@@ -123,7 +123,8 @@ virtual	~process_definition_base();
 	from class name_space without copying?  
 	No other class derives from this?
  */
-class process_definition : public process_definition_base, public scopespace {
+class process_definition : public process_definition_base, public scopespace, 
+	public sequential_scope {
 public:
 	typedef	never_const_ptr<instantiation_base>
 						port_formals_value_type;
@@ -393,7 +394,8 @@ public:
 	Generalizable user-defined data type, which can (eventually) 
 	build upon other user-defined data types.  
  */
-class user_def_datatype : public datatype_definition_base, public scopespace {
+class user_def_datatype : public datatype_definition_base, public scopespace, 
+		public sequential_scope {
 protected:
 	const string				key;
 	const never_const_ptr<name_space>	parent;
@@ -477,7 +479,8 @@ virtual	count_const_ptr<fundamental_type_reference>
 	Generalizable user-defined channel type, which can (eventually) 
 	build upon other user-defined channel types.  
  */
-class user_def_chan : public channel_definition_base, public scopespace {
+class user_def_chan : public channel_definition_base, public scopespace,
+		public sequential_scope {
 protected:
 	// list of other type definitions
 	const string				key;

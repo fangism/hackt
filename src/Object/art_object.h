@@ -13,6 +13,8 @@
 #include "art_object_inst_ref.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
+#include "art_object_control.h"
+#include "art_object_module.h"
 
 #endif	// __ART_OBJECT_H__
 

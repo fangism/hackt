@@ -174,6 +174,7 @@ namespace entity {
 //	class pint_instance_reference;		// relocated "art_object_expr"
 //	class pbool_instance_reference;		// relocated "art_object_expr"
 
+	class instance_management_base;
 //	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
@@ -196,6 +197,10 @@ namespace entity {
 	class index_list;			// not ART::parser::index_list
 	class const_index_list;
 
+	/**
+		Value type of this needs to be more general
+		to accommodate loop and conditional scopes?
+	 */
 	typedef	count_const_ptr<range_expr_list>
 					index_collection_item_ptr_type;
 	/** we keep track of the state of instance collections at
@@ -417,17 +422,21 @@ protected:	// typedefs -- keep these here for re-use
 	 */
 	typedef	list<excl_const_ptr<connection_assignment_base> >
 						connect_assign_list_type;
-#endif
 	/**
+		PHASE OUT:
+		This doesn't not belong in a namespace.  
 		Ordered list of parameter assignments.  
 	 */
 	typedef	list<excl_const_ptr<param_expression_assignment> >
 						assign_list_type;
 	/**
+		PHASE OUT:
+		This doesn't not belong in a namespace.  
 		Ordered list of instance connections.  
 	 */
 	typedef	list<excl_const_ptr<instance_reference_connection> >
 						connect_list_type;
+#endif
 
 	/** convenience struct for dumping */
 	class bin_sort {
@@ -512,9 +521,11 @@ protected:	// members
 		Conditional and loop scopes are kept in program order
 		in this list.
 	 */
+#if 0
 //	connect_assign_list_type	connect_assign_list;
 	assign_list_type		assign_list;
 	connect_list_type		connect_list;
+#endif
 
 public:
 	scopespace();
@@ -541,10 +552,12 @@ virtual	never_const_ptr<instantiation_base>
 	bool add_definition_alias(never_const_ptr<definition_base> d, 
 		const string& a);
 
+#if 0
 	void add_assignment_to_scope(
 		excl_const_ptr<param_expression_assignment> c);
 	void add_connection_to_scope(
 		excl_const_ptr<instance_reference_connection> c);
+#endif
 
 	size_t exclude_population(void) const;
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
@@ -557,6 +570,7 @@ protected:
 	void write_object_used_id_map(persistent_object_manager& m) const;
 	void load_object_used_id_map(persistent_object_manager& m);
 
+#if 0
 	void collect_assign_list_pointers(persistent_object_manager& m) const;
 	void write_object_assign_list(persistent_object_manager& m) const;
 	void load_object_assign_list(persistent_object_manager& m);
@@ -564,6 +578,7 @@ protected:
 	void collect_connect_list_pointers(persistent_object_manager& m) const;
 	void write_object_connect_list(persistent_object_manager& m) const;
 	void load_object_connect_list(persistent_object_manager& m);
+#endif
 
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
@@ -714,53 +729,6 @@ void	load_used_id_map_object(excl_ptr<object> o);
 public:
 	static const never_const_ptr<name_space>	null;
 };	// end class name_space
-
-//=============================================================================
-/**
-	Scope of a loop body.  
-	Notes: Instances in loop bodies will register sparse collections
-	in the parent definition scope, but track indices in this scope.  
-	Q: how should this be kept in the enclosing scope?
-		in hash_map or in some ordered list?
-	Q: should contents (instantiations) be kept ordered?
-	Q: derive from dynamic_scope?
-	Q: should not really be a scope, doesn't contain
-		it's own used_id_map, should use parent's.  
-		All lookups and registrations go to enclosing
-		definition or namespace scope.  
-	S: may contain instantiations and connections... references?
-	Q: However interface should be like scopespace?
-	Q: Should be able to make similar queries?
-	S: May have to further refine classification of scopes...
-		named_scope, true_scope, psuedo_scope...
- */
-class loop_scope {
-protected:
-	// should have modifiable pointer to parent scope?
-	// induction variable
-	// range expression
-public:
-	/** what about name of scope? none. */
-	loop_scope(const string& n, never_const_ptr<scopespace>);
-		// more args...
-	~loop_scope();
-
-};	// end class loop_scope
-
-//=============================================================================
-/**
-	Scope of a conditional body.  
-	Should this be some list?
- */
-class conditional_scope {
-protected:
-	// condition expression
-public:
-	conditional_scope(const string& n, never_const_ptr<scopespace>);
-		// more args...
-	~conditional_scope();
-
-};	// end class conditional_scope
 
 //=============================================================================
 /**
@@ -1142,6 +1110,78 @@ public:
 	/** just for convenience */
 	static const never_const_ptr<instantiation_base>	null;
 };	// end class instantiation_base
+
+//=============================================================================
+/**
+	Abstract interface for scopes with sequential 
+	instance management actions.
+ */
+class sequential_scope {
+public:
+	typedef list<excl_const_ptr<instance_management_base> >
+					instance_management_list_type;
+protected:
+	/**
+		The unified list of sequential instance management actions, 
+		including parameters, instantiations, assignments, 
+		and connections.  
+		Used for maintaining actions in source order.  
+	 */
+	list<excl_const_ptr<instance_management_base> >
+					instance_management_list;
+public:
+	sequential_scope();
+virtual	~sequential_scope();
+
+	ostream& dump(ostream& o) const;
+	void append_instance_management(
+		excl_const_ptr<instance_management_base> i);
+
+	void collect_object_pointer_list(persistent_object_manager& m) const;
+	void write_object_pointer_list(const persistent_object_manager& m) const;
+	void load_object_pointer_list(const persistent_object_manager& m);
+
+// need not be virtual?
+//	void unroll(...) = 0;
+
+};	// end class sequential_scope
+
+//=============================================================================
+/**
+	Abstract base class for sequential instantiation management objects, 
+	including instantiations, parameters, assignments, connections.  
+	Don't bother deriving from object, unless it is necessary.  
+ */
+class instance_management_base {
+protected:
+	// none
+public:
+	/**
+		Helper functor for adding a dereference before dumping, 
+		since the majority of objects are pointer-classed.
+		Consider using this in object as well.  
+	 */
+	class dumper {
+		private:
+			ostream& os;
+		public:
+			explicit dumper(ostream& o);
+
+			template <template <class> class P>
+			ostream&
+			operator () (const P<instance_management_base>& i) const;
+	};	// end class dumper
+
+public:
+virtual	ostream& dump(ostream& o) const = 0;
+
+virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
+virtual	void write_object(persistent_object_manager& m) const = 0;
+virtual	void load_object(persistent_object_manager& m) = 0;
+
+	// need pure virtual unrolling methods
+	// argument should contain some stack of expression values
+};	// end class instance_management_base
 
 //=============================================================================
 }	// end namespace entity

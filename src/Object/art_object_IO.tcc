@@ -5,6 +5,7 @@
 #define	__ART_OBJECT_IO_TCC__
 
 #include "art_object_IO.h"
+#include "art_macros.h"
 #include "art_utils.tcc"
 
 namespace ART {
@@ -30,8 +31,11 @@ void
 persistent_object_manager::write_pointer(
 		ostream& f, const P<T>& ptr) const {
 	// this extracts the naked pointer
-	if (ptr)	write_value(f, lookup_ptr_index(&*ptr));
-	else		write_value(f, lookup_ptr_index(NULL));
+	if (ptr) {
+		const object* o_ptr = IS_A(const object*, &*ptr);
+		assert(o_ptr);
+		write_value(f, lookup_ptr_index(o_ptr));
+	} else	write_value(f, lookup_ptr_index(NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

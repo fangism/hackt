@@ -1464,6 +1464,84 @@ if (!m.flag_visit(this)) {
 }
 
 //=============================================================================
+//=============================================================================
+// class instantiation_statement method definitions
+
+/**	Private empty constructor. */
+instantiation_statement::instantiation_statement(void) :
+		object(), inst_base(NULL), indices(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+instantiation_statement::instantiation_statement(
+		never_ptr<instantiation_base> b, 
+		const index_collection_item_ptr_type& i) :
+		object(), inst_base(b), indices(i) {
+	assert(inst_base);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+instantiation_statement::~instantiation_statement() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instantiation_statement::what(ostream& o) const {
+	return o << "instantiation-statement";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instantiation_statement::dump(ostream& o) const {
+	inst_base->get_type_ref()->dump(o) << " ";
+	o << inst_base->get_name();
+	if (indices)
+		indices->dump(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, INSTANTIATION_STATEMENT_TYPE)) {
+	inst_base->collect_transient_info(m);
+	if (indices)
+		indices->collect_transient_info(m);
+}	// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+instantiation_statement::construct_empty(void) {
+	return new instantiation_statement();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, inst_base);
+	m.write_pointer(f, indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, inst_base);
+	m.read_pointer(f, indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+}
+
+//=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 

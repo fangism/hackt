@@ -315,6 +315,44 @@ public:
 };	// end class pint_instantiation
 
 //=============================================================================
+//=============================================================================
+
+/**
+	This node retains the information for an instantiation statement.  
+	This is what will be unrolled.  
+	No parent, is a globally sequential item.  
+ */
+class instantiation_statement : public object, public instance_management_base {
+protected:
+	/**
+		A reference to an instantiation_base, where the collection
+		will be unrolled.  
+		Needs to be modifiable for unrolling.  
+		Should this point to an unrolled instance?
+		No, it will be looked up.  
+	 */
+	never_ptr<instantiation_base>		inst_base;
+
+	index_collection_item_ptr_type		indices;
+private:
+	instantiation_statement();
+public:
+	instantiation_statement(never_ptr<instantiation_base> b, 
+		const index_collection_item_ptr_type& i);
+	~instantiation_statement();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+/***
+	case: A top-level instantiation is called.
+	case: won't happen?  instantiation inside definition called
+***/
+	// unroll (context?)
+public:
+	ART_OBJECT_IO_METHODS
+};	// end class instantiation_statement
+
+//=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 

@@ -8,6 +8,9 @@
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_expr.h"
+#include "art_object_connect.h"
+#include "art_object_instance.h"	// for instantiation_statement
+#include "art_object_module.h"
 
 //=============================================================================
 namespace ART {
@@ -26,7 +29,12 @@ using namespace std;
 	built-in types.  
 	\param g pointer to global namespace.
  */
-context::context(never_ptr<name_space> g) : 
+#if 0
+context::context(never_ptr<name_space> g, 
+			list<excl_const_ptr<instance_management_base> >& l) : 
+#else
+context::context(module& m) :
+#endif
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -36,10 +44,17 @@ context::context(never_ptr<name_space> g) :
 		current_fundamental_type(NULL), 
 		dynamic_scope_stack(), 
 		object_stack(), 
-		global_namespace(g) {
+#if 0
+		global_namespace(g), 
+		master_instance_list(l)
+#else
+		global_namespace(m.get_global_namespace()), 
+		master_instance_list(m.instance_management_list)
+#endif
+		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
-	namespace_stack.push(g);
+	namespace_stack.push(global_namespace);
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
@@ -542,7 +557,18 @@ context::alias_definition(never_const_ptr<definition_base> d,
  */
 void
 context::add_connection(excl_const_ptr<instance_reference_connection> c) {
+#if 0
 	get_current_scope()->add_connection_to_scope(c);
+#else
+	never_ptr<sequential_scope>
+		seq_scope(get_current_scope().is_a<sequential_scope>());
+	excl_const_ptr<instance_management_base> imb(c);
+	if (seq_scope) {
+		seq_scope->append_instance_management(imb);
+	} else {
+		master_instance_list.push_back(imb);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -555,7 +581,18 @@ context::add_connection(excl_const_ptr<instance_reference_connection> c) {
  */
 void
 context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
+#if 0
 	get_current_scope()->add_assignment_to_scope(c);
+#else
+	never_ptr<sequential_scope>
+		seq_scope(get_current_scope().is_a<sequential_scope>());
+	excl_const_ptr<instance_management_base> imb(c);
+	if (seq_scope) {
+		seq_scope->append_instance_management(imb);
+	} else {
+		master_instance_list.push_back(imb);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -716,24 +753,35 @@ context::add_instance(const token_identifier& id,
 	current_scope->dump(cerr);
 #endif
 
-#if 0
-	excl_ptr<instantiation_base> new_inst = 
-		current_fundamental_type->make_instantiation(
-			current_scope, id, dim);
-#else
 	excl_ptr<instantiation_base> new_inst = 
 		fundamental_type_reference::make_instantiation(
 			current_fundamental_type, 
 			current_scope, id, dim);
-#endif
 	assert(new_inst);
 #if 0
 	cerr << "In context::add_instance, before add_instance: " << endl;
 	current_scope->dump(cerr);
 #endif
-	never_const_ptr<instantiation_base> ret(
-		current_scope->add_instance(new_inst));
+
+	excl_const_ptr<instance_management_base>
+		imb(new instantiation_statement(new_inst, dim));
+	never_ptr<sequential_scope>
+		seq_scope(current_scope.is_a<sequential_scope>());
+	if (seq_scope) {
+		// is a definition, or other control-flow scope, 
+		// so append to that.
+		seq_scope->append_instance_management(imb);
+	} else {
+		// never add sequential action item to namespace
+		// is order-dependent item.
+		master_instance_list.push_back(imb);
+	}
+	// this just adds instances to the pre-unrolled
+	// object data, and is not kept in any global order
+	never_const_ptr<instantiation_base>
+		ret(current_scope->add_instance(new_inst));
 	assert(!new_inst);		// ownership transferred
+
 #if 0
 	cerr << "In context::add_instance, after add_instance: " << endl;
 	current_scope->dump(cerr);

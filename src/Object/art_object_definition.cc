@@ -671,6 +671,7 @@ user_def_chan::user_def_chan(never_const_ptr<name_space> o,
 		definition_base(), 
 		channel_definition_base(), 
 		scopespace(),
+		sequential_scope(), 
 		key(name), 
 		parent(o) {
 	// FINISH ME
@@ -943,7 +944,7 @@ built_in_datatype_def::built_in_datatype_def(
 		scopespace(), 
 		key(n), 
 		parent(o) {
-	add_template_formal(p.as_a<instantiation_base>());
+	add_template_formal(p.as_a_xfer<instantiation_base>());
 	mark_defined();
 }
 
@@ -1354,6 +1355,7 @@ user_def_datatype::user_def_datatype(
 		definition_base(), 
 		datatype_definition_base(), 
 		scopespace(),
+		sequential_scope(), 
 		key(name), 
 		parent(o) {
 }
@@ -1623,15 +1625,9 @@ datatype_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
 //=============================================================================
 // class process_definition_base method definitions
 
-#if 0
-process_definition_base::process_definition_base(const string& n) :
-		definition_base(n) {
-}
-#else
 process_definition_base::process_definition_base() :
 		definition_base() {
 }
-#endif
 
 process_definition_base::~process_definition_base() { }
 
@@ -1654,6 +1650,7 @@ process_definition::process_definition(
 		definition_base(), 
 		process_definition_base(),
 		scopespace(),
+		sequential_scope(), 
 		key(s), 
 		parent(o), 
 		port_formals_list(), 

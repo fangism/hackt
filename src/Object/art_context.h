@@ -19,9 +19,10 @@ namespace ART {
 // avoids having to include "art_object.h"
 namespace entity {
 	using std::list;			
-	using namespace fang;			// for pointer classes
+	using namespace COUNT_PTR_NAMESPACE;	// for pointer classes
 
 	// ... and more as they are needed
+	class module;
 	class object;
 	class scopespace;
 	class name_space;
@@ -58,6 +59,7 @@ namespace entity {
 	typedef count_const_ptr<range_expr_list>
 				index_collection_item_ptr_type;
 
+	class instance_management_base;
 //	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
@@ -68,7 +70,7 @@ using namespace entity;
 namespace parser {
 //=============================================================================
 using namespace std;
-using namespace fang;			// for pointer classes
+using namespace PTRS_NAMESPACE;		// for pointer classes
 
 //=============================================================================
 // forward declarations
@@ -194,12 +196,36 @@ public:
 	/**
 		Read-only shortcut pointer to the global namespace.
 		Can this be modified inadvertently?
+		Need to be modifiable to access ordered lists...
 	 */
-	const never_const_ptr<name_space>	global_namespace;
+	const never_ptr<name_space>		global_namespace;
+//	const never_const_ptr<name_space>	global_namespace;
 
+protected:
+	/**
+		Consider a stack of contexts for instance_management_lists.
+		Push/pop when entering/leaving definition or
+		control scope.  
+		sequential_scope_stack?
+		Namespace change doesn't affect this stack!
+		The globally ordered (master) instance management list
+		should be at the bottom of the stack.  
+		Maintain multiple stacks? or unified stack?
+
+		This corresponds to the module class's 
+		globally ordered instance management list.  
+		This is where all globally ordered actions go.  
+	 */
+	list<excl_const_ptr<instance_management_base> >&
+						master_instance_list;
 
 public:
-	context(never_ptr<name_space> g);
+#if 0
+	context(never_ptr<name_space> g, 
+		list<excl_const_ptr<instance_management_base> >& l);
+#else
+	context(module& m);
+#endif
 	~context();
 
 // TO DO: sort methods by where they are expected to be invoked

@@ -20,8 +20,7 @@ namespace entity {
 // class param_expression_assignment method definitions
 	
 param_expression_assignment::param_expression_assignment() :
-//		connection_assignment_base(), 
-		object(), ex_list() {
+		object(), instance_management_base(), ex_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -146,8 +145,7 @@ param_expression_assignment::unroll_params(void) const {
 // class instance_reference_connection method definitions
 
 instance_reference_connection::instance_reference_connection() :
-//		connection_assignment_base(), 
-		object(), inst_list() {
+		object(), instance_management_base(), inst_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

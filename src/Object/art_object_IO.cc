@@ -32,6 +32,9 @@ const reconstruct_function_ptr_type
 persistent_object_manager::
 reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	NULL, 			// first slot is reserved
+
+	&module::construct_empty, 
+
 	&name_space::construct_empty, 
 
 	&process_definition::construct_empty, 
@@ -97,10 +100,12 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&logical_expr::construct_empty, 
 
 	// assignments and connections
+	&instantiation_statement::construct_empty, 
 	&param_expression_assignment::construct_empty, 
 	&aliases_connection::construct_empty, 
 	&port_connection::construct_empty, 
-
+	NULL, 	// &loop_scope::construct_empty, 
+	NULL, 	// &conditional_scope::construct_empty, 
 	// more reconstructors here...
 };
 
@@ -245,6 +250,7 @@ persistent_object_manager::~persistent_object_manager() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	The first non-NULL object is special: it is the root namespace.  
 	Returning an excl_ptr guarantees that memory will
@@ -260,6 +266,24 @@ persistent_object_manager::get_root_namespace(void) {
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The first non-NULL object is special: it is the root module.  
+	Returning an excl_ptr guarantees that memory will
+	be managed properly.
+	When the excl_ptr hits the end of a scope, unless ownership
+	has been transferred, the memory should be recursively reclaimed.  
+	Thus, this is not a const method.  
+ */
+excl_ptr<module>
+persistent_object_manager::get_root_module(void) {
+	assert(root);		// necessary?
+	return root;
+	// this relinquishes ownership and responsibility for deleting
+	// to whomever consumes the returned excl_ptr
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -268,7 +292,7 @@ persistent_object_manager::get_root_namespace(void) {
  */
 bool
 persistent_object_manager::register_transient_object(
-		const object* ptr, const type_index_enum t) {
+		const ptr_type* ptr, const type_index_enum t) {
 	const long probe = addr_to_index_map[ptr];
 	if (probe >= 0) {
 		// sanity check
@@ -280,8 +304,10 @@ persistent_object_manager::register_transient_object(
 	} else {
 		// else add new entry
 		addr_to_index_map[ptr] = reconstruction_table.size();
+		const object* o_ptr = IS_A(const object*, ptr);
+		if (ptr) assert(o_ptr);
 		reconstruction_table.push_back(
-			reconstruction_table_entry(ptr, t));
+			reconstruction_table_entry(o_ptr, t));
 			// should transfer ownership of newly 
 			// constructed stringstream
 		return false;
@@ -312,7 +338,7 @@ persistent_object_manager::initialize_null(void) {
 	\return true if already visited, false if this is first time.
  */
 bool
-persistent_object_manager::flag_visit(const object* ptr) {
+persistent_object_manager::flag_visit(const ptr_type* ptr) {
 	const long probe = addr_to_index_map[ptr];
 	assert(probe >= 0);
 	reconstruction_table_entry& e = reconstruction_table[probe];
@@ -332,17 +358,25 @@ persistent_object_manager::flag_visit(const object* ptr) {
 	\return index corresponding to the entry.  
  */
 long
-persistent_object_manager::lookup_ptr_index(const object* ptr) const {
+persistent_object_manager::lookup_ptr_index(const ptr_type* ptr) const {
 //	assert(ptr);
 	const long probe = addr_to_index_map[ptr];
 //	assert(probe >= 0);
 	// because uninitialized value of Long is -1
 	if (probe < 0) {
 		// more useful diagnosis message
-		if (ptr)
+		if (ptr) {
+			// can't dynamic cast from void b/c not polymorphic
+#if 0
+			const object* o_ptr =
+				reinterpret_cast<const object*>(ptr);
+			assert(o_ptr);
+#endif
 			ptr->what(cerr << "FATAL: Object (") << ") at addr "
 				<< ptr << " has not been registered with "
 				"the object manager!" << endl;
+			assert(0);
+		}
 		// else just NULL, don't bother
 		exit(1);
 	}
@@ -378,7 +412,7 @@ persistent_object_manager::lookup_ref_count(const long i) const {
 	\return writeable reference to a stream buffer.  
  */
 ostream&
-persistent_object_manager::lookup_write_buffer(const object* ptr) const {
+persistent_object_manager::lookup_write_buffer(const ptr_type* ptr) const {
 	stringstream& ret =
 		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
 #if DEBUG_ME
@@ -395,7 +429,7 @@ persistent_object_manager::lookup_write_buffer(const object* ptr) const {
 	\return readable reference to a stream buffer.  
  */
 istream&
-persistent_object_manager::lookup_read_buffer(const object* ptr) const {
+persistent_object_manager::lookup_read_buffer(const ptr_type* ptr) const {
 	stringstream& ret =
 		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
 #if DEBUG_ME
@@ -577,7 +611,8 @@ persistent_object_manager::collect_objects(void) {
 //	dump_text(cerr);		// DEBUG
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
-		object* o = const_cast<object*>(e.addr());
+//		object* o = const_cast<object*>(e.addr());
+		const object* o = e.addr();
 		assert(o);
 		o->write_object(*this);	// virtual
 		e.initialize_offsets();
@@ -645,7 +680,8 @@ persistent_object_manager::finish_load(ifstream& f) {
 void
 persistent_object_manager::load_objects(void) {
 	const size_t max = reconstruction_table.size();
-	size_t i = 1;		// 0th object is reserved NULL, skip it
+	// 0th object is reserved NULL, skip it
+	size_t i = 1;
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		object* o = const_cast<object*>(e.addr());
@@ -656,12 +692,12 @@ persistent_object_manager::load_objects(void) {
 	}
 	// Finally, after this is called, immediately assume responsibility
 	// for deleting all memory, by wrapping the root pointer
-	// to the global namespace in an excl_ptr
-	// Entry at position 1 is always the root namespace, global.  
+	// to the module containing the global namespace in an excl_ptr
+	// Entry at position 1 is ALWAYS the root module.  
 	object* r = lookup_obj_ptr(1);
-	name_space* ns = IS_A(name_space*, r);
-	assert(ns);
-	root = excl_ptr<name_space>(ns);
+	module* m = IS_A(module*, r);
+	assert(m);
+	root = excl_ptr<module>(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -670,17 +706,20 @@ persistent_object_manager::load_objects(void) {
  */
 void
 persistent_object_manager::save_object_to_file(const string& s, 
-		never_const_ptr<name_space> g) {
-	assert(g);
+		const module& m) {
+//	never_const_ptr<name_space> g(m.get_global_namespace());
+//	assert(g);
 	ofstream f(s.c_str(), ios_base::binary | ios_base::trunc);
+	assert(f.good());
 	persistent_object_manager pom;
 	pom.initialize_null();			// reserved 0th entry
-	g->collect_transient_info(pom);		// recursive visitor
+//	g->collect_transient_info(pom);		// recursive visitor
+	m.collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// for debugging
-	pom.write_header(f);
-	pom.finish_write(f);			// serialize
+	pom.write_header(f);		// after knowing size of each segment
+	pom.finish_write(f);			// serialize objects
 	f.close();
 }
 
@@ -688,7 +727,8 @@ persistent_object_manager::save_object_to_file(const string& s,
 /**
 	Loads hierarchical object collection from file.  
  */
-excl_ptr<name_space>
+// excl_ptr<name_space>
+excl_ptr<module>
 persistent_object_manager::load_object_from_file(const string& s) {
 	ifstream f(s.c_str(), ios_base::binary);
 	persistent_object_manager pom;
@@ -700,10 +740,15 @@ persistent_object_manager::load_object_from_file(const string& s) {
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// debugging only
 	// Oh no, partially initialized objects!
+#if 1
+	pom.load_objects();
+	return pom.get_root_module();
+#else
 	// Set their values before anyone observes them!
 	pom.load_objects();
 	// must acquire root object in some owned pointer!
 	return pom.get_root_namespace();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -729,12 +774,12 @@ persistent_object_manager::reset_for_loading(void) {
 	Should essentially make a deep copy of the hierarchical object
 	rooted at the global namespace.  
  */
-excl_ptr<name_space>
-persistent_object_manager::self_test_no_file(never_const_ptr<name_space> g) {
-	assert(g);
+// excl_ptr<name_space>
+excl_ptr<module>
+persistent_object_manager::self_test_no_file(const module& m) {
 	persistent_object_manager pom;
 	pom.initialize_null();			// reserved 0th entry
-	g->collect_transient_info(pom);		// recursive visitor
+	m.collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// for debugging
@@ -743,23 +788,29 @@ persistent_object_manager::self_test_no_file(never_const_ptr<name_space> g) {
 
 	// pretend we wrote it out and read it back in...
 	pom.reset_for_loading();
-
 	pom.reconstruct();                      // allocate-only pass
+
 	if (dump_reconstruction_table)
 		pom.dump_text(cerr << endl) << endl;	// debugging only
+
 	pom.load_objects();
 	// must acquire root object in some owned pointer!
+#if 0
 	return pom.get_root_namespace();
+#else
+	return pom.get_root_module();
+	// will get de-allocated after return statement is evaluated
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes out and reads back in, through an intermediate file.  
  */
-excl_ptr<name_space>
-persistent_object_manager::self_test(const string& s, 
-		never_const_ptr<name_space> g) {
-	save_object_to_file(s, g);
+// excl_ptr<name_space>
+excl_ptr<module>
+persistent_object_manager::self_test(const string& s, const module& m) {
+	save_object_to_file(s, m);
 	return load_object_from_file(s);
 }
 
