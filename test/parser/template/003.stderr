@@ -1,1 +1,1 @@
-object A not found, ERROR!ERROR in base instance_reference!  [5:21]
+object "A" not found, ERROR!  [5:21]

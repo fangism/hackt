@@ -1,2 +1,1 @@
-object x not found, ERROR!
-Error resolving expression [5:10]
+object "x" not found, ERROR!  [5:10]
