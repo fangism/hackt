@@ -2,6 +2,15 @@
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-08:
+	  Passes on all tested platforms and compilers:
+	  {gcc-3.3, 3.4, 4.0} x {FreeBSD, linux, darwin}
+	  Some ranlib warnings about multiple definitions 
+	  (related to util::what) using odcctools' ld with g++-4.0.  
+	  Will try to appease it in next revisions.  
+	  Will spend some revisions improving code that will benefit
+	  development along all directions before branching again.  
+
 	* ARTXX-00-01-04-main-00-07-merged-object-01-18:
 	  The great merge.
 	  Merged huge revisions from object-01 branch to mainline.  
