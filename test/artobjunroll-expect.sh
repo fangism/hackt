@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artobjunroll-expect.sh"
-#	$Id: artobjunroll-expect.sh,v 1.1.2.1 2005/01/17 22:08:56 fang Exp $
+#	$Id: artobjunroll-expect.sh,v 1.1.2.2 2005/01/18 04:25:00 fang Exp $
 
 # $1 is the executable for the unroller, expecting 2 arguments
 # $2 is the executable for reading in the object file, (probably artobjdump)
@@ -20,19 +20,26 @@ unroll=$1
 dump=$2
 srcroot=$3/$4
 bldroot=$4
-filter="$5"
+filter=$5
 logfile=$6
 
 # an pre-unrolled object file must already exist
 if ! [ -e $bldroot.artobj ] ; then exit 1 ; fi
 
 # see if it crashes first
-$unroll $bldroot.artobj $bldroot.artobjunroll
-if [ $? -gt 1 ] ; then exit 1 ; fi > /dev/null
+$unroll $bldroot.artobj $bldroot.artobjunroll 2> $bldroot.unrolldump
 
-# the run real test, comparing outputs
-# $unroll $bldroot.artobj $bldroot.artobjunroll
-$dump $bldroot.artobjunroll 2>&1 | cat > $bldroot.unrolldump
+# depending on exit status, take action
+case $? in
+	0) 
+		# the run real test, comparing outputs
+		# $unroll $bldroot.artobj $bldroot.artobjunroll
+		$dump $bldroot.artobjunroll 2>&1 | cat > $bldroot.unrolldump
+		break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
 $filter $bldroot.unrolldump > $bldroot.unrolldump.filter
 
 # .unrollstderr comparison file must exist
