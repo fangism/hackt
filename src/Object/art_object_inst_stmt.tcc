@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.6 2005/03/11 08:08:39 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.7 2005/03/11 08:38:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -180,7 +180,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
 	const_range_list crl;
-	const good_bool rr(resolve_instantiation_range(crl, c));
+	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		this->inst_base->instantiate_indices(crl);
 	} else {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.1.4.3 2005/03/11 05:16:43 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.1.4.4 2005/03/11 08:38:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -158,7 +158,7 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	return o << class_traits<Tag>::tag_name << '^' << dimensions;
+	return o << class_traits<Tag>::tag_name << '^' << this->dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,7 +196,7 @@ good_bool
 VALUE_COLLECTION_CLASS::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
-	if (dimensions == 0) {
+	if (this->dimensions == 0) {
 		if (type_check_actual_param_expr(*e).good) {
 			ival = e;
 			return good_bool(true);
@@ -291,7 +291,7 @@ VALUE_COLLECTION_CLASS::type_check_actual_param_expr(
 		return good_bool(false);
 	}
 	// only for formal parameters is this assertion valid.  
-	INVARIANT(index_collection.size() <= 1);
+	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return check_expression_dimensions(*pi);
 }
@@ -307,7 +307,7 @@ void
 VALUE_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key, dimensions)) {
+		persistent_traits<this_type>::type_key, this->dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
@@ -450,7 +450,7 @@ VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 		element_type& pi = collection[key_gen];
 		if (pi.instantiated) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
-				get_qualified_name() <<
+				this->get_qualified_name() <<
 				" already instantiated!" << endl;
 			THROW_EXIT;
 		}
@@ -521,7 +521,8 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	} else {
 		cerr << "ERROR: reference to uninitialized " <<
 			class_traits<Tag>::tag_name << ' ' <<
-			get_qualified_name() << " at index: " << i << endl;
+			this->get_qualified_name() << " at index: " <<
+			i << endl;
 	}
 	return good_bool(pi.valid);
 }
@@ -549,13 +550,13 @@ VALUE_ARRAY_CLASS::lookup_value_collection(
 			// this should NOT happen
 			cerr << "FATAL: reference to uninstantiated " <<
 				class_traits<Tag>::tag_name << ' ' <<
-				get_qualified_name() << " at index " <<
+				this->get_qualified_name() << " at index " <<
 				key_gen << endl;
 			ret.good = false;
 		} else if (!pi.valid) {
 			cerr << "ERROR: reference to uninitialized " <<
 				class_traits<Tag>::tag_name << ' ' <<
-				get_qualified_name() << " at index " <<
+				this->get_qualified_name() << " at index " <<
 				key_gen << endl;
 			ret.good = false;
 		}
@@ -586,10 +587,10 @@ VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
 VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_object_base(m, f);
+	parent_type::write_object_base(m, f);
 	// write out the instance map
 #if 1
-	collection.write(f);
+	this->collection.write(f);
 #endif
 }
 
@@ -597,10 +598,10 @@ VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
 VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
-	load_object_base(m, f);
+	parent_type::load_object_base(m, f);
 	// load the instance map
 #if 1
-	collection.read(f);
+	this->collection.read(f);
 #endif
 }
 
@@ -710,13 +711,13 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
 			class_traits<Tag>::tag_name << ' ' <<
-			get_qualified_name() << "!" << endl;
+			this->get_qualified_name() << "!" << endl;
 		return good_bool(false);
 	}
 	if (the_instance.valid) {
 		v = the_instance.value;
 	} else {
-		dump(cerr << "ERROR: use of uninitialized ") << endl;
+		this->dump(cerr << "ERROR: use of uninitialized ") << endl;
 	}
 	return good_bool(the_instance.valid);
 }
@@ -782,7 +783,7 @@ void
 VALUE_SCALAR_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	STACKTRACE("value_scalar::write_object()");
-	write_object_base(m, f);
+	parent_type::write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
 }
@@ -792,7 +793,7 @@ VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
 VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE("value_scalar::load_object()");
-	load_object_base(m, f);
+	parent_type::load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
 }

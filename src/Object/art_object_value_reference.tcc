@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.1.6.1 2005/03/11 01:16:21 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.1.6.2 2005/03/11 08:38:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -286,8 +286,8 @@ VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) const {
 		const size_t rpos =
 			br->value_collection_ref->is_template_formal();
 		if (lpos && rpos && (lpos == rpos)) {
-			if (array_indices && br->array_indices) {
-				return array_indices->
+			if (this->array_indices && br->array_indices) {
+				return this->array_indices->
 					must_be_equivalent_indices(
 						*br->array_indices);
 			} else {
@@ -314,9 +314,9 @@ good_bool
 VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	// lookup pbool_instance_collection
-	if (array_indices) {
+	if (this->array_indices) {
 		const const_index_list
-			indices(array_indices->unroll_resolve(c));
+			indices(this->array_indices->unroll_resolve(c));
 		if (!indices.empty()) {
 			const multikey_index_type
 				lower(indices.lower_multikey());
@@ -349,9 +349,9 @@ VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 	// lookup pbool_instance_collection
-	if (array_indices) {
+	if (this->array_indices) {
 		const const_index_list
-			indices(array_indices->resolve_index_list());
+			indices(this->array_indices->resolve_index_list());
 		if (!indices.empty()) {
 			const multikey_index_type
 				lower(indices.lower_multikey());
@@ -414,9 +414,9 @@ VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_index_list
 VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 	// criterion 1: indices (if any) must be resolved to constant values.  
-	if (array_indices) {
+	if (this->array_indices) {
 		const const_index_list
-			c_i(array_indices->resolve_index_list());
+			c_i(this->array_indices->resolve_index_list());
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to resolve index list." << endl;
 			return c_i;

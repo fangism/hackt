@@ -12,6 +12,10 @@
 	  Cleaned up, instantiation_statement template is now "committed."
 	  Another -1000 LOC!
 
+	* -inststmt-09: gcc4 standard compliance patch, 
+	  template-related name fixes.  Compiles and passes all tests.  
+	  Ready to commit to trunk.  
+
 
 2005-03-10	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.1.6.1 2005/03/11 01:16:15 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.1.6.2 2005/03/11 08:38:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONST_COLLECTION_TCC__
@@ -29,29 +29,16 @@
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 #endif
 
+#include <iostream>
 #include <exception>
 #include <algorithm>
 
 #include "art_object_const_collection.h"
 #include "art_object_classification_details.h"
-// #include "art_object_assign.h"
-// #include "art_object_connect.h"	// for ~aliases_connection_base
 
-#include "persistent.h"
+#include "persistent_object_manager.h"
 #include "stacktrace.h"
 #include "what.tcc"
-
-#if 0
-#include "STL/list.tcc"
-#include "qmap.tcc"
-#include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.tcc"
-#include "sstream.h"			// for ostringstring, used by dump
-#include "compose.h"
-#include "conditional.h"		// for compare_if
-#include "ptrs_functional.h"
-#include "dereference.h"
-#endif
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -118,16 +105,8 @@ persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
 namespace ART {
 namespace entity {
 //=============================================================================
-// #include "using_ostream.h"
+#include "using_ostream.h"
 using namespace util::memory;
-// USING_UTIL_COMPOSE
-// using std::mem_fun_ref;
-// using util::dereference;
-// using std::ostringstream;
-// using util::write_value;
-// using util::read_value;
-// using util::write_string;
-// using util::read_string;
 USING_STACKTRACE
 using util::persistent_traits;
 
