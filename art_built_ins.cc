@@ -27,13 +27,14 @@ built_in_namespace("BUILT-IN", never_const_ptr<name_space>(NULL));
 /** built-in parameter pbool type definition initialization */
 const built_in_param_def
 pbool_def = built_in_param_def(
-	never_const_ptr<name_space>(&built_in_namespace), "pbool", pbool_type);
+	never_const_ptr<name_space>(&built_in_namespace), "pbool");
 
 /** built-in parameter pint type definition initialization */
 const built_in_param_def
 pint_def = built_in_param_def(
-	never_const_ptr<name_space>(&built_in_namespace), "pint", pint_type);
+	never_const_ptr<name_space>(&built_in_namespace), "pint");
 
+#if 0
 /** built-in parameter pbool type reference */
 const param_type_reference
 pbool_type = param_type_reference(
@@ -43,6 +44,17 @@ pbool_type = param_type_reference(
 const param_type_reference
 pint_type = param_type_reference(
 	never_const_ptr<built_in_param_def>(&pint_def));
+#endif
+
+/** built-in parameter pbool type reference */
+const count_const_ptr<param_type_reference> pbool_type_ptr =
+	count_const_ptr<param_type_reference>(new param_type_reference(
+		never_const_ptr<built_in_param_def>(&pbool_def)));
+
+/** built-in parameter pint type reference */
+const count_const_ptr<param_type_reference> pint_type_ptr =
+	count_const_ptr<param_type_reference>(new param_type_reference(
+	never_const_ptr<built_in_param_def>(&pint_def)));
 
 //-----------------------------------------------------------------------------
 /** built-in data bool type definition initialization */
@@ -58,7 +70,8 @@ int_def = built_in_datatype_def(
 	excl_ptr<param_instantiation>(
 		new pint_instantiation(
 			built_in_namespace, // pint_type,
-			"width", new pint_const(32))));
+			"width",
+			count_const_ptr<pint_expr>(new pint_const(32)))));
 
 /** built-in data int type reference */
 const data_type_reference

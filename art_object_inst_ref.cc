@@ -53,6 +53,189 @@ simple_instance_reference::dimensions(void) const {
 	else return dim;
 }
 
+/**
+	May need to perform dimension-collapsing in some cases.  
+	Prerequisites for calling this method: non-zero dimension.  
+	Cases: 
+	1) Reference is not-indexed to a non-collective instance set.  
+		Then this is zero-dimensional (scalar).  
+	2) Reference is not-indexed to a collective instance set.
+		See if the instance collection from the point of reference
+		has statically resolvable dimensions.  
+	3) Reference is partially-indexed to a collective instance set.  
+	4) Reference is fully-indexed to a collective instance set, 
+		down to the last dimension.  
+	When in doubt, this is just a compile-time check, 
+		can conservatively return false.  
+ */
+bool
+simple_instance_reference::has_static_constant_dimensions(void) const {
+	// case 1: instance collection is not collective. 
+	const size_t base_dim = get_inst_base()->dimensions();
+	if (base_dim == 0)
+		return true;
+	// case 2: reference is not-indexed, and instance is collective.
+	// implicitly refers to the entire collection.
+	// (same case if dimensions are under-specified)
+	else if (!array_indices) {
+		instantiation_state iter = inst_state;
+		const instantiation_state
+			end(get_inst_base()->collection_state_end());
+		for ( ; iter!=end; iter++) {
+			if (iter->is_a<dynamic_range_list>())
+				return false;
+			else	assert(iter->is_a<const_range_list>());
+		}
+		return true;
+	} else if (array_indices->size() < base_dim) {
+		// case 3: partially-specified indices, implicit sub-collections
+		if (!array_indices->is_static_constant())
+			return false;
+
+		// to do: aggregate the state of the collection
+		// using multidimensional_sparse_set
+		// (for constant additions)
+		// if all is constant, for all partially indexed 
+		// sub-collections, compare their sub-tree shapes and sizes.
+
+		// out of laziness, finish this later...
+		return false;		// temporary
+	} else {
+		// case 4: fully-indexed down to last dimension
+		return array_indices->is_static_constant();
+	}
+}
+
+/**
+	If any instance additions are dynamic, 
+	conservatively return true.  
+	Cases: {collective, scalar} x {non-indexed, partial, fully-indexed}
+	In the conservative case, return true.  
+ */
+bool
+simple_instance_reference::may_be_densely_packed(void) const {
+	const size_t base_dim = get_inst_base()->dimensions();
+	// if not collective, then return true (not really applicable)
+	if (base_dim == 0)
+		return true;
+	// else is collective
+	if (array_indices) {
+		never_const_ptr<index_list> il(array_indices);
+		never_const_ptr<const_index_list>
+			cil(il.is_a<const_index_list>());
+		if (!cil)
+			return true;
+		if (array_indices->size() < base_dim) {
+			// array indices are underspecified
+			// TO DO: unpack instance collection into
+			// multidimensional_sparse_set
+			excl_ptr<mset_base> fui =
+				unroll_static_instances(base_dim);
+			assert(fui);
+			// convert index to ranges
+			const const_range_list crl(*cil);
+			const mset_base::range_list_type
+				rl(fui->query_compact_dimensions(crl));
+			return !rl.empty();
+		} else {
+			// array indices are fully specified, and constant
+			return true;
+		}
+	} else {
+		// not indexed, implicitly refers to entire collection
+		// TO DO: unpack instance collection into
+		// multidimensional_sparse_set
+		excl_ptr<mset_base> fui =
+			unroll_static_instances(base_dim);
+		assert(fui);
+		const mset_base::range_list_type
+			rl(fui->compact_dimensions());
+		return !rl.empty();
+	}
+}
+
+/**
+	Much like may_be_densely_packed, but conservatively returns false.  
+ */
+bool
+simple_instance_reference::must_be_densely_packed(void) const {
+	const size_t base_dim = get_inst_base()->dimensions();
+	// if not collective, then return true (not really applicable)
+	if (base_dim == 0)
+		return true;
+	// else is collective
+	if (array_indices) {
+		never_const_ptr<index_list> il(array_indices);
+		never_const_ptr<const_index_list>
+			cil(il.is_a<const_index_list>());
+		if (!cil)
+			return false;		// only difference from above
+		if (array_indices->size() < base_dim) {
+			// array indices are underspecified
+			// TO DO: unpack instance collection into
+			// multidimensional_sparse_set
+			excl_ptr<mset_base> fui =
+				unroll_static_instances(base_dim);
+			assert(fui);
+			// convert index to ranges
+			const const_range_list crl(*cil);
+			const mset_base::range_list_type
+				rl(fui->query_compact_dimensions(crl));
+			return !rl.empty();
+		} else {
+			// array indices are fully specified, and constant
+			return true;
+		}
+	} else {
+		// not indexed, implicitly refers to entire collection
+		// TO DO: unpack instance collection into
+		// multidimensional_sparse_set
+		excl_ptr<mset_base> fui = unroll_static_instances(base_dim);
+		assert(fui);
+		const mset_base::range_list_type
+			rl(fui->compact_dimensions());
+		return !rl.empty();
+	}
+}
+
+/**
+	Repacks the instance collection form the point of reference 
+	into a dense array, if possible.  
+	If fails, returns empty list.  
+	Prerequisites: must already satisfy:
+		non-zero dimensions
+		must_be_densely_packed (or not)
+		has_static_constant_dimensions
+ */
+const_range_list
+simple_instance_reference::static_constant_dimensions(void) const {
+	const size_t base_dim = get_inst_base()->dimensions();
+	assert(base_dim);
+	if (array_indices) {
+		never_const_ptr<index_list> il(array_indices);
+		never_const_ptr<const_index_list>
+			cil(il.is_a<const_index_list>());
+		if (!cil)	// is dynamic
+			return const_range_list();
+		// array indices are underspecified or fully specified
+		excl_ptr<mset_base> fui =
+			unroll_static_instances(base_dim);
+		assert(fui);
+		// convert index to ranges
+		const const_range_list crl(*cil);
+		const mset_base::range_list_type
+			rl(fui->query_compact_dimensions(crl));
+		return rl;	// will probably have to convert
+	} else {
+		// not indexed, implicitly refers to entire collection
+		excl_ptr<mset_base> fui = unroll_static_instances(base_dim);
+		assert(fui);
+		const mset_base::range_list_type
+			rl(fui->compact_dimensions());
+		return rl;	// will probably have to convert
+	}
+}
+
 ostream&
 simple_instance_reference::dump(ostream& o) const {
 	o << get_inst_base()->get_name();
@@ -94,7 +277,6 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// dimension-check:
 	const never_const_ptr<instantiation_base> inst_base(get_inst_base());
 	// number of indices must be <= dimension of instance collection.  
-//	const size_t max_dim = inst_base->dimensions();
 	const size_t max_dim = dimensions();	// depends on indices
 	if (i->size() > max_dim) {
 		cerr << "ERROR: instance collection " << inst_base->get_name()
@@ -110,8 +292,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// if indices are constant, check for total overlap
 	// with existing instances from the point of reference.
 
-	typedef base_multidimensional_sparse_set<int, const_range>
-							mset_base;
+	// mset_base typedef'd privately
 	// overriding default implementation with pair<int, int>
 	assert(max_dim <= mset_base::LIMIT);
 	never_const_ptr<index_list> il(i);
@@ -127,25 +308,32 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// else is constant index list, can compute coverage
 	//	using multidimensional_sparse_set
 
+	// eventually replace the following loop with unroll_static_instances
+#if 0
+	excl_ptr<mset_base>
+		cov(mset_base::make_multidimensional_sparse_set(cil_size));
+	assert(cov);
+	{
+		const_range_list cirl(*cil);
+		// if dimensions are underspecified, then
+		// we need to trim the lower dimension indices.
+		cov->add_ranges(cirl);
+	}
+	excl_ptr<mset_base>
+		inst(unroll_static_instances(cil_size));
+	cov->subtract(*inst);
+#else
 	const size_t cil_size = cil->size();
 	instantiation_state iter = inst_state;
 	const instantiation_state
 		end(inst_base->collection_state_end());
 	excl_ptr<mset_base>
 		cov(mset_base::make_multidimensional_sparse_set(cil_size));
-//		cov(mset_base::make_multidimensional_sparse_set(max_dim));
 	assert(cov);
 	{
 		const_range_list crl(*cil);
 		// if dimensions are underspecified, then
 		// we need to trim the lower dimension indices.
-#if 0
-		cerr << "this->dimensions = " << max_dim << endl;
-		cerr << "crl.size = " << crl.size() << endl;
-		while(crl.size() > cil_size)
-			crl.pop_back();
-		cerr << "crl.size = " << crl.size() << endl;
-#endif
 		cov->add_ranges(crl);
 	}
 	for ( ; iter!=end; iter++) {
@@ -165,6 +353,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 			cov->delete_ranges(crl);
 		}
 	}
+#endif
 	// if this point reached, then all instance additions
 	// were static constants.
 	// now, covered set must completely contain indices
@@ -179,6 +368,43 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	}
 	array_indices = i;
 	return true;
+}
+
+/**
+	For collection with only static constant additions, 
+	this returns the unrolled multidimensional set of instantiated
+	indices up to the point of reference.  
+	No dimension trimming.  
+	\param dim the number of dimensions to expand, 
+		which must be <= the instantiation's dimensions.  
+	\return newly allocated set of unrolled index instances
+		if everything is constant, else returns null, 
+		if there is even a single non-const range_list.  
+ */
+excl_ptr<simple_instance_reference::mset_base>
+simple_instance_reference::unroll_static_instances(const size_t dim) const {
+	assert(dim <= get_inst_base()->dimensions());
+	instantiation_state iter = inst_state;
+	const instantiation_state end(get_inst_base()->collection_state_end());
+	excl_ptr<mset_base>
+		cov(mset_base::make_multidimensional_sparse_set(dim));
+	assert(cov);
+	for ( ; iter!=end; iter++) {
+		if (iter->is_a<dynamic_range_list>()) {
+			// all we can do conservatively...
+			return excl_ptr<mset_base>(NULL);
+		} else {
+			count_const_ptr<const_range_list>
+				crlp(iter->is_a<const_range_list>());
+			assert(crlp);
+			const_range_list crl(*crlp);	// make deep copy
+			// dimension-trimming
+			while(crl.size() > dim)
+				crl.pop_back();
+			cov->add_ranges(crl);
+		}
+	}
+	return cov;
 }
 
 //=============================================================================

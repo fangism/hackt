@@ -241,8 +241,8 @@ extern const char* const yyrule[];
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
-	template_argument_list*	_template_argument_list;
 /** not used
+	template_argument_list*	_template_argument_list;
 	connection_argument_list*	_connection_argument_list;
 **/
 	range*			_range;
@@ -484,12 +484,14 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_expr_list>	member_index_expr_list
+%type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_expr>	optional_member_index_expr
 %type	<_expr> simple_expr
 %type	<_expr>	member_index_expr unary_expr
 %type	<_member_expr>	member_expr
 %type	<_index_expr>	index_expr
-%type	<_expr>	multiplicative_expr additive_expr shift_expr
+%type	<_expr>	multiplicative_expr additive_expr
+%type	<_expr> shift_expr optional_shift_expr
 %type	<_expr>	relational_equality_expr and_expr
 %type	<_expr>	exclusive_or_expr inclusive_or_expr
 %type	<_expr>	logical_and_expr logical_or_expr
@@ -497,8 +499,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_assign_stmt>	binary_assignment
 %type	<_incdec_stmt>	unary_assignment
 /* %type	<n>	conditional_expr optional_expr_in_braces */
-%type	<_template_argument_list>	optional_template_arguments_in_angles
-%type	<_expr_list>	member_index_expr_list_in_angles
+%type	<_expr_list>	optional_template_arguments_in_angles
+/* %type	<_expr_list>	member_index_expr_list_in_angles */
 %type	<_expr_list>	member_index_expr_list_in_parens
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
@@ -704,7 +706,7 @@ template_formal_id
 	We choose to force the user to disambiguate by placing parentheses
 	around relational expressions, which covers arithmetic use of '>'.
 	Notice that below, shift_expr is the highest expression
-	before relational_expr,  
+	before relational_expr.  
 **/
 	;
 
@@ -1683,23 +1685,40 @@ optional_expr_in_braces
 **/
 
 optional_template_arguments_in_angles
-	: member_index_expr_list_in_angles
-		{ $$ = new template_argument_list($1); }
+/*	: member_index_expr_list_in_angles	*/
+/*	replaced with shift_expr_optional_list to eliminate S/R on '>' */
+	: shift_expr_optional_list_in_angles
+		{ $$ = $1; }
+/*		{ $$ = new template_argument_list($1); }	*/
 	| { $$ = NULL; }
 	;
 
+shift_expr_optional_list_in_angles
+	: '<' shift_expr_optional_list '>'
+		{ $$ = expr_list_wrap($1, $2, $3); }
+	;
+
+shift_expr_optional_list
+	: shift_expr_optional_list ',' optional_shift_expr 
+		{ $$ = expr_list_append($1, $2, $3); }
+	| optional_shift_expr { $$ = new expr_list($1); }
+	;
+
+optional_shift_expr
+	: shift_expr { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+/** OBSOLETE
 member_index_expr_list_in_angles
 	: '<' member_index_expr_list '>'
 		{ $$ = expr_list_wrap($1, $2, $3); }
 	;
+**/
 
 member_index_expr_list_in_parens
 	: '(' member_index_expr_list ')'
 		{ $$ = expr_list_wrap($1, $2, $3); }
-/**
-	| '(' ')'
-		{ $$ = expr_list_wrap($1, new expr_list, $2); }
-**/
 	;
 
 expr_list_in_parens

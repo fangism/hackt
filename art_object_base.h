@@ -102,6 +102,7 @@ namespace entity {
 
 // declarations from "art_object_expr.h"
 	class param_expr;
+	class param_expr_list;
 	class pint_expr;
 	class pbool_expr;
 	class range_expr;
@@ -124,6 +125,7 @@ namespace entity {
 	typedef	index_collection_type::const_iterator
 					instantiation_state;
 
+#if 0
 typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
 
 /**
@@ -137,6 +139,7 @@ typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
 	(because they are cached?)
  */
 typedef	list<param_expr_ptr_type>			template_param_list;
+#endif
 
 
 //=============================================================================
@@ -238,6 +241,8 @@ public:
 		make_sparse_range_list(void) const;
 	excl_ptr<index_list>
 		make_index_list(void) const;
+	excl_ptr<param_expr_list>
+		make_param_expr_list(void) const;
 	excl_ptr<param_expression_assignment>
 		make_param_assignment(void);
 #if 0
@@ -560,8 +565,6 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-//	typedef	hashlist<string, never_const_ptr<param_instantiation> >
-//					template_formals_set;
 
 	// double-maintenance...
 	typedef	hash_qmap<string, never_const_ptr<param_instantiation> >
@@ -572,15 +575,6 @@ private:
 	// never_const_ptr<scopespace>	parent;		// inherited
 	// string			key;		// inherited
 	// used_id_map_type		used_id_map;	// inherited
-	/**
-		List and set of template formals.  
-		Pointer or object?
-		Depends on method of adding...
-		Going to add later? can't be const then...
-		Ownership?
-		convert later...
-	template_formals_set*		template_formals;
-	**/
 
 	/** subset of used_id_map, must be coherent with list */
 	template_formals_map_type	template_formals_map;
@@ -623,8 +617,30 @@ public:
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 
+#if 0
 virtual	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const = 0;
+#endif
+
+protected:
+	bool certify_template_arguments(never_ptr<param_expr_list> ta) const;
+public:
+	excl_ptr<param_expr_list>
+		make_default_template_arguments(void) const;
+
+public:
+// proposing to replace set_context_fundamental_type with the following:
+virtual count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const = 0;
+	// overloaded for no template argument, for convenience, 
+	// but must check that everything has default arguments!
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(void) const {
+			return make_fundamental_type_reference(
+				make_default_template_arguments());
+		}
+// why virtual? special cases for built-in types?
 
 // need not be virtual?
 virtual	string get_name(void) const;
@@ -681,11 +697,11 @@ protected:
 		This is owned, and thus must be deleted.  
 		Const?
 	 */
-	excl_ptr<template_param_list>		template_params;
+	excl_const_ptr<param_expr_list>		template_params;
 
 public:
 	fundamental_type_reference(void);
-explicit fundamental_type_reference(excl_ptr<template_param_list> pl);
+explicit fundamental_type_reference(excl_const_ptr<param_expr_list> pl);
 virtual	~fundamental_type_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -694,22 +710,42 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 	string template_param_string(void) const;
 	string get_qualified_name(void) const;
 	string hash_string(void) const;
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_type_reference(context& c) const;
+#endif
 
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
 	bool is_dynamically_parameter_dependent(void) const;
 
 	// later add dimensions and indices?
+
+/** wrapper for the next private function */
+static	excl_ptr<instantiation_base>
+		make_instantiation(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d);
+
+private:
+/**
+	Since context's current_fundamental type is now a count_ptr, 
+	we can't invoke it and copy the 'this' pointer.  
+	't' is used to invoke.  
+ */
 virtual	excl_ptr<instantiation_base>
-		make_instantiation(never_const_ptr<scopespace> s, 
+		make_instantiation_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const = 0;
 
+public:
 // TO DO: type equivalence relationship
-	bool may_be_equivalent(
-		never_const_ptr<fundamental_type_reference> t) const;
+	bool may_be_equivalent(const fundamental_type_reference& t) const;
+	bool must_be_equivalent(const fundamental_type_reference& t) const;
 };	// end class fundamental_type_reference
 
 //=============================================================================
@@ -772,8 +808,13 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
 
+#if 0
 virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
+#else
+virtual	count_const_ptr<fundamental_type_reference>
+		get_type_ref(void) const = 0;
+#endif
 
 	never_const_ptr<scopespace> get_owner(void) const { return owner; }
 	size_t dimensions(void) const { return depth; }
@@ -795,6 +836,10 @@ public:
 	bool port_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const;
 
+protected:
+	bool check_expression_dimensions(const param_expr& pr) const;
+
+public:
 /** currently always returns NULL, useless */
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;

@@ -11,8 +11,7 @@
 #include "art_parser_template_methods.h"
 
 // will need these come time for type-checking
-// #include "art_symbol_table.h"
-#include "art_object.h"
+// #include "art_symbol_table.h"	// this file is context-independent!
 #include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -40,6 +39,47 @@ expr::expr() : node() { }
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
 expr::~expr() { }
+
+//=============================================================================
+// class expr_list method definitions
+
+expr_list::expr_list() : parent() { }
+
+expr_list::expr_list(const expr* e) : parent(e) { }
+
+expr_list::~expr_list() { }
+
+ostream&
+expr_list::what(ostream& o) const {
+	return o << "(expr-list)";
+}
+
+/**
+	Type-checker checks each individual expression and 
+	returns a collection of built object expressions.  
+	NULL members will be represented with NULL object 
+	expression place-holders.  
+	Caller just has to grab the object_list off the stack
+	and go from there.  
+ */
+never_const_ptr<object>
+expr_list::check_build(never_ptr<context> c) const {
+	count_ptr<object_list> o(new object_list);
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		if (*i) {
+			(*i)->check_build(c);
+			// ignore useless return values (should be always NULL)
+			o->push_back(c->pop_top_object_stack());
+			// do error checking on list elsewhere
+		} else {
+			// add NULL placeholder
+			o->push_back(count_ptr<object>(NULL));
+		}
+	}
+	c->push_object_stack(o);
+	return never_const_ptr<object>(NULL);
+}
 
 //=============================================================================
 // class paren_expr method definitions

@@ -64,28 +64,27 @@ definition_base::dump(ostream& o) const {
 	Used for checking when a type should have null template arguments.  
 	Really just a special case of general template argument checking.  
 	\return true if this definition is not templated, 
-		or the template formals signature is empty.  
+		or the template formals signature is empty, 
+		or default parameters are available for all formals.  
  */
 bool
 definition_base::check_null_template_argument(void) const {
 	if (template_formals_list.empty())
 		return true;
-	else {
-		// make sure each formal has a default parameter value
-		template_formals_list_type::const_iterator i =
-			template_formals_list.begin();
-		for ( ; i!=template_formals_list.end(); i++) {
-			never_const_ptr<param_instantiation> p(*i);
-			assert(p);
+	// else make sure each formal has a default parameter value
+	template_formals_list_type::const_iterator i =
+		template_formals_list.begin();
+	for ( ; i!=template_formals_list.end(); i++) {
+		never_const_ptr<param_instantiation> p(*i);
+		assert(p);
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
-			if (!p->default_value())
-				return false;
-			// else continue;	// keep checking
-		}
-		// if we've reached end of list, we're good!
-		return true;
+		if (!p->default_value())
+			return false;
+		// else continue;	// keep checking
 	}
+	// if we've reached end of list, we're good!
+	return true;
 }
 
 /**
@@ -161,6 +160,109 @@ definition_base::set_context_definition(context& c) const {
 }
 
 /**
+	Certifies the template arguments against this definition's
+	template signature.  
+	This also replaces NULL arguments in the list with defaults
+	where appropriate.  
+	\param ta modifiable list of template argument expressions.
+		If this list is empty, however, it will try to 
+		construct the default arguments entirely.  
+	\return true if arguments successfully type-checked 
+		and default arguments supplied in missing places.  
+ */
+bool
+definition_base::certify_template_arguments(
+		never_ptr<param_expr_list> ta) const {
+if (ta) {
+	// first, number of arguments must match
+	const size_t a_size = ta->size();
+	const size_t f_size = template_formals_list.size();
+	const template_formals_list_type::const_iterator f_end =
+		template_formals_list.end();
+	template_formals_list_type::const_iterator f_iter =
+		template_formals_list.begin();
+	if (a_size != f_size) {
+		if (a_size)
+			return false;
+		// else a_size == 0, passed actuals list is empty, 
+		// try to fill in all default arguments
+		for ( ; f_iter!=f_end; f_iter++) {
+			never_const_ptr<param_instantiation> pinst(*f_iter);
+			assert(pinst);
+			count_const_ptr<param_expr>
+				default_expr(pinst->default_value());
+			if (!default_expr) {
+				// no default value to supply
+				return false;
+			} else {
+				ta->push_back(default_expr);
+			}
+		}
+		// if it fails, then list will be incomplete.  
+		// if this point is reached, then fill-in was successfull
+		return true;
+	}
+	param_expr_list::iterator p_iter = ta->begin();
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instantiation against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		count_const_ptr<param_expr> pex(*p_iter);
+		never_const_ptr<param_instantiation> pinst(*f_iter);
+		assert(pinst);
+		if (pex) {
+			// type-check assignment, conservative w.r.t. arrays
+			if (!pinst->type_check_actual_param_expr(*pex)) {
+				// error message?
+				return false;
+			}
+			// else continue checking successive arguments
+		} else {
+			// no parameter expression given, 
+			// check for default -- if exists, use it, 
+			// else is error
+			count_const_ptr<param_expr>
+				default_expr(pinst->default_value());
+			if (!default_expr) {
+				// error message?
+				return false;
+			} else {
+				// else, actually assign it a copy in the list
+				*p_iter = default_expr;
+			}
+		}
+	}
+	// end of checking reached, everything passed
+	return true;
+} else {
+	// no arguments supplied, make sure template specification is
+	// null, or every formal has default values.  
+	return check_null_template_argument();
+}
+}
+
+/**
+	Prerequisiste for calling this: must satisfy
+		check_null_template_arguments.  
+	\returns a list of default parameter expressions.  
+ */
+excl_ptr<param_expr_list>
+definition_base::make_default_template_arguments(void) const {
+	assert(check_null_template_argument());
+	if (template_formals_list.empty())
+		return excl_ptr<param_expr_list>(NULL);
+	param_expr_list* ret = new param_expr_list;
+	template_formals_list_type::const_iterator i = 
+		template_formals_list.begin();
+	for ( ; i!=template_formals_list.end(); i++) {
+		count_const_ptr<param_expr> d((*i)->default_value());
+		assert(d);	// everything must have default
+		ret->push_back(d);
+	}
+	return excl_ptr<param_expr_list>(ret);
+}
+
+/**
 	Only definition aliases will return a different pointer, 
 	the one for the original definition.  
 	Remember to use this in type-checking.  
@@ -186,12 +288,6 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 	never_const_ptr<param_instantiation> pf(
 		f.is_a<param_instantiation>());
 	assert(pf);
-#if 0
-	if (!template_formals) {
-		template_formals = new template_formals_set();
-		assert(template_formals);
-	}
-#endif
 	// check and make sure identifier wasn't repeated in formal list!
 	never_const_ptr<object> probe(lookup_object_here(pf->get_name()));
 	if (probe) {
@@ -199,15 +295,8 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 		return never_const_ptr<instantiation_base>(NULL);
 	}
 
-#if 0
-	const never_const_ptr<param_instantiation>* ret =
-		template_formals->append(pf->hash_string(),
-			never_const_ptr<param_instantiation>(pf));
-	assert(!ret);
-#else
 	template_formals_list.push_back(pf);
 	template_formals_map[pf->hash_string()] = pf;
-#endif
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the template_formals_list!
 	// template_formals_list and _map are strict subsets of used_id_map
@@ -248,6 +337,7 @@ inline
 datatype_definition::~datatype_definition() {
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 datatype_definition::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -257,6 +347,22 @@ datatype_definition::set_context_fundamental_type(context& c) const {
 	// CACHE the type_reference...
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
+}
+#endif
+
+count_const_ptr<fundamental_type_reference>
+datatype_definition::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new data_type_reference(
+				never_const_ptr<datatype_definition>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make data_type_reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
 }
 
 //=============================================================================
@@ -273,6 +379,7 @@ channel_definition::channel_definition(
 channel_definition::~channel_definition() {
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 channel_definition::set_context_fundamental_type(context& c) const {
 	channel_type_reference* dtr = new channel_type_reference(
@@ -281,6 +388,22 @@ channel_definition::set_context_fundamental_type(context& c) const {
 	assert(dtr);
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
+}
+#endif
+
+count_const_ptr<fundamental_type_reference>
+channel_definition::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new channel_type_reference(
+				never_const_ptr<channel_definition>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make channel_type_reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
 }
 
 //=============================================================================
@@ -384,6 +507,7 @@ built_in_datatype_def::set_context_definition(context& c) const {
 	return c.set_current_definition_reference(*this);
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 built_in_datatype_def::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -392,6 +516,22 @@ built_in_datatype_def::set_context_fundamental_type(context& c) const {
 	assert(dtr);
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
+}
+#endif
+
+count_const_ptr<fundamental_type_reference>
+built_in_datatype_def::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new data_type_reference(
+				never_const_ptr<built_in_datatype_def>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make built_in_data_type_reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
 }
 
 /**
@@ -422,9 +562,10 @@ built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
  */
 built_in_param_def::built_in_param_def(
 		never_const_ptr<name_space> p,
-		const string& n, 
-		const param_type_reference& t) :
-		definition_base(n, p), type_ref(&t) {
+		const string& n) :
+//		const param_type_reference& t
+		definition_base(n, p) {
+//		, type_ref(&t) {
 	mark_defined();
 }
 
@@ -447,6 +588,7 @@ built_in_param_def::set_context_definition(context& c) const {
 	return c.set_current_definition_reference(*this);
 }
 
+#if 0
 /**
 	Consider built-in type references, is this even used?
 	Now uses hard-coded param_type_references.  
@@ -457,6 +599,26 @@ built_in_param_def::set_context_definition(context& c) const {
 never_const_ptr<fundamental_type_reference>
 built_in_param_def::set_context_fundamental_type(context& c) const {
 	return c.set_current_fundamental_type(*type_ref);
+}
+#endif
+
+/**
+	PROBLEM: built_in types cannot be owned with excl_ptr!!!
+	There's one shared static built-in reference for each type.  
+	One solution: do away with built-in type_reference?
+	Or have a caller check for built-ins and replace?
+	Constructed built-in type references won't be used
+	in param_instantiations, should check but then ignore.  
+	Managed cache may solve this...
+	\param ta template arguments are never used.  
+ */
+count_const_ptr<fundamental_type_reference>
+built_in_param_def::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	assert(!ta);
+	return count_const_ptr<fundamental_type_reference>(
+		new param_type_reference(
+			never_const_ptr<built_in_param_def>(this)));
 }
 
 //=============================================================================
@@ -492,6 +654,7 @@ enum_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 enum_datatype_def::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -500,6 +663,7 @@ enum_datatype_def::set_context_fundamental_type(context& c) const {
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
 }
+#endif
 
 /**
 	Type equivalence of enumerated types:
@@ -656,6 +820,8 @@ process_definition::dump(ostream& o) const {
 	return o << "}" << endl;
 }
 
+#if 0
+// may become OBSOLETE
 never_const_ptr<fundamental_type_reference>
 process_definition::set_context_fundamental_type(context& c) const {
 	process_type_reference* dtr = new process_type_reference(
@@ -664,6 +830,22 @@ process_definition::set_context_fundamental_type(context& c) const {
 	assert(dtr);
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
+}
+#endif
+
+count_const_ptr<fundamental_type_reference>
+process_definition::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new process_type_reference(
+				never_const_ptr<process_definition>(this),
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make process_type_reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
 }
 
 /**

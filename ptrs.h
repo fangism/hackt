@@ -447,6 +447,12 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 	never_ptr<S>	is_a(void) const;
 
 	/**
+		Ownership transferring dynamic cast.  
+	 */
+	template <class S>
+	excl_ptr<S>	is_a_xfer(void);
+
+	/**
 		Dynamic cast assertion.  
 		No return value.  
 	 */
@@ -612,13 +618,19 @@ excl_const_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		return base_const_ptr_ref<S>(this->release());
 	}
 
-/**
-	Dynamic cast template wrapper.  
-	Can't overload dynamic_cast, because it's a keyword.  
-	Avoid returning naked pointers!
- */
-template <class S>
-never_const_ptr<S>	is_a(void) const;
+	/**
+		Dynamic cast template wrapper.  
+		Can't overload dynamic_cast, because it's a keyword.  
+		Avoid returning naked pointers!
+	 */
+	template <class S>
+	never_const_ptr<S>	is_a(void) const;
+
+	/**
+		Ownership transferring version. 
+	 */
+	template <class S>
+	excl_const_ptr<S>	is_a_xfer(void);
 
 	/**
 		Dynamic cast assertion.  
@@ -1209,9 +1221,29 @@ excl_ptr<T>::is_a(void) const {
 
 template <class T>
 template <class S>
+excl_ptr<S>
+excl_ptr<T>::is_a_xfer(void) {
+	S* s = dynamic_cast<S*>(this->ptr);
+	// momentary violation of exclusion
+	if (s) release();
+	return excl_ptr<S>(s);
+	// uses cross-type pointer constructor with dynamic cast
+}
+
+template <class T>
+template <class S>
 never_const_ptr<S>
 excl_const_ptr<T>::is_a(void) const {
 	return never_const_ptr<S>(dynamic_cast<const S*>(this->cptr));
+}
+
+template <class T>
+template <class S>
+excl_const_ptr<S>
+excl_const_ptr<T>::is_a_xfer(void) {
+	const S* s = dynamic_cast<const S*>(this->cptr);
+	if (s) release();
+	return excl_const_ptr<S>(s);
 }
 
 template <class T>

@@ -5,7 +5,7 @@
 
 #include "art_macros.h"
 #include "art_object_base.h"
-
+#include "multidimensional_sparse_set_fwd.h"
 
 namespace ART {
 //=============================================================================
@@ -102,20 +102,21 @@ virtual	string hash_string(void) const;
 		Will there be identifier conflicts?
  */
 class simple_instance_reference : public instance_reference_base {
+private:
+	typedef	base_multidimensional_sparse_set<int, const_range>
+						mset_base;
 protected:
-	/**
-		JUST USE index_list, defined in "art_object_expr"
-		Optional array indices (not ranges).  
-		Indices may be symbolic.  
-		Should be list of parameter expressions, possibly constants.  
-		Expressions are owned by a separate expression cache.  
-	typedef	list<never_const_ptr<param_expr> >	array_index_list;
-	**/
-
-protected:
-	// consider letting collective_instance_reference take care of it...
+	/** The indices (optional) for this particular reference. */
 	excl_ptr<index_list>			array_indices;
 	// may have to be count_ptr...
+	/**
+		The current state of the instantiation collection
+		at the point of reference.
+		Important because the state of an instantiation
+		collection may change, so implicit collection or
+		sub-collection references with the same indices may 
+		refer to different sets.  
+	 */
 	const instantiation_state		inst_state;
 
 // for subclasses:
@@ -127,6 +128,11 @@ public:
 virtual	~simple_instance_reference();
 
 	size_t dimensions(void) const;
+	bool may_be_densely_packed(void) const;
+	bool must_be_densely_packed(void) const;
+	bool has_static_constant_dimensions(void) const;
+	const_range_list static_constant_dimensions(void) const;
+
 	bool attach_indices(excl_ptr<index_list> i);
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -136,7 +142,7 @@ virtual	string hash_string(void) const;
 
 private:
 	// compute static index coverage
-	
+	excl_ptr<mset_base> unroll_static_instances(const size_t dim) const;
 };	// end class simple_instance_reference
 
 //-----------------------------------------------------------------------------

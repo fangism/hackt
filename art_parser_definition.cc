@@ -479,11 +479,14 @@ process_signature::check_build(never_ptr<context> c) const {
 	}
 	if (ports && !ports->empty()) {
 		never_const_ptr<object> o(ports->check_build(c));
-		// return value is the type used to instantiate, or NULL
+		// return value NULL, useless
+		// would've exited already if there was error
+#if 0
 		if (!o) {
 			cerr << ports->where() << endl;
 			exit(1);
 		}
+#endif
 	}
 	// this checks for conflicts in definitions.  
 	never_const_ptr<object>

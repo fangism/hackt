@@ -645,6 +645,23 @@ object_list::make_param_assignment(void) {
 	else	return ret;		// is ok
 }
 
+/**
+	Doesn't do any checking, just re-wraps the list.  
+	Objects may be null, but all others must be param_expr.  
+ */
+excl_ptr<param_expr_list>
+object_list::make_param_expr_list(void) const {
+	excl_ptr<param_expr_list> ret(new param_expr_list);
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_const_ptr<object> o(*i);
+		count_const_ptr<param_expr> pe(o.is_a<param_expr>());
+		if (o)	assert(pe);
+		ret->push_back(pe);	// NULL is ok.  
+	}
+	return ret;
+}
+
 //=============================================================================
 #if 0
 OBSOLETE
@@ -822,6 +839,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 	// DEBUG
 	cerr << "In scopespace::add_instance with this = " << this << endl;
 	i->dump(cerr << "excl_ptr<instantiation_base> i = ") << endl;
+	dump(cerr);	// dump the entire namespace
 #endif
 	never_ptr<object> probe(
 		lookup_object_here_with_modify(i->get_name()));
@@ -830,15 +848,16 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 			probe.is_a<instantiation_base>());
 		if (probe_inst) {
 			// compare types, must match!
-			never_const_ptr<fundamental_type_reference> old_type(
-				probe_inst->get_type_ref());
-			never_const_ptr<fundamental_type_reference> new_type(
-				i->get_type_ref());
-			// For now, compare pointers?  
-			// too strict, but more than sufficient for now.  
-			// Eventually will have to do real comparison
-			// based on contents.  
-			if (!old_type->may_be_equivalent(new_type)) {
+			count_const_ptr<fundamental_type_reference>
+				old_type(probe_inst->get_type_ref());
+			count_const_ptr<fundamental_type_reference>
+				new_type(i->get_type_ref());
+#if 0
+			probe_inst->dump(cerr << "lookup found: ") << endl;
+#endif
+			// type comparison is conservative, in the 
+			// case of dynamic template parameters.  
+			if (!old_type->may_be_equivalent(*new_type)) {
 				cerr << "ERROR: type of redeclaration of "
 					<< i->get_name() << " does not match "
 					"previous declaration: " << endl <<
@@ -898,6 +917,13 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 		// didn't exist before, just add new instance
 		never_const_ptr<instantiation_base> ret(i);
 		used_id_map[i->get_name()] = i;		// transfer ownership
+#if 0
+		ret->dump(cerr << "just added: ") << endl;
+		never_const_ptr<object> probe(
+			lookup_object_here(ret->get_name()));
+		probe->dump(cerr << "re-lookup: ") << endl;
+		dump(cerr);	// dump the entire namespace
+#endif
 		return ret;
 	}
 }

@@ -34,7 +34,7 @@ context::context(never_ptr<name_space> g) :
 		current_prototype(NULL), 
 		current_definition_reference(NULL), 
 		current_fundamental_type(NULL), 
-		current_template_arguments(NULL), 
+//		current_template_arguments(NULL), 
 //		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
 		object_stack(), 
@@ -47,6 +47,7 @@ context::context(never_ptr<name_space> g) :
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
 	{
 	count_ptr<object> bogus;
+//	excl_ptr<object> bogus;
 	object_stack.push(bogus);
 	}
 	// initializing stacks else top() will seg-fault
@@ -381,7 +382,8 @@ context::reset_current_fundamental_type(void) {
 	if (current_fundamental_type) {
 		indent--;
 		current_fundamental_type =
-			never_const_ptr<fundamental_type_reference>(NULL);
+//			never_const_ptr<fundamental_type_reference>(NULL);
+			count_const_ptr<fundamental_type_reference>(NULL);
 	} else {
 		cerr << "warning: current_fundamental_type was already NULL."
 			<< endl;
@@ -397,6 +399,7 @@ context::set_current_prototype(excl_ptr<definition_base> d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Using the current definition, and current set of template arguments, 
 	check whether template arguments are consistent with definition.  
@@ -438,8 +441,30 @@ context::set_current_fundamental_type(const fundamental_type_reference& tr) {
 		never_const_ptr<fundamental_type_reference>(&tr);
 	return current_fundamental_type;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Given a valid complete type reference, set the context to use it.  
+ */
+void
+context::set_current_fundamental_type(
+		count_const_ptr<fundamental_type_reference> tr) {
+	assert(!current_fundamental_type);
+	current_fundamental_type = tr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Query the fundamental type to instantiate.  
+ */
+count_const_ptr<fundamental_type_reference>
+context::get_current_fundamental_type(void) const {
+	return current_fundamental_type;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Sets the current template arguments in a list.  
 	\param tl is newly allocated template paramater list.
@@ -451,7 +476,7 @@ context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
 	assert(current_template_arguments);
 	assert(!tl);
 }
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -584,13 +609,33 @@ context::add_instance(const token_identifier& id,
 	assert(current_scope);
 
 	// "ptrs.h" complains if the following is written as a constructor:
+#if 0
+	cerr << "In context::add_instance, before make_instantiation: " << endl;
+	current_scope->dump(cerr);
+#endif
+
+#if 0
 	excl_ptr<instantiation_base> new_inst = 
 		current_fundamental_type->make_instantiation(
 			current_scope, id, dim);
+#else
+	excl_ptr<instantiation_base> new_inst = 
+		fundamental_type_reference::make_instantiation(
+			current_fundamental_type, 
+			current_scope, id, dim);
+#endif
 	assert(new_inst);
+#if 0
+	cerr << "In context::add_instance, before add_instance: " << endl;
+	current_scope->dump(cerr);
+#endif
 	never_const_ptr<instantiation_base> ret(
 		current_scope->add_instance(new_inst));
 	assert(!new_inst);		// ownership transferred
+#if 0
+	cerr << "In context::add_instance, after add_instance: " << endl;
+	current_scope->dump(cerr);
+#endif
 	if (!ret) {
 		cerr << id.where() << endl;
 		type_error_count++;
@@ -612,17 +657,20 @@ context::add_instance(const token_identifier& id,
  */
 never_const_ptr<instantiation_base>
 context::add_template_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim) {
+		index_collection_item_ptr_type dim, 
+		count_const_ptr<param_expr> d) {
 	assert(current_prototype);	// valid definition_base
 	assert(current_fundamental_type);
-	assert(current_fundamental_type.is_a<param_type_reference>());
+	count_const_ptr<param_type_reference>
+		ptype(current_fundamental_type.is_a<param_type_reference>());
+	assert(ptype);
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
 	never_const_ptr<instantiation_base> ret(
 		current_prototype->add_template_formal(
-			current_fundamental_type->make_instantiation(
-				current_prototype, id, dim)));
+			param_type_reference::make_template_formal(
+				ptype, current_prototype, id, dim, d)));
 	if (!ret) {
 		cerr << id.where() << endl;
 		type_error_count++;
@@ -636,8 +684,9 @@ context::add_template_formal(const token_identifier& id,
 	Wrapper for adding a non-arrayed template formal instantiation.  
  */
 never_const_ptr<instantiation_base>
-context::add_template_formal(const token_identifier& id) {
-	return add_template_formal(id, index_collection_item_ptr_type(NULL));
+context::add_template_formal(const token_identifier& id, 
+		count_const_ptr<param_expr> d) {
+	return add_template_formal(id, index_collection_item_ptr_type(NULL), d);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -659,7 +708,8 @@ context::add_port_formal(const token_identifier& id,
 		// valid port type to instantiate
 	never_const_ptr<instantiation_base> ret(
 		current_prototype->add_port_formal(
-			current_fundamental_type->make_instantiation(
+			fundamental_type_reference::make_instantiation(
+				current_fundamental_type, 
 				current_prototype, id, dim)));
 	if (!ret) {
 		cerr << id.where() << endl;
@@ -685,7 +735,9 @@ context::add_port_formal(const token_identifier& id) {
 	We permit NULL objects on the stack, as error placeholders.  
  */
 void
-context::push_object_stack(count_ptr<object> o) {
+context::push_object_stack(count_ptr<object> o)
+// context::push_object_stack(excl_ptr<object> o)
+{
 	if (o) {
 		const object* oself = &o->self();
 		// can we go back to not using maked pointer for check?
@@ -713,8 +765,10 @@ context::push_object_stack(count_ptr<object> o) {
 }
 
 count_ptr<object>
+// excl_ptr<object>
 context::pop_top_object_stack(void) {
 	count_ptr<object> ret = object_stack.top();
+//	excl_ptr<object> ret = object_stack.top();
 	object_stack.pop();
 	return ret;
 }

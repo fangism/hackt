@@ -502,16 +502,19 @@ instance_declaration::rightmost(void) const {
 
 never_const_ptr<object>
 instance_declaration::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> t;
+//	never_const_ptr<object> t;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_declaration::check_build(...): ";
 	)
-	t = type->check_build(c);
+	type->check_build(c);
+	// useless return value
+	count_const_ptr<fundamental_type_reference>
+		ftr(c->get_current_fundamental_type());
 		// should set the current_fundamental_type
 	c->reset_current_definition_reference();
 		// no longer need the base definition
-	if (t) {
+	if (ftr) {
 		ids->check_build(c);		// return value?
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "

@@ -102,8 +102,13 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
 
 never_const_ptr<instantiation_base>
 	add_port_formal(excl_ptr<instantiation_base> p);
@@ -134,8 +139,14 @@ virtual	~datatype_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
 
+#if 0
 virtual	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+virtual	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+
 virtual	bool type_equivalent(const datatype_definition& t) const = 0;
 virtual	bool require_signature_match(
 		never_const_ptr<definition_base> d) const = 0;
@@ -157,8 +168,13 @@ public:
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
 	bool type_equivalent(const datatype_definition& t) const;
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const
@@ -196,8 +212,16 @@ public:
 
 	ostream& what(ostream& o) const;
 
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+#if 0
+	// don't need yet
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+#endif
 	bool type_equivalent(const datatype_definition& t) const;
 	bool require_signature_match(never_const_ptr<definition_base> d) const;
 
@@ -215,21 +239,33 @@ public:
 class built_in_param_def : public definition_base {
 protected:
 //	string			key;		// inherited
+#if 0
 	/**
 		Forward pointer to unique type-reference, 
 		safe because built in param types are never templated.
+		Do not use count_ptr, else will form cycle.  
 	 */
 	never_const_ptr<param_type_reference>	type_ref;
+#endif
 public:
+#if 0
 	built_in_param_def(never_const_ptr<name_space> p, const string& n, 
 		const param_type_reference& t);
+#else
+	built_in_param_def(never_const_ptr<name_space> p, const string& n);
+#endif
 	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
 };	// end class built_in_param_def
 
 //-----------------------------------------------------------------------------
@@ -283,8 +319,13 @@ virtual	~channel_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
 
+#if 0
 virtual	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
+#endif
+virtual	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
 };	// end class channel_definition
 
 //-----------------------------------------------------------------------------
@@ -293,30 +334,8 @@ virtual	never_const_ptr<fundamental_type_reference>
 	build upon other user-defined channel types.  
  */
 class user_def_chan : public channel_definition {
-private:
-#if 0
-TEMPORARY
-	/**
-		Members will be kept as a list for ordered checking.  
-	 */
-	typedef	hashlist<string, never_const_ptr<datatype_definition> >
-						type_members;
-	/**
-		Template parameter will be kept in a list because their
-		order matters in type-checking.
-		Redundant? inherited?
-	 */
-	typedef	hashlist<string, never_const_ptr<datatype_definition> >
-						temp_param_list;
-		// template params already inherited...
-#endif
 protected:
 	// list of other type definitions
-#if 0
-	// temporary
-	temp_param_list		template_params;
-	type_members		members;
-#endif
 public:
 	user_def_chan(never_const_ptr<name_space> o, const string& name);
 	~user_def_chan();
@@ -341,7 +360,6 @@ public:
 		never_const_ptr<name_space> o,
 		const string& n, 
 		never_const_ptr<definition_base> t);
-//		template_formals_set* tf = NULL;
 virtual	~type_alias();
 	// never delete canonical (can't, it's const!)
 

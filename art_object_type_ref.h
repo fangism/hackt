@@ -67,23 +67,33 @@ public:
  */
 class data_type_reference : public fundamental_type_reference {
 protected:
-//	excl_ptr<template_param_list>	template_params;	// inherited
+//	excl_const_ptr<param_expr_list>	template_params;	// inherited
 	never_const_ptr<datatype_definition>	base_type_def;
 public:
 	data_type_reference(
 		never_const_ptr<datatype_definition> td);
 	data_type_reference(
 		never_const_ptr<datatype_definition> td, 
-		excl_ptr<template_param_list> pl);
+		excl_const_ptr<param_expr_list> pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+#if 0
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+#else
+private:
+	excl_ptr<instantiation_base>
+		make_instantiation_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d) const;
+#endif
 };	// end class data_type_reference
 
 //-----------------------------------------------------------------------------
@@ -93,22 +103,31 @@ virtual	~data_type_reference();
  */
 class channel_type_reference : public fundamental_type_reference {
 protected:
-//	excl_ptr<template_param_list>	template_params;	// inherited
+//	excl_const_ptr<param_expr_list>	template_params;	// inherited
 	never_const_ptr<channel_definition>	base_chan_def;
 public:
 	channel_type_reference(
 		never_const_ptr<channel_definition> td);
 	channel_type_reference(
 		never_const_ptr<channel_definition> td, 
-		excl_ptr<template_param_list> pl);
+		excl_const_ptr<param_expr_list> pl);
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+#if 0
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+#else
+	excl_ptr<instantiation_base>
+		make_instantiation_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d) const;
+#endif
 };	// end class channel_type_reference
 
 //-----------------------------------------------------------------------------
@@ -118,23 +137,32 @@ virtual	~channel_type_reference();
  */
 class process_type_reference : public fundamental_type_reference {
 protected:
-//	excl_ptr<template_param_list>	template_params;	// inherited
+//	excl_const_ptr<param_expr_list>	template_params;	// inherited
 	never_const_ptr<process_definition>	base_proc_def;
 public:
 	process_type_reference(
 		never_const_ptr<process_definition> td);
 	process_type_reference(
 		never_const_ptr<process_definition> td, 
-		excl_ptr<template_param_list> pl);
+		excl_const_ptr<param_expr_list> pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+#if 0
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+#else
+	excl_ptr<instantiation_base>
+		make_instantiation_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d) const;
+#endif
 };	// end class process_type_reference
 
 //-----------------------------------------------------------------------------
@@ -149,7 +177,7 @@ virtual	~process_type_reference();
  */
 class param_type_reference : public fundamental_type_reference {
 protected:
-//	excl_ptr<template_param_list>	template_params;	// inherited, unused
+//	excl_const_ptr<param_expr_list>	template_params;	// inherited, unused
 	never_const_ptr<built_in_param_def>	base_param_def;
 public:
 	param_type_reference(never_const_ptr<built_in_param_def> td);
@@ -157,10 +185,27 @@ virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+#if 0
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+#else
+	excl_ptr<instantiation_base>
+		make_instantiation_private(
+			count_const_ptr<fundamental_type_reference> t, 
+			never_const_ptr<scopespace> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d) const;
+#endif
+
+static	excl_ptr<instantiation_base>
+		make_template_formal(
+			count_const_ptr<param_type_reference> t, 
+			never_const_ptr<definition_base> s, 
+			const token_identifier& id, 
+			index_collection_item_ptr_type d, 
+			count_const_ptr<param_expr> def);
 };	// end class param_type_reference
 
 //=============================================================================

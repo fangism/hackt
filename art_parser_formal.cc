@@ -217,25 +217,33 @@ port_formal_decl::rightmost(void) const {
 
 /**
 	Very similar to instance_declaration::check_build.  
-	\return pointer to the conrete-type used for instantiation
+	\return just NULL.  
+	used to return pointer to the conrete-type used for instantiation
 		if there were no problems, else return NULL.  
  */
 never_const_ptr<object>
 port_formal_decl::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> t;
-	t = type->check_build(c);
+//	never_const_ptr<object> t;
+	type->check_build(c);
+	// useless return value
 		// should set the current_fundamental_type in context
+	count_const_ptr<fundamental_type_reference>
+		ftr(c->get_current_fundamental_type());
 	c->reset_current_definition_reference();
 		// no longer need the base definition
-	if (t) {
+	if (ftr) {
 		ids->check_build(c);
+		// always returns NULL
+		// error catching?
 	} else {
 		cerr << "ERROR with concrete-type in port formal decl. at "
 			<< type->where() << endl;
+		exit(1);
 		return never_const_ptr<object>(NULL);
 	}
 	c->reset_current_fundamental_type();
-	return t;
+	return never_const_ptr<object>(NULL);
+//	return t;
 }
 
 //=============================================================================
@@ -314,6 +322,19 @@ template_formal_id::check_build(never_ptr<context> c) const {
 	)
 	// there should be some open definition already
 	// type should already be set in the context
+	count_ptr<param_expr> default_val;
+	if (dflt) {
+		dflt->check_build(c);
+		count_ptr<object> o(c->pop_top_object_stack());
+		if (!o) {
+			cerr << "ERROR in default value expression " <<
+				dflt->where() << endl;
+			exit(1);
+		}
+		count_ptr<param_expr> p(o.is_a<param_expr>());
+		assert(p);
+		default_val = p;
+	}
 	if (dim) {
 		// attach array dimensions to current instantiation
 		dim->check_build(c);	// useless return value, check stack
@@ -326,9 +347,9 @@ template_formal_id::check_build(never_ptr<context> c) const {
 		}
 		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
 		assert(d);
-		t = c->add_template_formal(*name, d);
+		t = c->add_template_formal(*name, d, default_val);
 	} else {
-		t = c->add_template_formal(*name);
+		t = c->add_template_formal(*name, default_val);
 	}
 	return t;
 //	return never_const_ptr<object>(t);
@@ -375,24 +396,38 @@ template_formal_decl::rightmost(void) const {
 /**
 	Type-checks a list of template formals with the same type.  
 	Adds formal parameters to the context's current_prototype.  
+	\return the definition found, not particularly useful.
  */
 never_const_ptr<object>
 template_formal_decl::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+//	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"template_formal_decl::check_build(...): ";
 	)
-	o = type->check_build(c);	// sets_current_definition_reference
-	c->set_current_fundamental_type();
+//	o = 
+	type->check_build(c);	// sets_current_definition_reference
+	// useless return value, always NULL
+	never_const_ptr<definition_base>
+		def(c->get_current_definition_reference());
+	if (!def) {
+		cerr << "ERROR resolving base definition!  " <<
+			type->where() << endl;
+		exit(1);
+	}
+//	c->set_current_fundamental_type();
+	c->set_current_fundamental_type(def->make_fundamental_type_reference());
+		// don't anticipate any problems here...
 		// built-in param types pint and pbool
 		// have no template parameters...
 		// after type is upgraded to a concrete_type_ref
 		// then it will already be set by its check_build()
-	assert(o);
+//	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
+	// catch return errors?
 	c->reset_current_fundamental_type();
-	return o;
+//	return o;
+	return def;
 }
 
 //=============================================================================

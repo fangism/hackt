@@ -200,11 +200,18 @@ instantiation_base::template_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		this_type(get_type_ref());
 	never_const_ptr<fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(b_type)) {
+#else
+	count_const_ptr<fundamental_type_reference>
+		this_type(get_type_ref());
+	count_const_ptr<fundamental_type_reference>
+		b_type(b->get_type_ref());
+#endif
+	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -224,16 +231,23 @@ instantiation_base::port_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
+#if 0
 	never_const_ptr<fundamental_type_reference>
 		this_type(get_type_ref());
 	never_const_ptr<fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(b_type)) {
+#else
+	count_const_ptr<fundamental_type_reference>
+		this_type(get_type_ref());
+	count_const_ptr<fundamental_type_reference>
+		b_type(b->get_type_ref());
+#endif
+	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
 	// then compare sizes and dimensionality
-	if (formal_size_equivalent(b))
+	if (!formal_size_equivalent(b))
 		return false;
 	// last, but not least, name must match
 	return key == b->get_name();
@@ -295,14 +309,71 @@ instantiation_base::formal_size_equivalent(
 	}
 }
 
+/**
+	Checks for dimension and size equality between expression and 
+	instantiation.  
+	So far, only used by param_instantiation derivatives, 
+		in the context of checking template formals.  
+	May be useful else where for connections.  
+	\return true if dimensions *may* match.  
+ */
+bool
+instantiation_base::check_expression_dimensions(const param_expr& pe) const {
+	assert(IS_A(const param_instantiation*, this));
+	// else is not an expression class!
+
+	if (depth != pe.dimensions()) {
+		// number of dimensions doesn't even match!
+		// useful error message?
+		return false;
+	}
+	// dimensions match
+	if (depth != 0) {
+		assert(index_collection.size() == 1);
+		// make sure sizes in each dimension
+		index_collection_type::const_iterator i =
+			index_collection.begin();
+		count_const_ptr<const_range_list>
+			crl(i->is_a<const_range_list>());
+		if (crl) {
+			if (pe.has_static_constant_dimensions()) {
+				const_range_list
+					d(pe.static_constant_dimensions());
+				return (*crl == d);
+			} else {
+				// is dynamic, conservatively return true
+				return true;
+			}
+		} else {
+			// is dynamic, conservatively return true
+			return true;
+		}
+	} else {
+		// depth == 0 means instantiation is a single instance.  
+		assert(index_collection.size() == 0);
+		return (pe.dimensions() == 0);
+#if 0
+		if (pe.has_static_constant_dimensions()) {
+			const_range_list d(pe.static_constant_dimensions());
+			// better be empty for a scalar instance.  
+			return (d.empty());
+		} else {
+			// expression's dimension may be dynamic, conservatively
+			return true;
+		}
+#endif
+	}
+}
+
 //=============================================================================
 // class datatype_instantiation method definitions
 
 datatype_instantiation::datatype_instantiation(const scopespace& o, 
-		const data_type_reference& t, 
+//		const data_type_reference& t, 
+		count_const_ptr<data_type_reference> t, 
 		const string& n, 
 		index_collection_item_ptr_type d) : 
-		instantiation_base(o, n, d), type(&t) {
+		instantiation_base(o, n, d), type(t) {
 	assert(type);
 }
 
@@ -314,7 +385,8 @@ datatype_instantiation::what(ostream& o) const {
 	return o << "datatype-inst";
 }
 
-never_const_ptr<fundamental_type_reference>
+// never_const_ptr<fundamental_type_reference>
+count_const_ptr<fundamental_type_reference>
 datatype_instantiation::get_type_ref(void) const {
 	return type;
 }
@@ -345,10 +417,11 @@ datatype_instantiation::make_instance_reference(context& c) const {
 // class process_instantiation method definitions
 
 process_instantiation::process_instantiation(const scopespace& o, 
-		const process_type_reference& pt,
+//		const process_type_reference& pt,
+		count_const_ptr<process_type_reference> pt,
 		const string& n, 
 		index_collection_item_ptr_type d) : 
-		instantiation_base(o, n, d), type(&pt) {
+		instantiation_base(o, n, d), type(pt) {
 }
 
 process_instantiation::~process_instantiation() {
@@ -359,7 +432,8 @@ process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
 }
 
-never_const_ptr<fundamental_type_reference>
+// never_const_ptr<fundamental_type_reference>
+count_const_ptr<fundamental_type_reference>
 process_instantiation::get_type_ref(void) const {
 	return type;
 }
@@ -542,18 +616,33 @@ param_instantiation::is_loop_independent(void) const {
 // class pbool_instantiation method definitions
 
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
+		const string& n) :
+		param_instantiation(o, n,
+			index_collection_item_ptr_type(NULL)),
+		ival(NULL) {
+}
+
+pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n, 
-		const pbool_expr* i) :
+		index_collection_item_ptr_type d) :
+		param_instantiation(o, n, d), ival(NULL) {
+}
+
+pbool_instantiation::pbool_instantiation(const scopespace& o, 
+		const string& n, 
+		count_const_ptr<pbool_expr> i) :
 		param_instantiation(o, n,
 			index_collection_item_ptr_type(NULL)),
 		ival(i) {
+	assert(type_check_actual_param_expr(*i));
 }
 
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d, 
-		const pbool_expr* i) :
+		count_const_ptr<pbool_expr> i) :
 		param_instantiation(o, n, d), ival(i) {
+	assert(type_check_actual_param_expr(*i));
 }
 
 ostream&
@@ -561,11 +650,19 @@ pbool_instantiation::what(ostream& o) const {
 	return o << "pbool-inst";
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 pbool_instantiation::get_type_ref(void) const {
 	return never_const_ptr<fundamental_type_reference>(&pbool_type);
 		// defined in "art_built_ins.h"
 }
+#else
+count_const_ptr<fundamental_type_reference>
+pbool_instantiation::get_type_ref(void) const {
+	return pbool_type_ptr;
+		// defined in "art_built_ins.h"
+}
+#endif
 
 /**
 	Initializes a parameter instance with an expression.
@@ -576,6 +673,10 @@ pbool_instantiation::get_type_ref(void) const {
 	Note: a parameter is considered "usable" or initialized if it is 
 	has a valid initial value expression OR it is a template formal.  
 	Later, deal with loop indices.
+	MAKE SURE this is not a template_formal, (can't assign to those).
+	Ignore initializations of non-scalar params.  
+		(don't keep track of arrays statically)
+	Handled in unroll time with param_expression_assignment objects.  
 	\param e the rvalue expression.
 	\return true.  
 	\sa may_be_initialized
@@ -584,11 +685,26 @@ pbool_instantiation::get_type_ref(void) const {
 bool
 pbool_instantiation::initialize(count_const_ptr<pbool_expr> e) {
 	assert(e);
-	assert(!ival);		// must not already be initialized
+	assert(!ival);		// must not already be initialized or assigned
 	if (dimensions() == 0) {
-		ival = e;
+		if (type_check_actual_param_expr(*e)) {
+			ival = e;
+			return true;
+		} else {
+			return false;
+		}
 	} 
 	return true;
+}
+
+bool
+pbool_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
+	count_const_ptr<pbool_expr> b(p.is_a<pbool_expr>());
+	if (b && type_check_actual_param_expr(*b)) {
+		ival = b;
+		return true;
+	}
+	else return false;
 }
 
 count_const_ptr<param_expr>
@@ -643,22 +759,55 @@ pbool_instantiation::is_initialized(void) const {
 }
 #endif
 
+/**
+	Checks whether or not a pbool was passed to a formal 
+	pbool parameter in a template.  
+	Should also check dimensionality and size.  
+ */
+bool
+pbool_instantiation::type_check_actual_param_expr(const param_expr& pe) const {
+	const pbool_expr* pb(IS_A(const pbool_expr*, &pe));
+	if (!pb) {
+		// useful error message?
+		return false;
+	}
+	// only for formal parameters is this assertion valid.  
+	assert(index_collection.size() <= 1);
+	// check dimensions (is conservative with dynamic sizes)
+	return check_expression_dimensions(*pb);
+}
+
 //=============================================================================
 // class pint_instantiation method definitions
 
 pint_instantiation::pint_instantiation(const scopespace& o, 
+		const string& n) :
+		param_instantiation(o, n,
+			index_collection_item_ptr_type(NULL)),
+		ival(NULL) {
+}
+
+pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n, 
-		const pint_expr* i) :
+		index_collection_item_ptr_type d) :
+		param_instantiation(o, n, d), ival(NULL) {
+}
+
+pint_instantiation::pint_instantiation(const scopespace& o, 
+		const string& n, 
+		count_const_ptr<pint_expr> i) :
 		param_instantiation(o, n,
 			index_collection_item_ptr_type(NULL)),
 		ival(i) {
+	assert(type_check_actual_param_expr(*i));
 }
 
 pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d, 
-		const pint_expr* i) :
+		count_const_ptr<pint_expr> i) :
 		param_instantiation(o, n, d), ival(i) {
+	assert(type_check_actual_param_expr(*i));
 }
 
 ostream&
@@ -666,19 +815,32 @@ pint_instantiation::what(ostream& o) const {
 	return o << "pint-inst";
 }
 
+#if 0
 never_const_ptr<fundamental_type_reference>
 pint_instantiation::get_type_ref(void) const {
 	return never_const_ptr<fundamental_type_reference>(&pint_type);
 		// defined in "art_built_ins.h"
 }
+#else
+count_const_ptr<fundamental_type_reference>
+pint_instantiation::get_type_ref(void) const {
+	return pint_type_ptr;
+		// defined in "art_built_ins.h"
+}
+#endif
 
 /**
 	Initializes a parameter instance with an expression.
 	The ival may only be initialized once, enforced by assertions.  
 	Note: a parameter is considered "usable" if it is 
 	initialized OR it is a template formal.  
+	Only bother initializing scalar variables, 
+		ignore for initialization of non-scalars.  
+	A real assignment will be tracked in a param_expression_assignment
+		object.  
+	MAKE sure this is not a template_formal!!! that is invalid!
 	\param e the rvalue expression.
-	\return true.
+	\return false if there was error.  
 	\sa may_be_initialized
 	\sa must_be_initialized
  */
@@ -687,9 +849,24 @@ pint_instantiation::initialize(count_const_ptr<pint_expr> e) {
 	assert(e);
 	assert(!ival);
 	if (dimensions() == 0) {
-		ival = e;
+		if (type_check_actual_param_expr(*e)) {
+			ival = e;
+			return true;
+		} else {
+			return false;
+		}
 	}
 	return true;
+}
+
+bool
+pint_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
+	count_const_ptr<pint_expr> i(p.is_a<pint_expr>());
+	if (i && type_check_actual_param_expr(*i)) {
+		ival = i;
+		return true;
+	}
+	else return false;
 }
 
 count_const_ptr<param_expr>
@@ -730,14 +907,33 @@ pint_instantiation::make_instance_reference(context& c) const {
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
+/**
+	Checks whether or not a pint was passed to a formal 
+	pint parameter in a template.  
+	Should also check dimensionality and size.  
+ */
+bool
+pint_instantiation::type_check_actual_param_expr(const param_expr& pe) const {
+	const pint_expr* pi(IS_A(const pint_expr*, &pe));
+	if (!pi) {
+		// useful error message?
+		return false;
+	}
+	// only for formal parameters is this assertion valid.  
+	assert(index_collection.size() <= 1);
+	// check dimensions (is conservative with dynamic sizes)
+	return check_expression_dimensions(*pi);
+}
+
 //=============================================================================
 // class channel_instantiation method definitions
 
 channel_instantiation::channel_instantiation(const scopespace& o, 
-		const channel_type_reference& ct,
+//		const channel_type_reference& ct,
+		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
 		index_collection_item_ptr_type d) : 
-		instantiation_base(o, n, d), type(&ct) {
+		instantiation_base(o, n, d), type(ct) {
 }
 
 channel_instantiation::~channel_instantiation() {
@@ -748,7 +944,8 @@ channel_instantiation::what(ostream& o) const {
 	return o << "channel-inst";
 }
 
-never_const_ptr<fundamental_type_reference>
+// never_const_ptr<fundamental_type_reference>
+count_const_ptr<fundamental_type_reference>
 channel_instantiation::get_type_ref(void) const {
 	return type;
 }

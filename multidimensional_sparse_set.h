@@ -8,6 +8,7 @@
 #include <iostream>
 #include "sstream.h"		// used by "dump" method
 
+#include "multidimensional_sparse_set_fwd.h"		// forward declarations
 #include "discrete_interval_set.h"
 // includes <map> and <iostream>
 
@@ -15,10 +16,6 @@
 #include "ptrs.h"		// for excl_ptr, not copy-constructable
 #include "count_ptr.h"		// copy-constructable reference count pointers
 #include "sublist.h"		// list slices
-
-#ifndef	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
-#define	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE	fang
-#endif
 
 /**
 	Namespace containing multidimensional-sparse-set classes.  
@@ -33,15 +30,7 @@ using namespace COUNT_PTR_NAMESPACE;
 using namespace PTRS_NAMESPACE;
 
 //=============================================================================
-// forward declarations
-template <class T = int,
-		class R = pair<T,T>, 
-		template <class> class L = list >
-	class base_multidimensional_sparse_set;
-template <size_t, class T = int,
-		class R = pair<T,T>,
-		template <class> class L = list >
-	class multidimensional_sparse_set;
+// forward declarations in "multidimensional_sparse_set_fwd.h"
 
 //=============================================================================
 /**
@@ -60,6 +49,8 @@ public:
 	typedef	R				range_type;
 	/** format for a list of ranges to be added, list is also acceptable */
 	typedef	L<range_type>			range_list_type;
+	typedef	base_multidimensional_sparse_set<T,R,L>
+						this_type;
 public:
 	static const size_t			LIMIT = 4;
 
@@ -70,9 +61,24 @@ virtual	size_t dimensions(void) const = 0;
 
 virtual	bool empty(void) const = 0;
 virtual	void clear(void) = 0;
+virtual range_list_type query_compact_dimensions(
+		const range_list_type& r) const = 0;
+virtual range_list_type compact_dimensions(void) const = 0;
 virtual	bool contains(const range_list_type& r) const = 0;
 virtual	bool add_ranges(const range_list_type& r) = 0;
 virtual	bool delete_ranges(const range_list_type& r) = 0;
+
+virtual	bool join_sparse_set(const this_type& s) = 0;
+virtual	bool meet_sparse_set(const this_type& s) = 0;
+virtual	bool subtract_sparse_set(const this_type& s) = 0;
+#if 0
+	// expensive but sometimes necessary
+	deep_copy();
+	// to add dimension
+	promote();
+	// to lose a dimension
+	demote();
+#endif
 
 protected:
 virtual	ostream& dump(ostream& o, const string& pre) const = 0;
@@ -82,10 +88,25 @@ virtual	ostream& dump(ostream& o) const = 0;
 
 // static functions
 	/** virtually, a virtual constructor */
-static	base_multidimensional_sparse_set<T, R, L>* 
+static	this_type* 
 		make_multidimensional_sparse_set(const size_t d);
-// static	base_multidimensional_sparse_set<T, R, L>* 
-//		make_multidimensional_sparse_set(const range_list_type& r);
+#if 0
+static	this_type* 
+		make_multidimensional_sparse_set(const range_list_type& r);
+#endif
+static	bool	match_range_list(const range_list_type& s,
+			const range_list_type& t) {
+		assert(s.size() == t.size());
+		typename range_list_type::const_iterator si = s.begin();
+		typename range_list_type::const_iterator ti = t.begin();
+		for ( ; si!=s.end(); si++, ti++) {
+			if (si->first != ti->first ||
+					si->second != ti->second)
+				return false;
+			// else range matches, continue
+		}
+		return true;
+	}
 };	// end class base_multidimensional_sparse_set
 
 //=============================================================================
@@ -271,14 +292,14 @@ public:
 	bool join(const this_type& s) {
 		bool overlap = false;
 		typename map_type::const_iterator s_i = s.index_map.begin();
-		for ( ; s_i!=s.end(); s_i++) {
+		for ( ; s_i!=s.index_map.end(); s_i++) {
 			// recall map_value_type is pointer-class
 			// modifying lookup is ok
 			map_value_type probe = index_map[s_i->first];
 			if (probe) {
 				// recursive join subtree
 				// now can use modifing lookup
-				if (probe->join(s_i->second)) {
+				if (probe->join(*s_i->second)) {
 					overlap = true;
 				}
 			} else {
@@ -292,6 +313,57 @@ public:
 
 	/** alias for join(). */
 	bool unite(const this_type& s) { return join(s); }
+
+	/**
+		Subtracts the elements from the argument from this set.  
+		\return true if anything was actually removed.  
+	 */
+	bool subtract(const this_type& s) {
+		bool overlap = false;
+		typename map_type::const_iterator i = s.index_map.begin();
+		for ( ; i!=s.index_map.end(); i++) {
+			// recall map_value_type is pointer-class
+				// needs to be non-modifying query
+			const map_value_type probe = 
+				static_cast<const map_type&>(index_map)
+					[i->first];
+			if (probe) {
+				// recursive meet
+				// now can use modifing lookup
+				if (probe->subtract(*(i->second))) {
+					overlap = true;
+				}
+			}
+		}
+		return overlap;
+	}
+
+	/**
+		Join operator with run-type type-check.  
+	 */
+	bool join_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return join(*t);
+	}
+
+	/**
+		Meet operator with run-type type-check.  
+	 */
+	bool meet_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return meet(*t);
+	}
+
+	/**
+		Subtract operator with run-type type-check.  
+	 */
+	bool subtract_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return subtract(*t);
+	}
 
 	// write a generic walker for this bad boy?
 
@@ -315,6 +387,88 @@ protected:
 public:
 	ostream& dump(ostream& o) const { return dump(o, ""); }
 
+	/**
+		Bottom-up tries to construct a packed dense array
+		index representation of the entire tree-map collection.  
+		If collection is not "dense" returns empty list.  
+	 */
+	range_list_type compact_dimensions(void) const {
+		if (index_map.empty())
+			return range_list_type();
+		// check if this dimension is dense
+		typename map_type::const_iterator i = index_map.begin();
+		const typename map_type::const_reverse_iterator e =
+			index_map.rbegin();
+		const T min = i->first;
+		const T max = e->first;
+		const T diff = index_map.size() -1;
+		if (max -min != diff)
+			return range_list_type();	// not dense
+		// else if sub-dimensions match
+		range_list_type s = i->second->compact_dimensions();
+		// should empty case be acceptable? no, depends on return value
+		if (s.empty())
+			return range_list_type();
+		// match against s
+		for (i++; i!=index_map.end(); i++) {
+			range_list_type t = i->second->compact_dimensions();
+			if (t.empty())
+				return range_list_type();
+			else if (!match_range_list(s,t))
+				return range_list_type();
+			// else continue checking...
+		}
+		// if this point is reached, all subdimensions match
+		// prepend with this dimension's range, and return it.  
+		typename parent::range_type r(min, max);
+		s.push_front(r);
+		return s;
+	}
+
+	/**
+		Determines whether or not the sub-array indexed
+		is dense/compact.  
+	 */
+	range_list_type query_compact_dimensions(
+			const range_list_type& r) const {
+		assert(r.size() <= D);
+		if (r.empty())
+			return compact_dimensions();
+		// else proceed
+		range_list_type sub(r);
+		typename range_list_type::const_iterator t = sub.begin();
+		const T min = t->first;
+		const T max = t->second;
+		assert(min <= max);
+		sub.pop_front();
+		T i = min;
+		map_value_type probe =
+			static_cast<const map_type&>(index_map)[i];
+		if (!probe)	// referencing un-instantiated index
+			return range_list_type();
+		range_list_type s = probe->query_compact_dimensions(sub);
+		if (s.empty())
+			return range_list_type();
+		for (i++; i<=max; i++) {
+			map_value_type probe =	// shadows
+				static_cast<const map_type&>(index_map)[i];
+			if (!probe)	// referencing un-instantiated index
+				return range_list_type();
+			range_list_type t =
+				probe->query_compact_dimensions(sub);
+			if (t.empty())
+				return range_list_type();
+			else if (!match_range_list(s,t))
+				return range_list_type();
+			// else continue checking...
+		}
+		// if this point is reached, all subdimensions match
+		// prepend with this dimension's range, and return it.  
+		typename parent::range_type nr(min, max);
+		s.push_front(nr);
+		return s;
+	}
+
 };	// end class multidimensional_sparse_set
 
 //-----------------------------------------------------------------------------
@@ -328,6 +482,7 @@ friend class multidimensional_sparse_set<2,T,R,L>;
 
 protected:
 	typedef	base_multidimensional_sparse_set<T,R,L>	parent;
+	typedef	multidimensional_sparse_set<1,T,R,L>	this_type;
 	typedef	typename parent::range_list_type	range_list_type;
 	typedef	discrete_interval_set<T>		map_type;
 
@@ -389,6 +544,45 @@ public:
 		return index_map.delete_range(i->first, i->second);
 	}
 
+	bool join(const this_type& s) {
+		return index_map.join(s.index_map);
+	}
+
+	bool meet(const this_type& s) {
+		return index_map.meet(s.index_map);
+	}
+
+	bool subtract(const this_type& s) {
+		return index_map.subtract(s.index_map);
+	}
+
+	/**
+		Join operator with run-type type-check.  
+	 */
+	bool join_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return join(*t);
+	}
+
+	/**
+		Meet operator with run-type type-check.  
+	 */
+	bool meet_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return meet(*t);
+	}
+
+	/**
+		Subtract operator with run-type type-check.  
+	 */
+	bool subtract_sparse_set(const parent& s) {
+		const this_type* t = dynamic_cast<const this_type*>(&s);
+		assert(t);
+		return subtract(*t);
+	}
+
 protected:
 	/**
 		Prints out list of all members recursively.  
@@ -409,6 +603,46 @@ protected:
 
 public:
 	ostream& dump(ostream& o) const { return dump(o, ""); }
+
+	/**
+		1-D sparse set is dense if there is only one element
+		in the discrete_interval_set, that represents the 
+		entire set. 
+		\return single range in list if this is indeed dense, 
+			otherwise, returns an empty range list. 
+	 */
+	range_list_type compact_dimensions(void) const {
+		range_list_type ret;
+		if (index_map.size() == 1) {
+			const typename map_type::const_iterator b =
+				index_map.begin();
+			typename parent::range_type r(b->first, b->second);
+			ret.push_back(r);
+		}
+		return ret;
+	}
+
+	/**
+		Returns the queried range if it is contained entirely
+		in the 1D sparse set.  
+	 */
+	range_list_type query_compact_dimensions(
+			const range_list_type& r) const {
+		assert(r.size() <= 1);
+		range_list_type ret;
+		if (!r.empty()) {
+			// only one element
+			typename range_list_type::const_iterator f = r.begin();
+			const T min = f->first;
+			const T max = f->second;
+			if (index_map.contains_entirely(min, max) !=
+					index_map.end()) {
+				typename parent::range_type r(min, max);
+				ret.push_back(r);
+			}
+		}
+		return ret;
+	}
 
 };	// end class multidimensional_sparse_set
 

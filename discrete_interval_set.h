@@ -244,6 +244,18 @@ public:
 
 	bool unite(const discrete_interval_set<T>& b) { return join(b); }
 
+	/**
+		Subtracts argument's set from this set.  
+		\return true if anything was actually deleted.  
+	 */
+	bool subtract(const discrete_interval_set<T>& b) {
+		bool ret = false;
+		const_iterator i = b.begin();
+		for ( ; i!=b.end(); i++)
+			ret = delete_range(i->first, i->second) || ret;
+		return ret;
+	}
+
 // non-member functions
 template <class U>
 friend ostream& operator << (ostream& o, const discrete_interval_set<U>& r);

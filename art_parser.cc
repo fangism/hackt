@@ -21,7 +21,6 @@
 #include "art_parser_token.h"
 
 #include "art_symbol_table.h"
-#include "art_object_base.h"
 #include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -100,8 +99,13 @@ root_body::root_body(const root_item* r) : parent(r) { }
 root_body::~root_body() { }
 
 //=============================================================================
+#if 0
+OBSOLETE
 // class template_argument_list method definition
 
+/**
+	Destructive copy constructor.  
+ */
 CONSTRUCTOR_INLINE
 template_argument_list::template_argument_list(expr_list* e) : expr_list() {
 	e->release_append(*this);
@@ -129,6 +133,9 @@ template_argument_list::what(ostream& o) const {
  */
 never_const_ptr<object>
 template_argument_list::check_build(never_ptr<context> c) const {
+#if 1
+	return node::check_build(c);
+#else
 	excl_ptr<template_param_list> targs(new template_param_list);
 	assert(targs);
 	TRACE_CHECK_BUILD(
@@ -160,15 +167,9 @@ template_argument_list::check_build(never_ptr<context> c) const {
 	// leave the template argument context
 	return never_const_ptr<object>(NULL);
 	// set the current_fundamental_type upon returning from this
+#endif
 }
-
-//=============================================================================
-// template class node_list<> method definitions
-// had trouble finding reference to template functions defined here...?
-// template exporting not implemented in any gcc compiler yet...
-
-// thus all definitions must be in header
-// this way, PRS and HSE may use them
+#endif
 
 //=============================================================================
 // class type_base method definitions
@@ -707,8 +708,7 @@ if (alias) {
 // class concrete_type_ref method definitions
 
 CONSTRUCTOR_INLINE
-concrete_type_ref::concrete_type_ref(const type_base* n, 
-		const template_argument_list* t) : 
+concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
 		node(), base(n), temp_spec(t) {
 	assert(base);
 }
@@ -737,7 +737,9 @@ concrete_type_ref::rightmost(void) const {
 	Type-check a type reference, a definition with optional template
 	arguments.  The type reference is used for creating instantiations.  
 	If successful, this sets the current_fundamental_type in the context.  
-	\return the current fundamental type reference if successful,
+	\return NULL, caller needs to check the current_fundamental_type
+		set in the context.  
+	used to return the current fundamental type reference if successful,
 		else NULL.
  */
 never_const_ptr<object>
@@ -761,8 +763,12 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 
 	// check template arguments, if given
 	if (temp_spec) {
+		// FINISH ME!!!!!!!!!!
 		// using current_definition_reference
-		o = temp_spec->check_build(c);
+		temp_spec->check_build(c);
+		// useless return value, grab object_list off the stack
+		count_ptr<object> o(c->pop_top_object_stack());
+
 		// remember to check the list of template formals
 		// which aren't yet tied to a definition!
 		// each iteration should add one more formal to the
@@ -772,24 +778,53 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 		// which is not an object yet...
 		if (!o)	{
 			cerr << "concrete_type_ref: "
-				"bad template args!  ERROR" << endl;
+				"bad template args!  ERROR " 
+				<< temp_spec->where() << endl;
 			exit(1);		// temporary
 			return never_const_ptr<object>(NULL);
+		} 
+		count_ptr<object_list> ol(o.is_a<object_list>());
+		assert(ol);
+		excl_ptr<param_expr_list> tpl =
+			ol->make_param_expr_list();
+		if (!tpl) {
+			cerr << "ERROR building template parameter "
+				"expression list.  " << temp_spec->where()
+				<< endl;
+			exit(1);		// temporary
 		}
+		count_const_ptr<fundamental_type_reference>
+			type_ref(d->make_fundamental_type_reference(tpl));
+		if (!type_ref) {
+			cerr << "ERROR making complete type reference.  "
+				<< where() << endl;
+			exit(1);
+		}
+		c->set_current_fundamental_type(type_ref);
 	} else {
 		// if no args are supplied, 
 		// make sure that the definition doesn't require template args!
 		// Now allows default values for unsupplied arguments.  
 		if(!d->check_null_template_argument()) {
 			cerr << "definition expecting template arguments "
-				"where none were given!" << endl;
+				"where none were given!  " << where() << endl;
 			exit(1);		// temporary
 			return never_const_ptr<object>(NULL);
+		} else {
+			count_const_ptr<fundamental_type_reference>
+				type_ref(d->make_fundamental_type_reference());
+			if (!type_ref) {
+				cerr << "ERROR making complete type reference.  "
+					<< where() << endl;
+				exit(1);
+			}
+			c->set_current_fundamental_type(type_ref);
 		}
 	}
+	return never_const_ptr<object>(NULL);
 
-	// we've made it!  set the fundamental_type_reference for instantiation
-	return c->set_current_fundamental_type();
+// we've made it!  set the fundamental_type_reference for instantiation
+//	return c->set_current_fundamental_type();
 	// who should reset_current_fundamental_type?
 	// the decl_lists? or their containers?
 }

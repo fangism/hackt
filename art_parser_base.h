@@ -373,10 +373,28 @@ virtual	void release_append(node_list<T,D>& dest);
 };	// end of template class node_list<>
 
 //=============================================================================
-///     all expression lists are comma-separated
-// need to sub-class expression lists into template args and actuals
-typedef node_list_base<expr>			expr_list_base;
-typedef node_list<expr,comma>			expr_list;
+/**
+	List of expressions.  
+	Implemented in "art_parser_expr.cc".  
+	All expression lists are comma-separated.  
+	No need to sub-class expression lists into 
+	template args and actuals.  
+ */
+typedef node_list<expr,comma>			expr_list_base;
+
+class expr_list : public expr_list_base {
+protected:
+	typedef	expr_list_base			parent;
+public:
+	expr_list();
+	expr_list(const expr* e);
+	~expr_list();
+
+	ostream& what(ostream& o) const;
+	using parent::leftmost;
+	using parent::rightmost;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class expr_list
 
 #define expr_list_wrap(b,l,e)						\
 	IS_A(expr_list*, l->wrap(b,e))
@@ -915,6 +933,8 @@ virtual	line_position rightmost(void) const = 0;
 #endif
 
 //=============================================================================
+#if 0
+OBSOLETE
 /**
 	An expression list specialized for template arguments.
 	Derive from expr_list and re-cast list?  or just contain the list?
@@ -937,6 +957,7 @@ public:
 	IS_A(template_argument_list*, l->wrap(b,e))
 #define template_argument_list_append(l,d,n)				\
 	IS_A(template_argument_list*, l->append(d,n))
+#endif
 
 //=============================================================================
 /**
@@ -948,10 +969,9 @@ protected:
 	/** definition name base */
 	const excl_const_ptr<type_base>			base;
 	/** optional template arguments */
-	const excl_const_ptr<template_argument_list>	temp_spec;
+	const excl_const_ptr<expr_list>	temp_spec;
 public:
-	concrete_type_ref(const type_base* n, 
-		const template_argument_list* t = NULL);
+	concrete_type_ref(const type_base* n, const expr_list* t = NULL);
 virtual	~concrete_type_ref();
 
 virtual	ostream& what(ostream& o) const;

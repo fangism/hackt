@@ -42,6 +42,7 @@ namespace entity {
 
 // forward declarations of classes defined here (table of contents)
 	class param_expr;
+	class param_expr_list;
 	class index_expr;		// BEWARE also in ART::parser!
 	class const_index;
 	class pbool_expr;
@@ -92,6 +93,10 @@ virtual	string hash_string(void) const = 0;
 
 virtual	size_t dimensions(void) const = 0;
 
+virtual	bool has_static_constant_dimensions(void) const = 0;
+// only call this if dimensions are non-zero and sizes are static constant.  
+virtual	const_range_list static_constant_dimensions(void) const = 0;
+
 /** is initialized if is resolved to constant or some other formal */
 #if 0
 virtual bool is_initialized(void) const = 0;
@@ -99,6 +104,8 @@ virtual bool is_initialized(void) const = 0;
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
 #endif
+virtual bool may_be_equivalent(const param_expr& p) const = 0;
+virtual bool must_be_equivalent(const param_expr& p) const = 0;
 
 /** can be resolved to static constant value */
 virtual bool is_static_constant(void) const = 0;
@@ -109,6 +116,28 @@ virtual bool is_loop_independent(void) const = 0;
 /** doesn't depend on conditional variables */
 virtual bool is_unconditional(void) const = 0;
 };	// end class param_expr
+
+//-----------------------------------------------------------------------------
+class param_expr_list : public object,
+		public list<count_const_ptr<param_expr> > {
+protected:
+	typedef	list<count_const_ptr<param_expr> >	parent;
+public:
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	param_expr_list();
+	~param_expr_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+
+	bool may_be_equivalent(const param_expr_list& p) const;
+	bool must_be_equivalent(const param_expr_list& p) const;
+
+};	// end class param_expr_list
 
 //-----------------------------------------------------------------------------
 /**
@@ -158,6 +187,214 @@ virtual	~const_index();
 
 //-----------------------------------------------------------------------------
 /**
+	May contained mixed pint_expr and ranges!
+	Don't forget their interpretation differs!
+	pint_expr is interpreted as a dimension collapse, 
+	whereas range_expr preserves dimension, even if range is one.  
+
+	Doesn't make sense to ask how many dimensions are in an index_list
+	because it depends on the instance_reference to which it is 
+	attached.  
+	Instead the index list can tell one how may dimensions
+	are *collapsed* by the element types.  
+ */
+class index_list : public object {
+public:
+	index_list();
+	~index_list();
+
+// copy over most param_expr interface functions...
+virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const = 0;
+virtual	string hash_string(void) const = 0;
+
+/** NOT THE SAME **/
+virtual	size_t size(void) const = 0;
+virtual	size_t dimensions_collapsed(void) const = 0;
+
+#if 0
+virtual	bool is_initialized(void) const = 0;
+#else
+virtual	bool may_be_initialized(void) const = 0;
+virtual	bool must_be_initialized(void) const = 0;
+#endif
+virtual	bool is_static_constant(void) const = 0;
+virtual	bool is_loop_independent(void) const = 0;
+virtual	bool is_unconditional(void) const = 0;
+};	// end class index_list
+
+//-----------------------------------------------------------------------------
+/**
+	Index list whose indices are all constant.
+	This means we need a const_index interface to objects.  
+	Because of aribtrary pointer copying,
+	members must be reference counted.  
+ */
+class const_index_list : public index_list, 
+		private list<count_ptr<const_index> > {
+protected:
+	/** need list of pointers b/c const_index is abstract */
+	typedef	list<count_ptr<const_index> >	parent;
+public:
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	const_index_list();
+	~const_index_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	string hash_string(void) const;
+
+/** NOT THE SAME **/
+	size_t size(void) const;
+	size_t dimensions_collapsed(void) const;
+
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+#if 1
+	void push_back(const count_ptr<const_index>& i);
+#else
+	void push_back(excl_ptr<const_index> i);
+#endif
+
+#if 0
+	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
+	bool is_static_constant(void) const;
+	bool is_loop_independent(void) const;
+	bool is_unconditional(void) const;
+};	// end class const_index_list
+
+//-----------------------------------------------------------------------------
+/**
+	Elements of this index list are no necessarily static constants.  
+ */
+class dynamic_index_list : public index_list, 
+		private list<count_ptr<index_expr> > {
+protected:
+	typedef	list<count_ptr<index_expr> >	parent;
+public:
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	dynamic_index_list();
+	~dynamic_index_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	string hash_string(void) const;
+
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+#if 1
+	void push_back(const count_ptr<index_expr>& i);
+#else
+	void push_back(excl_ptr<index_expr> i);
+#endif
+
+/** NOT THE SAME **/
+	size_t size(void) const;
+	size_t dimensions_collapsed(void) const;
+
+#if 0
+	bool is_initialized(void) const;
+#else
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+#endif
+	bool is_static_constant(void) const;
+	bool is_loop_independent(void) const;
+	bool is_unconditional(void) const;
+};	// end class dynamic_index_list
+
+//=============================================================================
+/**
+	General interface to multidimensional indices.  
+	Make interface like std::list.  
+	Instance collection stack item?
+	Replace instance_collection_stack_item with this!
+	Elements of range_expr_list must be range_expr, 
+	i.e. fully expanded, no shorthand ranges.  
+ */
+class range_expr_list : public object {
+protected:
+//	never_const_ptr<instantiation_base>	owner;
+public:
+	range_expr_list();
+virtual	~range_expr_list() { }
+
+virtual	size_t size(void) const = 0;
+	size_t dimensions(void) const { return size(); }
+virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
+};	// end class range_expr_list
+
+//-----------------------------------------------------------------------------
+/**
+	List of constant range expressions.  
+	Would a vector be more appropriate?   consider changing later...
+ */
+class const_range_list : public range_expr_list, public list<const_range> {
+protected:
+	// no need for pointers here
+	typedef	list<const_range>	list_type;
+public:
+	const_range_list();
+	const_range_list(const list_type& l);
+explicit const_range_list(const const_index_list& i);
+	~const_range_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	size_t size(void) const;
+	const_range_list static_overlap(const range_expr_list& r) const;
+
+	bool operator == (const const_range_list& c) const;
+};	// end class const_range_list
+
+//-----------------------------------------------------------------------------
+/**
+	Base class.  
+	List of range expressions, not necessarily constant.  
+	May contain constant ranges however.  
+	Interface methods for unrolling.  
+
+	Replace the dynamic subclasses of instance_collection_stack_item
+	with this class by adding attributes...
+		is_unconditional
+		is_loop_independent
+	also cache these results...?
+ */
+class dynamic_range_list : public range_expr_list,
+		public list<count_ptr<pint_range> > {
+protected:
+	// list of pointers to pint_ranges?  or just copy construct?
+	// can't copy construct, is abstract
+	typedef	list<count_ptr<pint_range> >	list_type;
+public:
+	dynamic_range_list();
+virtual	~dynamic_range_list();
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	size_t size(void) const;
+	const_range_list static_overlap(const range_expr_list& r) const;
+		// false, will be empty
+};	// end class dynamic_range_list
+
+//=============================================================================
+/**
 	Abstract expression checked to be a single boolean.  
  */
 class pbool_expr : virtual public param_expr {
@@ -169,11 +406,19 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
+virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	const_range_list static_constant_dimensions(void) const = 0;
 #if 0
 virtual bool is_initialized(void) const = 0;
 #else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
+#endif
+	bool may_be_equivalent(const param_expr& p) const;
+	bool must_be_equivalent(const param_expr& p) const;
+#if 0
+virtual bool may_be_equivalent_pbool(const pbool_expr& p) const = 0;
+virtual bool must_be_equivalent_pbool(const pbool_expr& p) const = 0;
 #endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
@@ -193,11 +438,19 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
+virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	const_range_list static_constant_dimensions(void) const = 0;
 #if 0
 virtual bool is_initialized(void) const = 0;
 #else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
+#endif
+	bool may_be_equivalent(const param_expr& p) const;
+	bool must_be_equivalent(const param_expr& p) const;
+#if 0
+virtual bool may_be_equivalent_pint(const pint_expr& p) const = 0;
+virtual bool must_be_equivalent_pint(const pint_expr& p) const = 0;
 #endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
@@ -222,6 +475,10 @@ public:
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const;
+	bool may_be_equivalent(const param_expr& p) const;
+	bool must_be_equivalent(const param_expr& p) const;
+virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	const_range_list static_constant_dimensions(void) const = 0;
 };	// end class param_expr_collective
 **/
 
@@ -248,8 +505,14 @@ public:
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;
+	bool has_static_constant_dimensions(void) const;
+	const_range_list static_constant_dimensions(void) const;
 
+#if 1
 	bool initialize(count_const_ptr<param_expr> i);
+#else
+	bool initialize(excl_const_ptr<param_expr> i);
+#endif
 	string hash_string(void) const;
 	// implement later.
 #if 0
@@ -260,6 +523,10 @@ public:
 	// using param_instance_reference::must_be_initialized;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
+#endif
+#if 0
+	bool may_be_equivalent_pbool(const pbool_expr& p) const;
+	bool must_be_equivalent_pbool(const pbool_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
@@ -289,8 +556,14 @@ public:
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;
+	bool has_static_constant_dimensions(void) const;
+	const_range_list static_constant_dimensions(void) const;
 
+#if 1
 	bool initialize(count_const_ptr<param_expr> i);
+#else
+	bool initialize(excl_const_ptr<param_expr> i);
+#endif
 	string hash_string(void) const;
 	// implement later.
 #if 0
@@ -298,6 +571,10 @@ public:
 #else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
+#endif
+#if 0
+	bool may_be_equivalent_pint(const pint_expr& p) const;
+	bool must_be_equivalent_pint(const pint_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
@@ -320,12 +597,19 @@ public:
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }	// empty list
 
 #if 0
 	bool is_initialized(void) const { return true; }
 #else
 	bool may_be_initialized(void) const { return true; }
 	bool must_be_initialized(void) const { return true; }
+#endif
+#if 0
+	bool may_be_equivalent_pint(const pint_expr& p) const;
+	bool must_be_equivalent_pint(const pint_expr& p) const;
 #endif
 	bool is_static_constant(void) const { return true; }
 	int static_constant_int(void) const { return val; }
@@ -347,12 +631,19 @@ public:
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 
 #if 0
 	bool is_initialized(void) const { return true; }
 #else
 	bool may_be_initialized(void) const { return true; }
 	bool must_be_initialized(void) const { return true; }
+#endif
+#if 0
+	bool may_be_equivalent_pbool(const pbool_expr& p) const;
+	bool must_be_equivalent_pbool(const pbool_expr& p) const;
 #endif
 	bool is_static_constant(void) const { return true; }
 	bool static_constant_bool(void) const { return val; }
@@ -368,15 +659,27 @@ class pint_unary_expr : public pint_expr {
 protected:
 	const char			op;
 	/** expression argument must be 0-dimensional */
+#if 1
 	count_const_ptr<pint_expr>	ex;
+#else
+	excl_const_ptr<pint_expr>	ex;
+#endif
 public:
+#if 1
 	pint_unary_expr(const char o, count_const_ptr<pint_expr> e);
 	pint_unary_expr(count_const_ptr<pint_expr> e, const char o);
+#else
+	pint_unary_expr(const char o, excl_const_ptr<pint_expr> e);
+	pint_unary_expr(excl_const_ptr<pint_expr> e, const char o);
+#endif
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -384,6 +687,10 @@ public:
 		{ return ex->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return ex->must_be_initialized(); }
+#endif
+#if 0
+	bool may_be_equivalent_pint(const pint_expr& p) const;
+	bool must_be_equivalent_pint(const pint_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
@@ -400,15 +707,27 @@ class pbool_unary_expr : public pbool_expr {
 protected:
 	const char			op;
 	/** argument expression must be 0-dimensional */
+#if 1
 	count_const_ptr<pbool_expr>	ex;
+#else
+	excl_const_ptr<pbool_expr>	ex;
+#endif
 public:
+#if 1
 	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
 	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
+#else
+	pbool_unary_expr(const char o, excl_const_ptr<pbool_expr> e);
+	pbool_unary_expr(excl_const_ptr<pbool_expr> e, const char o);
+#endif
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -416,6 +735,10 @@ public:
 		{ return ex->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return ex->must_be_initialized(); }
+#endif
+#if 0
+	bool may_be_equivalent_pbool(const pbool_expr& p) const;
+	bool must_be_equivalent_pbool(const pbool_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
@@ -429,18 +752,31 @@ public:
  */
 class arith_expr : public pint_expr {
 protected:
+#if 1
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
+#else
+	excl_const_ptr<pint_expr>	lx;
+	excl_const_ptr<pint_expr>	rx;
+#endif
 	const char			op;
 public:
+#if 1
 	arith_expr(count_const_ptr<pint_expr> l, const char o, 
 		count_const_ptr<pint_expr> r);
+#else
+	arith_expr(excl_const_ptr<pint_expr> l, const char o, 
+		excl_const_ptr<pint_expr> r);
+#endif
 	~arith_expr() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -450,6 +786,10 @@ public:
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
+#endif
+#if 0
+	bool may_be_equivalent_pint(const pint_expr& p) const;
+	bool must_be_equivalent_pint(const pint_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
@@ -463,19 +803,32 @@ public:
  */
 class relational_expr : public pbool_expr {
 protected:
+#if 1
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
+#else
+	excl_const_ptr<pint_expr>	lx;
+	excl_const_ptr<pint_expr>	rx;
+#endif
 	const string			op;
 
 public:
+#if 1
 	relational_expr(count_const_ptr<pint_expr> l, const string& o, 
 		count_const_ptr<pint_expr> r);
+#else
+	relational_expr(excl_const_ptr<pint_expr> l, const string& o, 
+		excl_const_ptr<pint_expr> r);
+#endif
 	~relational_expr() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -485,6 +838,10 @@ public:
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
+#endif
+#if 0
+	bool may_be_equivalent_pbool(const pbool_expr& p) const;
+	bool must_be_equivalent_pbool(const pbool_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
@@ -498,19 +855,32 @@ public:
  */
 class logical_expr : public pbool_expr {
 protected:
+#if 1
 	count_const_ptr<pbool_expr>	lx;
 	count_const_ptr<pbool_expr>	rx;
+#else
+	excl_const_ptr<pbool_expr>	lx;
+	excl_const_ptr<pbool_expr>	rx;
+#endif
 	const string			op;
 
 public:
+#if 1
 	logical_expr(count_const_ptr<pbool_expr> l, const string& o, 
 		count_const_ptr<pbool_expr> r);
+#else
+	logical_expr(excl_const_ptr<pbool_expr> l, const string& o, 
+		excl_const_ptr<pbool_expr> r);
+#endif
 	~logical_expr() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
+	bool has_static_constant_dimensions(void) const { return true; }
+	const_range_list static_constant_dimensions(void) const
+		{ return const_range_list(); }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -520,6 +890,10 @@ public:
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
+#endif
+#if 0
+	bool may_be_equivalent_pbool(const pbool_expr& p) const;
+	bool must_be_equivalent_pbool(const pbool_expr& p) const;
 #endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
@@ -585,13 +959,24 @@ virtual bool is_unconditional(void) const = 0;
 class pint_range : public range_expr {
 protected:
 	// need to be const, or modifiable?
+#if 1
 	count_const_ptr<pint_expr>	lower;
 	count_const_ptr<pint_expr>	upper;
+#else
+	excl_const_ptr<pint_expr>	lower;
+	excl_const_ptr<pint_expr>	upper;
+#endif
 public:
 	/** implicit conversion from x[N] to x[0..N-1] */
+#if 1
 explicit pint_range(count_const_ptr<pint_expr> n);
 	pint_range(count_const_ptr<pint_expr> l,
 		count_const_ptr<pint_expr> u);
+#else
+explicit pint_range(excl_const_ptr<pint_expr> n);
+	pint_range(excl_const_ptr<pint_expr> l,
+		excl_const_ptr<pint_expr> u);
+#endif
 	pint_range(const pint_range& pr);
 	~pint_range() { }
 
@@ -678,240 +1063,6 @@ public:
 	bool is_loop_independent(void) const { return !empty(); }
 	bool is_unconditional(void) const { return !empty(); }
 };	// end class const_range
-
-//=============================================================================
-/**
-	General interface to multidimensional indices.  
-	Make interface like std::list.  
-	Instance collection stack item?
-	Replace instance_collection_stack_item with this!
-	Elements of range_expr_list must be range_expr, 
-	i.e. fully expanded, no shorthand ranges.  
- */
-class range_expr_list : public object {
-protected:
-//	never_const_ptr<instantiation_base>	owner;
-public:
-	range_expr_list();
-virtual	~range_expr_list() { }
-
-virtual	size_t size(void) const = 0;
-	size_t dimensions(void) const { return size(); }
-virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
-};	// end class range_expr_list
-
-//-----------------------------------------------------------------------------
-/**
-	List of constant range expressions.  
-	Would a vector be more appropriate?   consider changing later...
- */
-class const_range_list : public range_expr_list, public list<const_range> {
-protected:
-	// no need for pointers here
-	typedef	list<const_range>	list_type;
-public:
-	const_range_list();
-explicit const_range_list(const const_index_list& i);
-	~const_range_list();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	size_t size(void) const;
-	const_range_list static_overlap(const range_expr_list& r) const;
-
-	bool operator == (const const_range_list& c) const;
-};	// end class const_range_list
-
-//-----------------------------------------------------------------------------
-/**
-	Base class.  
-	List of range expressions, not necessarily constant.  
-	May contain constant ranges however.  
-	Interface methods for unrolling.  
-
-	Replace the dynamic subclasses of instance_collection_stack_item
-	with this class by adding attributes...
-		is_unconditional
-		is_loop_independent
-	also cache these results...?
- */
-class dynamic_range_list : public range_expr_list,
-		public list<count_ptr<pint_range> > {
-protected:
-	// list of pointers to pint_ranges?  or just copy construct?
-	// can't copy construct, is abstract
-	typedef	list<count_ptr<pint_range> >	list_type;
-public:
-	dynamic_range_list();
-virtual	~dynamic_range_list();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	size_t size(void) const;
-	const_range_list static_overlap(const range_expr_list& r) const;
-		// false, will be empty
-};	// end class dynamic_range_list
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	Expression parameters may depend on template formals, for example.
-	Expressions are unconditional and loop invariant.  
- */
-class unconditional_range_list : public dynamic_range_list {
-public:
-	unconditional_range_list();
-	~unconditional_range_list();
-
-};	// end class unconditional_range_list
-
-//-----------------------------------------------------------------------------
-/**
-	List of range expressions, that may be found in some
-	conditional body.  
-	Need back-reference to enclosing conditional body.  
- */
-class conditional_range_list : public dynamic_range_list {
-
-};	// end class conditional_range_list
-
-//-----------------------------------------------------------------------------
-/**
-	List of range expression, some of which may be loop-variant.  
-	Need back-reference to encapsulating loop.  
- */
-class loop_range_list : public dynamic_range_list {
-
-};	// end class loop_range_list
-#endif
-
-//=============================================================================
-
-// make base class for index_list?
-
-//-----------------------------------------------------------------------------
-/**
-	May contained mixed pint_expr and ranges!
-	Don't forget their interpretation differs!
-	pint_expr is interpreted as a dimension collapse, 
-	whereas range_expr preserves dimension, even if range is one.  
-
-	Doesn't make sense to ask how many dimensions are in an index_list
-	because it depends on the instance_reference to which it is 
-	attached.  
-	Instead the index list can tell one how may dimensions
-	are *collapsed* by the element types.  
- */
-class index_list : public object {
-public:
-	index_list();
-	~index_list();
-
-// copy over most param_expr interface functions...
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
-
-/** NOT THE SAME **/
-virtual	size_t size(void) const = 0;
-virtual	size_t dimensions_collapsed(void) const = 0;
-
-#if 0
-virtual	bool is_initialized(void) const = 0;
-#else
-virtual	bool may_be_initialized(void) const = 0;
-virtual	bool must_be_initialized(void) const = 0;
-#endif
-virtual	bool is_static_constant(void) const = 0;
-virtual	bool is_loop_independent(void) const = 0;
-virtual	bool is_unconditional(void) const = 0;
-};	// end class index_list
-
-//-----------------------------------------------------------------------------
-/**
-	Index list whose indices are all constant.
-	This means we need a const_index interface to objects.  
- */
-class const_index_list : public index_list, 
-		private list<count_ptr<const_index> > {
-protected:
-	/** need list of pointers b/c const_index is abstract */
-	typedef	list<count_ptr<const_index> >	parent;
-public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
-public:
-	const_index_list();
-	~const_index_list();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-
-/** NOT THE SAME **/
-	size_t size(void) const;
-	size_t dimensions_collapsed(void) const;
-
-	using parent::begin;
-	using parent::end;
-	using parent::rbegin;
-	using parent::rend;
-	void push_back(const count_ptr<const_index>& i);
-
-#if 0
-	bool is_initialized(void) const;
-#else
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-#endif
-	bool is_static_constant(void) const;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
-};	// end class const_index_list
-
-//-----------------------------------------------------------------------------
-/**
-	Elements of this index list are no necessarily static constants.  
- */
-class dynamic_index_list : public index_list, 
-		private list<count_ptr<index_expr> > {
-protected:
-	typedef	list<count_ptr<index_expr> >	parent;
-public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
-public:
-	dynamic_index_list();
-	~dynamic_index_list();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-
-	using parent::begin;
-	using parent::end;
-	using parent::rbegin;
-	using parent::rend;
-	void push_back(const count_ptr<index_expr>& i);
-
-/** NOT THE SAME **/
-	size_t size(void) const;
-	size_t dimensions_collapsed(void) const;
-
-#if 0
-	bool is_initialized(void) const;
-#else
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-#endif
-	bool is_static_constant(void) const;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
-};	// end class dynamic_index_list
 
 //=============================================================================
 }	// end namespace ART
