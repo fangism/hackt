@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.2 2005/01/18 04:22:50 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3 2005/01/19 04:53:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -846,7 +846,7 @@ name_space::dump(ostream& o) const {
 		);
 	}
 }	// end of indentation scope
-	return o << "}" << endl;
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
