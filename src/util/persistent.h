@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.4 2004/12/05 05:07:25 fang Exp $
+	$Id: persistent.h,v 1.5 2004/12/10 22:02:52 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__
@@ -27,13 +27,17 @@
 	Don't stick a semicolon after this.  
 ***/
 
-#define	PERSISTENT_METHODS_NO_ALLOC					\
+#define	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
 	void write_object(const persistent_object_manager& m) const;	\
 	void load_object(persistent_object_manager& m);
 
 #define	PERSISTENT_METHODS_NO_POINTERS					\
-	PERSISTENT_METHODS_NO_ALLOC					\
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
 static	persistent* construct_empty(const int);
+
+#define	PERSISTENT_METHODS_NO_ALLOC					\
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
+	void collect_transient_info(persistent_object_manager& m) const;
 
 #define	PERSISTENT_METHODS						\
 	PERSISTENT_METHODS_NO_POINTERS					\
