@@ -1,4 +1,5 @@
 *.core
+core.*
 ignore
 Makefile
 test-report.txt

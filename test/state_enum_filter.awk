@@ -15,9 +15,12 @@
 BEGIN {
 	state_str = "#STATE#";
 	rule_str = "#RULE#";
+
+	# strings to match
 	case1 = ".*[:].*[.].*[(][0-9]+[)]$";
 	case2 = "in state [0-9]+, possible rules are:";
 	case3 = "^[0-9]+\t";
+	case4 = " \\(rule [0-9]+\\)";	# note extra first space
 }
 
 # for all lines
@@ -31,8 +34,26 @@ BEGIN {
 	} else if (match(str, case3)) {
 		# need to qualify context a bit more here...
 		gsub("[0-9]+\t", state_str "\t", str);
+
+		# old version of bison uses "$" instead of "$end"
+		gsub("\\$$", "$end", str);
+	} else if (match(str, case4)) {
+		gsub(case4, "(" rule_str ")", str);
 	}
 	# else keep str as-is
+
+# further canonicalization of parser output:
+# because bison's .output strings differ in formatting between versions :S
+
+	# error message changed...
+	gsub(": parse error", ": syntax error", str);
+
+	# the production delimiter changed in some old version...
+	gsub("  ->  ", ": ", str);
+
+	# extraneous empty parens in output
+	gsub("[ \\t]*\\(\\).*$", "", str);
+
 	print str;
 }
 
