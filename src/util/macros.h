@@ -6,7 +6,7 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.3 2004/11/30 01:25:21 fang Exp $
+	$Id: macros.h,v 1.4 2005/01/13 19:00:02 fang Exp $
  */
 
 #ifndef	__MACROS_H__
@@ -91,6 +91,14 @@
 #define	NEVER_NULL(x)		assert(x)
 #define	MUST_BE_NULL(x)		assert(!(x))
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reserved for code that is never supposed to be called, but needs
+	to exist to satisfy some requirement.  
+	The general invariant is that such code is never reached at run-time.  
+ */
+#define	DIE			assert(0)
 
 //=============================================================================
 // exception throwing...
