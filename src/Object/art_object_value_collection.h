@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.1.4.1 2005/03/11 01:16:21 fang Exp $
+	$Id: art_object_value_collection.h,v 1.1.4.2 2005/03/11 04:08:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_H__
@@ -109,8 +109,13 @@ virtual	ostream&
 	type_check_actual_param_expr(const param_expr& pe) const;
 
 	// this MUST be changed to take a const_range_list
+#if 0
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+#else
+virtual	void
+	instantiate_indices(const const_range_list& i) = 0;
+#endif
 
 // virtual	bool lookup_value(bool& v) const = 0;
 
@@ -205,8 +210,13 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	// update this to accept const_range_list instead
+#if 0
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
+#else
+	void
+	instantiate_indices(const const_range_list&);
+#endif
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -284,8 +294,13 @@ public:
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
+#if 0
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
+#else
+	void
+	instantiate_indices(const const_range_list&);
+#endif
 
 	good_bool
 	lookup_value(value_type& v, const multikey_index_type& i) const;

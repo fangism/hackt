@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41.6.1 2005/03/11 01:16:15 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.6.2 2005/03/11 04:08:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1754,10 +1754,11 @@ arith_expr::resolve_value(value_type& i) const {
 		cerr << "ERROR: resolving right operand of: ";
 		dump(cerr) << endl;
 		return good_bool(false);
+	} else {
+		// Oooooh, virtual operator dispatch!
+		i = (*op)(a,b);
+		return good_bool(true);
 	}
-	// Oooooh, virtual operator dispatch!
-	i = (*op)(a,b);
-	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1793,11 +1794,17 @@ arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
 	value_type lval, rval;
 	const good_bool lex(lx->unroll_resolve_value(c, lval));
 	const good_bool rex(rx->unroll_resolve_value(c, rval));
-	if ((lex && rex).good) {
+	if (!lex.good) {
+		cerr << "ERROR: resolving left operand of: ";
+		dump(cerr) << endl;
+		return good_bool(false);
+	} else if (!rex.good) {
+		cerr << "ERROR: resolving right operand of: ";
+		dump(cerr) << endl;
+		return good_bool(false);
+	} else {
 		i = (*op)(lval, rval);
 		return good_bool(true);
-	} else {
-		return good_bool(false);
 	}
 }
 
@@ -3092,6 +3099,14 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+const_range_list::unroll_resolve(const_range_list& r, 
+		const unroll_context& c) const {
+	r = *this;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 excl_ptr<multikey_index_type>
 const_range_list::lower_multikey(void) const {
@@ -3297,6 +3312,26 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 		const count_ptr<const pint_range> ip(*i);
 		if (ip->resolve_range(c).good) {
 			r.push_back(c);
+		} else {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+dynamic_range_list::unroll_resolve(const_range_list& r, 
+		const unroll_context& c) const {
+	INVARIANT(r.empty());
+	// write as transform?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const_range cr;
+		const count_ptr<const pint_range> ip(*i);
+		if (ip->unroll_resolve_range(c, cr).good) {
+			r.push_back(cr);
 		} else {
 			return good_bool(false);
 		}

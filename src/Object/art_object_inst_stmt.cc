@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.4 2005/03/11 01:16:19 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.5 2005/03/11 04:08:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -164,22 +164,24 @@ instantiation_statement_base::get_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
+	This sets the range list passed by reference according to 
+	the resolved values at unroll-time.  
 	\pre Only call this if indices is NOT null.  
  */
 good_bool
 instantiation_statement_base::resolve_instantiation_range(
 		const_range_list& r, const unroll_context& c) const {
-	NEVER_NULL(indices);
+if (indices) {
 	INVARIANT(r.empty());	// not already constructed
-	const good_bool ret(crl.resolve_ranges(c));
+	const good_bool ret(indices->unroll_resolve(r, c));
 	if (!ret.good) {
 		// ranges is passed and returned by reference
 		// fail
-#if 0
+#if 1
 		cerr << "ERROR: unable to resolve indices of " <<
-			get_qualified_name() << " for instantiation: ";
+			get_inst_base()->get_qualified_name() <<
+			" for instantiation: ";
 #else
 		cerr << "ERROR: unable to resolve indices for instantiation: ";
 #endif
@@ -187,8 +189,11 @@ instantiation_statement_base::resolve_instantiation_range(
 		THROW_EXIT;	// temporary non-error-handling
 	}
 	return ret;
+} else {
+	INVARIANT(r.empty());
+	return good_bool(true);
 }
-#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t

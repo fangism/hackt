@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.1.2.3 2005/03/11 01:16:19 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.1.2.4 2005/03/11 04:08:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_PARAM_H__
@@ -35,7 +35,8 @@ protected:
 
 	// any need t pas in a context?
 	good_bool
-	unroll_type_check(value_collection_generic_type& v) const {
+	unroll_type_check(value_collection_generic_type& v,
+			const unroll_context&) const {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -63,7 +64,8 @@ protected:
 
 	// any need t pas in a context?
 	good_bool
-	unroll_type_check(value_collection_generic_type& v) const {
+	unroll_type_check(value_collection_generic_type& v, 
+			const unroll_context&) const {
 		// no need to type-check
 		return good_bool(true);
 	}

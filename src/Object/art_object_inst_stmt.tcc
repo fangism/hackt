@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.2 2005/03/09 05:21:41 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.3 2005/03/11 04:08:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -153,34 +153,36 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	this will require some serious specialization
+ */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
-#if 1
+#if 0
 	inst_base->instantiate_indices(this->indices);
 #else
 	const good_bool
-		tc(type_ref_parent_type::unroll_type_check(*this->inst_base));
-	// should be optimized away where there is no type-checkto be done
+		tc(type_ref_parent_type::unroll_type_check(
+			*this->inst_base, c));
+	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
-		cerr << "ERROR: type-mismatch during instantiation_statment::unroll." << endl;
+		cerr << "ERROR: type-mismatch during " <<
+			util::what<this_type>::name() <<
+			"::unroll." << endl;
 		THROW_EXIT;
 	}
-	// this will require some serious specialization
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
-	const_index_list cil;
-	if (this->indices) {
-		cil = this->indices->unroll_resolve(c);
-		if (cil.empty()) {
-			cerr << "ERROR: resolving indices." << endl;
-			THROW_EXIT;
-		}
+	const_range_list crl;
+	const good_bool rr(resolve_instantiation_range(crl, c));
+	if (rr.good) {
+		this->inst_base->instantiate_indices(crl);
+	} else {
+		cerr << "ERROR: resolving index range of instantiation!"
+			<< endl;
 	}
-	resolve_instantiation_range(r, c);
-	const const_range_list crl(cil);
-	this->inst_base->instantiate_indices(crl);
 #endif
 }
 

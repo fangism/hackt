@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.7.10.1 2005/03/11 01:16:17 fang Exp $
+	$Id: art_object_expr_base.h,v 1.7.10.2 2005/03/11 04:08:57 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -299,8 +299,12 @@ virtual	bool
 virtual	const_range_list
 	static_overlap(const range_expr_list& r) const = 0;
 
+// is this obsolete?
 virtual	good_bool
 	resolve_ranges(const_range_list& r) const = 0;
+
+virtual	good_bool
+	unroll_resolve(const_range_list&, const unroll_context&) const = 0;
 
 virtual	bool
 	must_be_formal_size_equivalent(const range_expr_list& ) const = 0;

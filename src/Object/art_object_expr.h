@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.22.6.1 2005/03/11 01:16:17 fang Exp $
+	$Id: art_object_expr.h,v 1.22.6.2 2005/03/11 04:08:57 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -230,6 +230,9 @@ public:
 		// false, will be empty
 	good_bool
 	resolve_ranges(const_range_list& r) const;
+
+	good_bool
+	unroll_resolve(const_range_list&, const unroll_context&) const;
 
 	bool
 	must_be_formal_size_equivalent(const range_expr_list& ) const;

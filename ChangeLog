@@ -5,6 +5,19 @@
 	* ARTXX-00-01-04-main-00-18-inststmt-04-merged-collection-03:
 	  Merged revisions from -collection child branch (-03).
 
+	* -inststmt-05:
+	  Updating the way instantiation statements are unrolled
+	  (tested on pint and pbool inst_stmts, which currently use
+	  the instantiation statement class template.  
+	  The work for resolving the range of instantiation is pushed
+	  to the instantiation_statement_base, which owns the
+	  indices (range_expr_list) pointer.  
+	  value_collection::instantiate_indices now takes const_range_list&.
+	  Added range_expr_list::unroll_resolve (pure virt.).
+	  Added const unroll_context& argument to 
+		class_traits<Tag>::instantiation_statement_type_ref_base::
+			unroll_type_check().  
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-03:
 	  Cleaned up conditional code with USE_VALUE_COLLECTION_TEMPLATE.  
 	  Resulting in 2000 fewer LOC.  :)

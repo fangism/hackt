@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.1.4.1 2005/03/11 01:16:21 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.1.4.2 2005/03/11 04:08:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -433,7 +433,14 @@ VALUE_ARRAY_CLASS::key_value_dumper::operator () (
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::instantiate_indices(const index_collection_item_ptr_type& i) {
+VALUE_ARRAY_CLASS::instantiate_indices(
+#if 0
+		const index_collection_item_ptr_type& i
+#else
+		const const_range_list& ranges
+#endif
+) {
+#if 0
 	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
@@ -447,6 +454,7 @@ VALUE_ARRAY_CLASS::instantiate_indices(const index_collection_item_ptr_type& i) 
 		i->dump(cerr) << endl;
 		THROW_EXIT;
 	} 
+#endif
 	// else success
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
@@ -685,8 +693,18 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-VALUE_SCALAR_CLASS::instantiate_indices(const index_collection_item_ptr_type& i) {
+VALUE_SCALAR_CLASS::instantiate_indices(
+#if 0
+		const index_collection_item_ptr_type& i
+#else
+		const const_range_list& r
+#endif
+) {
+#if 0
 	INVARIANT(!i);
+#else
+	INVARIANT (r.empty());
+#endif
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
