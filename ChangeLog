@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-02-16	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-07:
+	  bool_instance_collections (scalar, array<D>) are once again
+	  reconstructible *without* connections.  
+	  (A lotta work to get nowhere!)
+	  Next revision will massively clean-up before porting over the 
+	  overall changes with bool collections to int<W> collections.
+	  Then we'll attempt to reconstruct aliases... ooooh...
+
+
 2005-02-15	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-05:

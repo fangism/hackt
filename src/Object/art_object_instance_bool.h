@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.6 2005/02/15 22:31:39 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.7 2005/02/16 17:41:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -126,6 +126,9 @@ virtual	~bool_instance_alias_info();
 			container == i.container;
 	}
 
+
+virtual	void
+	dump_alias(ostream& o) const;
 	/**
 		Wants to be pure virtual but can't...
 	 */
@@ -398,6 +401,8 @@ public:
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
 
+	void
+	dump_alias(ostream& o) const;
 
 #if 0
 	// compare keys
@@ -440,6 +445,9 @@ private:
 	typedef	bool_instance_alias_base		parent_type;
 public:
 	~bool_instance_alias();
+
+	void
+	dump_alias(ostream& o) const;
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -520,10 +528,15 @@ public:
 	persistent*
 	construct_empty(const int);
 
+#if 0
+	// left to children classes to implement, now that there are pointers to visit...
+
 	void
 	collect_transient_info(persistent_object_manager& m) const;
+#endif
 
 protected:
+	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 };	// end class bool_instance_collection
@@ -623,7 +636,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class bool_array
 
 //-----------------------------------------------------------------------------
@@ -671,7 +684,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class bool_array (specialized)

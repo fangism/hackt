@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:06 fang Exp $
+#	$Id: Makefile.am,v 1.5.14.1 2005/02/16 17:41:35 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -10,7 +10,7 @@ ARTC_TEST_FAILURES = \
 	010 011 012 013
 
 ARTC_TEST_PASSES = \
-	000 001 002 003 006
+	000 001 002 003 006 014
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 

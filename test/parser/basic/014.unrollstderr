@@ -1,0 +1,115 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x31006f4	module__	0	0	40
+	2	 0x3100170	namespc_	0	40	68
+	3	 0x3101eb4	dboolcol	1	68	166
+	4	 0x3804604	datainst	0	166	186
+	5	 0x3100714	datatprf	0	186	202
+	6	 0x3101f00	datadefn	0	202	235
+	7	 0x3100724	crnglst_	0	235	255
+	8	 0x31001a4	namespc_	0	255	294
+	9	 0x3101f64	dboolcol	3	294	1135
+	10	 0x3804620	datainst	0	1135	1155
+	11	 0x3101fb4	datatprf	0	1155	1171
+	12	 0x3101fc4	crnglst_	0	1171	1207
+	13	 0x3101fd4	dboolcol	2	1207	1486
+	14	 0x380463c	datainst	0	1486	1506
+	15	 0x3102024	datatprf	0	1506	1522
+	16	 0x3102034	crnglst_	0	1522	1550
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    more_arrays =     In namespace "more_arrays", we have: {
+      0 parameter-collections
+      2 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        fancier_array = bool^3 fancier_array with indices: {
+          [0..3][0..4][1..2]
+        }
+          unrolled indices: {
+            [0][0][1] = ::more_arrays::fancier_array[0][0][1]
+            [0][0][2] = ::more_arrays::fancier_array[0][0][2]
+            [0][1][1] = ::more_arrays::fancier_array[0][1][1]
+            [0][1][2] = ::more_arrays::fancier_array[0][1][2]
+            [0][2][1] = ::more_arrays::fancier_array[0][2][1]
+            [0][2][2] = ::more_arrays::fancier_array[0][2][2]
+            [0][3][1] = ::more_arrays::fancier_array[0][3][1]
+            [0][3][2] = ::more_arrays::fancier_array[0][3][2]
+            [0][4][1] = ::more_arrays::fancier_array[0][4][1]
+            [0][4][2] = ::more_arrays::fancier_array[0][4][2]
+            [1][0][1] = ::more_arrays::fancier_array[1][0][1]
+            [1][0][2] = ::more_arrays::fancier_array[1][0][2]
+            [1][1][1] = ::more_arrays::fancier_array[1][1][1]
+            [1][1][2] = ::more_arrays::fancier_array[1][1][2]
+            [1][2][1] = ::more_arrays::fancier_array[1][2][1]
+            [1][2][2] = ::more_arrays::fancier_array[1][2][2]
+            [1][3][1] = ::more_arrays::fancier_array[1][3][1]
+            [1][3][2] = ::more_arrays::fancier_array[1][3][2]
+            [1][4][1] = ::more_arrays::fancier_array[1][4][1]
+            [1][4][2] = ::more_arrays::fancier_array[1][4][2]
+            [2][0][1] = ::more_arrays::fancier_array[2][0][1]
+            [2][0][2] = ::more_arrays::fancier_array[2][0][2]
+            [2][1][1] = ::more_arrays::fancier_array[2][1][1]
+            [2][1][2] = ::more_arrays::fancier_array[2][1][2]
+            [2][2][1] = ::more_arrays::fancier_array[2][2][1]
+            [2][2][2] = ::more_arrays::fancier_array[2][2][2]
+            [2][3][1] = ::more_arrays::fancier_array[2][3][1]
+            [2][3][2] = ::more_arrays::fancier_array[2][3][2]
+            [2][4][1] = ::more_arrays::fancier_array[2][4][1]
+            [2][4][2] = ::more_arrays::fancier_array[2][4][2]
+            [3][0][1] = ::more_arrays::fancier_array[3][0][1]
+            [3][0][2] = ::more_arrays::fancier_array[3][0][2]
+            [3][1][1] = ::more_arrays::fancier_array[3][1][1]
+            [3][1][2] = ::more_arrays::fancier_array[3][1][2]
+            [3][2][1] = ::more_arrays::fancier_array[3][2][1]
+            [3][2][2] = ::more_arrays::fancier_array[3][2][2]
+            [3][3][1] = ::more_arrays::fancier_array[3][3][1]
+            [3][3][2] = ::more_arrays::fancier_array[3][3][2]
+            [3][4][1] = ::more_arrays::fancier_array[3][4][1]
+            [3][4][2] = ::more_arrays::fancier_array[3][4][2]
+          }
+        fancy_array = bool^2 fancy_array with indices: {
+          [0..4][0..2]
+        }
+          unrolled indices: {
+            [0][0] = ::more_arrays::fancy_array[0][0]
+            [0][1] = ::more_arrays::fancy_array[0][1]
+            [0][2] = ::more_arrays::fancy_array[0][2]
+            [1][0] = ::more_arrays::fancy_array[1][0]
+            [1][1] = ::more_arrays::fancy_array[1][1]
+            [1][2] = ::more_arrays::fancy_array[1][2]
+            [2][0] = ::more_arrays::fancy_array[2][0]
+            [2][1] = ::more_arrays::fancy_array[2][1]
+            [2][2] = ::more_arrays::fancy_array[2][2]
+            [3][0] = ::more_arrays::fancy_array[3][0]
+            [3][1] = ::more_arrays::fancy_array[3][1]
+            [3][2] = ::more_arrays::fancy_array[3][2]
+            [4][0] = ::more_arrays::fancy_array[4][0]
+            [4][1] = ::more_arrays::fancy_array[4][1]
+            [4][2] = ::more_arrays::fancy_array[4][2]
+          }
+    }
+  Instances:
+    good_array = bool^1 good_array with indices: {
+      [0..4]
+    }
+      unrolled indices: {
+        0 = ::good_array[0]
+        1 = ::good_array[1]
+        2 = ::good_array[2]
+        3 = ::good_array[3]
+        4 = ::good_array[4]
+      }
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.7 2005/02/15 22:31:39 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.8 2005/02/16 17:41:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -102,6 +102,8 @@ using std::mem_fun_ref;
 USING_STACKTRACE
 using util::value_writer;
 using util::value_reader;
+using util::read_value;
+using util::write_value;
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
@@ -117,13 +119,25 @@ bool_instance_alias_info::~bool_instance_alias_info() { }
 void
 bool_instance_alias_info::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("bool_alias_info::collect_transients()");
 	if (instance)
 		instance->collect_transient_info(m);
+	// eventually need to implement this...
+
 	// shouldn't need to re-visit parent pointer, 
 	// UNLESS it is visited from an alias cycle, 
 	// in which case, the parent may not have been visited before...
-	NEVER_NULL(container);
-	container->collect_transient_info(m);
+
+	// this is allowed to be null ONLY if it belongs to a scalar
+	// in which case it is not yet unrolled.  
+	if (container)
+		container->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_info::dump_alias(ostream& o) const {
+	DIE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,6 +156,8 @@ bool_instance_alias_info::write_next_connection(
 void
 bool_instance_alias_info::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT("bool_alias_info::write_object()");
+//	NEVER_NULL(container);
 	m.write_pointer(o, instance);
 	m.write_pointer(o, container);
 }
@@ -153,9 +169,10 @@ bool_instance_alias_info::write_object_base(const persistent_object_manager& m,
 void
 bool_instance_alias_info::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	STACKTRACE_PERSISTENT("bool_alias_info::load_object()");
 	m.read_pointer(i, instance);
 	m.read_pointer(i, container);
-	NEVER_NULL(container);
+//	NEVER_NULL(container);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,6 +250,21 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints out the next instance alias in the connected set.  
+ */
+template <size_t D>
+void
+bool_instance_alias<D>::dump_alias(ostream& o) const {
+	NEVER_NULL(container);
+	o << container->get_qualified_name() <<
+		multikey<D, pint_value_type>(key);
+		// casting to multikey for the sake of printing [i] for D==1.
+		// could use specialization to accomplish this...
+		// bah, not important
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D>
 void
 bool_instance_alias<D>::write_next_connection(
@@ -249,14 +281,25 @@ template <size_t D>
 void
 bool_instance_alias<D>::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("bool_alias::collect_transients()");
 	// this isn't truly a persistent type, so we don't register this addr.
+	bool_instance_alias_info::collect_transient_info_base(m);
+	// next->collect_transient_info_base(m)?	CYCLE!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
 template <size_t D>
 void
 bool_instance_alias<D>::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT("bool_alias::write_object()");
+#if 0
+	value_writer<key_type> write_key(os);
+	write_key(key);
+#endif
+	bool_instance_alias_info::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,7 +307,12 @@ template <size_t D>
 void
 bool_instance_alias<D>::load_object(const persistent_object_manager& m, 
 		istream& i) {
-
+	STACKTRACE_PERSISTENT("bool_alias::load_object()");
+#if 0
+	value_reader<key_type> kr(os);
+	kr(e.key);
+#endif
+	bool_instance_alias_info::load_object_base(m, i);
 }
 
 //=============================================================================
@@ -274,9 +322,46 @@ bool_instance_alias<0>::~bool_instance_alias() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+bool_instance_alias<0>::dump_alias(ostream& o) const {
+	NEVER_NULL(container);
+	o << container->get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 bool_instance_alias<0>::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, container);
+	// no key to write!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias<0>::collect_transient_info(
+		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("bool_alias<0>::collect_transients()");
+	// this isn't truly a persistent type, so we don't register this addr.
+	bool_instance_alias_info::collect_transient_info_base(m);
+	// next->collect_transient_info_base(m)?	CYCLE!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias<0>::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	STACKTRACE_PERSISTENT("bool_alias<0>::write_object()");
+	bool_instance_alias_info::write_object_base(m, o);
+	// no key to write!
+	// continuation pointer?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias<0>::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	STACKTRACE_PERSISTENT("bool_alias<0>::load_object()");
+	bool_instance_alias_info::load_object_base(m, i);
+	// no key to load!
 }
 
 //=============================================================================
@@ -336,6 +421,7 @@ bool_instance_collection::make_instance_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 bool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -344,6 +430,7 @@ if (!m.register_transient_object(this,
 	parent_type::collect_transient_info_base(m);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_collection*
@@ -393,12 +480,20 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array() : parent_type(D), collection() {
+#if 0
+	STACKTRACE("bool_array<D>()");
+	cerr << collection.size() << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
+#if 0
+	STACKTRACE("bool_array<D>(scope,string)");
+	cerr << collection.size() << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -432,9 +527,10 @@ bool_array<D>::dump_unrolled_instances(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE 
 ostream&
-bool_array<D>::key_dumper::operator () (
-		const value_type& p) {
-	return os << auto_indent << _Select1st<value_type>()(p) << endl;
+bool_array<D>::key_dumper::operator () (const value_type& p) {
+	os << auto_indent << _Select1st<value_type>()(p) << " = ";
+	p.get_next()->dump_alias(os);
+	return os << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -625,13 +721,15 @@ bool_array<D>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Going to need some sort of element_reader counterpart.
 	\param e is a reference to a bool_instance_alias<D>.
  */
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::element_writer::operator () (const element_type& e) const {
-	value_writer<key_type> kw(os);
-	kw(e.key);
+	STACKTRACE_PERSISTENT("bool_array<D>::element_writer::operator()");
+	value_writer<key_type> write_key(os);
+	write_key(e.key);
 	e.write_object_base(pom, os);
 	// postpone connection writing until next phase
 }
@@ -640,6 +738,7 @@ bool_array<D>::element_writer::operator () (const element_type& e) const {
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::connection_writer::operator() (const element_type& e) const {
+	STACKTRACE_PERSISTENT("bool_array<D>::connection_writer::operator()");
 	const bool_instance_alias_base* const next = e.get_next();
 #if 0
 	NEVER_NULL(next);
@@ -656,8 +755,19 @@ bool_array<D>::connection_writer::operator() (const element_type& e) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
+bool_array<D>::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+	STACKTRACE_PERSISTENT("bool_array<D>::collect_transients()");
+	parent_type::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+void
 bool_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE_PERSISTENT("bool_array<D>::write_object(HELLO)");
 	parent_type::write_object_base(m, f);
 #if 0
 	collection.write(f);
@@ -665,10 +775,18 @@ bool_array<D>::write_object(const persistent_object_manager& m,
 	for_each(collection.begin(), collection.end(), 
 		instance_set_element_writer()
 	);
-#elif 0			// almost ready...
+#elif 1			// almost ready...
+	// need to know how many members to expect
+	write_value(f, collection.size());
+#endif
+
+#if 1
 	for_each(collection.begin(), collection.end(), 
 		element_writer(m, f)
 	);
+#endif
+#if 0
+	// punting connections...
 	for_each(collection.begin(), collection.end(), 
 		connection_writer(m, f)
 	);
@@ -685,6 +803,7 @@ bool_array<D>::write_object(const persistent_object_manager& m,
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("bool_array<D>::load_object()");
 	parent_type::load_object_base(m, f);
 #if 0
 	collection.read(f);
@@ -694,6 +813,30 @@ bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	//	let them start out pointing to themselves.  
 	// 2) each element contains information to reconstruct, 
 	//	we need temporary local storage for it.
+#if 1
+	size_t collection_size;
+	read_value(f, collection_size);
+#endif
+#if 1
+	size_t i = 0;
+	for ( ; i < collection_size; i++) {
+		// this must perfectly complement element_writer::operator()
+		// construct the element locally first, then insert it into set
+		key_type temp_key;
+		value_reader<key_type> read_key(f);
+		read_key(temp_key);
+		element_type temp_elem(temp_key);
+		temp_elem.load_object_base(m, f);
+		collection.insert(temp_elem);
+	}
+#endif
+#if 0
+	// punting connections...
+	i = 0;
+	for ( ; i < collection_size; i++) {
+		// this must complement connection_writer::operator()
+	}
+#endif
 #endif
 }
 
@@ -745,6 +888,7 @@ bool_array<0>::dump_unrolled_instances(ostream& o) const {
  */
 void
 bool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	STACKTRACE("bool_scalar::instantiate()");
 	INVARIANT(!i);
 	if (the_instance.valid()) {
 		// should never happen, but just in case...
@@ -800,20 +944,36 @@ bool_array<0>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+bool_array<0>::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+	STACKTRACE_PERSISTENT("bool_scalar::collect_transients()");
+	parent_type::collect_transient_info_base(m);
+	the_instance.collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 bool_array<0>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE_PERSISTENT("bool_scalar::write_object()");
 	parent_type::write_object_base(m, f);
 #if 0
 	write_value(f, the_instance);
+#else
+	the_instance.write_object(m, f);
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("bool_scalar::load_object()");
 	parent_type::load_object_base(m, f);
 #if 0
 	read_value(f, the_instance);
+#else
+	the_instance.load_object(m, f);
 #endif
 }
 
