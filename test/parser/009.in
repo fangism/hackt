@@ -1,0 +1,10 @@
+// this should fail to type check because "b" is not declared
+
+defproc badinverter(node a) {
+int k;
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+
