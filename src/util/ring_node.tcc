@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.1.2.2.6.2 2005/02/13 20:30:51 fang Exp $
+	$Id: ring_node.tcc,v 1.1.2.2.6.3 2005/02/14 04:48:23 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
@@ -73,8 +73,8 @@ ring_node_base::unsafe_merge(ring_node_base& r) {
 inline
 bool
 ring_node_base::contains(const ring_node_base& r) const {
-	const ring_node_base* walk1 = this;
-	const ring_node_base* walk2 = &r;
+	const_next_type walk1 = this;
+	const_next_type walk2 = &r;
 	do {
 		if (walk1 == &r || walk2 == this)
 			return true;
@@ -87,6 +87,40 @@ ring_node_base::contains(const ring_node_base& r) const {
 }
 
 #endif	// FORCE_INLINE_RING_NODE
+
+//=============================================================================
+// class ring_node_derived method definitions
+
+template <class T>
+ring_node_derived<T>::~ring_node_derived() {
+	if (next != this) {
+		next_type walk = next;
+		while (walk->next != this) {
+			walk = walk->next;
+		}
+		// found the node that points to this, update it
+		walk->next = next;
+	}
+	// else this is the last node, just drops itself
+	next = NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+bool
+ring_node_derived<T>::contains(const this_type& r) const {
+	const_next_type walk1 = this;
+	const_next_type walk2 = &r;
+	do {
+		if (walk1 == &r || walk2 == this)
+			return true;
+		else {
+			walk1 = walk1->next;
+			walk2 = walk2->next;
+		}
+	} while (walk1 != this && walk2 != &r);
+	return false;
+}
 
 //=============================================================================
 }	// end namespace util

@@ -2,6 +2,31 @@
 
 2005-02-13	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-02:
+	  Enabled instance_alias persistence of parameters (pint, pbool)
+	  because they contain no pointers.  
+	  multikey_map.tcc: using {write,read}_value with the key 
+	  of the key-value pair.  
+
+	+ Complication: desire the connective properties of ring_node
+	  and the key-aware properties of maplikeset_element
+	  (manifested as multikey_set_element), but creating such
+	  a result is highly non-trivial with the current data structure
+	  library.  
+
+	+ Added a variation of ring_node call ring_node_derived, which
+	  extends a base type, by making it ring-node-connected to
+	  its own type.  This will be required for use with 
+	  maplikeset_element, because one cannot compound two container-like
+	  adapters to make a super-type with the properties of both parents.  
+	  Testing passed easily... too easily.  
+
+	+ Drafted an implementation of bool_instance_alias_info
+	  and bool_instance_alias_base, which will be adapted in the
+	  next revision to use ring_node_derived.  
+
+	+ Much clean-up of art_object_instance_bool.h.
+
 	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-01:
 	  In this child branch, I'm play-testing the development of 
 	  using multikey_set for instance aliases, and ways of 

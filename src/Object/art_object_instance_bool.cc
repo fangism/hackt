@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.3 2005/02/13 20:30:44 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.4 2005/02/14 04:48:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -76,8 +76,55 @@ using std::string;
 // using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
 using util::dereference;
+using std::for_each;
 using std::mem_fun_ref;
 USING_STACKTRACE
+
+//=============================================================================
+// class bool_instance_alias_info method definitions
+
+/**
+	Doesn't register itself because this is not directly
+	dynamically allocated.  
+ */
+void
+bool_instance_alias_info::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (instance)
+		instance->collect_transient_info(m);
+	// shouldn't need to re-visit parent pointer, 
+	// UNLESS it is visited from an alias cycle, 
+	// in which case, the parent may not have been visited before...
+	NEVER_NULL(container);
+	container->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_info::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, instance);
+	m.write_pointer(o, container);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	How do we check that this is done once? use container pointer?
+ */
+void
+bool_instance_alias_info::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, instance);
+	m.read_pointer(i, container);
+	NEVER_NULL(container);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_info::transient_info_collector::operator () (
+		const bool_instance_alias_info& b) {
+	b.collect_transient_info_base(manager);
+}
 
 //=============================================================================
 // class bool_instance_alias_base method definitions
@@ -86,6 +133,40 @@ bool_instance_alias_base::~bool_instance_alias_base() {
 	STACKTRACE_DTOR("~bool_alias_base()");
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_base::collect_transient_info(
+		persistent_object_manager& m) const {
+	// IF NOT ALREADY VISITED!, but who's tracking, if not the manager?
+	// visit ALL aliases
+	for_each(begin(), end(), 
+		bool_instance_alias_info::transient_info_collector(m)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_base::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	value.write_object_base(m, o);
+	// the 'next' pointer needs to be handled with care!
+	// we're not going to write out the translated pointer for 'next', 
+	// but the information needed to reproduce it:
+	// a pointer to the collection, and a possible unrolled index.  
+	// next->value
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias_base::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	value.load_object_base(m, i);
+	// may require recursive instance collection construction!
+	// what if there is mutual recursion?  must prevent it!
+	// split into two phases!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 operator << (ostream& o, const bool_instance_alias_base& b) {
 	return o << "bool-alias @ " << &b;

@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.2 2005/02/13 02:38:59 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.3 2005/02/14 04:48:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -50,12 +50,19 @@ class bool_instance_alias_base;
 
 	Should be pool allocated for efficiency.  
  */
-struct bool_instance {
+class bool_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
+//	int		state;
+
+	// need one back-reference to one alias (connected in a ring)
+	never_ptr<const bool_instance_alias_base>
+			back_ref;
 
 public:
 	bool_instance();
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class bool_instance
 
@@ -89,13 +96,6 @@ public:
 		Consider using this to determine "instantiated" state.  
 	 */
 	never_ptr<const container_type>			container;
-#if 0
-	/**
-		Whether or not this is truly instantiated.  
-		Depends on implementation.  
-	 */
-	bool						instantiated;
-#endif
 public:
 	bool_instance_alias_info() :
 		instance(NULL), container(NULL) { }
@@ -108,7 +108,27 @@ public:
 	// default destructor
 
 	// default assignment
-	
+
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+	class transient_info_collector {
+		persistent_object_manager&	manager;
+	public:
+		explicit
+		transient_info_collector(persistent_object_manager& m) :
+			manager(m) { }
+
+		void
+		operator () (const bool_instance_alias_info&);
+	};
+
 };	// end class bool_instance_alias_info
 
 //-----------------------------------------------------------------------------
@@ -137,30 +157,26 @@ public:
 	 */
 	bool_instance_alias_base() : ring_node_type() { }
 
+	explicit
 	bool_instance_alias_base(
 		const never_ptr<const bool_instance_collection> p) :
 		ring_node_type(info_type(p)) { }
 
-#if 0
-	explicit
-	bool_instance_alias(const alias_ptr_type& p) :
-		instance(NULL), alias(p), instantiated(true) { }
-#endif
-
 	// default copy constructor
 
+	/**
+		Technically, references to bool_instance_alias_base
+		will never refer to subclass of this --
+		The containers of bool_instance_aliases are
+		only dimensions-specific, and the ring_node 
+		pointer cycles are never used for destruction.  
+		Nevertheless, it doesn't hurt to keep this virtual.  
+	 */
 virtual	~bool_instance_alias_base();
 
 	bool
 	valid(void) const { return value.container; }
 
-#if 0
-	void
-	instantiate(void) {
-		INVARIANT(!value.instantiated);
-		value.instantiated = true;
-	}
-#else
 	/**
 		Instantiates officially by linking to parent collection.  
 	 */
@@ -170,7 +186,6 @@ virtual	~bool_instance_alias_base();
 		INVARIANT(!value.container);
 		value.container = p;
 	}
-#endif
 #if 0
 	/// dereference, create
 	bool_instance&
@@ -214,7 +229,12 @@ virtual	~bool_instance_alias_base();
 	ostream&
 	operator << (ostream&, const bool_instance_alias_base&);
 
-};	// end class bool_instance_alias
+public:
+	// this class is not truly persistent but contains
+	// pointers to persistent types.  
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+private:
+};	// end class bool_instance_alias_base
 
 ostream&
 operator << (ostream&, const bool_instance_alias_base&);
@@ -229,47 +249,15 @@ operator << (ostream&, const bool_instance_alias_base&);
 	Alternate idea, use a multikey_generic instead of dimension-specific.
  */
 template <size_t D>
-class bool_instance_alias :
-#if 1
-	public bool_instance_alias_base
-#else
-	public multikey_set_element<D, pint_value_type, bool_instance_alias_base>
-#endif
+class bool_instance_alias : public bool_instance_alias_base
 {
 private:
 	typedef	bool_instance_alias<D>			this_type;
-#if 1
 	typedef	bool_instance_alias_base		parent_type;
-#else
-	typedef	multikey_set_element<D, pint_value_type, bool_instance_alias_base>
-							parent_type;
-#endif
 public:
-#if 1
 	typedef	multikey<D, pint_value_type>		key_type;
 	// or simple_type?
-#else
-	typedef	typename parent_type::key_type		key_type;
-#endif
-#if 0
-protected:
-	key_type					key;
-#endif
 public:
-#if 0
-	bool_instance_alias() : parent_type(), key() { }
-
-	/**
-		Implicit constructor for creating an empty alias element, 
-		used for creating keys to search sets.  
-	 */
-	bool_instance_alias(const key_type& k) : 
-			bool_instance_alias_base(), key(k) { }
-
-	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
-			const key_type& k) : 
-			bool_instance_alias_base(p), key(k) { }
-#else
 	bool_instance_alias() : parent_type() { }
 
 	/**
@@ -283,7 +271,6 @@ public:
 	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
 			const key_type& k) : 
 			bool_instance_alias_base(p), key(k) { }
-#endif
 #endif
 
 	~bool_instance_alias();
@@ -391,21 +378,11 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-#if 0
-	typedef	bool_instance_alias<D>			element_type;
-#else
 	typedef	multikey_set_element<D, 
 			pint_value_type, bool_instance_alias<D> >
 							element_type;
-#endif
-//	typedef	multikey_map<D, pint_value_type, element_type, qmap>
-	typedef	multikey_set<D, element_type>
-							collection_type;
-#if 1
+	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
-#else
-	typedef	typename collection_type::key_type	key_type;
-#endif
 
 protected:
 	typedef	typename collection_type::iterator	iterator;

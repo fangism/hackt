@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.3.2.1 2005/02/11 06:14:27 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.3.2.2 2005/02/14 04:48:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -565,7 +565,7 @@ pbool_array<D>::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
-#if 0
+#if 1
 	collection.write(f);
 #endif
 }
@@ -576,7 +576,7 @@ void
 pbool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
-#if 0
+#if 1
 	collection.read(f);
 #endif
 }

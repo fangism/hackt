@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.16.1.2.1 2005/02/11 06:14:31 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.16.1.2.2 2005/02/14 04:48:22 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -450,7 +450,13 @@ multikey_map<D,K,T,M>::write(ostream& f) const {
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++) {
 		// won't work for D==1
+#if 0
 		i->first.write(f);
+#else
+		// ok to do this if key contains no pointers
+		// and is of known fixed size
+		write_value(f, i->first);
+#endif
 		write_value(f, i->second);
 	}
 	return f;
@@ -468,7 +474,13 @@ multikey_map<D,K,T,M>::read(istream& f) {
 	for ( ; i<size; i++) {
 		key_type key;
 		mapped_type val;
+#if 0
 		key.read(f);
+#else
+		// ok to do this if key contains no pointers
+		// and is of known fixed size
+		read_value(f, key);
+#endif
 		read_value(f, val);
 		(*this)[key] = val;
 	}
