@@ -3,13 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.1.4.2 2005/02/02 19:08:18 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.1.4.3 2005/02/03 01:29:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
 #define	__ART_OBJECT_INSTANCE_PROC_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
@@ -33,25 +33,6 @@
 #include "compose.h"
 #include "binders.h"
 
-#if 0
-// for specializations of write_value / read_value
-// contains pointer, so needs object persistence
-namespace util {
-using ART::entity::proc_instance_alias;
-
-template <>
-void
-write_value(ostream&, const proc_instance_alias& p) {
-
-}
-
-template <>
-read_value(istream&, proc_instance_alias& p) {
-
-}
-
-}	// end namespace util
-#endif
 
 namespace ART {
 namespace entity {
@@ -63,14 +44,106 @@ using std::mem_fun_ref;
 USING_STACKTRACE;
 
 //=============================================================================
+// class proc_instance method definitions
+
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(proc_instance,
+	UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+proc_instance::proc_instance() : state(0) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+proc_instance::~proc_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+proc_instance::what(ostream& o) const {
+	return o << "proc_instance";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+persistent*
+proc_instance::construct_empty(const int) {
+	return new proc_instance;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_instance::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)) {
+	// walk vector of pointers...
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_instance::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	write_value(f, state);
+	// write pointer sequence...
+}
+
+void
+proc_instance::load_object(const persistent_object_manager& m, istream& f) {
+	read_value(f, state);
+	// read pointer sequence...
+}
+
+//=============================================================================
 // class proc_instance_alias method definitions
 
+// don't register as persistent type...
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_instance_alias::proc_instance_alias() :
 		instance(NULL), alias(NULL), instantiated(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_instance_alias::~proc_instance_alias() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+proc_instance_alias::what(ostream& o) const {
+	return o << "proc_instance_alias";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+proc_instance_alias::collect_transient_info(
+		persistent_object_manager& m) const {
+	// don't register itself, not dynamic, and isn't persistent! (yet)
+	if (instance)
+		instance->collect_transient_info(m);
+	if (alias)
+		alias->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only intended for use by process_instance_collections, 
+	not by the persistent object manager.  
+ */
+void
+proc_instance_alias::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	m.write_pointer(f, instance);
+	m.write_pointer(f, alias);
+	write_value(f, instantiated);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only intended for use by process_instance_collections, 
+	not by the persistent object manager.  
+ */
+void
+proc_instance_alias::load_object(const persistent_object_manager& m, 
+		istream& f) {
+	m.read_pointer(f, instance);
+	m.read_pointer(f, alias);
+	read_value(f, instantiated);
 }
 
 //=============================================================================
@@ -206,7 +279,8 @@ void
 process_instance_collection::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	parent_type::collect_transient_info_base(m);
-	proc_type->collect_transient_info(m);
+	if (proc_type)
+		proc_type->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -477,27 +551,39 @@ proc_array<D>::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		PROCESS_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	parent_type::collect_transient_info_base(m);
-	cerr << "FANG: finish proc_array<D>::collect_transient_info()" << endl;
+//	cerr << "FANG: finish proc_array<D>::collect_transient_info()" << endl;
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: walk the collection.
+	Can't just .write because contains pointers.  
+ */
 PROC_ARRAY_TEMPLATE_SIGNATURE
 void
 proc_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	cerr << "FANG: finish proc_array<D>::write_object()" << endl;
 	collection.write(f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: walk the collection.
+	Can't just read because contains pointers.  
+ */
 PROC_ARRAY_TEMPLATE_SIGNATURE
 void
 proc_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	cerr << "FANG: finish proc_array<D>::load_object()" << endl;
 	collection.read(f);
+#endif
 }
 
 //=============================================================================
@@ -617,7 +703,8 @@ proc_array<0>::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		PROCESS_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	parent_type::collect_transient_info_base(m);
-	cerr << "FANG: finish proc_array<0>::collect_transient_info()" << endl;
+//	cerr << "FANG: finish proc_array<0>::collect_transient_info()" << endl;
+	the_instance.collect_transient_info(m);
 }
 }
 
@@ -627,8 +714,8 @@ proc_array<0>::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 
-	cerr << "FANG: finish proc_array<0>::write_object()" << endl;
-	write_value(f, the_instance);
+//	cerr << "FANG: finish proc_array<0>::write_object()" << endl;
+	the_instance.write_object(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -636,8 +723,8 @@ void
 proc_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 
-	cerr << "FANG: finish proc_array<0>::load_object()" << endl;
-	read_value(f, the_instance);
+//	cerr << "FANG: finish proc_array<0>::load_object()" << endl;
+	the_instance.load_object(m, f);
 }
 
 //=============================================================================

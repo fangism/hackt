@@ -2,10 +2,10 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.9.8.2 2005/02/02 19:08:10 fang Exp $
+	$Id: artobjunroll.cc,v 1.9.8.3 2005/02/03 01:29:24 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <fstream>

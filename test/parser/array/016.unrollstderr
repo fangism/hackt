@@ -8,37 +8,37 @@ Persistent Object Manager text dump:
 	4	 0x3804604	datainst	0	767	787
 	5	 0x3303df4	datatprf	0	787	803
 	6	 0x3303e00	datadefn	0	803	835
-	7	 0x3303e54	dprmlst_	0	835	851
-	8	 0x268c024	cnstpi__	0	851	863
-	9	 0x3303e64	crnglst_	0	863	883
+	7	 0x3303e64	dprmlst_	0	835	851
+	8	 0x2672024	cnstpi__	0	851	863
+	9	 0x3303e74	crnglst_	0	863	883
 	10	 0x3804620	datainst	0	883	903
-	11	 0x3303e74	datatprf	0	903	919
-	12	 0x3303e84	dprmlst_	0	919	935
-	13	 0x3303e94	crnglst_	0	935	955
+	11	 0x3303e84	datatprf	0	903	919
+	12	 0x3303e94	dprmlst_	0	919	935
+	13	 0x3303ea4	crnglst_	0	935	955
 	14	 0x380463c	datainst	0	955	975
-	15	 0x3303ea4	datatprf	0	975	991
-	16	 0x3303eb4	dprmlst_	0	991	1007
-	17	 0x3303ec4	crnglst_	0	1007	1027
+	15	 0x3303eb4	datatprf	0	975	991
+	16	 0x3303ec4	dprmlst_	0	991	1007
+	17	 0x3303ed4	crnglst_	0	1007	1027
 	18	 0x3804658	datainst	0	1027	1047
-	19	 0x3303ed4	datatprf	0	1047	1063
-	20	 0x3303ee4	dprmlst_	0	1063	1079
-	21	 0x3303ef4	crnglst_	0	1079	1099
+	19	 0x3303ee4	datatprf	0	1047	1063
+	20	 0x3303ef4	dprmlst_	0	1063	1079
+	21	 0x3303f04	crnglst_	0	1079	1099
 	22	 0x3804674	datainst	0	1099	1119
-	23	 0x3303f04	datatprf	0	1119	1135
-	24	 0x3303f14	dprmlst_	0	1135	1151
-	25	 0x3303f24	crnglst_	0	1151	1171
+	23	 0x3303f14	datatprf	0	1119	1135
+	24	 0x3303f24	dprmlst_	0	1135	1151
+	25	 0x3303f34	crnglst_	0	1151	1171
 	26	 0x3804690	datainst	0	1171	1191
-	27	 0x3303f34	datatprf	0	1191	1207
-	28	 0x3303f44	dprmlst_	0	1207	1223
-	29	 0x3303f54	crnglst_	0	1223	1243
+	27	 0x3303f44	datatprf	0	1191	1207
+	28	 0x3303f54	dprmlst_	0	1207	1223
+	29	 0x3303f64	crnglst_	0	1223	1243
 	30	 0x38046ac	datainst	0	1243	1263
-	31	 0x3303f64	datatprf	0	1263	1279
-	32	 0x3303f74	dprmlst_	0	1279	1295
-	33	 0x3303f84	crnglst_	0	1295	1315
+	31	 0x3303f74	datatprf	0	1263	1279
+	32	 0x3303f84	dprmlst_	0	1279	1295
+	33	 0x3303f94	crnglst_	0	1295	1315
 	34	 0x38046c8	datainst	0	1315	1335
-	35	 0x3303f94	datatprf	0	1335	1351
-	36	 0x3303fa4	dprmlst_	0	1351	1367
-	37	 0x3303fb4	crnglst_	0	1367	1387
+	35	 0x3303fa4	datatprf	0	1335	1351
+	36	 0x3303fb4	dprmlst_	0	1351	1367
+	37	 0x3303fc4	crnglst_	0	1367	1387
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -48,7 +48,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    foo = int<32> foo with indices: {
+    foo = int<32>^1 foo with indices: {
       [5..5]
       [4..4]
       [21..24]

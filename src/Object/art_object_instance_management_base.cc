@@ -1,14 +1,14 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.8.8.2 2005/02/02 19:08:17 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.8.8.3 2005/02/03 01:29:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 #define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
 // compilation switches for debugging
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 

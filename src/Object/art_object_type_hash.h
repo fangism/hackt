@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.4 2004/12/25 03:12:21 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4.22.1 2005/02/03 01:29:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -51,7 +51,7 @@
 #define	DATA_TYPE_REFERENCE_TYPE_KEY				"datatprf"
 	// no need for param type reference, or built-in data type reference
 
-// Instantiations:
+// Instantiations, collections (non-unique):
 #define	PROCESS_INSTANCE_COLLECTION_TYPE_KEY			"proccoll"
 #define	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY			"chancoll"
 // #define	DATA_INSTANCE_COLLECTION_TYPE_KEY		"datacoll"
@@ -61,6 +61,9 @@
 #define	DINT_INSTANCE_COLLECTION_TYPE_KEY			"dintcoll"
 #define	PBOOL_INSTANCE_COLLECTION_TYPE_KEY			"pboolcol"
 #define	PINT_INSTANCE_COLLECTION_TYPE_KEY			"pintcoll"
+
+// Unique instances, post-unrolling:
+#define	UNIQUE_PROCESS_INSTANCE_TYPE_KEY			"procunis"
 
 // Instance references:
 	// simple instance reference may contain multidimensional indices

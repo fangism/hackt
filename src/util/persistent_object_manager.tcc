@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.1.4.1 2005/02/02 19:08:21 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.1.4.2 2005/02/03 01:29:25 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -118,7 +118,7 @@ persistent_object_manager::__write_pointer(ostream& o,
 				util::what<typename util::memory::
 					pointer_traits<P>::element_type
 				>::name() << " is not derived from "
-				"util::persistent, and this is unusable "
+				"util::persistent, and thus is unusable "
 				"by write_pointer." << endl;
 			THROW_EXIT;
 		}

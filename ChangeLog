@@ -2,6 +2,15 @@
 
 2005-02-02	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-03-unroll-00-03:
+	  Basic single process instance (alias) works.  
+	  Made proc_instance_alias pseudo-persistent, 
+	  never actually dynmically allocating through the object
+	  manager, but still contains aliases to unique instances, 
+	  which requires pointer management.  
+	  Many tests updated.  
+	  To do: be able to write / read collections of aliases.  
+
 	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-02:
 	  Factored out "safety" code for persistent object management
 	  out of all implementations of write_object, load_object.  

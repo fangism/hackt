@@ -18,8 +18,8 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    N = pint<> N value: ?
-    x = pint<> x with indices: {
+    N = pint^0 N value: ?
+    x = pint^1 x with indices: {
       [0..4]
     }
       unrolled index-value pairs: {

@@ -30,7 +30,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    foo = pint<> foo with indices: {
+    foo = pint^1 foo with indices: {
       [0..3]
       [40..42]
       [6..12]

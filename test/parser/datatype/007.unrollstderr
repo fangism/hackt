@@ -8,18 +8,18 @@ Persistent Object Manager text dump:
 	4	 0x3804604	datainst	0	119	139
 	5	 0x3302174	datatprf	0	139	155
 	6	 0x3302180	datadefn	0	155	187
-	7	 0x33021d4	dprmlst_	0	187	203
-	8	 0x268c024	cnstpi__	0	203	215
+	7	 0x33021e4	dprmlst_	0	187	203
+	8	 0x2672024	cnstpi__	0	203	215
 	9	 0x33001a4	namespc_	0	215	242
-	10	 0x33021e4	dintcoll	0	242	289
+	10	 0x33021f4	dintcoll	0	242	289
 	11	 0x3804620	datainst	0	289	309
-	12	 0x3302234	datatprf	0	309	325
-	13	 0x3302244	dprmlst_	0	325	341
+	12	 0x3302244	datatprf	0	309	325
+	13	 0x3302254	dprmlst_	0	325	341
 	14	 0x33001d8	namespc_	0	341	368
-	15	 0x3302254	dintcoll	0	368	415
+	15	 0x3302264	dintcoll	0	368	415
 	16	 0x380463c	datainst	0	415	435
-	17	 0x33022a4	datatprf	0	435	451
-	18	 0x33022b4	dprmlst_	0	451	467
+	17	 0x33022b4	datatprf	0	435	451
+	18	 0x33022c4	dprmlst_	0	451	467
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -36,7 +36,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> foo (instantiated)
+        foo = int<32>^0 foo (instantiated)
     }
     ick =     In namespace "ick", we have: {
       0 parameter-collections
@@ -45,9 +45,9 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> foo (instantiated)
+        foo = int<32>^0 foo (instantiated)
     }
   Instances:
-    foo = int<32> foo (instantiated)
+    foo = int<32>^0 foo (instantiated)
 }
 

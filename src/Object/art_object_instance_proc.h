@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.1.4.2 2005/02/02 19:08:18 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.1.4.3 2005/02/03 01:29:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -32,13 +32,25 @@ using MULTIKEY_MAP_NAMESPACE::multikey_map;
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
 	Needs to be pool allocated for efficient unique construction. 
+	Derive from unique_instance_base.  
  */
-struct proc_instance {
+class proc_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
 	int		state;
 
+	// TODO: contain a vector of pointers to sub-structures
+	// concrete definition map will map member names to index/offsets
+	//	per-class structure layout...
+	// empty for now
+
 public:
 	proc_instance();
+	~proc_instance();
+
+	ostream&
+	what(ostream&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class proc_instance
 
@@ -50,7 +62,7 @@ public:
 	Contains attribute fields.  
 	Needs to become persistent because of alias pointers!
  */
-class proc_instance_alias {
+class proc_instance_alias : public persistent {
 public:
 	typedef	never_ptr<const proc_instance_alias>	alias_ptr_type;
 private:
@@ -64,6 +76,9 @@ public:
 	proc_instance_alias();
 
 	~proc_instance_alias();
+
+	ostream&
+	what(ostream&) const;
 
 	bool
 	valid(void) const { return instantiated; }
@@ -107,6 +122,9 @@ public:
 	friend
 	ostream&
 	operator << (ostream&, const proc_instance_alias&);
+
+	// even though this is not persistent... yet
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 
 };	// end class proc_instance_alias
 
