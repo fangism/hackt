@@ -140,6 +140,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_map.h \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
+	util/operators.h \
 	util/persistent.h \
 	util/persistent_object_manager.h \
 	util/persistent_object_manager.tcc \

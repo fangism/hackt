@@ -9,6 +9,7 @@
 #include "art_object_inst_ref.h"		// includes "art_object_base.h"
 #include "discrete_interval_set_fwd.h"
 #include "multikey_fwd.h"
+#include "operators.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -29,6 +30,7 @@ namespace entity {
 	using namespace	DISCRETE_INTERVAL_SET_NAMESPACE;
 	using std::string;
 	using std::ostream;
+	USING_UTIL_OPERATIONS
 
 //=============================================================================
 // class forward declarations
@@ -649,6 +651,9 @@ virtual	count_const_ptr<const_param>
 		static_constant_param(void) const;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
+virtual	bool resolve_value(bool& i) const = 0;
+virtual	const_index_list resolve_dimensions(void) const = 0;
+virtual	bool resolve_values_into_flat_list(list<bool>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>
@@ -658,6 +663,7 @@ protected:
 
 //-----------------------------------------------------------------------------
 /**
+A
 	Abstract expression checked to be a single integer.  
  */
 class pint_expr : virtual public param_expr, virtual public index_expr {
@@ -756,6 +762,39 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	bool static_constant_bool(void) const;
+
+	bool resolve_value(bool& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<bool>& l) const;
+public:
+	/**
+		Helper class for assigning values to instances.
+	 */
+	class assigner {
+	protected:
+		/** reference to the source of values */
+		const pbool_expr&	src;
+		/** resolved range list */
+		const_index_list	ranges;
+		/** flat list of unrolled values */
+		list<bool>		vals;
+	public:
+		assigner(const pbool_expr& p);
+		// default destructor
+
+		bool
+		operator () (const bool b,
+			const pbool_instance_reference& p) const;
+
+		template <template <class> class P>
+		bool
+		operator () (const bool b,
+			const P<pbool_instance_reference>& p) const {
+			assert(p);
+			return this->operator()(b, *p);
+		}
+	};	// end class assigner
+
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -823,6 +862,7 @@ public:
 	public:
 		assigner(const pint_expr& p);
 		// default destructor
+
 		bool
 		operator () (const bool b,
 			const pint_instance_reference& p) const;
@@ -834,7 +874,7 @@ public:
 			assert(p);
 			return this->operator()(b, *p);
 		}
-	};	// end class pint_assigner
+	};	// end class assigner
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
@@ -924,6 +964,10 @@ public:
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 
+	bool resolve_value(bool& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<bool>& l) const;
+
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
@@ -1003,6 +1047,10 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+
+	bool resolve_value(bool& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -1013,13 +1061,38 @@ public:
 	Binary arithmetic expression accepts ints and returns an int.  
  */
 class arith_expr : public pint_expr {
+public:
+	typedef	binary_arithmetic_operation<int,int>	op_type;
+	static const plus<int,int>		adder;
+	static const minus<int,int>		subtractor;
+	static const multiplies<int,int>	multiplier;
+	static const divides<int,int>		divider;
+	static const modulus<int,int>		remainder;
+
+private:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef	qmap<char, const op_type*>	op_map_type;
+	typedef	qmap<const op_type*, char>	reverse_op_map_type;
+	static const op_map_type		op_map;
+	static const reverse_op_map_type	reverse_op_map;
+	static const size_t			op_map_size;
+	static void op_map_register(const char, const op_type* );
+	static size_t op_map_init(void);
 protected:
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
+#if 0
 	const char			op;
+#else
+	/**
+		Safe to use a naked pointer, b/c/ refers to a static object.  
+	 */
+	const op_type*			op;
+#endif
 private:
 	arith_expr();
 public:
+	// change: const ptr& arguments
 	arith_expr(count_const_ptr<pint_expr> l, const char o, 
 		count_const_ptr<pint_expr> r);
 	~arith_expr() { }
@@ -1054,10 +1127,32 @@ public:
 	Binary relational expression accepts ints and returns a bool.  
  */
 class relational_expr : public pbool_expr {
+public:
+	typedef	binary_relational_operation<bool,int>	op_type;
+	static const equal_to<bool,int>		op_equal_to;
+	static const not_equal_to<bool,int>	op_not_equal_to;
+	static const less<bool,int>		op_less;
+	static const greater<bool,int>		op_greater;
+	static const less_equal<bool,int>	op_less_equal;
+	static const greater_equal<bool,int>	op_greater_equal;
+private:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef	qmap<string, const op_type*>	op_map_type;
+	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+	static const op_map_type		op_map;
+	static const reverse_op_map_type	reverse_op_map;
+	static const size_t			op_map_size;
+	static void op_map_register(const string&, const op_type* );
+	static size_t op_map_init(void);
+
 protected:
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
+#if 0
 	const string			op;
+#else
+	const op_type*			op;
+#endif
 
 private:
 	relational_expr();
@@ -1083,6 +1178,10 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+
+	bool resolve_value(bool& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -1093,10 +1192,29 @@ public:
 	Binary logical expression accepts bools and returns a bool.  
  */
 class logical_expr : public pbool_expr {
+public:
+	typedef	binary_logical_operation<bool,bool>	op_type;
+	static const util::logical_and<bool,bool>	op_and;
+	static const util::logical_or<bool,bool>	op_or;
+	static const util::logical_xor<bool,bool>	op_xor;
+private:
+	// safe to use naked (never-delete) pointers on static objects
+	typedef	qmap<string, const op_type*>	op_map_type;
+	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+	static const op_map_type		op_map;
+	static const reverse_op_map_type	reverse_op_map;
+	static const size_t			op_map_size;
+	static void op_map_register(const string&, const op_type* );
+	static size_t op_map_init(void);
+
 protected:
 	count_const_ptr<pbool_expr>	lx;
 	count_const_ptr<pbool_expr>	rx;
+#if 0
 	const string			op;
+#else
+	const op_type*			op;
+#endif
 
 private:
 	logical_expr();
@@ -1122,6 +1240,10 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+
+	bool resolve_value(bool& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<bool>& l) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS

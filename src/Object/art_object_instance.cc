@@ -869,6 +869,27 @@ param_instance_collection::make_member_instance_reference(
 }
 
 //=============================================================================
+// struct pbool_instance method definitions
+// not really methods...
+
+bool
+operator == (const pbool_instance& p, const pbool_instance& q) {
+	assert(p.instantiated && q.instantiated);
+	if (p.valid && q.valid) {
+		return p.value == q.value;
+	} else return (p.valid == q.valid); 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+operator << (ostream& o, const pbool_instance& p) {
+	assert(p.instantiated);
+	if (p.valid) {
+		return o << "?";
+	} else	return o << p.value;
+}
+
+//=============================================================================
 // class pbool_instance_collection method definitions
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection, 
@@ -1033,6 +1054,263 @@ pbool_instance_collection::type_check_actual_param_expr(const param_expr& pe) co
 	assert(index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return check_expression_dimensions(*pb);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_instance_collection::instantiate_indices(
+		const index_collection_item_ptr_type& i) {
+	if (!collection)
+		collection = excl_ptr<collection_type>(
+			collection_type::make_multikey_qmap(depth));
+	assert(collection);
+	collection_type& collection_ref = *collection;
+	if (i) {
+#if 0
+		cerr << "multidimensional index instantiation!  "
+			"let's not get too fancy here..." << endl;
+#endif
+		// indices is a range_expr_list (base class)
+		// resolve into constants now using const_range_list
+		// if unable, (b/c uninitialized) then report error
+		const_range_list ranges;	// initially empty
+		if (!i->resolve_ranges(ranges)) {
+			// fail
+			cerr << "ERROR: unable to resolve indices "
+				"for instantiation: ";
+			i->dump(cerr) << endl;
+			exit(1);
+		} 
+		// else success
+		// now iterate through, unrolling one at a time...
+		// stop as soon as there is a conflict
+		// later: factor this out into common helper class
+		excl_ptr<multikey_generator_base<int> > key_gen = 
+			excl_ptr<multikey_generator_base<int> >(
+			multikey_generator_base<int>::make_multikey_generator(
+				ranges.size()));
+		assert(key_gen);
+		multikey_base<int>::iterator li =
+			key_gen->get_lower_corner().begin();
+		multikey_base<int>::iterator ui =
+			key_gen->get_upper_corner().begin();
+		const_range_list::const_iterator ri = ranges.begin();
+		const const_range_list::const_iterator re = ranges.end();
+		for ( ; ri != re; ri++, li++, ui++) {
+			*li = ri->first;
+			*ui = ri->second;
+		}
+		key_gen->initialize();
+#if 0
+		excl_ptr<multikey_base<int> > key_end = 
+			excl_ptr<multikey_base<int> >(
+			multikey_base<int>::make_multikey(ranges.size()));
+		assert(key_end);
+		copy(key_gen->begin(), key_gen->end(), key_end->begin());
+		never_const_ptr<multikey_base<int> >
+			key_gen_base(key_gen.is_a<multikey_base<int> >());
+		assert(key_gen_base);
+		never_const_ptr<multikey_base<int> >
+			key_end_base(key_end.is_a<multikey_base<int> >());
+		assert(key_end_base);
+#endif
+		multikey_generator_base<int>& key_gen_ref = *key_gen;
+		const multikey_base<int>& key_end_ref =
+			key_gen_ref.get_lower_corner();
+		do {
+#if 0
+			multikey_base<int>::const_iterator ci =
+				key_gen->begin();
+			for ( ; ci!=key_gen->end(); ci++) {
+				cerr << '[' << *ci << ']';
+			}
+			cerr << endl;
+#endif
+//			pbool_instance& pi = collection_ref[*key_gen_base];
+			pbool_instance& pi = collection_ref[key_gen_ref];
+			if (pi.instantiated) {
+				cerr << "ERROR: Index already instantiated!"
+					<< endl;
+				exit(1);
+			}
+			pi.instantiated = true;
+			assert(!pi.valid);
+//			(*key_gen)++;
+			key_gen_ref++;
+		// while (*key_gen_base != *key_end_base);
+		} while (key_gen_ref != key_end_ref);
+	} else {
+		// 0-D, or scalar
+		assert(!depth);
+		const never_ptr<scalar_type>
+			the(collection.is_a<scalar_type>());
+		assert(the);
+		pbool_instance& pi = *the;
+		if (pi.instantiated) {
+			cerr << "ERROR: Already instantiated!" << endl;
+			exit(1);
+		}
+		pi.instantiated = true;
+		assert(!pi.valid);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version assumes collection is a scalar.  
+ */
+bool
+pbool_instance_collection::lookup_value(bool& v) const {
+	assert(!depth);
+	if (!collection) {
+		// hasn't been instantiated yet!
+		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
+		return false;
+	}
+	const never_const_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	assert(the);
+	const pbool_instance& pi = *the;
+	if (pi.valid) {
+		v = pi.value;
+	} else {
+		dump(cerr << "ERROR: use of uninitialized ") << endl;
+	}
+	return pi.valid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assumes that index resolves down to a single integer.  
+	Returns value of a single integer, if it can be resolved.  
+	If integer is uninitialized, report as error.  
+ */
+bool
+pbool_instance_collection::lookup_value(bool& v,
+		 const multikey_base<int>& i) const {
+	assert(depth == i.dimensions());
+	if (!collection) {
+		// hasn't been instantiated yet!
+		cerr << "ERROR: reference to uninstantiated pbool!" << endl;
+		return false;
+	}
+	const pbool_instance& pi = (*collection)[i];
+	if (pi.valid) {
+		v = pi.value;
+	} else {
+		cerr << "ERROR: reference to uninitialized pbool " <<
+			get_qualified_name() << " at index: " << i << endl;
+	}
+	return pi.valid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param l list in which to accumulate values.
+	\param r the ranges, must be valid.
+	\return false on error, e.g. if value doesn't exist or 
+		is uninitialized; true on success.
+ */
+bool
+pbool_instance_collection::lookup_value_collection(
+		list<bool>& l, const const_range_list& r) const {
+	assert(collection);
+	const collection_type& collection_ref = *collection;
+	assert(!r.empty());
+	const excl_const_ptr<multikey_base<int> > lower(r.lower_multikey());
+	const excl_const_ptr<multikey_base<int> > upper(r.upper_multikey());
+	assert(lower);
+	assert(upper);
+	const excl_ptr<multikey_generator_base<int> >
+		key_gen(multikey_generator_base<int>::make_multikey_generator(
+			lower->dimensions()));
+	assert(key_gen);
+	multikey_generator_base<int>& key_gen_ref = *key_gen;
+	copy(lower->begin(), lower->end(), key_gen->get_lower_corner().begin());
+	copy(upper->begin(), upper->end(), key_gen->get_upper_corner().begin());
+	key_gen->initialize();
+	bool ret = true;
+	do {
+		const pbool_instance& pi = collection_ref[key_gen_ref];
+		// assert(pi.instantiated);	// else earlier check failed
+		if (!pi.instantiated)
+			cerr << "FATAL: reference to uninstantiated pbool index "
+				<< key_gen_ref << endl;
+		else if (!pi.valid)
+			cerr << "ERROR: reference to uninitialized pbool index "
+				<< key_gen_ref << endl;
+		ret &= (pi.valid && pi.instantiated);
+		l.push_back(pi.value);
+		key_gen_ref++;
+	} while (key_gen_ref != key_gen_ref.get_lower_corner());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands indices which may be under-specified into explicit
+	indices for the implicit subslice, if it is densely packed.  
+	Depends on the current state of the collection.  
+	\param l is list of indices, which may be under-specified, 
+		or even empty.
+	\return fully-specified index list, or empty list if there is error.
+ */
+const_index_list
+pbool_instance_collection::resolve_indices(const const_index_list& l) const {
+	const size_t l_size = l.size();
+	assert(collection);
+	if (dimensions() == l_size) {
+		// already fully specified
+		return l;
+	}
+	// convert indices to pair of list of multikeys
+	if (!l_size) {
+		return const_index_list(l, collection->is_compact());
+	}
+	// else construct slice
+	list<int> lower_list, upper_list;
+	transform(l.begin(), l.end(), back_inserter(lower_list), 
+		unary_compose(
+			mem_fun_ref(&const_index::lower_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	transform(l.begin(), l.end(), back_inserter(upper_list), 
+		unary_compose(
+			mem_fun_ref(&const_index::upper_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	return const_index_list(l, 
+		collection->is_compact_slice(lower_list, upper_list));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a single value.
+	Only call this if this is scalar, 0-D.
+	Decision: should we allow multiple assignments of the same value?
+	\return true on error.  
+ */
+bool
+pbool_instance_collection::assign(const bool b) {
+	assert(collection);
+	const never_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	assert(the);
+	pbool_instance& pi = *the;
+	return !(pi = b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a single value, using an index.
+	Only call this if this is non-scalar (array).  
+	\return true on error.
+ */
+bool
+pbool_instance_collection::assign(const multikey_base<int>& k, const bool b) {
+	assert(collection);
+	pbool_instance& pi = (*collection)[k];
+	return !(pi = b);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1273,6 +1551,7 @@ pint_instance_collection::instantiate_indices(
 		collection = excl_ptr<collection_type>(
 			collection_type::make_multikey_qmap(depth));
 	assert(collection);
+	collection_type& collection_ref = *collection;
 	if (i) {
 #if 0
 		cerr << "multidimensional index instantiation!  "
@@ -1309,6 +1588,7 @@ pint_instance_collection::instantiate_indices(
 			*ui = ri->second;
 		}
 		key_gen->initialize();
+#if 0
 		excl_ptr<multikey_base<int> > key_end = 
 			excl_ptr<multikey_base<int> >(
 			multikey_base<int>::make_multikey(ranges.size()));
@@ -1320,6 +1600,10 @@ pint_instance_collection::instantiate_indices(
 		never_const_ptr<multikey_base<int> >
 			key_end_base(key_end.is_a<multikey_base<int> >());
 		assert(key_end_base);
+#endif
+		multikey_generator_base<int>& key_gen_ref = *key_gen;
+		const multikey_base<int>& key_end_ref =
+			key_gen_ref.get_lower_corner();
 		do {
 #if 0
 			multikey_base<int>::const_iterator ci =
@@ -1329,7 +1613,8 @@ pint_instance_collection::instantiate_indices(
 			}
 			cerr << endl;
 #endif
-			pint_instance& pi = (*collection)[*key_gen_base];
+//			pint_instance& pi = collection_ref[*key_gen_base];
+			pint_instance& pi = collection_ref[key_gen_ref];
 			if (pi.instantiated) {
 				cerr << "ERROR: Index already instantiated!"
 					<< endl;
@@ -1337,8 +1622,10 @@ pint_instance_collection::instantiate_indices(
 			}
 			pi.instantiated = true;
 			assert(!pi.valid);
-			(*key_gen)++;
-		} while (*key_gen_base != *key_end_base);
+//			(*key_gen)++;
+			key_gen_ref++;
+		// while (*key_gen_base != *key_end_base);
+		} while (key_gen_ref != key_end_ref);
 	} else {
 		// 0-D, or scalar
 		assert(!depth);
@@ -1440,32 +1727,34 @@ bool
 pint_instance_collection::lookup_value_collection(
 		list<int>& l, const const_range_list& r) const {
 	assert(collection);
+	const collection_type& collection_ref = *collection;
 	assert(!r.empty());
-	excl_ptr<multikey_base<int> > lower = r.lower_multikey();
-	excl_ptr<multikey_base<int> > upper = r.upper_multikey();
+	const excl_const_ptr<multikey_base<int> > lower(r.lower_multikey());
+	const excl_const_ptr<multikey_base<int> > upper(r.upper_multikey());
 	assert(lower);
 	assert(upper);
-	excl_ptr<multikey_generator_base<int> >
+	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			lower->dimensions()));
 	assert(key_gen);
+	multikey_generator_base<int>& key_gen_ref = *key_gen;
 	copy(lower->begin(), lower->end(), key_gen->get_lower_corner().begin());
 	copy(upper->begin(), upper->end(), key_gen->get_upper_corner().begin());
 	key_gen->initialize();
 	bool ret = true;
 	do {
-		const pint_instance& pi = (*collection)[*key_gen];
+		const pint_instance& pi = collection_ref[key_gen_ref];
 		// assert(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated)
 			cerr << "FATAL: reference to uninstantiated pint index "
-				<< *key_gen << endl;
+				<< key_gen_ref << endl;
 		else if (!pi.valid)
 			cerr << "ERROR: reference to uninitialized pint index "
-				<< *key_gen << endl;
+				<< key_gen_ref << endl;
 		ret &= (pi.valid && pi.instantiated);
 		l.push_back(pi.value);
-		(*key_gen)++;
-	} while (*key_gen != key_gen->get_lower_corner());
+		key_gen_ref++;
+	} while (key_gen_ref != key_gen_ref.get_lower_corner());
 	return ret;
 }
 
@@ -1552,6 +1841,9 @@ if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE_KEY)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Later: will become dimension-specific.
+ */
 persistent*
 pint_instance_collection::construct_empty(const int i) {
 	return new pint_instance_collection();
@@ -1875,6 +2167,13 @@ pbool_instantiation_statement::get_inst_base(void) const {
 count_const_ptr<fundamental_type_reference>
 pbool_instantiation_statement::get_type_ref(void) const {
 	return pbool_type_ptr;		// built-in type pointer
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_instantiation_statement::unroll(void) const {
+	assert(inst_base);
+	inst_base->instantiate_indices(indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

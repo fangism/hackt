@@ -21,7 +21,15 @@ using namespace std;
 	1) order-independent data
 	2) source-order-dependent data
  */
-class module : public sequential_scope, public object, public persistent {
+class module :
+	public object, public persistent
+#if 0
+	// changing this to private or protected crashes on darwin-gcc-3.3!?
+	, private sequential_scope
+#else
+	, public sequential_scope
+#endif
+	{
 friend class context;
 protected:
 	/**
@@ -35,6 +43,13 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
+#if 1
+	/**
+		Whether or not this entire module has been 
+		successfully unrolled.
+	 */
+	bool					unrolled;
+#endif
 
 private:
 	module();
@@ -48,6 +63,15 @@ explicit	module(const string& s);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+
+#if 1
+	/**
+		Note: sequential scope has a const-version of this, 
+		and is non-virtual.  
+		Protected-ness keep user from accessing parent's unroll().
+	 */
+	void unroll_module(void);
+#endif
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL

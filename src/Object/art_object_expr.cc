@@ -35,38 +35,7 @@ using namespace std;
 using namespace ADS;
 using namespace PTRS_NAMESPACE;
 using namespace COUNT_PTR_NAMESPACE;
-
-// forward declarations (table of contents)
-class param_expr;
-class index_expr;
-class const_index;
-class pbool_expr;
-class pint_expr;
-class param_expr_collective;
-class param_literal;
-class pbool_literal;
-class pint_literal;
-class pint_const;
-class pbool_const;
-class param_unary_expr;
-class pint_unary_expr;
-class pbool_unary_expr;
-class param_binary_expr;
-class arith_expr;
-class relational_expr;
-class logical_expr;
-class range_expr;
-class pint_range;
-class const_range;
-class range_expr_list;
-class const_range_list;
-class dynamic_range_list;
-class unconditional_range_list;
-class conditional_range_list;
-class loop_range_list;
-class index_list;
-class const_index_list;
-class dynamic_index_list;
+USING_UTIL_OPERATIONS
 
 //=============================================================================
 // class param_expr method_definitions
@@ -916,6 +885,87 @@ pbool_instance_reference::static_constant_bool(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This version specifically asks for one integer value, 
+	thus the array indices must be scalar (0-D).  
+	\return true if resolution succeeds, else false.
+ */
+bool
+pbool_instance_reference::resolve_value(bool& i) const {
+	// lookup pbool_instance_collection
+	if (array_indices) {
+		const_index_list indices(array_indices->resolve_index_list());
+		if (!indices.empty()) {
+			const excl_ptr<multikey_base<int> > lower = 
+				indices.lower_multikey();
+			const excl_ptr<multikey_base<int> > upper = 
+				indices.upper_multikey();
+			assert(lower);
+			assert(upper);
+			if (*lower != *upper) {
+				cerr << "ERROR: upper != lower" << endl;
+				return false;
+			}
+			return pbool_inst_ref->lookup_value(i, *lower);
+		} else {
+			cerr << "Unable to resolve array_indices!" << endl;
+			return false;
+		}
+	} else {
+		return pbool_inst_ref->lookup_value(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param l the list in which to accumulate values.
+	\return false if there was error.  
+ */
+bool
+pbool_instance_reference::resolve_values_into_flat_list(list<bool>& l) const {
+	const_index_list ranges(resolve_dimensions());
+	if (ranges.empty()) {
+		cerr << "ERROR: could not unroll values with bad index."
+			<< endl;
+		return false;
+	}
+	else	return pbool_inst_ref->lookup_value_collection(
+			l, const_range_list(ranges));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the dimensions of the collection in the current state, 
+	ONLY IF, the indexed reference to the current state is all valid.  
+	Otherwise, returns an empty list, which is interpreted as an error.  
+
+	Really this should be independent of type?
+	Except for checking implicit indices...
+ */
+const_index_list
+pbool_instance_reference::resolve_dimensions(void) const {
+	// criterion 1: indices (if any) must be resolved to constant values.  
+	const_index_list c_i;
+	if (array_indices) {
+		c_i = array_indices->resolve_index_list();
+		if (c_i.empty()) {
+			cerr << "ERROR: failed to resolve index list." << endl;
+			return c_i;
+		}
+	}
+	// else let c_i remain empty, underspecified
+	// check for implicit indices, that sub-arrays are
+	// densely packed with the same dimensions.  
+	const const_index_list
+		r_i(pbool_inst_ref->resolve_indices(c_i));
+	if (r_i.empty()) {
+		cerr << "ERROR: implicitly resolving index list." << endl;
+	}
+	return r_i;
+	// Elsewhere (during assign) check for initialization.  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -985,6 +1035,127 @@ if (!m.flag_visit(this)) {
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
+}
+
+//-----------------------------------------------------------------------------
+// class pbool_instance_reference::assigner method definitions
+
+/**
+	Constructor caches the sequence of values for assigning to 
+	an integer instance collection.  
+ */
+pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
+		src(p), ranges(), vals() {
+	if (src.dimensions()) {
+		ranges = src.resolve_dimensions();
+		if (ranges.empty()) {
+			// if empty list returned, there was an error,
+			// because we know that the # dimensions is > 0.
+			cerr << "ERROR: assignment unrolling expecting "
+				"valid dimensions!" << endl;
+			// or throw exception
+			exit(1);
+		}
+		// load values into cache list as a sequence
+		// pass list by reference to a virtual func?
+		const bool err = src.resolve_values_into_flat_list(vals);
+		if (err) {
+			cerr << "ERROR: in flattening integer values." << endl;
+			exit(1);
+		}
+	} else {	// is just scalar value
+		// leave ranges empty
+		bool i;
+		if (src.resolve_value(i)) {
+			vals.push_back(i);
+		} else {
+			cerr << "ERROR: resolving scalar integer value!"
+				<< endl;
+			exit(1);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns cached list of unrolled values to the destination
+	instance collection.  
+	\param b the cumulative error status.
+	\param p the destination instance reference.  
+	\return error (true) if anything goes wrong, or has gone wrong before.  
+ */
+bool
+pbool_instance_reference::assigner::operator() (const bool b, 
+		const pbool_instance_reference& p) const {
+	// check dimensions for match first
+	if (ranges.empty()) {
+		assert(vals.size() == 1);
+		// is scalar assignment, but may be indexed
+		if (!p.pbool_inst_ref->dimensions()) {
+			// p.pbool_inst_ref is scalar
+			return p.pbool_inst_ref->assign(vals.front()) || b;
+		}
+	}
+	// else is scalar or array, but must resolve indices
+	const const_index_list dim(p.resolve_dimensions());
+	if (dim.empty()) {
+		cerr << "ERROR: unable to resolve constant dimensions."
+			<< endl;
+		exit(1);
+		// return true;
+	}
+	// We are assured that the dimensions of the references
+	// are equal, b/c dimensionality is statically checked.  
+	// However, ranges may be of different length because
+	// of collapsible dimensions.  
+	// Compare dim against ranges: sizes of each dimension...
+	// but what about collapsed dimensions?
+	if (!ranges.empty() && !ranges.equal_dimensions(dim)) {
+		// if range.empty(), then there is no need to match dimensions,
+		// dimensions must be equal because both src/dest are scalar.
+		cerr << "ERROR: resolved indices are not "
+			"dimension-equivalent!" << endl;
+		ranges.dump(cerr << "got: ");
+		dim.dump(cerr << " and: ") << endl;
+		exit(1);
+		// return true;
+	}
+	// else good to continue
+	const excl_const_ptr<multikey_base<int> > lower(dim.lower_multikey());
+	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
+	assert(lower);
+	assert(upper);
+	const excl_ptr<multikey_generator_base<int> >
+		key_gen(multikey_generator_base<int>::make_multikey_generator(
+			dim.size()));
+	assert(key_gen);
+	key_gen->get_lower_corner() = *lower;
+	key_gen->get_upper_corner() = *upper;
+	key_gen->initialize();
+	list<bool>::const_iterator list_iter = vals.begin();
+	bool assign_err = false;
+	// alias for key_gen
+	multikey_generator_base<int>& key_gen_ref = *key_gen;
+	do {
+		if (p.pbool_inst_ref->assign(key_gen_ref, *list_iter)) {
+			cerr << "ERROR: assigning index " << key_gen_ref << 
+				" of pbool collection " <<
+				p.pbool_inst_ref->get_qualified_name() <<
+				"." << endl;
+#if 0
+			cerr << "\tlower_corner = " <<
+				key_gen->get_lower_corner();
+			cerr << ", upper_corner = " <<
+				key_gen->get_upper_corner() << endl;
+			exit(1);
+#endif
+			assign_err = true;
+		}
+		list_iter++;			// unsafe, but checked
+		key_gen_ref++;
+	} while (key_gen_ref != key_gen_ref.get_upper_corner());
+	assert(list_iter == vals.end());	// sanity check
+	return assign_err || b;
 }
 
 //=============================================================================
@@ -1365,7 +1536,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
 	assert(lower);
 	assert(upper);
-	excl_ptr<multikey_generator_base<int> >
+	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	assert(key_gen);
@@ -1375,12 +1546,10 @@ pint_instance_reference::assigner::operator() (const bool b,
 	list<int>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	const never_const_ptr<multikey_base<int> >
-		kp(key_gen.is_a<multikey_base<int> >());
-	assert(kp);
+	multikey_generator_base<int>& key_gen_ref = *key_gen;
 	do {
-		if (p.pint_inst_ref->assign(*kp, *list_iter)) {
-			cerr << "ERROR: assigning index " << *kp << 
+		if (p.pint_inst_ref->assign(key_gen_ref, *list_iter)) {
+			cerr << "ERROR: assigning index " << key_gen_ref << 
 				" of pint collection " <<
 				p.pint_inst_ref->get_qualified_name() <<
 				"." << endl;
@@ -1394,8 +1563,8 @@ pint_instance_reference::assigner::operator() (const bool b,
 			assign_err = true;
 		}
 		list_iter++;			// unsafe, but checked
-		(*key_gen)++;
-	} while (*kp != *upper);
+		key_gen_ref++;
+	} while (key_gen_ref != key_gen_ref.get_upper_corner());
 	assert(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
@@ -1577,6 +1746,26 @@ excl_ptr<param_expression_assignment>
 pbool_const::make_param_expression_assignment_private(
 		const count_const_ptr<param_expr>& p) const {
 	return pbool_expr::make_param_expression_assignment_private(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+pbool_const::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_const::resolve_value(bool& i) const {
+	i = val;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_const::resolve_values_into_flat_list(list<bool>& l) const {
+	l.push_back(val);
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1832,6 +2021,30 @@ pbool_unary_expr::static_constant_bool(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+pbool_unary_expr::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_unary_expr::resolve_value(bool& i) const {
+	bool b;
+	const bool ret = ex->resolve_value(b);
+	i = !b;
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_unary_expr::resolve_values_into_flat_list(list<bool>& l) const {
+	bool b;
+	const bool ret = resolve_value(b);
+	l.push_back(b);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1871,20 +2084,72 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class arith_expr method definitions
 
+// static member initializations (order matters!)
+
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(arith_expr, ARITH_EXPR_TYPE_KEY)
+
+const plus<int,int>		arith_expr::adder;
+const minus<int,int>		arith_expr::subtractor;
+const multiplies<int,int>	arith_expr::multiplier;
+const divides<int,int>		arith_expr::divider;
+const modulus<int,int>		arith_expr::remainder;
+
+const arith_expr::op_map_type
+arith_expr::op_map;
+
+const arith_expr::reverse_op_map_type
+arith_expr::reverse_op_map;
+
+/**
+	NOTE: will be initialized to 0 (POD -- plain old data) before 
+		static objects will be constructed, then will initialized
+		to its proper value.  
+		Thus, this statement must follow initializations 
+		of op_map and reverse_op_map.  
+ */
+const size_t
+arith_expr::op_map_size = arith_expr::op_map_init();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of operator map.  
+ */
+void
+arith_expr::op_map_register(const char c, const op_type* o) {
+	assert(o);
+	const_cast<op_map_type&>(op_map)[c] = o;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of registered arithmetic operators.  
+ */
+size_t
+arith_expr::op_map_init(void) {
+	op_map_register('+', &adder);
+	op_map_register('-', &subtractor);
+	op_map_register('*', &multiplier);
+	op_map_register('/', &divider);
+	op_map_register('%', &remainder);
+	assert(op_map.size() == reverse_op_map.size());
+	return op_map.size();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
+	Default to adder (bogus), set op later during load.
  */
 arith_expr::arith_expr() :
-		lx(NULL), rx(NULL), op('\0') {
+		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 		count_const_ptr<pint_expr> r) :
-		lx(l), rx(r), op(o) {
+		lx(l), rx(r), op(op_map[o]) {
+	assert(op);
 	assert(lx);
 	assert(rx);
 	assert(lx->dimensions() == 0);
@@ -1900,13 +2165,13 @@ arith_expr::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 arith_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << op);
+	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 arith_expr::hash_string(void) const {
-	return lx->hash_string() +op +rx->hash_string();
+	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1932,6 +2197,7 @@ int
 arith_expr::static_constant_int(void) const {
 	int a = lx->static_constant_int();
 	int b = rx->static_constant_int();
+#if 0
 	switch(op) {
 		case '+':	return a + b;
 		case '-':	return a - b;
@@ -1943,6 +2209,9 @@ arith_expr::static_constant_int(void) const {
 				"\', aborting." << endl;
 			assert(0); return 0;
 	}
+#else
+	return (*op)(a,b);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1961,6 +2230,7 @@ arith_expr::resolve_value(int& i) const {
 		dump(cerr) << endl;
 		return false;
 	}
+#if 0
 	switch(op) {
 		case '+':	i = a + b;	break;
 		case '-':	i = a - b;	break;
@@ -1972,6 +2242,9 @@ arith_expr::resolve_value(int& i) const {
 				"\', aborting." << endl;
 			assert(0); return false;
 	}
+#else
+	i = (*op)(a,b);
+#endif
 	return true;
 }
 
@@ -2018,7 +2291,8 @@ void
 arith_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
-	write_value(f, op);
+//	write_value(f, op);
+	write_value(f, reverse_op_map[op]);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 	WRITE_OBJECT_FOOTER(f);
@@ -2030,7 +2304,11 @@ arith_expr::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-	read_value(f, op);
+	{
+	char o;
+	read_value(f, o);
+	op = op_map[o];
+	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);
@@ -2042,19 +2320,72 @@ if (!m.flag_visit(this)) {
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
 
+// static member initializations (order matters!)
+
+const equal_to<bool,int>		relational_expr::op_equal_to;
+const not_equal_to<bool,int>		relational_expr::op_not_equal_to;
+const less<bool,int>			relational_expr::op_less;
+const greater<bool,int>			relational_expr::op_greater;
+const less_equal<bool,int>		relational_expr::op_less_equal;
+const greater_equal<bool,int>		relational_expr::op_greater_equal;
+
+const relational_expr::op_map_type
+relational_expr::op_map;
+
+const relational_expr::reverse_op_map_type
+relational_expr::reverse_op_map;
+
+/**
+	NOTE: will be initialized to 0 (POD -- plain old data) before 
+		static objects will be constructed, then will initialized
+		to its proper value.  
+		Thus, this statement must follow initializations 
+		of op_map and reverse_op_map.  
+ */
+const size_t
+relational_expr::op_map_size = relational_expr::op_map_init();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of operator map.  
+ */
+void
+relational_expr::op_map_register(const string& s, const op_type* o) {
+	assert(o);
+	const_cast<op_map_type&>(op_map)[s] = o;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of registered relationalmetic operators.  
+ */
+size_t
+relational_expr::op_map_init(void) {
+	op_map_register("==", &op_equal_to);
+	op_map_register("!=", &op_not_equal_to);
+	op_map_register("<", &op_less);
+	op_map_register(">", &op_greater);
+	op_map_register("<=", &op_less_equal);
+	op_map_register(">=", &op_greater_equal);
+	assert(op_map.size() == reverse_op_map.size());
+	return op_map.size();
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
 	Note: pass string, not null char.  
  */
 relational_expr::relational_expr() :
-		lx(NULL), rx(NULL), op("") {
+		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 		const string& o, count_const_ptr<pint_expr> r) :
-		lx(l), rx(r), op(o) {
+		lx(l), rx(r), op(op_map[o]) {
+	assert(op);
 	assert(lx);
 	assert(rx);
 	assert(lx->dimensions() == 0);
@@ -2070,13 +2401,13 @@ relational_expr::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 relational_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << op);
+	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 relational_expr::hash_string(void) const {
-	return lx->hash_string() +op +rx->hash_string();
+	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2099,14 +2430,42 @@ relational_expr::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: what do you think?
+	\return result of resolved comparison.  
  */
 bool
 relational_expr::static_constant_bool(void) const {
 	int a = lx->static_constant_int();
 	int b = rx->static_constant_int();
-	// switch
-	return false;
+	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+relational_expr::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TO DO: switch on relational expression operator.  
+ */
+bool
+relational_expr::resolve_value(bool& i) const {
+	int li, ri;
+	const bool l_ret = lx->resolve_value(li);
+	const bool r_ret = rx->resolve_value(ri);
+	// SWITCH
+	i = (*op)(li, ri);
+	return l_ret && r_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+relational_expr::resolve_values_into_flat_list(list<bool>& l) const {
+	bool b;
+	const bool ret = resolve_value(b);
+	l.push_back(b);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2130,7 +2489,8 @@ void
 relational_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
-	write_value(f, op);
+//	write_value(f, op);
+	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 	WRITE_OBJECT_FOOTER(f);
@@ -2142,7 +2502,13 @@ relational_expr::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-	read_value(f, op);
+//	read_value(f, op);
+	{
+	string s;
+	read_value(f, s);
+	op = op_map[s];
+	assert(op);
+	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);
@@ -2154,18 +2520,65 @@ if (!m.flag_visit(this)) {
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(logical_expr, LOGICAL_EXPR_TYPE_KEY)
 
+// static member initializations (order matters!)
+
+const util::logical_and<bool,bool>	logical_expr::op_and;
+const util::logical_or<bool,bool>	logical_expr::op_or;
+const util::logical_xor<bool,bool>	logical_expr::op_xor;
+
+const logical_expr::op_map_type
+logical_expr::op_map;
+
+const logical_expr::reverse_op_map_type
+logical_expr::reverse_op_map;
+
+/**
+	NOTE: will be initialized to 0 (POD -- plain old data) before 
+		static objects will be constructed, then will initialized
+		to its proper value.  
+		Thus, this statement must follow initializations 
+		of op_map and reverse_op_map.  
+ */
+const size_t
+logical_expr::op_map_size = logical_expr::op_map_init();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of operator map.  
+ */
+void
+logical_expr::op_map_register(const string& s, const op_type* o) {
+	assert(o);
+	const_cast<op_map_type&>(op_map)[s] = o;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static initialization of registered logicalmetic operators.  
+ */
+size_t
+logical_expr::op_map_init(void) {
+	op_map_register("&&", &op_and);
+	op_map_register("||", &op_or);
+	op_map_register("^", &op_xor);
+	assert(op_map.size() == reverse_op_map.size());
+	return op_map.size();
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
 logical_expr::logical_expr() :
-		lx(NULL), rx(NULL), op("") {
+		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 		const string& o, count_const_ptr<pbool_expr> r) :
-		lx(l), rx(r), op(o) {
+		lx(l), rx(r), op(op_map[o]) {
+	assert(op);
 	assert(lx);
 	assert(rx);
 	assert(lx->dimensions() == 0);
@@ -2181,13 +2594,13 @@ logical_expr::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 logical_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << op);
+	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 logical_expr::hash_string(void) const {
-	return lx->hash_string() +op +rx->hash_string();
+	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2210,14 +2623,41 @@ logical_expr::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: what do you think?
+	Must be truly compile-time constant.
  */
 bool
 logical_expr::static_constant_bool(void) const {
 	bool a = lx->static_constant_bool();
 	bool b = rx->static_constant_bool();
-	// switch
-	return false;
+	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+logical_expr::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TO DO: switch on logical expression operator.  
+ */
+bool
+logical_expr::resolve_value(bool& i) const {
+	bool lb, rb;
+	const bool l_ret = lx->resolve_value(lb);
+	const bool r_ret = rx->resolve_value(rb);
+	i = (*op)(lb, rb);
+	return l_ret && r_ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+logical_expr::resolve_values_into_flat_list(list<bool>& l) const {
+	bool b;
+	const bool ret = resolve_value(b);
+	l.push_back(b);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2241,7 +2681,8 @@ void
 logical_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
-	write_value(f, op);
+//	write_value(f, op);
+	write_string(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 	WRITE_OBJECT_FOOTER(f);
@@ -2253,7 +2694,13 @@ logical_expr::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-	read_value(f, op);
+//	read_value(f, op);
+	{
+	string s;
+	read_string(f, s);
+	op = op_map[s];
+	assert(op);
+	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 	STRIP_OBJECT_FOOTER(f);

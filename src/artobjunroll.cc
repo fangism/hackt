@@ -49,16 +49,10 @@ main(int argc, char* argv[]) {
 
 //	the_module->dump(cerr);
 
-	the_module->unroll();
+//	the_module->unroll();
+	the_module->unroll_module();
 
 #if 0
-// ALL WRONG
-	// what to do in case of error?  exit?
-	global->unroll_params();
-	global->unroll_instances();
-	global->unroll_connections();
-	global->dump(cerr);
-
 	persistent_object_manager::save_object_to_file(ofname, global);
 #endif
 

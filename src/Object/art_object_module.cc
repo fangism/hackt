@@ -19,13 +19,15 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(module, MODULE_TYPE_KEY)
 /**
 	Private empty constructor.
  */
-module::module() : sequential_scope(), object(), persistent(), 
-		name(""), global_namespace(NULL) {
+module::module() :
+		object(), persistent(), sequential_scope(),
+		name(""), global_namespace(NULL), unrolled(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-module::module(const string& s) : sequential_scope(), object(), persistent(), 
-		name(s), global_namespace(new name_space("")) {
+module::module(const string& s) :
+		object(), persistent(), sequential_scope(),
+		name(s), global_namespace(new name_space("")), unrolled(false) {
 	assert(global_namespace);
 }
 
@@ -63,6 +65,19 @@ module::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Don't just call sequential_scope::unroll, this makes sure
+	entire module is not already unrolled.  
+ */
+void
+module::unroll_module(void) {
+	if (!unrolled) {
+		sequential_scope::unroll();
+		unrolled = true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Default empty constructor.  
 	Not really used, because module will be stack allocated.  
  */
@@ -87,9 +102,12 @@ void
 module::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
+	write_value(f, unrolled);
 	write_object_pointer_list(m);
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,10 +116,13 @@ module::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, name);
 	m.read_pointer(f, global_namespace);
+	read_value(f, unrolled);
 //	global_namespace->load_object(m);	// not necessary
 	load_object_pointer_list(m);
+	STRIP_OBJECT_FOOTER(f);
 }
 }
 

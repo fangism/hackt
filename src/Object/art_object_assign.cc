@@ -195,12 +195,21 @@ pbool_expression_assignment::append_param_instance_reference(
  */
 void
 pbool_expression_assignment::unroll(void) const {
+#if 0
 	cerr << "pbool_expression_assignment::unroll(): "
 		"Fang, finish me!" << endl;
+#endif
 	assert(!dests.empty());		// sanity check
-	// Evaluate source expression, src.
-	// need to verify sizes and types?
-	// should already be type verified (pbool)
+	// works for scalars and multidimensional arrays alike
+	pbool_instance_reference::assigner the_assigner(*src);
+	// will exit upon error
+	bool assign_err = 
+		accumulate(dests.begin(), dests.end(), false, the_assigner);
+	if (assign_err) {
+		cerr << "ERROR: something went wrong in pbool assignment."
+			<< endl;
+		exit(1);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -360,29 +369,7 @@ pint_expression_assignment::append_param_instance_reference(
 void
 pint_expression_assignment::unroll(void) const {
 	assert(!dests.empty());		// sanity check
-#if 0
-	if (src->dimensions()) {
-		// is non-scalar
-		// Evaluate source expression, src, and its dimensions.
-		const_range_list dim = src->resolve_dimensions();
-		if (dim.empty()) {
-			// if empty list returned, there was an error, 
-			// because we know that the # dimensions is > 0.
-			cerr << "ERROR: assignment unrolling expecting "
-				"valid dimensions!" << endl;
-			exit(1);
-		}
-		pint_instance_reference::assigner the_assigner(*src);
-		// will exit upon error
-		bool assign_err = 
-		accumulate(dests.begin(), dests.end(), false, the_assigner);
-
-		// need to verify sizes and types?
-		// should already be statically type verified (all pints)
-	} else {
-		// is scalar, easy
-	}
-#else
+	// works for scalars and multidimensional arrays alike
 	pint_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
 	bool assign_err = 
@@ -392,7 +379,6 @@ pint_expression_assignment::unroll(void) const {
 			<< endl;
 		exit(1);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

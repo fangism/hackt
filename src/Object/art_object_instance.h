@@ -213,12 +213,17 @@ NOTE: these functions should only be applicable to param_instance_references.
 };	// end class param_instance_collection
 
 //-----------------------------------------------------------------------------
+/**
+	A run-time instance of a boolean parameter. 
+ */
 struct pbool_instance {
+public:
+	typedef	bool		value_type;
 public:
 	/**
 		The unroll-time value of this pbool parameter.
 	 */
-	bool		value : 1;
+	value_type	value : 1;
 	/**
 		Whether or not this instance was truly instantiated,
 		Safeguards against extraneous instances in arrays.  
@@ -230,12 +235,27 @@ public:
 	bool		valid : 1;
 public:
 	pbool_instance() : value(false), instantiated(false), valid(false) { }
-	pbool_instance(const bool b) :
-		value(false), instantiated(b), valid(false) { }
-	pbool_instance(const int v) :
-		value(v), instantiated(true), valid(true) { }
+explicit pbool_instance(const value_type b) :
+		value(b), instantiated(true), valid(false) { }
 	// default copy constructor
 	// default destructor
+
+	/**
+		\return false on error, true on success.  
+	 */
+	bool operator = (const value_type b) {
+		assert(instantiated);
+		if (valid)
+			// error: already initialized
+			// or allow multiple assignments with the same value?
+			return false;
+		else {
+			value = b;
+			valid = true;
+			return true;
+		}
+	}
+
 };	// end struct pbool_instance
 
 bool
@@ -250,10 +270,12 @@ operator << (ostream& o, const pbool_instance& p);
  */
 class pbool_instance_collection : public param_instance_collection {
 // friend class pbool_instantiation_statement;
+friend class pbool_instance_reference;
 public:
 	// int or size_t (unsigned)?
 	typedef	multikey_qmap_base<int, pbool_instance>		collection_type;
 	typedef	multikey_qmap<0, int, pbool_instance>		scalar_type;
+        typedef multikey_qmap_base<int, bool>			value_type;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -270,8 +292,8 @@ protected:
 	count_const_ptr<pbool_expr>		ival;
 	/**
 		The unrolled collection of pbool instances.  
+	 */
 	excl_ptr<collection_type>		collection;
-	**/
 
 private:
 	pbool_instance_collection();
@@ -295,6 +317,23 @@ public:
 	count_const_ptr<pbool_expr> initial_value(void) const;
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
+
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+
+	bool lookup_value(bool& v) const;
+	bool lookup_value(bool& v, const multikey_base<int>& i) const;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
+	bool lookup_value_collection(list<bool>& l, 
+		const const_range_list& r) const;
+
+	const_index_list resolve_indices(const const_index_list& l) const;
+
+public:
+// really should be protected, usable by pbool_instance_reference::assigner
+	bool assign(const bool b);
+	bool assign(const multikey_base<int>& k, const bool b);
+
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -326,7 +365,7 @@ public:
 	pint_instance() : value(-1), instantiated(false), valid(false) { }
 explicit pint_instance(const bool b) :
 		value(-1), instantiated(b), valid(false) { }
-explicit pint_instance(const int v) :
+explicit pint_instance(const value_type v) :
 		value(v), instantiated(true), valid(true) { }
 	// default copy constructor
 	// default destructor
@@ -334,7 +373,7 @@ explicit pint_instance(const int v) :
 	/**
 		\return false on error, true on success.  
 	 */
-	bool operator = (const int i) {
+	bool operator = (const value_type i) {
 		assert(instantiated);
 		if (valid)
 			// error: already initialized
@@ -347,6 +386,8 @@ explicit pint_instance(const int v) :
 		}
 	}
 
+#if 0
+	// no longer used
 	struct is_valid {
 		/** for unary predication */
 		bool
@@ -358,6 +399,7 @@ explicit pint_instance(const int v) :
 			return b && pi.valid;
 		}
 	};	// end struct is_valid
+#endif
 };	// end struct pint_instance
 
 bool
@@ -529,7 +571,7 @@ public:
 	never_const_ptr<instance_collection_base> get_inst_base(void) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
-//	void unroll(void) const;
+	void unroll(void) const;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL

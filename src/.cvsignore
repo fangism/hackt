@@ -11,4 +11,6 @@ art_persistent_table
 core.*
 *.core
 *.artobj
+.gdb_history
+*.swp
 
