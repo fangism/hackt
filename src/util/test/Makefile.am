@@ -53,7 +53,8 @@ what_test_SOURCES = what_test.cc
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
 
-MORE_CFLAGS = -pipe -W -Wall -Wno-unused -Werror
+WARN_CFLAGS = -W -Wall -Wno-unused -Werror
+MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CFLAGS)
