@@ -37,8 +37,10 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	chapters/templates.tex \
 	chapters/typedefs.tex \
 	chapters/connections.tex \
-	chapters/linkage.tex
+	chapters/linkage.tex \
+	TODO
 
+# need GNU make for the following:
 # automatically generated dependencies in this (built) dir
 -include artxx.depend
 
