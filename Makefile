@@ -61,8 +61,7 @@ CFLAGS = -O2 -g -pipe
 # turn on -O4 later...
 ALL_CFLAGS = $(CFLAGS) $(WARN_FLAGS) $(CDEFS)
 
-LDFLAGS = -lc -lstdc++
-#	NOTE: -lc MUST appear before -lstdc++ on darwin gcc-3.3!!!
+LDFLAGS =
 
 LEX = flex
 LFLAGS = -t

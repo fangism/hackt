@@ -136,16 +136,6 @@ protected:
 	*/
 	excl_ptr<definition_base>	current_prototype;
 
-#if 0
-	OBSOLETE
-	/**
-		Flag that indicates whether or not we are declaring
-		a new definition, or checking against a previously
-		defined or declared definition.  
-	bool			check_against_previous_definition_signature;
-	**/
-#endif
-
 	/**
 		Pointer to the current definition referenced, usually
 		resolved by the last identifier.  
@@ -296,24 +286,12 @@ never_const_ptr<definition_base>
 never_const_ptr<datatype_definition>
 		get_current_datatype_definition(void) const;
 
-	// for keyword: int or bool
-#if 0
-never_const_ptr<datatype_definition>
-	set_datatype_def(const token_datatype& tid);
-#endif
-	// set template argument separately!
-	// need to assert(!inst_data_type_ref)?
-
 // should be called by parser after done using definitions
 void	reset_current_definition_reference(void);
 void	reset_current_fundamental_type(void);
 
 never_const_ptr<built_in_param_def>
 	get_current_param_definition(void) const;
-#if 0
-never_const_ptr<built_in_param_def>
-	set_param_def(const token_paramtype& pt);
-#endif
 
 never_const_ptr<channel_definition>
 	get_current_channel_definition(void) const;

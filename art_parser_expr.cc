@@ -429,6 +429,46 @@ range_list::check_build(never_ptr<context> c) const {
 			cerr << "problem with dimension " << i+1 <<
 				" of range_list between " << where() << endl;
 			exit(1);		// terminate?
+		} else if (!o.is_a<index_expr>()) {
+			// make sure each item is a range expression
+			cerr << "Expression in dimension " << i+1 <<
+				" of dense_range_list is not valid!  "
+				<< where() << endl;
+			exit(1);
+		}
+		ol->push_front(o);
+	}
+	c->push_object_stack(ol);
+	return never_const_ptr<object>(NULL);
+}
+
+//=============================================================================
+// class dense_range_list method definitions
+
+dense_range_list::dense_range_list(const expr* r) : parent(r) {
+}
+
+dense_range_list::~dense_range_list() {
+}
+
+never_const_ptr<object>
+dense_range_list::check_build(never_ptr<context> c) const {
+	parent::check_build(c);
+	count_ptr<object_list> ol(new object_list);
+	size_t i = 0;
+	for ( ; i<size(); i++) {
+		count_ptr<object> o(c->pop_top_object_stack());
+		if (!o) {
+			cerr << "Problem with dimension " << i+1 <<
+				" of dense_range_list between "
+				<< where() << endl;
+			exit(1);		// terminate?
+		} else if (!o.is_a<pint_expr>()) {
+			// make sure that each item is an integer expr
+			cerr << "Expression in dimension " << i+1 <<
+				" of dense_range_list is not integer!  "
+				<< where() << endl;
+			exit(1);
 		}
 		ol->push_front(o);
 	}

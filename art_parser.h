@@ -761,7 +761,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /// base class for range_list
-typedef node_list<range,comma>	range_list_base;
+typedef node_list<range,none>	range_list_base;
 
 /// all range lists are comma-separated, until we discard for C-style arrays
 class range_list : public range_list_base {
@@ -779,6 +779,27 @@ public:
 	IS_A(range_list*, l->wrap(b,e))
 #define range_list_append(l,d,n)					\
 	IS_A(range_list*, l->append(d,n))
+
+//-----------------------------------------------------------------------------
+/// base class for dense_range_list
+typedef node_list<expr,none>	dense_range_list_base;
+
+/// all range lists are comma-separated, until we discard for C-style arrays
+class dense_range_list : public dense_range_list_base {
+protected:
+	typedef	dense_range_list_base			parent;
+	// no additional members
+public:
+	dense_range_list(const expr* r);
+	~dense_range_list();
+
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class range_list
+
+#define dense_range_list_wrap(b,l,e)					\
+	IS_A(dense_range_list*, l->wrap(b,e))
+#define dense_range_list_append(l,d,n)					\
+	IS_A(dense_range_list*, l->append(d,n))
 
 //=============================================================================
 /// abstract base class for unary expressions
@@ -1385,14 +1406,60 @@ virtual	line_position rightmost(void) const;
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance declaration
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// clever re-use of declaration classes
-typedef	node_list<instance_declaration,semicolon>	data_param_list;
+//=============================================================================
+/**
+	Class for port data (rather, members) of a user-defined channels.  
+ */
+class data_param_id : public node {
+	// should be called data_port_id
+protected:
+	const excl_const_ptr<token_identifier>	id;
+	const excl_const_ptr<dense_range_list>	dim;
+public:
+	data_param_id(const token_identifier* i, const dense_range_list* d);
+	~data_param_id();
 
-#define data_param_list_wrap(b,l,e)					\
-	IS_A(data_param_list*, l)->wrap(b,e)
-#define data_param_list_append(l,d,n)					\
-	IS_A(data_param_list*, l)->append(d,n) 
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+};	// end class data_param_id
+
+typedef	node_list<data_param_id,comma>	data_param_id_list;
+
+#define data_param_id_list_wrap(b,l,e)					\
+	IS_A(data_param_id_list*, l)->wrap(b,e)
+#define data_param_id_list_append(l,d,n)				\
+	IS_A(data_param_id_list*, l)->append(d,n) 
+
+//-----------------------------------------------------------------------------
+/**
+	Data parameter port declarations, grouped together by type.  
+ */
+class data_param_decl : public node {
+protected:
+	/**
+		The base type of the data ports in this collection.  
+	 */
+	const excl_const_ptr<concrete_type_ref>		type;
+	const excl_const_ptr<data_param_id_list>	ids;
+public:
+	data_param_decl(const concrete_type_ref* t, 
+		const data_param_id_list* il);
+	~data_param_decl();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+};	// end class data_param_decl
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// clever re-use of declaration classes, or not...
+typedef	node_list<data_param_decl,semicolon>		data_param_decl_list;
+
+#define data_param_decl_list_wrap(b,l,e)				\
+	IS_A(data_param_decl_list*, l->wrap(b,e))
+#define data_param_decl_list_append(l,d,n)				\
+	IS_A(data_param_decl_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /// class for an or instance port connection or declaration connection
@@ -1489,9 +1556,9 @@ virtual	line_position rightmost(void) const;
 class port_formal_id : public node {
 protected:
 	const excl_const_ptr<token_identifier>	name;	///< formal name
-	const excl_const_ptr<range_list>	dim;	///< optional dimensions
+	const excl_const_ptr<dense_range_list>	dim;	///< optional dimensions
 public:
-	port_formal_id(const token_identifier* n, const range_list* d);
+	port_formal_id(const token_identifier* n, const dense_range_list* d);
 	~port_formal_id();
 
 	ostream& what(ostream& o) const;
@@ -1546,11 +1613,12 @@ typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
 class template_formal_id : public node {
 protected:
 	const excl_const_ptr<token_identifier>	name;	///< formal name
-	const excl_const_ptr<range_list>	dim;	///< optional dimensions
+	const excl_const_ptr<dense_range_list>	dim;	///< optional dimensions
 	const excl_const_ptr<token_char>	eq;	///< '=' token
 	const excl_const_ptr<expr>		dflt;	///< default value
 public:
-	template_formal_id(const token_identifier* n, const range_list* d, 
+	template_formal_id(const token_identifier* n,
+		const dense_range_list* d, 
 		const token_char* e = NULL, const expr* v = NULL);
 virtual	~template_formal_id();
 
@@ -1593,23 +1661,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_decl
 
 //-----------------------------------------------------------------------------
-#if 1
 typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
-#else
-typedef	node_list<template_formal_decl,semicolon>
-					template_formal_decl_list_base;
-
-/// list of template-formal declarations
-class template_formal_decl_list : public template_formal_decl_list_base {
-protected:
-	typedef	template_formal_decl_list_base		parent;
-public:
-	template_formal_decl_list(const template_formal_decl* tf);
-	~template_formal_decl_list();
-
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
-};	// end class template_formal_decl_list
-#endif
 
 #define template_formal_decl_list_wrap(b,l,e)				\
 	IS_A(template_formal_decl_list*, l->wrap(b,e))
@@ -1799,13 +1851,14 @@ protected:
 	const excl_const_ptr<token_keyword>	def;	///< "deftype" keyword
 	const excl_const_ptr<token_string>	dop;	///< <: operator
 	const excl_const_ptr<concrete_type_ref>	bdt;	///< the represented type
-	const excl_const_ptr<data_param_list>	params;	///< the implementation type
+	const excl_const_ptr<data_param_decl_list>
+						params;	///< implementation type
 public:
 	user_data_type_signature(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, 
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
-		const data_param_list* p);
+		const data_param_decl_list* p);
 virtual	~user_data_type_signature();
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
@@ -1820,7 +1873,7 @@ public:
 	user_data_type_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const concrete_type_ref* b, 
-		const data_param_list* p, const token_char* s);
+		const data_param_decl_list* p, const token_char* s);
 	~user_data_type_prototype();
 
 	ostream& what(ostream& o) const;
@@ -1837,7 +1890,7 @@ protected:
 //	const excl_const_ptr<token_identifier>	name;	// inherited
 //	const excl_const_ptr<token_string>	dop;	// inherited
 //	const excl_const_ptr<concrete_type_ref>	bdt;	// inherited
-//	const excl_const_ptr<data_param_list>	params;	// inherited
+//	const excl_const_ptr<data_param_decl_list>	params;	// inherited
 	const excl_const_ptr<token_char>	lb;	///< left brace
 	const excl_const_ptr<language_body>	setb;	///< set body
 	const excl_const_ptr<language_body>	getb;	///< get body
@@ -1846,7 +1899,7 @@ public:
 	user_data_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const concrete_type_ref* b, 
-		const data_param_list* p, 
+		const data_param_decl_list* p, 
 		const token_char* l, const language_body* s,
 		const language_body* g, const token_char* r);
 	~user_data_type_def();
@@ -1942,12 +1995,13 @@ protected:
 	const excl_const_ptr<token_keyword>	def;	///< "defchan" keyword
 	const excl_const_ptr<token_string>	dop;	///< <: operator
 	const excl_const_ptr<chan_type>		bct;	///< the represented type
-	const excl_const_ptr<data_param_list>	params;	///< the implementation type
+	const excl_const_ptr<data_param_decl_list>
+						params;	///< the implementation type
 public:
 	user_chan_type_signature(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
-		const data_param_list* p);
+		const data_param_decl_list* p);
 virtual	~user_chan_type_signature();
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
@@ -1962,7 +2016,7 @@ public:
 	user_chan_type_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
-		const data_param_list* p, const token_char* s);
+		const data_param_decl_list* p, const token_char* s);
 virtual	~user_chan_type_prototype();
 
 virtual	ostream& what(ostream& o) const;
@@ -1978,7 +2032,7 @@ protected:
 //	const excl_const_ptr<token_identifier>	name;	// inherited
 //	const excl_const_ptr<token_string>	dop;	// inherited
 //	const excl_const_ptr<chan_type>		bct;	// inherited
-//	const excl_const_ptr<data_param_list>	params;	// inherited
+//	const excl_const_ptr<data_param_decl_list>	params;	// inherited
 	const excl_const_ptr<token_char>	lb;	///< left brace
 	const excl_const_ptr<language_body>	sendb;	///< set body
 	const excl_const_ptr<language_body>	recvb;	///< get body
@@ -1987,7 +2041,7 @@ public:
 	user_chan_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
-		const data_param_list* p, 
+		const data_param_decl_list* p, 
 		const token_char* l, const language_body* s, 
 		const language_body* g, const token_char* r);
 	~user_chan_type_def();

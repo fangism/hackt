@@ -121,33 +121,6 @@ namespace entity {
 					instantiation_state;
 
 typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
-#if 0
-/***
-	Upgrade these to real expression object classes.  
-	PHASE OUT.  
-***/
-
-typedef	pair<param_expr_ptr_type, param_expr_ptr_type>	param_range_type;
-
-typedef	pair<int, int>					static_range_type;
-
-/**
-	Array dimensions are specified as a list of parameter expressions.
-	Range expressions also allowed.
-	Expressions may contain other literals referring to other parameters,
-	and need not necessarily be constants.
-	Non-constants will be checked at instantiation time.
-	Elements should be param_expr (owned pointers).
- */
-typedef	list<param_range_type>				array_index_list;
-
-/**
-	Array (range) dimensions resolved to static constants.  
-	\sa make_static_array_index_list
- */
-typedef	list<static_range_type>				static_array_index_list;
-#endif
-
 
 /**
 	The container type for template parameters.  
@@ -164,18 +137,6 @@ typedef	list<param_expr_ptr_type>			template_param_list;
 
 //=============================================================================
 // general non-member functions
-
-#if 0
-// MOVE this into object_list, replace static_array_index_list
-/**
-	Attempts to resolve a list of range expressions into constants.  
-	\param a the unresolved list of range expressions.
-	\return newly constructed list of constant index ranges, 
-		if possible, else NULL.  
- */
-excl_const_ptr<static_array_index_list>
-	make_static_array_index_list(const array_index_list& a);
-#endif
 
 //=============================================================================
 /// the root object type
@@ -314,10 +275,8 @@ class static_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-//	excl_const_ptr<static_array_index_list>		indices;
 	excl_const_ptr<const_range_list>		indices;
 public:
-//	static_collection_addition(excl_const_ptr<static_array_index_list>& i);
 	static_collection_addition(excl_const_ptr<const_range_list>& i);
 	// no copy-constructor
 	~static_collection_addition() { }
@@ -338,10 +297,8 @@ class dynamic_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-//	excl_const_ptr<array_index_list>		indices;
 	excl_const_ptr<dynamic_range_list>		indices;
 public:
-//	dynamic_collection_addition(excl_const_ptr<array_index_list>& i);
 	dynamic_collection_addition(excl_const_ptr<dynamic_range_list>& i);
 	~dynamic_collection_addition() { }
 
@@ -358,7 +315,7 @@ class loop_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-//	never_const_ptr<loop_scope>		body;
+//	never_const_ptr<loop_scope>			body;
 
 	size_t	dimensions(void) const { assert(0); return 0; }	// BARF for now
 };	// end class loop_collection_addition
@@ -373,55 +330,11 @@ class conditional_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-//	never_const_ptr<conditional_scope>	body;
+//	never_const_ptr<conditional_scope>		body;
 
 	size_t	dimensions(void) const { assert(0); return 0; }	// BARF for now
 
 };	// end class conditional_collection_addition
-
-//=============================================================================
-#if 0
-/**
-	THIS IS PREMATURE.
-	Need to establish the idea of a collection stack that
-	represents the state of a stack at various program points.  
-	Instance reference will refer to positions in the collection stack.  
-
-	Collection of indices for a sparse multidimensional array.
-	Indices however may depend on parameters and other unroll-time 
-	values, thus we need to keep around: 
-	1) statically bound instance indices, such as constants and 
-	resolved expressions, 2) dynamically determined indices
-	such as those dependent on formal template parameters, 
-	and loop and conditional indices dependent thereupon.  
-	Do we need to keep around precise conditions, or can we just 
-	FLAG it as dynamic for the purposes of static type-checking.  
-	And don't bother tracking here.  
-	This is not an object... yet.
- */
-class sparse_index_collection {
-public:
-	typedef	base_multidimensional_sparse_set<int>
-						static_instance_set_type;
-#if 1
-	typedef never_const_ptr<param_expr>	value_ptr_type;
-	typedef	pair<value_ptr_type, value_ptr_type>	range_type;
-	typedef	list<range_type>		range_list_type;
-	typedef	list<range_list_type>		range_list_set_type;
-#endif
-
-protected:
-	count_ptr<static_instance_set_type>	static_instances;
-		// of excl_ptr?
-	range_list_set_type			dynamic_instances;
-
-public:
-	sparse_index_collection(const int dim);
-	~sparse_index_collection();
-
-
-};	// end class sparse_index_collection
-#endif
 
 //=============================================================================
 /**
@@ -634,20 +547,7 @@ never_const_ptr<fundamental_type_reference>
 // returns type if unique match found, else NULL
 never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
 
-// type-specific counterparts
-
-#if 0
-// PHASE OUT type-specifics!  use only generic add_definition
-never_const_ptr<enum_datatype_def>
-			add_enum_declaration(excl_ptr<enum_datatype_def> en);
-//			add_enum_declaration(const token_identifier& en);
-
-never_const_ptr<process_definition>
-			probe_process_definition(const string& s) const;
-never_ptr<process_definition>
-			add_proc_declaration(const token_identifier& pname);
-never_ptr<process_definition>	add_proc_definition(const token_identifier& pname);
-#endif
+// type-specific counterparts, obsolete
 
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
@@ -753,10 +653,9 @@ public:
 	typedef	hashlist<string, never_const_ptr<param_instantiation> >
 					template_formals_set;
 protected:
-	// inherited:
-	// const scopespace*		parent;
-	// string			key;
-	// used_id_map_type		used_id_map;
+	// never_const_ptr<scopespace>	parent;		// inherited
+	// string			key;		// inherited
+	// used_id_map_type		used_id_map;	// inherited
 	/**
 		List and set of template formals.  
 		Pointer or object?
@@ -849,7 +748,6 @@ protected:
 	/**
 		Name of instance.
 	 */
-
 	string				key;
 
 	/**
@@ -863,7 +761,6 @@ protected:
 		of changing collection.  
 		Needs to be a deque so we can use iterators.  
 	 */
-//	excl_ptr<sparse_index_collection>	index_collection;
 	index_collection_type			index_collection;
 
 	/**
@@ -876,7 +773,6 @@ public:
 	// o should be reference, not pointer
 	instantiation_base(const scopespace& o, const string& n, 
 		index_collection_item_ptr_type d);
-//		const array_index_list* d = NULL);
 virtual	~instantiation_base();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -899,11 +795,6 @@ virtual	never_const_ptr<fundamental_type_reference>
 /** currently always returns NULL, useless */
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
-
-// new concept
-//	void set_array_dimensions(excl_ptr<array_index_list> d);
-//	bool array_dimension_match(const instantiation_base& i) const;
-
 };	// end class instantiation_base
 
 //=============================================================================
@@ -926,7 +817,6 @@ virtual	~type_reference_base() { }
 	definitions of the specific classes.  
  */
 class fundamental_type_reference : public type_reference_base {
-// members
 protected:
 	/**
 		Optional set of template parameters with which a
@@ -962,13 +852,6 @@ virtual	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const = 0;
-#if 0
-PHASE THE FOLLOWING OUT: functionality should be in the scopespace
-	not in the type_reference.  
-virtual never_const_ptr<instantiation_base>
-		add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const = 0;
-#endif
 
 // TO DO: type equivalence relationship
 	bool may_be_equivalent(
@@ -1006,7 +889,7 @@ public:
  */
 class data_type_reference : public fundamental_type_reference {
 protected:
-//	template_param_list*		template_params;	// inherited
+//	excl_ptr<template_param_list>	template_params;	// inherited
 	never_const_ptr<datatype_definition>	base_type_def;
 public:
 	data_type_reference(
@@ -1018,15 +901,11 @@ public:
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
-//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
-	never_const_ptr<instantiation_base>
-		add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const;
 };	// end class data_type_reference
 
 //-----------------------------------------------------------------------------
@@ -1047,15 +926,11 @@ public:
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
-//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
-	never_const_ptr<instantiation_base>
-		add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const;
 };	// end class channel_type_reference
 
 //-----------------------------------------------------------------------------
@@ -1065,7 +940,7 @@ virtual	~channel_type_reference();
  */
 class process_type_reference : public fundamental_type_reference {
 protected:
-//	template_param_list*		template_params;	// inherited
+//	excl_ptr<template_param_list>	template_params;	// inherited
 	never_const_ptr<process_definition>	base_proc_def;
 public:
 	process_type_reference(
@@ -1077,15 +952,11 @@ public:
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
-//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
-	never_const_ptr<instantiation_base>
-		add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const;
 };	// end class process_type_reference
 
 //-----------------------------------------------------------------------------
@@ -1100,22 +971,18 @@ virtual	~process_type_reference();
  */
 class param_type_reference : public fundamental_type_reference {
 protected:
-//	template_param_list*		template_params;	// inherited, unused
+//	excl_ptr<template_param_list>	template_params;	// inherited, unused
 	never_const_ptr<built_in_param_def>	base_param_def;
 public:
 	param_type_reference(never_const_ptr<built_in_param_def> td);
 virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
-//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	excl_ptr<instantiation_base>
 		make_instantiation(never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
-	never_const_ptr<instantiation_base>
-		add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const;
 };	// end class param_type_reference
 
 //=============================================================================
@@ -1138,7 +1005,7 @@ virtual	string hash_string(void) const = 0;
 
 //=============================================================================
 #if 0
-PHASE OUT, needs a facelift
+PHASE OUT, or needs a facelift
 	EVOLVE INTO: complex_aggregate_instance_reference, muhahahaha!
 /// in favor of using generic (single/collective) instance references
 //	all have potential indices, forget hierarchy
@@ -1198,7 +1065,6 @@ protected:
 
 protected:
 	// consider letting collective_instance_reference take care of it...
-//	excl_ptr<array_index_list>		array_indices;
 	excl_ptr<index_list>			array_indices;
 	// may have to be count_ptr...
 	const instantiation_state		inst_state;
@@ -1207,7 +1073,6 @@ protected:
 //	never_const_ptr<instantiation_base>	inst_ref;
 
 public:
-//	single_instance_reference(array_index_list* i = NULL);
 	single_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& st);
 virtual	~single_instance_reference();
@@ -1219,7 +1084,6 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const;
-
 };	// end class single_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -1229,7 +1093,6 @@ virtual	string hash_string(void) const;
 class datatype_instance_reference : public single_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-//	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<datatype_instantiation>	data_inst_ref;
 
 public:
@@ -1249,7 +1112,6 @@ public:
 class channel_instance_reference : public single_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-//	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<channel_instantiation>	channel_inst_ref;
 
 public:
@@ -1269,7 +1131,6 @@ public:
 class process_instance_reference : public single_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-//	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<process_instantiation>	process_inst_ref;
 
 public:
@@ -1307,15 +1168,12 @@ public:
 protected:
 //	string			key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
-//	bool			def;		///< flag: declared or defined
 	port_formals_set	port_formals;
 	// list language bodies
 	
 public:
-	process_definition(
-		never_const_ptr<name_space> o, 
+	process_definition(never_const_ptr<name_space> o, 
 		const string& s,
-//		const bool d, 
 		template_formals_set* tf = NULL);
 virtual	~process_definition();
 
@@ -1368,8 +1226,7 @@ public:
  */
 class datatype_definition : public definition_base {
 protected:
-// inherited:
-//	string			key;		///< name of type
+//	string			key;		// name of type, inherited
 public:
 	datatype_definition(
 		never_const_ptr<name_space> o, 
@@ -1413,6 +1270,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	Member of an enumeration, just an identifier.  
  */
 class enum_member : public object {
 protected:
@@ -1475,19 +1333,6 @@ public:
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
 };	// end class built_in_param_def
-
-//-----------------------------------------------------------------------------
-// TO DO: need to distinguish parameter and data-types...
-//-----------------------------------------------------------------------------
-// need specialized type definitions for templates? (int<N>)
-// class built_in_datatype_template_def : public built_in_datatype_def {
-// perhaps contain a type definition and a template signature?
-// }
-
-//-----------------------------------------------------------------------------
-// may need a template type that refers to an abstract template
-// with template actuals/parameters
-// or just use user_def_datatype below...
 
 //-----------------------------------------------------------------------------
 /**
@@ -1591,7 +1436,6 @@ virtual	~type_alias();
 	// never delete canonical (can't, it's const!)
 
 // need not be virtual
-// const definition_base*	resolve_canonical(void) const;
 never_const_ptr<definition_base>	resolve_canonical(void) const;
 
 virtual	ostream& what(ostream& o) const;
@@ -1655,11 +1499,6 @@ protected:
 	**/
 
 public:
-#if 0
-	param_instantiation(const scopespace& o, 
-		const param_type_reference& pt, const string& n, 
-		const param_expr* i = NULL);
-#endif
 	param_instantiation(const scopespace& o, const string& n, 
 		index_collection_item_ptr_type d);
 virtual	~param_instantiation();

@@ -204,7 +204,10 @@ extern const char* const yyrule[];
 	chan_type*		_chan_type;
 	user_chan_type_prototype*	_user_chan_type_prototype;
 	user_chan_type_def*	_user_chan_type_def;
-	data_param_list*	_data_param_list;
+	data_param_id*		_data_param_id;
+	data_param_id_list*	_data_param_id_list;
+	data_param_decl*	_data_param_decl;
+	data_param_decl_list*	_data_param_decl_list;
 	instance_management*	_instance_management;
 	instance_base*		_instance_base;
 	instance_array*		_instance_array;
@@ -226,10 +229,10 @@ extern const char* const yyrule[];
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
-/*** not used
-	prefix_expr*		_prefix_expr;
 	index_expr*		_index_expr;
 	member_expr*		_member_expr;
+/*** not needed
+	prefix_expr*		_prefix_expr;
 	arith_expr*		_arith_expr;
 	relational_expr*	_relational_expr;
 	logical_expr*		_logical_expr;
@@ -243,6 +246,7 @@ extern const char* const yyrule[];
 **/
 	range*			_range;
 	range_list*		_range_list;
+	dense_range_list*	_dense_range_list;
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
@@ -406,10 +410,11 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_user_data_type_def>	defdatatype
 %type	<_user_chan_type_def>	defchan
 %type	<_chp_body>	set_body get_body send_body recv_body
-%type	<_data_param_list>	data_param_list data_param_list_in_parens
-%type	<_instance_declaration>	data_param
-%type	<_instance_id_list>	data_param_id_list
-%type	<_instance_base>	data_param_id
+%type	<_data_param_decl_list>	data_param_decl_list
+%type	<_data_param_decl_list>	data_param_decl_list_in_parens
+%type	<_data_param_decl>	data_param_decl
+%type	<_data_param_id_list>	data_param_id_list
+%type	<_data_param_id>	data_param_id
 %type	<_definition_body>	definition_body optional_definition_body
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
@@ -468,6 +473,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_expr_list>	member_index_expr_list
 %type	<_expr>	optional_member_index_expr
 %type	<_expr>	member_index_expr unary_expr
+%type	<_member_expr>	member_expr
+%type	<_index_expr>	index_expr
 %type	<_expr>	multiplicative_expr additive_expr shift_expr
 %type	<_expr>	relational_equality_expr and_expr
 %type	<_expr>	exclusive_or_expr inclusive_or_expr
@@ -480,8 +487,14 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_expr_list>	member_index_expr_list_in_angles
 %type	<_expr_list>	member_index_expr_list_in_parens
 %type	<_expr_list>	expr_list_in_parens expr_list
-%type	<_range_list>	optional_range_list_in_brackets range_list_in_brackets
-%type	<_range_list>	range_list
+/* %type	<_range_list>	optional_range_list_in_brackets */
+/* %type	<_range_list>	range_list_in_brackets */
+/* %type	<_range_list>	range_list */
+%type	<_dense_range_list>	dense_range_list optional_dense_range_list
+%type	<_range_list>	sparse_range_list
+/* %type	<_range_list>	optional_sparse_range_list */
+%type	<_expr>		bracketed_dense_range
+%type	<_range>	bracketed_sparse_range
 %type	<_range>	range
 
 
@@ -654,7 +667,7 @@ template_formal_id_list
 
 template_formal_id
 	/** update formal declarations: only allow dense arrays, no ranges */
-	: ID optional_range_list_in_brackets
+	: ID optional_dense_range_list
 		{ $$ = new template_formal_id($1, $2); }
 /**
 	from http://www.computing.surrey.ac.uk/research/dsrg/fog/CxxGrammar.y:
@@ -662,7 +675,7 @@ template_formal_id
 	flattening part of the expression grammar to know when the 
 	next > is template end or arithmetic >.
 **/
-	| ID optional_range_list_in_brackets '=' shift_expr
+	| ID optional_dense_range_list '=' shift_expr
 		{ $$ = new template_formal_id($1, $2, $3, $4); }
 /**
 	We choose to force the user to disambiguate by placing parentheses
@@ -695,7 +708,7 @@ port_formal_id_list
 
 port_formal_id
 	/** update port formals: only dense arrays allowed, no sparse ranges */
-	: ID optional_range_list_in_brackets
+	: ID optional_dense_range_list
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
@@ -791,7 +804,7 @@ declare_datatype_proto
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_list_in_parens ';'
+          data_param_decl_list_in_parens ';'
 		{ $$ = new user_data_type_prototype(
 			$1, $2, $3, $4, $5, $6, $7); }
 	;
@@ -800,7 +813,7 @@ defdatatype
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_list_in_parens
+          data_param_decl_list_in_parens
 	  '{' set_body get_body '}'
 		{ $$ = new user_data_type_def(
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10); }
@@ -840,14 +853,14 @@ enum_member_list
 
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-	  data_param_list_in_parens ';'
+	  data_param_decl_list_in_parens ';'
 		{ $$ = new user_chan_type_prototype(
 			$1, $2, $3, $4, $5, $6, $7); }
 	;
 	
 defchan
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-          data_param_list_in_parens
+          data_param_decl_list_in_parens
 	  '{' send_body recv_body '}'
 		{ $$ = new user_chan_type_def(
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10); }
@@ -863,21 +876,21 @@ recv_body
 		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	;
 
-data_param_list_in_parens
-	: '(' data_param_list ')'
-		{ $$ = data_param_list_wrap($1, $2, $3); }
+data_param_decl_list_in_parens
+	: '(' data_param_decl_list ')'
+		{ $$ = data_param_decl_list_wrap($1, $2, $3); }
 	;
 
-data_param_list
+data_param_decl_list
 /* like declarations in formals list
 	consider using ';', similar to C-style... */
-	: data_param_list ';' data_param
-		{ $$ = data_param_list_append($1, $2, $3); }
-	| data_param
-		{ $$ = new data_param_list($1); }
+	: data_param_decl_list ';' data_param_decl
+		{ $$ = data_param_decl_list_append($1, $2, $3); }
+	| data_param_decl
+		{ $$ = new data_param_decl_list($1); }
 	;
 
-data_param
+data_param_decl
 /*
 	forseen problem: array brackets are with data_type
 	but to follow C-style, we want the arrays to go with identifiers
@@ -885,20 +898,24 @@ data_param
 	semicolon-delimited declarations
 */
 	: data_type_ref data_param_id_list
-		{ $$ = new instance_declaration($1, $2); }
+		{ $$ = new data_param_decl($1, $2); }
 	;
 
 data_param_id_list
 	: data_param_id_list ',' data_param_id
-		{ $$ = instance_id_list_append($1, $2, $3); }
+		{ $$ = data_param_id_list_append($1, $2, $3); }
 	| data_param_id
-		{ $$ = new instance_id_list($1); }
+		{ $$ = new data_param_id_list($1); }
 	;
 
 data_param_id
-	: ID optional_range_list_in_brackets
+	/** really, this should be formal */
+	: ID optional_dense_range_list
+		{ $$ = new data_param_id($1, $2); }
+/** archaic
 		{ $$ = ($2) ? new instance_array($1, $2)
 			: new instance_base($1); }
+**/
 	;
 
 
@@ -969,7 +986,7 @@ instance_id_list
 
 instance_id_item
 	/* array declaration: forbid connection, must connect later */
-	: ID range_list_in_brackets
+	: ID sparse_range_list
 		{ $$ = new instance_array($1, $2); }
 	/* single instance declaration without connection */
 	| ID
@@ -1399,21 +1416,28 @@ member_index_expr
 /*	: primary_expr */
 	: id_expr { $$ = $1; }
 	/* array index: should forbid C-style id[N][M]? current allows... */
-	| member_index_expr range_list_in_brackets
-		{ $$ = new index_expr($1, $2); }
-	| member_index_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+	| index_expr { $$ = $1; }
+	| member_expr { $$ = $1; }
 	/*			or id_expr? */
 	/* no function calls in expressions... yet */
 	;
 
-/*
-consider:
-list_of_bracketed_ranges
-	: list_of_bracketed_ranges '[' range ']'
-	| list_of_bracketed_ranges
+/** This removes S/R conflict between (a[i])[j] and (a[i][j]) */
+index_expr
+	: member_expr sparse_range_list
+		{ $$ = new index_expr($1, $2); }
+	| id_expr sparse_range_list
+		{ $$ = new index_expr($1, $2); }
 	;
-*/
+
+member_expr
+	: index_expr '.' ID
+		{ $$ = new member_expr($1, $2, $3); }
+	| member_expr '.' ID
+		{ $$ = new member_expr($1, $2, $3); }
+	| id_expr '.' ID
+		{ $$ = new member_expr($1, $2, $3); }
+	;
 
 unary_expr
 	: member_index_expr
@@ -1596,13 +1620,17 @@ expr_list
 	;
 
 /* --- array declaration syntax ------------------------------------------- */
+/** giving up CAST-style for C-style arrays */
 
+/**
+OBSOLETE
 optional_range_list_in_brackets
 	: range_list_in_brackets { $$ = $1; }
 	| { $$ = NULL; }
 	;
 
 range_list_in_brackets
+	// old-CAST style
 	: '[' range_list ']'
 		{ $$ = range_list_wrap($1, $2, $3); }
 	;
@@ -1612,11 +1640,52 @@ range_list
 		{ $$ = range_list_append($1, $2, $3); }
 	| range { $$ = new range_list($1); }
 	;
+**/
 
 range
 	: expr RANGE expr 
 		{ $$ = new range($1, $2, $3); }
 	| expr { $$ = new range($1); }
+	;
+
+optional_dense_range_list
+	: dense_range_list
+		{ $$ = $1; }
+	|	{ $$ = NULL; }
+	;
+
+/** not needed
+optional_sparse_range_list
+	: sparse_range_list
+		{ $$ = $1; }
+	|	{ $$ = NULL; }
+	;
+**/
+
+dense_range_list
+	: dense_range_list bracketed_dense_range
+		{ $$ = dense_range_list_append($1, NULL, $2); }
+	| bracketed_dense_range
+		{ $$ = new dense_range_list($1); }
+	;
+
+sparse_range_list
+	: sparse_range_list bracketed_sparse_range
+		{ $$ = range_list_append($1, NULL, $2); }
+	| bracketed_sparse_range
+		{ $$ = new range_list($1); }
+	;
+
+/** array declarations in template and port formals can only be dense */
+bracketed_dense_range
+	: '[' expr ']'
+		{ delete $1; $$ = $2; delete $3; }
+	;
+
+/** array instantiations and references elsewhere may be sparse */
+bracketed_sparse_range
+	: '[' range ']'
+		{ delete $1; $$ = $2; delete $3; }
 	;
 
 /* ----end array ---------------------------------------------------------- */

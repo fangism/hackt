@@ -532,7 +532,7 @@ user_data_type_prototype::user_data_type_prototype(
 	const template_formal_decl_list* tf, const token_keyword* df, 
 	const token_identifier* n, const token_string* dp, 
 	const concrete_type_ref* b, 
-	const data_param_list* p, const token_char* s) :
+	const data_param_decl_list* p, const token_char* s) :
 		prototype(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
@@ -588,7 +588,7 @@ CONSTRUCTOR_INLINE
 user_data_type_def::user_data_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const concrete_type_ref* b, 
-		const data_param_list* p, const token_char* l, 
+		const data_param_decl_list* p, const token_char* l, 
 		const language_body* s, const language_body* g,
 		const token_char* r) :
 		definition(), 
@@ -709,29 +709,7 @@ enum_prototype::rightmost(void) const {
  */
 never_const_ptr<object>
 enum_prototype::check_build(never_ptr<context> c) const {
-#if 1
 	return enum_signature::check_build(c);	// using.
-#else
-	enum_signature::check_build(c);
-	excl_ptr<definition_base> ed(c->get_current_prototype());
-	if (ed) {
-		never_ptr<enum_datatype_def> ret(
-			c->add_declaration(ed).is_a<enum_datatype_def>());
-		// doesn't modify the context's current_open_definition, 
-		// just adds a placeholder to the current scope.  
-		if (!ret) {
-			// error handling?
-			cerr << where() << endl;
-			exit(1);
-		} else {
-			c->reset_current_prototype();
-		}
-	} else {
-		cerr << "ERROR: malformed enum signature." << endl;
-		exit(1);
-	}
-	return never_const_ptr<object>(NULL);
-#endif
 }
 
 //=============================================================================
@@ -745,7 +723,6 @@ enum_member_list::~enum_member_list() {
 
 never_const_ptr<object>
 enum_member_list::check_build(never_ptr<context> c) const {
-//	cerr << "enum_member_list::check_build(): FINISH ME!" << endl;
 	// use current_open_definition
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
@@ -792,9 +769,6 @@ enum_def::rightmost(void) const {
  */
 never_const_ptr<object>
 enum_def::check_build(never_ptr<context> c) const {
-#if 0
-	return node::check_build(c);
-#else
 	never_const_ptr<object> o(enum_signature::check_build(c));
 	if (!o)	return never_const_ptr<object>(NULL);
 	// lookup and open definition
@@ -809,7 +783,6 @@ enum_def::check_build(never_ptr<context> c) const {
 #endif
 	c->close_enum_definition();
 	return never_const_ptr<object>(NULL);
-#endif
 }
 
 //=============================================================================
@@ -872,7 +845,7 @@ user_chan_type_signature::user_chan_type_signature(
 		const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n,
 		const token_string* dp, 
-		const chan_type* b, const data_param_list* p) :
+		const chan_type* b, const data_param_decl_list* p) :
 		signature_base(tf, n), 
 		def(df), dop(dp), bct(b), params(p) {
 	assert(def); assert(dop);
@@ -904,7 +877,7 @@ user_chan_type_prototype::user_chan_type_prototype(
 		const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
-		const data_param_list* p, const token_char* s) :
+		const data_param_decl_list* p, const token_char* s) :
 		prototype(), 
 		user_chan_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
@@ -939,7 +912,7 @@ CONSTRUCTOR_INLINE
 user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
-		const data_param_list* p, const token_char* l, 
+		const data_param_decl_list* p, const token_char* l, 
 		const language_body* s, const language_body* g, 
 		const token_char* r) :
 		definition(), 
@@ -1720,10 +1693,68 @@ loop_instantiation::rightmost(void) const {
 }
 
 //=============================================================================
+// class data_param_id method definitions
+
+data_param_id::data_param_id(const token_identifier* i, 
+		const dense_range_list* d) :
+		node(), id(i), dim(d) {
+	assert(id);
+	// dim is optional
+}
+
+data_param_id::~data_param_id() {
+}
+
+ostream&
+data_param_id::what(ostream& o) const {
+	return o << "(data-param-id)";
+}
+
+line_position
+data_param_id::leftmost(void) const {
+	return id->leftmost();
+}
+
+line_position
+data_param_id::rightmost(void) const {
+	if (dim)	return dim->rightmost();
+	else		return id->rightmost();
+}
+
+//=============================================================================
+// class data_param_decl method definition
+
+data_param_decl::data_param_decl(const concrete_type_ref* t, 
+		const data_param_id_list* il) :
+		node(), type(t), ids(il) {
+	assert(type);
+	assert(ids);
+}
+
+data_param_decl::~data_param_decl() {
+}
+
+ostream&
+data_param_decl::what(ostream& o) const {
+	return o << "(data-param-decl)";
+}
+
+line_position
+data_param_decl::leftmost(void) const {
+	return type->leftmost();
+}
+
+line_position
+data_param_decl::rightmost(void) const {
+	return ids->rightmost();
+}
+
+//=============================================================================
 // class port_formal_id method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_id::port_formal_id(const token_identifier* n, const range_list* d)
+port_formal_id::port_formal_id(const token_identifier* n,
+		const dense_range_list* d)
 		: node(), name(n), dim(d) {
 	assert(name);
 	// dim may be NULL
@@ -1828,7 +1859,7 @@ port_formal_decl::rightmost(void) const {
  */
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
-		const range_list* d, const token_char* e, 
+		const dense_range_list* d, const token_char* e, 
 		const expr* v) : 
 		node(), name(n), dim(d), eq(e), dflt(v) {
 	assert(name);
@@ -1960,28 +1991,6 @@ template_formal_decl::check_build(never_ptr<context> c) const {
 	c->reset_current_fundamental_type();
 	return o;
 }
-
-//=============================================================================
-// class template_formal_decl_list method definitions
-
-#if 0
-template_formal_decl_list::template_formal_decl_list(
-		const template_formal_decl* tf) : parent(tf) {
-}
-
-template_formal_decl_list::~template_formal_decl_list() {
-}
-
-/**
-	Since latter template formals may depend on former ones, 
-	we cannot build this bottom-up with the context's object stack.  
-	We sequentially build each formal parameter.  
- */
-never_const_ptr<object>
-template_formal_decl_list::check_build(never_ptr<context> c) const {
-	parent::check_build(c);
-}
-#endif
 
 //=============================================================================
 // class concrete_type_ref method definitions
@@ -2176,23 +2185,7 @@ process_prototype::rightmost(void) const {
  */
 never_const_ptr<object>
 process_prototype::check_build(never_ptr<context> c) const {
-#if 1
 	return process_signature::check_build(c);
-#else
-	never_const_ptr<object> o;
-	TRACE_CHECK_BUILD(
-		id->what(cerr << c->auto_indent() << 
-			"process_prototype::check_build(...): ");
-	)
-	c->declare_process(*id);		// will handle errors
-	// template parameters?
-
-	o = ports->check_build(c);		// ignore return value
-	c->reset_current_definition_reference();
-	c->close_process_definition();
-	// nothing better to do
-	return c->top_namespace();
-#endif
 }
 
 //=============================================================================
@@ -2261,7 +2254,7 @@ user_data_type_signature::user_data_type_signature(
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, 
 		const concrete_type_ref* b, 
-		const data_param_list* p) :
+		const data_param_decl_list* p) :
 		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {
 	assert(def); assert(dop); assert(bdt); assert(params);
 }
@@ -2354,12 +2347,11 @@ prototype::~prototype() { }
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 template class node_list<root_item>;			// root_body
-// template class node_list<data_type_base,comma>;	// base_data_type_list
 template class node_list<concrete_type_ref,comma>;	// data_type_ref_list
 template class node_list<def_body_item>;		// definition_body
 template class node_list<instance_base,comma>;		// instance_id_list
-template 
-class node_list<instance_declaration,semicolon>;	// data_param_list
+template class node_list<data_param_id,comma>;		// data_param_id_list
+template class node_list<data_param_decl,semicolon>;	// data_param_decl_list
 template class node_list<port_formal_id,comma>;		// port_formal_id_list
 template 
 class node_list<port_formal_decl,semicolon>;		// port_formal_decl_list

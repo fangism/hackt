@@ -31,7 +31,6 @@ context::context(never_ptr<name_space> g) :
 		namespace_stack(), 
 		current_open_definition(NULL), 
 		current_prototype(NULL), 
-//		check_against_previous_definition_signature(false), 
 		current_definition_reference(NULL), 
 		current_fundamental_type(NULL), 
 		current_template_arguments(NULL), 
@@ -55,89 +54,11 @@ context::context(never_ptr<name_space> g) :
 	assert(current_namespace);	// make sure allocated properly
 	assert(global_namespace);	// same pointer
 
-	// write-able pointer to global namespace
-	never_ptr<name_space> modify_global(current_namespace);
-
-	// should built-ins be in a super namespace about the globals?
+	// Q: should built-ins be in a super namespace about the globals?
 	// some static global set?  shared among all objects?
 	// thinking of merging object hierarchies in the future for linking...
 	// want to avoid multiple definitions in the global namespace.  
-
-	// must do parameter definitions first, "int" depends on "pint"
-	// could use "some_ptr"...
-
-	// persistent pointers
-#if 0
-	never_ptr<built_in_param_def> never_pbool_pd;
-	never_ptr<built_in_param_def> never_pint_pd;
-	{
-		excl_ptr<built_in_param_def> pbool_pd(
-			new built_in_param_def(modify_global, "pbool"));
-		never_pbool_pd = pbool_pd;
-		assert(never_pbool_pd == modify_global->add_definition(
-			pbool_pd.as_a<definition_base>()));
-			// stupid explicit up-cast?
-		excl_ptr<built_in_param_def> pint_pd(
-			new built_in_param_def(modify_global, "pint"));
-		never_pint_pd = pint_pd;
-		assert(never_pint_pd == modify_global->add_definition(
-			pint_pd.as_a<definition_base>()));
-			// stupid explicit up-cast?
-	}
-
-
-	never_ptr<param_type_reference> never_pbool_pr;
-	never_ptr<param_type_reference> never_pint_pr;
-	{
-		// then add built-in param type *references*
-		excl_ptr<param_type_reference> pbool_pr(	// "pbool"
-			new param_type_reference(never_pbool_pd));
-		never_pbool_pr = pbool_pr;
-		assert(never_pbool_pr == modify_global->add_type_reference(
-			pbool_pr.as_a<fundamental_type_reference>()));
-		excl_ptr<param_type_reference> pint_pr(		// "pint"
-			new param_type_reference(never_pint_pd));
-		never_pint_pr = pint_pr;
-		assert(never_pint_pr == modify_global->add_type_reference(
-			pint_pr.as_a<fundamental_type_reference>()));
-	}
-
-	// Add to the global namespace all built-in types definitions.  
-	// Lookups of built-in type always goes to global namespace.  
-	never_ptr<built_in_datatype_def> never_bool_dd;
-	never_ptr<built_in_datatype_def> never_int_dd;
-	{
-		excl_ptr<built_in_datatype_def> bool_dd(
-			new built_in_datatype_def(modify_global, "bool"));
-		never_bool_dd = bool_dd;
-		assert(never_bool_dd == modify_global->add_definition(
-			bool_dd.as_a<definition_base>()));
-		excl_ptr<built_in_datatype_def> int_dd(
-			new built_in_datatype_def(modify_global, "int"));
-		never_int_dd = int_dd;
-
-		// we properly parameterize "int" with a width
-		int_dd->add_template_formal(
-			new param_instantiation(*modify_global, *never_pint_pr, 
-				"width", new param_const_int(32)));
-			// effectively: template <pint width=32> deftype int;
-		assert(never_int_dd == modify_global->add_definition(
-			int_dd.as_a<definition_base>()));
-	}
-
-	// add built-in data type *references*
-	// remember to hash using template arguments, if applicable
-	excl_ptr<data_type_reference> bool_dr(
-		new data_type_reference(		// "bool"
-			never_bool_dd.as_a<datatype_definition>()));
-	never_ptr<data_type_reference> never_bool_dr(bool_dr);
-	assert(never_bool_dr == modify_global->add_type_reference(
-		bool_dr.as_a<fundamental_type_reference>()));
-	// somewhere we need to check consistency between supplied
-	//	template arguments and template formals!!!
-	// recall that "int" is a template
-	// shall we temporarily de-template it?
-#endif
+	// A: built-ins have been re-implemented in "art_built_ins.*"
 
 }	// end of context constructor
 
@@ -163,7 +84,6 @@ context::~context() {
 	\return pointer to opened namespace.
 	\sa close_namespace
  */
-// name_space*
 void
 context::open_namespace(const token_identifier& id) {
 	never_ptr<name_space> insub;
@@ -184,7 +104,6 @@ context::open_namespace(const token_identifier& id) {
 		exit(1);			// temporary
 		// return NULL
 	}
-//	return insub;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,7 +127,6 @@ context::close_namespace(void) {
 /// adds a using namespace directive, adds namespace to search list
 // error possible
 void
-// const name_space*
 context::using_namespace(const qualified_id& id) {
 	never_const_ptr<name_space> ret =
 		current_namespace->add_using_directive(id);
@@ -217,13 +135,11 @@ context::using_namespace(const qualified_id& id) {
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	}
-//	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// adds a using namespace directive under a different local name
 void
-// const name_space*
 context::alias_namespace(const qualified_id& id, const string& a) {
 	never_const_ptr<name_space> ret =
 		current_namespace->add_using_alias(id, a);
@@ -232,7 +148,6 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	}
-//	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -261,28 +176,6 @@ context::add_declaration(excl_ptr<definition_base> d) {
 	}
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Declares an enumeration type in the current namespace.  
-	As long as name doesn't conflict with something else, 
-	nothing else can really go wrong.  
- */
-void
-context::declare_enum(const token_identifier& en) {
-	never_const_ptr<enum_datatype_def> e(
-		current_namespace->add_enum_declaration(en));
-	if (!e) {
-		// something went wrong
-		type_error_count++;
-		cerr << en.where() << endl;
-		exit(1);
-	}
-	// else just return
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -348,42 +241,8 @@ context::add_enum_member(const token_identifier& em) {
 void
 context::close_enum_definition(void) {
 	current_open_definition = never_ptr<definition_base>(NULL);
-//	check_against_previous_definition_signature = false;
 	indent--;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	THIS NEEDS SERIOUS RE-WORK.  
-	model after enum's...
-	Q: should a declaration "open" the process?
-	A: well we need to check prototypes upon re-declaration...
-	Registers a process prototype signature.  
-	Type-checking occurs in the check_build of the template
-	and port formals.  
-	\param pname is just the name of the process prototype.  
- */
-void
-context::declare_process(const token_identifier& pname) {
-//	check_against_previous_definition_signature = 
-//		(current_namespace->probe_process_definition(pname));
-	never_ptr<process_definition> p =
-		current_namespace->add_proc_declaration(pname);
-	if (p) {
-		assert(!current_open_definition);	// sanity check
-		current_open_definition = p;
-		indent++;
-	} else {
-		// no real reason why this should ever fail...
-		// leave current_open_definition as it is
-		type_error_count++;
-		cerr << pname.where() << endl;
-		exit(1);			// temporary
-		// return NULL
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -398,7 +257,6 @@ context::declare_process(const token_identifier& pname) {
  */
 void
 context::open_process_definition(const token_identifier& pname) {
-#if 1
 	never_ptr<process_definition>
 		pd(current_namespace->lookup_object_here_with_modify(pname)
 				.is_a<process_definition>());
@@ -419,24 +277,6 @@ context::open_process_definition(const token_identifier& pname) {
 		exit(1);			// temporary
 		// return NULL
 	}
-#else
-//	check_against_previous_definition_signature = 
-//		(current_namespace->probe_process_definition(pname));
-	never_ptr<process_definition> p =
-		current_namespace->add_proc_definition(pname);
-	if (p) {
-		assert(!current_open_definition);	// sanity check
-		current_open_definition = p;
-		indent++;
-	} else {
-		// no real reason why this should ever fail...
-		// leave current_proc_def as it is
-		type_error_count++;
-		cerr << pname.where() << endl;
-		exit(1);			// temporary
-		// return NULL
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -449,7 +289,6 @@ inline
 void
 context::close_current_definition(void) {
 	current_open_definition = never_ptr<definition_base>(NULL);
-//	check_against_previous_definition_signature = false;
 	indent--;
 }
 
@@ -517,41 +356,6 @@ context::get_current_process_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	OBSOLETE.
-	Modifies the context's current_definition_reference, 
-	using a built-in data-type definition.  
-	(Approach: don't treat int<> as a corner case of a built-in
-		template; follow a standard framework)
-	\param id the name of the type (unqualified).  
-	\return pointer to defined or declared type if unique found, 
-		else NULL of no match or ambiguous.  
- */
-never_const_ptr<datatype_definition>
-context::set_datatype_def(const token_datatype& id) {
-	// lookup type (will be built-in int or bool)
-	assert(current_namespace);
-
-	// should always lookup in global namespace for built-in token datatype
-	never_const_ptr<datatype_definition> ret = global_namespace->
-		lookup_object_here(id).is_a<built_in_datatype_def>();
-	if (!ret) {
-		type_error_count++;
-		cerr << id.where() << endl;
-		exit(1);			// temporary
-	} else {
-		assert(!current_definition_reference);	// sanity check
-		current_definition_reference = ret.as_a<definition_base>();
-			// stupid upcast
-		indent++;
-	}
-	// to do elsewhere: set template width using w
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resets the current type definition to NULL.
  */
@@ -580,34 +384,6 @@ context::reset_current_fundamental_type(void) {
 			<< endl;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	OBSOLETE.
-	Sets current parameter instantiation type.
-	Re-implement built-in-types.  
-	\param pt token for built-in parameter type, pbool or pint.  
- */
-never_const_ptr<built_in_param_def>
-context::set_param_def(const token_paramtype& pt) {
-	assert(current_namespace);
-	assert(!current_definition_reference);
-	// always just lookup in global namespace
-	never_const_ptr<built_in_param_def> ret = global_namespace->
-		lookup_object_here(pt).is_a<built_in_param_def>();
-	if (!ret) {
-		type_error_count++;
-		cerr << pt.where() << endl;
-		exit(1);			// temporary
-	} else {
-		assert(!current_definition_reference);	// sanity check
-		current_definition_reference = ret.as_a<definition_base>();
-		indent++;
-	}
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<definition_base>
@@ -781,30 +557,6 @@ never_const_ptr<instantiation_base>
 context::add_instance(const token_identifier& id) {
 	// wrapper
 	return add_instance(id, index_collection_item_ptr_type(NULL));
-#if 0
-	assert(current_fundamental_type);
-	never_ptr<scopespace> current_scope = get_current_scope();
-		// .top_static_scope();
-	assert(current_scope);
-
-#if 0
-	// REPLACE the following call to add_instance_to_scope:
-	return current_fundamental_type->add_instance_to_scope(
-		*current_scope, id);
-#else
-	never_const_ptr<instantiation_base> ret(
-		current_scope->add_instance(
-			current_fundamental_type->make_instantiation(
-				current_scope, id, 
-				index_collection_item_ptr_type(NULL))));
-	if (!ret) {
-		cerr << id.where() << endl;
-		type_error_count++;
-		exit(1);
-	}
-	return ret;
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -934,8 +686,6 @@ context::push_object_stack(count_ptr<object> o) {
 			IS_A(const range_list*, oself) ||
 			IS_A(const index_list*, oself) ||
 			IS_A(const instance_reference_base*, oself));
-//		if (!o.is_a<param_expr>())
-//			assert(o.is_a<instance_reference_base>());
 	}
 	object_stack.push(o);
 }
