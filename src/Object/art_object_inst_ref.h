@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5.2.2 2005/02/24 02:27:09 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5.2.3 2005/02/24 19:34:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -44,11 +44,11 @@ protected:
 						parent_type;
 public:
 	/// the instance collection base type
-	typedef	typename class_traits<Tag>::instance_collection_type
-						instance_collection_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+						instance_collection_generic_type;
 	/// the type of alias element contained by instance collections
-	typedef	typename class_traits<Tag>::instance_alias_type
-						instance_alias_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+						instance_alias_base_type;
 	/// the type of connections formed by the alias type
 	typedef	typename class_traits<Tag>::alias_connection_type
 						alias_connection_type;
@@ -56,7 +56,7 @@ public:
 	typedef	typename class_traits<Tag>::alias_collection_type
 						alias_collection_type;
 	/// pointer type for instance collections
-	typedef	never_ptr<const instance_collection_type>
+	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
 private:
 	const instance_collection_ptr_type	inst_collection_ref;

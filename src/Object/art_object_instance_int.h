@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.6 2005/02/22 05:05:46 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.6.2.1 2005/02/24 19:34:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -225,8 +225,8 @@ private:
 	typedef	int_instance_collection			this_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
-	typedef	int_instance_alias_base			instance_alias_type;
-	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	int_instance_alias_base			instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>		instance_ptr_type;
 	// duplicated in instance_reference, by the way...
 	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
 							alias_collection_type;

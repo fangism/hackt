@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.1.4.2 2005/02/24 02:27:10 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.1.4.3 2005/02/24 19:34:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_H__
@@ -40,11 +40,11 @@ public:
 	/// the underlying type of the member instance referenced
 	typedef	typename class_traits<Tag>::instance_reference_type
 							parent_type;
-	typedef	typename class_traits<Tag>::instance_collection_type
-						instance_collection_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+						instance_collection_generic_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 						alias_collection_type;
-	typedef	never_ptr<const instance_collection_type>
+	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
 	/// the containing type, whose member is referenced
 	typedef	instance_reference_base			base_inst_type;

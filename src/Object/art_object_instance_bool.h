@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.2 2005/02/24 18:36:37 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.3 2005/02/24 19:34:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -199,6 +199,7 @@ public:
 };	// end class bool_instance
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE || 1
 /**
 	Extends a bool_instance_alias_base with a multikey, to be used
 	in a set.  
@@ -322,6 +323,7 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class bool_instance_alias<0>
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
 /**
@@ -333,8 +335,8 @@ private:
 	typedef	bool_instance_collection		this_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
-	typedef	bool_instance_alias_base		instance_alias_type;
-	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	bool_instance_alias_base		instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>		instance_ptr_type;
 	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
 							alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.3 2005/02/24 18:36:36 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.4 2005/02/24 19:34:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -39,9 +39,10 @@ struct class_traits {
 		This is most likely a base type from which 
 		dimension-specific subclasses are derived.  
 	 */
-	typedef	void				instance_alias_type;
-	/// a non-owned, modifiable pointer reference to instance_alias_type
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
+	typedef	void				instance_alias_base_type;
+	/// a non-owned, modifiable pointer reference to instance_alias_base_type
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
 
 	/**
 		This is the base type of the instance collection, 
@@ -49,7 +50,10 @@ struct class_traits {
 		This class will be sub-typed into dimension-specific
 		arrays and a scalar instance.  
 	 */
-	typedef	void				instance_collection_type;
+	typedef	void				instance_collection_generic_type;
+	/**
+		The parent type of instance_collection_generic_type.
+	 */
 	typedef	void				instance_collection_parent_type;
 
 	/**
@@ -77,7 +81,7 @@ struct class_traits {
 		These are passed around during unroll time to
 		manipulate references and connections.  
 	 */
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_type>
 						alias_collection_type;
 
 	/**
@@ -139,16 +143,27 @@ typedef ring_node_derived<process_instance_alias_info>
 //=============================================================================
 template <>
 struct class_traits<int_tag> {
+	typedef	int_tag				tag_type;
 	typedef	int_instance			instance_type;
-	typedef	int_instance_alias_base		instance_alias_type;
-	typedef	never_ptr<instance_alias_type>
-						instance_alias_ptr_type;
-	typedef	int_instance_collection		instance_collection_type;
+	typedef	int_instance_alias_base		instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	int_instance_collection		instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	int_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	int_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -161,15 +176,27 @@ struct class_traits<int_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<bool_tag> {
+	typedef	bool_tag			tag_type;
 	typedef	bool_instance			instance_type;
-	typedef	bool_instance_alias_base	instance_alias_type;
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
-	typedef	bool_instance_collection	instance_collection_type;
+	typedef	bool_instance_alias_base	instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	bool_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	bool_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	bool_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -182,19 +209,31 @@ struct class_traits<bool_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<enum_tag> {
+	typedef	enum_tag			tag_type;
 	typedef	enum_instance			instance_type;
 
 	// temporary
-	typedef	enum_instance_alias		instance_alias_type;
-//	typedef	enum_instance_alias_base	instance_alias_type;
+	typedef	enum_instance_alias		instance_alias_base_type;
+//	typedef	enum_instance_alias_base	instance_alias_base_type;
 
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
-	typedef	enum_instance_collection	instance_collection_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	enum_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	enum_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	enum_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -207,20 +246,32 @@ struct class_traits<enum_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<datastruct_tag> {
+	typedef	datastruct_tag			tag_type;
 	typedef	struct_instance			instance_type;
 
 	// temporary
-	typedef	struct_instance_alias		instance_alias_type;
-//	typedef	struct_instance_alias_base	instance_alias_type;
+	typedef	struct_instance_alias		instance_alias_base_type;
+//	typedef	struct_instance_alias_base	instance_alias_base_type;
 
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
-	typedef	struct_instance_collection	instance_collection_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	struct_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	datastruct_instance_reference	instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	datastruct_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -234,20 +285,32 @@ struct class_traits<datastruct_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<process_tag> {
+	typedef	process_tag			tag_type;
 	typedef	process_instance		instance_type;
 
 	// temporary
-//	typedef	process_instance_alias_base	instance_alias_type;
-	typedef	proc_instance_alias		instance_alias_type;
+//	typedef	process_instance_alias_base	instance_alias_base_type;
+	typedef	proc_instance_alias		instance_alias_base_type;
 
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
-	typedef	process_instance_collection	instance_collection_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	process_instance_collection	instance_collection_generic_type;
 	typedef	instance_collection_base	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	process_instance_reference	instance_reference_type;
 	typedef	simple_instance_reference	instance_reference_parent_type;
 	typedef	process_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	process_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
@@ -261,20 +324,32 @@ struct class_traits<process_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<channel_tag> {
+	typedef	channel_tag			tag_type;
 	typedef	channel_instance		instance_type;
 
 	// temporary
-//	typedef	channel_instance_alias_base	instance_alias_type;
-	typedef	chan_instance_alias		instance_alias_type;
+//	typedef	channel_instance_alias_base	instance_alias_base_type;
+	typedef	chan_instance_alias		instance_alias_base_type;
 
-	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
-	typedef	channel_instance_collection	instance_collection_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+
+	typedef	channel_instance_collection	instance_collection_generic_type;
 	typedef	instance_collection_base	instance_collection_parent_type;
+	template <size_t D>
+	struct instance_array {
+		typedef	entity::instance_array<tag_type,D>	type;
+	};
+
 	typedef	channel_instance_reference	instance_reference_type;
 	typedef	simple_instance_reference	instance_reference_parent_type;
 	typedef	channel_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;

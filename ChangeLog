@@ -8,6 +8,11 @@
 	  based on class_traits<Tag>.  
 	  Nothing blew up, all tests still intact.
 
+	* -instance-06:
+	  Major name clean-up and substitution to reduce ambiguity
+	  and provide template-typedef-like naming interface
+	  with class_traits for dimension-specific classes.  
+
 
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 

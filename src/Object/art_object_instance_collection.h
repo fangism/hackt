@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.2 2005/02/24 18:36:37 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.3 2005/02/24 19:34:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -54,9 +54,9 @@ public:
 							type_ref_type;
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
-	typedef	typename class_traits<Tag>::instance_alias_type
-							instance_alias_type;
-	typedef	never_ptr<instance_alias_type>		instance_alias_ptr_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+							instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>		instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	typename class_traits<Tag>::instance_parameter_type
@@ -121,11 +121,11 @@ virtual	void
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
 
-virtual instance_alias_ptr_type
+virtual instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual	bool
-	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -178,17 +178,17 @@ instance_array<Tag,0>
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 class instance_array :
-	public class_traits<Tag>::instance_collection_type {
+	public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection;
 	typedef	instance_array<Tag,D>			this_type;
-	typedef	typename class_traits<Tag>::instance_collection_type
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
 public:
-	typedef	typename class_traits<Tag>::instance_alias_type
-							instance_alias_type;
-//	typedef	typename parent_type::instance_alias_ptr_type
-	typedef	typename class_traits<Tag>::instance_alias_ptr_type
-							instance_alias_ptr_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+							instance_alias_base_type;
+//	typedef	typename parent_type::instance_alias_base_ptr_type
+	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+							instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	instance_alias<Tag,D>			element_type;
@@ -228,12 +228,12 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	instance_alias_ptr_type
+	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
 	// is this used? or can it be replaced by unroll_aliases?
 	bool
-	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
 
 	bool
@@ -279,16 +279,16 @@ public:
 //-----------------------------------------------------------------------------
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 class instance_array<Tag,0> :
-		public class_traits<Tag>::instance_collection_type {
+		public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
-	typedef	typename class_traits<Tag>::instance_collection_type
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_alias_type
-							instance_alias_type;
-	typedef	typename class_traits<Tag>::instance_alias_ptr_type
-							instance_alias_ptr_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+							instance_alias_base_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+							instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	instance_alias<Tag,0>			instance_type;
@@ -315,11 +315,11 @@ public:
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
-	instance_alias_ptr_type
+	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
 	bool
-	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
 
 	bool

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.2 2005/02/24 18:36:38 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.3 2005/02/24 19:34:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -640,9 +640,9 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_ptr_type
+typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	typename INSTANCE_ARRAY_CLASS::instance_alias_ptr_type
+	typedef	typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
 							return_type;
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
@@ -676,7 +676,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		list<instance_alias_ptr_type>& l,
+		list<instance_alias_base_ptr_type>& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 //	multikey_generator<D, pvalue_type> key_gen;
@@ -689,7 +689,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 		if (it == collection.end()) {
 			cerr << "FATAL: reference to uninstantiated int index "
 				<< key_gen << endl;
-			l.push_back(instance_alias_ptr_type(NULL));
+			l.push_back(instance_alias_base_ptr_type(NULL));
 			ret = false;
 		} else {
 		const element_type& pi(*it);
@@ -700,7 +700,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 		} else {
 			cerr << "FATAL: reference to uninstantiated int index "
 				<< key_gen << endl;
-			l.push_back(instance_alias_ptr_type(NULL));
+			l.push_back(instance_alias_base_ptr_type(NULL));
 			ret = false;
 		}
 		}
@@ -772,7 +772,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_type* const next = e.get_next();
+	const instance_alias_base_type* const next = e.get_next();
 	this->next->write_next_connection(pom, os);
 }
 
@@ -932,15 +932,15 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_ptr_type
+typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
 INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_ptr_type
+	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
 						return_type;
 	if (!this->the_instance.valid()) {
 		cerr << "ERROR: Reference to uninstantiated int!" << endl;
 		return return_type(NULL);
 	} else	return return_type(
-		const_cast<instance_alias_type*>(&this->the_instance));
+		const_cast<instance_alias_base_type*>(&this->the_instance));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
 }
@@ -953,7 +953,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		list<instance_alias_ptr_type>& l,
+		list<instance_alias_base_ptr_type>& l,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;
@@ -970,8 +970,8 @@ bool
 INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
 	if (this->the_instance.valid()) {
-		*(a.begin()) = instance_alias_ptr_type(
-			const_cast<instance_alias_type*>(&this->the_instance));
+		*(a.begin()) = instance_alias_base_ptr_type(
+			const_cast<instance_alias_base_type*>(&this->the_instance));
 		return false;
 	} else {
 		cerr << "ERROR: Reference to uninstantiated int!" << endl;

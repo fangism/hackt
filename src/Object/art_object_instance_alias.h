@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.4.2 2005/02/24 18:36:37 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.4.3 2005/02/24 19:34:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -59,7 +59,7 @@ public:
 	/**
 		Container type.
 	 */
-	typedef	typename class_traits<Tag>::instance_collection_type
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
 						container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
@@ -209,11 +209,11 @@ public:
 	/**
 		Dimension-generic container type.  
 	 */
-	typedef	typename class_traits<Tag>::instance_collection_type
-						instance_collection_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+						instance_collection_generic_type;
 	/**
 		Dimension-specific container type, 
-		should be sub-type of instance_collection_type;
+		should be sub-type of instance_collection_generic_type;
 	 */
 	typedef	instance_array<Tag,D>			container_type;
 private:
@@ -238,7 +238,7 @@ public:
 	instance_alias(const key_type& k) : parent_type(k) { }
 
 	instance_alias(const key_type& k, 
-		const never_ptr<const instance_collection_type> p) :
+		const never_ptr<const instance_collection_generic_type> p) :
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
 

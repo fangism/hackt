@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.6.2.2 2005/02/24 02:26:48 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.6.2.3 2005/02/24 19:34:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -108,11 +108,11 @@ public:
 	typedef	typename class_traits<Tag>::instance_reference_type
 						instance_reference_type;
 	/// the instance collection type referenced
-	typedef	typename class_traits<Tag>::instance_collection_type
-						instance_collection_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+						instance_collection_generic_type;
 	/// the instance alias type resolved by unrolling
-	typedef	typename class_traits<Tag>::instance_alias_type
-						instance_alias_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+						instance_alias_base_type;
 
 	typedef	typename parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;
