@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.1 2005/01/18 04:22:50 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.2 2005/01/20 19:02:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -144,7 +144,7 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pint_instance_collection::initialize(const count_ptr<const pint_expr>& e) {
+pint_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {
@@ -380,12 +380,13 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<int>::const_iterator ci = key_gen.begin();
+		multikey_base<pint_value_type>::const_iterator
+			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
 		cerr << endl;
@@ -426,7 +427,7 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
@@ -454,7 +455,8 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::lookup_value(int& v, const multikey_base<int>& i) const {
+pint_array<D>::lookup_value(value_type& v, 
+		const multikey_base<pint_value_type>& i) const {
 	INVARIANT(D == i.dimensions());
 	const pint_instance& pi = collection[i];
 	if (pi.valid) {
@@ -476,9 +478,9 @@ pint_array<D>::lookup_value(int& v, const multikey_base<int>& i) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value_collection(
-		list<int>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -506,7 +508,8 @@ pint_array<D>::lookup_value_collection(
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::assign(const multikey_base<int>& k, const int i) {
+pint_array<D>::assign(const multikey_base<pint_value_type>& k,
+		const value_type i) {
 	pint_instance& pi = collection[k];
 	return !(pi = i);
 }
@@ -602,6 +605,7 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 	cerr << "WARNING: pint_array<0>::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	// calling this is probably not intended, and is an error.  
+	// DIE;
 	return const_index_list();
 }
 
@@ -611,7 +615,7 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 	\return true if lookup found a valid value.  
  */
 bool
-pint_array<0>::lookup_value(int& v) const {
+pint_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
 		return false;
@@ -627,11 +631,12 @@ pint_array<0>::lookup_value(int& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_array<0>::lookup_value_collection(
-		list<int>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	cerr << "WARNING: pint_array<0>::lookup_value_collection(...) "
 		"should never be called." << endl;
+	// DIE;
 	INVARIANT(r.empty());
-	int i;
+	value_type i;
 	const bool ret = lookup_value(i);
 	l.push_back(i);
 	return ret;
@@ -642,7 +647,8 @@ pint_array<0>::lookup_value_collection(
 	This should never be called.  
  */
 bool
-pint_array<0>::lookup_value(int& v, const multikey_base<int>& i) const {
+pint_array<0>::lookup_value(value_type& v, 
+		const multikey_base<pint_value_type>& i) const {
 	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey_base) "
 		"should never be called!" << endl;
 	DIE;
@@ -657,14 +663,15 @@ pint_array<0>::lookup_value(int& v, const multikey_base<int>& i) const {
 	\return true on error, false on success.  
  */
 bool
-pint_array<0>::assign(const int i) {
+pint_array<0>::assign(const value_type i) {
 	return !(the_instance = i);
 		// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_array<0>::assign(const multikey_base<int>& k, const int i) {
+pint_array<0>::assign(const multikey_base<pint_value_type>& k, 
+		const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pint_array<0>::assign(multikey_base, int) "
 		"should never be called!" << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.20 2005/01/14 20:55:07 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.20.4.1 2005/01/20 19:02:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -775,16 +775,16 @@ simple_instance_reference::load_instance_collection_state(istream& f) {
 	Private empty constructor.  
  */
 member_instance_reference_base::member_instance_reference_base() :
-		base(NULL) {
+		base_inst_ref(NULL) {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 member_instance_reference_base::member_instance_reference_base(
 		const count_ptr<const simple_instance_reference>& b) :
-		base(b) {
-	NEVER_NULL(base);
-	INVARIANT(!base->dimensions());	// must be scalar! (for now)
+		base_inst_ref(b) {
+	NEVER_NULL(base_inst_ref);
+	INVARIANT(!base_inst_ref->dimensions());	// must be scalar! (for now)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -795,7 +795,7 @@ member_instance_reference_base::~member_instance_reference_base() {
 void
 member_instance_reference_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	base->collect_transient_info(m);
+	base_inst_ref->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -807,7 +807,7 @@ member_instance_reference_base::collect_transient_info_base(
 void
 member_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, base);
+	m.write_pointer(o, base_inst_ref);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -819,8 +819,8 @@ member_instance_reference_base::write_object_base(
 void
 member_instance_reference_base::load_object_base(
 		persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, base);
-	NEVER_NULL(base);
+	m.read_pointer(i, base_inst_ref);
+	NEVER_NULL(base_inst_ref);
 }
 
 //=============================================================================

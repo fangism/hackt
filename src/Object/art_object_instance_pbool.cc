@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.11.4.1 2005/01/18 04:22:50 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.11.4.2 2005/01/20 19:02:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -138,7 +138,7 @@ pbool_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pbool_instance_collection::initialize(const count_ptr<const pbool_expr>& e) {
+pbool_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);		// must not already be initialized or assigned
 	if (dimensions == 0) {
@@ -361,7 +361,7 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
@@ -407,7 +407,7 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -436,7 +436,8 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
-pbool_array<D>::lookup_value(bool& v, const multikey_base<int>& i) const {
+pbool_array<D>::lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const {
 	INVARIANT(D == i.dimensions());
 	const pbool_instance& pi(collection[i]);
 	if (pi.valid) {
@@ -458,9 +459,9 @@ pbool_array<D>::lookup_value(bool& v, const multikey_base<int>& i) const {
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value_collection(
-		list<bool>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -488,9 +489,10 @@ pbool_array<D>::lookup_value_collection(
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
-pbool_array<D>::assign(const multikey_base<int>& k, const bool i) {
+pbool_array<D>::assign(const multikey_base<pint_value_type>& k,
+		const value_type i) {
 	pbool_instance& pi = collection[k];
-	return !(pi = i);
+	return !(pi = i);	// yes, assignment is intended
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -605,7 +607,7 @@ pbool_array<0>::resolve_indices(const const_index_list& l) const {
 	\return true if lookup found a valid value.
  */
 bool
-pbool_array<0>::lookup_value(bool& v) const {
+pbool_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) { 
 		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
 		return false;
@@ -621,11 +623,11 @@ pbool_array<0>::lookup_value(bool& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_array<0>::lookup_value_collection(
-		list<bool>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	cerr << "WARNING: pbool_array<0>::lookup_value_collection(...) "
 		"should never be called." << endl;
 	INVARIANT(r.empty());
-	bool i;
+	value_type i;
 	const bool ret = lookup_value(i);
 	l.push_back(i);
 	return ret;
@@ -636,7 +638,8 @@ pbool_array<0>::lookup_value_collection(
 	This should never be called.
  */
 bool
-pbool_array<0>::lookup_value(bool& v, const multikey_base<int>& i) const {
+pbool_array<0>::lookup_value(value_type& v, 
+		const multikey_base<pint_value_type>& i) const {
 	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
 		"should never be called!" << endl;
 	DIE;
@@ -651,14 +654,15 @@ pbool_array<0>::lookup_value(bool& v, const multikey_base<int>& i) const {
 	\return true on error, false on success.
  */
 bool
-pbool_array<0>::assign(const bool i) {
+pbool_array<0>::assign(const value_type i) {
 	return !(the_instance = i);
 		// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_array<0>::assign(const multikey_base<int>& k, const bool i) {
+pbool_array<0>::assign(const multikey_base<pint_value_type>& k,
+		const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
 		"should never be called!" << endl;

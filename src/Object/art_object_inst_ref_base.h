@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.5.4.1 2005/01/20 18:43:52 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.5.4.2 2005/01/20 19:02:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -156,7 +156,7 @@ private:
 		Helper class for evaluating sparse, multidimensional
 		collections.  
 	 */
-	typedef	base_multidimensional_sparse_set<int, const_range>
+	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
 						mset_base;
 protected:
 	/**
@@ -284,7 +284,7 @@ protected:
 		must have dimension-0, scalar... for now
 		Is type limiter to simple? or can it be nested member?
 	 */
-	const count_ptr<const simple_instance_reference>	base;
+	const count_ptr<const simple_instance_reference>	base_inst_ref;
 protected:
 	member_instance_reference_base();
 public:
@@ -318,7 +318,6 @@ protected:
 
 // virtualized
 //	never_ptr<param_instance_collection>		param_inst_ref;
-
 protected:
 	param_instance_reference();
 public:
