@@ -1,8 +1,17 @@
 "ChangeLog"
 
+2005-01-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-04-cleanup:
+	  Many typedef's updated, espcially those involving multikey.
+	  Now everything is consistently maintained in a few definitions
+	  in "art_object_index.h".  Other minor changes like renaming
+	  parent to parent_type.  
+
+
 2005-01-19	David Fang	<fangism@users.sourceforge.net>
 
-	* Sub-branch: ARTXX-00-01-04-object-00-04-cleanup
+	* New sub-branch: ARTXX-00-01-04-object-00-04-cleanup
 	  Needed a makeover of typedefs, for sake of consistency
 	  (e.g. long vs. int) and future ease of migration to templates.
 
