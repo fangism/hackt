@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.3 2005/02/17 00:43:13 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.4 2005/02/17 07:26:11 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -217,7 +217,7 @@ public:
 		parent_type(k, v) { }
 
 	const key_type&
-	get_key(void) const { return first; }
+	get_key(void) const { return this->first; }
 
 	value_type&
 	value(void) const { return const_cast<this_type&>(*this).second; }
@@ -247,7 +247,7 @@ public:
 	 */
 	bool
 	operator < (const this_type& p) const {
-		return first < p.first;
+		return this->first < p.first;
 	}
 
 #if 0

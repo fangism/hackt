@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.4 2005/02/17 00:10:22 fang Exp $
+	$Id: ring_node.h,v 1.1.2.5 2005/02/17 07:26:12 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -585,7 +585,7 @@ public:
 
 	reference
 	operator * () const {
-		return static_cast<node_type&>(*current_node);
+		return static_cast<node_type&>(*this->current_node);
 	}
 
 	pointer
