@@ -152,7 +152,7 @@ class det_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	det_sel_base;
 public:
-	det_selection(node* n);
+	det_selection(guarded_command* n);
 virtual	~det_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -162,9 +162,9 @@ using	det_sel_base::where;
 };
 
 #define hse_det_selection_wrap(b,l,e)					\
-	IS_A(HSE::det_selection*, l)->wrap(b,e)
+	IS_A(HSE::det_selection*, l->wrap(b,e))
 #define hse_det_selection_append(l,d,n)					\
-	IS_A(HSE::det_selection*, l)->append(d,n)
+	IS_A(HSE::det_selection*, l->append(d,n))
 
 //=============================================================================
 /// container for non-deterministic selection statement
@@ -173,7 +173,7 @@ class nondet_selection : public selection,
 private:
 	typedef	node_list<guarded_command,colon>	nondet_sel_base;
 public:
-	nondet_selection(node* n);
+	nondet_selection(guarded_command* n);
 virtual	~nondet_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -183,9 +183,9 @@ using	nondet_sel_base::where;
 };
 
 #define hse_nondet_selection_wrap(b,l,e)				\
-	IS_A(HSE::nondet_selection*, l)->wrap(b,e)
+	IS_A(HSE::nondet_selection*, l->wrap(b,e))
 #define hse_nondet_selection_append(l,d,n)				\
-	IS_A(HSE::nondet_selection*, l)->append(d,n)
+	IS_A(HSE::nondet_selection*, l->append(d,n))
 
 //=============================================================================
 /*** not available ***

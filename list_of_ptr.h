@@ -26,18 +26,20 @@ using std::list;
  */
 template <class T>
 class list_of_ptr : virtual public list<T*> {
+private:
+	typedef	list<T*>				parent;
 public:
-	typedef	typename list<T*>::iterator		iterator;
-	typedef	typename list<T*>::const_iterator	const_iterator;
-	typedef	typename list<T*>::reverse_iterator	reverse_iterator;
-	typedef	typename list<T*>::const_reverse_iterator
-							const_reverse_iterator;
+	typedef	typename parent::iterator		iterator;
+	typedef	typename parent::const_iterator		const_iterator;
+	typedef	typename parent::reverse_iterator	reverse_iterator;
+	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 protected:
-	int			own;		///< ownership flag
+	///< ownership flag for the entire array, all or none
+	bool			own;
 public:
 
 /// The default constructor just creates an empty list.  
-explicit list_of_ptr() : list<T*>(), own(1) { }
+explicit list_of_ptr() : parent(), own(true) { }
 	list_of_ptr(const list_of_ptr<T>& l);
 
 /// The destructor frees memory to non-NULL pointers in the list.  
@@ -49,10 +51,47 @@ void	clear(void);
 
 // non-essential add-on methods
 
-using	list<T*>::begin;
-using	list<T*>::end;
+using	parent::push_back;
+using	parent::begin;
+using	parent::end;
 
-};
+};	// end of class list_of_ptr
+
+//=============================================================================
+/// A list of read-only pointers, based on std::list.  
+
+/**
+	The members of this class are pointers to objects of class T, 
+	as the name suggests.  The pointers should be exclusive, i.e., 
+	whereas other copies of the same pointer may read or write
+	the object, only this list has responsibility for de-allocating
+	the objects' memory.  This is generally useful for bottom-up 
+	constructed objects such as syntax trees.  
+ */
+template <class T>
+class list_of_const_ptr : virtual public list<const T*> {
+private:
+	typedef	list<const T*>				parent;
+public:
+	typedef	typename parent::iterator		iterator;
+	typedef	typename parent::const_iterator		const_iterator;
+	typedef	typename parent::reverse_iterator	reverse_iterator;
+	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
+public:
+
+/// The default constructor just creates an empty list.  
+explicit list_of_const_ptr() : parent() { }
+	list_of_const_ptr(const list<T*>& l);
+	list_of_const_ptr(const parent& l);
+
+virtual	~list_of_const_ptr();
+
+using	parent::push_back;
+using	parent::begin;
+using	parent::end;
+};	// end of class list_of_const_ptr
+
+//=============================================================================
 
 #endif	// __LIST_OF_PTR_H__
 

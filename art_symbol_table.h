@@ -79,34 +79,73 @@ protected:
 		OBSOLETE: A pointer to the current namespace scope.
 		Do not delete.  
 	 */
-//	name_space*		current_ns;
-#define current_ns		ns_stack.top()
+//	name_space*		current_namespace;
+#define current_namespace	ns_stack.top()
 
 	/**
-		Pointer to current data type, useful in list declarations.  
-		Do not delete.  
+		Pointer to current channel type, 
+		which is being declared or defined.  Do not delete.  
 		No stack needed, as definitions may not be nested.  
 	 */
-	const type_definition*	current_dt;
+	user_def_chan*		current_chan_def;
+	/**
+		Flag that indicates whether the current channel definition
+		in this context is new (first-encounter) or is a repeat, 
+		in which case, the current prototype's formals
+		should be type-matched one-for-one against the previous
+		declaration.  
+	 */
+	bool			check_against_prev_chan;
 
 	/**
-		Reference to the current open process definition.
+		Pointer to current data type, 
+		which is being declared or defined.  Do not delete.  
+		No stack needed, as definitions may not be nested.  
+	 */
+	user_def_type*		current_type_def;
+	/**
+		Flag that indicates whether the current data type definition
+		in this context is new (first-encounter) or is a repeat, 
+		in which case, the current prototype's formals
+		should be type-matched one-for-one against the previous
+		declaration.  
+	 */
+	bool			check_against_prev_type;
+
+	/**
+		Reference to the current process, which is being declared
+		or defined.
 		Do not delete.
 	 */
 	process_definition*	current_proc_def;
+	/**
+		Flag that indicates whether the current process definition
+		in this context is new (first-encounter) or is a repeat, 
+		in which case, the current prototype's formals
+		should be type-matched one-for-one against the previous
+		declaration.  
+	 */
+	bool			check_against_prev_process;
 
 	/**
-		Reference to the current open data type definition.  
-		Do not delete.
+		Reference to the current process type being instantiated.  
 	 */
-
-	user_def_type*		current_type_def;
+	const process_definition*	inst_proc_def;
 
 	/**
-		Reference to the current open channel definition.
-		Do not delete.
+		Reference to the current data type being instantiated.  
 	 */
-	user_def_chan*		current_chan_def;
+	const type_definition*	inst_type_def;
+
+	/**
+		Reference to the current channel begin instantiated.  
+//	const chan_definition*	inst_chan_def;
+	**/
+
+	// need current_blah_inst for array/dimension/range additions
+
+	// to be used in conjunction with inst_type_def
+	// current_template_params;
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -122,15 +161,37 @@ void	using_namespace(const id_expr& id);
 void	alias_namespace(const id_expr& id, const string& a);
 const name_space*	top_namespace(void) const;
 
+void	declare_process(const token_identifier& ps);
+void	open_process(const token_identifier& ps);
+// used for process and definitions
+void	close_process();
+
+void	declare_datatype(const token_identifier& ds);
+void	open_datatype(const token_identifier& ds);
+void	close_datatype();
+
+void	declare_chantype(const token_identifier& ds);
+void	open_chantype(const token_identifier& ds);
+void	close_chantype();
+
+// sets context's definition for instantiation
 const type_definition*	set_type_def(const id_expr& tid);
 const type_definition*	set_type_def(const token_string& tid);
 	// for keyword: int or bool
-type_definition*	set_type_def(const token_string& tid, const expr& w);
 	// for int<width>, for now only accept token_int... later expressions
+const type_definition*	set_type_def(const token_type& tid, const token_int& w);
 void	unset_type_def(void);
+
+void	set_template_params(void);
+void	unset_template_params(void);
 
 type_instantiation*	add_type_instance(const token_identifier& id);
 	// make another version overloaded for arrays
+
+const type_instantiation*	add_template_formal(const token_identifier& id);
+
+
+// repeat for processes and channels...
 
 string		auto_indent(void) const;
 

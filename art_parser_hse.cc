@@ -207,7 +207,7 @@ selection::what(ostream& o) const {
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
-det_selection::det_selection(node* n) : selection(),
+det_selection::det_selection(guarded_command* n) : selection(),
 		node_list<guarded_command,thickbar>(n) {
 }
 
@@ -233,7 +233,7 @@ det_selection::rightmost(void) const {
 // class nondet_selection method definitions
 
 CONSTRUCTOR_INLINE
-nondet_selection::nondet_selection(node* n) : selection(),
+nondet_selection::nondet_selection(guarded_command* n) : selection(),
 		node_list<guarded_command,colon>(n) {
 }
 

@@ -124,7 +124,29 @@ type_id::leftmost(void) const {
 
 line_position
 type_id::rightmost(void) const {
-	return temp_spec->rightmost();
+	if (temp_spec)
+		return temp_spec->rightmost();
+	else return base->rightmost();
+}
+
+const object*
+type_id::check_build(context* c) const {
+	const object* o;
+	o = c->set_type_def(*base);		// will handle errors
+	if (temp_spec)
+		o = temp_spec->check_build(c);
+	return o;
+}
+
+const id_expr&
+type_id::get_base_type(void) const {
+	assert(base);
+	return *base;
+}
+
+const expr_list*
+type_id::get_template_spec(void) const {
+	return temp_spec;
 }
 
 //=============================================================================
@@ -133,7 +155,7 @@ type_id::rightmost(void) const {
 CONSTRUCTOR_INLINE
 data_type_base::data_type_base(node* t, node* l, node* w, node* r) :
 		type_base(),
-		type(IS_A(token_keyword*, t)),
+		type(IS_A(token_type*, t)),
 		la(IS_A(token_char*, l)),
 		width(IS_A(token_int*, w)),
 		ra(IS_A(token_char*, r)) {
@@ -171,14 +193,16 @@ data_type_base::rightmost(void) const {
 	else            return type->rightmost();
 }
 
+/**
+	Type checks a single data type.  
+	Remember to unset_type_def after the list is done.  
+ */
 const object*
 data_type_base::check_build(context* c) const {
-// where do we report the error? in c?
-/**
+	assert(type);
 	if (width)
 		return c->set_type_def(*type, *width);
 	else
-**/
 		return c->set_type_def(*type);
 }
 
@@ -237,6 +261,22 @@ user_data_type_prototype::rightmost(void) const {
 	else		return params->rightmost();
 }
 
+const object*
+user_data_type_prototype::check_build(context* c) const {
+#if 0
+	const object* o;
+	c->declare_datatype(*this);	// really only need name
+	o = bdt->check_build(c);
+	assert(o);
+	o = params->check_build(c);
+	assert(o);
+	c->close_datatype();
+#else
+	cerr << "TO DO: user_data_type_prototype::check_build();" << endl;
+#endif
+	return c->top_namespace();
+}
+
 //=============================================================================
 // class user_data_type_def method definitions
 
@@ -274,6 +314,22 @@ user_data_type_def::rightmost(void) const {
 	else            return getb->rightmost();
 }
 
+/*** unveil later...
+const object*
+user_data_type_def::check_build(context* c) const {
+	const object* o;
+	c->open_datatype(*this);	// really only need name
+	o = bdt->check_build(c);
+	assert(o);
+	o = params->check_build(c);
+	assert(o);
+//	setb->check_build(c);
+//	getb->check_build(c);
+	c->close_datatype();
+	return c->top_namespace();
+}
+***/
+
 //=============================================================================
 // class chan_type method definitions
 
@@ -304,7 +360,11 @@ chan_type::leftmost(void) const {
 
 line_position
 chan_type::rightmost(void) const {
-	return dtypes->rightmost();
+	if (dtypes)
+		return dtypes->rightmost();
+	else if (dir)
+		return dir->rightmost();
+	else return chan->rightmost();
 }
 
 //=============================================================================
@@ -1064,6 +1124,20 @@ template_formal_id::rightmost(void) const {
 	else return name->rightmost();
 }
 
+const object*
+template_formal_id::check_build(context* c) const {
+	const object* o;
+	const type_instantiation* t;
+	// type should already be set in the context
+	t = c->add_template_formal(*name);
+	if (dim) {
+		// attach array dimensions to current instantiation
+		o = dim->check_build(c);
+		assert(o);
+	}
+	return t;
+}
+
 //=============================================================================
 // class template_formal_decl method definitions
 
@@ -1093,6 +1167,19 @@ template_formal_decl::leftmost(void) const {
 line_position
 template_formal_decl::rightmost(void) const {
 	return ids->rightmost();
+}
+
+/**
+	Type-checks a list of template formals with the same type.  
+ */
+const object*
+template_formal_decl::check_build(context* c) const {
+	const object* o;
+	o = type->check_build(c);
+	assert(o);
+	ids->check_build(c);	// node_list::check_build: ignore return value
+	c->unset_type_def();	// don't forget to unset!
+	return o;
 }
 
 //=============================================================================
@@ -1127,6 +1214,32 @@ def_type_id::rightmost(void) const {
 	else return name->rightmost();
 }
 
+const token_identifier&
+def_type_id::get_name(void) const {
+	assert(name);
+	return *name;
+}
+
+const template_formal_decl_list*
+def_type_id::get_template_formals(void) const {
+	return temp_spec;
+}
+
+const object*
+def_type_id::check_build(context* c) const {
+	const object* o;
+//	const type_definition* t;
+	assert(name);
+// don't check name again, should already be checked by process_proto, etc...
+//	t = c->set_type_def(*name);
+//	assert(t);
+	if (temp_spec) {
+		o = temp_spec->check_build(c);
+		assert(o);
+	}
+	return NULL;
+}
+
 //=============================================================================
 // class definition method definitions
 
@@ -1143,6 +1256,7 @@ definition::~definition() {
 
 CONSTRUCTOR_INLINE
 process_signature::process_signature(node* d, node* i, node* p) :
+		node(), 
 		def(IS_A(token_keyword*, d)),
 		idt(IS_A(def_type_id*, i)),
 		ports(IS_A(port_formal_decl_list*, p)) {
@@ -1152,6 +1266,21 @@ process_signature::process_signature(node* d, node* i, node* p) :
 DESTRUCTOR_INLINE
 process_signature::~process_signature() {
 	SAFEDELETE(def); SAFEDELETE(idt); SAFEDELETE(ports);
+}
+
+const token_identifier&
+process_signature::get_name(void) const {
+	return idt->get_name();
+}
+
+const template_formal_decl_list*
+process_signature::get_template_formals(void) const {
+	return idt->get_template_formals();
+}
+
+const port_formal_decl_list*
+process_signature::get_port_formals(void) const {
+	return ports;
 }
 
 //=============================================================================
@@ -1185,6 +1314,20 @@ process_prototype::rightmost(void) const {
 	return semi->rightmost();
 }
 
+const object*
+process_prototype::check_build(context* c) const {
+	const object* o;
+	DEBUG(TRACE_CHECK_BUILD, 
+		idt->what(cerr << c->auto_indent() << "process prototype: "))
+	c->declare_process(get_name());		// will handle errors
+	o = idt->check_build(c);		// always returns NULL
+	o = ports->check_build(c);		// ignore return value
+	c->unset_type_def();			// unset port type
+	c->close_process();
+	// nothing better to do
+	return c->top_namespace();
+}
+
 //=============================================================================
 // class process_def method definitions
 
@@ -1215,6 +1358,25 @@ line_position
 process_def::rightmost(void) const {
 	return body->rightmost();
 }
+
+/*** unveil later...
+const object*
+process_def::check_build(context* c) const {
+	const object* o;
+	DEBUG(TRACE_CHECK_BUILD, 
+		idt->what(cerr << c->auto_indent() << "process prototype: "))
+	c->open_process(get_name());		// will handle errors
+	o = idt->check_build(c);
+	assert(o);
+	o = ports->check_build(c);
+	assert(o);
+	o = body->check_build(c);
+	assert(o);
+	c->close_process();
+	// nothing better to do
+	return c->top_namespace();
+}
+***/
 
 
 //=============================================================================

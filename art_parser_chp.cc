@@ -163,6 +163,13 @@ wait::rightmost(void) const {
 //=============================================================================
 // class assignment method definitions
 
+/**
+	This constructor upgrades a regular parser::assign_stmt into
+	a CHP-class assignment statement.  
+	The constructor releases the members of the assign_stmt
+	and re-wraps them.  
+	\param a the constructed assign_stmt.
+ */
 CONSTRUCTOR_INLINE
 assignment::assignment(base_assign* a) : ART::parser::CHP::statement(),
 	// destructive transfer of ownership
@@ -238,6 +245,33 @@ communication::leftmost(void) const {
 }
 
 //=============================================================================
+// class comm_list method definitions
+
+CONSTRUCTOR_INLINE
+comm_list::comm_list(communication* c) : statement(), comm_list_base(c) {
+}
+
+DESTRUCTOR_INLINE
+comm_list::~comm_list() {
+}
+
+ostream&
+comm_list::what(ostream& o) const {
+	return o << "(comm-list)";
+}
+
+line_position
+comm_list::leftmost(void) const {
+	return comm_list_base::leftmost();
+}
+
+line_position
+comm_list::rightmost(void) const {
+	return comm_list_base::rightmost();
+}
+
+
+//=============================================================================
 // class send method definitions
 
 CONSTRUCTOR_INLINE
@@ -293,7 +327,7 @@ selection::what(ostream& o) const {
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
-det_selection::det_selection(node* n) : selection(),
+det_selection::det_selection(guarded_command* n) : selection(),
 		node_list<guarded_command,thickbar>(n) {
 }
 
@@ -319,7 +353,7 @@ det_selection::rightmost(void) const {
 // class nondet_selection method definitions
 
 CONSTRUCTOR_INLINE
-nondet_selection::nondet_selection(node* n) : selection(),
+nondet_selection::nondet_selection(guarded_command* n) : selection(),
 		node_list<guarded_command,colon>(n) {
 }
 
@@ -345,7 +379,7 @@ nondet_selection::rightmost(void) const {
 // class prob_selection method definitions
 
 CONSTRUCTOR_INLINE
-prob_selection::prob_selection(node* n) : selection(),
+prob_selection::prob_selection(guarded_command* n) : selection(),
 		node_list<guarded_command,thickbar>(n) {
 }
 
@@ -462,7 +496,7 @@ template class node_list<statement,semicolon>;		// CHP::stmt_list
 template class node_list<guarded_command,thickbar>;	// CHP::det_sel_base
 							// CHP::prob_sel_base
 template class node_list<guarded_command,colon>;	// CHP::nondet_sel_base
-template class node_list<communication,comma>;		// CHP::comm_list
+template class node_list<communication,comma>;		// CHP::comm_list_base
 
 //=============================================================================
 };	// end namespace CHP

@@ -17,6 +17,11 @@
 #define	CONSTRUCTOR_INLINE		
 #define	DESTRUCTOR_INLINE		
 
+//=============================================================================
+// debug flags
+#define	DEBUG_ID_EXPR	0
+
+//=============================================================================
 namespace ART {
 namespace parser {
 
@@ -67,14 +72,27 @@ paren_expr::rightmost(void) const {
 // class id_expr method definitions
 
 CONSTRUCTOR_INLINE
-id_expr::id_expr(node* n) : id_expr_base(n), expr(), absolute(NULL) { }
+id_expr::id_expr(token_identifier* n) : 
+	id_expr_base(n), expr(), absolute(NULL) {
+}
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
-id_expr::id_expr(const id_expr& i) : id_expr_base(i) { }
+id_expr::id_expr(const id_expr& i) : id_expr_base(i), expr(), absolute(NULL) {
+#if DEBUG_ID_EXPR
+	cerr << "id_expr::id_expr(const id_expr&);" << endl;
+#endif
+	if (i.absolute) {
+		absolute = new token_string(*i.absolute);
+		// actually *copy* the token
+		assert(absolute);
+	}
+}
 
 DESTRUCTOR_INLINE
-id_expr::~id_expr() { }
+id_expr::~id_expr() {
+	SAFEDELETE(absolute);
+}
 
 /**
 	Call this function in the parser to mark an un/qualified identifier
@@ -84,8 +102,9 @@ id_expr::~id_expr() { }
 	\return pointer to this object
  */
 id_expr*
-id_expr::force_absolute(node* s) {
-	absolute = IS_A(token_string*, s);
+id_expr::force_absolute(token_string* s) {
+//	absolute = IS_A(token_string*, s);
+	absolute = s;
 	assert(absolute);
 	return this;
 }
@@ -96,7 +115,7 @@ id_expr::what(ostream& o) const {
 }
 
 id_expr*
-id_expr::append(node* d, node* n) {
+id_expr::append(terminal* d, token_identifier* n) {
 	return IS_A(id_expr*, id_expr_base::append(d,n));
 }
 
@@ -110,19 +129,38 @@ id_expr::rightmost(void) const {
 	return id_expr_base::rightmost();
 }
 
-// friend operator (not a method)
+id_expr
+id_expr::copy_namespace_portion(void) const {
+	id_expr ret(*this);		// copy, not-owned
+	if (!ret.empty())
+		ret.pop_back();		// remove last element
+	if (!ret.delim.empty())
+		ret.delim.pop_back();
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// non-member functions
+
+// friend operator
 ostream& operator << (ostream& o, const id_expr& id) {
-	id_expr::const_iterator i = id.begin();
-	token_identifier* tid = IS_A(token_identifier*, *i);
-	assert(tid);
-	o << *tid;
-	for (i++ ; i!=id.end(); i++) {
-		i++;		// skip scope operator token
-		tid = IS_A(token_identifier*, *i);
+//	o << "(size = " << id.size() << ", empty = " << id.empty() << ")";
+	if (id.empty()) {
+		return o << "<null id_expr>";
+	} else {
+		id_expr::const_iterator i = id.begin();
+		if (id.is_absolute())
+			o << scope;
+		token_identifier* tid = *i;
 		assert(tid);
-		o << scope << *tid;
+		o << *tid;
+		for (i++ ; i!=id.end(); i++) {
+			tid = *i;
+			assert(tid);
+			o << scope << *tid;
+		}
+		return o;
 	}
-	return o;
 }
 
 //=============================================================================

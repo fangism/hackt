@@ -167,10 +167,16 @@ extern const char* const yyrule[];
 	token_type*		_token_type;
 
 	root_body*		_root_body;
+	root_item*		_root_item;
 	namespace_body*		_namespace_body;
 	using_namespace*	_using_namespace;
+	ART::parser::definition*	_definition;
+	def_body_item*		_def_body_item;
+	language_body*		_language_body;
+	prototype*		_prototype;
 	process_prototype*	_process_prototype;
 	process_def*		_process_def;
+	type_base*		_type_base;
 	def_type_id*		_def_type_id;
 	type_id*		_type_id;
 	port_formal_decl_list*	_port_formal_decl_list;
@@ -189,15 +195,18 @@ extern const char* const yyrule[];
 	user_chan_type_prototype*	_user_chan_type_prototype;
 	user_chan_type_def*	_user_chan_type_def;
 	data_param_list*	_data_param_list;
+	instance_base*		_instance_base;
 	instance_declaration*	_instance_declaration;
 	declaration_id_list*	_declaration_id_list;
 	declaration_base*	_declaration_base;
 	declaration_array*	_declaration_array;
 	definition_body*	_definition_body;
 	loop_instantiation*	_loop_instantiation;
+	conditional_instantiation*	_conditional_instantiation;
 	guarded_definition_body_list*	_guarded_definition_body_list;
 	guarded_definition_body*	_guarded_definition_body;
 	actuals_connection*	_actuals_connection;
+	statement*		_statement;
 	alias_assign*		_alias_assign;
 
 	expr*			_expr;
@@ -220,29 +229,37 @@ extern const char* const yyrule[];
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
+	CHP::statement*		_chp_stmt;
 	CHP::skip*		_chp_skip;
 	CHP::log*		_chp_log;
 	CHP::loop*		_chp_loop;
 	CHP::do_until*		_chp_do_until;
 	CHP::wait*		_chp_wait;
+	CHP::selection*		_chp_selection;
 	CHP::nondet_selection*	_chp_nondet_selection;
 	CHP::det_selection*	_chp_det_selection;
 	CHP::guarded_command*	_chp_guarded_command;
 	CHP::else_clause*	_chp_else_clause;
 	CHP::comm_list*		_chp_comm_list;
+	CHP::communication*	_chp_communication;
 	CHP::send*		_chp_send;
 	CHP::receive*		_chp_receive;
+	CHP::assignment*	_chp_assignment;
+	CHP::incdec_stmt*	_chp_incdec_stmt;
 
 	HSE::body*		_hse_body;
+	HSE::statement*		_hse_stmt;
 	HSE::stmt_list*		_hse_stmt_list;
 	HSE::skip*		_hse_skip;
 	HSE::loop*		_hse_loop;
 	HSE::do_until*		_hse_do_until;
 	HSE::wait*		_hse_wait;
+	HSE::selection*		_hse_selection;
 	HSE::nondet_selection*	_hse_nondet_selection;
 	HSE::det_selection*	_hse_det_selection;
 	HSE::guarded_command*	_hse_guarded_command;
 	HSE::else_clause*	_hse_else_clause;
+	HSE::assignment*	_hse_assignment;
 
 	PRS::body*		_prs_body;
 	PRS::rule_list*		_prs_rule_list;
@@ -328,47 +345,82 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_type>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
 
 /* non-terminals */
-%type	<n>	module top_root body body_item basic_item namespace_management
-%type	<n>	definition defproc def_type_id
+%type	<n>	module top_root body 
+%type	<_root_item>	body_item
+%type	<_root_item>	basic_item
+%type	<_root_item>	namespace_management
+%type	<_definition>	definition
+%type	<_process_def>	defproc
+%type	<_def_type_id>	def_type_id
 %type	<_token_keyword>	def_or_proc
-%type	<n>	declaration declare_proc_proto
-%type	<n>	declare_type_proto declare_chan_proto
-%type	<n>	optional_template_formal_decl_list_in_angles
-%type	<n>	template_formal_decl_list template_formal_decl
-%type	<n>	template_formal_id_list template_formal_id
-%type	<n>	optional_port_formal_decl_list_in_parens port_formal_decl_list
-%type	<n>	port_formal_decl port_formal_id_list port_formal_id
-%type	<n>	type_id base_template_type
+%type	<_prototype>	declaration
+%type	<_process_prototype>	declare_proc_proto
+%type	<_user_data_type_prototype>	declare_type_proto
+%type	<_user_chan_type_prototype>	declare_chan_proto
+%type	<_template_formal_decl_list>	optional_template_formal_decl_list_in_angles template_formal_decl_list
+%type	<_template_formal_decl>	template_formal_decl
+%type	<_template_formal_id_list>	template_formal_id_list
+%type	<_template_formal_id>	template_formal_id
+%type	<_port_formal_decl_list>	optional_port_formal_decl_list_in_parens port_formal_decl_list
+%type	<_port_formal_decl>	port_formal_decl
+%type	<_port_formal_id_list>	port_formal_id_list
+%type	<_port_formal_id>	port_formal_id
+%type	<_type_base>	type_id
+%type	<_data_type_base>	base_template_type
 /* %type	<n>	formal_id */
-%type	<n>	base_chan_type chan_or_port
-%type	<n>	base_data_type_list_in_parens
-%type	<n>	base_data_type_list base_data_type
-%type	<n>	deftype defchan
-%type	<n>	set_body get_body send_body recv_body
-%type	<n>	data_param_list data_param data_param_list_in_parens
-%type	<n>	data_param_id_list data_param_id
-%type	<n>	definition_body
-%type	<n>	instance_item instance_declaration 
-%type	<n>	loop_instantiation conditional_instantiation
-%type	<n>	declaration_id_list declaration_id_item
-%type	<n>	instance_connection instance_alias connection_actuals_list
-%type	<n>	guarded_definition_body_list guarded_definition_body
-%type	<n>	language_body
-%type	<n>	chp_body full_chp_body_item_list full_chp_body_item
-%type	<n>	chp_body_item chp_loop chp_do_until chp_selection chp_wait
-%type	<n>	chp_nondet_guarded_command_list
-%type	<n>	chp_unmatched_det_guarded_command_list
-%type	<n>	chp_matched_det_guarded_command_list
-%type	<n>	chp_guarded_command chp_else_clause chp_assignment
-%type	<n>	chp_comm_list chp_comm_action chp_send chp_recv
-%type	<n>	hse_body full_hse_body_item_list full_hse_body_item
-%type	<n>	hse_body_item hse_loop hse_do_until hse_selection hse_wait
-%type	<n>	hse_guarded_command hse_else_clause
-%type	<n>	hse_nondet_guarded_command_list
-%type	<n>	hse_matched_det_guarded_command_list
-%type	<n>	hse_unmatched_det_guarded_command_list
-%type	<n>	hse_assignment
-%type	<n>	prs_body single_prs
+%type	<_chan_type>	base_chan_type chan_or_port
+%type	<_base_data_type_list>	base_data_type_list_in_parens base_data_type_list
+%type	<_data_type_base>	base_data_type
+%type	<_user_data_type_def>	deftype
+%type	<_user_chan_type_def>	defchan
+%type	<_chp_body>	set_body get_body send_body recv_body
+%type	<_data_param_list>	data_param_list data_param_list_in_parens
+%type	<_instance_declaration>	data_param
+%type	<_declaration_id_list>	data_param_id_list
+%type	<_declaration_base>	data_param_id
+%type	<_definition_body>	definition_body
+%type	<_instance_base>	instance_item
+%type	<_instance_declaration>	instance_declaration 
+%type	<_loop_instantiation>	loop_instantiation
+%type	<_conditional_instantiation>	conditional_instantiation
+%type	<_declaration_id_list>	declaration_id_list
+%type	<_declaration_base>	declaration_id_item
+%type	<_actuals_connection>	instance_connection
+%type	<_alias_assign>	instance_alias
+%type	<_expr_list>	connection_actuals_list
+%type	<_guarded_definition_body_list>	guarded_definition_body_list
+%type	<_guarded_definition_body>	guarded_definition_body
+%type	<_language_body>	language_body
+%type	<_chp_stmt_list>	chp_body full_chp_body_item_list
+%type	<_chp_stmt>	full_chp_body_item chp_body_item
+%type	<_chp_loop>	chp_loop
+%type	<_chp_do_until>	chp_do_until
+%type	<_chp_selection>	chp_selection
+%type	<_chp_wait>	chp_wait
+%type	<_chp_nondet_selection>	chp_nondet_guarded_command_list
+%type	<_chp_det_selection>	chp_unmatched_det_guarded_command_list
+%type	<_chp_det_selection>	chp_matched_det_guarded_command_list
+%type	<_chp_guarded_command>	chp_guarded_command
+%type	<_chp_else_clause>	chp_else_clause
+/* %type	<_chp_assignment>	chp_assignment */
+%type	<_chp_comm_list>	chp_comm_list
+%type	<_chp_communication>	chp_comm_action
+%type	<_chp_send>	chp_send
+%type	<_chp_receive>	chp_recv
+%type	<_hse_stmt_list>	hse_body full_hse_body_item_list
+%type	<_hse_stmt>	full_hse_body_item hse_body_item
+%type	<_hse_loop>	hse_loop
+%type	<_hse_do_until>	hse_do_until
+%type	<_hse_selection>	hse_selection
+%type	<_hse_wait>	hse_wait
+%type	<_hse_guarded_command>	hse_guarded_command
+%type	<_hse_else_clause>	hse_else_clause
+%type	<_hse_nondet_selection>	hse_nondet_guarded_command_list
+%type	<_hse_det_selection>	hse_matched_det_guarded_command_list
+%type	<_hse_det_selection>	hse_unmatched_det_guarded_command_list
+%type	<_hse_assignment>	hse_assignment
+%type	<_prs_rule_list>	prs_body
+%type	<_prs_rule>	single_prs
 %type	<_expr>	prs_expr
 %type	<_token_string>	prs_arrow
 %type	<_token_char>	dir
@@ -383,11 +435,13 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_expr>	relational_equality_expr and_expr
 %type	<_expr>	exclusive_or_expr inclusive_or_expr
 %type	<_expr>	logical_and_expr logical_or_expr
-%type	<n>	assignment_stmt binary_assignment unary_assignment
+/* %type	<_statement>	assignment_stmt */
+%type	<_assign_stmt>	binary_assignment
+%type	<_incdec_stmt>	unary_assignment
 /* %type	<n>	conditional_expr optional_expr_in_braces */
-%type	<n>	optional_member_index_expr_list_in_angles
-%type	<n>	member_index_expr_list_in_angles
-%type	<n>	member_index_expr_list_in_parens
+%type	<_expr_list>	optional_member_index_expr_list_in_angles
+%type	<_expr_list>	member_index_expr_list_in_angles
+%type	<_expr_list>	member_index_expr_list_in_parens
 %type	<_expr_list>	expr_list_in_parens expr_list
 %type	<_range_list>	optional_range_list_in_brackets range_list_in_brackets
 %type	<_range_list>	range_list
@@ -420,17 +474,17 @@ body
 	;
 
 body_item
-	: basic_item
-	| definition
-	| declaration
+	: basic_item { $$ = $1; }
+	| definition { $$ = $1; }
+	| declaration { $$ = $1; }
 	;
 
 basic_item
 /* namespace_management already includes semicolon where needed */
 /* proposed change: forbid nested namespacs, only allow in root_item */
-	: namespace_management
+	: namespace_management { $$ = $1; }
 /* instance_item already includes semicolon where needed */
-	| instance_item
+	| instance_item { $$ = $1; }
 	;
 
 namespace_management
@@ -447,16 +501,16 @@ namespace_management
 
 /* Process, datatype, and channel definition. */
 definition
-	: defproc 
-	| deftype
-	| defchan
+	: defproc { $$ = $1; }
+	| deftype { $$ = $1; }
+	| defchan { $$ = $1; }
 	;
 
 /* declaration prototypes, like forward declarations */
 declaration
-	: declare_proc_proto
-	| declare_type_proto
-	| declare_chan_proto
+	: declare_proc_proto { $$ = $1; }
+	| declare_type_proto { $$ = $1; }
+	| declare_chan_proto { $$ = $1; }
 	;
 
 /******************************************************************************
@@ -565,8 +619,8 @@ type_id
 	: id_expr optional_member_index_expr_list_in_angles
 		/* for userdef or chan type, and templating */
 		{ $$ = new type_id($1, $2); }
-	| base_chan_type
-	| base_data_type
+	| base_chan_type { $$ = $1; }
+	| base_data_type { $$ = $1; }
 	;
 
 /******************************************************************************
@@ -734,11 +788,11 @@ definition_body
 */
 
 instance_item
-	: instance_declaration			/* single or array */
-	| instance_connection			/* connection of ports */
-	| instance_alias			/* aliasing connection */
-	| loop_instantiation
-	| conditional_instantiation
+	: instance_declaration { $$ = $1; }	/* single or array */
+	| instance_connection { $$ = $1; }	/* connection of ports */
+	| instance_alias { $$ = $1; }		/* aliasing connection */
+	| loop_instantiation { $$ = $1; }
+	| conditional_instantiation { $$ = $1; }
 	;
 
 loop_instantiation
@@ -837,7 +891,7 @@ language_body
 /* --- Language: CHP --- */
 
 chp_body
-	: full_chp_body_item_list
+	: full_chp_body_item_list { $$ = $1; }
 	;
 
 full_chp_body_item_list
@@ -863,12 +917,14 @@ full_chp_body_item
 	;
 
 chp_body_item
-	: chp_loop
-	| chp_do_until
-	| chp_selection
-	| chp_wait
-	| chp_assignment
-	| chp_comm_list
+	: chp_loop { $$ = $1; }
+	| chp_do_until { $$ = $1; }
+	| chp_selection { $$ = $1; }
+	| chp_wait { $$ = $1; }
+/*	| chp_assignment { $$ = $1; }	-- expanded */
+	| binary_assignment { $$ = new CHP::assignment($1); }
+	| unary_assignment { $$ = new CHP::incdec_stmt($1); }
+	| chp_comm_list { $$ = $1; }
 	| SKIP { $$ = new CHP::skip($1); }
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
@@ -912,7 +968,8 @@ chp_nondet_guarded_command_list
 		{ $$ = chp_nondet_selection_append($1, $2, $3); }
 	| chp_guarded_command ':' chp_guarded_command
 	/* can't have else clause in non-deterministic selection? */
-		{ $$ = (new CHP::nondet_selection($1))->append($2, $3); }
+		{ $$ = IS_A(CHP::nondet_selection*,
+			(new CHP::nondet_selection($1))->append($2, $3)); }
 	;
 
 chp_matched_det_guarded_command_list
@@ -941,11 +998,13 @@ chp_else_clause
 /*
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
-*/
 chp_assignment
-/* allow binary and unary assignments */
-	: assignment_stmt
+// allow binary and unary assignments
+// constructors re-wrap with transfer of ownership
+	: binary_assignment { $$ = new CHP::assignment($1); }
+	| unary_assignment { $$ = new CHP::bool_assign($1); }
 	;
+*/
 
 chp_comm_list
 	/* gives comma-separated communications precedence */
@@ -956,8 +1015,8 @@ chp_comm_list
 	;
 
 chp_comm_action
-	: chp_send 
-	| chp_recv
+	: chp_send { $$ = $1; }
+	| chp_recv { $$ = $1; }
 	;
 
 chp_send
@@ -978,7 +1037,7 @@ chp_recv
 /* --- Language: HSE --- */
 
 hse_body
-	: full_hse_body_item_list
+	: full_hse_body_item_list { $$ = $1; }
 	;
 
 full_hse_body_item_list
@@ -999,11 +1058,11 @@ full_hse_body_item
 
 hse_body_item
 	/* returns an HSE::statement */
-	: hse_loop
-	| hse_do_until
-	| hse_wait
-	| hse_selection
-	| hse_assignment
+	: hse_loop { $$ = $1; }
+	| hse_do_until { $$ = $1; }
+	| hse_wait { $$ = $1; }
+	| hse_selection { $$ = $1; }
+	| hse_assignment { $$ = $1; }
 	| SKIP { $$ = new HSE::skip($1); }
 	;
 
@@ -1044,7 +1103,8 @@ hse_nondet_guarded_command_list
 	: hse_nondet_guarded_command_list ':' hse_guarded_command
 		{ $$ = hse_nondet_selection_append($1, $2, $3); }
 	| hse_guarded_command ':' hse_guarded_command
-		{ $$ = (new HSE::nondet_selection($1))->append($2, $3); }
+		{ $$ = IS_A(HSE::nondet_selection*, 
+			(new HSE::nondet_selection($1))->append($2, $3)); }
 	;
 
 hse_matched_det_guarded_command_list
@@ -1145,7 +1205,7 @@ id_expr
 
 absolute_id
 	: SCOPE relative_id
-		{ $$ = IS_A(id_expr*, $2)->force_absolute($1); }
+		{ $$ = ($2)->force_absolute($1); }
 	;
 
 relative_id
@@ -1277,10 +1337,12 @@ conditional_expr
 	;
 **/
 
+/**
 assignment_stmt
-	: binary_assignment
-	| unary_assignment
+	: binary_assignment { $$ = $1; }
+	| unary_assignment { $$ = $1; }
 	;
+**/
 
 binary_assignment
 /*

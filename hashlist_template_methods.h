@@ -68,7 +68,8 @@ hashlist<K,T>::operator [] (const K& k) const {
 /// Standard default constructor, sets ownership flag to true.
 template <class K, class T>
 hashlist_of_ptr<K,T>::hashlist_of_ptr<K,T>() : 
-	list_of_ptr<T>(), hashlist<K,T*>() { }
+	list_of_ptr<T>(), hashlist<K,T*>() {
+}
 
 
 //-----------------------------------------------------------------------------
@@ -77,7 +78,27 @@ hashlist_of_ptr<K,T>::hashlist_of_ptr<K,T>() :
 	will be properly invoked.  Defined here to prevent inlining.  
  */
 template <class K, class T>
-hashlist_of_ptr<K,T>::~hashlist_of_ptr<K,T>() { }
+hashlist_of_ptr<K,T>::~hashlist_of_ptr<K,T>() {
+}
+
+//=============================================================================
+// class methods for hashlist_of_const_ptr<K,T>
+
+/// Standard default constructor.
+template <class K, class T>
+hashlist_of_const_ptr<K,T>::hashlist_of_const_ptr<K,T>() : 
+	list_of_const_ptr<T>(), hashlist<K, const T*>() {
+}
+
+
+//-----------------------------------------------------------------------------
+/**
+	Default destructor.  Since it is virtual, its parents' destructors
+	will be properly invoked.  Defined here to prevent inlining.  
+ */
+template <class K, class T>
+hashlist_of_const_ptr<K,T>::~hashlist_of_const_ptr<K,T>() {
+}
 
 //=============================================================================
 

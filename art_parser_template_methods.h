@@ -38,6 +38,11 @@
 // As a reminder, non-template methods should be defined in the .cc file.
 
 //=============================================================================
+// debug flags
+#define	DEBUG_NODE_LIST		0
+#define	DEBUG_NODE_LIST_BASE	1 && DEBUG_NODE_LIST
+
+//=============================================================================
 namespace ART {
 namespace parser {
 
@@ -46,30 +51,40 @@ namespace parser {
 //=============================================================================
 // for class node_list_base<>
 
-/// base constructor, initialized with one element
+/// empty constructor
 NODE_LIST_BASE_TEMPLATE_SPEC
-node_list_base<T>::node_list_base() : node(), list_of_ptr<node>() {
+node_list_base<T>::node_list_base() : node(), list_parent() {
 }
 
+/// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
-node_list_base<T>::node_list_base(node* n) : node_list_base() {
+node_list_base<T>::node_list_base(T* n) : node_list_base() {
+/***
+	// not needed, now that type is matched and checked
 	if(n && !IS_A(T*, n)) {
 		// throw type exception
 		n->what(cerr << "unexpected type: ") << endl;
 		exit(1);
 	}
+***/
 	push_back(n);
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::~node_list_base() {
+// is virtual, will invoke list_of_ptr<> destructor
 }
 
 //-----------------------------------------------------------------------------
 /// copy constructor, no transfer of ownership
 NODE_LIST_BASE_TEMPLATE_SPEC
-node_list_base<T>::node_list_base(const list_grandparent& l) : 
+node_list_base<T>::node_list_base(const node_list_base<T>& l) : 
 		list_parent(l) {
+#if DEBUG_NODE_LIST_BASE
+	cerr << "node_list_base<T>::node_list_base(const node_list_base<T>&);" << endl;
+	cerr << "\targument's size() = " << l.size() << endl;
+	cerr << "\tthis size() = " << this->size() << endl; 
+#endif
 }
 
 //=============================================================================
@@ -77,25 +92,39 @@ node_list_base<T>::node_list_base(const list_grandparent& l) :
 
 /// default empty constructor
 NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>::node_list() : parent(), open(NULL), close(NULL) {
+node_list<T,D>::node_list() : parent(), open(NULL), close(NULL), delim() {
 }
 
 /// constructor initialized with first element
 NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>::node_list(node* n) :
-		node_list_base<T>(), open(NULL), close(NULL) {
+node_list<T,D>::node_list(T* n) :
+		node_list_base<T>(), open(NULL), close(NULL), delim() {
+/***
+	// not needed, now that type is matched and checked
 	if(n && !IS_A(T*, n)) {
 		// throw type exception
 		n->what(cerr << "unexpected type: ") << endl;
 		exit(1);
 	}
+***/
 	push_back(n);
 }
 
 //-----------------------------------------------------------------------------
+/**
+	List copy constructor.  Uses the parent's copy constructor, 
+	which does NOT transfer ownership of the pointer elements.  
+	Does not copy the open and close delimiters, which aren't applicable.  
+ */
 NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>::node_list(const parent& l) : 
-		parent(l), open(NULL), close(NULL) {
+node_list<T,D>::node_list(const node_list<T,D>& l) : 
+		node_list_base<T>(l), open(NULL), close(NULL), delim(l.delim) {
+	// delim list will also copy without transfer of ownership
+#if DEBUG_NODE_LIST
+	cerr << "node_list<T,D>::node_list(const node_list<T,D>&);" << endl;
+	cerr << "\targument's size() = " << l.size() << endl;
+	cerr << "\tthis size() = " << this->size() << endl; 
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -107,13 +136,13 @@ node_list<T,D>::~node_list() {
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
-node_list<T,D>::wrap(node* b, node* e) {
-	open = IS_A(terminal*, b);
-	assert(open);
+node_list<T,D>::wrap(terminal* b, terminal* e) {
+//	open = IS_A(terminal*, b);	assert(open);
+	open = b;
 	assert(IS_A(token_char*, open) ||
 		IS_A(token_string*, open));
-	close = IS_A(terminal*, e);
-	assert(close);
+//	close = IS_A(terminal*, e);	assert(close);
+	close = e;
 	assert(IS_A(token_char*, close) ||
 		IS_A(token_string*, close));
 	return this;
@@ -122,19 +151,20 @@ node_list<T,D>::wrap(node* b, node* e) {
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
-node_list<T,D>::append(node* d, node* n) {
+node_list<T,D>::append(terminal* d, T* n) {
 	if (d) {
 		// check for delimiter character match
-		terminal* t = IS_A(terminal*, d);
-		assert(t);		// throw exception
-		// will fail if incorrect type is passed
-		assert(!(t->string_compare(D)));
-		push_back(d);
+		// will fail if incorrect token is passed
+		assert(!(d->string_compare(D)));
+		// now use separate list for delimiters
+		delim.push_back(d);
 	} else {
+		// consider using template specialization for this
+		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-	assert(IS_A(T*, n));	// type-check
-	push_back(n);			// n may be null
+//	assert(IS_A(T*, n));		// type-check, now redundant
+	push_back(n);			// n may be null, is ok
 	return this;
 }
 
@@ -150,37 +180,66 @@ node_list<T,D>::what(ostream& o) const {
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Returns position of left-most token in list, 
+	and even checks delimiter token list in parallel if necessary.  
+	\return the position of left-most token in list.  
+ */
 NODE_LIST_TEMPLATE_SPEC
 line_position
 node_list<T,D>::leftmost(void) const {
 	const_iterator i = begin();
+	delim_list::const_iterator j = delim.begin();
 	if (open)
 		return open->leftmost();
 	for( ; i!=end(); i++) {
 		if (*i) return (*i)->leftmost();
+		else if (j != delim.end()) {
+			if (*j) return (*j)->leftmost();
+			else j++;
+		}
 	}
 	return line_position();			// hopefully won't happen
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Returns position of right-most token in list, 
+	and even checks delimiter token list in parallel if necessary.  
+	\return the position of right-most token in list.  
+ */
 NODE_LIST_TEMPLATE_SPEC
 line_position
 node_list<T,D>::rightmost(void) const {
 	const_reverse_iterator i = rbegin();
+	delim_list::const_reverse_iterator j = delim.rbegin();
 	if (close)
 		return close->rightmost();
 	for( ; i!=rend(); i++) {
 		if (*i) return (*i)->rightmost();
+		else if (j != delim.rend()) {
+			if (*j) return (*j)->rightmost();
+			else j++;
+		}
 	}
 	return line_position();			// hopefully won't happen
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Sequentially type-checks and builds list of elements in order.  
+	No longer need to skip every other delimiter token because
+	delimiters are now in separate list.  
+	\return useless pointer, which only reflects the error status of the
+		last object in the list, and thus should be disregarded.  
+		The context object collects the necessary error information.  
+ */
 NODE_LIST_TEMPLATE_SPEC
 const object*
 node_list<T,D>::check_build(context* c) const {
 	const object* ret = NULL;
 	const_iterator i = begin();
+	for( ; i!=end(); i++) {
 	if (*i) {
 		DEBUG(TRACE_CHECK_BUILD, 
 			(*i)->what(cerr << c->auto_indent() << "checking a "))
@@ -188,22 +247,12 @@ node_list<T,D>::check_build(context* c) const {
 		ret = (*i)->check_build(c);
 		// context will be updated if there is an error
 	}
-	for(i++; i!=end(); i++) {
-		// remember to skip every other token if there was one!
-		if (D != none)
-			i++;
-		if (*i) {
-			DEBUG(TRACE_CHECK_BUILD, 
-				(*i)->what(cerr << c->auto_indent() << "checking a "))
-			// check returned value for failure
-			ret = (*i)->check_build(c);
-			// context will be updated if there is an error
-		}
+	// What if null argument needs to be checked, say, against a list?
+	// especially for optional argument placeholders, need the following:
+	// c->null_check_build();
+	// Alternatively, use template specialization to fix special cases.  
+	// port connectivity checking is a key example...
 	}
-	// a generally useless return value, as it only reflects the 
-	// return status of the last object in the list
-	// thus, should disregard this
-	// and use context object for error information
 	return ret;
 }
 

@@ -11,6 +11,8 @@
 #include "art_object.h"
 #include "art_symbol_table.h"
 using namespace ART;
+using namespace ART::entity;
+using namespace ART::parser;
 #include "art_switches.h"
 #include "y.tab.h"
 

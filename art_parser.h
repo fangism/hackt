@@ -108,7 +108,6 @@ virtual	line_position rightmost(void) const;
 #define	NODE_LIST_BASE_TEMPLATE_SPEC					\
 	template <class T>
 
-typedef	list_of_ptr<node>	node_list_base_parent;
 /**
 	This is the general class for list structures of nodes in the
 	syntax tree.  What is unique about this implementation is that
@@ -118,18 +117,18 @@ typedef	list_of_ptr<node>	node_list_base_parent;
 	type-checking.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
-class node_list_base : virtual public node, public node_list_base_parent {
+class node_list_base : virtual public node, public list_of_ptr<T> {
 private:
-	typedef		list<node*>			list_grandparent;
-	typedef		list_of_ptr<node>		list_parent;
+	typedef		list<T*>			list_grandparent;
+	typedef		list_of_ptr<T>			list_parent;
 public:
 	typedef		list_parent::iterator		iterator;
 	typedef		list_parent::const_iterator	const_iterator;
 public:
 	node_list_base();
-	node_list_base(const list_grandparent& l);
+	node_list_base(const node_list_base<T>& l);
 // initializing with first element, T must be subclass of node!
-	node_list_base(node* n);
+	node_list_base(T* n);
 
 virtual	~node_list_base();
 
@@ -164,14 +163,26 @@ public:
 	typedef	typename parent::const_iterator	const_iterator;
 	typedef	typename parent::reverse_iterator	reverse_iterator;
 	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
-
+	typedef	list_of_ptr<terminal>	delim_list;
 protected:
 	terminal*	open;		///< wrapping string, such as "("
 	terminal*	close;		///< wrapping string, such as ")"
+	/**
+		We now keep the delimiter tokens in a separate list
+		so they no longer collide with the useful elements.
+		Alternative is to just keep a list of file positions, 
+		since the D template parameter tells us what the delimiter 
+		token is already.  
+		If we really care about saving memory, can just delete
+		the delimiter tokens as they are passed in.  
+		If we really care about performance, just don't produce
+		allocated tokens and ignore the arguments.  
+	 */
+	delim_list	delim;
 public:
 	node_list();
-	node_list(const parent& l);
-	node_list(node* n);
+	node_list(const node_list<T,D>& l);
+	node_list(T* n);
 virtual	~node_list();
 
 using	parent::begin;
@@ -179,16 +190,23 @@ using	parent::end;
 
 /**
 	This attaches enclosing text, such as brackets, braces, parentheses, 
-	around a node_list.  The arguments are type-checked as token_strings.  
+	around a node_list.  The arguments are type-checked as token_strings
+	or token_chars.  
+	\param b the beginning token such as open-parenthesis.  
+	\param e the end token such as open-parenthesis.  
+	\return this.
  */
-virtual	node_list<T,D>* wrap(node* b, node* e);		// not inlined
+virtual	node_list<T,D>* wrap(terminal* b, terminal* e);
 
 /**
 	Adds an element to a node list, along with the delimiting
 	character token.  Also checks that delimiter matchs, and
 	that type of argument matches.
+	\param d the delimiter token, such as a comma, must match D.
+	\param n the useful node.  
+	\return this.
  */
-virtual	node_list<T,D>* append(node* d, node* n);
+virtual	node_list<T,D>* append(terminal* d, T* n);
 
 // the following methods are defined in "art_parser_template_methods.h"
 
@@ -199,6 +217,9 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
 virtual	const object* check_build(context* c) const;
+
+// trimmed-out delimiters
+// virtual	list<const T*> element_list_only(void) const;
 };	// end of class node_list<>
 
 //=============================================================================
@@ -377,6 +398,8 @@ class id_expr : public id_expr_base, public expr {
 public:
 	typedef	id_expr_base::iterator		iterator;
 	typedef	id_expr_base::const_iterator	const_iterator;
+	typedef	id_expr_base::reverse_iterator	reverse_iterator;
+	typedef	id_expr_base::const_reverse_iterator	const_reverse_iterator;
 protected:
 	/**
 		Indicates whether identifier is absolute, meaning
@@ -386,24 +409,28 @@ protected:
 	 */
 	token_string*			absolute;
 public:
-explicit id_expr(node* n);
+explicit id_expr(token_identifier* n);
 	id_expr(const id_expr& i);
 virtual	~id_expr();
-
-/// Tags this id_expr as absolute, to be resolved from the global scope.  
-id_expr*	force_absolute(node* s);
-int		is_absolute(void) const { return absolute == NULL; }
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
 // overshadow parent's
-virtual	id_expr* append(node* d, node* n);
+virtual	id_expr* append(terminal* d, token_identifier* n);
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
 // virtual	const object* check_build(context* c) const;
+
+/// Tags this id_expr as absolute, to be resolved from the global scope.  
+id_expr*	force_absolute(token_string* s);
+bool		is_absolute(void) const { return absolute != NULL; }
+
+// want a method for splitting off the last id, isolating namespace portion
+id_expr		copy_namespace_portion(void) const;
+		// remember to delete this after done using!
 
 friend	ostream& operator << (ostream& o, const id_expr& id);
 };
@@ -627,6 +654,7 @@ virtual	~token_type();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -636,7 +664,7 @@ protected:
 /**
 	Base type's name.  Can only be an id_expr.  
  */
-	id_expr*		base;
+	id_expr*		base;		///< base type identifier
 	expr_list*		temp_spec;	///< template arguments
 public:
 	type_id(node* b, node* t);
@@ -645,15 +673,24 @@ virtual	~type_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
+
+	const id_expr& get_base_type(void) const;
+	const expr_list* get_template_spec(void) const;
 };
 
 //-----------------------------------------------------------------------------
-/// base type for data, such as int...
+/**
+	Base type for data, such as int, and bool, not to be confused with 
+	pbool and pint.  
+	Currently, the width member only accepts constant integers, 
+	but may eventually allow pints as well.  
+ */
 class data_type_base : public type_base {
 protected:
-	token_keyword*		type;		// generalize to structs?
-	token_char*		la;		// optional angle bracket
-	token_int*		width;		// integer width (optional)
+	token_type*		type;		// generalize to structs?
+	token_char*		la;		///< optional angle bracket
+	token_int*		width;		///< integer width (optional)
 	token_char*		ra;
 public:
 	data_type_base(node* t, node* l, node* w, node* r);
@@ -721,12 +758,12 @@ public:
 	incdec_stmt(node* n, node* o);
 virtual	~incdec_stmt();
 
-virtual	expr* release_expr(void);
-virtual	terminal* release_op(void);
-
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+
+virtual	expr* release_expr(void);
+virtual	terminal* release_op(void);
 };
 
 //-----------------------------------------------------------------------------
@@ -740,13 +777,13 @@ public:
 	assign_stmt(node* left, node* o, node* right);
 virtual	~assign_stmt();
 
-virtual	expr* release_lhs(void);
-virtual	terminal* release_op(void);
-virtual	expr* release_rhs(void);
-
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+
+virtual	expr* release_lhs(void);
+virtual	terminal* release_op(void);
+virtual	expr* release_rhs(void);
 };
 
 //=============================================================================
@@ -1040,6 +1077,7 @@ virtual	~template_formal_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 /// list of template-formal identifiers (optional arrays)
@@ -1063,6 +1101,7 @@ virtual	~template_formal_decl();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 /// list of template-formal declarations
@@ -1087,6 +1126,10 @@ virtual	~def_type_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
+
+	const token_identifier& get_name(void) const;
+	const template_formal_decl_list* get_template_formals(void) const;
 };
 
 //=============================================================================
@@ -1121,15 +1164,20 @@ virtual	~prototype();
 	This class need not be a node or root_item because it's never 
 	constructed on the symbol stack.  
  */
-class process_signature {		// not a node or root_item!
+class process_signature : virtual public node {
 protected:
 	token_keyword*			def;	///< definition keyword
 	def_type_id*			idt;	///< identifier [template]
+		// should never be NULL, could be const reference?
 	port_formal_decl_list*		ports;	///< optional port formal list
 public:
 	process_signature(node* d, node* i, node* p);
 virtual	~process_signature();
 
+// note: non-virtual
+	const token_identifier& get_name(void) const;
+	const template_formal_decl_list* get_template_formals(void) const;
+	const port_formal_decl_list* get_port_formals(void) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -1144,6 +1192,7 @@ virtual	~process_prototype();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -1230,6 +1279,7 @@ virtual	~user_data_type_prototype();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------

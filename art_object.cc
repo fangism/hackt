@@ -4,6 +4,7 @@
 #include "art_parser_debug.h"
 #include "art_parser.h"
 #include "map_of_ptr_template_methods.h"
+#include "hash_map_of_ptr_template_methods.h"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -11,8 +12,7 @@
 // hash<string>.  
 
 #include "hash_specializations.h"		// substitute for the following
-
-// #include "hashlist_template_methods.h"
+#include "hashlist_template_methods.h"
 	// includes "list_of_ptr_template_methods.h"
 #include "art_object.h"
 
@@ -61,6 +61,18 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+// non-member function prototypes
+
+static bool temp_formal_set_equals(
+	const process_definition::temp_formal_set& ts,       
+	const template_formal_decl_list* tl);
+
+static bool port_formal_set_equals(
+	const process_definition::port_formal_set& ps,             
+	const port_formal_decl_list* pl);        
+
+
+//=============================================================================
 // class scopespace methods
 scopespace::scopespace(const string& n, const scopespace* p) : 
 		object(), parent(p), key(n), 
@@ -84,29 +96,30 @@ scopespace::~scopespace() {
 	\param id the hash key.  
 	\return const pointer to object indexed by hash key, otherwise NULL 
 		if object there doesn't already exist.  
- */
 inline
 const object*
 scopespace::
 what_is(const string& id) {		// const?
 	return used_id_map[id];
 }
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	OBSOLETE.  
 	This lookup function returns a reference to some object that belongs to 
 	this scope, be it a namespace, process, definition, or instantiation.
 	Useful for assignments.  
 	\param id the hash key.  
 	\return pointer to object indexed by hash key, otherwise NULL 
 		if object there doesn't already exist.  
- */
 inline
 const object*&
 scopespace::
 assign_id(const string& id) {
 	return used_id_map[id];
 }
+**/
 
 //=============================================================================
 // class name_space methods
@@ -158,6 +171,16 @@ name_space::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Returns pointer to global namespace by following parent pointers.
+const name_space*
+name_space::get_global_namespace(void) const {
+	if (parent)
+		return parent->get_global_namespace();
+	else	// no parent
+		return this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 name_space::what(ostream& o) const {
 	return o << "entity::namespace";
@@ -181,23 +204,23 @@ name_space::what(ostream& o) const {
 name_space*
 name_space::add_open_namespace(const string& n) {
 	name_space* ret;
-	const object* probe = what_is(n);
+	const object* probe = used_id_map[n];
 	if (probe) {
 		const name_space* probe_ns = IS_A(const name_space*, probe);
 		// an alias may return with valid pointer!
 		if (!probe_ns) {
-			probe->what(cerr << " ... already taken as a ")
+			probe->what(cerr << n << " is already declared as a ")
 				<< ", ERROR! ";
 			return NULL;
 		} else if (open_aliases[n]) {
 		// we have a valid namespace pointer, 
 		// now we see if this is an alias, or true sub-namespace
-			cerr << " ... already an open alias, ERROR! ";
+			cerr << n << " is already declared an open alias, ERROR! ";
 			return NULL;
 		} else {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
 			DEBUG(TRACE_NAMESPACE_NEW, 
-				cerr << " ... already exists as subspace, re-opening")
+				cerr << n << " is already exists as subspace, re-opening")
 			assert(probe_ns == subns[n]);
 			ret = subns[n];		// return modifiable pointer
 			// we can return this
@@ -214,7 +237,7 @@ name_space::add_open_namespace(const string& n) {
 		ret = new name_space(n, this);
 		assert(ret);
 		subns[n] = ret;		// store it in map of sub-namespaces
-		assign_id(n) = ret;	// register it as a used id
+		used_id_map[n] = ret;	// register it as a used id
 	}
 
 	// silly sanity checks
@@ -280,13 +303,14 @@ name_space::add_using_directive(const id_expr& n) {
 	// else we've narrowed it down to one
 		case 1: ret = (*i); open_spaces.push_back(ret); break;
 		case 0:	{
-			cerr << " ... not found, ERROR! ";
+			cerr << "namespace " << n << " not found, ERROR! ";
+			// or n is not a namespace
 			ret = NULL;
 			break;	// no matches
 			}
 		default: {	// > 1
 			ret = NULL;
-			cerr << " ERROR: ambiguous import of namespaces, " << 
+			cerr << " ERROR: ambiguous import of namespaces, "
 				"need to be more specific.  candidates are: ";
 				for ( ; i!=candidates.end(); i++)
 					cerr << endl << "\t" << 
@@ -329,22 +353,22 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 		cerr << endl << "adding using-alias in space: " 
 			<< get_qualified_name() << " as " << a)
 
-	probe = what_is(a);
+	probe = used_id_map[a];
 	if (probe) {
 		// then already, it conflicts with some other id
 		// we report the conflict precisely as follows:
 		ret = IS_A(const name_space*, probe);
 		if (ret) {
 			if(subns[a]) {
-				cerr << " ... already a sub-namespace, ERROR! ";
+				cerr << a << " is already a sub-namespace, ERROR! ";
 			} else if(open_aliases[a]) {
-				cerr << " ... already an open alias, ERROR! ";
+				cerr << a << " is already an open alias, ERROR! ";
 			} else {
 				// cannot possibly be anything else!
-				cerr << "WTF!!???";
+				cerr << a << "WTF!!???";
 			}
 		} else {
-			probe->what(cerr << " ... already declared ")
+			probe->what(cerr << a << " is already declared ") 
 				<< ", ERROR! ";
 		}
 		return NULL;
@@ -362,7 +386,7 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 		case 1: {
 			ret = (*i);
 			open_aliases[a] = ret;
-			assign_id(a) = ret;
+			used_id_map[a] = ret;
 			break;
 			}
 		case 0:	{
@@ -372,7 +396,7 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 			}
 		default: {	// > 1
 			ret = NULL;
-			cerr << " ERROR: ambiguous import of namespaces, " << 
+			cerr << " ERROR: ambiguous import of namespaces, "
 				"need to be more specific.  candidates are: ";
 				for ( ; i!=candidates.end(); i++)
 					cerr << endl << "\t" << 
@@ -389,6 +413,9 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	(at most one precise match)
 	This will serach both true subnamespaces and aliased subspaces.  
 	This variation includes the invoking namespace in the pattern match.  
+	Now honors the absolute flag of the id_expr to start search
+	from global namespace.  
+	TO DO: re-use quey_subnamespace_match
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
@@ -400,18 +427,22 @@ name_space::query_namespace_match(const id_expr& id) const {
 		cerr << "query_namespace_match: " << id 
 			<< " in " << get_qualified_name() << endl)
 
+	if (id.empty())	{	// what if it's absolute and empty?
+		return (id.is_absolute()) ? get_global_namespace() : this;
+	}
 	id_expr::const_iterator i = id.begin();	assert(*i);
-	const token_identifier* tid = IS_A(const token_identifier*, *i);
+	const token_identifier* tid = *i;
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-	const name_space* ns = this;
+	const name_space* ns = (id.is_absolute()) ? this
+		: get_global_namespace();
 	if (ns->key.compare(*tid)) {
 		// if names differ, already failed, try alias spaces
 		return NULL;
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
 			const name_space* next;
-			i++;	// remember to skip scope tokens
+			// no need to skip scope tokens anymore
 			tid = IS_A(token_identifier*, *i); assert(tid);
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
@@ -419,16 +450,7 @@ name_space::query_namespace_match(const id_expr& id) const {
 			next = ns->subns[*tid];
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-
-//			ns = (next) ? next : ns->open_aliases[*tid];
-			if (next) {
-				ns = next;
-			} else {
-				alias_map_type::const_iterator i = 
-					ns->open_aliases.find(*tid);
-				ns = (i != open_aliases.end()) ?
-					i->second : NULL;
-			}
+			ns = (next) ? next : ns->open_aliases[*tid];
 		}
 
 	// for loop terminates when ns is NULL or i is at the end
@@ -458,34 +480,27 @@ name_space::query_subnamespace_match(const id_expr& id) const {
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << endl << "query_subnamespace_match: " << id 
 			<< " in " << get_qualified_name() << endl)
-	id_expr::const_iterator i = id.begin();	assert(*i);
-	token_identifier* tid = IS_A(token_identifier*, *i);
+	if (id.empty())	{	// what if it's absolute and empty?
+		return (id.is_absolute()) ? get_global_namespace() : this;
+	}
+	id_expr::const_iterator i = id.begin();	// id may be empty!
+	const token_identifier* tid = *i;
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-	const name_space* ns = subns[*tid];	// lookup map of sub-namespaces
+	const name_space* ns = 
+		((id.is_absolute()) ? get_global_namespace() : this)
+		->subns[*tid];	// lookup map of sub-namespaces
 	if (!ns) {				// else lookup in aliases
-//		ns = open_aliases[*tid];	// replaced for const semantics
-		alias_map_type::const_iterator i = open_aliases.find(*tid);
-		ns = (i != open_aliases.end()) ? i->second : NULL;
+		ns = open_aliases[*tid];	// replaced for const semantics
 	}
 	// remember to skip scope tokens
 	for (i++; ns && i!=id.end(); i++) {
 		const name_space* next;
-		i++;
 		tid = IS_A(token_identifier*, *i); assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = ns->subns[*tid];
 		// if not found in subspaces, check aliases list
-
-//		ns = (next) ? next : ns->open_aliases[*tid];
-		if (next) {
-			ns = next;
-		} else {
-			alias_map_type::const_iterator i = 
-				ns->open_aliases.find(*tid);
-			ns = (i != open_aliases.end()) ?
-				i->second : NULL;
-		}
+		ns = (next) ? next : ns->open_aliases[*tid];
 	}
 	// for loop terminates when ns is NULL or i is at the end
 	// if i is not at the end, then we didn't find a matched namespace
@@ -534,6 +549,8 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) const {
 	// same query.  
 #if 1
 	if (m.empty() && parent)
+#else
+	if (parent)
 #endif
 		parent->query_import_namespace_match(m, id);
 }
@@ -573,6 +590,8 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) const {
 	// until list is not empty, keep querying parents
 #if 1
 	if (m.empty() && parent)
+#else
+	if (parent)
 #endif
 		parent->query_type_def_match(m, tid);
 }
@@ -618,13 +637,13 @@ if (parent) {
 } else {
 	assert(d);
 	string k = d->get_name();
-	const object* probe = what_is(k);
+	const object* probe = used_id_map[k];
 	assert(!probe);
 	// else "ERROR: identifier already taken, failed to add built-in type!";
 
 	// type_defs owns this type is reponsible for deleting it
 	type_defs[k] = d;
-	assign_id(k) = d;
+	used_id_map[k] = d;
 	return d;
 }
 }
@@ -642,10 +661,10 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 	cerr << endl << "adding type-alias in space: " 
 		<< get_qualified_name() << " as " << a;
 
-	probe = what_is(a);
+	probe = used_id_map[a];
 	if (probe) {
 		// then already, it conflicts with some other id
-		probe->what(cerr << " ... already declared ")
+		probe->what(cerr << a << " is already declared ")
 			<< ", ERROR! ";
 		return NULL;
 	}
@@ -662,7 +681,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 		case 1: {
 			ret = (*i);
 			type_defs[a] = ret;
-			assign_id(a) = ret;
+			used_id_map[a] = ret;
 			break;
 			}
 		case 0:	{
@@ -672,7 +691,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 			}
 		default: {	// > 1
 			ret = NULL;
-			cerr << " ERROR: ambiguous type alias, " << 
+			cerr << " ERROR: ambiguous type alias, "
 				"need to be more specific.  candidates are: ";
 				for ( ; i!=candidates.end(); i++)
 					cerr << endl << "\t" << 
@@ -688,22 +707,23 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Public interface to lookup a single type_definition.  
-	This version take a single identifier string.  
+	This version takes a single identifier string (unqualified).  
 	Will need to make sure that template params of matched type is null.  
-	\param id the unqualified name of the type
+	\param id the unqualified name of the type.  
 	\return pointer to matched type_definition, only if it unique, 
-		otherwise returns NULL
+		otherwise returns NULL.  
 	\sa query_type_def_match
+	\sa lookup_qualified_type
  */
 
-// const?
 const type_definition*
-name_space::lookup_unique_type(const string& id) const {
+name_space::lookup_unqualified_type(const string& id) const {
 	// const
 	const type_definition* ret;
 	type_def_list::iterator i;
 	type_def_list candidates;
 
+	// only want to query if type was unqualified
 	query_type_def_match(candidates, id);
 
 	i = candidates.begin();
@@ -713,13 +733,13 @@ name_space::lookup_unique_type(const string& id) const {
 			break;
 			}
 		case 0:	{
-			cerr << " ... not found, ERROR! ";
+			cerr << "type " << id << " ... not found, ERROR! ";
 			ret = NULL;
 			break;	// no matches
 			}
 		default: {	// > 1
 			ret = NULL;
-			cerr << " ERROR: ambiguous type definition, " << 
+			cerr << " ERROR: ambiguous type definition, "
 				"need to be more specific.  candidates are: ";
 				for ( ; i!=candidates.end(); i++)
 					cerr << endl << "\t" << 
@@ -727,6 +747,38 @@ name_space::lookup_unique_type(const string& id) const {
 			}
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public interface to lookup a single type_definition.  
+	This version takes a qualified expression.  
+	Will need to make sure that template params of matched type is null.  
+	\param id the qualified name of the type.  
+	\return pointer to matched type_definition, only if it unique, 
+		otherwise returns NULL.  
+	\sa query_type_def_match
+ */
+const type_definition*
+name_space::lookup_qualified_type(const id_expr& id) const {
+	id_expr nsname = id.copy_namespace_portion();
+//	cerr << "nsname = " << " " << nsname << endl;
+	// what if nsname is empty? start search here
+	const name_space* root = 
+		((id.is_absolute()) ? get_global_namespace() : this)
+		->query_subnamespace_match(nsname);
+	if (root) {
+		const type_definition* ret;
+		id_expr::const_reverse_iterator e = id.rbegin();
+		assert(*e);
+		ret = root->type_defs[**e];
+		if (!ret)
+			cerr << "type " << id << " ... not found, ERROR! ";
+		return ret;
+	} else {
+		cerr << " ERROR: namespace " << nsname << " not found!";
+		return NULL;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -744,9 +796,9 @@ name_space::add_type_instantiation(const type_definition& t,
 		const string& id) {
 	const object* probe;
 	type_instantiation* new_inst;
-	probe = what_is(id);
+	probe = used_id_map[id];
 	if (probe) {
-		probe->what(cerr << " ... already declared ")
+		probe->what(cerr << id << " is already declared ")
 			<< ", ERROR! ";
 		return NULL;
 	}
@@ -756,8 +808,121 @@ name_space::add_type_instantiation(const type_definition& t,
 	new_inst = new type_instantiation(this, &t, id);
 	assert(new_inst);
 	type_insts[id] = new_inst;
-	assign_id(id) = new_inst;
+	used_id_map[id] = new_inst;
 	return new_inst;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks to see whether process definition or prototype already 
+	exists.  
+	\param s the name of the process in this namespace.  
+	\return valid pointer to process_definition if found, 
+		else NULL if not found.  
+ */
+const process_definition*
+name_space::probe_process(const string& s) const {
+	const object* probe = used_id_map[s];
+	if (probe) {
+		const process_definition* probe_pd = 
+			IS_A(const process_definition*, probe);
+		if (probe_pd) {
+			const process_definition* pd;
+			pd = proc_defs[s];
+			assert(pd == probe_pd);
+			return pd;
+		} else {
+			// actually found something else
+			return NULL;
+		}
+	} else {
+		assert(!proc_defs[s]);
+		return NULL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers a process prototype.  
+	Need to let the caller know whether already existed and should
+	check against previous declaration, or this is a new process.  
+	\param pname the process' signature, including identifier,
+		optional template signature, and port signature.  
+	Details: ...
+ */
+process_definition*
+name_space::add_proc_declaration(const token_identifier& pname) {
+	process_definition* pd = NULL;
+	const object* probe = used_id_map[pname];	// looks up used_id_map
+	if (probe) {
+		// something already exists with name...
+		const process_definition* probe_pd = 
+			IS_A(const process_definition*, probe);
+		if (probe_pd) {
+			// see if this declaration matches EXACTLY
+			// or punt check until check_build() on the templates
+			//	and ports?
+			pd = proc_defs[pname];
+			assert(pd == probe_pd);
+			return pd;
+		} else {
+			// already declared as something else in this scope.
+			probe->what(cerr << pname << " is already declared as ")
+				<< ", ERROR! ";
+			return NULL;
+		}
+	} else {
+		// slot is free, allocate new entry for process definition
+		pd = new process_definition(this, pname, false);
+		assert(pd);
+		proc_defs[pname] = pd;
+		used_id_map[pname] = pd;
+	}
+	return pd;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers a process definition.  
+	\param pname the process' signature, including identifier,
+		optional template signature, and port signature.  
+	Details: ...
+ */
+process_definition*
+name_space::add_proc_definition(const token_identifier& pname) {
+	process_definition* pd = NULL;
+	const object* probe = used_id_map[pname];	// looks up used_id_map
+	if (probe) {
+		// something already exists with name...
+		const process_definition* probe_pd = 
+			IS_A(const process_definition*, probe);
+		if (probe_pd) {
+			if (probe_pd->is_defined()) {
+				cerr << pname << " process already defined.  "
+					"redefinition starting at " 
+					<< pname.where();
+				return NULL;
+			} else {
+			// probably already declared
+			// punt check, until traversing templates/ports
+			pd = proc_defs[pname];
+			assert(pd == probe_pd);
+			return pd;
+			}
+		} else {
+			// already declared as something else in this scope.
+			probe->what(cerr << pname << " is already declared as ")
+				<< ", ERROR! ";
+			return NULL;
+		}
+	} else {
+		// slot is free, allocate new entry for process definition
+		pd = new process_definition(this, pname, true);
+		assert(pd);
+		proc_defs[pname] = pd;
+		used_id_map[pname] = pd;
+	}
+	return pd;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -912,6 +1077,11 @@ type_alias::what(ostream& o) const {
 	return o << "aliased-type: " << key;
 }
 
+bool
+type_alias::type_equivalent(const type_definition& t) const {
+	return resolve_canonical()->type_equivalent(t);
+}
+
 //=============================================================================
 // class built_in_type_def method definitions
 
@@ -928,6 +1098,26 @@ built_in_type_def::what(ostream& o) const {
 	return o << key;
 }
 
+/**
+	Checks data type equivalence.
+	TO DO:
+	Currently does NOT check template signature, which need to be 
+	implemented eventually, but punting for now.  
+	\param t the type_definition to be checked.
+	\return true if types are equivalent.  
+ */
+bool
+built_in_type_def::type_equivalent(const type_definition& t) const {
+	const built_in_type_def* b = 
+		IS_A(const built_in_type_def*, t.resolve_canonical());
+	if (b) {
+		// later: check template signature! (for int<>)
+		return key == b->key;
+	} else {
+		return false;
+	}
+}
+
 //=============================================================================
 // class user_def_type methods
 
@@ -939,6 +1129,27 @@ user_def_type::user_def_type(const name_space* o, const string& name) :
 ostream&
 user_def_type::what(ostream& o) const {
 	return o << "used-defined-type: " << key;
+}
+
+/**
+	Equivalance operator for user-defined types.  
+	TO DO: actually write comparison, for now, just always returns false.  
+	\param t the type_definition to be checked;
+	\return true if the type names match, the (optional) template
+		formals match, and the data formals match.  
+ */
+bool
+user_def_type::type_equivalent(const type_definition& t) const {
+	const user_def_type* u = 
+		IS_A(const user_def_type*, t.resolve_canonical());
+	if (u) {
+		// compare template_params
+		// compare data members
+		// for now...
+		return false;
+	} else {
+		return false;
+	}
 }
 
 //=============================================================================
@@ -956,13 +1167,46 @@ type_instantiation::what(ostream& o) const {
 	return o << "type-inst";
 }
 
+/**
+	Takes a template formal, resolves its type first, looking up
+	through parents' scopes if necessary.  
+	If successful, compares for type-equivalence, 
+	and identifier match.  
+	\param tf the template formal from the syntax tree.
+	\return true if type and identifier match exactly.  
+ */
+bool
+type_instantiation::equals_template_formal(
+		const template_formal_decl& tf) const {
+
+	return false;
+}
+
+/**
+	Takes a port formal, resolves its type first, looking up
+	through parents' scopes if necessary.  
+	If successful, compares for type-equivalence, 
+	and identifier match.  
+	TO DO:
+	\param tf the port formal from the syntax tree.
+	\return true if type and identifier match exactly.  
+ */
+bool
+type_instantiation::equals_port_formal(
+		const port_formal_decl& pf) const {
+	return false;
+}
+
 //=============================================================================
 // class process_definition method definitions
 
+/**
+	Constructor for a process definition symbol table entry.  
+ */
 process_definition::process_definition(const name_space* o, 
 		const string& s, const bool d) : 
 		definition(s, o), def(d),
-		temp_formals(), port_formals(), used_id_map() {
+		temp_formals(), port_formals() {
 	// fill me in...
 }
 
@@ -973,6 +1217,107 @@ process_definition::~process_definition() {
 ostream&
 process_definition::what(ostream& o) const {
 	return o << "process-definition";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compares an unchecked process_signature's formal list against
+	a bound formal list (this).  
+	Name must match, template formals (if applicable) must
+	match precisely with type and formal identifier name.  
+	Port formals must also match type and formal identifier.  
+	\param ps the process signature.
+	\return true if signatures are equivalent.  
+ */
+bool
+process_definition::equals_signature(const process_signature& ps) const {
+	if (key != ps.get_name())
+		return false;
+	// continue comparing template formals
+	if (!temp_formal_set_equals(temp_formals, ps.get_template_formals()))
+		return false;
+	// continue comparing port formals
+	if (!port_formal_set_equals(port_formals, ps.get_port_formals()))
+		return false;
+	return true;
+}
+
+//=============================================================================
+// non-member functions related to process_definition
+
+/**
+	Compares a temp_formal_set against a template_formal_decl_list from
+	the syntax tree.  
+	\param ts the already type-checked template formal list.
+	\param tl the syntax tree template formal list to be checked.
+	\return true if template formal lists are equivalent.  
+ */
+bool
+temp_formal_set_equals(const process_definition::temp_formal_set& ts,
+	const template_formal_decl_list* tl) {
+	if (tl) {
+		template_formal_decl_list::const_iterator i = tl->begin();
+		process_definition::temp_formal_set::const_iterator 
+			j = ts.begin();
+		for ( ; i != tl->end() && j != ts.end(); i++, j++) {
+			const template_formal_decl* ti = 
+				IS_A(const template_formal_decl*, *i);
+			const type_instantiation* tj = *j;
+			if (ti && !tj || !ti && tj) {
+				// then mismatch in number of arguments
+				return false;
+			} else if (ti && tj) {
+				// compare them, item-for-item
+				if (!tj->equals_template_formal(*ti))
+					return false;
+				// else continue
+			}
+			// else end of both lists reached, proceed
+		}
+	} else {
+		// tl is NULL, then ts should also be empty
+		if (!ts.empty())
+			return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compares a port_formal_set against a port_formal_decl_list from
+	the syntax tree.  
+	\param ps the already type-checked port formal list.
+	\param pl the syntax tree port formal list to be checked.
+	\return true if port formal lists are equivalent.  
+ */
+bool
+port_formal_set_equals(const process_definition::port_formal_set& ps,
+	const port_formal_decl_list* pl) {
+	if (pl) {
+		port_formal_decl_list::const_iterator i = pl->begin();
+		process_definition::port_formal_set::const_iterator 
+			j = ps.begin();
+		for ( ; i != pl->end() && j != ps.end(); i++, j++) {
+			const port_formal_decl* pi = 
+				IS_A(const port_formal_decl*, *i);
+			const instantiation* pj = *j;
+			if (pi && !pj || !pi && pj) {
+				// then mismatch in number of arguments
+				return false;
+			} else if (pi && pj) {
+				// compare them, item-for-item
+				if (!pj->equals_port_formal(*pi))
+					return false;
+				// else continue
+			}
+			// else end of both lists reached, proceed
+		}
+	} else {
+		// pl is NULL, then ts should also be empty
+		if (!ps.empty())
+			return false;
+	}
+	return true;
 }
 
 //=============================================================================
@@ -990,6 +1335,12 @@ process_instantiation::~process_instantiation() {
 ostream&
 process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
+}
+
+bool
+process_instantiation::equals_port_formal(const port_formal_decl& pf) const {
+	// a process can never be passed on a port.  
+	return false;
 }
 
 //=============================================================================

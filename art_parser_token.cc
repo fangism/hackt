@@ -11,10 +11,8 @@
 #include "art_switches.h"
 #include "art_parser.h"
 // #include "art_parser_template_methods.h"	// no templates here
-
-// will need these come time for type checking
-// #include "art_symbol_table.h"
-// #include "art_object.h"
+#include "art_symbol_table.h"
+#include "art_object.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -338,9 +336,14 @@ token_type::rightmost(void) const {
 	return token_keyword::rightmost();
 }
 
+const object*
+token_type::check_build(context* c) const {
+	return c->set_type_def(*this);
+}
+
 //=============================================================================
-};
-};
+};	// end namespace parser
+};	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

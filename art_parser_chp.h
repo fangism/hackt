@@ -169,12 +169,24 @@ virtual	~communication();
 virtual	line_position leftmost(void) const;
 };
 
-typedef	node_list<communication,comma>		comm_list;
+//-----------------------------------------------------------------------------
+class comm_list : public statement, public node_list<communication,comma> {
+private:
+	typedef	node_list<communication,comma>		comm_list_base;
+public:
+	comm_list(communication* c);
+virtual	~comm_list();
+
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+using	comm_list_base::where;
+};
 
 #define chp_comm_list_wrap(b,l,e)					\
-	IS_A(CHP::det_selection*, l)->wrap(b,e)
+	IS_A(CHP::comm_list*, l->wrap(b,e))
 #define chp_comm_list_append(l,d,n)					\
-	IS_A(CHP::det_selection*, l)->append(d,n)
+	IS_A(CHP::comm_list*, l->append(d,n))
 
 
 //-----------------------------------------------------------------------------
@@ -219,7 +231,7 @@ class det_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	det_sel_base;
 public:
-	det_selection(node* n);
+	det_selection(guarded_command* n);
 virtual	~det_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -229,9 +241,9 @@ using	det_sel_base::where;
 };
 
 #define chp_det_selection_wrap(b,l,e)					\
-	IS_A(CHP::det_selection*, l)->wrap(b,e)
+	IS_A(CHP::det_selection*, l->wrap(b,e))
 #define chp_det_selection_append(l,d,n)					\
-	IS_A(CHP::det_selection*, l)->append(d,n)
+	IS_A(CHP::det_selection*, l->append(d,n))
 
 //=============================================================================
 /// container for non-deterministic selection statement
@@ -240,7 +252,7 @@ class nondet_selection : public selection,
 private:
 	typedef	node_list<guarded_command,colon>	nondet_sel_base;
 public:
-	nondet_selection(node* n);
+	nondet_selection(guarded_command* n);
 virtual	~nondet_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -250,9 +262,9 @@ using	nondet_sel_base::where;
 };
 
 #define chp_nondet_selection_wrap(b,l,e)				\
-	IS_A(CHP::nondet_selection*, l)->wrap(b,e)
+	IS_A(CHP::nondet_selection*, l->wrap(b,e))
 #define chp_nondet_selection_append(l,d,n)				\
-	IS_A(CHP::nondet_selection*, l)->append(d,n)
+	IS_A(CHP::nondet_selection*, l->append(d,n))
 
 //=============================================================================
 /// container for probablistic selection statement
@@ -261,7 +273,7 @@ class prob_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
 public:
-	prob_selection(node* n);
+	prob_selection(guarded_command* n);
 virtual	~prob_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -271,9 +283,9 @@ using	prob_sel_base::where;
 };
 
 #define chp_prob_selection_wrap(b,l,e)					\
-	IS_A(CHP::prob_selection*, l)->wrap(b,e)
+	IS_A(CHP::prob_selection*, l->wrap(b,e))
 #define chp_prob_selection_append(l,d,n)				\
-	IS_A(CHP::prob_selection*, l)->append(d,n)
+	IS_A(CHP::prob_selection*, l->append(d,n))
 
 //=============================================================================
 /// CHP loop contains a list of statements

@@ -1,49 +1,45 @@
-// "map_of_ptr.h"
-// useful template for map<K,T*>
-// the alternative is to instantiate map<auto_ptr<T>>...
+// "hash_map_of_ptr.h"
+// useful template for hash_map<K,T*>
+// the alternative is to instantiate hash_map<auto_ptr<T>>...
 
 // NOTE: assumes EXCLUSIVE ownwership of the pointers contained!
 // any violation thereof will require something more powerful,
 // such as reference counting.  
 
-#ifndef __MAP_OF_PTR_H__
-#define __MAP_OF_PTR_H__
+#ifndef __HASH_MAP_OF_PTR_H__
+#define __HASH_MAP_OF_PTR_H__
 
-#include <map>
-
-using std::map;
+#include "hash_map.h"		// wraps around <hash_map>
 
 //=============================================================================
-/// A map of exclusively owned pointers, based on std::map.  
+/// A hash_map of exclusively owned pointers, based on std::hash_map.  
 
 /**
 	The members of this class are pair<K,T*>, with K being the key type
 	and T is the contained type.  The pointers should be exclusive, i.e., 
 	whereas other copies of the same pointer may read or write
-	the object, only this map has responsibility for de-allocating
+	the object, only this hash_map has responsibility for de-allocating
 	the objects' memory.  This is generally useful for 
 	look-up tables of owned references.  
  */
 template <class K, class T>
-class map_of_ptr : public map<K,T*> {
+class hash_map_of_ptr : public hash_map<K,T*> {
 private:
-	typedef map<K,T*>				parent;
+	typedef hash_map<K,T*>				parent;
 public:
 	typedef	typename parent::iterator		iterator;
 	typedef	typename parent::const_iterator		const_iterator;
-	typedef	typename parent::reverse_iterator	reverse_iterator;
-	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 protected:
 	int			own;		///< ownership flag
 public:
 
-/// The default constructor just creates an empty map.  
-explicit map_of_ptr() : parent(), own(1) { }
+/// The default constructor just creates an empty hash_map.  
+explicit hash_map_of_ptr() : parent(), own(1) { }
 // copy constructor copies pointers without transferring ownership
-	map_of_ptr(const map_of_ptr<K,T>& l);
+	hash_map_of_ptr(const hash_map_of_ptr<K,T>& l);
 
-/// The destructor frees memory to non-NULL pointers in the map.  
-virtual	~map_of_ptr();		// don't want to inline this
+/// The destructor frees memory to non-NULL pointers in the hash_map.  
+virtual	~hash_map_of_ptr();		// don't want to inline this
 
 /**
 	Re-use parent's index operator.  Explicitly written here to 
@@ -58,14 +54,11 @@ T*& operator [] (const K& k) {
 
 const T* operator [] (const K& k) const;
 
-using	parent::begin;
-using	parent::end;
-
 // non-essential add-on methods
-};	// end of class map_of_ptr
+};	// end of class hash_map_of_ptr
 
 //=============================================================================
-/// A map of read-only pointers, based on std::map.  
+/// A hash_map of read-only pointers, based on std::hash_map.  
 
 /**
 	The members of this class are pair<K, const T*>, 
@@ -76,23 +69,21 @@ using	parent::end;
 	This version provides const semantics for the const [] operator.  
  */
 template <class K, class T>
-class map_of_const_ptr : public map<K, const T*> {
+class hash_map_of_const_ptr : public hash_map<K, const T*> {
 private:
-	typedef map<K, const T*>			parent;
+	typedef hash_map<K, const T*>			parent;
 public:
 	typedef	typename parent::iterator		iterator;
 	typedef	typename parent::const_iterator		const_iterator;
-	typedef	typename parent::reverse_iterator	reverse_iterator;
-	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 public:
 
-/// The default constructor just creates an empty map.  
-explicit map_of_const_ptr() : parent() { }
+/// The default constructor just creates an empty hash_map.  
+explicit hash_map_of_const_ptr() : parent() { }
 // copy constructor copies pointers without transferring ownership
-	map_of_const_ptr(const map_of_const_ptr<K,T>& l);
+	hash_map_of_const_ptr(const hash_map_of_const_ptr<K,T>& l);
 
-/// The destructor frees memory to non-NULL pointers in the map.  
-virtual	~map_of_const_ptr();		// don't want to inline this
+/// The destructor frees memory to non-NULL pointers in the hash_map.  
+virtual	~hash_map_of_const_ptr();		// don't want to inline this
 
 /**
 	Re-use parent's index operator.  Explicitly written here to 
@@ -107,13 +98,10 @@ const T*& operator [] (const K& k) {
 
 const T* operator [] (const K& k) const;
 
-using	parent::begin;
-using	parent::end;
-
 // non-essential add-on methods
-};	// end of class map_of_const_ptr
+};	// end of class hash_map_of_const_ptr
 
 //=============================================================================
 
-#endif	// __MAP_OF_PTR_H__
+#endif	// __HASH_MAP_OF_PTR_H__
 

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "map_of_ptr.h"
+#include "hash_map_of_ptr.h"
 #include "hashlist.h"		// includes "list_of_ptr.h" and <hash_map>
 	// for now don't need hashlist...
 #include "art_macros.h"
@@ -90,7 +91,7 @@ protected:	// typedefs -- keep these here for re-use
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	map<string, const name_space*>		alias_map_type;
+	typedef	map_of_const_ptr<string, name_space>	alias_map_type;
 
 	/**
 		Resolves identifier to actual data type.  
@@ -103,14 +104,14 @@ protected:	// typedefs -- keep these here for re-use
 	 */
 	typedef	map_of_ptr<string, type_definition>	type_def_set;
 	/// list useful for query returns, const pointer?
-	typedef	list<const type_definition*>		type_def_list;
+	typedef	list_of_const_ptr<type_definition>	type_def_list;
 
 	/// resolves identifier to actual data type, we own these pointers
 	typedef	map_of_ptr<string, type_instantiation>	type_inst_set;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_definition>	proc_def_set;
-	typedef	list<const process_definition*>		proc_def_list;
+	typedef	list_of_const_ptr<process_definition>	proc_def_list;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_instantiation>	proc_inst_set;
@@ -123,7 +124,7 @@ protected:	// typedefs -- keep these here for re-use
 		These pointers are not owned by this namespace.  
 		Furthermore, they are read-only.  
 	 */
-	typedef list<const name_space*>			namespace_list;
+	typedef list_of_const_ptr<name_space>		namespace_list;
 
 	/**
 		This set contains the list of identifiers for this namespace
@@ -148,7 +149,7 @@ protected:	// typedefs -- keep these here for re-use
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
 	 */
-	typedef	hash_map<string, const object*>		used_id_map_type;
+	typedef	hash_map_of_const_ptr<string, object>	used_id_map_type;
 
 protected:	// members
 	// should really only contain instantiations? no definitions?
@@ -187,8 +188,8 @@ public:
 virtual	~scopespace();
 
 virtual	ostream& what(ostream& o) const = 0;
-const object*	what_is(const string& id);
-const object*& assign_id(const string& id);
+// const object*	what_is(const string& id);	// obsolete
+// const object*&	assign_id(const string& id);	// obsolete
 
 };	// end class scopespace
 
@@ -275,12 +276,13 @@ public:
 // explicit name_space();	// for GLOBAL?
 	~name_space();
 
-string	get_qualified_name(void) const;
-
 virtual	ostream& what(ostream& o) const;
 
+string	get_qualified_name(void) const;
+const name_space*	get_global_namespace(void) const;
+
 // update these return types later
-name_space*	add_open_namespace(const string& n);
+name_space*		add_open_namespace(const string& n);
 const name_space*	leave_namespace(void);	// or close_namespace
 const name_space*	add_using_directive(const id_expr& n);
 const name_space*	add_using_alias(const id_expr& n, const string& a);
@@ -290,13 +292,15 @@ built_in_type_def*	add_built_in_type_definition(built_in_type_def* d);
 type_definition*	add_type_alias(const id_expr& t, const string& a);
 
 // returns type if unique match found, else NULL
-const type_definition*	lookup_unique_type(const string& id) const;
-
+const type_definition*	lookup_unqualified_type(const string& id) const;
+const type_definition*	lookup_qualified_type(const id_expr& id) const;
 
 type_definition*	add_type_definition();
 type_instantiation*	add_type_instantiation(const type_definition& t, 
 				const string& i);
-process_definition*	add_proc_definition();
+const process_definition*	probe_process(const string& s) const;
+process_definition*	add_proc_declaration(const token_identifier& pname);
+process_definition*	add_proc_definition(const token_identifier& pname);
 process_instantiation*	add_proc_instantiation();
 
 // some private utility functions (may become public later)
@@ -367,11 +371,16 @@ protected:
 		belongs.  Should be const?  Do not delete.  
 	 */
 	const name_space*		owner;
+	// TO DO: This would be a good place to include template instantiation
+	// and array dimensions, assuming all types are parameterizable
+	// and array-able.  (process, data-types, channels)
+
 public:
 	instantiation(const name_space* o);
 virtual	~instantiation();
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	bool equals_port_formal(const port_formal_decl& tf) const = 0;
 };	// end class instantiation
 
 //=============================================================================
@@ -383,9 +392,11 @@ virtual	ostream& what(ostream& o) const = 0;
 	Consider deriving definition from name_space privately.  
  */
 class process_definition : public definition {
-private:
+public:
 	/**
 		Table of template formals.  
+		Needs to be ordered for argument checking, 
+		and have fast lookup, thus hashlist.  
 		Remember: template formals are accessible to the rest 
 		of the body and to the port formals as well.  
 		For now, the contained type is type_instantiation
@@ -399,36 +410,36 @@ private:
 			It'd be nice to be able to swap instance arguments
 			that preserve specified interfaces...
 	 */
-	typedef map_of_ptr<string, type_instantiation>	temp_formal_set;
+	typedef hashlist_of_const_ptr<string, type_instantiation>
+								temp_formal_set;
 	
 	/**
 		Table of port formals.
 		The types can be data-types or channel-types, 
 		either base-types or user-defined types.  
+		Needs to be ordered for argument checking, 
+		and have fast lookup, thus hashlist.  
 	 */
-	typedef map_of_ptr<string, instantiation>	port_formal_set;
+	typedef hashlist_of_const_ptr<string, instantiation>	port_formal_set;
 
 	/**
 		Table of local instantiations (orderless) of 
 		data-types and channels.  
+		These instantiations are owned by this process.  
 	 */
 	typedef map_of_ptr<string, instantiation>	inst_set;
 
 	// List of language bodies, separate or merged?
 
-	/**
-		Process definition has its own namespace.  
-		Instantiation names may not conflict within
-		a namespace, even if the types are distinct from context.  
-	 */
-	typedef	hash_map<string, object*>	used_id_map_type;
+// inherited:
+//	typedef	hash_map<string, object*>	used_id_map_type;
 
 protected:
 //	string			key;		// inherited
+//	used_id_map_type	used_id_map;	// inherited
 	bool			def;		///< flag: declared or defined
 	temp_formal_set		temp_formals;
 	port_formal_set		port_formals;
-	used_id_map_type	used_id_map;
 	// list language bodies
 	
 public:
@@ -437,8 +448,15 @@ virtual	~process_definition();
 
 virtual	ostream& what(ostream& o) const;
 
+	bool equals_signature(const process_signature& ps) const;
+	bool is_defined(void) const { return def; }
+
+void	add_template_formal(const type_definition* d, 
+		const template_formal_id& t);
+void	add_port_formal(const type_definition* d, 
+		const port_formal_id& p);
+
 /*** to add (non-virtual):
-void	add_template_formal(...);
 void	add_process_instantiation(...);
 void	add_type_instantiation(...);
 void	add_channel_instantiation(...);
@@ -455,18 +473,22 @@ class process_instantiation : public instantiation {
 private:
 
 protected:
-	// list of template actuals
 	string			key;		///< name of instance
+	// list of template actuals
+	// list of port actuals
 
 public:
 	process_instantiation(const name_space* o);
 virtual	~process_instantiation();
 
 virtual	ostream& what(ostream& o) const;
+virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 };
 
 //=============================================================================
-/// abstract base class for types and their representations
+/**
+	Abstract base class for types and their representations.
+ */
 class type_definition : public definition {
 protected:
 // inherited:
@@ -479,6 +501,7 @@ string	get_qualified_name(void) const;
 virtual	string get_name(void) const;
 virtual	ostream& what(ostream& o) const = 0;
 virtual	const type_definition* resolve_canonical(void) const;
+virtual	bool type_equivalent(const type_definition& t) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -493,7 +516,14 @@ public:
 virtual	~built_in_type_def();
 
 virtual	ostream& what(ostream& o) const;
+virtual	bool type_equivalent(const type_definition& t) const;
 };
+
+//-----------------------------------------------------------------------------
+// need specialized type definitions for templates? (int<N>)
+// class built_in_type_template_def : public built_in_type_def {
+// perhaps contain a type definition and a template signature?
+// }
 
 //-----------------------------------------------------------------------------
 // may need a template type that refers to an abstract template
@@ -508,15 +538,15 @@ virtual	ostream& what(ostream& o) const;
 class user_def_type : public type_definition {
 private:
 	/**
-		Members will be kept as a map, 
-		because their order doesn't matter, or do they?
+		Members will be kept as a hashlist
+		because their order matters, or don't they?
 	 */
-	typedef	hash_map<string, const type_definition*>	type_members;
+	typedef	hashlist_of_const_ptr<string, type_definition>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	list<const type_definition*>	temp_param_list;
+	typedef	hashlist_of_const_ptr<string, type_definition>	temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
@@ -526,6 +556,7 @@ public:
 virtual	~user_def_type() { }
 
 virtual	ostream& what(ostream& o) const;
+virtual	bool type_equivalent(const type_definition& t) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -550,14 +581,14 @@ virtual	ostream& what(ostream& o) const = 0;
 class user_def_chan : public channel_definition {
 private:
 	/**
-		Members will be kept as a map.  
+		Members will be kept as a list for ordered checking.  
 	 */
-	typedef	hash_map<string, const type_definition*>	type_members;
+	typedef	hashlist_of_const_ptr<string, type_definition>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	list<const type_definition*>	temp_param_list;
+	typedef	hashlist_of_const_ptr<string, type_definition>	temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
@@ -590,22 +621,35 @@ virtual	~type_alias();
 const type_definition*	resolve_canonical(void) const;
 
 virtual	ostream& what(ostream& o) const;
+virtual	bool type_equivalent(const type_definition& t) const;
 };
 
 //=============================================================================
 /// Instantiation of a data type, either inside or outside definition.  
 class type_instantiation : public instantiation {
 protected:
-	const type_definition*	type;		/// the actual type
+	const type_definition*	type;		///< the actual type
 	string			key;		///< name of instance
-	// more to come...
+	// need range of array
 public:
 	type_instantiation(const name_space* o, const type_definition* t,
 		const string& n);
 virtual	~type_instantiation();
 
 virtual	ostream& what(ostream& o) const;
+	bool equals_template_formal(const template_formal_decl& tf) const;
+virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 };
+
+//=============================================================================
+/***
+class template_instance : public instantiation {
+protected:
+	list_of_ptr<...>		// some form of expression
+public:
+
+};
+***/
 
 //=============================================================================
 };	// end namespace entity
