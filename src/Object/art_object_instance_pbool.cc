@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.1 2005/02/06 03:47:01 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.2 2005/02/06 05:32:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -494,7 +494,8 @@ bool
 pbool_array<D>::lookup_value(value_type& v,
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pbool_instance& pi(collection[i]);
+	const multikey<D, pint_value_type> index(i);
+	const pbool_instance& pi(collection[index]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -548,6 +549,10 @@ PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const multikey<D, pint_value_type> index(k);
 	pbool_instance& pi = collection[k];
 	return !(pi = i);	// yes, assignment is intended
 }

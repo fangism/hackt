@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.2 2005/02/03 03:34:48 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.2.2.1 2005/02/06 05:32:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1140,17 +1140,24 @@ pbool_instance_reference::resolve_value(value_type& i) const {
 		const const_index_list
 			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
+#if 0
 			const excl_ptr<multikey_index_type>
 				lower = indices.lower_multikey();
 			const excl_ptr<multikey_index_type>
 				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
-			if (*lower != *upper) {
+#else
+			const multikey_index_type
+				lower(indices.lower_multikey());
+			const multikey_index_type
+				upper(indices.upper_multikey());
+#endif
+			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
 			}
-			return pbool_inst_ref->lookup_value(i, *lower);
+			return pbool_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to resolve array_indices!" << endl;
 			return false;
@@ -1445,6 +1452,7 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 	}
 	// else good to continue
 
+#if 0
 	const excl_ptr<index_generator_type>
 		key_gen(index_generator_type::
 			make_multikey_generator(dim.size()));
@@ -1453,13 +1461,21 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
 	key_gen->initialize();
+#else
+	generic_index_generator_type key_gen(dim.size());
+	// automatic and temporarily allocated
+	key_gen.get_lower_corner() = dim.lower_multikey();
+	key_gen.get_upper_corner() = dim.upper_multikey();
+	key_gen.initialize();
+#endif
+
 	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	index_generator_type& key_gen_ref = *key_gen;
+//	index_generator_type& key_gen_ref = *key_gen;
 	do {
-		if (p.pbool_inst_ref->assign(key_gen_ref, *list_iter)) {
-			cerr << "ERROR: assigning index " << key_gen_ref << 
+		if (p.pbool_inst_ref->assign(key_gen, *list_iter)) {
+			cerr << "ERROR: assigning index " << key_gen << 
 				" of pbool collection " <<
 				p.pbool_inst_ref->get_qualified_name() <<
 				"." << endl;
@@ -1473,8 +1489,8 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 			assign_err = true;
 		}
 		list_iter++;			// unsafe, but checked
-		key_gen_ref++;
-	} while (key_gen_ref != key_gen_ref.get_upper_corner());
+		key_gen++;
+	} while (key_gen != key_gen.get_upper_corner());
 	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
@@ -1669,17 +1685,24 @@ pint_instance_reference::resolve_value(value_type& i) const {
 		if (!indices.empty()) {
 			// really should pass indices into ->lookup_values();
 			// fix this later...
+#if 0
 			const excl_ptr<multikey_index_type>
 				lower = indices.lower_multikey();
 			const excl_ptr<multikey_index_type>
 				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
-			if (*lower != *upper) {
+#else
+			const multikey_index_type
+				lower(indices.lower_multikey());
+			const multikey_index_type
+				upper(indices.upper_multikey());
+#endif
+			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
 			}
-			return pint_inst_ref->lookup_value(i, *lower);
+			return pint_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to resolve array_indices!" << endl;
 			return false;
@@ -1784,8 +1807,8 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 
 		generic_index_generator_type key_gen(rdim.size());
 		// automatic and temporarily allocated
-		key_gen.get_lower_corner() = *rdim.lower_multikey();
-		key_gen.get_upper_corner() = *rdim.upper_multikey();
+		key_gen.get_lower_corner() = rdim.lower_multikey();
+		key_gen.get_upper_corner() = rdim.upper_multikey();
 		key_gen.initialize();
 		bool lookup_err = false;
 		pint_const_collection::iterator coll_iter(ret->begin());
@@ -1989,6 +2012,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
+#if 0
 	const excl_ptr<index_generator_type>
 		key_gen(index_generator_type::
 			make_multikey_generator(dim.size()));
@@ -1997,13 +2021,20 @@ pint_instance_reference::assigner::operator() (const bool b,
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
 	key_gen->initialize();
+#else
+	generic_index_generator_type key_gen(dim.size());
+	// automatic and temporarily allocated
+	key_gen.get_lower_corner() = dim.lower_multikey();
+	key_gen.get_upper_corner() = dim.upper_multikey();
+	key_gen.initialize();
+#endif
 	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	index_generator_type& key_gen_ref = *key_gen;
+//	index_generator_type& key_gen_ref = *key_gen;
 	do {
-		if (p.pint_inst_ref->assign(key_gen_ref, *list_iter)) {
-			cerr << "ERROR: assigning index " << key_gen_ref << 
+		if (p.pint_inst_ref->assign(key_gen, *list_iter)) {
+			cerr << "ERROR: assigning index " << key_gen << 
 				" of pint collection " <<
 				p.pint_inst_ref->get_qualified_name() <<
 				"." << endl;
@@ -2017,8 +2048,8 @@ pint_instance_reference::assigner::operator() (const bool b,
 			assign_err = true;
 		}
 		list_iter++;			// unsafe, but checked
-		key_gen_ref++;
-	} while (key_gen_ref != key_gen_ref.get_upper_corner());
+		key_gen++;
+	} while (key_gen != key_gen.get_upper_corner());
 	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
@@ -4340,6 +4371,7 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 excl_ptr<multikey_index_type>
 const_range_list::lower_multikey(void) const {
 	typedef	excl_ptr<multikey_index_type>	return_type;
@@ -4358,6 +4390,25 @@ const_range_list::upper_multikey(void) const {
 	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
 	return ret;
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+multikey_index_type
+const_range_list::lower_multikey(void) const {
+	typedef	multikey_index_type	return_type;
+	return_type ret(size());
+	transform(begin(), end(), ret.begin(), _Select1st<const_range>());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+multikey_index_type
+const_range_list::upper_multikey(void) const {
+	typedef	multikey_index_type	return_type;
+	return_type ret(size());
+	transform(begin(), end(), ret.begin(), _Select2nd<const_range>());
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4866,6 +4917,7 @@ const_index_list::resolve_multikey(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 excl_ptr<multikey_index_type>
 const_index_list::lower_multikey(void) const {
 	typedef	excl_ptr<multikey_index_type>	return_type;
@@ -4894,6 +4946,35 @@ const_index_list::upper_multikey(void) const {
 	);
 	return ret;
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+multikey_index_type
+const_index_list::lower_multikey(void) const {
+	typedef	multikey_index_type	return_type;
+	return_type ret(size());
+	transform(begin(), end(), ret.begin(), 
+		unary_compose(
+			mem_fun_ref(&const_index::lower_bound), 
+			dereference<count_ptr, const const_index>()
+		)
+	);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+multikey_index_type
+const_index_list::upper_multikey(void) const {
+	typedef	multikey_index_type	return_type;
+	return_type ret(size());
+	transform(begin(), end(), ret.begin(), 
+		unary_compose(
+			mem_fun_ref(&const_index::upper_bound), 
+			dereference<count_ptr, const const_index>()
+		)
+	);
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

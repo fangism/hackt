@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.2.2.1 2005/02/06 03:47:01 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.2.2.2 2005/02/06 05:32:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -500,7 +500,8 @@ bool
 pint_array<D>::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pint_instance& pi = collection[i];
+	const multikey<D, pint_value_type> index(i);
+	const pint_instance& pi = collection[index];
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -556,7 +557,11 @@ PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
-	pint_instance& pi = collection[k];
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const multikey<D, pint_value_type> index(k);
+	pint_instance& pi = collection[index];
 	return !(pi = i);
 }
 

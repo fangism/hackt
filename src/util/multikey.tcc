@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5 2005/01/28 19:58:46 fang Exp $
+	$Id: multikey.tcc,v 1.5.10.1 2005/02/06 05:32:05 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -52,6 +52,14 @@ MULTIKEY_TEMPLATE_SIGNATURE
 multikey<D,K>::multikey(const K i) :
 		base_type() {
 	fill(indices, &indices[D], i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_TEMPLATE_SIGNATURE
+multikey<D,K>::multikey(const multikey_generic<K>& k) :
+		base_type() {
+	INVARIANT(k.dimensions() == D);
+	copy(k.begin(), k.end(), indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.2.2.1 2005/02/06 03:47:00 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.2.2.2 2005/02/06 05:32:02 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -275,10 +275,13 @@ public:
 	bool
 	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
-	excl_ptr<multikey_index_type>
+
+//	excl_ptr<multikey_index_type>
+	multikey_index_type
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_index_type>
+//	excl_ptr<multikey_index_type>
+	multikey_index_type
 	lower_multikey(void) const;
 
 	bool
@@ -342,10 +345,12 @@ public:
 	bool
 	resolve_ranges(const_range_list& r) const;
 
-	excl_ptr<multikey_index_type>
+//	excl_ptr<multikey_index_type>
+	multikey_index_type
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_index_type>
+//	excl_ptr<multikey_index_type>
+	multikey_index_type
 	lower_multikey(void) const;
 
 	template <size_t D>

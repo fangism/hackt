@@ -2,7 +2,7 @@
 	\file "art_object_extern_templates.cc"
 	Repository of explici template instantiations needed 
 	by the object-related library.  
-	$Id: art_object_extern_templates.cc,v 1.2 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_extern_templates.cc,v 1.2.10.1 2005/02/06 05:32:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXTERN_TEMPLATES_CC__
@@ -23,6 +23,7 @@ namespace util {
 using ART::entity::pint_value_type;
 
 template class multikey_base<pint_value_type>;
+template class multikey_generic<pint_value_type>;
 template class multikey<1, pint_value_type>;
 template class multikey<2, pint_value_type>;
 template class multikey<3, pint_value_type>;

@@ -37,6 +37,14 @@
 	  multikey_base has been obsoleted by the introduction of 
 	  multikey_generic.  
 
+	+ -set-04: slowly phasing out multikey_base.
+	  Minor extensions to multikey interface, ablility to convert from
+	  generic type to dimension-specific with assertion check on size.  
+	  Replaced definition of multikey_index_type with multikey_generic.  
+	  Goal: no more virtual function calls from multikey_base.  
+	  To do: continue similar changes with "unroll_index_type".
+	  Possibly specialize multikey<1> as plain value instead of [1].
+
 
 2005-02-04	David Fang	<fangism@users.sourceforge.net>
 

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19 2005/01/28 19:58:46 fang Exp $
+	$Id: multikey.h,v 1.19.10.1 2005/02/06 05:32:05 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -169,7 +169,11 @@ public:
 		\param i the default value with which to fill indices.  
 			Plain-old-data types will default to 0.
 	 */
+	explicit
 	multikey(const K i = K());
+
+	explicit
+	multikey(const multikey_generic<K>& k);
 
 	/**
 		Copy constructor compatible with other dimensions.  
@@ -361,7 +365,7 @@ public:
 	multikey_generic(const impl_type& m) :
 		interface_type(), impl_type(m) { }
 
-	multikey_generic(const size_t d, const size_t i = 0) :
+	multikey_generic(const size_t d, const K i = 0) :
 		interface_type(), impl_type(i, d) { }
 	// valarray constructor: 1st param is fill-value, 2nd param is size
 

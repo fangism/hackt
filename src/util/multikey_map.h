@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14 2004/12/23 00:07:44 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.1 2005/02/06 05:32:06 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -343,12 +343,12 @@ public:
 	using map_type::rend;
 
 	T&
-	operator [] (const typename map_type::key_type& k) {
+	operator [] (const key_type& k) {
 		return map_type::operator[](k);
 	}
 
 	T
-	operator [] (const typename map_type::key_type& k) const {
+	operator [] (const key_type& k) const {
 		return map_type::operator[](k);
 	}
 
@@ -363,6 +363,16 @@ public:
 
 	T
 	operator [] (const multikey_base<K>& k) const;
+
+	T&
+	operator [] (const multikey<1,K>& k) {
+		return map_type::operator[](k[0]);
+	}
+
+	T
+	operator [] (const multikey<1,K>& k) const {
+		return map_type::operator[](k[0]);
+	}
 
 	key_list_pair_type
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;

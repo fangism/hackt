@@ -1,7 +1,7 @@
 /**
 	\file "art_object_index.h"
 	Typedef for index types.  
-	$Id: art_object_index.h,v 1.2 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_index.h,v 1.2.10.1 2005/02/06 05:32:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INDEX_H__
@@ -19,7 +19,11 @@ namespace entity {
 	This is actually an abstract type with a static generator function.  
 	Used in "art_object_expr.cc".
  */
+#if 0
 typedef	util::multikey_base<pint_value_type>		multikey_index_type;
+#else
+typedef	util::multikey_generic<pint_value_type>		multikey_index_type;
+#endif
 
 /**
 	Base type for multidimensional key ranged iterators, used to 
@@ -27,7 +31,9 @@ typedef	util::multikey_base<pint_value_type>		multikey_index_type;
 	This is actually an abstract type with a static generator function.  
 	Used in "art_object_expr.cc".
  */
+#if 0
 typedef	util::multikey_generator_base<pint_value_type>	index_generator_type;
+#endif
 
 /**
 	Index type used for referencing unrolling instance collections.  
