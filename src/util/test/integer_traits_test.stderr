@@ -1,0 +1,92 @@
+Testing traits of integer 0:
+... is a perfect square.
+nearest square-root is 0
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+0! (factorial) = 1
+Fibonacci[0] = 1
+
+Testing traits of integer 1:
+... is a perfect square.
+nearest square-root is 1
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 1) = (10 << 0) = 10
+1! (factorial) = 1
+Fibonacci[1] = 1
+
+Testing traits of integer 2:
+... is not a perfect square.
+nearest square-root is 1
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 2) = (10 << 1) = 20
+2! (factorial) = 2
+Fibonacci[2] = 2
+
+Testing traits of integer 3:
+... is not a perfect square.
+nearest square-root is 1
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+3! (factorial) = 6
+Fibonacci[3] = 3
+
+Testing traits of integer 4:
+... is a perfect square.
+nearest square-root is 2
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 4) = (10 << 2) = 40
+4! (factorial) = 24
+Fibonacci[4] = 5
+
+Testing traits of integer 5:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+5! (factorial) = 120
+Fibonacci[5] = 8
+
+Testing traits of integer 6:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+6! (factorial) = 720
+Fibonacci[6] = 13
+
+Testing traits of integer 7:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+7! (factorial) = 5040
+Fibonacci[7] = 21
+
+Testing traits of integer 8:
+... is not a perfect square.
+nearest square-root is 2
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 8) = (10 << 3) = 80
+8! (factorial) = 40320
+Fibonacci[8] = 34
+
+Testing traits of integer 9:
+... is a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+9! (factorial) = 362880
+Fibonacci[9] = 55
+
+Testing traits of integer 10:
+... is not a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+10! (factorial) = 3628800
+Fibonacci[10] = 89
+
