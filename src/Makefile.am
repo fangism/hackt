@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2004/11/26 23:15:05 fang Exp $
+#	$Id: Makefile.am,v 1.21 2004/11/28 23:41:01 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -136,6 +136,9 @@ UTIL_HEADER_FILES = \
 	util/list_vector.h \
 	util/list_vector.tcc \
 	util/memory/list_vector_pool.h \
+	util/memory/pointer_classes_fwd.h \
+	util/memory/pointer_classes.h \
+	util/memory/pointer_traits.h \
 	util/multidimensional_qmap.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_sparse_set.h \
