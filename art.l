@@ -81,7 +81,8 @@ static	char* string_buf_ptr = NULL;
 #define	KEYWORD_UPDATE	{ yylval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE; }
 #define	ELSE_UPDATE	{ yylval._token_else = new token_else(yytext); TOKEN_UPDATE; }
 #define	BOOL_UPDATE	{ yylval._token_bool = new token_bool(yytext); TOKEN_UPDATE; }
-#define	TYPE_UPDATE	{ yylval._token_type = new token_type(yytext); TOKEN_UPDATE; }
+#define	DATATYPE_UPDATE	{ yylval._token_datatype = new token_datatype(yytext); TOKEN_UPDATE; }
+#define	PARAMTYPE_UPDATE	{ yylval._token_paramtype = new token_paramtype(yytext); TOKEN_UPDATE; }
 #define	MULTICHAR_UPDATE						\
 			{ yylval._token_string = new token_string(yytext); TOKEN_UPDATE; }
 #define	STRING_UPDATE	{ TOKEN_UPDATE; 				\
@@ -254,10 +255,10 @@ FALSE		"false"
 {RECV}		{ KEYWORD_UPDATE; return RECV; }
 {SET}		{ KEYWORD_UPDATE; return SET; }
 {GET}		{ KEYWORD_UPDATE; return GET; }
-{INT_TYPE}	{ TYPE_UPDATE; return INT_TYPE; }
-{BOOL_TYPE}	{ TYPE_UPDATE; return BOOL_TYPE; }
-{PINT_TYPE}	{ TYPE_UPDATE; return PINT_TYPE; }
-{PBOOL_TYPE}	{ TYPE_UPDATE; return PBOOL_TYPE; }
+{INT_TYPE}	{ DATATYPE_UPDATE; return INT_TYPE; }
+{BOOL_TYPE}	{ DATATYPE_UPDATE; return BOOL_TYPE; }
+{PINT_TYPE}	{ PARAMTYPE_UPDATE; return PINT_TYPE; }
+{PBOOL_TYPE}	{ PARAMTYPE_UPDATE; return PBOOL_TYPE; }
 {CHANNEL}	{ KEYWORD_UPDATE; return CHANNEL; }
 {TRUE}		{ BOOL_UPDATE; return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE; return BOOL_FALSE; }

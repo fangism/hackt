@@ -321,11 +321,6 @@ token_type::token_type(const char* tf) : token_keyword(tf), type_base() { }
 DESTRUCTOR_INLINE
 token_type::~token_type() { }
 
-ostream&
-token_type::what(ostream& o) const {
-	return o << "type: " << *((const string*) this);
-}
-
 line_position
 token_type::leftmost(void) const {
 	return token_keyword::leftmost();
@@ -336,9 +331,42 @@ token_type::rightmost(void) const {
 	return token_keyword::rightmost();
 }
 
+//=============================================================================
+// class token_datatype method definitions
+
+CONSTRUCTOR_INLINE
+token_datatype::token_datatype(const char* dt) : token_type(dt) { }
+
+DESTRUCTOR_INLINE
+token_datatype::~token_datatype() { }
+
+ostream&
+token_datatype::what(ostream& o) const {
+	return o << "datatype: " << *((const string*) this);
+}
+
 const object*
-token_type::check_build(context* c) const {
-	return c->set_type_def(*this);
+token_datatype::check_build(context* c) const {
+	return c->set_datatype_def(*this);
+}
+
+//=============================================================================
+// class token_paramtype method definitions
+
+CONSTRUCTOR_INLINE
+token_paramtype::token_paramtype(const char* dt) : token_type(dt) { }
+
+DESTRUCTOR_INLINE
+token_paramtype::~token_paramtype() { }
+
+ostream&
+token_paramtype::what(ostream& o) const {
+	return o << "paramtype: " << *((const string*) this);
+}
+
+const object*
+token_paramtype::check_build(context* c) const {
+	return c->set_param_def(*this);
 }
 
 //=============================================================================

@@ -73,9 +73,10 @@ makeinfo:
 
 all: makeinfo .depend $(TARGETS)
 
-ART_OBJ = y.tab.o art.yy.o art_parser.o art_parser_prs.o art_parser_hse.o \
+ART_OBJ = y.tab.o y.union.o art.yy.o \
+	art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \
-	art_symbol_table.o art_utils.o art_object.o y.union.o \
+	art_symbol_table.o art_utils.o art_object.o art_object_expr.o \
 	art_main.o
 
 ART_DEPS = $(ART_OBJ:.o=.d)

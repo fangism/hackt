@@ -25,10 +25,11 @@ namespace entity {
 	class user_def_type;
 	class channel_definition;
 	class channel_instantiation;
-	class type_definition;
-	class type_instantiation;
+	class datatype_definition;
+	class datatype_instantiation;
 	class process_definition;
 	class process_instantiation;
+	class built_in_param_def;
 };
 using namespace entity;
 
@@ -40,6 +41,8 @@ using namespace std;
 // forward declarations
 class id_expr;
 class token_identifier;
+class token_datatype;
+class token_paramtype;
 
 //=============================================================================
 // what is a context object?
@@ -135,16 +138,21 @@ protected:
 	/**
 		Reference to the current data type being instantiated.  
 	 */
-	const type_definition*	inst_type_def;
+	const datatype_definition*	inst_data_def;
 
 	/**
 		Reference to the current channel begin instantiated.  
-//	const chan_definition*	inst_chan_def;
-	**/
+	 */
+	const channel_definition*	inst_chan_def;
+
+	/**
+		Reference to the current parameter being declared.
+	 */
+	const built_in_param_def*	inst_param_def;
 
 	// need current_blah_inst for array/dimension/range additions
 
-	// to be used in conjunction with inst_type_def
+	// to be used in conjunction with inst_data_def
 	// current_template_params;
 
 public:
@@ -175,20 +183,23 @@ void	open_chantype(const token_identifier& ds);
 void	close_chantype();
 
 // sets context's definition for instantiation
-const type_definition*	set_type_def(const id_expr& tid);
-const type_definition*	set_type_def(const token_string& tid);
+const datatype_definition*	set_datatype_def(const id_expr& tid);
+const datatype_definition*	set_datatype_def(const token_string& tid);
 	// for keyword: int or bool
-	// for int<width>, for now only accept token_int... later expressions
-const type_definition*	set_type_def(const token_type& tid, const token_int& w);
-void	unset_type_def(void);
+const datatype_definition*	set_datatype_def(const token_datatype& tid);
+	// set template argument separately!
+void	unset_datatype_def(void);
+
+const built_in_param_def*	set_param_def(const token_paramtype& pt);
+void	unset_paramtype_def(void);
 
 void	set_template_params(void);
 void	unset_template_params(void);
 
-type_instantiation*	add_type_instance(const token_identifier& id);
+datatype_instantiation*	add_type_instance(const token_identifier& id);
 	// make another version overloaded for arrays
 
-const type_instantiation*	add_template_formal(const token_identifier& id);
+const datatype_instantiation*	add_template_formal(const token_identifier& id);
 
 
 // repeat for processes and channels...

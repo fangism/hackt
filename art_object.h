@@ -51,19 +51,38 @@ using namespace std;
 // forward declarations
 class scopespace;
 class name_space;
-class definition;
-class type_definition;
+class definition_base;
+class channel_definition;
+class datatype_definition;
 class process_definition;
-class instantiation;
-class type_instantiation;
+class built_in_datatype_def;
+class built_in_param_def;
+
+class type_reference_base;
+class data_type_reference;
+class channel_type_reference;
+class process_type_reference;
+
+class instantiation_base;
+class channel_instantiation;
+class datatype_instantiation;
 class process_instantiation;
-class built_in_type_def;
+class param_instantiation;
+
+class instance_reference_base;
+class datatype_instance_reference;
+class channel_instance_reference;
+class process_instance_reference;
+// class param_instance_reference;
+
+// from "art_object_expr.h"
+class param_expr;
 
 //=============================================================================
 /// the root object type
 class object {
 public:
-virtual ~object() { }
+// virtual ~object() { }
 virtual	ostream& what(ostream& o) const = 0;
 };
 
@@ -102,12 +121,12 @@ protected:	// typedefs -- keep these here for re-use
 		This structure owns the pointers to these definitions,
 		and thus, is responsible for deleteing them.  
 	 */
-	typedef	map_of_ptr<string, type_definition>	type_def_set;
+	typedef	map_of_ptr<string, datatype_definition>	type_def_set;
 	/// list useful for query returns, const pointer?
-	typedef	list_of_const_ptr<type_definition>	type_def_list;
+	typedef	list_of_const_ptr<datatype_definition>	type_def_list;
 
 	/// resolves identifier to actual data type, we own these pointers
-	typedef	map_of_ptr<string, type_instantiation>	type_inst_set;
+	typedef	map_of_ptr<string, datatype_instantiation>	type_inst_set;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_definition>	proc_def_set;
@@ -116,13 +135,17 @@ protected:	// typedefs -- keep these here for re-use
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_instantiation>	proc_inst_set;
 
+	typedef	map_of_ptr<string, built_in_param_def>	param_def_set;
+	typedef	list_of_const_ptr<built_in_param_def>	param_def_list;
+	typedef	map_of_ptr<string, param_instantiation>	param_inst_set;
+
 	/**
 		Container for open namespaces with optional aliases.  
 		Doesn't have to be a map because never any need to search
 		by key.  List implementation is sufficient, because
 		whole list will always be searched, if it is searched at all.  
-		These pointers are not owned by this namespace.  
-		Furthermore, they are read-only.  
+		These pointers are read-only, and thus not
+		owned by this namespace.  
 	 */
 	typedef list_of_const_ptr<name_space>		namespace_list;
 
@@ -145,11 +168,18 @@ protected:	// typedefs -- keep these here for re-use
 		EVERY addition to this namespace must register
 		through this hash_map.  
 		Again, these pointers are not owned.  
-		These (redundandlty) stored copies of pointers are read-only.  
+		These (redundantly) stored copies of pointers are read-only.  
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
 	 */
 	typedef	hash_map_of_const_ptr<string, object>	used_id_map_type;
+
+	/**
+		A cache of type references for template-able types.  
+		This set owns pointers to the type_references.  
+	 */
+	typedef	hashlist_of_ptr<string,type_reference_base>
+							param_type_set;
 
 protected:	// members
 	// should really only contain instantiations? no definitions?
@@ -182,6 +212,14 @@ protected:	// members
 		automatically, expecially in sub-classes of scopespace.  
 	 */
 	used_id_map_type	used_id_map;
+
+	/**
+		Keeps around a cache of types specified with template
+		arguments.  
+		Punting this, for now, make deep copy of template arguments
+		for each type instance.  
+	param_type_set		type_template_cache;
+	**/
 
 public:
 	scopespace(const string& n, const scopespace* p);
@@ -255,6 +293,18 @@ protected:
 		be deleted in the destructor.  
 	 */
 	type_inst_set		type_insts;
+
+	/**
+		Parameter types, only existing in the global namespace.
+	 */
+	param_def_set		param_defs;
+
+	/**
+		Local parameter instantiations.  
+		Should be in scopespace?
+	 */
+	param_inst_set		param_insts;
+
 	/**
 		Container of process definitions in this scope.
 		These definitions are owned by this scope, and should
@@ -288,15 +338,25 @@ const name_space*	add_using_directive(const id_expr& n);
 const name_space*	add_using_alias(const id_expr& n, const string& a);
 
 // to be used ONLY by the global namespace
-built_in_type_def*	add_built_in_type_definition(built_in_type_def* d);
-type_definition*	add_type_alias(const id_expr& t, const string& a);
+built_in_datatype_def*	add_built_in_datatype_definition(
+				built_in_datatype_def* d);
+built_in_param_def*	add_built_in_param_definition(built_in_param_def* d);
+datatype_definition*	add_type_alias(const id_expr& t, const string& a);
 
 // returns type if unique match found, else NULL
-const type_definition*	lookup_unqualified_type(const string& id) const;
-const type_definition*	lookup_qualified_type(const id_expr& id) const;
+const datatype_definition*	lookup_unqualified_datatype(
+					const string& id) const;
+const datatype_definition*	lookup_qualified_datatype(
+					const id_expr& id) const;
+const datatype_definition*	lookup_built_in_datatype(
+					const token_datatype& id) const;
+const built_in_param_def*	lookup_built_in_paramtype(
+					const token_paramtype& id) const;
 
-type_definition*	add_type_definition();
-type_instantiation*	add_type_instantiation(const type_definition& t, 
+datatype_definition*	add_datatype_definition();
+datatype_instantiation*	add_datatype_instantiation(
+//				const data_type_reference& t,
+				data_type_reference& t,	// temporary
 				const string& i);
 const process_definition*	probe_process(const string& s) const;
 process_definition*	add_proc_declaration(const token_identifier& pname);
@@ -312,10 +372,10 @@ void	query_import_namespace_match(namespace_list& m, const id_expr& id) const;
 
 // these will not be recursive, but iteratively invoked by
 // add_blah_inst/def();
-void	query_type_def_match(type_def_list& m, const string& tid) const;
-void	query_type_def_match(type_def_list& m, const type_id& tid) const;
-void	query_type_inst_match(type_def_list& m, const string& tid) const;
-void	query_type_inst_match(type_def_list& m, const id_expr& tid) const;
+void	query_datatype_def_match(type_def_list& m, const string& tid) const;
+void	query_datatype_def_match(type_def_list& m, const type_id& tid) const;
+void	query_datatype_inst_match(type_def_list& m, const string& tid) const;
+void	query_datatype_inst_match(type_def_list& m, const id_expr& tid) const;
 void	query_proc_def_match(proc_def_list& m, const type_id& pid) const;
 void	query_proc_inst_match(proc_def_list& m, const id_expr& pid) const;
 
@@ -325,7 +385,7 @@ void	find_namespace_ending_with(namespace_list& m,
 void	find_namespace_starting_with(namespace_list& m, 
 		const id_expr& id) const;
 
-void	inherit_built_in_types(void);
+// void	inherit_built_in_types(void);		// OBSOLETE
 
 // will we need generalized versions of queries that return object*
 // if we don't know a priori what an identifier's class is?
@@ -339,8 +399,7 @@ void	inherit_built_in_types(void);
 	Consider deriving from name_space to re-use the 
 	name-resolving functionality.  
  */
-// class definition : public object
-class definition : public scopespace {
+class definition_base : public scopespace {
 protected:
 	/**
 		Back-pointer to the namespace to which this definition 
@@ -351,11 +410,12 @@ protected:
 	// string			key;
 	// used_id_map_type		used_id_map;
 public:
-	definition(const string& n, const name_space* p);
-virtual	~definition();
+	definition_base(const string& n, const name_space* p);
+virtual	~definition_base();
 
 virtual	ostream& what(ostream& o) const = 0;
-};	// end class definition
+virtual	string get_name(void) const;
+};	// end class definition_base
 
 //=============================================================================
 /**
@@ -363,25 +423,215 @@ virtual	ostream& what(ostream& o) const = 0;
 	may appear both inside and outside definitions.  Instantiations
 	inside definitions will build as part of the definitions, 			whereas those outside definitions will register as actual 
 	instantiations in the object file.  
+	Sub-classes must contain const pointers to type_reference_base
+	sub-classes.  
  */
-class instantiation : public object {
+class instantiation_base : public object {
+protected:
+	/**
+		The container type for array dimensions, allowing
+		range expressions.  Expressions may contain
+		other literals referring to other parameters, 
+		and need not necessarily be constants.  
+		Non-constants will be checked at instantiation time.  
+		Elements should be param_expr (owned pointers).
+	 */
+	typedef	list_of_ptr<param_expr>		array_dim_list;
 protected:
 	/**
 		Back-pointer to the namespace to which this definition 
 		belongs.  Should be const?  Do not delete.  
 	 */
 	const name_space*		owner;
-	// TO DO: This would be a good place to include template instantiation
-	// and array dimensions, assuming all types are parameterizable
-	// and array-able.  (process, data-types, channels)
+
+	/**
+		Name of instance.
+	 */
+
+	string				key;
+	/**
+		Optional array dimension sizes, which can be ranges.  
+	 */
+	array_dim_list*			array_dimensions;
 
 public:
-	instantiation(const name_space* o);
-virtual	~instantiation();
+	instantiation_base(const name_space* o, const string& n, 
+		array_dim_list* d = NULL);
+virtual	~instantiation_base();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	bool equals_port_formal(const port_formal_decl& tf) const = 0;
-};	// end class instantiation
+	void set_array_dimensions(array_dim_list* d);
+
+	bool array_dimension_match(const instantiation_base& i) const;
+
+};	// end class instantiation_base
+
+//=============================================================================
+/**
+	This class is a reference to a type (datatype, process, channel), 
+	and contains optional template argments.  
+	Instantiations should contain wrapper-references of this type, 
+	and not direct references to type definitions.  
+	This level of indirection...
+	Sub-classes thereof should contain const pointers to 
+	definitions of the specific classes.  
+ */
+class type_reference_base : public object {
+protected:
+	/**
+		The container type for template parameters.  
+		Temporarily allows any entity::object, however, 
+		should definitely not contain subclasses
+		of scopespace; intended for instantiations of constant
+		parameters, (and when things get fancy) other types, 
+		(even fancier) other template arguments.  
+		Consider list of paramter_expressions.  
+	 */
+	typedef	list_of_ptr<object>		template_param_list;
+
+// members
+protected:
+	/**
+		Optional set of template parameters with which a
+		type is instantiated.  
+		Types must match that of template signature.  
+		Hmmm... maybe need a concrete_type class...
+		distinguish type_reference from type_instance.  
+		This is owned, and thus must be deleted.  
+	 */
+	template_param_list*		template_params;
+
+public:
+	type_reference_base(template_param_list* pl);
+virtual	~type_reference_base();
+
+virtual const definition_base* get_base_def(void) const = 0;
+// type equivalence relationship
+
+};
+
+//-----------------------------------------------------------------------------
+class data_type_reference : public type_reference_base {
+protected:
+//	template_param_list*		template_params;	// inherited
+	const datatype_definition*	base_type_def;
+public:
+	data_type_reference(const datatype_definition* td, 
+		template_param_list* pl = NULL);
+virtual	~data_type_reference();
+
+	ostream& what(ostream& o) const;
+	const definition_base* get_base_def(void) const;
+};
+
+//-----------------------------------------------------------------------------
+class channel_type_reference : public type_reference_base {
+protected:
+//	template_param_list*		template_params;	// inherited
+	const channel_definition*	base_chan_def;
+public:
+	channel_type_reference(const channel_definition* td, 
+		template_param_list* pl = NULL);
+virtual	~channel_type_reference();
+
+	ostream& what(ostream& o) const;
+	const definition_base* get_base_def(void) const;
+};
+
+//-----------------------------------------------------------------------------
+class process_type_reference : public type_reference_base {
+protected:
+//	template_param_list*		template_params;	// inherited
+	const process_definition*	base_proc_def;
+public:
+	process_type_reference(const process_definition* td, 
+		template_param_list* pl = NULL);
+virtual	~process_type_reference();
+
+	ostream& what(ostream& o) const;
+	const definition_base* get_base_def(void) const;
+};
+
+//=============================================================================
+/**
+	Base class for a reference to a particular instance.  
+	Where a particular instance, either array or single, is 
+	connected or aliased, this object refers to a single instance
+	of a datatype, channel, or process.  
+	To check, that the instance references was actually in the 
+	dimension range of the array declared.  
+	Collection, bundle?
+	Sub-classes must contain a const pointer to the appropriate
+	subclass of type_reference_base.  
+ */
+class instance_reference_base : public object {
+protected:
+	/**
+		Optional array indices (not ranges).  
+		Indices may be symbolic.  
+		Should be list of parameter instances, possibly constants.  
+	 */
+	typedef	list_of_ptr<object>		array_index_list;
+
+protected:
+	array_index_list*			array_indices;
+// for subclasses:
+//	const instantiation_base*		inst_ref;
+
+public:
+	instance_reference_base(array_index_list* i = NULL);
+virtual	~instance_reference_base();
+
+};
+
+//-----------------------------------------------------------------------------
+/**
+	A reference to a single instance of datatype.  
+ */
+class datatype_instance_reference : public instance_reference_base {
+protected:
+//	array_index_list*			array_indices;	// inherited
+	const datatype_instantiation*		data_inst_ref;
+
+public:
+	datatype_instance_reference(const datatype_instantiation* dt, 
+		array_index_list* i = NULL);
+virtual	~datatype_instance_reference();
+
+};
+
+//-----------------------------------------------------------------------------
+/**
+	A reference to a single instance of channel.  
+ */
+class channel_instance_reference : public instance_reference_base {
+protected:
+//	array_index_list*			array_indices;	// inherited
+	const channel_instantiation*		channel_inst_ref;
+
+public:
+	channel_instance_reference(const channel_instantiation* dt, 
+		array_index_list* i = NULL);
+virtual	~channel_instance_reference();
+
+};
+
+//-----------------------------------------------------------------------------
+/**
+	A reference to a single instance of process.  
+ */
+class process_instance_reference : public instance_reference_base {
+protected:
+//	array_index_list*			array_indices;	// inherited
+	const process_instantiation*		process_inst_ref;
+
+public:
+	process_instance_reference(const process_instantiation* dt, 
+		array_index_list* i = NULL);
+virtual	~process_instance_reference();
+
+};
 
 //=============================================================================
 /**
@@ -391,7 +641,7 @@ virtual	bool equals_port_formal(const port_formal_decl& tf) const = 0;
 	from class name_space without copying?  
 	Consider deriving definition from name_space privately.  
  */
-class process_definition : public definition {
+class process_definition : public definition_base {
 public:
 	/**
 		Table of template formals.  
@@ -399,7 +649,7 @@ public:
 		and have fast lookup, thus hashlist.  
 		Remember: template formals are accessible to the rest 
 		of the body and to the port formals as well.  
-		For now, the contained type is type_instantiation
+		For now, the contained type is datatype_instantiation
 			which is generalized to include the paramater types
 			pbool and pint, not to be confused with the data 
 			types bool and int.  
@@ -410,8 +660,8 @@ public:
 			It'd be nice to be able to swap instance arguments
 			that preserve specified interfaces...
 	 */
-	typedef hashlist_of_const_ptr<string, type_instantiation>
-								temp_formal_set;
+	typedef hashlist_of_const_ptr<string, datatype_instantiation>
+							temp_formal_set;
 	
 	/**
 		Table of port formals.
@@ -420,14 +670,15 @@ public:
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
 	 */
-	typedef hashlist_of_const_ptr<string, instantiation>	port_formal_set;
+	typedef hashlist_of_const_ptr<string, instantiation_base>
+							port_formal_set;
 
 	/**
 		Table of local instantiations (orderless) of 
 		data-types and channels.  
 		These instantiations are owned by this process.  
 	 */
-	typedef map_of_ptr<string, instantiation>	inst_set;
+	typedef map_of_ptr<string, instantiation_base>	inst_set;
 
 	// List of language bodies, separate or merged?
 
@@ -448,17 +699,19 @@ virtual	~process_definition();
 
 virtual	ostream& what(ostream& o) const;
 
-	bool equals_signature(const process_signature& ps) const;
+// OBSOLETE:
+//	bool equals_signature(const process_signature& ps) const;
+
 	bool is_defined(void) const { return def; }
 
-void	add_template_formal(const type_definition* d, 
+void	add_template_formal(const datatype_definition* d, 
 		const template_formal_id& t);
-void	add_port_formal(const type_definition* d, 
+void	add_port_formal(const datatype_definition* d, 
 		const port_formal_id& p);
 
 /*** to add (non-virtual):
 void	add_process_instantiation(...);
-void	add_type_instantiation(...);
+void	add_datatype_instantiation(...);
 void	add_channel_instantiation(...);
 void	add_language_body(...);
 ***/
@@ -469,99 +722,125 @@ void	add_language_body(...);
 /**
 	Process instantiation.  
  */
-class process_instantiation : public instantiation {
-private:
-
+class process_instantiation : public instantiation_base {
 protected:
-	string			key;		///< name of instance
+	/**
+		The type of process being instantiated.  
+		Temporary: non-const and owned.  
+	 */
+	process_type_reference*		type;
+//	const process_type_reference*		type;
+
+	// reserve these for connections between instance_references
 	// list of template actuals
 	// list of port actuals
 
 public:
-	process_instantiation(const name_space* o);
+	process_instantiation(const name_space* o, 
+//		const process_type_reference* pt,
+		process_type_reference* pt,
+		const string& n);
 virtual	~process_instantiation();
 
 virtual	ostream& what(ostream& o) const;
-virtual	bool equals_port_formal(const port_formal_decl& tf) const;
+// virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 };
 
 //=============================================================================
 /**
 	Abstract base class for types and their representations.
  */
-class type_definition : public definition {
+class datatype_definition : public definition_base {
 protected:
 // inherited:
 //	string			key;		///< name of type
 public:
-	type_definition(const name_space* o, const string& n);
-virtual	~type_definition();
+	datatype_definition(const name_space* o, const string& n);
+virtual	~datatype_definition();
 
 string	get_qualified_name(void) const;
-virtual	string get_name(void) const;
 virtual	ostream& what(ostream& o) const = 0;
-virtual	const type_definition* resolve_canonical(void) const;
-virtual	bool type_equivalent(const type_definition& t) const = 0;
+virtual	const datatype_definition* resolve_canonical(void) const;
+virtual	bool type_equivalent(const datatype_definition& t) const = 0;
 };
 
 //-----------------------------------------------------------------------------
 /**
-	Reserved for special built-in fundamental base types.  
+	Reserved for special built-in fundamental data types.  
+	All user-defined data types will boil down to these types.  
 	May potentially build off of this as a base class for 
 	specialization.  
  */
-class built_in_type_def : public type_definition {
+class built_in_datatype_def : public datatype_definition {
 public:
-	built_in_type_def(const name_space* o, const string& n);
-virtual	~built_in_type_def();
+	built_in_datatype_def(const name_space* o, const string& n);
+virtual	~built_in_datatype_def();
 
 virtual	ostream& what(ostream& o) const;
-virtual	bool type_equivalent(const type_definition& t) const;
+virtual	bool type_equivalent(const datatype_definition& t) const;
 };
 
 //-----------------------------------------------------------------------------
+/**
+	Reserved for special built-in parameter types, pint and pbool.  
+	Nothing can really be derived from them... yet.  
+	Note that there is no intermediate param_definition class, 
+	because parameter types can only be built in; there are no
+	user-defined parameter types, for now...
+ */
+class built_in_param_def : public definition_base {
+public:
+	built_in_param_def(const name_space* p, const string& n);
+virtual	~built_in_param_def();
+
+	ostream& what(ostream& o) const;
+};
+
+//-----------------------------------------------------------------------------
+// TO DO: need to distinguish parameter and data-types...
+//-----------------------------------------------------------------------------
 // need specialized type definitions for templates? (int<N>)
-// class built_in_type_template_def : public built_in_type_def {
+// class built_in_datatype_template_def : public built_in_datatype_def {
 // perhaps contain a type definition and a template signature?
 // }
 
 //-----------------------------------------------------------------------------
 // may need a template type that refers to an abstract template
 // with template actuals/parameters
-// or just use user_def_type below...
+// or just use user_def_datatype below...
 
 //-----------------------------------------------------------------------------
 /**
 	Generalizable user-defined data type, which can (eventually) 
 	build upon other user-defined data types.  
  */
-class user_def_type : public type_definition {
+class user_def_datatype : public datatype_definition {
 private:
 	/**
 		Members will be kept as a hashlist
 		because their order matters, or don't they?
 	 */
-	typedef	hashlist_of_const_ptr<string, type_definition>	type_members;
+	typedef	hashlist_of_const_ptr<string, datatype_definition>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	hashlist_of_const_ptr<string, type_definition>	temp_param_list;
+	typedef	hashlist_of_const_ptr<string, datatype_definition>	temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
 	type_members		members;
 public:
-	user_def_type(const name_space* o, const string& name);
-virtual	~user_def_type() { }
+	user_def_datatype(const name_space* o, const string& name);
+virtual	~user_def_datatype() { }
 
 virtual	ostream& what(ostream& o) const;
-virtual	bool type_equivalent(const type_definition& t) const;
+virtual	bool type_equivalent(const datatype_definition& t) const;
 };
 
 //-----------------------------------------------------------------------------
 /// abstract base class for channels and their representations
-class channel_definition : public definition {
+class channel_definition : public definition_base {
 protected:
 	string			key;		///< name of type
 public:
@@ -583,12 +862,12 @@ private:
 	/**
 		Members will be kept as a list for ordered checking.  
 	 */
-	typedef	hashlist_of_const_ptr<string, type_definition>	type_members;
+	typedef	hashlist_of_const_ptr<string, datatype_definition>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	hashlist_of_const_ptr<string, type_definition>	temp_param_list;
+	typedef	hashlist_of_const_ptr<string, datatype_definition>	temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
@@ -607,49 +886,78 @@ virtual	ostream& what(ostream& o) const;
 //	to accelerate their resolution, not having to search sequentially
 //	up to the global namespace.  
 // add an alias into each scope's used_id_map...
-class type_alias : public type_definition {
+class type_alias : public datatype_definition {
 protected:
 	/// pointer to the type represented by this type-id
-	const type_definition*		canonical;
+	const datatype_definition*		canonical;
 public:
 	type_alias(const name_space* o, const string& n, 
-		const type_definition* t);
+		const datatype_definition* t);
 virtual	~type_alias();
 	// never delete canonical (can't, it's const!)
 
 // need not be virtual
-const type_definition*	resolve_canonical(void) const;
+const datatype_definition*	resolve_canonical(void) const;
 
 virtual	ostream& what(ostream& o) const;
-virtual	bool type_equivalent(const type_definition& t) const;
+virtual	bool type_equivalent(const datatype_definition& t) const;
 };
 
 //=============================================================================
 /// Instantiation of a data type, either inside or outside definition.  
-class type_instantiation : public instantiation {
+class datatype_instantiation : public instantiation_base {
 protected:
-	const type_definition*	type;		///< the actual type
-	string			key;		///< name of instance
-	// need range of array
+//	const data_type_reference*	type;		///< the actual type
+	data_type_reference*		type;		// temporarily owned
 public:
-	type_instantiation(const name_space* o, const type_definition* t,
+	datatype_instantiation(const name_space* o, 
+//		const data_type_reference* t,
+		data_type_reference* t,
 		const string& n);
-virtual	~type_instantiation();
+virtual	~datatype_instantiation();
 
 virtual	ostream& what(ostream& o) const;
+
 	bool equals_template_formal(const template_formal_decl& tf) const;
 virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 };
 
 //=============================================================================
-/***
-class template_instance : public instantiation {
+/**
+	Instantiation of a channel type.  
+ */
+class channel_instantiation : public instantiation_base {
 protected:
-	list_of_ptr<...>		// some form of expression
+//	const channel_type_reference*	type;
+	channel_type_reference*		type;		// temporarily owned
 public:
+	channel_instantiation(const name_space* o, 
+//		const channel_type_reference* ct,
+		channel_type_reference* ct,
+		const string& n);
+virtual	~channel_instantiation();
 
-};
-***/
+virtual	ostream& what(ostream& o) const;
+};	// end class channel_instantiation
+
+//=============================================================================
+/**
+	Instance of a built-in parameter type, such as pint and pbool.  
+ */
+class param_instantiation : public instantiation_base {
+protected:
+	/**
+		Type refers directly to a definition in this case, 
+		because parameters are never templatable.  
+	 */
+	const built_in_param_def*	type;		// never owned
+public:
+	param_instantiation(const name_space* o, 
+		const built_in_param_def* pt, const string& n);
+virtual	~param_instantiation();
+
+virtual	ostream& what(ostream& o) const;
+};	// end class param_instantiation
 
 //=============================================================================
 };	// end namespace entity

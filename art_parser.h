@@ -636,7 +636,10 @@ virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
-/// abstract base class for type
+/**
+	Abstract base class for types in general (parameters, data, channel, 
+	process...)
+ */
 class type_base : virtual public node {
 public:
 	type_base();
@@ -648,15 +651,49 @@ virtual	line_position rightmost(void) const = 0;
 };
 
 //-----------------------------------------------------------------------------
-/// keywords that are also types
+/**
+	Abstract base class for keywords that correspond to built-in types, 
+	(for both data-types and parameter types).  
+ */
 class token_type : public token_keyword, public type_base {
 public:
 	token_type(const char* tf);
 virtual	~token_type();
 
-virtual	ostream& what(ostream& o) const;
+// just use parent's
+virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	const object* check_build(context* c) const = 0;
+};
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "int" and "bool" data types.
+ */
+class token_datatype : public token_type {
+public:
+	token_datatype(const char* dt);
+virtual	~token_datatype();
+
+virtual	ostream& what(ostream& o) const;
+using token_type::leftmost;
+using token_type::rightmost;
+virtual	const object* check_build(context* c) const;
+};
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "pint" and "pbool" parameter types.
+ */
+class token_paramtype : public token_type {
+public:
+	token_paramtype(const char* dt);
+virtual	~token_paramtype();
+
+virtual	ostream& what(ostream& o) const;
+using token_type::leftmost;
+using token_type::rightmost;
 virtual	const object* check_build(context* c) const;
 };
 
@@ -692,13 +729,16 @@ virtual	const object* check_build(context* c) const;
 class data_type_base : public type_base {
 protected:
 	token_type*		type;		// generalize to structs?
+	expr_list*		width;		///< optional width
+/** OBSOLETE
 	token_char*		la;		///< optional angle bracket
 	token_int*		width;		///< integer width (optional)
 	token_char*		ra;
+**/
 public:
-	data_type_base(token_type* t, token_char* l, 
-		token_int* w, token_char* r);
-	data_type_base(token_type* t);
+	data_type_base(token_type* t, 
+//		token_char* l, token_int* w, token_char* r
+		expr_list* w = NULL);
 virtual	~data_type_base();
 
 virtual	ostream& what(ostream& o) const;
@@ -1040,7 +1080,12 @@ virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
-// left-hand side may be general lvalue-expression
+/**
+	Statement that is just a connection of ports.  
+	Resembles a plain function call.  
+	Unlike instance_connection, this doesn't create any new 
+	instantiations.  
+ */
 class connection_statement : public actuals_base {
 protected:
 	expr*			lvalue;
@@ -1175,10 +1220,12 @@ typedef	node_list<template_formal_id,comma>	template_formal_id_list;
 /// template formal declaration contains a type and identifier list
 class template_formal_decl : public node {
 protected:
-	type_base*			type;	///< formal base type
+//	type_base*			type;	// too general
+	token_paramtype*		type;	///< formal base type
 	template_formal_id_list*	ids;	///< identifier list
 public:
-	template_formal_decl(type_base* t, template_formal_id_list* i);
+//	template_formal_decl(type_base* t, template_formal_id_list* i);
+	template_formal_decl(token_paramtype* t, template_formal_id_list* i);
 virtual	~template_formal_decl();
 
 virtual	ostream& what(ostream& o) const;

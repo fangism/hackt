@@ -172,7 +172,7 @@ type_id::rightmost(void) const {
 const object*
 type_id::check_build(context* c) const {
 	const object* o;
-	o = c->set_type_def(*base);		// will handle errors
+	o = c->set_datatype_def(*base);		// will handle errors
 	if (temp_spec)
 		o = temp_spec->check_build(c);
 	return o;
@@ -193,24 +193,24 @@ type_id::get_template_spec(void) const {
 // class data_type_base method definitions
 
 CONSTRUCTOR_INLINE
-data_type_base::data_type_base(token_type* t, token_char* l, 
-	token_int* w, token_char* r) :
+data_type_base::data_type_base(token_type* t, 
+//	token_char* l, token_int* w, token_char* r, 	// OBSOLETE
+	expr_list* w) :
 		type_base(),
-		type(t), la(l), width(w), ra(r) {
-	assert(type); assert(la); assert(width); assert(ra);
-}
-
-CONSTRUCTOR_INLINE
-data_type_base::data_type_base(token_type* t) : type_base(),
-		type(t),
-		la(NULL), width(NULL), ra(NULL) {
-	assert(type);
+		type(t), 
+//		la(l), width(w), ra(r) 
+		width(w) {
+	assert(type); 
+//	assert(la); assert(width); assert(ra);
+	if (w) assert(width);
 }
 
 DESTRUCTOR_INLINE
 data_type_base::~data_type_base() {
-	SAFEDELETE(type); SAFEDELETE(la);
-	SAFEDELETE(width); SAFEDELETE(ra);
+	SAFEDELETE(type);
+//	SAFEDELETE(la);
+	SAFEDELETE(width);
+//	SAFEDELETE(ra);
 }
 
 ostream&
@@ -225,23 +225,29 @@ data_type_base::leftmost(void) const {
 
 line_position
 data_type_base::rightmost(void) const {
-	if (ra)         return ra->rightmost();
-	else if (width) return width->rightmost();
-	else if (la)    return la->rightmost();
+//	if (ra)         return ra->rightmost();
+	if (width)	return width->rightmost();
+//	if (la)  	return la->rightmost();
 	else            return type->rightmost();
 }
 
 /**
 	Type checks a single data type.  
-	Remember to unset_type_def after the list is done.  
+	Remember to unset_datatype_def after the list is done.  
+	TO DO: set template arguments if applicable
  */
 const object*
 data_type_base::check_build(context* c) const {
+	const object* o;
 	assert(type);
+	o = c->set_datatype_def(*type);
+#if 0
 	if (width)
-		return c->set_type_def(*type, *width);
-	else
-		return c->set_type_def(*type);
+		c->set_template_args(*width);
+	OR	width->check_build(c);	// expr_list has no context
+		// perhaps sub-type off expr_list? template args...
+#endif
+	return o;
 }
 
 //=============================================================================
@@ -911,7 +917,9 @@ instance_declaration::check_build(context* c) const {
 	if (t) {
 		ids->check_build(c);
 	} 
-	c->unset_type_def();
+	// instance could be ANY type
+	c->unset_datatype_def();
+	c->unset_paramtype_def();
 //	return t;
 	return c->top_namespace();
 }
@@ -1176,7 +1184,7 @@ template_formal_id::rightmost(void) const {
 const object*
 template_formal_id::check_build(context* c) const {
 	const object* o;
-	const type_instantiation* t;
+	const datatype_instantiation* t;
 	// type should already be set in the context
 	t = c->add_template_formal(*name);
 	if (dim) {
@@ -1191,7 +1199,9 @@ template_formal_id::check_build(context* c) const {
 // class template_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
-template_formal_decl::template_formal_decl(type_base* t, 
+template_formal_decl::template_formal_decl(
+//	type_base* t, 
+	token_paramtype* t, 
 	template_formal_id_list* i) :
 		node(), type(t), ids(i) {
 	assert(type); assert(ids);
@@ -1226,7 +1236,7 @@ template_formal_decl::check_build(context* c) const {
 	o = type->check_build(c);
 	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
-	c->unset_type_def();	// don't forget to unset!
+	c->unset_paramtype_def();	// don't forget to unset!
 	return o;
 }
 
@@ -1278,7 +1288,7 @@ def_type_id::check_build(context* c) const {
 //	const type_definition* t;
 	assert(name);
 // don't check name again, should already be checked by process_proto, etc...
-//	t = c->set_type_def(*name);
+//	t = c->set_datatype_def(*name);
 //	assert(t);
 	if (temp_spec) {
 		o = temp_spec->check_build(c);
@@ -1368,7 +1378,7 @@ process_prototype::check_build(context* c) const {
 	c->declare_process(get_name());		// will handle errors
 	o = idt->check_build(c);		// always returns NULL
 	o = ports->check_build(c);		// ignore return value
-	c->unset_type_def();			// unset port type
+	c->unset_datatype_def();			// unset port type
 	c->close_process();
 	// nothing better to do
 	return c->top_namespace();

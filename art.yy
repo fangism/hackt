@@ -164,7 +164,8 @@ extern const char* const yyrule[];
 	token_float*		_token_float;
 	token_identifier*	_token_identifier;
 	token_quoted_string*	_token_quoted_string;
-	token_type*		_token_type;
+	token_datatype*		_token_datatype;
+	token_paramtype*	_token_paramtype;
 	token_else*		_token_else;
 
 	root_body*		_root_body;
@@ -347,7 +348,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_bool>		BOOL_TRUE BOOL_FALSE
 
 /* _token_type */
-%token	<_token_type>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
+%token	<_token_datatype>	INT_TYPE BOOL_TYPE
+%token	<_token_paramtype>	PINT_TYPE PBOOL_TYPE
 
 /* non-terminals */
 %type	<_root_body>	module
@@ -372,7 +374,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
 %type	<_type_base>	type_id
-%type	<_data_type_base>	base_template_type
+/* %type	<_data_type_base>	base_template_type */
+%type	<_token_paramtype>	base_template_type
 /* %type	<n>	formal_id */
 %type	<_chan_type>	base_chan_type chan_or_port
 %type	<_base_data_type_list>	base_data_type_list_in_parens base_data_type_list
@@ -393,6 +396,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
+%type	<_alias_list>	rvalue_optional_alias_list
 %type	<_alias_list>	alias_list
 %type	<_expr_list>	connection_actuals_list
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
@@ -466,7 +470,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 /* top level syntax */
 
 module
-	: top_root /* END_OF_FILE (doesn't work they way I want yet...) */
+	: top_root
 		{ $$ = $1; }
 	;
 
@@ -630,6 +634,9 @@ type_id
 		{ $$ = new type_id($1, $2); }
 	| base_chan_type { $$ = $1; }
 	| base_data_type { $$ = $1; }
+	| base_template_type { $$ = $1; }
+		/* should parameter declarations be allowed 
+			in loops and conditionals? rather not */
 	;
 
 /******************************************************************************
@@ -638,9 +645,9 @@ type_id
 
 base_template_type
 	: PINT_TYPE 		/* integer parameter */
-		{ $$ = new data_type_base($1); }
+		{ $$ = $1; }
 	| PBOOL_TYPE		/* boolean parameter */
-		{ $$ = new data_type_base($1); }
+		{ $$ = $1; }
 	;
 
 /* channel type: channel, inport, outport, and data types */
@@ -677,7 +684,9 @@ base_data_type
 	optional parens get confused with template-parameters
 	going to use angle brackets <> in the template-fashion */
 	: INT_TYPE '<' INT '>'
-		{ $$ = new data_type_base($1, $2, $3, $4); }
+		{ $$ = new data_type_base($1, 
+			(new expr_list($3))->wrap($2, $4));
+		}
 	| INT_TYPE
 		{ $$ = new data_type_base($1); }
 	| BOOL_TYPE
@@ -799,7 +808,9 @@ definition_body
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_statement { $$ = $1; }	/* connection of ports */
-	| alias_list ';' { $$ = $1; delete $2; }	/* alias connection */
+	| alias_list '=' expr ';'
+		{ $$ = alias_list_append($1, $2, $3); delete $4; }
+			/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
 	;
@@ -838,9 +849,8 @@ instance_id_item
 	/* single instance declaration with connection */
 	| ID connection_actuals_list
 		{ $$ = new instance_connection($1, $2); }
-	/* alias or assignment (not just member_id expression?) */
-/*	| ID '=' expr */
-	| ID '=' alias_list
+	/* instance alias or parameter assignment */
+	| ID '=' rvalue_optional_alias_list
 		{ $$ = new instance_alias($1, 
 			alias_list_wrap($2, $3, NULL)); }
 	;
@@ -853,13 +863,13 @@ connection_statement
 		{ $$ = new connection_statement($1, $2, $3); }
 	;
 
-/*
-instance_alias
-	: member_index_expr '=' alias_list ';'
-		{ $$ = new instance_alias($1, 
-			alias_list_wrap($2, $3, NULL), $4); }
+rvalue_optional_alias_list
+/* note that expr can be just another member_index_expr */
+	: alias_list '=' expr
+		{ $$ = alias_list_append($1, $2, $3); }
+	| expr
+		{ $$ = new alias_list($1); }
 	;
-*/
 
 /* aliasing syntax, or data types is value assignment (general expr?)
 	type check this, of course */

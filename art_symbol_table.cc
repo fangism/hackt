@@ -35,9 +35,9 @@ context::context(name_space* g) :
 		current_proc_def(NULL), 
 		check_against_prev_process(false), 
 		inst_proc_def(NULL), 
-		inst_type_def(NULL)
-//		inst_chan_def(NULL)
-		{
+		inst_data_def(NULL),
+		inst_chan_def(NULL), 
+		inst_param_def(NULL) {
 	// perhaps verify that g is indeed global?
 	ns_stack.push(g);
 
@@ -45,16 +45,16 @@ context::context(name_space* g) :
 	assert(current_namespace);		// make sure allocated properly
 
 	// Add to the global namespace all built-in types and definitions.  
-	// When sub-namespaces are created, they will inherit aliases to these
-	// built-in types to speed-up lookup-resolutions in namespaces.  
-	assert(current_namespace->add_built_in_type_definition(
-		new built_in_type_def(current_namespace, "bool")));
-	assert(current_namespace->add_built_in_type_definition(
-		new built_in_type_def(current_namespace, "int")));
-	assert(current_namespace->add_built_in_type_definition(
-		new built_in_type_def(current_namespace, "pbool")));
-	assert(current_namespace->add_built_in_type_definition(
-		new built_in_type_def(current_namespace, "pint")));
+	// Lookups of built-in type always goes to global namespace.  
+	assert(current_namespace->add_built_in_datatype_definition(
+		new built_in_datatype_def(current_namespace, "bool")));
+	assert(current_namespace->add_built_in_datatype_definition(
+		new built_in_datatype_def(current_namespace, "int")));
+
+	assert(current_namespace->add_built_in_param_definition(
+		new built_in_param_def(current_namespace, "pbool")));
+	assert(current_namespace->add_built_in_param_definition(
+		new built_in_param_def(current_namespace, "pint")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -243,24 +243,25 @@ context::close_datatype(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_type_def) 
+	Modifies the context's current type definition (inst_data_def) 
 	if the referenced type is resolved without error.  
 	\param id the name of the type (unqualified).  
 	\return pointer to defined or declared type if unique found, 
 		else NULL of no match or ambiguous.  
  */
-const type_definition*
-context::set_type_def(const token_string& id) {
+const datatype_definition*
+context::set_datatype_def(const token_string& id) {
 	// lookup type (will be built-in int or bool)
 	assert(current_namespace);
-	const type_definition* ret = current_namespace->lookup_unqualified_type(id);
+	const datatype_definition* ret = 
+		current_namespace->lookup_unqualified_datatype(id);
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_type_def);		// sanity check
-		inst_type_def = ret;
+		assert(!inst_data_def);		// sanity check
+		inst_data_def = ret;
 		indent++;
 	}
 	return ret;
@@ -268,7 +269,7 @@ context::set_type_def(const token_string& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_type_def) 
+	Modifies the context's current type definition (inst_data_def) 
 	if the referenced type is resolved without error.  
 	TODO: Currently doesn't check template specialization type. 
 	Punting on this until template mechanism is more generalized.  
@@ -278,20 +279,20 @@ context::set_type_def(const token_string& id) {
 	\return pointer to defined or declared type if unique found, 
 		else NULL of no match or ambiguous.  
  */
-const type_definition*
-context::set_type_def(const id_expr& tid) {
+const datatype_definition*
+context::set_datatype_def(const id_expr& tid) {
 	// lookup type (will be built-in int or bool)
 	assert(current_namespace);
-	const type_definition* ret = 
-		current_namespace->lookup_qualified_type(tid);
+	const datatype_definition* ret = 
+		current_namespace->lookup_qualified_datatype(tid);
 	if (!ret) {
 		type_error_count++;
 		// a more helpful message, please!
 		cerr << tid.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_type_def);		// sanity check
-		inst_type_def = ret;
+		assert(!inst_data_def);		// sanity check
+		inst_data_def = ret;
 		indent++;
 	}
 	return ret;
@@ -299,54 +300,95 @@ context::set_type_def(const id_expr& tid) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Modifies the context's current type definition (inst_type_def) 
+	Modifies the context's current type definition (inst_data_def) 
 	if the referenced type is resolved without error.  
+	(Approach: don't treat int<> as a corner case of a built-in
+		template; follow a standard framework)
 	\param id the name of the type (unqualified).  
 	\return pointer to defined or declared type if unique found, 
 		else NULL of no match or ambiguous.  
  */
-const type_definition*
-context::set_type_def(const token_type& id, const token_int& w) {
+const datatype_definition*
+context::set_datatype_def(const token_datatype& id) {
 	// lookup type (will be built-in int or bool)
-#if 0
 	assert(current_namespace);
-	const type_definition* ret = current_namespace->lookup_unqualified_type(id);
+	const datatype_definition* ret = 
+		current_namespace->lookup_built_in_datatype(id);
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
 		exit(1);			// temporary
 	} else {
-		assert(!inst_type_def);		// sanity check
-		inst_type_def = ret;
+		assert(!inst_data_def);		// sanity check
+		inst_data_def = ret;
 		indent++;
 	}
-	// to do: set template width using w
+	// to do elsewhere: set template width using w
 	return ret;
-#else
-	return NULL;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resets the current type definition to NULL.
+	TODO: Also resets template arguments.  
  */
 void
-context::unset_type_def(void) {
-	if (inst_type_def) {
+context::unset_datatype_def(void) {
+	if (inst_data_def) {
 		indent--;
-		inst_type_def = NULL;
+		inst_data_def = NULL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets current parameter instantiation type.
+ */
+
+const built_in_param_def*
+context::set_param_def(const token_paramtype& pt) {
+	assert(current_namespace);
+	assert(!inst_param_def);
+	// always just lookup in global namespace
+	const built_in_param_def* ret = 
+		current_namespace->lookup_built_in_paramtype(pt);
+	if (!ret) {
+		type_error_count++;
+		cerr << pt.where() << endl;
+		exit(1);			// temporary
+	} else {
+		assert(!inst_param_def);		// sanity check
+		inst_param_def = ret;
+		indent++;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the current parameter type to NULL.
+	TODO: Also resets template arguments.  
+ */
+void
+context::unset_paramtype_def(void) {
+	if (inst_param_def) {
+		indent--;
+		inst_param_def = NULL;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-type_instantiation*
+datatype_instantiation*
 context::add_type_instance(const token_identifier& id) {
-	type_instantiation* ret;
+	datatype_instantiation* ret;
 	assert(current_namespace);
-	assert(inst_type_def);
-	ret = current_namespace->add_type_instantiation(*inst_type_def, id);
+	assert(inst_data_def);
+	// TO DO: need not just definition, but type_reference
+	// for now, ignore template parameters, add them later
+	ret = current_namespace->add_datatype_instantiation(
+		*new data_type_reference(inst_data_def), id);
+//	ret = current_namespace->add_datatype_instantiation(*inst_data_def, id);
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -363,13 +405,13 @@ context::add_type_instance(const token_identifier& id) {
 	TO DO: write it, finish it.  
 	\param id the name of the formal instance.  
  */
-const type_instantiation*
+const datatype_instantiation*
 context::add_template_formal(const token_identifier& id) {
 #if 0
-	const type_instantiation* ret;
-	assert(inst_type_def);
+	const datatype_instantiation* ret;
+	assert(inst_data_def);
 	assert(current_namespace);
-//	ret = inst_type_def->add_template_formal();
+//	ret = inst_data_def->add_template_formal();
 #else
 	return NULL;
 #endif

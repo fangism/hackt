@@ -16,6 +16,8 @@
 	// includes "list_of_ptr_template_methods.h"
 #include "art_object.h"
 
+#include "art_object_expr.h"
+
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
@@ -63,6 +65,9 @@ namespace entity {
 //=============================================================================
 // non-member function prototypes
 
+/***
+OBSOLETE:
+
 static bool temp_formal_set_equals(
 	const process_definition::temp_formal_set& ts,       
 	const template_formal_decl_list* tl);
@@ -70,19 +75,20 @@ static bool temp_formal_set_equals(
 static bool port_formal_set_equals(
 	const process_definition::port_formal_set& ps,             
 	const port_formal_decl_list* pl);        
-
+***/
 
 //=============================================================================
 // class scopespace methods
 scopespace::scopespace(const string& n, const scopespace* p) : 
 		object(), parent(p), key(n), 
-		used_id_map() {
+		used_id_map()
+//		type_template_cache()
+		{
 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 scopespace::~scopespace() {
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -130,15 +136,15 @@ assign_id(const string& id) {
 	such as bool and int.  
 	\param n the name.  
 	\param p pointer to the parent namespace.  
-	\sa inherit_built_in_types
  */
 name_space::name_space(const string& n, const name_space* p) : 
 		scopespace(n, p), 
 		parent(p), 	// doubly-initialized? override?
 		subns(), open_spaces(), open_aliases(), 
 		type_defs(), type_insts(),
+		param_defs(), param_insts(),
 		proc_defs(), proc_insts() {
-	inherit_built_in_types();
+//	inherit_built_in_types();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -568,12 +574,12 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) const {
 	\param tid the name of type to search for.  
  */
 void
-name_space::query_type_def_match(type_def_list& m, const string& tid) const {
+name_space::query_datatype_def_match(type_def_list& m, const string& tid) const {
 	DEBUG(TRACE_DATATYPE_QUERY, 
-		cerr << endl << "query_type_def_match: " << tid
+		cerr << endl << "query_datatype_def_match: " << tid
 			<< " in " << get_qualified_name())
 	{
-		const type_definition* ret = type_defs[tid];
+		const datatype_definition* ret = type_defs[tid];
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
@@ -581,7 +587,7 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) const {
 		// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			const type_definition* ret = (*i)->type_defs[tid];
+			const datatype_definition* ret = (*i)->type_defs[tid];
 			if (ret) m.push_back(ret);
 		}
 		// don't search aliased imports
@@ -593,7 +599,7 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) const {
 #else
 	if (parent)
 #endif
-		parent->query_type_def_match(m, tid);
+		parent->query_datatype_def_match(m, tid);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -625,14 +631,14 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Adds a built-in type definition, generally reserved only for use 
+	Adds a built-in datatype definition, generally reserved only for use 
 	with the global scope.  
  */
-built_in_type_def*
-name_space::add_built_in_type_definition(built_in_type_def* d) {
+built_in_datatype_def*
+name_space::add_built_in_datatype_definition(built_in_datatype_def* d) {
 if (parent) {
-	cerr << "Adding of built-in types is reserved for the "
-		<< "global namespace only!";
+	cerr << "Adding of built-in data types is reserved for the "
+		"global namespace only!";
 	return NULL;
 } else {
 	assert(d);
@@ -649,11 +655,36 @@ if (parent) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-type_definition*
+/**
+	Adds a built-in parameter definition, generally reserved only for use 
+	with the global scope.  
+ */
+built_in_param_def*
+name_space::add_built_in_param_definition(built_in_param_def* d) {
+if (parent) {
+	cerr << "Adding of built-in params is reserved for the "
+		"global namespace only!";
+	return NULL;
+} else {
+	assert(d);
+	string k = d->get_name();
+	const object* probe = used_id_map[k];
+	assert(!probe);
+	// else "ERROR: identifier already taken, failed to add built-in type!";
+
+	// type_defs owns this type is reponsible for deleting it
+	param_defs[k] = d;
+	used_id_map[k] = d;
+	return d;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_definition*
 name_space::add_type_alias(const id_expr& t, const string& a) {
 	return NULL;
 /*** not done yet
-	type_definition* ret;
+	datatype_definition* ret;
 	object* probe;
 	namespace_list::iterator i;
 	namespace_list candidates;		// empty list
@@ -671,7 +702,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 
 	// else we're ok to proceed to add alias
 	// first find the referenced type name...
-	query_type_def_match(candidates, t);
+	query_datatype_def_match(candidates, t);
 	i = candidates.begin();
 
 	switch (candidates.size()) {
@@ -706,25 +737,25 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Public interface to lookup a single type_definition.  
+	Public interface to lookup a single datatype_definition.  
 	This version takes a single identifier string (unqualified).  
 	Will need to make sure that template params of matched type is null.  
 	\param id the unqualified name of the type.  
-	\return pointer to matched type_definition, only if it unique, 
+	\return pointer to matched datatype_definition, only if it unique, 
 		otherwise returns NULL.  
-	\sa query_type_def_match
-	\sa lookup_qualified_type
+	\sa query_datatype_def_match
+	\sa lookup_qualified_datatype
  */
 
-const type_definition*
-name_space::lookup_unqualified_type(const string& id) const {
+const datatype_definition*
+name_space::lookup_unqualified_datatype(const string& id) const {
 	// const
-	const type_definition* ret;
+	const datatype_definition* ret;
 	type_def_list::iterator i;
 	type_def_list candidates;
 
 	// only want to query if type was unqualified
-	query_type_def_match(candidates, id);
+	query_datatype_def_match(candidates, id);
 
 	i = candidates.begin();
 	switch (candidates.size()) {
@@ -751,16 +782,16 @@ name_space::lookup_unqualified_type(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Public interface to lookup a single type_definition.  
+	Public interface to lookup a single datatype_definition.  
 	This version takes a qualified expression.  
 	Will need to make sure that template params of matched type is null.  
 	\param id the qualified name of the type.  
-	\return pointer to matched type_definition, only if it unique, 
+	\return pointer to matched datatype_definition, only if it unique, 
 		otherwise returns NULL.  
-	\sa query_type_def_match
+	\sa query_datatype_def_match
  */
-const type_definition*
-name_space::lookup_qualified_type(const id_expr& id) const {
+const datatype_definition*
+name_space::lookup_qualified_datatype(const id_expr& id) const {
 	id_expr nsname = id.copy_namespace_portion();
 //	cerr << "nsname = " << " " << nsname << endl;
 	// what if nsname is empty? start search here
@@ -768,7 +799,7 @@ name_space::lookup_qualified_type(const id_expr& id) const {
 		((id.is_absolute()) ? get_global_namespace() : this)
 		->query_subnamespace_match(nsname);
 	if (root) {
-		const type_definition* ret;
+		const datatype_definition* ret;
 		id_expr::const_reverse_iterator e = id.rbegin();
 		assert(*e);
 		ret = root->type_defs[**e];
@@ -783,6 +814,32 @@ name_space::lookup_qualified_type(const id_expr& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Faster lookup of built-in int<> and bool data types, 
+	rooted at the global namespace.  
+ */
+const datatype_definition*
+name_space::lookup_built_in_datatype(const token_datatype& id) const {
+	const datatype_definition* ret;
+	ret = get_global_namespace()->type_defs[id];
+	assert(ret);		// better already be there!
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Faster lookup of built-in int<> and bool data types, 
+	rooted at the global namespace.  
+ */
+const built_in_param_def*
+name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
+	const built_in_param_def* ret;
+	ret = get_global_namespace()->param_defs[id];
+	assert(ret);		// better already be there!
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Create an instance of a data type and add it local symbol table.  
 	First checks to see if name is already taken in the used_id_map.  
 	If it collides with anything, then error.  
@@ -791,11 +848,13 @@ name_space::lookup_qualified_type(const id_expr& id) const {
 	\param t the type of the instance.
 	\param id the names of the instance.  
  */
-type_instantiation*
-name_space::add_type_instantiation(const type_definition& t, 
+datatype_instantiation*
+name_space::add_datatype_instantiation(
+//		const data_type_reference& t, 
+		data_type_reference& t, 	// temporary, until const
 		const string& id) {
 	const object* probe;
-	type_instantiation* new_inst;
+	datatype_instantiation* new_inst;
 	probe = used_id_map[id];
 	if (probe) {
 		probe->what(cerr << id << " is already declared ")
@@ -805,7 +864,8 @@ name_space::add_type_instantiation(const type_definition& t,
 	// consistency check
 	assert(!type_insts[id]);
 	// else safe to proceed
-	new_inst = new type_instantiation(this, &t, id);
+
+	new_inst = new datatype_instantiation(this, &t, id);
 	assert(new_inst);
 	type_insts[id] = new_inst;
 	used_id_map[id] = new_inst;
@@ -927,25 +987,25 @@ name_space::add_proc_definition(const token_identifier& pname) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	OBSOLETE.
 	This searches the parent for built-in types and creates local 
 	aliases to them under the same name, for accelerated type resolution.  
 	Types that qualify for inheritance are either built-in types, 
 	which should only be in the global namespace, or aliases thereof.  
 	To be used only by the constructor, hence private.  
- */
 void
 name_space::inherit_built_in_types(void) {
 if (parent) {
 	type_def_set::const_iterator i = parent->type_defs.begin();
 	for ( ; i!=parent->type_defs.end(); i++) {
-		const type_definition* t;
+		const datatype_definition* t;
 		t = (*i).second;
 		assert(t);
 		t = t->resolve_canonical();	// resolve
 		assert(t);
 
 		// detect built-in types
-		if (IS_A(const built_in_type_def*, t)) {
+		if (IS_A(const built_in_datatype_def*, t)) {
 			assert(!used_id_map[(*i).first]);
 			type_alias* new_alias = 
 				new type_alias(this, (*i).first, t);
@@ -956,60 +1016,159 @@ if (parent) {
 	}
 } // end if (parent)
 }
+**/
 
 //=============================================================================
-// class definition method definitions
+// class definition_base method definitions
 
 // p is parent
 inline
-definition::definition(const string& n, const name_space* p) : 
+definition_base::definition_base(const string& n, const name_space* p) : 
 		scopespace(n, p) {
 }
 
 inline
-definition::~definition() {
+definition_base::~definition_base() {
+}
+
+string
+definition_base::get_name(void) const {
+	return key;
+}
+
+
+//=============================================================================
+// class type_reference_base method definitions
+
+type_reference_base::type_reference_base(template_param_list* pl) : object(), 
+		template_params(pl) {
+}
+
+type_reference_base::~type_reference_base() {
+	SAFEDELETE(template_params);
 }
 
 //=============================================================================
-// class instantiation method definitions
+// class data_type_reference method definitions
 
-inline
-instantiation::instantiation(const name_space* o) : object(), owner(o) {
+data_type_reference::data_type_reference(const datatype_definition* td, 
+		template_param_list* pl) : type_reference_base(pl), 
+		base_type_def(td) {
 }
 
-inline
-instantiation::~instantiation() {
+data_type_reference::~data_type_reference() {
+}
+
+ostream&
+data_type_reference::what(ostream& o) const {
+	return o << "data-type-reference";
+}
+
+const definition_base*
+data_type_reference::get_base_def(void) const {
+	return base_type_def;
 }
 
 //=============================================================================
-// class type_definition method definitions
+// class channel_type_reference method definitions
+
+channel_type_reference::channel_type_reference(const channel_definition* cd, 
+		template_param_list* pl) : type_reference_base(pl), 
+		base_chan_def(cd) {
+}
+
+channel_type_reference::~channel_type_reference() {
+}
+
+ostream&
+channel_type_reference::what(ostream& o) const {
+	return o << "channel-type-reference";
+}
+
+const definition_base*
+channel_type_reference::get_base_def(void) const {
+	return base_chan_def;
+}
+
+//=============================================================================
+// class process_type_reference method definitions
+
+process_type_reference::process_type_reference(const process_definition* pd, 
+		template_param_list* pl) : type_reference_base(pl), 
+		base_proc_def(pd) {
+}
+
+process_type_reference::~process_type_reference() {
+}
+
+ostream&
+process_type_reference::what(ostream& o) const {
+	return o << "process-type-reference";
+}
+
+const definition_base*
+process_type_reference::get_base_def(void) const {
+	return base_proc_def;
+}
+
+//=============================================================================
+// class instantiation_base method definitions
+
+inline
+instantiation_base::instantiation_base(const name_space* o, 
+		const string& n, array_dim_list* d) : 
+		object(), owner(o), key(n), array_dimensions(d) {
+}
+
+inline
+instantiation_base::~instantiation_base() {
+	SAFEDELETE(array_dimensions);
+}
+
+void
+instantiation_base::set_array_dimensions(array_dim_list* d) {
+	// just in case, delete what was previously there
+	SAFEDELETE(array_dimensions);
+	array_dimensions = d;
+}
+
+/**
+	Determines whether or not the dimensions of two instantiation_base
+	arrays are equivalent, and hance compatible.  
+	\param i the second instantiation_base to compare against.
+	\return false for now.
+ */
+bool
+instantiation_base::array_dimension_match(const instantiation_base& i) const {
+	// TO DO: this is temporary
+	// if both lists are not NULL, iterate through lists...
+	return false;
+}
+
+//=============================================================================
+// class datatype_definition method definitions
 
 // make sure that this constructor is never invoked outside this file
 inline
-type_definition::type_definition(const name_space* o, const string& n) :
-	definition(n, o) {
+datatype_definition::datatype_definition(const name_space* o, const string& n) :
+	definition_base(n, o) {
 }
 
 inline
-type_definition::~type_definition() {
+datatype_definition::~datatype_definition() {
 }
 
 string
-type_definition::get_qualified_name(void) const {
+datatype_definition::get_qualified_name(void) const {
 	return parent->get_qualified_name() +scope +key;
-}
-
-string
-type_definition::get_name(void) const {
-	return key;
 }
 
 /**
 	Call this to automatically resolve type, if type referenced
 	is an alias or typedef.  
  */
-const type_definition*
-type_definition::resolve_canonical(void) const {
+const datatype_definition*
+datatype_definition::resolve_canonical(void) const {
 	return this;
 }
 
@@ -1019,7 +1178,7 @@ type_definition::resolve_canonical(void) const {
 // make sure that this constructor is never invoked outside this file
 inline
 channel_definition::channel_definition(const name_space* o, const string& n) :
-	definition(n, o) {
+	definition_base(n, o) {
 }
 
 channel_definition::~channel_definition() {
@@ -1046,8 +1205,8 @@ channel_definition::get_name(void) const {
 	\param t pointer to the actual type being aliased.  
  */
 type_alias::type_alias(const name_space* o, const string& n, 
-		const type_definition* t) :
-		type_definition(o, n), canonical(t) {
+		const datatype_definition* t) :
+		datatype_definition(o, n), canonical(t) {
 	assert(canonical);
 	// just in case t is not a canonical type, i.e. another alias...
 	const type_alias* a = IS_A(const type_alias*, canonical);
@@ -1067,7 +1226,7 @@ type_alias::~type_alias() { }
 	\return the canonical pointer.  
  */
 inline
-const type_definition*
+const datatype_definition*
 type_alias::resolve_canonical(void) const {
 	return canonical;
 }
@@ -1078,23 +1237,23 @@ type_alias::what(ostream& o) const {
 }
 
 bool
-type_alias::type_equivalent(const type_definition& t) const {
+type_alias::type_equivalent(const datatype_definition& t) const {
 	return resolve_canonical()->type_equivalent(t);
 }
 
 //=============================================================================
-// class built_in_type_def method definitions
+// class built_in_datatype_def method definitions
 
 // doesn't like inlining this, linker can't find definition on gcc-3.3
 // inline
-built_in_type_def::built_in_type_def(const name_space* o, const string& n) :
-	type_definition(o, n) {
+built_in_datatype_def::built_in_datatype_def(const name_space* o, const string& n) :
+	datatype_definition(o, n) {
 }
 
-built_in_type_def::~built_in_type_def() { }
+built_in_datatype_def::~built_in_datatype_def() { }
 
 ostream&
-built_in_type_def::what(ostream& o) const {
+built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
@@ -1103,13 +1262,13 @@ built_in_type_def::what(ostream& o) const {
 	TO DO:
 	Currently does NOT check template signature, which need to be 
 	implemented eventually, but punting for now.  
-	\param t the type_definition to be checked.
+	\param t the datatype_definition to be checked.
 	\return true if types are equivalent.  
  */
 bool
-built_in_type_def::type_equivalent(const type_definition& t) const {
-	const built_in_type_def* b = 
-		IS_A(const built_in_type_def*, t.resolve_canonical());
+built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
+	const built_in_datatype_def* b = 
+		IS_A(const built_in_datatype_def*, t.resolve_canonical());
 	if (b) {
 		// later: check template signature! (for int<>)
 		return key == b->key;
@@ -1119,29 +1278,44 @@ built_in_type_def::type_equivalent(const type_definition& t) const {
 }
 
 //=============================================================================
-// class user_def_type methods
+// class built_in_param_def method definitions
 
-/// constructor for user defined type
-user_def_type::user_def_type(const name_space* o, const string& name) :
-	type_definition(o, name), template_params(), members() {
+built_in_param_def::built_in_param_def(const name_space* p, const string& n) :
+		definition_base(n, p) {
+}
+
+built_in_param_def::~built_in_param_def() {
 }
 
 ostream&
-user_def_type::what(ostream& o) const {
+built_in_param_def::what(ostream& o) const {
+	return o << "(built-in param type)";
+}
+
+//=============================================================================
+// class user_def_datatype methods
+
+/// constructor for user defined type
+user_def_datatype::user_def_datatype(const name_space* o, const string& name) :
+	datatype_definition(o, name), template_params(), members() {
+}
+
+ostream&
+user_def_datatype::what(ostream& o) const {
 	return o << "used-defined-type: " << key;
 }
 
 /**
 	Equivalance operator for user-defined types.  
 	TO DO: actually write comparison, for now, just always returns false.  
-	\param t the type_definition to be checked;
+	\param t the datatype_definition to be checked;
 	\return true if the type names match, the (optional) template
 		formals match, and the data formals match.  
  */
 bool
-user_def_type::type_equivalent(const type_definition& t) const {
-	const user_def_type* u = 
-		IS_A(const user_def_type*, t.resolve_canonical());
+user_def_datatype::type_equivalent(const datatype_definition& t) const {
+	const user_def_datatype* u = 
+		IS_A(const user_def_datatype*, t.resolve_canonical());
 	if (u) {
 		// compare template_params
 		// compare data members
@@ -1153,17 +1327,23 @@ user_def_type::type_equivalent(const type_definition& t) const {
 }
 
 //=============================================================================
-// class type_instantiation method definitions
+// class datatype_instantiation method definitions
 
-type_instantiation::type_instantiation(const name_space* o, 
-		const type_definition* t, const string& n) : 
-		instantiation(o), type(t), key(n) {
+datatype_instantiation::datatype_instantiation(const name_space* o, 
+//		const data_type_reference* t, 
+		data_type_reference* t, 
+		const string& n) : 
+		instantiation_base(o, n), type(t) {
+	assert(type);
 }
 
-type_instantiation::~type_instantiation() { }
+datatype_instantiation::~datatype_instantiation() {
+	// temporary, until type is const, compiler should complain
+	SAFEDELETE(type);
+}
 
 ostream&
-type_instantiation::what(ostream& o) const {
+datatype_instantiation::what(ostream& o) const {
 	return o << "type-inst";
 }
 
@@ -1176,7 +1356,7 @@ type_instantiation::what(ostream& o) const {
 	\return true if type and identifier match exactly.  
  */
 bool
-type_instantiation::equals_template_formal(
+datatype_instantiation::equals_template_formal(
 		const template_formal_decl& tf) const {
 
 	return false;
@@ -1192,7 +1372,7 @@ type_instantiation::equals_template_formal(
 	\return true if type and identifier match exactly.  
  */
 bool
-type_instantiation::equals_port_formal(
+datatype_instantiation::equals_port_formal(
 		const port_formal_decl& pf) const {
 	return false;
 }
@@ -1205,7 +1385,7 @@ type_instantiation::equals_port_formal(
  */
 process_definition::process_definition(const name_space* o, 
 		const string& s, const bool d) : 
-		definition(s, o), def(d),
+		definition_base(s, o), def(d),
 		temp_formals(), port_formals() {
 	// fill me in...
 }
@@ -1221,6 +1401,7 @@ process_definition::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	OBSOLETE.  
 	Compares an unchecked process_signature's formal list against
 	a bound formal list (this).  
 	Name must match, template formals (if applicable) must
@@ -1228,7 +1409,6 @@ process_definition::what(ostream& o) const {
 	Port formals must also match type and formal identifier.  
 	\param ps the process signature.
 	\return true if signatures are equivalent.  
- */
 bool
 process_definition::equals_signature(const process_signature& ps) const {
 	if (key != ps.get_name())
@@ -1241,17 +1421,18 @@ process_definition::equals_signature(const process_signature& ps) const {
 		return false;
 	return true;
 }
+**/
 
 //=============================================================================
 // non-member functions related to process_definition
 
 /**
+	OBSOLETE.  
 	Compares a temp_formal_set against a template_formal_decl_list from
 	the syntax tree.  
 	\param ts the already type-checked template formal list.
 	\param tl the syntax tree template formal list to be checked.
 	\return true if template formal lists are equivalent.  
- */
 bool
 temp_formal_set_equals(const process_definition::temp_formal_set& ts,
 	const template_formal_decl_list* tl) {
@@ -1262,7 +1443,7 @@ temp_formal_set_equals(const process_definition::temp_formal_set& ts,
 		for ( ; i != tl->end() && j != ts.end(); i++, j++) {
 			const template_formal_decl* ti = 
 				IS_A(const template_formal_decl*, *i);
-			const type_instantiation* tj = *j;
+			const datatype_instantiation* tj = *j;
 			if (ti && !tj || !ti && tj) {
 				// then mismatch in number of arguments
 				return false;
@@ -1281,15 +1462,16 @@ temp_formal_set_equals(const process_definition::temp_formal_set& ts,
 	}
 	return true;
 }
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	OBSOLETE.  
 	Compares a port_formal_set against a port_formal_decl_list from
 	the syntax tree.  
 	\param ps the already type-checked port formal list.
 	\param pl the syntax tree port formal list to be checked.
 	\return true if port formal lists are equivalent.  
- */
 bool
 port_formal_set_equals(const process_definition::port_formal_set& ps,
 	const port_formal_decl_list* pl) {
@@ -1319,17 +1501,22 @@ port_formal_set_equals(const process_definition::port_formal_set& ps,
 	}
 	return true;
 }
+**/
 
 //=============================================================================
-// class process_instantiation method instantiations
+// class process_instantiation method definitions
 
-process_instantiation::process_instantiation(const name_space* o) : 
-		instantiation(o) {
-	// fill me in...
+process_instantiation::process_instantiation(const name_space* o, 
+//		const process_type_reference* pt,
+		process_type_reference* pt,
+		const string& n) : 
+		instantiation_base(o, n), type(pt) {
+	assert(type);
 }
 
 process_instantiation::~process_instantiation() {
-	// fill me in...
+	// this is temporary; remove this when type is const
+	SAFEDELETE(type);
 }
 
 ostream&
@@ -1337,10 +1524,50 @@ process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
 }
 
+/*** OBSOLETE
 bool
 process_instantiation::equals_port_formal(const port_formal_decl& pf) const {
 	// a process can never be passed on a port.  
 	return false;
+}
+***/
+
+//=============================================================================
+// class param_instantiation method definitions
+
+param_instantiation::param_instantiation(const name_space* o, 
+		const built_in_param_def* pt, const string& n) :
+		instantiation_base(o, n), type(pt) {
+	assert(pt);
+}
+
+param_instantiation::~param_instantiation() {
+}
+
+ostream&
+param_instantiation::what(ostream& o) const {
+	return o << "param-inst";
+}
+
+//=============================================================================
+// class channel_instantiation method definitions
+
+channel_instantiation::channel_instantiation(const name_space* o, 
+//		const channel_type_reference* ct,
+		channel_type_reference* ct,
+		const string& n) :
+		instantiation_base(o, n), type(ct) {
+	assert(type);
+}
+
+channel_instantiation::~channel_instantiation() {
+	// temporary until type is const
+	SAFEDELETE(type);
+}
+
+ostream&
+channel_instantiation::what(ostream& o) const {
+	return o << "channel-inst";
 }
 
 //=============================================================================
