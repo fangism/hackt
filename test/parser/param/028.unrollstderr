@@ -1,0 +1,4 @@
+ERROR: reference to uninitialized pint ::n at index: [2]
+ERROR: resolving left operand of: pint-inst-ref n[2]-1
+ERROR: unable to resolve indices for instantiation: [0..::n[2]-1]
+ERROR in unrolling.  Aborting.

@@ -1,9 +1,9 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2004/11/02 07:52:31 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.1 2005/01/18 04:25:34 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
-SUFFIXES = .in .artctest .artobjtest
+SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_SUBJECTS = \
 	    001 002 003 004 005 006 007 008 009 \
@@ -20,8 +20,20 @@ ARTOBJ_TEST_SUBJECTS = \
 	020 021 022 028 \
 	033
 
+# subset of ARTOBJ_TEST_SUBJECTS
+ARTOBJUNROLL_TEST_SUBJECTS = \
+	$(ARTOBJ_TEST_SUBJECTS)
+
+# not needed yet, parse/type-check/unroll failures already handled by scripts
+ARTOBJUNROLL_XFAIL_TEST_SUBJECTS =
+
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest)
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
+
+XFAIL_TESTS = $(ARTC_XFAIL_TEST_SUBJECTS:=.artctest) \
+	$(ARTOBJ_XFAIL_TEST_SUBJECTS:=.artobjtest) \
+	$(ARTOBJUNROLL_XFAIL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # define empty, let template Makefile add to it
 EXTRA_DIST =

@@ -1,0 +1,41 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x25024e4	module__	0	0	63
+	2	 0x2500250	namespc_	0	63	99
+	3	 0x2502504	pintcoll	0	99	136
+	4	 0x3803a04	pintinst	0	136	152
+	5	 0x2502560	cnstpi__	0	152	164
+	6	 0x2502574	pintcoll	0	164	201
+	7	 0x3803a18	pintinst	0	201	217
+	8	 0x25025d0	cnstpi__	0	217	229
+	9	 0x25025e4	pboolcol	0	229	262
+	10	 0x3802e04	pboolins	0	262	278
+	11	 0x250263c	cnstpb__	0	278	290
+	12	 0x2502644	pboolcol	0	290	323
+	13	 0x3802e18	pboolins	0	323	339
+	14	 0x250269c	cnstpb__	0	339	351
+	15	 0x3806000	piassign	0	351	371
+	16	 0x25026c0	spiref__	0	371	391
+	17	 0x3806014	piassign	0	391	411
+	18	 0x25026f0	spiref__	0	411	431
+	19	 0x3805a00	pbassign	0	431	451
+	20	 0x2502720	spbref__	0	451	471
+	21	 0x3805a14	pbassign	0	471	491
+	22	 0x2502750	spbref__	0	491	511
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  4 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+Parameters:
+  M = pint<> M (init = 5) value: 5
+  N = pint<> N (init = 3) value: 3
+  a = pbool<> a (init = true) value: 1
+  b = pbool<> b (init = false) value: 0
+}
+
