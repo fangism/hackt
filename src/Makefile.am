@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.5.4.2 2005/01/24 22:28:04 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.5.4.3 2005/01/25 05:22:43 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -226,6 +226,7 @@ UTIL_HEADER_FILES = \
 	util/qmap.tcc \
 	util/sstream.h \
 	util/stacktrace.h \
+	util/static_trace.h \
 	util/string_fwd.h \
 	util/sublist.h \
 	util/sublist.tcc \
@@ -261,6 +262,7 @@ libart___la_SOURCES = \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	util/stacktrace.cc \
+	util/static_trace.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \

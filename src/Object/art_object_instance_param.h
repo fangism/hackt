@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.11.4.2 2005/01/20 19:02:16 fang Exp $
+	$Id: art_object_instance_param.h,v 1.11.4.2.4.1 2005/01/25 05:22:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -9,7 +9,7 @@
 
 #include "art_object_instance_base.h"
 #include "art_object_expr_param_ref.h"	// for typedef init_arg_type
-#include "memory/pointer_classes.h"
+#include "memory/count_ptr.h"
 
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
@@ -368,6 +368,7 @@ template <>
 class pbool_array<0> : public pbool_instance_collection {
 private:
 	typedef	pbool_instance_collection		parent_type;
+	typedef	pbool_array<0>				this_type;
 public:
 	typedef	pbool_instance				instance_type;
 	typedef	pbool_instance				element_type;
@@ -420,6 +421,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+
 };	// end class pbool_array specialization
 
 typedef	pbool_array<0>			pbool_scalar;
@@ -693,6 +695,7 @@ template <>
 class pint_array<0> : public pint_instance_collection {
 private:
 	typedef	pint_instance_collection		parent_type;
+	typedef	pint_array<0>				this_type;
 public:
 	typedef	pint_instance				instance_type;
 	typedef	pint_instance				element_type;
@@ -711,7 +714,7 @@ public:
 	pint_array(const scopespace& o, const string& n, 
 		const count_ptr<const pint_const>& i);
 
-	~pint_array() { }
+	~pint_array();
 
 	bool
 	is_partially_unrolled(void) const;
@@ -747,6 +750,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_array specialization
 
 typedef	pint_array<0>			pint_scalar;

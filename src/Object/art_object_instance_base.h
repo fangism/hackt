@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.10.4.1 2005/01/18 04:22:49 fang Exp $
+	$Id: art_object_instance_base.h,v 1.10.4.1.6.1 2005/01/25 05:22:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -68,8 +68,12 @@ protected:
 		Can be a namespace of definition's scopespace.  
 		Is NEVER null, should be reference?
 		Should never be a loop or conditional namespace.  
+
+		Wants to be const, but because at least one child class
+		is pool-allocated (requiring assignability), 
+		we have to make it normal...
 	 */
-	const owner_ptr_type		owner;
+	owner_ptr_type			owner;
 
 	/**
 		Name of instance.
@@ -83,9 +87,8 @@ protected:
 		implemented in the leaf children classes.  
 		Can elements be NULL?
 	 */
-	index_collection_type			index_collection;
+	index_collection_type		index_collection;
 
-public:
 	/**
 		A somewhat redundant field for the dimensionality of the
 		collection.  Really, this is a per-class compile-time
@@ -93,8 +96,10 @@ public:
 		a massive virtual function, we cache the value once
 		per-object.  
 		We allow this to be public because it is constant.  
+
+		Wants to be const.  
 	 */
-	const size_t	dimensions;
+	size_t				dimensions;
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
@@ -114,6 +119,9 @@ public:
 		const size_t d);
 
 virtual	~instance_collection_base();
+
+	size_t
+	get_dimensions(void) const { return dimensions; }
 
 virtual	ostream&
 	what(ostream& o) const = 0;

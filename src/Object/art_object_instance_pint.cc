@@ -1,11 +1,15 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.3 2005/01/21 20:52:09 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.1 2005/01/25 05:22:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
 #define	__ART_OBJECT_INSTANCE_PINT_CC__
+
+#define	DEBUG_LIST_VECTOR_POOL				1
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
+#define ENABLE_STACKTRACE				1
 
 #include <exception>
 #include <iostream>
@@ -22,6 +26,8 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#include "memory/list_vector_pool.h"
+#include "what.h"
 #include "STL/list.tcc"
 #include "multikey_qmap.tcc"		// include "qmap.tcc"
 #include "persistent_object_manager.tcc"
@@ -30,9 +36,22 @@
 #include "ptrs_functional.h"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+
+STATIC_TRACE_BEGIN("instance_pint")
+
+//=============================================================================
+namespace util {
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<0>, "pint_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<1>, "pint_array<1>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<2>, "pint_array<2>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
+}
 
 //=============================================================================
 namespace ART {
@@ -43,6 +62,10 @@ using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 //=============================================================================
 // struct pint_instance method definitions
@@ -109,7 +132,9 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_instance_collection::~pint_instance_collection() { }
+pint_instance_collection::~pint_instance_collection() {
+	STACKTRACE("~pint_instance_collection()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -548,6 +573,9 @@ if (!m.flag_visit(this)) {
 //-----------------------------------------------------------------------------
 // class pint_array<0> specialization method definitions
 
+// reminder: pint_scalar == pint_array<0>
+LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array() : parent_type(0), the_instance() {
 }
@@ -561,6 +589,11 @@ pint_array<0>::pint_array(const scopespace& o, const string& n) :
 pint_array<0>::pint_array(const scopespace& o, const string& n, 
 		const count_ptr<const pint_const>& i) :
 		parent_type(o, n, 0, i), the_instance() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_array<0>::~pint_array() {
+	STACKTRACE("~pint_scalar()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -722,6 +755,8 @@ template class pint_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance_pint")
 
 #endif	// __ART_OBJECT_INSTANCE_PINT_CC__
 

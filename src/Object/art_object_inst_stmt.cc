@@ -1,15 +1,16 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.3 2005/01/21 01:55:36 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.1 2005/01/25 05:22:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
 #define	__ART_OBJECT_INST_STMT_CC__
 
 // for debugging only, before inclusion of header file
-// #define	DEBUG_LIST_VECTOR_POOL		1
-// #define	ENABLE_STACKTRACE		1
+#define	DEBUG_LIST_VECTOR_POOL				1
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
+#define	ENABLE_STACKTRACE				1
 
 #include <iostream>
 #include <algorithm>
@@ -28,6 +29,9 @@
 #include "memory/list_vector_pool.h"
 #include "persistent_object_manager.tcc"
 #include "stacktrace.h"
+#include "static_trace.h"
+
+STATIC_TRACE_BEGIN("inst_stmt")
 
 //=============================================================================
 // local specializations
@@ -53,6 +57,9 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 namespace ART {
 namespace entity {
 USING_STACKTRACE
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 //=============================================================================
 // class instantiation_statement method definitions
@@ -698,6 +705,7 @@ data_instantiation_statement::data_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
+	STACKTRACE("~data_instantiation_statement");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -832,6 +840,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("inst_stmt")
 
 #endif	// __ART_OBJECT_INST_STMT_CC__
 

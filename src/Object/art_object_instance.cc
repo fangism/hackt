@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38.4.2 2005/01/20 18:43:52 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.38.4.2.4.1 2005/01/25 05:22:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
 #define	__ART_OBJECT_INSTANCE_CC__
+
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <algorithm>
@@ -82,6 +84,7 @@ instance_collection_base::instance_collection_base(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {
+	STACKTRACE("~instance_collection_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6.4.4 2005/01/23 01:33:54 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6.4.4.2.1 2005/01/25 05:22:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -375,7 +375,8 @@ public:
 	pint_const(const long v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
 
-	~pint_const() { }
+	// change back to inline later
+	~pint_const();
 
 	ostream&
 	what(ostream& o) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.24.4.1 2005/01/20 19:02:12 fang Exp $
+	$Id: art_object_base.h,v 1.24.4.1.4.1 2005/01/25 05:22:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -40,6 +40,11 @@ using namespace util::memory;
  */
 class object {
 public:
+	// only for the purpose of emitting a virtual table, 
+	// see notes for class "node" in "art_parser_base.h".  
+virtual	void
+	bogus(void) const;
+
 virtual ~object() { }
 
 /**

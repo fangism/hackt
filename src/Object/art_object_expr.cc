@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5.2.1 2005/01/24 22:28:38 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5.2.2 2005/01/25 05:22:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -9,19 +9,11 @@
 
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
+#define	ENABLE_STACKTRACE				1
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
-
-#include "memory/pointer_classes.h"
-#include "sstream.h"			// for ostringstring, used by dump
-#include "discrete_interval_set.tcc"
-
-#include "what.tcc"
-#include "STL/list.tcc"
-#include "qmap.tcc"
-#include "stacktrace.h"
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
@@ -32,6 +24,7 @@
 #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
+#include "art_object_type_hash.h"
 
 #if 0
 #include "multikey.h"			// extern template instantiations
@@ -41,14 +34,21 @@
 #include "art_object_extern_templates.h"
 #endif
 
+#include "what.tcc"
+#include "STL/list.tcc"
+#include "qmap.tcc"
+#include "stacktrace.h"
+#include "static_trace.h"
 #include "memory/list_vector_pool.h"
 #include "persistent_object_manager.tcc"
-
-#include "art_object_type_hash.h"
-
+#include "memory/pointer_classes.h"
+#include "sstream.h"			// for ostringstring, used by dump
+#include "discrete_interval_set.tcc"
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
+
+STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace util {
@@ -114,8 +114,9 @@ using std::dereference;
 using std::ostringstream;
 USING_STACKTRACE
 
-#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
+// the robust list_vector_pool requires this.  
 #endif
 
 //=============================================================================
@@ -1929,6 +1930,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
  */
 inline
 pint_const::pint_const() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_const::~pint_const() {
+	STACKTRACE("~pint_const()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -5039,6 +5045,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namepace entity
 }	// end namepace ART
+
+STATIC_TRACE_END("object-expr")
 
 #endif	// __ART_OBJECT_EXPR_CC__
 

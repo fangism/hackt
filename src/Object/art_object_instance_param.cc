@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.8.4.1 2005/01/18 04:22:50 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.8.4.1.6.1 2005/01/25 05:22:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
 #define	__ART_OBJECT_INSTANCE_PARAM_CC__
+
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 
@@ -50,12 +52,13 @@ param_instance_collection::param_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instance_collection::~param_instance_collection() {
+	STACKTRACE("~param_instance_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_instance_collection::dump(ostream& o) const {
-#if 1
+#if 0
 	STACKTRACE("param_instance_collection::dump()");
 #endif
 #if 0

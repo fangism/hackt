@@ -1,11 +1,13 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.2 2005/01/18 04:22:48 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2.6.1 2005/01/25 05:22:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
 #define	__ART_OBJECT_DEFINITION_CC__
+
+#define ENABLE_STACKTRACE		1
 
 #include <exception>
 #include <iostream>
@@ -28,10 +30,14 @@
 
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+//=============================================================================
+STATIC_TRACE_BEGIN("object-definition")
 
 //=============================================================================
 namespace ART {
@@ -63,6 +69,7 @@ definition_base::definition_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 definition_base::~definition_base() {
+	STACKTRACE_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -191,7 +198,7 @@ definition_base::lookup_object_here(const string& id) const {
  */
 bool
 definition_base::check_null_template_argument(void) const {
-	STACKTRACE("definition_base::check_null_template_argument()");
+//	STACKTRACE("definition_base::check_null_template_argument()");
 	if (template_formals_list.empty())
 		return true;
 	// else make sure each formal has a default parameter value
@@ -1052,7 +1059,9 @@ built_in_datatype_def::built_in_datatype_def(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-built_in_datatype_def::~built_in_datatype_def() { }
+built_in_datatype_def::~built_in_datatype_def() {
+	STACKTRACE("~built_in_datatype_def()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1114,17 +1123,19 @@ built_in_datatype_def::make_fundamental_type_reference(
 	we have to override definition_base::add_template_formal.  
 	Used in construction of built-in types in art_built_ins.cc.
 	KLUDGE: redesign interface classes, please!
+	\param f the param instance collection, will keep ownership.  
  */
 never_ptr<const instance_collection_base>
 built_in_datatype_def::add_template_formal(
 		excl_ptr<instance_collection_base>& f) {
-	STACKTRACE("built_in_datatype_def::add_template_formal()");
+	STACKTRACE("add_template_formal(excl_ptr<>)");
 	const never_ptr<const param_instance_collection>
 		pf(f.is_a<const param_instance_collection>());
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
-	const never_ptr<const object> probe(
-		datatype_definition_base::lookup_object_here(pf->get_name()));
+	const never_ptr<const object>
+		probe(datatype_definition_base::lookup_object_here(
+			pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return never_ptr<const instance_collection_base>(NULL);
@@ -2441,6 +2452,8 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("object-definition")
 
 #endif	// __ART_OBJECT_DEFINITION_CC__
 

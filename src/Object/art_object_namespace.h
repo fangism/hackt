@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.6 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_namespace.h,v 1.6.12.1 2005/01/25 05:22:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -15,8 +15,8 @@
 
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition
-#include "memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
+#include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
+#include "memory/list_vector_pool_fwd.h"
 
 namespace ART {
 //=============================================================================
@@ -274,6 +274,8 @@ virtual	void
 	Namespace container class.  
  */
 class name_space : public scopespace {
+private:
+	typedef	name_space			this_type;
 	// list of pointers to other opened namespaces (and their aliases)
 	// table of type definitions (user-defined data types)
 	// table of process definitions
@@ -289,9 +291,17 @@ class name_space : public scopespace {
 	// order of instantiations? shouldn't matter.
 
 protected:
-	const string				key;
-	// ummm... should this have been removed? scopespace already has one
-	const never_ptr<const name_space>	parent;	// override parent
+	/**
+		The (short) name of the namespace.  
+		Should be const, but pool requires assignability.  
+	 */
+	string					key;
+
+	/**
+		The parent namespace of this namespace.  
+		Should be const.  
+	 */
+	never_ptr<const name_space>	parent;
 
 	/**
 		The set of namespaces which are open to search within
@@ -429,6 +439,10 @@ public:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 public:
 	static const never_ptr<const name_space>	null;
+
+	friend class list_vector_pool<name_space>;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+
 };	// end class name_space
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3 2005/01/19 04:53:16 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3.6.1 2005/01/25 05:22:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -41,6 +41,7 @@
 #include "art_object_type_ref_base.h"
 #include "art_object_type_hash.h"
 
+#include "memory/list_vector_pool.h"
 #include "indent.h"
 #include "stacktrace.h"
 #include "persistent_object_manager.tcc"
@@ -290,7 +291,7 @@ scopespace::add_instance(
 			}	// else good to continue
 			
 			// compare dimensions
-			const size_t p_dim = probe_inst->dimensions;
+			const size_t p_dim = probe_inst->get_dimensions();
 #if 0
 			cerr << "original dimensions = " << p_dim << 
 				", new dimensions = " << dim << endl;
@@ -646,6 +647,8 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 // class name_space method definitions
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
+
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const never_ptr<const name_space>

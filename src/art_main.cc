@@ -5,15 +5,21 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.8 2005/01/16 02:44:15 fang Exp $
+	$Id: art_main.cc,v 1.8.12.1 2005/01/25 05:22:44 fang Exp $
  */
 
 #include <iostream>
 #include <fstream>
 #include "art++.h"			// has everything you need
 
+#define ENABLE_STACKTRACE		1
+
+#include "stacktrace.h"
+USING_STACKTRACE
+
 int
 main(int argc, char* argv[]) {
+	STACKTRACE_VERBOSE;
 	excl_ptr<parser::node> root;		///< root of the syntax tree
 	never_ptr<const entity::object> top;	///< root type-checked object
 	entity::module the_module("-stdin-");

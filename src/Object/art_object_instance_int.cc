@@ -3,13 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11.4.4 2005/01/21 20:52:09 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11.4.4.4.1 2005/01/25 05:22:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
 
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		1
 
 #include <exception>
 #include <iostream>
@@ -30,10 +30,13 @@
 #include "persistent_object_manager.tcc"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
+
+STATIC_TRACE_BEGIN("instance-int")
 
 namespace ART {
 namespace entity {
@@ -58,7 +61,9 @@ int_instance_collection::int_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance_collection::~int_instance_collection() { }
+int_instance_collection::~int_instance_collection() {
+	STACKTRACE("~int_instance_collection()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -536,6 +541,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance-int")
 
 #endif	// __ART_OBJECT_INSTANCE_INT_CC__
 
