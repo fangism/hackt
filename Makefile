@@ -198,6 +198,7 @@ tarball: clobber
 	$(TAR) $(TARBALL) ./*
 
 # if regression fails, make will abort and abandon commit
+# strongly suggest running with ccache to speedup re-build
 commit: regression clobberdepend
 	cvs commit
 
@@ -208,4 +209,3 @@ commit: regression clobberdepend
 # but BSD make dies when it can't find it :(
 # hence the self-modifying Makefile
 # the following line will magically appear and disappear...
-include .depend
