@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.16.42.1 2005/03/09 19:24:52 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.16.42.2 2005/03/11 01:05:26 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
@@ -18,10 +18,8 @@
 #include "art_object_instance_param.h"
 #include "art_object_expr_const.h"
 #include "static_trace.h"
-#if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_value_collection.h"
 #include "art_object_classification_details.h"
-#endif
 
 STATIC_TRACE_BEGIN("built-ins");
 
@@ -42,7 +40,8 @@ namespace entity {
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
-#if !USE_VALUE_COLLECTION_TEMPLATE
+#if 0
+// re-enable this when it switches back to pooled...
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
 #endif
 // this early because int_def contains a pint_scalar, 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29.2.2.2.1 2005/03/09 19:24:55 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29.2.2.2.2 2005/03/11 01:05:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -19,9 +19,7 @@
 #include "art_object_instance_enum.h"
 #include "art_object_instance_struct.h"
 #include "art_object_instance_param.h"
-#if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_value_collection.h"
-#endif
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_base.h"
 #include "art_object_type_hash.h"
@@ -878,20 +876,10 @@ param_type_reference::make_instance_collection(
 	// hard coded... yucky, but efficient.  
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
-#if USE_VALUE_COLLECTION_TEMPLATE
-			pbool_instance_collection::make_array(*s, id, d)
-#else
-			pbool_instance_collection::make_pbool_array(*s, id, d)
-#endif
-			);
+			pbool_instance_collection::make_array(*s, id, d));
 	else if (this->must_be_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
-#if USE_VALUE_COLLECTION_TEMPLATE
-			pint_instance_collection::make_array(*s, id, d)
-#else
-			pint_instance_collection::make_pint_array(*s, id, d)
-#endif
-			);
+			pint_instance_collection::make_array(*s, id, d));
 	else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;

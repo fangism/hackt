@@ -2,6 +2,10 @@
 
 2005-03-08	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-03:
+	  Cleaned up conditional code with USE_VALUE_COLLECTION_TEMPLATE.  
+	  Resulting in 2000 fewer LOC.  :)
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-02-merged-expr-05:
 	  Merged in revisions from -expr child branch (through -05).
 
@@ -56,6 +60,9 @@
 	  are responsible for type-checking, index/range-resolving, 
 	  sparse-instance populating, etc...
 	  but _after_ fixing interface for range_expr_lists.
+
+	* Happy Birthday to ART++!
+	  (Wait, I've spent a year on this!?)
 
 
 2005-03-06	David Fang	<fangism@users.sourceforge.net>

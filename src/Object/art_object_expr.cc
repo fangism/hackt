@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41.8.2 2005/03/10 23:20:23 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.8.3 2005/03/11 01:05:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -26,12 +26,10 @@
 #include "art_object_expr.h"		// includes "art_object_expr_const.h"
 // #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
-#if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_classification_details.h"
 #include "art_object_value_collection.h"
 #include "art_object_const_collection.tcc"
 #include "art_object_value_reference.tcc"
-#endif	// USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_assign.h"
 #include "art_object_connect.h"		// for ~aliases_connection_base
 #include "art_object_type_hash.h"
