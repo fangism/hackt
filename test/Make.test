@@ -60,7 +60,12 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobj) \
 	$(ARTOBJ_TEST_SUBJECTS:=.objdiff)
 
-all-local: subdir.not_a_test $(TESTS)
+DISTCLEANFILES += Makefile
+
+all-local: .cvsignore subdir.not_a_test $(TESTS)
+
+.cvsignore: $(top_srcdir)/test/test.cvsignore
+	$(LN_S) $< $@
 
 # automatically removes $(CLEANFILES)
 clean-local:

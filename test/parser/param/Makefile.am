@@ -25,6 +25,7 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 # define empty, let template Makefile add to it
 EXTRA_DIST =
 CLEANFILES =
+DISTCLEANFILES =
 
 include $(top_srcdir)/test/Make.test
 

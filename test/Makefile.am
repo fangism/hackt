@@ -16,8 +16,10 @@ TESTS = clean-test
 DISTCLEANFILES = $(TESTS)
 
 CLEANFILES = 
+
 EXTRA_DIST = Make.test artc-expect.sh artobj-diff.sh \
-	state_enum_filter.awk address_filter.sed
+	state_enum_filter.awk address_filter.sed \
+	test.cvsignore
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test

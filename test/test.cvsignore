@@ -9,7 +9,9 @@ core.*
 *.indump
 *.outdump
 *.objdiff
-Makefile
-subdir.not_a_test
 ignore
-
+Makefile
+Makefile.in
+test-report.txt
+clean-test
+subdir.not_a_test

@@ -24,6 +24,7 @@ BISON_OUTPUTS = 026
 # define empty, let template Makefile add to it
 EXTRA_DIST =
 CLEANFILES =
+DISTCLEANFILES =
 
 include $(top_srcdir)/test/Make.test
 

@@ -9,6 +9,7 @@ SUBDIRS = basic namespace param array process datatype \
 
 EXTRA_DIST = 
 CLEANFILES =
+DISTCLEANFILES =
 
 include $(top_srcdir)/test/Make.test
 

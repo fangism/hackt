@@ -1,7 +1,0 @@
-*.core
-core.*
-ignore
-Makefile
-test-report.txt
-clean-test
-subdir.not_a_test
