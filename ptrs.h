@@ -494,6 +494,7 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
  */
 template <class T>
 class excl_const_ptr : public virtual base_const_ptr<T> {
+template <class> friend class excl_const_ptr;
 template <class> friend class never_const_ptr;
 template <class> friend class some_const_ptr;
 
@@ -560,6 +561,13 @@ explicit excl_const_ptr(excl_ptr<T>& e) throw() :
 			base_const_ptr<T>(e.release()) { }
 
 /**
+	For safe up-cast, pointer constructor.  
+ */
+	template <class S>
+	excl_const_ptr(excl_const_ptr<S>& e) throw() :
+		base_const_ptr<T>(e.release()) { }
+
+/**
 	De-allocates memory.  
 	Should be safe to delete NULL?
  */
@@ -579,6 +587,14 @@ excl_const_ptr<T>& operator = (excl_const_ptr<T>& e) throw() {
 		base_const_ptr<T>(r.cptr) { }
 	excl_const_ptr(base_ptr_ref<T> r) throw() :
 		base_const_ptr<T>(r.ptr) { }
+
+	template <class S>
+	excl_const_ptr(base_const_ptr_ref<S> r) throw() :
+		base_const_ptr<T>(r.cptr) { }
+	template <class S>
+	excl_const_ptr(base_ptr_ref<S> r) throw() :
+		base_const_ptr<T>(r.ptr) { }
+
 excl_const_ptr<T>& operator = (base_const_ptr_ref<T> r) throw() {
 		reset(r.cptr);
 		r.cptr = NULL;
@@ -639,6 +655,7 @@ never_const_ptr<S>	is_a(void) const;
 template <class T>
 class never_ptr : public virtual base_ptr<T> {
 template <class> friend class excl_ptr;
+template <class> friend class never_ptr;
 template <class> friend class excl_const_ptr;
 template <class> friend class never_const_ptr;
 
@@ -758,6 +775,7 @@ class never_const_ptr : public virtual base_const_ptr<T> {
 template <class> friend class excl_ptr;
 template <class> friend class never_ptr;
 template <class> friend class excl_const_ptr;
+template <class> friend class never_const_ptr;
 
 public:
 /**
@@ -798,6 +816,16 @@ explicit never_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
 	never_const_ptr(const excl_ptr<T>& p) throw() :
 		base_const_ptr<T>(p.ptr) { }
 
+	/** safe up-cast versions */
+	template <class S>
+	never_const_ptr(const never_ptr<S>& p) throw() :
+		base_const_ptr<T>(p.ptr) { }
+	template <class S>
+	never_const_ptr(const some_ptr<S>& p) throw();
+	template <class S>
+	never_const_ptr(const excl_ptr<S>& p) throw() :
+		base_const_ptr<T>(p.ptr) { }
+
 /**
 	Doesn't have to be explicit because it should always be safe
 	to copy a never-delete, read-only pointer.  
@@ -807,6 +835,16 @@ explicit never_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
 		base_const_ptr<T>(p.cptr) { }
 	never_const_ptr(const some_const_ptr<T>& p) throw();
 	never_const_ptr(const excl_const_ptr<T>& p) throw() :
+		base_const_ptr<T>(p.cptr) { }
+
+	/** safe up-cast versions */
+	template <class S>
+	never_const_ptr(const never_const_ptr<S>& p) throw() :
+		base_const_ptr<T>(p.cptr) { }
+	template <class S>
+	never_const_ptr(const some_const_ptr<S>& p) throw();
+	template <class S>
+	never_const_ptr(const excl_const_ptr<S>& p) throw() :
 		base_const_ptr<T>(p.cptr) { }
 
 virtual	~never_const_ptr() { }

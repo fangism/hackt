@@ -128,14 +128,21 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+/**
+	Pushes a parameter expression (constant int) onto the 
+	context's expression stack.  
+	\return NULL, useless.  
+ */
 never_const_ptr<object>
 token_int::check_build(never_ptr<context> c) const {
-	cerr << "token_int::check_build(): not quite done yet!" << endl;
-	count_const_ptr<param_expr> pe(new param_const_int(val));
+	count_ptr<param_expr> pe(new param_const_int(val));
+#if	UNIFIED_OBJECT_STACK
+	c->push_object_stack(pe);
+#else
 	c->push_expression_stack(pe);
+#endif
 	return never_const_ptr<object>(NULL);
 }
-
 
 //=============================================================================
 // class token_float method definitions
@@ -187,6 +194,8 @@ token_float::check_build(never_ptr<context> c) const {
 CONSTRUCTOR_INLINE
 token_string::token_string(const char* s) : string(s), terminal() { }
 
+token_string::token_string(const token_string& s) : string(s), terminal() { }
+
 DESTRUCTOR_INLINE
 token_string::~token_string() { }
 
@@ -209,6 +218,11 @@ token_string::rightmost(void) const {
 CONSTRUCTOR_INLINE
 token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
 
+/** default copy constructor */
+token_identifier::token_identifier(const token_identifier& i) :
+	token_string(i), expr() {
+}
+
 DESTRUCTOR_INLINE
 token_identifier::~token_identifier() { }
 
@@ -229,8 +243,10 @@ token_identifier::rightmost(void) const {
 
 /**
 	MESS ALERT:
-	Type-checking for expression literals, 
-	not to be used for instantiation and declaration.  
+	Type-checking for expression literals and instance references, 
+	not to be called from declarations.  
+
+	(Later use "new_identifier" for declarations and definitions.)
 	The identifier must have been instantiated or declared formally
 	to pass type-check.  
 	Not intended for use of user-defined type identifiers... yet.
@@ -244,13 +260,27 @@ token_identifier::rightmost(void) const {
  */
 never_const_ptr<object>
 token_identifier::check_build(never_ptr<context> c) const {
-//	TRACE_CHECK_BUILD(
+	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
-			<< "token_identifier::check_build(...): FINISH ME!";
-//	)
+			<< "token_identifier::check_build(...)";
+	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	return c->lookup_instance(*this);
+	never_const_ptr<instantiation_base> inst(c->lookup_instance(*this));
+	// problem: stack is count_ptr, incompatible with never_ptr
+	if (inst) {
+		// we will then make an instance_reference
+		inst->make_instance_reference(*c);
+		// already pushes onto context's object_stack
+		// useless return value, always NULL
+	} else {
+		// push a NULL placeholder
+		c->push_object_stack(count_ptr<object>(NULL));
+		// better error handling later...
+		what(cerr << "failed to find ") << endl;
+		exit(1);		// temporary termination
+	}
+	return inst;
 }
 
 //=============================================================================
@@ -299,10 +329,13 @@ token_bool::rightmost(void) const {
 }
 never_const_ptr<object>
 token_bool::check_build(never_ptr<context> c) const {
-	cerr << "token_bool::check_build(): not quite done yet!" << endl;
-	count_const_ptr<param_expr> pe(
+	count_ptr<param_expr> pe(
 		new param_const_bool(strcmp(c_str(),"true") == 0));
+#if	UNIFIED_OBJECT_STACK
+	c->push_object_stack(pe);
+#else
 	c->push_expression_stack(pe);
+#endif
 	return never_const_ptr<object>(NULL);
 }
 

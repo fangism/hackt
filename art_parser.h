@@ -308,7 +308,8 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 /**
-	In all implementations, must return a param_expr object.
+	In all implementations, must create a param_expr object.
+	The created object will be pushed onto the context's stack.  
  */
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class expr
@@ -374,7 +375,7 @@ protected:
 /// the character
 	int c;
 public:
-	token_char(const int i);
+explicit token_char(const int i);
 virtual	~token_char();
 
 virtual	int string_compare(const char* d) const;
@@ -409,7 +410,7 @@ protected:
 	long val;			///< the value
 public:
 /// standard constructor
-	token_int(const long v);
+explicit token_int(const long v);
 /// standard virtual destructor
 	~token_int();
 
@@ -427,7 +428,7 @@ protected:
 	double val;			///< the value
 public:
 /// standard constructor
-	token_float(const double v);
+explicit token_float(const double v);
 /// standard virtual destructor
 	~token_float();
 
@@ -452,7 +453,8 @@ public:
 class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
-	token_string(const char* s);
+explicit token_string(const char* s);
+	token_string(const token_string& s);
 virtual	~token_string();
 
 virtual	int string_compare(const char* d) const;
@@ -471,7 +473,8 @@ virtual	line_position rightmost(void) const;
 class token_identifier : public token_string, public expr {
 					// consider postfix_expr?
 public:
-	token_identifier(const char* s);
+explicit token_identifier(const char* s);
+	token_identifier(const token_identifier& i);
 	~token_identifier();
 
 	ostream& what(ostream& o) const;
@@ -1381,7 +1384,7 @@ protected:
 	const excl_const_ptr<alias_list>	aliases;
 	const excl_const_ptr<terminal>		semi;	///< semicolon
 public:
-	instance_alias(const token_identifier* i, const alias_list* al, 
+	instance_alias(const token_identifier* i, alias_list* al, 
 		const terminal* s = NULL);
 virtual	~instance_alias();
 

@@ -264,11 +264,12 @@ id_expr::check_build(never_ptr<context> c) const {
 		inst = o.is_a<instantiation_base>();
 		if (inst) {
 			// we found an instance which may be single
-			// or collective...
-			// c->?
-			return inst->make_instance_reference(*c);
+			// or collective... info is in inst.
+			inst->make_instance_reference(*c);
+			// pushes the created reference onto
+			// context's instance_reference_stack.
+
 			// doesn't have to be a parameter, does it?
-			// return new param_literal(*inst);
 		} else {
 			cerr << "object " << *qid <<
 				" is not an instance, ERROR!";

@@ -1,7 +1,5 @@
 # "Makefile"
-# I insist on keeping this Makefile BSD-make compatible!
-# I'm trying to make this as self-contained as possible to avoid 
-# ugly dependencies.  
+# I insist on keeping this Makefile BSD-make and GNUmake compatible!
 
 SHELL = /bin/sh
 
@@ -12,6 +10,7 @@ SHELL = /bin/sh
 AWK = awk
 CAT = cat
 CPP = cpp
+CVS = cvs
 DIFF = diff -B
 # -B: ignore blank line diffs
 ECHO = echo
@@ -22,7 +21,6 @@ MV = mv -f
 TOUCH = touch
 TAR = tar -czvf
 
-CVS = cvs
 # defined with intention of self-modification...
 THISMAKEFILE = Makefile
 
@@ -30,10 +28,14 @@ CC = gcc
 CXX = g++
 
 LD = g++
-# for C++ programs, need LD = g++ for certain libraries to link
+# for C++ programs, need LD = g++ for certain standard libraries to link
 
-# may need to add this to environment for dynamic linked libraries...
+# hint: may need to add this to environment for dynamic linked libraries...
 # setenv LD_LIBRARY_PATH /usr/local/compiler/lib
+
+# don't need MAKEFLAGS, already included in MAKE
+RECURSIVE_MAKE = $(MAKE) $(MAKEFLAGS) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
+	LDFLAGS="$(LDFLAGS)" CDEFS="$(CDEFS)"
 
 # use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...
@@ -42,13 +44,13 @@ LD = g++
 # other potentially anal warnings not covered by -Wall, how far can we go?
 MORE_WARN = -Wcast-qual -Wpointer-arith 
 # -Wstrict-prototypes -Wmissing-prototypes (only appropriate for C)
-# "traditional" is for C
+# "traditional" is for C-only
 # -Wtraditional -Wwrite-strings \
 # "shadow" and "write-strings" affects y.tab.o, depending on yacc version
 # -Wshadow -Woverloaded-virtual
 
 NO_WARN = -Wno-unused
-# "no-unused" affects art.yy.o, from flex
+# "no-unused" affects art.yy.o, from flex (yyunput unused)
 
 # extremely anal about warnings... report as errors!
 WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
@@ -60,18 +62,21 @@ CFLAGS = -O2 -g -pipe
 ALL_CFLAGS = $(CFLAGS) $(WARN_FLAGS) $(CDEFS)
 
 LDFLAGS = -lc -lstdc++
-#	-lfl: don't need this for flex, because classes are self-contained
 #	NOTE: -lc MUST appear before -lstdc++ on darwin gcc-3.3!!!
+
 LEX = flex
 LFLAGS = -t
 YACC = yacc
 YFLAGS = -d -t -v
 MAKEDEPEND = $(CC) -MM
+# note: do not use bison -y !
 
+# Main targets
 ARTC = artc
 TARGETS = $(ARTC)
 TARBALL = art.tar.gz
 
+# documentation configuration
 DOXYGEN_CONFIG = art.doxygen.config
 
 .SUFFIXES: .cc .o .l .yy .d
@@ -85,6 +90,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 .cc.d:
 	$(MAKEDEPEND) $< > $@
 
+# target dependencies
 default: all
 
 force:
@@ -99,8 +105,12 @@ makeinfo:
 	@$(ECHO) "#	YACC = $(YACC) $(YFLAGS)"
 	@$(ECHO) "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 
-all: makeinfo .depend $(TARGETS)
+# for parallel make, .depend and TARGETS should be sequential
+all: makeinfo
+	$(RECURSIVE_MAKE) .depend
+	$(RECURSIVE_MAKE) $(TARGETS)
 
+# all objects may be built in parallel
 ART_OBJ = y.tab.o y.union.o art.yy.o \
 	art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \
@@ -137,7 +147,7 @@ art.yy.cc: art.l y.tab.h
 y.tab.h y.tab.cc y.output y.output.h: art.yy
 	$(YACC) $(YFLAGS) $?
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
-	$(MV) y.tab.c y.tab.cc
+	-$(MV) y.tab.c y.tab.cc
 
 art.yy.types: art.yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
@@ -151,15 +161,18 @@ y.union.cc: y.output art.yy.types
 		-v type=ART::parser::node y.output > $@
 
 # regression testing
+TEST_SUBJECTS = 
 # this file defines and accumulates TEST_SUBJECTS (without their suffixes)
 include test/Make.inc
 
-regression: makeinfo clobber regression-target regression-norebuild
+# explicitly not parallel
+regression: clobber
+	$(RECURSIVE_MAKE) regression-target
+	$(RECURSIVE_MAKE) regression-norebuild
 
 # MAKEFLAGS is redundant for gmake?
 regression-target:
-	$(MAKE) $(MAKEFLAGS) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
-		LDFLAGS="$(LDFLAGS)" CDEFS="-DREGRESSION_TEST_MODE=1" all
+	$(RECURSIVE_MAKE) CDEFS="-DREGRESSION_TEST_MODE=1" all
 
 TEST_FILTER = $(AWK) -f test/state_enum_filter.awk
 TEST_REPORT = test-report.txt
@@ -229,10 +242,14 @@ cleantests:
 	-@$(RM) $(TEST_SUBJECTS:=.diff)
 	-$(RM) $(TEST_REPORT)
 
-clean: cleanlexer cleanparser cleandepend cleantests
+cleanobjects:
 	-$(RM) *.o
+
+cleanjunk:
 	-$(RM) *.tmp.*
 	-$(RM) *.core
+
+clean: cleanlexer cleanparser cleandepend cleantests cleanobjects cleanjunk
 
 # for now don't always clobber this, until everyone else can generate docs...
 nodocs:
@@ -246,7 +263,7 @@ nodocs:
 clobberdepend: cleandepend
 	-$(RM) .depend
 	@$(ECHO) "cleaning $(THISMAKEFILE) ..."
-	@$(GREP) -v "^include \.depend" $(THISMAKEFILE) > $(THISMAKEFILE).temp; \
+	@$(GREP) -v "^include \.depend" $(THISMAKEFILE) > $(THISMAKEFILE).temp
 	$(MV) $(THISMAKEFILE).temp $(THISMAKEFILE)
 
 clobber: clean clobberdepend
@@ -259,8 +276,8 @@ tarball: clobber
 # if regression fails, make will abort and abandon commit
 # strongly suggest running with ccache to speedup re-build
 commit: regression
-	$(MAKE) clobberdepend
-	-$(MAKE) cvsdiffs
+	$(RECURSIVE_MAKE) clobberdepend
+	$(RECURSIVE_MAKE) cvsdiffs
 	$(CVS) commit
 
 cvsdiffs: force
@@ -269,7 +286,7 @@ cvsdiffs: force
 # header file dependencies generated with gcc -MM, saved to .depend
 
 # gmake needs to include dependencies explicitly, 
-# whereas BSD make doesn't: it's implicit
+# whereas BSD make doesn't: it's implicit with .depend
 # but BSD make dies when it can't find it :(
 # hence the self-modifying Makefile
 # the following line will magically appear and disappear...

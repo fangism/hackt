@@ -106,6 +106,61 @@ object_handle::dump(ostream& o) const {
 }
 
 //=============================================================================
+// class instance_collection_stack_item method definitions
+
+bool
+instance_collection_stack_item::static_overlap(
+		const instance_collection_stack_item& c) const {
+	return false;
+}
+
+//=============================================================================
+// class static_collection_addition method definitions
+
+static_collection_addition::static_collection_addition(
+		excl_const_ptr<static_array_index_list>& i) :
+	parent(), indices(i) {
+}
+
+bool
+static_collection_addition::static_overlap(
+		const instance_collection_stack_item& c) const {
+	const static_collection_addition* s = 
+		IS_A(const static_collection_addition*, &c);
+	if (s) {
+		// dimensionality should match, or else!
+		assert(indices->size() == s->indices->size());
+		static_array_index_list::const_iterator i = indices->begin();
+		static_array_index_list::const_iterator j = s->indices->begin();
+		for ( ; i!=indices->end(); i++, j++) {
+			// chec for index overlap in all dimensions
+			const static_range_type& ir = *i;
+			const static_range_type& jr = *j;
+			if (jr.first <= ir.first && ir.first <= jr.second ||
+				jr.first <= ir.second && ir.second <= jr.second ||
+				ir.first <= jr.first && jr.first <= ir.second ||
+				ir.first <= jr.second && jr.second <= ir.second)
+				continue;
+			else return false;
+			// if there is any dimension without overlap, false
+		}
+		// else there is some overlap in all dimensions
+		return true;
+	} else {	// argument is dynamic, not static
+		// conservatively return false
+		return false;
+	}
+}
+
+//=============================================================================
+// class dynamic_collection_addition method definitions
+
+dynamic_collection_addition::dynamic_collection_addition(
+		excl_const_ptr<array_index_list>& i) :
+		parent(), indices(i) {
+}
+
+//=============================================================================
 #if 0
 // class sparse_index_collection method definitions
 
@@ -123,7 +178,7 @@ sparse_index_collection::~sparse_index_collection() { }
 // class scopespace method definitions
 scopespace::scopespace(const string& n, never_const_ptr<scopespace> p) : 
 		object(), parent(p), key(n), 
-		used_id_map() {
+		used_id_map(), connect_assign_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -224,12 +279,100 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// const instantiation_base*
+/**
+	Registers a new instance of some type in the used_id_map.  
+	Need to check for collisions, with previously declared instances.  
+	For collectives, such as sparse arrays and dense arrays, 
+	redeclarations with new indices are permitted, as long as it 
+	can't be immediately determined that indices overlap.  
+	Types must match for collective additions of course.  
+	(What if type-parameters depend on variables?  allow?)
+	\param i the new instance, possibly with sparse indices.
+	\return pointer to newly created instance if successful, 
+		else NULL.  
+ */
 never_const_ptr<instantiation_base>
 scopespace::add_instance(excl_ptr<instantiation_base> i) {
-	never_const_ptr<instantiation_base> ret(i);
-	used_id_map[i->get_name()] = i;
-	return ret;
+	never_ptr<object> probe(
+		lookup_object_here_with_modify(i->get_name()));
+	if (probe) {
+		never_ptr<instantiation_base> probe_inst(
+			probe.is_a<instantiation_base>());
+		if (probe_inst) {
+			// compare types, must match!
+			never_const_ptr<fundamental_type_reference> old_type(
+				probe_inst->get_type_ref());
+			never_const_ptr<fundamental_type_reference> new_type(
+				i->get_type_ref());
+			// For now, compare pointers?  
+			// too strict, but more than sufficient for now.  
+			// Eventually will have to do real comparison
+			// based on contents.  
+			if (!old_type->may_be_equivalent(new_type)) {
+				cerr << "ERROR: type of redeclaration of "
+					<< i->get_name() << " does not match "
+					"previous declaration: " << endl <<
+					"\twas: ";
+				old_type->dump(cerr) << ", got: ";
+				new_type->dump(cerr) << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			}	// else good to continue
+			
+			// compare dimensions
+			if (!probe_inst->dimensions()) {
+				// if original declaration was not collective, 
+				// then one cannot add more.  
+				probe->dump(cerr) << " was originally declared "
+					"as a single instance, and thus may "
+					"not be extended or re-declared, "
+					"ERROR!" << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			} else if (probe_inst->dimensions()!=i->dimensions()) {
+				probe->dump(cerr) << " was originally declared "
+					"as a " << probe_inst->dimensions() <<
+					"-D array, so the new declaration "
+					"cannot add a " << i->dimensions() <<
+					"-D array, ERROR!" << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			}	// else dimensions match apropriately
+
+			// here, we know we're referring to the same collection
+			// check for overlap with existing static-const indices
+			if (probe_inst->merge_index_ranges(i)) {
+				// returned true if there is definite overlap
+				cerr << "detected overlap in indices in the "
+					"collection addition for " <<
+					i->get_name() << ", ERROR!" << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			}
+			// else didn't detect static conflict.  
+			// We discard the new instantiation, i, 
+			// and let it delete itself at the end of this scope.  
+			// ... happy ending, or is it?
+			return probe_inst;
+		} else {
+			probe->what(cerr << i->get_name() <<
+				" is already declared ") << ", ERROR!";
+			return never_const_ptr<instantiation_base>(NULL);
+		}
+	} else {
+		// didn't exist before, just add new instance
+		never_const_ptr<instantiation_base> ret(i);
+		used_id_map[i->get_name()] = i;		// transfer ownership
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void
+scopespace::add_connection_to_scope(
+		excl_const_ptr<connection_assignment_base> c) {
+	connect_assign_list.push_back(c);
 }
 
 //=============================================================================
@@ -1143,6 +1286,11 @@ fundamental_type_reference::fundamental_type_reference(void) :
 fundamental_type_reference::~fundamental_type_reference() {
 }
 
+ostream&
+fundamental_type_reference::dump(ostream& o) const {
+	return o << hash_string();
+}
+
 /**
 	Evaluates type reference as a flat string, for caching purposes.  
 	We unconditionally add the <> to the key even if there is no template
@@ -1185,6 +1333,29 @@ fundamental_type_reference::get_qualified_name(void) const {
 never_const_ptr<fundamental_type_reference>
 fundamental_type_reference::set_context_type_reference(context& c) const {
 	return c.set_current_fundamental_type(*this);
+}
+
+/**
+	Returns true if the types *may* be equivalent.  
+	Easy for non-template types, but for template types, 
+	sometimes parameters may be determined by other parameters
+	and thus are not statically constant for comparison.  
+	\return false if there is definite mismatch in type.  
+	TO DO: static argument checking for template arguments.  
+ */
+bool
+fundamental_type_reference::may_be_equivalent(
+		never_const_ptr<fundamental_type_reference> t) const {
+	assert(t);
+	never_const_ptr<definition_base> left(get_base_def());
+	never_const_ptr<definition_base> right(t->get_base_def());
+	if (left != right) {
+		cerr << "pointers: left = " << left.unprotected_const_ptr() <<
+			", right = " << right.unprotected_const_ptr() << endl;
+		return false;
+	}
+	// TO DO: compare template arguments
+	return true;
 }
 
 //=============================================================================
@@ -1236,10 +1407,12 @@ data_type_reference::what(ostream& o) const {
 	return o << "data-type-reference";
 }
 
+#if 0
 ostream&
 data_type_reference::dump(ostream& o) const {
 	return what(o);
 }
+#endif
 
 // const definition_base*
 never_const_ptr<definition_base>
@@ -1250,16 +1423,20 @@ data_type_reference::get_base_def(void) const {
 /**
 	Creates an instance of a data type, 
 	and adds it to a scope.
+	TO DO: move all error checking into scopespace::add_instance
+		for unification.  
+		Handle cases for additions to sparse collections.  
 	\param s the scope to which to add this instance.
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 data_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
 	// what if s is a loop-scope, not a namespace?  PUNT!
+#if 1
+	// PHASE OUT, PHASE INTO s.add_instance()
 	never_const_ptr<object> probe = s.lookup_object_here(id);
 	if (probe) {
 		probe->what(cerr << id << " is already declared ") <<
@@ -1267,6 +1444,7 @@ data_type_reference::add_instance_to_scope(scopespace& s,
 		return never_const_ptr<instantiation_base>(NULL);
 	}
 	// else proceed
+#endif
 	excl_ptr<datatype_instantiation> di(
 		new datatype_instantiation(s, *this, id));
 	assert(di);
@@ -1304,10 +1482,12 @@ channel_type_reference::what(ostream& o) const {
 	return o << "channel-type-reference";
 }
 
+#if 0
 ostream&
 channel_type_reference::dump(ostream& o) const {
 	return what(o);
 }
+#endif
 
 // const definition_base*
 never_const_ptr<definition_base>
@@ -1359,10 +1539,12 @@ process_type_reference::what(ostream& o) const {
 	return o << "process-type-reference";
 }
 
+#if 0
 ostream&
 process_type_reference::dump(ostream& o) const {
 	return what(o);
 }
+#endif
 
 // const definition_base*
 never_const_ptr<definition_base>
@@ -1406,10 +1588,12 @@ param_type_reference::what(ostream& o) const {
 	return o << "param-type-reference";
 }
 
+#if 0
 ostream&
 param_type_reference::dump(ostream& o) const {
 	return what(o);
 }
+#endif
 
 never_const_ptr<definition_base>
 param_type_reference::get_base_def(void) const {
@@ -1503,21 +1687,102 @@ instantiation_base::get_qualified_name(void) const {
 	else return key;
 }
 
-/*** TO DO, if necessary
-// reserve for instance_reference
-string
-instantiation_base::hash_string(void) const {
-	// don't need get_type_ref()->hash_string().
-	string ret(get_qualified_name());
-	// TO DO: do array dimensions matter, or is name sufficient?
-//	if (array_dimensions) {
-//	}
-	return ret;
+/**
+	Grabs the current top of the deque of the index collection, 
+	so the encapsulating instance reference know what
+	instances were visibie at the time of reference.  
+	QUESTION: what if it's empty because it is not collective?
+ */
+instantiation_base::index_collection_type::const_iterator
+instantiation_base::current_collection_state(void) const {
+	return index_collection.begin();
 }
-***/
 
 /**
-NEEDS TO BE REDONE
+	
+	\return true if the new range *definitely* overlaps with previous
+		static constant ranges.  Comparisons with dynamic ranges
+		will conservatively return false; they will be resolved
+		at unroll-time.  Also returns true if there was an error.  
+ */
+bool
+instantiation_base::detect_static_overlap(
+		index_collection_item_ptr_type r) const {
+	assert(r);
+	assert(r->dimensions() == depth);
+	if (r.is_a<static_collection_addition>()) {
+	index_collection_type::const_iterator i = index_collection.begin();
+	for ( ; i!=index_collection.end(); i++) {
+		if ((*i)->static_overlap(*r)) {
+			return true;
+		}
+	}
+	// if this point reached, then return false
+	} // else just return false, can't know statically without analysis
+	return false;
+}
+
+/**
+	If this instance is a collection, add the new range of indices
+	which may be sparse or dense.  
+	This is only applicable if this instantiation was initialized
+	as a collective.  
+	The dimensions better damn well match!  
+	\param r the index ranges to be added.  
+	\return true if error condition. 
+	\sa detect_static_overlap
+ */
+bool
+instantiation_base::add_index_range(index_collection_item_ptr_type r) {
+	assert(r);
+	if (depth) {
+		if (r->dimensions() == depth) {
+			bool overlap = detect_static_overlap(r);
+			index_collection.push_back(r);
+			if (overlap) {
+				cerr << "ERROR: detected static constant "
+				"overlap in indices -- "
+				"reinstantiation collision." << endl;
+			}
+			return overlap;
+		} else {
+			cerr << "ERROR: " << key << " was originally declared "
+				"a " << depth << "-dimension collection, thus "
+				"you cannot append with a " 
+				<< r->dimensions() <<
+				"-dimension index range!" << endl;
+			return true;
+		}
+	} else {
+		cerr << "ERROR: " << key << " was originally declared "
+			"as a single instance, not a collective, and hence, "
+			"may not be appended!" << endl;
+		return true;
+	}
+}
+
+/**
+	Merges index ranges from another instantiation base, 
+	such as a redeclaration with more indices of the same collection.  
+	\return true if there is definite overlap, signaling an error.  
+ */
+bool
+instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
+	assert(i);
+	// check type equality here, or push responsibility to caller?
+	bool err = false;
+	index_collection_type::const_reverse_iterator iter =
+		i->index_collection.rbegin();
+	for ( ; iter!=i->index_collection.rend(); iter++) {
+		if (add_index_range(*iter)) {
+			err = true;
+		}
+	}
+	return err;
+}
+
+/**
+OBSOLETE
 void
 instantiation_base::set_array_dimensions(excl_ptr<array_index_list> d) {
 	// just in case, delete what was previously there
@@ -1526,17 +1791,18 @@ instantiation_base::set_array_dimensions(excl_ptr<array_index_list> d) {
 **/
 
 /**
+	OBSOLETE.
 	Determines whether or not the dimensions of two instantiation_base
 	arrays are equivalent, and hence compatible.  
 	\param i the second instantiation_base to compare against.
 	\return false for now.
- */
 bool
 instantiation_base::array_dimension_match(const instantiation_base& i) const {
 	// TO DO: this is temporary
 	// if both lists are not NULL, iterate through lists...
 	return false;
 }
+**/
 
 //=============================================================================
 // class datatype_definition method definitions
@@ -1819,7 +2085,11 @@ datatype_instantiation::make_instance_reference(context& c) const {
 	count_ptr<datatype_instance_reference> new_ir(
 		new datatype_instance_reference(*this));
 		// omitting index argument
+#if	UNIFIED_OBJECT_STACK
+	c.push_object_stack(new_ir);
+#else
 	c.push_instance_reference_stack(new_ir);
+#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -1901,7 +2171,11 @@ process_instantiation::make_instance_reference(context& c) const {
 	count_ptr<process_instance_reference> new_ir(
 		new process_instance_reference(*this));
 		// omitting index argument
+#if	UNIFIED_OBJECT_STACK
+	c.push_object_stack(new_ir);
+#else
 	c.push_instance_reference_stack(new_ir);
+#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -1936,10 +2210,15 @@ param_instantiation::get_type_ref(void) const {
 	\sa is_initialized
  */
 void
-param_instantiation::initialize(excl_const_ptr<param_expr> e) {
+param_instantiation::initialize(count_const_ptr<param_expr> e) {
 	assert(!ival);
 	assert(e);
 	ival = e;
+}
+
+count_const_ptr<param_expr>
+param_instantiation::default_value(void) const {
+	return ival;
 }
 
 /**
@@ -1952,17 +2231,24 @@ param_instantiation::initialize(excl_const_ptr<param_expr> e) {
 	Different: param type reference are always referred to in the global
 		scope because they cannot be templated!
 		Therefore, cache them in the global (or built-in) namespace.  
+	\return NULL.
  */
 never_const_ptr<instance_reference_base>
 param_instantiation::make_instance_reference(context& c) const {
-	cerr << "param_instantiation::make_instance_reference() "
-		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
+
+	// problem: needs to be modifiable for later initialization
 	count_ptr<param_instance_reference> new_ir(
-		new param_instance_reference(*this));
+		new param_instance_reference(
+			never_ptr<param_instantiation>(
+			const_cast<param_instantiation*>(this))));
 		// omitting index argument
+#if	UNIFIED_OBJECT_STACK
+	c.push_object_stack(new_ir);
+#else
 	c.push_instance_reference_stack(new_ir);
+#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -2005,7 +2291,11 @@ channel_instantiation::make_instance_reference(context& c) const {
 	count_ptr<channel_instance_reference> new_ir(
 		new channel_instance_reference(*this));
 		// omitting index argument
+#if	UNIFIED_OBJECT_STACK
+	c.push_object_stack(new_ir);
+#else
 	c.push_instance_reference_stack(new_ir);
+#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -2017,7 +2307,17 @@ single_instance_reference::~single_instance_reference() {
 
 ostream&
 single_instance_reference::dump(ostream& o) const {
-	return what(o);
+	o << get_inst_base()->get_name();
+	if (array_indices) {
+		o << "[";
+		array_index_list::const_iterator i;
+		i=array_indices->begin();
+		for ( ; i!=array_indices->end(); i++) {
+			(*i)->dump(o) << ",";
+		}
+		o << "]";
+	}
+	return o;
 }
 
 string
@@ -2076,6 +2376,15 @@ collective_instance_reference::hash_string(void) const {
 //=============================================================================
 // class param_instance_reference method definitions
 
+/**
+	\param pi needs to be modifiable for later initialization.  
+ */
+param_instance_reference::param_instance_reference(
+		never_ptr<param_instantiation> pi,
+		array_index_list* i) :
+		single_instance_reference(i), param_inst_ref(pi) {
+}
+
 never_const_ptr<instantiation_base>
 param_instance_reference::get_inst_base(void) const {
 	return param_inst_ref;
@@ -2084,6 +2393,24 @@ param_instance_reference::get_inst_base(void) const {
 ostream&
 param_instance_reference::what(ostream& o) const {
 	return o << "param-inst-ref";
+}
+
+/**
+	For single instances references, check whether it is initialized.  
+	For collective instance references, and indexed references, 
+	just conservatively say that it hasn't been initialized it; 
+	so don't bother checking until unroll time.  
+ */
+bool
+param_instance_reference::is_initialized(void) const {
+	if (param_inst_ref->dimensions() > 0)
+		return false;
+	else return param_inst_ref->is_initialized();
+}
+
+void
+param_instance_reference::initialize(count_const_ptr<param_expr> i) {
+	param_inst_ref->initialize(i);
 }
 
 //=============================================================================
@@ -2133,6 +2460,87 @@ channel_instance_reference::what(ostream& o) const {
 ostream&
 channel_instance_reference::dump(ostream& o) const {
 	return what(o);
+}
+
+//=============================================================================
+// class param_expression_assignment method definitions
+
+param_expression_assignment::param_expression_assignment() :
+		connection_assignment_base(), ex_list() {
+}
+
+param_expression_assignment::~param_expression_assignment() { }
+
+void
+param_expression_assignment::append_param_expression(
+		count_const_ptr<param_expr> e) {
+	ex_list.push_back(e);
+}
+
+void
+param_expression_assignment::prepend_param_expression(
+		count_const_ptr<param_expr> e) {
+	ex_list.push_front(e);
+}
+
+//=============================================================================
+// class instance_reference_connection method definitions
+
+instance_reference_connection::instance_reference_connection() :
+		connection_assignment_base(), inst_list() {
+}
+
+/**
+	\param i instance reference to connect, may not be NULL.
+ */
+void
+instance_reference_connection::append_instance_reference(
+		count_const_ptr<instance_reference_base> i) {
+	assert(i);
+	inst_list.push_back(i);
+}
+
+//=============================================================================
+// class aliases_connection method definitions
+
+aliases_connection::aliases_connection() : instance_reference_connection() { };
+
+void
+aliases_connection::prepend_instance_reference(
+		count_const_ptr<instance_reference_base> i) {
+	assert(i);
+	inst_list.push_front(i);
+}
+
+//=============================================================================
+// class port_connection method definitions
+
+/**
+	Initial constructor for a port-connection.  
+	\param i an instance of the definition that is to be connected.
+ */
+port_connection::port_connection(
+		count_const_ptr<single_instance_reference> i) :
+		instance_reference_connection(), inst(i) {
+}
+
+/**
+	\param i instance reference to connect, may be NULL.
+ */
+void
+port_connection::append_instance_reference(
+		count_const_ptr<instance_reference_base> i) {
+	// do not assert, may be NULL.  
+	inst_list.push_back(i);
+}
+
+//=============================================================================
+// class dynamic_connection_assignment method definitions
+
+dynamic_connection_assignment::dynamic_connection_assignment(
+		never_const_ptr<scopespace> s) :
+		connection_assignment_base(), dscope(s) {
+	// check that dscope is actually a loop or conditional
 }
 
 //=============================================================================

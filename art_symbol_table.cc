@@ -37,8 +37,12 @@ context::context(never_ptr<name_space> g) :
 		current_template_arguments(NULL), 
 		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
+#if	UNIFIED_OBJECT_STACK
+		object_stack(), 
+#else
 		instance_reference_stack(), 
 		expression_stack(), 
+#endif
 		global_namespace(g) {
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -46,6 +50,12 @@ context::context(never_ptr<name_space> g) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
+#if	UNIFIED_OBJECT_STACK
+	{
+	count_ptr<object> bogus;
+	object_stack.push(bogus);
+	}
+#else
 	{
 	count_const_ptr<instance_reference_base> bogus;
 	instance_reference_stack.push(bogus);
@@ -54,6 +64,7 @@ context::context(never_ptr<name_space> g) :
 	count_const_ptr<param_expr> bogus;
 	expression_stack.push(bogus);
 	}
+#endif
 	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
@@ -535,6 +546,17 @@ context::lookup_object(const qualified_id& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Adds a (partially) type-checked connection or assignment 
+	to the current scope, which may be dynamic.  
+	\param c the new connection or assignment list.
+ */
+void
+context::add_connection(excl_const_ptr<connection_assignment_base> c) {
+	get_current_scope()->add_connection_to_scope(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Ok to start search in namespace, because definitions
 	can only be found in namespaces, not other types of scopes.  
  */
@@ -645,6 +667,34 @@ context::add_template_formal(const token_identifier& id) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if	UNIFIED_OBJECT_STACK
+
+/**
+	Created objects are passed around on the context's object stack.  
+	For now we restrict the type to param_expr and instance_reference.  
+	We permit NULL objects on the stack, as error placeholders.  
+ */
+void
+context::push_object_stack(count_ptr<object> o) {
+	if (o) {
+		const object* oself = &o->self();
+		assert(IS_A(const param_expr*, oself) ||
+			IS_A(const instance_reference_base*, oself));
+//		if (!o.is_a<param_expr>())
+//			assert(o.is_a<instance_reference_base>());
+	}
+	object_stack.push(o);
+}
+
+count_ptr<object>
+context::pop_top_object_stack(void) {
+	count_ptr<object> ret = object_stack.top();
+	object_stack.pop();
+	return ret;
+}
+
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 context::push_instance_reference_stack(
 		count_const_ptr<instance_reference_base> i) {
@@ -656,6 +706,7 @@ void
 context::push_expression_stack(count_const_ptr<param_expr> e) {
 	expression_stack.push(e);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// automatic indentation for nicer debug printing

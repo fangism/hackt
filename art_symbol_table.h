@@ -13,6 +13,8 @@
 #include "ptrs.h"
 #include "count_ptr.h"
 
+#define		UNIFIED_OBJECT_STACK		1
+
 namespace ART {
 
 //=============================================================================
@@ -49,6 +51,10 @@ namespace entity {
 	class param_type_reference;
 	class param_instantiation;
 	class param_instance_reference;
+
+	class connection_assignment_base;
+	class param_expression_assignment;
+	class instance_reference_connection;
 
 	class param_expr;
 	// replicated typedefs from "art_object.h"
@@ -174,6 +180,16 @@ protected:
 	stack<never_ptr<scopespace> >	dynamic_scope_stack;
 #define	current_dynamic_scope		dynamic_scope_stack.top()
 
+#if	UNIFIED_OBJECT_STACK
+	/**
+		A unified stack intended for instance references and
+		parameter expressions.  
+		Items need to be modifiable.  
+		e.g. when we are initializing reference 
+			expressions on the stack.
+	 */
+	stack<count_ptr<object> >		object_stack;
+#else
 	/**
 		Stack of references to instances.  
 		These instance references are newly constructed, 
@@ -192,6 +208,7 @@ protected:
 		We use count_const_ptr because of copy-constructibility.  
 	 */
 	stack<count_const_ptr<param_expr> >	expression_stack;
+#endif
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -230,6 +247,10 @@ void	close_datatype_definition();
 void	declare_chantype(const token_identifier& ds);
 void	open_chantype(const token_identifier& ds);
 void	close_chantype_definition();
+
+void	add_connection(excl_const_ptr<connection_assignment_base> c);
+void	add_assignment(excl_const_ptr<connection_assignment_base> a)
+		{ add_connection(a); }
 
 never_const_ptr<scopespace>	get_current_scope(void) const;
 never_ptr<scopespace>		get_current_scope(void);
@@ -312,6 +333,11 @@ never_const_ptr<instantiation_base>
 
 const datatype_instantiation*	add_template_formal(const token_identifier& id);
 
+#if	UNIFIED_OBJECT_STACK
+void	push_object_stack(count_ptr<object> i);
+count_ptr<object> pop_top_object_stack(void);
+
+#else
 void	push_instance_reference_stack(
 			count_const_ptr<instance_reference_base> i);
 count_const_ptr<instance_reference_base>
@@ -320,6 +346,7 @@ count_const_ptr<instance_reference_base>
 void	push_expression_stack(count_const_ptr<param_expr> i);
 count_const_ptr<param_expr>
 		pop_top_expression_stack(void);
+#endif
 
 // repeat for processes and channels...
 

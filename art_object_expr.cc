@@ -4,7 +4,6 @@
 #include <stdlib.h>			// for ltoa
 #include <assert.h>
 #include <iostream>
-// do NOT use strstream because their name is inconsistent across libraries
 
 #include "art_parser.h"
 #include "art_object.h"
@@ -23,6 +22,7 @@ param_expr::dump(ostream& o) const {
 //=============================================================================
 // class param_expr_collective method defintions
 
+#if 0
 param_expr_collective::param_expr_collective() : param_expr(), elist() {
 }
 
@@ -48,12 +48,13 @@ param_expr_collective::hash_string(void) const {
 	ret += "}";
 	return ret;
 }
+#endif
 
 //=============================================================================
 // class param_literal method definitions
 
-param_literal::param_literal(const param_instance_reference& v) :
-		param_expr(), var(&v) {
+param_literal::param_literal(count_ptr<param_instance_reference> v) :
+		param_expr(), var(v) {
 	assert(var);
 }
 
@@ -68,6 +69,30 @@ param_literal::what(ostream& o) const {
 string
 param_literal::hash_string(void) const {
 	return var->hash_string();
+}
+
+/**
+	Whether or not this reference is initialized or is 
+	dependent on a template formal parameter.  
+ */
+bool
+param_literal::is_initialized(void) const {
+	return var->is_initialized();
+}
+
+/**
+	Find out if the referenced parameter variable is
+	has been defined, and if so whether or not it is constant.  
+	TO DO: finish
+ */
+bool
+param_literal::is_static_constant(void) const {
+	return false;
+}
+
+void
+param_literal::initialize(count_const_ptr<param_expr> i) {
+	var->initialize(i);
 }
 
 //=============================================================================

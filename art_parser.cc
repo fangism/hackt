@@ -10,6 +10,7 @@
 // -fkeep-inline-functions
 
 #include <iostream>
+#include <vector>
 
 #include "art_parser_debug.h"
 #include "art_macros.h"
@@ -31,6 +32,7 @@
 //=============================================================================
 namespace ART {
 namespace parser {
+using namespace std;
 // using ART::entity::param_expr;
 
 //=============================================================================
@@ -137,16 +139,14 @@ template_argument_list::check_build(never_ptr<context> c) const {
 		// this should cache parameter expressions
 		never_const_ptr<object> eret(e->check_build(c));
 		if (eret) {
-//			const param_expr* exref = 
-//				IS_A(const param_expr*, eret);
 			never_const_ptr<param_expr>
 				exref(eret.is_a<param_expr>());
 			assert(exref);
 			targs->push_back(exref);
-//			targs->push_back(never_const_ptr<param_expr>(exref));
 		} else {
 			// failed!!!  better error handling later
-			cerr << "BAD template argument (not an expression)!";
+			cerr << "BAD template argument (not an expression)!"
+				<< endl;
 			exit(1);
 		}
 	}
@@ -225,7 +225,8 @@ alias_list::rightmost(void) const {
 /**
 	Context-sensitive type-checking for parameter expression assignment
 	lists and other instance elements.  
-	Checks type consistency of elements.  
+	Builds references bottom-up first.  
+	Then checks type consistency of elements.  
 	\param c the context of the current position in the syntax tree.
 	\return pointer to rightmost instance corresponding to the 
 		final element in the assignment / alias list
@@ -235,22 +236,203 @@ never_const_ptr<object>
 alias_list::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
-			"alias_list::check_build(...): " << endl;
+			"alias_list::check_build(...): FINISH ME!";
 	)
-if (size()) {
+if (size() > 0) {		// non-empty
 	never_const_ptr<object> ret(NULL);
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		never_const_ptr<object> o(NULL);
+		never_const_ptr<object> o;
 		if (*i) {
+			// check each expression
 			o = (*i)->check_build(c);
-			// check type of o for consistency
-			// could use context object for modification...
+			// Useless return value.
+			// Each expression or instance referenced
+			// will be pushed onto the context's object stack.
+		} else {
+			// need a place-holder item on stack?
+			// the caller depends on the size of this list.
+			// for now stop.
+			assert(0);
 		}
 	}
+	// After list items have been built, check types.  
+	// Types connected MUST match,
+	// and sizes must match if statically known, 
+	// else punt until unroll-time.  
+
+	// pop stack items to a local list
+	vector<count_ptr<object> > connect(size());
+	{
+		int j = size() -1;
+		for ( ; j>=0; j--)
+			connect[j] = c->pop_top_object_stack();
+	}
+
+	// case: left-hand-side is a param_instance_reference
+	//	then we have expression assignment.  
+	// case: left-hand-side is some-other-instance-reference (physical)
+	//	then rhs can be arbitrary chain of 
+	//	same type instance references.
+	// TO DO: in general this needs much work to complete
+
+	if (!connect[0]) {
+		cerr << endl << "ERROR in the first item in alias-list."
+			<< endl;
+		exit(1);
+	} else if (connect[0].is_a<param_instance_reference>()) {
+		// then expect subsequent items to be the same
+		// or already param_expr in the case of some constants.
+		// However, only the last item may be a constant.  
+		excl_ptr<param_expression_assignment> exass(
+			new param_expression_assignment);
+
+		// Mark all but the last expression as initialized 
+		// to the right-most expression.  
+		// TO DO: FINISH THIS PART
+		// rvalue = ...
+		// make sure rvalue is validly initialized
+		// i.e. is a constant or a formal parameter
+
+		bool err = false;
+		size_t last = size() -1;
+
+		count_const_ptr<param_expr> rhse(
+			connect[last].is_a<param_expr>());
+		count_ptr<param_instance_reference> rhsi(
+			connect[last].is_a<param_instance_reference>());
+		if (!connect[last]) {
+			cerr << "ERROR: rhs of expression assignment "
+				"is malformed (null)" << endl;
+			err = true;
+		} else if (rhse) {
+			// last term must be initialized or be 
+			// dependent on formals
+			if (!rhse->is_initialized()) {
+				rhse->dump(cerr << "ERROR: rhs of expr-"
+					"assignment is not initialized or "
+					"dependent on formals: ") << endl;
+				err = true;
+			}
+		} else if (rhsi) {
+			if (!rhsi->is_initialized()) {
+				// not definitely initialized
+				rhsi->dump(cerr << "ERROR: rhs of expr-"
+					"assignment is not initialized or "
+					"dependent on formals: ") << endl;
+				err = true;
+			} else {
+				// may be initialized, resolve at unroll
+				rhse = count_const_ptr<param_literal>(
+					new param_literal(rhsi));
+			}
+		// could also be a param_literal?
+		} else {
+			connect[last]->what(
+				cerr << "ERROR: rhs is unexpected object: ")
+				<< endl;
+			err = true;
+		}
+
+		size_t k = 0;
+		for ( ; k<last; k++) {	// all but last one
+			// consider modularizing this loop
+			bool for_err = false;
+			count_ptr<param_literal> pl(
+				connect[k].is_a<param_literal>());
+			count_ptr<param_instance_reference> ir(
+				connect[k].is_a<param_instance_reference>());
+			if (!connect[k]) {
+				cerr << "ERROR: in creating item " << k+1 <<
+					" of alias-list." << endl;
+				for_err = true;
+			} else if (pl) {
+				// single expression
+				// can't handle collections of expressions yet.
+
+				if (pl->is_initialized()) {
+					cerr << "ERROR: expression " << k+1 <<
+						"is already initialized!"
+						<< endl;
+					// don't care if it's same value...
+					for_err = true;
+				} else if (rhse) {
+					pl->initialize(rhse);
+					assert(pl->is_initialized());
+				}	// else already error in rhse
+				if (pl->is_static_constant()) {
+					// shouldn't happen if pl is literal
+					cerr << "ERROR: constants may only "
+						"appear as the last term of "
+						"assignment lists!" << endl;
+					for_err = true;
+				}
+				if (for_err)
+					exass->append_param_expression(
+						count_ptr<param_expr>(NULL));
+				else exass->append_param_expression(pl);
+
+			} else if (ir) {
+				// a single parameter instance reference
+				// make sure not already initialized!
+				if (ir->is_initialized()) {
+					// definitely initialized or formal
+					cerr << "ERROR: expression " << k+1 <<
+						"is already initialized!"
+						<< endl;
+					// don't care if it's same value...
+					for_err = true;
+				} else if (rhse) {
+					ir->initialize(rhse);
+					assert(ir->is_initialized());
+				} // else already error in rhse
+				if (for_err)
+					exass->append_param_expression(
+						count_ptr<param_expr>(NULL));
+				else exass->append_param_expression(
+					count_ptr<param_literal>(
+						new param_literal(ir)));
+			} else {
+				// is reference to something else
+				// or might be collective...
+				// ERROR
+				cerr << "ERROR: unhandled case for item "
+					<< k+1 << " of alias-list." << endl;
+				for_err = true;
+			}
+			if (for_err)
+				err = for_err;
+		}
+
+		// if all is well, then add this new list to the context's
+		// current scope.  
+		if (err) {
+			cerr << "HALT: at least one error in alias list."
+				<< endl;
+			exit(1);
+		} else {
+			c->add_assignment(
+				excl_const_ptr<connection_assignment_base>(
+					exass));
+			// and transfer ownership
+			assert(!exass.owned());
+		}
+	} else if (connect[0].is_a<instance_reference_base>()) {
+		cerr << "alias_list::check_build(): not done yet "
+			"for non-param/expr instance connections yet.  "
+			"Aborting." << endl;
+		exit(1);
+	} else {
+		// ERROR
+		cerr << "WTF? first element of alias_list is not an instance!"
+			<< endl;
+		exit(1);
+	}
+
 	return ret;
 } else {
-	// will this ever happen?  will be caught as error for now.
+	// will this ever be empty?  will be caught as error for now.
+	assert(0);
 	return never_const_ptr<object>(NULL);
 }
 }
@@ -1023,6 +1205,11 @@ instance_base::rightmost(void) const {
 	return id->rightmost();
 }
 
+/**
+	Eventually don't return top_namespace, 
+	but a pointer to the created instance_base
+	so that it may be used by instance_alias.  
+ */
 never_const_ptr<object>
 instance_base::check_build(never_ptr<context> c) const {
 	never_const_ptr<instantiation_base> inst;
@@ -1215,10 +1402,32 @@ connection_statement::rightmost(void) const {
 //=============================================================================
 // class instance_alias method definitions
 
-CONSTRUCTOR_INLINE
-instance_alias::instance_alias(const token_identifier* i, const alias_list* a, 
+/**
+	Takes a statement like: type foo = bar;
+	and virtually produces: type foo; foo = bar;
+	\param i the name of the instance being instantiated and connected.  
+	\param a right-hand-side alias list, non-const because we will
+		prepend i to it, before making it constant.
+		This makes it check_build code easier.  
+	\param s optional semicolon.  
+ */
+// CONSTRUCTOR_INLINE
+instance_alias::instance_alias(const token_identifier* i, alias_list* a, 
 		const terminal* s) :
-		instance_base(i), aliases(a), semi(s) {
+		instance_base(i),
+		aliases(
+			(assert(a),
+			// need deep copy of i as an expression, 
+			// because already managed by parent, 
+			// and list uses count_const_ptr<expr>
+			a->push_front(count_const_ptr<token_identifier>(
+				new token_identifier(*i))),
+			// caution, unless we add an '=' token to delim_list
+			// assertion will be broken, but who cares?
+			a)
+			// the value of this compound expression is a
+		),
+		semi(s) {
 	assert(aliases);
 }
 
@@ -1244,34 +1453,29 @@ instance_alias::rightmost(void) const {
 }
 
 /**
-	Type-checking for an instance declaration with an assignment
-	or alias list.  
+	Type-checking for an instance declaration with an 
+	expression assignment or alias-connection list.  
 	First register the declared indentifier as an instance.  
-	TO DO: PUNT until collective type-references are implemented.  
-	Instantiation of an alias chain MUST be a single instance?
-	or can it be collective?
-	For aliasing, can be collective.
+	Then type-check the list.  
  */
 never_const_ptr<object>
 instance_alias::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
-			"instance_alias::check_build(...): finish me!";
+			"instance_alias::check_build(...)";
 	)
+	// declare and register the instance first
 	o = instance_base::check_build(c);
+	// useless return value (top_namespace)
 	// should return reference to the new INSTANCE, not its type
+	// what is returned on error?
 
-	// should actually check instance-REFERENCES
-	never_const_ptr<fundamental_type_reference> tr(
-		o.is_a<fundamental_type_reference>());
-	assert(tr);
-	// set the instance to match or just set current instantiation
-	tr = c->set_current_fundamental_type(*tr);
+	// the new instance's identifier is already replicated in the 
+	// alias_list, so we can just call it to build 
+	// an expression assignment or instance connection object.  
+	o = aliases->check_build(c);
 
-	if (aliases)
-		o = aliases->check_build(c);
-	// unset instance
 	return o;
 }
 

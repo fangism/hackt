@@ -13,6 +13,7 @@
 #include "hash_qmap.h"
 #include "hashlist.h"
 #include "ptrs.h"
+#include "count_ptr.h"
 #include "multidimensional_sparse_set.h"
 
 /*********** note on use of data structures ***************
@@ -88,6 +89,10 @@ class datatype_instance_reference;
 class channel_instance_reference;
 class process_instance_reference;
 class param_instance_reference;
+
+class connection_assignment_base;
+class param_expression_assignment;
+class instance_reference_connection;
 
 // from "art_object_expr.h"
 class param_expr;
@@ -222,12 +227,14 @@ public:
 	instance_collection_stack_item() { }
 virtual	~instance_collection_stack_item() { }
 
+/** dimensionality of the indices */
+virtual	size_t	dimensions(void) const = 0;
 /**
 	Query whether or not there is definite overlap with
 	this item.  
 	\return Conservatively returns false for dynamic instances.  
-virtual	bool definite_overlap(void) const = 0;
-**/
+ */
+virtual	bool static_overlap(const instance_collection_stack_item& ) const;
 
 /**
 	Resolve at unroll time, all parameters must be bound to 
@@ -241,6 +248,8 @@ virtual	bool final_resolve(void) const = 0;
 /**
 	A collection addition whose indices are statically resolved
 	to constants.  
+	At this point no need to expand indices into a tree yet, 
+	save that for unroll-time.  
  */
 class static_collection_addition : public instance_collection_stack_item {
 protected:
@@ -248,10 +257,12 @@ protected:
 protected:
 	excl_const_ptr<static_array_index_list>		indices;
 public:
-	static_collection_addition(excl_const_ptr<static_array_index_list>& i)
-		: parent(), indices(i) { }
+	static_collection_addition(excl_const_ptr<static_array_index_list>& i);
 	// no copy-constructor
 	~static_collection_addition() { }
+
+	size_t	dimensions(void) const { return indices->size(); }
+	bool static_overlap(const instance_collection_stack_item& ) const;
 
 };	// end class static_collection_addition
 
@@ -266,11 +277,12 @@ class dynamic_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-	list<param_range_type>				indices;
+	excl_const_ptr<array_index_list>		indices;
 public:
-	dynamic_collection_addition() : parent(), indices() { }
+	dynamic_collection_addition(excl_const_ptr<array_index_list>& i);
 	~dynamic_collection_addition() { }
 
+	size_t	dimensions(void) const { return indices->size(); }
 };	// end class dynamic_collection_addition
 
 //=============================================================================
@@ -285,6 +297,7 @@ protected:
 protected:
 //	never_const_ptr<loop_scope>		body;
 
+	size_t	dimensions(void) const { assert(0); return 0; }	// BARF for now
 };	// end class loop_collection_addition
 
 //=============================================================================
@@ -298,6 +311,8 @@ protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
 //	never_const_ptr<conditional_scope>	body;
+
+	size_t	dimensions(void) const { assert(0); return 0; }	// BARF for now
 
 };	// end class conditional_collection_addition
 
@@ -402,6 +417,12 @@ protected:	// typedefs -- keep these here for re-use
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
 
+	/**
+		Ordered list of connections and assignments.  
+	 */
+	typedef	list<excl_const_ptr<connection_assignment_base> >
+						connect_assign_list_type;
+
 protected:	// members
 	// should really only contain instantiations? no definitions?
 	// what should a generic scopespace contain?
@@ -435,6 +456,16 @@ protected:	// members
 	 */
 	used_id_map_type	used_id_map;
 
+	/**
+		This list is for maintaining items and actions
+		whose order must be preserved.  
+		Assignments and connection statements are 
+		maintained in this list.  
+		Conditional and loop scopes are kept in program order
+		in this list.
+	 */
+	connect_assign_list_type	connect_assign_list;
+
 public:
 	scopespace(const string& n, never_const_ptr<scopespace> p);
 virtual	~scopespace();
@@ -452,6 +483,9 @@ virtual	never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& i
 
 virtual	never_const_ptr<instantiation_base>
 			add_instance(excl_ptr<instantiation_base> i);
+
+	void add_connection_to_scope(
+		excl_const_ptr<connection_assignment_base> c);
 
 };	// end class scopespace
 
@@ -581,8 +615,13 @@ void	find_namespace_starting_with(namespace_list& m,
 		in hash_map or in some ordered list?
 	Q: should contents (instantiations) be kept ordered?
 	Q: derive from dynamic_scope?
+	Q: should not really be a scope, doesn't contain
+		it's own used_id_map, should use parent's.  
+		All lookups and registrations go to enclosing
+		definition or namespace scope.  
+	S: may contain instantiations and connections... references?
  */
-class loop_scope : public scopespace {
+class loop_scope {
 protected:
 	// should have modifiable pointer to parent scope?
 	// induction variable
@@ -600,7 +639,7 @@ public:
 	Scope of a conditional body.  
 	Should this be some list?
  */
-class conditional_scope : public scopespace {
+class conditional_scope {
 protected:
 	// condition expression
 public:
@@ -691,6 +730,11 @@ virtual	const instantiation_base* add_template_formal(instantiation_base* f);
 	sub-classes.  
  */
 class instantiation_base : public object {
+public:
+	typedef	count_const_ptr<instance_collection_stack_item>
+					index_collection_item_ptr_type;
+	typedef	deque<index_collection_item_ptr_type>
+					index_collection_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -718,8 +762,7 @@ protected:
 		Needs to be a deque so we can use iterators.  
 	 */
 //	excl_ptr<sparse_index_collection>	index_collection;
-	deque<count_const_ptr<instance_collection_stack_item> >
-					index_collection;
+	index_collection_type			index_collection;
 //	excl_ptr<array_index_list>	array_dimensions;
 
 	/**
@@ -742,13 +785,21 @@ virtual	string hash_string(void) const { return key; }
 
 virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
+
+	size_t dimensions(void) const { return depth; }
+	index_collection_type::const_iterator
+		current_collection_state(void) const;
+	bool detect_static_overlap(index_collection_item_ptr_type r) const;
+	bool add_index_range(index_collection_item_ptr_type r);
+	bool merge_index_ranges(never_const_ptr<instantiation_base> i);
+
+/** currently always returns NULL, useless */
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
 
 // new concept
 //	void set_array_dimensions(excl_ptr<array_index_list> d);
-
-	bool array_dimension_match(const instantiation_base& i) const;
+//	bool array_dimension_match(const instantiation_base& i) const;
 
 };	// end class instantiation_base
 
@@ -791,7 +842,7 @@ explicit fundamental_type_reference(excl_ptr<template_param_list> pl);
 virtual	~fundamental_type_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const;
 virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 	string template_param_string(void) const;
 	string get_qualified_name(void) const;
@@ -808,7 +859,8 @@ virtual never_const_ptr<instantiation_base>
 			const token_identifier& id) const = 0;
 
 // TO DO: type equivalence relationship
-
+	bool may_be_equivalent(
+		never_const_ptr<fundamental_type_reference> t) const;
 };	// end class fundamental_type_reference
 
 //-----------------------------------------------------------------------------
@@ -851,7 +903,7 @@ public:
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	never_const_ptr<instantiation_base>
 		add_instance_to_scope(scopespace& s, 
@@ -876,7 +928,7 @@ public:
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	never_const_ptr<instantiation_base>
 		add_instance_to_scope(scopespace& s, 
@@ -902,7 +954,7 @@ public:
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	never_const_ptr<instantiation_base>
 		add_instance_to_scope(scopespace& s, 
@@ -927,7 +979,7 @@ public:
 virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
 	never_const_ptr<instantiation_base>
 		add_instance_to_scope(scopespace& s, 
@@ -1401,8 +1453,11 @@ protected:
 		ival is to be interpreted as a default value, in the 
 		case where one is not supplied.  
 		Or should this be never delete? cache-owned expressions?
+		Screw the cache.  
+		Only applicable for simple single instances.  
+		Collectives won't be checked until unroll time.  
 	 */
-	excl_const_ptr<param_expr>	ival;
+	count_const_ptr<param_expr>	ival;
 
 public:
 	param_instantiation(const scopespace& o, 
@@ -1416,9 +1471,10 @@ public:
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
 
-	void initialize(excl_const_ptr<param_expr> e);
+	void initialize(count_const_ptr<param_expr> e);
 
-	never_const_ptr<param_expr> default_value(void) const { return ival; }
+	/** appropriate for the context of a template parameter formal */
+	count_const_ptr<param_expr> default_value(void) const;
 
 /**
 	A parameter is considered "usable" if it is either initialized
@@ -1436,17 +1492,131 @@ public:
 class param_instance_reference : public single_instance_reference {
 protected:
 //	array_index_list*			array_indices;	// inherited
-	never_const_ptr<param_instantiation>	param_inst_ref;
+	never_ptr<param_instantiation>		param_inst_ref;
 
 public:
-	param_instance_reference(const param_instantiation& pi, 
-		array_index_list* i = NULL) : 
-		single_instance_reference(i), param_inst_ref(&pi) { }
+	param_instance_reference(never_ptr<param_instantiation> pi, 
+		array_index_list* i = NULL);
 	~param_instance_reference() { }
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
+	bool is_initialized(void) const;
+	void initialize(count_const_ptr<param_expr> i);
 };	// end class param_instance_reference
+
+//=============================================================================
+/**
+	Base class for connections, and expression assignments.  
+	These will all be kept in a list to be expanded by each scope
+	when unrolled.  
+	List keeps things in program order.  
+	Need to consider how re-packed, constructed arrays, 
+	will fit into picture.  
+ */
+class connection_assignment_base {
+protected:
+	// don't need parent back-reference
+public:
+	connection_assignment_base() { }
+virtual	~connection_assignment_base() { }
+
+// interface functions
+// need to specify argument as something containing template arguments
+// virtual	void unroll_build() const = 0;
+// virtual	void static_check() const = 0;
+};	// end class connection_assignment_base
+
+//-----------------------------------------------------------------------------
+/**
+	Class for saving and managing expression assignments.  
+	Includes both static and dynamic expressions.  
+ */
+class param_expression_assignment : public connection_assignment_base {
+protected:
+	// really should be exclusive pointers
+	list<count_const_ptr<param_expr> >		ex_list;
+	// param_expr may contain references to parameter instances, ok
+public:
+	param_expression_assignment();
+	~param_expression_assignment();
+
+	void	append_param_expression(count_const_ptr<param_expr> e);
+	void	prepend_param_expression(count_const_ptr<param_expr> e);
+
+};	// end class param_expression_assignment
+
+//-----------------------------------------------------------------------------
+/**
+	Class for saving and managing expression assignments.  
+	Includes both static and dynamic instance references.  
+ */
+class instance_reference_connection : public connection_assignment_base {
+protected:
+	// items may be singular or collective instances references.  
+	list<count_const_ptr<instance_reference_base> >		inst_list;
+public:
+	instance_reference_connection();
+virtual	~instance_reference_connection() { }
+
+// non-virtual
+virtual	void	append_instance_reference(
+			count_const_ptr<instance_reference_base> i);
+};	// end class instance_reference_connection
+
+//-----------------------------------------------------------------------------
+/**
+	Alias-style instance connection, e.g. x = y = z;
+	List items are interpreted as connecting to each other, 
+	and thus having the same type and size.  
+ */
+class aliases_connection : public instance_reference_connection {
+protected:
+	// no additional fields
+public:
+	aliases_connection();
+	~aliases_connection() { }
+
+	void	prepend_instance_reference(
+			count_const_ptr<instance_reference_base> i);
+
+};	// end class aliases_connection
+
+//-----------------------------------------------------------------------------
+/**
+	Port-style instance connection, e.g. x(y,z,w);
+	Which is short-hand for x.first = y, x.second = z, ...;
+	List items are interpreted as connecting to the ports
+	of the instance.  
+ */
+class port_connection : public instance_reference_connection {
+protected:
+	/** should be reference to a single instance, may be indexed.  */
+	count_const_ptr<single_instance_reference>	inst;
+public:
+	port_connection(count_const_ptr<single_instance_reference> i);
+	~port_connection() { }
+
+	void	append_instance_reference(
+			count_const_ptr<instance_reference_base> i);
+
+};	// end class port_connection
+
+//-----------------------------------------------------------------------------
+/**
+	Wrapper reference to a loop or conditional namespace.  
+ */
+class dynamic_connection_assignment : public connection_assignment_base {
+protected:
+	/** the dynamic scope, a loop or conditional */
+	never_const_ptr<scopespace>			dscope;
+	// may be really static if bounds and conditions can be 
+	// resolved as static constants...
+public:
+	dynamic_connection_assignment(never_const_ptr<scopespace> s);
+	~dynamic_connection_assignment() { }
+
+};	// end class dynamic_connection_assignment
 
 //=============================================================================
 }	// end namespace entity
