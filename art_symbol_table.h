@@ -16,9 +16,15 @@ namespace ART {
 
 //=============================================================================
 // forward declarations from another namespace, from "art_object.h"
+// avoids having to include "art_object.h"
 namespace entity {
-	class name_space;
 	// and more as they are needed
+	class name_space;
+	class built_in_type_def;
+	class user_def_type;
+	class type_instantiation;
+	class process_definition;
+	class process_instantiation;
 };
 using namespace entity;
 
@@ -57,8 +63,15 @@ protected:
 		Do not delete.  
 	 */
 	name_space*		current_ns;
+	/// Reference to the current open process definition.  
+	process_definition*	current_proc_def;
+	/// Reference to the current open data type definition.  
+	user_def_type*		current_type_def;
+	// Reference to the current open channel definition.  
+	// user_chan_def*	current_chan_def;
 
 public:
+	/// the number of semantic errors to accumulate before bailing out
 	static const long	type_error_limit = 3;
 
 public:
@@ -74,6 +87,7 @@ name_space*	open_namespace(const token_identifier& id);
 name_space*	close_namespace(void);
 name_space*	using_namespace(const id_expr& id);
 name_space*	alias_namespace(const id_expr& id, const string& a);
+
 
 string		auto_indent(void) const;
 

@@ -4,6 +4,7 @@
 #include "art_object.h"
 #include "list_of_ptr_template_methods.h"
 #include "map_of_ptr_template_methods.h"
+// #include "hashlist_template_methods.h"
 
 namespace ART {
 namespace entity {
@@ -70,7 +71,7 @@ name_space::add_open_namespace(const string& n) {
 	ret = subns[n];
 	// if sub-namespace already exists, return reference to it
 	if (ret) {
-		cerr << " ... already exists as subspace";
+		cerr << " ... already exists as subspace, re-opening";
 	} else {	// else create it, linking this as its parent
 		cerr << " ... creating new";
 		ret = new name_space(n, this);
@@ -322,8 +323,9 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	finds a namespace ending with a (optionally) scoped identifier
-	(allows multiple matches, hence the use of a list reference)
+	Finds a namespace ending with a (optionally) scoped identifier
+	(allows multiple matches, hence the use of a list reference).
+	Currently not used.  
  */
 void
 name_space::

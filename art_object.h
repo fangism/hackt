@@ -63,20 +63,24 @@ class name_space : public object {
 	// table of real instantiations (outside of definitions)
 private:
 	/// may become hash_map if need be, for now map suffices (r/b-tree)
-	typedef	map_of_ptr<string, name_space>	ns_map_type;
+	typedef	map_of_ptr<string, name_space>		subns_map_type;
 
 	/// resolves identifier to actual data type, we own these pointers
 	typedef	map_of_ptr<string, type_definition>	type_def_map_type;
+	typedef	list<type_definition*>			type_def_list;
 
 	/// resolves identifier to actual data type, we own these pointers
 	typedef	map_of_ptr<string, type_instantiation>	type_inst_map_type;
+	typedef	list<type_instantiation*>		type_inst_list;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_definition>	proc_def_map_type;
+	typedef	list<process_definition*>		proc_def_list;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_instantiation>
 							proc_inst_map_type;
+	typedef	list<process_instantiation*>		proc_inst_list;
 
 	/**
 		Container for open namespaces with optional aliases.  
@@ -111,7 +115,7 @@ protected:
 		Not const-pointers, because they are "owned" by 
 		this namespace.
 	 */
-	ns_map_type		subns;
+	subns_map_type		subns;
 
 	/**
 		The set of namespaces which are open to search within
@@ -132,7 +136,7 @@ protected:
 		these namespace pointers are not owned, and thus are
 		not deleted at destruction time.  
 	 */
-	ns_map_type		open_aliases;
+	subns_map_type		open_aliases;
 
 	/**
 		Container of data type definitions in this scope.
@@ -176,6 +180,9 @@ name_space*	add_using_directive(const id_expr& n);
 name_space*	add_using_alias(const id_expr& n, const string& a);
 
 type_definition*	add_type_definition();
+type_instantiation*	add_type_instantiation();
+process_definition*	add_proc_definition();
+process_instantiation*	add_proc_instantiation();
 
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
@@ -183,15 +190,22 @@ private:
 name_space*	query_namespace_match(const id_expr& id);
 name_space*	query_subnamespace_match(const id_expr& id);
 void	query_import_namespace_match(namespace_list& m, const id_expr& id);
+
+// these will not be recursive, but iteratively invoked by
+// add_blah_inst/def();
+void	query_type_def_match(type_def_list& m, const id_expr& pid);
+void	query_type_inst_match(type_def_list& m, const id_expr& pid);
+void	query_proc_def_match(type_def_list& m, const id_expr& pid);
+void	query_proc_inst_match(type_def_list& m, const id_expr& pid);
+
+// the following are not used... yet
 void	find_namespace_ending_with(namespace_list& m, const id_expr& id);
-name_space*	find_namespace_starting_with(const id_expr& id);
-
-
-
+void	find_namespace_starting_with(namespace_list& m, const id_expr& id);
 
 
 // will we need generalized versions of queries that return object*
 // if we don't know a priori what an identifier's class is?
+// single symbol table or separate?
 
 };
 
@@ -220,7 +234,14 @@ class process_definition : public definition {
 	// table of template formals
 	// table of port formals
 	// table of sub-instantiations
-	// table of language bodies
+	// table of language bodies, or should these just be merged?
+private:
+	// remember: template formals are accessible to the rest of the body
+	// and to the port formals as well
+	
+protected:
+	
+public:
 
 };
 
@@ -229,6 +250,12 @@ class process_definition : public definition {
 	Process instantiation.  
  */
 class process_instantiation : public instantiation {
+private:
+
+protected:
+	// list of template actuals
+
+public:
 
 };
 

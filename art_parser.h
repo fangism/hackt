@@ -5,28 +5,15 @@
 #ifndef __ART_PARSER_H__
 #define __ART_PARSER_H__
 
-// probably stick to lists, no hash_map's until the build() phase
-// if this file gets too honkin' big, I'll split it up...
-
 #include <iostream>
 #include <string>
-#include <typeinfo>
 
 #include <stdio.h>		// just for sprintf
 #include <string.h>		// for a few C-string functions
 
-#ifdef	__APPLE__		// different location with gcc-3.3 on OS X
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-#else
-#include <hash_map>
-#endif
-
 #include "art_macros.h"
 #include "art_switches.h"
 #include "art_utils.h"
-// #include "art_symbol_table.h"
-// #include "art_object.h"
 #include "list_of_ptr.h"	// includes <list>
 
 /// This is the general namespace for all ART-related classes.  
@@ -36,7 +23,7 @@ using namespace std;
 
 // forward declaration of outside namespace and classes
 namespace entity {
-	class object;
+	class object;		// defined in "art_object.h"
 };
 
 using namespace entity;
@@ -54,8 +41,8 @@ namespace parser {
 //=============================================================================
 // forward declarations in this namespace
 class context;			// defined in art_symbol_table.h
-class token_char;
-class token_string;
+class token_char;		// defined here
+class token_string;		// defined here
 
 //=============================================================================
 // some constant delimiter strings, defined in art_parser.cc
