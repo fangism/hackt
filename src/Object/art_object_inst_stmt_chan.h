@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.1.2.2 2005/03/11 05:16:41 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.1.2.3 2005/03/11 07:52:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CHAN_H__
@@ -28,7 +28,7 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	unroll_type_reference(const unroll_context& c) const {
+	unroll_type_reference(unroll_context& c) const {
 #if 0
 		return type->unroll_resolve(c);
 #else

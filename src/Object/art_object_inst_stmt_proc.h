@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_proc.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_proc.h,v 1.1.2.2 2005/03/11 05:16:41 fang Exp $
+	$Id: art_object_inst_stmt_proc.h,v 1.1.2.3 2005/03/11 07:52:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_PROC_H__
@@ -28,13 +28,8 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	unroll_type_reference(const unroll_context& c) const {
-#if 0
+	unroll_type_reference(unroll_context& c) const {
 		return type->unroll_resolve(c);
-#else
-		// temporary
-		return type_ref_ptr_type(NULL);
-#endif
 	}
 
 	static

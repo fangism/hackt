@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.4 2005/03/11 05:16:41 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.5 2005/03/11 07:52:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -199,9 +199,9 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(this->inst_base);
 	// let the scopespace take care of it
-	// inst_base->collect_transient_info(m);
-	parent_type::collect_transient_info_base(m);
+	inst_base->collect_transient_info(m);
 	type_ref_parent_type::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 

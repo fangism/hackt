@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29.2.3 2005/03/11 01:16:20 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29.2.4 2005/03/11 07:52:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -29,6 +29,9 @@
 
 #if USE_INST_STMT_TEMPLATE
 #include "art_object_inst_stmt_param.h"
+#include "art_object_inst_stmt_data.h"
+#include "art_object_inst_stmt_chan.h"
+#include "art_object_inst_stmt_proc.h"
 #endif
 
 #include "sstream.h"

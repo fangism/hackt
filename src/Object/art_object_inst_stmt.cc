@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.6 2005/03/11 05:16:40 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.7 2005/03/11 07:52:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -467,6 +467,7 @@ pint_instantiation_statement::load_object(const persistent_object_manager& m,
 #endif	// USE_INST_STMT_TEMPLATE
 
 //=============================================================================
+#if !USE_INST_STMT_TEMPLATE
 // class process_instantiation_statement method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -712,10 +713,12 @@ channel_instantiation_statement::load_object(
 		m.load_object(indices);
 #endif
 }
+#endif	// USE_INST_STMT_TEMPLATE
 
 //=============================================================================
 // class data_instantiation_statement method definitions
 
+#if !USE_INST_STMT_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(data_instantiation_statement, 64)
 
@@ -858,6 +861,7 @@ data_instantiation_statement::load_object(const persistent_object_manager& m,
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
 }
+#endif	// USE_INST_STMT_TEMPLATE
 
 //=============================================================================
 // explicit template class instantiations
@@ -865,6 +869,9 @@ data_instantiation_statement::load_object(const persistent_object_manager& m,
 #if USE_INST_STMT_TEMPLATE
 template class instantiation_statement<pbool_tag>;
 template class instantiation_statement<pint_tag>;
+template class instantiation_statement<datatype_tag>;
+template class instantiation_statement<channel_tag>;
+template class instantiation_statement<process_tag>;
 #endif
 
 //=============================================================================

@@ -1,6 +1,15 @@
 "ChangeLog"
 
-2005-03-08	David Fang	<fangism@users.sourceforge.net>
+2005-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-07:
+	  Ported data,proc,chan instantiation_statements to use new
+	  template class, no problems!
+	  Next revision will clean up #if USE_INST_STMT_TEMPLATE.  
+	  Plan: clean-up, merge to trunk, work templateing expr-assignments.  
+
+
+2005-03-10	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-18-inststmt-04-merged-collection-03:
 	  Merged revisions from -collection child branch (-03).
