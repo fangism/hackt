@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.3.2.3 2005/02/07 22:53:12 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.3.2.4 2005/02/08 06:41:22 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -183,6 +183,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits.h \
 	util/const_assoc_query.h \
 	util/const_assoc_query.tcc \
+	util/const_traits.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/discrete_interval_set.h \
@@ -226,6 +227,9 @@ UTIL_HEADER_FILES = \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
 	util/multikey_qmap.tcc \
+	util/multikey_set_fwd.h \
+	util/multikey_set.h \
+	util/multikey_set.tcc \
 	util/nested_iterator.h \
 	util/null_construct.h \
 	util/numeric/integer_traits.h \

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.10.6 2005/02/07 22:53:14 fang Exp $
+	$Id: multikey.h,v 1.19.10.7 2005/02/08 06:41:23 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -60,6 +60,7 @@ private:
 protected:
 	typedef	multikey_traits<K>			traits_type;
 public:
+	typedef	this_type				implementation_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::reference		reference;
 	typedef	typename traits_type::const_reference	const_reference;
@@ -157,6 +158,7 @@ private:
 protected:
 	typedef	multikey_traits<K>			traits_type;
 public:
+	typedef	K					implementation_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::reference		reference;
 	typedef	typename traits_type::const_reference	const_reference;
@@ -233,6 +235,9 @@ public:
 	 */
 	operator const K& () const { return index; }
 
+	this_type&
+	operator = (const K k) { index = k; return *this; }
+
 	/**
 		Safe indexing with array-bound check.  
 		indices is public, so one can always access it directly...
@@ -275,6 +280,8 @@ class multikey : public multikey_implementation_base<D,K> {
 	typedef	multikey<D,K>				this_type;
 	typedef	multikey_implementation_base<D,K>	impl_type;
 public:
+	// workaround for constness problem in multikey_set_element
+	typedef	this_type				self_key_type;
 	typedef	typename impl_type::value_type		value_type;
 	typedef	typename impl_type::reference		reference;
 	typedef	typename impl_type::const_reference	const_reference;
@@ -321,6 +328,9 @@ public:
 	template <template <class> class S>
 	explicit
 	multikey(const S<K>& s, const K i = K());
+
+	const self_key_type&
+	self_key(void) const { return *this; }
 
 	this_type&
 	operator = (const this_type& s);

@@ -2,7 +2,7 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.2.1 2005/02/07 22:53:14 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.2.2 2005/02/08 06:41:23 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -11,6 +11,7 @@
 // #include <iosfwd>
 #include "macros.h"
 #include "multikey_assoc_fwd.h"
+#include "assoc_traits.h"		// for set_element_traits
 #include "STL/list_fwd.h"
 #include "STL/pair_fwd.h"
 
@@ -44,9 +45,16 @@ protected:
 	/** this is the representation-type */
 	typedef	C					assoc_type;
 public:
-	typedef	typename assoc_type::key_type		key_type;
-//	typedef	typename assoc_type::mapped_type	mapped_type;
 	typedef	typename assoc_type::value_type		value_type;
+#if 0
+	typedef	typename assoc_type::key_type		key_type;
+#else
+	typedef	typename set_element_traits<value_type>::key_type
+							key_type;
+	typedef	typename set_element_traits<value_type>::mapped_type
+							mapped_type;
+#endif
+//	typedef	typename assoc_type::mapped_type	mapped_type;
 //	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
@@ -63,10 +71,25 @@ public:
 	typedef	typename assoc_type::const_pointer	const_pointer;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
+	// this only works for maps... set::key_type == set::value_type :S
+#if 1
 	typedef	typename key_type::value_type		index_type;
+#else
+	/**
+		Dirty hack from "assoc_traits.h".
+		The key_type corresponds to a multikey(-like) class.  
+		The key_type type has a value_type member which corresponds
+		(most likely) to some built-in integer type.
+	 */
+	typedef	typename set_element_traits<value_type>::key_type::value_type
+							index_type;
+#endif
 	typedef	list<index_type>			key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
+
+protected:
+	typedef	typename assoc_type::key_type		find_arg_type;
 
 public:
 	// for array_traits<> interface
@@ -111,8 +134,19 @@ public:
 	using assoc_type::end;
 	using assoc_type::rbegin;
 	using assoc_type::rend;
-	using assoc_type::find;
 
+	// weird: using "find_arg_type"
+	iterator
+	find(const find_arg_type& k) {
+		return assoc_type::find(k);
+	}
+
+	const_iterator
+	find(const find_arg_type& k) const {
+		return assoc_type::find(k);
+	}
+
+#if 0
 	iterator
 	lower_bound(const key_type& k) {
 		return assoc_type::lower_bound(k);
@@ -132,6 +166,27 @@ public:
 	upper_bound(const key_type& k) const {
 		return assoc_type::upper_bound(k);
 	}
+#else
+	iterator
+	lower_bound(const find_arg_type& k) {
+		return assoc_type::lower_bound(k);
+	}
+
+	const_iterator
+	lower_bound(const find_arg_type& k) const {
+		return assoc_type::lower_bound(k);
+	}
+
+	iterator
+	upper_bound(const find_arg_type& k) {
+		return assoc_type::upper_bound(k);
+	}
+
+	const_iterator
+	upper_bound(const find_arg_type& k) const {
+		return assoc_type::upper_bound(k);
+	}
+#endif
 
 	/**
 		\param K may be underspecified key (fewer dimensions).
@@ -184,6 +239,16 @@ public:
 	size_type
 	count(const index_type i) const;
 #endif
+
+	size_type
+	erase(const key_type& k) {
+		return assoc_type::erase(k);
+	}
+
+	void
+	erase(iterator i) {
+		assoc_type::erase(i);
+	}
 
 	template <class K>
 	size_type
@@ -280,9 +345,16 @@ class multikey_assoc<1,C> : public C {
 protected:
 	typedef	C					assoc_type;
 public:
-	typedef	typename assoc_type::key_type		key_type;
-	typedef	typename assoc_type::mapped_type	mapped_type;
 	typedef	typename assoc_type::value_type		value_type;
+#if 0
+	typedef	typename assoc_type::key_type		key_type;
+#else
+	typedef	typename set_element_traits<value_type>::key_type
+							key_type;
+	typedef	typename set_element_traits<value_type>::mapped_type
+							mapped_type;
+#endif
+//	typedef	typename assoc_type::mapped_type	mapped_type;
 //	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
@@ -299,7 +371,13 @@ public:
 	typedef	typename assoc_type::const_pointer	const_pointer;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
+	// only works for map's type:
+#if 1
 	typedef	key_type				index_type;
+#else
+	typedef	typename set_element_traits<value_type>::key_type
+							index_type;
+#endif
 	typedef	list<key_type>				key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;

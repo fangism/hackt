@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.7 2005/02/07 22:53:15 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.8 2005/02/08 06:41:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
@@ -49,6 +49,8 @@ class multikey_map :
 	protected M<multikey<D,K>, T>
 #endif
 {
+private:
+	typedef	multikey_map<D,K,T,M>			this_type;
 protected:
 	/** this is the representation-type */
 #if USE_MULTIKEY_ASSOC
@@ -76,9 +78,9 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
-	typedef	list<K>					key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	typename mt::key_list_type		key_list_type;
+	typedef	typename mt::key_list_pair_type		key_list_pair_type;
+	typedef	typename mt::key_pair_type		key_pair_type;
 
 public:
 	// for array_traits<> interface
@@ -109,22 +111,26 @@ public:
 	}
 #endif
 
+#if 0
 	/**
 		Number of dimensions.
 	 */
 	size_t
 	dimensions(void) const { return D; }
+#endif
 
 #if 0
 	size_t
 	size(void) const { return this->population(); }
 #endif
 
+#if 0
 	/**
 		\return The number of elements (leaves) in map.  
 	 */
 	size_t
 	population(void) const { return mt::size(); }
+#endif
 
 #if 0
 	/**
@@ -274,6 +280,8 @@ class multikey_map<1,K,T,M> :
 		protected M<K,T>
 #endif
 {
+private:
+	typedef	multikey_map<1,K,T,M>			this_type;
 protected:
 #if USE_MULTIKEY_ASSOC
 	typedef	multikey_assoc<1, M<K,T> >		map_type;
@@ -300,14 +308,15 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
-	typedef	list<K>					key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	typename mt::key_list_type		key_list_type;
+	typedef	typename mt::key_list_pair_type		key_list_pair_type;
+	typedef	typename mt::key_pair_type		key_pair_type;
 
 	// for array_traits<>
 	enum { dim = 1 };
 public:
 	multikey_map();
+
 	~multikey_map();
 
 #if 0
@@ -327,11 +336,13 @@ public:
 	using map_type::size;
 #endif
 
+#if 0
 	size_t
 	dimensions(void) const { return 1; }
 
 	size_t
 	population(void) const { return mt::size(); }
+#endif
 
 #if 0
 	void

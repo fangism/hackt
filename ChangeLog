@@ -12,6 +12,18 @@
 	  of multikey_map into multikey_assoc template wrapper.  
 	  Much removed code in commends in this snapshot.  
 
+	+ -set-14-trans-00: "multikey_set*" family added (1st draft), 
+	  *almost* entirely working, just needed to add initial files
+	  to checkpoint first revision.  
+	  This is a *transient* snapshot, and will compile, but the newly
+	  added test (multikey_set_test) does not run correctly yet.  
+	  Many adaptations have been made to the base multikey_assoc, 
+	  without disturbing the functionality of multikey_maps.  
+	  Future plans for major improvement of code maintainability:
+	  Make a set adapter to give map-like key-value interface to 
+	  std::set, since we find ourselves working around basic
+	  fundamental differences.  
+
 
 2005-02-06	David Fang	<fangism@users.sourceforge.net>
 

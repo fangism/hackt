@@ -1,7 +1,7 @@
 /**
 	\file "multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.1.2.1 2005/02/07 22:53:15 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.1.2.2 2005/02/08 06:41:23 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -68,8 +68,12 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::iterator
 multikey_assoc<D,C>::lower_bound(const K& k) {
-	const key_type x(k, numeric_limits<typename K::value_type>::min());
-	return assoc_type::lower_bound(x);
+	const key_type
+		x(k.self_key(),
+		numeric_limits<typename K::self_key_type::value_type>::min());
+	// YUCK
+	const typename assoc_type::key_type xx(x);
+	return assoc_type::lower_bound(xx);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,8 +81,12 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::const_iterator
 multikey_assoc<D,C>::lower_bound(const K& k) const {
-	const key_type x(k, numeric_limits<typename K::value_type>::min());
-	return assoc_type::lower_bound(x);
+	const key_type
+		x(k.self_key(),
+		numeric_limits<typename K::self_key_type::value_type>::min());
+	// YUCK
+	const typename assoc_type::key_type xx(x);
+	return assoc_type::lower_bound(xx);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,8 +150,12 @@ typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::count(const K& k) const {
 	static const size_t dim2 = K::dim;
 	key_type l(k);
+//	typename assoc_type::key_type l(k);
 	l[dim2-1]++;
-	return distance(lower_bound(k), lower_bound(l));
+	const typename assoc_type::key_type kk(k);
+	const typename assoc_type::key_type ll(l);
+	return distance(lower_bound(kk),
+		lower_bound(ll));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -164,21 +176,24 @@ multikey_assoc<D,C>::count(const index_type i) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Erases all entries matching the prefix multikey.  
+ */
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::erase(const K& k) {
-	static const size_t dim2 = K::dim;
+	static const size_t dim2 = K::self_key_type::dim;
 	if (dim2 < D) {
-		K m(k);
+		typename K::self_key_type m(k.self_key());
 		m[dim2-1]++;
 		const iterator l(lower_bound(k));
 		const iterator u(lower_bound(m));
-		size_type ret = distance(l,u);
+		const size_type ret = distance(l,u);
 		if (ret) assoc_type::erase(l,u);
 		return ret;
 	} else {        // D2 >= D
-		const key_type l(k);
+		const typename assoc_type::key_type l(k.self_key());
 		const iterator f(assoc_type::find(l));
 		if (f != this->end()) {
 			assoc_type::erase(f);
