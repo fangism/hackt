@@ -1019,7 +1019,7 @@ range_list
 range
 	: expr RANGE expr 
 		{ $$ = new range($1, $2, $3); }
-	| expr { $$ = new range($1, NULL, NULL); }
+	| expr { $$ = new range($1); }
 	;
 
 //----end array ----------------------------------------------------------

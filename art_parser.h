@@ -295,17 +295,12 @@ protected:
 	expr*			e;		///< enclosed expression
 	token_char*		rp;		///< right parenthesis
 public:
-	paren_expr(node* l, node* n, node* r) : expr(), 
-		lp(dynamic_cast<token_char*>(l)), 
-		e(dynamic_cast<expr*>(n)), 
-		rp(dynamic_cast<token_char*>(r))
-		{ assert(lp); assert(e); assert(rp); }
-virtual	~paren_expr() { SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp); }
+	paren_expr(node* l, node* n, node* r);
+virtual	~paren_expr();
 
 virtual	ostream& what(ostream& o) const { return o << "(paren-expr)"; }
 virtual	line_position leftmost(void) const { return lp->leftmost(); }
 virtual	line_position rightmost(void) const { return rp->rightmost(); }
-
 };
 
 //=============================================================================
@@ -420,7 +415,7 @@ virtual	line_position rightmost(void) const
 class token_else : public token_keyword, public expr {
 public:
 	token_else(const char* tf) : token_keyword(tf), expr()
-		{ assert(!strcmp(tf,"true") || !strcmp(tf,"false")); }
+		{ assert(!strcmp(tf,"else")); }
 virtual	~token_else() { }
 
 virtual	ostream& what(ostream& o) const
@@ -458,22 +453,15 @@ protected:
 	terminal*	op;		///< range operator token ".."
 	expr*		upper;		///< inclusive upper bound
 public:
+/// simple constructor for when range is just one integer expression
+	range(node* l);
 /**
-	Upper bound is optional.  If omitted, range is interpreted as [l,l].  
 	Failure to dynamic_cast will result in assignment to a NULL pointer, 
 	which will be detected, and properly memory managed, assuming
 	that the arguments exclusively "owned" their memory locations.  
  */
-	range(node* l, node* o, node* u = NULL) : expr(), 
-		// note: cannot static_cast from a virtual base
-		lower(dynamic_cast<expr*>(l)), 
-		op(dynamic_cast<terminal*>(o)),
-		upper(dynamic_cast<expr*>(u)) {
-			if (l && !lower) delete l;
-			if (o && !op) delete o;
-			if (u && !upper) delete u;
-		}
-virtual	~range() { SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper); }
+	range(node* l, node* o, node* u);
+virtual	~range();
 
 virtual	ostream& what(ostream& o) const { return o << "(range)"; }
 virtual	line_position leftmost(void) const { return lower->leftmost(); }
@@ -868,7 +856,7 @@ public:
 	namespace_body(node* s, node* n, node* l, node* b, node* r, node* c);
 virtual	~namespace_body();
 
-virtual	ostream& what(ostream& o) const { return o << "(namespace-body)"; }
+virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const { return ns->leftmost(); }
 virtual	line_position rightmost(void) const { return semi->rightmost(); }
 

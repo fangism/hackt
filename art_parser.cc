@@ -33,7 +33,8 @@ const char colon[] = ":";	///< delimiter for node_list template argument
  */
 object*
 node::check_build(context* c) const {
-	cerr << "check_build() not fully-implmented yet." << endl;
+	cerr << c->auto_indent() << 
+		"node::check_build() not fully-implmented yet.";
 	return NULL;
 }
 
@@ -45,6 +46,45 @@ node::check_build(context* c) const {
 
 // thus all definitions must be in header
 // this way, PRS and HSE may use them
+
+//=============================================================================
+// class paren_expr method definitions
+
+CONSTRUCTOR_INLINE
+paren_expr::paren_expr(node* l, node* n, node* r) : expr(),
+		lp(dynamic_cast<token_char*>(l)),
+		e(dynamic_cast<expr*>(n)),
+		rp(dynamic_cast<token_char*>(r)) {
+	assert(lp); assert(e); assert(rp);
+}
+
+DESTRUCTOR_INLINE
+paren_expr::~paren_expr() {
+	SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp);
+}
+
+//=============================================================================
+// class range method definitions
+
+CONSTRUCTOR_INLINE
+range::range(node* l) : expr(), 
+		lower(dynamic_cast<expr*>(l)), op(NULL), upper(NULL) {
+	assert(lower); 
+}
+
+CONSTRUCTOR_INLINE
+range::range(node* l, node* o, node* u) : expr(),
+		lower(dynamic_cast<expr*>(l)),
+		op(dynamic_cast<terminal*>(o)),
+		upper(dynamic_cast<expr*>(u)) {
+	assert(lower); assert(op); assert(u);
+}
+
+DESTRUCTOR_INLINE
+range::~range() {
+	SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper);
+}
+
 
 //=============================================================================
 // class namespace_body method definitions
@@ -65,14 +105,15 @@ namespace_body(node* s, node* n, node* l, node* b, node* r, node* c) :
 		ns(dynamic_cast<token_keyword*>(s)),
 		name(dynamic_cast<token_identifier*>(n)),
 		lb(dynamic_cast<terminal*>(l)),
-		body(dynamic_cast<token_identifier*>(b)),     
+		body(dynamic_cast<root_body*>(b)),     
 		rb(dynamic_cast<terminal*>(r)),
 		semi(dynamic_cast<terminal*>(c)) {
 	assert(ns); assert(name); assert(lb);
-	// body may be NULL
+	if (b) assert(body);		// body may be NULL
 	assert(rb); assert(semi);
 }
 
+/// destructor
 DESTRUCTOR_INLINE
 namespace_body::
 ~namespace_body() {
@@ -80,21 +121,28 @@ namespace_body::
 	SAFEDELETE(body); SAFEDELETE(rb); SAFEDELETE(semi);
 }
 
+/// what eeeez it, man?
+ostream&
+namespace_body::
+what(ostream& o) const {
+	return o << "(namespace-body: " << *name << ")";
+}
 
 // recursive type-checker
 object*
 namespace_body::
 check_build(context* c) const {
-	cerr << "entering namespace: " << *name << endl;
+	cerr << c->auto_indent() << "entering namespace: " << *name;
 	// use context lookup: see if namespace already exists in super-scope
 		// name_space* ns = c->lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
 	// otherwise register a new namespace, add it to context
-
+	c->open_namespace(*name);
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
-	cerr << "leaving namespace: " << *name << endl;
+	cerr << c->auto_indent() << "leaving namespace: " << *name;
+	c->close_namespace();
 	// if no errors, return pointer to the namespace just processed
 	return NULL;
 }
@@ -154,15 +202,15 @@ chan_type::attach_data_types(node* t) {
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 template class node_list<root_item>;			// root_body
-template class node_list<expr,comma>;		// expr_list
+template class node_list<expr,comma>;			// expr_list
 template class node_list<token_identifier,scope>;	// id_expr
-template class node_list<range,comma>;		// range_list
-template class node_list<data_type_base,comma>;	// base_data_type_list
+template class node_list<range,comma>;			// range_list
+template class node_list<data_type_base,comma>;		// base_data_type_list
 template class node_list<def_body_item>;		// definition_body
 template class node_list<declaration_base,comma>;	// declaration_id_list
 template 
 class node_list<instance_declaration,semicolon>;	// data_param_list
-template class node_list<port_formal_id,comma>;	// port_formal_id_list
+template class node_list<port_formal_id,comma>;		// port_formal_id_list
 template 
 class node_list<port_formal_decl,semicolon>;		// port_formal_decl_list
 template 

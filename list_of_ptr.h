@@ -40,7 +40,7 @@ public:
 	list_of_ptr() : list<T*>() { }
 
 /// The destructor frees memory to non-NULL pointers in the list.  
-virtual	~list_of_ptr();
+virtual	~list_of_ptr();		// don't want to inline this
 
 // non-essential add-on methods
 

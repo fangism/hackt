@@ -151,12 +151,20 @@ node_list<T,D>::rightmost(void) const {
 NODE_LIST_TEMPLATE_SPEC
 object*
 node_list<T,D>::check_build(context* c) const {
+	object* o = NULL;
 	const_iterator i = begin();
-	for( ; i!=end(); i++) {
-		// remember to skip every other token, which is a delimiter
-		if (i!=begin()) i++;
+	if (*i) {
+		(*i)->what(cerr << c->auto_indent() << "checking a ");
+		// check returned value for failure
+		o = (*i)->check_build(c);
+		// update context c with o, should be done inside
+	}
+	for(i++; i!=end(); i++) {
+		// remember to skip every other token if there was one!
+		if (D != none)
+			i++;
 		if (*i) {
-			object* o;
+			(*i)->what(cerr << c->auto_indent() << "checking a ");
 			// check returned value for failure
 			o = (*i)->check_build(c);
 			// update context c with o, should be done inside

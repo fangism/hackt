@@ -52,7 +52,7 @@ y.tab.h y.tab.cc: art.yy
 # documentation targets
 docs:
 	doxygen $(DOXYGEN_CONFIG)
-	(cd dox/latex; make)
+	(cd dox/latex; make < /dev/null )
 
 clean:
 	-rm -f *.o
@@ -81,4 +81,8 @@ y.tab.o: art_parser.h art_macros.h art_parser_prs.h art_parser_hse.h
 art_utils.o: art_utils.h
 art_symbol_table.o: art_symbol_table.h
 art_object.o: art_object.h
+art_parser.o: art_parser.h art_parser_template_methods.h
+art_parser_prs.o: art_parser_prs.h art_parser_template_methods.h
+art_parser_hse.o: art_parser_hse.h art_parser_template_methods.h
+
 

@@ -9,7 +9,6 @@
 
 ****/
 
-
 #include <list>
 #include <map>
 
@@ -20,8 +19,11 @@ namespace ART {
 //=============================================================================
 // forward declarations
 namespace parser {
-	class token_string;
-	class token_identifier;
+	// note: methods may specify string as formal types, 
+	// but you can still pass token_identifiers and token_strings
+	// because they are derived from string.
+//	class token_string;
+//	class token_identifier;
 };
 using namespace parser;
 
@@ -53,6 +55,9 @@ class name_space : public object {
 	// table of type definitions (user-defined data types)
 	// table of process definitions
 	// table of real instantiations (outside of definitions)
+private:
+	// may become hash_map if need be, for now map suffices (r/b-tree)
+	typedef	map<string, name_space*>	ns_map_type;
 protected:
 	/**
 		Reference to the parent namespace, if applicable.  
@@ -65,23 +70,31 @@ protected:
 		make other const references to outside members through the
 		parent chain.  
 	 */
-	const name_space*	parent;
+	name_space*		parent;
 
 	/**
 		The name of this namespace, also used as the map key for 
 		the table that contains this namespace.  
 	 */
 	string			key;
+
+	/**
+		A set of sub-namespaces, mapped by name.  
+		Not const-pointers, because they are "owned" by 
+		this namespace.
+	 */
+	ns_map_type		subns;
+
 public:
-	name_space(const token_identifier& n, const name_space* p);
+	name_space(const string& n, name_space* p);
 // explicit name_space();	// for GLOBAL?
-	~name_space() { }
+	~name_space();
 
 // update these return types later
-void	add_open_namespace(const token_identifier& n);
+name_space*	add_open_namespace(const string& n);
 void	add_using_directive(const id_expr& n);
-void	add_using_alias(const id_expr& n, const token_identifier& a);
-void	leave_namespace(void);	// or close_namespace
+void	add_using_alias(const id_expr& n, const string& a);
+name_space*	leave_namespace(void);	// or close_namespace
 };
 
 //=============================================================================
@@ -130,7 +143,7 @@ protected:
 	type_members		template_params;
 	type_members		members;
 public:
-	user_type_def(const token_identifier& name);
+	user_type_def(const string& name);
 virtual	~user_type_def() { }
 
 };
