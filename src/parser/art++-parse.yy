@@ -11,9 +11,6 @@
 %{
 #include <iostream>
 
-// consider changing "art_parser.h" to "art_parser_base.h"
-// and using "art_parser.h" as include "art_parser*.h"
-
 #include "art_parser.h"			// should be first
 #include "art++-parse.output.h"		// auto-generated state strings! :)
 
