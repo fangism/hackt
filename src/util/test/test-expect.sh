@@ -5,20 +5,31 @@
 # $2 is the path to the source directory, which is not necessarily ./
 #	during distcheck uses _build
 
+cmd=$1
+filter=$2/../../../test/address_filter.sed
+srcroot=$2/$1
+bldroot=$1
+
 # see if it crashes first
-{ $1 ; if [ $? -gt 1 ] ; then exit 1 ; fi } 2>&1 | cat > /dev/null
+{ $cmd ; if [ $? -gt 1 ] ; then exit 1 ; fi } 2>&1 | cat > /dev/null
 
 # the run real test, comparing outputs
-$1 2>&1 | cat > $1.out
+$cmd 2>&1 | cat > $bldroot.out
 
-filter=$2/../../../test/address_filter.sed
-$filter $1.out > $1.out.filter
-$filter $2/$1.stderr > $1.stderr.filter
+$filter $bldroot.out > $bldroot.out.filter
 
-diff $1.stderr.filter $1.out.filter 2>&1 | cat > $1.diff
+if ! [ -f $srcroot.stderr ]
+then
+	echo "Missing $srcroot.stderr"
+	exit 1
+fi
 
-if [ -s $1.diff ] ; then
-	echo "$1.diff is non-empty!"
+$filter $srcroot.stderr > $bldroot.stderr.filter
+
+diff $bldroot.stderr.filter $bldroot.out.filter 2>&1 | cat > $bldroot.diff
+
+if [ -s $bldroot.diff ] ; then
+	echo "$bldroot.diff is non-empty!"
 	exit 1
 fi
 

@@ -1,0 +1,99 @@
+enter: dummy ctor
+0x628fc
+leave: dummy ctor
+enter: operator new
+| enter: list_vector_pool::list_vector_pool()
+Reserved named_thing chunk of size 16*1 starting at 0x1800270
+| leave: list_vector_pool::list_vector_pool()
+| enter: list_vector_pool::allocate()
+| | enter: empty ctor
+0xbffff270
+| | leave: empty ctor
+| | enter: dtor
+0xbffff270
+| | leave: dtor
+Allocated named_thing from pool @ 0x1800270
+| leave: list_vector_pool::allocate()
+leave: operator new
+enter: dummy ctor
+0x1800270
+leave: dummy ctor
+enter: main()
+anon_static sitting at 0x628fc
+anon_dynamic sitting at 0x1800270
+| enter: actually_called_one()
+| | enter: dummy ctor
+0x628d8
+| | leave: dummy ctor
+| | enter: dummy ctor
+0x628d9
+| | leave: dummy ctor
+| leave: actually_called_one()
+| enter: actually_called_one()
+| leave: actually_called_one()
+| enter: actually_called_two()
+| | enter: operator new
+| | | enter: list_vector_pool::allocate()
+| | | | enter: empty ctor
+0xbffff4e0
+| | | | leave: empty ctor
+| | | | enter: dtor
+0xbffff4e0
+| | | | leave: dtor
+Allocated named_thing from pool @ 0x1800271
+| | | leave: list_vector_pool::allocate()
+| | leave: operator new
+| | enter: dummy ctor
+0x1800271
+| | leave: dummy ctor
+| | enter: operator new
+| | | enter: list_vector_pool::allocate()
+| | | | enter: empty ctor
+0xbffff4e0
+| | | | leave: empty ctor
+| | | | enter: dtor
+0xbffff4e0
+| | | | leave: dtor
+Allocated named_thing from pool @ 0x1800272
+| | | leave: list_vector_pool::allocate()
+| | leave: operator new
+| | enter: dummy ctor
+0x1800272
+| | leave: dummy ctor
+| leave: actually_called_two()
+| enter: actually_called_two()
+| leave: actually_called_two()
+leave: main()
+enter: dtor
+0x1800272
+leave: dtor
+enter: operator delete
+| enter: list_vector_pool::deallocate()
+Returned named_thing @ 0x1800272 to free-list.
+| leave: list_vector_pool::deallocate()
+leave: operator delete
+enter: dtor
+0x1800271
+leave: dtor
+enter: operator delete
+| enter: list_vector_pool::deallocate()
+Returned named_thing @ 0x1800271 to free-list.
+| leave: list_vector_pool::deallocate()
+leave: operator delete
+enter: dtor
+0x628d9
+leave: dtor
+enter: dtor
+0x628d8
+leave: dtor
+enter: dtor
+0x1800270
+leave: dtor
+enter: operator delete
+| enter: list_vector_pool::deallocate()
+Returned named_thing @ 0x1800270 to free-list.
+| leave: list_vector_pool::deallocate()
+leave: operator delete
+enter: dtor
+0x628fc
+leave: dtor

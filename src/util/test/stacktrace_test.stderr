@@ -7,4 +7,8 @@ enter: f_g
 | leave: f_c
 leave: f_g
 10
+enter: dude_wheres_my_prototype
+leave: dude_wheres_my_prototype
+enter: float verbose_function_trace(const char*, int*)
+leave: float verbose_function_trace(const char*, int*)
 10

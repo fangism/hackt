@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7 2005/01/16 02:44:23 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.4.1 2005/01/23 01:34:01 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -35,8 +35,13 @@
 #define	DEBUG_LIST_VECTOR_POOL	0
 #endif
 
-#ifndef	DEBUG_USING_WHAT
-#define	DEBUG_USING_WHAT	1
+#ifndef	DEBUG_LIST_VECTOR_POOL_USING_WHAT
+#define	DEBUG_LIST_VECTOR_POOL_USING_WHAT	1
+#endif
+
+// default off
+#ifndef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE	0
 #endif
 
 // annoying debug messages
@@ -51,8 +56,15 @@
 #endif
 
 // problem: preprocessor definition value not being evaluated correctly?
-#if DEBUG_USING_WHAT
-#include "what.tcc"
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+	#include "what.tcc"
+#endif
+
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+	#include "stacktrace.h"
+	#define	LIST_VECTOR_POOL_STACKTRACE(arg)	STACKTRACE(arg)
+#else
+	#define	LIST_VECTOR_POOL_STACKTRACE(arg)
 #endif
 
 //=============================================================================
@@ -76,13 +88,59 @@
  */
 #define	LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(T,C)			\
 T::pool_type T::pool(C);						\
-void* T::operator new (size_t s)				\
+void* T::operator new (size_t s)					\
 	{ return pool.allocate(); }					\
 inline void* T::operator new (size_t s, void*& p)			\
 	{ NEVER_NULL(p); return p; }					\
 void T::operator delete (void* p)					\
 	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
 
+/**
+	These definitions are intended for using a reference-counted
+	memory pool, as required by static global initialization ordering.  
+	The static reference count object for the global pool will be 
+	set by the call to acquire_pool_reference(), which is the only
+	public interface to the allocator.  
+
+	\param the name of the type.
+	\param C the chunk size.  
+
+	We cannot use a static count_ptr because we cannot guarantee
+	that it will be initialized once by acquire_pool_reference()
+	across all modules -- the home module may come along later and
+	clobber it to NULL, because of object initialization.  
+	Thus we must resort to plain-old-data (POD) 
+	pool and pool_ref_count, which are guaranteed to be 
+	NULL upon initialization.  
+
+	Old obsolete notes on abandoning a reference-count scheme.  
+	Fortunately, count_ptr gives us a means of faking reference 
+	counts for such situations.  We return corecively constructed
+	reference-count pointers with explicit count* arguments.  
+	This didn't seem to destroy the last reference to the pool...
+ */
+#define	LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(T,C)			\
+									\
+T::pool_type&								\
+T::get_pool(void) {							\
+	static pool_type pool(C);					\
+	return pool;							\
+}									\
+									\
+void* T::operator new (size_t s) {					\
+	LIST_VECTOR_POOL_STACKTRACE("operator new");			\
+	return get_pool().allocate();					\
+}									\
+inline void* T::operator new (size_t s, void*& p) {			\
+	NEVER_NULL(p); return p;					\
+}									\
+void T::operator delete (void* p) {					\
+	LIST_VECTOR_POOL_STACKTRACE("operator delete");			\
+	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);			\
+	get_pool().deallocate(t);					\
+}
+
+									
 
 //=============================================================================
 
@@ -97,7 +155,7 @@ using std::queue;
 using std::list;
 using std::vector;
 #include "using_ostream.h"
-#if DEBUG_USING_WHAT
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 using util::what;
 #endif
 
@@ -154,7 +212,7 @@ public:
  */
 template <class T, bool Threaded>
 class list_vector_pool {
-#if DEBUG_USING_WHAT
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 private:
 	typedef	typename util::what<T>		what_type;
 #endif
@@ -229,15 +287,16 @@ public:
 	explicit
 	list_vector_pool(const size_type C = 16) : 
 			chunk_size(C), pool(), free_list(), peak(0) {
+		LIST_VECTOR_POOL_STACKTRACE(
+			"list_vector_pool::list_vector_pool()");
 		assert(chunk_size);
 		// worry about alignment, placement and pages sizes later
 		pool.push_back(chunk_type());
 		pool.back().reserve(chunk_size);
 #if VERBOSE_ALLOC
-		// doesn't like what<T>::name, program terminates normally!?
 		cerr << "Reserved " << 
-#if DEBUG_USING_WHAT
-			what<T>::name << 
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+			what<T>::name() << 
 #endif
 			" chunk of size " << chunk_size << "*" <<
 			sizeof(T) << " starting at " <<
@@ -260,10 +319,12 @@ public:
 		corrupting memory reference by the old non-freed pointers!
 	 */
 	~list_vector_pool() {
+		LIST_VECTOR_POOL_STACKTRACE(
+			"list_vector_pool::~list_vector_pool()");
 #if VERBOSE_ALLOC
 		status(cerr << "~list_vector_pool<" <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+			what<T>::name() <<
 #endif
 			">() at " << this << endl);
 #if VERBOSE_ALLOC && 0
@@ -287,7 +348,7 @@ public:
 		const size_t leak = peak -free_list.size();
 		if (leak) {
 			cerr << "\t*** YOU MAY HAVE A MEMORY LEAK! ***" << endl;
-			cerr << '\t' << leak << ' ' << what<T>::name <<
+			cerr << '\t' << leak << ' ' << what<T>::name() <<
 				" are unaccounted for." << endl;
 		}
 	}
@@ -303,6 +364,7 @@ public:
 	 */
 	pointer
 	allocate(void) {
+		LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::allocate()");
 #if THREADED_ALLOC
 		// volatile? do not optimize away?
 		Lock got_the_mutex;
@@ -315,8 +377,8 @@ public:
 			free_list.pop();
 #if VERBOSE_ALLOC
 			cerr << "Allocated " <<
-#if DEBUG_USING_WHAT
-				what<T>::name << 
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+				what<T>::name() << 
 #endif
 				" from free-list @ " << ret << endl;
 #endif
@@ -330,8 +392,8 @@ public:
 				// rare case: allocate chunk
 #if VERBOSE_ALLOC
 				cerr << "New chunk of " << chunk_size << " " <<
-#if DEBUG_USING_WHAT
-					what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+					what<T>::name() <<
 #endif
 					" allocated." << endl;
 #endif
@@ -347,8 +409,8 @@ public:
 			INVARIANT_ASSERT(ret);
 #if VERBOSE_ALLOC
 			cerr << "Allocated " <<
-#if DEBUG_USING_WHAT
-				what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+				what<T>::name() <<
 #endif
 				" from pool @ " << ret << endl;
 #endif
@@ -367,14 +429,15 @@ public:
 	// if so, use set<pointer> for the free_list
 	void
 	deallocate(pointer p) {
+		LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::deallocate()");
 #if THREADED_ALLOC
 		Lock got_the_mutex;
 #endif
 		assert(p);
 #if VERBOSE_ALLOC
 		cerr << "Returned " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+			what<T>::name() <<
 #endif
 			" @ " << p << " to free-list." << endl;
 #endif
@@ -394,11 +457,12 @@ public:
 	 */
 	void
 	construct(pointer p, const T& val) {
+		LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::construct()");
 		assert(p);
 #if VERBOSE_ALLOC
 		cerr << "Constructing " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+			what<T>::name() <<
 #endif
 			" @ " << p;
 		new(p) T(val);
@@ -418,6 +482,7 @@ public:
 	 */
 	void
 	destroy(pointer p) {
+		LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::destroy()");
 		assert(p);
 #if VERBOSE_ALLOC
 		cerr << "Punting destruction for " << p;
@@ -433,10 +498,11 @@ public:
 	/// feedback IO, indented one-tab by default
 	ostream&
 	status(ostream& o) const {
+		LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::status()");
 		o << '\t' << pool.size() << " chunks of " << chunk_size <<
 			"*" << sizeof(T) << " " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+			what<T>::name() <<
 #endif
 			" allocated." << endl;
 		o << '\t' << "Peak usage: " << peak << " elements, " <<

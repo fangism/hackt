@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6.4.3 2005/01/20 21:59:41 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6.4.4 2005/01/23 01:33:54 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -12,6 +12,7 @@
 #include "multikey_fwd.h"
 #include "packed_array.h"
 #include "persistent.h"
+#include "memory/list_vector_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -360,11 +361,15 @@ public:
 	Going to need a pool allocator...
  */
 class pint_const : public pint_expr, public const_index, public const_param {
+private:
+	typedef	pint_const		this_type;
 public:
 	typedef pint_expr::value_type	value_type;
 protected:
-	// might have to remove constness for assignability
-	const value_type		val;
+	// removed constness for assignability
+	value_type			val;
+private:
+	pint_const();
 public:
 	explicit
 	pint_const(const long v) :
@@ -454,6 +459,9 @@ private:
 		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_METHODS
+
+	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------
@@ -562,10 +570,16 @@ public:
 	Constant boolean parameters, true or false.  
  */
 class pbool_const : public pbool_expr, public const_param {
+private:
+	typedef	pbool_const		this_type;
 public:
 	typedef	pbool_value_type	value_type;
 protected:
-	const value_type		val;
+	// removed const-ness for assignability
+	value_type		val;
+private:
+	pbool_const();
+
 public:
 	explicit
 	pbool_const(const pbool_value_type v) :
@@ -639,6 +653,9 @@ private:
 		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_METHODS
+
+	friend class list_vector_pool<pbool_const>;
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pbool_const
 
 //-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.7 2005/01/14 03:46:39 fang Exp $
+	$Id: art_parser_prs.cc,v 1.7.4.1 2005/01/23 01:33:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -162,7 +162,7 @@ op_loop::what(ostream& o) const {
 #if 0
 	o << "(op-loop ";
 #else
-	o << '(' << util::what<op_loop>::name << ' ';
+	o << '(' << util::what<op_loop>::name() << ' ';
 #endif
 	return op->what(o) << ")";
 }

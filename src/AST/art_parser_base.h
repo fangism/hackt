@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.18 2005/01/15 19:13:37 fang Exp $
+	$Id: art_parser_base.h,v 1.18.4.1 2005/01/23 01:33:51 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -24,7 +24,7 @@
 #define PARSER_WHAT_DEFAULT_IMPLEMENTATION(T)				\
 std::ostream&								\
 T::what(std::ostream& o) const {					\
-        return o << util::what<T >::name;				\
+        return o << util::what<T >::name();				\
 }
 
 //=============================================================================

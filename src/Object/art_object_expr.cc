@@ -1,11 +1,13 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.4 2005/01/21 20:52:08 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5 2005/01/23 01:33:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
+
+// #define	DEBUG_LIST_VECTOR_POOL		1
 
 #include <exception>
 #include <iostream>
@@ -38,6 +40,7 @@
 #include "art_object_extern_templates.h"
 #endif
 
+#include "memory/list_vector_pool.h"
 #include "persistent_object_manager.tcc"
 
 #include "art_object_type_hash.h"
@@ -1905,7 +1908,22 @@ pint_instance_reference::assigner::operator() (const bool b,
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	ALERT: we allocate one of these during the static initialization
+	of built-ins, we may need a safeguard to ensure that
+	the allocator is initialized first!
+***/
+LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_const, 1024)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private inline empty constructor, uninitialized.
+ */
+inline
+pint_const::pint_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2036,7 +2054,7 @@ pint_const::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// wasteful
-	read_value(f, const_cast<value_type&>(val));
+	read_value(f, val);
 	STRIP_OBJECT_FOOTER(f);			// wasteful
 }
 // else already visited
@@ -2263,7 +2281,17 @@ if (!m.flag_visit(this)) {
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pbool_const, 1024)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_const)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private inline empty constructor, uninitialized.
+ */
+inline
+pbool_const::pbool_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2349,7 +2377,7 @@ pbool_const::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// wasteful
-	read_value(f, const_cast<value_type&>(val));
+	read_value(f, val);
 	STRIP_OBJECT_FOOTER(f);			// wasteful
 }
 // else already visited

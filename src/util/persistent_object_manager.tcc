@@ -1,11 +1,11 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.10 2004/12/11 06:22:44 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.10.4.1 2005/01/23 01:33:56 fang Exp $
  */
 
-#ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
-#define	__PERSISTENT_OBJECT_MANAGER_TCC__
+#ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
+#define	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
 #include <fstream>
 
@@ -54,7 +54,7 @@ using namespace util::memory;
 template <class T>
 int
 persistent_object_manager::register_persistent_type(void) {
-	reconstruction_function_map_type& m = get_reconstruction_function_map();
+	reconstruction_function_map_type& m = reconstruction_function_map();
 	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
 	const reconstruct_function_ptr_type probe = m[type_key];
 #if WELCOME_TO_TYPE_REGISTRATION
@@ -376,5 +376,5 @@ persistent_traits<T>::persistent_traits(const string& s) {
 //=============================================================================
 }	// end namespace util
 
-#endif	//	__PERSISTENT_OBJECT_MANAGER_TCC__
+#endif	//	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
