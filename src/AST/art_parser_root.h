@@ -1,0 +1,61 @@
+/**
+	\file "art_parser_root.h"
+	Base set of classes for the ART parser.  
+	$Id: art_parser_root.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+ */
+
+#ifndef __ART_PARSER_ROOT_H__
+#define __ART_PARSER_ROOT_H__
+
+#include "art_parser_base.h"
+
+namespace ART {
+namespace parser {
+//=============================================================================
+/**
+	Abstract base class for root-level items.  
+	Root-level items include statements that can be found
+	in namespaces.  
+	Assertion: all root items are nonterminals.  
+ */
+class root_item : virtual public node {
+public:
+	root_item() : node() { }
+
+virtual	~root_item() { }
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
+};	// end class root_item
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef node_list<const root_item>	root_item_list;
+
+/** list of root_items */
+class root_body : public root_item_list {
+protected:
+	typedef	root_item_list			parent;
+public:
+	explicit
+	root_body(const root_item* r);
+
+	~root_body();
+};	// end class root_body
+
+#define root_body_wrap(b,l,e)						\
+	IS_A(root_body*, l->wrap(b,e))
+#define root_body_append(l,d,n)						\
+	IS_A(root_body*, l->append(d,n))
+
+//=============================================================================
+}	// end namespace parser
+}	// end namespace ART
+
+#endif	// __ART_PARSER_ROOT_H__
+
