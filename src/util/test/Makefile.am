@@ -23,7 +23,8 @@ noinst_PROGRAMS = \
 	multidimensional_sparse_set_test \
 	multidimensional_qmap_test \
 	multikey_qmap_test \
-	multikey_generator_test
+	multikey_generator_test \
+	multikey_qmap_slice_test
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
@@ -35,6 +36,7 @@ multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
+multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
 
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
