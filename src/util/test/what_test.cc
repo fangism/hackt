@@ -1,6 +1,6 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.2 2005/01/14 06:29:42 fang Exp $
+	$Id: what_test.cc,v 1.3 2005/01/28 19:59:00 fang Exp $
  */
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include "what.tcc"
 
 #define	DEBUG_LIST_VECTOR_POOL		1	// pre-define to enable debug
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 
 #include "using_ostream.h"
 using util::what;
@@ -31,7 +31,7 @@ public:
 	static
 	void
 	print_type(void) {
-		cerr << what<T>::name << endl;
+		cerr << what<T>::name() << endl;
 	}
 };
 
@@ -45,33 +45,33 @@ SPECIALIZE_UTIL_WHAT(Bar<Ick>, "Bar<Ick>");
 
 int
 main(int argc, char* argv) {
-	cerr << what<Foo>::name << endl;
-	cerr << what<Ick>::name << endl;
-	cerr << what<Yum>::name << endl;
-	cerr << what<const Yum>::name << endl;
-	cerr << what<Yum*>::name << endl;
-	cerr << what<Yum&>::name << endl;
-	cerr << what<Yum**>::name << endl;
-	cerr << what<Yum*&>::name << endl;
-	cerr << what<Yum const*>::name << endl;
-	cerr << what<const Yum*>::name << endl;
-	cerr << what<Yum* const>::name << endl;
-	cerr << what<Yum const* const>::name << endl;
-	cerr << what<const Yum* const>::name << endl;
-	cerr << what<Yum const&>::name << endl;
-	cerr << what<const Yum&>::name << endl;
+	cerr << what<Foo>::name() << endl;
+	cerr << what<Ick>::name() << endl;
+	cerr << what<Yum>::name() << endl;
+	cerr << what<const Yum>::name() << endl;
+	cerr << what<Yum*>::name() << endl;
+	cerr << what<Yum&>::name() << endl;
+	cerr << what<Yum**>::name() << endl;
+	cerr << what<Yum*&>::name() << endl;
+	cerr << what<Yum const*>::name() << endl;
+	cerr << what<const Yum*>::name() << endl;
+	cerr << what<Yum* const>::name() << endl;
+	cerr << what<Yum const* const>::name() << endl;
+	cerr << what<const Yum* const>::name() << endl;
+	cerr << what<Yum const&>::name() << endl;
+	cerr << what<const Yum&>::name() << endl;
 	cerr << endl;
-	cerr << what<Yum const**>::name << endl;
-	cerr << what<Yum* const*>::name << endl;
-	cerr << what<Yum** const>::name << endl;
-	cerr << what<Yum const* const*>::name << endl;
-	cerr << what<Yum const** const>::name << endl;
-	cerr << what<Yum * const* const>::name << endl;
-	cerr << what<Yum const* const* const>::name << endl;
+	cerr << what<Yum const**>::name() << endl;
+	cerr << what<Yum* const*>::name() << endl;
+	cerr << what<Yum** const>::name() << endl;
+	cerr << what<Yum const* const*>::name() << endl;
+	cerr << what<Yum const** const>::name() << endl;
+	cerr << what<Yum * const* const>::name() << endl;
+	cerr << what<Yum const* const* const>::name() << endl;
 	cerr << endl;
-	cerr << what<Bar<Foo> >::name << endl;
-	cerr << what<Bar<Ick> >::name << endl;
-	cerr << what<Bar<Yum> >::name << endl;
+	cerr << what<Bar<Foo> >::name() << endl;
+	cerr << what<Bar<Ick> >::name() << endl;
+	cerr << what<Bar<Yum> >::name() << endl;
 	Bar<Foo>::print_type();
 	Bar<Ick>::print_type();
 	Bar<Yum>::print_type();

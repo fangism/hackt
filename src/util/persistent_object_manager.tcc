@@ -1,11 +1,14 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.10 2004/12/11 06:22:44 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11 2005/01/28 19:58:47 fang Exp $
  */
 
-#ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
-#define	__PERSISTENT_OBJECT_MANAGER_TCC__
+#ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
+#define	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
+
+// #define	ENABLE_STACKTRACE		1
+// depend on whatever file includes this
 
 #include <fstream>
 
@@ -13,7 +16,16 @@
 // already includes <iostream>
 
 #include "macros.h"
+#include "stacktrace.h"
 #include "IO_utils.tcc"
+
+#if ENABLE_STACKTRACE
+#include "what.tcc"
+#include "sstream.h"
+#endif
+
+
+
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
 
@@ -38,7 +50,12 @@ persistent_object_manager::get_root<T>(void);
 namespace util {
 //=============================================================================
 #include "using_ostream.h"
+USING_STACKTRACE
 using namespace util::memory;
+#if ENABLE_STACKTRACE
+using util::what;
+using std::ostringstream;
+#endif
 
 //=============================================================================
 // class persistent_object_manager template method definitions
@@ -54,7 +71,7 @@ using namespace util::memory;
 template <class T>
 int
 persistent_object_manager::register_persistent_type(void) {
-	reconstruction_function_map_type& m = get_reconstruction_function_map();
+	reconstruction_function_map_type& m = reconstruction_function_map();
 	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
 	const reconstruct_function_ptr_type probe = m[type_key];
 #if WELCOME_TO_TYPE_REGISTRATION
@@ -64,7 +81,7 @@ persistent_object_manager::register_persistent_type(void) {
 	if (probe) {
 		cerr << "FATAL: Persistent type with key \"" <<
 			type_key << "\" already taken!" << endl;
-		exit(1);
+		THROW_EXIT;
 	} else {
 		m[type_key] = persistent_traits<T>::reconstructor;
 	}
@@ -126,6 +143,13 @@ inline
 void
 persistent_object_manager::__read_pointer(istream& f, 
 		const P& ptr, single_owner_pointer_tag) const {
+#if ENABLE_STACKTRACE
+	static ostringstream oss;
+	static const ostream& oss_ref = 
+		oss << "__read_pointer-single<" <<
+			what<typename P::element_type>::name() << ">()";
+	STACKTRACE(oss.str());
+#endif
 	const typename pointer_traits<P>::pointer&
 		p = pointer_manipulator::get_pointer(ptr);
 	__read_pointer(f, p, __pointer_category(p));
@@ -138,16 +162,29 @@ void
 persistent_object_manager::__read_pointer(istream& f, 
 		const P& ptr, shared_owner_pointer_tag) const {
 	typedef typename pointer_traits<P>::pointer	pointer_type;
+#if ENABLE_STACKTRACE
+	static ostringstream oss;
+	static const ostream& oss_ref = 
+		oss << "__read_pointer-shared<" <<
+			what<typename P::element_type>::name() << ">()";
+	STACKTRACE(oss.str());
+#endif
 	// not reference here, use a local copy first!
 	const pointer_type p = pointer_manipulator::get_pointer(ptr);
 	__read_pointer(f, p, __pointer_category(p));
 	if (p) {
 		size_t* c = lookup_ref_count(p);
 		NEVER_NULL(c);
+#if 0
+		cerr << "ref_count @ " << p << " = " << *c << endl;
+#endif
 		// uses the unsafe constructor
 		const_cast<P&>(ptr) = P(p, c);
 		// the reference-count pointer is responsible for
 		// deleting the size_t*
+#if 0
+		cerr << "ref_count @ " << p << " = " << *c << endl;
+#endif
 	} else {
 		const_cast<P&>(ptr) = P(NULL);
 	}
@@ -176,6 +213,7 @@ persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
 template <class P>
 void
 persistent_object_manager::read_pointer(istream& f, const P& ptr) const {
+	STACKTRACE("pom::read_pointer()");
 	__read_pointer(f, ptr, __pointer_category(ptr));
 }
 
@@ -223,6 +261,7 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	typedef	typename L::size_type	size_type;
 	typedef	typename L::value_type	pointer_type;
 	// assert(l.empty()); ?
+	STACKTRACE("pom::read_pointer_list()");
 	size_type s = 0;
 	read_value(f, s);
 	size_type i = 0;
@@ -310,6 +349,7 @@ persistent_object_manager::load_object_from_file(const string& s) {
 template <class T>
 excl_ptr<T>
 persistent_object_manager::self_test_no_file(const T& m) {
+	STACKTRACE("pom::self_test_no_file()");
 	persistent_object_manager pom;
 	pom.initialize_null();			// reserved 0th entry
 	m.collect_transient_info(pom);		// recursive visitor
@@ -376,5 +416,5 @@ persistent_traits<T>::persistent_traits(const string& s) {
 //=============================================================================
 }	// end namespace util
 
-#endif	//	__PERSISTENT_OBJECT_MANAGER_TCC__
+#endif	//	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 

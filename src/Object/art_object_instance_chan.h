@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.7 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -124,9 +124,8 @@ private:
 friend class channel_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	chan_instance_alias			element_type;
-	typedef	multikey_map<D, int, element_type, qmap>
+	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 
 private:
@@ -180,7 +179,6 @@ private:
 friend class channel_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type	instance_ptr_type;
-	typedef	parent_type::unroll_index_type	unroll_index_type;
 private:
 	chan_instance_alias			the_instance;
 

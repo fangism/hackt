@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.9 2005/01/16 04:47:22 fang Exp $
+	$Id: art_object_assign.h,v 1.10 2005/01/28 19:58:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -16,6 +16,7 @@
 namespace ART {
 namespace entity {
 USING_LIST
+USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
 
@@ -147,7 +148,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 
 };	// end class pbool_expression_assignment
@@ -213,7 +214,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class pint_expression_assignment
 

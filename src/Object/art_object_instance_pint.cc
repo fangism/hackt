@@ -1,11 +1,15 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13 2005/01/28 19:58:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
 #define	__ART_OBJECT_INSTANCE_PINT_CC__
+
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>
@@ -19,6 +23,11 @@
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
+
+#include "memory/list_vector_pool.tcc"
+#include "what.h"
 #include "STL/list.tcc"
 #include "multikey_qmap.tcc"		// include "qmap.tcc"
 #include "persistent_object_manager.tcc"
@@ -27,9 +36,28 @@
 #include "ptrs_functional.h"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+
+//=============================================================================
+namespace util {
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<0>, "pint_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<1>, "pint_array<1>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<2>, "pint_array<2>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
+	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
+
+namespace memory {
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
+}	// end namespace memory
+}	// end namespace util
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("instance_pint")
 
 //=============================================================================
 namespace ART {
@@ -40,6 +68,10 @@ using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 //=============================================================================
 // struct pint_instance method definitions
@@ -106,7 +138,9 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_instance_collection::~pint_instance_collection() { }
+pint_instance_collection::~pint_instance_collection() {
+//	STACKTRACE("~pint_instance_collection()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -144,7 +178,7 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pint_instance_collection::initialize(const count_ptr<const pint_expr>& e) {
+pint_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {
@@ -181,7 +215,7 @@ pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
  */
 count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
-	STACKTRACE("pint_instance_collection::default_value()");
+//	STACKTRACE("pint_instance_collection::default_value()");
 	return ival;
 }
 
@@ -301,6 +335,7 @@ pint_instance_collection::construct_empty(const int i) {
 void
 pint_instance_collection::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE("pint_inst_coll::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
 }
@@ -309,6 +344,7 @@ pint_instance_collection::write_object_base(
 void
 pint_instance_collection::load_object_base(persistent_object_manager& m, 
 		istream& f) {
+	STACKTRACE("pint_inst_coll::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
 }
@@ -380,12 +416,13 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<int>::const_iterator ci = key_gen.begin();
+		multikey_base<pint_value_type>::const_iterator
+			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
 		cerr << endl;
@@ -426,7 +463,7 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
@@ -454,7 +491,8 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::lookup_value(int& v, const multikey_base<int>& i) const {
+pint_array<D>::lookup_value(value_type& v, 
+		const multikey_base<pint_value_type>& i) const {
 	INVARIANT(D == i.dimensions());
 	const pint_instance& pi = collection[i];
 	if (pi.valid) {
@@ -476,9 +514,9 @@ pint_array<D>::lookup_value(int& v, const multikey_base<int>& i) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value_collection(
-		list<int>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -506,7 +544,8 @@ pint_array<D>::lookup_value_collection(
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::assign(const multikey_base<int>& k, const int i) {
+pint_array<D>::assign(const multikey_base<pint_value_type>& k,
+		const value_type i) {
 	pint_instance& pi = collection[k];
 	return !(pi = i);
 }
@@ -542,6 +581,9 @@ if (!m.flag_visit(this)) {
 //-----------------------------------------------------------------------------
 // class pint_array<0> specialization method definitions
 
+// reminder: pint_scalar == pint_array<0>
+LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array() : parent_type(0), the_instance() {
 }
@@ -558,6 +600,12 @@ pint_array<0>::pint_array(const scopespace& o, const string& n,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_array<0>::~pint_array() {
+	STACKTRACE("~pint_scalar()");
+//	STACKTRACE_STREAM << "@ " << this << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_array<0>::is_partially_unrolled(void) const {
 	return the_instance.instantiated;
@@ -566,7 +614,7 @@ pint_array<0>::is_partially_unrolled(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_array<0>::dump_unrolled_values(ostream& o) const {
-	return o << auto_indent << the_instance << endl;
+	return o << auto_indent << the_instance;	// << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -602,6 +650,7 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 	cerr << "WARNING: pint_array<0>::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	// calling this is probably not intended, and is an error.  
+	// DIE;
 	return const_index_list();
 }
 
@@ -611,7 +660,7 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 	\return true if lookup found a valid value.  
  */
 bool
-pint_array<0>::lookup_value(int& v) const {
+pint_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
 		return false;
@@ -627,11 +676,12 @@ pint_array<0>::lookup_value(int& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_array<0>::lookup_value_collection(
-		list<int>& l, const const_range_list& r) const {
+		list<value_type>& l, const const_range_list& r) const {
 	cerr << "WARNING: pint_array<0>::lookup_value_collection(...) "
 		"should never be called." << endl;
+	// DIE;
 	INVARIANT(r.empty());
-	int i;
+	value_type i;
 	const bool ret = lookup_value(i);
 	l.push_back(i);
 	return ret;
@@ -642,7 +692,8 @@ pint_array<0>::lookup_value_collection(
 	This should never be called.  
  */
 bool
-pint_array<0>::lookup_value(int& v, const multikey_base<int>& i) const {
+pint_array<0>::lookup_value(value_type& v, 
+		const multikey_base<pint_value_type>& i) const {
 	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey_base) "
 		"should never be called!" << endl;
 	DIE;
@@ -657,14 +708,15 @@ pint_array<0>::lookup_value(int& v, const multikey_base<int>& i) const {
 	\return true on error, false on success.  
  */
 bool
-pint_array<0>::assign(const int i) {
+pint_array<0>::assign(const value_type i) {
 	return !(the_instance = i);
 		// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_array<0>::assign(const multikey_base<int>& k, const int i) {
+pint_array<0>::assign(const multikey_base<pint_value_type>& k, 
+		const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pint_array<0>::assign(multikey_base, int) "
 		"should never be called!" << endl;
@@ -675,6 +727,7 @@ pint_array<0>::assign(const multikey_base<int>& k, const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_array<0>::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("pint_scalar::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -688,6 +741,7 @@ pint_array<0>::write_object(const persistent_object_manager& m) const {
 void
 pint_array<0>::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("pint_scalar::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
@@ -712,6 +766,8 @@ template class pint_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance_pint")
 
 #endif	// __ART_OBJECT_INSTANCE_PINT_CC__
 

@@ -1,16 +1,16 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.33 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance.h,v 1.34 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
 
 #include "art_object_instance_base.h"
+#include "art_object_index.h"
 #include "memory/pointer_classes.h"
 
-#include "multikey_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -32,7 +32,6 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<proc_instance_alias>	instance_ptr_type;
-	typedef multikey_base<int>		unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references
@@ -113,6 +112,8 @@ class datatype_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
 protected:
+	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
+protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
 public:
@@ -134,6 +135,10 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
+	// a better return type?
+virtual	bool
+	commit_type(const type_ref_ptr_type& ) = 0;
+
 // methods for connection and aliasing?
 
 // need to do this for real... using object not parse tree
@@ -145,6 +150,12 @@ virtual	count_ptr<instance_reference_base>
 	make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const;
 
+virtual void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+virtual	never_ptr<const const_param_expr_list>
+	get_actual_param_list(void) const;	// = 0;
+	
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -161,7 +172,6 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
-	typedef multikey_base<int>		unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references

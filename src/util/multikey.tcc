@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.4 2005/01/14 19:40:13 fang Exp $
+	$Id: multikey.tcc,v 1.5 2005/01/28 19:58:46 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -24,6 +24,7 @@ using std::copy;
 using std::fill;
 using std::transform;
 using std::lexicographical_compare;
+using std::ptr_fun;
 
 //=============================================================================
 // class multikey_base method definitions
@@ -635,20 +636,19 @@ multikey_generator<D,K>::initialize(void) {
 	get_upper_corner(void) const { return upper_corner; }
 #endif
 
+/**
+	Postfix increment, advances the multikey to the next key in the
+	slice's lexicographical ordering.  
+	\return reference to self.  
+ */
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 multikey_base<K>&
 multikey_generator<D,K>::operator ++ (int) {
 #if 0
-	iterator inc = --(base_type::end());
-	const const_iterator msp = --(base_type::begin());
-	const_iterator min = --(lower_corner.end());
-	const_iterator max = --(upper_corner.end());
-#else
 	iterator inc = &this->indices[D-1];
 	const const_iterator msp = &this->indices[-1];
 	const_iterator min = &lower_corner.indices[D-1];
 	const_iterator max = &upper_corner.indices[D-1];
-#endif
 	for ( ; inc != msp; inc--, min--, max--) {
 		if (*inc >= *max)
 			*inc = *min;
@@ -657,6 +657,20 @@ multikey_generator<D,K>::operator ++ (int) {
 			break;
 		}
 	}
+#else
+	reverse_iterator inc = this->rbegin();
+	const const_reverse_iterator msp = this->rend();
+	const_reverse_iterator min = lower_corner.rbegin();
+	const_reverse_iterator max = upper_corner.rbegin();
+	for ( ; inc != msp; inc++, min++, max++) {
+		if (*inc >= *max)
+			*inc = *min;
+		else {
+			(*inc)++;
+			break;
+		}
+	}
+#endif
 	return *this;
 }
 
@@ -730,6 +744,31 @@ multikey_generator_generic<K>::initialize(void) {
 	validate();
 	copy(lower_corner.begin(), lower_corner.end(), this->begin());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Postfix increment, advances the multikey to the next key in the
+	slice's lexicographical ordering.  
+	\return reference to self.  
+ */
+MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
+multikey_base<K>&
+multikey_generator_generic<K>::operator ++ (int) {
+	reverse_iterator inc = this->rbegin();
+	const const_reverse_iterator msp = this->rend();
+	const_reverse_iterator min = lower_corner.rbegin();
+	const_reverse_iterator max = upper_corner.rbegin();
+	for ( ; inc != msp; inc++, min++, max++) {
+		if (*inc >= *max)
+			*inc = *min;
+		else {
+			(*inc)++;
+			break;
+		}
+	}
+	return *this;
+}
+
 
 //=============================================================================
 }	// end namespace MULTIKEY_NAMESPACE

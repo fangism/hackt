@@ -1,0 +1,24 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3300674	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	56
+	3	 0x3300694	dintcoll	0	56	101
+	4	 0x3804604	datainst	0	101	121
+	5	 0x33006e4	datatprf	0	121	137
+	6	 0x33012c0	datadefn	0	137	168
+	7	 0x33006f4	dprmlst_	0	168	184
+	8	 0x263f024	cnstpi__	0	184	196
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    N = int<32> N
+}
+

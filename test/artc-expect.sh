@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artc-expect.sh"
-#	$Id: artc-expect.sh,v 1.4 2004/11/02 07:52:27 fang Exp $
+#	$Id: artc-expect.sh,v 1.5 2005/01/28 19:59:00 fang Exp $
 
 # $1 is the executable, expecting input from stdin
 # $2 is the path to the source directory, which is not necessarily ./
@@ -13,43 +13,55 @@
 
 # if [ $# -lt 6 ] ; then exit 1 ; fi
 
+cmd=$1
+srcroot=$2/$3
+bldroot=$3
+filter="$4"
+logfile=$5
+
+# echo $cmd
+# echo $srcroot
+# echo $bldroot
+# echo $filter
+# echo $logfile
+
 # see if it crashes first
-$1 < $2/$3.in 2> /dev/null ; \
+$cmd < $srcroot.in 2> /dev/null ; \
 if [ $? -gt 1 ] ; then exit 1 ; fi > /dev/null
 
 # the run real test, comparing outputs
-$1 < $2/$3.in 2>&1 | cat > $3.test
-$4 $3.test > $3.test.filter
-if [ -f $2/$3.stderr ] ; then
-	$4 $2/$3.stderr > $3.stderr.filter
+$cmd < $srcroot.in 2>&1 | cat > $bldroot.test
+$filter $bldroot.test > $bldroot.test.filter
+if [ -f $srcroot.stderr ] ; then
+	$filter $srcroot.stderr > $bldroot.stderr.filter
 else
-	touch $3.stderr.filter
+	touch $bldroot.stderr.filter
 fi
 
-diff $3.stderr.filter $3.test.filter 2>&1 | cat > $3.diff
+diff -u $bldroot.stderr.filter $bldroot.test.filter 2>&1 | cat > $bldroot.diff
 
 # first-try: if different, see if it's because of bison...
 # if so, re-run using bison's expected output
 # otherwise, exit with error
-if [ -s $3.diff ] ; then
+if [ -s $bldroot.diff ] ; then
 	if grep ^YACC Makefile | grep -q bison ; then
-		if [ -f $2/$3.stderr.bison ] ; then
-			$4 $2/$3.stderr.bison > $3.stderr.bison.filter
+		if [ -f $srcroot.stderr.bison ] ; then
+			$filter $srcroot.stderr.bison > $bldroot.stderr.bison.filter
 		else
-			touch $3.stderr.bison.filter
+			touch $bldroot.stderr.bison.filter
 		fi
-		diff $3.stderr.bison.filter $3.test.filter 2>&1 | cat > $3.bison.diff
-		if ! [ -s $3.bison.diff ] ; then
-			mv -f $3.bison.diff $3.diff
+		diff $bldroot.stderr.bison.filter $bldroot.test.filter 2>&1 | cat > $bldroot.bison.diff
+		if ! [ -s $bldroot.bison.diff ] ; then
+			mv -f $bldroot.bison.diff $bldroot.diff
 		else
-			echo "$3.bison.diff is non-empty!"
+			echo "$bldroot.bison.diff is non-empty!"
 		fi
 	fi
 fi
 
-if [ -s $3.diff ] ; then
-	echo "$3.diff is non-empty!  See $5."
-	echo `pwd`/"$3.diff" >> $5
+if [ -s $bldroot.diff ] ; then
+	echo "$bldroot.diff is non-empty!  See $logfile."
+	echo `pwd`/"$bldroot.diff" >> $logfile
 	exit 1
 fi
 

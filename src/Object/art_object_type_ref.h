@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.17 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.18 2005/01/28 19:58:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -92,9 +92,10 @@ virtual	~data_type_reference();
 	never_ptr<const datatype_definition_base>
 	get_base_datatype_def(void) const;
 
-	/// unroll-time type-resolution... arguments? return?
-	bool
-	unroll_resolve(void);
+	/// unroll-time type-resolution... arguments? return? context?
+	// need to be able to lookup parameters... update later...
+	count_ptr<const data_type_reference>
+	unroll_resolve(unroll_context&) const;
 
 private:
 	excl_ptr<instantiation_statement>

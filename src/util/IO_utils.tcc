@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.5 2004/12/25 03:12:22 fang Exp $
+	$Id: IO_utils.tcc,v 1.6 2005/01/28 19:58:46 fang Exp $
  */
 
 #ifndef __IO_UTILS_TCC__
@@ -22,6 +22,13 @@ namespace util {
 using std::ostream;
 using std::istream;
 //=============================================================================
+// automatic template instantiation suppression
+
+// these are instantiated in "IO_utils.cc"
+extern template void write_value(ostream&, const char&);
+extern template void read_value(istream&, char&);
+
+//=============================================================================
 /**
 	Generic function for writing binary values of plain-old-data (POD)
 	to output stream.
@@ -31,7 +38,7 @@ using std::istream;
 	\param v the data value.
  */
 template <class T>
-inline
+// inline
 void    write_value(ostream& f, const T& v) {
 	f.write(reinterpret_cast<const char*>(&v), sizeof(T));
 }
@@ -46,7 +53,7 @@ void    write_value(ostream& f, const T& v) {
 	\param v the data value.
  */
 template <class T>
-inline
+// inline
 void    read_value(istream& f, T& v) {
 	f.read(reinterpret_cast<char*>(&v), sizeof(T));
 }

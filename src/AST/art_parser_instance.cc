@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.16 2005/01/16 02:44:17 fang Exp $
+	$Id: art_parser_instance.cc,v 1.17 2005/01/28 19:58:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -320,7 +320,7 @@ instance_base::what(ostream& o) const {
 #if 0
 	return id->what(o << "(declaration-id): ");
 #else
-	return id->what(o << util::what<instance_base>::name << ": ");
+	return id->what(o << util::what<instance_base>::name() << ": ");
 #endif
 }
 
@@ -378,7 +378,7 @@ instance_array::what(ostream& o) const {
 	return ranges->what(id->what(o << "(declaration-array): "));
 #else
 	return ranges->what(
-		id->what(o << util::what<instance_array>::name << ": "));
+		id->what(o << util::what<instance_array>::name() << ": "));
 #endif
 }
 

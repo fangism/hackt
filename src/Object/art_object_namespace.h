@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.6 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_namespace.h,v 1.7 2005/01/28 19:58:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -15,8 +15,8 @@
 
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition
-#include "memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
+#include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
+#include "memory/list_vector_pool_fwd.h"
 
 namespace ART {
 //=============================================================================
@@ -39,6 +39,7 @@ namespace parser {
 namespace entity {
 //=============================================================================
 USING_LIST
+USING_CONSTRUCT
 using std::string;
 using std::istream;
 using util::persistent;
@@ -182,8 +183,9 @@ protected:	// members
 	 */
 	used_id_map_type	used_id_map;
 
-public:
+protected:
 	scopespace();
+public:
 virtual	~scopespace();
 
 virtual	ostream&
@@ -259,6 +261,10 @@ protected:
 	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
+	static
+	void
+	write_object_base_fake(const persistent_object_manager& m, ostream&);
+
 	void
 	load_object_base(persistent_object_manager& m, istream&);
 
@@ -274,6 +280,8 @@ virtual	void
 	Namespace container class.  
  */
 class name_space : public scopespace {
+private:
+	typedef	name_space			this_type;
 	// list of pointers to other opened namespaces (and their aliases)
 	// table of type definitions (user-defined data types)
 	// table of process definitions
@@ -289,9 +297,17 @@ class name_space : public scopespace {
 	// order of instantiations? shouldn't matter.
 
 protected:
-	const string				key;
-	// ummm... should this have been removed? scopespace already has one
-	const never_ptr<const name_space>	parent;	// override parent
+	/**
+		The (short) name of the namespace.  
+		Should be const, but pool requires assignability.  
+	 */
+	string					key;
+
+	/**
+		The parent namespace of this namespace.  
+		Should be const.  
+	 */
+	never_ptr<const name_space>		parent;
 
 	/**
 		The set of namespaces which are open to search within
@@ -323,19 +339,30 @@ protected:
 	// later introduce single symbol imports?
 	// i.e. using A::my_type;
 private:
-explicit name_space();
+	name_space();
 
 public:
-explicit name_space(const string& n);
+	explicit
+	name_space(const string& n);
+
 	name_space(const string& n, never_ptr<const name_space>);
+
 	~name_space();
 
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	const string&
+	get_key(void) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	ostream& pair_dump(ostream& o) const;
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	ostream&
+	pair_dump(ostream& o) const;
 
 	string
 	get_qualified_name(void) const;
@@ -429,6 +456,10 @@ public:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 public:
 	static const never_ptr<const name_space>	null;
+
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+
 };	// end class name_space
 
 //=============================================================================

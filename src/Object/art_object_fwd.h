@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.5 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_fwd.h,v 1.6 2005/01/28 19:58:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -97,6 +97,7 @@ namespace entity {
 	class param_expr;
 	class const_param;
 	class param_expr_list;
+	class const_param_expr_list;
 	class dynamic_param_expr_list;
 	class index_expr;               // BEWARE also in ART::parser!
 	class const_index;
@@ -124,6 +125,16 @@ namespace entity {
 	class const_index_list;
 	class dynamic_index_list;
 
+	/**
+		The global integer-type for parameter integers.  
+	 */
+	typedef	long		pint_value_type;
+
+	/**
+		The global boolean-type for parameter integers.  
+	 */
+	typedef	bool		pbool_value_type;
+
 	class instance_collection_stack_item;
 
 	/**
@@ -144,8 +155,10 @@ namespace entity {
 	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement>)
 			index_collection_type;
 
-}
-}
+	class unroll_context;
+
+}	// end namespace entity
+}	// end namespace ART
 
 #endif	// __ART_OBJECT_FWD_H__
 

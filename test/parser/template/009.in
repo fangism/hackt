@@ -1,4 +1,4 @@
-// should pass: approiate use of template type
+// should pass: appropriate use of template type
 
 template <pint N>
 defproc foo();

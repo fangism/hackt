@@ -2,7 +2,7 @@
 	\file "indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.3 2005/01/28 19:03:59 fang Exp $
+	$Id: indent.cc,v 1.4 2005/01/28 19:58:46 fang Exp $
  */
 
 #include <iostream>

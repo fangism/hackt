@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.7 2005/01/12 03:19:40 fang Exp $
+	$Id: TODO,v 1.8 2005/01/28 19:58:46 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -34,10 +34,28 @@ Do this with hash_qmap, qmap, multikey_qmap, etc. first to see benefit.
 
 -------------------------------------------------------------------------------
 
+Regarding memory pools:
+
+	* Type-agnostic versions of pools that allocate pure blocks of memory, 
+	  based on requested size (sizeof()).  
+	  Set of explicit template instantiations to "cover" the needed sizes.
+	  Goal: reduces unnecessary template code replication.  
+	  Safe use of reinterpret_cast, just as with std::allocator.  
+
+	* Reclamable memory pools, reclaim contiguous blocks of memory.  
+	  Like list_vector_pool, but with ability to release empty blocks.  
+	  List_vector_pool is only good for recycling, but not reclaiming.  
+
+	* Reclamable pools with FIFO or LIFO replacement deallocation.  
+
+
 In "list_vector.*":
 
 	Implement insertion and deletion with vector fragmentation, 
 		and map management.  
+
+	Possibly track bit-map of free-indices?
+	May need bit-manip adaptation or library...
 
 -------------------------------------------------------------------------------
 

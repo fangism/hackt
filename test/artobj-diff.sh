@@ -1,7 +1,7 @@
 #!/bin/sh
 # "artobj-diff.sh"
 # compares textual object dumps
-#	$Id: artobj-diff.sh,v 1.4 2004/11/02 07:52:27 fang Exp $
+#	$Id: artobj-diff.sh,v 1.5 2005/01/28 19:59:00 fang Exp $
 
 # $1 is the executable for generating the object file, (probably art++2obj)
 #	and producing a textual dump to stderr.  
@@ -18,23 +18,30 @@
 
 # if the .test file exists, then program didn't crash, we can proceed.
 
-if ! [ -e $4.test ] ; then exit 1 ; fi
+cmd=$1
+dump=$2
+srcroot=$3/$4
+bldroot=$4
+filter=$5
+logfile=$6
 
-$1 $3/$4.in 2> /dev/null
+if ! [ -e $bldroot.test ] ; then exit 1 ; fi
+
+$cmd $srcroot.in 2> /dev/null
 if [ $? -ne 0 ] ; then exit 1; fi
-$1 $3/$4.in $4.artobj 2>&1 | cat > $4.outdump
+$cmd $srcroot.in $bldroot.artobj 2>&1 | cat > $bldroot.outdump
 
-$2 $4.artobj 2> /dev/null
+$dump $bldroot.artobj 2> /dev/null
 if [ $? -ne 0 ] ; then exit 1; fi
-$2 $4.artobj 2>&1 | cat > $4.indump
+$dump $bldroot.artobj 2>&1 | cat > $bldroot.indump
 
-$5 $4.outdump > $4.outdump.filter
-$5 $4.indump > $4.indump.filter
-diff -b $4.outdump.filter $4.indump.filter 2>&1 | cat > $4.objdiff
+$filter $bldroot.outdump > $bldroot.outdump.filter
+$filter $bldroot.indump > $bldroot.indump.filter
+diff -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | cat > $bldroot.objdiff
 
-if [ -s $4.objdiff ] ; then
-	echo "$4.objdiff is non-empty!  See $6."
-	echo `pwd`/"$4.objdiff" >> $6
+if [ -s $bldroot.objdiff ] ; then
+	echo "$bldroot.objdiff is non-empty!  See $logfile."
+	echo `pwd`/"$bldroot.objdiff" >> $logfile
 	exit 1
 fi
 

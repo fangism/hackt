@@ -1,8 +1,10 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.13 2005/01/28 19:03:59 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14 2005/01/28 19:58:47 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <fstream>
 
@@ -14,6 +16,8 @@
 #include "macros.h"
 #include "IO_utils.tcc"
 	// includes <iostream>
+#include "sstream.h"
+#include "stacktrace.h"
 
 //=============================================================================
 // flags and switches
@@ -26,6 +30,8 @@ namespace util {
 #include "using_ostream.h"
 using std::stringbuf;
 using std::streamsize;
+using std::ostringstream;
+USING_STACKTRACE
 
 //=============================================================================
 // class reconstruction_table_entry method definitions
@@ -38,25 +44,6 @@ persistent_object_manager::reconstruction_table_entry::mode =
 
 bool
 persistent_object_manager::dump_reconstruction_table = false;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-/**
-	Is statically initialized to NULL before any objects use it.  
- */
-persistent_object_manager::reconstruction_function_map_type*
-persistent_object_manager::the_reconstruction_function_map_ptr = NULL;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Proper orderly initialization to guarantee that this
-	is properly deleted upon program termination.  
-	Note the use of unsafe "address-taking" of reference to 
-	initialize the pointer-class object.  
- */
-excl_ptr<persistent_object_manager::reconstruction_function_map_type>
-persistent_object_manager::the_reconstruction_function_map_ptr_wrapped(
-	&get_reconstruction_function_map());
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
@@ -122,9 +109,11 @@ persistent_object_manager::reconstruction_table_entry::
  */
 size_t*
 persistent_object_manager::reconstruction_table_entry::count(void) const {
+	STACKTRACE("recon_table_entry::count()");
 	if (!ref_count) {
 		ref_count = new size_t(0);
 	}
+	NEVER_NULL(ref_count);
 	return ref_count;
 }
 
@@ -236,13 +225,6 @@ void
 persistent_object_manager::initialize_null(void) {
 	assert(!reconstruction_table.size());
 	register_transient_object(NULL, persistent::hash_key::null);
-#if 0
-	reconstruction_table_entry& e = reconstruction_table[0];
-	e.set_head(0);
-	e.set_tail(0);
-	assert(!e.head_pos());
-	assert(!e.tail_pos());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,6 +291,7 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
  */
 size_t*
 persistent_object_manager::lookup_ref_count(const long i) const {
+	STACKTRACE("lookup_ref_count(long)");
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return e.count();
 }
@@ -319,6 +302,7 @@ persistent_object_manager::lookup_ref_count(const long i) const {
  */
 size_t*
 persistent_object_manager::lookup_ref_count(const persistent* p) const {
+	STACKTRACE("lookup_ref_count(persistent*)");
 	return lookup_ref_count(lookup_ptr_index(p));
 }
 
@@ -367,13 +351,11 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
 	\return valid reference to the only reconstruction function map.  
  */
 persistent_object_manager::reconstruction_function_map_type&
-persistent_object_manager::get_reconstruction_function_map(void) {
-	if (!the_reconstruction_function_map_ptr) {
-		the_reconstruction_function_map_ptr = 
-			new reconstruction_function_map_type;
-		assert(the_reconstruction_function_map_ptr);
-	}
-	return *the_reconstruction_function_map_ptr;
+persistent_object_manager::reconstruction_function_map(void) {
+	// function-local static initialized once upon first entry
+	static reconstruction_function_map_type
+		the_reconstruction_function_map;
+	return the_reconstruction_function_map;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -382,7 +364,7 @@ persistent_object_manager::verify_registered_type(
 		const persistent::hash_key& k) {
 	const reconstruct_function_ptr_type probe =
 		static_cast<const reconstruction_function_map_type&>(
-			get_reconstruction_function_map())[k];
+			reconstruction_function_map())[k];
 	return (probe != NULL);
 }
 
@@ -390,11 +372,11 @@ persistent_object_manager::verify_registered_type(
 ostream&
 persistent_object_manager::dump_registered_type_map(ostream& o) {
 	const reconstruction_function_map_type& m =
-		get_reconstruction_function_map();
+		reconstruction_function_map();
 	reconstruction_function_map_type::const_iterator iter = m.begin();
 	const reconstruction_function_map_type::const_iterator end = m.end();
 	o << "persistent_object_manager::reconstruction_function_map has " <<
-		get_reconstruction_function_map().size() << " entries." << endl;
+		reconstruction_function_map().size() << " entries." << endl;
 	o << "\tkey\t\twhat" << endl;
 	for ( ; iter != end; iter++) {
 		// this calls the appropriate construct_empty()
@@ -441,6 +423,7 @@ persistent_object_manager::dump_text(ostream& o) const {
  */
 void
 persistent_object_manager::write_header(ofstream& f) {
+	STACKTRACE("pom::write_header()");
 	// How many entries to expect?
 	const size_t max = reconstruction_table.size();
 	write_value(f, max);
@@ -468,6 +451,7 @@ persistent_object_manager::write_header(ofstream& f) {
  */
 void
 persistent_object_manager::load_header(ifstream& f) {
+	STACKTRACE("pom::load_header()");
 	size_t max;
 	INVARIANT(f.good());
 	read_value(f, max);
@@ -514,6 +498,7 @@ persistent_object_manager::load_header(ifstream& f) {
  */
 void
 persistent_object_manager::reconstruct(void) {
+	STACKTRACE("pom::reconstruct()");
 	const size_t max = reconstruction_table.size();
 	// skip the 0th entry, is reserved NULL
 	addr_to_index_map[NULL] = 0;
@@ -523,7 +508,7 @@ persistent_object_manager::reconstruct(void) {
 		const persistent::hash_key& t = e.type();
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
 			const reconstruct_function_ptr_type f = 
-				get_reconstruction_function_map()[t];
+				reconstruction_function_map()[t];
 			if (f) {
 				e.assign_addr((*f)(e.get_alloc_arg()));
 				addr_to_index_map[e.addr()] = i;
@@ -548,6 +533,7 @@ persistent_object_manager::reconstruct(void) {
  */
 void
 persistent_object_manager::finish_write(ofstream& f) {
+	STACKTRACE("pom::finish_write()");
 	// First, compute offsets of the stream segments (buffers)
 	const size_t max = reconstruction_table.size();
 	size_t i = 0;
@@ -574,6 +560,7 @@ persistent_object_manager::finish_write(ofstream& f) {
  */
 void
 persistent_object_manager::collect_objects(void) {
+	STACKTRACE("pom::collect_objects()");
 	const size_t max = reconstruction_table.size();
 	size_t i = 1;			// don't initialize the 0th one!
 //	dump_text(cerr);		// DEBUG
@@ -609,6 +596,7 @@ persistent_object_manager::collect_objects(void) {
  */
 void
 persistent_object_manager::finish_load(ifstream& f) {
+	STACKTRACE("pom::finish_load()");
 	const size_t max = reconstruction_table.size();
 	// skip the 0th object, it's reserved NULL
 	size_t i = 1;
@@ -621,6 +609,9 @@ persistent_object_manager::finish_load(ifstream& f) {
 #if 1
 		// is there a better way to do this, 
 		// eliminating intermediate? and need to allocate/free?
+		// CONSIDER: valarray for fast buffer
+		// or an auto-expanding function-local static array
+		// CONSIDER: using i/ostream_iterator and std::copy;
 		if (size <= 64) {
 			char sbuf[64];	// fixed size buffer on the stack
 			f.read(sbuf, size);
@@ -665,15 +656,33 @@ persistent_object_manager::finish_load(ifstream& f) {
  */
 void
 persistent_object_manager::load_objects(void) {
+	STACKTRACE("pom::load_objects()");
 	const size_t max = reconstruction_table.size();
 	// 0th object is reserved NULL, skip it
 	size_t i = 1;
 	for ( ; i<max; i++) {
+#if 0
+		ostringstream oss;
+		oss << "iter: " << i;
+		STACKTRACE(oss.str());
+#endif
 		reconstruction_table_entry& e = reconstruction_table[i];
 		persistent* o = const_cast<persistent*>(e.addr());
-		if (o)
+		if (o) {
+		/***
+			CONSIDER: moving common header and footer code
+			common to all load_object implementations here, 
+			including visit-once check.  
+			Or factor it out into another (private) proxy
+			member function, because load_object is allowed
+			to call load_object recursively.
+		***/
 			o->load_object(*this);
 			// virtual call, unavoidable const cast
+#if 0
+			o->what(cerr << "@ " << o << ", ") << endl;
+#endif
+		}
 		// else can't load a NULL object
 	}
 	// Finally, after this is called, immediately assume responsibility
@@ -711,6 +720,7 @@ persistent_object_manager::save_object_to_file(const string& s,
  */
 void
 persistent_object_manager::reset_for_loading(void) {
+	STACKTRACE("pom::reset_for_loading()");
 	const size_t max = reconstruction_table.size();
 	size_t i = 1;		// 0th object is reserved NULL, skip it
 	for ( ; i<max; i++) {

@@ -1,14 +1,14 @@
 /**
 	\file "IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.1 2004/11/05 02:38:30 fang Exp $
+	$Id: IO_utils.cc,v 1.2 2005/01/28 19:58:46 fang Exp $
  */
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
-#include "IO_utils.h"
+#include <string>
+#include "IO_utils.tcc"		// need to explicitly instantiate for char
 
-using namespace std;
 
 //=============================================================================
 // arbitrary sanity check
@@ -16,6 +16,44 @@ using namespace std;
 
 //=============================================================================
 namespace util {
+#include "using_ostream.h"
+
+//-----------------------------------------------------------------------------
+/**
+	Providing a bool specialization to force, 1-byte size
+	writing of boolean to binary.  
+	NOTE: darwin-gcc-3.3 defaults to int, 
+		i686-linux gcc-3.4 defaults to char.
+	\param f output stream.
+	\param v boolean value.  
+ */ 
+template <>
+void
+write_value(ostream& f, const bool& b) {
+	write_value<char>(f, b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Providing a bool specialization to force, 1-byte size
+	reading of boolean from binary.  
+	\param f output stream.
+	\param v boolean value.  
+ */
+template <>
+void
+read_value(istream& f, bool& b) {
+	char c;
+	read_value(f, c);
+	b = c;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// explicit instantiation needed for some compilers
+template void write_value(ostream&, const char&);
+template void read_value(istream&, char&);
+
+//-----------------------------------------------------------------------------
 /**
 	String specialization of binary writing.
  */
@@ -27,7 +65,7 @@ write_value(ostream& f, const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	String specialization of binary writing.
+	String specialization of binary reading.
  */
 template <>
 void
@@ -55,6 +93,8 @@ write_string(ostream& f, const string& s) {
 
 /**
 	Reads a string from an input file stream (binary).  
+	Consider using a valarray<char>, or alloca.  
+	Is alloca dangerous?
  */
 void
 read_string(istream& f, string& s) {
@@ -70,7 +110,7 @@ read_string(istream& f, string& s) {
 if (len) {
 	if (len -1 > def_size) {
 		// too big for default
-		char* big_buf = new char [len+1];	// extra space for \0
+		char* const big_buf = new char [len+1];	// extra space for \0
 		assert(big_buf);
 		f.read(big_buf, len);		// load into buffer
 		big_buf[len] = '\0';

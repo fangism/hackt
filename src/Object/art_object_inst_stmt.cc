@@ -1,15 +1,16 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11 2005/01/16 04:47:22 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12 2005/01/28 19:58:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
 #define	__ART_OBJECT_INST_STMT_CC__
 
 // for debugging only, before inclusion of header file
-// #define	DEBUG_LIST_VECTOR_POOL		1
-// #define	ENABLE_STACKTRACE		1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
@@ -22,11 +23,13 @@
 #include "art_object_expr_base.h"
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
+#include "art_object_unroll_context.h"
 
 #include "what.tcc"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 //=============================================================================
 // local specializations
@@ -49,9 +52,16 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 #endif
 
 //=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("inst_stmt")
+
+//=============================================================================
 namespace ART {
 namespace entity {
 USING_STACKTRACE
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 //=============================================================================
 // class instantiation_statement method definitions
@@ -71,8 +81,9 @@ instantiation_statement::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if 1
 instantiation_statement::~instantiation_statement() {
+	STACKTRACE("~instantiation_statement()");
 }
 #endif
 
@@ -80,9 +91,6 @@ instantiation_statement::~instantiation_statement() {
 ostream&
 instantiation_statement::dump(ostream& o) const {
 	STACKTRACE("instantation_statement::dump()");
-#if 1
-	cerr << "&o = " << &o << endl;
-#endif
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
@@ -212,14 +220,7 @@ pbool_instantiation_statement::~pbool_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pbool_instantiation_statement::what(ostream& o) const {
-	return o << "pbool-instantiation_statement";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instantiation_statement)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -339,22 +340,12 @@ pint_instantiation_statement::~pint_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_instantiation_statement::what(ostream& o) const {
-	return o << "pint-instantiation_statement";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instantiation_statement)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instantiation_statement::dump(ostream& o) const {
 	STACKTRACE("pint_instantation_statement::dump()");
-#if 1
-	cerr << "&o = " << &o << endl;
-#endif
 	return instantiation_statement::dump(o);
 }
 
@@ -717,6 +708,10 @@ data_instantiation_statement::data_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
+	STACKTRACE("~data_instantiation_statement()");
+#if 0
+	cerr << "data-type-ref has " << type.refs() << " references." << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -761,27 +756,52 @@ data_instantiation_statement::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// almost ready to unveil
+/**
+	TODO: add context argument.
+ */
 void
 data_instantiation_statement::unroll(void) const {
+	STACKTRACE("data_instantiation_statement::unroll()");
+	NEVER_NULL(inst_base);
 	// we need to type-check against template parameters!
 	// perhaps this should be made virtual...
-	type->unroll_resolve();
-	if (inst_base->partially_unrolled()) {
+	unroll_context c;
+	const count_ptr<const data_type_reference>
+		final_type_ref(type->unroll_resolve(c));
+	if (!final_type_ref) {
+		cerr << "ERROR resolving data type reference during unroll."
+			<< endl;
+		return;
+	}
+#if 0
+	if (inst_base->is_partially_unrolled()) {
 		// then we must check type-consistency
+		// need a method for obtaining the parameter list
+		cerr << "Someone was here first." << endl;
+		// use existing type check
 	} else {
 		// is first instance, which will determine the type
+		// set the actual parameters
+		const bool err = inst_base->commit_type(final_type_ref);
+		INVARIANT(!err);
+		// nothing can possibly go wrong with the first type
 	}
+#else
+	const bool err = inst_base->commit_type(final_type_ref);
+	if (err) {
+		cerr << "ERROR during data_instantiation_statement::unroll()"
+			<< endl;
+		THROW_EXIT;
+	}
+#endif
 	inst_base->instantiate_indices(indices);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-STACKTRACE("data_instantiation_statement::collect_transient_info()");
+// STACKTRACE("data_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);
@@ -826,6 +846,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("inst_stmt")
 
 #endif	// __ART_OBJECT_INST_STMT_CC__
 

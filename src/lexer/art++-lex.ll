@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.9 2005/01/28 19:03:57 fang Exp $
+ *	$Id: art++-lex.ll,v 1.10 2005/01/28 19:58:45 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -34,7 +34,10 @@
 		case 1) start of source (anywhere): while the source
 		is on the 
 
-	To do: 
+	TODO:
+		Modified to throw exception on lexical error, 
+		but parser needs to catch it to properly unwind the stack!
+
 		After static type are implemented in unions, 
 		use the appropriate yylval union member.  
 
@@ -50,9 +53,9 @@
 /* scanner-specific header */
 
 #include <iostream>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdlib>
 
+#include "macros.h"
 #include "using_ostream.h"
 #include "art_parser.h"			/* everything needed for "y.tab.h" */
 using namespace ART::parser;
@@ -440,14 +443,14 @@ EXPORT		"export"
 	cerr << "*/ (close-comment) found outside of <comment> " <<
 		LINE_COL(current) << endl;
 	TOKEN_UPDATE();
-	exit(1);
+	THROW_EXIT;
 }
 
 {BADID}	{ 
 	cerr << "bad identifier: \"" << yytext <<"\" " <<
 		LINE_COL(current) << endl;
 	TOKEN_UPDATE();
-	exit(1);
+	THROW_EXIT;
 }
 
 .	{
@@ -479,7 +482,7 @@ EXPORT		"export"
 	} else {
 		cerr << "nested comments forbidden, found /* " <<
 			LINE_COL(current) << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 }
 
@@ -511,7 +514,7 @@ EXPORT		"export"
 	MULTILINE_MORE(comment_pos);
 	cerr << "unterminated comment, starting on line "
 		<< comment_pos.line << ", got <<EOF>>" << endl;
-	exit(1);
+	THROW_EXIT;
 }
 }
 
@@ -520,7 +523,7 @@ EXPORT		"export"
 	cerr << "unterminated quoted-string on line " << current.line <<
 		", got \\n" << endl;
 	STRING_UPDATE();
-	exit(1);
+	THROW_EXIT;
 }
 
 {MORESTRING}	{
@@ -559,7 +562,7 @@ EXPORT		"export"
 	if ( result > 0xff ) {
 		cerr << "bad octal escape sequence " << yytext << " " <<
 			LINE_COL(current) << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	*string_buf_ptr++ = result;
 	STRING_UPDATE();
@@ -568,12 +571,12 @@ EXPORT		"export"
 {BAD_ESCAPE}	{
 	cerr << "bad octal escape sequence " << yytext << " " <<
 		LINE_COL(current) << endl;
-	exit(1);
+	THROW_EXIT;
 }
 <<EOF>>	{
 	cerr << "unterminated string, starting on line " << current.line << 
 		", got <<EOF>>" << endl;
-	exit(1);
+	THROW_EXIT;
 }
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.5 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6 2005/01/28 19:58:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -156,7 +156,7 @@ private:
 		Helper class for evaluating sparse, multidimensional
 		collections.  
 	 */
-	typedef	base_multidimensional_sparse_set<int, const_range>
+	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
 						mset_base;
 protected:
 	/**
@@ -164,8 +164,13 @@ protected:
 		Why modifiable pointer?
 		May need method to deep-copy the indices, unless
 		this pointer becomes counted.  
+
+		This pointer may be null, when no explicit indices are given, 
+		not necessarily zero-dimensional (scalar).
+		Could be implicit reference to entire collection.  
 	 */
 	excl_ptr<index_list>			array_indices;
+
 	/**
 		The current state of the instantiation collection
 		at the point of reference.
@@ -279,7 +284,7 @@ protected:
 		must have dimension-0, scalar... for now
 		Is type limiter to simple? or can it be nested member?
 	 */
-	const count_ptr<const simple_instance_reference>	base;
+	const count_ptr<const simple_instance_reference>	base_inst_ref;
 protected:
 	member_instance_reference_base();
 public:
@@ -313,7 +318,6 @@ protected:
 
 // virtualized
 //	never_ptr<param_instance_collection>		param_inst_ref;
-
 protected:
 	param_instance_reference();
 public:

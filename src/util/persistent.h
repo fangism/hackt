@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.7 2005/01/06 17:44:57 fang Exp $
+	$Id: persistent.h,v 1.8 2005/01/28 19:58:47 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__
@@ -65,7 +65,7 @@ void T::load_object(persistent_object_manager& m) { }
 #define	PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(T)			\
 std::ostream&								\
 T::what(std::ostream& o) const {					\
-	return o << util::what<T >::name;				\
+	return o << util::what<T >::name();				\
 }
 
 //-----------------------------------------------------------------------------

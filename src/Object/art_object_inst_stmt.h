@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.8 2005/01/16 04:47:23 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9 2005/01/28 19:58:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -9,13 +9,14 @@
 
 #include "art_object_instance_management_base.h"
 #include "art_object_inst_stmt_base.h"
-#include "memory/pointer_classes.h"
+#include "memory/count_ptr.h"
 #include "memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
 USING_LIST
+USING_CONSTRUCT
 using namespace util::memory;	// for experimental pointer classes
 using namespace MULTIKEY_NAMESPACE;
 using namespace MULTIKEY_MAP_NAMESPACE;
@@ -89,7 +90,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 };	// end class pbool_instantiation_statement
@@ -141,7 +142,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 };	// end class pint_instantiation_statement
@@ -281,7 +282,7 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-#if 0
+#if 1
 	// almost ready to unveil...
 	void
 	unroll(void) const;
@@ -292,7 +293,7 @@ public:
 
 
 public:
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 

@@ -3,23 +3,20 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7 2005/01/16 02:44:23 fang Exp $
+	$Id: list_vector_pool.h,v 1.8 2005/01/28 19:58:52 fang Exp $
  */
 
-#ifndef	__LIST_VECTOR_POOL_H__
-#define	__LIST_VECTOR_POOL_H__
+#ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
+#define	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
 
 #include "memory/list_vector_pool_fwd.h"
+#include "memory/thread_lock.h"
 #include "macros.h"
 
-#include <pthread.h>
-
-#include <cassert>
 #include <queue>
 #include <list>
 #include <vector>
-
-#include <iostream>
+#include <iosfwd>
 
 // because FreeBSD's <pthreads.h> defines initializer as NULL
 // and I haven't figured out a workaround yet.
@@ -30,30 +27,10 @@
 #define	THREADED_ALLOC		1
 #endif
 
-// turn invariant assertions on or off
-#ifndef	DEBUG_LIST_VECTOR_POOL
-#define	DEBUG_LIST_VECTOR_POOL	0
-#endif
 
-#ifndef	DEBUG_USING_WHAT
-#define	DEBUG_USING_WHAT	1
-#endif
+#define	LIST_VECTOR_POOL_TEMPLATE_SIGNATURE				\
+template <class T, bool Threaded>
 
-// annoying debug messages
-#define VERBOSE_ALLOC		1 && DEBUG_LIST_VECTOR_POOL
-#define	VERBOSE_LOCK		0 && VERBOSE_ALLOC
-
-
-#if DEBUG_LIST_VECTOR_POOL
-	#define INVARIANT_ASSERT(foo)	assert(foo)
-#else
-	#define INVARIANT_ASSERT(foo)	{ }
-#endif
-
-// problem: preprocessor definition value not being evaluated correctly?
-#if DEBUG_USING_WHAT
-#include "what.tcc"
-#endif
 
 //=============================================================================
 // interface macros
@@ -76,13 +53,80 @@
  */
 #define	LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(T,C)			\
 T::pool_type T::pool(C);						\
-void* T::operator new (size_t s)				\
+void* T::operator new (size_t s)					\
 	{ return pool.allocate(); }					\
 inline void* T::operator new (size_t s, void*& p)			\
 	{ NEVER_NULL(p); return p; }					\
 void T::operator delete (void* p)					\
 	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
 
+/**
+	Convenient macro for explicitly requiring that a memory pool
+	be ready during static initialization of a particular module.
+	This is not required now... kept in comments for historical reference.
+	\param T cannot be a template-id, use a convenient simple typedef.
+ */
+#define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
+static const T::pool_ref_type						\
+__pool_ref_ ## T ## __ (T::get_pool());
+
+/**
+	These definitions are intended for using a reference-counted
+	memory pool, as required by static global initialization ordering.  
+	The static reference count object for the global pool will be 
+	set by the call to acquire_pool_reference(), which is the only
+	public interface to the allocator.  
+
+	\param the name of the type.
+	\param C the chunk size.  
+
+	We cannot use a static count_ptr because we cannot guarantee
+	that it will be initialized once by acquire_pool_reference()
+	across all modules -- the home module may come along later and
+	clobber it to NULL, because of object initialization.  
+	Thus we must resort to plain-old-data (POD) 
+	pool and pool_ref_count, which are guaranteed to be 
+	NULL upon initialization.  
+
+	Old obsolete notes on abandoning a reference-count scheme.  
+	Fortunately, count_ptr gives us a means of faking reference 
+	counts for such situations.  We return corecively constructed
+	reference-count pointers with explicit count* arguments.  
+	This didn't seem to destroy the last reference to the pool...
+ */
+#define	LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(T,C)			\
+									\
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)				\
+									\
+T::pool_ref_ref_type							\
+T::get_pool(void) {							\
+	static pool_type*	pool = new pool_type(C);		\
+	static size_t*		count = new size_t(0);			\
+	return pool_ref_ref_type(pool, count);				\
+}									\
+									\
+void*									\
+T::operator new (size_t s) {						\
+	static pool_type& pool(*get_pool());				\
+	LIST_VECTOR_POOL_STACKTRACE("operator new");			\
+	return pool.allocate();						\
+}									\
+									\
+inline									\
+void*									\
+T::operator new (size_t s, void*& p) {					\
+	NEVER_NULL(p); return p;					\
+}									\
+									\
+void									\
+T::operator delete (void* p) {						\
+	static pool_type& pool(*get_pool());				\
+	LIST_VECTOR_POOL_STACKTRACE("operator delete");			\
+	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);			\
+	pool.deallocate(t);						\
+}
+
+									
 
 //=============================================================================
 
@@ -92,14 +136,56 @@ namespace util {
 	Memory-management utility namespace.
  */
 namespace memory {
-typedef	pthread_mutex_t				mutex_type;
 using std::queue;
 using std::list;
 using std::vector;
-#include "using_ostream.h"
-#if DEBUG_USING_WHAT
-using util::what;
-#endif
+using std::ostream;
+
+//=============================================================================
+/**
+	Tag to dictate when destruction occurs in pool-managed resources.  
+ */
+struct lazy_destruction_tag { };
+
+/**
+	Tag to dictate when destruction occurs in pool-managed resources.  
+ */
+struct eager_destruction_tag { };
+
+/**
+	Default to eager / early destruction.  
+	Is safe to use lazy destruction for non-recursive 
+	destructors, i.e. object that do not contain pointers
+	to other likewise pooled objects.  
+	To override the default eager destruction, 
+	define a specialization of this (in the util::memory namespace)
+	in the module where the pool is instantiated.  
+	A macro is provided below.  
+	\param T the class type to be pooled.  
+ */
+template <class T>
+struct list_vector_pool_policy {
+	typedef	eager_destruction_tag	destruction_policy;
+};	// end struct list_vector_pool_policy
+
+/**
+	This macro must appear in the util::memory namespace.  
+ */
+#define	LIST_VECTOR_POOL_LAZY_DESTRUCTION(T)				\
+template <>								\
+struct list_vector_pool_policy<T> {					\
+	typedef	lazy_destruction_tag	destruction_policy;		\
+};	// end struct list_vector_pool_policy
+
+/**
+	Helper method for distinguishing destruction policies.
+ */
+template <class T>
+inline
+typename list_vector_pool_policy<T>::destruction_policy
+list_vector_pool_destruction_policy(void) {
+	return typename list_vector_pool_policy<T>::destruction_policy();
+}
 
 //=============================================================================
 // specialization
@@ -152,12 +238,8 @@ public:
 	IDEA: use a bit-vector map to track which addresses are available.
 	IDEA: use a discrete_interval_set to track address ranges.
  */
-template <class T, bool Threaded>
+LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
 class list_vector_pool {
-#if DEBUG_USING_WHAT
-private:
-	typedef	typename util::what<T>		what_type;
-#endif
 public:
 	typedef	T				value_type;
 	typedef	size_t				size_type;
@@ -171,6 +253,7 @@ private:
 	// STL data-structures' allocators...
 	typedef	vector<value_type>		chunk_type;
 	typedef	list<chunk_type>		impl_type;
+	typedef	pool_thread_lock<Threaded>	lock_type;
 #if 1
 	// could also try priority_queue... using less<pointer>
 	// could try set<pointer> for uniqueness checking
@@ -181,36 +264,7 @@ private:
 	typedef	queue<pointer, deque<pointer, list_vector_pool<pointer> > >
 						free_list_type;
 #endif
-#if THREADED_ALLOC
-	static mutex_type			the_mutex;
-	friend struct Lock;			// grant access to the_mutex
-	struct Lock {
-		Lock() {
-#if VERBOSE_LOCK
-			cerr << "getting lock at " << &the_mutex << "... ";
-#endif
-			if (Threaded)
-				assert(!pthread_mutex_lock(&the_mutex));
-#if VERBOSE_LOCK
-			cerr << "got it." << endl;
-#endif
-		}
 
-		~Lock() {
-#if VERBOSE_LOCK
-			cerr << "releasing lock... ";
-#endif
-			if (Threaded)
-				assert(!pthread_mutex_unlock(&the_mutex));
-#if VERBOSE_LOCK
-			cerr << "released." << endl;
-#endif
-		}
-	};	// end struct Lock
-	// may need __attribute__ ((__unused__))
-#endif	// THREADED_ALLOC
-
-private:
 	// probably no need to change...
 	const size_t				chunk_size;
 	impl_type				pool;
@@ -220,209 +274,37 @@ private:
 		Useful for detecting memory leaks.  
 	 */
 	size_t					peak;
+
+	// mutex shouldn't be static!  should be PER pool
+	mutex_type				the_mutex;
+
 public:
-	/**
-		Reserves one chunk up-front.  
-		\param C is number of elements to allocate at a time.
-			Should be related to page_size/sizeof(T).  
-	 */
 	explicit
-	list_vector_pool(const size_type C = 16) : 
-			chunk_size(C), pool(), free_list(), peak(0) {
-		assert(chunk_size);
-		// worry about alignment, placement and pages sizes later
-		pool.push_back(chunk_type());
-		pool.back().reserve(chunk_size);
-#if VERBOSE_ALLOC
-		// doesn't like what<T>::name, program terminates normally!?
-		cerr << "Reserved " << 
-#if DEBUG_USING_WHAT
-			what<T>::name << 
-#endif
-			" chunk of size " << chunk_size << "*" <<
-			sizeof(T) << " starting at " <<
-			&pool.back().front() << endl;
-#endif
-		INVARIANT_ASSERT(pool.back().capacity() == chunk_size);
-		INVARIANT_ASSERT(!pool.back().size());
-		INVARIANT_ASSERT(free_list.empty());
-	}
+	list_vector_pool(const size_type C = 16);
 
 	// no copy-constructor
 
-	/**
-		Default destructor with diagnostics.
-		There is a non-fatal memory leak if peak != free_list's size, 
-		because all elements that belong to this allocator's region
-		should be returned to this free list before the entire
-		allocator is released!  Else subsequent memory allocations
-		may overwrite the same physical space in memory, 
-		corrupting memory reference by the old non-freed pointers!
-	 */
-	~list_vector_pool() {
-#if VERBOSE_ALLOC
-		status(cerr << "~list_vector_pool<" <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
-#endif
-			">() at " << this << endl);
-#if VERBOSE_ALLOC && 0
-		// for debugging deallocation path only
-		typename impl_type::iterator i = pool.begin();
-		const typename impl_type::iterator e = pool.end();
-		cerr << "Clearing chunk-list: " << endl;
-		for ( ; i!=e; i++) {
-			i->clear();
-			cerr << "\tcleared chunk." << endl;
-		}
-		pool.clear();
-		cerr << "... cleared chunk-list." << endl;
-		cerr << "Clearing free-list... ";
-		while(!free_list.empty())
-			free_list.pop();
-		cerr << "...cleared." << endl;
-#endif
-#endif
-		INVARIANT(free_list.size() <= peak);
-		const size_t leak = peak -free_list.size();
-		if (leak) {
-			cerr << "\t*** YOU MAY HAVE A MEMORY LEAK! ***" << endl;
-			cerr << '\t' << leak << ' ' << what<T>::name <<
-				" are unaccounted for." << endl;
-		}
-	}
+	~list_vector_pool();
 
-	/**
-		Allocate one element only, without construction.
-		Here is where lazy deletion takes place:
-		Any pointer that was returned to the free-list
-		by deallocate() (below) was not destroyed;
-		there is no need to destroy until it is re-allocated.  
-		It MUST be destroyed upon reallocation to guarantee
-		that old structures are not leaked!  
-	 */
 	pointer
-	allocate(void) {
-#if THREADED_ALLOC
-		// volatile? do not optimize away?
-		Lock got_the_mutex;
-#endif
-		// see if an address is available from the free-list
-		if (!free_list.empty()) {
-			pointer ret = free_list.front();
-			INVARIANT_ASSERT(ret);
-			ret->~T();		// Lazy deletion!
-			free_list.pop();
-#if VERBOSE_ALLOC
-			cerr << "Allocated " <<
-#if DEBUG_USING_WHAT
-				what<T>::name << 
-#endif
-				" from free-list @ " << ret << endl;
-#endif
-			return ret;
-		} else {
-			// if not, use the chunk.
-			INVARIANT_ASSERT(!pool.empty());
-			chunk_type* chunk = &pool.back();
-			INVARIANT_ASSERT(chunk->capacity());
-			if (chunk->size() == chunk->capacity()) {
-				// rare case: allocate chunk
-#if VERBOSE_ALLOC
-				cerr << "New chunk of " << chunk_size << " " <<
-#if DEBUG_USING_WHAT
-					what<T>::name <<
-#endif
-					" allocated." << endl;
-#endif
-				pool.push_back(chunk_type());
-				chunk = &pool.back();
-				chunk->reserve(chunk_size);
-				INVARIANT_ASSERT(!chunk->size());
-			}
-			INVARIANT_ASSERT(chunk->capacity() == chunk_size);
-			chunk->push_back(T());
-			// T must be copy-constructible
-			pointer ret = &chunk->back();
-			INVARIANT_ASSERT(ret);
-#if VERBOSE_ALLOC
-			cerr << "Allocated " <<
-#if DEBUG_USING_WHAT
-				what<T>::name <<
-#endif
-				" from pool @ " << ret << endl;
-#endif
-			peak++;
-			return ret;
-		}
-		// lock will expire at end-of-scope
-	}
+	allocate(void);
 
 	/// allocate n elements without construction, unimplemented
 	pointer
 	allocate(size_type n, list_vector_pool<void>::const_pointer hint = 0);
 
-	/// deallocates without destruction
-	// any safety checks for multiple deletions?
-	// if so, use set<pointer> for the free_list
 	void
-	deallocate(pointer p) {
-#if THREADED_ALLOC
-		Lock got_the_mutex;
-#endif
-		assert(p);
-#if VERBOSE_ALLOC
-		cerr << "Returned " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
-#endif
-			" @ " << p << " to free-list." << endl;
-#endif
-		free_list.push(p);
-		// lock will expire at end-of-scope
-	}
+	deallocate(pointer p);
 
-	/// deallocates without destruction, unimplemented
+	/// deallocates, unimplemented
 	void
 	deallocate(pointer p, size_type n);
 
-	/**
-		Initialize *p by val.  
-		The new operator is given a placed address, 
-		which doesn't actually reallocate.  
-		The value is copy-constructed in-place.  
-	 */
 	void
-	construct(pointer p, const T& val) {
-		assert(p);
-#if VERBOSE_ALLOC
-		cerr << "Constructing " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
-#endif
-			" @ " << p;
-		new(p) T(val);
-		cerr << " ... constructed." << endl;
-#else
-		new(p) T(val);
-#endif
-	}
+	construct(pointer p, const T& val);
 
-	/**
-		Destroys *p without deallocating.
-		QUESTION: should this ever be destroyed, 
-		or should the vector take care of it?
-		ANSWER: lazy destruction, destroy when it is
-		reallocated at a later point and clobbered...
-		See allocate(), when free-list pointer is recycled.
-	 */
 	void
-	destroy(pointer p) {
-		assert(p);
-#if VERBOSE_ALLOC
-		cerr << "Punting destruction for " << p;
-#endif
-	}
+	destroy(pointer p);
 
 	// other miscellaneous methods
 	size_type
@@ -432,51 +314,42 @@ public:
 
 	/// feedback IO, indented one-tab by default
 	ostream&
-	status(ostream& o) const {
-		o << '\t' << pool.size() << " chunks of " << chunk_size <<
-			"*" << sizeof(T) << " " <<
-#if DEBUG_USING_WHAT
-			what<T>::name <<
-#endif
-			" allocated." << endl;
-		o << '\t' << "Peak usage: " << peak << " elements, " <<
-			"free-list has " << free_list.size() << 
-			" remaining." << endl;
-		return o;
-	}
+	status(ostream& o) const;
+
+private:
+	// policy-based variations
+
+	static
+	void
+	eager_destroy(const pointer, const eager_destruction_tag);
+
+	static
+	void
+	eager_destroy(const pointer, const lazy_destruction_tag);
+
+	static
+	void
+	lazy_destroy(const pointer, const eager_destruction_tag);
+
+	static
+	void
+	lazy_destroy(const pointer, const lazy_destruction_tag);
 
 };	// end class list_vector_pool
 
 //-----------------------------------------------------------------------------
-#if THREADED_ALLOC
-// static initializer of STL mutex element
-template<class T, bool Threaded>
-mutex_type
-list_vector_pool<T, Threaded>::the_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-#endif
+template <class T>
+bool
+operator == (const list_vector_pool<T>&, const list_vector_pool<T>&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
-inline
 bool
-operator == (const list_vector_pool<T>&, const list_vector_pool<T>&) {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
-inline
-bool
-operator != (const list_vector_pool<T>&, const list_vector_pool<T>&) {
-	return false;
-}
+operator != (const list_vector_pool<T>&, const list_vector_pool<T>&);
 
 //=============================================================================
 }	// end namespace memory
 }	// end namespace util
 
-#undef	INVARIANT_ASSERT
-
-#endif	//	__LIST_VECTOR_POOL_H__
+#endif	// __UTIL_MEMORY_LIST_VECTOR_POOL_H__
 

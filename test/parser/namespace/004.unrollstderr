@@ -1,0 +1,220 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3303484	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	60
+	3	 0x33001a4	namespc_	0	60	99
+	4	 0x33001d8	namespc_	0	99	126
+	5	 0x330020c	namespc_	0	126	165
+	6	 0x3300240	namespc_	0	165	210
+	7	 0x3300274	namespc_	0	210	242
+	8	 0x33002a8	namespc_	0	242	285
+	9	 0x33002dc	namespc_	0	285	312
+	10	 0x33034d0	namespc_	0	312	338
+	11	 0x3303504	namespc_	0	338	363
+	12	 0x3303538	namespc_	0	363	391
+	13	 0x330356c	namespc_	0	391	417
+	14	 0x33035a0	namespc_	0	417	441
+	15	 0x33035d4	namespc_	0	441	467
+	16	 0x3303608	namespc_	0	467	491
+	17	 0x330363c	namespc_	0	491	520
+	18	 0x3303670	namespc_	0	520	546
+	19	 0x33036a4	namespc_	0	546	572
+	20	 0x33036d8	namespc_	0	572	597
+	21	 0x33037e4	dintcoll	0	597	644
+	22	 0x3804604	datainst	0	644	664
+	23	 0x3303834	datatprf	0	664	680
+	24	 0x3303840	datadefn	0	680	711
+	25	 0x3303894	dprmlst_	0	711	727
+	26	 0x263f024	cnstpi__	0	727	739
+	27	 0x330370c	namespc_	0	739	774
+	28	 0x3303740	namespc_	0	774	801
+	29	 0x3303774	namespc_	0	801	827
+	30	 0x33037a8	namespc_	0	827	852
+	31	 0x33037dc	namespc_	0	852	875
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  2 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    caltech =     In namespace "caltech", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      2 sub-namespaces
+      0 definitions
+      0 typedefs
+      Namespaces:
+        EAS =         In namespace "EAS", we have: {
+          0 parameter-collections
+          0 instantiation-collections
+          1 sub-namespaces
+          0 definitions
+          0 typedefs
+          Namespaces:
+            CS =             In namespace "CS", we have: {
+              0 parameter-collections
+              0 instantiation-collections
+              1 sub-namespaces
+              0 definitions
+              0 typedefs
+              Namespaces:
+                alain =                 In namespace "alain", we have: {
+                  0 parameter-collections
+                  0 instantiation-collections
+                  0 sub-namespaces
+                  0 definitions
+                  0 typedefs
+                }
+            }
+        }
+        PMA =         In namespace "PMA", we have: {
+          0 parameter-collections
+          0 instantiation-collections
+          0 sub-namespaces
+          0 definitions
+          0 typedefs
+        }
+    }
+    cornell =     In namespace "cornell", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      2 sub-namespaces
+      0 definitions
+      0 typedefs
+      Namespaces:
+        CS =         In namespace "CS", we have: {
+          0 parameter-collections
+          0 instantiation-collections
+          1 sub-namespaces
+          0 definitions
+          0 typedefs
+          Namespaces:
+            alain =             In namespace "alain", we have: {
+              0 parameter-collections
+              0 instantiation-collections
+              0 sub-namespaces
+              0 definitions
+              0 typedefs
+            }
+        }
+        ECE =         In namespace "ECE", we have: {
+          0 parameter-collections
+          0 instantiation-collections
+          1 sub-namespaces
+          0 definitions
+          0 typedefs
+          Namespaces:
+            CSL =             In namespace "CSL", we have: {
+              0 parameter-collections
+              0 instantiation-collections
+              4 sub-namespaces
+              0 definitions
+              0 typedefs
+              Namespaces:
+                jose =                 In namespace "jose", we have: {
+                  0 parameter-collections
+                  0 instantiation-collections
+                  0 sub-namespaces
+                  0 definitions
+                  0 typedefs
+                }
+                martin =                 In namespace "martin", we have: {
+                  0 parameter-collections
+                  0 instantiation-collections
+                  0 sub-namespaces
+                  0 definitions
+                  0 typedefs
+                }
+                rajit =                 In namespace "rajit", we have: {
+                  0 parameter-collections
+                  0 instantiation-collections
+                  5 sub-namespaces
+                  0 definitions
+                  0 typedefs
+                  Namespaces:
+                    clint =                     In namespace "clint", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      0 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                    }
+                    dave =                     In namespace "dave", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      0 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                    }
+                    fang =                     In namespace "fang", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      2 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                      Namespaces:
+                        ART =                         In namespace "ART", we have: {
+                          0 parameter-collections
+                          0 instantiation-collections
+                          1 sub-namespaces
+                          0 definitions
+                          0 typedefs
+                          Namespaces:
+                            parser =                             In namespace "parser", we have: {
+                              0 parameter-collections
+                              0 instantiation-collections
+                              0 sub-namespaces
+                              0 definitions
+                              0 typedefs
+                            }
+                        }
+                        hacked_parser_generator =                         In namespace "hacked_parser_generator", we have: {
+                          0 parameter-collections
+                          0 instantiation-collections
+                          0 sub-namespaces
+                          0 definitions
+                          0 typedefs
+                        }
+                    }
+                    teifel =                     In namespace "teifel", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      0 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                    }
+                    virantha =                     In namespace "virantha", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      0 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                    }
+                }
+                sally =                 In namespace "sally", we have: {
+                  0 parameter-collections
+                  0 instantiation-collections
+                  1 sub-namespaces
+                  0 definitions
+                  0 typedefs
+                  Namespaces:
+                    stella =                     In namespace "stella", we have: {
+                      0 parameter-collections
+                      0 instantiation-collections
+                      0 sub-namespaces
+                      0 definitions
+                      0 typedefs
+                    }
+                }
+            }
+        }
+      Instances:
+        foo = int<32> foo
+    }
+}
+

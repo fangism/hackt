@@ -1,14 +1,15 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.11 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12 2005/01/28 19:58:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
 #define	__ART_OBJECT_INSTANCE_PARAM_H__
 
 #include "art_object_instance_base.h"
-#include "memory/pointer_classes.h"
+#include "art_object_expr_param_ref.h"	// for typedef init_arg_type
+#include "memory/count_ptr.h"
 
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
@@ -131,7 +132,7 @@ protected:
  */
 struct pbool_instance {
 public:
-	typedef	bool		value_type;
+	typedef	pbool_value_type		value_type;
 public:
 	/**
 		The unroll-time value of this pbool parameter.
@@ -148,7 +149,9 @@ public:
 	bool		valid : 1;
 public:
 	pbool_instance() : value(false), instantiated(false), valid(false) { }
-explicit pbool_instance(const value_type b) :
+
+	explicit
+	pbool_instance(const value_type b) :
 		value(b), instantiated(true), valid(false) { }
 	// default copy constructor
 	// default destructor
@@ -182,6 +185,10 @@ operator << (ostream& o, const pbool_instance& p);
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
 class pbool_instance_collection : public param_instance_collection {
+public:
+	typedef	pbool_value_type		value_type;
+	typedef	pbool_instance_reference	reference_type;
+	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
 // friend class pbool_instantiation_statement;
@@ -227,7 +234,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(const count_ptr<const pbool_expr>& e);
+	initialize(const init_arg_type& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);
@@ -243,13 +250,16 @@ virtual	ostream&
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
 // virtual	bool lookup_value(bool& v) const = 0;
+
 virtual	bool
-	lookup_value(bool& v, const multikey_base<int>& i) const = 0;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 virtual	bool
-	lookup_value_collection(list<bool>& l, 
+	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -258,23 +268,29 @@ virtual	const_index_list
 public:
 // really should be protected, usable by pbool_instance_reference::assigner
 virtual	bool
-	assign(const multikey_base<int>& k, const bool b) = 0;
+	assign(const multikey_base<pint_value_type>& k, const bool b) = 0;
 
 public:
 
-	static pbool_instance_collection*
+	static
+	pbool_instance_collection*
 	make_pbool_array(const scopespace& o, const string& n, const size_t d);
 
 	// only intended for children class
 	// need not be virtual, no pointers in subclasses
-	static persistent* construct_empty(const int);
+	static
+	persistent*
+	construct_empty(const int);
 
 protected:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object_base(const persistent_object_manager& m, 
-		ostream& o) const;
-	void load_object_base(persistent_object_manager& m, 
-		istream& i);
+	void
+	collect_transient_info(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream& o) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.
@@ -292,9 +308,10 @@ private:
 	typedef	pbool_instance_collection		parent_type;
 friend class pbool_instance_collection;
 public:
+	typedef	pbool_instance::value_type		value_type;
 	typedef	pbool_instance				element_type;
 	/// Type for actual values, including validity and status.
-	typedef	multikey_map<D, int, element_type, qmap>
+	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 
 protected:
@@ -319,14 +336,15 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 	bool
-	lookup_value(bool& v, const multikey_base<int>& i) const;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const;
 
 	bool
-	lookup_value_collection(list<bool>& l,
+	lookup_value_collection(list<value_type>& l,
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<int>& k, const bool i);
+	assign(const multikey_base<pint_value_type>& k, const value_type i);
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -350,6 +368,7 @@ template <>
 class pbool_array<0> : public pbool_instance_collection {
 private:
 	typedef	pbool_instance_collection		parent_type;
+	typedef	pbool_array<0>				this_type;
 public:
 	typedef	pbool_instance				instance_type;
 	typedef	pbool_instance				element_type;
@@ -375,10 +394,10 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	bool
-	lookup_value(bool& i) const;
+	lookup_value(value_type& i) const;
 
 	bool
-	assign(const bool i);
+	assign(const value_type i);
 
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
@@ -386,21 +405,23 @@ public:
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
 	bool
-	lookup_value(bool& v, const multikey_base<int>& i) const;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 	bool
-	lookup_value_collection(list<bool>& l, 
+	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<int>& k, const bool i);
+	assign(const multikey_base<pint_value_type>& k, const value_type i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+
 };	// end class pbool_array specialization
 
 typedef	pbool_array<0>			pbool_scalar;
@@ -411,7 +432,7 @@ typedef	pbool_array<0>			pbool_scalar;
  */
 struct pint_instance {
 public:
-	typedef int	value_type;
+	typedef pint_value_type		value_type;
 public:
 	/**
 		The unroll-time value of this pint parameter.
@@ -429,9 +450,13 @@ public:
 	bool		valid : 1;
 public:
 	pint_instance() : value(-1), instantiated(false), valid(false) { }
-explicit pint_instance(const bool b) :
+
+	explicit
+	pint_instance(const bool b) :
 		value(-1), instantiated(b), valid(false) { }
-explicit pint_instance(const value_type v) :
+
+	explicit
+	pint_instance(const value_type v) :
 		value(v), instantiated(true), valid(true) { }
 	// default copy constructor
 	// default destructor
@@ -481,6 +506,10 @@ operator << (ostream& o, const pint_instance& p);
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
+public:
+	typedef	pint_value_type			value_type;
+	typedef	pint_instance_reference		reference_type;
+	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
 // friend class pint_instantiation_statement;
@@ -533,7 +562,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(const count_ptr<const pint_expr>& e);
+	initialize(const init_arg_type& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);
@@ -552,11 +581,12 @@ virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
 virtual	bool
-	lookup_value(int& v, const multikey_base<int>& i) const = 0;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 virtual	bool
-	lookup_value_collection(list<int>& l, 
+	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -565,7 +595,7 @@ virtual	const_index_list
 public:
 // really should be protected, usable by pint_instance_reference::assigner
 virtual	bool
-	assign(const multikey_base<int>& k, const int i) = 0;
+	assign(const multikey_base<pint_value_type>& k, const value_type i) = 0;
 
 public:
 	// subclasses will share this persistent type entry
@@ -604,11 +634,13 @@ class pint_array : public pint_instance_collection {
 private:
 	typedef	pint_instance_collection		parent_type;
 public:
+	typedef	pint_instance::value_type		value_type;
 	typedef	pint_instance				element_type;
 	/**
 		Type for actual values, including validity and status.
 	 */
-	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
+	typedef	multikey_map<D, pint_value_type, element_type, qmap>
+							collection_type;
 protected:
 	/** The collection of value instances */
 	collection_type					collection;
@@ -632,14 +664,15 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 	bool
-	lookup_value(int& v, const multikey_base<int>& i) const;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const;
 
 	bool
-	lookup_value_collection(list<int>& l, 
+	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<int>& k, const int i);
+	assign(const multikey_base<pint_value_type>& k, const value_type i);
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -662,6 +695,7 @@ template <>
 class pint_array<0> : public pint_instance_collection {
 private:
 	typedef	pint_instance_collection		parent_type;
+	typedef	pint_array<0>				this_type;
 public:
 	typedef	pint_instance				instance_type;
 	typedef	pint_instance				element_type;
@@ -680,7 +714,7 @@ public:
 	pint_array(const scopespace& o, const string& n, 
 		const count_ptr<const pint_const>& i);
 
-	~pint_array() { }
+	~pint_array();
 
 	bool
 	is_partially_unrolled(void) const;
@@ -689,10 +723,10 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	bool
-	lookup_value(int& i) const;
+	lookup_value(value_type& i) const;
 
 	bool
-	assign(const int i);
+	assign(const value_type i);
 
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
@@ -700,21 +734,24 @@ public:
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
 	bool
-	lookup_value(int& v, const multikey_base<int>& i) const;
+	lookup_value(value_type& v,
+		const multikey_base<pint_value_type>& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 	bool
-	lookup_value_collection(list<int>& l, 
+	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<int>& k, const int i);
+	assign(const multikey_base<pint_value_type>& k, const value_type i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_array specialization
 
 typedef	pint_array<0>			pint_scalar;

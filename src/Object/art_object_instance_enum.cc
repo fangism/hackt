@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.8 2005/01/16 02:44:19 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -16,7 +16,14 @@
 #include "art_object_instance_enum.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_object_definition.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
@@ -47,6 +54,22 @@ enum_instance_collection::enum_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance_collection::~enum_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This determines the type during the unroll phase.  
+	Enums are never templated, and thus require no template parameters.  
+	The only information needed is the reference to the
+	enumeration definition.  
+	\return false, signaling no error.  
+ */
+bool
+enum_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	// INVARIANT(!is_partially_unrolled());
+	INVARIANT(t->get_base_def().is_a<const enum_datatype_def>());
+	// do something with the definition base?
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -194,7 +217,7 @@ enum_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
@@ -233,7 +256,7 @@ enum_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -289,7 +312,7 @@ bool
 enum_array<D>::lookup_instance_collection(
 		list<instance_ptr_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;

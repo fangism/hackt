@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.10 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_module.h,v 1.11 2005/01/28 19:58:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__
@@ -49,13 +49,12 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
-#if 1
+
 	/**
 		Whether or not this entire module has been 
 		successfully unrolled.
 	 */
 	bool					unrolled;
-#endif
 
 private:
 	module();
@@ -68,7 +67,7 @@ explicit	module(const string& s);
 	get_global_namespace(void) const;
 
 	void
-	set_global_namespace(excl_ptr<name_space> n);
+	set_global_namespace(excl_ptr<name_space>& n);
 
 	ostream&
 	what(ostream& o) const;
@@ -76,7 +75,9 @@ explicit	module(const string& s);
 	ostream&
 	dump(ostream& o) const;
 
-#if 1
+	bool
+	is_unrolled(void) const {	return unrolled;	}
+
 	/**
 		Note: sequential scope has a const-version of this, 
 		and is non-virtual.  
@@ -84,7 +85,6 @@ explicit	module(const string& s);
 	 */
 	void
 	unroll_module(void);
-#endif
 
 public:
 	PERSISTENT_METHODS

@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.8 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -121,8 +121,8 @@ class enum_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
 public:
+	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	never_ptr<enum_instance_alias>		instance_ptr_type;
-	typedef	multikey_base<int>			unroll_index_type;
 protected:
 	explicit
 	enum_instance_collection(const size_t d) : parent_type(d) { }
@@ -143,6 +143,9 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 #endif
+
+	bool
+	commit_type(const type_ref_ptr_type& );
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
@@ -192,9 +195,8 @@ private:
 friend class enum_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	enum_instance_alias			element_type;
-	typedef	multikey_map<D, int, element_type, qmap>
+	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 
 private:
@@ -248,7 +250,6 @@ private:
 friend class enum_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type	instance_ptr_type;
-	typedef	parent_type::unroll_index_type	unroll_index_type;
 private:
 	enum_instance_alias			the_instance;
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.13 2005/01/16 02:44:16 fang Exp $
+	$Id: art_parser_base.cc,v 1.14 2005/01/28 19:58:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -159,7 +159,7 @@ type_id::~type_id() {
 
 ostream&
 type_id::what(ostream& o) const {
-	return base->what(o << util::what<type_id>::name << ": ");
+	return base->what(o << util::what<type_id>::name() << ": ");
 }
 
 line_position
@@ -506,7 +506,7 @@ namespace_body::what(ostream& o) const {
 #if 0
 	return o << "(namespace-body: " << *name << ")";
 #else
-	return o << '(' << util::what<namespace_body>::name <<
+	return o << '(' << util::what<namespace_body>::name() <<
 		": " << *name << ')';
 #endif
 }
@@ -568,7 +568,7 @@ namespace_id::what(ostream& o) const {
 #if 0
 	return o << "(namespace-id): " << *qid;
 #else
-	return o << util::what<namespace_id>::name << ": " << *qid;
+	return o << util::what<namespace_id>::name() << ": " << *qid;
 #endif
 }
 

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2004/11/02 07:52:26 fang Exp $
+#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:00 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -19,8 +19,9 @@ DISTCLEANFILES = $(TESTS)
 CLEANFILES = 
 
 EXTRA_DIST = Make.test artc-expect.sh artobj-diff.sh \
+	artobjunroll-expect.sh \
 	state_enum_filter.awk address_filter.sed \
-	test.cvsignore
+	spacestonewline.awk test.cvsignore
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.10 2005/01/06 17:44:55 fang Exp $
+	$Id: art++-parse.yy,v 1.11 2005/01/28 19:58:45 fang Exp $
  */
 
 %{
@@ -2102,6 +2102,6 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 ***/
 	
 	// or throw exception
-	exit(1);
+	THROW_EXIT;
 }
 

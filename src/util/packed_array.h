@@ -2,20 +2,19 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.7 2004/12/25 03:12:22 fang Exp $
+	$Id: packed_array.h,v 1.8 2005/01/28 19:58:46 fang Exp $
  */
 
-#ifndef	__PACKED_ARRAY_H__
-#define	__PACKED_ARRAY_H__
+#ifndef	__UTIL_PACKED_ARRAY_H__
+#define	__UTIL_PACKED_ARRAY_H__
+
+#include "packed_array_fwd.h"
 
 #include <valarray>
 #include <vector>
 #include <iosfwd>
 #include "macros.h"
 #include "multikey.h"
-
-#define	PACKED_ARRAY_TEMPLATE_SIGNATURE					\
-template <size_t D, class T>
 
 #define	PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE				\
 template <size_t D>
@@ -319,8 +318,6 @@ public:
 };	// end class packed_array (specialized)
 
 //=============================================================================
-#define	PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE		template <class T>
-
 /**
 	Variable dimensions array.  
 	When you're too lazy to make dimension-specific arrays.  
@@ -492,5 +489,5 @@ public:
 //=============================================================================
 }	// end namespace util
 
-#endif	// __PACKED_ARRAY_H__
+#endif	// __UTIL_PACKED_ARRAY_H__
 

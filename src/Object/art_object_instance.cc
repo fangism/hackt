@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38 2005/01/16 04:47:23 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39 2005/01/28 19:58:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
 #define	__ART_OBJECT_INSTANCE_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>
@@ -25,7 +27,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
-// #include "indent.h"
+#include "indent.h"
 #include "stacktrace.h"
 
 //=============================================================================
@@ -36,6 +38,8 @@ using std::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -80,6 +84,7 @@ instance_collection_base::instance_collection_base(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {
+	STACKTRACE("~instance_collection_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -89,13 +94,29 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
-	index_collection_type::const_iterator i = index_collection.begin();
-	for ( ; i!=index_collection.end(); i++) {
-		NEVER_NULL(*i);
-		const index_collection_item_ptr_type
-			ind((*i)->get_indices());
-		if (ind)
-			ind->dump(o) << endl;
+
+	if (dimensions) {
+		INVARIANT(!index_collection.empty());
+		o << " with indices: {" << endl;
+	{	// indentation scope
+		indent indenter(o);
+		index_collection_type::const_iterator
+			i = index_collection.begin();
+		const index_collection_type::const_iterator
+			e = index_collection.end();
+		for ( ; i!=e; i++) {
+			NEVER_NULL(*i);
+			const index_collection_item_ptr_type
+				ind((*i)->get_indices());
+			// ind can be NULL?
+			NEVER_NULL(ind);
+			ind->dump(o << auto_indent) << endl;
+		}
+	}	// end indentation scope
+		o << auto_indent << "}" << endl;
+	} else {
+		INVARIANT(index_collection.size() == 1);
+		// the list contains exactly one instantiation statement
 	}
 	return o;
 }
@@ -103,7 +124,7 @@ instance_collection_base::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance_collection_base::pair_dump(ostream& o) const {
-	o << "  " << get_name() << " = ";
+	o << auto_indent << get_name() << " = ";
 	return dump(o) << endl;
 }
 
@@ -434,7 +455,7 @@ inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
-	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
+//	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
 	index_collection_type::const_iterator i = index_collection.begin();
@@ -462,7 +483,7 @@ instance_collection_base::collect_index_collection_pointers(
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE("instance_collection_base::collect_transient_info_base()");
+//	STACKTRACE("instance_collection_base::collect_transient_info_base()");
 	collect_index_collection_pointers(m);
 }
 
@@ -476,6 +497,7 @@ inline
 void
 instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE("inst_coll_base::write_index_collection_pointers()");
 	m.write_pointer(o, owner);
 	write_string(o, key);
 	m.write_pointer_list(o, index_collection);
@@ -499,6 +521,7 @@ inline
 void
 instance_collection_base::load_index_collection_pointers(
 		persistent_object_manager& m, istream& i) {
+	STACKTRACE("inst_coll_base::load_index_collection_pointers()");
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -559,6 +582,18 @@ datatype_instance_collection::make_member_instance_reference(
 			never_ptr<const datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default action for request for resolved param list.  
+	This is appropriate for collection types that have no 
+	template parameters.  
+	\return null list of parameters.  
+ */
+never_ptr<const const_param_expr_list>
+datatype_instance_collection::get_actual_param_list(void) const {
+	return never_ptr<const const_param_expr_list>(NULL);
 }
 
 //=============================================================================

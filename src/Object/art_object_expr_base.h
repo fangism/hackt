@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.4 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr_base.h,v 1.5 2005/01/28 19:58:41 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -89,6 +89,10 @@ virtual bool
 	virtual multikey_qmap<D,size_t,pbool_instance>
 			evaluate(void) const;
 #endif
+
+virtual	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const = 0;
+
 private:
 virtual	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
@@ -141,6 +145,10 @@ virtual	bool
 
 virtual	bool
 	is_loop_independent(void) const = 0;
+
+// TODO: add a context argument for unroll-time resolution
+virtual	excl_ptr<const_param_expr_list>
+	unroll_resolve(const unroll_context&) const = 0;
 
 };	// end class param_expr_list
 
@@ -294,9 +302,17 @@ virtual	bool
  */
 class pbool_expr : virtual public param_expr {
 public:
+	/**
+		The global boolean value type, set in "art_object_fwd.h".
+		We bother with this typedef for the future potential of 
+		using templates to extend to other parameter types.  
+	 */
+	typedef	pbool_value_type		value_type;
+public:
 	pbool_expr() : param_expr() { }
 
-virtual	~pbool_expr() { }
+	// temporary de-inline for debugging
+virtual	~pbool_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -337,17 +353,17 @@ virtual	count_ptr<const const_param>
 virtual bool
 	is_loop_independent(void) const = 0;
 
-virtual bool
+virtual value_type
 	static_constant_bool(void) const = 0;
 
 virtual	bool
-	resolve_value(bool& i) const = 0;
+	resolve_value(value_type& i) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
 
 virtual	bool
-	resolve_values_into_flat_list(list<bool>& l) const = 0;
+	resolve_values_into_flat_list(list<value_type>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>
@@ -361,12 +377,17 @@ protected:
  */
 class pint_expr : virtual public param_expr, virtual public index_expr {
 public:
-	/// the internal storage type
-	typedef	long			value_type;
+	/**
+		The internal storage type, set in "art_object_fwd.h".
+		We bother with this typedef for the future potential of 
+		using templates to extend to other parameter types.  
+	 */
+	typedef	pint_value_type			value_type;
 public:
 	pint_expr() : param_expr(), index_expr() { }
 
-virtual	~pint_expr() { }
+	// temporary de-inline for debugging purposes
+virtual	~pint_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -410,20 +431,20 @@ virtual bool
 virtual bool
 	is_loop_independent(void) const = 0;
 
-virtual int
+virtual value_type
 	static_constant_int(void) const = 0;
 
 	count_ptr<const_index>
 	resolve_index(void) const;
 
 virtual	bool
-	resolve_value(int& i) const = 0;
+	resolve_value(value_type& i) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
 
 virtual	bool
-	resolve_values_into_flat_list(list<int>& l) const = 0;
+	resolve_values_into_flat_list(list<value_type>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>

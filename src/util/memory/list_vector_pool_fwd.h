@@ -2,11 +2,13 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2 2005/01/15 19:13:44 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.3 2005/01/28 19:58:52 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
 #define	__LIST_VECTOR_POOL_FWD_H__
+
+#include "STL/construct_fwd.h"
 
 /**
 	These are the enw and delete operators required when
@@ -37,6 +39,59 @@
 private:								\
 	typedef	list_vector_pool<this_type>		pool_type;	\
 	static pool_type				pool;
+
+/**
+	Similar macro to the non-robust version defined above.  
+	This version is needed when allocation from such list_vector_pools
+	is done during static initialization across modules.  
+	The call to get_pool is the replacement for the static
+	pool -- the actual pool is a function-local static object, 
+	guaranteed to be initialized exactly once upon first
+	entry into the function.  
+
+	Tried and abandoned: using reference-counted pointers to the 
+	static pool, and using a macro to "require" and initialize the
+	pool from another module.  
+	This was abandoned because the last reference was not properly
+	destroying the allocator.  But now I suspect that it may
+	be due to a different nature of function-local statics.  
+
+	QUIRK: such an allocator is sometimes destroyed upon program 
+	termination, and I don't know why -- perhaps it is being conservative
+	w.r.t the possibility of external references to it?
+	In the case where the allocator is not destroyed, 
+	one will not be able to get the leak diagnostics from the pool.  
+ */
+#define	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS			\
+	static void*	operator new (size_t);				\
+	static void	operator delete (void*);			\
+private:								\
+	static void*	operator new (size_t, void*&);			\
+	typedef	list_vector_pool<this_type>		pool_type;	\
+	typedef	raw_count_ptr<pool_type>	pool_ref_ref_type;	\
+public:									\
+	typedef	count_ptr<const pool_type>		pool_ref_type;	\
+									\
+	static								\
+	pool_ref_ref_type						\
+	get_pool(void);
+
+/**
+	Friends needed only if default constructor is private.
+	NOTE: the formal parameters identifiers for the _Construct 
+	friend declarations (__p, __value) are kept to work around a 
+	major lookup bug in gcc-3.3.
+	Otherwise, it would be better off without it.  
+	Fortunately, there's no harm in keeping them; only the definition's
+	formal parameters matter -- it's just an eyesore to see them here.  
+
+	See "util/test/friend_function_formal_bug.cc" for example.  
+ */
+#define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
+	friend class list_vector_pool<this_type>;			\
+	friend void _Construct<this_type>(this_type* __p);		\
+	friend void _Construct<this_type, this_type>(			\
+		this_type* __p, const this_type& __value);
 
 namespace util {
 //=============================================================================

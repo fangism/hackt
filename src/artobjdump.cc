@@ -3,7 +3,7 @@
 	Just dumps an object file to human-readable (?) output.  
 	Useful for testing object file integrity.  
 
-	$Id: artobjdump.cc,v 1.5 2004/11/02 07:51:31 fang Exp $
+	$Id: artobjdump.cc,v 1.6 2005/01/28 19:58:31 fang Exp $
  */
 
 #include <iostream>
@@ -43,9 +43,14 @@ main(int argc, char* argv[]) {
 	persistent_object_manager::dump_reconstruction_table = true;
 	persistent::warn_unimplemented = true;	// for verbosity
 
-	excl_ptr<entity::module> the_module =
-		persistent_object_manager::load_object_from_file
+	excl_ptr<entity::module> the_module;
+try {
+	the_module = persistent_object_manager::load_object_from_file
 			<entity::module>(fname);
+}
+catch (...) {
+	return 1;
+}
 	the_module->dump(cerr);
 
 	// global will delete itself (recursively)

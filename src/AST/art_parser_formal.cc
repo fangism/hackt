@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.12 2005/01/16 02:44:17 fang Exp $
+	$Id: art_parser_formal.cc,v 1.13 2005/01/28 19:58:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -155,7 +155,7 @@ port_formal_id::what(ostream& o) const {
 #if 0
 	name->what(o << "(port-formal-id): ");
 #else
-	name->what(o << util::what<port_formal_id>::name << ": ");
+	name->what(o << util::what<port_formal_id>::name() << ": ");
 #endif
 	if (dim) dim->what(o);
 	return o;
@@ -323,7 +323,7 @@ template_formal_id::what(ostream& o) const {
 #if 0
 	name->what(o << "(template-formal-id): ");
 #else
-	name->what(o << util::what<template_formal_id>::name << ": ");
+	name->what(o << util::what<template_formal_id>::name() << ": ");
 #endif
 	if (dim) dim->what(o << " with ");
 	return o;

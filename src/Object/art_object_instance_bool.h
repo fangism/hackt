@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.8 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -10,22 +10,18 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool_fwd.h"
 
-#include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
 namespace ART {
-namespace parser {
-class token_identifier;
-}
-
 namespace entity {
 USING_LIST
+USING_CONSTRUCT
+using std::ostream;
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
-using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
@@ -134,8 +130,10 @@ class bool_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
 public:
+	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	never_ptr<bool_instance_alias>		instance_ptr_type;
-	typedef	multikey_base<int>			unroll_index_type;
+	/// boolean data (node) has no parameters
+	typedef	void					param_type;
 protected:
 	/// private empty constructor
 	explicit
@@ -157,6 +155,9 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 #endif
+
+	bool
+	commit_type(const type_ref_ptr_type& );
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
@@ -206,9 +207,8 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	bool_instance_alias			element_type;
-	typedef	multikey_map<D, int, element_type, qmap>
+	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 
 private:
@@ -261,6 +261,7 @@ template <>
 class bool_array<0> : public bool_instance_collection {
 friend class bool_instance_collection;
 	typedef	bool_instance_collection	parent_type;
+	typedef	bool_array<0>			this_type;
 private:
 	bool_instance_alias			the_instance;
 
@@ -295,8 +296,11 @@ public:
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
-
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class bool_array (specialized)
+
+typedef	bool_array<0>	bool_scalar;
 
 //=============================================================================
 }	// end namespace entity

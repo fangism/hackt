@@ -1,4 +1,4 @@
-#! /usr/bin/awk
+#! /usr/bin/awk -f
 # "test/state_enum_filter.awk"
 
 # Whenever the grammar changes, the enumerations of the parser states

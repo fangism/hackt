@@ -1,2 +1,7 @@
 *.swp
+*.o
+*.lo
+.deps
+.libs
+.dirstamp
 

@@ -1,13 +1,13 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22 2005/01/16 04:47:24 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23 2005/01/28 19:58:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
 #define	__ART_OBJECT_TYPE_REF_CC__
 
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
@@ -53,12 +53,13 @@ fundamental_type_reference::fundamental_type_reference(void) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fundamental_type_reference::~fundamental_type_reference() {
+	STACKTRACE("~fundamental_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
-	STACKTRACE("fundamental_type_reference::dump()");
+//	STACKTRACE("fundamental_type_reference::dump()");
 	return o << hash_string();
 }
 
@@ -73,7 +74,7 @@ fundamental_type_reference::dump(ostream& o) const {
  */
 string
 fundamental_type_reference::hash_string(void) const {
-	STACKTRACE("fundamental_type_reference::hash_string()");
+//	STACKTRACE("fundamental_type_reference::hash_string()");
 	// use fully qualified?  for hashing, no.
 	// possible collision case?
 	return get_base_def()->get_name() +template_param_string();
@@ -310,6 +311,7 @@ fundamental_type_reference::collect_transient_info_base(
 void
 fundamental_type_reference::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE("fund_type_ref::write_object_base()");
 	m.write_pointer(o, template_params);
 }
 
@@ -317,6 +319,7 @@ fundamental_type_reference::write_object_base(
 void
 fundamental_type_reference::load_object_base(
 		persistent_object_manager& m, istream& i) {
+	STACKTRACE("fund_type_ref::load_object_base()");
 	m.read_pointer(i, template_params);
 	if (template_params)
 		const_cast<param_expr_list&>(*template_params).load_object(m);
@@ -384,6 +387,7 @@ data_type_reference::data_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
+	STACKTRACE("~data_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -402,6 +406,35 @@ data_type_reference::get_base_def(void) const {
 never_ptr<const datatype_definition_base>
 data_type_reference::get_base_datatype_def(void) const {
 	return base_type_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	Will eventually require a context-like object.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const data_type_reference>
+data_type_reference::unroll_resolve(unroll_context& c) const {
+	STACKTRACE("data_type_reference::unroll_resolve()");
+	typedef	count_ptr<const data_type_reference>	return_type;
+	// eventually pass a context argument
+	if (template_params) {
+		excl_ptr<const param_expr_list>
+			actuals = template_params->unroll_resolve(c)
+				.as_a_xfer<const param_expr_list>();
+		if (actuals) {
+			return return_type(new data_type_reference(
+				base_type_def, actuals));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		return return_type(new data_type_reference(base_type_def));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -469,6 +502,7 @@ void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -483,6 +517,7 @@ data_type_reference::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_type_reference::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("data_type_ref::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
@@ -497,6 +532,7 @@ data_type_reference::write_object(const persistent_object_manager& m) const {
 void
 data_type_reference::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("data_type_ref::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_type_def);

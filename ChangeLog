@@ -1,6 +1,179 @@
 "ChangeLog"
 
+2005-01-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-13:
+	  Specialized read/write_value of pbool_instance, which contains
+	  bit-fields, same story as bool -- 3 bools "compressed" to 1 char.  
+	  (A few tests updated.)
+
+	* ARTXX-00-01-04-object-00-12:
+	  In util/IO_utils.{h,cc}, specialized write_value and read_value
+	  with <bool> to use write/read_value <char> to ensure that
+	  booleans are written out as one byte.  
+	  (On darwin-gcc-3.3, passing bool defaulted to using a 4-byte int, 
+	  on i686-linux-gcc-3.4, passing bool defaulted to using char.)
+	  Gotta ensure platform independence!  
+
+	* ARTXX-00-01-04-object-00-11-merged-fixutil-12:
+	  Merged changes from the -fixutil sub-branch (up to -12)
+	  into the main object branch.  
+
+	* ARTXX-00-01-04-object-00-10-fixutil-12:
+	  Test directory updated for new expected unrolled objects.
+	  Differences to due to exclusion of built-in template int
+	  definition argument.  (wasn't supposed to be there anyways)
+	  Typedef_alias forgot to call scopespace base persistent
+	  methods, resulting in fake leak.  Fixed.  
+	  This revision should be sufficiently stable (verified on
+	  darwin) to commit to the parent branch.  
+
+
+2005-01-26	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-10-merged-gcc-01:
+	  Merged gcc-3.3 workaround into this parent branch.
+	  Enhanced test scripts in src/util/test to be able to write
+	  hook filters/scripts in case tests need more than the 
+	  default filtering.  
+	  This is intended to permit *slightly* different or even
+	  non-deterministic behavior of various compilers, 
+	  a common variation being LINK-ORDERING and global static
+	  module initialization and destruction ordering.  
+	  Fortunately, the revisions in this series have made 
+	  the libraries extremely robust to "the ordering problem"
+	  with explicit dependence macros.  
+	  Slowly, we'll work our back out of "fixutil" to the parent branch.
+
+
+2005-01-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-09-gcc:
+	  New quick branch spawned off to work around a gcc-3.3 bug.
+	  (Not a problem in gcc-3.4)
+	  Problem is related to friend function formal parameter misuse.
+	  Problem can be demonstrated by
+	  "util/test/friend_function_formal_bug.cc" in gcc-3.3.
+	  Fixed, and merged back into -fixutil-10.
+
+	* ARTXX-00-01-04-object-00-10-fixutil-08:
+	  Been spending a few days fixing up a mysterious pseudo
+	  memory leak (*GASP*).  The problem is cause by improper handling
+	  of the built-in datatype definitions.  The whole definition
+	  contents were still written out, which cause bad reconstruction.  
+	  Data-type references have special handling for built-in types.
+	  This snapshot has fixed it, but kept all the extraneous 
+	  debugging options on.  After more testing, will gradually
+	  recede the debugging level.  
+
+
+2005-01-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-09:
+	  Merged changes from -fixutil sub-branch, up to its -03 revision.
+	  Net result: pool-allocate pint_const and pbool_const, 
+	  but we made many side improvements along the way.
+
+	* The lesson of the day is "function-local static."
+
+	* ARTXX-00-01-04-object-00-08-fixutil:
+	  Sub-branch created for introducing new improvements and fixes to
+	  the util library.  
+	  Modules affected: stacktrace, list_vector_pool, what.
+	  list_vector_pool: introduced more robust version of macros
+		for overriding new and delete operators
+		-- new version is practically immune to adverse ordering
+		of global static initialization, which is an issue when
+		cross-module allocators are invoked; there must be a way
+		to guarantee on-demand initialization:
+			solution: function-local static instances!
+		observation: consequence: out of conservativeness, 
+			such static allocators will not be destroyed
+			upon program termination IF the pool is referenced
+			by multiple modules.  (won't be able to get leak 
+			diagnostics from such pools)
+		side note: tried and abandoned a reference-count scheme.
+	what: updated interface and default macro definition
+		now must call ::name() by function (no arg), 
+		to match the typeinfo interface.  
+		All definitions of name() store function-local static
+		copies of the string, which are initialized upon 
+		first entry to the function, so performance is still
+		very efficient.
+		This revision should be robust to all link-orderings
+		so it is safe to reference ::name across modules.  
+	stacktrace: replaced class static stack structures
+		with function-local static objects.
+		This makes stacktrace safe to use for debugging
+		during static initialization and destruction.  
+		+ New macros STACKTRACE_BRIEF and STACKTRACE_VERBOSE
+		so user need not pass custom string everywhere.  
+		+ Also added ostream check protection, in case ostream
+		is destroyed before a trace is printed.  
+	persistent_object_manager:
+		you guessed it, replaced static members 
+		(reconstruction_function_tbale) with 
+		function-local static in the referencing static function.  
+
+
+2005-01-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-objject-00-08:
+	  New files: src/Object/art_object_extern_templates.{h,cc}
+	  Tried playing around with separate template compilation for 
+	  a few classes (multikey, packed_array).
+	  Very little reduction in compilation time and final binary size.  
+	  Only the smallest, most common classes were factored out.  
+	  More signficant dimension-specific, content-type-specific
+	  map classes cannot be efficiently collated.  
+	  "With great specialization come great replication."
+
+
+2005-01-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-04-cleanup:
+	  Many typedef's updated, espcially those involving multikey.
+	  Now everything is consistently maintained in a few definitions
+	  in "art_object_index.h".  Other minor changes like renaming
+	  parent to parent_type.  
+
+	* ARTXX-00-01-04-object-00-05:
+	  FINALLY wrote a prototype unroll system for the built-in 
+	  datatypes.  Successfully tested basic int<32> instantiations.
+	  Created placeholder class unroll_context for use in unrolling.  
+	  Not all unroll methods have been adapted to use it yet.  
+	  Expressions are unrolled into pint_const_collections
+	  (pbool_const_collection to be created).  
+	  Also updated util/multikey.* to provide reverse iterator interface.  
+
+	* ARTXX-00-01-04-object-00-06:
+	  Removed a TON of empty .stderr files from the repository, 
+	  they are now automatically generated and cleaned by
+	  the rules in the template makefile Make.test.
+
+	* ARTXX-00-01-04-object-00-07:
+	  test-Makefile's pain in the a**...
+	  Updated .cvsignore generation to copy template (was linked before)
+	  and include additional CLEANFILES, in all test subdirectories.  
+	  Re-did Makefile.am's in all test subdirectories:
+	  ARTC_TEST_SUBJECTS = $(ARTC_TEST_PASSES) $(ARTC_TEST_FAILURES)
+	  This way, ARTC_TEST_FAILURES can be used for EXTRA_DIST, 
+	  to avoid having to regenerate extraneous .stderr files.  
+	  Perhaps auto-generating .cvsignore everywhere is a good idea...
+
+
+2005-01-19	David Fang	<fangism@users.sourceforge.net>
+
+	* New sub-branch: ARTXX-00-01-04-object-00-04-cleanup
+	  Needed a makeover of typedefs, for sake of consistency
+	  (e.g. long vs. int) and future ease of migration to templates.
+
+
 2005-01-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object:
+	  Added unroll tests for namespace subdirectory.  
+	  Not exciting until example with int<>s are introduced.  
 
 	* Created branch: ARTXX-00-01-04-util
 	  This branch is for modifications to the utils library that
@@ -23,6 +196,10 @@
 	  This branch is intended for modifications to the front-end
 	  lexer and parser.
 
+	* Created branch: ARTXX-00-01-04-object
+	  This branch is intended for updates to the type-checker, 
+	  unroller, and object system of the compiler.  
+
 	* ARTXX-00-01-04-parser:
 	  Updated lexer: yy_current_buffer -> YY_CURRRENT_BUFFER
 	  The macro's definition differs slightly between the current stable
@@ -30,6 +207,23 @@
 	  This maintains compatibility.  
 
 	* Added LEX and YACC to configure.in with AC_ARG_VAR.
+
+	* ARTXX-00-01-04-object:
+	  Revised test *.sh check test-scripts.  
+	  Introduced (preliminary) unrolling test, finally!  
+	  Need to write {bool,int}_instance_collection::unroll().  
+
+	* Added unroll tests to tests/parser/param directory.
+	  Updated artobjunroll-expect.sh script to handle 
+		  expected unroll errors.
+	  Test suite is coming along...
+
+	* Minor stuff:
+	  In util/indent.cc: fixed disable_indent.
+	  Updated dump() method to use better indentation in
+		many Object class definitions.
+	  artobjdump and artobjunroll handles exceptions from unrolling, 
+		and also if input object file is empty.
 
 
 2005-01-16	David Fang	<fangism@users.sourceforge.net>

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.8 2005/01/16 02:44:19 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9 2005/01/28 19:58:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -16,10 +16,17 @@
 #include "art_object_instance_struct.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
+#include "stacktrace.h"
 
 #include "ptrs_functional.h"
 #include "compose.h"
@@ -32,6 +39,7 @@ using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
 using std::dereference;
 using std::mem_fun_ref;
+USING_STACKTRACE
 
 //=============================================================================
 // class struct_instance_collection method definitions
@@ -47,6 +55,22 @@ struct_instance_collection::struct_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct_instance_collection::~struct_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This sets the actual type for the instance collection.  
+	\param t the struct type reference, containing resolved
+		template parameters if applicable.  
+	\return false if type is set without error, else true.  
+ */
+bool
+struct_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	STACKTRACE("struct_instance_collection::commit_type()");
+//	INVARIANT(!is_partially_unrolled());
+	cerr << "FANG: finish struct_instance_collection::commit_type()!"
+		<< endl;
+	return true;	// temporary: always return error
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -192,7 +216,7 @@ struct_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
@@ -231,7 +255,7 @@ struct_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -287,7 +311,7 @@ bool
 struct_array<D>::lookup_instance_collection(
 		list<instance_ptr_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;

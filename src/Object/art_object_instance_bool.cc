@@ -1,11 +1,15 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.8 2005/01/16 02:44:19 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
 #define	__ART_OBJECT_INSTANCE_BOOL_CC__
+
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>
@@ -14,14 +18,36 @@
 #include "art_object_instance_bool.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_built_ins.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
-
+#include "stacktrace.h"
+#include "static_trace.h"
+#include "memory/list_vector_pool.tcc"
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
+
+STATIC_TRACE_BEGIN("instance-bool")
+
+namespace util {
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<0>, "bool_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<1>, "bool_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<2>, "bool_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<3>, "bool_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<4>, "bool_array_4D")
+namespace memory {
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
+}	// end namespace memory
+}	// end namespace util
 
 namespace ART {
 namespace entity {
@@ -30,6 +56,7 @@ using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
 using std::dereference;
 using std::mem_fun_ref;
+USING_STACKTRACE
 
 //=============================================================================
 // class bool_instance_collection method definitions
@@ -45,6 +72,21 @@ bool_instance_collection::bool_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_collection::~bool_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	During unroll phase, this determines the type, except that
+	this type is a built-in primary type, bool.  
+	\return false normally, signaling no error.  
+	\pre this is the first statement unrolled in this collection.  
+ */
+bool
+bool_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	// INVARIANT(!is_partially_unrolled());
+	INVARIANT(t->get_base_def() == &bool_def);
+	// shouldn't have any parameters, NULL or empty list
+	return false;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -189,7 +231,7 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
@@ -228,7 +270,7 @@ bool_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -283,7 +325,7 @@ bool
 bool_array<D>::lookup_instance_collection(
 		list<instance_ptr_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -332,6 +374,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class bool_array method definitions (specialized)
 
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(bool_scalar, 256)
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_array<0>::bool_array() : parent_type(0), the_instance() {
 }
@@ -343,7 +387,9 @@ bool_array<0>::bool_array(const scopespace& o, const string& n) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_array<0>::~bool_array() { }
+bool_array<0>::~bool_array() {
+	STACKTRACE("~bool_scalar()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -453,6 +499,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance-bool")
 
 #endif	// __ART_OBJECT_INSTANCE_BOOL_CC__
 

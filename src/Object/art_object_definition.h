@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.23 2005/01/14 19:40:27 fang Exp $
+	$Id: art_object_definition.h,v 1.24 2005/01/28 19:58:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -73,7 +73,8 @@ protected:
 	// no new members
 public:
 	typedef_base() : definition_base(), scopespace(), sequential_scope() { }
-virtual	~typedef_base() { }
+
+virtual	~typedef_base();
 
 virtual	const string&
 	get_key(void) const = 0;
@@ -285,7 +286,8 @@ private:
 	typedef	definition_base				parent_type;
 public:
 	datatype_definition_base() : definition_base() { }
-virtual	~datatype_definition_base() { }
+
+virtual	~datatype_definition_base();
 
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 

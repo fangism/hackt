@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.5 2005/01/28 19:58:41 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -49,9 +49,13 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
  */
 class pbool_instance_reference : public param_instance_reference, 
 		public pbool_expr {
+public:
+	typedef	pbool_value_type			value_type;
 private:
 	typedef param_instance_reference		parent_type;
 	typedef	pbool_expr				interface_type;
+public:
+	typedef	count_ptr<const interface_type>		init_arg_type;
 protected:
 	never_ptr<pbool_instance_collection>		pbool_inst_ref;
 private:
@@ -89,7 +93,7 @@ public:
 	static_constant_dimensions(void) const;
 
 	bool
-	initialize(const count_ptr<const pbool_expr>& i);
+	initialize(const init_arg_type& i);
 
 	string
 	hash_string(void) const;
@@ -113,17 +117,21 @@ public:
 	bool
 	is_loop_independent(void) const;
 
-	bool
+	value_type
 	static_constant_bool(void) const;
 
 	bool
-	resolve_value(bool& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<bool>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	/**
 		Helper class for assigning values to instances.
@@ -135,7 +143,7 @@ public:
 		/** resolved range list */
 		const_index_list	ranges;
 		/** flat list of unrolled values */
-		list<bool>		vals;
+		list<value_type>		vals;
 	public:
 		assigner(const pbool_expr& p);
 		// default destructor
@@ -170,9 +178,13 @@ public:
  */
 class pint_instance_reference : public param_instance_reference, 
 		public pint_expr {
+public:
+	typedef	pint_value_type				value_type;
 private:
 	typedef	param_instance_reference		parent_type;
 	typedef	pint_expr				interface_type;
+public:
+	typedef	count_ptr<const interface_type>		init_arg_type;
 protected:
 	/**
 		Back-reference to integer collection.  
@@ -212,7 +224,7 @@ public:
 	static_constant_dimensions(void) const;
 
 	bool
-	initialize(const count_ptr<const pint_expr>& i);
+	initialize(const init_arg_type& i);
 
 	string
 	hash_string(void) const;
@@ -232,17 +244,20 @@ public:
 	bool
 	is_loop_independent(void) const;
 
-	int
+	value_type
 	static_constant_int(void) const;
 
 	bool
-	resolve_value(int& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<int>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 protected:
 //	bool assign(const list<int>& l) const;
@@ -258,7 +273,7 @@ public:
 		/** resolved range list */
 		const_index_list	ranges;
 		/** flat list of unrolled values */
-		list<int>		vals;
+		list<value_type>	vals;
 	public:
 		assigner(const pint_expr& p);
 		// default destructor

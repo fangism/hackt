@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7 2005/01/28 19:58:41 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -12,6 +12,7 @@
 #include "multikey_fwd.h"
 #include "packed_array.h"
 #include "persistent.h"
+#include "memory/list_vector_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -19,6 +20,7 @@ namespace entity {
 
 using namespace MULTIKEY_NAMESPACE;
 USING_LIST
+USING_CONSTRUCT
 using std::pair;
 using std::string;
 using std::ostream;
@@ -83,6 +85,9 @@ virtual	count_ptr<const const_param>
 
 	bool
 	is_unconditional(void) const { return true; }
+
+virtual	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const = 0;
 };	// end class const_param
 
 //-----------------------------------------------------------------------------
@@ -94,12 +99,12 @@ class const_param_expr_list : public param_expr_list,
 		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 protected:
-	typedef	list<count_ptr<const const_param> >	parent;
+	typedef	list<count_ptr<const const_param> >	parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_param_expr_list();
 // lazy: use default copy constructor
@@ -154,6 +159,9 @@ private:
 	bool
 	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
+
+	excl_ptr<const_param_expr_list>
+	unroll_resolve(const unroll_context&) const;
 public:
 	PERSISTENT_METHODS
 };	// end class const_param_expr_list
@@ -174,10 +182,10 @@ virtual	~const_index() { }
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
 
-virtual	int
+virtual	pint_value_type
 	lower_bound(void) const = 0;
 
-virtual	int
+virtual	pint_value_type
 	upper_bound(void) const = 0;
 
 virtual	bool
@@ -202,17 +210,17 @@ public:
 	typedef	const_index_ptr_type		value_type;
 protected:
 	/** need list of pointers b/c const_index is abstract */
-	typedef	list<const_index_ptr_type>	parent;
+	typedef	list<const_index_ptr_type>		parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_index_list();
 
 	const_index_list(const const_index_list& l, 
-		const pair<list<int>, list<int> >& f);
+		const pair<list<pint_value_type>, list<pint_value_type> >& f);
 
 	~const_index_list();
 
@@ -235,12 +243,12 @@ public:
 	const_range_list
 	collapsed_dimension_ranges(void) const;
 
-	using parent::empty;
-	using parent::clear;
-	using parent::begin;
-	using parent::end;
-	using parent::rbegin;
-	using parent::rend;
+	using parent_type::empty;
+	using parent_type::clear;
+	using parent_type::begin;
+	using parent_type::end;
+	using parent_type::rbegin;
+	using parent_type::rend;
 
 	void
 	push_back(const const_index_ptr_type& i);
@@ -264,12 +272,12 @@ public:
 	resolve_index_list(void) const;
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+	resolve_multikey(excl_ptr<multikey_base<pint_value_type> >& k) const;
 #endif
-	excl_ptr<multikey_base<int> >
+	excl_ptr<multikey_base<pint_value_type> >
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<int> >
+	excl_ptr<multikey_base<pint_value_type> >
 	lower_multikey(void) const;
 
 	bool
@@ -287,7 +295,7 @@ public:
 class const_range_list : public range_expr_list, public list<const_range> {
 protected:
 	// no need for pointers here
-	typedef	list<const_range>	list_type;
+	typedef	list<const_range>			list_type;
 public:
 	typedef	list_type::iterator			iterator;
 	typedef	list_type::const_iterator		const_iterator;
@@ -328,15 +336,21 @@ public:
 	bool
 	resolve_ranges(const_range_list& r) const;
 
-	excl_ptr<multikey_base<int> >
+	excl_ptr<multikey_base<pint_value_type> >
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<int> >
+	excl_ptr<multikey_base<pint_value_type> >
 	lower_multikey(void) const;
 
 	template <size_t D>
 	void
-	make_multikey_generator(multikey_generator<D, int>& k) const;
+	make_multikey_generator(
+		multikey_generator<D, pint_value_type>& k) const;
+
+	// is a pint_const_collection::array_type::key_type
+	multikey_generic<size_t>
+	resolve_sizes(void) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class const_range_list
@@ -345,18 +359,25 @@ public:
 /**
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  
+	Going to need a pool allocator...
  */
 class pint_const : public pint_expr, public const_index, public const_param {
+private:
+	typedef	pint_const		this_type;
 public:
-	typedef long			value_type;
+	typedef pint_expr::value_type	value_type;
 protected:
-	const value_type		val;
+	// removed constness for assignability
+	value_type			val;
+private:
+	pint_const();
 public:
 	explicit
 	pint_const(const long v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
 
-	~pint_const() { }
+	// change back to inline later
+	~pint_const();
 
 	ostream&
 	what(ostream& o) const;
@@ -397,7 +418,8 @@ public:
 	count_ptr<const const_param>
 	static_constant_param(void) const;
 
-	int
+	// may chop '_int' off for templating
+	value_type
 	static_constant_int(void) const { return val; }
 
 	bool
@@ -412,14 +434,14 @@ public:
 	bool
 	range_size_equivalent(const const_index& i) const;
 
-	int
+	value_type
 	lower_bound(void) const;
 
-	int
+	value_type
 	upper_bound(void) const;
 
 	bool
-	resolve_value(int& i) const;
+	resolve_value(value_type& i) const;
 
 	count_ptr<const_index>
 	resolve_index(void) const;
@@ -428,7 +450,10 @@ public:
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<int>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -436,6 +461,9 @@ private:
 		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_METHODS
+
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------
@@ -447,13 +475,32 @@ public:
  */
 class pint_const_collection : public pint_expr, public const_param {
 public:
-	typedef	pint_expr::value_type			value_type;
+	typedef	pint_value_type				value_type;
 	typedef	util::packed_array_generic<value_type>	array_type;
+	typedef	array_type::iterator			iterator;
+	typedef	array_type::const_iterator		const_iterator;
 protected:
 	array_type					values;
 public:
+	explicit
 	pint_const_collection(const size_t d);
+
+	explicit
+	pint_const_collection(const array_type::key_type&);
+
 	~pint_const_collection();
+
+	iterator
+	begin(void) { return values.begin(); }
+
+	const_iterator
+	begin(void) const { return values.begin(); }
+
+	iterator
+	end(void) { return values.end(); }
+
+	const_iterator
+	end(void) const { return values.end(); }
 
 	ostream&
 	what(ostream& o) const;
@@ -498,19 +545,22 @@ public:
 	is_unconditional(void) const { return true; }
 
 	// only makes sense for scalars
-	int
+	value_type
 	static_constant_int(void) const;
 
 	// only makes sense for scalars
 	bool
-	resolve_value(int& ) const;
+	resolve_value(value_type& ) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	// flat-list needs to be replaced
 	bool
-	resolve_values_into_flat_list(list<int>& ) const;
+	resolve_values_into_flat_list(list<value_type>& ) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 public:
 	PERSISTENT_METHODS
@@ -522,13 +572,19 @@ public:
 	Constant boolean parameters, true or false.  
  */
 class pbool_const : public pbool_expr, public const_param {
+private:
+	typedef	pbool_const		this_type;
 public:
-	typedef	bool			value_type;
+	typedef	pbool_value_type	value_type;
 protected:
-	const value_type		val;
+	// removed const-ness for assignability
+	value_type		val;
+private:
+	pbool_const();
+
 public:
 	explicit
-	pbool_const(const bool v) :
+	pbool_const(const pbool_value_type v) :
 		pbool_expr(), const_param(), val(v) { }
 
 	~pbool_const() { }
@@ -582,13 +638,16 @@ public:
 	is_unconditional(void) const { return true; }
 
 	bool
-	resolve_value(bool& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<bool>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -596,6 +655,9 @@ private:
 		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_METHODS
+
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pbool_const
 
 //-----------------------------------------------------------------------------
@@ -604,10 +666,10 @@ public:
 	Deriving from pair to inherit its interface with first and second.  
  */
 class const_range : public range_expr, public const_index,
-		public pair<int,int> {
+		public pair<pint_value_type, pint_value_type> {
 friend class const_range_list;
 private:
-	typedef	pair<int,int>			parent;
+	typedef	pair<pint_value_type,pint_value_type>	parent_type;
 	// typedef for interval_type (needs discrete_interval_set)
 	// relocated to source file
 public:
@@ -616,18 +678,21 @@ public:
 
 	/** explicit conversion from x[N] to x[0..N-1] */
 	explicit
-	const_range(const int n);
+	const_range(const pint_value_type n);
 
 	explicit
 	const_range(const pint_const& n);
 
 	explicit
-	const_range(const parent& p);
+	const_range(const parent_type& p);
 
-	const_range(const int l, const int u);
+	const_range(const pint_value_type l, const pint_value_type u);
+
 	const_range(const const_range& r);
+
 private:
-	const_range(const int l, const int u, const bool);
+	const_range(const pint_value_type l, const pint_value_type u,
+		const bool);
 public:
 	~const_range() { }
 
@@ -635,16 +700,25 @@ public:
 	bool
 	empty(void) const { return first > second; }
 
-	int
+	pint_value_type
 	lower(void) const {
-		assert(!empty());
+		INVARIANT(!empty());
 		return first;
 	}
 
-	int
+	pint_value_type
 	upper(void) const {
-		assert(!empty());
+		INVARIANT(!empty());
 		return second;
+	}
+
+	/**
+		\return The size spanned by this range.
+	 */
+	size_t
+	size(void) const {
+		INVARIANT(!empty());
+		return second -first +1;
 	}
 
 	ostream&
@@ -683,10 +757,10 @@ public:
 	bool
 	range_size_equivalent(const const_index& i) const;
 
-	int
+	pint_value_type
 	lower_bound(void) const;
 
-	int
+	pint_value_type
 	upper_bound(void) const;
 
 	bool

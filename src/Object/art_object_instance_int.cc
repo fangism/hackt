@@ -3,11 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11 2005/01/16 02:44:19 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12 2005/01/28 19:58:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
@@ -16,15 +18,25 @@
 #include "art_object_instance_int.h"
 #include "art_object_inst_ref_data.h"
 #include "art_object_expr_const.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
+#include "art_built_ins.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
+
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
+
+STATIC_TRACE_BEGIN("instance-int")
 
 namespace ART {
 namespace entity {
@@ -49,7 +61,46 @@ int_instance_collection::int_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance_collection::~int_instance_collection() { }
+int_instance_collection::~int_instance_collection() {
+	STACKTRACE("~int_instance_collection()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	During unroll phase, this commits the type of the collection.  
+	\param t the data integer type reference, containing width, 
+		must already be resolved to a const_param_expr_list.  
+	\return false on success, true on error.  
+	\post the integer width is fixed for the rest of the program.  
+ */
+bool
+int_instance_collection::commit_type(const type_ref_ptr_type& t) {
+	STACKTRACE("int_instance_collection::commit_type()");
+	INVARIANT(t->get_base_def() == &int_def);
+	const never_ptr<const param_expr_list>
+		params(t->get_template_params());
+	NEVER_NULL(params);
+	// extract first and only parameter, the integer width
+	const never_ptr<const const_param_expr_list>
+		cparams(params.is_a<const const_param_expr_list>());
+	NEVER_NULL(cparams);
+	INVARIANT(cparams->size() == 1);
+	const count_ptr<const const_param>&
+		param1(cparams->front());
+	NEVER_NULL(param1);
+	const count_ptr<const pint_const>
+		pwidth(param1.is_a<const pint_const>());
+	NEVER_NULL(pwidth);
+	const pint_value_type new_width = pwidth->static_constant_int();
+	INVARIANT(new_width);
+	if (is_partially_unrolled()) {
+		INVARIANT(int_width);
+		return (new_width != int_width);
+	} else {
+		int_width = new_width;
+		return false;
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -69,6 +120,16 @@ int_instance_collection::make_instance_reference(void) const {
 			never_ptr<const int_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to return a legitmate reference to a parameter list!
+ */
+never_ptr<const const_param_expr_list>
+int_instance_collection::get_actual_param_list(void) const {
+	STACKTRACE("int_instance_collection::get_actual_param_list()");
+	return never_ptr<const const_param_expr_list>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,6 +256,7 @@ int_array<D>::key_dumper::operator () (
 INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	STACKTRACE("int_array<D>::instantiate_indices()");
 	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
@@ -212,7 +274,7 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	do {
@@ -221,7 +283,9 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		if (pi.valid()) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
+				" of " << get_qualified_name() <<
 				" already instantiated!" << endl;
+			// a useful error returned would be nice...
 			THROW_EXIT;
 		}
 		pi.instantiate();
@@ -251,7 +315,7 @@ int_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<int> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
@@ -306,7 +370,7 @@ bool
 int_array<D>::lookup_instance_collection(
 		list<instance_ptr_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
-	multikey_generator<D, int> key_gen;
+	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool ret = true;
@@ -396,6 +460,7 @@ int_array<0>::dump_unrolled_instances(ostream& o) const {
  */
 void
 int_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	STACKTRACE("int_array<0>::instantiate_indices()");
 	INVARIANT(!i);
 	if (the_instance.valid()) {
 		// should never happen, but just in case...
@@ -476,6 +541,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance-int")
 
 #endif	// __ART_OBJECT_INSTANCE_INT_CC__
 

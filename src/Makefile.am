@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.41 2005/01/28 19:03:56 fang Exp $
+#	$Id: Makefile.am,v 1.42 2005/01/28 19:58:30 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -128,6 +128,8 @@ OBJECT_CC_FILES = \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
+	Object/art_object_unroll_context.cc \
+	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc
 
 # these source files have no .h file (use other name)
@@ -143,6 +145,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
+	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
@@ -166,6 +169,7 @@ UTIL_HEADER_FILES = \
 	util/STL/map.tcc \
 	util/STL/namespace.h \
 	util/STL/pair_fwd.h \
+	util/STL/reverse_iterator.h \
 	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
 	util/STL/vector_fwd.h \
@@ -189,9 +193,14 @@ UTIL_HEADER_FILES = \
 	util/list_vector.tcc \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
+	util/memory/list_vector_pool.tcc \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
+	util/memory/pointer_manipulator.h \
+	util/memory/excl_ptr.h \
+	util/memory/count_ptr.h \
+	util/memory/thread_lock.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_qmap.h \
 	util/multidimensional_qmap.tcc \
@@ -210,6 +219,7 @@ UTIL_HEADER_FILES = \
 	util/nested_iterator.h \
 	util/numeric/integer_traits.h \
 	util/operators.h \
+	util/packed_array_fwd.h \
 	util/packed_array.h \
 	util/packed_array.tcc \
 	util/persistent.h \
@@ -220,6 +230,7 @@ UTIL_HEADER_FILES = \
 	util/qmap.tcc \
 	util/sstream.h \
 	util/stacktrace.h \
+	util/static_trace.h \
 	util/string_fwd.h \
 	util/sublist.h \
 	util/sublist.tcc \
@@ -227,6 +238,7 @@ UTIL_HEADER_FILES = \
 	util/unique_list.tcc \
 	util/using_istream.h \
 	util/using_ostream.h \
+	util/what_fwd.h \
 	util/what.h \
 	util/what.tcc \
 	util/binders.h \
@@ -248,13 +260,15 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
-	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	util/stacktrace.cc \
+	util/static_trace.cc \
+	util/memory/thread_lock.cc \
+	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \
@@ -300,9 +314,14 @@ $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
+# NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
+# gcc -E ignores file that require no preprocessing
+
+CPP_TRADITIONAL = cpp
 
 parser/art++.types: parser/art++-parse.yy
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+		$(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 		$(SED) '/^[ \t]*$$/d' > $@
 
@@ -323,6 +342,10 @@ YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
 parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-parse-prefix.h
+	@if ! [ -s parser/art++.types ] ; then \
+		$(ECHO) "parser/art++.types is empty!" ; \
+		exit 1 ; \
+	fi
 	$(AWK) -f $(YACC_UNION_SCRIPT) \
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
