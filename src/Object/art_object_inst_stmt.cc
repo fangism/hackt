@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.3 2005/03/09 05:21:40 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.4 2005/03/11 01:16:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -28,6 +28,7 @@
 #include "art_object_unroll_context.h"
 #include "art_object_classification_details.h"
 #include "art_object_instance_collection.h"
+#include "art_object_value_collection.h"
 
 #if USE_INST_STMT_TEMPLATE
 #include "art_object_inst_stmt_param.h"
@@ -50,7 +51,7 @@
 #endif
 
 #if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)		STACKTRACE(x)
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
 #else
 	#define	STACKTRACE_PERSISTENT(x)
 #endif

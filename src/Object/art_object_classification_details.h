@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.2.12.2 2005/03/09 05:21:40 fang Exp $
+	$Id: art_object_classification_details.h,v 1.2.12.3 2005/03/11 01:16:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -357,7 +357,6 @@ struct class_traits<process_tag> {
 					instantiation_statement_parent_type;
 	typedef	process_instantiation_statement
 					instantiation_statement_type;
-	typedef	process_instance_collection	instance_collection_generic_type;
 	// define this elsewhere, in "art_object_inst_stmt_proc.h"
 	class instantiation_statement_type_ref_base;
 
@@ -404,7 +403,6 @@ struct class_traits<channel_tag> {
 					instantiation_statement_parent_type;
 	typedef	channel_instantiation_statement
 					instantiation_statement_type;
-	typedef	channel_instance_collection	instance_collection_generic_type;
 	// define this elsewhere, in "art_object_inst_stmt_chan.h"
 	class instantiation_statement_type_ref_base;
 
@@ -432,11 +430,59 @@ struct class_traits<parameter_value_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<pint_tag> {
+	typedef	pint_tag			tag_type;
+	static const char			tag_name[];
+	static const char			value_type_name[];
+	typedef	pint_instance			instance_type;
+	typedef	pint_value_type			value_type;
+
+#if 0
+	typedef	pint_instance_alias_base	instance_alias_base_type;
+
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+#endif
+
+	typedef	pint_instance_collection	value_collection_generic_type;
+	typedef	param_instance_collection	value_collection_parent_type;
+	template <size_t D>
+	struct value_array {
+		typedef	entity::value_array<tag_type,D>	type;
+	};
+	typedef	pint_const			const_expr_type;
+	typedef	pint_const_collection		const_collection_type;
+
 	typedef	param_instantiation_statement
 					instantiation_statement_parent_type;
 	typedef	pint_instantiation_statement
 					instantiation_statement_type;
-	typedef	pint_instance_collection	instance_collection_generic_type;
+
+	// define this elsewhere, in "art_object_inst_stmt_chan.h"
+	class instantiation_statement_type_ref_base;
+
+	// this will have a different template base
+	typedef	pint_instance_reference		instance_reference_type;
+	typedef	param_instance_reference	instance_reference_parent_type;
+	typedef	pint_expr			expr_base_type;
+	typedef const_param			const_collection_parent_type;
+#if 0
+	typedef	pint_member_instance_reference
+						member_instance_reference_type;
+	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
+						alias_collection_type;
+	typedef	channel_alias_connection	alias_connection_type;
+	typedef	aliases_connection_base		alias_connection_parent_type;
+#else
+	typedef	never_ptr<pint_instance>	value_reference_ptr_type;
+	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
+						value_reference_collection_type;
+#endif
+	// need real type here!
+	typedef	void			value_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;
 
@@ -448,17 +494,69 @@ struct class_traits<pint_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<pbool_tag> {
+	typedef	pbool_tag			tag_type;
+	static const char			tag_name[];
+	static const char			value_type_name[];
+	typedef	pbool_instance			instance_type;
+	typedef	pbool_value_type		value_type;
+
+#if 0
+	typedef	pbool_instance_alias_base	instance_alias_base_type;
+
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	template <size_t D>
+	struct instance_alias {
+		typedef	entity::instance_alias<tag_type,D>	type;
+	};
+#endif
+
+	typedef	pbool_instance_collection	value_collection_generic_type;
+	typedef	param_instance_collection	value_collection_parent_type;
+	template <size_t D>
+	struct value_array {
+		typedef	entity::value_array<tag_type,D>	type;
+	};
+	typedef	pbool_const			const_expr_type;
+	typedef	pbool_const_collection		const_collection_type;
+
 	typedef	param_instantiation_statement
 					instantiation_statement_parent_type;
 	typedef	pbool_instantiation_statement
 					instantiation_statement_type;
-	typedef	pbool_instance_collection	instance_collection_generic_type;
+
+	// define this elsewhere, in "art_object_inst_stmt_chan.h"
+	class instantiation_statement_type_ref_base;
+
+	// this will have a different template base
+	typedef	pbool_instance_reference		instance_reference_type;
+	typedef	param_instance_reference	instance_reference_parent_type;
+	typedef	pbool_expr			expr_base_type;
+	typedef const_param			const_collection_parent_type;
+#if 0
+	typedef	pbool_member_instance_reference
+						member_instance_reference_type;
+	typedef	packed_array_generic<pbool_value_type, instance_alias_base_ptr_type>
+						alias_collection_type;
+	typedef	channel_alias_connection	alias_connection_type;
+	typedef	aliases_connection_base		alias_connection_parent_type;
+#else
+	typedef	never_ptr<pbool_instance>	value_reference_ptr_type;
+	typedef	packed_array_generic<pbool_value_type, value_reference_ptr_type>
+						value_reference_collection_type;
+#endif
+	// need real type here!
+	typedef	void			value_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;
 
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+
+	// TODO: migrate declaration from "art_built_ins.h", 
+	// but keep definition in "art_built_ins.cc"
+	static const type_ref_ptr_type		built_in_type_ptr;
 };	// end struct class_traits<pbool_tag>
 
 

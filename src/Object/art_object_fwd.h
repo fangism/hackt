@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7.12.3 2005/03/09 05:21:40 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.4 2005/03/11 01:16:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -55,6 +55,8 @@ namespace entity {
 
 	template <class, size_t>
 	class instance_array;
+	template <class, size_t>
+	class value_array;
 
 	// subclasses of datatype_instance_collection
 	typedef	instance_collection<bool_tag>
@@ -106,9 +108,13 @@ namespace entity {
 	class pbool_type_reference;
 	class pint_type_reference;
 
+	template <class>
+	class value_collection;
 	class param_instance_collection;
-	class pbool_instance_collection;
-	class pint_instance_collection;
+	typedef	value_collection<pint_tag>
+		pint_instance_collection;
+	typedef	value_collection<pbool_tag>
+		pbool_instance_collection;
 
 	class pint_instance;
 	class pbool_instance;
@@ -172,8 +178,12 @@ namespace entity {
 
 // expressions and family
 	class param_instance_reference;
-	class pint_instance_reference;
-	class pbool_instance_reference;
+	template <class>
+	class value_reference;
+	typedef	value_reference<pint_tag>
+		pint_instance_reference;
+	typedef	value_reference<pbool_tag>
+		pbool_instance_reference;
 
 	class param_expr;
 	class const_param;
@@ -206,8 +216,17 @@ namespace entity {
 	class const_index_list;
 	class dynamic_index_list;
 
+	template <class>
+	class const_collection;
+	typedef	const_collection<pint_tag>
+		pint_const_collection;
+	typedef	const_collection<pbool_tag>
+		pbool_const_collection;
+
 	/**
 		The global integer-type for parameter integers.  
+		This may have to be changed to int32 in the future, 
+		for 64b portability...
 	 */
 	typedef	long		pint_value_type;
 
