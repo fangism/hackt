@@ -1,3 +1,4 @@
+.cvsignore
 *.core
 core.*
 *.test

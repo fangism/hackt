@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.5.4.3 2005/01/21 02:48:04 fang Exp $
+#	$Id: Make.test,v 1.5.4.4 2005/01/21 06:09:58 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -52,12 +52,16 @@ subdir.not_a_test:
 
 # must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
-EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) $(ARTC_TEST_SUBJECTS:=.stderr) \
+EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) \
+	$(ARTC_TEST_FAILURES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr)
 
+# filter-out is GNUMake feature
+#	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
+
 # must be previously defined
-CLEANFILES += $(TESTS) subdir.not_a_test \
+CLEANFILES += $(TESTS) \
 	$(ARTC_TEST_SUBJECTS:=.diff) \
 	$(ARTC_TEST_SUBJECTS:=.test) \
 	$(ARTC_TEST_SUBJECTS:=.test.filter) \
@@ -77,30 +81,37 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr.filter) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
 
-# is this really needed?
-# DISTCLEANFILES += Makefile
+DISTCLEANFILES += .cvsignore subdir.not_a_test
 
 all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
+SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
+
 # might as well include this for non-maintainers too
+# consider using CLEANFILES
+# again, can't append to file with cat redirection because distclean
+# sets permissions of new files as read-only
 .cvsignore: $(top_srcdir)/test/test.cvsignore
-	$(LN_S) $< $@
+	@$(ECHO) $(ARTC_TEST_PASSES:=.stderr) | $(SPACES_TO_NEWLINE) > $@.temp
+	$(CAT) $< $@.temp > $@
+	-$(RM) $@.temp
+#	$(LN_S) $< $@
 
 # automatically removes $(CLEANFILES)
 clean-local:
 	-$(RM) *.core core.*
-#	-$(RM) *.filter *.diff
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
 # dist-hook-extra:
 #	$(RM) $(distdir)/subdir.not_a_test
 
-dist-hook-missing: $(EXTRA_DIST)
-	@for f in $(EXTRA_DIST); do \
-		if ! [ -f $$f ] ; then \
-			$(TOUCH) $$f ; \
-		fi ; \
-	done
+# this cheat is only needed to create auto-generated (empty) distribution files
+# dist-hook-missing: $(EXTRA_DIST)
+#	@for f in $(EXTRA_DIST); do \
+#		if ! [ -f $$f ] ; then \
+#			$(TOUCH) $$f ; \
+#		fi ; \
+#	done
 
