@@ -359,8 +359,6 @@ pint_expression_assignment::append_param_instance_reference(
  */
 void
 pint_expression_assignment::unroll(void) const {
-	cerr << "pint_expression_assignment::unroll(): "
-		"Fang, finish me!" << endl;
 	assert(!dests.empty());		// sanity check
 #if 0
 	if (src->dimensions()) {
@@ -388,7 +386,12 @@ pint_expression_assignment::unroll(void) const {
 	pint_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
 	bool assign_err = 
-	accumulate(dests.begin(), dests.end(), false, the_assigner);
+		accumulate(dests.begin(), dests.end(), false, the_assigner);
+	if (assign_err) {
+		cerr << "ERROR: something went wrong in pint assignment."
+			<< endl;
+		exit(1);
+	}
 #endif
 }
 

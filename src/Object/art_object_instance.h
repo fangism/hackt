@@ -331,6 +331,9 @@ explicit pint_instance(const int v) :
 	// default copy constructor
 	// default destructor
 
+	/**
+		\return false on error, true on success.  
+	 */
 	bool operator = (const int i) {
 		assert(instantiated);
 		if (valid)

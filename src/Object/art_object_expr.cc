@@ -1341,65 +1341,79 @@ pint_instance_reference::assigner::operator() (const bool b,
 		const pint_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
-		// is scalar assignment
-		assert(p.resolve_dimensions().empty());
 		assert(vals.size() == 1);
-		return p.pint_inst_ref->assign(vals.front()) || b;
-	} else {
-		const_index_list dim(p.resolve_dimensions());
-		if (dim.empty()) {
-			cerr << "ERROR: unable to resolve constant dimensions."
-				<< endl;
-			exit(1);
-			// return true;
+		// is scalar assignment, but may be indexed
+		if (!p.pint_inst_ref->dimensions()) {
+			// p.pint_inst_ref is scalar
+			return p.pint_inst_ref->assign(vals.front()) || b;
 		}
-		// We are assured that the dimensions of the references
-		// are equal, b/c dimensionality is statically checked.  
-		// However, ranges may be of different length because
-		// of collapsible dimensions.  
-		// Compare dim against ranges: sizes of each dimension...
-		// but what about collapsed dimensions?
-		if (!ranges.equal_dimensions(dim)) {
-			cerr << "ERROR: resolved indices are not "
-				"dimension equivalent!" << endl;
-			ranges.what(cerr << "got: ");
-			dim.what(cerr << " and: ") << endl;
-			exit(1);
-			// return true;
-		}
-		// else good to continue
-		excl_const_ptr<multikey_base<int> > lower(
-			dim.lower_multikey());
-		const excl_const_ptr<multikey_base<int> > upper(
-			dim.upper_multikey());
-		assert(lower);
-		assert(upper);
-		excl_ptr<multikey_generator_base<int> >
-			key_gen(
-			multikey_generator_base<int>::make_multikey_generator(
-				dim.size()));
-		assert(key_gen);
-		key_gen->get_lower_corner() = *lower;
-		key_gen->get_upper_corner() = *upper;
-		key_gen->initialize();
-		list<int>::const_iterator list_iter = vals.begin();
-		bool assign_err = false;
-		// alias for key_gen
-		const never_ptr<multikey_base<int> >
-			kp(key_gen.is_a<multikey_base<int> >());
-		assert(kp);
-		do {
-			if (p.pint_inst_ref->assign(*kp, *list_iter)) {
-				cerr << "ERROR: assigning index " << *kp
-					<< endl;
-				assign_err = true;
-			}
-			list_iter++;			// unsafe, but checked
-			(*key_gen)++;
-		} while (*kp != *upper);
-		assert(list_iter == vals.end());	// sanity check
-		return assign_err;
 	}
+	// else is scalar or array, but must resolve indices
+	const const_index_list dim(p.resolve_dimensions());
+	if (dim.empty()) {
+		cerr << "ERROR: unable to resolve constant dimensions."
+			<< endl;
+		exit(1);
+		// return true;
+	}
+	// We are assured that the dimensions of the references
+	// are equal, b/c dimensionality is statically checked.  
+	// However, ranges may be of different length because
+	// of collapsible dimensions.  
+	// Compare dim against ranges: sizes of each dimension...
+	// but what about collapsed dimensions?
+	if (!ranges.empty() && !ranges.equal_dimensions(dim)) {
+		// if range.empty(), then there is no need to match dimensions,
+		// dimensions must be equal because both src/dest are scalar.
+		cerr << "ERROR: resolved indices are not "
+			"dimension-equivalent!" << endl;
+		ranges.dump(cerr << "got: ");
+		dim.dump(cerr << " and: ") << endl;
+		exit(1);
+		// return true;
+	}
+	// else good to continue
+	const excl_const_ptr<multikey_base<int> > lower(dim.lower_multikey());
+	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
+	assert(lower);
+	assert(upper);
+#if 1
+	cerr << "lower = " << *lower;
+	cerr << ", upper = " << *upper << endl;
+#endif
+	excl_ptr<multikey_generator_base<int> >
+		key_gen(multikey_generator_base<int>::make_multikey_generator(
+			dim.size()));
+	assert(key_gen);
+	key_gen->get_lower_corner() = *lower;
+	key_gen->get_upper_corner() = *upper;
+	key_gen->initialize();
+	list<int>::const_iterator list_iter = vals.begin();
+	bool assign_err = false;
+	// alias for key_gen
+	const never_const_ptr<multikey_base<int> >
+		kp(key_gen.is_a<multikey_base<int> >());
+	assert(kp);
+#if 1
+	cerr << "initial kp = " << *kp << endl;
+#endif
+	do {
+		if (p.pint_inst_ref->assign(*kp, *list_iter)) {
+			cerr << "ERROR: assigning index " << *kp << endl;
+#if 1
+			cerr << "\tlower_corner = " <<
+				key_gen->get_lower_corner();
+			cerr << ", upper_corner = " <<
+				key_gen->get_upper_corner() << endl;
+			exit(1);
+#endif
+			assign_err = true;
+		}
+		list_iter++;			// unsafe, but checked
+		(*key_gen)++;
+	} while (*kp != *upper);
+	assert(list_iter == vals.end());	// sanity check
+	return assign_err || b;
 }
 
 //=============================================================================

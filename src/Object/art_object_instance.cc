@@ -1513,7 +1513,7 @@ pint_instance_collection::resolve_indices(const const_index_list& l) const {
 	Assigns a single value.
 	Only call this if this is scalar, 0-D.
 	Decision: should we allow multiple assignments of the same value?
-	\return true if successful.  
+	\return true on error.  
  */
 bool
 pint_instance_collection::assign(const int i) {
@@ -1521,18 +1521,20 @@ pint_instance_collection::assign(const int i) {
 	const never_ptr<scalar_type> the(collection.is_a<scalar_type>());
 	assert(the);
 	pint_instance& pi = *the;
-	return pi = i;
+	return !(pi = i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\return true if successful.
+	Assigns a single value, using an index.
+	Only call this if this is non-scalar (array).  
+	\return true on error.
  */
 bool
 pint_instance_collection::assign(const multikey_base<int>& k, const int i) {
 	assert(collection);
 	pint_instance& pi = (*collection)[k];
-	return pi = i;
+	return !(pi = i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
