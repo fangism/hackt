@@ -1,17 +1,20 @@
 /**
 	\file "ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.1.2.2.6.1 2005/02/13 02:39:02 fang Exp $
+	$Id: ring_node.tcc,v 1.1.2.2.6.2 2005/02/13 20:30:51 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
 #define	__UTIL_RING_NODE_TCC__
 
 #include "ring_node.h"
+
+#if 0
 #if defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
 	#include "stacktrace.h"
 #else
 	#define	STACKTRACE(x)
+#endif
 #endif
 
 namespace util {
@@ -20,8 +23,8 @@ namespace util {
 #if !FORCE_INLINE_RING_NODE
 inline
 ring_node_base::ring_node_base() : next(this) {
-	STACKTRACE("ring_node_base()");
-#if ENABLE_STACKTRACE
+//	STACKTRACE("ring_node_base()");
+#if 0
 	std::cerr << "starting: " << this << " -> " << next << endl;
 #endif
 }
@@ -29,9 +32,9 @@ ring_node_base::ring_node_base() : next(this) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 ring_node_base::ring_node_base(ring_node_base* r) : next(r) {
-	STACKTRACE("ring_node_base(*)");
+//	STACKTRACE("ring_node_base(*)");
 	NEVER_NULL(next);
-#if ENABLE_STACKTRACE
+#if 0
 	std::cerr << "starting: " << this << " -> " << next << endl;
 #endif
 }
@@ -39,14 +42,14 @@ ring_node_base::ring_node_base(ring_node_base* r) : next(r) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 ring_node_base::~ring_node_base() {
-	STACKTRACE("~ring_node_base()");
-#if ENABLE_STACKTRACE
+//	STACKTRACE("~ring_node_base()");
+#if 0
 	std::cerr << "end: " << this << " -> " << next << endl;
 #endif
 	if (next != this) {
 		ring_node_base* walk = next;
 		while (walk->next != this) {
-#if ENABLE_STACKTRACE
+#if 0
 			std::cerr << "walking: " << walk << endl;
 #endif
 			walk = walk->next;
@@ -62,7 +65,7 @@ ring_node_base::~ring_node_base() {
 inline
 void
 ring_node_base::unsafe_merge(ring_node_base& r) {
-	STACKTRACE("ring_node_base::unsafe_merge()");
+//	STACKTRACE("ring_node_base::unsafe_merge()");
 	std::swap(next, r.next);
 }
 
