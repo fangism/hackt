@@ -67,6 +67,7 @@ using namespace ART::parser;
 #endif
 
 #include "art_lex.h"
+using ART::token_position;
 
 #define	STRING_MAX_LEN		1024
 
