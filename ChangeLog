@@ -22,6 +22,16 @@
 	  they are now automatically generated and cleaned by
 	  the rules in the template makefile Make.test.
 
+	* ARTXX-00-01-04-object-00-07:
+	  test-Makefile's pain in the a**...
+	  Updated .cvsignore generation to copy template (was linked before)
+	  and include additional CLEANFILES, in all test subdirectories.  
+	  Re-did Makefile.am's in all test subdirectories:
+	  ARTC_TEST_SUBJECTS = $(ARTC_TEST_PASSES) $(ARTC_TEST_FAILURES)
+	  This way, ARTC_TEST_FAILURES can be used for EXTRA_DIST, 
+	  to avoid having to regenerate extraneous .stderr files.  
+	  Perhaps auto-generating .cvsignore everywhere is a good idea...
+
 
 2005-01-19	David Fang	<fangism@users.sourceforge.net>
 

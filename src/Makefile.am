@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.3 2005/01/21 01:55:28 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.4 2005/01/21 06:08:15 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -300,9 +300,14 @@ $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
+# NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
+# gcc -E ignores file that require no preprocessing
+
+CPP_TRADITIONAL = cpp
 
 parser/art++.types: parser/art++-parse.yy
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+		$(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 		$(SED) '/^[ \t]*$$/d' > $@
 
@@ -323,6 +328,10 @@ YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
 parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-parse-prefix.h
+	@if ! [ -s parser/art++.types ] ; then \
+		$(ECHO) "parser/art++.types is empty!" ; \
+		exit 1 ; \
+	fi
 	$(AWK) -f $(YACC_UNION_SCRIPT) \
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
