@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-01:
+	  New branch started off of the trunk, dedicated to improving the
+	  front-end lexer/parser.  
+	  In this revision, we sliced and diced the AST/ header files into
+	  more manageable units, resulting in noticeably faster 
+	  compile-times, and even smaller binaries.  
+	  See what a little organization can do?
+	  Later revisions will re-work the parser, especially the 
+	  node_list aspect, eliminating non-essential terminals.  
+
+
 2005-01-27	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-13:

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.8 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_prs.cc,v 1.8.26.1 2005/02/22 08:15:20 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -9,7 +9,8 @@
 
 #include "art_parser.tcc"
 #include "art_parser_prs.h"
-#include "art_parser_expr.h"
+#include "art_parser_expr.h"		// for id_expr
+#include "art_parser_range.h"
 #include "art_parser_token.h"
 
 #include "what.h"

@@ -1,13 +1,14 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.6 2005/01/14 00:00:53 fang Exp $
+	$Id: art_parser_prs.h,v 1.6.40.1 2005/02/22 08:15:21 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
 #define	__ART_PARSER_PRS_H__
 
-#include "art_parser_base.h"
+#include "art_parser_expr_base.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {

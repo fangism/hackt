@@ -1,7 +1,8 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.10 2005/01/28 19:58:39 fang Exp $
+	Rename this to "art_parser_node_list.tcc"!
+	$Id: art_parser.tcc,v 1.10.26.1 2005/02/22 08:15:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -12,7 +13,7 @@
 #include "STL/list.tcc"
 
 #include "art_parser_debug.h"
-#include "art_parser_base.h"		// includes "ptrs.h", "count_ptr.h"
+#include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
 #include "art_context.h"
 	// for class context, uses auto_indent()
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.7 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_hse.cc,v 1.7.40.1 2005/02/22 08:15:20 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -10,7 +10,7 @@
 #include "art_parser.tcc"
 #include "art_parser_hse.h"
 #include "art_parser_token.h"
-#include "art_parser_expr.h"
+#include "art_parser_expr_base.h"
 
 #include "what.h"
 

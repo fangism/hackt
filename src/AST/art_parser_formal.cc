@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.13 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_formal.cc,v 1.13.26.1 2005/02/22 08:15:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -21,8 +21,10 @@
 #include "art_parser.tcc"
 
 #include "art_parser_formal.h"
-#include "art_parser_expr.h"
+#include "art_parser_expr_base.h"
+#include "art_parser_range_list.h"
 #include "art_parser_token.h"
+#include "art_parser_type.h"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"

@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_instance.h,v 1.8.40.1 2005/02/22 08:15:20 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
 #define __ART_PARSER_INSTANCE_H__
 
-#include "art_parser_base.h"
+#include "art_parser_expr_list.h"
+#include "art_parser_root.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {

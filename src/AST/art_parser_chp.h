@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_chp.h,v 1.5.40.1 2005/02/22 08:15:18 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
 #define	__ART_PARSER_CHP_H__
 
-#include "art_parser_base.h"
+#include "art_parser_terminal.h"
+#include "art_parser_statement.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {

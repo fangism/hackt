@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.6.1 2005/02/22 08:15:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -12,7 +12,7 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_base.h"
+#include "art_parser_terminal.h"
 
 #include "STL/list.tcc"
 #include "hash_qmap.tcc"

@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_definition.h,v 1.8.40.1 2005/02/22 08:15:18 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
 #define __ART_PARSER_DEFINITION_H__
 
-#include "art_parser_base.h"
+#include "art_parser_root_item.h"
+#include "art_parser_type.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
