@@ -1,1 +1,1 @@
-ERROR: int ::int has no public member named "bogus" at [22:42..46]
+ERROR: built-in-datatype-def ::int has no public member named "bogus" at [22:42..46]
