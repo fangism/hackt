@@ -227,7 +227,7 @@ public:
 		Returns a naked pointer only if this is the final reference
 		to the object, otherwise returns NULL.  
 	 */
-	T* exclusive_release(void) const {
+	T* exclusive_release(void) {
 		if (this->owned()) {
 			T* ret = ptr;
 			ptr = NULL;
@@ -404,7 +404,7 @@ public:
 		Returns a naked pointer only if this is the final reference
 		to the object, otherwise returns NULL.  
 	 */
-	const T* exclusive_release(void) const {
+	const T* exclusive_release(void) {
 		if (this->owned()) {
 			const T* ret = cptr;
 			cptr = NULL;

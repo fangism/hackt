@@ -733,6 +733,16 @@ concrete_type_ref::rightmost(void) const {
 	else return base->rightmost();
 }
 
+never_const_ptr<type_base>
+concrete_type_ref::get_base_def(void) const {
+	return base;
+}
+
+never_const_ptr<expr_list>
+concrete_type_ref::get_temp_spec(void) const {
+	return temp_spec;
+}
+
 /**
 	Type-check a type reference, a definition with optional template
 	arguments.  The type reference is used for creating instantiations.  

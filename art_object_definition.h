@@ -147,7 +147,9 @@ virtual	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<param_expr_list> ta) const;
 
+#if 0
 virtual	bool type_equivalent(const datatype_definition& t) const = 0;
+#endif
 virtual	bool require_signature_match(
 		never_const_ptr<definition_base> d) const = 0;
 };	// end class datatype_definition
@@ -166,8 +168,10 @@ public:
 	~built_in_datatype_def();
 
 	ostream& what(ostream& o) const;
+#if 0
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
+#endif
 #if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
@@ -175,7 +179,9 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<param_expr_list> ta) const;
+#if 0
 	bool type_equivalent(const datatype_definition& t) const;
+#endif
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const
 		{ assert(d); return key == d->get_name(); }
@@ -222,7 +228,9 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<param_expr_list> ta) const;
 #endif
+#if 0
 	bool type_equivalent(const datatype_definition& t) const;
+#endif
 	bool require_signature_match(never_const_ptr<definition_base> d) const;
 
 	bool add_member(const token_identifier& em);
@@ -257,8 +265,10 @@ public:
 	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
+#if 0
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
+#endif
 #if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
@@ -302,7 +312,9 @@ public:
 	~user_def_datatype() { }
 
 	ostream& what(ostream& o) const;
+#if 0
 	bool type_equivalent(const datatype_definition& t) const;
+#endif
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const { return false; }
 		// temporary
@@ -350,21 +362,40 @@ public:
 //	to accelerate their resolution, not having to search sequentially
 //	up to the global namespace.  
 // add an alias into each scope's used_id_map...
-// also templatable, for partial template spcifications?
+// also templatable, for partial template spcifications?  YES
+// should we sub-type? hold off...
 class type_alias : public definition_base {
 protected:
+	// inherits template formals
 	/// pointer to the type represented by this type-id
+#if 0
 	never_const_ptr<definition_base>	canonical;
+#else
+	excl_const_ptr<fundamental_type_reference>	canonical;
+#endif
 public:
+	type_alias(
+		never_const_ptr<name_space> o,
+		const string& n);
+#if 0
 	type_alias(
 		never_const_ptr<name_space> o,
 		const string& n, 
 		never_const_ptr<definition_base> t);
+#endif
 virtual	~type_alias();
-	// never delete canonical (can't, it's const!)
 
 // need not be virtual
+#if 0
 never_const_ptr<definition_base>	resolve_canonical(void) const;
+never_const_ptr<fundamental_type_reference>	resolve_canonical(void) const;
+#endif
+
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+
+	void assign_typedef(excl_const_ptr<fundamental_type_reference> t);
 
 virtual	ostream& what(ostream& o) const;
 };	// end class type_alias

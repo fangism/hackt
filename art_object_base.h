@@ -374,6 +374,8 @@ virtual	never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& i
 
 virtual	never_const_ptr<instantiation_base>
 			add_instance(excl_ptr<instantiation_base> i);
+	bool add_definition_alias(never_const_ptr<definition_base> d, 
+		const string& a);
 
 	void add_connection_to_scope(
 		excl_const_ptr<connection_assignment_base> c);
@@ -613,8 +615,11 @@ protected:
 		never_const_ptr<definition_base> d) const;
 
 public:
-/** sub-classes shouldn't have to re-implement this */
-virtual	never_const_ptr<definition_base>
+	/**
+		sub-classes shouldn't have to re-implement this,
+		no longer virtual
+	 */
+	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 
 #if 0
@@ -647,7 +652,10 @@ virtual	string get_name(void) const;
 // need not be virtual?
 virtual	string get_qualified_name(void) const;
 
+#if 0
 never_const_ptr<definition_base> resolve_canonical(void) const;
+count_const_ptr<fundamental_type_reference> resolve_canonical(void) const;
+#endif
 
 /** definition signature comparison, true if equal */
 virtual	bool require_signature_match(

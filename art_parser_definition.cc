@@ -668,6 +668,95 @@ typedef_alias::rightmost(void) const {
 	else		return id->rightmost();
 }
 
+/**
+	Three syntaxes for typedef:
+	1) typedef old new;
+	2) typedef old<...> new;
+	3) template <...> typedef old<...> new;
+	is the LHS always supposed to be a *type* or in case 1, 
+	can it be interpreted as the definition?
+	A definition alias is just a hash_map duplicate entry.  
+	A type alias also acts like a definition on behalf of the 
+	(partially) complete type referenced.  
+	Amibiguous semantics for case 1, default to interpreting "old" as 
+	its definition.  
+	Then we need to peek down the `base' member.
+	Use keyword to check class?
+ */
+never_const_ptr<object>
+typedef_alias::check_build(never_ptr<context> c) const {
+	// first we read the user's mind by peeking down base.  
+	// does base have any template params, even an empty list?
+if (base->get_temp_spec()) {
+	return node::check_build(c);
+#if 0
+	// then base certainly refers to a concrete type
+	// so now we make a new definition to wrap around it
+
+	excl_ptr<definition_base>
+		ret(new type_alias(c->get_current_namespace(), *id));
+	never_ptr<type_alias> ta(ret.is_a<type_alias>());
+	c->set_current_prototype(ret);
+	if (temp_spec) {
+		never_const_ptr<object> o(temp_spec->check_build(c));
+		// will add template_formals to the alias
+		if (!o) {
+			cerr << "ERROR in template formals of typedef!  "
+				<< temp_spec->where() << endl;
+			exit(1);
+		}
+	}
+	base->check_build(c);	// make sure is complete type
+	// useless return value NULL, check current_fundamental_type
+	count_const_ptr<fundamental_type_reference>
+		ftr(c->get_current_fundamental_type());
+	if (!ftr) {
+		cerr << "ERROR resolving concrete type reference in typedef!  "
+			<< base->where() << endl;
+		exit(1);
+	}
+	c->reset_current_fundamental_type();
+	assert(ftr.refs() == 1);
+	excl_const_ptr<fundamental_type_reference>
+		ftr_ex(ftr.exclusive_release());
+	assert(ftr_ex);
+	// else safe to alias type
+	ta->assign_typedef(ftr_ex);
+	// let context add the complete alias to the scope
+	// check for collision error
+	// reset_current_prototype?
+#endif
+} else {	// base may actually refer to the definition, not the type
+	// in this case we create a definition alias
+	// restriction: temp_spec for this definition must be empty or null.  
+	if (temp_spec) {
+		cerr << "ERROR: pure definition alias cannot have "
+			"a template signature.  " << where() << endl;
+		exit(1);
+	}
+	// issue warning about this interpretation?
+	never_const_ptr<type_base>
+		basedef(base->get_base_def());
+	never_const_ptr<object>
+		o(basedef->check_build(c));
+	never_const_ptr<definition_base>
+		d(o.is_a<definition_base>());
+	if (!d) {
+		cerr << "typedef_alias: bad definition reference!  "
+			"ERROR!  " << basedef->where() << endl;
+		exit(1);
+	}
+	bool b = c->alias_definition(d, *id);
+	if (!b) {
+		cerr << id->where() << endl;
+		exit(1);
+		return never_const_ptr<object>(NULL);
+	}
+	// else was successful
+	return d;
+}
+}
+
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 

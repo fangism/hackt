@@ -267,10 +267,20 @@ definition_base::make_default_template_arguments(void) const {
 	the one for the original definition.  
 	Remember to use this in type-checking.  
  */
+#if 0
 never_const_ptr<definition_base>
 definition_base::resolve_canonical(void) const {
 	return never_const_ptr<definition_base>(this);
 }
+
+/**
+	Maybe de-virtualize...
+ */
+never_const_ptr<fundamental_type_reference>
+definition_base::resolve_canonical(void) const {
+	return never_const_ptr<fundamental_type_reference>(NULL);
+}
+#endif
 
 /**
 	DO ME NOW!
@@ -427,6 +437,18 @@ user_def_chan::what(ostream& o) const {
 // class type_alias method definitions
 
 /**
+	Constructor without canonical alias yet, will attach it later.  
+ */
+type_alias::type_alias(
+		never_const_ptr<name_space> o, 
+		const string& n) :
+		definition_base(n, o),
+		canonical(NULL)
+		{
+}
+
+#if 0
+/**
 	Type alias constructor follows the argument pointer until, 
 	it encounters a canonical type, one that is not an alias.  
 	Later: allow template typdefs!
@@ -443,6 +465,7 @@ type_alias::type_alias(
 	assert(canonical);
 	// just in case t is not a canonical type, i.e. another alias...
 }
+#endif
 
 /**
 	Destructor, never deletes the canonical type pointer.  
@@ -453,15 +476,44 @@ type_alias::~type_alias() { }
 	Fancy name for "just return the canonical pointer."
 	\return the canonical pointer.  
  */
+#if 0
 inline
 never_const_ptr<definition_base>
 type_alias::resolve_canonical(void) const {
 	return canonical;
 }
 
+inline
+never_const_ptr<fundamental_type_reference>
+type_alias::resolve_canonical(void) const {
+	return canonical;
+}
+#endif
+
 ostream&
 type_alias::what(ostream& o) const {
 	return o << "aliased-type: " << key;
+}
+
+count_const_ptr<fundamental_type_reference>
+type_alias::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+#if 0
+	cerr << "type_alias::make_fundamental_type_reference(): FINISH ME!"
+		<< endl;
+	return count_const_ptr<fundamental_type_reference>(NULL);
+#else
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new data_type_reference(
+				never_const_ptr<built_in_datatype_def>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make built_in_data_type_reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
+#endif
 }
 
 //=============================================================================
@@ -497,7 +549,9 @@ built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
+#if 0
 /**
+	WRONG: this is not used to open definitions for modification.  
 	Built-in data types should never be opened for modification.  
 	Assert fails.  
  */
@@ -506,6 +560,7 @@ built_in_datatype_def::set_context_definition(context& c) const {
 	assert(0);
 	return c.set_current_definition_reference(*this);
 }
+#endif
 
 #if 0
 never_const_ptr<fundamental_type_reference>
@@ -534,6 +589,7 @@ built_in_datatype_def::make_fundamental_type_reference(
 	}
 }
 
+#if 0
 /**
 	Checks data type equivalence.
 	TO DO:
@@ -553,6 +609,7 @@ built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
 		return false;
 	}
 }
+#endif
 
 //=============================================================================
 // class built_in_param_def method definitions
@@ -577,7 +634,9 @@ built_in_param_def::what(ostream& o) const {
 	return o << key;
 }
 
+#if 0
 /**
+	WRONG: not used to open definitions for modification.  
 	Really this should never be called, as built-in definitions
 	cannot be opened for modification.  
 	Assert fails.
@@ -587,6 +646,7 @@ built_in_param_def::set_context_definition(context& c) const {
 	assert(0);
 	return c.set_current_definition_reference(*this);
 }
+#endif
 
 #if 0
 /**
@@ -665,6 +725,7 @@ enum_datatype_def::set_context_fundamental_type(context& c) const {
 }
 #endif
 
+#if 0
 /**
 	Type equivalence of enumerated types:
 	must point to same definition, namely this!
@@ -675,6 +736,7 @@ enum_datatype_def::type_equivalent(const datatype_definition& t) const {
 		t.resolve_canonical().is_a<enum_datatype_def>();
 	return b == this;
 }
+#endif
 
 /**
 	Not the same as type-equivalence, which requires precise 
@@ -741,6 +803,7 @@ user_def_datatype::what(ostream& o) const {
 	return o << "used-defined-datatype: " << key;
 }
 
+#if 0
 /**
 	Equivalance operator for user-defined types.  
 	TO DO: actually write comparison, for now, just always returns false.  
@@ -761,6 +824,7 @@ user_def_datatype::type_equivalent(const datatype_definition& t) const {
 		return false;
 	}
 }
+#endif
 
 //=============================================================================
 // class process_definition method definitions

@@ -929,6 +929,26 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a definition name alias to this scope.  
+ */
+bool
+scopespace::add_definition_alias(never_const_ptr<definition_base> d, 
+		const string& a) {
+	never_const_ptr<object> probe(lookup_object_here(a));
+	if (probe) {
+		cerr << "Identifier \"" << a << "\" already taken by a ";
+		probe->what(cerr) << " in ";
+		what(cerr) << " " << get_qualified_name() << ".  ERROR!  ";
+		return false;
+	} else {
+//		used_id_map[a] = d;
+		used_id_map[a] = excl_ptr<object_handle>(new object_handle(d));
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 void
 scopespace::add_connection_to_scope(

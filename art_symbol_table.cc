@@ -482,10 +482,33 @@ context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
 /**
 	TO FIX: when checking a prototype, current scope should be 
 	updated to that prototype's definition.  
+	fixed: resolves object_handle automatically.
  */
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
+#if 0
 	return get_current_scope()->lookup_object(id);
+#else
+	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	while (o.is_a<object_handle>())
+		o = never_const_ptr<object>(&o->self());
+	return o;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a definition alias to the current scope, be it definition or
+	namespace.  
+	\param d the definition, never owned because the actual 
+		definition is already owned in some namespace.  
+	\param a the local name to alias the definition.  
+	\return true if successful (no collisions).  
+ */
+bool
+context::alias_definition(never_const_ptr<definition_base> d,
+		const token_identifier& a) {
+	return get_current_scope()->add_definition_alias(d, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -507,7 +530,14 @@ context::add_connection(excl_const_ptr<connection_assignment_base> c) {
 never_const_ptr<definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	assert(current_namespace);
+#if 0
 	return current_namespace->lookup_object(id).is_a<definition_base>();
+#else
+	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	while (o.is_a<object_handle>())
+		o = never_const_ptr<object>(&o->self());
+	return o.is_a<definition_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -518,21 +548,42 @@ context::lookup_definition(const token_identifier& id) const {
 never_const_ptr<definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	assert(current_namespace);
+#if 0
 	return current_namespace->lookup_object(id).is_a<definition_base>();
+#else
+	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	while (o.is_a<object_handle>())
+		o = never_const_ptr<object>(&o->self());
+	return o.is_a<definition_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
+#if 0
 	return current_namespace->lookup_object(id).is_a<instantiation_base>();
+#else
+	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	while (o.is_a<object_handle>())
+		o = never_const_ptr<object>(&o->self());
+	return o.is_a<instantiation_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
+#if 0
 	return current_namespace->lookup_object(id).is_a<instantiation_base>();
+#else
+	never_const_ptr<object> o(get_current_scope()->lookup_object(id));
+	while (o.is_a<object_handle>())
+		o = never_const_ptr<object>(&o->self());
+	return o.is_a<instantiation_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

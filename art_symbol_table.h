@@ -250,6 +250,9 @@ void	declare_chantype(const token_identifier& ds);
 void	open_chantype(const token_identifier& ds);
 void	close_chantype_definition(void);
 
+bool	alias_definition(never_const_ptr<definition_base> d, 
+		const token_identifier& id);
+
 void	add_connection(excl_const_ptr<connection_assignment_base> c);
 void	add_assignment(excl_const_ptr<connection_assignment_base> a)
 		{ add_connection(a); }

@@ -974,6 +974,9 @@ public:
 	concrete_type_ref(const type_base* n, const expr_list* t = NULL);
 virtual	~concrete_type_ref();
 
+	never_const_ptr<type_base> get_base_def(void) const;
+	never_const_ptr<expr_list> get_temp_spec(void) const;
+
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
