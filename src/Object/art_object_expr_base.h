@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.6 2005/02/27 22:54:11 fang Exp $
+	$Id: art_object_expr_base.h,v 1.6.2.1 2005/03/01 02:28:37 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -9,6 +9,7 @@
 
 #include "art_object_base.h"
 #include "persistent.h"
+#include "boolean_types.h"
 
 //=============================================================================
 namespace ART {
@@ -17,6 +18,8 @@ USING_LIST
 using std::string;
 using std::ostream;
 using util::persistent;
+using util::good_bool;
+using util::bad_bool;
 
 //=============================================================================
 /**
@@ -84,12 +87,6 @@ virtual bool
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment(const count_ptr<const param_expr>& p);
 
-#if 0
-	// can't make template virtual functions...
-	virtual multikey_qmap<D,size_t,pbool_instance>
-			evaluate(void) const;
-#endif
-
 virtual	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const = 0;
 
@@ -146,7 +143,6 @@ virtual	bool
 virtual	bool
 	is_loop_independent(void) const = 0;
 
-// TODO: add a context argument for unroll-time resolution
 virtual	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const = 0;
 
@@ -303,7 +299,7 @@ virtual	bool
 virtual	const_range_list
 	static_overlap(const range_expr_list& r) const = 0;
 
-virtual	bool
+virtual	good_bool
 	resolve_ranges(const_range_list& r) const = 0;
 
 virtual	bool
@@ -374,13 +370,13 @@ virtual bool
 virtual value_type
 	static_constant_bool(void) const = 0;
 
-virtual	bool
+virtual	good_bool
 	resolve_value(value_type& i) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
 
-virtual	bool
+virtual	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const = 0;
 
 protected:
@@ -465,16 +461,16 @@ virtual value_type
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 
-virtual	bool
+virtual	good_bool
 	resolve_value(value_type& i) const = 0;
 
-virtual	bool
+virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
 
-virtual	bool
+virtual	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const = 0;
 
 protected:
@@ -548,10 +544,10 @@ virtual bool
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 
-virtual	bool
+virtual	good_bool
 	resolve_range(const_range& r) const = 0;
 
-virtual	bool
+virtual	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const = 0;
 
 virtual	bool

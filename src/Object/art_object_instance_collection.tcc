@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.2.2.1 2005/02/28 20:36:03 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.2.2.2 2005/03/01 02:28:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -647,7 +647,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(
 	// resolve into constants now using const_range_list
 	// if unable, (b/c uninitialized) then report error
 	const_range_list ranges;        // initially empty
-	if (!i->resolve_ranges(ranges)) {
+	if (!i->resolve_ranges(ranges).good) {
 		// ranges is passed and returned by reference
 		// fail
 		cerr << "ERROR: unable to resolve indices "

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.10.2.1 2005/02/28 20:36:00 fang Exp $
+	$Id: art_object_definition_base.h,v 1.10.2.2 2005/03/01 02:28:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -123,8 +123,6 @@ virtual	ostream&
 
 	ostream&
 	pair_dump(ostream& o) const;
-
-//	bool dump_cerr(void) const;		// historical artifact
 
 virtual	const string&
 	get_key(void) const = 0;

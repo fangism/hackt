@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.13.2.2 2005/02/28 20:36:05 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.13.2.3 2005/03/01 02:28:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -416,7 +416,7 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	// resolve into constants now using const_range_list
 	// if unable, (b/c uninitialized) then report error
 	const_range_list ranges;	// initially empty
-	if (!i->resolve_ranges(ranges)) {
+	if (!i->resolve_ranges(ranges).good) {
 		// ranges is passed and returned by reference
 		// fail
 		cerr << "ERROR: unable to resolve indices of " <<
@@ -503,7 +503,7 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 	to valid dynamic allocation in pbool_instance_reference methods.
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
-bool
+good_bool
 pbool_array<D>::lookup_value(value_type& v,
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
@@ -515,7 +515,7 @@ pbool_array<D>::lookup_value(value_type& v,
 		cerr << "ERROR: reference to uninitialized pbool " <<
 			get_qualified_name() << " at index: " << i << endl;
 	}
-	return pi.valid;
+	return good_bool(pi.valid);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -526,26 +526,28 @@ pbool_array<D>::lookup_value(value_type& v,
 		is uninitialized; true on success.
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
-bool
+good_bool
 pbool_array<D>::lookup_value_collection(
 		list<value_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	multikey_generator<D, pint_value_type> key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
-	bool ret = true;
+	good_bool ret(true);
 	do {
 		const pbool_instance& pi(collection[key_gen]);
 		// INVARIANT(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated)
+		if (!pi.instantiated) {
 			cerr << "FATAL: reference to uninstantiated pbool "
 				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
-		else if (!pi.valid)
+			ret.good = false;
+		} else if (!pi.valid) {
 			cerr << "ERROR: reference to uninitialized pbool "
 				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
-		ret &= (pi.valid && pi.instantiated);
+			ret.good = false;
+		}
 		l.push_back(pi.value);
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
@@ -675,30 +677,30 @@ pbool_array<0>::resolve_indices(const const_index_list& l) const {
 	This version assumes collection is a scalar.
 	\return true if lookup found a valid value.
  */
-bool
+good_bool
 pbool_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) { 
 		cerr << "ERROR: Reference to uninstantiated pbool " <<
 			get_qualified_name() << "!" << endl;
-		return false;
+		return good_bool(false);
 	}
 	if (the_instance.valid) {
 		v = the_instance.value;
 	} else {
 		dump(cerr << "ERROR: use of uninitialized ") << endl;
 	}
-	return the_instance.valid;
+	return good_bool(the_instance.valid);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pbool_array<0>::lookup_value_collection(
 		list<value_type>& l, const const_range_list& r) const {
 	cerr << "WARNING: pbool_array<0>::lookup_value_collection(...) "
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	value_type i;
-	const bool ret = lookup_value(i);
+	const good_bool ret(lookup_value(i));
 	l.push_back(i);
 	return ret;
 }
@@ -707,13 +709,13 @@ pbool_array<0>::lookup_value_collection(
 /**
 	This should never be called.
  */
-bool
+good_bool
 pbool_array<0>::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
 	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

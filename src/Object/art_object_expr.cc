@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.38.2.2 2005/02/28 20:36:00 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.38.2.3 2005/03/01 02:28:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -369,7 +369,7 @@ pint_expr::unroll_resolve_index(const unroll_context& c) const {
 	STACKTRACE("pint_expr::unroll_resolve_index()");
 	typedef count_ptr<const_index> return_type;
 	value_type i;
-	return (unroll_resolve_value(c, i)) ? 
+	return (unroll_resolve_value(c, i).good) ? 
 		return_type(new pint_const(i)) :
 		return_type(NULL);
 }
@@ -384,7 +384,7 @@ pint_expr::resolve_index(void) const {
 	STACKTRACE("pint_expr::resolve_index()");
 	typedef count_ptr<const_index> return_type;
 	value_type i;
-	return (resolve_value(i)) ? 
+	return (resolve_value(i).good) ? 
 		return_type(new pint_const(i)) :
 		return_type(NULL);
 }
@@ -1189,7 +1189,7 @@ pbool_instance_reference::must_be_equivalent_pbool(const pbool_expr& b) const {
 	This code is grossly replicated... damn copy-paste...
 	\return true if resolution succeeds, else false.
  */
-bool
+good_bool
 pbool_instance_reference::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	// lookup pbool_instance_collection
@@ -1203,12 +1203,12 @@ pbool_instance_reference::unroll_resolve_value(
 				upper(indices.upper_multikey());
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
-				return false;
+				return good_bool(false);
 			}
 			return pbool_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!" << endl;
-			return false;
+			return good_bool(false);
 		}
 	} else {
 		const never_ptr<pbool_scalar>
@@ -1224,7 +1224,7 @@ pbool_instance_reference::unroll_resolve_value(
 	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
  */
-bool
+good_bool
 pbool_instance_reference::resolve_value(value_type& i) const {
 	// lookup pbool_instance_collection
 	if (array_indices) {
@@ -1237,12 +1237,12 @@ pbool_instance_reference::resolve_value(value_type& i) const {
 				upper(indices.upper_multikey());
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
-				return false;
+				return good_bool(false);
 			}
 			return pbool_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to resolve array_indices!" << endl;
-			return false;
+			return good_bool(false);
 		}
 	} else {
 		const never_ptr<pbool_scalar>
@@ -1257,7 +1257,7 @@ pbool_instance_reference::resolve_value(value_type& i) const {
 	\param l the list in which to accumulate values.
 	\return false if there was error.  
  */
-bool
+good_bool
 pbool_instance_reference::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	// base collection must be non-scalar
@@ -1267,7 +1267,7 @@ pbool_instance_reference::resolve_values_into_flat_list(
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
 			<< endl;
-		return false;
+		return good_bool(false);
 	}
 	else	return pbool_inst_ref->lookup_value_collection(
 			l, const_range_list(ranges));
@@ -1377,8 +1377,8 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 		const never_ptr<pbool_scalar>
 			ps(pbool_inst_ref.is_a<pbool_scalar>());
 		INVARIANT(ps);
-		const bool valid(ps->lookup_value(_val));
-		if (!valid) {
+		const bad_bool valid(ps->lookup_value(_val));
+		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"pbool_instance_reference, "
 				"uninitialized value." << endl;
@@ -1481,15 +1481,15 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 		}
 		// load values into cache list as a sequence
 		// pass list by reference to a virtual func?
-		const bool err = src.resolve_values_into_flat_list(vals);
-		if (err) {
+		const bad_bool err(src.resolve_values_into_flat_list(vals));
+		if (err.bad) {
 			cerr << "ERROR: in flattening integer values." << endl;
 			THROW_EXIT;
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
 		value_type i;
-		if (src.resolve_value(i)) {
+		if (src.resolve_value(i).good) {
 			vals.push_back(i);
 		} else {
 			cerr << "ERROR: resolving scalar integer value!"
@@ -1747,7 +1747,7 @@ pint_instance_reference::must_be_equivalent_pint(const pint_expr& i) const {
 	Grossly replicated code... ugh...
 	\return true if resolution succeeds, else false.
  */
-bool
+good_bool
 pint_instance_reference::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	// lookup pint_instance_collection
@@ -1763,12 +1763,12 @@ pint_instance_reference::unroll_resolve_value(
 				upper(indices.upper_multikey());
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
-				return false;
+				return good_bool(false);
 			}
 			return pint_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!" << endl;
-			return false;
+			return good_bool(false);
 		}
 	} else {
 		const never_ptr<pint_scalar>
@@ -1784,7 +1784,7 @@ pint_instance_reference::unroll_resolve_value(
 	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
  */
-bool
+good_bool
 pint_instance_reference::resolve_value(value_type& i) const {
 	// lookup pint_instance_collection
 	if (array_indices) {
@@ -1799,12 +1799,12 @@ pint_instance_reference::resolve_value(value_type& i) const {
 				upper(indices.upper_multikey());
 			if (lower != upper) {
 				cerr << "ERROR: upper != lower" << endl;
-				return false;
+				return good_bool(false);
 			}
 			return pint_inst_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to resolve array_indices!" << endl;
-			return false;
+			return good_bool(false);
 		}
 	} else {
 		const never_ptr<pint_scalar>
@@ -1823,7 +1823,7 @@ pint_instance_reference::resolve_value(value_type& i) const {
 	\param l the list in which to accumulate values.
 	\return false if there was error.  
  */
-bool
+good_bool
 pint_instance_reference::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	// base collection must be non-scalar
@@ -1833,7 +1833,7 @@ pint_instance_reference::resolve_values_into_flat_list(
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
 			<< endl;
-		return false;
+		return good_bool(false);
 	}
 	else	return pint_inst_ref->lookup_value_collection(
 			l, const_range_list(ranges));
@@ -1914,7 +1914,7 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 		do {
 			// populate the collection with values
 			// lookup_value returns true on success, false on error
-			if (!pint_inst_ref->lookup_value(*coll_iter, key_gen)) {
+			if (!pint_inst_ref->lookup_value(*coll_iter, key_gen).good) {
 				cerr << "ERROR: looking up index " <<
 					key_gen << " of pint collection " <<
 					pint_inst_ref->get_qualified_name() <<
@@ -1940,8 +1940,8 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 		const never_ptr<pint_scalar>
 			ps(pint_inst_ref.is_a<pint_scalar>());
 		INVARIANT(ps);
-		const bool valid(ps->lookup_value(_val));
-		if (!valid) {
+		const bad_bool valid(ps->lookup_value(_val));
+		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"pint_instance_reference, "
 				"uninitialized value." << endl;
@@ -2069,15 +2069,15 @@ pint_instance_reference::assigner::assigner(const pint_expr& p) :
 		}
 		// load values into cache list as a sequence
 		// pass list by reference to a virtual func?
-		const bool err = src.resolve_values_into_flat_list(vals);
-		if (err) {
+		const bad_bool err(src.resolve_values_into_flat_list(vals));
+		if (err.bad) {
 			cerr << "ERROR: in flattening integer values." << endl;
 			THROW_EXIT;
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
 		value_type i;
-		if (src.resolve_value(i)) {
+		if (src.resolve_value(i).good) {
 			vals.push_back(i);
 		} else {
 			cerr << "ERROR: resolving scalar integer value!"
@@ -2233,10 +2233,10 @@ pint_const::upper_bound(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_const::resolve_value(value_type& i) const {
 	i = val;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2258,10 +2258,10 @@ pint_const::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2282,10 +2282,10 @@ pint_const::make_param_expression_assignment_private(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_const::unroll_resolve_value(const unroll_context& c, value_type& i) const {
 	i = val;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2467,22 +2467,22 @@ pint_const_collection::must_be_equivalent_pint(const pint_expr& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_const_collection::unroll_resolve_value(
 		const unroll_context&, value_type& ) const {
 	cerr << "Never supposed to call "
 		"pint_const_collection::unroll_resolve_value()." << endl;
 	THROW_EXIT;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_const_collection::resolve_value(value_type& ) const {
 	cerr << "Never supposed to call pint_const_collection::resolve_value()."
 		<< endl;
 	THROW_EXIT;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2498,11 +2498,11 @@ pint_const_collection::static_constant_int(void) const {
 	Straight copy of constant values to list.  
 	May become obsolete in future.  
  */
-bool
+good_bool
 pint_const_collection::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	copy(values.begin(), values.end(), back_inserter(l));
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2618,17 +2618,17 @@ pbool_const::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pbool_const::resolve_value(value_type& i) const {
 	i = val;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pbool_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2754,12 +2754,12 @@ pint_unary_expr::must_be_equivalent_pint(const pint_expr& p) const {
 /**
 	\return true if succssfully resolved.
  */
-bool
+good_bool
 pint_unary_expr::unroll_resolve_value(const unroll_context& c, 
 		value_type& i) const {
 	value_type j;
 	NEVER_NULL(ex);
-	const bool ret = ex->unroll_resolve_value(c, j);
+	const good_bool ret(ex->unroll_resolve_value(c, j));
 	i = -j;		// regardless of ret
 	return ret;
 }
@@ -2768,11 +2768,11 @@ pint_unary_expr::unroll_resolve_value(const unroll_context& c,
 /**
 	Returns resolved value of negation expression.  
  */
-bool
+good_bool
 pint_unary_expr::resolve_value(value_type& i) const {
 	value_type j;
 	NEVER_NULL(ex);
-	const bool ret = ex->resolve_value(j);
+	const good_bool ret(ex->resolve_value(j));
 	i = -j;		// regardless of ret
 	return ret;
 }
@@ -2781,10 +2781,10 @@ pint_unary_expr::resolve_value(value_type& i) const {
 /**
 	\return false if there is error in resolving.
  */
-bool
+good_bool
 pint_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type i = 0;
-	const bool ret = resolve_value(i);
+	const good_bool ret(resolve_value(i));
 	l.push_back(i);		// regardless of validity
 	return ret;
 }
@@ -2941,19 +2941,19 @@ pbool_unary_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pbool_unary_expr::resolve_value(value_type& i) const {
 	value_type b;
-	const bool ret = ex->resolve_value(b);
+	const good_bool ret(ex->resolve_value(b));
 	i = !b;
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pbool_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type b;
-	const bool ret = resolve_value(b);
+	const good_bool ret(resolve_value(b));
 	l.push_back(b);
 	return ret;
 }
@@ -3130,22 +3130,8 @@ arith_expr::value_type
 arith_expr::static_constant_int(void) const {
 	const arg_type a = lx->static_constant_int();
 	const arg_type b = rx->static_constant_int();
-#if 0
-	switch(op) {
-		case '+':	return a + b;
-		case '-':	return a - b;
-		case '*':	return a / b;
-		case '/':	return a * b;
-		case '%':	return a % b;
-		default:
-			cerr << "FATAL: Unexpected operator \'" << op <<
-				"\', aborting." << endl;
-			DIE; return 0;
-	}
-#else
 	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3165,48 +3151,34 @@ arith_expr::must_be_equivalent_pint(const pint_expr& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 arith_expr::resolve_value(value_type& i) const {
 	arg_type a, b;
 	NEVER_NULL(lx);	NEVER_NULL(rx);
-	const bool lret = lx->resolve_value(a);
-	const bool rret = rx->resolve_value(b);
-	if (!lret) {
+	const good_bool lret(lx->resolve_value(a));
+	const good_bool rret(rx->resolve_value(b));
+	if (!lret.good) {
 		cerr << "ERROR: resolving left operand of: ";
 		dump(cerr) << endl;
-		return false;
-	} else if (!rret) {
+		return good_bool(false);
+	} else if (!rret.good) {
 		cerr << "ERROR: resolving right operand of: ";
 		dump(cerr) << endl;
-		return false;
+		return good_bool(false);
 	}
-#if 0
-	switch(op) {
-		case '+':	i = a + b;	break;
-		case '-':	i = a - b;	break;
-		case '*':	i = a / b;	break;
-		case '/':	i = a * b;	break;
-		case '%':	i = a % b;	break;
-		default:	
-			cerr << "FATAL: Unexpected operator \'" << op <<
-				"\', aborting." << endl;
-			DIE; return false;
-	}
-#else
 	// Oooooh, virtual operator dispatch!
 	i = (*op)(a,b);
-#endif
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return false if there is error in resolving.
  */
-bool
+good_bool
 arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type i = 0;
-	const bool ret = resolve_value(i);
+	const good_bool ret(resolve_value(i));
 	l.push_back(i);		// regardless of validity
 	return ret;
 }
@@ -3225,18 +3197,18 @@ arith_expr::resolve_dimensions(void) const {
 /**
 	\return true if resolved.
  */
-bool
+good_bool
 arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	value_type lval, rval;
-	const bool lex(lx->unroll_resolve_value(c, lval));
-	const bool rex(rx->unroll_resolve_value(c, rval));
-	if (lex && rex) {
+	const good_bool lex(lx->unroll_resolve_value(c, lval));
+	const good_bool rex(rx->unroll_resolve_value(c, rval));
+	if ((lex && rex).good) {
 		i = (*op)(lval, rval);
-		return true;
+		return good_bool(true);
 	} else {
-		return false;
+		return good_bool(false);
 	}
 }
 
@@ -3466,11 +3438,11 @@ relational_expr::resolve_dimensions(void) const {
 /**
 	TO DO: switch on relational expression operator.  
  */
-bool
+good_bool
 relational_expr::resolve_value(value_type& i) const {
 	arg_type li, ri;
-	const bool l_ret = lx->resolve_value(li);
-	const bool r_ret = rx->resolve_value(ri);
+	const good_bool l_ret(lx->resolve_value(li));
+	const good_bool r_ret(rx->resolve_value(ri));
 	// SWITCH
 	i = (*op)(li, ri);
 	return l_ret && r_ret;
@@ -3482,10 +3454,10 @@ relational_expr::resolve_value(value_type& i) const {
 	\param l the cumulative list of values.
 	\return error status
  */
-bool
+good_bool
 relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type b;
-	const bool ret = resolve_value(b);
+	const good_bool ret(resolve_value(b));
 	l.push_back(b);
 	return ret;
 }
@@ -3705,20 +3677,20 @@ logical_expr::resolve_dimensions(void) const {
 /**
 	TO DO: switch on logical expression operator.  
  */
-bool
+good_bool
 logical_expr::resolve_value(value_type& i) const {
 	arg_type lb, rb;
-	const bool l_ret = lx->resolve_value(lb);
-	const bool r_ret = rx->resolve_value(rb);
+	const good_bool l_ret(lx->resolve_value(lb));
+	const good_bool r_ret(rx->resolve_value(rb));
 	i = (*op)(lb, rb);
 	return l_ret && r_ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	arg_type b;
-	const bool ret = resolve_value(b);
+	const good_bool ret(resolve_value(b));
 	l.push_back(b);
 	return ret;
 }
@@ -3886,20 +3858,24 @@ pint_range::static_constant_range(void) const {
 /**
 	\return true if successfully resolved at unroll-time.
  */
-bool
+good_bool
 pint_range::unroll_resolve_range(const unroll_context& c, 
 		const_range& r) const {
-	if (!lower->unroll_resolve_value(c, r.first))	return false;
-	if (!upper->unroll_resolve_value(c, r.second))	return false;
-	return true;
+	if (!lower->unroll_resolve_value(c, r.first).good)
+		return good_bool(false);
+	if (!upper->unroll_resolve_value(c, r.second).good)
+		return good_bool(false);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 pint_range::resolve_range(const_range& r) const {
-	if (!lower->resolve_value(r.first))	return false;
-	if (!upper->resolve_value(r.second))	return false;
-	return true;
+	if (!lower->resolve_value(r.first).good)
+		return good_bool(false);
+	if (!upper->resolve_value(r.second).good)
+		return good_bool(false);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4135,17 +4111,17 @@ const_range::upper_bound(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
 	r = *this;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 const_range::resolve_range(const_range& r) const {
 	r = *this;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4229,7 +4205,7 @@ count_ptr<const_index>
 range_expr::unroll_resolve_index(const unroll_context& c) const {
 	typedef	count_ptr<const_index>	return_type;
 	const_range tmp;
-	return (unroll_resolve_range(c, tmp)) ?
+	return (unroll_resolve_range(c, tmp).good) ?
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
 }
@@ -4242,7 +4218,7 @@ count_ptr<const_index>
 range_expr::resolve_index(void) const {
 	typedef	count_ptr<const_index>	return_type;
 	const_range tmp;
-	return (resolve_range(tmp)) ?
+	return (resolve_range(tmp).good) ?
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
 }
@@ -4550,10 +4526,10 @@ const_range_list::must_be_formal_size_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 const_range_list::resolve_ranges(const_range_list& r) const {
 	r = *this;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4761,7 +4737,7 @@ dynamic_range_list::static_overlap(const range_expr_list& r) const {
 		where final range bounds are saved.  
 	\return true if success, false if fail.  
  */
-bool
+good_bool
 dynamic_range_list::resolve_ranges(const_range_list& r) const {
 	// resolve ranges each step, each dynamic_range
 	r.clear();
@@ -4770,13 +4746,13 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 	for ( ; i!=e; i++) {
 		const_range c;
 		const count_ptr<const pint_range> ip(*i);
-		if (ip->resolve_range(c)) {
+		if (ip->resolve_range(c).good) {
 			r.push_back(c);
 		} else {
-			return false;
+			return good_bool(false);
 		}
 	}
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -17,6 +17,11 @@
 	  some expression classes, instantiation statements, 
 	  instance collections.  
 
+	* -bool-05:
+	  Upgraded more bool return values in expression methods and
+	  param value instance collection methods.  
+	  Actually caught an old (wrong error message) bug in the process!
+
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.6.2.1 2005/02/28 03:11:31 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.6.2.2 2005/03/01 02:28:37 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -17,8 +17,6 @@ namespace entity {
 USING_LIST
 using std::string;
 using std::ostream;
-using util::bad_bool;
-using util::good_bool;
 
 //=============================================================================
 /**
@@ -127,16 +125,16 @@ public:
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -265,16 +263,16 @@ public:
 	bool
 	must_be_equivalent_pint(const pint_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.13.2.2 2005/02/28 20:36:05 fang Exp $
+	$Id: art_object_instance_param.h,v 1.13.2.3 2005/03/01 02:28:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -259,12 +259,12 @@ virtual	void
 
 // virtual	bool lookup_value(bool& v) const = 0;
 
-virtual	bool
+virtual	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	bool
+virtual	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
@@ -342,11 +342,11 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l,
 		const const_range_list& r) const;
 
@@ -395,7 +395,7 @@ public:
 	ostream&
 	dump_unrolled_values(ostream& o) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& i) const;
 
 	bad_bool
@@ -406,12 +406,12 @@ public:
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
@@ -585,12 +585,12 @@ virtual	ostream&
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
-virtual	bool
+virtual	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	bool
+virtual	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
@@ -670,11 +670,11 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
@@ -729,7 +729,7 @@ public:
 	ostream&
 	dump_unrolled_values(ostream& o) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& i) const;
 
 	bad_bool
@@ -740,12 +740,12 @@ public:
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
