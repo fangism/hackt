@@ -15,7 +15,8 @@ RECURSIVE_MAKE = $(MAKE)
 # problems with passing parallel build flags -j
 
 # by default builds first target
-default: all
+# default: all
+default: regression-target
 
 all: makeinfo
 

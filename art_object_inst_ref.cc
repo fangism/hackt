@@ -54,8 +54,37 @@ simple_instance_reference::dimensions(void) const {
 }
 
 /**
+	Queries whether or not there were any dynamic instances added
+	to the collection from the initial instantiation up to the
+	point of references of this instance reference.  
+	Note: This routine is independent of the array_indices.  
+	\return true if all instance additions upto this point
+		were static constant (sparse or dense) indices.  
+ */
+bool
+simple_instance_reference::is_static_constant_collection(void) const {
+	instantiation_state iter = inst_state;
+	const instantiation_state
+		end(get_inst_base()->collection_state_end());
+	for ( ; iter!=end; iter++) {
+		const count_const_ptr<dynamic_range_list>
+			drl(iter->is_a<dynamic_range_list>());
+		if (drl) {
+			if (!drl->is_static_constant())
+				return false;
+			// unconditional false is too conservative
+		}
+		else	assert(iter->is_a<const_range_list>());
+	}
+	return true;
+}
+
+/**
 	May need to perform dimension-collapsing in some cases.  
+	Precondition: array indices already bound-checked if static constant.  
 	Prerequisites for calling this method: non-zero dimension.  
+	This function guarantees nothing about the packed-ness of the
+	current state of the collection.  
 	Cases: 
 	1) Reference is not-indexed to a non-collective instance set.  
 		Then this is zero-dimensional (scalar).  
@@ -78,20 +107,34 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 	// implicitly refers to the entire collection.
 	// (same case if dimensions are under-specified)
 	else if (!array_indices) {
+#if 0
+		// substituted
 		instantiation_state iter = inst_state;
 		const instantiation_state
 			end(get_inst_base()->collection_state_end());
 		for ( ; iter!=end; iter++) {
-			if (iter->is_a<dynamic_range_list>())
-				return false;
+			const count_const_ptr<dynamic_range_list>
+				drl(iter->is_a<dynamic_range_list>());
+			if (drl) {
+				if (!drl->is_static_constant())
+					return false;
+				// unconditional false is too conservative
+			}
 			else	assert(iter->is_a<const_range_list>());
 		}
 		return true;
+#else
+		// is the entire collection known statically?
+		return is_static_constant_collection();
+#endif
 	} else if (array_indices->size() < base_dim) {
 		// case 3: partially-specified indices, implicit sub-collections
 		if (!array_indices->is_static_constant())
 			return false;
+		else return is_static_constant_collection();
+		// else we know entire collection statically.
 
+#if 0
 		// to do: aggregate the state of the collection
 		// using multidimensional_sparse_set
 		// (for constant additions)
@@ -100,6 +143,7 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 
 		// out of laziness, finish this later...
 		return false;		// temporary
+#endif
 	} else {
 		// case 4: fully-indexed down to last dimension
 		return array_indices->is_static_constant();
@@ -107,6 +151,7 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 }
 
 /**
+	Preconditions: 
 	If any instance additions are dynamic, 
 	conservatively return true.  
 	Cases: {collective, scalar} x {non-indexed, partial, fully-indexed}
@@ -126,17 +171,24 @@ simple_instance_reference::may_be_densely_packed(void) const {
 		if (!cil)
 			return true;
 		if (array_indices->size() < base_dim) {
-			// array indices are underspecified
-			// TO DO: unpack instance collection into
+			// Array indices are underspecified. 
+			// Unpack instance collection into
 			// multidimensional_sparse_set
 			excl_ptr<mset_base> fui =
 				unroll_static_instances(base_dim);
 			assert(fui);
+//			fui->dump(cerr << "fui: ") << endl;	// DEBUG
 			// convert index to ranges
 			const const_range_list crl(*cil);
+//			crl.dump(cerr << "crl: ") << endl;	// DEBUG
 			const mset_base::range_list_type
 				rl(fui->query_compact_dimensions(crl));
-			return !rl.empty();
+			const bool ret = !rl.empty();
+#if 0
+			if (!ret)	// diagnostics
+				cerr << "Not densely packed." << endl;
+#endif
+			return ret;
 		} else {
 			// array indices are fully specified, and constant
 			return true;
@@ -210,6 +262,7 @@ simple_instance_reference::must_be_densely_packed(void) const {
 		has_static_constant_dimensions
 	\return dense range list representation of the instance collection
 		if it is indeed compact, else returns an empty list.  
+	\sa implicit_static_constant_indices
  */
 const_range_list
 simple_instance_reference::static_constant_dimensions(void) const {
@@ -219,8 +272,10 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		const never_const_ptr<index_list> il(array_indices);
 		const never_const_ptr<const_index_list>
 			cil(il.is_a<const_index_list>());
-		if (!cil)	// is dynamic
+		if (!cil) {	// is dynamic
+//			cerr << "simple_instance_reference::static_constant_dimensions(): array_indices is dynamic." << endl;
 			return const_range_list();
+		}
 		// array indices are underspecified or fully specified
 		excl_ptr<mset_base> fui =
 			unroll_static_instances(base_dim);
@@ -240,6 +295,82 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		const mset_base::range_list_type
 			rl(fui->compact_dimensions());
 		return rl;	// will probably have to convert
+	}
+}
+
+/**
+	Prerequisites: must_be_densely_packed, is_static_constant_collection, 
+		have non-zero dimension.  
+	For a collection reference with underspecified indices, 
+	this fills in the remaining dimensions, ONLY IF the remaining 
+	dimensions are packed.  
+	Very similar to must_be_densely_packed.  
+	\return indices filled with dimensions for unspecified dimensions, 
+		else will assert fail if anything goes wrong.  
+ */
+const_index_list
+simple_instance_reference::implicit_static_constant_indices(void) const {
+	const size_t base_dim = get_inst_base()->dimensions();
+	// if not collective, then return true (not really applicable)
+	assert(base_dim);		// non-zero dimension only!
+	// else is collective
+	if (array_indices) {
+		never_const_ptr<index_list> il(array_indices);
+		never_const_ptr<const_index_list>
+			cil(il.is_a<const_index_list>());
+		assert(cil);
+		const size_t a_size = array_indices->size();
+		// or compute equivalent from a const dynamic_index_list?
+		if (a_size < base_dim) {
+			// array indices are underspecified
+			// TO DO: unpack instance collection into
+			// multidimensional_sparse_set
+			excl_ptr<mset_base> fui =
+				unroll_static_instances(base_dim);
+			assert(fui);
+			// convert index to ranges
+			const const_range_list crl(*cil);
+			const mset_base::range_list_type
+				rl(fui->query_compact_dimensions(crl));
+			// is a list<const_range>, must convert to index_list
+			assert(!rl.empty());
+
+			// add implied indices (ranges) back to original
+			// sanity consistency check first...
+			mset_base::range_list_type::const_iterator
+				ri = rl.begin();
+			const_index_list::const_iterator
+				ai = cil->begin();
+			for ( ; ai!=cil->end(); ai++, ri++) {
+				assert(*ai);
+				assert(**ai == *ri);	// consistency check
+			}
+			const_index_list ret(*cil);	// copy, then append
+			for ( ; ri!=rl.end(); ri++) {
+				ret.push_back(count_ptr<const_index>(
+					new const_range(*ri)));
+			}
+			return ret;
+		} else {
+			// array indices are fully specified, and constant
+			return const_index_list(*cil);
+		}
+	} else {
+		// not indexed, implicitly refers to entire collection
+		// TO DO: unpack instance collection into
+		// multidimensional_sparse_set
+		excl_ptr<mset_base> fui = unroll_static_instances(base_dim);
+		assert(fui);
+		const mset_base::range_list_type
+			rl(fui->compact_dimensions());
+		mset_base::range_list_type::const_iterator
+			ri = rl.begin();
+		const_index_list ret;
+		for ( ; ri!=rl.end(); ri++) {
+			ret.push_back(count_ptr<const_index>(
+				new const_range(*ri)));
+		}
+		return ret;
 	}
 }
 
@@ -353,6 +484,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 /**
 	Checks "may" type-equivalence of two instance references.  
 	Is conservative.  
+	An unpacked collection reference is equivalent to nothing.  
 	Prints descriptive error if false is returned.  
 	\return true if referenced instances' types may be equivalent.  
  */
@@ -391,8 +523,65 @@ simple_instance_reference::may_be_type_equivalent(
 		return true;
 	}
 	// else fall-through handle multidimensional case
-	if (has_static_constant_dimensions() &&
-			i.has_static_constant_dimensions()) {
+
+	// check for packed-ness of instance reference?
+	// if indices only partially specify dimensions.  
+	const bool l_may_pack = may_be_densely_packed();
+	const bool r_may_pack = i.may_be_densely_packed();
+	if (!l_may_pack || !r_may_pack) {
+		// we know statically that one of them is not packed, 
+		// which immediately disqualifies them from equivalence.  
+		if (!l_may_pack)
+			cerr << "Left instance reference not packed!" << endl;
+		if (!r_may_pack)
+			cerr << "Right instance reference not packed!" << endl;
+		return false;
+	}
+
+	// We already know that both references *may* be packed.  
+	// We can only do precise analysis if we know that
+	// both instance references *must* be packed.
+	const bool l_must_pack = must_be_densely_packed();
+	const bool r_must_pack = i.must_be_densely_packed();
+	// Otherwise, we can only conservatively return true.  
+	if (!l_must_pack || !r_must_pack)
+		return true;
+
+	// Here, we know we can obtain the implicit packed indices, 
+	// and then compare them.  
+
+	const simple_instance_reference*
+		sir = IS_A(const simple_instance_reference*, &i);
+	if (!sir) {
+		// then is not a simple_instance_reference, 
+		// is complex-aggregate, which is not handled yet
+		// eventually get around to this
+		return true;
+	}
+	const const_index_list lindex(implicit_static_constant_indices());
+	const const_index_list rindex(sir->implicit_static_constant_indices());
+
+	const_range_list lrange(lindex);
+	const_range_list rrange(rindex);
+	lrange.collapse_dimensions_wrt_indices(lindex);
+	rrange.collapse_dimensions_wrt_indices(rindex);
+
+	const bool ret = lrange.is_size_equivalent(rrange);
+	if (!ret) {
+		lrange.dump(cerr << "got: ") << " and: ";
+		rrange.dump(cerr) << endl;
+	}
+	return ret;
+
+#if 0
+TONS OF OLD CODE
+	const bool lscd = has_static_constant_dimensions();
+	const bool rscd = i.has_static_constant_dimensions();
+#if 0
+	cerr << "left: " << (lscd ? "has_static..." : "!static...") << endl;
+	cerr << "right: " << (rscd ? "has_static..." : "!static...") << endl;
+#endif
+	if (lscd && rscd) {
 
 		// don't *compare* static_constant_dimensions, because
 		// those are used for checking coverage of referenced
@@ -401,14 +590,23 @@ simple_instance_reference::may_be_type_equivalent(
 		// compare the array_indices directly
 		const_range_list ldim(static_constant_dimensions());
 		const_range_list rdim(i.static_constant_dimensions());
-		assert(!ldim.empty());
-		assert(!rdim.empty());
-
 #if 0
 		ldim.dump(cerr) << endl;
 		rdim.dump(cerr) << endl;
 #endif
-
+#if 0
+		// not necessarily so anymore...
+		assert(!ldim.empty());
+		assert(!rdim.empty());
+#else
+		if (ldim.empty() || rdim.empty()) {
+			// then at least one of them is not a 
+			// reference to a packed (sub-)collection.
+			// If either reference is not packed, 
+			// then they cannot be equivalent.  
+			return false;
+		}
+#endif
 		// examine array_indices:
 		// walk the index lists, skipping collapsed dimensions
 		// and comparing the sizes of statically known ranges.  
@@ -443,49 +641,6 @@ simple_instance_reference::may_be_type_equivalent(
 		if (ril)
 			rdim.collapse_dimensions_wrt_indices(*ril);
 
-#if 0
-		// move this code into const_range_list::is_size_equivalent()
-		const_range_list::const_iterator liter = ldim.begin();
-		const_range_list::const_iterator riter = rdim.begin();
-		// we know they're not empty...
-
-		// how do we handle case where no indices are given, 
-		// referencing entire collection?
-
-
-		// Is there a better way to write this?  I hate do-while...
-		int dim = 1;
-		for (;; liter++, riter++) {
-			// dimension is collapsed if index is just a pint
-			while (liter!=ldim.end() &&
-					IS_A(const pint_const*, &*liter))
-				liter++;
-			while (riter!=rdim.end() &&
-					IS_A(const pint_const*, &*riter))
-				riter++;
-			if (liter == ldim.end() || riter == rdim.end())
-				break;
-			const const_range&
-				lrange(IS_A(const const_range&, *liter));
-			const const_range&
-				rrange(IS_A(const const_range&, *riter));
-			const int ldiff = lrange.second -lrange.first;
-			const int rdiff = rrange.second -rrange.first;
-			if (ldiff != rdiff) {
-				cerr << "Size of dimension " << dim <<
-					" does not match!  got: " <<
-					ldiff+1 << " and " << rdiff+1
-					<< "." << endl;
-				return false;
-			}
-			// else continue checking...
-			dim++;
-		}
-		assert(liter == ldim.end() && riter == rdim.end());
-		// assertion, based on the dimensions matching
-		// if we've made it this far, all dimensions match
-		return true;
-#else
 		// will report error if mismatch
 		const bool ret = ldim.is_size_equivalent(rdim);
 		if (!ret) {
@@ -493,11 +648,12 @@ simple_instance_reference::may_be_type_equivalent(
 			rdim.dump(cerr) << endl;
 		}
 		return ret;
-#endif
 	} else {
 		// cannot deduce size/shape equivalence at this time
 		return true;
 	}
+END TONS OF OLD CODE
+#endif
 }
 
 /**

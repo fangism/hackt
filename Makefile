@@ -14,7 +14,8 @@ include Make.vars
 RECURSIVE_MAKE = $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" LD="$(LD)" \
 	LDFLAGS="$(LDFLAGS)" CPPFLAGS="$(CPPFLAGS)" YACC=$(YACC)
 
-default: all
+# default: all
+default: regression-target
 
 # BSDmake-specific
 .BEGIN:	makeinfo

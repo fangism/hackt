@@ -647,6 +647,17 @@ public:
 				typename parent::range_type r(min, max);
 				ret.push_back(r);
 			}
+		} else {
+			// not specified, entire set must be compact, 
+			// i.e. have only one entry (discrete interval)
+			if (index_map.size() == 1) {
+				typename map_type::const_iterator
+					m = index_map.begin();
+				typename parent::range_type
+					r(m->first, m->second);
+				ret.push_back(r);
+			}
+			// else is not packed, return empty
 		}
 		return ret;
 	}

@@ -327,6 +327,7 @@ public:
 virtual	~const_index();
 
 // same pure virtual functions
+virtual	bool operator == (const const_range& c) const = 0;
 };	// end class const_index
 
 //-----------------------------------------------------------------------------
@@ -463,6 +464,7 @@ virtual	~range_expr_list() { }
 
 virtual	size_t size(void) const = 0;
 	size_t dimensions(void) const { return size(); }
+virtual	bool is_static_constant(void) const = 0;
 virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
 };	// end class range_expr_list
 
@@ -476,6 +478,11 @@ protected:
 	// no need for pointers here
 	typedef	list<const_range>	list_type;
 public:
+	typedef	list_type::iterator			iterator;
+	typedef	list_type::const_iterator		const_iterator;
+	typedef	list_type::reverse_iterator		reverse_iterator;
+	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
+public:
 	const_range_list();
 	const_range_list(const list_type& l);
 explicit const_range_list(const const_index_list& i);
@@ -484,8 +491,10 @@ explicit const_range_list(const const_index_list& i);
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	size_t size(void) const;
+	bool is_static_constant(void) const { return true; }
 	const_range_list static_overlap(const range_expr_list& r) const;
 
+	const_index_list revert_to_indices(const const_index_list& il) const;
 	void collapse_dimensions_wrt_indices(const const_index_list& il);
 
 	bool is_size_equivalent(const const_range_list& il) const;
@@ -512,12 +521,18 @@ protected:
 	// can't copy construct, is abstract
 	typedef	list<count_ptr<pint_range> >	list_type;
 public:
+	typedef	list_type::iterator			iterator;
+	typedef	list_type::const_iterator		const_iterator;
+	typedef	list_type::reverse_iterator		reverse_iterator;
+	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
+public:
 	dynamic_range_list();
 virtual	~dynamic_range_list();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	size_t size(void) const;
+	bool is_static_constant(void) const;
 	const_range_list static_overlap(const range_expr_list& r) const;
 		// false, will be empty
 };	// end class dynamic_range_list
@@ -705,6 +720,7 @@ public:
 	int static_constant_int(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
+	bool operator == (const const_range& c) const;
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------

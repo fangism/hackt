@@ -795,6 +795,11 @@ pint_const::static_constant_param(void) const {
 		new pint_const(val));
 }
 
+bool
+pint_const::operator == (const const_range& c) const {
+	return (val == c.first) && (val == c.second);
+}
+
 //=============================================================================
 // class pbool_const method definitions
 
@@ -1401,6 +1406,22 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 	}
 }
 
+#if 0
+/**
+	Takes a list of ranges and converts back to indices, using a 
+	reference index list, resembling the original index list.  
+	Useful for converting results from multidimensional_sparse_set
+	queries (range lists) back into index form where needed.  
+	\param il the reference index list.
+ */
+const_index_list
+const_range_list::revert_to_indices(const const_index_list& il) const {
+	// let's actually bother to check consistency of the reference list
+	const_index_list ret;
+	// have a better idea... punt this for now
+}
+#endif
+
 /**
 	Collapses the multidimensional range list using an
 	reference index list as an argument.  
@@ -1410,10 +1431,10 @@ const_range_list::static_overlap(const range_expr_list& r) const {
  */
 void
 const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
-	assert(size() == il.size());
+	assert(size() >= il.size());
 	iterator i = begin();
 	const_index_list::const_iterator j = il.begin();
-	for ( ; i!=end(); i++, j++) {
+	for ( ; j!=il.end(); i++, j++) {
 		const count_const_ptr<pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
@@ -1427,7 +1448,7 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 			assert(pr->second == i->second);
 		}
 	}
-	assert(j == il.end());
+	// any remaining indices are kept
 }
 
 /**
@@ -1502,6 +1523,19 @@ dynamic_range_list::dump(ostream& o) const {
 size_t
 dynamic_range_list::size(void) const {
 	return list_type::size();
+}
+
+bool
+dynamic_range_list::is_static_constant(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		const count_const_ptr<pint_range> pr(*i);
+		assert(pr);
+		if (!pr->is_static_constant())
+			return false;
+		// else continue checking
+	}
+	return true;
 }
 
 /**

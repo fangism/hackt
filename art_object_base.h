@@ -120,6 +120,7 @@ namespace entity {
 	class const_range_list;
 	class dynamic_range_list;
 	class index_list;			// not ART::parser::index_list
+	class const_index_list;
 
 	typedef	count_const_ptr<range_expr_list>
 					index_collection_item_ptr_type;

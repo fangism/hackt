@@ -146,8 +146,10 @@ virtual	~simple_instance_reference();
 	size_t dimensions(void) const;
 	bool may_be_densely_packed(void) const;
 	bool must_be_densely_packed(void) const;
+	bool is_static_constant_collection(void) const;
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
+	const_index_list implicit_static_constant_indices(void) const;
 
 	bool attach_indices(excl_ptr<index_list> i);
 
