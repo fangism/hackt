@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.5.4.1 2005/01/24 19:45:58 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.5.4.2 2005/01/24 22:28:04 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -172,6 +172,7 @@ UTIL_HEADER_FILES = \
 	util/STL/reverse_iterator.h \
 	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
+	util/STL/vector.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
