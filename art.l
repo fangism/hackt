@@ -39,9 +39,6 @@
 		is on the 
 
 	To do: 
-		See if we can use the single character tokens' characters
-		as the return values to the parser.  
-
 		Implement the #line directive to interpret the output
 		of flattened, preprocessed files.  
 
@@ -448,7 +445,7 @@ FALSE		"false"
 	}
 	STRING_UPDATE;
 	BEGIN(INITIAL);
-	yylval.n = new token_string(string_buf);
+	yylval.n = new token_quoted_string(string_buf);
 	return STRING;
 }
 
