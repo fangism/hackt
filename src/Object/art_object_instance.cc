@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.3 2005/02/03 03:34:51 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.4 2005/02/09 04:14:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -27,6 +27,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
 
@@ -34,7 +35,7 @@
 namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE
@@ -510,7 +511,7 @@ instance_collection_base::collect_index_collection_pointers(
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
-		dereference<never_ptr, const instance_management_base>()
+		dereference<never_ptr<const instance_management_base> >()
 	)
 	);
 #endif

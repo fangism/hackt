@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.1 2005/02/03 03:34:52 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2 2005/02/09 04:14:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -35,6 +35,7 @@
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
+#include "dereference.h"
 
 STATIC_TRACE_BEGIN("instance-bool")
 
@@ -54,7 +55,7 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
 
@@ -280,13 +281,13 @@ bool_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,
@@ -300,11 +301,12 @@ bool_array<D>::resolve_indices(const const_index_list& l) const {
  */
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 typename bool_array<D>::instance_ptr_type
-bool_array<D>::lookup_instance(const unroll_index_type& i) const {
+bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
+	const multikey<D, pint_value_type> index(i);
 	const bool_instance_alias&
-		b(collection[i]);
+		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
@@ -445,7 +447,7 @@ bool_array<0>::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 bool_array<0>::instance_ptr_type
-bool_array<0>::lookup_instance(const unroll_index_type& i) const {
+bool_array<0>::lookup_instance(const multikey_index_type& i) const {
 	if (!the_instance.valid()) {
 		cerr << "ERROR: Reference to uninstantiated bool!" << endl;
 		return instance_ptr_type(NULL);

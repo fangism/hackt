@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14.2.1 2005/02/03 03:34:56 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.2.2 2005/02/09 04:14:18 fang Exp $
  */
 
 // flags and switches
@@ -347,10 +347,10 @@ persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 			ptr->what(cerr << "FATAL: Object (") << ") at addr "
 				<< ptr << " has not been registered with "
 				"the object manager!" << endl;
-			assert(0);
+			DIE;
 		}
 		// else just NULL, don't bother
-		exit(1);
+		THROW_EXIT;
 	}
 	return probe;
 }
@@ -562,7 +562,7 @@ persistent_object_manager::load_header(ifstream& f) {
 				!verify_registered_type(t)) {
 			cerr << "FATAL: persistent type code \"" <<
 				t << "\" has not been registered!" << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		reconstruction_table.push_back(
 			reconstruction_table_entry(t, aux, head, tail));

@@ -1,5 +1,155 @@
 "ChangeLog"
 
+2005-02-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-08-merged-set-16:
+	  Merged all revisions from -set child branch.  No issues.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-collection-00-trans-00:
+	  Temporary sibling branch for changes that have to wait until
+	  after -set branch is merged.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-15:
+	  Once again stable.  Introduced maplikeset interface to 
+	  adapt a set to have a map-like interface, where key components
+	  of set::value_type may be passed to method functions.  
+	  Stuck this into multikey_set and multikey_set_element, 
+	  and it works like magic, AFAICT.  
+	  Code is in real desparate need of housekeeping... next rev.
+
+	+ -set16:
+	  Cleaned up and removed excess commented code.  
+	  Reverted some changes to multikey_assoc back to the way they
+	  were before the multikey_set fiasco.  
+	  Code is trim and functional.  Time to move on.  
+
+
+2005-02-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-12:
+	+ "ring_node.h": eliminated need for const_cast of second
+	  pointer in iterator construction by const-ifying 
+	  the second pointer member, which is never dereferenced anyways.  
+
+	+ -set-13: "multikey_assoc*": multidimensional associative 
+	  container adapter.  Factored out multidimensional facilities
+	  of multikey_map into multikey_assoc template wrapper.  
+	  Much removed code in commends in this snapshot.  
+
+	+ -set-14-trans-00: "multikey_set*" family added (1st draft), 
+	  *almost* entirely working, just needed to add initial files
+	  to checkpoint first revision.  
+	  This is a *transient* snapshot, and will compile, but the newly
+	  added test (multikey_set_test) does not run correctly yet.  
+	  Many adaptations have been made to the base multikey_assoc, 
+	  without disturbing the functionality of multikey_maps.  
+	  Future plans for major improvement of code maintainability:
+	  Make a set adapter to give map-like key-value interface to 
+	  std::set, since we find ourselves working around basic
+	  fundamental differences.  
+
+
+2005-02-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-07:
+	  Obliterated multikey_base, multikey_map_base.
+	  (Actually, just #if 0'd all referenceds to them)
+	  A few regression tests were updated with more accurate
+	  error reporting in test/parser/param.  
+
+	+ -set-08:
+	  Expurgated any and all references to the virtual base types
+	  involving multikey and multikey_map.  
+
+	+ -set-09:
+	  Factored out multikey implementation into seperate struct, 
+	  for the sake of specializing the <1> case.  
+	  Implements standard sequence/iterator interface.
+	  Replaced direct references to indices[] array with iterators.  
+	  Removed (comment) specialization of multikey_map using qmap
+	  as the implementation type, no longer needed.  
+
+	+ -set-10:
+	  Eliminated virtual base classes (in comments, flagged out):
+		  base_multidimensional_qmap
+		  base_multidimensional_sparse_set
+	  Internalized/privatized implementation of 
+	  simple_instance_reference::mset_base, defining as a module-local
+	  virtual base class in "art_object_inst_ref.cc".
+	  In general, we prefer this pattern of "let the user virtualize"
+	  the various dimension-specific data structures.  
+	  We provide a uniform functional interface to make this easy.  
+
+	+ -set-11:
+	  Cleaned out commented and flagged out blocks of code
+	  removed from revision -set-10.
+
+
+2005-02-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-01:
+	  Many util library improvements.
+
+	+ "pointer_traits" completely re-done.
+	  Individualized traits, for better orthogonal design.  
+	  Instantiating pointer_traits for the purpose of using one trait
+	  would try result in instantiating for all traits, some of 
+	  which were not applicable.  
+	  Leveraged partial specializations in various pointer classes.  
+
+	+ "const_assoc_query" an implementation-independent wrapper
+	  for maps to overload the lookup [] operator.  
+	  (This would've saved hundreds of lines of useless wrapping
+	  in qmap.* and hash_qmap.*)
+
+	+ "null_construct.h" guarantees initial values for constructed
+	  objects, especially pointers, which default to junk.  
+	  Useful for const-query returning of null pointers when 
+	  something is not found.  
+
+	+ "hash_qmap.*" wiped verbose definition, and replaced with
+	  const_assoc_query wrapper.  So simple!  Legacy code 
+	  in the declaration and definitions files is block commented out.  
+	  Next revision will alter qmap, and add qset.  
+
+	+ -set-02: qmap now derived from const_assoc_query<std:map<...> >
+
+	+ -set-03: consistency patch
+	  Changed multikey_base<pint_value_type> to
+	  ART::entity::multikey_index_type as defined in "art_object_index.h"
+	  Preparing to obliterate multikey_base...
+	  and create multikey associative interface...
+	  multikey_base has been obsoleted by the introduction of 
+	  multikey_generic.  
+
+	+ -set-04: slowly phasing out multikey_base.
+	  Minor extensions to multikey interface, ablility to convert from
+	  generic type to dimension-specific with assertion check on size.  
+	  Replaced definition of multikey_index_type with multikey_generic.  
+	  Goal: no more virtual function calls from multikey_base.  
+	  To do: continue similar changes with "unroll_index_type".
+	  Possibly specialize multikey<1> as plain value instead of [1].
+
+	+ -set-05: no more references to multikey_base remaining.
+	  Replaced unroll_index_type with multikey_index_type, 
+	  both are multikey_generic<pint_value_type>.
+
+	+ -set-06: changed signature of dereference functor
+	  to take a generic class argument, and using pointer_traits
+	  (internal_reference<T>::type).
+	  Relocated "dereference_t" and hellper to "dereference.h".
+	  Updated all affected source files.  
+
+
+2005-02-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set:
+	  Branch dedicated to developing multikey_set structure.  
+	  Consider re-doing all of multikey_map family:
+	  create a qtree, underlying base type to qmap, qset.
+	  Or a multikey-tree, with new multikey methods?
+
+
 2005-02-03	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-06:

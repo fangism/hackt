@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.3 2005/02/05 02:24:02 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.4 2005/02/09 04:14:06 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -179,6 +179,12 @@ UTIL_HEADER_FILES = \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
+	util/assoc_traits_fwd.h \
+	util/assoc_traits.h \
+	util/const_assoc_query.h \
+	util/const_assoc_query.tcc \
+	util/const_traits.h \
+	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/discrete_interval_set.h \
 	util/discrete_interval_set.tcc \
@@ -193,6 +199,7 @@ UTIL_HEADER_FILES = \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
+	util/maplikeset.h \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
 	util/memory/list_vector_pool.tcc \
@@ -212,13 +219,20 @@ UTIL_HEADER_FILES = \
 	util/multikey_fwd.h \
 	util/multikey.h \
 	util/multikey.tcc \
+	util/multikey_assoc_fwd.h \
+	util/multikey_assoc.h \
+	util/multikey_assoc.tcc \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
 	util/multikey_map.tcc \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
 	util/multikey_qmap.tcc \
+	util/multikey_set_fwd.h \
+	util/multikey_set.h \
+	util/multikey_set.tcc \
 	util/nested_iterator.h \
+	util/null_construct.h \
 	util/numeric/integer_traits.h \
 	util/operators.h \
 	util/packed_array_fwd.h \

@@ -1,14 +1,14 @@
 /**
 	\file "hash_qmap_test.cc"
 	Test for queryable hash map.
-	$Id: hash_qmap_test.cc,v 1.5.16.1 2005/02/03 03:34:57 fang Exp $
+	$Id: hash_qmap_test.cc,v 1.5.16.2 2005/02/09 04:14:20 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "hash_qmap.tcc"
-#include "memory/pointer_classes.h"
+#include "memory/excl_ptr.h"
 #include "hash_specializations.h"
 
 #include "using_ostream.h"

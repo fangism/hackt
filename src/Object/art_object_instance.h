@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.3 2005/02/03 03:34:51 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.4 2005/02/09 04:14:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -17,7 +17,7 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
-using MULTIKEY_NAMESPACE::multikey_base;
+// using MULTIKEY_NAMESPACE::multikey_base;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -87,7 +87,7 @@ virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
 virtual instance_ptr_type
-	lookup_instance(const unroll_index_type& i) const = 0;
+	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual bool
 	lookup_instance_collection(list<instance_ptr_type>& l,
@@ -235,7 +235,7 @@ virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
 virtual instance_ptr_type
-	lookup_instance(const unroll_index_type& i) const = 0;
+	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual bool
 	lookup_instance_collection(list<instance_ptr_type>& l,

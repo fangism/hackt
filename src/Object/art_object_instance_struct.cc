@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.9.2.1 2005/02/03 03:34:54 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.2.2 2005/02/09 04:14:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -29,6 +29,7 @@
 #include "stacktrace.h"
 
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "compose.h"
 #include "binders.h"
 
@@ -37,7 +38,7 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
 
@@ -266,13 +267,13 @@ struct_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,
@@ -286,11 +287,12 @@ struct_array<D>::resolve_indices(const const_index_list& l) const {
  */
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
 typename struct_array<D>::instance_ptr_type
-struct_array<D>::lookup_instance(const unroll_index_type& i) const {
+struct_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
+	const multikey<D, pint_value_type> index(i);
 	const struct_instance_alias&
-		b(collection[i]);
+		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
@@ -429,7 +431,7 @@ struct_array<0>::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 struct_array<0>::instance_ptr_type
-struct_array<0>::lookup_instance(const unroll_index_type& i) const {
+struct_array<0>::lookup_instance(const multikey_index_type& i) const {
 	if (!the_instance.valid()) {
 		cerr << "ERROR: Reference to uninstantiated struct!" << endl;
 		return instance_ptr_type(NULL);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.5.2.1 2005/01/31 04:16:33 fang Exp $
+	$Id: art_object_expr_base.h,v 1.5.2.2 2005/02/09 04:14:08 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -261,7 +261,7 @@ virtual	const_index_list
 
 #if 0
 virtual	bool
-	resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const = 0;
 #endif
 
 virtual	bool

@@ -1,7 +1,7 @@
 /**
 	\file "qmap.tcc"
 	Template class method definitions for queryable map.  
-	$Id: qmap.tcc,v 1.2 2004/12/05 05:07:25 fang Exp $
+	$Id: qmap.tcc,v 1.2.16.1 2005/02/09 04:14:19 fang Exp $
  */
 
 #ifndef	__QMAP_TCC__
@@ -9,8 +9,35 @@
 
 #include "qmap.h"
 #include "STL/map.tcc"
+#include "const_assoc_query.tcc"
 
 namespace QMAP_NAMESPACE {
+/**
+	Purges map of entries that are just default values, 
+	useful for removing null pointers for maps of pointers
+	(where semantically appropriate).  
+	Requirement: T must be comparable for equality.  
+ */
+QMAP_TEMPLATE_SIGNATURE
+void
+qmap<K,T,C,A>::clean(void) {
+	const mapped_type def = null_construct<T>();  // default value
+	iterator i = this->begin();
+	const const_iterator e = this->end();
+	for ( ; i!=e; ) {
+		if (i->second == def) {
+			iterator j = i;
+			j++;
+			this->erase(i);
+			i = j;
+		} else {
+			i++;
+		}
+	}
+}
+
+#if 0
+OBSOLETE
 //=============================================================================
 // class qmap method definitions
 
@@ -69,10 +96,16 @@ qmap<K,T,C,A>::operator [] (const key_type& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Purges map of entries that are just default values, 
+	useful for removing null pointers for maps of pointers
+	(where semantically appropriate).  
+	Requirement: T must be comparable for equality.  
+ */
 QMAP_TEMPLATE_SIGNATURE
 void
 qmap<K,T,C,A>::clean(void) {
-	const mapped_type def;  // default value
+	const mapped_type def = null_construct<T>();  // default value
 #if 0
 	// won't work because of pair<> b.s.
 	remove_if(index_map.begin(), index_map.end(),
@@ -445,7 +478,8 @@ operator < (const qmap<K,T*,C,A>& __m1, const qmap<K,T*,C,A>& __m2) {
 }
 
 //=============================================================================
-}
+#endif
+}	// end namespace QMAP_NAMESPACE
 
 #endif	// __QMAP_TCC__
 

@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9.2.1 2005/02/03 03:34:54 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.2 2005/02/09 04:14:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -20,7 +20,7 @@ USING_LIST
 using std::string;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
-using MULTIKEY_NAMESPACE::multikey_base;
+// using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
@@ -153,7 +153,7 @@ virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
 virtual instance_ptr_type
-	lookup_instance(const unroll_index_type& i) const = 0;
+	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
@@ -164,7 +164,7 @@ virtual	const_index_list
 
 #if 0
 virtual bool
-	connect(const unroll_index_type& k, const struct_instance_alias& b) = 0;
+	connect(const multikey_index_type& k, const struct_instance_alias& b) = 0;
 #endif
 public:
 
@@ -222,7 +222,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 	instance_ptr_type
-	lookup_instance(const unroll_index_type& l) const;
+	lookup_instance(const multikey_index_type& l) const;
 
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
@@ -272,7 +272,7 @@ public:
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
 	instance_ptr_type
-	lookup_instance(const unroll_index_type& l) const;
+	lookup_instance(const multikey_index_type& l) const;
 
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.3 2005/02/03 03:34:53 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.4 2005/02/09 04:14:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -20,8 +20,7 @@ namespace entity {
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
 using QMAP_NAMESPACE::qmap;
-using MULTIKEY_NAMESPACE::multikey_base;
-using MULTIKEY_NAMESPACE::multikey_base;
+// using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
@@ -261,7 +260,7 @@ virtual	void
 
 virtual	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const = 0;
+		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 virtual	bool
@@ -274,7 +273,7 @@ virtual	const_index_list
 public:
 // really should be protected, usable by pbool_instance_reference::assigner
 virtual	bool
-	assign(const multikey_base<pint_value_type>& k, const bool b) = 0;
+	assign(const multikey_index_type& k, const bool b) = 0;
 
 public:
 
@@ -343,14 +342,14 @@ public:
 
 	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const;
+		const multikey_index_type& i) const;
 
 	bool
 	lookup_value_collection(list<value_type>& l,
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<pint_value_type>& k, const value_type i);
+	assign(const multikey_index_type& k, const value_type i);
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -412,7 +411,7 @@ public:
 
 	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const;
+		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 	bool
@@ -420,7 +419,7 @@ public:
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<pint_value_type>& k, const value_type i);
+	assign(const multikey_index_type& k, const value_type i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -591,7 +590,7 @@ virtual	void
 
 virtual	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const = 0;
+		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 virtual	bool
@@ -604,7 +603,7 @@ virtual	const_index_list
 public:
 // really should be protected, usable by pint_instance_reference::assigner
 virtual	bool
-	assign(const multikey_base<pint_value_type>& k, const value_type i) = 0;
+	assign(const multikey_index_type& k, const value_type i) = 0;
 
 public:
 	// subclasses will share this persistent type entry
@@ -674,14 +673,14 @@ public:
 
 	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const;
+		const multikey_index_type& i) const;
 
 	bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<pint_value_type>& k, const value_type i);
+	assign(const multikey_index_type& k, const value_type i);
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -744,7 +743,7 @@ public:
 
 	bool
 	lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const;
+		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 	bool
@@ -752,7 +751,7 @@ public:
 		const const_range_list& r) const;
 
 	bool
-	assign(const multikey_base<pint_value_type>& k, const value_type i);
+	assign(const multikey_index_type& k, const value_type i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;

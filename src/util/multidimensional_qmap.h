@@ -1,12 +1,12 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.9 2004/12/16 01:08:53 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.9.16.1 2005/02/09 04:14:14 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
-#ifndef	__MULTIDIMENSIONAL_QMAP_H__
-#define	__MULTIDIMENSIONAL_QMAP_H__
+#ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_H__
+#define	__UTIL_MULTIDIMENSIONAL_QMAP_H__
 
 #include <iosfwd>
 
@@ -76,101 +76,9 @@ bool
 empty(const typename multidimensional_qmap<D,K,T,L>::value_type& i);
 
 //=============================================================================
-/**
-	Abstract base-class for multidimensional queryable map.  
-	Param K is the key type, typically an integer, or integer-like class.  
-	Param T is the object's value type.  
-	Param L is the container for indexing (list, vector).  
-	// maybe introduce P for pointer class overriding?
-	Interface: unlike base_multidimensional_sparse_set, operations
-		cannot be done using ranges, but only one index at a time.  
-	Index lists are generalized as a pair of iterators, may even be T*.  
- */
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class base_multidimensional_qmap {
-public:
-	typedef	base_multidimensional_qmap<K,T,L>	this_type;
-	typedef	L<K>					key_list_type;
-	typedef	typename key_list_type::const_iterator	const_list_iterator;
-	typedef	pair<const_list_iterator, const_list_iterator>
-							index_arg_type;
-	typedef typename qmap<K,T>::size_type		size_type;
-public:
-	static const size_t			LIMIT = 4;
-
-public:
-virtual	~base_multidimensional_qmap() { }
-
-virtual bool
-	empty(void) const = 0;
-
-virtual void
-	clear(void) = 0;
-
-virtual	void
-	clean(void) = 0;
-
-virtual	size_t
-	dimensions(void) const = 0;
-
-virtual	size_type
-	population(void) const = 0;
-
-virtual	T&
-	operator [] (const index_arg_type& i) = 0;
-
-virtual	T
-	operator [] (const index_arg_type& i) const = 0;
-
-	/**
-		For convenience, need not be virtual.  
-	 */
-	T&
-	operator [] (const key_list_type& l) {
-		// pure virtual call
-		return (*this)[make_iter_range(l)];
-	}
-
-	/**
-		For convenience, need not be virtual.  
-	 */
-	T
-	operator [] (const key_list_type& l) const {
-		// pure virtual call
-		return AS_A(const this_type&, *this)[make_iter_range(l)];
-	}
-
-// virtual bool probe(...) const;
-
-virtual	bool
-	erase(const index_arg_type& l) = 0;
-
-	bool
-	erase(const key_list_type& l) {
-		return erase(make_iter_range(l));
-	}
-
-// another that dereferences one-level only, given an index
-// cannot be specified here in base class
-
-protected:
-virtual	ostream&
-	dump(ostream& o, const string& pre) const = 0;
-
-public:
-virtual	ostream&
-	dump(ostream& o) const = 0;
-
-// static functions
-	/** virtually, a virtual constructor */
-	static
-	this_type* 
-	make_multidimensional_qmap(const size_t d);
-};	// end class base_multidimensional_qmap
-
-//=============================================================================
 #if 0
 // not ready yet...
+// CONSIDER NESTED_ITERATOR!
 template <size_t D, class K, class T>
 struct multdimensional_map_iterator_base {
 	typedef	multidimensional_map_iterator_base*		_base_ptr;
@@ -207,19 +115,23 @@ struct multidimensional_map_iterator :
 	problem: limits implementation's template depth.  
 	Places limit on dimensionality of arrays...
 	Is 4 enough?
+
+	\param K is the key type, typically an integer, or integer-like class.  
+	\param T is the object's value type.  
+	\param L is the container for indexing (list, vector).  
  */
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class multidimensional_qmap : public base_multidimensional_qmap<K, T, L> {
+class multidimensional_qmap {
 friend class multidimensional_qmap<D+1, K, T, L>;
-
-public:
-	typedef	base_multidimensional_qmap<K, T, L>	parent;
+protected:
 	typedef	multidimensional_qmap<D, K, T, L>	this_type;
-	typedef	typename parent::index_arg_type		index_arg_type;
 	typedef multidimensional_qmap<D-1, K, T, L>	child_type;
 	typedef	child_type				map_value_type;
-	typedef	typename parent::key_list_type		key_list_type;
+public:
+	typedef	L<K>					key_list_type;
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
+	typedef	pair<const_list_iterator, const_list_iterator>
+							index_arg_type;
 	typedef	qmap<K, map_value_type>			map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
@@ -229,9 +141,10 @@ public:
 						const_reverse_map_iterator;
 	typedef	typename map_type::value_type		value_type;
 
+
 public:
 	// for array_traits<>
-	static const size_t dim = D;
+	enum { dim = D };
 
 protected:
 	map_type					index_map;
@@ -329,17 +242,16 @@ public:
 /**
 	Specialization of a one-dimensional array.  
  */
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class multidimensional_qmap<1,K,T,L> :
-		public base_multidimensional_qmap<K,T,L> {
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+class multidimensional_qmap<1,K,T,L> {
 friend class multidimensional_qmap<2,K,T,L>;
-
-public:
-	typedef	base_multidimensional_qmap<K,T,L>	parent;
+protected:
 	typedef	multidimensional_qmap<1,K,T,L>		this_type;
-	typedef	typename parent::index_arg_type		index_arg_type;
-	typedef	typename parent::key_list_type		key_list_type;
+public:
+	typedef	L<K>					key_list_type;
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
+	typedef	pair<const_list_iterator, const_list_iterator>
+							index_arg_type;
 	typedef	qmap<K,T>				map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
@@ -348,7 +260,7 @@ public:
 
 public:
 	// for array_traits<>
-	static const size_t dim = 1;
+	enum { dim = 1 };
 
 protected:
 	/**
@@ -478,17 +390,16 @@ empty(const typename multidimensional_qmap<D,K,T,L>::value_type& i) {
 // specialization of array_traits
 namespace util {
 
-
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 struct array_traits<
 		MULTIDIMENSIONAL_QMAP_NAMESPACE::
 			multidimensional_qmap<D,K,T,L> > {
 	typedef	MULTIDIMENSIONAL_QMAP_NAMESPACE::multidimensional_qmap<D,K,T,L>
 				array_type;
-	static const size_t	dimensions = array_type::dim;
+	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 
-}
+}	// end namespace util
 
-#endif	// __MULTIDIMENSIONAL_QMAP_H__
+#endif	// __UTIL_MULTIDIMENSIONAL_QMAP_H__
 

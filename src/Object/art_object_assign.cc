@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14.2.1 2005/02/03 03:34:46 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.14.2.2 2005/02/09 04:14:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -24,6 +24,7 @@
 #include "what.h"
 #include "binders.h"
 #include "compose.h"
+#include "dereference.h"
 #include "ptrs_functional.h"
 
 //=============================================================================
@@ -39,7 +40,7 @@ namespace ART {
 namespace entity {
 USING_UTIL_COMPOSE
 using std::mem_fun_ref;
-using std::dereference;
+using util::dereference;
 using std::bind2nd_argval;
 
 //=============================================================================
@@ -267,7 +268,7 @@ if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
 			&pbool_instance_reference::collect_transient_info), m), 
-		dereference<count_ptr, const pbool_instance_reference>()
+		dereference<count_ptr<const pbool_instance_reference> >()
 	)
 	);
 }
@@ -438,7 +439,7 @@ if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
 			&pint_instance_reference::collect_transient_info), m), 
-		dereference<count_ptr, const pint_instance_reference>()
+		dereference<count_ptr<const pint_instance_reference> >()
 	)
 	);
 }

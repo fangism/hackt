@@ -4,7 +4,7 @@
 	template classes.  
 	Useful for common template classes that are shared all over the place, 
 	explicitly or implicitly.  
-	$Id: art_object_extern_templates.h,v 1.2 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_extern_templates.h,v 1.2.2.1 2005/02/09 04:14:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXTERN_TEMPLATES_H__
@@ -26,8 +26,11 @@ using ART::entity::pint_value_type;
 //=============================================================================
 #if 1
 // in the section, use "extern" prefixing to suppress instantiation
+// extern template
+// class multikey_base<pint_value_type>;
+
 extern template
-class multikey_base<pint_value_type>;
+class multikey_generic<pint_value_type>;
 
 extern template
 class multikey<1, pint_value_type>;

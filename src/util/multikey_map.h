@@ -2,11 +2,13 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14 2004/12/23 00:07:44 fang Exp $
+	$Id: multikey_map.h,v 1.14.16.1 2005/02/09 04:14:16 fang Exp $
  */
 
-#ifndef	__MULTIKEY_MAP_H__
-#define	__MULTIKEY_MAP_H__
+#ifndef	__UTIL_MULTIKEY_MAP_H__
+#define	__UTIL_MULTIKEY_MAP_H__
+
+#define	USE_MULTIKEY_ASSOC			1
 
 #include "macros.h"
 #include "STL/list_fwd.h"
@@ -16,55 +18,16 @@
 #include "multikey_map_fwd.h"
 #include "array_traits.h"
 
+#if USE_MULTIKEY_ASSOC
+#include "multikey_assoc.h"
+#endif
+
 namespace MULTIKEY_MAP_NAMESPACE {
 using std::ostream;
 using std::istream;
 using std::pair;
 USING_LIST
-using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_NAMESPACE::multikey;
-
-//=============================================================================
-/**
-	Abstract base class for pseudo-multidimensional map.
-	Implementation-independent.  
- */
-BASE_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map_base {
-public:
-	typedef	pair<multikey_base<K>, multikey_base<K> >
-							multikey_base_pair;
-	typedef	multikey_map_base<K,T>			this_type;
-	typedef	list<K>					key_list_type;
-	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
-public:
-	static const size_t				LIMIT = 4;
-public:
-virtual	~multikey_map_base() { }
-
-virtual	size_t dimensions(void) const = 0;
-virtual	size_t population(void) const = 0;
-	size_t size(void) const { return this->population(); }
-virtual	bool empty(void) const = 0;
-virtual	void clear(void) = 0;
-virtual	void clean(void) = 0;
-
-virtual	T& operator [] (const list<K>& k) = 0;
-virtual	T operator [] (const list<K>& k) const = 0;
-virtual	T& operator [] (const multikey_base<K>& k) = 0;
-virtual	T operator [] (const multikey_base<K>& k) const = 0;
-
-virtual	key_list_pair_type is_compact_slice(
-		const key_list_type& l, const key_list_type& u) const = 0;
-virtual	key_list_pair_type is_compact_slice(const key_list_type& l) const = 0;
-virtual	key_list_pair_type is_compact(void) const = 0;
-
-virtual	ostream& dump(ostream& o) const = 0;
-
-template <template <class, class> class M>
-static	this_type* make_multikey_map(const size_t d);
-
-};	// end class multikey_map_base
 
 //=============================================================================
 /**
@@ -79,12 +42,22 @@ static	this_type* make_multikey_map(const size_t d);
 	\example multikey_qmap_test.cc
  */
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map : protected M<multikey<D,K>, T>, 
-		public multikey_map_base<K,T> {
+class multikey_map :
+#if USE_MULTIKEY_ASSOC
+	public multikey_assoc<D, M< multikey<D,K>, T> >
+#else
+	protected M<multikey<D,K>, T>
+#endif
+{
+private:
+	typedef	multikey_map<D,K,T,M>			this_type;
 protected:
 	/** this is the representation-type */
-	typedef	multikey_map_base<K,T>			interface_type;
+#if USE_MULTIKEY_ASSOC
+	typedef	multikey_assoc<D, M<multikey<D,K>, T> >	map_type;
+#else
 	typedef	M<multikey<D,K>, T>			map_type;
+#endif
 	typedef	map_type				mt;
 public:
 	typedef	typename mt::key_type			key_type;
@@ -105,14 +78,13 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
-	typedef	typename interface_type::key_list_type	key_list_type;
-	typedef	typename interface_type::key_list_pair_type
-							key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	typename mt::key_list_type		key_list_type;
+	typedef	typename mt::key_list_pair_type		key_list_pair_type;
+	typedef	typename mt::key_pair_type		key_pair_type;
 
 public:
 	// for array_traits<> interface
-	static const size_t dim = D;
+	enum { dim = D };
 
 public:
 	/**
@@ -125,6 +97,10 @@ public:
 	 */
 	~multikey_map();
 
+	using map_type::empty;
+	using map_type::size;
+	using map_type::clear;
+#if 0
 	/**
 		Whether or not this map contains any elements.
 		Need final overrider here to resolve ambiguity.  
@@ -133,36 +109,51 @@ public:
 	empty(void) const {
 		return map_type::empty();
 	}
+#endif
 
+#if 0
 	/**
 		Number of dimensions.
 	 */
 	size_t
 	dimensions(void) const { return D; }
+#endif
 
+#if 0
+	size_t
+	size(void) const { return this->population(); }
+#endif
+
+#if 0
 	/**
 		\return The number of elements (leaves) in map.  
 	 */
 	size_t
 	population(void) const { return mt::size(); }
+#endif
 
+#if 0
 	/**
 		Removes all elements.
 	 */
 	void
 	clear(void);
+#endif
 
+#if 0
 	/**
 		General method for removing default values.  
 	 */
 	void
 	clean(void);
+#endif
 
 	using map_type::begin;
 	using map_type::end;
 	using map_type::rbegin;
 	using map_type::rend;
 
+#if !USE_MULTIKEY_ASSOC
 	/**
 		\param k The key of the (key, value) pair to find.  
 		\return First element >= key k, or end().  
@@ -204,14 +195,15 @@ public:
 	/** specialization of erase() for only 1 dimension specified */
 	size_type
 	erase(const K i);
+#endif
 
 	T&
-	operator [] (const typename map_type::key_type& k) {
+	operator [] (const key_type& k) {
 		return map_type::operator[](k);
 	}
 
 	T
-	operator [] (const typename map_type::key_type& k) const {
+	operator [] (const key_type& k) const {
 		return map_type::operator[](k);
 	}
 
@@ -227,12 +219,7 @@ public:
 	T
 	operator [] (const list<K>& k) const;
 
-	T&
-	operator [] (const multikey_base<K>& k);
-
-	T
-	operator [] (const multikey_base<K>& k) const;
-
+#if !USE_MULTIKEY_ASSOC
 	/**
 		Recursive routine to determine implicit desnsely 
 		packed subslice.  
@@ -260,17 +247,18 @@ public:
 	key_list_pair_type
 	is_compact(void) const;
 
-	ostream&
-	dump(ostream& o) const;
-
 	/**
 		Returns the extremities of the indicies in each dimension.
 		If empty, returns empty lists.  
 	 */
 	key_list_pair_type
 	index_extremities(void) const;
+#endif
 
 public:
+	ostream&
+	dump(ostream& o) const;
+
 	// IO methods
 	ostream&
 	write(ostream& f) const;
@@ -285,10 +273,21 @@ public:
 	Specialization for one-dimension: just use base map type.  
  */
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map<1,K,T,M> : protected M<K,T>, public multikey_map_base<K,T> {
+class multikey_map<1,K,T,M> : 
+#if USE_MULTIKEY_ASSOC
+		public multikey_assoc<1, M<K,T> >
+#else
+		protected M<K,T>
+#endif
+{
+private:
+	typedef	multikey_map<1,K,T,M>			this_type;
 protected:
-	typedef	multikey_map_base<K,T>			interface_type;
+#if USE_MULTIKEY_ASSOC
+	typedef	multikey_assoc<1, M<K,T> >		map_type;
+#else
 	typedef	M<K, T>					map_type;
+#endif
 	typedef	map_type				mt;
 public:
 	typedef	typename mt::key_type			key_type;
@@ -309,17 +308,18 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
-	typedef	typename interface_type::key_list_type	key_list_type;
-	typedef	typename interface_type::key_list_pair_type
-							key_list_pair_type;
-	typedef	pair<key_type, key_type>		key_pair_type;
+	typedef	typename mt::key_list_type		key_list_type;
+	typedef	typename mt::key_list_pair_type		key_list_pair_type;
+	typedef	typename mt::key_pair_type		key_pair_type;
 
 	// for array_traits<>
-	static const size_t dim = 1;
+	enum { dim = 1 };
 public:
 	multikey_map();
+
 	~multikey_map();
 
+#if 0
 	bool
 	empty(void) const {
 		return map_type::empty();
@@ -329,13 +329,25 @@ public:
 	clear(void);
 
 	size_t
+	size(void) const { return this->population(); }
+#else
+	using map_type::empty;
+	using map_type::clear;
+	using map_type::size;
+#endif
+
+#if 0
+	size_t
 	dimensions(void) const { return 1; }
 
 	size_t
 	population(void) const { return mt::size(); }
+#endif
 
+#if 0
 	void
 	clean(void);
+#endif
 
 	using map_type::begin;
 	using map_type::end;
@@ -343,12 +355,12 @@ public:
 	using map_type::rend;
 
 	T&
-	operator [] (const typename map_type::key_type& k) {
+	operator [] (const key_type& k) {
 		return map_type::operator[](k);
 	}
 
 	T
-	operator [] (const typename map_type::key_type& k) const {
+	operator [] (const key_type& k) const {
 		return map_type::operator[](k);
 	}
 
@@ -359,11 +371,16 @@ public:
 	operator [] (const key_list_type& k) const;
 
 	T&
-	operator [] (const multikey_base<K>& k);
+	operator [] (const multikey<1,K>& k) {
+		return map_type::operator[](k[0]);
+	}
 
 	T
-	operator [] (const multikey_base<K>& k) const;
+	operator [] (const multikey<1,K>& k) const {
+		return map_type::operator[](k[0]);
+	}
 
+#if !USE_MULTIKEY_ASSOC
 	key_list_pair_type
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
 
@@ -378,7 +395,7 @@ public:
 
 	key_list_pair_type
 	is_compact(void) const;
-
+#endif
 
 	ostream&
 	dump(ostream& o) const;
@@ -402,10 +419,10 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 struct array_traits<MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M> > {
 	typedef	MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M>
 				array_type;
-	static const size_t	dimensions = array_type::dim;
+	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 
-}
+}	// end namespace util
 
-#endif	//	__MULTIKEY_MAP_H__
+#endif	// __UTIL_MULTIKEY_MAP_H__
 

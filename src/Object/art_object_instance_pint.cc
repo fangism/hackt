@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.2 2005/02/03 03:34:53 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.3 2005/02/09 04:14:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -34,6 +34,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
@@ -63,7 +64,7 @@ STATIC_TRACE_BEGIN("instance_pint")
 namespace ART {
 namespace entity {
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
@@ -427,7 +428,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<pint_value_type>::const_iterator
+		multikey_index_type::const_iterator
 			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
@@ -473,13 +474,13 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l, 
@@ -498,9 +499,10 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pint_instance& pi = collection[i];
+	const multikey<D, pint_value_type> index(i);
+	const pint_instance& pi = collection[index];
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -554,9 +556,13 @@ pint_array<D>::lookup_value_collection(
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::assign(const multikey_base<pint_value_type>& k,
+pint_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
-	pint_instance& pi = collection[k];
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const multikey<D, pint_value_type> index(k);
+	pint_instance& pi = collection[index];
 	return !(pi = i);
 }
 
@@ -695,8 +701,8 @@ pint_array<0>::lookup_value_collection(
  */
 bool
 pint_array<0>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
-	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey_base) "
+		const multikey_index_type& i) const {
+	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return false;
@@ -717,10 +723,10 @@ pint_array<0>::assign(const value_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_array<0>::assign(const multikey_base<pint_value_type>& k, 
+pint_array<0>::assign(const multikey_index_type& k, 
 		const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pint_array<0>::assign(multikey_base, int) "
+	cerr << "FATAL: pint_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return true;

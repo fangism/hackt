@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.2 2005/01/28 19:58:51 fang Exp $
+	$Id: count_ptr.h,v 1.2.2.1 2005/02/09 04:14:19 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -395,6 +395,11 @@ public:
 	}
 
 };	// end class count_ptr
+
+//=============================================================================
+// pointer_traits specializations
+
+SPECIALIZE_ALL_POINTER_TRAITS(count_ptr)
 
 //=============================================================================
 }	// end namespace memory

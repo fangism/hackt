@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.1 2005/02/03 03:34:50 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2 2005/02/09 04:14:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -11,7 +11,6 @@
 #include "persistent.h"
 #include "art_object_instance_base.h"
 #include "memory/pointer_classes.h"
-#include "multidimensional_sparse_set.h"
 
 namespace ART {
 namespace entity {
@@ -20,7 +19,6 @@ using std::ostream;
 using std::istream;
 USING_LIST
 using namespace util::memory;
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
 /**
@@ -152,12 +150,24 @@ public:
  */
 class simple_instance_reference : virtual public instance_reference_base {
 private:
+#if 0
 	/**
 		Helper class for evaluating sparse, multidimensional
 		collections.  
 	 */
 	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
 						mset_base;
+#else
+	/**
+		Helper class for evaluating sparse, multidimensional
+		collections.  
+		Virtual base class wrapper around sparse set.  
+	 */
+	class mset_base;
+
+	template <size_t>
+	class mset;
+#endif
 protected:
 	/**
 		The indices (optional) for this particular reference.
@@ -265,8 +275,11 @@ protected:		// for children only
 
 private:
 	// need help with instantiation state, count?
-	void write_instance_collection_state(ostream& f) const;
-	void load_instance_collection_state(istream& f);
+	void
+	write_instance_collection_state(ostream& f) const;
+
+	void
+	load_instance_collection_state(istream& f);
 };	// end class simple_instance_reference
 
 //=============================================================================

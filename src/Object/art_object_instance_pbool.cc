@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.2 2005/02/03 03:34:53 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.3 2005/02/09 04:14:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -28,6 +28,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
@@ -83,7 +84,7 @@ STATIC_TRACE_BEGIN("instance_pbool")
 namespace ART {
 namespace entity {
 USING_UTIL_COMPOSE
-using std::dereference;
+using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
 
@@ -420,7 +421,8 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<int>::const_iterator ci = key_gen.begin();
+		multikey_index_type::const_iterator
+			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
 		cerr << endl;
@@ -465,13 +467,13 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
+			dereference<count_ptr<const const_index> >()
 		)
 	);
 	return const_index_list(l,
@@ -491,9 +493,10 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value(value_type& v,
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const pbool_instance& pi(collection[i]);
+	const multikey<D, pint_value_type> index(i);
+	const pbool_instance& pi(collection[index]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -545,9 +548,13 @@ pbool_array<D>::lookup_value_collection(
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
-pbool_array<D>::assign(const multikey_base<pint_value_type>& k,
+pbool_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
-	pbool_instance& pi = collection[k];
+	// convert from generic to dimension-specific
+	// for efficiency, consider an unsafe pointer version, to save copying
+//	const typename collection_type::key_type index(k);
+	const multikey<D, pint_value_type> index(k);
+	pbool_instance& pi = collection[index];
 	return !(pi = i);	// yes, assignment is intended
 }
 
@@ -687,8 +694,8 @@ pbool_array<0>::lookup_value_collection(
  */
 bool
 pbool_array<0>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
-	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
+		const multikey_index_type& i) const {
+	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return false;
@@ -709,10 +716,10 @@ pbool_array<0>::assign(const value_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_array<0>::assign(const multikey_base<pint_value_type>& k,
+pbool_array<0>::assign(const multikey_index_type& k,
 		const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
+	cerr << "FATAL: pbool_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return true;

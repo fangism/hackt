@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8.2.1 2005/02/03 03:34:52 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.2.2 2005/02/09 04:14:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -20,7 +20,7 @@ USING_LIST
 using std::string;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
-using MULTIKEY_NAMESPACE::multikey_base;
+// using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
@@ -148,7 +148,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 	instance_ptr_type
-	lookup_instance(const unroll_index_type& l) const;
+	lookup_instance(const multikey_index_type& l) const;
 
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
@@ -198,7 +198,7 @@ public:
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
 	instance_ptr_type
-	lookup_instance(const unroll_index_type& l) const;
+	lookup_instance(const multikey_index_type& l) const;
 
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 

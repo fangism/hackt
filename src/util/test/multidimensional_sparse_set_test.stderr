@@ -1,6 +1,5 @@
 1D-array test: 
 ar0.dimensions() = 1
-ar1->dimensions() = 1
 ar0: 
 ar0: [0]
 [1]
@@ -79,7 +78,6 @@ ar0: [0]
 
 2D-array test: 
 ar0.dimensions() = 2
-ar1->dimensions() = 2
 ar0: 
 ar0: [0][0]
 [0][1]
@@ -998,4 +996,3 @@ ar0: [0][0]
 
 3D-array test: 
 ar0.dimensions() = 3
-ar1->dimensions() = 3
