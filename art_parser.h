@@ -24,6 +24,7 @@ using namespace __gnu_cxx;
 
 #include "art_macros.h"
 #include "art_switches.h"
+#include "art_utils.h"
 #include "list_of_ptr.h"	// includes <list>
 
 using namespace std;
@@ -75,10 +76,14 @@ virtual	~node() { }
 	Shows representation without recursive descent.  
 	Derived classes of non-terminals should just print their type name.  
  */
-virtual	ostream& what(ostream& o) const { return o << "(node)"; }
-// virtual	ostream& where(ostream& o) const = 0;
-// virtual	ostream& leftmost(ostream& o) const = 0;
-// virtual	ostream& rightmost(ostream& o) const = 0;
+virtual	ostream& what(ostream& o) const = 0;
+/// shows the position where node starts
+virtual	line_position leftmost(void) const = 0;
+/// shows the position where node ends
+virtual	line_position rightmost(void) const = 0;
+/// shows range of file position covered by a particular node
+virtual	line_range where(void) const
+		{ return line_range(leftmost(), rightmost()); }
 
 // will type-check and return a usable ART::object
 // virtual object* check_build(const context* c) const = 0;
@@ -89,20 +94,21 @@ virtual	ostream& what(ostream& o) const { return o << "(node)"; }
 class terminal : virtual public node {
 protected:
 /// the position in the file where token was found, pos.off is unused
-	long		line;
-	long		col;
+	line_position	pos;
 // file name will be kept separate?
-//	token_position	pos;		// too big
 public:
 ///	base constructor always records the current position of the token
 //	"current" is defined in art_switches.h
-	terminal() : node() { line = current.line; col = current.col; }
+	terminal() : node(), pos(current) { }
 
 ///	standard virtual destructor
 virtual	~terminal() { }
 
 virtual	int string_compare(const char* d) const = 0;
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const { return pos; }
+virtual	line_position rightmost(void) const { return pos; }
+
 };
 
 //=============================================================================
@@ -114,8 +120,9 @@ public:
 virtual ~nonterminal() { }
 
 virtual	ostream& what(ostream& o) const = 0;
-// virtual	ostream& where(ostream& o) const = 0;
-	// includes token position information
+virtual	line_range where(void) const { return node::where(); }
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 //=============================================================================
@@ -152,8 +159,10 @@ virtual	~node_list_base() { }
 using	list_parent::begin;
 using	list_parent::end;
 
-virtual	ostream& what(ostream& o) const { return o << "(node_list_base)"; }
 // later, use static functions (operator <<) to determine type name...
+virtual	ostream& what(ostream& o) const { return o << "(node_list_base)"; }
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -176,6 +185,8 @@ private:
 public:
 	typedef	typename parent::iterator	iterator;
 	typedef	typename parent::const_iterator	const_iterator;
+	typedef	typename parent::reverse_iterator	reverse_iterator;
+	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
 
 protected:
 	terminal*	open;		///< wrapping string, such as "("
@@ -218,6 +229,26 @@ virtual	ostream& what(ostream& o) const {
 		if (*i) (*i)->what(o) << " ";
 		return o << "...";
 	}
+
+virtual	line_position leftmost(void) const {
+	const_iterator i = begin();
+	if (open)
+		return open->leftmost();
+	for( ; i!=end(); i++) {
+		if (*i) return (*i)->leftmost();
+	}
+	return line_position();
+}
+
+virtual	line_position rightmost(void) const {
+	const_iterator i = end();
+	if (close)
+		return close->rightmost();
+	for(i-- ; i!=begin(); i--) {
+		if (*i) return (*i)->rightmost();
+	}
+	return line_position();
+}
 };
 
 // non-inline methods... will these be possibly multiply-defined?
@@ -263,6 +294,8 @@ public:
 	root_item() : nonterminal() { }
 virtual	~root_item() { }
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 typedef node_list<root_item>	root_body;
@@ -284,6 +317,8 @@ public:
 virtual	~expr() { }
 
 virtual	ostream& what(ostream& o) const  = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 ///	all expression lists are comma-separated
@@ -311,6 +346,26 @@ virtual	ostream& what(ostream& o) const { return o << (char) c; }
 };
 
 //=============================================================================
+class paren_expr : public expr {
+protected:
+	token_char*		lp;		///< left parenthesis
+	expr*			e;		///< enclosed expression
+	token_char*		rp;		///< right parenthesis
+public:
+	paren_expr(node* l, node* n, node* r) : expr(), 
+		lp(dynamic_cast<token_char*>(l)), 
+		e(dynamic_cast<expr*>(n)), 
+		rp(dynamic_cast<token_char*>(r))
+		{ assert(lp); assert(e); assert(rp); }
+virtual	~paren_expr() { SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp); }
+
+virtual	ostream& what(ostream& o) const { return o << "(paren-expr)"; }
+virtual	line_position leftmost(void) const { return lp->leftmost(); }
+virtual	line_position rightmost(void) const { return rp->rightmost(); }
+
+};
+
+//=============================================================================
 /// stores an integer (long) in native form and retains position information
 class token_int : public terminal, public expr {
 protected:
@@ -325,6 +380,8 @@ virtual	~token_int() { }
 virtual	int string_compare(const char* d) const 
 		{ char n[64]; sprintf(n, "%ld", val); return strcmp(n,d); }
 virtual	ostream& what(ostream& o) const { return o << "int: " << val; }
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 //=============================================================================
@@ -342,6 +399,8 @@ virtual	~token_float() { }
 virtual	int string_compare(const char* d) const 
 		{ char n[64]; sprintf(n, "%f", val); return strcmp(n,d); }
 virtual	ostream& what(ostream& o) const { return o << "float: " << val; }
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 //=============================================================================
@@ -375,6 +434,8 @@ public:
 virtual	~token_identifier() { }
 virtual	ostream& what(ostream& o) const 
 		{ return o << "identifier: " << (const string&) (*this); }
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 /// generalized scoped identifier expression
@@ -403,6 +464,8 @@ public:
 virtual	~token_bool() { }
 virtual	ostream& what(ostream& o) const
 		{ return o << "bool: " << *((const string*) this); }
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -415,6 +478,8 @@ virtual	~token_else() { }
 
 virtual	ostream& what(ostream& o) const
 		{ return o << "keyword: " << *((const string*) this); }
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -429,6 +494,8 @@ virtual	ostream& what(ostream& o) const {
 		return ((const token_string*) this)->what(o << "string: \"") 
 			<< "\"";
 	}
+virtual	line_position leftmost(void) const { return terminal::leftmost(); }
+virtual	line_position rightmost(void) const { return terminal::rightmost(); }
 };
 
 //=============================================================================
@@ -462,6 +529,12 @@ public:
 virtual	~range() { SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper); }
 
 virtual	ostream& what(ostream& o) const { return o << "(range)"; }
+virtual	line_position leftmost(void) const { return lower->leftmost(); }
+virtual	line_position rightmost(void) const {
+	if (upper)	return upper->rightmost();
+	else if (op)	return op->rightmost();
+	else		return lower->rightmost();
+}
 };
 
 /// all range lists are comma-separated
@@ -495,6 +568,8 @@ public:
 virtual	~unary_expr() { SAFEDELETE(e); SAFEDELETE(op); }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -505,6 +580,8 @@ public:
 virtual	~prefix_expr() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(prefix-expr)"; }
+virtual	line_position leftmost(void) const { return op->leftmost(); }
+virtual	line_position rightmost(void) const { return e->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -515,6 +592,8 @@ public:
 virtual	~postfix_expr() { }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const { return e->leftmost(); }
+virtual	line_position rightmost(void) const { return op->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -528,19 +607,21 @@ public:
 virtual	~member_expr() { SAFEDELETE(member); }
 
 virtual	ostream& what(ostream& o) const { return o << "(member-expr)"; }
+virtual	line_position rightmost(void) const { return member->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
 /// class for array indexing, with support for multiple dimensions and ranges
 class index_expr : public postfix_expr {
 protected:
-	expr*		ranges;			// should be range_list
+	range_list*		ranges;		///< index
 public:
 	index_expr(node* l, node* i) : postfix_expr(l, NULL), 
-		ranges(dynamic_cast<expr*>(i)) { }
+		ranges(dynamic_cast<range_list*>(i)) { }
 virtual	~index_expr() { SAFEDELETE(ranges); }
 
 virtual	ostream& what(ostream& o) const { return o << "(index-expr)"; }
+virtual	line_position rightmost(void) const { return ranges->rightmost(); }
 };
 
 //=============================================================================
@@ -558,6 +639,8 @@ public:
 virtual	~binary_expr() { SAFEDELETE(l); SAFEDELETE(op); SAFEDELETE(r); }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const { return l->leftmost(); }
+virtual	line_position rightmost(void) const { return r->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -601,6 +684,8 @@ public:
 virtual	~type_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -610,8 +695,13 @@ public:
 	token_type(const char* tf) : token_keyword(tf), type_base() { }
 //		{ assert(!strcmp(tf,"true") || !strcmp(tf,"false")); }
 virtual	~token_type() { }
+
 virtual	ostream& what(ostream& o) const
 		{ return o << "type: " << *((const string*) this); }
+virtual	line_position leftmost(void) const
+		{ return token_keyword::leftmost(); }
+virtual	line_position rightmost(void) const
+		{ return token_keyword::rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -633,25 +723,9 @@ virtual	ostream& what(ostream& o) const {
 		if (temp_spec) temp_spec->what(o);
 		return o;
 	}
+virtual	line_position leftmost(void) const { return base->leftmost(); }
+virtual	line_position rightmost(void) const { return temp_spec->rightmost(); }
 };
-
-//-----------------------------------------------------------------------------
-/*** obsolete
-/// base class for channel type
-class chan_type_root : public type_base {
-protected:
-	token_keyword*		chan;		///< keyword "channel"
-	token_char*		dir;		///< port direction: in or out
-public:
-	chan_type_root(node* c, node* d = NULL) : type_base(), 
-		chan(dynamic_cast<token_keyword*>(c)), 
-		dir(dynamic_cast<token_char*>(d))
-		{ assert(chan); }		// dir may be null
-virtual	~chan_type_root() { SAFEDELETE(chan); SAFEDELETE(dir); }
-
-virtual	ostream& what(ostream& o) const { return o << "(chan/port-base)"; }
-};
-***/
 
 //-----------------------------------------------------------------------------
 /// base type for data, such as int...
@@ -675,6 +749,13 @@ virtual	~data_type_base() { SAFEDELETE(type); SAFEDELETE(la);
 		SAFEDELETE(width); SAFEDELETE(ra); }
 
 virtual	ostream& what(ostream& o) const { return o << "(data-type-base)"; }
+virtual	line_position leftmost(void) const { return type->leftmost(); }
+virtual	line_position rightmost(void) const {
+	if (ra)		return ra->rightmost();
+	else if (width)	return width->rightmost();
+	else if (la)	return la->rightmost();
+	else		return type->rightmost();
+}
 };
 
 /// list of base data types
@@ -706,6 +787,8 @@ virtual	~chan_type() { SAFEDELETE(chan); SAFEDELETE(dir); SAFEDELETE(dtypes); }
 chan_type* attach_data_types(node* t);
 
 virtual	ostream& what(ostream& o) const { return o << "(chan-type)"; }
+virtual	line_position leftmost(void) const { return chan->leftmost(); }
+virtual	line_position rightmost(void) const { return dtypes->rightmost(); }
 };
 
 #define	chan_type_attach_data_types(ct,t)				\
@@ -718,6 +801,7 @@ protected:
 	token_keyword*		def;		///< "deftype" keyword
 	token_identifier*	name;		///< name of new type
 //	...
+public:
 
 };
 
@@ -732,6 +816,8 @@ public:
 virtual	~statement() { }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -756,6 +842,8 @@ virtual	expr* release_expr(void) { expr* r = e; e = NULL; return r; }
 virtual	terminal* release_op(void) { terminal* r = op; op = NULL; return r; }
 
 virtual	ostream& what(ostream& o) const { return o << "(inc/dec-stmt)"; }
+virtual	line_position leftmost(void) const { return e->leftmost(); }
+virtual	line_position rightmost(void) const { return op->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -774,6 +862,8 @@ public:
 virtual	~assign_stmt() { SAFEDELETE(lhs); SAFEDELETE(op); SAFEDELETE(rhs); }
 
 virtual	ostream& what(ostream& o) const { return o << "(assign-stmt)"; }
+virtual	line_position leftmost(void) const { return lhs->leftmost(); }
+virtual	line_position rightmost(void) const { return rhs->rightmost(); }
 };
 
 //=============================================================================
@@ -784,6 +874,8 @@ public:
 virtual	~def_body_item() { }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
 
 /// definition body is just a list of definition items
@@ -810,7 +902,9 @@ virtual language_body* attach_tag(node* t) {
 		return this;
 	}
 
-virtual	ostream& what(ostream& o) const { return o << "(language-body)"; }
+virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const { return tag->leftmost(); }
+virtual	line_position rightmost(void) const = 0;
 };
 
 //=============================================================================
@@ -840,6 +934,8 @@ virtual	~namespace_body() { SAFEDELETE(name); SAFEDELETE(lb);
 		SAFEDELETE(body); SAFEDELETE(rb); }
 
 virtual	ostream& what(ostream& o) const { return o << "(namespace-body)"; }
+virtual	line_position leftmost(void) const { return ns->leftmost(); }
+virtual	line_position rightmost(void) const { return semi->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -867,6 +963,8 @@ virtual	~using_namespace() { SAFEDELETE(open); SAFEDELETE(id);
 		SAFEDELETE(as); SAFEDELETE(alias); }
 
 virtual	ostream& what(ostream& o) const { return o << "(using-namespace)"; }
+virtual	line_position leftmost(void) const { return open->leftmost(); }
+virtual	line_position rightmost(void) const { return semi->rightmost(); }
 };
 
 //=============================================================================
@@ -887,6 +985,9 @@ virtual	~declaration_base() { SAFEDELETE(id); }
 
 virtual	ostream& what(ostream& o) const 
 		{ return id->what(o << "(declaration-id): "); }
+virtual	line_position leftmost(void) const { return id->leftmost(); }
+virtual	line_position rightmost(void) const { return id->rightmost(); }
+virtual	line_range where(void) const { return node::where(); }
 };
 
 typedef	node_list<declaration_base,comma>	declaration_id_list;
@@ -909,6 +1010,7 @@ virtual	~declaration_array() { SAFEDELETE(ranges); }
 
 virtual	ostream& what(ostream& o) const 
 		{ return ranges->what(id->what(o << "(declaration-array): ")); }
+virtual	line_position rightmost(void) const { return ranges->rightmost(); }
 };
 
 //=============================================================================
@@ -919,6 +1021,9 @@ public:
 virtual	~instance_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
+virtual	line_range where(void) const { return node::where(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -939,6 +1044,8 @@ virtual	~instance_declaration() { SAFEDELETE(type); SAFEDELETE (ids);
 		SAFEDELETE(semi); }
 
 virtual	ostream& what(ostream& o) const { return o << "(instance-decl)"; }
+virtual	line_position leftmost(void) const { return type->leftmost(); }
+virtual	line_position rightmost(void) const { return semi->rightmost(); }
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -969,12 +1076,17 @@ virtual	~actuals_connection()
 // remember to check for declaration context when checking id
 
 virtual	ostream& what(ostream& o) const { return o << "(actuals-connection)"; }
+virtual	line_position leftmost(void) const
+		{ return declaration_base::leftmost(); }
+virtual	line_position rightmost(void) const { return semi->rightmost(); }
+virtual	line_range where(void) const { return node::where(); }
 };
 
 //-----------------------------------------------------------------------------
 /// aliasing identifiers is establishing a connection, or assigning a value
 class alias_assign : public instance_base, public declaration_base {
 protected:
+//	expr*			id;		// inherited
 	terminal*		op;		///< assign operator
 	expr*			rhs;		///< right-hand side
 	terminal*		semi;		///< semicolon
@@ -990,6 +1102,10 @@ virtual	~alias_assign() { SAFEDELETE(op); SAFEDELETE(rhs); SAFEDELETE(semi); }
 // type check here
 
 virtual	ostream& what(ostream& o) const { return o << "(alias-assign)"; }
+virtual	line_position leftmost(void) const
+		{ return declaration_base::leftmost(); }
+virtual	line_position rightmost(void) const { return semi->rightmost(); }
+virtual	line_range where(void) const { return node::where(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -1023,6 +1139,8 @@ virtual	~loop_instantiation() {
 	}
 
 virtual	ostream& what(ostream& o) const { return o << "(loop-instance)"; }
+virtual	line_position leftmost(void) const { return lp->leftmost(); }
+virtual	line_position rightmost(void) const { return rp->rightmost(); }
 };
 
 //=============================================================================
@@ -1043,6 +1161,8 @@ virtual	ostream& what(ostream& o) const {
 		if (dim) dim->what(o);
 		return o;
 		}
+virtual	line_position leftmost(void) const { return name->leftmost(); }
+virtual	line_position rightmost(void) const { return dim->rightmost(); }
 };
 
 /// list of port-formal identifiers (optional arrays)
@@ -1068,6 +1188,8 @@ public:
 virtual	~port_formal_decl() { SAFEDELETE(type); SAFEDELETE(ids); }
 
 virtual	ostream& what(ostream& o) const { return o << "(port-formal-decl)"; }
+virtual	line_position leftmost(void) const { return type->leftmost(); }
+virtual	line_position rightmost(void) const { return ids->rightmost(); }
 };
 
 /// list of port-formal declarations
@@ -1096,6 +1218,8 @@ virtual	ostream& what(ostream& o) const {
 		if (dim) dim->what(o);
 		return o;
 		}
+virtual	line_position leftmost(void) const { return name->leftmost(); }
+virtual	line_position rightmost(void) const { return dim->rightmost(); }
 };
 
 /// list of template-formal identifiers (optional arrays)
@@ -1122,6 +1246,8 @@ virtual	~template_formal_decl() { SAFEDELETE(type); SAFEDELETE(ids); }
 
 virtual	ostream& what(ostream& o) const
 		{ return o << "(template-formal-decl)"; }
+virtual	line_position leftmost(void) const { return type->leftmost(); }
+virtual	line_position rightmost(void) const { return ids->rightmost(); }
 };
 
 /// list of template-formal declarations
@@ -1147,6 +1273,11 @@ public:
 virtual	~def_type_id() { SAFEDELETE(name); SAFEDELETE(temp_spec); }
 
 virtual	ostream& what(ostream& o) const { return o << "(def-type-id)"; }
+virtual	line_position leftmost(void) const { return name->leftmost(); }
+virtual	line_position rightmost(void) const {
+		if (temp_spec) return temp_spec->rightmost();
+		else return name->rightmost();
+	}
 };
 
 //=============================================================================
@@ -1161,6 +1292,8 @@ public:
 virtual	~definition() { SAFEDELETE(body); }
 
 virtual	ostream& what(ostream& o) const { return o << "(definition)"; }
+virtual	line_position leftmost(void) const { return body->leftmost(); }
+virtual	line_position rightmost(void) const { return body->rightmost(); }
 };
 
 //-----------------------------------------------------------------------------
@@ -1179,6 +1312,7 @@ public:
 		}
 
 virtual	ostream& what(ostream& o) const { return o << "(process-definition)"; }
+virtual	line_position leftmost(void) const { return def->leftmost(); }
 };
 
 //=============================================================================
@@ -1198,6 +1332,8 @@ virtual	~guarded_definition_body() { SAFEDELETE(guard);
 		SAFEDELETE(arrow); SAFEDELETE(body); }
 
 virtual	ostream& what(ostream& o) const { return o << "(guarded-def-body)"; }
+virtual	line_position leftmost(void) const { return guard->leftmost(); }
+virtual	line_position rightmost(void) const { return body->rightmost(); }
 };
 
 /// list of template-formal declarations
@@ -1221,6 +1357,8 @@ public:
 
 virtual	ostream& what(ostream& o) const
 	{ return o << "(conditional-instance)"; }
+virtual	line_position leftmost(void) const { return gd->leftmost(); }
+virtual	line_position rightmost(void) const { return gd->rightmost(); }
 };
 
 //=============================================================================

@@ -38,28 +38,34 @@ virtual	~rule() { SAFEDELETE(guard); SAFEDELETE(arrow);
 		SAFEDELETE(r); SAFEDELETE(dir); }
 
 virtual	ostream& what(ostream& o) const { return o << "(prs-rule)"; }
+virtual	line_position leftmost(void) const { return guard->leftmost(); }
+virtual	line_position rightmost(void) const { return dir->rightmost(); }
 };
+
+typedef node_list<rule>		rule_list;
+#define prs_rule_list_wrap(b,l,e)					\
+	dynamic_cast<PRS::rule_list*>(l)->wrap(b,e)
+#define prs_rule_list_append(l,d,n)					\
+	dynamic_cast<PRS::rule_list*>(l)->append(d,n)
+
 
 //=============================================================================
 /// a collection of production rules
-class body : public language_body, public node_list<rule> {
+class body : public language_body {
 protected:
+	rule_list*		rules;
 public:
-	body(node* r) : language_body(NULL), node_list<rule>(r) { }
-virtual	~body() { }
-
-/**
-	attaches the "prs" keyword to a language body
-	attach_tag();
- */
-
-#define	prs_body_tag_wrap(t,l,b,r)					\
-	dynamic_cast<PRS::body*>(					\
-		dynamic_cast<PRS::body*>(b)->attach_tag(t))->wrap(l,r)
+	body(node* t, node* r) : language_body(t), 
+		rules(dynamic_cast<rule_list*>(r))
+		{ if (r) assert(rules); }
+virtual	~body() { SAFEDELETE(rules); }
 
 virtual	ostream& what(ostream& o) const { return o << "(prs-body)"; }
+virtual	line_position leftmost(void) const
+	{ return language_body::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return rules->rightmost(); }
 };
-
 
 //=============================================================================
 };	// end namespace PRS

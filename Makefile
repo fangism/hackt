@@ -36,7 +36,8 @@ default: all
 
 all: $(TARGETS)
 
-ART_OBJ = art.yy.o y.tab.o art_parser.o art_symbol_table.o art_main.o
+ART_OBJ = art.yy.o y.tab.o art_parser.o art_symbol_table.o art_main.o \
+	art_utils.o
 artc: $(ART_OBJ)
 	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
 
@@ -75,6 +76,9 @@ tarball: clobber
 
 # header file dependencies could be generated automatically... not bothering
 art_main.o: art_parser.h list_of_ptr.h art_switches.h
-art.yy.o: y.tab.h
-y.tab.o: art_parser.h
+art.yy.o: y.tab.h art_lex.h
+y.tab.o: art_parser.h art_macros.h art_parser_prs.h art_parser_hse.h
+art_utils.o: art_utils.h
+art_symbol_table.o: art_symbol_table.h
+art_object.o: art_object.h
 

@@ -539,13 +539,13 @@ guarded_definition_body
 
 language_body
 	: CHP_LANG '{' chp_body '}'
-//		{ $$ = hse_body_tag_wrap($1, $2, $3, $4); }
+//		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	| HSE_LANG '{' hse_body '}'
-		{ $$ = hse_body_tag_wrap($1, $2, $3, $4); }
+		{ $$ = new HSE::body($1, hse_stmt_list_wrap($2, $3, $4)); }
 	| PRS_LANG '{' prs_body '}'
-		{ $$ = prs_body_tag_wrap($1, $2, $3, $4); }
+		{ $$ = new PRS::body($1, prs_rule_list_wrap($2, $3, $4)); }
 //	| STACK_LANG '{' stack_body '}'
-//		{ $$ = stack_body_tag_wrap($1, $2, $3, $4); }
+//		{ $$ = new stack::body($1, stack_rule_list_wrap($2, $3, $4)); }
 //	and more...
 	;
 
@@ -665,9 +665,9 @@ hse_body
 
 full_hse_body_item_list
 	: full_hse_body_item_list ';' full_hse_body_item
-		{ $$ = hse_body_append($1, $2, $3); }
+		{ $$ = hse_stmt_list_append($1, $2, $3); }
 	| full_hse_body_item
-		{ $$ = new HSE::body($1); }
+		{ $$ = new HSE::stmt_list($1); }
 	;
 
 full_hse_body_item
@@ -687,7 +687,7 @@ hse_body_item
 
 hse_loop
 	: BEGINLOOP hse_body ']'
-		{ $$ = new HSE::loop(hse_body_wrap($1, $2, $3)); }
+		{ $$ = new HSE::loop(hse_stmt_list_wrap($1, $2, $3)); }
 	;
 
 hse_do_until
@@ -748,8 +748,8 @@ hse_assignment
 
 prs_body
 	: prs_body single_prs 
-		{ $$ = dynamic_cast<PRS::body*>($1)->append(NULL, $2); }
-	| single_prs { $$ = new PRS::body($1); }
+		{ $$ = prs_rule_list_append($1, NULL, $2); }
+	| single_prs { $$ = new PRS::rule_list($1); }
 	;
 
 single_prs
@@ -1056,17 +1056,23 @@ void yyerror(const char* msg) {
 	for (s=yyss; s <= yyssp; s++)
 		cerr << ' ' << *s;
 	cerr << endl;
+
 	cerr << "yy-value-stack:" << endl;
+	// or just show the top N items on stack...
 	for (v=yyvs; v <= yyvsp; v++) {
 		if (v && v->n) {
-			v->n->what(cerr << '\t') << endl;
+			v->n->what(cerr << '\t') << " " 
+				<< v->n->where() << endl;
 		} else {
 			cerr << "\t(null) " << endl;
 		}
 	}
 	assert(yylval.n);	// NULL check
-	yylval.n->what(cerr << "received: ") << endl;
-	cerr << "on line " << current.line << " col " << current.col << endl;
+	yylval.n->what(cerr << "received: ") << " "
+		<< yylval.n->where() << endl;
+
+	// to do: list possible expected tokens based on state table
+	
 	// or throw exception
 	exit(1);
 }

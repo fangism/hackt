@@ -88,6 +88,20 @@ class formals_symtab : public symbol_table {
 };
 
 //=============================================================================
+// what is a context object?
+// a reference to:
+//	1) the current stack of visible scopes (goes up to global)
+//	2) the list of available outside scopes
+
+/// the contect object is what is passed down the type-checker routines
+class context {
+protected:
+
+public:
+
+};
+
+//=============================================================================
 };
 };
 

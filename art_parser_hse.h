@@ -27,35 +27,43 @@ public:
 virtual	~statement() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-statement)"; }
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
 };
+
+typedef	node_list<statement,semicolon>	stmt_list;
+
+#define hse_stmt_list_wrap(b,l,e)					\
+	dynamic_cast<HSE::stmt_list*>(l)->wrap(b,e)
+#define hse_stmt_list_append(l,d,n)					\
+	dynamic_cast<HSE::stmt_list*>(l)->append(d,n)
 
 //=============================================================================
 /// HSE body is just a list of statements
-class body : public language_body, public node_list<statement> {
+class body : public language_body {
+protected:
+	stmt_list*		stmts;		///< list of HSE statements
 public:
-	body(node* r) : language_body(NULL), node_list<statement>(r) { }
-virtual	~body() { }
+	body(node* t, node* s) : language_body(t), 
+		stmts(dynamic_cast<stmt_list*>(s))
+		{ if(s) assert(stmts); }
+virtual	~body() { SAFEDELETE(stmts); }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-body)"; }
+virtual	line_position leftmost(void) const
+	{ return language_body::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return stmts->rightmost(); }
 };
-
-#define hse_body_tag_wrap(t,l,b,r)					\
-	dynamic_cast<HSE::body*>(					\
-		dynamic_cast<HSE::body*>(b)->attach_tag(t))->wrap(l,r)
-
-#define hse_body_wrap(b,l,e)						\
-	dynamic_cast<HSE::body*>(l)->wrap(b,e)
-#define hse_body_append(l,d,n)						\
-	dynamic_cast<HSE::body*>(l)->append(d,n)
 
 
 //=============================================================================
 /// HSE guarded command contains an expression condition and body
 class guarded_command : public nonterminal {
 protected:
-	hse_expr*		guard;
-	terminal*		arrow;
-	body*			command;
+	hse_expr*		guard;		///< guard expression
+	terminal*		arrow;		///< right-arrow
+	body*			command;	///< statement body
 public:
 	guarded_command(node* g, node* a, node* c) : nonterminal(), 
 		guard(dynamic_cast<hse_expr*>(g)), 
@@ -66,6 +74,10 @@ virtual	~guarded_command() { SAFEDELETE(guard);
 		SAFEDELETE(arrow); SAFEDELETE(command); }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-guarded-cmd)"; }
+virtual	line_position leftmost(void) const
+	{ return guard->leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return command->rightmost(); }
 };
 
 //=============================================================================
@@ -96,6 +108,12 @@ virtual	~skip() { }
 // check that nothing appears after skip statement
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-skip)"; }
+virtual	line_position leftmost(void) const
+	{ return token_keyword::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return token_keyword::rightmost(); }
+virtual	line_range where(void) const
+	{ return token_keyword::where(); }
 };
 
 //=============================================================================
@@ -113,6 +131,8 @@ public:
 virtual	~wait() { SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb); }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-wait)"; }
+virtual	line_position leftmost(void) const { return lb->leftmost(); }
+virtual	line_position rightmost(void) const { return rb->rightmost(); }
 };
 
 //=============================================================================
@@ -131,6 +151,12 @@ virtual	~assignment() { }
 // remember to type check in HSE language mode
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-assignment)"; }
+virtual	line_position leftmost(void) const
+	{ return incdec_stmt::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return incdec_stmt::rightmost(); }
+virtual	line_range where(void) const
+	{ return incdec_stmt::where(); }
 };
 
 //=============================================================================
@@ -148,12 +174,20 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-selection)"; }
 /// container for deterministic selection statement
 class det_selection : public selection, 
 		public node_list<guarded_command,thickbar> {
+private:
+	typedef	node_list<guarded_command,thickbar>	det_sel_base;
 public:
 	det_selection(node* n) : selection(), 
 		node_list<guarded_command,thickbar>(n) { }
 virtual	~det_selection() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-det-sel)"; }
+virtual	line_position leftmost(void) const
+	{ return det_sel_base::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return det_sel_base::rightmost(); }
+virtual	line_range where(void) const
+	{ return det_sel_base::where(); }
 };
 
 #define hse_det_selection_wrap(b,l,e)					\
@@ -165,12 +199,20 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-det-sel)"; }
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, 
 		public node_list<guarded_command,colon> {
+private:
+	typedef	node_list<guarded_command,colon>	nondet_sel_base;
 public:
 	nondet_selection(node* n) : selection(), 
 		node_list<guarded_command,colon>(n) { }
 virtual	~nondet_selection() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-nondet-sel)"; }
+virtual	line_position leftmost(void) const
+	{ return nondet_sel_base::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return nondet_sel_base::rightmost(); }
+virtual	line_range where(void) const
+	{ return nondet_sel_base::where(); }
 };
 
 #define hse_nondet_selection_wrap(b,l,e)				\
@@ -182,12 +224,20 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-nondet-sel)"; }
 /// container for probablistic selection statement
 class prob_selection : public selection, 
 		public node_list<guarded_command,thickbar> {
+private:
+	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
 public:
 	prob_selection(node* n) : selection(), 
 		node_list<guarded_command,thickbar>(n) { }
 virtual	~prob_selection() { }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-prob-sel)"; }
+virtual	line_position leftmost(void) const
+	{ return prob_sel_base::leftmost(); }
+virtual	line_position rightmost(void) const
+	{ return prob_sel_base::rightmost(); }
+virtual	line_range where(void) const
+	{ return prob_sel_base::where(); }
 };
 
 //=============================================================================
@@ -200,6 +250,8 @@ public:
 virtual	~loop() { SAFEDELETE(command); }
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-loop)"; }
+virtual	line_position leftmost(void) const { return command->leftmost(); }
+virtual	line_position rightmost(void) const { return command->rightmost(); }
 };
 
 //=============================================================================
@@ -215,6 +267,8 @@ virtual	~do_until() { SAFEDELETE(sel); }
 // type-check: cannot contain an else clause, else infinite loop!
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-do-until)"; }
+virtual	line_position leftmost(void) const { return sel->leftmost(); }
+virtual	line_position rightmost(void) const { return sel->rightmost(); }
 };
 
 //=============================================================================
