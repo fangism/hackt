@@ -1,0 +1,2 @@
+ERROR: cannot redeclare or append to a port formal instance.
+[4:6..7]
