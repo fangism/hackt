@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "sstream.h"			// for ostringstring, used by dump
+#include "discrete_interval_set.h"
 
 #include "art_parser.h"
 #include "art_object.h"			// before including "art_object_expr.h"
@@ -100,201 +101,6 @@ param_expr_collective::hash_string(void) const {
 #endif
 
 //=============================================================================
-#if 0
-// replaced with instance_references directly
-// class param_literal method definitions
-#if 0
-OBSOLETE, inlined in header
-
-param_literal::param_literal(count_ptr<param_instance_reference> v) :
-		param_expr(), var(v) {
-	assert(var);
-}
-
-param_literal::~param_literal() {
-}
-
-ostream&
-param_literal::what(ostream& o) const {
-	return o << "param-literal";
-}
-
-string
-param_literal::hash_string(void) const {
-	return var->hash_string();
-}
-#endif
-
-/**
-	Whether or not this reference is initialized or is 
-	dependent on a template formal parameter.  
- */
-bool
-param_literal::is_initialized(void) const {
-	return get_inst_ref()->is_initialized();
-}
-
-/**
-	Find out if the referenced parameter variable is
-	has been defined, and if so whether or not it is constant.  
-	TO DO: finish
- */
-bool
-param_literal::is_static_constant(void) const {
-	// get_inst_ref()...
-	return false;
-}
-
-#if 0
-void
-param_literal::initialize(count_const_ptr<param_expr> i) {
-	var->initialize(i);
-}
-#endif
-
-bool
-param_literal::is_loop_independent(void) const {
-	// get_inst_ref()...
-	return true;
-}
-
-bool
-param_literal::is_unconditional(void) const {
-	// get_inst_ref()...
-	return false;
-}
-
-//=============================================================================
-// class pbool_literal method definitions
-
-pbool_literal::pbool_literal(count_ptr<pbool_instance_reference> v) :
-		pbool_expr(), param_literal(), var(v) {
-	assert(var);
-}
-
-pbool_literal::~pbool_literal() {
-}
-
-count_const_ptr<param_instance_reference>
-pbool_literal::get_inst_ref(void) const {
-	return var;
-}
-
-ostream&
-pbool_literal::what(ostream& o) const {
-	return o << "pbool-literal";
-}
-
-ostream&
-pbool_literal::dump(ostream& o) const {
-	return var->dump(o);
-}
-
-string
-pbool_literal::hash_string(void) const {
-	return var->hash_string();
-}
-
-void
-pbool_literal::initialize(count_const_ptr<param_expr> i) {
-	var->initialize(i);
-}
-
-bool
-pbool_literal::is_initialized(void) const {
-	return var->is_initialized();
-}
-
-bool
-pbool_literal::is_static_constant(void) const {
-	return var->is_static_constant();
-}
-
-bool
-pbool_literal::is_loop_independent(void) const {
-	return var->is_loop_independent();
-}
-
-bool
-pbool_literal::is_unconditional(void) const {
-	return var->is_unconditional();
-}
-
-bool
-pbool_literal::static_constant_bool(void) const {
-	// temporary... later actually bother to look up var...
-	assert(0);
-	return false;
-//	return var->get_param_inst_base()->
-//		default_value().is_a<pbool_expr>()->static_constant_bool();
-}
-
-//=============================================================================
-// class pint_literal method definitions
-
-pint_literal::pint_literal(count_ptr<pint_instance_reference> v) :
-		pint_expr(), param_literal(), var(v) {
-	assert(var);
-}
-
-pint_literal::~pint_literal() {
-}
-
-count_const_ptr<param_instance_reference>
-pint_literal::get_inst_ref(void) const {
-	return var;
-}
-
-ostream&
-pint_literal::what(ostream& o) const {
-	return o << "pint-literal";
-}
-
-ostream&
-pint_literal::dump(ostream& o) const {
-	return var->dump(o);
-}
-
-string
-pint_literal::hash_string(void) const {
-	return var->hash_string();
-}
-
-void
-pint_literal::initialize(count_const_ptr<param_expr> i) {
-	var->initialize(i);
-}
-
-bool
-pint_literal::is_initialized(void) const {
-	return var->is_initialized();
-}
-
-bool
-pint_literal::is_static_constant(void) const {
-	return var->is_static_constant();
-}
-
-bool
-pint_literal::is_loop_independent(void) const {
-	return var->is_loop_independent();
-}
-
-bool
-pint_literal::is_unconditional(void) const {
-	return var->is_unconditional();
-}
-
-int
-pint_literal::static_constant_int(void) const {
-	assert(0);			// temporary
-	return 0;
-//	return var->get_param_inst_base()->
-//		default_value().is_a<pbool_expr>()->static_constant_bool();
-}
-#endif
-
-//=============================================================================
 // class pbool_instance_reference method definitions
 
 pbool_instance_reference::pbool_instance_reference(
@@ -374,24 +180,6 @@ pbool_instance_reference::static_constant_bool(void) const {
 	assert(is_static_constant());
 	return pbool_inst_ref->initial_value()->static_constant_bool();
 }
-
-#if 0
-OBSOLETED AFTER CLASS SHIFT
-/**
-	\return newly constructed pbool literal if successful, 
-		returns NULL if type mismatches.  
- */
-count_ptr<param_expr>
-pbool_instance_reference::make_param_literal(
-		count_ptr<param_instance_reference> pr) {
-	// make sure passed pointer is a self-ref count
-	assert(pr == this);
-	count_ptr<pbool_instance_reference> br(
-		pr.is_a<pbool_instance_reference>());
-	if (br)	return count_ptr<param_expr>(new pbool_literal(br));
-	else	return count_ptr<param_expr>(NULL);
-}
-#endif
 
 //=============================================================================
 // class pint_instance_reference method definitions
@@ -474,23 +262,6 @@ pint_instance_reference::static_constant_int(void) const {
 	return pint_inst_ref->initial_value()->static_constant_int();
 }
 
-#if 0
-/**
-	\return newly constructed pint literal if successful, 
-		returns NULL if type mismatches.  
- */
-count_ptr<param_expr>
-pint_instance_reference::make_param_literal(
-		count_ptr<param_instance_reference> pr) {
-	// make sure passed pointer is a self-ref count
-	assert(pr == this);
-	count_ptr<pint_instance_reference> ir(
-		pr.is_a<pint_instance_reference>());
-	if (ir)	return count_ptr<param_expr>(new pint_literal(ir));
-	else	return count_ptr<param_expr>(NULL);
-}
-#endif
-
 //=============================================================================
 // class pint_const method definitions
 
@@ -528,50 +299,6 @@ string
 pbool_const::hash_string(void) const {
 	return (val) ? "true" : "false";
 }
-
-//=============================================================================
-#if 0
-// class param_unary_expr method definitions
-
-param_unary_expr::param_unary_expr(const char o, const param_expr* e) :
-		param_expr(), op(o), ex(e) {
-	assert(ex);
-}
-
-param_unary_expr::param_unary_expr(const param_expr* e, const char o) :
-		param_expr(), op(o), ex(e) {
-	assert(ex);
-}
-
-ostream&
-param_unary_expr::what(ostream& o) const {
-	return o << "param-unary-expr";
-}
-
-string
-param_unary_expr::hash_string(void) const {
-	return ex->hash_string() +op;
-}
-
-//=============================================================================
-// class param_binary_expr method definitions
-
-param_binary_expr::param_binary_expr(const param_expr* l, const char o, 
-		const param_expr* r) : param_expr(), op(o), lx(l), rx(r) {
-	assert(lx);
-	assert(rx);
-}
-
-ostream&
-param_binary_expr::what(ostream& o) const {
-	return o << "param-binary-expr";
-}
-
-string
-param_binary_expr::hash_string(void) const {
-	return lx->hash_string() +op +rx->hash_string();
-}
-#endif
 
 //=============================================================================
 // class pint_unary_expr method definitions
@@ -922,13 +649,20 @@ pint_range::static_constant_range(void) const {
 //=============================================================================
 // class const_range method definitions
 
-/** Default empty constructor. */
-const_range::const_range() : range_expr(), interval() {
+/**
+	Default empty constructor. 
+	Makes an invalid range.  
+ */
+const_range::const_range() : range_expr(), const_index(), parent(0,-1) {
 }
 
 /** Protected internal constructor. */
-const_range::const_range(const impl_type& i) :
-		range_expr(), interval(i) {
+const_range::const_range(const interval_type& i) :
+		range_expr(), const_index(), 
+		parent(i.empty() ? 0 : i.begin()->first,
+			i.empty() ? -1 : i.begin()->second) {
+	if (!i.empty())
+		assert(upper() >= lower());		// else what!?!?
 }
 
 /**
@@ -936,13 +670,18 @@ const_range::const_range(const impl_type& i) :
 	\param n must be > 0, else assertion will fail.
  */
 const_range::const_range(const int n) :
-		range_expr(),
-#if 0
-		lower(0), upper(n -1)
-#else
-		interval(0, n-1)
-#endif
-		{
+		range_expr(), const_index(), 
+		parent(0, n-1) {
+	assert(upper() >= lower());		// else what!?!?
+}
+
+/**
+	Explicit constructor of a dense range from 0 to N-1.  
+	\param n must be > 0, else assertion will fail.
+ */
+const_range::const_range(const pint_const& n) :
+		range_expr(), const_index(), 
+		parent(0, n.static_constant_int() -1) {
 	assert(upper() >= lower());		// else what!?!?
 }
 
@@ -952,13 +691,8 @@ const_range::const_range(const int n) :
 	\param u is upper bound, inclusive, and must be >= l.  
  */
 const_range::const_range(const int l, const int u) :
-		range_expr(),
-#if 0
-		lower(l), upper(u)
-#else
-		interval(l, u)
-#endif
-		{
+		range_expr(), const_index(), 
+		parent(l, u) {
 	assert(upper() >= lower());		// else what!?!?
 }
 
@@ -968,12 +702,17 @@ const_range::const_range(const const_range& r) :
 		index_expr(),
 		range_expr(), 
 		const_index(), 
-#if 0
-		lower(r.lower), upper(r.upper)
-#else
-		interval(r.interval)
-#endif
-		{
+		parent(r) {
+	// assert check range?
+}
+
+const_range::const_range(const parent r) :
+		object(), 
+		index_expr(),
+		range_expr(), 
+		const_index(), 
+		parent(r) {
+	// assert check range?
 }
 
 ostream&
@@ -983,7 +722,10 @@ const_range::what(ostream& o) const {
 
 ostream&
 const_range::dump(ostream& o) const {
-	return o << "[" << lower() << ".." << upper() << "]";
+	if (empty())
+		return o << "[]";
+	else
+		return o << "[" << lower() << ".." << upper() << "]";
 }
 
 string
@@ -1006,27 +748,15 @@ const_range::static_overlap(const const_range& r) const {
 	r.dump(cerr << "const const_range& r = ") << endl;
 #endif
 
-#if 0
-	// OLD and obsolete
-	return (lower <= r.lower && r.lower <= upper ||
-		lower <= r.upper && r.upper <= upper ||
-		r.lower <= lower && lower <= r.upper ||
-		r.lower <= upper && upper <= r.upper);
-#else
-	impl_type temp(interval);
-	temp.intersect(r.interval);
-#if 0
-	cerr << " ... finished computing temp.intersect: ";
-	cerr << "temp = " << temp;
-	cerr << endl;
-#endif
+	interval_type temp(first, second);
+	interval_type temp2(r.first, r.second);
+	temp.intersect(temp2);
 	return const_range(temp);		// private constructor
-#endif
 }
 
 bool
 const_range::is_initialized(void) const {
-	return true;
+	return !empty();
 }
 
 /**
@@ -1035,7 +765,7 @@ const_range::is_initialized(void) const {
  */
 bool
 const_range::is_sane(void) const {
-	return true;
+	return !empty();
 }
 
 //=============================================================================
@@ -1062,6 +792,30 @@ range_expr_list::range_expr_list() : object() {
 // class const_range_list method definitions
 
 const_range_list::const_range_list() : range_expr_list(), list_type() {
+}
+
+/**
+	Explicit conversion from an index list to a range list.  
+	Only available for constants, of course.
+	Converts x[n] to x[n..n].
+	Useful for static range-checking of indices.  
+ */
+const_range_list::const_range_list(const const_index_list& i) :
+		range_expr_list(), list_type() {
+	const_index_list::const_iterator j = i.begin();
+	for ( ; j!=i.end(); j++) {
+		count_ptr<const_index> k(*j);
+		assert(k);
+		count_ptr<pint_const> p(k.is_a<pint_const>());
+		count_ptr<const_range> r(k.is_a<const_range>());
+		if (p) {
+			const int min_max = p->static_constant_int();
+			push_back(const_range(min_max, min_max));	// copy
+		} else {
+			assert(r);
+			push_back(*r);		// deep copy
+		}
+	}
 }
 
 const_range_list::~const_range_list() {

@@ -10,15 +10,10 @@
 #ifndef	__DISCRETE_INTERVAL_SET_H__
 #define	__DISCRETE_INTERVAL_SET_H__
 
+#include "discrete_interval_set_fwd.h"
+
 #include <map>
 #include <iostream>
-
-#define	DEBUG_DISCRETE_INTERVAL_SET		0
-// eventually delete all that...
-
-#ifndef DISCRETE_INTERVAL_SET_NAMESPACE
-#define DISCRETE_INTERVAL_SET_NAMESPACE		fang
-#endif
 
 //=============================================================================
 /**
@@ -26,12 +21,6 @@
  */
 namespace DISCRETE_INTERVAL_SET_NAMESPACE {
 using namespace std;		// for map<>
-
-// forward declarations
-template <class T> class discrete_interval_set;
-
-template <class U>
-ostream& operator << (ostream& o, const discrete_interval_set<U>& r);
 
 //=============================================================================
 /**
@@ -96,9 +85,6 @@ protected:
 			else the end() iterator.
 	 */
 	iterator contains(const T v) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << "Does " << *this << " contain " << v << "?  ";
-#endif
 		iterator ret = this->upper_bound(v);
 			// b/c lower_bound misses equality condition
 		// (ret != this->end()) is irrelevant.  
@@ -106,24 +92,13 @@ protected:
 			ret--;		// look at interval before
 			assert(ret->first <= v);
 			if (ret->second >= v) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-				cerr << ((ret != this->end()) ? "yes" :
-					"no") << endl;
-#endif
 				return ret;
 			}
 		} else {
 			if (ret->first <= v && v <= ret->second) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-				cerr << ((ret != this->end()) ? "yes" :
-					"no") << endl;
-#endif
 				return ret;
 			}
 		}
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << ((ret != this->end()) ? "yes" : "no") << endl;
-#endif
 		return this->end();
 	}
 
@@ -145,6 +120,18 @@ public:
 				return ret;
 		}
 		return this->end();
+	}
+
+	/**
+		Returns the interval that entirely contains [min,max], 
+		else returns the end iterator.  
+	 */
+	const_iterator contains_entirely(const T min, const T max) const {
+		const_iterator l = contains(min);
+		if (l == this->end())
+			return l;
+		const_iterator u = contains(max);
+		return (u == l) ? u : this->end();
 	}
 
 	/**
@@ -176,60 +163,20 @@ public:
 		\return true if anything was deleted.  
 	 */
 	bool behead(const T m) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << "beheading from " << m << " and below." << endl;
-#endif
 		iterator li = contains(m);
 		if (li != this->end()) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "li != end()" << endl;
-#endif 
 			T new_max = li->second;
 			T new_min = m +1;
 			li++;
-
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "erasing from begin to li:" << endl;
-			if (this->begin() != this->end())
-				cerr << "begin: " << this->begin()->first <<
-					".." << this->begin()->second << endl;
-			else	cerr << "begin: (end)" << endl;
-			if (li != this->end())
-				cerr << "li: " << li->first <<
-					".." << li->second << endl;
-			else	cerr << "li: (end)" << endl;
-			cerr << "new_min = " << new_min <<
-				", new_max = " << new_max << endl;
-#endif
 			erase(this->begin(), li);
 			if (new_min <= new_max)		// was != (WRONG)
 				(*this)[new_min] = new_max;
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "result is " << *this << endl;
-#endif
 			return true;
 		} else {	// no overlap
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "li == end()" << endl;
-#endif 
 			li = lower_bound(m);
 			const bool ret = (li != this->begin());
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "erasing from begin to li:" << endl;
-			if (this->begin() != this->end())
-				cerr << "begin: " << this->begin()->first <<
-					".." << this->begin()->second << endl;
-			else	cerr << "begin: (end)" << endl;
-			if (li != this->end())
-				cerr << "li: " << li->first <<
-					".." << li->second << endl;
-			else	cerr << "li: (end)" << endl;
-#endif
 			erase(this->begin(), li);
 			// won't delete li
-#if DEBUG_DISCRETE_INTERVAL_SET
-			cerr << "result is " << *this << endl;
-#endif
 			return ret;
 		}
 	}
@@ -240,9 +187,6 @@ public:
 		\return true if anything was deleted.  
 	 */
 	bool betail(const T m) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << "betailing from " << m << " and above." << endl;
-#endif
 		iterator ui = contains(m);
 		if (ui != this->end()) {
 			if (ui->first == m) {
@@ -251,17 +195,11 @@ public:
 				ui++;		// don't delete this
 			}
 			erase(ui, this->end());
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << "result is " << *this << endl;
-#endif
 			return true;
 		} else {	// no overlap
 			ui = lower_bound(m);
 			const bool ret = (ui != this->end());
 			erase(ui, this->end());
-#if DEBUG_DISCRETE_INTERVAL_SET
-		cerr << "result is " << *this << endl;
-#endif
 			return ret;
 		}
 	}
@@ -331,9 +269,6 @@ discrete_interval_set<T>::query_overlap(const T min, const T max) const {
 template <class T>
 bool
 discrete_interval_set<T>::add_range(const T min, const T max) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-	cerr << "adding [" << min << "," << max << "]" << endl;
-#endif
 	const bool overlap = query_overlap(min, max);
 	// doesn't catch case where both miss around other intervals...
 	iterator li = contains(min -1);
@@ -400,9 +335,6 @@ discrete_interval_set<T>::add_range(const T min, const T max) {
 template <class T>
 bool
 discrete_interval_set<T>::delete_range(const T min, const T max) {
-#if DEBUG_DISCRETE_INTERVAL_SET
-	cerr << "deleting [" << min << "," << max << "]" << endl;
-#endif
 	const bool overlap = query_overlap(min, max);
 	if (overlap) {
 	iterator li = contains(min);

@@ -696,7 +696,7 @@ index_expr::rightmost(void) const {
  */
 never_const_ptr<object>
 index_expr::check_build(never_ptr<context> c) const {
-	cerr << "index_expr::check_build(): FINISH ME!" << endl;
+//	cerr << "index_expr::check_build(): FINISH ME!" << endl;
 //	never_const_ptr<object> o;
 
 	ranges->check_build(c);		// useless return value
@@ -730,41 +730,13 @@ index_expr::check_build(never_ptr<context> c) const {
 		base_inst(base_obj.is_a<simple_instance_reference>());
 	assert(base_inst);
 
-//	FINISH ME
-//	base_inst->attach_indices(index_list_obj);
-
-#if 0
-	if (o) {
-		count_ptr<simple_instance_reference>
-			ir(o.is_a<simple_instance_reference>());
-		assert(ir);		// sanity check
-		ranges->check_build(c);
-		count_ptr<object> i(c->pop_top_object_stack());
-		if (i) {
-			count_ptr<object_list> indices(i.is_a<object_list>());
-			assert(indices);
-			// convert object_list into index_list (attempt)
-		} else {
-			// there was some error in one of the indices
-			// try to pin point which one?
-			cerr << where() << endl;
-//			c->type_error_count++;	// protected...
-			exit(1);
-		}
-	} else {
-		// there was some error in the instance_reference lookup
-		cerr << where() << endl;
-//		c->type_error_count++;	// protected...
+	const bool ai = base_inst->attach_indices(index_list_obj);
+	if (!ai) {
+		cerr << ranges->where() << endl;
 		exit(1);
 	}
-#endif
-#if 0
-	// expect: collective_type_reference
-	never_const_ptr<collective_instance_reference> cir(
-		o.is_a<collective_instance_reference>());
-	// check each of the ranges from left to right
-	assert(cir);			// temporary
-#endif
+	// push indexed instance reference back onto stack
+	c->push_object_stack(base_inst);
 	return never_const_ptr<object>(NULL);
 }
 

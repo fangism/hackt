@@ -36,6 +36,8 @@ protected:
 	const_reverse_iterator	rhead;
 	const_reverse_iterator	rtail;
 public:
+	// default empty constructor?
+
 	/** Standard copy constructor */
 	sublist(const sublist<T>& l) :
 		the_list(l.the_list), head(l.head), tail(l.tail), 
@@ -69,6 +71,9 @@ virtual	~sublist() { }
 		return *this;
 	}
 
+	/** alias for behead() */
+	void pop_front(void) { behead(); }
+
 	/** Removes the last element from the slice. */
 	sublist<T>& betail(void) {
 		if (rhead != rtail) {
@@ -76,6 +81,11 @@ virtual	~sublist() { }
 		}
 		return *this;
 	}
+
+	/** alias for betail() */
+	void pop_back(void) { betail(); }
+
+// no push methods, slices may only shrink...
 
 };	// end class sublist
 //=============================================================================

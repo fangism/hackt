@@ -5,9 +5,10 @@
 
 #include <iosfwd>
 #include <string>
+#include <list>
 
 // #include "art_object.h"	// before including this header
-#include "discrete_interval_set.h"
+#include "discrete_interval_set_fwd.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -202,110 +203,6 @@ public:
 };	// end class param_expr_collective
 **/
 
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	THIS class is POINTLESS, PHASE THIS OUT after 
-		literals are merged with instance references.  
-	This is the same as param_instance_reference.  
-
-	Abstract interface.  
-	A reference to single parameter instance.  
-	Actually, can be collective too, just depends on var.  
-	Should sub-type into pbool and pint...
- */
-class param_literal : virtual public param_expr {
-protected:
-	/**
-		OBSOLETE, virtualized.  
-		The referencing pointer to the parameter instance.  
-		Is modifiable because parameters may be initialized later. 
-	count_ptr<param_instance_reference>	var;
-	**/
-public:
-//	param_literal(count_ptr<param_instance_reference> v);
-	param_literal() : param_expr() { }
-virtual	~param_literal() { }
-
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-// virtual	string hash_string(void) const;
-	// implement later.
-	bool is_initialized(void) const;
-	bool is_static_constant(void) const;
-virtual	count_const_ptr<param_instance_reference> get_inst_ref(void) const = 0;
-virtual	void initialize(count_const_ptr<param_expr> i) = 0;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
-};	// end class param_literal
-
-//-----------------------------------------------------------------------------
-/**
-	PHASE THIS INTO pbool_instance_reference.  Pointless wrapper this is.  
-
-	A reference to single parameter instance.  
-	Actually, can be collective too, just depends on var.  
-	Should sub-type into pbool and pbool...
- */
-class pbool_literal : public pbool_expr, public param_literal {
-protected:
-	/**
-		The referencing pointer to the parameter instance.  
-		Is modifiable because parameters may be initialized later. 
-	 */
-	count_ptr<pbool_instance_reference>	var;
-public:
-	pbool_literal(count_ptr<pbool_instance_reference> v);
-	~pbool_literal();
-
-	count_const_ptr<param_instance_reference> get_inst_ref(void) const;
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-	// implement later.
-	bool is_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_unconditional(void) const;
-	bool is_loop_independent(void) const;
-	bool static_constant_bool(void) const;
-	void initialize(count_const_ptr<param_expr> i);
-};	// end class pbool_literal
-
-//-----------------------------------------------------------------------------
-/**
-	PHASE THIS INTO pint_instance_reference.  Pointless wrapper this is.  
-
-	A reference to single parameter instance.  
-	Actually, can be collective too, just depends on var.  
-	Should sub-type into pbool and pint...
- */
-class pint_literal : public pint_expr, public param_literal {
-protected:
-	/**
-		The referencing pointer to the parameter instance.  
-		Is modifiable because parameters may be initialized later. 
-	 */
-	count_ptr<pint_instance_reference>	var;
-public:
-	pint_literal(count_ptr<pint_instance_reference> v);
-	~pint_literal();
-
-	count_const_ptr<param_instance_reference> get_inst_ref(void) const;
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-	// implement later.
-	bool is_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_unconditional(void) const;
-	bool is_loop_independent(void) const;
-	int static_constant_int(void) const;
-	void initialize(count_const_ptr<param_expr> i);
-};	// end class pint_literal
-
-// replaced by the following
-#endif
-
 //=============================================================================
 /**
 	A reference to a instance of built-in type pbool.  
@@ -336,10 +233,6 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	bool static_constant_bool(void) const;
-#if 0
-	count_ptr<param_expr> make_param_literal(
-		count_ptr<param_instance_reference> pr);
-#endif
 };	// end class pbool_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -371,10 +264,6 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	int static_constant_int(void) const;
-#if 0
-	count_ptr<param_expr> make_param_literal(
-		count_ptr<param_instance_reference> pr);
-#endif
 };	// end class pint_instance_reference
 
 //=============================================================================
@@ -419,29 +308,6 @@ public:
 };	// end class pbool_const
 
 //-----------------------------------------------------------------------------
-#if 0
-/**
-	Unary parameter expressions.  
-	Pointer-class-ize.
-	Subclassify into pints and pbools?
- */
-class param_unary_expr : public param_expr {
-public:
-protected:
-	const char			op;
-	const param_expr*		ex;
-public:
-	param_unary_expr(const char o, const param_expr* e);
-	param_unary_expr(const param_expr* e, const char o);
-	~param_unary_expr() { }
-	ostream& what(ostream& o) const;
-	string hash_string(void) const;
-	bool is_initialized(void) const { return ex->is_initialized(); }
-	bool is_static_constant(void) const { return ex->is_static_constant(); }
-};	// end class param_unary_expr
-#endif
-
-//-----------------------------------------------------------------------------
 /**
 	Only possibilites, unary negation, bit-wise negation.  
  */
@@ -482,34 +348,6 @@ public:
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
 };	// end class pbool_unary_expr
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	Binary parameter expressions.  
-	Pointer-class-ize.
-	Subclassify into pints and pbools?
- */
-class param_binary_expr : public param_expr {
-public:
-protected:
-	const char			op;
-	const param_expr*		lx;
-	const param_expr*		rx;
-public:
-	param_binary_expr(const param_expr* l, const char o, 
-		const param_expr* r);
-	~param_binary_expr() { }
-	ostream& what(ostream& o) const;
-	string hash_string(void) const;
-	bool is_initialized(void) const {
-		return lx->is_initialized() && rx->is_initialized();
-	}
-	bool is_static_constant(void) const {
-		return lx->is_static_constant() && rx->is_static_constant();
-	}
-};	// end class param_binary_expr
-#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -659,39 +497,41 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 //-----------------------------------------------------------------------------
 /**
 	Constant version of range expression.  
+	Deriving from pair to inherit its interface with first and second.  
  */
-class const_range : public range_expr, public const_index {
+class const_range : public range_expr, public const_index,
+		public pair<int,int> {
 protected:
-	/** implementation type for range */
-	typedef	discrete_interval_set<int>	impl_type;
+	typedef	pair<int,int>			parent;
+	/** implementation type for range-checking */
+	typedef	discrete_interval_set<int>	interval_type;
 protected:
-#if 0
-	const int			lower;
-	const int			upper;
-#else
-	const impl_type			interval;
-#endif
+//	const interval_type			interval;
 public:
 	// dispense with pint_const objects here
 	const_range();
 	/** explicit conversion from x[N] to x[0..N-1] */
 explicit const_range(const int n);
+explicit const_range(const pint_const& n);
+explicit const_range(const parent p);
 	const_range(const int l, const int u);
 	const_range(const const_range& r);
 protected:
-	const_range(const impl_type& i);
+	const_range(const interval_type& i);
 public:
 	~const_range() { }
 
 	/** use this to query whether or not range is valid */
-	bool empty(void) const { return interval.empty(); }
+	bool empty(void) const { return first > second; }
 	int lower(void) const {
-		assert(!interval.empty());	// only one member
-		return interval.begin()->first;
+		assert(!empty());
+		return first;
+//		return interval.begin()->first;
 	}
 	int upper(void) const {
-		assert(!interval.empty());	// only one member
-		return interval.begin()->second;
+		assert(!empty());
+		return second;
+//		return interval.begin()->second;
 	}
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -700,9 +540,9 @@ public:
 	const_range static_overlap(const const_range& r) const;
 	bool is_initialized(void) const;
 	bool is_sane(void) const;
-	bool is_static_constant(void) const { return true; }
-	bool is_loop_independent(void) const { return true; }
-	bool is_unconditional(void) const { return false; }
+	bool is_static_constant(void) const { return !empty(); }
+	bool is_loop_independent(void) const { return !empty(); }
+	bool is_unconditional(void) const { return !empty(); }
 };	// end class const_range
 
 //=============================================================================
@@ -735,10 +575,9 @@ class const_range_list : public range_expr_list, public list<const_range> {
 protected:
 	// no need for pointers here
 	typedef	list<const_range>	list_type;
-protected:
-//	list_type			index_ranges;
 public:
 	const_range_list();
+explicit const_range_list(const const_index_list& i);
 	~const_range_list();
 
 	ostream& what(ostream& o) const;
@@ -766,8 +605,6 @@ protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
 	typedef	list<count_ptr<pint_range> >	list_type;
-protected:
-//	list_type			index_ranges;
 public:
 	dynamic_range_list();
 virtual	~dynamic_range_list();
@@ -853,6 +690,7 @@ class const_index_list : public index_list,
 protected:
 	/** need list of pointers b/c const_index is abstract */
 	typedef	list<count_ptr<const_index> >	parent;
+public:
 	typedef parent::iterator		iterator;
 	typedef parent::const_iterator		const_iterator;
 	typedef parent::reverse_iterator	reverse_iterator;
@@ -883,6 +721,7 @@ class dynamic_index_list : public index_list,
 		public list<count_ptr<index_expr> > {
 protected:
 	typedef	list<count_ptr<index_expr> >	parent;
+public:
 	typedef parent::iterator		iterator;
 	typedef parent::const_iterator		const_iterator;
 	typedef parent::reverse_iterator	reverse_iterator;

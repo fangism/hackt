@@ -5,6 +5,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <list>
 #include <deque>
 
 #include "art_macros.h"
@@ -14,7 +15,7 @@
 // #include "hashlist.h"
 #include "ptrs.h"
 #include "count_ptr.h"
-#include "multidimensional_sparse_set.h"
+// #include "multidimensional_sparse_set.h"	// not yet
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -1039,7 +1040,6 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
-	bool attach_indices(excl_ptr<index_list> i);
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -1117,12 +1117,16 @@ public:
 virtual	~simple_instance_reference();
 
 	size_t dimensions(void) const;
-	bool add_index_list(excl_ptr<index_list> i);
+	bool attach_indices(excl_ptr<index_list> i);
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const;
+
+private:
+	// compute static index coverage
+	
 };	// end class simple_instance_reference
 
 //-----------------------------------------------------------------------------

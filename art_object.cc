@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "multidimensional_sparse_set.h"
+
 #include "art_parser_debug.h"		// need this?
 #include "art_parser.h"
 #include "art_symbol_table.h"
@@ -3028,6 +3030,88 @@ simple_instance_reference::hash_string(void) const {
 		ret += array_indices->hash_string();
 	}
 	return ret;
+}
+
+/**
+	Adds indices to instance reference.  
+	Must check with number of number of dimensions.  
+	(Should we allow under-specification of dimensions?
+		i.e. x[i] of a 2-D array to be a 1D array reference.)
+	Then referring to x is referring to the entire array of x.  
+	\return true if successful, else false.  
+ */
+bool
+simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
+	// make sure not already indexed
+	// side note: if indexing were truly recursive and not list-based, 
+	//	we'd be able to append indices one-by-one.  
+	assert(!array_indices);
+	assert(i);
+	// dimension-check:
+	const never_const_ptr<instantiation_base> inst_base(get_inst_base());
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim = inst_base->dimensions();
+	if (i->size() > max_dim) {
+		cerr << "ERROR: instance collection " << inst_base->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return false;
+	} else {
+		// allow under-specified dimensions?  yeah for now...
+		// if indices are constant, check for total overlap
+		// with existing instances from the point of reference.
+
+		typedef base_multidimensional_sparse_set<int, const_range>
+								mset_base;
+		// overriding default implementation with pair<int, int>
+		assert(max_dim <= mset_base::LIMIT);
+		never_const_ptr<index_list> il(i);
+		never_const_ptr<const_index_list>
+			cil(il.is_a<const_index_list>());
+		if (!cil)	// is dynamic, conservatively covers anything
+			return false;
+		// else is constant index list, can compute coverage
+		//	using multidimensional_sparse_set
+		instantiation_state iter = inst_state;
+		const instantiation_state
+			end(inst_base->collection_state_end());
+		excl_ptr<mset_base> cov(
+			mset_base::make_multidimensional_sparse_set(max_dim));
+		assert(cov);
+		{
+			const_range_list crl(*cil);
+			cov->add_ranges(crl);
+		}
+		for ( ; iter!=end; iter++) {
+			if (iter->is_a<dynamic_range_list>()) {
+				// all we can do conservatively...
+				cov->clear();
+				// empty means indices have been covered
+				break;
+			} else {
+				count_const_ptr<const_range_list>
+					crlp(iter->is_a<const_range_list>());
+				assert(crlp);
+				cov->delete_ranges(*crlp);
+			}
+		}
+		// if this point reached, then all instance additions
+		// were static constants.
+		// now, covered set must completely contain indices
+		if (!cov->empty()) {
+			// empty means covered.  
+			cerr << "ERROR: The following referenced indices "
+				"have definitely not been instantiated: {";
+			cov->dump(cerr << endl) << "} ";
+			// cerr << where() << endl;	// caller
+			// fancy: list indices not instantiated?
+			return false;
+		}
+		array_indices = i;
+		return true;
+	}
 }
 
 //=============================================================================

@@ -283,9 +283,10 @@ extern const char* const yyrule[];
 	HSE::assignment*	_hse_assignment;
 
 	PRS::body*		_prs_body;
+	PRS::body_item*		_prs_body_item;
 	PRS::rule_list*		_prs_rule_list;
 	PRS::rule*		_prs_rule;
-
+	PRS::loop*		_prs_loop;
 }
 
 %{
@@ -461,8 +462,12 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_hse_det_selection>	hse_unmatched_det_guarded_command_list
 %type	<_hse_assignment>	hse_assignment
 %type	<_prs_rule_list>	prs_body
+%type	<_prs_body_item>	prs_body_item
 %type	<_prs_rule>	single_prs
-%type	<_expr>	prs_expr
+%type	<_prs_loop>	prs_loop
+%type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
+%type	<_expr> prs_not prs_and prs_or
+%type	<_expr> prs_and_loop prs_or_loop
 %type	<_token_string>	prs_arrow
 %type	<_token_char>	dir
 %type	<_expr>	paren_expr expr
@@ -1312,12 +1317,24 @@ hse_assignment
 */
 
 prs_body
-	: prs_body single_prs 
+	: prs_body prs_body_item
 		{ $$ = prs_rule_list_append($1, NULL, $2); }
-	| single_prs { $$ = new PRS::rule_list($1); }
+	| prs_body_item
+		{ $$ = new PRS::rule_list($1); }
+	;
+
+prs_body_item
+	: single_prs { $$ = $1; }
+	| prs_loop { $$ = $1; }
+	;
+
+prs_loop
+	: '(' ':' ID ':' range ':' prs_body ')'
+		{ $$ = new PRS::loop($1, $2, $3, $4, $5, $6, $7, $8); }
 	;
 
 single_prs
+	/* note: type-check prs_expr as boolean return type */
 	: prs_expr prs_arrow member_index_expr dir
 		{ $$ = new PRS::rule($1, $2, $3, $4); }
 	;
@@ -1334,13 +1351,55 @@ dir
 	| '-' 
 	;
 
-/* end of PRS language */
 
 /* want prs expr to be only ~, & and | expressions */
-/* for now, allow any expression and type-check for bool later */
 prs_expr
-	: expr
+	: prs_or { $$ = $1; }
+/*	used to be just "expr"		 */
 	;
+
+prs_paren_expr
+	: '(' prs_expr ')'
+		{ $$ = new paren_expr($1, $2, $3); }
+	;
+
+prs_unary_expr
+	: member_index_expr { $$ = $1; }
+	| prs_paren_expr { $$ = $1; }
+	| prs_and_loop { $$ = $1; }
+	| prs_or_loop { $$ = $1; }
+	;
+
+prs_not
+	: '~' prs_unary_expr { $$ = new prefix_expr($1, $2); }
+	| prs_unary_expr { $$ = $1; }
+	;
+
+prs_and
+	: prs_and '&' prs_not
+		{ $$ = new logical_expr($1, $2, $3); }
+	| prs_not { $$ = $1; }
+	;
+
+prs_or
+	: prs_or '|' prs_and
+		{ $$ = new logical_expr($1, $2, $3); }
+	| prs_and { $$ = $1; }
+	;
+
+/* non-short-circuit AND */
+prs_and_loop
+	: '(' '&' ':' ID ':' range ':' prs_expr ')'
+		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+	;
+
+/* non-short-circuit OR */
+prs_or_loop
+	: '(' '|' ':' ID ':' range ':' prs_expr ')'
+		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+	;
+
+/* end of PRS language */
 
 /******************************************************************************
 // Expressions, expressions, expressions
@@ -1517,12 +1576,14 @@ inclusive_or_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
+/* short-circuit AND ? */
 logical_and_expr
 	: inclusive_or_expr
 	| logical_and_expr LOGICAL_AND inclusive_or_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
+/* short-circuit OR ? */
 logical_or_expr
 	: logical_and_expr
 	| logical_or_expr LOGICAL_OR logical_and_expr

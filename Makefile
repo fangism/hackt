@@ -167,7 +167,7 @@ y.union.cc: y.output art.yy.types
 		-v type=ART::parser::node y.output > $@
 
 # extra dependencies to ensure correct in-order parallel builds
-art_main.o: y.tab.h
+art_main.o: y.tab.h y.tab.cc
 
 # regression testing
 TEST_SUBJECTS = 
