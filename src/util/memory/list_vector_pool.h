@@ -3,11 +3,13 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.2 2004/12/05 05:08:14 fang Exp $
+	$Id: list_vector_pool.h,v 1.3 2005/01/11 01:56:05 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
 #define	__LIST_VECTOR_POOL_H__
+
+#include "memory/list_vector_pool_fwd.h"
 
 #include <pthread.h>
 
@@ -56,11 +58,6 @@ using std::ostream;
 using std::endl;
 
 //=============================================================================
-// forward declaration
-template <class T, bool Threaded = true>
-class list_vector_pool;
-
-//-----------------------------------------------------------------------------
 // specialization
 template <>
 class list_vector_pool<void> {
