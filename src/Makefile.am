@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2004/11/05 02:38:16 fang Exp $
+#	$Id: Makefile.am,v 1.20 2004/11/26 23:15:05 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -131,7 +131,11 @@ UTIL_HEADER_FILES = \
 	util/hash_qmap.h \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
-	util/list_vector_pool.h \
+	util/likely.h \
+	util/list_vector_fwd.h \
+	util/list_vector.h \
+	util/list_vector.tcc \
+	util/memory/list_vector_pool.h \
 	util/multidimensional_qmap.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_sparse_set.h \
@@ -142,6 +146,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_map.h \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
+	util/nested_iterator.h \
 	util/operators.h \
 	util/persistent.h \
 	util/persistent_object_manager.h \
@@ -152,6 +157,7 @@ UTIL_HEADER_FILES = \
 	util/qmap_fwd.h \
 	util/sstream.h \
 	util/sublist.h \
+	util/unique_list.h \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
@@ -280,6 +286,7 @@ EXTRA_DIST = \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
+	util/TODO \
 	wc-l
 
 TESTS = art_persistent_table
