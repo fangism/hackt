@@ -1,0 +1,10 @@
+// should fail: overlapping multidimensional arrays
+// Will overlap with two clusters,
+// but for now reports overlap for only the latter.  
+// Later, report collisions will all previous groups.  
+// Even merge them together!
+
+int q[4..7][4..7][4..7];
+int q[4][4][4];
+int q[2..4][3..4][3..5];	// collides
+
