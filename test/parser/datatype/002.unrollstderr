@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102404	module__	0	0	52
-	2	 0x3100170	namespc_	0	52	96
-	3	 0x3102424	dintcoll	0	96	133
+	1	 0x3302404	module__	0	0	52
+	2	 0x3300170	namespc_	0	52	96
+	3	 0x3302424	dintcoll	0	96	133
 	4	 0x3804604	datainst	0	133	153
-	5	 0x3102484	datatprf	0	153	169
-	6	 0x3102490	datadefn	0	169	201
-	7	 0x31024f4	dprmlst_	0	201	217
-	8	 0x25f6024	cnstpi__	0	217	229
-	9	 0x3102504	dintcoll	0	229	266
+	5	 0x3302484	datatprf	0	153	169
+	6	 0x3302490	datadefn	0	169	201
+	7	 0x33024f4	dprmlst_	0	201	217
+	8	 0x2602024	cnstpi__	0	217	229
+	9	 0x3302504	dintcoll	0	229	266
 	10	 0x3804620	datainst	0	266	286
-	11	 0x3102564	dintcoll	0	286	323
+	11	 0x3302564	dintcoll	0	286	323
 	12	 0x380463c	datainst	0	323	343
-	13	 0x2709004	dboolcol	0	343	376
-	14	 0x3804658	datainst	0	376	396
-	15	 0x31025c4	datatprf	0	396	412
-	16	 0x31025d0	datadefn	0	412	445
-	17	 0x2709054	dboolcol	0	445	478
-	18	 0x3804674	datainst	0	478	498
-	19	 0x27090a4	dboolcol	0	498	531
-	20	 0x3804690	datainst	0	531	551
+	13	 0x260f004	dboolcol	0	343	377
+	14	 0x3804658	datainst	0	377	397
+	15	 0x33025c4	datatprf	0	397	413
+	16	 0x33025d0	datadefn	0	413	446
+	17	 0x260f054	dboolcol	0	446	480
+	18	 0x3804674	datainst	0	480	500
+	19	 0x260f0a4	dboolcol	0	500	534
+	20	 0x3804690	datainst	0	534	554
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -31,11 +31,11 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    a = int<32>^0 a (instantiated)
-    b = int<32>^0 b (instantiated)
-    c = int<32>^0 c (instantiated)
-    x = bool^0 x (instantiated)
-    y = bool^0 y (instantiated)
-    z = bool^0 z (instantiated)
+    a = int<32>^0 a (instantiated) = ::a
+    b = int<32>^0 b (instantiated) = ::b
+    c = int<32>^0 c (instantiated) = ::c
+    x = bool^0 x (instantiated) = ::x
+    y = bool^0 y (instantiated) = ::y
+    z = bool^0 z (instantiated) = ::z
 }
 

@@ -2,18 +2,18 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x31006b4	module__	0	0	36
-	2	 0x3100170	namespc_	0	36	64
-	3	 0x31006d4	dintcoll	0	64	101
+	1	 0x33006b4	module__	0	0	36
+	2	 0x3300170	namespc_	0	36	64
+	3	 0x33006d4	dintcoll	0	64	101
 	4	 0x3804604	datainst	0	101	121
-	5	 0x3101884	datatprf	0	121	137
-	6	 0x3101890	datadefn	0	137	169
-	7	 0x31018f4	dprmlst_	0	169	185
-	8	 0x25f6024	cnstpi__	0	185	197
-	9	 0x2709004	dboolcol	0	197	230
-	10	 0x3804620	datainst	0	230	250
-	11	 0x3101904	datatprf	0	250	266
-	12	 0x3101910	datadefn	0	266	299
+	5	 0x3301884	datatprf	0	121	137
+	6	 0x3301890	datadefn	0	137	169
+	7	 0x33018f4	dprmlst_	0	169	185
+	8	 0x2602024	cnstpi__	0	185	197
+	9	 0x260f004	dboolcol	0	197	231
+	10	 0x3804620	datainst	0	231	251
+	11	 0x3301904	datatprf	0	251	267
+	12	 0x3301910	datadefn	0	267	300
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -23,7 +23,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    x = int<32>^0 x (instantiated)
-    y = bool^0 y (instantiated)
+    x = int<32>^0 x (instantiated) = ::x
+    y = bool^0 y (instantiated) = ::y
 }
 

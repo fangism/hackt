@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.6 2005/02/17 00:43:09 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7 2005/02/17 19:45:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -632,7 +632,7 @@ datatype_instance_collection::dump(ostream& o) const {
 			o << auto_indent << "}";        // << endl;
 		} else {
 			// else nothing to say, just one scalar instance
-			o << " (instantiated)";
+			dump_unrolled_instances(o << " (instantiated)");
 		}
 	}
 	return o;

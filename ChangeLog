@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-02-17	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13:
+	  Prelimiary testing of saving and restoring bool instance aliases, 
+	  where there are no actual connections.  So far so good.
+	  Some minor updates to instance dumping.  
+	  Tests were also updated because of expansion in bool
+	  instance object binary size.  
+
+
 2005-02-16	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-12:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.5 2005/02/17 04:20:35 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6 2005/02/17 19:45:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -277,7 +277,8 @@ bool_instance_alias<D>::collect_transient_info(
 	STACKTRACE_PERSISTENT("bool_alias::collect_transients()");
 	// this isn't truly a persistent type, so we don't register this addr.
 	bool_instance_alias_info::collect_transient_info_base(m);
-	// next->collect_transient_info_base(m)?	CYCLE!
+	if (next != this)
+		next->collect_transient_info_base(m);	// CYCLE?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -293,6 +294,7 @@ bool_instance_alias<D>::write_object(const persistent_object_manager& m,
 	write_key(key);
 #endif
 	bool_instance_alias_info::write_object_base(m, o);
+	// write the continuation alias pointer in a difference phase!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -306,6 +308,7 @@ bool_instance_alias<D>::load_object(const persistent_object_manager& m,
 	kr(e.key);
 #endif
 	bool_instance_alias_info::load_object_base(m, i);
+	// load the continuation alias pointer in a difference phase!
 }
 
 //=============================================================================
@@ -332,6 +335,10 @@ bool_instance_alias<0>::write_next_connection(
 /**
 	If this is the SAME as template version, this function need not be
 	virtual!  
+	Only issue: merge is a member function of bool_instance_alias_base, 
+	which is a ring_node_derived<...>.
+	May require another argument with a safe up-cast?
+	Or just have this return the bool_instance_alias_base?
  */
 void
 bool_instance_alias<0>::load_next_connection(
@@ -353,6 +360,9 @@ bool_instance_alias<0>::collect_transient_info(
 	// this isn't truly a persistent type, so we don't register this addr.
 	bool_instance_alias_info::collect_transient_info_base(m);
 	// next->collect_transient_info_base(m)?	CYCLE!
+	// maybe not recursive cycle, just visit the next's container
+	if (next != this)
+		next->collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -362,7 +372,15 @@ bool_instance_alias<0>::write_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("bool_alias<0>::write_object()");
 	bool_instance_alias_info::write_object_base(m, o);
 	// no key to write!
-	// continuation pointer?
+	// continuation pointer? write in separate phase or now?
+	// see connection_writer, may factor out common code...
+	NEVER_NULL(next);
+	if (next == this) {
+		write_value<char>(o, 0);
+	} else {
+		write_value<char>(o, 1);
+		next->write_next_connection(m, o);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -372,6 +390,12 @@ bool_instance_alias<0>::load_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("bool_alias<0>::load_object()");
 	bool_instance_alias_info::load_object_base(m, i);
 	// no key to load!
+	// continuation pointer? load in separate phase or now?
+	char c;
+	read_value(i, c);
+	if (c) {
+		load_next_connection(m, i);
+	}
 }
 
 //=============================================================================
@@ -749,7 +773,7 @@ bool_array<D>::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("bool_array<D>::connection_writer::operator()");
 	const bool_instance_alias_base* const next = e.get_next();
 	NEVER_NULL(next);
-	if (next != this) {
+	if (next != &e) {
 		write_value<char>(os, 1);
 		next->write_next_connection(pom, os);
 	} else {
@@ -802,7 +826,7 @@ bool_array<D>::write_object(const persistent_object_manager& m,
 	for_each(collection.begin(), collection.end(), 
 		element_writer(m, f)
 	);
-#if 0
+#if 1
 	// punting connections...
 	for_each(collection.begin(), collection.end(), 
 		connection_writer(m, f)
@@ -834,7 +858,7 @@ bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	for ( ; i < collection_size; i++) {
 		load_element();
 	}
-#if 0
+#if 1
 	// punting connections...
 	for_each(collection.begin(), collection.end(), 
 		connection_loader(m, f)
@@ -877,7 +901,13 @@ bool_array<0>::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_array<0>::dump_unrolled_instances(ostream& o) const {
-	return o << auto_indent << the_instance << endl;
+	// this never gets called?
+#if 0
+	o << auto_indent << the_instance << endl;
+#else
+	the_instance.get_next()->dump_alias(o << " = ");
+	return o;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -971,6 +1001,7 @@ bool_array<0>::write_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("bool_scalar::write_object()");
 	parent_type::write_object_base(m, f);
 	the_instance.write_object(m, f);
+	// the_instance.write_object may write the continuation information
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -979,6 +1010,8 @@ bool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("bool_scalar::load_object()");
 	parent_type::load_object_base(m, f);
 	the_instance.load_object(m, f);
+	// the_instance.load_object may load the continuation information
+	// because this collection has been sufficiently loaded
 }
 
 //=============================================================================

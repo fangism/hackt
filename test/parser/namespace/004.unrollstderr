@@ -2,37 +2,37 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3103484	module__	0	0	32
-	2	 0x3100170	namespc_	0	32	60
-	3	 0x31001a4	namespc_	0	60	99
-	4	 0x31001d8	namespc_	0	99	126
-	5	 0x310020c	namespc_	0	126	165
-	6	 0x3100240	namespc_	0	165	210
-	7	 0x3100274	namespc_	0	210	242
-	8	 0x31002a8	namespc_	0	242	285
-	9	 0x31002dc	namespc_	0	285	312
-	10	 0x31034d0	namespc_	0	312	338
-	11	 0x3103504	namespc_	0	338	363
-	12	 0x3103538	namespc_	0	363	391
-	13	 0x310356c	namespc_	0	391	417
-	14	 0x31035a0	namespc_	0	417	441
-	15	 0x31035d4	namespc_	0	441	467
-	16	 0x3103608	namespc_	0	467	491
-	17	 0x310363c	namespc_	0	491	520
-	18	 0x3103670	namespc_	0	520	546
-	19	 0x31036a4	namespc_	0	546	572
-	20	 0x31036d8	namespc_	0	572	597
-	21	 0x31037e4	dintcoll	0	597	636
+	1	 0x3303484	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	60
+	3	 0x33001a4	namespc_	0	60	99
+	4	 0x33001d8	namespc_	0	99	126
+	5	 0x330020c	namespc_	0	126	165
+	6	 0x3300240	namespc_	0	165	210
+	7	 0x3300274	namespc_	0	210	242
+	8	 0x33002a8	namespc_	0	242	285
+	9	 0x33002dc	namespc_	0	285	312
+	10	 0x33034d0	namespc_	0	312	338
+	11	 0x3303504	namespc_	0	338	363
+	12	 0x3303538	namespc_	0	363	391
+	13	 0x330356c	namespc_	0	391	417
+	14	 0x33035a0	namespc_	0	417	441
+	15	 0x33035d4	namespc_	0	441	467
+	16	 0x3303608	namespc_	0	467	491
+	17	 0x330363c	namespc_	0	491	520
+	18	 0x3303670	namespc_	0	520	546
+	19	 0x33036a4	namespc_	0	546	572
+	20	 0x33036d8	namespc_	0	572	597
+	21	 0x33037e4	dintcoll	0	597	636
 	22	 0x3804604	datainst	0	636	656
-	23	 0x3103844	datatprf	0	656	672
-	24	 0x3103850	datadefn	0	672	704
-	25	 0x31038b4	dprmlst_	0	704	720
-	26	 0x25f6024	cnstpi__	0	720	732
-	27	 0x310370c	namespc_	0	732	767
-	28	 0x3103740	namespc_	0	767	794
-	29	 0x3103774	namespc_	0	794	820
-	30	 0x31037a8	namespc_	0	820	845
-	31	 0x31037dc	namespc_	0	845	868
+	23	 0x3303844	datatprf	0	656	672
+	24	 0x3303850	datadefn	0	672	704
+	25	 0x33038b4	dprmlst_	0	704	720
+	26	 0x2602024	cnstpi__	0	720	732
+	27	 0x330370c	namespc_	0	732	767
+	28	 0x3303740	namespc_	0	767	794
+	29	 0x3303774	namespc_	0	794	820
+	30	 0x33037a8	namespc_	0	820	845
+	31	 0x33037dc	namespc_	0	845	868
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -214,7 +214,7 @@ In namespace "", we have: {
             }
         }
       Instances:
-        foo = int<32>^0 foo (instantiated)
+        foo = int<32>^0 foo (instantiated) = ::cornell::foo
     }
 }
 

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.4 2005/02/17 00:43:10 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5 2005/02/17 19:45:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -795,7 +795,12 @@ int_array<0>::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_array<0>::dump_unrolled_instances(ostream& o) const {
+#if 0
 	return o << auto_indent << the_instance << endl;
+#else
+	the_instance.get_next()->dump_alias(o << " = ");
+	return o;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
