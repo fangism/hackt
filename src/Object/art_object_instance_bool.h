@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.1 2004/12/10 22:02:17 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.2 2004/12/10 23:18:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -192,17 +192,8 @@ public:
 	collect_transient_info(persistent_object_manager& m) const;
 
 protected:
-#if 0
-	void
-	write_object_base(const persistent_object_manager& m, ostream&) const;
-
-	void
-	load_object_base(persistent_object_manager& m, istream&);
-#else
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
-#endif
-
 };	// end class bool_instance_collection
 
 //-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.27 2004/12/10 22:02:17 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.28 2004/12/10 23:18:07 fang Exp $
  */
 
 #include <iostream>
@@ -22,9 +22,6 @@
 #include "binders.h"
 #include "ptrs_functional.h"
 // #include "indent.h"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 namespace ART {
@@ -166,7 +163,6 @@ instance_collection_base::detect_static_overlap(
 	for ( ; i!=index_collection.end(); i++) {
 		// return upon first overlap error
 		// later accumulate all overlaps.  
-//		const_range_list ovlp((*i)->static_overlap(*r));
 		const_range_list ovlp((*i)->get_indices()->static_overlap(*r));
 		if (!ovlp.empty()) {
 			return ovlp;
@@ -476,11 +472,6 @@ instance_collection_base::load_object_base(
 //=============================================================================
 // class datatype_instance_collection method definitions
 
-#if 0
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_instance_collection, 
-	DATA_INSTANCE_COLLECTION_TYPE_KEY)
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -503,43 +494,11 @@ datatype_instance_collection::~datatype_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-datatype_instance_collection::what(ostream& o) const {
-	return o << "datatype-inst";
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	assert(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// becoming pure-virtual
-/**
-	Create a datatype reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-datatype_instance_collection::make_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions -- when attach_indices() invoked
-	return count_ptr<datatype_instance_reference>(
-		new datatype_instance_reference(
-			never_ptr<const datatype_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -558,58 +517,6 @@ datatype_instance_collection::make_member_instance_reference(
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-datatype_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_INSTANCE_COLLECTION_TYPE_KEY)) {
-	// don't bother visit the owner, assuming that's the caller
-	// go through index_collection
-	collect_index_collection_pointers(m);
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-datatype_instance_collection::construct_empty(const int i) {
-	return new datatype_instance_collection();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Need special case handling for built-in types? int and bool?
- */
-void
-datatype_instance_collection::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer(f, owner);
-	write_string(f, key);
-	write_index_collection_pointers(m);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Need special case handling for built-in types? int and bool?
- */
-void
-datatype_instance_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
 
 //=============================================================================
 // class process_instance_collection method definitions
@@ -713,13 +620,7 @@ process_instance_collection::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
-#if 0
-	m.write_pointer(f, owner);
-	write_string(f, key);
-	write_index_collection_pointers(m);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -729,13 +630,7 @@ process_instance_collection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-#if 0
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -844,13 +739,7 @@ channel_instance_collection::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
-#if 0
-	m.write_pointer(f, owner);
-	write_string(f, key);
-	write_index_collection_pointers(m);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -860,13 +749,7 @@ channel_instance_collection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-#if 0
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited

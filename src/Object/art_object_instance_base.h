@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.3 2004/12/10 22:02:17 fang Exp $
+	$Id: art_object_instance_base.h,v 1.4 2004/12/10 23:18:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -19,12 +19,6 @@
 	// need complete definition (never_ptr members)
 
 namespace ART {
-//=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
 //=============================================================================
 USING_LIST

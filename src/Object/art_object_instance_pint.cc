@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.2 2004/12/10 22:02:18 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.3 2004/12/10 23:18:08 fang Exp $
  */
 
 #include <iostream>
@@ -296,13 +296,7 @@ pint_instance_collection::construct_empty(const int i) {
 void
 pint_instance_collection::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
-#if 0
-	m.write_pointer(f, owner);
-	write_string(f, key);
-	write_index_collection_pointers(m);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	m.write_pointer(f, ival);
 }
 
@@ -310,13 +304,7 @@ pint_instance_collection::write_object_base(
 void
 pint_instance_collection::load_object_base(persistent_object_manager& m, 
 		istream& f) {
-#if 0
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	m.read_pointer(f, ival);
 }
 

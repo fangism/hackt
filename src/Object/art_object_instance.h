@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.24 2004/12/10 22:02:17 fang Exp $
+	$Id: art_object_instance.h,v 1.25 2004/12/10 23:18:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -104,11 +104,7 @@ virtual	count_ptr<instance_reference_base>
 	count_ptr<member_instance_reference_base>
 	make_member_instance_reference(
 		count_ptr<const simple_instance_reference> b) const;
-#if 0
-public:
-	PERSISTENT_STATIC_MEMBERS_DECL
-	PERSISTENT_METHODS
-#endif
+
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;

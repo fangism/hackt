@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.2 2004/12/10 22:02:18 fang Exp $
+	$Id: art_object_instance_param.h,v 1.3 2004/12/10 23:18:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -34,13 +34,6 @@ using namespace MULTIKEY_MAP_NAMESPACE;
 class param_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
-protected:
-	/**
-		OBSOLETE after sub-typing, and hard-wiring.  
-		Type refers directly to a definition in this case, 
-		because parameters are never templatable.  
-	never_ptr<const param_type_reference>	type;
-	**/
 
 protected:
 	param_instance_collection();

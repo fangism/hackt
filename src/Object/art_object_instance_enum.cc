@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.1 2004/12/10 22:02:17 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.2 2004/12/10 23:18:08 fang Exp $
  */
 
 #include <iostream>
@@ -453,8 +453,6 @@ if (!m.flag_visit(this)) {
 	STRIP_OBJECT_FOOTER(f);
 }
 }
-
-//=============================================================================
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.2 2004/12/10 22:02:18 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.3 2004/12/10 23:18:08 fang Exp $
  */
 
 #include <iostream>
@@ -273,13 +273,7 @@ pbool_instance_collection::construct_empty(const int i) {
 void
 pbool_instance_collection::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
-#if 0
-	m.write_pointer(f, owner);
-	write_string(f, key);
-	write_index_collection_pointers(m);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	m.write_pointer(f, ival);
 }
 
@@ -287,13 +281,7 @@ pbool_instance_collection::write_object_base(
 void
 pbool_instance_collection::load_object_base(persistent_object_manager& m, 
 		istream& f) {
-#if 0
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	m.read_pointer(f, ival);
 }
 
@@ -369,10 +357,6 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	multikey_generator<D, int> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
-#if 0
-	const typename multikey_generator<D, int>::base_type&
-		key_end = key_gen.get_lower_corner();
-#endif
 	do {
 #if 0
 		multikey_base<int>::const_iterator ci = key_gen.begin();

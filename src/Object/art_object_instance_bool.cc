@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.1 2004/12/10 22:02:17 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.2 2004/12/10 23:18:08 fang Exp $
  */
 
 #include <iostream>
@@ -449,8 +449,6 @@ if (!m.flag_visit(this)) {
 	STRIP_OBJECT_FOOTER(f);
 }
 }
-
-//=============================================================================
 
 //=============================================================================
 }	// end namespace entity
