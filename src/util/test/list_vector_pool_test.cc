@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.1 2004/11/05 02:38:59 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.2 2004/11/07 06:27:24 fang Exp $
  */
 
 #include <assert.h>
@@ -63,7 +63,6 @@ main(int argc, char* argv[]) {
 	cout << "test 1: " << endl;
 	string_manager m;
 }
-#if 0
 {
 	char alpha[] = "abcdefgh";
 	size_t j = 0;
@@ -93,7 +92,6 @@ main(int argc, char* argv[]) {
 		assert(i == 40320);
 	}
 }
-#endif
 {
 	char alpha[] = "abcdefgh";
 	size_t j = 0;
@@ -102,8 +100,10 @@ main(int argc, char* argv[]) {
 		string_manager m;
 		size_t i = 0;
 		do {
+#if 0
 			cout << '.' << i;
 			cout.flush();
+#endif
 			m.add_index_string(i++, alpha);
 		} while (next_permutation(alpha, alpha+8));
 		cout << "added " << i << " strings to map." << endl;
@@ -120,8 +120,10 @@ main(int argc, char* argv[]) {
 	string_manager m;
 	size_t i = 0;
 	do {
+#if 0
 		cout << '.' << i;
 		cout.flush();
+#endif
 		try {
 			m.add_index_string(i++, alpha);
 		} catch (...) {
@@ -134,13 +136,11 @@ main(int argc, char* argv[]) {
 	for ( ; i < 40320; i+=10)
 		m.delete_index(i);
 	cout << "deleted every 10th strings from map." << endl;
-#if 0
 	i = 0;
 	do {
 		m.add_index_string(i++, numer);
 	} while (next_permutation(numer, numer+7));
 	cout << "added and replaced with numeric strings" << endl;
-#endif
 }
 	return 0;
 }

@@ -1,5 +1,10 @@
 "ChangeLog"
 
+2004-11-06	David Fang	<fangism@users.sourceforge.net>
+	
+	* Debugged and finished testing the list_vector_pool allocator.  
+
+
 2004-11-05	David Fang	<fangism@users.sourceforge.net>
 
 	* Minor fixes in template code to make gcc-3.4.0 happy, 

@@ -1,0 +1,27 @@
+test 1: 
+cleaning up string_manager...
+test 2a[0]: 
+added 40320 strings to map.
+cleaning up string_manager...
+test 2a[1]: 
+added 40320 strings to map.
+cleaning up string_manager...
+test 2b[0]: 
+added/deleted 40320 strings to map.
+cleaning up string_manager...
+test 2b[1]: 
+added/deleted 40320 strings to map.
+cleaning up string_manager...
+test 3[0]: 
+added 40320 strings to map.
+deleted every 10th strings from map.
+cleaning up string_manager...
+test 3[1]: 
+added 40320 strings to map.
+deleted every 10th strings from map.
+cleaning up string_manager...
+test 4: 
+added 40320 strings to map.
+deleted every 10th strings from map.
+added and replaced with numeric strings
+cleaning up string_manager...

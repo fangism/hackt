@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.1 2004/11/05 02:38:47 fang Exp $
+	$Id: list_vector_pool.h,v 1.2 2004/11/07 06:27:24 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -16,6 +16,7 @@
 #include <list>
 #include <vector>
 
+#include <iostream>
 
 // because FreeBSD's <pthreads.h> defines initializer as NULL
 // and I haven't figured out a workaround yet.
@@ -27,15 +28,12 @@
 #endif
 
 // turn invariant assertions on or off
-#define	DEBUG_LIST_VECTOR_POOL	1
+#define	DEBUG_LIST_VECTOR_POOL	0
 
 // annoying debug messages
 #define VERBOSE_ALLOC		1 && DEBUG_LIST_VECTOR_POOL
 #define	VERBOSE_LOCK		0 && VERBOSE_ALLOC
 
-#if VERBOSE_ALLOC
-#include <iostream>
-#endif
 
 #if DEBUG_LIST_VECTOR_POOL
 #define INVARIANT_ASSERT(foo)	assert(foo)
@@ -53,10 +51,8 @@ typedef	pthread_mutex_t				mutex_type;
 using std::queue;
 using std::list;
 using std::vector;
-
-#if VERBOSE_ALLOC
-using namespace std;		// for debugging
-#endif
+using std::ostream;
+using std::endl;
 
 //=============================================================================
 // forward declaration
@@ -78,7 +74,7 @@ public:
 
 //-----------------------------------------------------------------------------
 #if 0
-// specialization for when allocated type is just pointer, 
+// Partial specialization for when allocated type is just pointer, 
 // to prevent pointer recursion, not needed unless free_list_type is fancy
 template <class T, bool Threaded>
 class list_vector_pool<T*, Threaded> {
@@ -125,6 +121,9 @@ private:
 	typedef	vector<value_type>		chunk_type;
 	typedef	list<chunk_type>		impl_type;
 #if 1
+	// could also try priority_queue... using less<pointer>
+	// could try set<pointer> for uniqueness checking
+		// set<> maintains begin() and end() with constant-time
 	typedef	queue<pointer>			free_list_type;
 #else
 	// ballsy: use itself as allocator! (template recursion problem?)
@@ -136,7 +135,6 @@ private:
 	friend struct Lock;			// grant access to the_mutex
 	struct Lock {
 		Lock() {
-//			assert(the_mutex);
 #if VERBOSE_LOCK
 			cerr << "getting lock at " << &the_mutex << "... ";
 #endif
@@ -172,12 +170,18 @@ public:
 		\param C is number of elements to allocate at a time.
 			Should be related to page_size/sizeof(T).  
 	 */
+	explicit
 	list_vector_pool(const size_type C = 16) : 
 			chunk_size(C), pool(), free_list() {
 		assert(chunk_size);
 		// worry about alignment, placement and pages sizes later
 		pool.push_back(chunk_type());
 		pool.back().reserve(chunk_size);
+#if VERBOSE_ALLOC
+		cerr << "Reserved chunk of size " << chunk_size << "*" <<
+			sizeof(T) << " starting at " <<
+			&pool.back().front() << endl;
+#endif
 		INVARIANT_ASSERT(pool.back().capacity() == chunk_size);
 		INVARIANT_ASSERT(!pool.back().size());
 		INVARIANT_ASSERT(free_list.empty());
@@ -186,8 +190,37 @@ public:
 	// no copy-constructor
 
 	// default destructor suffices
+	~list_vector_pool() {
+#if VERBOSE_ALLOC
+		status(cerr << "~list_vector_pool()" << endl);
+#if VERBOSE_ALLOC && 0
+		// for debugging deallocation path only
+		typename impl_type::iterator i = pool.begin();
+		const typename impl_type::iterator e = pool.end();
+		cerr << "Clearing chunk-list: " << endl;
+		for ( ; i!=e; i++) {
+			i->clear();
+			cerr << "\tcleared chunk." << endl;
+		}
+		pool.clear();
+		cerr << "... cleared chunk-list." << endl;
+		cerr << "Clearing free-list... ";
+		while(!free_list.empty())
+			free_list.pop();
+		cerr << "...cleared." << endl;
+#endif
+#endif
+	}
 
-	/// allocate one element only, without construction
+	/**
+		Allocate one element only, without construction.
+		Here is where lazy deletion takes place:
+		Any pointer that was returned to the free-list
+		by deallocate() (below) was not destroyed;
+		there is no need to destroy until it is re-allocated.  
+		It MUST be destroyed upon reallocation to guarantee
+		that old structures are not leaked!  
+	 */
 	pointer
 	allocate(void) {
 #if THREADED_ALLOC
@@ -198,9 +231,10 @@ public:
 		if (!free_list.empty()) {
 			pointer ret = free_list.front();
 			INVARIANT_ASSERT(ret);
+			ret->~T();		// Lazy deletion!
 			free_list.pop();
 #if VERBOSE_ALLOC
-			cerr << "alloc from free-list @ " << ret << endl;
+			cerr << "Allocated from free-list @ " << ret << endl;
 #endif
 			return ret;
 		} else {
@@ -211,7 +245,7 @@ public:
 			if (chunk->size() == chunk->capacity()) {
 				// rare case: allocate chunk
 #if VERBOSE_ALLOC
-				cerr << "new chunk of " << chunk_size
+				cerr << "New chunk of " << chunk_size
 					<< " allocated." << endl;
 #endif
 				pool.push_back(chunk_type());
@@ -225,7 +259,7 @@ public:
 			pointer ret = &chunk->back();
 			INVARIANT_ASSERT(ret);
 #if VERBOSE_ALLOC
-			cerr << "alloc from pool @ " << ret << endl;
+			cerr << "Allocated from pool @ " << ret << endl;
 #endif
 			return ret;
 		}
@@ -246,7 +280,7 @@ public:
 #endif
 		assert(p);
 #if VERBOSE_ALLOC
-		cerr << "returned " << p << " to free-list." << endl;
+		cerr << "Returned " << p << " to free-list." << endl;
 #endif
 		free_list.push(p);
 		// lock will expire at end-of-scope
@@ -265,20 +299,45 @@ public:
 	void
 	construct(pointer p, const T& val) {
 		assert(p);
+#if VERBOSE_ALLOC
+		cerr << "Constructing " << p;
 		new(p) T(val);
+		cerr << " ... constructed." << endl;
+#else
+		new(p) T(val);
+#endif
 	}
 
-	/// destroys *p without deallocating
+	/**
+		Destroys *p without deallocating.
+		QUESTION: should this ever be destroyed, 
+		or should the vector take care of it?
+		ANSWER: lazy destruction, destroy when it is
+		reallocated at a later point and clobbered...
+		See allocate(), when free-list pointer is recycled.
+	 */
 	void
 	destroy(pointer p) {
 		assert(p);
-		p->~T();
+#if VERBOSE_ALLOC
+		cerr << "Punting destruction for " << p;
+#endif
 	}
 
 	// other miscellaneous methods
 	size_type max_size() const;
 
 	// rebinding typedef
+
+	// feedback IO
+	ostream&
+	status(ostream& o) const {
+		o << pool.size() << " chunks of " << chunk_size  << "*" << 
+			sizeof(T) << " have been allocated." << endl;
+		o << "Free-list has " << free_list.size() << 
+			" entries available." << endl;
+		return o;
+	}
 
 };	// end class list_vector_pool
 
