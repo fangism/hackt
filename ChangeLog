@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-03:
+	  art++-parse.yy: deleted uses of *_append *_wrap macros, 
+	  in preparation for substituting code with new node_list.
+
+
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-parser-01-02:

@@ -2,7 +2,7 @@
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser.tcc,v 1.10.26.1 2005/02/22 08:15:17 fang Exp $
+	$Id: art_parser.tcc,v 1.10.26.2 2005/02/25 06:12:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -97,6 +97,19 @@ node_list_base<T>::node_list_base(const node_list_base<T>& l) :
 	cerr << "\tthis size() = " << this->size() << endl; 
 #endif
 }
+
+//-----------------------------------------------------------------------------
+#if 0
+/**
+	\param p must be a freshly allocated pointer, 
+	this the list will assume responsibility for deleting it.  
+ */
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
+void
+node_list_base<T>::push_back(const T* p) {
+	list_parent::push_back(value_type(p));
+}
+#endif
 
 //-----------------------------------------------------------------------------
 NODE_LIST_BASE_TEMPLATE_SIGNATURE

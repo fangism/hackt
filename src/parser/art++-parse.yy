@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.11.26.1 2005/02/24 06:17:14 fang Exp $
+	$Id: art++-parse.yy,v 1.11.26.2 2005/02/25 06:12:20 fang Exp $
  */
 
 %{
@@ -42,6 +42,12 @@ util::memory::excl_ptr<root_body> AST_root;
 useful typedefs are defined in art_parser.h
 macros: d = delimiter, n = node, b = begin, e = end, l = list
 */
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define	APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
 
 /**
 	Bogus namespace for documenting yacc's internal tables:
@@ -592,8 +598,10 @@ top_root
 	;
 
 body
-	: body body_item { $$ = root_body_append($1, NULL, $2); }
-	| body_item { $$ = new root_body($1); }
+	: body body_item
+		{ $$ = $1; $1->push_back($2); }
+	| body_item
+		{ $$ = new root_body($1); }
 	;
 
 body_item
@@ -692,18 +700,18 @@ defproc
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens
 	  '{' optional_definition_body '}'
-		{ $$ = new process_def($1, $2, $3, $4, 
-			definition_body_wrap($5, $6, $7));
+	/* optional_definition_body will always be valid, sometimes empty */
+		{ WRAP_LIST($5, $6, $7);
+		  $$ = new process_def($1, $2, $3, $4, $6);
 		}
 	;
 
 optional_port_formal_decl_list_in_parens
 	/* note: the parens are NOT optional! */
 	: '(' port_formal_decl_list ')'
-		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '(' ')'
-		{ $$ = port_formal_decl_list_wrap($1, 
-			(new port_formal_decl_list()), $2); }
+		{ $$ = new port_formal_decl_list(); WRAP_LIST($1, $$, $2); }
 		/* empty, but wrapped */
 	;
 
@@ -719,7 +727,7 @@ concrete_type_ref
 
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
-		{ $$ = template_formal_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 /** OBSOLETE
@@ -731,7 +739,7 @@ optional_template_formal_decl_list_in_angles
 
 template_formal_decl_list
 	: template_formal_decl_list ';' template_formal_decl
-		{ $$ = template_formal_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| template_formal_decl
 		{ $$ = new template_formal_decl_list($1); }
 	;
@@ -745,7 +753,7 @@ template_formal_decl
 
 template_formal_id_list
 	: template_formal_id_list ',' template_formal_id
-		{ $$ = template_formal_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| template_formal_id
 		{ $$ = new template_formal_id_list($1); }
 	;
@@ -773,7 +781,7 @@ template_formal_id
 port_formal_decl_list
 	/* would rather use ','-delimiter, but wth... */
 	: port_formal_decl_list ';' port_formal_decl
-		{ $$ = port_formal_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| port_formal_decl
 		{ $$ = new port_formal_decl_list($1); }
 	;
@@ -786,7 +794,7 @@ port_formal_decl
 
 port_formal_id_list
 	: port_formal_id_list ',' port_formal_id
-		{ $$ = port_formal_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| port_formal_id
 		{ $$ = new port_formal_id_list($1); }
 	;
@@ -853,14 +861,14 @@ chan_or_port
 
 data_type_ref_list_in_parens
 	: '(' data_type_ref_list ')'
-		{ $$ = data_type_ref_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 /* why only base data types? why not user-defined ones? */
 data_type_ref_list
 /*	: data_type_ref_list ',' base_data_type	*/
 	: data_type_ref_list ',' data_type_ref
-		{ $$ = data_type_ref_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 /*	| base_data_type	*/
 	| data_type_ref
 		{ $$ = new data_type_ref_list($1); }
@@ -906,12 +914,14 @@ defdatatype
 
 set_body
 	: SET '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 get_body
 	: GET '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 declare_enum
@@ -921,13 +931,13 @@ declare_enum
 
 defenum
 	: ENUM ID '{' enum_member_list '}'
-		{ $$ = new enum_def($1, $2,
-			enum_member_list_wrap($3, $4, $5)); }
+		{ WRAP_LIST($3, $4, $5);
+		  $$ = new enum_def($1, $2, $4); }
 	;
 
 enum_member_list
 	: enum_member_list ',' ID
-		{ $$ = enum_member_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| ID
 		{ $$ = new enum_member_list($1); }
 	;
@@ -953,24 +963,26 @@ defchan
 
 send_body
 	: SEND '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 recv_body
 	: RECV '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 data_param_decl_list_in_parens
 	: '(' data_param_decl_list ')'
-		{ $$ = data_param_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 data_param_decl_list
 /* like declarations in formals list
 	consider using ';', similar to C-style... */
 	: data_param_decl_list ';' data_param_decl
-		{ $$ = data_param_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| data_param_decl
 		{ $$ = new data_param_decl_list($1); }
 	;
@@ -988,7 +1000,7 @@ data_param_decl
 
 data_param_id_list
 	: data_param_id_list ',' data_param_id
-		{ $$ = data_param_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| data_param_id
 		{ $$ = new data_param_id_list($1); }
 	;
@@ -1007,7 +1019,7 @@ data_param_id
 /* --- definition_body --- */
 definition_body
 	: definition_body definition_body_item
-		{ $$ = definition_body_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| definition_body_item
 		{ $$ = new definition_body($1); }
 	;
@@ -1041,7 +1053,7 @@ instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_statement { $$ = $1; }	/* connection of ports */
 	| alias_list '=' expr ';'
-		{ $$ = alias_list_append($1, $2, $3); delete $4; }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
 			/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
@@ -1054,8 +1066,8 @@ loop_instantiation
 
 conditional_instantiation
 	: '[' guarded_definition_body_list ']'
-		{ $$ = new conditional_instantiation(
-			guarded_definition_body_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3);
+		  $$ = new conditional_instantiation($2); }
 	;
 
 type_instance_declaration
@@ -1066,7 +1078,7 @@ type_instance_declaration
 
 instance_id_list
 	: instance_id_list ',' instance_id_item
-		{ $$ = instance_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| instance_id_item
 		{ $$ = new instance_id_list($1); }
 	;
@@ -1083,8 +1095,8 @@ instance_id_item
 		{ $$ = new instance_connection($1, $2); }
 	/* instance alias or parameter assignment */
 	| ID '=' rvalue_optional_alias_list
-		{ $$ = new instance_alias($1, 
-			alias_list_wrap($2, $3, NULL)); }
+		{ WRAP_LIST($2, $3, NULL);
+		  $$ = new instance_alias($1, $3); }
 	;
 
 connection_statement
@@ -1098,7 +1110,7 @@ connection_statement
 rvalue_optional_alias_list
 /* note that expr can be just another member_index_expr */
 	: alias_list '=' expr
-		{ $$ = alias_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| expr
 		{ $$ = new alias_list($1); }
 	;
@@ -1107,7 +1119,7 @@ rvalue_optional_alias_list
 	type check this, of course */
 alias_list
 	: alias_list '=' complex_aggregate_reference
-		{ $$ = alias_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	/* to type-check: first term must contain only rvalues */
 	| complex_aggregate_reference
 		{ $$ = new alias_list($1); }
@@ -1118,12 +1130,12 @@ connection_actuals_list
 	/* down-cast to more specific type?  internal to consumer */
 /*	: member_index_expr_list_in_parens	*/
 	: '(' complex_aggregate_reference_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 guarded_definition_body_list
 	: guarded_definition_body_list THICKBAR guarded_definition_body
-		{ $$ = guarded_definition_body_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| guarded_definition_body
 		{ $$ = new guarded_definition_body_list($1); }
 	;
@@ -1142,16 +1154,11 @@ guarded_definition_body
 
 language_body
 	: CHP_LANG '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4); $$ = new CHP::body($1, $3); }
 	| HSE_LANG '{' hse_body '}'
-		{ $$ = new HSE::body($1, hse_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
 	| PRS_LANG '{' prs_body '}'
-		{ $$ = new PRS::body($1, prs_rule_list_wrap($2, $3, $4)); }
-/*
-//	| STACK_LANG '{' stack_body '}'
-//		{ $$ = new stack::body($1, stack_rule_list_wrap($2, $3, $4)); }
-//	and more...
-*/
+		{ WRAP_LIST($2, $3, $4); $$ = new PRS::body($1, $3); }
 	;
 
 /* --- Language: CHP --- */
@@ -1162,7 +1169,7 @@ chp_body
 
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
-		{ $$ = chp_stmt_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| full_chp_body_item
 		{ $$ = new CHP::stmt_list($1); }
 	;
@@ -1199,13 +1206,13 @@ chp_body_item
 chp_loop
 	/* do-forever loop */
 	: BEGINLOOP chp_body ']'
-		{ $$ = new CHP::loop(chp_stmt_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new CHP::loop($2); }
 	;
 
 chp_do_until
 	/* do-until-all-guards-false */
 	: BEGINLOOP chp_matched_det_guarded_command_list ']'
-		{ $$ = new CHP::do_until(chp_det_selection_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new CHP::do_until($2); }
 	;
 
 chp_wait
@@ -1216,9 +1223,9 @@ chp_wait
 
 chp_selection
 	: '[' chp_matched_det_guarded_command_list ']'
-		{ $$ = chp_det_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '[' chp_nondet_guarded_command_list ']'
-		{ $$ = chp_nondet_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 /*
 // wtf is this?... probalistic selection for FT
 //	| "%[" { chp_guarded_command ":" }** "]%"
@@ -1231,22 +1238,23 @@ note: these lists must have at least 2 clauses, will have to fix with "else"
 */
 chp_nondet_guarded_command_list
 	: chp_nondet_guarded_command_list ':' chp_guarded_command
-		{ $$ = chp_nondet_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_guarded_command ':' chp_guarded_command
 	/* can't have else clause in non-deterministic selection? */
-		{ $$ = IS_A(CHP::nondet_selection*,
-			(new CHP::nondet_selection($1))->append($2, $3)); }
+		{ $$ = new CHP::nondet_selection($1);
+		  APPEND_LIST($$, $2, $3);
+		}
 	;
 
 chp_matched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_else_clause
-		{ $$ = chp_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_unmatched_det_guarded_command_list
 	;
 
 chp_unmatched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_guarded_command
-		{ $$ = chp_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_guarded_command
 		{ $$ = new CHP::det_selection($1); }
 	;
@@ -1275,7 +1283,7 @@ chp_assignment
 chp_comm_list
 	/* gives comma-separated communications precedence */
 	: chp_comm_list ',' chp_comm_action
-		{ $$ = chp_comm_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_comm_action
 		{ $$ = new CHP::comm_list($1); }
 	;
@@ -1308,7 +1316,7 @@ hse_body
 
 full_hse_body_item_list
 	: full_hse_body_item_list ';' full_hse_body_item
-		{ $$ = hse_stmt_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| full_hse_body_item
 		{ $$ = new HSE::stmt_list($1); }
 	;
@@ -1334,13 +1342,13 @@ hse_body_item
 
 hse_loop
 	: BEGINLOOP hse_body ']'
-		{ $$ = new HSE::loop(hse_stmt_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new HSE::loop($2); }
 	;
 
 hse_do_until
 	/* keep entering loop until all guards false */
 	: BEGINLOOP hse_matched_det_guarded_command_list ']'
-		{ $$ = new HSE::do_until(hse_det_selection_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new HSE::do_until($2); }
 	;
 
 hse_wait
@@ -1350,9 +1358,9 @@ hse_wait
 
 hse_selection
 	: '[' hse_matched_det_guarded_command_list ']'
-		{ $$ = hse_nondet_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '[' hse_nondet_guarded_command_list ']'
-		{ $$ = hse_det_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 hse_guarded_command
@@ -1367,21 +1375,21 @@ hse_else_clause
 
 hse_nondet_guarded_command_list
 	: hse_nondet_guarded_command_list ':' hse_guarded_command
-		{ $$ = hse_nondet_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_guarded_command ':' hse_guarded_command
-		{ $$ = IS_A(HSE::nondet_selection*, 
-			(new HSE::nondet_selection($1))->append($2, $3)); }
+		{ $$ = new HSE::nondet_selection($1);
+			APPEND_LIST($$, $2, $3); }
 	;
 
 hse_matched_det_guarded_command_list
 	: hse_unmatched_det_guarded_command_list THICKBAR hse_else_clause
-		{ $$ = hse_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_unmatched_det_guarded_command_list
 	;
 
 hse_unmatched_det_guarded_command_list
 	: hse_unmatched_det_guarded_command_list THICKBAR hse_guarded_command
-		{ $$ = hse_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_guarded_command
 		{ $$ = new HSE::det_selection($1); }
 	;
@@ -1395,6 +1403,7 @@ hse_assignment
 		{ $$ = new HSE::assignment(
 			IS_A(ART::parser::incdec_stmt*, $1)); }
 	;
+/* will there be a leak if dynamic cast fails? */
 
 /*
 //--- Language: PRS ---
@@ -1404,7 +1413,7 @@ hse_assignment
 
 prs_body
 	: prs_body prs_body_item
-		{ $$ = prs_rule_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| prs_body_item
 		{ $$ = new PRS::rule_list($1); }
 	;
@@ -1527,7 +1536,7 @@ id_expr
 
 absolute_id
 	: SCOPE relative_id
-		{ $$ = ($2)->force_absolute($1); }
+		{ $$ = $2->force_absolute($1); }
 	;
 
 relative_id
@@ -1539,15 +1548,16 @@ relative_id
 
 qualified_id
 	: qualified_id SCOPE ID
-		{ $$ = qualified_id_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| ID SCOPE ID
-		{ $$ = (new qualified_id($1))->append($2, $3); }
+		{ $$ = new qualified_id($1);
+		  APPEND_LIST($$, $2, $3); }
 	;
 
 /** was mandatory, but is now optional, blank items are allowed! */
 member_index_expr_list
 	: member_index_expr_list ',' optional_member_index_expr
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_member_index_expr { $$ = new expr_list($1); }
 	;
 
@@ -1755,12 +1765,12 @@ optional_template_arguments_in_angles
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list
 	: shift_expr_optional_list ',' optional_shift_expr 
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_shift_expr { $$ = new expr_list($1); }
 	;
 
@@ -1769,51 +1779,24 @@ optional_shift_expr
 	| { $$ = NULL; }
 	;
 
-/** OBSOLETE
-member_index_expr_list_in_angles
-	: '<' member_index_expr_list '>'
-		{ $$ = expr_list_wrap($1, $2, $3); }
-	;
-**/
-
 member_index_expr_list_in_parens
 	: '(' member_index_expr_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 expr_list_in_parens
 	: '(' expr_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 expr_list
 	: expr_list ',' expr 
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| expr { $$ = new expr_list($1); }
 	;
 
 /* --- array declaration syntax ------------------------------------------- */
 /** giving up CAST-style for C-style arrays */
-
-/**
-OBSOLETE
-optional_range_list_in_brackets
-	: range_list_in_brackets { $$ = $1; }
-	| { $$ = NULL; }
-	;
-
-range_list_in_brackets
-	// old-CAST style
-	: '[' range_list ']'
-		{ $$ = range_list_wrap($1, $2, $3); }
-	;
-
-range_list
-	: range_list ',' range 
-		{ $$ = range_list_append($1, $2, $3); }
-	| range { $$ = new range_list($1); }
-	;
-**/
 
 range
 	: expr RANGE expr 
@@ -1837,14 +1820,14 @@ optional_sparse_range_list
 
 dense_range_list
 	: dense_range_list bracketed_dense_range
-		{ $$ = dense_range_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| bracketed_dense_range
 		{ $$ = new dense_range_list($1); }
 	;
 
 sparse_range_list
 	: sparse_range_list bracketed_sparse_range
-		{ $$ = range_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| bracketed_sparse_range
 		{ $$ = new range_list($1); }
 	;
@@ -1852,13 +1835,13 @@ sparse_range_list
 /** array declarations in template and port formals can only be dense */
 bracketed_dense_range
 	: '[' expr ']'
-		{ delete $1; $$ = $2; delete $3; }
+		{ DELETE_TOKEN($1); $$ = $2; DELETE_TOKEN($3); }
 	;
 
 /** array instantiations and references elsewhere may be sparse */
 bracketed_sparse_range
 	: '[' range ']'
-		{ delete $1; $$ = $2; delete $3; }
+		{ DELETE_TOKEN($1); $$ = $2; DELETE_TOKEN($3); }
 	;
 
 /* ----end array ---------------------------------------------------------- */
@@ -1871,7 +1854,7 @@ complex_aggregate_reference
 /* pasting arrays together */
 array_concatenation
 	: array_concatenation '#' complex_expr_term
-		{ $$ = array_concatenation_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| complex_expr_term
 		{ $$ = new array_concatenation($1); }
 	;
@@ -1907,7 +1890,7 @@ optional_complex_aggregate_reference
 /** items are optional! */
 complex_aggregate_reference_list
 	: complex_aggregate_reference_list ',' optional_complex_aggregate_reference
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_complex_aggregate_reference
 		{ $$ = new expr_list($1); }
 	;
@@ -2065,6 +2048,8 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	 *	Because the union-pointer resolution can only return
 	 *	one type, the base type, the mother destructor, 
 	 * 	ART::parser::node::~node(), must be virtual.  
+	 *	TODO: put this clean-up routine into another function
+	 *	what can be called from an exception handler.  
 	 */
 	s=yyss+1;
 	v=yyvs+1;
