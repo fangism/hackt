@@ -3,6 +3,7 @@
 	Method definitions for persistent class interface.  
  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <iostream>
 #include <algorithm>
