@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.2 2005/02/03 03:34:49 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.2.2.1 2005/02/06 03:47:00 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -9,6 +9,7 @@
 
 #include "STL/pair_fwd.h"
 #include "art_object_expr_base.h"
+#include "art_object_index.h"
 #include "multikey_fwd.h"
 #include "packed_array.h"
 #include "persistent.h"
@@ -272,12 +273,12 @@ public:
 	resolve_index_list(void) const;
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<pint_value_type> >& k) const;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
-	excl_ptr<multikey_base<pint_value_type> >
+	excl_ptr<multikey_index_type>
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	excl_ptr<multikey_index_type>
 	lower_multikey(void) const;
 
 	bool
@@ -341,10 +342,10 @@ public:
 	bool
 	resolve_ranges(const_range_list& r) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	excl_ptr<multikey_index_type>
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	excl_ptr<multikey_index_type>
 	lower_multikey(void) const;
 
 	template <size_t D>

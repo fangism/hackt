@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19.2.2 2005/02/03 03:34:49 fang Exp $
+	$Id: art_object_expr.h,v 1.19.2.2.2.1 2005/02/06 03:47:00 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -169,7 +169,7 @@ public:
 
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
 
 	bool

@@ -27,6 +27,16 @@
 	  in the declaration and definitions files is block commented out.  
 	  Next revision will alter qmap, and add qset.  
 
+	+ -set-02: qmap now derived from const_assoc_query<std:map<...> >
+
+	+ -set-03: consistency patch
+	  Changed multikey_base<pint_value_type> to
+	  ART::entity::multikey_index_type as defined in "art_object_index.h"
+	  Preparing to obliterate multikey_base...
+	  and create multikey associative interface...
+	  multikey_base has been obsoleted by the introduction of 
+	  multikey_generic.  
+
 
 2005-02-04	David Fang	<fangism@users.sourceforge.net>
 

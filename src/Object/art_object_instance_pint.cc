@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.2 2005/02/03 03:34:53 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.2.2.1 2005/02/06 03:47:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -427,7 +427,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 #if 0
-		multikey_base<pint_value_type>::const_iterator
+		multikey_index_type::const_iterator
 			ci = key_gen.begin();
 		for ( ; ci!=key_gen.end(); ci++)
 			cerr << '[' << *ci << ']';
@@ -498,7 +498,7 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const pint_instance& pi = collection[i];
 	if (pi.valid) {
@@ -554,7 +554,7 @@ pint_array<D>::lookup_value_collection(
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::assign(const multikey_base<pint_value_type>& k,
+pint_array<D>::assign(const multikey_index_type& k,
 		const value_type i) {
 	pint_instance& pi = collection[k];
 	return !(pi = i);
@@ -695,7 +695,7 @@ pint_array<0>::lookup_value_collection(
  */
 bool
 pint_array<0>::lookup_value(value_type& v, 
-		const multikey_base<pint_value_type>& i) const {
+		const multikey_index_type& i) const {
 	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey_base) "
 		"should never be called!" << endl;
 	DIE;
@@ -717,7 +717,7 @@ pint_array<0>::assign(const value_type i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_array<0>::assign(const multikey_base<pint_value_type>& k, 
+pint_array<0>::assign(const multikey_index_type& k, 
 		const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pint_array<0>::assign(multikey_base, int) "
