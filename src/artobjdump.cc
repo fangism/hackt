@@ -26,6 +26,14 @@ main(int argc, char* argv[]) {
 	string fname(argv[1]);
 
 //	persistent_object_manager::dump_registered_type_map(cerr);
+/***
+	The following line is required to make Appls's gcc think
+	that linking in the majority of libart++.la is required 
+	in the executable.  
+	Without it the only reference to the module type is through
+	a pointer-class, which is insufficient.  
+***/
+	{ entity::module bogus("please link modules from libart++.la"); }
 
 	persistent_object_manager::dump_reconstruction_table = true;
 	persistent::warn_unimplemented = true;	// for verbosity

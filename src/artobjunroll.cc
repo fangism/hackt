@@ -37,6 +37,9 @@ main(int argc, char* argv[]) {
 	const string ifname(argv[1]);
 	const string ofname(argv[2]);
 
+	// the following is needed to force linkage of modules from libart++
+	{ entity::module bogus("please link modules from libart++.la"); }
+
 	persistent_object_manager::dump_reconstruction_table = true;
 	persistent::warn_unimplemented = true;	// for verbosity
 
