@@ -2,23 +2,17 @@
 
 #include <iostream>
 
-#include "multidimensional_sparse_set.h"
-
-#include "art_parser_debug.h"		// need this?
+// #include "art_parser_debug.h"		// need this?
 #include "art_parser_base.h"
 #include "art_symbol_table.h"
-
-// CAUTION on ordering of the following two include files!
-// including "art_object.h" first will cause compiler to complain
-// about redefinition of struct hash<> template upon specialization of
-// hash<string>.  
 
 #include "hash_specializations.h"		// substitute for the following
 
 #include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
-#include "art_built_ins.h"
+// #include "art_built_ins.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -37,9 +31,7 @@ namespace entity {
 inline
 definition_base::definition_base(const string& n,
 		never_const_ptr<name_space> p) :
-//		template_formals_set* tf : 
 		scopespace(n, p),
-//		template_formals(tf),
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {
@@ -212,8 +204,6 @@ inline
 datatype_definition::datatype_definition(
 		never_const_ptr<name_space> o,
 		const string& n) :
-//		template_formals_set* tf :
-//		definition_base(n, o, tf)
 		definition_base(n, o) {
 }
 
@@ -240,8 +230,6 @@ inline
 channel_definition::channel_definition(
 		never_const_ptr<name_space> o, 
 		const string& n) :
-//		template_formals_set* tf :
-//		definition_base(n, o, tf)
 		definition_base(n, o) {
 }
 
@@ -290,8 +278,6 @@ type_alias::type_alias(
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		never_const_ptr<definition_base> t) :
-//		template_formals_set* tf :
-//		definition_base(n, o, tf),
 		definition_base(n, o),
 		canonical(t->resolve_canonical()) {
 	assert(canonical);
@@ -584,10 +570,7 @@ user_def_datatype::type_equivalent(const datatype_definition& t) const {
 process_definition::process_definition(
 		never_const_ptr<name_space> o, 
 		const string& s) :
-//		template_formals_set* tf : 
-//		definition_base(s, o, tf),
 		definition_base(s, o),
-//		port_formals()
 		port_formals_list(), 
 		port_formals_map()
 		{
@@ -662,17 +645,10 @@ process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
 	}
 
 	{
-#if 0
-	const never_const_ptr<instantiation_base>* ret =
-		port_formals.append(f->hash_string(),
-			never_const_ptr<instantiation_base>(f));
-	assert(!ret);
-#else
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
 	port_formals_list.push_back(pf);
 	port_formals_map[f->get_name()] = pf;
-#endif
 	}
 
 	used_id_map[f->hash_string()] = f;

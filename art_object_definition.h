@@ -3,21 +3,8 @@
 #ifndef	__ART_OBJECT_DEFINITION_H__
 #define	__ART_OBJECT_DEFINITION_H__
 
-#include <iosfwd>
-#include <string>
-#include <list>
-#include <deque>
-
 #include "art_macros.h"
-
 #include "art_object_base.h"
-
-#if 0
-#include "qmap.h"
-#include "hash_qmap.h"
-#include "ptrs.h"
-#include "count_ptr.h"
-#endif
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -69,46 +56,6 @@ namespace entity {
 	class built_in_datatype_def;
 	class built_in_param_def;
 
-#if 0
-// declarations from "art_object_expr.h"
-	class param_expr;
-	class pint_expr;
-	class pbool_expr;
-	class range_expr;
-	class pint_range;
-	class const_range;
-	class range_expr_list;
-	class const_range_list;
-	class dynamic_range_list;
-	class index_list;			// not ART::parser::index_list
-
-	typedef	count_const_ptr<range_expr_list>
-					index_collection_item_ptr_type;
-	/** we keep track of the state of instance collections at
-		various program points with this container */
-	typedef	deque<index_collection_item_ptr_type>
-					index_collection_type;
-
-	/** the state of an instance collection, kept track by each 
-		instance reference */
-	typedef	index_collection_type::const_iterator
-					instantiation_state;
-
-typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
-
-/**
-	The container type for template parameters.  
-	Temporarily allows any entity::object, however, 
-	should definitely not contain subclasses
-	of scopespace; intended for instantiations of constant
-	parameters, (and when things get fancy) other types, 
-	(even fancier) other template arguments.  
-	These parameter expressions are not owned!  
-	(because they are cached?)
- */
-typedef	list<param_expr_ptr_type>			template_param_list;
-#endif
-
 //=============================================================================
 // class definition_base declared in "art_object_base.h"
 
@@ -143,18 +90,13 @@ public:
 protected:
 //	string			key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
-#if 0
-	port_formals_set	port_formals;
-#else
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
-#endif
 	// list language bodies
 	
 public:
 	process_definition(never_const_ptr<name_space> o, 
 		const string& s); 
-//		template_formals_set* tf = NULL
 	~process_definition();
 
 	ostream& what(ostream& o) const;
@@ -184,7 +126,6 @@ public:
 	datatype_definition(
 		never_const_ptr<name_space> o, 
 		const string& n);
-//		template_formals_set* tf = NULL;
 virtual	~datatype_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -334,7 +275,6 @@ protected:
 //	string			key;		// inherited
 public:
 	channel_definition(never_const_ptr<name_space> o, const string& n);
-//		template_formals_set* tf = NULL;
 virtual	~channel_definition();
 
 virtual	ostream& what(ostream& o) const = 0;

@@ -3,20 +3,8 @@
 #ifndef	__ART_OBJECT_CONNECT_H__
 #define	__ART_OBJECT_CONNECT_H__
 
-#include <iosfwd>
-#include <string>
-#include <list>
-#include <deque>
-
 #include "art_macros.h"
 #include "art_object_base.h"
-
-#if 0
-#include "qmap.h"
-#include "hash_qmap.h"
-#include "ptrs.h"
-#include "count_ptr.h"
-#endif
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -56,94 +44,6 @@ namespace entity {
 //=============================================================================
 	using namespace std;
 	using namespace fang;		// for experimental pointer classes
-
-//=============================================================================
-// forward declarations
-#if 0
-	class scopespace;
-	class name_space;
-	class loop_scope;
-	class conditional_scope;
-
-	class definition_base;
-	class channel_definition;
-	class datatype_definition;
-	class process_definition;
-	class enum_datatype_def;
-	class built_in_datatype_def;
-	class built_in_param_def;
-
-	class fundamental_type_reference;
-	class collective_type_reference;
-	class data_type_reference;
-	class channel_type_reference;
-	class process_type_reference;
-	class param_type_reference;		// redundant
-
-//	class instance_collection_stack_item;
-
-	class instantiation_base;
-	class channel_instantiation;
-	class datatype_instantiation;
-	class process_instantiation;
-	class param_instantiation;
-	class pint_instantiation;
-	class pbool_instantiation;
-
-	class instance_reference_base;
-	class simple_instance_reference;
-	class datatype_instance_reference;
-	class channel_instance_reference;
-	class process_instance_reference;
-	class param_instance_reference;
-//	class pint_instance_reference;		// relocated "art_object_expr"
-//	class pbool_instance_reference;		// relocated "art_object_expr"
-
-	class connection_assignment_base;
-	class param_expression_assignment;
-	class instance_reference_connection;
-
-// declarations from "art_object_expr.h"
-	class param_expr;
-	class pint_expr;
-	class pbool_expr;
-	class range_expr;
-	class pint_range;
-	class const_range;
-	class range_expr_list;
-	class const_range_list;
-	class dynamic_range_list;
-	class index_list;			// not ART::parser::index_list
-
-	typedef	count_const_ptr<range_expr_list>
-					index_collection_item_ptr_type;
-	/** we keep track of the state of instance collections at
-		various program points with this container */
-	typedef	deque<index_collection_item_ptr_type>
-					index_collection_type;
-
-	/** the state of an instance collection, kept track by each 
-		instance reference */
-	typedef	index_collection_type::const_iterator
-					instantiation_state;
-
-typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
-
-/**
-	The container type for template parameters.  
-	Temporarily allows any entity::object, however, 
-	should definitely not contain subclasses
-	of scopespace; intended for instantiations of constant
-	parameters, (and when things get fancy) other types, 
-	(even fancier) other template arguments.  
-	These parameter expressions are not owned!  
-	(because they are cached?)
- */
-typedef	list<param_expr_ptr_type>			template_param_list;
-#endif
-
-//=============================================================================
-// general non-member functions
 
 //=============================================================================
 /**

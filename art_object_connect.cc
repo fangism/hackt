@@ -3,22 +3,13 @@
 
 #include <iostream>
 
-#include "multidimensional_sparse_set.h"
+// #include "multidimensional_sparse_set.h"
 
 #include "art_parser_debug.h"		// need this?
 #include "art_parser_base.h"
-#include "art_symbol_table.h"
-
-// CAUTION on ordering of the following two include files!
-// including "art_object.h" first will cause compiler to complain
-// about redefinition of struct hash<> template upon specialization of
-// hash<string>.  
-
-#include "hash_specializations.h"		// substitute for the following
-
 #include "art_object_connect.h"
 #include "art_object_expr.h"
-#include "art_built_ins.h"
+// #include "art_built_ins.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"

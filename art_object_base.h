@@ -238,6 +238,12 @@ public:
 		make_sparse_range_list(void) const;
 	excl_ptr<index_list>
 		make_index_list(void) const;
+	excl_ptr<param_expression_assignment>
+		make_param_assignment(void);
+#if 0
+	count_ptr<instance_reference_connection>
+		make_instance_connection(void) const;
+#endif
 };	// end class object_list
 
 //=============================================================================

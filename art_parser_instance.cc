@@ -87,6 +87,7 @@ alias_list::rightmost(void) const {
 	lists and other instance elements.  
 	Builds references bottom-up first.  
 	Then checks type consistency of elements.  
+	Post-condition: leaves connection_assignment_base on stack.  
 	\param c the context of the current position in the syntax tree.
 	\return pointer to rightmost instance corresponding to the 
 		final element in the assignment / alias list
@@ -99,42 +100,24 @@ alias_list::check_build(never_ptr<context> c) const {
 			"alias_list::check_build(...): FINISH ME!";
 	)
 if (size() > 0) {		// non-empty
-	// can't we just re-use parent's check_build()?
-	// alias_list_base::check_build(c);
-	// no, because we need place-holder on stack. 
-
 	never_const_ptr<object> ret(NULL);
-	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		never_const_ptr<object> o;
-		if (*i) {
-			// check each expression
-			o = (*i)->check_build(c);
-			// Useless return value.
-			// Each expression or instance referenced
-			// will be pushed onto the context's object stack.
-		} else {
-			// need a place-holder item on stack? No.
-			// can never be a NULL item in alias_list, 
-			//	according to the grammar.
-			// Thus we can use parent's check_build().
+	// can we just re-use parent's check_build()?
+	// yes, because we don't need place-holder on stack.
+	alias_list_base::check_build(c);
+	// errors in individual items will result in NULL on stack.
 
-			// the caller depends on the size of this list.
-			// for now stop.
-			assert(0);
-		}
-	}
 	// After list items have been built, check types.  
 	// Types connected MUST match,
 	// and sizes must match if statically known, 
 	// else punt until unroll-time.  
 
 	// pop stack items to a local list
-	vector<count_ptr<object> > connect(size());
+	object_list connect;
 	{
 		int j = size() -1;
-		for ( ; j>=0; j--)
-			connect[j] = c->pop_top_object_stack();
+		for ( ; j>=0; j--) {
+			connect.push_front(c->pop_top_object_stack());
+		}
 	}
 
 	// case: left-hand-side is a param_instance_reference
@@ -144,16 +127,23 @@ if (size() > 0) {		// non-empty
 	//	same type instance references.
 	// TO DO: in general this needs much work to complete
 
-	if (!connect[0]) {
+	const object_list::const_iterator first_obj = connect.begin();
+
+	if (!*first_obj) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
 		exit(1);
-	} else if (connect[0].is_a<param_instance_reference>()) {
+	} else if (first_obj->is_a<param_instance_reference>()) {
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
-		excl_ptr<param_expression_assignment> exass(
-			new param_expression_assignment);
+
+#if 1
+		excl_ptr<param_expression_assignment> exass = 
+			connect.make_param_assignment();
+#else
+		excl_ptr<param_expression_assignment>
+			exass(new param_expression_assignment);
 		assert(exass);
 
 		// Mark all but the last expression as initialized 
@@ -164,11 +154,11 @@ if (size() > 0) {		// non-empty
 		// i.e. is a constant or a formal parameter
 
 		bool err = false;
-		size_t last = size() -1;
 
-		count_const_ptr<param_expr> rhse(
-			connect[last].is_a<param_expr>());
-		if (!connect[last]) {
+		object_list::const_iterator last_obj = connect.end();
+		last_obj--;		// safe because list is not empty
+		count_const_ptr<param_expr> rhse(last_obj->is_a<param_expr>());
+		if (!*last_obj) {
 			cerr << "ERROR: rhs of expression assignment "
 				"is malformed (null)" << endl;
 			err = true;
@@ -184,18 +174,20 @@ if (size() > 0) {		// non-empty
 				exit(1);		// temporary
 			}
 		} else {
-			connect[last]->what(
+			(*last_obj)->what(
 				cerr << "ERROR: rhs is unexpected object: ")
 				<< endl;
 			err = true;
 		}
 
 		size_t k = 0;
-		for ( ; k<last; k++) {	// all but last one
+		object_list::iterator iter = connect.begin();
+			// needs to be modifiable for initialization
+		for ( ; iter!=last_obj; iter++, k++) {	// all but last one
 			// consider modularizing this loop
 			bool for_err = false;
-			count_ptr<param_expr> ir(connect[k].is_a<param_expr>());
-			if (!connect[k]) {
+			count_ptr<param_expr> ir(iter->is_a<param_expr>());
+			if (!*iter) {
 				cerr << "ERROR: in creating item " << k+1 <<
 					" of alias-list." << endl;
 				for_err = true;
@@ -248,10 +240,21 @@ if (size() > 0) {		// non-empty
 			if (for_err)
 				err = for_err;
 		}
+#endif
 
 		// if all is well, then add this new list to the context's
 		// current scope.  
-		if (err) {
+		// idea for error checking:
+		// instead of returning NULL, return partially created
+		// list with error-markers, maintained in the object
+		// and query the error status.  
+		// forbid object writing if there are any errors.  
+#if 0
+		if (err)
+#else
+		if (!exass)
+#endif
+		{
 			cerr << "HALT: at least one error in alias list."
 				<< endl;
 			exit(1);
@@ -262,7 +265,7 @@ if (size() > 0) {		// non-empty
 			// and transfer ownership
 			assert(!exass.owned());
 		}
-	} else if (connect[0].is_a<instance_reference_base>()) {
+	} else if (first_obj->is_a<instance_reference_base>()) {
 		cerr << "alias_list::check_build(): not done yet "
 			"for non-param/expr instance connections yet.  "
 			"Aborting." << endl;

@@ -2,11 +2,8 @@
 
 #include <iostream>
 
-#include "multidimensional_sparse_set.h"
-
-#include "art_parser_debug.h"		// need this?
+#include "art_parser_debug.h"
 #include "art_parser_base.h"
-#include "art_symbol_table.h"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -14,11 +11,10 @@
 // hash<string>.  
 
 #include "hash_specializations.h"		// substitute for the following
-// #include "hashlist_template_methods.h"
 
 #include "art_object_base.h"
 #include "art_object_expr.h"
-#include "art_built_ins.h"
+#include "art_object_connect.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -476,6 +472,128 @@ object_list::make_index_list(void) const {
 	}
 }
 
+/**
+	Converts a list into a param_expression_assignment object.  
+	This is non-const because assignment requires that we 
+	initialize parameter instance references, which requires 
+	modification.  
+	\return newly constructed param_expresion_assignment 
+		if there are no errors, else NULL.  
+		(May change with more sophisticated error-handling.)
+ */
+excl_ptr<param_expression_assignment>
+object_list::make_param_assignment(void) {
+	// then expect subsequent items to be the same
+	// or already param_expr in the case of some constants.
+	// However, only the last item may be a constant.
+	excl_ptr<param_expression_assignment>
+		ret(new param_expression_assignment);
+	assert(ret);
+					
+	// Mark all but the last expression as initialized
+	// to the right-most expression.
+	// TO DO: FINISH THIS PART
+	// rvalue = ...
+	// make sure rvalue is validly initialized
+	// i.e. is a constant or a formal parameter
+
+	bool err = false;
+
+	const_iterator last_obj = end();
+	last_obj--;		// safe because list is not empty
+	count_const_ptr<param_expr> rhse(last_obj->is_a<param_expr>());
+	if (!*last_obj) {
+		cerr << "ERROR: rhs of expression assignment "
+			"is malformed (null)" << endl;
+		err = true;
+	} else if (rhse) {
+		// last term must be initialized or be
+		// dependent on formals
+		// if collective, conservative: may-be-initialized
+		if (!rhse->is_initialized()) {
+			rhse->dump(cerr << "ERROR: rhs of expr-"
+				"assignment is not initialized or "
+				"dependent on formals: ") << endl;
+			err = true;
+			exit(1);		// temporary
+		}
+	} else {
+		(*last_obj)->what(
+			cerr << "ERROR: rhs is unexpected object: ") << endl;
+		err = true;
+	}
+
+	if (err)
+		return excl_ptr<param_expression_assignment>(NULL);
+
+	size_t k = 0;
+	iterator iter = begin();
+		// needs to be modifiable for initialization
+	for ( ; iter!=last_obj; iter++, k++) {	// all but last one
+		// consider modularizing this loop
+		bool for_err = false;
+		count_ptr<param_expr> ir(iter->is_a<param_expr>());
+		if (!*iter) {
+			cerr << "ERROR: in creating item " << k+1 <<
+				" of alias-list." << endl;
+			for_err = true;
+		} else if (ir) {
+			// make this body into subroutine...
+			// a single parameter instance reference
+			// make sure not already initialized!
+			if (ir->is_initialized()) {
+				// definitely initialized or formal
+				cerr << "ERROR: expression " << k+1 <<
+					"is already initialized!"
+					<< endl;
+				// don't care if it's same value...
+				for_err = true;
+			} else if (rhse) {
+				// what to do about collective arrays?
+				count_ptr<pbool_instance_reference>
+					bir(ir.is_a<pbool_instance_reference>());
+				count_ptr<pint_instance_reference>
+					pir(ir.is_a<pint_instance_reference>());
+				// gotta be one class or the other
+				// check this after re-write
+				assert(rhse);
+				bool init_ret;
+				if (bir)
+					init_ret = bir->initialize(rhse);
+				else {
+					assert(pir);
+					init_ret = pir->initialize(rhse);
+				}
+				if (!init_ret) {
+					cerr << "Error initializing "
+					"item " << k+1 << " of alias-"
+					"list.  " << endl;
+					for_err = true;
+				}
+//				assert(ir->is_initialized());
+			} // else already error in rhse
+			if (for_err)
+				ret->append_param_expression(
+					count_ptr<param_expr>(NULL));
+			else ret->append_param_expression(ir);
+		} else {
+			// is reference to something else
+			// or might be collective...
+			// ERROR
+			cerr << "ERROR: unhandled case for item "
+				<< k+1 << " of alias-list." << endl;
+			for_err = true;
+		}
+		if (for_err)
+			err = for_err;
+	}
+
+	// if there are any errors, discard everything?
+	// later: track errors in partially constructed objects
+	if (err)
+		return excl_ptr<param_expression_assignment>(NULL);
+	else	return ret;		// is ok
+}
 
 //=============================================================================
 #if 0

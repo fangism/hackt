@@ -3,31 +3,9 @@
 #ifndef	__ART_OBJECT_INST_REF_H__
 #define	__ART_OBJECT_INST_REF_H__
 
-#include <iosfwd>
-#include <string>
-#include <list>
-#include <deque>
-
 #include "art_macros.h"
 #include "art_object_base.h"
 
-#include "qmap.h"
-#include "hash_qmap.h"
-#include "ptrs.h"
-#include "count_ptr.h"
-
-/*********** note on use of data structures ***************
-Lists are needed for sets that need to maintain sequence, such as
-formal declarations in definitions.  Type-checking is done in order
-of elements, comparing actuals against formals one-by-one.  
-For some lists, however, we'd like constant time access to 
-elements in the sequence by hashing indices.  Hashlist provides
-this added functionality by associating a key to each element in the 
-list.  
-
-Maps...
-
-********************** end note **************************/
 
 namespace ART {
 //=============================================================================
@@ -54,91 +32,6 @@ namespace entity {
 //=============================================================================
 	using namespace std;
 	using namespace fang;		// for experimental pointer classes
-
-//=============================================================================
-// forward declarations
-#if 0
-	class scopespace;
-	class name_space;
-	class loop_scope;
-	class conditional_scope;
-
-	class definition_base;
-	class channel_definition;
-	class datatype_definition;
-	class process_definition;
-	class enum_datatype_def;
-	class built_in_datatype_def;
-	class built_in_param_def;
-
-	class fundamental_type_reference;
-	class collective_type_reference;
-	class data_type_reference;
-	class channel_type_reference;
-	class process_type_reference;
-	class param_type_reference;		// redundant
-
-//	class instance_collection_stack_item;
-
-	class instantiation_base;
-	class channel_instantiation;
-	class datatype_instantiation;
-	class process_instantiation;
-	class param_instantiation;
-	class pint_instantiation;
-	class pbool_instantiation;
-
-	class instance_reference_base;
-	class simple_instance_reference;
-	class datatype_instance_reference;
-	class channel_instance_reference;
-	class process_instance_reference;
-	class param_instance_reference;
-//	class pint_instance_reference;		// relocated "art_object_expr"
-//	class pbool_instance_reference;		// relocated "art_object_expr"
-
-	class connection_assignment_base;
-	class param_expression_assignment;
-	class instance_reference_connection;
-
-// declarations from "art_object_expr.h"
-	class param_expr;
-	class pint_expr;
-	class pbool_expr;
-	class range_expr;
-	class pint_range;
-	class const_range;
-	class range_expr_list;
-	class const_range_list;
-	class dynamic_range_list;
-	class index_list;			// not ART::parser::index_list
-
-	typedef	count_const_ptr<range_expr_list>
-					index_collection_item_ptr_type;
-	/** we keep track of the state of instance collections at
-		various program points with this container */
-	typedef	deque<index_collection_item_ptr_type>
-					index_collection_type;
-
-	/** the state of an instance collection, kept track by each 
-		instance reference */
-	typedef	index_collection_type::const_iterator
-					instantiation_state;
-
-typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
-
-/**
-	The container type for template parameters.  
-	Temporarily allows any entity::object, however, 
-	should definitely not contain subclasses
-	of scopespace; intended for instantiations of constant
-	parameters, (and when things get fancy) other types, 
-	(even fancier) other template arguments.  
-	These parameter expressions are not owned!  
-	(because they are cached?)
- */
-typedef	list<param_expr_ptr_type>			template_param_list;
-#endif
 
 //=============================================================================
 /**
@@ -332,66 +225,11 @@ virtual	never_const_ptr<param_instantiation>
 
 virtual	bool initialize(count_const_ptr<param_expr> i) = 0;
 
-#if 0
-virtual count_ptr<param_expr> make_param_literal(
-		count_ptr<param_instance_reference> pr) = 0;
-#endif
 };	// end class param_instance_reference
 
-//-----------------------------------------------------------------------------
-#if 0
-// moved to art_object_expr.h
-/**
-	A reference to a instance of built-in type pbool.  
-	Consider multiply deriving from pbool_expr, 
-	and replacing pbool_literal.  
- */
-class pbool_instance_reference : public param_instance_reference {
-protected:
-	never_ptr<pbool_instantiation>		pbool_inst_ref;
-public:
-	pbool_instance_reference(never_ptr<pbool_instantiation> pi, 
-		excl_ptr<index_list> i);
-	~pbool_instance_reference() { }
-
-	ostream& what(ostream& o) const;
-	never_const_ptr<instantiation_base> get_inst_base(void) const;
-	never_const_ptr<param_instantiation>
-		get_param_inst_base(void) const;
-
-	bool initialize(count_const_ptr<param_expr> i);
-#if 0
-	count_ptr<param_expr> make_param_literal(
-		count_ptr<param_instance_reference> pr);
-#endif
-};	// end class pbool_instance_reference
-
-//-----------------------------------------------------------------------------
-/**
-	A reference to a instance of built-in type pint.  
-	Consider multiply deriving from pint_expr, 
-	and replacing pint_literal.  
- */
-class pint_instance_reference : public param_instance_reference {
-protected:
-	never_ptr<pint_instantiation>		pint_inst_ref;
-public:
-	pint_instance_reference(never_ptr<pint_instantiation> pi, 
-		excl_ptr<index_list> i);
-	~pint_instance_reference() { }
-
-	ostream& what(ostream& o) const;
-	never_const_ptr<instantiation_base> get_inst_base(void) const;
-	never_const_ptr<param_instantiation>
-		get_param_inst_base(void) const;
-
-	bool initialize(count_const_ptr<param_expr> i);
-#if 0
-	count_ptr<param_expr> make_param_literal(
-		count_ptr<param_instance_reference> pr);
-#endif
-};	// end class pint_instance_reference
-#endif
+//=============================================================================
+// classes pint_instance_reference and pbool_instance_reference
+//	are in "art_object_expr.*"
 
 //=============================================================================
 }	// end namespace entity

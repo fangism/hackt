@@ -59,8 +59,7 @@ art.yy.types: art.yy
 
 y.union.cc: y.output art.yy.types
 	$(AWK) -f yacc-union-type.awk -v yaccfile=art.yy.types \
-		-v include="art_parser.h" \
-		-v namespace=ART::parser \
+		-v include="art_parser.h" -v namespace=ART::parser \
 		-v type=ART::parser::node y.output > $@
 
 # extra dependencies to ensure correct in-order parallel builds
@@ -71,9 +70,12 @@ regression: clobber
 	$(RECURSIVE_MAKE) regression-target
 	$(RECURSIVE_MAKE) regression-norebuild
 
+regression-noclobber: regression-target
+	$(RECURSIVE_MAKE) regression-norebuild
+
 # MAKEFLAGS is redundant for gmake?
 regression-target:
-	$(RECURSIVE_MAKE) CDEFS="-DREGRESSION_TEST_MODE=1" all
+	$(RECURSIVE_MAKE) CPPFLAGS="$(CPPFLAGS) -DREGRESSION_TEST_MODE=1" all
 
 # just to make sure nothing crashes
 regression-preliminary: cleantests

@@ -3,11 +3,7 @@
 #ifndef __ART_OBJECT_EXPR_H__
 #define __ART_OBJECT_EXPR_H__
 
-#include <iosfwd>
-#include <string>
-#include <list>
-
-#include "art_object_inst_ref.h"
+#include "art_object_inst_ref.h"		// include "art_object_base.h"
 #include "discrete_interval_set_fwd.h"
 
 //=============================================================================
