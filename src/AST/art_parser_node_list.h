@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.1 2005/02/22 08:15:20 fang Exp $
+	$Id: art_parser_node_list.h,v 1.2 2005/02/24 06:17:06 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
 #define __ART_PARSER_NODE_LIST_H__
+
+#define	USE_NEW_NODE_LIST		0
 
 #include "STL/list.h"
 #include "art_parser_fwd.h"
@@ -13,17 +15,78 @@
 #include "memory/count_ptr.h"
 
 namespace ART {
-//=============================================================================
+namespace parser {
+
 USING_LIST
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 
-namespace parser {
 //=============================================================================
-// From here below, begins the definitions of the fundamental base classes
-// for the ART parser.  
-// Most children classes that derive from them are defined in
-// headers "art_parser_*.h".  
+// replacement node list
+
+#if USE_NEW_NODE_LIST
+
+#define	NODE_LIST_TEMPLATE_SIGNATURE					\
+template <class T>
+
+class node_list : public node {
+	typedef	node_list<T>				this_type;
+protected:
+	// consider using a vector
+	typedef	list<count_ptr<T> >			list_type;
+protected:
+	typedef	typename list_type::value_type		value_type;
+	typedef	typename list_type::iterator		iterator;
+	typedef	typename list_type::const_iterator	const_iterator;
+protected:
+	list_type					nodes;
+	line_position					start;
+	line_position					end;
+public:
+	node_list();
+
+	explicit
+	node_list(const T*);
+
+	~node_list();
+
+	iterator
+	begin(void) { return nodes.begin(); }
+
+	const_iterator
+	begin(void) const { return nodes.begin(); }
+
+	iterator
+	end(void) { return nodes.end(); }
+
+	const_iterator
+	end(void) const { return nodes.end(); }
+
+	this_type*
+	append(const T*);		// basically push_back
+
+	this_type*
+	wrap(const line_position&, const line_position&);
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	line_range
+	where(void) const;
+
+	never_ptr<const object>
+	check_build(context&) const;
+
+};	// end class node_list
+
+#else
+
 //=============================================================================
 #define	NODE_LIST_BASE_TEMPLATE_SIGNATURE				\
 	template <class T>
@@ -181,6 +244,8 @@ virtual	line_position
 virtual	void
 	release_append(node_list<T,D>& dest);
 };	// end of template class node_list<>
+
+#endif	// USE_NEW_NODE_LIST
 
 //=============================================================================
 }	// end namespace parser

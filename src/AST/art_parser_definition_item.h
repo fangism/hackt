@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.1 2005/02/22 08:15:19 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.2 2005/02/24 06:17:05 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
@@ -31,6 +31,9 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+virtual	never_ptr<const object>
+	check_build(context& ) const = 0;
 };	// end class def_body_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
