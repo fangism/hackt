@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.10 2005/02/27 22:54:29 fang Exp $
+	$Id: list_vector_pool.h,v 1.10.10.1 2005/03/06 02:56:32 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -51,15 +51,67 @@ template <class T, bool Threaded>
 	A reinterpret_cast is needed because this particular allocator is 
 	works with type-specific arguments, but the standard allocator 
 	interface works with generic void-pointers.  
+
+	NOTE:
+	http://www.informit.com/guides/content.asp?g=cplusplus&seqNum=40&rl=1
+
+	Implementation
+
+	The implementation of new is straightforward: it calls a custom 
+	allocation function, say, allocate_from_pool(), and returns the 
+	resulting pointer. You can use any other memory allocation function 
+	that suits your needs, such as malloc() or GlobalAlloc(), as long as 
+	that function meets the memory alignment requirement of your 
+	objects. Here's a typical implementation of new:
+
+	void* A::operator new (size_t size) {
+		void *p=allocate_from_pool(size);
+		return p;
+	} // A's default ctor implicitly called here
+
+	Note that when this function exits, the class's default constructor 
+	executes automatically and constructs an object of type A. 
+	The matching version of delete looks as follows:
+
+	void A::operator delete (void *p) {
+		release(p); // return memory to pool
+	} // A's dtor implicitly called at this point
+
+	C++ guarantees that an object's destructor is automatically called 
+	just before delete executes. Therefore, you shouldn't invoke A's 
+	destructor explicitly (doing so would cause undefined behavior as 
+	the destructor will actually run twice).
+
+	--- end quote ---
+
+	SUMMARY:
+	Did you catch the part about implicit ctor/dtor calls?
+	This means we CANNOT use vector<T> as our underlying memory chunk.  
+	We cannot suppress the call to the destructor!
+	The only hack we can do to make this safe is upon destruction of
+	the pool, walk the entire free-list and default-construct
+	each location pointer in the free-list.  This clears the contents
+	of what is about to be destroyed.  Then when the vector destructor 
+	is called, it should be safe to destroy each element.
  */
 #define	LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(T,C)			\
 T::pool_type T::pool(C);						\
-void* T::operator new (size_t s)					\
-	{ return pool.allocate(); }					\
-void* T::operator new (size_t s, void*& p)				\
-	{ NEVER_NULL(p); return p; }					\
-void T::operator delete (void* p)					\
-	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
+void*									\
+T::operator new (size_t s) {						\
+	INVARIANT(sizeof(T) == s);					\
+	return pool.allocate();						\
+}									\
+void*									\
+T::operator new (size_t s, void*& p) {					\
+	INVARIANT(sizeof(T) == s);					\
+	NEVER_NULL(p); return p;					\
+}									\
+void									\
+T::operator delete (void* p) {						\
+	T* t = reinterpret_cast<T*>(p);					\
+	NEVER_NULL(t);							\
+	pool.deallocate(t);						\
+}
 
 /**
 	Convenient macro for explicitly requiring that a memory pool
@@ -110,12 +162,13 @@ void*									\
 T::operator new (size_t s) {						\
 	static pool_type& pool(*get_pool());				\
 	LIST_VECTOR_POOL_STACKTRACE("operator new");			\
+	INVARIANT(sizeof(T) == s);					\
 	return pool.allocate();						\
 }									\
 									\
-inline									\
 void*									\
 T::operator new (size_t s, void*& p) {					\
+	INVARIANT(sizeof(T) == s);					\
 	NEVER_NULL(p); return p;					\
 }									\
 									\
@@ -142,6 +195,23 @@ using std::vector;
 using std::ostream;
 
 //=============================================================================
+/**
+	Default to eager / early destruction.  
+	Is safe to use lazy destruction for non-recursive 
+	destructors, i.e. object that do not contain pointers
+	to other likewise pooled objects.  
+	To override the default eager destruction, 
+	define a specialization of this (in the util::memory namespace)
+	in the module where the pool is instantiated.  
+	A macro is provided below.  
+	\param T the class type to be pooled.  
+ */
+template <class T>
+struct list_vector_pool_policy {
+	typedef	eager_destruction_tag	destruction_policy;
+};      // end struct list_vector_pool_policy
+
+//-----------------------------------------------------------------------------
 /**
 	This macro must appear in the util::memory namespace.  
  */
@@ -290,26 +360,6 @@ public:
 	ostream&
 	status(ostream& o) const;
 
-#if 0
-private:
-	// policy-based variations
-
-	static
-	void
-	eager_destroy(const pointer, const eager_destruction_tag);
-
-	static
-	void
-	eager_destroy(const pointer, const lazy_destruction_tag);
-
-	static
-	void
-	lazy_destroy(const pointer, const eager_destruction_tag);
-
-	static
-	void
-	lazy_destroy(const pointer, const lazy_destruction_tag);
-#endif
 };	// end class list_vector_pool
 
 //-----------------------------------------------------------------------------

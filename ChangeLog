@@ -12,6 +12,15 @@
 	  Later revision will add macros to override new and delete
 	  using the chunk_map_pool.  
 
+	* -chunkmap-02:
+	  Realized mistake in list_vector_pool implementation.
+	  Even overloaded new/delete operators implicitly call
+	  ctors and dtors on the relevant pointers, thus rendering
+	  eager/lazy destruction somewhat irrelevant -- always destroyed
+	  afer delete.  To compensate, re-construct elements pointed
+	  in the free-list before destruction of the pool.  
+	  Cleaned up files a bit.  Will apply these concepts to chunk_map_pool.
+
 
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 

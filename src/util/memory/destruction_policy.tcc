@@ -1,7 +1,7 @@
 /**
 	\file "memory/destruction_policy.tcc"
 	Implementation of policy-specific explicit destructor invokers.  
-	$Id: destruction_policy.tcc,v 1.2.10.1 2005/03/06 00:52:05 fang Exp $
+	$Id: destruction_policy.tcc,v 1.2.10.2 2005/03/06 02:56:32 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
@@ -15,6 +15,7 @@ namespace memory {
 USING_CONSTRUCT
 USING_DESTROY
 
+//-----------------------------------------------------------------------------
 template <class T>
 inline
 void
@@ -46,6 +47,33 @@ lazy_destroy(T* const p, const lazy_destruction_tag) {
 	// no need to construct
 }
 
+//-----------------------------------------------------------------------------
+template <class T>
+inline
+void
+eager_construct(T* const p, const eager_destruction_tag) {
+}
+
+template <class T>
+inline
+void
+eager_construct(T* const p, const lazy_destruction_tag) {
+}
+
+template <class T>
+inline
+void
+lazy_construct(T* const p, const eager_destruction_tag) {
+	_Construct(p);
+}
+
+template <class T>
+inline
+void
+lazy_construct(T* const p, const lazy_destruction_tag) {
+}
+
+//-----------------------------------------------------------------------------
 }	// end namespace memory
 }	// end namespace util
 
