@@ -13,6 +13,7 @@
 #include "sstream.h"			// reduce to forward decl?
 #include "ptrs.h"			// need complete definition
 #include "count_ptr.h"			// need complete definition
+#include "art_utils.h"
 
 namespace ART {
 namespace entity {
@@ -151,11 +152,36 @@ public:
 	/** pointer registration interface */
 	bool register_transient_object(
 		const object* ptr, const type_index_enum t);
-	long lookup_ptr_index(const object* ptr) const;
-	object*	lookup_obj_ptr(const long i) const;
 	bool flag_visit(const object* ptr);
 	ostream& lookup_write_buffer(const object* ptr) const;
 	istream& lookup_read_buffer(const object* ptr) const;
+
+	long lookup_ptr_index(const object* ptr) const;
+	object*	lookup_obj_ptr(const long i) const;
+
+	/**
+		Doesn't actually write out the pointer, but the index 
+		representing the object represented by the pointer.
+		Precondition: pointer must already be registered.
+		\param f output (file) stream.
+		\param ptr the pointer (class) object to translate and 
+			write out.
+	 */
+	template <template <class> class P, class T>
+	void write_pointer(ostream& f, const P<T>& ptr) const {
+		if (ptr)	write_value(f, lookup_ptr_index(&*ptr));
+		else		write_value(f, lookup_ptr_index(NULL));
+	}
+
+	/**
+		ALERT: this intentially and coercively discards const-ness!
+	 */
+	template <template <class> class P, class T>
+	void read_pointer(istream& f, const P<T>& ptr) const {
+		long i;
+		read_value(f, i);
+		const_cast<P<T>& >(ptr) = P<T>(lookup_obj_ptr(i));
+	}
 
 // two interface functions suffice for file interaction:
 	static void	save_object_to_file(const string& s,

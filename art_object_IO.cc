@@ -249,6 +249,33 @@ persistent_object_manager::lookup_read_buffer(const object* ptr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Doesn't actually write out the pointer, but the index representing
+	the object represented by the pointer.  
+	Precondition: pointer must already be registered.  
+	\param f output (file) stream.
+	\param ptr the pointer (class) object to translate and write out.
+ */
+void
+persistent_object_manager::write_pointer(ostream& f, const object* ptr) const {
+	write_value(f, lookup_ptr_index(ptr));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	ALERT: this intentially and coercively discards const-ness!
+ */
+template <template <class> class P, class T>
+void
+persistent_object_manager::read_pointer(istream& f, const P<T>& ptr) const {
+	long i;
+	read_value(f, i);
+	const_cast<P<T>& >(ptr) = P<T>(lookup_obj_ptr(i));
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 persistent_object_manager::dump_text(ostream& o) const {
 	o << "Persistent Object Manager text dump: " << endl;

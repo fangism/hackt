@@ -34,7 +34,7 @@ public:
 		{ assert(line>0); assert(col>0); }
 // default destructor
 
-};
+};	// end class line_position
 
 //=============================================================================
 class line_range {
@@ -48,7 +48,7 @@ public:
 // default destructor
 
 friend ostream& operator << (ostream& o, const line_range& l);
-};
+};	// end class line_range
 
 }	// end namespace ART
 

@@ -1233,12 +1233,8 @@ name_space::add_open_namespace(const string& n) {
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
 		excl_ptr<name_space> new_ns(
 			new name_space(n, never_const_ptr<name_space>(this)));
-		ret = new_ns;
-		assert(ret);
-		assert(new_ns.owned());
-		// register it as a used id
-		used_id_map[n] = new_ns;
-			// explicit transfer
+		ret = add_namespace(new_ns);
+		// explicit transfer
 		assert(!new_ns);
 	}
 
@@ -1247,6 +1243,23 @@ name_space::add_open_namespace(const string& n) {
 	assert(ret->key == n);
 	DEBUG(TRACE_NAMESPACE_NEW, 
 		cerr << " with parent: " << ret->parent->key)
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private method for adding a namespace to the used_id_map.
+	Ideally, should already be checked before calling this.  
+ */
+never_ptr<name_space>
+name_space::add_namespace(excl_ptr<name_space> new_ns) {
+	never_ptr<name_space> ret(new_ns);
+	assert(ret);
+	assert(new_ns.owned());
+	// register it as a used id
+	used_id_map[new_ns->key] = new_ns;
+		// explicit transfer
+	assert(!new_ns);
 	return ret;
 }
 
@@ -1818,11 +1831,7 @@ name_space::write_object(persistent_object_manager& m) const {
 	write_string(f, key);
 
 	// WHAT ABOUT NULL?
-	if (parent) {
-		write_value(f, m.lookup_ptr_index(&*parent));
-	} else {
-		write_value(f, m.lookup_ptr_index(NULL));
-	}
+	m.write_pointer(f, parent);
 
 	// only write out namespaces
 	// how many namespaces in the used_id_map?
@@ -1851,7 +1860,7 @@ name_space::write_object(persistent_object_manager& m) const {
 	const ns_list_type::const_iterator l_end = ns_list.end();
 	for ( ; l_iter!=l_end; l_iter++) {
 		never_const_ptr<name_space> l_obj(*l_iter);
-		write_value(f, m.lookup_ptr_index(&*l_obj));
+		m.write_pointer(f, l_obj);
 	}
 
 	// write a tail or delimiter for checking alignment?
@@ -1896,12 +1905,7 @@ if (!m.flag_visit(this)) {
 	}
 
 	// Next, read in the parent namespace pointer.  
-	{
-	long i;
-	read_value(f, i);
-	const_cast<never_const_ptr<name_space>& >(parent) =
-		never_const_ptr<name_space>(m.lookup_obj_ptr(i));
-	}
+	m.read_pointer(f, parent);
 
 	{
 	size_t s;
@@ -1916,10 +1920,7 @@ if (!m.flag_visit(this)) {
 		o->load_object(m);	// recursion!!!
 		name_space* ns = IS_A(name_space*, o);
 		assert(ns);
-		// see name_space::add_open_namespace for how
-		// it is added as a excl_ptr
-		// TO DO: make a common private method.  
-		used_id_map[ns->get_key()] = excl_ptr<name_space>(ns);
+		add_namespace(excl_ptr<name_space>(ns));
 		// ownership restored here!
 	}
 	}

@@ -175,6 +175,11 @@ virtual	ostream& what(ostream& o) const = 0;
  */
 virtual	ostream& dump(ostream& o) const = 0;
 
+#if 0
+/**	prints out what it (may have) looked like in source */
+virtual	ostream& source(ostream& o) const = 0;
+#endif
+
 /**
 	Use this method to automatically dereference object handles.  
  */
@@ -481,6 +486,11 @@ never_const_ptr<name_space>	leave_namespace(void);	// or close_namespace
 never_const_ptr<name_space>	add_using_directive(const qualified_id& n);
 never_const_ptr<name_space>	add_using_alias(const qualified_id& n, const string& a);
 
+private:
+never_ptr<name_space>	add_namespace(excl_ptr<name_space> ns);
+
+public:
+
 // do we really need to specialize adding definitions by class?
 // to be used ONLY by the global namespace (???)
 never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
@@ -527,9 +537,7 @@ void	find_namespace_starting_with(namespace_list& m,
 
 // methods for object file I/O
 public:
-// static const type_index_enum	type_index = NAMESPACE_TYPE;
 type_index_enum	get_type_index(void) const;
-
 /** gathers pointer information about immediate pointer members */
 void	collect_transient_info(persistent_object_manager& m) const;
 void	write_object(persistent_object_manager& m) const;
