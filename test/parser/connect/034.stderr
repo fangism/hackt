@@ -1,3 +1,3 @@
-ERROR: The following referenced indices have definitely not been instantiated: {
+ERROR: The following referenced indices of "c" have definitely not been instantiated: {
 [6]
 } [9:35]
