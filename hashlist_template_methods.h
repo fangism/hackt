@@ -6,7 +6,9 @@
 #include <iostream>
 
 #include "hashlist.h"
-#include "list_of_ptr_template_methods.h"
+
+// phased out pointer specializations
+// #include "list_of_ptr_template_methods.h"	// obsolete
 
 //=============================================================================
 // class methods for hashlist<K,T>
@@ -63,6 +65,9 @@ hashlist<K,T>::operator [] (const K& k) const {
 }
 
 //=============================================================================
+// phased out
+#if 0
+//=============================================================================
 // class methods for hashlist_of_ptr<K,T>
 
 /// Standard default constructor, sets ownership flag to true.
@@ -100,6 +105,8 @@ template <class K, class T>
 hashlist_of_const_ptr<K,T>::~hashlist_of_const_ptr() {
 }
 
+//=============================================================================
+#endif
 //=============================================================================
 
 #endif	// __HASHLIST_TEMPLATE_METHODS_H__

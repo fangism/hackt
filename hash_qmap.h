@@ -49,14 +49,20 @@ public:
 		Since it's constant, it won't modify the map
 		by making a blank entry at the given key, 
 		which is what map<K,T> does.  
+		IMPORTANT: just using the [] operator on a map
+		will default to the non-const version.  
+		To disambiguate, thus forcing use of this const-preserving
+		lookup, one must explicitly static_cast the invoking object.
+		e.g. static_cast<const map_type&>(map_name)[key]
 		\param k the key used to lookup.  
-		\return read-only COPY of the object if found, 
+		\return COPY of the object if found, 
 			else a freshly constructed object.  
+			Can't use a reference because might return
+			reference to a temporary.  
 	 */
-	const T operator [] (const K& k) const {
+	T operator [] (const K& k) const {
 		const_iterator i = find(k);	// uses find() const;
 		return (i != this->end()) ? i->second : T();
-//		return (i != hash_map<K,T>::end()) ? i->second : T();
 		// if T is a pointer class, should be equivalent to NULL
 		// or whatever the default constructor is
 	}

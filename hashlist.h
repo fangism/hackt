@@ -3,10 +3,13 @@
 // needed for when data needs to be kept in an ordered list
 // with rapid acesss to its elements by a key
 
+// phased out pointer specializations...
+
 #ifndef	__HASHLIST_H__
 #define	__HASHLIST_H__
 
-#include "list_of_ptr.h"	// includes <list>
+#include <list>
+// #include "list_of_ptr.h"	// includes <list>
 using std::list;
 
 #include "hash_map.h"		// NOT the system <hash_map>
@@ -43,6 +46,9 @@ using	list<T>::empty;
 };
 
 //=============================================================================
+#if 0
+// OBSOLETE
+
 /**
 	Class for storing a constant-time access list of owned pointers
 	to objects.  
@@ -84,6 +90,8 @@ virtual	~hashlist_of_const_ptr();		// not inlined
 using parent::begin;
 using parent::end;
 };	// end class hashlist_of_const_ptr
+
+#endif
 
 //=============================================================================
 

@@ -9,10 +9,17 @@
 #include "art_parser.h"
 #include "art_object.h"
 #include "art_object_expr.h"
-#include "list_of_ptr_template_methods.h"	// for array_dim_list
 
 namespace ART {
 namespace entity {
+//=============================================================================
+// class param_expr method_definitions
+
+ostream&
+param_expr::dump(ostream& o) const {
+	return what(o);
+}
+
 //=============================================================================
 // class param_expr_collective method defintions
 
@@ -30,7 +37,6 @@ param_expr_collective::what(ostream& o) const {
 string
 param_expr_collective::hash_string(void) const {
 	string ret("{");
-//	list_of_ptr<param_expr>::const_iterator i = 
 	list<excl_ptr<param_expr> >::const_iterator i = 
 		elist.begin();
 	for ( ; i!=elist.end(); i++) {
@@ -43,10 +49,6 @@ param_expr_collective::hash_string(void) const {
 	ret += "}";
 	return ret;
 }
-
-//=============================================================================
-// class param_const_int method definitions
-
 
 //=============================================================================
 // class param_literal method definitions
@@ -142,7 +144,7 @@ param_binary_expr::hash_string(void) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS
 
-template class list_of_ptr<param_expr>;		// array_dim_list
+// template class list_of_ptr<param_expr>;		// array_dim_list
 
 //=============================================================================
 }	// end namepace entity

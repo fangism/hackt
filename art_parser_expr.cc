@@ -173,7 +173,8 @@ qualified_id::copy_beheaded(void) const {
  */
 const object*
 qualified_id::check_build(context* c) const {
-	return c->lookup_object(*this);
+	return c->lookup_object(*this).unprotected_const_ptr();
+//	return c->lookup_object(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -340,9 +341,11 @@ const object*
 range::check_build(context* c) const {
 	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
 	const object* o;
-	const param_type_reference* pint_type = 
-		IS_A(const param_type_reference*, 
-			c->global_namespace->lookup_object("pint"));
+//	const param_type_reference* pint_type = 
+//		IS_A(const param_type_reference*, 
+//			c->global_namespace->lookup_object("pint"));
+	never_const_ptr<param_type_reference> pint_type = c->global_namespace->
+		lookup_object("pint").is_a<param_type_reference>();
 	assert(pint_type);
 	o = lower->check_build(c);
 	assert(o);

@@ -249,7 +249,8 @@ token_identifier::check_build(context* c) const {
 //	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	return c->lookup_instance(*this);
+	return c->lookup_instance(*this).unprotected_const_ptr();
+//	return c->lookup_instance(*this);
 }
 
 //=============================================================================
@@ -415,7 +416,8 @@ token_datatype::check_build(context* c) const {
 		what(cerr << c->auto_indent())
 			<< "token_datatype::check_build(...): ";
 	)
-	return c->set_datatype_def(*this);
+	return c->set_datatype_def(*this).unprotected_const_ptr();
+//	return c->set_datatype_def(*this);
 }
 
 //=============================================================================
@@ -438,7 +440,8 @@ token_paramtype::check_build(context* c) const {
 		what(cerr << c->auto_indent())
 			<< "token_paramtype::check_build(...): ";
 	)
-	return c->set_param_def(*this);
+	return c->set_param_def(*this).unprotected_const_ptr();
+//	return c->set_param_def(*this);
 }
 
 //=============================================================================

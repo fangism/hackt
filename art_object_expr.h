@@ -27,7 +27,6 @@ class param_instantiation;
 	Elements should be param_expr (owned pointers).
  */
 typedef list<never_const_ptr<param_expr> >		array_dim_list;
-// typedef list_of_ptr<param_expr>			array_dim_list;
 
 //============================================================================= 
 /**
@@ -45,6 +44,7 @@ public:
 	param_expr() : object() { }
 virtual	~param_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const;		// temporary
 virtual	string hash_string(void) const = 0;
 };	// end class param_expr
 
@@ -54,7 +54,6 @@ virtual	string hash_string(void) const = 0;
  */
 class param_expr_collective : public param_expr {
 protected:
-//	list_of_ptr<param_expr>		elist;
 	list<excl_ptr<param_expr> >	elist;
 public:
 	param_expr_collective();

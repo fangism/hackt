@@ -311,14 +311,16 @@ type_id::rightmost(void) const {
  */
 const object*
 type_id::check_build(context* c) const {
-	const object* o;
-	const definition_base* d;
+//	const object* o;
+//	const definition_base* d;
+	never_const_ptr<definition_base> d;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"type_id::check_build(...): " << endl;
 	)
-	o = c->lookup_definition(*base);
-	d = IS_A(const definition_base*, o);
+	d = c->lookup_definition(*base);
+//	o = c->lookup_definition(*base);
+//	d = IS_A(const definition_base*, o);
 	if (!d) {
 //		cerr << "type_id::check_build(context*) : ERROR!" << endl;
 		return NULL;
@@ -326,7 +328,8 @@ type_id::check_build(context* c) const {
 	// set type definition reference
 	d = d->set_context_definition(*c);	// pure virtual
 	// c->set_definition(d);		// don't care which kind...
-	return d;
+	return d.unprotected_const_ptr();
+//	return d;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1274,14 +1277,15 @@ instance_alias::check_build(context* c) const {
 	const object* o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
-			"instance_alias::check_build(...): ";
+			"instance_alias::check_build(...): finish me!";
 	)
 	o = instance_base::check_build(c);
 	// should return reference to the new INSTANCE, not its type
 
 	// should actually check instance-REFERENCES
-	const fundamental_type_reference* tr =
-		IS_A(const fundamental_type_reference*, o);
+//	const fundamental_type_reference* tr =
+	never_const_ptr<fundamental_type_reference> tr(
+		IS_A(const fundamental_type_reference*, o));
 	assert(tr);
 	// set the instance to match or just set current instantiation
 	tr = c->set_current_fundamental_type(*tr);
@@ -1585,7 +1589,8 @@ concrete_type_ref::check_build(context* c) const {
 	}
 
 	// we've made it!  set the fundamental_type_reference for instantiation
-	return c->set_current_fundamental_type();
+	return c->set_current_fundamental_type().unprotected_const_ptr();
+//	return c->set_current_fundamental_type();
 }
 
 //=============================================================================

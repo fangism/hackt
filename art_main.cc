@@ -3,6 +3,7 @@
 #include <iostream>
 #include "getopt_portable.h"		// for getopt()
 
+#include "ptrs.h"
 #include "art_debug.h"
 #include "art_parser.h"
 #include "art_parser_chp.h"		// need forward declarations for these
@@ -21,28 +22,25 @@ using namespace std;
 extern  YYSTYPE yyval;			// root token
 extern "C" {
 	int yyparse(void);              // in "y.tab.cc"
-//	void yyerror(const char*);	// ancient compiler rejects
-//	void yyerror(char*);	// replace with this if necessary
 }
 
 int main(int argc, char* argv[]) {
-	parser::node* root;	///< root of the syntax tree
+	excl_ptr<parser::node> root;	///< root of the syntax tree
+//	parser::node* root;	///< root of the syntax tree
 	/// root of type-checked object
 	const entity::object* top = NULL;
-	entity::name_space* global = new name_space("",NULL);
-	parser::context* the_context = new context(global);
+//	entity::name_space* global = new name_space("",NULL);
+	excl_ptr<entity::name_space> global(new name_space(""));
+//	parser::context* the_context = new context(global);
+	excl_ptr<parser::context> the_context(new context(global));
 
-//	try {
 		yyparse();
-//	} catch (...) {
-//		cerr << "uncaught exception in parsing";
-//		exit(1);
-//	}
 DEBUG(DEBUG_BASIC, 
 	cerr << "parsing successful... tree built, on to type-checking!" 
 		<< endl;
 )
-	root = yyval._root_body;
+	root = excl_ptr<parser::node>(yyval._root_body);
+//	root = yyval._root_body;
 if (root) {
 DEBUG(DEBUG_BASIC, 
 	root->what(cerr << "root is a ") << endl;	// what's our top root?
@@ -53,17 +51,18 @@ DEBUG(DEBUG_BASIC,
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
 	// global = new context();
-	top = root->check_build(the_context);
+	top = root->check_build(the_context.unprotected_ptr());	// temporary
+//	top = root->check_build(the_context);
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 
 	// massive recursive deletion of syntax tree, reclaim memory
-	SAFEDELETE(root);
+//	SAFEDELETE(root);	// excl_ptr<> will delete itself.
 
 	// IMPORTANT: should be the same, don't delete both
-	if (top) assert(top == global);
+	if (top) assert(global == top);
 	// delete ART object and its hierarchy
-	SAFEDELETE(global);
+//	SAFEDELETE(global);	// excl_ptr<> will delete itself.
 	return 0;
 }
 
