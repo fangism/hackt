@@ -1,0 +1,59 @@
+# "test/Make.test"
+# a template makefile for testing, to be included in recursive invocations
+
+include $(top_srcdir)/Make.stddef
+
+ARTC_EXE = $(top_builddir)/src/artc
+ARTC_TEST_SH = $(top_srcdir)/test/artc-expect.sh
+STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
+
+TEST_REPORT = $(top_builddir)/test/test-report.txt
+
+# This needs to be specified in Makefile.am to take effect
+# SUFFIXES = .artctest .in
+
+.in.stderr:
+	@$(TOUCH) $@
+
+subdir.not_a_test:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "echo \"In $(subdir):\" >> $(TEST_REPORT)" >> $@
+	@$(CHMOD) a+x $@
+
+.in.artctest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) "$(ARTC_TEST_SH) $(ARTC_EXE) $(srcdir) $* \"$(STATE_ENUM_FILTER)\" $(TEST_REPORT)" >> $@
+	@$(CHMOD) a+x $@
+
+# must be previously defined
+EXTRA_DIST += $(TESTS:.artctest=.in) $(TESTS:.artctest=.stderr) \
+	$(BISON_OUTPUTS:=.stderr.bison)
+
+# must be previously defined
+CLEANFILES += $(TESTS) \
+	$(TESTS:.artctest=.diff) \
+	$(TESTS:.artctest=.test) \
+	$(TESTS:.artctest=.test.filter) \
+	$(TESTS:.artctest=.stderr.filter) \
+	$(BISON_OUTPUTS:=.stderr.bison.filter) \
+	$(BISON_OUTPUTS:=.stderr.bison.diff) \
+	subdir.not_a_test
+
+all-local: subdir.not_a_test $(TESTS)
+
+# automatically removes $(CLEANFILES)
+clean-local:
+
+# some stderr files don't exist, because empty output files are optional
+# this shouldn't really be necessary...
+# dist-hook-extra:
+#	$(RM) $(distdir)/subdir.not_a_test
+
+dist-hook-missing: $(EXTRA_DIST)
+	@for f in $(EXTRA_DIST); do \
+		if ! [ -f $$f ] ; then \
+			$(TOUCH) $$f ; \
+		fi ; \
+	done
+
