@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.2.2 2005/02/08 22:45:12 fang Exp $
+	$Id: multikey_set.h,v 1.1.2.3 2005/02/09 00:36:04 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -14,8 +14,6 @@
 #include "multikey.h"
 
 namespace util {
-using std::ostream;
-
 //=============================================================================
 /**
 	Multidimensional set implemented as 1-level red-black tree
@@ -76,83 +74,7 @@ public:
 
 	~multikey_set();
 
-#if 0
-	/**
-		Wraps around parent set_type's insert.  
-	 */
-	pair<iterator, bool>
-	insert(const value_type& v) {
-		return set_type::insert(v);
-	}
-
-	/**
-		Convenient insertion of element given separate
-		key and value.  
-		If no value is given, then makes a default value . 
-	 */
-	pair<iterator, bool>
-	insert(const impl_key_type& k, const impl_value_type& v = 
-			impl_value_type()) {
-		return set_type::insert(value_type(k, v));
-	}
-#endif
-
-#if 1
-	iterator
-	insert(const key_type& k, const impl_value_type& v = 
-			impl_value_type()) {
-		return set_type::insert(k, v);
-	}
-
-	iterator
-	insert(const element_type& p) {
-		return set_type::insert(p);
-	}
-#else
-	using set_type::insert;
-#endif
-
-#if 0
-	/**
-		Convenient insertion of element given separate
-		key and value.  
-		If no value is given, then makes a default value . 
-	 */
-	pair<iterator, bool>
-	insert(const index_type& k, const impl_value_type& v = 
-			impl_value_type()) {
-		return set_type::insert(value_type(k, v));
-	}
-#endif
-
-#if 0
-	/**
-		Searches for an element with just the key part of the element, 
-		leaving the value field default constructed.  
-		Const-semantics, guaranteeing no creation of blank entries.  
-	 */
-	const_iterator
-	find(const key_type& k) const {
-		return set_type::find(value_type(k));
-	}
-
-#if 0
-	/**
-		Non-const version, used by erase() implementations.  
-	 */
-	iterator
-	find(const key_type& k) {
-		return set_type::find(value_type(k));
-	}
-#endif
-#endif
-
-#if 0
-	size_type
-	erase(const key_type& k) {
-		return set_type::erase(value_type(k));
-	}
-#endif
+	// EVERYTHING needed is inherited
 
 	void
 	clean(void);
@@ -163,117 +85,6 @@ public:
 	dump(ostream& o) const;
 
 };	// end class multikey_set
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SPECIALIZED_MULTIKEY_SET_TEMPLATE_SIGNATURE
-class multikey_set<1, T, S> : public multikey_assoc<1, S<T> > {
-private:
-	typedef	multikey_set<1, T, S>			this_type;
-protected:
-	typedef	multikey_assoc<1, S<T> >		set_type;
-	typedef	T					element_type;
-public:
-	typedef	typename set_type::key_type		key_type;
-//	typedef	typename set_type::mapped_type		mapped_type;
-	typedef	typename set_type::value_type		value_type;
-	typedef	typename set_type::key_compare		key_compare;
-	typedef	typename set_type::allocator_type	allocator_type;
-
-	typedef	typename set_type::reference		reference;
-	typedef	typename set_type::const_reference	const_reference;
-	typedef	typename set_type::iterator		iterator;
-	typedef	typename set_type::const_iterator	const_iterator;
-	typedef	typename set_type::reverse_iterator	reverse_iterator;
-	typedef	typename set_type::const_reverse_iterator
-							const_reverse_iterator;
-	typedef	typename set_type::size_type		size_type;
-	typedef	typename set_type::difference_type	difference_type;
-	typedef	typename set_type::pointer		pointer;
-	typedef	typename set_type::const_pointer	const_pointer;
-	typedef	typename set_type::allocator_type	allocator_type;
-
-	typedef	typename set_type::index_type		index_type;
-	typedef	typename set_type::key_list_type	key_list_type;
-	typedef	typename set_type::key_list_pair_type	key_list_pair_type;
-	typedef	typename set_type::key_pair_type	key_pair_type;
-
-	enum { dim = 1 };
-protected:
-	/**
-		Since a set's value_type is the same as it's key_type, 
-		we use the following typedefs to distinguish between the
-		logical key and value semantics of the contained elements.  
-	 */
-	typedef	typename element_type::key_type		impl_key_type;
-	typedef	typename element_type::value_type	impl_value_type;
-
-public:
-	multikey_set();
-
-	~multikey_set();
-
-	/**
-		Wraps around parent set_type's insert.  
-	 */
-	pair<iterator, bool>
-	insert(const value_type& v) {
-		return set_type::insert(v);
-	}
-
-	/**
-		Convenient insertion of element given separate
-		key and value.  
-	 */
-	pair<iterator, bool>
-	insert(const impl_key_type& k, const impl_value_type& v) {
-		return set_type::insert(value_type(k, v));
-	}
-
-	/**
-		Convenient insertion of element given separate
-		key and value.  
-	 */
-	pair<iterator, bool>
-	insert(const index_type& k, const impl_value_type& v) {
-		return set_type::insert(value_type(k, v));
-	}
-
-#if 1
-	/**
-		Inserts a default constructed element at the key.  
-	 */
-	pair<iterator, bool>
-	insert(const impl_key_type& k) {
-		return set_type::insert(value_type(k));
-	}
-#else
-	/**
-		Inserts a default constructed element at the key.  
-	 */
-	pair<iterator, bool>
-	insert(const index_type& k) {
-		return set_type::insert(value_type(k));
-	}
-#endif
-
-	/**
-		Searches for an element with just the key part of the element, 
-		leaving the value field default constructed.  
-		Const-semantics, guaranteeing no creation of blank entries.  
-	 */
-	const_iterator
-	find(const impl_key_type& k) const {
-		return set_type::find(value_type(k));
-	}
-
-	// everything else inherited
-
-	ostream&
-	dump(ostream& o) const;
-
-};	// end class multikey_set
-#endif
 
 //=============================================================================
 
@@ -299,38 +110,7 @@ public:
 	 */
 	typedef	key_type				self_key_type;
 	enum { dim = D };
-protected:
-#if 0
-	/**
-		Should this be const like map's value_type?
-		Yes, else the set may become unsorted through
-		unauthorized tampering.  
-		HOWEVER, we need to be able to perform arithmetic
-		operations on it, like ++, when evaluating bounds, 
-		which prevents us from declaring it as const.
-		These are ok situations...
-	 */
-	const key_type					key;
-
-	/**
-		The value contained with the key.
-		Publicly accessible for convenience?
-	 */
-	value_type					value;
-#endif
 public:
-#if 0
-	// when does an element get default-constructed?
-	multikey_set_element() : key(), value() { }
-#endif
-
-#if 0
-	/**
-		Really a special case constructor intended for D = 1.
-	 */
-	multikey_set_element(const index_type k, const value_type& v =
-			value_type()) : key(k), value(v) { }
-#endif
 
 	explicit
 	multikey_set_element(const key_type& k, const value_type& v =
@@ -343,28 +123,6 @@ public:
 	const key_type&
 	self_key(void) const { return key; }
 
-#if 0
-	value_type&
-	get_value(void) { return value; }
-
-	const value_type&
-	get_value(void) const { return value; }
-#endif
-
-#if 0
-	/**
-		WARNING: abusing implicit conversion operator!
-	 */
-	operator value_type& () { return value; }
-
-	operator const value_type& () { return value; }
-#endif
-
-#if 0
-	// make it usable by find...
-	operator const key_type& () { return key; }
-#endif
-
 	const index_type&
 	operator [] (const size_t i) const { return key[i]; }
 
@@ -373,36 +131,6 @@ public:
 		parent_type::operator = (v);
 		return *this;
 	}
-
-#if 0
-	/**
-		ALERT! confusing operator overload combination ahead!
-		When comparing order, compare key.  
-		This operator is used to sort the set.  
-	 */
-	bool
-	operator < (const this_type& p) const {
-		return key < p.key;
-	}
-
-	/**
-		ALERT! confusing operator overload combination ahead!
-		When comparing equality, compare value only!
-		This is useful in determining whether or not
-		elements contained at a position are equal, 
-		by ignoring their sorting "keys".  
-		See where this applies in "multikey_assoc.tcc".
-	 */
-	bool
-	operator == (const this_type& p) const {
-		return value == p.value;
-	}
-
-	bool
-	operator != (const this_type& p) const {
-		return !(value == p.value);
-	}
-#endif
 
 };	// end class multikey_set_element
 

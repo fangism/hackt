@@ -1,21 +1,19 @@
 /**
 	\file "multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.1.2.2 2005/02/08 06:41:23 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.1.2.3 2005/02/09 00:36:03 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
 #define	__UTIL_MULTIKEY_ASSOC_TCC__
 
 #include "multikey_assoc.h"
-// #include "multikey.tcc"
 
 #include <limits>
 #include <functional>
 #include <algorithm>
 #include <iterator>
 
-// #include "IO_utils.tcc"
 
 #define	DEBUG_SLICE		0
 
@@ -24,13 +22,6 @@ namespace util {
 using std::pair;
 using std::numeric_limits;
 USING_LIST
-#if 0
-using util::write_value;
-using util::read_value;
-using util::write_map;
-using util::read_map;
-#endif
-// using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
 // class multikey_assoc method definitions
@@ -43,37 +34,12 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 multikey_assoc<D,C>::~multikey_assoc() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-void
-multikey_assoc<D,C>::clean(void) {
-	const T def;
-	iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; ) {
-		if (i->second == def) {
-			iterator j = i;
-			j++;
-			assoc_type::erase(i);
-			i = j;
-		} else {
-			i++;
-		}
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::iterator
 multikey_assoc<D,C>::lower_bound(const K& k) {
-	const key_type
-		x(k.self_key(),
-		numeric_limits<typename K::self_key_type::value_type>::min());
-	// YUCK
-	const typename assoc_type::key_type xx(x);
-	return assoc_type::lower_bound(xx);
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,12 +47,8 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::const_iterator
 multikey_assoc<D,C>::lower_bound(const K& k) const {
-	const key_type
-		x(k.self_key(),
-		numeric_limits<typename K::self_key_type::value_type>::min());
-	// YUCK
-	const typename assoc_type::key_type xx(x);
-	return assoc_type::lower_bound(xx);
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,30 +112,16 @@ typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::count(const K& k) const {
 	static const size_t dim2 = K::dim;
 	key_type l(k);
-//	typename assoc_type::key_type l(k);
 	l[dim2-1]++;
-	const typename assoc_type::key_type kk(k);
-	const typename assoc_type::key_type ll(l);
-	return distance(lower_bound(kk),
-		lower_bound(ll));
+	return distance(lower_bound(k), lower_bound(l));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::count(const index_type i) const {
-#if 0
-	multikey<1,K> l;
-	l[0] = i;
-	key_type m(l);
-	m[0]++;
-	return distance(lower_bound(l), lower_bound(m));
-#else
 	return distance(lower_bound(i), lower_bound(i+1));
-#endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -183,9 +131,9 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 template <class K>
 typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::erase(const K& k) {
-	static const size_t dim2 = K::self_key_type::dim;
+	static const size_t dim2 = K::dim;
 	if (dim2 < D) {
-		typename K::self_key_type m(k.self_key());
+		K m(k);
 		m[dim2-1]++;
 		const iterator l(lower_bound(k));
 		const iterator u(lower_bound(m));
@@ -193,7 +141,7 @@ multikey_assoc<D,C>::erase(const K& k) {
 		if (ret) assoc_type::erase(l,u);
 		return ret;
 	} else {        // D2 >= D
-		const typename assoc_type::key_type l(k.self_key());
+		const key_type l(k);
 		const iterator f(assoc_type::find(l));
 		if (f != this->end()) {
 			assoc_type::erase(f);
@@ -203,25 +151,15 @@ multikey_assoc<D,C>::erase(const K& k) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::size_type
 multikey_assoc<D,C>::erase(const index_type i) {
-#if 0
-	multikey<1,K> m, k;
-	k[0] = i;
-	m[0] = i+1;
-	const iterator l(lower_bound(k));
-	const iterator u(lower_bound(m));
-#else
 	const iterator l(lower_bound(i));
 	const iterator u(lower_bound(i+1));
-#endif
 	size_type ret = distance(l,u);
 	if (ret) assoc_type::erase(l,u);
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
@@ -444,35 +382,17 @@ multikey_assoc<D,C>::is_compact(void) const {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-ostream&
-multikey_assoc<D,C>::dump(ostream& o) const {
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; i++)
-		o << i->first << " = " << i->second << endl;
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::key_list_pair_type
 multikey_assoc<D,C>::index_extremities(void) const {
 	typedef key_list_pair_type	return_type;
 	if (this->empty())
 		return return_type();
-	const_iterator iter = this->begin();
-	const_iterator end = this->end();
-#if 0
-	typename key_type::accumulate_extremities ext(iter->first);
-	for_each(iter, end, ext);	// passes a COPY of ext...
-#else
+	const const_iterator iter = this->begin();
+	const const_iterator end = this->end();
 	key_pair_type ext(iter->first, iter->first);
 	ext = accumulate(iter, end, ext,
 		typename key_type::accumulate_extremities());
-#endif
 	return_type ret;
 	copy(ext.first.begin(), ext.first.end(),
 		back_inserter(ret.first));
@@ -481,42 +401,6 @@ multikey_assoc<D,C>::index_extremities(void) const {
 	return ret;
 }
 
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-ostream&
-multikey_assoc<D,C>::write(ostream& f) const {
-	INVARIANT(f.good());
-	write_value(f, population());
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; i++) {
-		i->first.write(f);
-		write_value(f, i->second);
-	}
-	return f;
-}
-
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-istream&
-multikey_assoc<D,C>::read(istream& f) {
-	INVARIANT(f.good());
-	INVARIANT(empty());
-	size_t size, i=0;
-	read_value(f, size);
-	for ( ; i<size; i++) {
-		key_type key;
-		mapped_type val;
-		key.read(f);
-		read_value(f, val);
-		(*this)[key] = val;
-	}
-	return f;
-}
-#endif
 
 //=============================================================================
 // class multikey_assoc method definitions (specialized)
@@ -527,45 +411,6 @@ multikey_assoc<1,C>::multikey_assoc() : assoc_type() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 multikey_assoc<1,C>::~multikey_assoc() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-void
-multikey_assoc<1,C>::clean(void) {
-	const T def;
-	iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; ) {
-		if (i->second == def) {
-			iterator j = i;
-			j++;
-			this->erase(i);
-			i = j;
-		} else {
-			i++;
-		}
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-T&
-multikey_assoc<1,C>::operator [] (const key_list_type& k) {
-	INVARIANT(k.size() == 1);
-	return assoc_type::operator[](k.front());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-T
-multikey_assoc<1,C>::operator [] (const key_list_type& k) const {
-	INVARIANT(k.size() == 1);
-	return assoc_type::operator[](k.front());
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
@@ -622,74 +467,6 @@ multikey_assoc<1,C>::is_compact(void) const {
 #endif
 }
 
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-ostream&
-multikey_assoc<1,C>::dump(ostream& o) const {
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; i++)
-		o << '[' << i->first << ']' << " = "
-			<< i->second << endl;
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-ostream&
-multikey_assoc<1,C>::write(ostream& f) const {
-#if 0
-	write_assoc(f, static_cast<const assoc_type&>(*this));
-#else
-	INVARIANT(f.good());
-	write_value(f, population());
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; i++) {
-#if 0
-		i->first.write(f);      // invalid for D=1
-		write_value(f, i->second);
-#else
-		util::write_key_value_pair(f, *i);
-#endif
-	}
-#endif
-	return f;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-istream&
-multikey_assoc<1,C>::read(istream& f) {
-// strange Apple gcc-3.3 (build 1640) bug reporting
-// undefined reference to blah with char_traints (TYPO in name-mangled libs)!
-// when this is fixed, set following to #if 1, same above with write().
-#if 0
-	read_assoc(f, static_cast<assoc_type&>(*this));
-#else
-	INVARIANT(f.good());
-	INVARIANT(empty());
-	size_t size, i=0;
-	read_value(f, size);
-	for ( ; i<size; i++) {
-#if 0
-		key_type key;
-		mapped_type val;
-		key.read(f);            // invalid for D=1
-		read_value(f, val);
-		(*this)[key] = val;
-#else
-		pair<K, T> p;
-		util::read_key_value_pair(f, p);
-		(*this)[p.first] = p.second;
-#endif
-	}
-#endif
-	return f;
-}
-#endif
 
 //=============================================================================
 }	// end namespace util

@@ -4,7 +4,7 @@
 	container values such as set, map, hash_map.  
 
 	Incidentally, this is used by "const_assoc_query.h".
-	$Id: assoc_traits.h,v 1.1.2.2 2005/02/08 06:41:23 fang Exp $
+	$Id: assoc_traits.h,v 1.1.2.3 2005/02/09 00:36:03 fang Exp $
  */
 
 #ifndef	__UTIL_ASSOC_TRAITS_H__
@@ -69,7 +69,8 @@ struct assoc_traits<std::set<K,C,A> > {
 };	// end struct assoc_traits
 
 //=============================================================================
-
+#if 0
+ASHAMED TO EVEN ADMIT THIS EVER EXISTED :)
 /**
 	Really dirty traits hack to get the virtual key/value components
 	of a set's value_type, which is the same as set<>::key_type.
@@ -98,6 +99,7 @@ struct set_element_traits<std::pair<const K, T> > {
 						key_type;
 	typedef	typename pair_type::second_type	mapped_type;
 };
+#endif
 
 //=============================================================================
 }	// end namespace util

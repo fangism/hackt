@@ -2,25 +2,20 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.2.3 2005/02/08 22:45:12 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.2.4 2005/02/09 00:36:03 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
 #define	__UTIL_MULTIKEY_ASSOC_H__
 
-// #include <iosfwd>
 #include "macros.h"
 #include "multikey_assoc_fwd.h"
-#include "assoc_traits.h"		// for set_element_traits
 #include "STL/list_fwd.h"
 #include "STL/pair_fwd.h"
 
-// #include "multikey_fwd.h"
 #include "array_traits.h"
 
 namespace util {
-// using std::ostream;
-// using std::istream;
 using std::pair;
 USING_LIST
 // using MULTIKEY_NAMESPACE::multikey;
@@ -46,15 +41,8 @@ protected:
 	typedef	C					assoc_type;
 public:
 	typedef	typename assoc_type::value_type		value_type;
-#if 1
 	typedef	typename assoc_type::key_type		key_type;
 	typedef	typename assoc_type::mapped_type	mapped_type;
-#else
-	typedef	typename set_element_traits<value_type>::key_type
-							key_type;
-	typedef	typename set_element_traits<value_type>::mapped_type
-							mapped_type;
-#endif
 	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
@@ -72,24 +60,10 @@ public:
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
 	// this only works for maps... set::key_type == set::value_type :S
-#if 1
 	typedef	typename key_type::value_type		index_type;
-#else
-	/**
-		Dirty hack from "assoc_traits.h".
-		The key_type corresponds to a multikey(-like) class.  
-		The key_type type has a value_type member which corresponds
-		(most likely) to some built-in integer type.
-	 */
-	typedef	typename set_element_traits<value_type>::key_type::value_type
-							index_type;
-#endif
 	typedef	list<index_type>			key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
-
-protected:
-	typedef	typename assoc_type::key_type		find_arg_type;
 
 public:
 	// for array_traits<> interface
@@ -122,31 +96,21 @@ public:
 	size_t
 	population(void) const { return this->size(); }
 
-#if 0
-	/**
-		General method for removing default values.  
-	 */
-	void
-	clean(void);
-#endif
-
 	using assoc_type::begin;
 	using assoc_type::end;
 	using assoc_type::rbegin;
 	using assoc_type::rend;
 
-	// weird: using "find_arg_type"
 	iterator
-	find(const find_arg_type& k) {
+	find(const key_type& k) {
 		return assoc_type::find(k);
 	}
 
 	const_iterator
-	find(const find_arg_type& k) const {
+	find(const key_type& k) const {
 		return assoc_type::find(k);
 	}
 
-#if 0
 	iterator
 	lower_bound(const key_type& k) {
 		return assoc_type::lower_bound(k);
@@ -166,27 +130,6 @@ public:
 	upper_bound(const key_type& k) const {
 		return assoc_type::upper_bound(k);
 	}
-#else
-	iterator
-	lower_bound(const find_arg_type& k) {
-		return assoc_type::lower_bound(k);
-	}
-
-	const_iterator
-	lower_bound(const find_arg_type& k) const {
-		return assoc_type::lower_bound(k);
-	}
-
-	iterator
-	upper_bound(const find_arg_type& k) {
-		return assoc_type::upper_bound(k);
-	}
-
-	const_iterator
-	upper_bound(const find_arg_type& k) const {
-		return assoc_type::upper_bound(k);
-	}
-#endif
 
 	/**
 		\param K may be underspecified key (fewer dimensions).
@@ -234,11 +177,9 @@ public:
 	size_type
 	count(const K& k) const;
 
-#if 1
 	/** specialization for D2 == 1 */
 	size_type
 	count(const index_type i) const;
-#endif
 
 	size_type
 	erase(const key_type& k) {
@@ -254,35 +195,9 @@ public:
 	size_type
 	erase(const K& k);
 
-#if 1
 	/** specialization of erase() for only 1 dimension specified */
 	size_type
 	erase(const index_type i);
-#endif
-
-#if 0
-	T&
-	operator [] (const key_type& k) {
-		return assoc_type::operator[](k);
-	}
-
-	T
-	operator [] (const key_type& k) const {
-		return assoc_type::operator[](k);
-	}
-
-	/**
-		Check length of list?
-	 */
-	T&
-	operator [] (const list<K>& k);
-
-	/**
-		Check length of list?
-	 */
-	T
-	operator [] (const list<K>& k) const;
-#endif
 
 	/**
 		Recursive routine to determine implicit desnsely 
@@ -311,27 +226,12 @@ public:
 	key_list_pair_type
 	is_compact(void) const;
 
-#if 0
-	ostream&
-	dump(ostream& o) const;
-#endif
-
 	/**
 		Returns the extremities of the indicies in each dimension.
 		If empty, returns empty lists.  
 	 */
 	key_list_pair_type
 	index_extremities(void) const;
-
-public:
-#if 0
-	// IO methods
-	ostream&
-	write(ostream& f) const;
-
-	istream&
-	read(istream& f);
-#endif
 
 };	// end class multikey_assoc
 
@@ -346,16 +246,9 @@ protected:
 	typedef	C					assoc_type;
 public:
 	typedef	typename assoc_type::value_type		value_type;
-#if 0
 	typedef	typename assoc_type::key_type		key_type;
-#else
-	typedef	typename set_element_traits<value_type>::key_type
-							key_type;
-	typedef	typename set_element_traits<value_type>::mapped_type
-							mapped_type;
-#endif
-//	typedef	typename assoc_type::mapped_type	mapped_type;
-//	typedef	typename assoc_type::key_compare	key_compare;
+	typedef	typename assoc_type::mapped_type	mapped_type;
+	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
 	typedef	typename assoc_type::reference		reference;
@@ -372,12 +265,7 @@ public:
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
 	// only works for map's type:
-#if 1
 	typedef	key_type				index_type;
-#else
-	typedef	typename set_element_traits<value_type>::key_type
-							index_type;
-#endif
 	typedef	list<key_type>				key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
@@ -399,44 +287,11 @@ public:
 	size_t
 	population(void) const { return this->size(); }
 
-#if 0
-	void
-	clean(void);
-#endif
-
 	using assoc_type::begin;
 	using assoc_type::end;
 	using assoc_type::rbegin;
 	using assoc_type::rend;
 	using assoc_type::find;
-
-#if 0
-	T&
-	operator [] (const key_type& k) {
-		return assoc_type::operator[](k);
-	}
-
-	T
-	operator [] (const key_type& k) const {
-		return assoc_type::operator[](k);
-	}
-
-	T&
-	operator [] (const key_list_type& k);
-
-	T
-	operator [] (const key_list_type& k) const;
-
-	T&
-	operator [] (const multikey<1,K>& k) {
-		return assoc_type::operator[](k[0]);
-	}
-
-	T
-	operator [] (const multikey<1,K>& k) const {
-		return assoc_type::operator[](k[0]);
-	}
-#endif
 
 	key_list_pair_type
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
@@ -452,17 +307,6 @@ public:
 
 	key_list_pair_type
 	is_compact(void) const;
-
-#if 0
-	ostream&
-	dump(ostream& o) const;
-
-	ostream&
-	write(ostream& f) const;
-
-	istream&
-	read(istream& f);
-#endif
 
 	// all other methods are the same as general template class
 

@@ -10,6 +10,12 @@
 	  and it works like magic, AFAICT.  
 	  Code is in real desparate need of housekeeping... next rev.
 
+	+ -set16:
+	  Cleaned up and removed excess commented code.  
+	  Reverted some changes to multikey_assoc back to the way they
+	  were before the multikey_set fiasco.  
+	  Code is trim and functional.  Time to move on.  
+
 
 2005-02-07	David Fang	<fangism@users.sourceforge.net>
 
