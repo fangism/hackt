@@ -27,12 +27,17 @@ main(int argc, char* argv[]) {
 
 	persistent_object_manager::dump_reconstruction_table = true;
 	entity::object::warn_unimplemented = true;	// for verbosity
+
+#if 0
 	excl_ptr<entity::name_space> global =
 		persistent_object_manager::load_object_from_file(fname);
-
 	assert(global);
-
 	global->dump(cerr);
+#else
+	excl_ptr<entity::module> the_module =
+		persistent_object_manager::load_object_from_file(fname);
+	the_module->dump(cerr);
+#endif
 
 	// global will delete itself (recursively)
 	return 0;

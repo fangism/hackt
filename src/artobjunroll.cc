@@ -40,19 +40,21 @@ main(int argc, char* argv[]) {
 	persistent_object_manager::dump_reconstruction_table = true;
 	entity::object::warn_unimplemented = true;	// for verbosity
 
-	excl_ptr<entity::name_space> global =
-		persistent_object_manager::load_object_from_file(ifname);
+	excl_ptr<entity::module> the_module =
+	persistent_object_manager::load_object_from_file(ifname);
 
-	assert(global);
-//	global->dump(cerr);
+//	the_module->dump(cerr);
 
+#if 0
+// ALL WRONG
 	// what to do in case of error?  exit?
 	global->unroll_params();
-//	global->unroll_instances();
-//	global->unroll_connections();
-//	global->dump(cerr);
+	global->unroll_instances();
+	global->unroll_connections();
+	global->dump(cerr);
 
 	persistent_object_manager::save_object_to_file(ofname, global);
+#endif
 
 	// global will delete itself (recursively)
 	return 0;

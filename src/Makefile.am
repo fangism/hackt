@@ -102,6 +102,8 @@ OBJECT_CC_FILES = \
 	Object/art_object_instance.cc \
 	Object/art_object_inst_ref.cc \
 	Object/art_object_connect.cc \
+	Object/art_object_control.cc \
+	Object/art_object_module.cc \
 	Object/art_object_IO.cc \
 	Object/art_built_ins.cc
 
