@@ -202,8 +202,8 @@ public:
 	typedef	qmap<K, map_value_type>			map_type;
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;
-	typedef	typename map_type::reverse_iterator	map_iterator;
-	typedef	typename map_type::const_reverse_iterator const_map_iterator;
+	typedef	typename map_type::reverse_iterator	reverse_map_iterator;
+	typedef	typename map_type::const_reverse_iterator const_reverse_map_iterator;
 	typedef	typename map_type::value_type		value_type;
 
 protected:
