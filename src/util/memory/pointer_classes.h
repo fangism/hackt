@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.3 2004/11/30 02:33:48 fang Exp $
+	$Id: pointer_classes.h,v 1.4 2004/12/02 06:34:21 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -40,11 +40,11 @@
 #include "memory/pointer_traits.h"
 
 //=============================================================================
-#ifndef	NULL
-#define	NULL	0
-#endif
 
 namespace util {
+// forward declaration only
+class persistent_object_manager;
+
 /**
 	The namespace for pointer-classes, written by Fang.  
 	The classes contained herein offer efficient light-weight
@@ -58,6 +58,8 @@ namespace memory {
 	for functions to be trusted with pointer manipulations.  
  */
 class pointer_manipulator {
+// declared and defined in "persistent_object_manager.h"
+friend class persistent_object_manager;
 private:
 	/**
 		\param T is a raw pointer type.
@@ -81,6 +83,14 @@ private:
 		return p.base_pointer();
 	}
 
+	template <class T>
+	inline
+	static
+	const typename T::pointer&
+	get_pointer(const T& p) {
+		return __get_pointer(p, __pointer_category(p));
+	}
+
 public:
 	/**
 		\return true if pointers are equal.
@@ -90,8 +100,14 @@ public:
 	static
 	bool
 	compare_pointers_equal(const P1& p1, const P2& p2) {
+#if 0
+		// should work, but compiler can't find get_pointer?
+//		return get_pointer(p1) == get_pointer(p2);
+		return get_pointer<P1>(p1) == get_pointer<P2>(p2);
+#else
 		return (__get_pointer(p1, __pointer_category(p1)) ==
 			__get_pointer(p2, __pointer_category(p2)));
+#endif
 	}
 
 public:
@@ -103,8 +119,14 @@ public:
 	static
 	bool
 	compare_pointers_unequal(const P1& p1, const P2& p2) {
+#if 0
+		// should work, but compiler can't find get_pointer?
+//		return get_pointer(p1) != get_pointer(p2);
+		return get_pointer<P1>(p1) != get_pointer<P2>(p2);
+#else
 		return (__get_pointer(p1, __pointer_category(p1)) !=
 			__get_pointer(p2, __pointer_category(p2)));
+#endif
 	}
 
 };	// end class pointer_manipulator
@@ -574,9 +596,15 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 	This is useful for containers that are never copy-constructed.  
 	Upon copy-construction, the new copies will be NULL.  
 	(Pseudo-copy-constructible)
+	To rephrase yet another way, any struct or container with 
+	sticky pointers will not be copyable, but the compiler
+	will not complain about it, it will only manifest
+	as a run-time error when you try to use a pointer copy
+	that don't expect to be NULL.  
  */
 template <class T>
 class sticky_ptr {
+friend class pointer_manipulator;
 template <class> friend class excl_ptr;
 template <class> friend class some_ptr;
 template <class> friend class never_ptr;
@@ -690,6 +718,7 @@ public:
  */
 template <class T>
 class unique_ptr {
+friend class pointer_manipulator;
 	// TODO: finish me!!!
 };	// end class unique_ptr
 

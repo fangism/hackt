@@ -2,7 +2,7 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.2 2004/11/30 01:26:06 fang Exp $
+	$Id: pointer_traits.h,v 1.3 2004/12/02 06:34:21 fang Exp $
  */
 
 #ifndef	__POINTER_TRAITS_H__
@@ -23,37 +23,16 @@ namespace util {
 namespace memory {
 
 //=============================================================================
-// general non-pointer traits
-template <class T>
-struct raw_pointer_traits {
-	// is not a pointer
-	static const bool is_pointer = false;
-	static const size_t indirections = 0;
-};	// end struct raw_pointer_traits
-
-// general pointer traits, partially specialized
-template <class T>
-struct raw_pointer_traits<T*> {
-	static const bool is_pointer = true;
-	static const size_t indirections =
-		raw_pointer_traits<T>::indirections +1;
-	static const bool is_void_pointer = false;
-};	// end struct raw_pointer_traits
-
-// fully specialized void* pointer traits
-template <>
-struct raw_pointer_traits<void*> {
-	static const bool is_pointer = true;
-	static const size_t indirections = 1;
-	static const bool is_void_pointer = true;
-};	// end struct raw_pointer_traits
-
-//=============================================================================
 // tags used to distinguish different classes of pointer-classes
+// may need a lattice of orthogonal clasification tags
 
+/// the default for things that are not pointers
+struct not_a_pointer_tag { };
+
+/// tag for raw, naked, bare pointers
 struct raw_pointer_tag { };
 
-/// most generat base tag for all pointer classes
+/// most generic base tag for all pointer classes
 struct pointer_class_base_tag { };
 
 /// pointer classes with this tag have one owner per object
@@ -62,9 +41,54 @@ struct single_owner_pointer_tag : public pointer_class_base_tag { };
 /// pointer classes with this tag have shared ownership, e.g. reference-count
 struct shared_owner_pointer_tag : public pointer_class_base_tag { };
 
-// single and shared must be mutuall exclusive...
+// single and shared must be mutually exclusive...
+// is there a way to make sure one didn't screw up?
 
-// may need a lattice of orthogonal clasification tags
+/// for pointers that manage arrays?  would rather not use them...
+struct pointer_class_array_tag { };
+
+
+//=============================================================================
+// general non-pointer traits
+template <class T>
+struct raw_pointer_traits {
+	/**
+		Sounds silly, but this is useful for writing code that
+		automatically distinguishes pointers and pointer classes
+		from other non-pointer types (built-in or user-defined).  
+	 */
+	typedef	not_a_pointer_tag	pointer_category;
+	static const bool 		is_pointer = false;
+	static const size_t		indirections = 0;
+};	// end struct raw_pointer_traits
+
+// general pointer traits, partially specialized
+template <class T>
+struct raw_pointer_traits<T*> {
+	typedef	raw_pointer_tag		pointer_category;
+	typedef	T			element_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+
+	static const bool		is_pointer = true;
+	static const size_t		indirections =
+					raw_pointer_traits<T>::indirections +1;
+	static const bool		is_void_pointer = false;
+};	// end struct raw_pointer_traits
+
+// fully specialized void* pointer traits
+template <>
+struct raw_pointer_traits<void*> {
+	typedef	raw_pointer_tag		pointer_category;
+	typedef	void			element_type;
+//	can't declare reference to void, duh!
+//	typedef	void&			reference;
+	typedef	void*			pointer;
+
+	static const bool		is_pointer = true;
+	static const size_t		indirections = 1;
+	static const bool		is_void_pointer = true;
+};	// end struct raw_pointer_traits
 
 //=============================================================================
 /**
@@ -74,11 +98,11 @@ struct shared_owner_pointer_tag : public pointer_class_base_tag { };
  */
 template <class T>
 struct pointer_traits {
-	typedef	typename T::element_type		element_type;
+	typedef	typename T::element_type	element_type;
 	typedef	typename T::reference		reference;
 	typedef	typename T::pointer		pointer;
 
-	static const bool is_raw_pointer = false;
+	static const bool			is_raw_pointer = false;
 
 	typedef	typename T::pointer_category	pointer_category;
 
@@ -86,36 +110,36 @@ struct pointer_traits {
 		Whether or not the pointer is responsible for an
 		entire array.  
 	 */
-	static const bool is_array = T::is_array;
+	static const bool			is_array = T::is_array;
 
 	/**
 		Whether or not the pointer class relies on the 
 		referenced object containing information
 		about memory management.  
 	 */
-	static const bool is_intrusive = T::is_intrusive;
+	static const bool			is_intrusive = T::is_intrusive;
 
 	/**
 		Whether or not the pointer object is refrence counted.  
 		Counted and non-counted pointers may not interact directly, 
 		like oil and water.  
 	 */
-	static const bool is_counted = T::is_counted;
+	static const bool			is_counted = T::is_counted;
 
 	/**
 		Whether or not multiple pointers to the same object
 		(regardless of ownership) may coexist.  
 		Otherwise is unique.
 	 */
-	static const bool is_shared = T::is_shared;
+	static const bool			is_shared = T::is_shared;
 
 	/**
 		Ownership characteristics.
 		Arguably redundant...
 	 */
-	static const bool always_owns = T::always_owns;
-	static const bool sometimes_owns = T::sometimes_owns;
-	static const bool never_owns = T::never_owns;
+	static const bool			always_owns = T::always_owns;
+	static const bool			sometimes_owns = T::sometimes_owns;
+	static const bool			never_owns = T::never_owns;
 
 	/**
 		The default class to return from a non-transferring
@@ -137,15 +161,11 @@ struct pointer_traits {
  */
 template <class T>
 struct pointer_traits<T*> {
-	typedef	T				element_type;
-	typedef	T&				reference;
-	typedef	T*				pointer;
-
-	typedef	raw_pointer_tag			pointer_category;
-
-	static const bool is_raw_pointer = true;
-	static const bool is_intrusive = false;
-	static const bool is_counted = false;
+	typedef	typename raw_pointer_traits<T*>::element_type	element_type;
+	typedef	typename raw_pointer_traits<T*>::reference	reference;
+	typedef	typename raw_pointer_traits<T*>::pointer	pointer;
+	typedef	typename raw_pointer_traits<T*>::pointer_category
+							pointer_category;
 
 };	// end struct pointer_traits
 
