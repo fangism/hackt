@@ -15,6 +15,9 @@
 	  Added some missing *_instance method definitions to satisfy
 	  g++-4.0's ld.  
 
+	* -object-01-18:
+	  Updated DevelopmentPlan.dot.
+
 
 2005-02-26	David Fang	<fangism@users.sourceforge.net>
 
