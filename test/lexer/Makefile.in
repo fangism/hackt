@@ -15,15 +15,15 @@
 @SET_MAKE@
 
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.in,v 1.1 2005/03/02 00:29:02 fang Exp $
+#	$Id: Makefile.in,v 1.2 2005/03/02 05:27:49 fang Exp $
 
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Makefile.in,v 1.1 2005/03/02 00:29:02 fang Exp $
+#	$Id: Makefile.in,v 1.2 2005/03/02 05:27:49 fang Exp $
 
 # "Make.stddef"
 # make-independent definitions
-#	$Id: Makefile.in,v 1.1 2005/03/02 00:29:02 fang Exp $
+#	$Id: Makefile.in,v 1.2 2005/03/02 05:27:49 fang Exp $
 
 # SHELL = /bin/sh
 # add -v for verbose

@@ -2,6 +2,12 @@
 
 2005-03-01	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-13:
+	  So I forgot to include the new try_lex_catch.awk script 
+	  last revision, my bad!  
+	  While I was at it, straightened out some symbol namespaces
+	  and linkage with the parser.  
+
 	* ARTXX-00-01-04-main-00-12:
 	  Made lexer/parser more exception-safe by throwing exceptions
 	  and proprely freeing memory when caught.  

@@ -2,7 +2,7 @@
 	\file "art++.h"
 	The only header file needed to write top-level applications for ART.
 
-	$Id: art++.h,v 1.7 2005/02/27 22:54:07 fang Exp $
+	$Id: art++.h,v 1.8 2005/03/02 05:27:49 fang Exp $
  */
 
 #ifndef	__ARTXX_H__
@@ -37,11 +37,14 @@ extern	excl_ptr<root_body>	AST_root;
 #endif
 extern	FILE* artxx_in;
 
-extern "C" {
+// extern "C" {
 int	artxx_parse(void);		// in "art++-parse-prefix.cc"
-}
+// }
 
-using namespace std;
+#include "using_ostream.h"
+using std::ifstream;
+using std::ofstream;
+using std::ios_base;
 
 #endif	// __ARTXX_H__
 

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.14 2005/03/02 00:29:01 fang Exp $
+	$Id: art++-parse.yy,v 1.15 2005/03/02 05:27:49 fang Exp $
  */
 
 %{
@@ -15,18 +15,18 @@
 
 #include "art_parser.h"			// should be first
 #include "art++-parse.output.h"		// auto-generated state strings! :)
+#include "using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
 #if defined (__GNUC__) && (3 <= __GNUC__)
 #define __attribute__(arglist)		/* empty */
 #endif
 
-using namespace std;
 using namespace ART::lexer;
 using namespace ART::parser;
 
 #if YYBISON
-#include "memory/pointer_classes.h"
+#include "memory/excl_ptr.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to
@@ -324,11 +324,7 @@ extern	int at_eof(void);		// from "art++-lex.ll"
 }
 using ART::lexer::at_eof;
 
-extern "C" {
-	int yyparse(void);		// parser routine to call
-	void yyerror(const char* msg);	// ancient compiler rejects
-//	void yyerror(char* msg);	// replace with this if necessary
-}
+static void yyerror(const char* msg);	// ancient compiler rejects
 
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
@@ -1986,7 +1982,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 #define	YYTABLESIZE	YYLAST
 #endif
 
-// void yyerror(char* msg)		// replace with this if necessary
+// following prototype MUST appear as is (after "static") for awk hack...
+static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	const short* s;
 	const YYSTYPE* v;
