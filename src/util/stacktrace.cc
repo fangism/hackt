@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.6 2005/01/28 19:58:47 fang Exp $
+	$Id: stacktrace.cc,v 1.6.14.1 2005/02/15 07:32:11 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -23,7 +23,7 @@ STATIC_TRACE_BEGIN("stacktrace")
 
 namespace util {
 USING_LIST
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 using std::stack;
 using std::ostream_iterator;
 #include "using_ostream.h"

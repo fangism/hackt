@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.2.6.1 2005/02/13 20:30:44 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.2.6.2 2005/02/15 07:32:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -117,7 +117,7 @@ namespace entity {
 
 #include "using_ostream.h"
 using util::hash_map;
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 using parser::scope;
 using std::_Select2nd;
 using namespace util::memory;
@@ -126,6 +126,10 @@ using util::indent;
 using util::auto_indent;
 using util::disable_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // general non-member function definitions

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.2.1.2.2 2005/02/13 02:39:01 fang Exp $
+	$Id: multikey.h,v 1.19.2.1.2.3 2005/02/15 07:32:08 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -30,7 +30,7 @@ template <class K>
 /***
 	Later be able to compare between keys of different dimensions.  
 ***/
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using std::valarray;
 using std::pair;
 using std::ostream;
@@ -917,7 +917,7 @@ public:
 };	// end class multikey_generator_generic
 
 //=============================================================================
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
 
 
 #endif	// __UTIL_MULTIKEY_H__

@@ -2,7 +2,7 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.4.1.2.2 2005/02/13 02:39:02 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.4.1.2.3 2005/02/15 07:32:09 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -18,7 +18,6 @@
 namespace util {
 using std::pair;
 USING_LIST
-// using MULTIKEY_NAMESPACE::multikey;
 
 //=============================================================================
 /**

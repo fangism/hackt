@@ -3,7 +3,7 @@
 	Multidimensional queryable map.  
 	NOTE: this should erally be redefined as a template specialization, 
 	not as a child class.
-	$Id: multikey_qmap.h,v 1.11.16.1 2005/02/09 04:14:17 fang Exp $
+	$Id: multikey_qmap.h,v 1.11.16.1.2.1 2005/02/15 07:32:09 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_QMAP_H__
@@ -14,11 +14,11 @@
 #include "multikey_map.h"
 
 
-namespace MULTIKEY_MAP_NAMESPACE {
-using namespace MULTIKEY_NAMESPACE;
-using QMAP_NAMESPACE::qmap;
+namespace util {
+using util::qmap;
 
 #if SPECIALIZE_MULTIKEY_QMAP
+OBSOLETE
 //=============================================================================
 /**
 	Specialization of multikey_map with qmap as the underlying map type.  
@@ -281,7 +281,7 @@ public:
 
 #endif	// SPECIALIZE_MULTIKEY_QMAP
 //=============================================================================
-}	// end namespace MULTIKEY_MAP_NAMESPACE
+}	// end namespace util
 
 #endif	// __UTIL_MULTIKEY_QMAP_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.16.1.2.2 2005/02/14 04:48:22 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.16.1.2.3 2005/02/15 07:32:09 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -24,7 +24,7 @@
 
 #define	DEBUG_SLICE		0
 
-namespace MULTIKEY_MAP_NAMESPACE {
+namespace util {
 #include "using_ostream.h"
 using std::istream;
 using std::pair;
@@ -34,7 +34,7 @@ using util::write_value;
 using util::read_value;
 using util::write_map;
 using util::read_map;
-using MULTIKEY_NAMESPACE::multikey_generator;
+using util::multikey_generator;
 
 //=============================================================================
 // class multikey_map method definitions
@@ -671,7 +671,7 @@ multikey_map<1,K,T,M>::read(istream& f) {
 #endif	// SPECIALIZE_MULTIKEY_MAP_1
 
 //=============================================================================
-}	// end namespace MULTIKEY_MAP_NAMESPACE
+}	// end namespace util
 
 #undef	DEBUG_SLICE
 

@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.4.16.1 2005/02/09 04:14:21 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.4.16.1.2.1 2005/02/15 07:32:14 fang Exp $
  */
 
 #include <iostream>
@@ -14,8 +14,9 @@
 USING_LIST
 #include "using_ostream.h"
 
+using std::pair;
 using namespace util::memory;
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+using util::multidimensional_sparse_set;
 
 template <class T, class R, template <class> class L>
 int

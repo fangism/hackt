@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.4.2.1 2005/02/13 20:30:43 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.4.2.2 2005/02/15 07:32:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -58,6 +58,8 @@ using std::bind2nd_argval_void;
 USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // class instance_collection_base method definitions

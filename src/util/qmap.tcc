@@ -1,17 +1,17 @@
 /**
 	\file "qmap.tcc"
 	Template class method definitions for queryable map.  
-	$Id: qmap.tcc,v 1.2.16.1 2005/02/09 04:14:19 fang Exp $
+	$Id: qmap.tcc,v 1.2.16.1.2.1 2005/02/15 07:32:11 fang Exp $
  */
 
-#ifndef	__QMAP_TCC__
-#define	__QMAP_TCC__
+#ifndef	__UTIL_QMAP_TCC__
+#define	__UTIL_QMAP_TCC__
 
 #include "qmap.h"
 #include "STL/map.tcc"
 #include "const_assoc_query.tcc"
 
-namespace QMAP_NAMESPACE {
+namespace util {
 /**
 	Purges map of entries that are just default values, 
 	useful for removing null pointers for maps of pointers
@@ -479,7 +479,7 @@ operator < (const qmap<K,T*,C,A>& __m1, const qmap<K,T*,C,A>& __m2) {
 
 //=============================================================================
 #endif
-}	// end namespace QMAP_NAMESPACE
+}	// end namespace util
 
-#endif	// __QMAP_TCC__
+#endif	// __UTIL_QMAP_TCC__
 

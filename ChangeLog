@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-02-15	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-05:
+	  Namespace clean-up only, replaced *_NAMESPACE in the util/
+	  directory with 'util'.  
+
+
 2005-02-14	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-03:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.3 2005/02/09 04:14:07 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.3.2.1 2005/02/15 07:31:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -130,12 +130,16 @@ namespace entity {
 using namespace util::memory;
 USING_UTIL_COMPOSE
 USING_UTIL_OPERATIONS
-using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
+using util::discrete_interval_set;
 using std::_Select1st;
 using std::_Select2nd;
 using std::mem_fun_ref;
 using util::dereference;
 using std::ostringstream;
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
 USING_STACKTRACE
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE

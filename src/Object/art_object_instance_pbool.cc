@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.3.2.2 2005/02/14 04:48:20 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.3.2.3 2005/02/15 07:32:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -87,6 +87,10 @@ USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // struct pbool_instance method definitions

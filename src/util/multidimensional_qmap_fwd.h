@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap_fwd.h"
 	Forward declarations for a fixed depth/dimension sparse tree.
-	$Id: multidimensional_qmap_fwd.h,v 1.5.16.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multidimensional_qmap_fwd.h,v 1.5.16.1.2.1 2005/02/15 07:32:07 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -14,12 +14,8 @@
 #include "STL/list_fwd.h"
 #endif
 
-#ifndef	MULTIDIMENSIONAL_QMAP_NAMESPACE
-#define	MULTIDIMENSIONAL_QMAP_NAMESPACE		util
-#endif
-
 // full description in "multidimensional_qmap.h"
-namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
+namespace util {
 //=============================================================================
 USING_LIST
 
@@ -38,7 +34,7 @@ template <size_t, class K = int, class T = char*,
 	template <class K, class T, template <class> class L>
 
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_QMAP_NAMESPACE
+}	// end namespace util
 
 #endif	// __UTIL_MULTIDIMENSIONAL_QMAP_FWD_H__
 

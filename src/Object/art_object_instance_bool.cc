@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.5 2005/02/15 02:04:13 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.6 2005/02/15 07:32:02 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -73,12 +73,16 @@ namespace memory {
 namespace ART {
 namespace entity {
 using std::string;
-// using namespace MULTIKEY_NAMESPACE;
+using std::_Select1st;
 USING_UTIL_COMPOSE
+using util::indent;
+using util::auto_indent;
 using util::dereference;
 using std::for_each;
 using std::mem_fun_ref;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class bool_instance_alias_info method definitions

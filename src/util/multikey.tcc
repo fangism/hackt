@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5.2.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multikey.tcc,v 1.5.2.1.2.1 2005/02/15 07:32:08 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -16,7 +16,7 @@
 #include "IO_utils.tcc"
 
 
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using util::write_value;
 using util::read_value;
 #include "using_ostream.h"
@@ -603,7 +603,7 @@ multikey_generator_generic<K>::operator ++ (int) {
 
 
 //=============================================================================
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
 
 
 #endif	// __UTIL_MULTIKEY_TCC__

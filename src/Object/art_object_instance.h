@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.4 2005/02/09 04:14:10 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.4.2.1 2005/02/15 07:32:02 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -17,7 +17,6 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
-// using MULTIKEY_NAMESPACE::multikey_base;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"

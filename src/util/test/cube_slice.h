@@ -1,7 +1,7 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.4 2004/12/15 23:31:18 fang Exp $
+	$Id: cube_slice.h,v 1.4.28.1 2005/02/15 07:32:13 fang Exp $
  */
 
 #include <assert.h>
@@ -17,12 +17,14 @@ namespace testing {
 USING_LIST
 using std::string;
 #include "using_ostream.h"
+using std::pair;
 using std::accumulate;
 using std::ostringstream;
 using std::ostream_iterator;
-using namespace MULTIKEY_NAMESPACE;
-using namespace MULTIKEY_MAP_NAMESPACE;
-using QMAP_NAMESPACE::qmap;
+using util::multikey;
+using util::multikey_generator;
+using util::multikey_map;
+using util::qmap;
 
 #if 0
 typedef multikey_qmap<1,int,string>	map_1d_type;

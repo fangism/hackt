@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.2 2005/02/09 04:14:09 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.2.2.1 2005/02/15 07:32:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -30,7 +30,10 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+using util::multidimensional_sparse_set_traits;
+using util::multidimensional_sparse_set;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class simple_instance_reference::mset_base definition

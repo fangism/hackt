@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.9 2005/01/28 19:58:46 fang Exp $
+	$Id: packed_array.tcc,v 1.9.14.1 2005/02/15 07:32:10 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -17,7 +17,7 @@ namespace util {
 #include "using_ostream.h"
 using std::accumulate;
 using std::ostream_iterator;
-using MULTIKEY_NAMESPACE::multikey_generator;
+using util::multikey_generator;
 
 //=============================================================================
 PACKED_ARRAY_TEMPLATE_SIGNATURE

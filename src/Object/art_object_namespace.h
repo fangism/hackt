@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.7.2.1 2005/02/03 03:34:54 fang Exp $
+	$Id: art_object_namespace.h,v 1.7.2.1.6.1 2005/02/15 07:32:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -49,7 +49,7 @@ using parser::token_identifier;
 using parser::qualified_id_slice;
 using parser::qualified_id;
 using namespace util::memory;
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 
 //=============================================================================
 /**

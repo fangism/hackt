@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.3.2.1 2005/02/11 06:14:28 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.3.2.2 2005/02/15 07:32:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -38,11 +38,15 @@
 namespace ART {
 namespace entity {
 using std::string;
-using namespace MULTIKEY_NAMESPACE;
+using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE;
+using util::write_value;
+using util::read_value;
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // class proc_instance method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.3 2005/02/03 03:34:47 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.3.6.1 2005/02/15 07:31:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -51,6 +51,10 @@ using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
 using namespace ADS;
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // class definition_base method definitions

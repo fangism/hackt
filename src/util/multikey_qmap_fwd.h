@@ -1,7 +1,7 @@
 /**
 	\file "multikey_qmap_fwd.h"
 	Forward declarations for queryable multidimensional map.  
-	$Id: multikey_qmap_fwd.h,v 1.5.16.1 2005/02/09 04:14:17 fang Exp $
+	$Id: multikey_qmap_fwd.h,v 1.5.16.1.2.1 2005/02/15 07:32:10 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_FWD_H__
@@ -18,15 +18,15 @@
 #define	MULTIKEY_QMAP_TEMPLATE_SIGNATURE				\
 template <size_t D, class K, class T>
 
-namespace MULTIKEY_MAP_NAMESPACE {
+namespace util {
 //=============================================================================
 // forward declare specialization
 #if SPECIALIZE_MULTIKEY_QMAP
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-class multikey_map<D,K,T,QMAP_NAMESPACE::qmap>;
+class multikey_map<D,K,T,util::qmap>;
 #endif
 
-}	// end namespace MULTIKEY_MAP_NAMESPACE
+}	// end namespace util
 
 #endif	//	__MULTIKEY_QMAP_FWD_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.3.2.2 2005/02/14 04:48:20 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.3.2.3 2005/02/15 07:32:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -69,6 +69,8 @@ using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.5 2004/12/05 05:07:23 fang Exp $
+	$Id: list_vector.h,v 1.5.28.1 2005/02/15 07:32:07 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_H__
@@ -25,7 +25,7 @@ namespace util {
 USING_LIST
 using std::vector;
 using std::ostream;
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 
 //=============================================================================
 /**

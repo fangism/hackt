@@ -1,20 +1,15 @@
 /**
 	\file "multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
-	$Id: multikey_fwd.h,v 1.10.2.1 2005/02/09 04:14:16 fang Exp $
+	$Id: multikey_fwd.h,v 1.10.2.1.2.1 2005/02/15 07:32:09 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H_FWD__
 #define	__UTIL_MULTIKEY_H_FWD__
 
-// overrideable namespace
-#ifndef	MULTIKEY_NAMESPACE
-#define	MULTIKEY_NAMESPACE	util
-#endif
-
 #include <iosfwd>
 
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using std::ostream;
 
 //=============================================================================
@@ -71,7 +66,7 @@ bool
 operator != (const multikey<D,K>& l, const multikey<D,K>& r);
 
 //-----------------------------------------------------------------------------
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
 
 //=============================================================================
 #endif	// __UTIL_MULTIKEY_H_FWD__
