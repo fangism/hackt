@@ -1,0 +1,19 @@
+// should pass: wrapping templates in typedefs
+
+template <pint N, M>
+defproc array2d();
+
+template <pint Q>
+typedef	array2d<1,Q>	row;
+
+template <pint K = 10>
+typedef	array2d<K,1>	col;
+
+array2d<3,3>	the_matrix;
+
+row<12>		the_row;
+
+col		the_col;		// using default!
+
+// later connection type checking...
+

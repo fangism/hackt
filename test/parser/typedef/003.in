@@ -3,3 +3,5 @@
 
 typedef	int<>		int32;
 
+int32	fe, fi, fo, fum;
+

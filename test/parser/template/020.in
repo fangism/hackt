@@ -1,0 +1,7 @@
+// should fail: can't use 1D array where scalar is expected
+
+template <pint N, M[N][N]>
+defproc the_matrix() {
+	int<M[0][0..0]> first;		// bad: 2d array
+}
+

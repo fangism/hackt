@@ -1,0 +1,2 @@
+ERROR: failed to make data_type_alias type reference because template argument types do not match.
+ERROR making complete type reference.  [6:1..9]

@@ -1,0 +1,7 @@
+// should fail:
+// aliases the type correctly, but instantiation wrongly used template
+
+typedef	int<32>		int32;
+
+int32<> fe, fi, fo, fum;
+
