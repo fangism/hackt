@@ -662,6 +662,38 @@ object_list::make_param_expr_list(void) const {
 	return ret;
 }
 
+excl_const_ptr<aliases_connection>
+object_list::make_alias_connection(void) const {
+	excl_ptr<aliases_connection>
+		ret(new aliases_connection);
+	const_iterator i = begin();
+	assert(size() > 1);		// else what are you connecting?
+	count_const_ptr<object> fo(*i);
+	count_const_ptr<instance_reference_base>
+		fir(fo.is_a<instance_reference_base>());
+	// keep this around for type-checking comparisons
+	ret->append_instance_reference(fir);
+	// starting with second instance reference, type-check and alias
+	int j = 2;
+	for (i++; i!=end(); i++, j++) {
+		count_const_ptr<object> o(*i);
+		assert(o);
+		count_const_ptr<instance_reference_base>
+			ir(o.is_a<instance_reference_base>());
+		assert(ir);
+		if (!fir->may_be_type_equivalent(*ir)) {
+			cerr << "ERROR: type/size of instance reference " 
+				<< j << " of alias list doesn't match the "
+				"type/size of the first instance reference!  "
+				<< endl;
+			return excl_const_ptr<aliases_connection>(NULL);
+		} else {
+			ret->append_instance_reference(ir);
+		}
+	}
+	return excl_const_ptr<aliases_connection>(ret);	// const-ify
+}
+
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : object(),
@@ -797,6 +829,20 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 		never_ptr<instantiation_base> probe_inst(
 			probe.is_a<instantiation_base>());
 		if (probe_inst) {
+			// make sure is not a template or port formal instance!
+			// can't append to those.  
+			if (probe_inst->is_template_formal()) {
+				cerr << "ERROR: cannot redeclare or append to "
+					"a template formal parameter." << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			}
+			if (probe_inst->is_port_formal()) {
+				cerr << "ERROR: cannot redeclare or append to "
+					"a port formal instance." << endl;
+				return never_const_ptr<instantiation_base>(
+					NULL);
+			}
 			// compare types, must match!
 			count_const_ptr<fundamental_type_reference>
 				old_type(probe_inst->get_type_ref());

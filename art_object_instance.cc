@@ -188,6 +188,32 @@ instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
 }
 
 /**
+	Queries whether or not this is a template formal, by 
+	checking its membership in the owner.  
+ */
+bool
+instantiation_base::is_template_formal(void) const {
+	never_const_ptr<definition_base>
+		def(owner.is_a<definition_base>());
+	if (def)
+		return def->lookup_template_formal(key);
+	else return false;		// owner is not a definition
+}
+
+/**
+	Queries whether or not this is a port formal, by 
+	checking its membership in the owner.  
+ */
+bool
+instantiation_base::is_port_formal(void) const {
+	never_const_ptr<definition_base>
+		def(owner.is_a<definition_base>());
+	if (def)
+		return def->lookup_port_formal(key);
+	else return false;		// owner is not a definition
+}
+
+/**
 	For two template formals to be equivalent, their
 	type and size must match, names need not.  
 	Currently allows comparison of parameter and non-parameter
@@ -401,14 +427,18 @@ datatype_instantiation::get_type_ref(void) const {
  */
 never_const_ptr<instance_reference_base>
 datatype_instantiation::make_instance_reference(context& c) const {
+#if 0
 	cerr << "datatype_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
+#endif
 	// depends on whether this instance is collective, 
-	//	check array dimensions.  
+	//	check array dimensions -- when attach_indices() invoked
 	count_ptr<datatype_instance_reference> new_ir(
-		new datatype_instance_reference(*this, 
+		new datatype_instance_reference(
+			never_const_ptr<datatype_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
 }
@@ -453,9 +483,11 @@ process_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<process_instance_reference> new_ir(
-		new process_instance_reference(*this, 
+		new process_instance_reference(
+			never_const_ptr<process_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
+		// may attach in parser::instance_array::check_build()
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
 }
@@ -965,7 +997,8 @@ channel_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<channel_instance_reference> new_ir(
-		new channel_instance_reference(*this, 
+		new channel_instance_reference(
+			never_const_ptr<channel_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
 	c.push_object_stack(new_ir);

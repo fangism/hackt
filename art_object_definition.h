@@ -87,6 +87,8 @@ virtual never_const_ptr<fundamental_type_reference>
 		get_base_type_ref(void) const = 0;
 virtual	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f) = 0;
 
+	excl_const_ptr<fundamental_type_reference>
+		resolve_complete_type(never_const_ptr<param_expr_list> p) const;
 };	// end class typedef_base
 
 //=============================================================================
@@ -157,6 +159,9 @@ public:
 	string get_qualified_name(void) const;
 	never_const_ptr<scopespace> get_parent(void) const;
 
+	/** overrides definition_base's */
+	never_const_ptr<instantiation_base>
+		lookup_port_formal(const string& id) const;
 	never_const_ptr<object> lookup_object_here(const string& id) const;
 
 	count_const_ptr<fundamental_type_reference>

@@ -50,6 +50,14 @@ virtual	ostream& dump(ostream& o) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
+virtual	bool may_be_densely_packed(void) const = 0;
+virtual	bool must_be_densely_packed(void) const = 0;
+virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	const_range_list static_constant_dimensions(void) const = 0;
+virtual	bool may_be_type_equivalent(
+		const instance_reference_base& i) const = 0;
+virtual	bool must_be_type_equivalent(
+		const instance_reference_base& i) const = 0;
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -136,9 +144,12 @@ virtual	~simple_instance_reference();
 	bool attach_indices(excl_ptr<index_list> i);
 
 virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const;
+	ostream& dump(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const;
+	// need not be virtual
+	bool may_be_type_equivalent(const instance_reference_base& i) const;
+	bool must_be_type_equivalent(const instance_reference_base& i) const;
 
 private:
 	// compute static index coverage
@@ -152,15 +163,15 @@ private:
 class datatype_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	never_const_ptr<datatype_instantiation>	data_inst_ref;
+	const never_const_ptr<datatype_instantiation>	data_inst_ref;
 
 public:
-	datatype_instance_reference(const datatype_instantiation& di, 
+	datatype_instance_reference(never_const_ptr<datatype_instantiation> di, 
 		excl_ptr<index_list> i);
 	~datatype_instance_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class datatype_instance_reference
 
@@ -171,15 +182,15 @@ public:
 class channel_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	never_const_ptr<channel_instantiation>	channel_inst_ref;
+	const never_const_ptr<channel_instantiation>	channel_inst_ref;
 
 public:
-	channel_instance_reference(const channel_instantiation& ci, 
+	channel_instance_reference(never_const_ptr<channel_instantiation> ci, 
 		excl_ptr<index_list> i);
 	~channel_instance_reference();
 
 	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class channel_instance_reference
 
@@ -190,10 +201,10 @@ public:
 class process_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	never_const_ptr<process_instantiation>	process_inst_ref;
+	const never_const_ptr<process_instantiation>	process_inst_ref;
 
 public:
-	process_instance_reference(const process_instantiation& pi, 
+	process_instance_reference(never_const_ptr<process_instantiation> pi, 
 		excl_ptr<index_list> i);
 	~process_instance_reference();
 
@@ -225,12 +236,8 @@ virtual	never_const_ptr<param_instantiation>
 
 	// consider moving these functions into instance_reference_base
 	//	where array_indices are inherited from.  
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;

@@ -138,109 +138,8 @@ if (size() > 0) {		// non-empty
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
 
-#if 1
 		excl_ptr<param_expression_assignment> exass = 
 			connect.make_param_assignment();
-#else
-		excl_ptr<param_expression_assignment>
-			exass(new param_expression_assignment);
-		assert(exass);
-
-		// Mark all but the last expression as initialized 
-		// to the right-most expression.  
-		// TO DO: FINISH THIS PART
-		// rvalue = ...
-		// make sure rvalue is validly initialized
-		// i.e. is a constant or a formal parameter
-
-		bool err = false;
-
-		object_list::const_iterator last_obj = connect.end();
-		last_obj--;		// safe because list is not empty
-		count_const_ptr<param_expr> rhse(last_obj->is_a<param_expr>());
-		if (!*last_obj) {
-			cerr << "ERROR: rhs of expression assignment "
-				"is malformed (null)" << endl;
-			err = true;
-		} else if (rhse) {
-			// last term must be initialized or be 
-			// dependent on formals
-			// if collective, conservative: may-be-initialized
-			if (!rhse->is_initialized()) {
-				rhse->dump(cerr << "ERROR: rhs of expr-"
-					"assignment is not initialized or "
-					"dependent on formals: ") << endl;
-				err = true;
-				exit(1);		// temporary
-			}
-		} else {
-			(*last_obj)->what(
-				cerr << "ERROR: rhs is unexpected object: ")
-				<< endl;
-			err = true;
-		}
-
-		size_t k = 0;
-		object_list::iterator iter = connect.begin();
-			// needs to be modifiable for initialization
-		for ( ; iter!=last_obj; iter++, k++) {	// all but last one
-			// consider modularizing this loop
-			bool for_err = false;
-			count_ptr<param_expr> ir(iter->is_a<param_expr>());
-			if (!*iter) {
-				cerr << "ERROR: in creating item " << k+1 <<
-					" of alias-list." << endl;
-				for_err = true;
-			} else if (ir) {
-				// a single parameter instance reference
-				// make sure not already initialized!
-				if (ir->is_initialized()) {
-					// definitely initialized or formal
-					cerr << "ERROR: expression " << k+1 <<
-						"is already initialized!"
-						<< endl;
-					// don't care if it's same value...
-					for_err = true;
-				} else if (rhse) {
-					// what to do about collective arrays?
-					count_ptr<pbool_instance_reference>
-						bir(ir.is_a<pbool_instance_reference>());
-					count_ptr<pint_instance_reference>
-						pir(ir.is_a<pint_instance_reference>());
-					// gotta be one class or the other
-					// check this after re-write
-					assert(rhse);
-					bool init_ret;
-					if (bir)
-						init_ret = bir->initialize(rhse);
-					else {
-						assert(pir);
-						init_ret = pir->initialize(rhse);
-					}
-					if (!init_ret) {
-						cerr << "Error initializing "
-						"item " << k+1 << " of alias-"
-						"list.  " << endl;
-						for_err = true;
-					}
-//					assert(ir->is_initialized());
-				} // else already error in rhse
-				if (for_err)
-					exass->append_param_expression(
-						count_ptr<param_expr>(NULL));
-				else exass->append_param_expression(ir);
-			} else {
-				// is reference to something else
-				// or might be collective...
-				// ERROR
-				cerr << "ERROR: unhandled case for item "
-					<< k+1 << " of alias-list." << endl;
-				for_err = true;
-			}
-			if (for_err)
-				err = for_err;
-		}
-#endif
 
 		// if all is well, then add this new list to the context's
 		// current scope.  
@@ -249,14 +148,9 @@ if (size() > 0) {		// non-empty
 		// list with error-markers, maintained in the object
 		// and query the error status.  
 		// forbid object writing if there are any errors.  
-#if 0
-		if (err)
-#else
-		if (!exass)
-#endif
-		{
-			cerr << "HALT: at least one error in alias list."
-				<< endl;
+		if (!exass) {
+			cerr << "HALT: at least one error in alias list.  "
+				<< where() << endl;
 			exit(1);
 		} else {
 			c->add_assignment(
@@ -266,13 +160,30 @@ if (size() > 0) {		// non-empty
 			assert(!exass.owned());
 		}
 	} else if (first_obj->is_a<instance_reference_base>()) {
+#if 0
 		cerr << "alias_list::check_build(): not done yet "
 			"for non-param/expr instance connections yet.  "
 			"Aborting." << endl;
 		exit(1);
+#else
+		excl_const_ptr<aliases_connection> connection =
+			connect.make_alias_connection();
+		// also type-checks connections
+		if (!connection) {
+			cerr << "HALT: at least one error in connection list.  "
+				<< where() << endl;
+			exit(1);
+		} else {
+			c->add_connection(
+				excl_const_ptr<connection_assignment_base>(
+					connection));
+			assert(!connection.owned());
+		}
+#endif
 	} else {
 		// ERROR
-		cerr << "WTF? first element of alias_list is not an instance!"
+		cerr << "WTF? first element of alias_list is not "
+			"an instance reference!"
 			<< endl;
 		exit(1);
 	}

@@ -51,9 +51,20 @@ class dynamic_index_list;
 //=============================================================================
 // class param_expr method_definitions
 
+// inline
 param_expr::param_expr() : object() { }
 
+// inline
 param_expr::~param_expr() { }
+
+//-----------------------------------------------------------------------------
+// class const_param method definitions
+
+// inline
+const_param::const_param() : param_expr() { }
+
+// inline
+const_param::~const_param() { }
 
 //-----------------------------------------------------------------------------
 // class pbool_expr method definitions
@@ -123,13 +134,43 @@ param_expr_list::what(ostream& o) const {
 
 ostream&
 param_expr_list::dump(ostream& o) const {
+	if (empty()) return o;
+	// else at least 1 item in list
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		// separator?
+	if (*i)	(*i)->dump(o);
+	else	o << "(null)";
+	for (i++; i!=end(); i++) {
+		o << ", ";
 		if (*i)	(*i)->dump(o);
 		else	o << "(null)";
 	}
 	return o;
+}
+
+bool
+param_expr_list::may_be_initialized(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_const_ptr<param_expr> ip(*i);
+		assert(ip);	// nothing may be NULL at this point!
+		if (!ip->may_be_initialized())
+			return false;
+		// else continue checking...
+	}
+	return true;
+}
+
+bool
+param_expr_list::must_be_initialized(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_const_ptr<param_expr> ip(*i);
+		assert(ip);	// nothing may be NULL at this point!
+		if (!ip->must_be_initialized())
+			return false;
+		// else continue checking...
+	}
+	return true;
 }
 
 bool
@@ -273,7 +314,6 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 	return simple_instance_reference::static_constant_dimensions();
 }
 
-#if 1
 /**
 	\return true if sucessfully initialized with valid expression.  
  */
@@ -288,30 +328,7 @@ pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
 		return pbool_inst_ref->initialize(b);
 	}
 }
-#else
-/**
-	\return true if sucessfully initialized with valid expression.  
-		Otherwise, whatever was passed in will be deleted!
- */
-bool
-pbool_instance_reference::initialize(excl_const_ptr<param_expr> i) {
-	excl_const_ptr<pbool_expr> b(ni.is_a_xfer<pbool_expr>());
-	if (!b) {
-		i->what(cerr << "Cannot initialize a bool parameter with a ")
-			<< " expression, ERROR!  " << endl;
-		return false;
-	} else {
-		return pbool_inst_ref->initialize(b);
-	}
-}
-#endif
 
-#if 0
-bool
-pbool_instance_reference::is_initialized(void) const {
-	return param_instance_reference::is_initialized();
-}
-#else
 bool
 pbool_instance_reference::may_be_initialized(void) const {
 	return param_instance_reference::may_be_initialized();
@@ -321,25 +338,6 @@ bool
 pbool_instance_reference::must_be_initialized(void) const {
 	return param_instance_reference::must_be_initialized();
 }
-#endif
-
-#if 0
-bool
-pbool_instance_reference::may_be_equivalent_pbool(const pbool_expr& b) const {
-	// don't bother with symbolic equivalence
-	if (is_static_constant() && b.is_static_constant())
-		return static_constant_bool() == b.static_constant_bool();
-	else return true;
-}
-
-bool
-pbool_instance_reference::must_be_equivalent_pbool(const pbool_expr& b) const {
-	// don't bother with symbolic equivalence
-	if (is_static_constant() && b.is_static_constant())
-		return static_constant_bool() == b.static_constant_bool();
-	else return false;
-}
-#endif
 
 bool
 pbool_instance_reference::is_static_constant(void) const {
@@ -417,7 +415,6 @@ pint_instance_reference::static_constant_dimensions(void) const {
 	return simple_instance_reference::static_constant_dimensions();
 }
 
-#if 1
 /**
 	\return true if successfully initialized with valid expression.  
  */
@@ -432,31 +429,7 @@ pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
 		return pint_inst_ref->initialize(b);
 	}
 }
-#else
-/**
-	\return true if successfully initialized with valid expression.  
-		If bad_cast, then param_expr passed will be
-		deleted at end of scope.  
- */
-bool
-pint_instance_reference::initialize(excl_const_ptr<param_expr> i) {
-	excl_const_ptr<pint_expr> b(i.is_a_xfer<pint_expr>());
-	if (!b) {
-		i->what(cerr << "Cannot initialize an int parameter with a ")
-			<< " expression, ERROR!  " << endl;
-		return false;
-	} else {
-		return pint_inst_ref->initialize(b);
-	}
-}
-#endif
 
-#if 0
-bool
-pint_instance_reference::is_initialized(void) const {
-	return param_instance_reference::is_initialized();
-}
-#else
 bool
 pint_instance_reference::may_be_initialized(void) const {
 	return param_instance_reference::may_be_initialized();
@@ -466,7 +439,6 @@ bool
 pint_instance_reference::must_be_initialized(void) const {
 	return param_instance_reference::must_be_initialized();
 }
-#endif
 
 bool
 pint_instance_reference::is_static_constant(void) const {
@@ -534,7 +506,6 @@ pbool_const::hash_string(void) const {
 //=============================================================================
 // class pint_unary_expr method definitions
 
-#if 1
 pint_unary_expr::pint_unary_expr(
 		const char o, count_const_ptr<pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
@@ -548,21 +519,6 @@ pint_unary_expr::pint_unary_expr(
 	assert(ex);
 	assert(ex->dimensions() == 0);
 }
-#else
-pint_unary_expr::pint_unary_expr(
-		const char o, excl_const_ptr<pint_expr> e) :
-		pint_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
-}
-
-pint_unary_expr::pint_unary_expr(
-		excl_const_ptr<pint_expr> e, const char o) :
-		pint_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
-}
-#endif
 
 ostream&
 pint_unary_expr::what(ostream& o) const {
@@ -580,26 +536,6 @@ pint_unary_expr::hash_string(void) const {
 //	return op +ex->hash_string();
 	return ex->hash_string() +op;
 }
-
-#if 0
-bool
-pint_unary_expr::is_initialized(void) const {
-	return ex->is_initialized();
-}
-#else
-#if 0
-	INLINED
-bool
-pint_unary_expr::may_be_initialized(void) const {
-	return ex->may_be_initialized();
-}
-
-bool
-pint_unary_expr::must_be_initialized(void) const {
-	return ex->must_be_initialized();
-}
-#endif
-#endif
 
 bool
 pint_unary_expr::is_static_constant(void) const {
@@ -625,7 +561,6 @@ pint_unary_expr::static_constant_int(void) const {
 //=============================================================================
 // class pbool_unary_expr method definitions
 
-#if 1
 pbool_unary_expr::pbool_unary_expr(
 		const char o, count_const_ptr<pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
@@ -639,21 +574,6 @@ pbool_unary_expr::pbool_unary_expr(
 	assert(ex);
 	assert(ex->dimensions() == 0);
 }
-#else
-pbool_unary_expr::pbool_unary_expr(
-		const char o, excl_const_ptr<pbool_expr> e) :
-		pbool_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
-}
-
-pbool_unary_expr::pbool_unary_expr(
-		excl_const_ptr<pbool_expr> e, const char o) :
-		pbool_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
-}
-#endif
 
 ostream&
 pbool_unary_expr::what(ostream& o) const {
@@ -670,13 +590,6 @@ string
 pbool_unary_expr::hash_string(void) const {
 	return ex->hash_string() +op;
 }
-
-#if 0
-bool
-pbool_unary_expr::is_initialized(void) const {
-	return ex->is_initialized();
-}
-#endif
 
 bool
 pbool_unary_expr::is_static_constant(void) const {
@@ -701,7 +614,6 @@ pbool_unary_expr::static_constant_bool(void) const {
 //=============================================================================
 // class arith_expr method definitions
 
-#if 1
 arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 		count_const_ptr<pint_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -710,16 +622,6 @@ arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 	assert(lx->dimensions() == 0);
 	assert(rx->dimensions() == 0);
 }
-#else
-arith_expr::arith_expr(excl_const_ptr<pint_expr> l, const char o,
-		excl_const_ptr<pint_expr> r) :
-		lx(l), rx(r), op(o) {
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
-}
-#endif
 
 ostream&
 arith_expr::what(ostream& o) const {
@@ -735,13 +637,6 @@ string
 arith_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
-
-#if 0
-bool
-arith_expr::is_initialized(void) const {
-	return lx->is_initialized() && rx->is_initialized();
-}
-#endif
 
 bool
 arith_expr::is_static_constant(void) const {
@@ -775,7 +670,6 @@ arith_expr::static_constant_int(void) const {
 //=============================================================================
 // class relational_expr method definitions
 
-#if 1
 relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 		const string& o, count_const_ptr<pint_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -784,16 +678,6 @@ relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 	assert(lx->dimensions() == 0);
 	assert(rx->dimensions() == 0);
 }
-#else
-relational_expr::relational_expr(excl_const_ptr<pint_expr> l,
-		const string& o, excl_const_ptr<pint_expr> r) :
-		lx(l), rx(r), op(o) {
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
-}
-#endif
 
 ostream&
 relational_expr::what(ostream& o) const {
@@ -809,13 +693,6 @@ string
 relational_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
-
-#if 0
-bool
-relational_expr::is_initialized(void) const {
-	return lx->is_initialized() && rx->is_initialized();
-}
-#endif
 
 bool
 relational_expr::is_static_constant(void) const {
@@ -846,7 +723,6 @@ relational_expr::static_constant_bool(void) const {
 //=============================================================================
 // class logical_expr method definitions
 
-#if 1
 logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 		const string& o, count_const_ptr<pbool_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -855,16 +731,6 @@ logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 	assert(lx->dimensions() == 0);
 	assert(rx->dimensions() == 0);
 }
-#else
-logical_expr::logical_expr(excl_const_ptr<pbool_expr> l,
-		const string& o, excl_const_ptr<pbool_expr> r) :
-		lx(l), rx(r), op(o) {
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
-}
-#endif
 
 ostream&
 logical_expr::what(ostream& o) const {
@@ -880,13 +746,6 @@ string
 logical_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
-
-#if 0
-bool
-logical_expr::is_initialized(void) const {
-	return lx->is_initialized() && rx->is_initialized();
-}
-#endif
 
 bool
 logical_expr::is_static_constant(void) const {
@@ -917,7 +776,6 @@ logical_expr::static_constant_bool(void) const {
 //=============================================================================
 // class pint_range method definitions
 
-#if 1
 pint_range::pint_range(count_const_ptr<pint_expr> n) :
 		range_expr(),
 		lower(new pint_const(0)),
@@ -934,24 +792,6 @@ pint_range::pint_range(count_const_ptr<pint_expr> l,
 	assert(lower);
 	assert(upper);
 }
-#else
-pint_range::pint_range(excl_const_ptr<pint_expr> n) :
-		range_expr(),
-		lower(new pint_const(0)),
-		upper(new arith_expr(n, '-', 
-			excl_const_ptr<pint_expr>(new pint_const(1)))) {
-	assert(n);
-	assert(lower);
-	assert(upper);
-}
-
-pint_range::pint_range(excl_const_ptr<pint_expr> l, 
-		excl_const_ptr<pint_expr> u) :
-		range_expr(), lower(l), upper(u) {
-	assert(lower);
-	assert(upper);
-}
-#endif
 
 pint_range::pint_range(const pint_range& pr) :
 		object(), index_expr(), range_expr(), 
@@ -974,13 +814,6 @@ string
 pint_range::hash_string(void) const {
 	return lower->hash_string() + ".." +upper->hash_string();
 }
-
-#if 0
-bool
-pint_range::is_initialized(void) const {
-	return lower->is_initialized() && upper->is_initialized();
-}
-#endif
 
 /**
 	Range is sane if lower <= upper.
@@ -1118,13 +951,6 @@ bool
 const_range::operator == (const const_range& c) const {
 	return (first == c.first) && (second == c.second);
 }
-
-#if 0
-bool
-const_range::is_initialized(void) const {
-	return !empty();
-}
-#endif
 
 /**
 	Presumably if this was successfully constructed, then it
@@ -1371,7 +1197,6 @@ const_index_list::dimensions_collapsed(void) const {
 	return ret;
 }
 
-#if 1
 /**
 	Wrapper to list paren'ts push_back that checks that
 	expression is a 0-dimensional pint_inst reference.  
@@ -1383,26 +1208,7 @@ const_index_list::push_back(const count_ptr<const_index>& i) {
 	assert(i->dimensions() == 0);
 	parent::push_back(i);
 }
-#else
-/**
-	Wrapper to list paren'ts push_back that checks that
-	expression is a 0-dimensional pint_inst reference.  
- */
-void
-const_index_list::push_back(excl_ptr<const_index> i) {
-	// check dimensionality
-	assert(i);
-	assert(i->dimensions() == 0);
-	parent::push_back(i);
-}
-#endif
 
-#if 0
-bool
-const_index_list::is_initialized(void) const {
-	return true;
-}
-#else
 bool
 const_index_list::may_be_initialized(void) const {
 	return true;
@@ -1412,7 +1218,6 @@ bool
 const_index_list::must_be_initialized(void) const {
 	return true;
 }
-#endif
 
 bool
 const_index_list::is_static_constant(void) const {
@@ -1459,21 +1264,12 @@ dynamic_index_list::hash_string(void) const {
 	return ret;
 }
 
-#if 1
 void
 dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 	assert(i);
 	assert(i->dimensions() == 0);
 	parent::push_back(i);
 }
-#else
-void
-dynamic_index_list::push_back(excl_ptr<index_expr> i) {
-	assert(i);
-	assert(i->dimensions() == 0);
-	parent::push_back(i);
-}
-#endif
 
 size_t
 dynamic_index_list::size(void) const {
@@ -1497,18 +1293,6 @@ dynamic_index_list::dimensions_collapsed(void) const {
 	return ret;
 }
 
-#if 0
-bool
-dynamic_index_list::is_initialized(void) const {
-	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		assert(*i);
-		if (!(*i)->is_initialized())
-			return false;
-	}
-	return true;
-}
-#else
 bool
 dynamic_index_list::may_be_initialized(void) const {
 	const_iterator i = begin();
@@ -1530,7 +1314,6 @@ dynamic_index_list::must_be_initialized(void) const {
 	}
 	return true;
 }
-#endif
 
 bool
 dynamic_index_list::is_static_constant(void) const {

@@ -109,6 +109,7 @@ virtual	void	append_instance_reference(
 	Alias-style instance connection, e.g. x = y = z;
 	List items are interpreted as connecting to each other, 
 	and thus having the same type and size.  
+	Should be no need for sub-typing?
  */
 class aliases_connection : public instance_reference_connection {
 protected:
@@ -128,6 +129,7 @@ public:
 	Which is short-hand for x.first = y, x.second = z, ...;
 	List items are interpreted as connecting to the ports
 	of the instance.  
+	Sub-type into process/data/channel?
  */
 class port_connection : public instance_reference_connection {
 protected:

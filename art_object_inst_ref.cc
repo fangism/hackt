@@ -238,7 +238,7 @@ simple_instance_reference::static_constant_dimensions(void) const {
 
 ostream&
 simple_instance_reference::dump(ostream& o) const {
-	o << get_inst_base()->get_name();
+	what(o) << " " << get_inst_base()->get_name();
 	if (array_indices) {
 		array_indices->dump(o);
 	}
@@ -309,7 +309,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	//	using multidimensional_sparse_set
 
 	// eventually replace the following loop with unroll_static_instances
-#if 0
+	const size_t cil_size = cil->size();
 	excl_ptr<mset_base>
 		cov(mset_base::make_multidimensional_sparse_set(cil_size));
 	assert(cov);
@@ -319,41 +319,14 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 		// we need to trim the lower dimension indices.
 		cov->add_ranges(cirl);
 	}
-	excl_ptr<mset_base>
-		inst(unroll_static_instances(cil_size));
-	cov->subtract(*inst);
-#else
-	const size_t cil_size = cil->size();
-	instantiation_state iter = inst_state;
-	const instantiation_state
-		end(inst_base->collection_state_end());
-	excl_ptr<mset_base>
-		cov(mset_base::make_multidimensional_sparse_set(cil_size));
-	assert(cov);
-	{
-		const_range_list crl(*cil);
-		// if dimensions are underspecified, then
-		// we need to trim the lower dimension indices.
-		cov->add_ranges(crl);
+	excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
+	if (inst) {
+		cov->subtract_sparse_set(*inst);
+		// make sure to clean if empty in subtract() method
 	}
-	for ( ; iter!=end; iter++) {
-		if (iter->is_a<dynamic_range_list>()) {
-			// all we can do conservatively...
-			cov->clear();
-			// empty means indices have been covered
-			break;
-		} else {
-			count_const_ptr<const_range_list>
-				crlp(iter->is_a<const_range_list>());
-			assert(crlp);
-			const_range_list crl(*crlp);	// make deep copy
-			// dimension-trimming
-			while(crl.size() > cil_size)
-				crl.pop_back();
-			cov->delete_ranges(crl);
-		}
-	}
-#endif
+	else	// was dynamic, potentially covering all indices
+		cov->clear();
+
 	// if this point reached, then all instance additions
 	// were static constants.
 	// now, covered set must completely contain indices
@@ -368,6 +341,134 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	}
 	array_indices = i;
 	return true;
+}
+
+/**
+	Checks "may" type-equivalence of two instance references.  
+	Is conservative.  
+	Prints descriptive error if false is returned.  
+	\return true if referenced instances' types may be equivalent.  
+ */
+bool
+simple_instance_reference::may_be_type_equivalent(
+		const instance_reference_base& i) const {
+	const never_const_ptr<instantiation_base>
+		lib(get_inst_base());
+	const never_const_ptr<instantiation_base>
+		rib(i.get_inst_base());
+	const count_const_ptr<fundamental_type_reference>
+		ltr(lib->get_type_ref());
+	const count_const_ptr<fundamental_type_reference>
+		rtr(rib->get_type_ref());
+	const bool type_eq = ltr->may_be_equivalent(*rtr);
+	// if base types differ, then cannot be equivalent
+	if (!type_eq) {
+		ltr->dump(cerr << "Types do not match! got: ") << " and: ";
+		rtr->dump(cerr) << "." << endl;
+		return false;
+	}
+	// else they match, continue to check dimensionality and size.  
+
+	// TO DO: factor this section code out to a method for re-use.  
+	// note: is dimensions of the *reference* not the instantiation!
+	if (dimensions() != i.dimensions()) {
+		cerr << "Dimensions do not match! got: " << dimensions()
+			<< " and: " << i.dimensions() << "." << endl;
+		return false;
+	}
+	// catch simple 0-dimensional case, based on the inst_bases
+	if (lib->dimensions() == 0) {
+		assert(rib->dimensions() == 0);
+		// otherwise should've been caught by dimension comparison
+		return true;
+	}
+	// fall-through handle multidimensional case
+	if (has_static_constant_dimensions() &&
+			i.has_static_constant_dimensions()) {
+
+		// don't *compare* static_constant_dimensions, because
+		// those are used for checking coverage of referenced
+		// multidimensional indices, and don't preserve
+		// the dimension-collapsing information of indices.
+		// compare the array_indices directly
+		const const_range_list ldim(static_constant_dimensions());
+		const const_range_list rdim(i.static_constant_dimensions());
+
+		// examine array_indices:
+		// walk the index lists, skipping collapsed dimensions
+		// and comparing the sizes of statically known ranges.  
+		// if dimensions are under-specified, 
+		// compare the sizes of the remaining ranges.  
+		const simple_instance_reference*
+			sir = IS_A(const simple_instance_reference*, &i);
+		if (!sir) {
+			// then is not a simple_instance_reference, 
+			// is complex-aggregate, which is not handled yet
+			return true;
+		}
+		never_const_ptr<const_index_list>
+			lil(array_indices.is_a<const_index_list>());
+		never_const_ptr<const_index_list>
+			ril(sir->array_indices.is_a<const_index_list>());
+		// sanity check for dynamic indices
+		if (array_indices && !lil) {
+			assert(array_indices.is_a<dynamic_index_list>());
+			return true;
+		}
+		if (sir->array_indices && !ril) {
+			assert(sir->array_indices.is_a<dynamic_index_list>());
+			return true;
+		}
+		// lil and ril may still be NULL, 
+		// meaning implicit references to their entire collections
+		// now ready to compare non-collapsed dimensions...
+		// walk the const_range_lists
+		const_range_list::const_iterator liter = ldim.begin();
+		const_range_list::const_iterator riter = rdim.begin();
+		// Is there a better way to write this?  I hate do-while...
+		int dim = 1;
+		do {
+			// dimension is collapsed if index is just a pint
+			while (liter!=ldim.end() && IS_A(const pint_const*, &*liter))
+				liter++;
+			while (riter!=rdim.end() && IS_A(const pint_const*, &*riter))
+				riter++;
+			if (liter == ldim.end() || riter == rdim.end())
+				break;
+			const const_range&
+				lrange(IS_A(const const_range&, *liter));
+			const const_range&
+				rrange(IS_A(const const_range&, *riter));
+			const int ldiff = lrange.second -lrange.first;
+			const int rdiff = rrange.second -rrange.first;
+			if (ldiff != rdiff) {
+				cerr << "Size of dimension " << dim <<
+					" does not match!  got: " <<
+					ldiff+1 << " and " << rdiff+1
+					<< "." << endl;
+				return false;
+			}
+			// else continue checking...
+			dim++;
+		} while(1);
+		assert(liter == ldim.end() && riter == rdim.end());
+		// assertion, based on the dimensions matching
+		// if we've made it this far, all dimensions match
+		return true;
+	} else {
+		// cannot deduce size/shape equivalence at this time
+		return true;
+	}
+}
+
+/**
+	"must" type-equivalence.  
+ */
+bool
+simple_instance_reference::must_be_type_equivalent(
+		const instance_reference_base& i) const {
+	// fix me...
+	return false;
 }
 
 /**
@@ -677,10 +778,11 @@ pint_instance_reference::make_param_literal(
 // class process_instance_reference method definitions
 
 process_instance_reference::process_instance_reference(
-		const process_instantiation& pi,
+		never_const_ptr<process_instantiation> pi,
 		excl_ptr<index_list> i) :
-		simple_instance_reference(i, pi.current_collection_state()),
-		process_inst_ref(&pi) {
+		simple_instance_reference(i, pi->current_collection_state()),
+		process_inst_ref(pi) {
+	assert(process_inst_ref);
 }
 
 process_instance_reference::~process_instance_reference() {
@@ -700,10 +802,11 @@ process_instance_reference::what(ostream& o) const {
 // class datatype_instance_reference method definitions
 
 datatype_instance_reference::datatype_instance_reference(
-		const datatype_instantiation& di,
+		never_const_ptr<datatype_instantiation> di,
 		excl_ptr<index_list> i) :
-		simple_instance_reference(i, di.current_collection_state()),
-		data_inst_ref(&di) {
+		simple_instance_reference(i, di->current_collection_state()),
+		data_inst_ref(di) {
+	assert(data_inst_ref);
 }
 
 datatype_instance_reference::~datatype_instance_reference() {
@@ -719,19 +822,27 @@ datatype_instance_reference::what(ostream& o) const {
 	return o << "datatype-inst-ref";
 }
 
+#if 0
+USE simple_instance_reference::dump
 ostream&
 datatype_instance_reference::dump(ostream& o) const {
-	return what(o);
+	what(o) << ": ";
+	data_inst_ref->dump(o);
+	if (array_indices)
+		array_indices->dump(o);
+	return o;
 }
+#endif
 
 //=============================================================================
 // class channel_instance_reference method definitions
 
 channel_instance_reference::channel_instance_reference(
-		const channel_instantiation& ci,
+		never_const_ptr<channel_instantiation> ci,
 		excl_ptr<index_list> i) :
-		simple_instance_reference(i, ci.current_collection_state()),
-		channel_inst_ref(&ci) {
+		simple_instance_reference(i, ci->current_collection_state()),
+		channel_inst_ref(ci) {
+	assert(channel_inst_ref);
 }
 
 channel_instance_reference::~channel_instance_reference() {
@@ -747,10 +858,12 @@ channel_instance_reference::what(ostream& o) const {
 	return o << "channel-inst-ref";
 }
 
+#if 0
 ostream&
 channel_instance_reference::dump(ostream& o) const {
 	return what(o);
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

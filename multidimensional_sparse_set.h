@@ -332,6 +332,9 @@ public:
 				// now can use modifing lookup
 				if (probe->subtract(*(i->second))) {
 					overlap = true;
+					// clean-up
+					if (probe->empty())
+						index_map.erase(i->first);
 				}
 			}
 		}

@@ -103,6 +103,8 @@ namespace entity {
 	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
+	class aliases_connection;
+	class port_connection;
 
 // declarations from "art_object_expr.h"
 	class param_expr;
@@ -249,9 +251,12 @@ public:
 		make_param_expr_list(void) const;
 	excl_ptr<param_expression_assignment>
 		make_param_assignment(void);
+	excl_const_ptr<aliases_connection>
+		make_alias_connection(void) const;
 #if 0
-	count_ptr<instance_reference_connection>
-		make_instance_connection(void) const;
+	// needs base process type
+	excl_const_ptr<instance_reference_connection>
+		make_port_connection(void) const;
 #endif
 };	// end class object_list
 
@@ -623,12 +628,15 @@ virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
 	bool is_defined(void) const { return defined; }
 	void mark_defined(void) { assert(!defined); defined = true; }
 
+	never_const_ptr<param_instantiation>
+		lookup_template_formal(const string& id) const;
+/** should be pure virtual, but let's default to NULL */
+virtual	never_const_ptr<instantiation_base>
+		lookup_port_formal(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
 
 virtual	bool check_null_template_argument(void) const;
 
-	never_const_ptr<param_instantiation>
-		lookup_template_formal(const string& id) const;
 
 protected:
 	// Q: what if expressions are involved, can't statically resolve?
@@ -732,7 +740,7 @@ protected:
 	excl_const_ptr<param_expr_list>		template_params;
 
 public:
-	fundamental_type_reference(void);
+	fundamental_type_reference();
 explicit fundamental_type_reference(excl_const_ptr<param_expr_list> pl);
 virtual	~fundamental_type_reference();
 
@@ -773,6 +781,12 @@ virtual	excl_ptr<instantiation_base>
 public:
 	bool may_be_equivalent(const fundamental_type_reference& t) const;
 	bool must_be_equivalent(const fundamental_type_reference& t) const;
+
+	// something for resolving typedefs
+	// or return by value? statically would require copy constructor
+	// wth, just allocate one...
+	excl_const_ptr<fundamental_type_reference>
+		make_canonical_type_reference(void) const;
 };	// end class fundamental_type_reference
 
 //=============================================================================
@@ -853,6 +867,8 @@ private:
 	bool formal_size_equivalent(
 		never_const_ptr<instantiation_base> b) const;
 public:
+	bool is_template_formal(void) const;
+	bool is_port_formal(void) const;
 	bool template_formal_equivalent(
 		never_const_ptr<instantiation_base> b) const;
 	bool port_formal_equivalent(

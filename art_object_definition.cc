@@ -68,13 +68,20 @@ definition_base::dump_template_formals(ostream& o) const {
 }
 
 /**
+ */
+never_const_ptr<param_instantiation>
+definition_base::lookup_template_formal(const string& id) const {
+	return static_cast<const template_formals_map_type&>
+		(template_formals_map)[id];
+}
+
+/**
 	Searches template formals set *ONLY* for a matching object.  
 	Subclasses should override this to search their respective scopes.  
  */
 never_const_ptr<object>
 definition_base::lookup_object_here(const string& id) const {
-	return static_cast<const template_formals_map_type&>
-		(template_formals_map)[id];
+	return lookup_template_formal(id);
 }
 
 /**
@@ -105,6 +112,17 @@ definition_base::check_null_template_argument(void) const {
 }
 
 /**
+	A default lookup that always returns NULL.  
+	Overridden in process_definition.  
+ */
+never_const_ptr<instantiation_base>
+definition_base::lookup_port_formal(const string& id) const {
+	return never_const_ptr<instantiation_base>(NULL);
+}
+
+#if 0
+REDEFINED, this one is obsolete
+/**
 	Need template_formal_set to be a queryable-hashlist...
  */
 never_const_ptr<param_instantiation>
@@ -118,6 +136,7 @@ definition_base::lookup_template_formal(const string& id) const {
 		return never_const_ptr<param_instantiation>(NULL);
 	}
 }
+#endif
 
 /**
 	Compares the sequence of template formals for a generic definition.  
@@ -359,6 +378,22 @@ typedef_base::dump(ostream& o) const {
 	get_base_type_ref()->dump(o);
 	return o;
 }
+
+#if 0
+UNVEIL LATER
+/**
+	\param pa the actual parameters passed.  
+		Should we require that it be "initialized" i.e. constant or 
+		dependent on other template formals (in the case of typedefs
+		within template definitions)?
+		If dependent on template formals, this type cannot be 
+		fully resolved.  
+		Only accept const_param_expr_list?  Yeah.  
+ */
+excl_const_ptr<fundamental_type_reference>
+typedef_base::resolve_complete_type(never_const_ptr<param_expr_list> pa) const {
+}
+#endif
 
 //=============================================================================
 // class datatype_definition_base method definitions
@@ -1021,6 +1056,15 @@ process_definition::get_parent(void) const {
 never_const_ptr<object>
 process_definition::lookup_object_here(const string& s) const {
 	return scopespace::lookup_object_here(s);
+}
+
+/**
+	Override's definition_base's port formal lookup.  
+	\return pointer to port's instantiation if found, else NULL.  
+ */
+never_const_ptr<instantiation_base>
+process_definition::lookup_port_formal(const string& id) const {
+	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
 }
 
 count_const_ptr<fundamental_type_reference>

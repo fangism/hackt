@@ -98,12 +98,8 @@ virtual	bool has_static_constant_dimensions(void) const = 0;
 virtual	const_range_list static_constant_dimensions(void) const = 0;
 
 /** is initialized if is resolved to constant or some other formal */
-#if 0
-virtual bool is_initialized(void) const = 0;
-#else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
-#endif
 virtual bool may_be_equivalent(const param_expr& p) const = 0;
 virtual bool must_be_equivalent(const param_expr& p) const = 0;
 
@@ -118,6 +114,45 @@ virtual bool is_unconditional(void) const = 0;
 };	// end class param_expr
 
 //-----------------------------------------------------------------------------
+/**
+	Silly as it may seem...
+	Interface for pure constants.  
+	Used for unroll time, when everything must be bound.  
+	Need this to distinguish between dynamic and const param_expr_lists
+ */
+class const_param : virtual public param_expr {
+protected:
+	// no members
+public:
+	const_param();
+virtual	~const_param();
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const = 0;
+virtual	string hash_string(void) const = 0;
+virtual	size_t dimensions(void) const = 0;
+
+// don't know if these are applicable... 
+// depends on whether or not we use this for collective constants...
+virtual	bool has_static_constant_dimensions(void) const = 0;
+// only call this if dimensions are non-zero and sizes are static constant.  
+virtual	const_range_list static_constant_dimensions(void) const = 0;
+
+	bool may_be_initialized(void) const { return true; }
+	bool must_be_initialized(void) const { return true; }
+virtual bool may_be_equivalent(const param_expr& p) const = 0;
+virtual bool must_be_equivalent(const param_expr& p) const = 0;
+
+	bool is_static_constant(void) const { return true; }
+	bool is_loop_independent(void) const { return true; }
+	bool is_unconditional(void) const { return true; }
+};	// end class const_param
+
+//-----------------------------------------------------------------------------
+/**
+	A list of parameter expressions.  
+	Consider splitting into dynamic vs. const?
+ */
 class param_expr_list : public object,
 		public list<count_const_ptr<param_expr> > {
 protected:
@@ -134,9 +169,14 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+
 	bool may_be_equivalent(const param_expr_list& p) const;
 	bool must_be_equivalent(const param_expr_list& p) const;
 
+	bool is_static_constant(void) const;
+	bool is_loop_independent(void) const;
 };	// end class param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -159,12 +199,8 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual size_t dimensions(void) const = 0;
-#if 0
-virtual bool is_initialized(void) const = 0;
-#else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
-#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
@@ -212,12 +248,8 @@ virtual	string hash_string(void) const = 0;
 virtual	size_t size(void) const = 0;
 virtual	size_t dimensions_collapsed(void) const = 0;
 
-#if 0
-virtual	bool is_initialized(void) const = 0;
-#else
 virtual	bool may_be_initialized(void) const = 0;
 virtual	bool must_be_initialized(void) const = 0;
-#endif
 virtual	bool is_static_constant(void) const = 0;
 virtual	bool is_loop_independent(void) const = 0;
 virtual	bool is_unconditional(void) const = 0;
@@ -256,18 +288,10 @@ public:
 	using parent::end;
 	using parent::rbegin;
 	using parent::rend;
-#if 1
 	void push_back(const count_ptr<const_index>& i);
-#else
-	void push_back(excl_ptr<const_index> i);
-#endif
 
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -298,22 +322,14 @@ public:
 	using parent::end;
 	using parent::rbegin;
 	using parent::rend;
-#if 1
 	void push_back(const count_ptr<index_expr>& i);
-#else
-	void push_back(excl_ptr<index_expr> i);
-#endif
 
 /** NOT THE SAME **/
 	size_t size(void) const;
 	size_t dimensions_collapsed(void) const;
 
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -408,18 +424,10 @@ virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
 virtual	bool has_static_constant_dimensions(void) const = 0;
 virtual	const_range_list static_constant_dimensions(void) const = 0;
-#if 0
-virtual bool is_initialized(void) const = 0;
-#else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
-#endif
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
-#if 0
-virtual bool may_be_equivalent_pbool(const pbool_expr& p) const = 0;
-virtual bool must_be_equivalent_pbool(const pbool_expr& p) const = 0;
-#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
@@ -440,18 +448,10 @@ virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
 virtual	bool has_static_constant_dimensions(void) const = 0;
 virtual	const_range_list static_constant_dimensions(void) const = 0;
-#if 0
-virtual bool is_initialized(void) const = 0;
-#else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
-#endif
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
-#if 0
-virtual bool may_be_equivalent_pint(const pint_expr& p) const = 0;
-virtual bool must_be_equivalent_pint(const pint_expr& p) const = 0;
-#endif
 virtual bool is_static_constant(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
@@ -508,26 +508,13 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-#if 1
 	bool initialize(count_const_ptr<param_expr> i);
-#else
-	bool initialize(excl_const_ptr<param_expr> i);
-#endif
 	string hash_string(void) const;
-	// implement later.
-#if 0
-	bool is_initialized(void) const;
-#else
 	// try these
 	// using param_instance_reference::may_be_initialized;
 	// using param_instance_reference::must_be_initialized;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-#endif
-#if 0
-	bool may_be_equivalent_pbool(const pbool_expr& p) const;
-	bool must_be_equivalent_pbool(const pbool_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
@@ -559,23 +546,10 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-#if 1
 	bool initialize(count_const_ptr<param_expr> i);
-#else
-	bool initialize(excl_const_ptr<param_expr> i);
-#endif
 	string hash_string(void) const;
-	// implement later.
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
-#endif
-#if 0
-	bool may_be_equivalent_pint(const pint_expr& p) const;
-	bool must_be_equivalent_pint(const pint_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
@@ -587,11 +561,12 @@ public:
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  
  */
-class pint_const : public pint_expr, public const_index {
+class pint_const : public pint_expr, public const_index, public const_param {
 protected:
 	const long			val;
 public:
-	pint_const(const long v) : pint_expr(), const_index(), val(v) { }
+	pint_const(const long v) :
+		pint_expr(), const_index(), const_param(), val(v) { }
 	~pint_const() { }
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -601,16 +576,12 @@ public:
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }	// empty list
 
-#if 0
-	bool is_initialized(void) const { return true; }
-#else
 	bool may_be_initialized(void) const { return true; }
 	bool must_be_initialized(void) const { return true; }
-#endif
-#if 0
-	bool may_be_equivalent_pint(const pint_expr& p) const;
-	bool must_be_equivalent_pint(const pint_expr& p) const;
-#endif
+	bool may_be_equivalent(const param_expr& e) const
+		{ return pint_expr::may_be_equivalent(e); }
+	bool must_be_equivalent(const param_expr& e) const
+		{ return pint_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
 	int static_constant_int(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -621,11 +592,12 @@ public:
 /**
 	Constant boolean parameters, true or false.  
  */
-class pbool_const : public pbool_expr {
+class pbool_const : public pbool_expr, public const_param {
 protected:
 	const bool			val;
 public:
-	pbool_const(const bool v) : pbool_expr(), val(v) { }
+	pbool_const(const bool v) :
+		pbool_expr(), const_param(), val(v) { }
 	~pbool_const() { }
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -635,16 +607,12 @@ public:
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
 
-#if 0
-	bool is_initialized(void) const { return true; }
-#else
 	bool may_be_initialized(void) const { return true; }
 	bool must_be_initialized(void) const { return true; }
-#endif
-#if 0
-	bool may_be_equivalent_pbool(const pbool_expr& p) const;
-	bool must_be_equivalent_pbool(const pbool_expr& p) const;
-#endif
+	bool may_be_equivalent(const param_expr& e) const
+		{ return pbool_expr::may_be_equivalent(e); }
+	bool must_be_equivalent(const param_expr& e) const
+		{ return pbool_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -659,19 +627,10 @@ class pint_unary_expr : public pint_expr {
 protected:
 	const char			op;
 	/** expression argument must be 0-dimensional */
-#if 1
 	count_const_ptr<pint_expr>	ex;
-#else
-	excl_const_ptr<pint_expr>	ex;
-#endif
 public:
-#if 1
 	pint_unary_expr(const char o, count_const_ptr<pint_expr> e);
 	pint_unary_expr(count_const_ptr<pint_expr> e, const char o);
-#else
-	pint_unary_expr(const char o, excl_const_ptr<pint_expr> e);
-	pint_unary_expr(excl_const_ptr<pint_expr> e, const char o);
-#endif
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -680,18 +639,10 @@ public:
 	bool has_static_constant_dimensions(void) const { return true; }
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const
 		{ return ex->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return ex->must_be_initialized(); }
-#endif
-#if 0
-	bool may_be_equivalent_pint(const pint_expr& p) const;
-	bool must_be_equivalent_pint(const pint_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -707,19 +658,10 @@ class pbool_unary_expr : public pbool_expr {
 protected:
 	const char			op;
 	/** argument expression must be 0-dimensional */
-#if 1
 	count_const_ptr<pbool_expr>	ex;
-#else
-	excl_const_ptr<pbool_expr>	ex;
-#endif
 public:
-#if 1
 	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
 	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
-#else
-	pbool_unary_expr(const char o, excl_const_ptr<pbool_expr> e);
-	pbool_unary_expr(excl_const_ptr<pbool_expr> e, const char o);
-#endif
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -728,18 +670,10 @@ public:
 	bool has_static_constant_dimensions(void) const { return true; }
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const
 		{ return ex->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return ex->must_be_initialized(); }
-#endif
-#if 0
-	bool may_be_equivalent_pbool(const pbool_expr& p) const;
-	bool must_be_equivalent_pbool(const pbool_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -752,22 +686,12 @@ public:
  */
 class arith_expr : public pint_expr {
 protected:
-#if 1
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
-#else
-	excl_const_ptr<pint_expr>	lx;
-	excl_const_ptr<pint_expr>	rx;
-#endif
 	const char			op;
 public:
-#if 1
 	arith_expr(count_const_ptr<pint_expr> l, const char o, 
 		count_const_ptr<pint_expr> r);
-#else
-	arith_expr(excl_const_ptr<pint_expr> l, const char o, 
-		excl_const_ptr<pint_expr> r);
-#endif
 	~arith_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -777,20 +701,12 @@ public:
 	bool has_static_constant_dimensions(void) const { return true; }
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const
 		{ return lx->may_be_initialized() && 
 			rx->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
-#endif
-#if 0
-	bool may_be_equivalent_pint(const pint_expr& p) const;
-	bool must_be_equivalent_pint(const pint_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -803,23 +719,13 @@ public:
  */
 class relational_expr : public pbool_expr {
 protected:
-#if 1
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
-#else
-	excl_const_ptr<pint_expr>	lx;
-	excl_const_ptr<pint_expr>	rx;
-#endif
 	const string			op;
 
 public:
-#if 1
 	relational_expr(count_const_ptr<pint_expr> l, const string& o, 
 		count_const_ptr<pint_expr> r);
-#else
-	relational_expr(excl_const_ptr<pint_expr> l, const string& o, 
-		excl_const_ptr<pint_expr> r);
-#endif
 	~relational_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -829,20 +735,12 @@ public:
 	bool has_static_constant_dimensions(void) const { return true; }
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const
 		{ return lx->may_be_initialized() && 
 			rx->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
-#endif
-#if 0
-	bool may_be_equivalent_pbool(const pbool_expr& p) const;
-	bool must_be_equivalent_pbool(const pbool_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -855,23 +753,13 @@ public:
  */
 class logical_expr : public pbool_expr {
 protected:
-#if 1
 	count_const_ptr<pbool_expr>	lx;
 	count_const_ptr<pbool_expr>	rx;
-#else
-	excl_const_ptr<pbool_expr>	lx;
-	excl_const_ptr<pbool_expr>	rx;
-#endif
 	const string			op;
 
 public:
-#if 1
 	logical_expr(count_const_ptr<pbool_expr> l, const string& o, 
 		count_const_ptr<pbool_expr> r);
-#else
-	logical_expr(excl_const_ptr<pbool_expr> l, const string& o, 
-		excl_const_ptr<pbool_expr> r);
-#endif
 	~logical_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -881,20 +769,12 @@ public:
 	bool has_static_constant_dimensions(void) const { return true; }
 	const_range_list static_constant_dimensions(void) const
 		{ return const_range_list(); }
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const
 		{ return lx->may_be_initialized() && 
 			rx->may_be_initialized(); }
 	bool must_be_initialized(void) const
 		{ return lx->must_be_initialized() && 
 			rx->must_be_initialized(); }
-#endif
-#if 0
-	bool may_be_equivalent_pbool(const pbool_expr& p) const;
-	bool must_be_equivalent_pbool(const pbool_expr& p) const;
-#endif
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
@@ -930,12 +810,8 @@ virtual	string hash_string(void) const = 0;
  */
 virtual	size_t dimensions(void) const { return 0; }
 /** is initialized if is resolved to constant or some other formal */
-#if 0
-virtual bool is_initialized(void) const = 0;
-#else
 virtual bool may_be_initialized(void) const = 0;
 virtual bool must_be_initialized(void) const = 0;
-#endif
 
 /** is sane if range makes sense */
 virtual	bool is_sane(void) const = 0;
@@ -959,24 +835,13 @@ virtual bool is_unconditional(void) const = 0;
 class pint_range : public range_expr {
 protected:
 	// need to be const, or modifiable?
-#if 1
 	count_const_ptr<pint_expr>	lower;
 	count_const_ptr<pint_expr>	upper;
-#else
-	excl_const_ptr<pint_expr>	lower;
-	excl_const_ptr<pint_expr>	upper;
-#endif
 public:
 	/** implicit conversion from x[N] to x[0..N-1] */
-#if 1
 explicit pint_range(count_const_ptr<pint_expr> n);
 	pint_range(count_const_ptr<pint_expr> l,
 		count_const_ptr<pint_expr> u);
-#else
-explicit pint_range(excl_const_ptr<pint_expr> n);
-	pint_range(excl_const_ptr<pint_expr> l,
-		excl_const_ptr<pint_expr> u);
-#endif
 	pint_range(const pint_range& pr);
 	~pint_range() { }
 
@@ -986,9 +851,6 @@ explicit pint_range(excl_const_ptr<pint_expr> n);
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;		// unused?
 
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const {
 		return lower->may_be_initialized() &&
 			upper->may_be_initialized();
@@ -997,7 +859,6 @@ explicit pint_range(excl_const_ptr<pint_expr> n);
 		return lower->must_be_initialized() &&
 			upper->must_be_initialized();
 	}
-#endif
 	bool is_sane(void) const;
 	bool is_static_constant(void) const;
 	// for now just return false, don't bother checking recursively...
@@ -1052,12 +913,8 @@ public:
 	const_range static_overlap(const const_range& r) const;
 
 	bool operator == (const const_range& c) const;
-#if 0
-	bool is_initialized(void) const;
-#else
 	bool may_be_initialized(void) const { return !empty(); }
 	bool must_be_initialized(void) const { return !empty(); }
-#endif
 	bool is_sane(void) const;
 	bool is_static_constant(void) const { return !empty(); }
 	bool is_loop_independent(void) const { return !empty(); }

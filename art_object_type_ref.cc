@@ -99,14 +99,28 @@ fundamental_type_reference::make_instantiation(
 	sometimes parameters may be determined by other parameters
 	and thus are not statically constant for comparison.  
 	\return false if there is definite mismatch in type.  
-	TO DO: static argument checking for template arguments.  
+	TO DO: resolve typedefs!
  */
 bool
 fundamental_type_reference::may_be_equivalent(
 		const fundamental_type_reference& t) const {
 	never_const_ptr<definition_base> left(get_base_def());
 	never_const_ptr<definition_base> right(t.get_base_def());
-	// may need to resolve alias? TO DO
+
+#if 0
+	// TO resolve typedefs and aliases
+	// self-recursive call to expand parameters...
+	never_const_ptr<typedef_base> ltdb(left.is_a<typedef_base>());
+	if (ltdb) {
+
+	}
+	never_const_ptr<typedef_base> rtdb(right.is_a<typedef_base>());
+	if (rtdb) {
+
+	}
+	assert(!ltdb && !rtdb);		// down to canonical definitions
+#endif
+
 	if (left != right) {
 #if 0
 		left->dump(cerr << "left: ") << endl;
@@ -115,7 +129,6 @@ fundamental_type_reference::may_be_equivalent(
 		return false;
 	}
 	// else base definitions are equal
-	// TO DO: compare template arguments
 	if (template_params) {
 		if (!t.template_params) {
 			// template params should be filled in with defaults
@@ -166,6 +179,24 @@ fundamental_type_reference::must_be_equivalent(
 	}
 	return false;
 }
+
+#if 0
+declared now, 
+UNVEIL LATER
+/**
+	Takes a type reference with a typedef and resolves it to 
+	its canonical definition, with parameters substituted
+	appropriately.  
+	We need a method for substituting parameters.  
+	What should this method do if this is already canonical?
+	Preconditions: parameters must be initialized?
+ */
+excl_const_ptr<fundamental_type_reference>
+	make_canonical_type_reference(void) const {
+
+}
+#endif
+
 
 //=============================================================================
 #if 0
