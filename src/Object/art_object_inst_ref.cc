@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.1 2005/02/03 03:34:49 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.1.2.1 2005/02/07 01:11:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -31,6 +31,122 @@
 namespace ART {
 namespace entity {
 using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+
+//=============================================================================
+// class simple_instance_reference::mset_base definition
+
+class simple_instance_reference::mset_base {
+public:
+	typedef	multidimensional_sparse_set_traits<
+			pint_value_type, const_range, list>
+						traits_type;
+	typedef	traits_type::range_type		range_type;
+	typedef	traits_type::range_list_type	range_list_type;
+
+	/// dimensions limit
+	enum { LIMIT = 4 };
+
+virtual	~mset_base() { }
+
+virtual	range_list_type
+	compact_dimensions(void) const = 0;
+
+virtual	range_list_type
+	query_compact_dimensions(const range_list_type& r) const = 0;
+
+virtual	bool
+	add_ranges(const range_list_type& r) = 0;
+
+virtual	bool
+	subtract_sparse_set(const mset_base& s) = 0;
+
+virtual	void
+	clear(void) = 0;
+
+virtual	bool
+	empty(void) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+	static
+	mset_base*
+	make_multidimensional_sparse_set(const size_t d);
+
+};	// end class simple_instance_reference::mset_base
+
+//=============================================================================
+/**
+	Wrapper class to sparse set implementation, 
+	implements a limited interface for use in this module.  
+ */
+template <size_t D>
+class simple_instance_reference::mset :
+		public simple_instance_reference::mset_base {
+protected:
+	typedef	multidimensional_sparse_set<D, pint_value_type, const_range>
+							impl_type;
+	typedef	simple_instance_reference::mset_base	base_type;
+	typedef	mset<D>					this_type;
+public:
+	typedef base_type::range_type			range_type;
+	typedef base_type::range_list_type		range_list_type;
+protected:
+	impl_type			sset;
+public:
+
+	// standard destructor
+
+	range_list_type
+	compact_dimensions(void) const {
+		return sset.compact_dimensions();
+	}
+
+	range_list_type
+	query_compact_dimensions(const range_list_type& r) const {
+		return sset.query_compact_dimensions(r);
+	}
+
+	bool
+	add_ranges(const range_list_type& r) {
+		return sset.add_ranges(r);
+	}
+
+	bool
+	subtract_sparse_set(const mset_base& s) {
+		const this_type* t = IS_A(const this_type*, &s);
+		INVARIANT(t);
+		return sset.subtract(t->sset);
+	}
+
+	void
+	clear(void) { sset.clear(); }
+
+	bool
+	empty(void) const { return sset.empty(); }
+
+	ostream&
+	dump(ostream& o) const {
+		return sset.dump(o);
+	}
+
+
+};	// end class simple_instance_reference::mset
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_instance_reference::mset_base*
+simple_instance_reference::mset_base::make_multidimensional_sparse_set(
+		const size_t d) {
+	INVARIANT(d > 0 && d <= LIMIT);
+	switch(d) {
+		case 1: return new simple_instance_reference::mset<1>();
+		case 2: return new simple_instance_reference::mset<2>();
+		case 3: return new simple_instance_reference::mset<3>();
+		case 4: return new simple_instance_reference::mset<4>();
+		// add more cases if LIMIT is ever extended.
+		default: return NULL;
+	}
+}
 
 //=============================================================================
 // class simple_instance_reference method definitions
@@ -513,7 +629,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 
 	// eventually replace the following loop with unroll_static_instances
 	const size_t cil_size = cil->size();
-	excl_ptr<mset_base>
+	const excl_ptr<mset_base>
 		cov(mset_base::make_multidimensional_sparse_set(cil_size));
 	NEVER_NULL(cov);
 	{
@@ -522,7 +638,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 		// we need to trim the lower dimension indices.
 		cov->add_ranges(cirl);
 	}
-	excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
+	const excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
 	if (inst) {
 		cov->subtract_sparse_set(*inst);
 		// make sure to clean if empty in subtract() method

@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.4 2005/02/06 21:31:07 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.5 2005/02/07 01:11:16 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -66,7 +66,7 @@ public:
 
 public:
 	// for array_traits<> interface
-	static const size_t dim = D;
+	enum { dim = D };
 
 public:
 	/**
@@ -264,7 +264,7 @@ public:
 	typedef	pair<key_type, key_type>		key_pair_type;
 
 	// for array_traits<>
-	static const size_t dim = 1;
+	enum { dim = 1 };
 public:
 	multikey_map();
 	~multikey_map();
@@ -358,10 +358,10 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 struct array_traits<MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M> > {
 	typedef	MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M>
 				array_type;
-	static const size_t	dimensions = array_type::dim;
+	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 
-}
+}	// end namespace util
 
 #endif	//	__MULTIKEY_MAP_H__
 

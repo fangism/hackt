@@ -1,11 +1,11 @@
 /**
 	\file "multidimensional_qmap.tcc"
 	Template method definitions for multidimensional_qmap class.
-	$Id: multidimensional_qmap.tcc,v 1.1 2004/12/05 05:07:23 fang Exp $
+	$Id: multidimensional_qmap.tcc,v 1.1.24.1 2005/02/07 01:11:15 fang Exp $
  */
 
-#ifndef	__MULTIDIMENSIONAL_QMAP_TCC__
-#define	__MULTIDIMENSIONAL_QMAP_TCC__
+#ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
+#define	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 
 #include <iostream>
 #include <numeric>		// for accumulate
@@ -19,6 +19,7 @@ namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
 using std::accumulate;
 #include "using_ostream.h"
 
+#if WANT_BASE_MULTIDIMENSIONAL_QMAP
 //=============================================================================
 // class base_multidimensional_qmap method definitions
 
@@ -39,18 +40,25 @@ make_multidimensional_qmap(const size_t d) {
 		default: return NULL;
 	}
 }
+#endif
 
 //=============================================================================
 // class multidimensional_qmap method definitions
 
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<D,K,T,L>::multidimensional_qmap() :
-		parent(), index_map() { }
+#if WANT_BASE_MULTIDIMENSIONAL_QMAP
+		parent(),
+#endif
+		index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<D,K,T,L>::multidimensional_qmap(const this_type& s) :
-		parent(), index_map(s.index_map) { }
+#if WANT_BASE_MULTIDIMENSIONAL_QMAP
+		parent(), 
+#endif
+		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
@@ -172,22 +180,28 @@ multidimensional_qmap<D,K,T,L>::dump(ostream& o, const string& pre) const {
 //=============================================================================
 // class multidimensional_qmap method definitions (specialized)
 
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<1,K,T,L>::multidimensional_qmap() :
-		parent(), index_map() { }
+#if WANT_BASE_MULTIDIMENSIONAL_QMAP
+		parent(), 
+#endif
+		index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<1,K,T,L>::
 multidimensional_qmap(const this_type& s) :
-		parent(), index_map(s.index_map) { }
+#if WANT_BASE_MULTIDIMENSIONAL_QMAP
+		parent(), 
+#endif
+		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<1,K,T,L>::~multidimensional_qmap() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 bool
 multidimensional_qmap<1,K,T,L>::erase(const K i) {
 	map_iterator probe = index_map.find(i);
@@ -198,7 +212,7 @@ multidimensional_qmap<1,K,T,L>::erase(const K i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 bool
 multidimensional_qmap<1,K,T,L>::erase(const index_arg_type& l) {
 	INVARIANT(l.first == l.second);
@@ -206,7 +220,7 @@ multidimensional_qmap<1,K,T,L>::erase(const index_arg_type& l) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 ostream&
 multidimensional_qmap<1,K,T,L>::dump(ostream& o, const string& pre) const {
 	const_map_iterator i = index_map.begin();
@@ -221,5 +235,5 @@ multidimensional_qmap<1,K,T,L>::dump(ostream& o, const string& pre) const {
 //=============================================================================
 }	// end namespace MULTIDIMENSIONAL_QMAP_NAMESPACE
 
-#endif	// __MULTIDIMENSIONAL_QMAP_TCC__
+#endif	// __UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.10.4 2005/02/06 21:31:07 fang Exp $
+	$Id: multikey.h,v 1.19.10.5 2005/02/07 01:11:16 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -68,6 +68,8 @@ public:
 	typedef	typename traits_type::reverse_iterator	reverse_iterator;
 	typedef	typename traits_type::const_reverse_iterator
 							const_reverse_iterator;
+
+	enum { dim = D };
 
 protected:
 	K	indices[D];
@@ -163,6 +165,8 @@ public:
 	typedef	typename traits_type::reverse_iterator	reverse_iterator;
 	typedef	typename traits_type::const_reverse_iterator
 							const_reverse_iterator;
+
+	enum { dim = 1 };
 
 protected:
 	K	index;
@@ -761,7 +765,6 @@ public:
 
 //=============================================================================
 }	// end namespace MULTIKEY_NAMESPACE
-
 
 
 #endif	// __UTIL_MULTIKEY_H__
