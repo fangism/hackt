@@ -665,7 +665,7 @@ libtool: $(LIBTOOL_DEPS)
 
 @HAVE_DOXYGEN_TRUE@docs: $(DOXYGEN_CONFIG)
 @HAVE_DOXYGEN_TRUE@	$(DOXYGEN) $(DOXYGEN_CONFIG)
-@HAVE_DOXYGEN_TRUE@	(cd dox/latex; $(MAKE) < /dev/null )
+@HAVE_DOXYGEN_TRUE@	(cd dox/latex; $(MAKE) ps pdf < /dev/null )
 @HAVE_DOXYGEN_FALSE@docs:
 @HAVE_DOXYGEN_FALSE@	@$(ECHO) No doxygen found in path.  
 

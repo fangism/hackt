@@ -1,21 +1,24 @@
 to do list:
 
+this TODO list is way outdated... clean TODO list.
+
+UNROLL that sh--
 
 Write objects!!!
-	issues: converting pointers to indices
-	dump binary to file
-	load back in from file
-	linkability: 
+	resolved issues: converting pointers to indices (done)
+	dump binary to file (done)
+	load back in from file (done)
+	linkability: -- not yet
 	translation tables:
-	compare object dumps
+	compare object dumps (done)
 
 specifically:
-	definitions: write used_id_maps
-	type_refs: definition and param references
-	instances: 
-	instance references: 
-	expressions:
-	assignments, connections:
+	definitions: write used_id_maps (done)
+	type_refs: definition and param references (done)
+	instances:  (done)
+	instance references:  (done)
+	expressions: (done)
+	assignments, connections: (done)
 
 make simplest tests possible:
 	empty definitions
@@ -33,6 +36,7 @@ code rework:
 
 type-check and build typedefs
 	need to resolve semantic ambiguity first!
+		typedef a b;	// treated as a definition alias
 	partially done, 
 	still too conservative with resective to template argument matching
 	Need to be able to pass parameter context down recursively first...
