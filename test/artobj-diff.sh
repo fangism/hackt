@@ -1,7 +1,7 @@
 #!/bin/sh
 # "artobj-diff.sh"
 # compares textual object dumps
-#	$Id: artobj-diff.sh,v 1.4.4.1 2005/01/17 22:08:56 fang Exp $
+#	$Id: artobj-diff.sh,v 1.4.4.1.6.1 2005/01/27 00:56:45 fang Exp $
 
 # $1 is the executable for generating the object file, (probably art++2obj)
 #	and producing a textual dump to stderr.  
@@ -37,7 +37,7 @@ $dump $bldroot.artobj 2>&1 | cat > $bldroot.indump
 
 $filter $bldroot.outdump > $bldroot.outdump.filter
 $filter $bldroot.indump > $bldroot.indump.filter
-diff -b $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | cat > $bldroot.objdiff
+diff -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | cat > $bldroot.objdiff
 
 if [ -s $bldroot.objdiff ] ; then
 	echo "$bldroot.objdiff is non-empty!  See $logfile."

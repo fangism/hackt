@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artobjunroll-expect.sh"
-#	$Id: artobjunroll-expect.sh,v 1.1.2.2 2005/01/18 04:25:00 fang Exp $
+#	$Id: artobjunroll-expect.sh,v 1.1.2.2.6.1 2005/01/27 00:56:45 fang Exp $
 
 # $1 is the executable for the unroller, expecting 2 arguments
 # $2 is the executable for reading in the object file, (probably artobjdump)
@@ -51,7 +51,7 @@ else
 fi
 
 # ignore whitespace differences
-diff -bw $bldroot.unrollstderr.filter $bldroot.unrolldump.filter 2>&1 | cat > $bldroot.unrolldiff
+diff -buw $bldroot.unrollstderr.filter $bldroot.unrolldump.filter 2>&1 | cat > $bldroot.unrolldiff
 
 if [ -s $bldroot.unrolldiff ] ; then
 	echo "$bldroot.unrolldiff is non-empty!  See $logfile."
