@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29.2.4 2005/03/11 07:52:39 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29.2.5 2005/03/11 08:08:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -27,12 +27,10 @@
 #include "art_built_ins.h"
 #include "art_object_classification_details.h"
 
-#if USE_INST_STMT_TEMPLATE
 #include "art_object_inst_stmt_param.h"
 #include "art_object_inst_stmt_data.h"
 #include "art_object_inst_stmt_chan.h"
 #include "art_object_inst_stmt_proc.h"
-#endif
 
 #include "sstream.h"
 #include "stacktrace.h"
@@ -841,21 +839,13 @@ param_type_reference::make_instantiation_statement_private(
 		const index_collection_item_ptr_type& d) const {
 	typedef	excl_ptr<instantiation_statement_base>	return_type;
 	INVARIANT(t == this);
-	if (this->must_be_equivalent(*pbool_type_ptr))
-#if USE_INST_STMT_TEMPLATE
+	if (this->must_be_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));
-#else
-		return return_type(new pbool_instantiation_statement(d));
-#endif
-	else if (this->must_be_equivalent(*pint_type_ptr))
-#if USE_INST_STMT_TEMPLATE
+	} else if (this->must_be_equivalent(*pint_type_ptr)) {
 		return return_type(new pint_instantiation_statement(
 			pint_type_ptr, d));
-#else
-		return return_type(new pint_instantiation_statement(d));
-#endif
-	else {
+	} else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		dump(cerr) << " at " << this << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7.12.5 2005/03/11 07:52:37 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.6 2005/03/11 08:08:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -155,13 +155,6 @@ namespace entity {
 	class instantiation_statement_base;
 	class param_instantiation_statement;
 
-#if 0
-	class pbool_instantiation_statement;
-	class pint_instantiation_statement;
-	class data_instantiation_statement;
-	class channel_instantiation_statement;
-	class process_instantiation_statement;
-#else
 	typedef	instantiation_statement<pbool_tag>
 		pbool_instantiation_statement;
 	typedef	instantiation_statement<pint_tag>
@@ -172,7 +165,6 @@ namespace entity {
 		channel_instantiation_statement;
 	typedef	instantiation_statement<process_tag>
 		process_instantiation_statement;
-#endif
 
 // expressions and family
 	class param_instance_reference;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.5 2005/03/11 07:52:38 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.6 2005/03/11 08:08:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -35,9 +35,8 @@
 
 #include "what.tcc"
 #include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.tcc"
+#include "persistent_object_manager.h"
 #include "stacktrace.h"
-#include "static_trace.h"
 
 // conditional defines, after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR

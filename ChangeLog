@@ -8,6 +8,10 @@
 	  Next revision will clean up #if USE_INST_STMT_TEMPLATE.  
 	  Plan: clean-up, merge to trunk, work templateing expr-assignments.  
 
+	* -inststmt-08:
+	  Cleaned up, instantiation_statement template is now "committed."
+	  Another -1000 LOC!
+
 
 2005-03-10	David Fang	<fangism@users.sourceforge.net>
 
