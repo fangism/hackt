@@ -1,12 +1,13 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.7 2005/02/27 22:11:59 fang Exp $
+	$Id: art_parser_prs.h,v 1.8 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
 #define	__ART_PARSER_PRS_H__
 
+#include "art_parser_prs_fwd.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_definition_item.h"
 
@@ -39,7 +40,7 @@ virtual	never_ptr<const object>
 #endif
 };	// end class body_item
 
-typedef node_list<const body_item>		rule_list;
+// typedef node_list<const body_item>		rule_list;
 
 //=============================================================================
 /**

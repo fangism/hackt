@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.20 2005/03/06 04:36:48 fang Exp $
+	$Id: art_parser_token.cc,v 1.21 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -12,10 +12,12 @@
 #include <cstring>		// for a few C-string functions
 #include <exception>
 
-#include "art_switches.h"
-#include "art_parser_debug.h"
+// #include "art_switches.h"
+// #include "art_parser_debug.h"
 
 #include "art_parser_token.h"
+#include "art_parser_token_char.h"
+#include "art_parser_token_string.h"
 
 #include "art_context.h"
 #include "art_object_definition.h"
@@ -330,10 +332,6 @@ token_identifier::rightmost(void) const {
 never_ptr<const object>
 token_identifier::check_build(context& c) const {
 	STACKTRACE("token_identifier::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_identifier::check_build(...)";
-	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const never_ptr<const instance_collection_base>
@@ -518,10 +516,6 @@ token_datatype::what(ostream& o) const {
 #if 0
 never_ptr<const object>
 token_datatype::check_build(context& c) const {
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_datatype::check_build(...): ";
-	)
 	return c.set_datatype_def(*this);
 }
 #endif
@@ -543,10 +537,6 @@ token_paramtype::what(ostream& o) const {
 #if 0
 never_ptr<const object>
 token_paramtype::check_build(context& c) const {
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_paramtype::check_build(...): ";
-	)
 	return c.set_param_def(*this);
 }
 #endif
@@ -563,10 +553,6 @@ token_bool_type::~token_bool_type() { }
 never_ptr<const object>
 token_bool_type::check_build(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_bool_type::check_build(...): ";
-	)
 	// bool_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(bool_def);
 }
@@ -583,10 +569,6 @@ token_int_type::~token_int_type() { }
 never_ptr<const object>
 token_int_type::check_build(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_int_type::check_build(...): ";
-	)
 	// int_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(int_def);
 }
@@ -610,10 +592,6 @@ token_pbool_type::~token_pbool_type() { }
 never_ptr<const object>
 token_pbool_type::check_build(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_pbool_type::check_build(...): ";
-	)
 	// pbool_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(pbool_def);
 }
@@ -635,10 +613,6 @@ token_pint_type::~token_pint_type() { }
 never_ptr<const object>
 token_pint_type::check_build(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_pint_type::check_build(...): ";
-	)
 	// pint_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(pint_def);
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.37 2005/03/04 07:00:05 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.38 2005/03/06 22:45:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -13,7 +13,8 @@
 #include <iostream>
 #include <functional>
 
-#include "art_parser_terminal.h"
+#include "art_parser_delim.h"
+#include "art_parser_token_string.h"
 
 #include "STL/list.tcc"
 #include "hash_qmap.tcc"
@@ -35,9 +36,6 @@
 #include "stacktrace.h"
 #include "static_trace.h"
 #include "persistent_object_manager.tcc"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 STATIC_TRACE_BEGIN("object-definition")

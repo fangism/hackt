@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.4 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_node_list.h,v 1.5 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
@@ -202,7 +202,7 @@ virtual	void
 	The delimiter specifier, D, is used for checking that every other
 	token is separated by a D character (if D is not '\0').  
  */
-NODE_LIST_TEMPLATE_SIGNATURE_DEFAULT
+NODE_LIST_TEMPLATE_SIGNATURE
 class node_list : public node_list_base<T> {
 private:
 	typedef		node_list_base<T>	parent;

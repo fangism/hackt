@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.25 2005/03/04 07:00:06 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.26 2005/03/06 22:45:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -29,7 +29,7 @@
 #include "art_object_instance_collection.h"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// specializations
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_reference, 

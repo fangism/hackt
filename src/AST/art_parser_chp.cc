@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.8 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_chp.cc,v 1.9 2005/03/06 22:45:49 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
@@ -12,6 +12,7 @@
 #include "art_parser_chp.h"
 #include "art_parser_expr_list.h"
 #include "art_parser_token.h"
+#include "art_parser_token_char.h"
 
 #include "what.h"
 
@@ -65,14 +66,7 @@ DESTRUCTOR_INLINE
 body::~body() {
 }
 
-#if 0
-ostream&
-body::what(ostream& o) const {
-	return o << "(chp-body)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(body)
-#endif
 
 line_position 
 body::rightmost(void) const {
@@ -103,14 +97,7 @@ DESTRUCTOR_INLINE
 guarded_command::~guarded_command() {
 }
 
-#if 0
-ostream&
-guarded_command::what(ostream& o) const {
-	return o << "(chp-guarded-cmd)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_command)
-#endif
 
 line_position
 guarded_command::leftmost(void) const {
@@ -142,14 +129,7 @@ else_clause::else_clause(const token_else* g, const terminal* a,
 DESTRUCTOR_INLINE
 else_clause::~else_clause() { }
 
-#if 0
-ostream&
-else_clause::what(ostream& o) const {
-	return o << "(chp-else-clause)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(else_clause)
-#endif
 
 //=============================================================================
 // class skip method definitions
@@ -166,14 +146,7 @@ skip::~skip() { }
 
 // check that nothing appears after skip statement
 
-#if 0
-ostream&
-skip::what(ostream& o) const {
-	return o << "(chp-skip)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(skip)
-#endif
 
 line_position
 skip::leftmost(void) const {
@@ -207,14 +180,7 @@ wait::wait(const terminal* l, const expr* c, const terminal* r) :
 DESTRUCTOR_INLINE
 wait::~wait() { }
 
-#if 0
-ostream&
-wait::what(ostream& o) const {
-	return o << "(chp-wait)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(wait)
-#endif
 
 line_position
 wait::leftmost(void) const {
@@ -253,14 +219,7 @@ assignment::assignment(base_assign* a) : parent_type(),
 DESTRUCTOR_INLINE
 assignment::~assignment() { }
 
-#if 0
-ostream&
-assignment::what(ostream& o) const {
-	return o << "(chp-assignment)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(assignment)
-#endif
 
 line_position
 assignment::leftmost(void) const {
@@ -292,14 +251,7 @@ incdec_stmt::incdec_stmt(base_assign* a) : parent_type(),
 DESTRUCTOR_INLINE
 incdec_stmt::~incdec_stmt() { }
 
-#if 0
-ostream&
-incdec_stmt::what(ostream& o) const {
-	return o << "(chp-assignment)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(incdec_stmt)
-#endif
 
 line_position
 incdec_stmt::leftmost(void) const {
@@ -347,14 +299,7 @@ DESTRUCTOR_INLINE
 comm_list::~comm_list() {
 }
 
-#if 0
-ostream&
-comm_list::what(ostream& o) const {
-	return o << "(chp-comm-list)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(comm_list)
-#endif
 
 line_position
 comm_list::leftmost(void) const {
@@ -385,14 +330,7 @@ send::send(const expr* c, const token_char* d, const expr_list* r) :
 DESTRUCTOR_INLINE
 send::~send() { }
 
-#if 0
-ostream&
-send::what(ostream& o) const {
-	return o << "(chp-send)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(send)
-#endif
 
 line_position
 send::rightmost(void) const {
@@ -417,14 +355,7 @@ receive::receive(const expr* c, const token_char* d, const expr_list* l) :
 DESTRUCTOR_INLINE
 receive::~receive() { }
 
-#if 0
-ostream&
-receive::what(ostream& o) const {
-	return o << "(chp-receive)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(receive)
-#endif
 
 line_position
 receive::rightmost(void) const {
@@ -457,14 +388,7 @@ det_selection::det_selection(const guarded_command* n) :
 DESTRUCTOR_INLINE
 det_selection::~det_selection() { }
 
-#if 0
-ostream&
-det_selection::what(ostream& o) const {
-	return o << "(chp-det-sel)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
-#endif
 
 line_position
 det_selection::leftmost(void) const {
@@ -493,14 +417,7 @@ nondet_selection::nondet_selection(const guarded_command* n) :
 DESTRUCTOR_INLINE
 nondet_selection::~nondet_selection() { }
 
-#if 0
-ostream&
-nondet_selection::what(ostream& o) const {
-	return o << "(chp-nondet-sel)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
-#endif
 
 line_position
 nondet_selection::leftmost(void) const {
@@ -529,14 +446,7 @@ prob_selection::prob_selection(const guarded_command* n) : selection(),
 DESTRUCTOR_INLINE
 prob_selection::~prob_selection() { }
 
-#if 0
-ostream&
-prob_selection::what(ostream& o) const {
-	return o << "(chp-prob-sel)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
-#endif
 
 line_position
 prob_selection::leftmost(void) const {
@@ -565,14 +475,7 @@ loop::loop(const stmt_list* n) : statement(), commands(n) {
 DESTRUCTOR_INLINE
 loop::~loop() { }
 
-#if 0
-ostream&
-loop::what(ostream& o) const {
-	return o << "(chp-loop)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop)
-#endif
 
 line_position
 loop::leftmost(void) const {
@@ -600,14 +503,7 @@ do_until::do_until(const det_selection* n) : statement(),
 DESTRUCTOR_INLINE
 do_until::~do_until() { }
 
-#if 0
-ostream&
-do_until::what(ostream& o) const {
-	return o << "(chp-do-until)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(do_until)
-#endif
 
 line_position
 do_until::leftmost(void) const {
@@ -637,14 +533,7 @@ log::log(const token_keyword* l, const expr_list* n) : statement(),
 DESTRUCTOR_INLINE
 log::~log() { }
 
-#if 0
-ostream&
-log::what(ostream& o) const {
-	return o << "(chp-log)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(log)
-#endif
 
 line_position
 log::leftmost(void) const {

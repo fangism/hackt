@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.11 2005/02/27 22:54:07 fang Exp $
+	$Id: art_main.cc,v 1.12 2005/03/06 22:45:48 fang Exp $
  */
 
 #include <iostream>
@@ -20,7 +20,7 @@ USING_STACKTRACE
 int
 main(int argc, char* argv[]) {
 	STACKTRACE_VERBOSE;
-	excl_ptr<parser::root_body> root;		///< root of the syntax tree
+	excl_ptr<parser::root_body> root;	///< root of the syntax tree
 	never_ptr<const entity::object> top;	///< root type-checked object
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
@@ -33,21 +33,12 @@ catch (...) {
 	return 1;
 }
 
-DEBUG(DEBUG_BASIC, 
-	cerr << "parsing successful... tree built, on to type-checking!" 
-		<< endl;
-)
 #if USING_YACC
 	root = excl_ptr<parser::root_body>(artxx_val._root_body);
 #elif USING_BISON
 	root = AST_root;
 #endif
 if (root) {
-DEBUG(DEBUG_BASIC, 
-	root->what(cerr << "root is a ") << endl;	// what's our top root?
-	cerr << "----------------------------------------------------";
-)
-
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
@@ -59,12 +50,10 @@ catch (...) {
 	return 1;
 }
 }	// end if (root)
-DEBUG(DEBUG_BASIC, cerr << endl)
 
 	if (top) {
 		assert(the_module.get_global_namespace() ==
 			the_context.get_current_namespace());
-DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
 
 //	global->dump(cerr);

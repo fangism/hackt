@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.9 2005/02/27 22:11:59 fang Exp $
+	$Id: art_parser_prs.cc,v 1.10 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -13,6 +13,8 @@
 #include "art_parser_expr.h"		// for id_expr
 #include "art_parser_range.h"
 #include "art_parser_token.h"
+#include "art_parser_token_char.h"
+#include "art_parser_token_string.h"
 
 #include "what.h"
 
@@ -58,14 +60,7 @@ DESTRUCTOR_INLINE
 rule::~rule() {
 }
 
-#if 0
-ostream&
-rule::what(ostream& o) const {
-	return o << "(prs-rule)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(rule)
-#endif
 
 line_position
 rule::leftmost(void) const {
@@ -99,14 +94,7 @@ loop::loop(const token_char* l, const token_char* c1,
 loop::~loop() {
 }
 
-#if 0
-ostream&
-loop::what(ostream& o) const {
-	return o << "(prs-loop)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop)
-#endif
 
 line_position
 loop::leftmost(void) const {
@@ -141,12 +129,7 @@ DESTRUCTOR_INLINE
 body::~body() {
 }
 
-#if 0
-ostream&
-body::what(ostream& o) const { return o << "(prs-body)"; }
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(body)
-#endif
 
 line_position
 body::leftmost(void) const {

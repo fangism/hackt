@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.19 2005/02/27 22:54:07 fang Exp $
+	$Id: art_parser_instance.cc,v 1.20 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -16,14 +16,14 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_debug.h"
-#include "art_switches.h"
+// #include "art_parser_debug.h"
+// #include "art_switches.h"
 #include "art_parser.tcc"
 
 #include "art_parser_instance.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_range_list.h"
-#include "art_parser_terminal.h"
+#include "art_parser_token_string.h"
 #include "art_parser_type.h"
 
 #include "art_context.h"
@@ -134,10 +134,6 @@ alias_list::rightmost(void) const {
 never_ptr<const object>
 alias_list::check_build(context& c) const {
 	STACKTRACE("alias_list::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"alias_list::check_build(...): FINISH ME!";
-	)
 if (size() > 0) {		// non-empty
 	const never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
@@ -244,14 +240,7 @@ DESTRUCTOR_INLINE
 connection_argument_list::~connection_argument_list() {
 }
 
-#if 0
-ostream&
-connection_argument_list::what(ostream& o) const {
-	return o << "(connection-arg-list)";       
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_argument_list)
-#endif
 
 /**
 	Type checks a expression list in the connection argument context.
@@ -262,10 +251,6 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_argument_list)
 never_ptr<const object>
 connection_argument_list::check_build(context& c) const {
 	STACKTRACE("connection_argument_list::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"connection_argument_list::check_build(...): " << endl;
-	)
 	// enter the connection argument context
 	const never_ptr<const object>
 		o(expr_list::check_build(c));
@@ -345,10 +330,6 @@ instance_base::rightmost(void) const {
 never_ptr<const object>
 instance_base::check_build(context& c) const {
 	STACKTRACE("instance_base::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "instance_base::check_build(...): ";
-	)
 
 	// uses c.current_fundamental_type
 	const never_ptr<const instance_collection_base>
@@ -399,10 +380,6 @@ instance_array::rightmost(void) const {
 never_ptr<const object>
 instance_array::check_build(context& c) const {
 	STACKTRACE("instance_array::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"instance_array::check_build(...): " << endl;
-	)
 	if (ranges) {
 		ranges->check_build(c);
 		// expecting ranges and singe integer expressions
@@ -463,14 +440,7 @@ DESTRUCTOR_INLINE
 instance_declaration::~instance_declaration() {
 }
 
-#if 0
-ostream&
-instance_declaration::what(ostream& o) const {
-	return o << "(instance-decl)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_declaration)
-#endif
 
 line_position
 instance_declaration::leftmost(void) const {
@@ -485,10 +455,6 @@ instance_declaration::rightmost(void) const {
 never_ptr<const object>
 instance_declaration::check_build(context& c) const {
 	STACKTRACE("instance_declaration::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"instance_declaration::check_build(...): ";
-	)
 	type->check_build(c);
 	// useless return value
 	const count_ptr<const fundamental_type_reference>
@@ -523,14 +489,7 @@ instance_connection::~instance_connection() {
 
 // remember to check for declaration context when checking id
 
-#if 0
-ostream&
-instance_connection::what(ostream& o) const {
-	return o << "(actuals-connection)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_connection)
-#endif
 
 line_position
 instance_connection::leftmost(void) const {
@@ -547,10 +506,6 @@ never_ptr<const object>
 instance_connection::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("instance_connection::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"instance_connection::check_build(...): ";
-	)
 	const never_ptr<const object>
 		o(instance_base::check_build(c));
 	if (!o) {
@@ -609,14 +564,7 @@ DESTRUCTOR_INLINE
 connection_statement::~connection_statement() {
 }
 
-#if 0
-ostream&
-connection_statement::what(ostream& o) const {
-	return o << "(connection-statement)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_statement)
-#endif
 
 line_position
 connection_statement::leftmost(void) const {
@@ -635,10 +583,6 @@ connection_statement::rightmost(void) const {
 never_ptr<const object>
 connection_statement::check_build(context& c) const {
 	STACKTRACE("connection_statement::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"connection_statement::check_build(...): ";
-	)
 	lvalue->check_build(c);
 	// useless return value, expect instance_reference_base on object_stack
 	count_ptr<const object> o(c.pop_top_object_stack());
@@ -715,14 +659,7 @@ DESTRUCTOR_INLINE
 instance_alias::~instance_alias() {
 }
 
-#if 0
-ostream&
-instance_alias::what(ostream& o) const {
-	return o << "(alias-assign)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_alias)
-#endif
 
 line_position
 instance_alias::leftmost(void) const {
@@ -745,10 +682,6 @@ instance_alias::rightmost(void) const {
 never_ptr<const object>
 instance_alias::check_build(context& c) const {
 	STACKTRACE("instance_alias::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"instance_alias::check_build(...)";
-	)
 	// declare and register the instance first
 	never_ptr<const object>
 		o(instance_base::check_build(c));
@@ -783,14 +716,7 @@ DESTRUCTOR_INLINE
 loop_instantiation::~loop_instantiation() {
 }
 
-#if 0
-ostream&
-loop_instantiation::what(ostream& o) const {
-	return o << "(loop-instance)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_instantiation)
-#endif
 
 line_position
 loop_instantiation::leftmost(void) const {
@@ -826,14 +752,7 @@ DESTRUCTOR_INLINE
 guarded_definition_body::~guarded_definition_body() {
 }       
 
-#if 0
-ostream&
-guarded_definition_body::what(ostream& o) const {      
-	return o << "(guarded-def-body)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_definition_body)
-#endif
 
 line_position
 guarded_definition_body::leftmost(void) const {
@@ -874,14 +793,7 @@ DESTRUCTOR_INLINE
 conditional_instantiation::~conditional_instantiation() {
 }
 
-#if 0
-ostream&
-conditional_instantiation::what(ostream& o) const {
-	return o << "(conditional-instance)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(conditional_instantiation)
-#endif
 
 line_position
 conditional_instantiation::leftmost(void) const {

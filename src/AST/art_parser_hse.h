@@ -1,14 +1,15 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.7 2005/02/27 22:11:58 fang Exp $
+	$Id: art_parser_hse.h,v 1.8 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
 #define	__ART_PARSER_HSE_H__
 
+#include "art_parser_hse_fwd.h"
 #include "art_parser_definition_item.h"
-#include "art_parser_terminal.h"
+#include "art_parser_token_string.h"
 #include "art_parser_statement.h"
 
 namespace ART {

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.49 2005/03/06 04:36:47 fang Exp $
+#	$Id: Makefile.am,v 1.50 2005/03/06 22:45:48 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -101,6 +101,10 @@ AST_CC_FILES = \
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_fwd.h \
+	AST/art_parser_chp_fwd.h \
+	AST/art_parser_hse_fwd.h \
+	AST/art_parser_prs_fwd.h \
+	AST/art_parser_delim.h \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
 	AST/art_parser_node_list.tcc \
@@ -115,9 +119,10 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_root_item.h \
 	AST/art_parser_statement.h \
 	AST/art_parser_terminal.h \
+	AST/art_parser_token_char.h \
+	AST/art_parser_token_string.h \
 	AST/art_parser_type.h \
-	AST/art_parser_type_base.h \
-	AST/art_parser_debug.h
+	AST/art_parser_type_base.h
 
 # all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
@@ -178,8 +183,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_type_hash.h
 
 UTIL_HEADER_FILES = \
-	util/art_debug.h \
-	util/art_switches.h \
 	util/macros.h \
 	util/STL/allocator_fwd.h \
 	util/STL/construct_fwd.h \
@@ -408,8 +411,7 @@ parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-par
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
 
-AM_CPPFLAGS = -DREGRESSION_TEST_MODE \
-	-I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
+AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
 	-I$(srcdir)/lexer -I$(srcdir)/AST -I$(srcdir)/Object \
 	-Iparser
 # will need _build directories for "make distcheck" with auto-generated headers

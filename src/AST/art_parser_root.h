@@ -1,13 +1,13 @@
 /**
 	\file "art_parser_root.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root.h,v 1.3 2005/02/25 07:23:56 fang Exp $
+	$Id: art_parser_root.h,v 1.4 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef __ART_PARSER_ROOT_H__
 #define __ART_PARSER_ROOT_H__
 
-#include "art_parser_base.h"
+#include "art_parser_node_list.h"
 
 namespace ART {
 namespace parser {

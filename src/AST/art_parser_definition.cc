@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.16 2005/03/01 04:50:53 fang Exp $
+	$Id: art_parser_definition.cc,v 1.17 2005/03/06 22:45:49 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -19,14 +19,15 @@
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
 
-#include "art_parser_debug.h"
-#include "art_switches.h"
+// #include "art_parser_debug.h"
+// #include "art_switches.h"
 #include "art_parser.tcc"
 
 #include "art_parser_expr_base.h"
 #include "art_parser_definition.h"
 #include "art_parser_formal.h"
-#include "art_parser_terminal.h"
+#include "art_parser_token_char.h"
+#include "art_parser_token_string.h"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"
@@ -117,14 +118,7 @@ DESTRUCTOR_INLINE
 user_data_type_prototype::~user_data_type_prototype() {
 }
 
-#if 0
-ostream&
-user_data_type_prototype::what(ostream& o) const {
-	return o << "(user-data-type-proto)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_data_type_prototype)
-#endif
 
 line_position
 user_data_type_prototype::leftmost(void) const {
@@ -141,10 +135,6 @@ user_data_type_prototype::rightmost(void) const {
 never_ptr<const object>
 user_data_type_prototype::check_build(context& c) const {
 	STACKTRACE("user_data_type_prototype::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"user_data_type_prototype::check_build(...): " << endl;
-	)
 #if 0
 	never_ptr<const object> o;
 	c.declare_datatype(*this);	// really only need name
@@ -179,14 +169,7 @@ user_data_type_def::user_data_type_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 user_data_type_def::~user_data_type_def() { }
 
-#if 0
-ostream&
-user_data_type_def::what(ostream& o) const {
-	return o << "(user-data-type-def)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_data_type_def)
-#endif
 
 line_position
 user_data_type_def::leftmost(void) const {
@@ -210,10 +193,6 @@ user_data_type_def::check_build(context& c) const {
 never_ptr<const object>
 user_data_type_def::check_build(context& c) const {
 	never_ptr<const object> o;
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"user_data_type_def::check_build(...): " << endl;
-	)
 	c.open_datatype(*this);	// really only need name
 	o = bdt->check_build(c);
 	assert(o);
@@ -273,14 +252,7 @@ enum_prototype::enum_prototype(const token_keyword* e,
 
 enum_prototype::~enum_prototype() { }
 
-#if 0
-ostream&
-enum_prototype::what(ostream& o) const {
-	return o << "(enum-declaration)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(enum_prototype)
-#endif
 
 line_position
 enum_prototype::leftmost(void) const {
@@ -343,14 +315,7 @@ enum_def::enum_def(const token_keyword* e, const token_identifier* i,
 enum_def::~enum_def() {
 }
 
-#if 0
-ostream&
-enum_def::what(ostream& o) const {
-	return o << "(enum-definition)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(enum_def)
-#endif
 
 line_position
 enum_def::leftmost(void) const {
@@ -436,14 +401,7 @@ user_chan_type_prototype::user_chan_type_prototype(
 DESTRUCTOR_INLINE
 user_chan_type_prototype::~user_chan_type_prototype() { }
 
-#if 0
-ostream&
-user_chan_type_prototype::what(ostream& o) const {
-	return o << "(user-chan-type-proto)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_chan_type_prototype)
-#endif
 
 line_position
 user_chan_type_prototype::leftmost(void) const {
@@ -482,14 +440,7 @@ user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 user_chan_type_def::~user_chan_type_def() { }
 
-#if 0
-ostream&
-user_chan_type_def::what(ostream& o) const {
-	return o << "(user-chan-type-def)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_chan_type_def)
-#endif
 
 line_position
 user_chan_type_def::leftmost(void) const {
@@ -595,14 +546,7 @@ DESTRUCTOR_INLINE
 process_prototype::~process_prototype() {
 }
 
-#if 0
-ostream&
-process_prototype::what(ostream& o) const {
-	return o << "(process-prototype)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_prototype)
-#endif
 
 line_position
 process_prototype::leftmost(void) const {
@@ -640,14 +584,7 @@ process_def::process_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 process_def::~process_def() { }
 
-#if 0
-ostream&
-process_def::what(ostream& o) const {
-	return o << "(process-definition)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_def)
-#endif
 
 line_position
 process_def::leftmost(void) const {
@@ -666,10 +603,6 @@ process_def::rightmost(void) const {
 never_ptr<const object>
 process_def::check_build(context& c) const {
 	STACKTRACE("process_def::check_build()");
-	TRACE_CHECK_BUILD(
-		get_name().what(cerr << c.auto_indent() << 
-			"process_def::check_build(...): ");
-	)
 	never_ptr<const object>
 		o(process_signature::check_build(c));
 	if (!o) {
@@ -732,14 +665,7 @@ typedef_alias::typedef_alias(const template_formal_decl_list* t,
 
 typedef_alias::~typedef_alias() { }
 
-#if 0
-ostream&
-typedef_alias::what(ostream& o) const {
-	return o << "(typedef-alias)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(typedef_alias)
-#endif
 
 line_position
 typedef_alias::leftmost(void) const {

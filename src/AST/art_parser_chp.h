@@ -1,13 +1,14 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.6 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_chp.h,v 1.7 2005/03/06 22:45:49 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
 #define	__ART_PARSER_CHP_H__
 
-#include "art_parser_terminal.h"
+#include "art_parser_chp_fwd.h"
+#include "art_parser_token_string.h"
 #include "art_parser_statement.h"
 #include "art_parser_definition_item.h"
 
@@ -45,7 +46,7 @@ virtual	never_ptr<const object>
 #endif
 };
 
-typedef	node_list<const statement,semicolon>	stmt_list;
+// typedef	node_list<const statement,semicolon>	stmt_list;
 
 //=============================================================================
 /// CHP body is just a list of statements

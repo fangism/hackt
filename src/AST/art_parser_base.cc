@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.16 2005/03/01 04:50:53 fang Exp $
+	$Id: art_parser_base.cc,v 1.17 2005/03/06 22:45:48 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -16,12 +16,13 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_debug.h"
-#include "art_switches.h"
+// #include "art_parser_debug.h"
+// #include "art_switches.h"
 #include "art_parser.tcc"
 
 #include "art_parser_expr_base.h"
 #include "art_parser_token.h"
+#include "art_parser_token_char.h"
 #include "art_parser_root_item.h"
 #include "art_parser_type.h"
 #include "art_parser_identifier.h"
@@ -188,10 +189,6 @@ type_id::rightmost(void) const {
 never_ptr<const object>
 type_id::check_build(context& c) const {
 	STACKTRACE("type_id::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() <<
-			"type_id::check_build(...): " << endl;
-	)
 	const never_ptr<const definition_base>
 		d(c.lookup_definition(*base));
 	if (!d) {
@@ -222,14 +219,7 @@ DESTRUCTOR_INLINE
 chan_type::~chan_type() {
 }
 
-#if 0
-ostream&
-chan_type::what(ostream& o) const {
-	return o << "(chan-type)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(chan_type)
-#endif
 
 line_position
 chan_type::leftmost(void) const {
@@ -329,14 +319,7 @@ incdec_stmt::release_op(void) {
 }
 #endif
 
-#if 0
-ostream&
-incdec_stmt::what(ostream& o) const {
-	return o << "(inc/dec-stmt)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(incdec_stmt)
-#endif
 
 line_position
 incdec_stmt::leftmost(void) const {
@@ -412,14 +395,7 @@ assign_stmt::release_rhs(void) {
 }
 #endif
 
-#if 0
-ostream&
-assign_stmt::what(ostream& o) const {
-	return o << "(assign-stmt)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(assign_stmt)
-#endif
 
 line_position
 assign_stmt::leftmost(void) const {
@@ -537,10 +513,6 @@ namespace_body::rightmost(void) const {
 never_ptr<const object>
 namespace_body::check_build(context& c) const {
 	STACKTRACE("namespace_body::check_build()");
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() << 
-			"namespace_body::check_build(...): " << *name;
-	)
 	// use context lookup: see if namespace already exists in super-scope
 		// name_space* ns = c.lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
@@ -551,9 +523,6 @@ namespace_body::check_build(context& c) const {
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
-//	TRACE_CHECK_BUILD(
-//		cerr << c.auto_indent() << "leaving namespace: " << *name;
-//	)
 	c.close_namespace();
 
 	// if no errors, return pointer to the namespace just processed
@@ -653,14 +622,7 @@ DESTRUCTOR_INLINE
 using_namespace::~using_namespace() {
 }
 
-#if 0
-ostream&
-using_namespace::what(ostream& o) const {
-	return o << "(using-namespace)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(using_namespace)
-#endif
 
 line_position
 using_namespace::leftmost(void) const {
@@ -680,18 +642,10 @@ never_ptr<const object>
 using_namespace::check_build(context& c) const {
 	STACKTRACE("using_namespace::check_build()");
 if (alias) {
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() << 
-			"using_namespace::check_build(...) (alias): "
-			<< *id;
-	)
+	// (alias)
 	c.alias_namespace(*id->get_id(), *alias);
 } else {
-	TRACE_CHECK_BUILD(
-		cerr << c.auto_indent() << 
-			"using_namespace::check_build(...) (using): "
-			<< *id;
-	)
+	// (using)
 	// if aliased... print all, report as error (done inside)
 	c.using_namespace(*id->get_id());
 }
@@ -711,14 +665,7 @@ DESTRUCTOR_INLINE
 concrete_type_ref::~concrete_type_ref() {
 }
 
-#if 0
-ostream&
-concrete_type_ref::what(ostream& o) const {
-	return o << "(type-ref)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(concrete_type_ref)
-#endif
 
 line_position
 concrete_type_ref::leftmost(void) const {
@@ -756,10 +703,6 @@ concrete_type_ref::check_build(context& c) const {
 	STACKTRACE("concrete_type_ref::check_build()");
 
 	never_ptr<const object> o;
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"concrete_type_ref::check_build(...): ";
-	)
 
 	// sets context's current definition
 	o = base->check_build(c);

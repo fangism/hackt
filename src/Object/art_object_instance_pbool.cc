@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.16 2005/03/04 07:00:08 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.17 2005/03/06 22:45:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -32,9 +32,6 @@
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 // stat of static initializations

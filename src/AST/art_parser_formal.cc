@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.14 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_formal.cc,v 1.15 2005/03/06 22:45:49 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -16,14 +16,15 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_debug.h"
-#include "art_switches.h"
+// #include "art_parser_debug.h"
+// #include "art_switches.h"
 #include "art_parser.tcc"
 
 #include "art_parser_formal.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_range_list.h"
 #include "art_parser_token.h"
+#include "art_parser_token_char.h"
 #include "art_parser_type.h"
 
 #include "art_context.h"
@@ -70,14 +71,7 @@ data_param_id::data_param_id(const token_identifier* i,
 data_param_id::~data_param_id() {
 }
 
-#if 0
-ostream&
-data_param_id::what(ostream& o) const {
-	return o << "(data-param-id)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(data_param_id)
-#endif
 
 line_position
 data_param_id::leftmost(void) const {
@@ -117,14 +111,7 @@ data_param_decl::data_param_decl(const concrete_type_ref* t,
 data_param_decl::~data_param_decl() {
 }
 
-#if 0
-ostream&
-data_param_decl::what(ostream& o) const {
-	return o << "(data-param-decl)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(data_param_decl)
-#endif
 
 line_position
 data_param_decl::leftmost(void) const {
@@ -198,10 +185,6 @@ port_formal_id::check_build(context& c) const {
 	STACKTRACE("port_formal_id::check_build()");
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"port_formal_id::check_build(...): ";
-	)
 
 	if (dim) {
 		dim->check_build(c);	// useless return value
@@ -244,14 +227,7 @@ DESTRUCTOR_INLINE
 port_formal_decl::~port_formal_decl() {
 }
 
-#if 0
-ostream&
-port_formal_decl::what(ostream& o) const {
-	return o << "(port-formal-decl)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(port_formal_decl)
-#endif
 
 line_position
 port_formal_decl::leftmost(void) const {
@@ -367,10 +343,6 @@ template_formal_id::check_build(context& c) const {
 	STACKTRACE("template_formal_id::check_build()");
 	never_ptr<const instance_collection_base> t;
 		// should be param_instantiation
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"template_formal_id::check_build(...): ";
-	)
 	// there should be some open definition already
 	// type should already be set in the context
 	count_ptr<const param_expr> default_val;
@@ -430,14 +402,7 @@ DESTRUCTOR_INLINE
 template_formal_decl::~template_formal_decl() {
 }
 
-#if 0
-ostream&
-template_formal_decl::what(ostream& o) const {
-	return o << "(template-formal-decl)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_formal_decl)
-#endif
 
 line_position
 template_formal_decl::leftmost(void) const {
@@ -457,10 +422,6 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent()) <<
-			"template_formal_decl::check_build(...): ";
-	)
 	type->check_build(c);	// sets_current_definition_reference
 	// useless return value, always NULL
 	const never_ptr<const definition_base>

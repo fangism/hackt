@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.20 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_base.h,v 1.21 2005/03/06 22:45:49 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -54,18 +54,6 @@ namespace parser {
 // forward declarations
 
 class context;		// defined in "Object/art_context.h"
-
-//=============================================================================
-// some constant delimiter strings, defined in art_parser.cc
-// these are used as delimiter template arguments for node_list
-extern	const char	none[];
-extern	const char	comma[];
-extern	const char	semicolon[];
-extern	const char	scope[];
-extern	const char	thickbar[];
-extern	const char	colon[];
-extern	const char	alias[];
-extern	const char	pound[];	// calling it "hash" would be confusing
 
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type

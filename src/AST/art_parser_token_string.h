@@ -1,0 +1,99 @@
+/**
+	\file "art_parser_token_string.h"
+	Base set of classes for the ART parser.  
+	These classes are implemented in "art_parser_token.cc"
+	$Id: art_parser_token_string.h,v 1.1 2005/03/06 22:45:51 fang Exp $
+ */
+
+#ifndef __ART_PARSER_TOKEN_STRING_H__
+#define __ART_PARSER_TOKEN_STRING_H__
+
+#include "art_parser_terminal.h"
+#include "art_parser_expr_base.h"
+
+//=============================================================================
+namespace ART {
+namespace parser {
+//=============================================================================
+/**
+	This class extends functionality of the standard string for
+	the lexer and parser.
+	Subclasses thereof are intended for use by the lexer.
+	This class also keeps track of the line and column position in a
+	file for a given token.
+	For now, this class is used for punctuation tokens.  How silly.
+	For identifier, use token_identifier.
+	For quoted strings, use token_quoted_string.
+ */
+class token_string : public string, public terminal {
+public:
+/// uses base class' constructors to copy text and record position
+	explicit
+	token_string(const char* s) : node(), string(s), terminal() { }
+
+	/// default copy-constructor
+	token_string(const token_string& s) : node(), string(s), terminal() { }
+
+virtual ~token_string() { }
+
+virtual int
+	string_compare(const char* d) const;
+
+virtual ostream&
+	what(ostream& o) const;
+
+virtual line_position
+	rightmost(void) const;
+
+// never really check the type of a string yet (no built-in type yet)
+// virtual	never_ptr<const object> check_build(context& c) const;
+};	// end class token_string
+
+//-----------------------------------------------------------------------------
+/**
+	Class for single plain identifiers, used in declarations.
+	Final, no sub-classes.
+ */
+class token_identifier : public token_string, public expr {
+					// consider postfix_expr?
+public:
+	explicit
+	token_identifier(const char* s) : node(), token_string(s), expr() { }
+
+	token_identifier(const token_identifier& i) :
+		node(), token_string(i), expr() { }
+
+	~token_identifier() { }
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& c) const;
+};      // end class token_identifier
+
+//-----------------------------------------------------------------------------
+/// keyword version of token_string class, not necessarily an expr
+class token_keyword : public token_string {
+public:
+	explicit
+	token_keyword(const char* s) : token_string(s) { }
+
+virtual ~token_keyword() { }
+
+virtual ostream&
+	what(ostream& o) const;
+};	// end class token_keyword
+
+//=============================================================================
+}	// end namespace parser
+}	// end namespace ART
+
+#endif	// __ART_PARSER_TOKEN_STRING_H__
+

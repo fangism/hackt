@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-03-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18:
+	  Major cleanup.
+	  Stripped archaic debugging files "art_debug.h"
+		  "art_parser_debug.h" "art_switches.h".
+	  Removed any debug macros that were derived from those files.  
+	  Split some more AST header files to reduce inclusion of
+		unnecesary header files, by recursion.
+
+
 2005-03-05	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-17-merged-chunkmap-03:

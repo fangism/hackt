@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.10 2005/02/27 22:54:16 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.11 2005/03/06 22:45:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -21,9 +21,6 @@
 
 #include "indent.h"
 #include "stacktrace.h"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 namespace ART {

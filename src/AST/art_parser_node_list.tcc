@@ -2,7 +2,7 @@
 	\file "art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.3 2005/03/01 04:50:54 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.4 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_LIST_TCC__
@@ -12,7 +12,7 @@
 
 #include "STL/list.tcc"
 
-#include "art_parser_debug.h"
+// #include "art_parser_debug.h"
 #include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
 #include "art_parser_node_position.h"
 #include "art_context.h"

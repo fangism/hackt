@@ -2,7 +2,7 @@
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser.tcc,v 1.13 2005/03/01 04:50:53 fang Exp $
+	$Id: art_parser.tcc,v 1.14 2005/03/06 22:45:48 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -12,7 +12,7 @@
 
 #include "STL/list.tcc"
 
-#include "art_parser_debug.h"
+// #include "art_parser_debug.h"
 #include "art_parser_terminal.h"
 #include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
 #include "art_context.h"
@@ -152,10 +152,6 @@ node_list_base<T>::check_build(context& c) const {
 
 	never_ptr<const object> ret(NULL);
 	const_iterator i = begin();
-	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent() <<
-			"node_list_base<T>::check_build(...): ");
-	)
 	for( ; i!=end(); i++) {
 	if (*i) {
 		// check returned value for failure

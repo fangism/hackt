@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.19 2005/03/05 02:49:57 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.20 2005/03/06 22:45:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -34,8 +34,8 @@
 #include "qmap.tcc"
 #include "STL/list.tcc"
 
-#include "art_parser_debug.h"
-#include "art_parser_terminal.h"
+// #include "art_parser_debug.h"
+#include "art_parser_token_string.h"
 #include "art_parser_identifier.h"
 
 #include "art_object_namespace.h"
@@ -67,6 +67,7 @@
 #endif
 
 //=============================================================================
+#if 0
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 // these are pretty much OBSOLETE, remove them some time
 
@@ -106,6 +107,7 @@
   #define	TRACE_DATATYPE_SEARCH		MASTER_DEBUG_LEVEL
 #endif
 
+#endif
 
 //=============================================================================
 
@@ -965,9 +967,10 @@ name_space::add_open_namespace(const string& n) {
 			return never_ptr<name_space>(NULL);
 		} else {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
-			DEBUG(TRACE_NAMESPACE_NEW, 
-				cerr << n << " is already exists as subspace, "
-					"re-opening")
+#if 0
+			cerr << n << " is already exists as subspace, "
+					"re-opening";
+#endif
 			ret = lookup_object_here_with_modify(n)
 				.is_a<name_space>();
 //			INVARIANT(lookup_object_here(n).is_a<name_space>());
@@ -976,7 +979,7 @@ name_space::add_open_namespace(const string& n) {
 		INVARIANT(ret);
 	} else {
 		// create it, linking this as its parent
-		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
+//		cerr << " ... creating new";
 		excl_ptr<name_space>
 			new_ns(new name_space(
 				n, never_ptr<const name_space>(this)));
@@ -988,8 +991,7 @@ name_space::add_open_namespace(const string& n) {
 	// silly sanity checks
 	INVARIANT(ret->parent == this);
 	INVARIANT(ret->key == n);
-	DEBUG(TRACE_NAMESPACE_NEW, 
-		cerr << " with parent: " << ret->parent->key)
+//	cerr << " with parent: " << ret->parent->key;
 	return ret;
 }
 
@@ -1063,9 +1065,10 @@ name_space::add_using_directive(const qualified_id& n) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	DEBUG(TRACE_NAMESPACE_USING, 
-		cerr << endl << "adding using-directive in space: " 
-			<< get_qualified_name())
+#if 0
+	cerr << endl << "adding using-directive in space: " 
+		<< get_qualified_name();
+#endif
 	// see if namespace has already been declared within scope of search
 	// remember: the qualified_id is a suffix to be appended onto root
 	// find it/them, record to list
@@ -1125,9 +1128,10 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	DEBUG(TRACE_NAMESPACE_ALIAS, 
-		cerr << endl << "adding using-alias in space: " 
-			<< get_qualified_name() << " as " << a)
+#if 0
+	cerr << endl << "adding using-alias in space: " 
+		<< get_qualified_name() << " as " << a;
+#endif
 
 	// need to force use of the constant version of the lookup
 	// because this method is non-const.  
@@ -1227,9 +1231,10 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << "query_namespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
+#if 0
+	cerr << "query_namespace_match: " << id 
+		<< " in " << get_qualified_name() << endl;
+#endif
 
 	if (id.empty())	{	// what if it's absolute and empty?
 		return (id.is_absolute()) ? get_global_namespace() : 
@@ -1240,7 +1245,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 	const count_ptr<const token_identifier>& tidp(*i);
 	NEVER_NULL(tidp);
 	const token_identifier& tid(*tidp);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
 	never_ptr<const name_space>
 		ns = (id.is_absolute()) ? get_global_namespace()
 		: never_ptr<const name_space>(this);
@@ -1254,7 +1258,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 				tidp2(i->is_a<const token_identifier>());
 			NEVER_NULL(tidp2);
 			const token_identifier& tid2(*tidp2);
-			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			const never_ptr<const name_space>
@@ -1289,9 +1292,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is just a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << endl << "query_subnamespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
+#if 0
+	cerr << endl << "query_subnamespace_match: " << id 
+		<< " in " << get_qualified_name() << endl;
+#endif
 
 	// here, does NOT check for global-absoluteness
 	if (id.empty())	{	// what if it's absolute and empty?
@@ -1318,8 +1322,6 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	for (i++; ns && i!=id.end(); i++) {
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
-		// tid = i->is_a<const token_identifier>();
-		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 		const never_ptr<const name_space>
 			next = ns->lookup_object_here(tid2).is_a<const name_space>();
 		// if not found in subspaces, check aliases list
@@ -1349,9 +1351,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 void
 name_space::
 query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << endl << "query_import_namespace_match: " << id 
-			<< " in " << get_qualified_name())
+#if 0
+	cerr << endl << "query_import_namespace_match: " << id 
+		<< " in " << get_qualified_name();
+#endif
 	{
 		const never_ptr<const name_space>
 			ret(query_subnamespace_match(id));

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.28 2005/03/05 02:49:57 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29 2005/03/06 22:45:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "art_parser_terminal.h"	// so token_identifier : string
+#include "art_parser_token_string.h"	// so token_identifier : string
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance_bool.h"
@@ -30,9 +30,8 @@
 #include "stacktrace.h"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// specializations
 
-//=============================================================================
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)

@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.2 2005/02/27 22:11:58 fang Exp $
+	$Id: art_parser_fwd.h,v 1.3 2005/03/06 22:45:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
 #define	__ART_PARSER_FWD_H__
+
+#include "art_parser_delim.h"
 
 namespace ART {
 namespace parser {
@@ -23,10 +25,10 @@ class token_keyword;
 #if 0
 template <class T>
 class node_list_base;			// defined in "art_parser.tcc"
-
-template <class T, const char[]>
-class node_list;			// defined in "art_parser.tcc"
 #endif
+
+template <class T, const char[] = none>
+class node_list;			// defined in "art_parser.tcc"
 
 class expr_list;
 class root_item;
