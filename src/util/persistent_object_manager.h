@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.11 2004/12/15 23:31:14 fang Exp $
+	$Id: persistent_object_manager.h,v 1.11.10.1 2005/01/23 00:48:54 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -183,6 +183,7 @@ public:
 	int register_persistent_type(void);
 
 private:
+#if 0
 	/**
 		Why naked pointer?  because objects of non-built-in type
 		are not guaranteed to be initialized.  
@@ -202,13 +203,14 @@ private:
 	static
 	excl_ptr<reconstruction_function_map_type>
 	the_reconstruction_function_map_ptr_wrapped;
+#endif
 
 	/**
 		The safe accessor to global private static table.  
 	 */
 	static
 	reconstruction_function_map_type&
-	get_reconstruction_function_map(void);
+	reconstruction_function_map(void);
 
 public:
 	static

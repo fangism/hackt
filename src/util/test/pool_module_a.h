@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_a.h"
 	Header for one module of a multimodule memory pool test.
-	$Id: pool_module_a.h,v 1.1.2.1 2005/01/22 06:38:30 fang Exp $
+	$Id: pool_module_a.h,v 1.1.2.2 2005/01/23 00:48:59 fang Exp $
  */
 
 #ifndef	__POOL_MODULE_A_H__
@@ -27,7 +27,7 @@ public:
 };	// end class twiddle_dum
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT_ROBUST_DECLARATION(twiddle_dum)
+	SPECIALIZE_UTIL_WHAT_DECLARATION(twiddle_dum)
 }	// end namespace util
 
 #endif	// __POOL_MODULE_A_H__

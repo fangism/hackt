@@ -1,5 +1,47 @@
 "ChangeLog"
 
+2005-01-22	David Fang	<fangism@users.sourceforge.net>
+
+	* The lesson of the day is "function-local static."
+
+	* ARTXX-00-01-04-object-00-08-fixutil:
+	  Sub-branch created for introducing new improvements and fixes to
+	  the util library.  
+	  Modules affected: stacktrace, list_vector_pool, what.
+	  list_vector_pool: introduced more robust version of macros
+		for overriding new and delete operators
+		-- new version is practically immune to adverse ordering
+		of global static initialization, which is an issue when
+		cross-module allocators are invoked; there must be a way
+		to guarantee on-demand initialization:
+			solution: function-local static instances!
+		observation: consequence: out of conservativeness, 
+			such static allocators will not be destroyed
+			upon program termination IF the pool is referenced
+			by multiple modules.  (won't be able to get leak 
+			diagnostics from such pools)
+		side note: tried and abandoned a reference-count scheme.
+	what: updated interface and default macro definition
+		now must call ::name() by function (no arg), 
+		to match the typeinfo interface.  
+		All definitions of name() store function-local static
+		copies of the string, which are initialized upon 
+		first entry to the function, so performance is still
+		very efficient.
+		This revision should be robust to all link-orderings
+		so it is safe to reference ::name across modules.  
+	stacktrace: replaced class static stack structures
+		with function-local static objects.
+		This makes stacktrace safe to use for debugging
+		during static initialization and destruction.  
+		Also added ostream check protection, in case ostream
+		is destroyed before a trace is printed.  
+	persistent_object_manager:
+		you guessed it, replaced static members 
+		(reconstruction_function_tbale) with 
+		function-local static in the referencing static function.  
+
+
 2005-01-21	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-objject-00-08:

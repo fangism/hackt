@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.5.10.1 2005/01/22 20:52:51 fang Exp $
+	$Id: stacktrace.cc,v 1.5.10.2 2005/01/23 00:48:55 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -18,8 +18,6 @@
 #include "STL/list.tcc"
 #include "qmap.tcc"
 #include "memory/pointer_classes.h"
-
-#define	FUNCTION_LOCAL_STATIC_STACKTRACE	1
 
 namespace util {
 USING_LIST
@@ -51,37 +49,10 @@ public:
 	typedef	stack<int>	stack_echo_type;
 	/// the type of stack used to track stream redirections
 	typedef	stack<ostream*>	stack_streams_type;
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-private:
-	static stack_text_type*			stack_text;
-	static excl_ptr<stack_text_type>	stack_text_ptr;
-#endif
 public:
 	static stack_text_type&			get_stack_text(void);
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-private:
-	// stream-independent indentation
-	static stack_text_type*			stack_indent;
-	static excl_ptr<stack_text_type>	stack_indent_ptr;
-#endif
-public:
 	static stack_text_type&			get_stack_indent(void);
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-private:
-	static stack_echo_type*			stack_echo;
-	static excl_ptr<stack_echo_type>	stack_echo_ptr;
-#endif
-public:
 	static stack_echo_type&			get_stack_echo(void);
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-private:
-	static stack_streams_type*		stack_streams;
-	static excl_ptr<stack_streams_type>	stack_streams_ptr;
-#endif
-public:
 	static stack_streams_type&		get_stack_streams(void);
 
 private:
@@ -106,114 +77,42 @@ public:
 //-----------------------------------------------------------------------------
 // static construction
 
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-stacktrace::manager::stack_text_type*
-stacktrace::manager::stack_text = NULL;
-
-excl_ptr<stacktrace::manager::stack_text_type>
-stacktrace::manager::stack_text_ptr(NULL);
-#endif
-
 stacktrace::manager::stack_text_type&
 stacktrace::manager::get_stack_text(void) {
-#if FUNCTION_LOCAL_STATIC_STACKTRACE
 	static stack_text_type stack_text;
 	return stack_text;
-#else
-	if (UNLIKELY(!stack_text)) {
-		stack_text = new stack_text_type;
-		stack_text_ptr = excl_ptr<stack_text_type>(stack_text);
-	}
-	NEVER_NULL(stack_text);
-	return *stack_text;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-stacktrace::manager::stack_text_type*
-stacktrace::manager::stack_indent = NULL;
-
-excl_ptr<stacktrace::manager::stack_text_type>
-stacktrace::manager::stack_indent_ptr(NULL);
-#endif
 
 stacktrace::manager::stack_text_type&
 stacktrace::manager::get_stack_indent(void) {
-#if FUNCTION_LOCAL_STATIC_STACKTRACE
 	static stack_text_type stack_indent;
 	return stack_indent;
-#else
-	if (UNLIKELY(!stack_indent)) {
-		stack_indent = new stack_text_type;
-		stack_indent_ptr = excl_ptr<stack_text_type>(stack_indent);
-	}
-	NEVER_NULL(stack_indent);
-	return *stack_indent;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-stacktrace::manager::stack_echo_type*
-stacktrace::manager::stack_echo = NULL;
-
-excl_ptr<stacktrace::manager::stack_echo_type>
-stacktrace::manager::stack_echo_ptr(NULL);
-#endif
-
 /**
 	Push 1 to initialize enabled, 0 to disable initially.  
  */
 stacktrace::manager::stack_echo_type&
 stacktrace::manager::get_stack_echo(void) {
-#if FUNCTION_LOCAL_STATIC_STACKTRACE
 	static stack_echo_type stack_echo;
 	static const int init_once = (stack_echo.push(1), 1);
 	INVARIANT(init_once && !stack_echo.empty());
 	return stack_echo;
-#else
-	if (UNLIKELY(!stack_echo)) {
-		stack_echo = new stack_echo_type;
-		stack_echo_ptr = excl_ptr<stack_echo_type>(stack_echo);
-		stack_echo->push(1);
-	}
-	NEVER_NULL(stack_echo);
-	return *stack_echo;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if !FUNCTION_LOCAL_STATIC_STACKTRACE
-stacktrace::manager::stack_streams_type*
-stacktrace::manager::stack_streams = NULL;
-
-excl_ptr<stacktrace::manager::stack_streams_type>
-stacktrace::manager::stack_streams_ptr(NULL);
-#endif
-
 /**
 	Defaults to stderr.  
  */
 stacktrace::manager::stack_streams_type&
 stacktrace::manager::get_stack_streams(void) {
-#if FUNCTION_LOCAL_STATIC_STACKTRACE
 	static stack_streams_type stack_streams;
 	static const int init_once = (stack_streams.push(&cerr), 1);
 	INVARIANT(init_once && !stack_streams.empty());
 	return stack_streams;
-#else
-	if (UNLIKELY(!stack_streams)) {
-		stack_streams = new stack_streams_type;
-		stack_streams_ptr = excl_ptr<stack_streams_type>(stack_streams);
-		stack_streams->push(&cerr);
-	}
-	NEVER_NULL(stack_streams);
-	return *stack_streams;
-#endif
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.12 2005/01/16 02:44:17 fang Exp $
+	$Id: art_parser_expr.cc,v 1.12.10.1 2005/01/23 00:48:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -340,7 +340,7 @@ id_expr::what(ostream& o) const {
 #if 0
         return o << "(namespace-id): " << *qid;
 #else
-        return o << util::what<id_expr>::name << ": " << *qid;
+        return o << util::what<id_expr>::name() << ": " << *qid;
 #endif
 }
 

@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.10.3 2005/01/22 22:35:26 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.10.4 2005/01/23 00:48:56 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -294,10 +294,9 @@ public:
 		pool.push_back(chunk_type());
 		pool.back().reserve(chunk_size);
 #if VERBOSE_ALLOC
-		// doesn't like what<T>::name, program terminates normally!?
 		cerr << "Reserved " << 
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name << 
+			what<T>::name() << 
 #endif
 			" chunk of size " << chunk_size << "*" <<
 			sizeof(T) << " starting at " <<
@@ -325,7 +324,7 @@ public:
 #if VERBOSE_ALLOC
 		status(cerr << "~list_vector_pool<" <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name <<
+			what<T>::name() <<
 #endif
 			">() at " << this << endl);
 #if VERBOSE_ALLOC && 0
@@ -349,7 +348,7 @@ public:
 		const size_t leak = peak -free_list.size();
 		if (leak) {
 			cerr << "\t*** YOU MAY HAVE A MEMORY LEAK! ***" << endl;
-			cerr << '\t' << leak << ' ' << what<T>::name <<
+			cerr << '\t' << leak << ' ' << what<T>::name() <<
 				" are unaccounted for." << endl;
 		}
 	}
@@ -379,7 +378,7 @@ public:
 #if VERBOSE_ALLOC
 			cerr << "Allocated " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-				what<T>::name << 
+				what<T>::name() << 
 #endif
 				" from free-list @ " << ret << endl;
 #endif
@@ -394,7 +393,7 @@ public:
 #if VERBOSE_ALLOC
 				cerr << "New chunk of " << chunk_size << " " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-					what<T>::name <<
+					what<T>::name() <<
 #endif
 					" allocated." << endl;
 #endif
@@ -411,7 +410,7 @@ public:
 #if VERBOSE_ALLOC
 			cerr << "Allocated " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-				what<T>::name <<
+				what<T>::name() <<
 #endif
 				" from pool @ " << ret << endl;
 #endif
@@ -438,7 +437,7 @@ public:
 #if VERBOSE_ALLOC
 		cerr << "Returned " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name <<
+			what<T>::name() <<
 #endif
 			" @ " << p << " to free-list." << endl;
 #endif
@@ -463,7 +462,7 @@ public:
 #if VERBOSE_ALLOC
 		cerr << "Constructing " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name <<
+			what<T>::name() <<
 #endif
 			" @ " << p;
 		new(p) T(val);
@@ -503,7 +502,7 @@ public:
 		o << '\t' << pool.size() << " chunks of " << chunk_size <<
 			"*" << sizeof(T) << " " <<
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name <<
+			what<T>::name() <<
 #endif
 			" allocated." << endl;
 		o << '\t' << "Peak usage: " << peak << " elements, " <<

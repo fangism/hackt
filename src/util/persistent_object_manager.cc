@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.12.4.1 2005/01/18 04:24:31 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12.4.1.4.1 2005/01/23 00:48:54 fang Exp $
  */
 
 #include <fstream>
@@ -41,6 +41,7 @@ persistent_object_manager::dump_reconstruction_table = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#if 0
 /**
 	Is statically initialized to NULL before any objects use it.  
  */
@@ -56,7 +57,8 @@ persistent_object_manager::the_reconstruction_function_map_ptr = NULL;
  */
 excl_ptr<persistent_object_manager::reconstruction_function_map_type>
 persistent_object_manager::the_reconstruction_function_map_ptr_wrapped(
-	&get_reconstruction_function_map());
+	&reconstruction_function_map());
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
@@ -367,13 +369,20 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
 	\return valid reference to the only reconstruction function map.  
  */
 persistent_object_manager::reconstruction_function_map_type&
-persistent_object_manager::get_reconstruction_function_map(void) {
+persistent_object_manager::reconstruction_function_map(void) {
+#if 0
 	if (!the_reconstruction_function_map_ptr) {
 		the_reconstruction_function_map_ptr = 
 			new reconstruction_function_map_type;
 		assert(the_reconstruction_function_map_ptr);
 	}
 	return *the_reconstruction_function_map_ptr;
+#else
+	// function-local static initialized once upon first entry
+	static reconstruction_function_map_type
+		the_reconstruction_function_map;
+	return the_reconstruction_function_map;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -382,7 +391,7 @@ persistent_object_manager::verify_registered_type(
 		const persistent::hash_key& k) {
 	const reconstruct_function_ptr_type probe =
 		static_cast<const reconstruction_function_map_type&>(
-			get_reconstruction_function_map())[k];
+			reconstruction_function_map())[k];
 	return (probe != NULL);
 }
 
@@ -390,11 +399,11 @@ persistent_object_manager::verify_registered_type(
 ostream&
 persistent_object_manager::dump_registered_type_map(ostream& o) {
 	const reconstruction_function_map_type& m =
-		get_reconstruction_function_map();
+		reconstruction_function_map();
 	reconstruction_function_map_type::const_iterator iter = m.begin();
 	const reconstruction_function_map_type::const_iterator end = m.end();
 	o << "persistent_object_manager::reconstruction_function_map has " <<
-		get_reconstruction_function_map().size() << " entries." << endl;
+		reconstruction_function_map().size() << " entries." << endl;
 	o << "\tkey\t\twhat" << endl;
 	for ( ; iter != end; iter++) {
 		// this calls the appropriate construct_empty()
@@ -523,7 +532,7 @@ persistent_object_manager::reconstruct(void) {
 		const persistent::hash_key& t = e.type();
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
 			const reconstruct_function_ptr_type f = 
-				get_reconstruction_function_map()[t];
+				reconstruction_function_map()[t];
 			if (f) {
 				e.assign_addr((*f)(e.get_alloc_arg()));
 				addr_to_index_map[e.addr()] = i;

@@ -1,7 +1,7 @@
 /**
 	\file "what.h"
 	Utility for user-defined type-names.
-	$Id: what.h,v 1.3.10.1 2005/01/22 06:38:26 fang Exp $
+	$Id: what.h,v 1.3.10.2 2005/01/23 00:48:55 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_H__
@@ -36,20 +36,31 @@
 #define	SPECIALIZE_UTIL_WHAT_DECLARATION(T)			\
 	template <>						\
 	struct what<T> {					\
-		typedef	const char	name_type[];		\
-		static const name_type	name;			\
+		typedef	const char*	name_type;		\
+		static name_type	name(void);		\
 	};
 
+/**
+	Using function-local static will guarantee safe usage
+	and proper initialization before its first use, even
+	in across separately initialized modules.  
+ */
 #define	SPECIALIZE_UTIL_WHAT_DEFINITION(T, __name__)		\
-	template <>						\
-	const what<T>::name_type				\
-	what<T>::name = __name__;
+	what<T>::name_type					\
+	what<T>::name(void) {					\
+		static const name_type local_name = __name__;	\
+		return local_name;				\
+	}
 
 #define	SPECIALIZE_UTIL_WHAT(T, __name__)			\
 	SPECIALIZE_UTIL_WHAT_DECLARATION(T)			\
 	SPECIALIZE_UTIL_WHAT_DEFINITION(T, __name__)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETE: these definitions are not needed because the above
+macros were made robust.  
+
 /**
 	When using what<> during debugging (or whatnot) of static
 	initializations, ordering is not guaranteed automatically!
@@ -94,6 +105,7 @@
 
 // no macro provided to combine this because they are intended 
 // to be used separately.
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -104,12 +116,16 @@
 #define	PARTIAL_SPECIALIZE_UTIL_WHAT(T, __name__)		\
 	template <class S>					\
 	struct what<T<S> > {					\
-		typedef	const char	name_type[];		\
-		static const name_type	name;			\
+		typedef	const char*	name_type;		\
+		static name_type	name(void);		\
 	};							\
 	template <class S>					\
-	const what<T<S> >::name_type				\
-	what<T<S> >::name = __name__ ## "<" ## what<S>::name ## ">";
+	what<T<S> >::name_type					\
+	what<T<S> >::name(void) {				\
+		static const name_type local_name =		\
+			__name__ ## "<" ## what<S>::name ## ">";\
+		return local_name;				\
+	}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace util {
@@ -128,7 +144,7 @@ struct what {
 	/// the type of the name (must be printable)
 	typedef	const char*		name_type;
 	/// the full name of the type
-	static const name_type		name;
+	static name_type		name(void);
 };	// end struct what
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -138,32 +154,32 @@ struct what {
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<const T> {
-	static const string		name_string;
+	// static const string		name_string;
 	typedef	const char*		name_type;
-	static const name_type		name;
+	static name_type		name(void);
 };
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T&> {
-	static const string		name_string;
+	// static const string		name_string;
 	typedef	const char*		name_type;
-	static const name_type		name;
+	static name_type		name(void);
 };
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T*> {
-	static const string		name_string;
+	// static const string		name_string;
 	typedef	const char*		name_type;
-	static const name_type		name;
+	static name_type		name(void);
 };
 
 #if !SUFFIX_STYLE_CONST
 // this is not necessary when using the suffix-style const qualifier
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T* const> {
-	static const string		name_string;
+	// static const string		name_string;
 	typedef	const char*		name_type;
-	static const name_type		name;
+	static name_type		name(void);
 };
 #endif
 

@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_b.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_b.cc,v 1.1.2.3 2005/01/22 22:36:20 fang Exp $
+	$Id: pool_module_b.cc,v 1.1.2.4 2005/01/23 00:48:59 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -30,11 +30,13 @@ static const ostream&
 #endif
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT_ROBUST_DEFINITION(twiddle_dee, "twiddle_dee")
+	SPECIALIZE_UTIL_WHAT_DEFINITION(twiddle_dee, "twiddle_dee")
 } 
 
+#if 0
 REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum);
 REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dee);
+#endif
 
 // REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dum);
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(twiddle_dee, 8)
