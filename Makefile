@@ -163,6 +163,9 @@ y.union.cc: y.output art.yy.types
 		-v namespace=ART::parser \
 		-v type=ART::parser::node y.output > $@
 
+# extra dependencies to ensure correct in-order parallel builds
+art_main.o: y.tab.h
+
 # regression testing
 TEST_SUBJECTS = 
 # this file defines and accumulates TEST_SUBJECTS (without their suffixes)
