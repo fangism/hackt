@@ -1,0 +1,6 @@
+// should pass: appropriate use of template formal int
+
+template <pint N; pbool M>
+defproc foo() {
+	int bar[N][M];
+}

@@ -1,0 +1,9 @@
+// should pass: approiate use of template type
+
+template <pint N>
+defproc foo();
+
+foo<13> bar;
+
+// for type-checking ok if foo undefined
+

@@ -1,0 +1,9 @@
+// should fail: wrong number of template args
+
+template <pint N>
+defproc foo();
+
+foo<13,false> bar;
+
+// for type-checking ok if foo undefined
+

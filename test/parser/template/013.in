@@ -1,0 +1,7 @@
+// should fail: pbool where pint expected
+
+template <pbool N>
+defproc foo() {
+	int bar[N];
+}
+

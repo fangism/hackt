@@ -1,0 +1,6 @@
+// should pass:
+
+template <pint N>
+defproc foo() {
+	int bar[2*N+1];
+}
