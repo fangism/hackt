@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2004-09-03	David Fang	<fangism@users.sourceforge.net>
+
+	* Started a documentation directory dox/lang for the language
+	  specification documentation, not to be mixed with the 
+	  doxygen-generated code reference manual.  
+
+	* Added some rather harmless data structure tests that have been 
+	  sitting around for a long time (in src/util/test).  
+
+
 2004-09-01	David Fang	<fangism@users.sourceforge.net>
 
 	* Reworked connection and assignment management in class scopespace.

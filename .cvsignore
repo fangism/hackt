@@ -9,6 +9,7 @@ cvsdiffs
 flatsrc
 configure
 Makefile
+Makefile.in
 configure.scan
 configure.lineno
 autoscan.log

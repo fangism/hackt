@@ -4,7 +4,7 @@
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = src test .
+SUBDIRS = src test . dox/lang
 
 include $(top_srcdir)/Make.stddef
 
@@ -18,7 +18,7 @@ libtool: $(LIBTOOL_DEPS)
 
 # see configure.in for adding libtool flags
 
-CLEANFILES = art++.doxygen.config
+CLEANFILES = art++.doxygen.config art++.doxygen.log
 
 DISTCLEANFILES = config.in.h~
 

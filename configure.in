@@ -84,6 +84,7 @@ AC_CONFIG_FILES([
 	test/parser/template/Makefile
 	test/parser/typedef/Makefile
 	test/parser/connect/Makefile
+	dox/lang/Makefile
 	])
 
 AC_OUTPUT
