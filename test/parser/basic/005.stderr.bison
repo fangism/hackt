@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(type-ref) [3:1..3]
 35	[ [3:4]
 in state 35, possible rules are:
