@@ -17,7 +17,7 @@ rule::rule(node* g, node* a, node* rhs, node* d) : node(),
 		guard(IS_A(expr*, g)),
 		arrow(IS_A(terminal*, a)),
 		r(IS_A(expr*, rhs)),
-		dir(IS_A(terminal*, dir)) {
+		dir(IS_A(terminal*, d)) {
 	assert(guard); assert(arrow); assert(r); assert(dir);
 	assert(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }

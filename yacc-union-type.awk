@@ -1,4 +1,3 @@
-# "yacc-union-type.awk"
 
 # the goal of this script is to produce:
 # a C function that takes as arguments:
@@ -33,6 +32,7 @@
 #	suggetsed creation of intermediate file:
 #	grep -v "#include" <yacc-file> | cpp -P |
 #		sed -e "/^%start/,$$$$d" -e "/%{/,/%}/d"
+# enumfile = "y.tab.h" for symbol enumerations
 # include (optional) = space-delimited list of headers to include
 # namespace (optional) = space-delimited list of namespaces to use
 
@@ -45,13 +45,16 @@ BEGIN {
 	member_count = 0;
 	state_count = 0;
 
+	# user-defined token symbols are enumerater from 257 and higher
+	token_enum = 256 +1;
+
 	if (yaccfile == "") {
 		print "\"yaccfile\" must be defined as an argument!";
-		exit;
+		exit 1;
 	} 
 	if (type == "") {
 		print "\"type\" must be defined as an argument!";
-		exit;
+		exit 1;
 	}
 
 	print "/*";
@@ -76,7 +79,7 @@ BEGIN {
 	print "";
 	print "#include \"y.tab.h\"";	# for YYSTYPE
 	print "#include <assert.h>";
-	print "#include <stdio.h>";
+#	print "#include <iostream.h>";
 	print "";
 
 	process_union(yaccfile);
@@ -107,7 +110,9 @@ BEGIN {
 	print "";
 }
 
-function process_union(file) {
+function process_union(file, 
+	# local variables
+	member_type, member_id ) {
 if (!got_union) {
 	do { getline < file; } while(!match($0, "%union.*{"));
 	# then we know we're in a union
@@ -125,7 +130,7 @@ if (!got_union) {
 			member_type += "*";
 		} else if (!match(member_type, "[*]")) {
 			printf "union member must be a pointer!";
-			exit;
+			exit 1;
 		}
 		type_of[member_id] = member_type;
 #		print "union member " member_id " has type " member_type;
@@ -138,7 +143,9 @@ if (!got_union) {
 	got_union = 1;
 }}
 
-function process_symbol_types(file) {
+function process_symbol_types(file, 
+	# local variables
+	argc, i, member_id, member_type, symbol_id ) {
 if (got_union) {
 	while(getline < file) {
 	argc = split($0, type_args);
@@ -150,24 +157,61 @@ if (got_union) {
 #		print "found union member " member_id " with type " member_type;
 		if (member_type == "") {
 			print "union member \"" member_id "\" not found!";
-			exit;
+			exit 1;
 		}
 		for (i=3; i<= argc; i++) {
 			symbol_id = type_args[i];
 			symbol_type[symbol_id] = member_type;
 #			print "symbol " symbol_id " returns member " \
 #				member_id " with type " member_type;
+			if (match($1, "type") && match(symbol_id, "'")) {
+				# then token is a single character
+				gsub("'", "", symbol_id);
+#				print symbol_id " = " string_char_to_int(symbol_id);
+				token_set[string_char_to_int(symbol_id)] = member_type;
+			} else if (match($1, "token")) {
+				# token is user-defined
+#				print "#define " symbol_id " " token_enum;
+				token_set[token_enum] = member_type;
+				token_enum++;
+			} # end if match "type"
 		}
 	} # end if argc
 	} # end if match(...)
 	# just read to end-of-file
 } # end while
+	# print out map of token_enum to type_enum
+	print "static int token_to_type_enum_map[" token_enum "] = {";
+	for (i=0; i<token_enum; i++) {
+		member_type = token_set[i];
+		if (member_type == "") {
+			printf("%d, ", -1);	# should die
+		} else {
+			printf("%d, ", enum_of[member_type]);
+		}
+	}
+	print "};";
+	print "";
 } else {	# !got_union
 	print "need to have completed process_union() before " \
 		"invoking process_symbol_types().";
-	exit;
+	exit 1;
 }
 }
+
+# convert character to int
+function string_char_to_int(char, 
+	# local vars
+	i, c) {
+	for (i=0; i<256; i++) {
+		c = sprintf("%c", i);
+		if (char == c)
+			return i;
+	}
+	return -1;
+}
+
+
 
 /^state [0-9]*/ {
 	print "/************************** " $0 " **************************/";
@@ -224,14 +268,12 @@ END {
 		gsub("::", "_", type_str);
 		print "static " type "* yy_union_get_" type_str \
 			"(const YYSTYPE& u) {";
-		print "\tfprintf(stderr, \"" type_str "\");";
+#		print "\tcerr << "\"" type_str "\";";
 		print "\treturn u." mid ";";
 		print "}";
 	}
 	print "";
 
-	print "/* definition of yy_union_resolve() */";
-	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
 	print "static const yy_state_map_link* yysma[" state_count "] = {";
 	for (i=0; i<state_count; i++) {
 		if (shift_count[i])
@@ -248,6 +290,8 @@ END {
 	}
 	print "};";	# end of array of function pointers
 	print "";
+	print "/* definition of yy_union_resolve() */";
+	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
 	print "/* function body really starts here */";
 	print "const yy_state_map_link* iter = yysma[i];";
 	print "/* sequentially compare state keys */";
@@ -255,15 +299,22 @@ END {
 	print "\tif(iter->state == j) break;";
 	print "\titer = iter->next;";
 	print "} /* end while */";
-#	print "if (iter) {";
-	print "if (iter->state == j) {";
+	print "if (iter && iter->state == j) {";
 		print "\t/* then we've found a match, return appropriately wrapped pointer */";
-		print "\treturn (*yy_union_get[iter->type_enum])(u);";
+		print "\t" type "* ret = (*yy_union_get[iter->type_enum])(u);";
+		print "\treturn ret;";
 	print "} else {";
-		print "\tfprintf(stderr, \"NOT FOUND\");";
-	print "\treturn NULL;";
+		print "\treturn NULL;";
 	print "}";
 	print "}";
+	print "";
 
+# a union resolution lookup using yychar
+	print type "* yy_union_lookup(const YYSTYPE& u, const int c) {";
+	print "\tint i = token_to_type_enum_map[c];";
+	print "\tassert(i >= 0);";
+	print "\treturn (*yy_union_get[i])(u);";
+	print "}";
+	print "";
 }
 

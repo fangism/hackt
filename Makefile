@@ -101,7 +101,7 @@ art.yy.types: art.yy
 
 y.union.cc: y.output art.yy.types
 	$(AWK) -f yacc-union-type.awk -v yaccfile=art.yy.types \
-		-v include="art_parser.h" \
+		-v include="art_parser.h art_parser_chp.h art_parser_hse.h art_parser_prs.h" \
 		-v namespace=ART::parser \
 		-v type=ART::parser::node y.output > $@
 

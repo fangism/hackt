@@ -165,7 +165,98 @@ extern const char* const yyrule[];
 	token_identifier*	_token_identifier;
 	token_quoted_string*	_token_quoted_string;
 	token_type*		_token_type;
+
+	root_body*		_root_body;
+	namespace_body*		_namespace_body;
+	using_namespace*	_using_namespace;
+	process_prototype*	_process_prototype;
+	process_def*		_process_def;
+	def_type_id*		_def_type_id;
+	type_id*		_type_id;
+	port_formal_decl_list*	_port_formal_decl_list;
+	port_formal_decl*	_port_formal_decl;
+	port_formal_id_list*	_port_formal_id_list;
+	port_formal_id*		_port_formal_id;
+	template_formal_decl_list*	_template_formal_decl_list;
+	template_formal_decl*	_template_formal_decl;
+	template_formal_id_list*	_template_formal_id_list;
+	template_formal_id*	_template_formal_id;
+	data_type_base*		_data_type_base;
+	base_data_type_list*	_base_data_type_list;
+	user_data_type_prototype*	_user_data_type_prototype;
+	user_data_type_def*	_user_data_type_def;
+	chan_type*		_chan_type;
+	user_chan_type_prototype*	_user_chan_type_prototype;
+	user_chan_type_def*	_user_chan_type_def;
+	data_param_list*	_data_param_list;
+	instance_declaration*	_instance_declaration;
+	declaration_id_list*	_declaration_id_list;
+	declaration_base*	_declaration_base;
+	declaration_array*	_declaration_array;
+	definition_body*	_definition_body;
+	loop_instantiation*	_loop_instantiation;
+	guarded_definition_body_list*	_guarded_definition_body_list;
+	guarded_definition_body*	_guarded_definition_body;
+	actuals_connection*	_actuals_connection;
+	alias_assign*		_alias_assign;
+
+	expr*			_expr;
+	paren_expr*		_paren_expr;
+	id_expr*		_id_expr;
+
+/*** not used
+	prefix_expr*		_prefix_expr;
+	index_expr*		_index_expr;
+	member_expr*		_member_expr;
+	arith_expr*		_arith_expr;
+	relational_expr*	_relational_expr;
+	logical_expr*		_logical_expr;
+***/
+	assign_stmt*		_assign_stmt;
+	incdec_stmt*		_incdec_stmt;
+	expr_list*		_expr_list;
+	range*			_range;
+	range_list*		_range_list;
+
+	CHP::body*		_chp_body;
+	CHP::stmt_list*		_chp_stmt_list;
+	CHP::skip*		_chp_skip;
+	CHP::log*		_chp_log;
+	CHP::loop*		_chp_loop;
+	CHP::do_until*		_chp_do_until;
+	CHP::wait*		_chp_wait;
+	CHP::nondet_selection*	_chp_nondet_selection;
+	CHP::det_selection*	_chp_det_selection;
+	CHP::guarded_command*	_chp_guarded_command;
+	CHP::else_clause*	_chp_else_clause;
+	CHP::comm_list*		_chp_comm_list;
+	CHP::send*		_chp_send;
+	CHP::receive*		_chp_receive;
+
+	HSE::body*		_hse_body;
+	HSE::stmt_list*		_hse_stmt_list;
+	HSE::skip*		_hse_skip;
+	HSE::loop*		_hse_loop;
+	HSE::do_until*		_hse_do_until;
+	HSE::wait*		_hse_wait;
+	HSE::nondet_selection*	_hse_nondet_selection;
+	HSE::det_selection*	_hse_det_selection;
+	HSE::guarded_command*	_hse_guarded_command;
+	HSE::else_clause*	_hse_else_clause;
+
+	PRS::body*		_prs_body;
+	PRS::rule_list*		_prs_rule_list;
+	PRS::rule*		_prs_rule;
+
 }
+
+%{
+/* automatically generated function to resolve parser symbol type
+	on the yy value stack, base on yy state stack transitions
+ */
+extern	node* yy_union_resolve(const YYSTYPE& u, const short i, const short j);
+extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
+%}
 
 /*
 	The lexer returns newly allocated nodes FOR ALL TOKENS, 
@@ -197,52 +288,49 @@ extern const char* const yyrule[];
 %token	<_token_char>	TILDE AND PIPE XOR
 */
 /* change these to _token_char */
-%type	<n>	'{' '}' '[' ']' '(' ')' '<' '>'
-%type	<n>	',' '.' ';' ':'
-%type	<n>	'=' '+' '-' '*' '/' '%'
-%type	<n>	'!' '?' '~' '&' '|' '^'
+%type	<_token_char>	'{' '}' '[' ']' '(' ')' '<' '>'
+%type	<_token_char>	',' '.' ';' ':'
+%type	<_token_char>	'=' '+' '-' '*' '/' '%'
+%type	<_token_char>	'!' '?' '~' '&' '|' '^'
 
 /*
 	the following tokens are defined below because they consist of
 	2 or more characters
 */
 
-/* _token_identifier */
-%token	<n>	ID
-/* _token_float */
-%token	<n>		FLOAT
-/* _token_int */
-%token	<n>		INT
-/* _token_quoted_string */
-%token	<n>	STRING
+%token	<_token_identifier>	ID
+%token	<_token_float>		FLOAT
+%token	<_token_int>		INT
+%token	<_token_quoted_string>	STRING
 
 /* _token_string */
-%token	<n>		LE GE EQUAL NOTEQUAL
-%token	<n>		THICKBAR SCOPE RANGE
-%token	<n>		IMPLIES RARROW
-%token	<n>		BEGINLOOP BEGINPROB ENDPROB
-%token	<n>		DEFINEOP
-%token	<n>		LOGICAL_AND LOGICAL_OR
-%token	<n>		INSERT EXTRACT
-%token	<n>		PLUSPLUS MINUSMINUS
+%token	<_token_string>		LE GE EQUAL NOTEQUAL
+%token	<_token_string>		THICKBAR SCOPE RANGE
+%token	<_token_string>		IMPLIES RARROW
+%token	<_token_string>		BEGINLOOP BEGINPROB ENDPROB
+%token	<_token_string>		DEFINEOP
+%token	<_token_string>		LOGICAL_AND LOGICAL_OR
+%token	<_token_string>		INSERT EXTRACT
+%token	<_token_string>		PLUSPLUS MINUSMINUS
 
 /* _token_keyword */
-%token	<n>	NAMESPACE
-%token	<n>	OPEN AS
-%token	<n>	CHP_LANG HSE_LANG PRS_LANG
-%token	<n>	SKIP ELSE LOG
-%token	<n>	DEFINE DEFPROC DEFCHAN DEFTYPE
-%token	<n>	SET GET SEND RECV
-%token	<n>	CHANNEL
-%token	<n>	BOOL_TRUE BOOL_FALSE
+%token	<_token_keyword>	NAMESPACE
+%token	<_token_keyword>	OPEN AS
+%token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
+%token	<_token_keyword>	SKIP ELSE LOG
+%token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
+%token	<_token_keyword>	SET GET SEND RECV
+%token	<_token_keyword>	CHANNEL
+
+%token	<_token_bool>		BOOL_TRUE BOOL_FALSE
 
 /* _token_type */
-%token	<n>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
+%token	<_token_type>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
 
 /* non-terminals */
 %type	<n>	module top_root body body_item basic_item namespace_management
 %type	<n>	definition defproc def_type_id
-%type	<n>	def_or_proc		/* _token_keyword*/
+%type	<_token_keyword>	def_or_proc
 %type	<n>	declaration declare_proc_proto
 %type	<n>	declare_type_proto declare_chan_proto
 %type	<n>	optional_template_formal_decl_list_in_angles
@@ -280,26 +368,30 @@ extern const char* const yyrule[];
 %type	<n>	hse_matched_det_guarded_command_list
 %type	<n>	hse_unmatched_det_guarded_command_list
 %type	<n>	hse_assignment
-%type	<n>	prs_body single_prs prs_expr
-%type	<n>	prs_arrow	/* _token_string */
-%type	<n>	dir		/* _token_char */
-%type	<n>	paren_expr expr
+%type	<n>	prs_body single_prs
+%type	<_expr>	prs_expr
+%type	<_token_string>	prs_arrow
+%type	<_token_char>	dir
+%type	<_expr>	paren_expr expr
 /* %type	<n>	primary_expr */
-%type	<n>	literal	/* terminal */
-%type	<n>	id_expr qualified_id absolute_id relative_id
-%type	<n>	member_index_expr_list member_index_expr unary_expr
-%type	<n>	multiplicative_expr additive_expr shift_expr
-%type	<n>	relational_equality_expr and_expr
-%type	<n>	exclusive_or_expr inclusive_or_expr
-%type	<n>	logical_and_expr logical_or_expr
+%type	<_expr>	literal
+%type	<_id_expr>	id_expr
+%type	<_id_expr>	qualified_id absolute_id relative_id
+%type	<_expr_list>	member_index_expr_list
+%type	<_expr>	member_index_expr unary_expr
+%type	<_expr>	multiplicative_expr additive_expr shift_expr
+%type	<_expr>	relational_equality_expr and_expr
+%type	<_expr>	exclusive_or_expr inclusive_or_expr
+%type	<_expr>	logical_and_expr logical_or_expr
 %type	<n>	assignment_stmt binary_assignment unary_assignment
 /* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<n>	optional_member_index_expr_list_in_angles
 %type	<n>	member_index_expr_list_in_angles
 %type	<n>	member_index_expr_list_in_parens
-%type	<n>	expr_list_in_parens expr_list
-%type	<n>	optional_range_list_in_brackets range_list_in_brackets
-%type	<n>	range_list range
+%type	<_expr_list>	expr_list_in_parens expr_list
+%type	<_range_list>	optional_range_list_in_brackets range_list_in_brackets
+%type	<_range_list>	range_list
+%type	<_range>	range
 
 
 %start	module
@@ -1078,7 +1170,7 @@ member_index_expr_list
 /* this is what we want for expression arguments, without operators */
 member_index_expr
 /*	: primary_expr */
-	: id_expr
+	: id_expr { $$ = $1; }
 	/* array index */
 	| member_index_expr range_list_in_brackets
 		{ $$ = new index_expr($1, $2); }
@@ -1091,7 +1183,7 @@ member_index_expr
 unary_expr
 	: member_index_expr
 	| literal { $$ = $1; }
-	| paren_expr
+	| paren_expr { $$ = $1; }
 	/* no prefix operations, moved to assignment */
 	| '-' unary_expr
 		{ $$ = new prefix_expr($1, $2); }
@@ -1315,6 +1407,7 @@ range
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	const short* s;
 	const YYSTYPE* v;
+	node* resolved_node = NULL;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
@@ -1324,22 +1417,54 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		// how do we know which union member?
 		// need to look at the state stack, and the transition
 		// from the previous state
+/*** before union resolution was introduced:
 		if (v && v->n) {
 			v->n->what(cerr << '\t') << " " 
 				<< v->n->where();
 		} else {
 			cerr << "\t(null) ";
 		}
+***/
+
+// after union resolution was introduced
+		if (v) {
+			resolved_node = yy_union_resolve(*v, *(s-1), *s);
+			if (resolved_node)
+				resolved_node->what(cerr << '\t') << " "
+					<< resolved_node->where();
+			else
+				cerr << "\t(null) ";
+		} else {
+			cerr << "\t(null) ";
+		}
+
 		cerr << endl << *s;
 	}
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
-	assert(yylval.n);	// NULL check
+	assert(resolved_node);	// NULL check
 //	cerr << "received: ";
 	if (at_eof()) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
+/***
+//	before union resolution was necessary this was used, very simple
 		(yylval.n->what(cerr << "\t") << " ") << yylval.n->where();
+***/
+/***
+	PROBLEM: now, don't know how to resolve union member 
+	of the offending token, because it won't correspond to any valid state.  
+	*s is unknown, and yylval is unknown
+	The state-stack gives us no futher information.  
+	BUT we have access to yychar, from the lexer which tells us the last
+	token type returned.  
+		// CERTAIN DEATH on yy_union_resolve!
+		resolved_node = yy_union_resolve(yylval, *(s-1), *s);
+***/
+		resolved_node = yy_union_lookup(yylval, yychar);
+		assert(resolved_node);
+		(resolved_node->what(cerr << "\t") << " ")
+			<< resolved_node->where();
 	}
 	cerr << endl;
 

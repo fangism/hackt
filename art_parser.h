@@ -398,6 +398,9 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
+// overshadow parent's
+virtual	id_expr* append(node* d, node* n);
+
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
 // virtual	object* check_build(context* c) const;

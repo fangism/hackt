@@ -95,6 +95,11 @@ id_expr::what(ostream& o) const {
 	return o << "(id-expr)";
 }
 
+id_expr*
+id_expr::append(node* d, node* n) {
+	return IS_A(id_expr*, id_expr_base::append(d,n));
+}
+
 line_position
 id_expr::leftmost(void) const {
 	return id_expr_base::leftmost();

@@ -4,6 +4,9 @@
 #include "getopt_portable.h"		// for getopt()
 
 #include "art_parser.h"
+#include "art_parser_chp.h"		// need forward declarations for these
+#include "art_parser_hse.h"
+#include "art_parser_prs.h"
 #include "art_object.h"
 #include "art_symbol_table.h"
 using namespace ART;
