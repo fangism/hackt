@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.2 2005/01/28 19:58:46 fang Exp $
+	$Id: IO_utils.cc,v 1.2.30.1 2005/02/28 18:47:44 fang Exp $
  */
 
 #include <cassert>
@@ -83,7 +83,7 @@ write_string(ostream& f, const string& s) {
 	const string::size_type len = s.length();
 		// excludes null-termination
 	assert(len < STRING_LIMIT);	// sanity check, not a real limit
-	f.write((const char*) &len, sizeof(len));
+	f.write(reinterpret_cast<const char*>(&len), sizeof(len));
 //	assert(len >= 0);		// unsigned, always true
 	if (len)
 		f.write(s.c_str(), len);

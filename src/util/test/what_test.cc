@@ -1,6 +1,6 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.3 2005/01/28 19:59:00 fang Exp $
+	$Id: what_test.cc,v 1.3.30.1 2005/02/28 18:47:45 fang Exp $
  */
 
 #include <iostream>
@@ -22,7 +22,7 @@ class Ick {
 };
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(Ick, "ick");
+SPECIALIZE_UTIL_WHAT(Ick, "ick")
 }
 
 template <class T>
@@ -39,8 +39,8 @@ class Yum {
 };
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(Yum, "yum");
-SPECIALIZE_UTIL_WHAT(Bar<Ick>, "Bar<Ick>");
+SPECIALIZE_UTIL_WHAT(Yum, "yum")
+SPECIALIZE_UTIL_WHAT(Bar<Ick>, "Bar<Ick>")
 }
 
 int

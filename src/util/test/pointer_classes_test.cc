@@ -1,7 +1,7 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.5 2005/01/28 19:58:57 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.5.30.1 2005/02/28 18:47:45 fang Exp $
  */
 
 #include <iostream>
@@ -121,7 +121,12 @@ void basic_vector_test(void) {
 		else	cout << "W[" << k << "] = NULL" << endl;
 	}
 
+#if 1
 	W[0] = W[5] = V[2];
+#else
+	W[5] = V[2];
+	W[0] = W[5];
+#endif
 	assert(W[5] == V[2]);
 	assert(W[0] == V[2]);
 	*W[4] = 666;

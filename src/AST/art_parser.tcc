@@ -2,7 +2,7 @@
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser.tcc,v 1.12 2005/02/27 23:16:57 fang Exp $
+	$Id: art_parser.tcc,v 1.12.2.1 2005/02/28 18:47:44 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -142,10 +142,13 @@ node_list_base<T>::what(ostream& o) const {
 NODE_LIST_BASE_TEMPLATE_SIGNATURE
 never_ptr<const object>
 node_list_base<T>::check_build(context& c) const {
+#if ENABLE_STACKTRACE
+	// with gcc4, these static symbols become multiply defined... arg
 	static const string trace_root(util::what<T>::name());
 	static const char trace_suffix[] = "_list::check_build()";
 	static const string trace_str(trace_root + trace_suffix);
 	STACKTRACE(trace_str);
+#endif
 
 	never_ptr<const object> ret(NULL);
 	const_iterator i = begin();
