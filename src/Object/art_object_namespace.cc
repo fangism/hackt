@@ -1,13 +1,16 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.2 2005/02/03 03:34:54 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.3 2005/02/17 00:10:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
 #define	__ART_OBJECT_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
 
 #include <iostream>
 #include <fstream>
@@ -49,7 +52,22 @@
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
+//=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// these are pretty much OBSOLETE, remove them some time
 
 #define		DEBUG_NAMESPACE			1 && DEBUG_CHECK_BUILD
 #define		TRACE_QUERY			0	// bool, ok to change
@@ -99,7 +117,7 @@ namespace entity {
 
 #include "using_ostream.h"
 using util::hash_map;
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 using parser::scope;
 using std::_Select2nd;
 using namespace util::memory;
@@ -108,6 +126,10 @@ using util::indent;
 using util::auto_indent;
 using util::disable_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // general non-member function definitions

@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5.2.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multikey.tcc,v 1.5.2.2 2005/02/17 00:10:19 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -16,7 +16,7 @@
 #include "IO_utils.tcc"
 
 
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using util::write_value;
 using util::read_value;
 #include "using_ostream.h"
@@ -601,9 +601,27 @@ multikey_generator_generic<K>::operator ++ (int) {
 	return *this;
 }
 
+//=============================================================================
+// specializations
+
+template <class K>
+void
+value_writer<multikey_generic<K> >::operator () (const value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	write_array(os, AS_A(const valarray<K>&, v));
+}
+
+//-----------------------------------------------------------------------------
+
+template <class K>
+void
+value_reader<multikey_generic<K> >::operator () (value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	read_sequence_resize(is, AS_A(valarray<K>&, v));
+}
 
 //=============================================================================
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
 
 
 #endif	// __UTIL_MULTIKEY_TCC__

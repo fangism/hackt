@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.3 2005/02/09 04:14:12 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.4 2005/02/17 00:10:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -69,6 +69,8 @@ using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -501,7 +503,7 @@ bool
 pint_array<D>::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
-	const multikey<D, pint_value_type> index(i);
+	const key_type index(i);
 	const pint_instance& pi = collection[index];
 	if (pi.valid) {
 		v = pi.value;
@@ -561,7 +563,7 @@ pint_array<D>::assign(const multikey_index_type& k,
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
 //	const typename collection_type::key_type index(k);
-	const multikey<D, pint_value_type> index(k);
+	const key_type index(k);
 	pint_instance& pi = collection[index];
 	return !(pi = i);
 }
@@ -573,7 +575,9 @@ pint_array<D>::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
+#if 1
 	collection.write(f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -582,7 +586,9 @@ void
 pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
+#if 1
 	collection.read(f);
+#endif
 }
 
 //-----------------------------------------------------------------------------

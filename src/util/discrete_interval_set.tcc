@@ -1,17 +1,17 @@
 /**
 	\file "discrete_interval_set.tcc"
 	Template class method definitions for discrete_interval_set.
-	$Id: discrete_interval_set.tcc,v 1.2 2004/12/16 01:08:53 fang Exp $
+	$Id: discrete_interval_set.tcc,v 1.2.16.1 2005/02/17 00:10:17 fang Exp $
  */
 
-#ifndef	__DISCRETE_INTERVAL_SET_TCC__
-#define	__DISCRETE_INTERVAL_SET_TCC__
+#ifndef	__UTIL_DISCRETE_INTERVAL_SET_TCC__
+#define	__UTIL_DISCRETE_INTERVAL_SET_TCC__
 
 #include <iostream>
 #include "macros.h"
 #include "discrete_interval_set.h"
 
-namespace DISCRETE_INTERVAL_SET_NAMESPACE {
+namespace util {
 using std::ostream;
 
 //=============================================================================
@@ -355,7 +355,7 @@ operator << (ostream& o, const discrete_interval_set<U>& r) {
 }
 
 //=============================================================================
-}	// end namespace DISCRETE_INTERVAL_SET_NAMESPACE
+}	// end namespace util
 
-#endif	// __DISCRETE_INTERVAL_SET_TCC__
+#endif	// __UTIL_DISCRETE_INTERVAL_SET_TCC__
 

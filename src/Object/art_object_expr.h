@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19.2.3 2005/02/09 04:14:08 fang Exp $
+	$Id: art_object_expr.h,v 1.19.2.4 2005/02/17 00:10:11 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -31,8 +31,7 @@ USING_LIST
 using std::string;
 using std::ostream;
 USING_UTIL_OPERATIONS
-using QMAP_NAMESPACE::qmap;
-using namespace MULTIKEY_NAMESPACE;
+using util::qmap;
 
 //=============================================================================
 /**

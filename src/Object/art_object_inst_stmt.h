@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9.2.1 2005/02/03 03:34:50 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.2.2 2005/02/17 00:10:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -18,8 +18,6 @@ namespace entity {
 USING_LIST
 USING_CONSTRUCT
 using namespace util::memory;	// for experimental pointer classes
-using namespace MULTIKEY_NAMESPACE;
-using namespace MULTIKEY_MAP_NAMESPACE;
 
 //=============================================================================
 /**

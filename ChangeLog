@@ -1,5 +1,109 @@
 "ChangeLog"
 
+2005-02-16	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-10-merged-multikey-09:
+	  Merged all revisions from the -09-multikey child branch 
+	  (through rev. -09)
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-07:
+	  bool_instance_collections (scalar, array<D>) are once again
+	  reconstructible *without* connections.  
+	  (A lotta work to get nowhere!)
+	  Next revision will massively clean-up before porting over the 
+	  overall changes with bool collections to int<W> collections.
+	  Then we'll attempt to reconstruct aliases... ooooh...
+
+	+ -multikey-08:
+	  Massively cleaned up, as promised.
+	  Affected: multikey_map-related files, art_object_instance_bool.*
+
+	+ -multikey-09:
+	  int_instance_collections are reconstructible once again.  
+	  No aliases reconstructed yet.  
+	  Many test output updated because binary objects have changed size.
+	  All tests pass, this snapshot is good enough to merge back to
+	  the parent branch.  
+
+
+2005-02-15	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-05:
+	  Namespace clean-up only, replaced *_NAMESPACE in the util/
+	  directory with 'util'.  
+
+	+ -multikey-06:
+	  IO_utils*: added value_writer and value_reader functors to
+	  facilitate partial specializations with template classes.  
+	  Defaults to using plain-old write_value and read_value.  
+	  Skeletal implementations of bool alias persistence and 
+	  reconstruction.  
+	  bool_instance_alias<D> is now derived from 
+	  multikey_set_element_derived!  (except when D == 0)
+	  Thus, bool_array<D> may directly use multikey_set<element_type>.
+	  This revision compiles, same as before, but not all tests pass
+	  because code is in transient state.  
+
+
+2005-02-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-03:
+	  Designed "derived" versions of maplikeset_element and
+	  multikey_set_element.  Functionally, they are the same as their
+	  non-derived counterparts, but their implementations facilitate
+	  composition of features such as ring_node-connectivity.  
+	  These have been tested individually in the util/test directory.  
+	  Next revision will test the composability on
+	  "art_object_instance_bool.*".  
+
+	+ -multikey-04:
+	  Now using node_ring_derived for alias base.
+	  Now using multikey_set_element_derived in bool_array<D>.
+	  Trying replacing bool_instance_alias_base derived definition
+	  with typedef to ring_node_derived<bool_instance_alias_info>.
+	  Everything compiles, nothing dies, tests don't pass still
+	  because alias persistence hasn't been implemented yet.  
+	  Some updating in maplikeset.h, multikey_assoc.h now uses
+	  _Select1st, _Select2nd functors to allow specialization
+	  of key-value accessors.  (Needs clean-up.)
+
+
+2005-02-13	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-02:
+	  Enabled instance_alias persistence of parameters (pint, pbool)
+	  because they contain no pointers.  
+	  multikey_map.tcc: using {write,read}_value with the key 
+	  of the key-value pair.  
+
+	+ Complication: desire the connective properties of ring_node
+	  and the key-aware properties of maplikeset_element
+	  (manifested as multikey_set_element), but creating such
+	  a result is highly non-trivial with the current data structure
+	  library.  
+
+	+ Added a variation of ring_node call ring_node_derived, which
+	  extends a base type, by making it ring-node-connected to
+	  its own type.  This will be required for use with 
+	  maplikeset_element, because one cannot compound two container-like
+	  adapters to make a super-type with the properties of both parents.  
+	  Testing passed easily... too easily.  
+
+	+ Drafted an implementation of bool_instance_alias_info
+	  and bool_instance_alias_base, which will be adapted in the
+	  next revision to use ring_node_derived.  
+
+	+ Much clean-up of art_object_instance_bool.h.
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-01:
+	  In this child branch, I'm play-testing the development of 
+	  using multikey_set for instance aliases, and ways of 
+	  reconstructing connections through object persistence.  
+	  This snapshot compiles and runs, but many tests will not pass
+	  because instance collection persistence has been disabled.  
+	  Working on the persistence of aliases...
+
+
 2005-02-08	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-08-merged-set-16:

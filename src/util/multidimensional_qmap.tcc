@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.tcc"
 	Template method definitions for multidimensional_qmap class.
-	$Id: multidimensional_qmap.tcc,v 1.1.16.1 2005/02/09 04:14:14 fang Exp $
+	$Id: multidimensional_qmap.tcc,v 1.1.16.2 2005/02/17 00:10:18 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
@@ -15,7 +15,7 @@
 
 #include "qmap.tcc"
 
-namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
+namespace util {
 using std::accumulate;
 #include "using_ostream.h"
 
@@ -66,11 +66,9 @@ multidimensional_qmap<D,K,T,L>::clean(void) {
 		}
 	}
 #else
-	for_each(index_map.begin(), index_map.end(),
-		MULTIDIMENSIONAL_QMAP_NAMESPACE::clean<D,K,T,L>);
+	for_each(index_map.begin(), index_map.end(), util::clean<D,K,T,L>);
 	// problems with assignment = of pairs with const first
-	remove_if(index_map.begin(), index_map.end(),
-		MULTIDIMENSIONAL_QMAP_NAMESPACE::empty<D,K,T,L>);
+	remove_if(index_map.begin(), index_map.end(), util::empty<D,K,T,L>);
 #endif
 }
 
@@ -108,7 +106,7 @@ MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 typename multidimensional_qmap<D,K,T,L>::size_type
 multidimensional_qmap<D,K,T,L>::population(void) const {
 	return accumulate(index_map.begin(), index_map.end(), 0,
-		MULTIDIMENSIONAL_QMAP_NAMESPACE::population<D,K,T,L>);
+		util::population<D,K,T,L>);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,7 +193,7 @@ multidimensional_qmap<1,K,T,L>::dump(ostream& o, const string& pre) const {
 }
 
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_QMAP_NAMESPACE
+}	// end namespace util
 
 #endif	// __UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 

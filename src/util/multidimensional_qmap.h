@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.9.16.1 2005/02/09 04:14:14 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.9.16.2 2005/02/17 00:10:18 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -31,11 +31,11 @@
 	Use nested_iterator concept!
  */
 
-namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
+namespace util {
 //=============================================================================
 using std::pair;
 using std::string;
-using QMAP_NAMESPACE::qmap;
+using util::qmap;
 
 #include "using_ostream.h"
 
@@ -385,17 +385,15 @@ empty(const typename multidimensional_qmap<D,K,T,L>::value_type& i) {
 }
 
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_QMAP_NAMESPACE
+}	// end namespace util
 
 // specialization of array_traits
 namespace util {
 
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 struct array_traits<
-		MULTIDIMENSIONAL_QMAP_NAMESPACE::
-			multidimensional_qmap<D,K,T,L> > {
-	typedef	MULTIDIMENSIONAL_QMAP_NAMESPACE::multidimensional_qmap<D,K,T,L>
-				array_type;
+		util::multidimensional_qmap<D,K,T,L> > {
+	typedef	util::multidimensional_qmap<D,K,T,L>	array_type;
 	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 

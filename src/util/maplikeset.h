@@ -1,11 +1,14 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1 2005/02/09 04:14:14 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.2 2005/02/17 00:10:18 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
 #define	__UTIL_MAPLIKESET_H__
+
+#include <utility>		// for std::pair
+#include "STL/functional_fwd.h"
 
 namespace util {
 //=============================================================================
@@ -27,8 +30,6 @@ namespace util {
 	distinguishable key-value components.  
 	The value component must be default constructible.  
 
-	TODO: provide a maplikeset_element template.  
-
 	\param S is a set container.
  */
 template <class S>
@@ -45,7 +46,7 @@ public:
 	/**
 		The value_type IS the mapped_type.
 	 */
-	typedef	value_type				mapped_type;
+	typedef	typename value_type::value_type		mapped_type;
 
 	/**
 		The key comparater IS the value comparator of sets.  
@@ -60,11 +61,7 @@ public:
 		the value_types should allow the "mapped_type"
 		component to be mutable without violating ordering.  
 	 */
-#if 0
-	typedef	value_type&				reference;
-#else
 	typedef	typename set_type::reference		reference;
-#endif
 	typedef	typename set_type::const_reference	const_reference;
 	/**
 		Set type's iterator is actually const!
@@ -80,21 +77,6 @@ public:
 	typedef	typename set_type::pointer		pointer;
 	typedef	typename set_type::const_pointer	const_pointer;
 	typedef	typename set_type::allocator_type	allocator_type;
-protected:
-	typedef	typename value_type::value_type		impl_value_type;
-
-#if 0
-protected:
-	/**
-		Explicit conversion...
-	 */
-	static
-	inline
-	value_type
-	key_to_value(const key_type& k) {
-		return value_type(k);
-	}
-#endif
 
 public:
 	maplikeset() : set_type() { }
@@ -161,8 +143,7 @@ public:
 	}
 	
 	iterator
-	insert(const key_type& k, const impl_value_type& v = 
-			impl_value_type()) {
+	insert(const key_type& k, const mapped_type& v = mapped_type()) {
 		// returns pair<iterator, bool>
 		return set_type::insert(value_type(k, v)).first;
 	}
@@ -188,6 +169,7 @@ public:
 	}
 
 #if 0
+	// don't provide the const-semantics lookup automatically...
 	/**
 		For convenience, we provide a const-query lookup operator.  
 	 */
@@ -206,16 +188,16 @@ public:
 	with maplikeset.  
  */
 template <class K, class V>
-class maplikeset_element {
+class maplikeset_element : public std::pair<const K, V> {
 private:
 	typedef	maplikeset_element<K,V>			this_type;
+	typedef std::pair<const K, V>			parent_type;
 public:
 	typedef	K					key_type;
 	typedef	V					mapped_type;
 	typedef	V					value_type;
 protected:
-	const key_type					key;
-	/**
+	/***
 		Kludge:
 		Sets only return const pointer/reference/iterators, 
 		and thus the elements may not be modified!
@@ -223,47 +205,132 @@ protected:
 		const is the key which is used for sort-ordering.  
 		The value component should be free to change, 
 		hence, the value field is mutable.  
-	 */
-	mutable value_type				value;
+		We achieve this with const-cast on references to second.  
+	***/
 public:
-	maplikeset_element() : key(), value() { }
+	maplikeset_element() : parent_type() { }
 
 	explicit
 	maplikeset_element(const key_type& k, 
-		const value_type& v = value_type()) : key(k), value(v) { }
+		const value_type& v = value_type()) :
+		parent_type(k, v) { }
 
 	const key_type&
-	get_key(void) const { return key; }
+	get_key(void) const { return first; }
 
-#if 0
 	value_type&
-	get_value(void) { return value; }
-#endif
+	value(void) const { return const_cast<this_type&>(*this).second; }
 
 	const value_type&
-	get_value(void) const { return value; }
-
-#if 0
-	/**
-		WARNING: abusing implicit conversion operator!
-	 */
-	operator value_type& () { return value; }
-
-	operator const value_type& () { return value; }
-#endif
+	const_value(void) const { return this->second; }
 
 	/**
 		This requires mutability of value, see its note.  
 	 */
 	const this_type&
 	operator = (const value_type& v) const {
-		value = v;
+		const_cast<this_type&>(*this).second = v;
 		return *this;
 	}
 
 	const this_type&
 	operator = (const this_type& k) const {
-		value = k.value;
+		const_cast<this_type&>(*this).second = k.second;
+		return *this;
+	}
+
+	/**
+		ALERT! confusing operator overload combination ahead!
+		When comparing order, compare key.  
+		This operator is used to sort the set.  
+	 */
+	bool
+	operator < (const this_type& p) const {
+		return first < p.first;
+	}
+
+#if 0
+	/**
+		ALERT! confusing operator overload combination ahead!
+		When comparing equality, compare value only!
+		This is useful in determining whether or not
+		elements contained at a position are equal, 
+		by ignoring their sorting "keys".  
+		See where this applies in "multikey_assoc.tcc".
+	 */
+	bool
+	operator == (const this_type& p) const {
+		return second == p.second;
+	}
+
+	bool
+	operator != (const this_type& p) const {
+		return !(second == p.second);
+	}
+#endif
+
+};	// end class maplikeset_element
+
+//=============================================================================
+
+/**
+	A map-like set element derived from the value type.  
+ */
+template <class K, class V>
+class maplikeset_element_derived : public V {
+	typedef	maplikeset_element_derived<K,V>		this_type;
+protected:
+	typedef	V					parent_type;
+public:
+	typedef	K					key_type;
+	typedef	V					value_type;
+	typedef	K					first_type;
+	typedef	V					second_type;
+public:
+	/**
+		Decided to make this public const for convenience.  
+	 */
+	const key_type					key;
+public:
+	/**
+		Is this default constructor needed?
+	 */
+	maplikeset_element_derived() : value_type(), key() { }
+
+	explicit
+	maplikeset_element_derived(const key_type& k, 
+		const value_type& v = value_type()) :
+		value_type(v), key(k) { }
+
+	const key_type&
+	get_key(void) const { return key; }
+
+	value_type&
+	value(void) const { return const_cast<this_type&>(*this); }
+
+	const value_type&
+	const_value(void) const {
+		return static_cast<const value_type&>(*this);
+	}
+
+	/**
+		This requires mutability of value, see its note.  
+		Here, the 'value' is the base_type.  
+	 */
+	const this_type&
+	operator = (const value_type& v) const {
+		// Egregious casting to achieve parent_type mutability...
+		const_cast<value_type&>(
+			static_cast<const value_type&>(*this)) = v;
+		return *this;
+	}
+
+	const this_type&
+	operator = (const this_type& k) const {
+		// Egregious casting to achieve parent_type mutability...
+		const_cast<value_type&>(
+			static_cast<const value_type&>(*this)) = 
+			static_cast<const value_type&>(k);
 		return *this;
 	}
 
@@ -288,19 +355,62 @@ public:
 	 */
 	bool
 	operator == (const this_type& p) const {
-		return value == p.value;
+		return static_cast<const value_type&>(*this) ==
+			static_cast<const value_type&>(p);
 	}
 
 	bool
 	operator != (const this_type& p) const {
-		return !(value == p.value);
+		return !(*this == p);
 	}
 #endif
 
-};	// end class maplikeset_element
+};	// end class maplikeset_element_derived
 
 //=============================================================================
 }	// end namespace util
+
+
+//=============================================================================
+
+namespace std {
+using util::maplikeset_element_derived;
+
+template <class K, class V>
+struct _Select1st<maplikeset_element_derived<K,V> > :
+	public unary_function<maplikeset_element_derived<K,V>, 
+		typename maplikeset_element_derived<K,V>::first_type> {
+	typedef	maplikeset_element_derived<K,V>		pair_type;
+	typedef	typename pair_type::key_type		first_type;
+
+	first_type&
+	operator () (pair_type& p) const { return p.key; }
+
+	const first_type&
+	operator () (const pair_type& p) const { return p.key; }
+};	// end struct _Select1st
+
+template <class K, class V>
+struct _Select2nd<maplikeset_element_derived<K,V> > :
+	public unary_function<maplikeset_element_derived<K,V>, 
+		typename maplikeset_element_derived<K,V>::second_type> {
+	typedef	maplikeset_element_derived<K,V>		pair_type;
+	typedef	typename pair_type::value_type		second_type;
+
+	second_type&
+	operator () (pair_type& p) const {
+		return static_cast<second_type&>(p);
+	}
+
+	const second_type&
+	operator () (const pair_type& p) const {
+		return static_cast<const second_type&>(p);
+	}
+};	// end struct _Select2nd
+
+}	// end namespace std
+
+//=============================================================================
 
 #endif	// __UTIL_MAPLIKESET_H__
 

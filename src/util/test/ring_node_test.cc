@@ -1,7 +1,7 @@
 /**
 	\file "ring_node_test.cc"
 	Test for ring_node structures.  
-	$Id: ring_node_test.cc,v 1.1.2.1 2005/02/04 05:40:25 fang Exp $
+	$Id: ring_node_test.cc,v 1.1.2.2 2005/02/17 00:10:25 fang Exp $
  */
 
 #include <iostream>
@@ -11,21 +11,42 @@
 #include "using_ostream.h"
 using std::string;
 using util::ring_node;
+using util::ring_node_derived;
 
-typedef	ring_node<string>	ring_type;
+// typedef	ring_node<string>	ring_type;
 
+template <class RingType>
 ostream&
-dump_ring_node(ostream& o, const ring_type& r) {
+dump_ring_node(ostream& o, const RingType& r) {
 	// could even use ostream_iterator
-	ring_type::const_iterator i = r.begin();
-	const ring_type::const_iterator e = r.end();
+	typename RingType::const_iterator i = r.begin();
+	const typename RingType::const_iterator e = r.end();
 	for ( ; i!=e; i++)
 		cout << *i << endl;
 	return o;
 }
 
+template <template <class> class>
+static
+void
+ring_type_test(void);
+
+//=============================================================================
 int
 main(int argc, char* argv[]) {
+	cout << "========= testing ring_node<string> =========" << endl;
+	ring_type_test<ring_node>();
+	cout << "===== testing ring_node_derived<string> =====" << endl;
+	ring_type_test<ring_node_derived>();
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+template <template <class> class R>
+static
+void
+ring_type_test(void) {
+	typedef	R<string>	ring_type;
 {
 	ring_type first("Hello.");
 	dump_ring_node(cout, first) << endl;
@@ -97,6 +118,5 @@ main(int argc, char* argv[]) {
 	dump_ring_node(cout, first) << endl;
 	dump_ring_node(cout, second) << endl;
 }
-	return 0;
 }
 

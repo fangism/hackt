@@ -3,13 +3,15 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.2 2005/02/09 04:14:11 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.3 2005/02/17 00:10:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <exception>
 #include <iostream>
@@ -26,27 +28,250 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-#include "multikey_qmap.tcc"
+// #include "multikey_qmap.tcc"
+#include "multikey_set.tcc"
+#include "ring_node.tcc"
+
 #include "persistent_object_manager.tcc"
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
-
 #include "ptrs_functional.h"
-#include "dereference.h"
 #include "compose.h"
 #include "binders.h"
+#include "dereference.h"
 
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
+//=============================================================================
+// module-local specializations
+
+namespace std {
+using ART::entity::int_instance_alias;
+
+template <size_t D>
+struct _Select1st<int_instance_alias<D> > :
+	public _Select1st<typename int_instance_alias<D>::parent_type> {
+};      // end struct _Select1st
+
+template <size_t D>
+struct _Select2nd<int_instance_alias<D> > :
+	public _Select2nd<typename int_instance_alias<D>::parent_type> {
+};
+}	// end namespace std
+
+//=============================================================================
 STATIC_TRACE_BEGIN("instance-int")
 
 namespace ART {
 namespace entity {
 using std::string;
-using namespace MULTIKEY_NAMESPACE;
+using std::_Select1st;
+using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
+using util::multikey;
+using util::value_writer;
+using util::value_reader;
+using util::write_value;
+using util::read_value;
+using util::indent;
+using util::auto_indent;
+
+//=============================================================================
+// class int_instance_alias_info method definitions
+
+// inline
+int_instance_alias_info::~int_instance_alias_info() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (instance)
+		instance->collect_transient_info(m);
+	if (container)
+		container->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::dump_alias(ostream& o) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::write_next_connection(
+		const persistent_object_manager&, ostream&) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, instance);
+	m.write_pointer(o, container);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, instance);
+	m.read_pointer(i, container);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias_info::transient_info_collector::operator () (
+		const int_instance_alias_info& i) {
+	i.collect_transient_info_base(manager);
+}
+
+//=============================================================================
+// typedef int_instance_alias_base function definitions
+
+ostream&
+operator << (ostream& o, const int_instance_alias_base& i) {
+	return o << "int-alias @ " << &i;
+}
+
+//=============================================================================
+// class int_instance_alias method definitions
+
+template <size_t D>
+int_instance_alias<D>::~int_instance_alias() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        Prints out the next instance alias in the connected set.  
+ */
+template <size_t D>
+void
+int_instance_alias<D>::dump_alias(ostream& o) const {
+	NEVER_NULL(container);
+	o << container->get_qualified_name() <<
+		multikey<D, pint_value_type>(key);
+		// casting to multikey for the sake of printing [i] for D==1.
+		// could use specialization to accomplish this...
+		// bah, not important
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+int_instance_alias<D>::write_next_connection(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, container);
+#if 0
+	value_writer<key_type> kw(os);
+	kw(e.key);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+int_instance_alias<D>::collect_transient_info(
+		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("bool_alias::collect_transients()");
+	// this isn't truly a persistent type, so we don't register this addr.
+	int_instance_alias_info::collect_transient_info_base(m);
+	// next->collect_transient_info_base(m)?        CYCLE!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
+template <size_t D>
+void
+int_instance_alias<D>::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_PERSISTENT("int_alias::write_object()");
+#if 0
+	value_writer<key_type> write_key(os);
+	write_key(key);
+#endif
+	int_instance_alias_info::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+int_instance_alias<D>::load_object(const persistent_object_manager& m,
+		istream& i) {
+	STACKTRACE_PERSISTENT("int_alias::load_object()");
+#if 0
+	value_reader<key_type> kr(os);
+	kr(e.key);
+#endif
+	int_instance_alias_info::load_object_base(m, i);
+}
+
+//=============================================================================
+// class int_instance_alias<0> method definitions
+
+int_instance_alias<0>::~int_instance_alias() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias<0>::dump_alias(ostream& o) const {
+	NEVER_NULL(container);
+	o << container->get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias<0>::write_next_connection(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, container);
+	// no key to write!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias<0>::collect_transient_info(
+		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("int_alias<0>::collect_transients()");
+	// this isn't truly a persistent type, so we don't register this addr.
+	int_instance_alias_info::collect_transient_info_base(m);
+	// next->collect_transient_info_base(m)?        CYCLE!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias<0>::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_PERSISTENT("int_alias<0>::write_object()");
+	int_instance_alias_info::write_object_base(m, o);
+	// no key to write!
+	// continuation pointer?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_alias<0>::load_object(const persistent_object_manager& m,
+		istream& i) {
+	STACKTRACE_PERSISTENT("int_alias<0>::load_object()");
+	int_instance_alias_info::load_object_base(m, i);
+	// no key to load!
+}
 
 //=============================================================================
 // class int_instance_collection method definitions
@@ -140,6 +365,7 @@ int_instance_collection::get_actual_param_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 int_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -149,6 +375,7 @@ if (!m.register_transient_object(this,
 	parent_type::collect_transient_info_base(m);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_collection*
@@ -200,10 +427,11 @@ int_instance_collection::load_object_base(
 //=============================================================================
 // class int_instance_alias method definitions
 
+template <size_t D>
 ostream&
-operator << (ostream& o, const int_instance_alias& b) {
+operator << (ostream& o, const int_instance_alias<D>& b) {
 	INVARIANT(b.valid());
-	return o << "(int-alias)";
+	return o << "(int-alias-" << D << ")";
 }
 
 //=============================================================================
@@ -250,9 +478,14 @@ int_array<D>::dump_unrolled_instances(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INT_ARRAY_TEMPLATE_SIGNATURE 
 ostream&
-int_array<D>::key_dumper::operator () (
-		const typename collection_type::value_type& p) {
+int_array<D>::key_dumper::operator () (const value_type& p) {
+#if 0
 	return os << auto_indent << p.first << endl;
+#else
+	os << auto_indent << _Select1st<value_type>()(p) << " = ";
+	p.get_next()->dump_alias(os);
+	return os << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -284,7 +517,9 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
+	bool err = false;
 	do {
+#if 0
 		// will create if necessary
 		int_instance_alias& pi(collection[key_gen]);
 		if (pi.valid()) {
@@ -296,8 +531,30 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			THROW_EXIT;
 		}
 		pi.instantiate();
+#else
+		const_iterator iter = collection.find(key_gen);
+		if (iter == collection.end()) {
+			// then we can insert a new one
+			// create with back-ref!
+			collection.insert(element_type(key_gen,
+				never_ptr<const this_type>(this)));
+#if 0
+			const_iterator iter = collection.find(key_gen);
+			INVARIANT(iter->valid());
+#endif
+		} else {
+			// found one that already exists!
+			// more detailed message, please!
+			cerr << "ERROR: Index " << key_gen << " of ";
+			what(cerr) << ' ' << get_qualified_name() <<
+				" already instantiated!" << endl;
+			err = true;
+		}
+#endif
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+	if (err)
+		THROW_EXIT;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -349,14 +606,25 @@ typename int_array<D>::instance_ptr_type
 int_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
-	const multikey<D, pint_value_type> index(i);
+//	const typename multikey<D, pint_value_type>::simple_type index(i);
+	const key_type index(i);
+#if 0
 	const int_instance_alias&
 		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
+#else
+	const const_iterator it(collection.find(index));
+	if (it == collection.end()) {
+		cerr << "ERROR: reference to uninstantiated int " <<
+			get_qualified_name() << " at index: " << i << endl;
+		return instance_ptr_type(NULL);
+	}
+	const element_type& b(*it);
+#endif
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
-		return instance_ptr_type(const_cast<int_instance_alias*>(&b));
+		return instance_ptr_type(const_cast<element_type*>(&b));
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
@@ -383,19 +651,62 @@ int_array<D>::lookup_instance_collection(
 	key_gen.initialize();
 	bool ret = true;
 	do {
-		const int_instance_alias& pi(collection[key_gen]);
+		const const_iterator it(collection.find(key_gen));
+		if (it == collection.end()) {
+			cerr << "FATAL: reference to uninstantiated int index "
+				<< key_gen << endl;
+			l.push_back(instance_ptr_type(NULL));
+			ret = false;
+		} else {
+		const element_type& pi(*it);
+		// pi MUST be valid if it belongs to an array
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
-				const_cast<int_instance_alias*>(&pi)));
+				const_cast<element_type*>(&pi)));
 		} else {
 			cerr << "FATAL: reference to uninstantiated int index "
 				<< key_gen << endl;
 			l.push_back(instance_ptr_type(NULL));
+			ret = false;
 		}
-		ret &= pi.valid();
+		}
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Going to need some sort of element_reader counterpart.
+	\param e is a reference to a int_instance_alias<D>.
+ */
+INT_ARRAY_TEMPLATE_SIGNATURE
+void
+int_array<D>::element_writer::operator () (const element_type& e) const {
+	STACKTRACE_PERSISTENT("int_array<D>::element_writer::operator()");
+	value_writer<key_type> write_key(os);
+	write_key(e.key);
+	e.write_object_base(pom, os);
+	// postpone connection writing until next phase
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INT_ARRAY_TEMPLATE_SIGNATURE
+void
+int_array<D>::connection_writer::operator() (const element_type& e) const {
+	STACKTRACE_PERSISTENT("int_array<D>::connection_writer::operator()");
+	const int_instance_alias_base* const next = e.get_next();
+	next->write_next_connection(pom, os);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INT_ARRAY_TEMPLATE_SIGNATURE
+void
+int_array<D>::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+	STACKTRACE_PERSISTENT("int_array<D>::collect_transients()");
+	parent_type::collect_transient_info_base(m);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -404,7 +715,21 @@ void
 int_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	collection.write(f);
+#else
+	// need to know how many members to expect
+	write_value(f, collection.size());
+	for_each(collection.begin(), collection.end(),
+		element_writer(m, f)
+	);
+#endif
+#if 0
+	// punting connections...
+	for_each(collection.begin(), collection.end(), 
+		connection_writer(m, f)
+	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -412,7 +737,30 @@ INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	collection.read(f);
+#else
+	size_t collection_size;
+	read_value(f, collection_size);
+	size_t i = 0;
+	for ( ; i < collection_size; i++) {
+		// this must perfectly complement element_writer::operator()
+		// construct the element locally first, then insert it into set
+		key_type temp_key;
+		value_reader<key_type> read_key(f);
+		read_key(temp_key);
+		element_type temp_elem(temp_key);
+		temp_elem.load_object_base(m, f);
+		collection.insert(temp_elem);
+	}
+#endif
+#if 0
+	// punting connections...
+	i = 0;
+	for ( ; i < collection_size; i++) {
+		// this must complement connection_writer::operator()
+	}
+#endif
 }
 
 //=============================================================================
@@ -466,7 +814,8 @@ int_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		cerr << "ERROR: Scalar int already instantiated!" << endl;
 		THROW_EXIT;
 	}
-	the_instance.instantiate();
+//	the_instance.instantiate();
+	the_instance.instantiate(never_ptr<const this_type>(this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -494,7 +843,7 @@ int_array<0>::lookup_instance(const multikey_index_type& i) const {
 		cerr << "ERROR: Reference to uninstantiated int!" << endl;
 		return instance_ptr_type(NULL);
 	} else	return instance_ptr_type(
-		const_cast<int_instance_alias*>(&the_instance));
+		const_cast<instance_type*>(&the_instance));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
 }
@@ -515,17 +864,35 @@ int_array<0>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+int_array<0>::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+	STACKTRACE_PERSISTENT("int_scalar::collect_transients()");
+	parent_type::collect_transient_info_base(m);
+	the_instance.collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 int_array<0>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	write_value(f, the_instance);
+#else
+	the_instance.write_object(m, f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	read_value(f, the_instance);
+#else
+	the_instance.load_object(m, f);
+#endif
 }
 
 //=============================================================================

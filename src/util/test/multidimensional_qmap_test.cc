@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.4 2004/12/05 05:08:28 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.4.16.1 2005/02/17 00:10:24 fang Exp $
  */
 
 #include <iostream>
@@ -11,13 +11,15 @@ using std::ostringstream;
 
 #include "STL/list.tcc"
 USING_LIST
+using std::string;
 
 #include "using_ostream.h"
 
 // later separate the following into declarations and definitions
 #include "multidimensional_qmap.tcc"
 
-using namespace MULTIDIMENSIONAL_QMAP_NAMESPACE;
+using util::multidimensional_qmap;
+using util::make_iter_range;
 
 typedef	multidimensional_qmap<3, int, string>	test_map3d_type;
 

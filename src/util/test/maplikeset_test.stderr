@@ -1,3 +1,42 @@
+======= testing maplikeset with non-derived element ======
+set foo should be empty: 
+
+set foo should contain exactly 1 empty element: 
+( 12,  )
+
+set foo should still contain exactly 1 empty element:
+( 12,  )
+
+set foo has one non-empty string:
+( 1, one )
+( 12,  )
+
+set foo has one non-empty string:
+( 1, two )
+( 12,  )
+
+set foo has no empty strings:
+( 1, two )
+( 12, zero )
+
+set foo has 2 empty strings:
+( 0,  )
+( 1, two )
+( 12,  )
+
+set foo has 2 empty strings:
+( 0,  )
+( 1, two )
+( 4,  grams of fat )
+( 12,  )
+
+set foo has 1 empty string:
+( 0, two grams of fat )
+( 1, two )
+( 4,  grams of fat )
+( 12,  )
+
+========= testing maplikeset with derived element ========
 set foo should be empty: 
 
 set foo should contain exactly 1 empty element: 

@@ -1,11 +1,13 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1 2005/02/17 00:10:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
 #define	__ART_OBJECT_FWD_H__
+
+#include <cstddef>			// for size_t
 
 #include "memory/pointer_classes_fwd.h"
 #include "STL/deque_fwd.h"
@@ -68,8 +70,8 @@ namespace entity {
 	class enum_instance;
 	class struct_instance;
 
-	class int_instance_alias;
-	class bool_instance_alias;
+	template <size_t>	class int_instance_alias;
+	template <size_t>	class bool_instance_alias;
 	class enum_instance_alias;
 	class struct_instance_alias;
 	class proc_instance_alias;

@@ -3,7 +3,7 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: qmap.h,v 1.8.16.1 2005/02/09 04:14:18 fang Exp $
+	$Id: qmap.h,v 1.8.16.2 2005/02/17 00:10:22 fang Exp $
  */
 
 #ifndef	__UTIL_QMAP_H__
@@ -14,7 +14,7 @@
 #include "STL/map.h"
 #include "const_assoc_query.h"
 
-namespace QMAP_NAMESPACE {
+namespace util {
 USING_MAP
 using std::pair;
 
@@ -444,7 +444,7 @@ public:
 #endif
 
 //-----------------------------------------------------------------------------
-}	// end namespace QMAP_NAMESPACE
+}	// end namespace util
 
 #endif	// __UTIL_QMAP_H__
 

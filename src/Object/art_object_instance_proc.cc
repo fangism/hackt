@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.3 2005/02/09 04:14:12 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.4 2005/02/17 00:10:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -38,11 +38,15 @@
 namespace ART {
 namespace entity {
 using std::string;
-using namespace MULTIKEY_NAMESPACE;
+using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE;
+using util::write_value;
+using util::read_value;
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // class proc_instance method definitions
@@ -491,7 +495,7 @@ typename proc_array<D>::instance_ptr_type
 proc_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
-	const multikey<D, pint_value_type> index(i);
+	const key_type index(i);
 	const proc_instance_alias&
 		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);

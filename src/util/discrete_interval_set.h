@@ -3,13 +3,13 @@
 	Class for a set of intervals over the set of integers
 	or discrete, integer-like values.  
 	This class is used to build the "multidimensional_sparse_set" class.  
-	$Id: discrete_interval_set.h,v 1.6 2004/12/16 01:08:53 fang Exp $
+	$Id: discrete_interval_set.h,v 1.6.16.1 2005/02/17 00:10:17 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004
 
-#ifndef	__DISCRETE_INTERVAL_SET_H__
-#define	__DISCRETE_INTERVAL_SET_H__
+#ifndef	__UTIL_DISCRETE_INTERVAL_SET_H__
+#define	__UTIL_DISCRETE_INTERVAL_SET_H__
 
 #include "discrete_interval_set_fwd.h"
 
@@ -17,7 +17,7 @@
 #include <iosfwd>
 
 //=============================================================================
-namespace DISCRETE_INTERVAL_SET_NAMESPACE {
+namespace util {
 using std::map;		// for map<>
 using std::ostream;
 
@@ -177,7 +177,7 @@ public:
 };	// end class discrete_interval_set
 
 //=============================================================================
-}	// end namespace DISCRETE_INTERVAL_SET_NAMESPACE
+}	// end namespace util
 
-#endif	//	__DISCRETE_INTERVAL_SET_H__
+#endif	// __UTIL_DISCRETE_INTERVAL_SET_H__
 

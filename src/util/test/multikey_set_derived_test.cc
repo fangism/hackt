@@ -1,11 +1,12 @@
 /**
-	\file "multikey_set_test.cc"
-	Test for multikey_set template class.  
-	$Id: multikey_set_test.cc,v 1.1.4.2 2005/02/17 00:10:24 fang Exp $
+	\file "multikey_set_derived_test.cc"
+	Test for multikey_set template class, using derived elements.  
+	$Id: multikey_set_derived_test.cc,v 1.1.4.1 2005/02/17 00:10:24 fang Exp $
  */
 
 #include <string>
 #include <iostream>
+// #include "maplikeset.h"
 #include "multikey_set.tcc"
 #include "sstream.h"
 #include <set>
@@ -15,12 +16,12 @@
 using std::string;
 using util::multikey;
 using util::multikey_set;
-using util::multikey_set_element;
+using util::multikey_set_element_derived;
 using std::ostringstream;
 
-typedef	multikey_set_element<3, int, string>	string_element_3d;
-typedef	multikey_set_element<2, int, string>	string_element_2d;
-typedef	multikey_set_element<1, int, string>	string_element_1d;
+typedef	multikey_set_element_derived<3, int, string>	string_element_3d;
+typedef	multikey_set_element_derived<2, int, string>	string_element_2d;
+typedef	multikey_set_element_derived<1, int, string>	string_element_1d;
 
 typedef	multikey_set<3, string_element_3d>	string_set_3d_type;
 typedef	multikey_set<2, string_element_2d>	string_set_2d_type;

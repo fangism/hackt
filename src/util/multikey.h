@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.2.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multikey.h,v 1.19.2.2 2005/02/17 00:10:19 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -14,6 +14,7 @@
 #include "STL/reverse_iterator.h"
 #include <valarray>
 #include <iosfwd>
+#include "IO_utils_fwd.h"
 
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K>
@@ -30,7 +31,7 @@ template <class K>
 /***
 	Later be able to compare between keys of different dimensions.  
 ***/
-namespace MULTIKEY_NAMESPACE {
+namespace util {
 using std::valarray;
 using std::pair;
 using std::ostream;
@@ -61,6 +62,10 @@ protected:
 	typedef	multikey_traits<K>			traits_type;
 public:
 	typedef	this_type				implementation_type;
+	/**
+		This is used to specialize dimension 1.  
+	 */
+	typedef	multikey<D,K>				simple_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::reference		reference;
 	typedef	typename traits_type::const_reference	const_reference;
@@ -159,6 +164,7 @@ protected:
 	typedef	multikey_traits<K>			traits_type;
 public:
 	typedef	K					implementation_type;
+	typedef	K					simple_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::reference		reference;
 	typedef	typename traits_type::const_reference	const_reference;
@@ -223,6 +229,7 @@ public:
 	const_reference
 	back(void) const { return index; }
 
+#if 0
 	/**
 		Convenient implicit conversion to plain scalar type.  
 		Non-const reference.  
@@ -234,6 +241,7 @@ public:
 		Const reference.  
 	 */
 	operator const K& () const { return index; }
+#endif
 
 	this_type&
 	operator = (const K k) { index = k; return *this; }
@@ -282,6 +290,12 @@ class multikey : public multikey_implementation_base<D,K> {
 public:
 	// workaround for constness problem in multikey_set_element
 	typedef	this_type				self_key_type;
+	/**
+		Referencing the "simple_type" of a multikey changes nothing
+		except for the case where D == 1, in which case, 
+		the specialization takes place.  
+	 */
+	typedef	typename impl_type::simple_type		simple_type;
 	typedef	typename impl_type::value_type		value_type;
 	typedef	typename impl_type::reference		reference;
 	typedef	typename impl_type::const_reference	const_reference;
@@ -511,6 +525,14 @@ public:
 		return impl_type::operator[](i);
 	}
 
+	/**
+		Just or the sake of specializing for D == 1.
+	 */
+	operator K () const {
+		INVARIANT(size() == 1);
+		return impl_type::operator[](0);
+	}
+
 	bool
 	operator == (const this_type&) const;
 
@@ -656,9 +678,126 @@ public:
 	corner_type&
 	operator ++ (int);
 
+	operator K () const {
+		// really want concept_check upon instantiation for D == 1
+		INVARIANT(D == 1);
+		return base_type::front();
+	}
+
 	// all other methods inherited
 
 };	// end class multikey_generator
+
+//=============================================================================
+#if 0
+/**
+	Only works for integer-like keys.  
+	Extension of a standard multikey, with knowledge of bounds.  
+ */
+template <class K>
+class multikey_generator<1,K> : public multikey<1,K> {
+public:
+	typedef	K					value_type;
+	typedef	multikey<1,K>				base_type;
+	typedef	typename base_type::iterator		iterator;
+	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reverse_iterator	reverse_iterator;
+	typedef	typename base_type::const_reverse_iterator
+							const_reverse_iterator;
+	typedef	base_type				corner_type;
+	typedef	typename base_type::simple_type		simple_type;
+// protected:
+public:		// for sake of laziness and convenience
+	/** vector of lower bounds */
+	corner_type		lower_corner;
+	/** vector of upper bounds */
+	corner_type		upper_corner;
+public:
+	/// default constructor
+	multikey_generator() : base_type(), lower_corner(), upper_corner() { }
+
+	// construct from a pair of keys
+	multikey_generator(const base_type& l, const base_type& u) :
+		base_type(), lower_corner(l), upper_corner(u) { }
+
+#if 0
+	// construct from a pair of keys
+	multikey_generator(const corner_type& l, const corner_type& u) :
+		base_type(), lower_corner(l), upper_corner(u) { }
+#endif
+
+	/// copy from a sequence of pairs
+	template <template <class> class L, template <class, class> class P>
+	explicit
+	multikey_generator(const L<P<K,K> >& l);
+
+	/**
+		\param LP is a list-of-pairs-like class.  
+	 */
+	template <class LP>
+	explicit
+	multikey_generator(const LP& l);
+
+	// use default destructor
+
+	/**
+		Make sure bounds are sane.  
+	 */
+	void
+	validate(void) const;
+
+	void
+	initialize(void);
+
+	size_t
+	size(void) const { return base_type::dimensions(); }
+
+	iterator
+	begin(void) { return base_type::begin(); }
+
+	const_iterator
+	begin(void) const { return base_type::begin(); }
+
+	iterator
+	end(void) { return base_type::end(); }
+
+	const_iterator
+	end(void) const { return base_type::end(); }
+
+	reverse_iterator
+	rbegin(void) { return base_type::rbegin(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return base_type::rbegin(); }
+
+	reverse_iterator
+	rend(void) { return base_type::rend(); }
+
+	const_reverse_iterator
+	rend(void) const { return base_type::rend(); }
+
+	corner_type&
+	get_lower_corner(void) { return lower_corner; }
+
+	const corner_type&
+	get_lower_corner(void) const { return lower_corner; }
+
+	corner_type&
+	get_upper_corner(void) { return upper_corner; }
+
+	const corner_type&
+	get_upper_corner(void) const { return upper_corner; }
+
+	// can be used directly as key, no need to convert
+	corner_type&
+	operator ++ (int);
+
+	operator K () const { return base_type::index; }
+
+	// all other methods inherited
+
+};	// end class multikey_generator
+#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -779,8 +918,37 @@ public:
 };	// end class multikey_generator_generic
 
 //=============================================================================
-}	// end namespace MULTIKEY_NAMESPACE
+}	// end namespace util
+
+//=============================================================================
+// specializations of other structs
+namespace util {
+
+template <class K>
+struct value_writer<multikey_generic<K> > {
+	typedef	multikey_generic<K>	value_type;
+	ostream& os;
+
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const value_type&);
+};	// end struct
+
+template <class K>
+struct value_reader<multikey_generic<K> > {
+	typedef	multikey_generic<K>	value_type;
+	istream& is;
+
+	value_reader(istream& o) : is(o) { }
+
+	void
+	operator () (value_type&);
+};	// end struct
 
 
+}	// end namespace util
+
+//=============================================================================
 #endif	// __UTIL_MULTIKEY_H__
 

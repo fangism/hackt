@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8.2.2 2005/02/09 04:14:10 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.2.3 2005/02/17 00:10:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -19,9 +19,8 @@ namespace entity {
 USING_LIST
 using std::string;
 using namespace util::memory;
-using QMAP_NAMESPACE::qmap;
-// using MULTIKEY_NAMESPACE::multikey_base;
-using MULTIKEY_MAP_NAMESPACE::multikey_map;
+using util::qmap;
+using util::multikey_map;
 
 //=============================================================================
 // class channel_instance_collection declared in "art_object_instance.h"
@@ -123,7 +122,7 @@ public:
 	typedef	chan_instance_alias			element_type;
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
-
+	typedef	typename collection_type::key_type	key_type;
 private:
 	collection_type					collection;
 private:

@@ -1,24 +1,20 @@
 /**
 	\file "discrete_interval_set_fwd.h"
 	Forward declarations for interval set class over integer-like values.
-	$Id: discrete_interval_set_fwd.h,v 1.5 2004/12/16 01:08:53 fang Exp $
+	$Id: discrete_interval_set_fwd.h,v 1.5.16.1 2005/02/17 00:10:17 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004
 
-#ifndef	__DISCRETE_INTERVAL_SET_FWD_H__
-#define	__DISCRETE_INTERVAL_SET_FWD_H__
+#ifndef	__UTIL_DISCRETE_INTERVAL_SET_FWD_H__
+#define	__UTIL_DISCRETE_INTERVAL_SET_FWD_H__
 
 #include <iosfwd>
-
-#ifndef DISCRETE_INTERVAL_SET_NAMESPACE
-#define DISCRETE_INTERVAL_SET_NAMESPACE		util
-#endif
 
 #define DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE	template <class T>
 
 //=============================================================================
-namespace DISCRETE_INTERVAL_SET_NAMESPACE {
+namespace util {
 using std::ostream;
 
 // forward declarations
@@ -29,7 +25,7 @@ template <class U>
 ostream& operator << (ostream& o, const discrete_interval_set<U>& r);
 
 //=============================================================================
-}	// end namespace DISCRETE_INTERVAL_SET_NAMESPACE
+}	// end namespace util
 
-#endif	//	__DISCRETE_INTERVAL_SET_FWD_H__
+#endif	// __UTIL_DISCRETE_INTERVAL_SET_FWD_H__
 

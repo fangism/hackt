@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.2.16.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.2.16.2 2005/02/17 00:10:18 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
@@ -13,7 +13,7 @@
 #include "qmap.tcc"
 #include "discrete_interval_set.tcc"
 
-namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE {
+namespace util {
 using std::ostringstream;
 #include "using_ostream.h"
 
@@ -420,7 +420,7 @@ multidimensional_sparse_set<1,T,R,L>::query_compact_dimensions(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
+}	// end namespace util
 
 #endif	// __UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 

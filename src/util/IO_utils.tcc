@@ -1,11 +1,11 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.6 2005/01/28 19:58:46 fang Exp $
+	$Id: IO_utils.tcc,v 1.6.2.1 2005/02/17 00:10:17 fang Exp $
  */
 
-#ifndef __IO_UTILS_TCC__
-#define __IO_UTILS_TCC__
+#ifndef __UTIL_IO_UTILS_TCC__
+#define __UTIL_IO_UTILS_TCC__
 
 #include <string>
 #include <iostream>
@@ -27,6 +27,28 @@ using std::istream;
 // these are instantiated in "IO_utils.cc"
 extern template void write_value(ostream&, const char&);
 extern template void read_value(istream&, char&);
+
+//=============================================================================
+/**
+	Default implementation for binary object writing.  
+	TODO: convert ALL invocations of read/write_value to 
+	the functor for proper specialization.  
+ */
+template <class T>
+void
+value_writer<T>::operator () (const T& t) {
+	write_value(os, t);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Default implementation for binary object reading.
+ */
+template <class T>
+void
+value_reader<T>::operator () (T& t) {
+	read_value(is, t);
+}
 
 //=============================================================================
 /**
@@ -296,5 +318,5 @@ read_map(istream& f, M& m) {
 
 }	// end namespace util
 
-#endif	// __IO_UTILS_TCC__
+#endif	// __UTIL_IO_UTILS_TCC__
 

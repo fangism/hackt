@@ -1,13 +1,16 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.4 2005/02/09 04:14:09 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.5 2005/02/17 00:10:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
 #define	__ART_OBJECT_INSTANCE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
 
 #include <iostream>
 #include <algorithm>
@@ -31,6 +34,20 @@
 #include "indent.h"
 #include "stacktrace.h"
 
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
+
 //=============================================================================
 namespace ART {
 namespace entity {
@@ -41,6 +58,8 @@ using std::bind2nd_argval_void;
 USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -85,7 +104,7 @@ instance_collection_base::instance_collection_base(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {
-	STACKTRACE("~instance_collection_base()");
+	STACKTRACE_DTOR("~instance_collection_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -493,13 +512,13 @@ inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
-//	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
+//	STACKTRACE_PERSISTENT("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
 	index_collection_type::const_iterator i = index_collection.begin();
 	const index_collection_type::const_iterator e = index_collection.end();
 	for ( ; i!=e; i++) {
-		STACKTRACE("for all index_collection:");
+		STACKTRACE_PERSISTENT("for all index_collection:");
 		NEVER_NULL(*i);
 #if 0
 		(*i)->what(STACKTRACE_STREAM << "at " << &**i << ", ") << endl;
@@ -521,7 +540,7 @@ instance_collection_base::collect_index_collection_pointers(
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-//	STACKTRACE("instance_collection_base::collect_transient_info_base()");
+//	STACKTRACE_PERSISTENT("instance_collection_base::collect_transient_info_base()");
 	collect_index_collection_pointers(m);
 }
 
@@ -535,7 +554,7 @@ inline
 void
 instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE("inst_coll_base::write_index_collection_pointers()");
+	STACKTRACE_PERSISTENT("inst_coll_base::write_index_collection_pointers()");
 	m.write_pointer(o, owner);
 	write_string(o, key);
 	m.write_pointer_list(o, index_collection);
@@ -559,7 +578,7 @@ inline
 void
 instance_collection_base::load_index_collection_pointers(
 		const persistent_object_manager& m, istream& i) {
-	STACKTRACE("inst_coll_base::load_index_collection_pointers()");
+	STACKTRACE_PERSISTENT("inst_coll_base::load_index_collection_pointers()");
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.3 2005/02/09 04:14:08 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.4 2005/02/17 00:10:12 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -19,12 +19,14 @@
 namespace ART {
 namespace entity {
 
-using namespace MULTIKEY_NAMESPACE;
 USING_LIST
 USING_CONSTRUCT
 using std::pair;
 using std::string;
 using std::ostream;
+using std::istream;
+using util::multikey_generic;
+using util::multikey_generator;
 using util::persistent;
 using util::persistent_object_manager;	// forward declared
 
@@ -271,16 +273,15 @@ public:
 
 	const_index_list
 	resolve_index_list(void) const;
+
 #if 0
 	bool
 	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
 
-//	excl_ptr<multikey_index_type>
 	multikey_index_type
 	upper_multikey(void) const;
 
-//	excl_ptr<multikey_index_type>
 	multikey_index_type
 	lower_multikey(void) const;
 
@@ -345,11 +346,9 @@ public:
 	bool
 	resolve_ranges(const_range_list& r) const;
 
-//	excl_ptr<multikey_index_type>
 	multikey_index_type
 	upper_multikey(void) const;
 
-//	excl_ptr<multikey_index_type>
 	multikey_index_type
 	lower_multikey(void) const;
 

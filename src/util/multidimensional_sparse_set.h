@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.6.16.1 2005/02/09 04:14:15 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.6.16.2 2005/02/17 00:10:18 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -22,12 +22,12 @@
 /**
 	Namespace containing multidimensional-sparse-set classes.  
  */
-namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE {
+namespace util {
 //=============================================================================
 using std::ostream;
 using std::string;
-using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
-using QMAP_NAMESPACE::qmap;
+using util::discrete_interval_set;
+using util::qmap;
 using namespace util::memory;
 
 //=============================================================================
@@ -324,16 +324,13 @@ public:
 };	// end class multidimensional_sparse_set
 
 //=============================================================================
-}	// end namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
+}	// end namespace util
 
 namespace util {
 
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-struct array_traits<
-	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
-		multidimensional_sparse_set<D,T,R,L> > {
-	typedef	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
-		multidimensional_sparse_set<D,T,R,L>	array_type;
+struct array_traits<util::multidimensional_sparse_set<D,T,R,L> > {
+	typedef	util::multidimensional_sparse_set<D,T,R,L>	array_type;
 	enum { dimensions = array_type::dim };
 };	// end struct array_traits
 

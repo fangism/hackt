@@ -2,43 +2,43 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3303d84	module__	0	0	60
-	2	 0x3300170	namespc_	0	60	84
-	3	 0x3303da4	dintcoll	1	84	767
-	4	 0x3804604	datainst	0	767	787
-	5	 0x3303df4	datatprf	0	787	803
-	6	 0x3303e00	datadefn	0	803	835
-	7	 0x3303e64	dprmlst_	0	835	851
-	8	 0x2672024	cnstpi__	0	851	863
-	9	 0x3303e74	crnglst_	0	863	883
-	10	 0x3804620	datainst	0	883	903
-	11	 0x3303e84	datatprf	0	903	919
-	12	 0x3303e94	dprmlst_	0	919	935
-	13	 0x3303ea4	crnglst_	0	935	955
-	14	 0x380463c	datainst	0	955	975
-	15	 0x3303eb4	datatprf	0	975	991
-	16	 0x3303ec4	dprmlst_	0	991	1007
-	17	 0x3303ed4	crnglst_	0	1007	1027
-	18	 0x3804658	datainst	0	1027	1047
-	19	 0x3303ee4	datatprf	0	1047	1063
-	20	 0x3303ef4	dprmlst_	0	1063	1079
-	21	 0x3303f04	crnglst_	0	1079	1099
-	22	 0x3804674	datainst	0	1099	1119
-	23	 0x3303f14	datatprf	0	1119	1135
-	24	 0x3303f24	dprmlst_	0	1135	1151
-	25	 0x3303f34	crnglst_	0	1151	1171
-	26	 0x3804690	datainst	0	1171	1191
-	27	 0x3303f44	datatprf	0	1191	1207
-	28	 0x3303f54	dprmlst_	0	1207	1223
-	29	 0x3303f64	crnglst_	0	1223	1243
-	30	 0x38046ac	datainst	0	1243	1263
-	31	 0x3303f74	datatprf	0	1263	1279
-	32	 0x3303f84	dprmlst_	0	1279	1295
-	33	 0x3303f94	crnglst_	0	1295	1315
-	34	 0x38046c8	datainst	0	1315	1335
-	35	 0x3303fa4	datatprf	0	1335	1351
-	36	 0x3303fb4	dprmlst_	0	1351	1367
-	37	 0x3303fc4	crnglst_	0	1367	1387
+	1	 0x3103d84	module__	0	0	60
+	2	 0x3100170	namespc_	0	60	84
+	3	 0x3103da4	dintcoll	1	84	519
+	4	 0x3804604	datainst	0	519	539
+	5	 0x3103df4	datatprf	0	539	555
+	6	 0x3103e00	datadefn	0	555	587
+	7	 0x3103e64	dprmlst_	0	587	603
+	8	 0x25f6024	cnstpi__	0	603	615
+	9	 0x3103e74	crnglst_	0	615	635
+	10	 0x3804620	datainst	0	635	655
+	11	 0x3103e84	datatprf	0	655	671
+	12	 0x3103e94	dprmlst_	0	671	687
+	13	 0x3103ea4	crnglst_	0	687	707
+	14	 0x380463c	datainst	0	707	727
+	15	 0x3103eb4	datatprf	0	727	743
+	16	 0x3103ec4	dprmlst_	0	743	759
+	17	 0x3103ed4	crnglst_	0	759	779
+	18	 0x3804658	datainst	0	779	799
+	19	 0x3103ee4	datatprf	0	799	815
+	20	 0x3103ef4	dprmlst_	0	815	831
+	21	 0x3103f04	crnglst_	0	831	851
+	22	 0x3804674	datainst	0	851	871
+	23	 0x3103f14	datatprf	0	871	887
+	24	 0x3103f24	dprmlst_	0	887	903
+	25	 0x3103f34	crnglst_	0	903	923
+	26	 0x3804690	datainst	0	923	943
+	27	 0x3103f44	datatprf	0	943	959
+	28	 0x3103f54	dprmlst_	0	959	975
+	29	 0x3103f64	crnglst_	0	975	995
+	30	 0x38046ac	datainst	0	995	1015
+	31	 0x3103f74	datatprf	0	1015	1031
+	32	 0x3103f84	dprmlst_	0	1031	1047
+	33	 0x3103f94	crnglst_	0	1047	1067
+	34	 0x38046c8	datainst	0	1067	1087
+	35	 0x3103fa4	datatprf	0	1087	1103
+	36	 0x3103fb4	dprmlst_	0	1103	1119
+	37	 0x3103fc4	crnglst_	0	1119	1139
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -59,37 +59,37 @@ In namespace "", we have: {
       [5..5]
     }
       unrolled indices: {
-        0
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        10
-        11
-        12
-        15
-        16
-        17
-        18
-        19
-        20
-        21
-        22
-        23
-        24
-        25
-        26
-        27
-        28
-        29
-        40
-        41
-        42
+        0 = ::foo[0]
+        1 = ::foo[1]
+        2 = ::foo[2]
+        3 = ::foo[3]
+        4 = ::foo[4]
+        5 = ::foo[5]
+        6 = ::foo[6]
+        7 = ::foo[7]
+        8 = ::foo[8]
+        9 = ::foo[9]
+        10 = ::foo[10]
+        11 = ::foo[11]
+        12 = ::foo[12]
+        15 = ::foo[15]
+        16 = ::foo[16]
+        17 = ::foo[17]
+        18 = ::foo[18]
+        19 = ::foo[19]
+        20 = ::foo[20]
+        21 = ::foo[21]
+        22 = ::foo[22]
+        23 = ::foo[23]
+        24 = ::foo[24]
+        25 = ::foo[25]
+        26 = ::foo[26]
+        27 = ::foo[27]
+        28 = ::foo[28]
+        29 = ::foo[29]
+        40 = ::foo[40]
+        41 = ::foo[41]
+        42 = ::foo[42]
       }
 }
 

@@ -2,26 +2,22 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102474	module__	0	0	40
+	1	 0x31006f4	module__	0	0	40
 	2	 0x3100170	namespc_	0	40	68
-	3	 0x3102494	dintcoll	1	68	170
-	4	 0x3804604	datainst	0	170	190
-	5	 0x31024e4	datatprf	0	190	206
-	6	 0x31024f0	datadefn	0	206	238
-	7	 0x3102554	dprmlst_	0	238	254
-	8	 0x25f6024	cnstpi__	0	254	266
-	9	 0x3102564	crnglst_	0	266	286
-	10	 0x31001a4	namespc_	0	286	325
-	11	 0x3102594	dintcoll	3	325	1170
-	12	 0x3804620	datainst	0	1170	1190
-	13	 0x3102574	datatprf	0	1190	1206
-	14	 0x3102584	dprmlst_	0	1206	1222
-	15	 0x31025e4	crnglst_	0	1222	1258
-	16	 0x31025f4	dintcoll	2	1258	1541
-	17	 0x380463c	datainst	0	1541	1561
-	18	 0x3102644	datatprf	0	1561	1577
-	19	 0x3102654	dprmlst_	0	1577	1593
-	20	 0x3102664	crnglst_	0	1593	1621
+	3	 0x3101eb4	dboolcol	1	68	166
+	4	 0x3804604	datainst	0	166	186
+	5	 0x3100714	datatprf	0	186	202
+	6	 0x3101f00	datadefn	0	202	235
+	7	 0x3100724	crnglst_	0	235	255
+	8	 0x31001a4	namespc_	0	255	294
+	9	 0x3101f64	dboolcol	3	294	1135
+	10	 0x3804620	datainst	0	1135	1155
+	11	 0x3101fb4	datatprf	0	1155	1171
+	12	 0x3101fc4	crnglst_	0	1171	1207
+	13	 0x3101fd4	dboolcol	2	1207	1486
+	14	 0x380463c	datainst	0	1486	1506
+	15	 0x3102024	datatprf	0	1506	1522
+	16	 0x3102034	crnglst_	0	1522	1550
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -38,7 +34,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        fancier_array = int<32>^3 fancier_array with indices: {
+        fancier_array = bool^3 fancier_array with indices: {
           [0..3][0..4][1..2]
         }
           unrolled indices: {
@@ -83,7 +79,7 @@ In namespace "", we have: {
             [3][4][1] = ::more_arrays::fancier_array[3][4][1]
             [3][4][2] = ::more_arrays::fancier_array[3][4][2]
           }
-        fancy_array = int<32>^2 fancy_array with indices: {
+        fancy_array = bool^2 fancy_array with indices: {
           [0..4][0..2]
         }
           unrolled indices: {
@@ -105,7 +101,7 @@ In namespace "", we have: {
           }
     }
   Instances:
-    good_array = int<32>^1 good_array with indices: {
+    good_array = bool^1 good_array with indices: {
       [0..4]
     }
       unrolled indices: {
