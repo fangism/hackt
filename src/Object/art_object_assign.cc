@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14.2.2 2005/02/09 04:14:07 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.14.2.2.6.1 2005/02/20 09:08:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -33,7 +33,14 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_expression_assignment,
 		"pint-expression-assignment")
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_expression_assignment, 
 		"pbool-expression-assignment")
-}
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_expression_assignment,
+		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_expression_assignment,
+		PINT_EXPR_ASSIGNMENT_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
@@ -42,6 +49,7 @@ USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;
 using std::bind2nd_argval;
+using util::persistent_traits;
 
 //=============================================================================
 // class param_expression_assignment method definitions
@@ -114,9 +122,6 @@ param_expression_assignment::validate_reference_is_uninitialized(
 
 //=============================================================================
 // class pbool_expression_assignment method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_expression_assignment,
-	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_expression_assignment, 32)
@@ -262,7 +267,8 @@ pbool_expression_assignment::unroll(unroll_context& c) const {
 void
 pbool_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(
@@ -299,9 +305,6 @@ pbool_expression_assignment::load_object(
 
 //=============================================================================
 // class pint_expression_assignment method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_expression_assignment,
-	PINT_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_expression_assignment, 64)
@@ -433,7 +436,8 @@ pint_expression_assignment::unroll(unroll_context& c) const {
 void
 pint_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.5 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.1 2005/02/20 09:08:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -33,6 +33,12 @@
 #include "compose.h"
 #include "binders.h"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_instance_collection, 
+		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::string;
@@ -45,12 +51,10 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // class enum_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_instance_collection,
-	ENUM_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -107,11 +111,21 @@ enum_instance_collection::make_instance_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+enum_instance_collection::member_inst_ref_ptr_type
+enum_instance_collection::make_member_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_inst_ref_ptr_type(
+		new enum_member_instance_reference(
+			b, never_ptr<const this_type>(this)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 enum_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		ENUM_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 }
 }

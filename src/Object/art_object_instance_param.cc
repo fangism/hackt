@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.9.2.2 2005/01/31 04:16:34 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.9.2.2.14.1 2005/02/20 09:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -209,10 +209,10 @@ param_instance_collection::is_loop_independent(void) const {
 	2) Thus they cannot even be referenced.  
 	3) This is just a placeholder that should never be called.  
  */
-count_ptr<member_instance_reference_base>
+param_instance_collection::member_inst_ref_ptr_type
 param_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	typedef	count_ptr<member_instance_reference_base>	return_type;
+		const inst_ref_ptr_type& b) const {
+	typedef	member_inst_ref_ptr_type	return_type;
 	NEVER_NULL(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
 	DIE;

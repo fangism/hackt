@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.3 2005/02/17 04:21:01 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.3.2.1 2005/02/20 09:08:18 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -29,27 +29,6 @@
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
 
-/**
-	Application specific explicit static template method instantiation
-	for persistent object IO.
-	Include "persistent_object_manager.tcc" before calling this macro.
-	Make sure to instantiate these in the util namespace.  
- */
-#define EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(T)
-
-#if 0
-#define EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(T)			\
-template excl_ptr<T>							\
-persistent_object_manager::load_object_from_file<T>(const string&);	\
-template excl_ptr<T>							\
-persistent_object_manager::self_test<T>(const string&, const T&);	\
-template excl_ptr<T>							\
-persistent_object_manager::self_test_no_file<T>(const T& m);		\
-template excl_ptr<T>							\
-persistent_object_manager::get_root<T>(void);
-#endif
-
-
 namespace util {
 //=============================================================================
 #include "using_ostream.h"
@@ -76,6 +55,7 @@ int
 persistent_object_manager::register_persistent_type(void) {
 	reconstruction_function_map_type& m = reconstruction_function_map();
 	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
+	INVARIANT(type_key != persistent::hash_key::null);
 	const reconstruct_function_ptr_type probe = m[type_key];
 #if WELCOME_TO_TYPE_REGISTRATION
 	cerr << "Welcome to persistent type registration, "
@@ -363,6 +343,7 @@ persistent_object_manager::__load_object_once(const P& p,
 //=============================================================================
 // class persistent_traits method definitions (default)
 
+#if 0
 /**
 	Initially null.
 	Will be set by constructing an object.  
@@ -388,8 +369,16 @@ persistent_traits<T>::persistent_traits(const string& s) {
 	INVARIANT(!type_id);
 	INVARIANT(type_key == persistent::hash_key::null);
 	type_key = s;
+	INVARIANT(get_type_key() == s);
 	type_id = persistent_object_manager::register_persistent_type<T>();
 }
+
+template <class T>
+const persistent::hash_key&
+persistent_traits<T>::get_type_key(void) {
+	return type_key;
+}
+#endif
 
 //=============================================================================
 }	// end namespace util

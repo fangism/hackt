@@ -1,5 +1,68 @@
 "ChangeLog"
 
+2005-02-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-merged-persistent-04:
+	  Merged -persistent-04 branch revisions into this branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-04:
+	  Substituted direct use of TYPE_KEY macros with
+	  persistent_traits<...>::type_key for less copying, 
+	  better maintainability.  
+	  This revision is clean and ready to merge with parent branch.
+
+
+2005-02-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-02-member-01:
+	  Child branch created for the sake of revising the 
+	  member_instance_reference system.  
+	  Testing to see if member_instance_reference_base
+	  really requires simple_instance_reference as the base type, 
+	  should really be generic.
+	  (a few connect tests will still die until announced otherwise)
+
+	+ -member-02:
+	  Changed base type of member_instance_reference_base to generic
+	  instance_reference_base.  Later, the base type shouldn't be allowed
+	  to be complex-aggregate, so perhaps deriving from nothing 
+	  (instead of instance_reference_base) is the correct thing to do.  
+
+	+ -member-03:
+	  Replaced all member_instance_references with template
+	  versions, extended datatypes members into subtype-specific
+	  versions.  ALL tests pass in this revision!
+	  This revision is littered with commented out code, next revision
+	  must clean up.  
+
+	+ -member-04: cleaned-up, ready to merge to parent branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-03-merged-member-04:
+	  Merged -member-04 child branch.
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-01:
+	  Subtype template classes for alias_connection s are enabled, 
+	  everything compiles, but there is some difficulty with 
+	  persistent type registration: the hash_key's are not retrieved
+	  properly by calls to static persistent_traits<T>::get_hash_key.
+	  Solution: we need proper specialization of persistent_traits, 
+	  which currently isn't done because type-keys are only registered
+	  dynamically by static objects, hence specialized definitions
+	  do not exist.  This branch will remedy this by using specialization
+	  and dynamic registration (for unique ID).  
+	  This initial revision compiles, but some tests will die while
+	  modifications are in transient state.  
+
+	+ -persistent-02:
+	  Overhauled persistent type registration as promised.  
+	  Compiles, runs most tests, some unexpected deaths in 
+	  tests/parser/connect.  Must sleep first...
+	  Deaths related to datatype_member_instance_references.
+
+
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04:

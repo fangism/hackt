@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.1 2005/02/20 09:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -74,6 +74,13 @@ struct _Select2nd<int_instance_alias<D> > :
 //=============================================================================
 STATIC_TRACE_BEGIN("instance-int")
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::int_instance_collection, 
+		DINT_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
+
 namespace ART {
 namespace entity {
 using std::string;
@@ -91,6 +98,7 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // class int_instance_alias_info method definitions
@@ -277,9 +285,6 @@ int_instance_alias<0>::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class int_instance_collection method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(int_instance_collection,
-	DINT_INSTANCE_COLLECTION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int_instance_collection::int_instance_collection(const scopespace& o, 
@@ -356,6 +361,16 @@ int_instance_collection::make_instance_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_instance_collection::member_inst_ref_ptr_type
+int_instance_collection::make_member_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_inst_ref_ptr_type(
+		new int_member_instance_reference(
+			b, never_ptr<const this_type>(this)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need to return a legitmate reference to a parameter list!
  */
@@ -364,19 +379,6 @@ int_instance_collection::get_actual_param_list(void) const {
 	STACKTRACE("int_instance_collection::get_actual_param_list()");
 	return never_ptr<const const_param_expr_list>(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-int_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-STACKTRACE("int_instance_collection::collect_transient_info()");
-if (!m.register_transient_object(this, 
-		DINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
-	parent_type::collect_transient_info_base(m);
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_collection*
@@ -704,7 +706,8 @@ int_array<D>::connection_writer::operator() (const element_type& e) const {
 INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("int_array<D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 }
@@ -871,7 +874,8 @@ int_array<0>::lookup_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_array<0>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("int_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	the_instance.collect_transient_info(m);

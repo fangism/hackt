@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.14.2.1.10.1 2005/02/18 01:25:34 fang Exp $
+ 	$Id: art_object_module.cc,v 1.14.2.1.10.2 2005/02/20 09:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -33,6 +33,10 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::module, MODULE_TYPE_KEY)
+}	// end namespace util
 
 namespace ART {
 namespace entity {
@@ -43,11 +47,10 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 USING_STACKTRACE
+using util::persistent_traits;
 
 //=============================================================================
 // class module method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(module, MODULE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -141,7 +144,8 @@ module::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_PERSISTENT("module::collect_transient_info()");
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member

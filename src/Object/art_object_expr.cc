@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.1 2005/02/18 06:07:42 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.2 2005/02/20 09:08:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -27,6 +27,7 @@
 // #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
+#include "art_object_connect.h"		// for ~aliases_connection_base
 #include "art_object_type_hash.h"
 
 #if 0
@@ -64,6 +65,10 @@
 #else
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace util {
@@ -111,16 +116,52 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_param_expr_list, CONST_PARAM_EXPR_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_param_expr_list, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_reference, 
+		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_reference, 
+		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const, CONST_PINT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const_collection, CONST_PINT_COLLECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::arith_expr, ARITH_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::relational_expr, RELATIONAL_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::logical_expr, LOGICAL_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range, CONST_RANGE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY)
+
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::const_range)
 }	// end namespace memory
 }	// end namespace util
-
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace ART {
@@ -141,6 +182,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 USING_STACKTRACE
+using util::persistent_traits;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -356,9 +398,6 @@ param_expr_list::~param_expr_list() { }
 //=============================================================================
 // class const_param_expr_list method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_param_expr_list, 
-	CONST_PARAM_EXPR_LIST_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent_type() { }
@@ -535,7 +574,8 @@ const_param_expr_list::unroll_resolve(const unroll_context& c) const {
 void
 const_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -597,9 +637,6 @@ const_param_expr_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class dynamic_param_expr_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_param_expr_list, 
-	DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list() :
@@ -845,7 +882,8 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 void
 dynamic_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -956,9 +994,6 @@ param_expr_collective::hash_string(void) const {
 
 //=============================================================================
 // class pbool_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_reference, 
-	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1313,6 +1348,16 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Parameters have value semantics, not alias semantics!
+ */
+excl_ptr<aliases_connection_base>
+pbool_instance_reference::make_aliases_connection_private(void) const {
+	DIE;
+	return excl_ptr<aliases_connection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -1320,7 +1365,8 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 void
 pbool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY))
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key))
 {  
 	collect_transient_info_base(m);
 	pbool_inst_ref->collect_transient_info(m);
@@ -1503,9 +1549,6 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 
 //=============================================================================
 // class pint_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_reference, 
-	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1874,6 +1917,16 @@ pint_instance_reference::assign(const list<value_type>& l) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Parameters have value semantics, not alias semantics!
+ */
+excl_ptr<aliases_connection_base>
+pint_instance_reference::make_aliases_connection_private(void) const {
+	DIE;
+	return excl_ptr<aliases_connection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -1882,7 +1935,7 @@ void
 pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
+		persistent_traits<this_type>::type_key)) {  
 	collect_transient_info_base(m);
 	pint_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
@@ -2064,8 +2117,6 @@ pint_instance_reference::assigner::operator() (const bool b,
 //=============================================================================
 // class pint_const method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 	ALERT: we allocate one of these during the static initialization
@@ -2200,7 +2251,8 @@ pint_const::unroll_resolve(const unroll_context& c) const {
  */
 void
 pint_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PINT_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2223,9 +2275,6 @@ pint_const::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class pint_const_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const_collection, 
-		CONST_PINT_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const_collection::pint_const_collection(const size_t d) :
@@ -2424,7 +2473,8 @@ pint_const_collection::collect_transient_info(
 	const char s = values.dimensions();
 	INVARIANT(s >= 0);
 	INVARIANT(s <= 4);
-	m.register_transient_object(this, CONST_PINT_COLLECTION_TYPE_KEY, s);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2451,8 +2501,6 @@ pint_const_collection::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class pbool_const method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pbool_const, 1024)
@@ -2533,7 +2581,8 @@ pbool_const::must_be_equivalent_pbool(const pbool_expr& b) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PBOOL_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2557,8 +2606,6 @@ pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class pint_unary_expr method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2701,7 +2748,8 @@ pint_unary_expr::unroll_resolve(const unroll_context& c) const {
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_UNARY_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	ex->collect_transient_info(m);
 }
 }
@@ -2730,9 +2778,6 @@ pint_unary_expr::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class pbool_unary_expr method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_unary_expr, 
-	PBOOL_UNARY_EXPR_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2862,7 +2907,8 @@ pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
 void
 pbool_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_UNARY_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	ex->collect_transient_info(m);
 }
 }
@@ -2893,8 +2939,6 @@ pbool_unary_expr::load_object(const persistent_object_manager& m,
 // class arith_expr method definitions
 
 // static member initializations (order matters!)
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(arith_expr, ARITH_EXPR_TYPE_KEY)
 
 const plus<pint_value_type, pint_value_type>		arith_expr::adder;
 const minus<pint_value_type, pint_value_type>		arith_expr::subtractor;
@@ -3130,7 +3174,8 @@ arith_expr::unroll_resolve(const unroll_context& c) const {
 void
 arith_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ARITH_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3164,8 +3209,6 @@ arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class relational_expr method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
 
 // static member initializations (order matters!)
 
@@ -3381,7 +3424,8 @@ relational_expr::unroll_resolve(const unroll_context& c) const {
 void
 relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, RELATIONAL_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3417,8 +3461,6 @@ relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class logical_expr method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(logical_expr, LOGICAL_EXPR_TYPE_KEY)
 
 // static member initializations (order matters!)
 
@@ -3615,7 +3657,8 @@ logical_expr::unroll_resolve(const unroll_context& c) const {
 void
 logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, LOGICAL_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3651,8 +3694,6 @@ logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class pint_range method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_range, DYNAMIC_RANGE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3772,7 +3813,8 @@ pint_range::must_be_formal_size_equivalent(const range_expr& re) const {
 void
 pint_range::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lower->collect_transient_info(m);
 	upper->collect_transient_info(m);
 }
@@ -3801,7 +3843,8 @@ pint_range::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class const_range method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range, CONST_RANGE_TYPE_KEY)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(const_range, 64)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4012,7 +4055,8 @@ const_range::range_size_equivalent(const const_index& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4087,9 +4131,6 @@ range_expr_list::range_expr_list() : object(), persistent() {
 
 //=============================================================================
 // class const_range_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range_list, 
-	CONST_RANGE_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list::const_range_list() : range_expr_list(), list_type() {
@@ -4474,7 +4515,8 @@ const_range_list::resolve_sizes(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_LIST_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4524,9 +4566,6 @@ const_range_list::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class dynamic_range_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_range_list, 
-	DYNAMIC_RANGE_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_range_list::dynamic_range_list() : range_expr_list(), list_type() {
@@ -4646,7 +4685,8 @@ dynamic_range_list::must_be_formal_size_equivalent(
 void
 dynamic_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -4718,9 +4758,6 @@ index_list::~index_list() { }
 
 //=============================================================================
 // class const_index_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_index_list, 
-	CONST_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::const_index_list() : index_list(), parent_type() { }
@@ -5032,7 +5069,8 @@ const_index_list::must_be_equivalent_indices(const index_list& l) const {
 void
 const_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -5093,9 +5131,6 @@ const_index_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class dynamic_index_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_index_list, 
-	DYNAMIC_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_index_list::dynamic_index_list() : index_list(), parent_type() { }
@@ -5324,7 +5359,8 @@ dynamic_index_list::resolve_multikey(
 void
 dynamic_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {

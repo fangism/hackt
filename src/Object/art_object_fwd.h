@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.2 2005/02/18 06:07:43 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.3 2005/02/20 09:08:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -51,7 +51,28 @@ namespace entity {
 	class process_instance_reference;
 	class built_in_param_def;
 	class typedef_base;
+#if 0
 	class member_instance_reference_base;
+	class process_member_instance_reference;
+	class channel_member_instance_reference;
+	class datatype_member_instance_reference;
+#else
+	template <class>
+	class member_instance_reference;
+
+	typedef	member_instance_reference<process_instance_reference>
+		process_member_instance_reference;
+	typedef	member_instance_reference<channel_instance_reference>
+		channel_member_instance_reference;
+	typedef	member_instance_reference<bool_instance_reference>
+		bool_member_instance_reference;
+	typedef	member_instance_reference<int_instance_reference>
+		int_member_instance_reference;
+	typedef	member_instance_reference<enum_instance_reference>
+		enum_member_instance_reference;
+	typedef	member_instance_reference<datastruct_instance_reference>
+		datastruct_member_instance_reference;
+#endif
 
 	class param_type_reference;
 	class pbool_type_reference;
@@ -84,8 +105,31 @@ namespace entity {
 	class instance_management_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
-	class aliases_connection_base;
 	class port_connection;
+	class aliases_connection_base;
+#if 1
+	// defined in "art_object_connect.h"
+	class data_alias_connection_base;
+	template <class, class>	class alias_connection;
+	typedef alias_connection<int_instance_reference, 
+			data_alias_connection_base>
+		int_alias_connection;
+	typedef alias_connection<bool_instance_reference, 
+			data_alias_connection_base>
+		bool_alias_connection;
+	typedef alias_connection<enum_instance_reference,
+			data_alias_connection_base>
+		enum_alias_connection;
+	typedef alias_connection<datastruct_instance_reference,
+			data_alias_connection_base>
+		datastruct_alias_connection;
+	typedef alias_connection<channel_instance_reference,
+			aliases_connection_base>
+		channel_alias_connection;
+	typedef alias_connection<process_instance_reference,
+			aliases_connection_base>
+		process_alias_connection;
+#endif
 
 	class instantiation_statement;
 	class param_instantiation_statement;

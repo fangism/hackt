@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.28.18.1 2005/02/18 03:25:13 fang Exp $
+ 	$Id: art_object_base.cc,v 1.28.18.2 2005/02/20 09:08:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -602,13 +602,19 @@ object_list::make_param_expr_list(void) const {
 excl_ptr<const aliases_connection_base>
 object_list::make_alias_connection(void) const {
 	typedef	excl_ptr<const aliases_connection_base>	return_type;
-	excl_ptr<aliases_connection_base>
-		ret(new aliases_connection_base);
 	const_iterator i = begin();
 	INVARIANT(size() > 1);		// else what are you connecting?
 	const count_ptr<const object> fo(*i);
 	const count_ptr<const instance_reference_base>
 		fir(fo.is_a<const instance_reference_base>());
+	NEVER_NULL(fir);
+#if 0
+	excl_ptr<aliases_connection_base>
+		ret(new aliases_connection_base);
+#else
+	excl_ptr<aliases_connection_base>
+		ret = instance_reference_base::make_aliases_connection(fir);
+#endif
 	// keep this around for type-checking comparisons
 	ret->append_instance_reference(fir);
 	// starting with second instance reference, type-check and alias

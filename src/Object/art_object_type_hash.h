@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1 2005/02/18 06:07:45 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4.16.1.10.2 2005/02/20 09:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -54,7 +54,6 @@
 // Instantiations, collections (non-unique):
 #define	PROCESS_INSTANCE_COLLECTION_TYPE_KEY			"proccoll"
 #define	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY			"chancoll"
-// #define	DATA_INSTANCE_COLLECTION_TYPE_KEY		"datacoll"
 #define	STRUCT_INSTANCE_COLLECTION_TYPE_KEY			"dstrcoll"
 #define	ENUM_INSTANCE_COLLECTION_TYPE_KEY			"enumcoll"
 #define	DBOOL_INSTANCE_COLLECTION_TYPE_KEY			"dboolcol"
@@ -69,7 +68,6 @@
 	// simple instance reference may contain multidimensional indices
 #define	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"sprocref"
 #define	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"schanref"
-// #define	SIMPLE_DATA_INSTANCE_REFERENCE_TYPE_KEY		"sdataref"
 #define	SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"sdbref"
 #define	SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY			"sdiref"
 #define	SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"sderef"
@@ -80,7 +78,6 @@
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
 #define	AGGREGATE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"achanref"
-// #define	AGGREGATE_DATA_INSTANCE_REFERENCE_TYPE_KEY	"adataref"
 #define	AGGREGATE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"adbref"
 #define	AGGREGATE_DINT_INSTANCE_REFERENCE_TYPE_KEY		"adiref"
 #define	AGGREGATE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"apbref"
@@ -89,7 +86,10 @@
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
 #define	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"mchanref"
-#define	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY			"mdataref"
+#define	MEMBER_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"mdbolref"
+#define	MEMBER_DINT_INSTANCE_REFERENCE_TYPE_KEY			"mdintref"
+#define	MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"menumref"
+#define	MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"mstrtref"
 	// no such thing as param member instance reference
 
 // Expressions:
@@ -145,8 +145,8 @@
 #define	DINT_ALIAS_CONNECTION_TYPE_KEY				"dialias"
 #define	ENUM_ALIAS_CONNECTION_TYPE_KEY				"enmalias"
 #define	STRUCT_ALIAS_CONNECTION_TYPE_KEY			"stralias"
-#define	CHAN_ALIAS_CONNECTION_TYPE_KEY				"chnalias"
-#define	PROC_ALIAS_CONNECTION_TYPE_KEY				"prcalias"
+#define	CHANNEL_ALIAS_CONNECTION_TYPE_KEY			"chnalias"
+#define	PROCESS_ALIAS_CONNECTION_TYPE_KEY			"prcalias"
 
 #define	PORT_CONNECTION_TYPE_KEY				"portconn"
 #define	LOOP_SCOPE_TYPE_KEY					"loopscop"

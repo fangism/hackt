@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.8.2.4 2005/02/17 00:43:09 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.2.4.2.1 2005/02/20 09:08:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -32,6 +32,12 @@
 #include "compose.h"
 #include "binders.h"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instance_collection, 
+		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::string;
@@ -44,12 +50,10 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // class channel_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection,
-	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -103,12 +107,12 @@ channel_instance_collection::make_instance_reference(void) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-count_ptr<member_instance_reference_base>
+channel_instance_collection::member_inst_ref_ptr_type
 channel_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
+		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
-	return count_ptr<channel_member_instance_reference>(
+	return member_inst_ref_ptr_type(
 		new channel_member_instance_reference(
 			b, never_ptr<const channel_instance_collection>(this)));
 		// omitting index argument, set it later...
@@ -120,7 +124,7 @@ void
 channel_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 }
 }

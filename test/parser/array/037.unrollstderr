@@ -2,43 +2,43 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3103de4	module__	0	0	48
+	1	 0x3103de0	module__	0	0	48
 	2	 0x3100170	namespc_	0	48	80
 	3	 0x3103e04	dintcoll	1	80	164
-	4	 0x3804604	datainst	0	164	184
-	5	 0x3103e54	datatprf	0	184	200
+	4	 0x3804800	datainst	0	164	184
+	5	 0x3103e50	datatprf	0	184	200
 	6	 0x3103d80	datadefn	0	200	232
 	7	 0x3103e64	dprmlst_	0	232	248
-	8	 0x25f6024	cnstpi__	0	248	260
+	8	 0x25bb024	cnstpi__	0	248	260
 	9	 0x3103e74	crnglst_	0	260	280
 	10	 0x3103e84	dintcoll	3	280	1515
-	11	 0x3804620	datainst	0	1515	1535
-	12	 0x3103ed4	datatprf	0	1535	1551
+	11	 0x3804818	datainst	0	1515	1535
+	12	 0x3103ed0	datatprf	0	1535	1551
 	13	 0x3103ee4	dprmlst_	0	1551	1567
 	14	 0x3103ef4	crnglst_	0	1567	1603
 	15	 0x3103f04	dintcoll	3	1603	2438
-	16	 0x380463c	datainst	0	2438	2458
-	17	 0x3103f54	datatprf	0	2458	2474
+	16	 0x3804830	datainst	0	2438	2458
+	17	 0x3103f50	datatprf	0	2458	2474
 	18	 0x3103f64	dprmlst_	0	2474	2490
 	19	 0x3103f74	crnglst_	0	2490	2526
-	20	 0x3103f84	aliascon	0	2526	2546
+	20	 0x3103f80	dialias_	0	2526	2546
 	21	 0x3103fac	sdiref__	0	2546	2566
 	22	 0x3103fcc	sdiref__	0	2566	2586
 	23	 0x3103fd4	cindlst_	0	2586	2610
-	24	 0x25f6038	cnstpi__	0	2610	2622
-	25	 0x25f604c	cnstpi__	0	2622	2634
-	26	 0x3103ff0	cnstrng_	0	2634	2650
-	27	 0x3104004	aliascon	0	2650	2670
-	28	 0x310402c	sdiref__	0	2670	2690
-	29	 0x3104034	cindlst_	0	2690	2714
-	30	 0x25f6060	cnstpi__	0	2714	2726
-	31	 0x3104050	cnstrng_	0	2726	2742
-	32	 0x3104070	cnstrng_	0	2742	2758
-	33	 0x310409c	sdiref__	0	2758	2778
-	34	 0x31040a4	cindlst_	0	2778	2802
-	35	 0x31040c0	cnstrng_	0	2802	2818
-	36	 0x31040e0	cnstrng_	0	2818	2834
-	37	 0x25f6074	cnstpi__	0	2834	2846
+	24	 0x25bb038	cnstpi__	0	2610	2622
+	25	 0x25bb04c	cnstpi__	0	2622	2634
+	26	 0x3802010	cnstrng_	0	2634	2650
+	27	 0x3103fe0	dialias_	0	2650	2670
+	28	 0x310400c	sdiref__	0	2670	2690
+	29	 0x3104014	cindlst_	0	2690	2714
+	30	 0x25bb060	cnstpi__	0	2714	2726
+	31	 0x3802024	cnstrng_	0	2726	2742
+	32	 0x3802038	cnstrng_	0	2742	2758
+	33	 0x310403c	sdiref__	0	2758	2778
+	34	 0x3104044	cindlst_	0	2778	2802
+	35	 0x380204c	cnstrng_	0	2802	2818
+	36	 0x3802060	cnstrng_	0	2818	2834
+	37	 0x25bb074	cnstpi__	0	2834	2846
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

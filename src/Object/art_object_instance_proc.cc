@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.5 2005/02/17 00:43:10 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.1 2005/02/20 09:08:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -35,6 +35,14 @@
 #include "binders.h"
 
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::proc_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance_collection, 
+		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 #include "using_ostream.h"
@@ -48,12 +56,10 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // class proc_instance method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(proc_instance,
-	UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_instance::proc_instance() : state(0) { }
@@ -76,7 +82,8 @@ proc_instance::construct_empty(const int) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 proc_instance::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	// walk vector of pointers...
 }
 }
@@ -154,9 +161,6 @@ proc_instance_alias::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection,
-	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_collection::process_instance_collection(const size_t d) :
@@ -268,12 +272,12 @@ process_instance_collection::make_instance_reference(void) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-count_ptr<member_instance_reference_base>
+process_instance_collection::member_inst_ref_ptr_type
 process_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
+		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
-	return count_ptr<process_member_instance_reference>(
+	return member_inst_ref_ptr_type(
 		new process_member_instance_reference(
 			b, never_ptr<const process_instance_collection>(this)));
 		// omitting index argument, set it later...
@@ -556,7 +560,7 @@ PROC_ARRAY_TEMPLATE_SIGNATURE
 void
 proc_array<D>::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		PROCESS_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<parent_type>::type_key, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 //	cerr << "FANG: finish proc_array<D>::collect_transient_info()" << endl;
 }
@@ -708,7 +712,7 @@ proc_array<0>::lookup_instance_collection(
 void
 proc_array<0>::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		PROCESS_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<parent_type>::type_key, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 //	cerr << "FANG: finish proc_array<0>::collect_transient_info()" << endl;
 	the_instance.collect_transient_info(m);

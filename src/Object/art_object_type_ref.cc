@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.1 2005/02/18 06:07:45 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2 2005/02/20 09:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -33,11 +33,21 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::ostringstream;
 #include "using_ostream.h"
 USING_STACKTRACE
+using util::persistent_traits;
 
 //=============================================================================
 // class fundamental_type_reference method definitions
@@ -357,9 +367,6 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_type_reference, 
-	DATA_TYPE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -505,7 +512,8 @@ data_type_reference::make_instance_collection(
 void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -554,9 +562,6 @@ data_type_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class channel_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_type_reference, 
-	CHANNEL_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -635,7 +640,8 @@ channel_type_reference::make_instance_collection(
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_chan_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -665,9 +671,6 @@ channel_type_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference, 
-	PROCESS_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -775,7 +778,8 @@ process_type_reference::make_instance_collection(
 void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_proc_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }

@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.3 2005/02/18 06:07:42 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.4 2005/02/20 09:08:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -13,7 +13,7 @@
 #include "memory/pointer_classes.h"
 #include "packed_array.h"
 
-#define	SUBTYPE_ALIASES_CONNECTION			0
+#define	SUBTYPE_ALIASES_CONNECTION			1
 
 namespace ART {
 namespace entity {
@@ -36,6 +36,8 @@ protected:
 #if !SUBTYPE_ALIASES_CONNECTION
 protected:
 	typedef	list<generic_inst_ptr_type>		inst_list_type;
+	typedef	inst_list_type::iterator		iterator;
+	typedef	inst_list_type::const_iterator		const_iterator;
 protected:
 	// items may be singular or collective instances references.  
 	inst_list_type					inst_list;
@@ -91,8 +93,10 @@ virtual	ostream&
 	ostream&
 	dump(ostream& o) const;
 
+#if 0
 	void
 	prepend_instance_reference(const generic_inst_ptr_type& i);
+#endif
 
 	void
 	unroll(unroll_context& ) const;
@@ -112,6 +116,8 @@ class data_alias_connection_base : public aliases_connection_base {
 	typedef	data_alias_connection_base	this_type;
 protected:
 	typedef	aliases_connection_base		parent_type;
+	typedef	parent_type::generic_inst_ptr_type
+						generic_inst_ptr_type;
 public:
 	data_alias_connection_base() : parent_type() { }
 
@@ -132,7 +138,8 @@ alias_connection<InstRef,Parent>
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 class alias_connection : public Parent {
-	typedef	alias_connection		this_type;
+	typedef	alias_connection<InstRef,Parent>
+						this_type;
 public:
 	typedef	Parent				parent_type;
 	typedef	InstRef				instance_reference_type;
@@ -173,18 +180,6 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class alias_connection
 
-typedef	alias_connection<int_instance_reference, data_alias_connection_base>
-						int_alias_connection;
-typedef	alias_connection<bool_instance_reference, data_alias_connection_base>
-						bool_alias_connection;
-typedef	alias_connection<enum_instance_reference, data_alias_connection_base>
-						enum_alias_connection;
-typedef	alias_connection<datastruct_instance_reference, data_alias_connection_base>
-						datastruct_alias_connection;
-typedef	alias_connection<channel_instance_reference, aliases_connection_base>
-						chan_alias_connection;
-typedef	alias_connection<process_instance_reference, aliases_connection_base>
-						proc_alias_connection;
 #endif
 
 //-----------------------------------------------------------------------------

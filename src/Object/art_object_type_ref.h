@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.18.2.1 2005/02/03 03:34:55 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.18.2.1.10.1 2005/02/20 09:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -119,6 +119,7 @@ public:
  */
 class channel_type_reference : public fundamental_type_reference {
 private:
+	typedef	channel_type_reference			this_type;
 	typedef	fundamental_type_reference		parent_type;
 protected:
 //	excl_ptr<const param_expr_list>	template_params;	// inherited

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.5.2.2 2005/02/03 03:34:49 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.5.2.2.10.1 2005/02/20 09:08:11 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -52,6 +52,7 @@ class pbool_instance_reference : public param_instance_reference,
 public:
 	typedef	pbool_value_type			value_type;
 private:
+	typedef	pbool_instance_reference		this_type;
 	typedef param_instance_reference		parent_type;
 	typedef	pbool_expr				interface_type;
 public:
@@ -164,6 +165,10 @@ public:
 		}
 	};	// end class assigner
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -184,6 +189,7 @@ class pint_instance_reference : public param_instance_reference,
 public:
 	typedef	pint_value_type				value_type;
 private:
+	typedef	pint_instance_reference			this_type;
 	typedef	param_instance_reference		parent_type;
 	typedef	pint_expr				interface_type;
 public:
@@ -296,6 +302,10 @@ public:
 			return this->operator()(b, *p);
 		}
 	};	// end class assigner
+
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
 
 protected:
 	using parent_type::collect_transient_info_base;

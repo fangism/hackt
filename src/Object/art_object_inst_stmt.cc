@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.2 2005/02/18 06:07:44 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.3 2005/02/20 09:08:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -48,12 +48,6 @@
 
 //=============================================================================
 // local specializations
-#if 0
-// need to explicitly instantiate here because list_vector_pool's
-// static initialization requires that the ::name be initialized first.
-// Without this, the name is automatically instantiated, but too late.
-template struct util::what<ART::entity::data_instantiation_statement>;
-#else
 // Alternatively, explicit specialization here guarantees that the
 // static initialization occurs in the correct order in this module.  
 namespace util {
@@ -63,8 +57,23 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
 	"pint_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
-}
-#endif
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instantiation_statement, 
+		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instantiation_statement, 
+		PINT_INSTANTIATION_STATEMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instantiation_statement, 
+		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instantiation_statement, 
+		CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_instantiation_statement, 
+		DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 // start of static initializations
@@ -74,6 +83,7 @@ STATIC_TRACE_BEGIN("inst_stmt")
 namespace ART {
 namespace entity {
 USING_STACKTRACE
+using util::persistent_traits;
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif
@@ -96,11 +106,9 @@ instantiation_statement::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 instantiation_statement::~instantiation_statement() {
 	STACKTRACE_DTOR("~instantiation_statement()");
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -209,9 +217,6 @@ param_instantiation_statement::~param_instantiation_statement() {
 //=============================================================================
 // class pbool_instantiation_statement method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instantiation_statement, 
-	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_instantiation_statement, 128)
 
@@ -287,7 +292,8 @@ pbool_instantiation_statement::unroll(unroll_context& c) const {
 void
 pbool_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
@@ -319,9 +325,6 @@ pbool_instantiation_statement::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class pint_instantiation_statement method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instantiation_statement, 
-	PINT_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_instantiation_statement, 256)
@@ -400,7 +403,8 @@ void
 pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 STACKTRACE_PERSISTENT("pint_instantiation_statement::collect_transient_info()");
-if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
@@ -432,9 +436,6 @@ pint_instantiation_statement::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_instantiation_statement method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instantiation_statement, 
-	PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -529,7 +530,8 @@ process_instantiation_statement::unroll(unroll_context& c) const {
 void
 process_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	NEVER_NULL(type);
 	inst_base->collect_transient_info(m);
@@ -570,9 +572,6 @@ process_instantiation_statement::load_object(
 
 //=============================================================================
 // class channel_instantiation_statement method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instantiation_statement, 
-	CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -644,7 +643,8 @@ channel_instantiation_statement::get_type_ref(void) const {
 void
 channel_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	INVARIANT(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
@@ -684,9 +684,6 @@ channel_instantiation_statement::load_object(
 
 //=============================================================================
 // class data_instantiation_statement method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_instantiation_statement, 
-	DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(data_instantiation_statement, 64)
@@ -793,7 +790,8 @@ void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 // STACKTRACE("data_instantiation_statement::collect_transient_info()");
-if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.1 2005/02/20 09:08:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -67,6 +67,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<2>, "bool_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<3>, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<4>, "bool_array_4D")
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::bool_instance_collection, 
+		DBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
@@ -106,6 +111,7 @@ using util::value_writer;
 using util::value_reader;
 using util::read_value;
 using util::write_value;
+using util::persistent_traits;
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
@@ -401,9 +407,6 @@ bool_instance_alias<0>::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class bool_instance_collection method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(bool_instance_collection,
-	DBOOL_INSTANCE_COLLECTION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool_instance_collection::bool_instance_collection(const scopespace& o, 
@@ -452,6 +455,16 @@ bool_instance_collection::make_instance_reference(void) const {
 			never_ptr<const bool_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_instance_collection::member_inst_ref_ptr_type
+bool_instance_collection::make_member_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_inst_ref_ptr_type(
+		new bool_member_instance_reference(
+			b, never_ptr<const this_type>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -808,7 +821,8 @@ bool_array<D>::connection_loader::operator() (const element_type& e) {
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("bool_array<D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 }
@@ -987,7 +1001,8 @@ bool_array<0>::load_reference(istream& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_array<0>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("bool_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	the_instance.collect_transient_info(m);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9.2.2.2.2 2005/02/18 06:07:44 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.2.2.2.3 2005/02/20 09:08:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -148,6 +148,7 @@ public:
  */
 class process_instantiation_statement : public instantiation_statement {
 private:
+	typedef	process_instantiation_statement	this_type;
 	typedef	instantiation_statement		parent_type;
 public:
 	typedef	process_instance_collection	collection_type;
@@ -195,6 +196,7 @@ public:
  */
 class channel_instantiation_statement : public instantiation_statement {
 private:
+	typedef	channel_instantiation_statement	this_type;
 	typedef	instantiation_statement		parent_type;
 public:
 	typedef	channel_instance_collection	collection_type;
