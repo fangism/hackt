@@ -1,18 +1,17 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.12 2004/12/05 05:06:53 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.13 2004/12/06 07:11:19 fang Exp $
  */
 
 #include <iostream>
 
 #include "STL/list.tcc"
-#include "qmap.tcc"
 #include "multidimensional_sparse_set.tcc"
 
-#include "art_parser_base.h"
 #include "art_object_instance.h"
 #include "art_object_inst_ref.h"
+// #include "art_object_expr_const.h"
 #include "art_object_expr.h"
 #include "art_object_control.h"
 #include "persistent_object_manager.tcc"
@@ -24,6 +23,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
 // class simple_instance_reference method definitions

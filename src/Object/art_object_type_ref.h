@@ -1,13 +1,13 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.11 2004/12/05 05:06:54 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.12 2004/12/06 07:11:21 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
 #define	__ART_OBJECT_TYPE_REF_H__
 
-#include "art_object_base.h"
+#include "art_object_type_ref_base.h"
 
 namespace ART {
 //=============================================================================

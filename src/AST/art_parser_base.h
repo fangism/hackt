@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.10 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_base.h,v 1.11 2004/12/06 07:11:09 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -13,6 +13,7 @@
 #include "art_lex.h"		// for token_position
 #include "sublist.h"		// for efficient list slices
 #include "memory/pointer_classes.h"	// experimental pointer classes
+#include "art_parser_fwd.h"
 
 /**
 	This is the general namespace for all ART-related classes.  
@@ -29,10 +30,13 @@ namespace entity {
 }
 
 using std::string;
+using std::ostream;
 USING_LIST
-using namespace entity;
-using namespace util::memory;		// for experimental pointer classes
+using entity::object;
+using entity::enum_datatype_def;
+using entity::process_definition;
 using util::sublist;
+using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -44,16 +48,6 @@ using util::sublist;
 	return a more useful manipulate ART object.  
  */
 namespace parser {
-//=============================================================================
-// forward declarations in this namespace
-	class expr;		// family defined in "art_parser_expr.h"
-	class id_expr;
-	class token_char;	// defined here
-	class token_string;	// defined here
-	class qualified_id;	// defined here
-	class concrete_type_ref;	// defined here
-	class context;		// defined in "art_symbol_table.h"
-
 //=============================================================================
 // some constant delimiter strings, defined in art_parser.cc
 // these are used as delimiter template arguments for node_list

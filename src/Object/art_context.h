@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.9 2004/12/05 05:06:52 fang Exp $
+	$Id: art_context.h,v 1.10 2004/12/06 07:11:18 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -16,60 +16,11 @@
 
 #include "memory/pointer_classes.h"
 
+#include "art_object_fwd.h"
+
 namespace ART {
 
 //=============================================================================
-// forward declarations from another namespace, from "art_object.h"
-// avoids having to include "art_object.h"
-namespace entity {
-	USING_LIST
-	using namespace util::memory;	// for pointer classes
-
-	// ... and more as they are needed
-	class module;
-	class object;
-	class scopespace;
-	class sequential_scope;
-	class name_space;
-	class built_in_type_def;
-	class fundamental_type_reference;
-	class instance_collection_base;
-	class instance_reference_base;
-	class definition_base;
-	class user_def_chan;
-	class user_def_type;
-	class channel_definition_base;
-	class channel_type_reference;
-	class channel_instance_collection;
-	class channel_instance_reference;
-	class datatype_definition_base;
-	class data_type_reference;
-	class datatype_instance_collection;
-	class datatype_instance_reference;
-	class process_definition_base;
-	class process_definition;
-	class process_type_reference;
-	class process_instance_collection;
-	class process_instance_reference;
-	class built_in_param_def;
-	class param_type_reference;
-	class param_instance_collection;
-	class param_instance_reference;
-
-	class param_expr;
-	class range_expr_list;
-
-	class instance_collection_stack_item;
-	// try to convert this to excl_ptr...
-	typedef count_ptr<const range_expr_list>
-				index_collection_item_ptr_type;
-
-	class instance_management_base;
-//	class connection_assignment_base;
-	class param_expression_assignment;
-	class instance_reference_connection;
-
-}
 using namespace entity;
 
 namespace parser {

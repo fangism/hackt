@@ -2,17 +2,19 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.4 2004/12/05 05:06:52 fang Exp $
+	$Id: art_object_assign.h,v 1.5 2004/12/06 07:11:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
 #define	__ART_OBJECT_ASSIGN_H__
 
-#include "art_object_base.h"
+#include "art_object_instance_management_base.h"
+#include "art_object_expr_base.h"
 #include "memory/pointer_classes.h"
 
 namespace ART {
 //=============================================================================
+#if 0
 // forward declarations from outside namespaces
 namespace parser {
 	// note: methods may specify string as formal types, 
@@ -25,12 +27,13 @@ namespace parser {
 	class context;
 }
 using namespace parser;
+#endif
 
 //=============================================================================
 namespace entity {
-	USING_LIST
-	using std::ostream;
-	using namespace util::memory;	// for experimental pointer classes
+USING_LIST
+using std::ostream;
+using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 /**

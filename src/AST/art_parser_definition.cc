@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.6 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_definition.cc,v 1.7 2004/12/06 07:11:09 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -23,8 +23,9 @@
 #include "art_parser_formal.h"
 
 #include "art_context.h"
+#include "art_object_type_ref_base.h"
 #include "art_object_definition.h"
-#include "art_object_expr.h"
+#include "art_object_expr_base.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable

@@ -2,7 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
- 	$Id: art_object_instance.cc,v 1.24 2004/12/05 05:06:53 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.25 2004/12/06 07:11:20 fang Exp $
  */
 
 #include <iostream>
@@ -10,12 +10,12 @@
 
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
-#include "art_object_expr.h"
+#include "art_object_inst_ref.h"
+#include "art_object_expr.h"		// for pint/pbool_instance_reference
 #include "art_built_ins.h"
 
 #include "STL/list.tcc"
-#include "qmap.tcc"
-#include "multikey_qmap.tcc"
+#include "multikey_qmap.tcc"		// include "qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "compose.h"
 #include "binders.h"
@@ -3075,6 +3075,7 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // explicit template instantiations
 
+#if 0
 template class pbool_array<0>;
 template class pbool_array<1>;
 template class pbool_array<2>;
@@ -3086,6 +3087,7 @@ template class pint_array<1>;
 template class pint_array<2>;
 template class pint_array<3>;
 template class pint_array<4>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,15 +1,15 @@
 /**
-	\file "art_object_expr.h"
-	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.15 2004/12/06 07:11:19 fang Exp $
+	\file "art_object_expr_const.h"
+	Classes related to constant expressions, symbolic and parameters.  
+	$Id: art_object_expr_const.h,v 1.1 2004/12/06 07:11:19 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_H__
-#define __ART_OBJECT_EXPR_H__
+#ifndef __ART_OBJECT_EXPR_CONST_H__
+#define __ART_OBJECT_EXPR_CONST_H__
 
-#include "art_object_expr_const.h"	// include "art_object_expr_base.h"
-#include "art_object_inst_ref_base.h"	// includes "art_object_base.h"
-#include "operators.h"
+#include "art_object_expr_base.h"
+#include "discrete_interval_set_fwd.h"
+#include "multikey_fwd.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -31,10 +31,8 @@ namespace entity {
 	USING_LIST
 	using std::string;
 	using std::ostream;
-	USING_UTIL_OPERATIONS
 
 //=============================================================================
-#if 0
 /**
 	Silly as it may seem...
 	Interface for pure constants.  
@@ -71,10 +69,8 @@ virtual	count_ptr<const const_param>
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 };	// end class const_param
-#endif
 
 //-----------------------------------------------------------------------------
-#if 0
 /**
 	List of strictly constant param expressions.  
 	Only scalar expressions allowed, no array indirections or collections.  
@@ -126,9 +122,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_param_expr_list
-#endif
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Generalized list of parameter expressions, can be dynamic.  
  */
@@ -179,9 +175,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_param_expr_list
+#endif
 
 //-----------------------------------------------------------------------------
-#if 0
 /**
 	Abstract interface for constant indices and index ranges.  
  */
@@ -199,10 +195,8 @@ virtual	int upper_bound(void) const = 0;
 virtual	bool operator == (const const_range& c) const = 0;
 virtual	bool range_size_equivalent(const const_index& i) const = 0;
 };	// end class const_index
-#endif
 
 //-----------------------------------------------------------------------------
-#if 0
 /**
 	Index list whose indices are all constant.
 	This means we need a const_index interface to objects.  
@@ -261,9 +255,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_index_list
-#endif
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Elements of this index list are no necessarily static constants.  
  */
@@ -308,9 +302,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_index_list
+#endif
 
 //=============================================================================
-#if 0
 /**
 	List of constant range expressions.  
 	Would a vector be more appropriate?   consider changing later...
@@ -366,9 +360,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_range_list
-#endif
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Base class.  
 	List of range expressions, not necessarily constant.  
@@ -407,6 +401,7 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class dynamic_range_list
+#endif
 
 //=============================================================================
 /**
@@ -433,6 +428,7 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
 **/
 
 //=============================================================================
+#if 0
 /**
 	A reference to a instance of built-in type pbool.  
 	Consider multiply deriving from pbool_expr, 
@@ -589,9 +585,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pint_instance_reference
+#endif
 
 //=============================================================================
-#if 0
 /**
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  
@@ -690,9 +686,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pbool_const
-#endif
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Only possibilities, unary negation, bit-wise negation.  
  */
@@ -1015,9 +1011,9 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class pint_range
+#endif
 
 //-----------------------------------------------------------------------------
-#if 0
 /**
 	Constant version of range expression.  
 	Deriving from pair to inherit its interface with first and second.  
@@ -1076,11 +1072,10 @@ public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
 };	// end class const_range
-#endif
 
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_H__
+#endif	// __ART_OBJECT_EXPR_CONST_H__
 

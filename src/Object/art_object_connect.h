@@ -2,13 +2,14 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.11 2004/12/05 05:06:52 fang Exp $
+	$Id: art_object_connect.h,v 1.12 2004/12/06 07:11:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
 #define	__ART_OBJECT_CONNECT_H__
 
 #include "art_object_base.h"
+#include "art_object_instance_management_base.h"
 #include "memory/pointer_classes.h"
 
 namespace ART {

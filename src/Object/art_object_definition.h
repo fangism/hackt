@@ -1,13 +1,15 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.13 2004/12/05 05:06:53 fang Exp $
+	$Id: art_object_definition.h,v 1.14 2004/12/06 07:11:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
 #define	__ART_OBJECT_DEFINITION_H__
 
-#include "art_object_base.h"
+#include "art_object_definition_base.h"
+#include "art_object_namespace.h"
+#include "art_object_instance_management_base.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -52,6 +54,7 @@ namespace entity {
 //=============================================================================
 // forward declarations
 
+#if 0
 	class definition_base;
 	class process_definition_base;
 	class process_definition;
@@ -64,6 +67,7 @@ namespace entity {
 	class enum_datatype_def;
 	class built_in_datatype_def;
 	class built_in_param_def;
+#endif
 
 //=============================================================================
 // class definition_base declared in "art_object_base.h"

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.6 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_expr.cc,v 1.7 2004/12/06 07:11:09 fang Exp $
  */
 
 #include <iostream>
@@ -12,7 +12,9 @@
 #include "sublist.tcc"
 
 // will need these come time for type-checking
-// #include "art_symbol_table.h"	// this file is context-independent!
+#include "art_object_instance_base.h"
+#include "art_object_definition_base.h"
+#include "art_object_inst_ref_base.h"
 #include "art_object_expr.h"
 
 // enable or disable constructor inlining, undefined at the end of file

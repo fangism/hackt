@@ -2,16 +2,22 @@
 	\file "art_object_control.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: art_object_control.h,v 1.5 2004/11/30 01:25:09 fang Exp $
+	$Id: art_object_control.h,v 1.6 2004/12/06 07:11:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONTROL_H__
 #define	__ART_OBJECT_CONTROL_H__
 
-#include "art_object_base.h"
+#include "string_fwd.h"
+#include "art_object_fwd.h"
+#include "art_object_instance_management_base.h"
+#include "memory/pointer_classes.h"
 
 namespace ART {
 namespace entity {
+using std::string;
+using util::memory::never_ptr;
+
 //=============================================================================
 /**
 	Scope of a loop body.

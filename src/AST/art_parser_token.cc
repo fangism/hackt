@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.6 2004/12/05 05:06:50 fang Exp $
+	$Id: art_parser_token.cc,v 1.7 2004/12/06 07:11:10 fang Exp $
  */
 
 #include <iostream>
@@ -14,7 +14,9 @@
 #include "art_parser_token.h"
 
 #include "art_context.h"
-#include "art_object_expr.h"
+#include "art_object_instance_base.h"
+#include "art_object_inst_ref_base.h"
+#include "art_object_expr_const.h"
 #include "art_built_ins.h"
 
 // enable or disable constructor inlining, undefined at the end of file

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.17 2004/12/05 05:06:52 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.18 2004/12/06 07:11:18 fang Exp $
  */
 
 #include <iostream>
@@ -15,7 +15,12 @@
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
-#include "art_object_expr.h"
+#if 0
+#include "art_object_inst_ref_base.h"
+#include "art_object_expr_const.h"
+#else
+#include "art_object_expr.h"			// for dynamic_param_expr_list
+#endif
 #include "persistent_object_manager.tcc"
 
 //=============================================================================

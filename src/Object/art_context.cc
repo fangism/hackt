@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.12 2004/12/05 05:06:52 fang Exp $
+ 	$Id: art_context.cc,v 1.13 2004/12/06 07:11:18 fang Exp $
  */
 
 #include <assert.h>
@@ -12,7 +12,7 @@
 #include "art_parser_base.h"
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
-#include "art_object_expr.h"
+#include "art_object_inst_ref.h"
 #include "art_object_assign.h"
 #include "art_object_connect.h"
 #include "art_object_instance.h"	// for instantiation_statement

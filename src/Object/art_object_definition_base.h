@@ -1,0 +1,236 @@
+/**
+	\file "art_object_definition_base.h"
+	Base classes for definition objects.  
+	$Id: art_object_definition_base.h,v 1.1 2004/12/06 07:11:19 fang Exp $
+ */
+
+#ifndef	__ART_OBJECT_DEFINITION_BASE_H__
+#define	__ART_OBJECT_DEFINITION_BASE_H__
+
+#include "STL/list.h"
+
+#include "macros.h"
+#include "art_object_base.h"
+#include "persistent.h"		// for persistent object interface
+	// includes <iosfwd> <string>
+
+// #include "qmap.h"		// need complete definition
+#include "hash_qmap.h"		// need complete definition
+#include "memory/pointer_classes.h"
+				// need complete definition (never_ptr members)
+
+// for convenience
+#include "art_object_type_hash.h"
+
+//=============================================================================
+// macros
+
+//=============================================================================
+// temporary switches
+
+//=============================================================================
+// forward declarations
+
+namespace ART {
+//=============================================================================
+// forward declarations from outside namespaces
+namespace parser {
+	// note: methods may specify string as formal types, 
+	// but you can still pass token_identifiers and token_strings
+	// because they are derived from string.
+	class token_string;
+	class token_identifier;
+	class qualified_id_slice;
+	class qualified_id;
+	class context;
+}
+using namespace parser;
+
+//=============================================================================
+/**
+	The namespace of objects that will be returned by the type-checker, 
+	and includes the various hierarchical symbol tables in their 
+	respective scopes.  
+ */
+namespace entity {
+//=============================================================================
+USING_LIST
+// USING_DEQUE
+using namespace util;
+using namespace util::memory;
+// using namespace QMAP_NAMESPACE;
+using namespace HASH_QMAP_NAMESPACE;
+
+//=============================================================================
+// general non-member functions
+
+//=============================================================================
+/**
+	Base class for definition objects.  
+	Consider deriving from name_space to re-use the 
+	name-resolving functionality.  
+	All definitions are potentially templatable.  
+ */
+class definition_base : virtual public object, virtual public persistent {
+public:
+	/**
+		Table of template formals.  
+		Needs to be ordered for argument checking, 
+		and have fast lookup, thus hashlist.  
+		Remember: template formals are accessible to the rest 
+		of the body and to the port formals as well.  
+		For now, the contained type is datatype_instance_collection
+			which is generalized to include the paramater types
+			pbool and pint, not to be confused with the data 
+			types bool and int.  
+		In the far future, prepare to extend template formals to 
+			include abstract types of processes, channels and 
+			data types in template argument list.  
+			*shudder*
+			It'd be nice to be able to swap instance arguments
+			that preserve specified interfaces...
+		May need hashqlist, for const-queryable hash structure!!!
+	**/
+	typedef	never_ptr<const param_instance_collection>
+					template_formals_value_type;
+	// double-maintenance...
+	typedef	hash_qmap<string, template_formals_value_type>
+					template_formals_map_type;
+	typedef	list<template_formals_value_type>
+					template_formals_list_type;
+	/** map from param_instance_collection to actual value passed */
+	typedef	hash_qmap<string, count_ptr<const param_expr> >
+					template_actuals_map_type;
+
+protected:
+//	const string			key;
+//	const never_ptr<const name_space>	parent;
+
+protected:
+	/** subset of used_id_map, must be coherent with list */
+	template_formals_map_type	template_formals_map;
+	/** subset of used_id_map, must be coherent with map */
+	template_formals_list_type	template_formals_list;
+
+	/**
+		Whether or not this definition is complete or only declared.  
+		As soon as a definition is opened, mark it as defined
+		to allow self-recursive template definitions.  
+	 */
+	bool				defined;
+public:
+	definition_base();
+virtual	~definition_base();
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const;	// temporary
+	ostream& dump_template_formals(ostream& o) const;
+	ostream& pair_dump(ostream& o) const;
+//	bool dump_cerr(void) const;		// historical artifact
+
+virtual	const string& get_key(void) const = 0;
+virtual	never_ptr<const scopespace> get_parent(void) const = 0;
+
+	bool is_defined(void) const { return defined; }
+	void mark_defined(void) { assert(!defined); defined = true; }
+
+	void fill_template_actuals_map(template_actuals_map_type& am, 
+		const param_expr_list& al) const;
+
+	never_ptr<const param_instance_collection>
+		lookup_template_formal(const string& id) const;
+/** should be pure virtual, but let's default to NULL */
+virtual	never_ptr<const instance_collection_base>
+		lookup_port_formal(const string& id) const;
+virtual	never_ptr<const object>	lookup_object_here(const string& id) const;
+
+virtual	bool check_null_template_argument(void) const;
+
+
+protected:
+	// Q: what if expressions are involved, can't statically resolve?
+	// e.g. with arrays of parameters... and referenced indices.
+	// well, they must be at least initialized (usable).  
+	// need notion of formal equivalence
+	// MAY be equivalent
+	bool equivalent_template_formals(
+		never_ptr<const definition_base> d) const;
+
+protected:
+	bool certify_template_arguments(
+		never_ptr<dynamic_param_expr_list> ta) const;
+public:
+	excl_ptr<dynamic_param_expr_list>
+		make_default_template_arguments(void) const;
+	/** by default returns false */
+virtual	bool certify_port_actuals(const object_list& ol) const;
+
+public:
+// proposing to replace set_context_fundamental_type with the following:
+virtual count_ptr<const fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<dynamic_param_expr_list> ta) const = 0;
+	// overloaded for no template argument, for convenience, 
+	// but must check that everything has default arguments!
+	count_ptr<const fundamental_type_reference>
+		make_fundamental_type_reference(void) const;
+// why virtual? special cases for built-in types?
+
+/**
+	Create an empty, unresolved typedef, based on the 
+	invoker's type.  
+ */
+virtual	excl_ptr<definition_base>
+		make_typedef(never_ptr<const scopespace> s, 
+			const token_identifier& id) const = 0;
+
+// need not be virtual?
+virtual	string get_name(void) const;
+// need not be virtual?
+virtual	string get_qualified_name(void) const;
+
+/** definition signature comparison, true if equal */
+virtual	bool require_signature_match(
+		never_ptr<const definition_base> d) const
+		{ return false; }	// temporary, should be pure
+
+/**
+	f should be const and owned -- pointer type conflict...  
+	virtual so that types without templates can assert NULL.  
+	TO DO: This function should be pure virtual and belong 
+		to a different interface!
+ */
+virtual	never_ptr<const instance_collection_base>
+		add_template_formal(never_ptr<instantiation_statement> f, 
+			const token_identifier& id);
+
+/**
+	Really, only some definitions should have ports...
+ */
+virtual	never_ptr<const instance_collection_base>
+		add_port_formal(never_ptr<instantiation_statement> f, 
+			const token_identifier& id);
+
+#if 0
+virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
+#endif
+
+protected:
+void	collect_template_formal_pointers(persistent_object_manager& m) const;
+void	write_object_template_formals(const persistent_object_manager& m) const;
+void	load_object_template_formals(persistent_object_manager& m);
+public:
+	static const never_ptr<const definition_base>	null;
+};	// end class definition_base
+
+//=============================================================================
+/// actual values passed
+typedef	definition_base::template_actuals_map_type
+		template_actuals_map_type;
+
+//=============================================================================
+}	// end namespace entity
+}	// end namespace ART
+
+#endif	// __ART_OBJECT_DEFINITION_BASE_H__
+

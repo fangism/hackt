@@ -1,21 +1,16 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.13 2004/12/05 05:06:52 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.14 2004/12/06 07:11:18 fang Exp $
  */
 
 #include <iostream>
 
-// #include "art_parser_debug.h"		// need this?
-#include "art_parser_base.h"
 #include "art_object_connect.h"
-#include "art_object_expr.h"
+#include "art_object_inst_ref_base.h"
 
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 namespace ART {
@@ -50,7 +45,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection,
 	ALIAS_CONNECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-aliases_connection::aliases_connection() : instance_reference_connection() { };
+aliases_connection::aliases_connection() : instance_reference_connection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

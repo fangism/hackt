@@ -1,13 +1,14 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
-	$Id: art_object_instance.h,v 1.21 2004/12/05 05:06:54 fang Exp $
+	$Id: art_object_instance.h,v 1.22 2004/12/06 07:11:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
 
-#include "art_object_base.h"
+#include "art_object_instance_base.h"
+#include "art_object_instance_management_base.h"
 #include "memory/pointer_classes.h"
 
 #include "multikey_fwd.h"

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.5 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_base.cc,v 1.6 2004/12/06 07:11:09 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -21,7 +21,10 @@
 #include "art_parser_token.h"
 
 #include "art_context.h"
+#include "art_object_definition_base.h"
+#include "art_object_type_ref_base.h"
 #include "art_object_expr.h"
+#include "art_object_namespace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -97,79 +100,6 @@ root_item::~root_item() { }
 root_body::root_body(const root_item* r) : parent(r) { }
 
 root_body::~root_body() { }
-
-//=============================================================================
-#if 0
-OBSOLETE
-// class template_argument_list method definition
-
-/**
-	Destructive copy constructor.  
- */
-CONSTRUCTOR_INLINE
-template_argument_list::template_argument_list(expr_list* e) : expr_list() {
-	e->release_append(*this);
-}
-
-DESTRUCTOR_INLINE
-template_argument_list::~template_argument_list() {
-}
-
-ostream&
-template_argument_list::what(ostream& o) const {
-	return o << "(template-arg-list)";
-}
-
-/**
-	Type checks a expression list in the template argument context.  
-	First builds a list of parameter expression objects.  
-	Should expr_list do this automatically?
-	Can it be used for both template and port arguments?
-	TO DO: manipulate context using definition_base.  
-	\param c the context object -- its current_definition_reference
-		must be set to a valid definition, because this
-		uses that definition to type-check.  
-	\return NULL always?  How does caller know something went wrong?
- */
-never_ptr<const object>
-template_argument_list::check_build(never_ptr<context> c) const {
-#if 1
-	return node::check_build(c);
-#else
-	excl_ptr<template_param_list> targs(new template_param_list);
-	assert(targs);
-	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() <<
-			"template_argument_list::check_build(...): " << endl;
-	)
-	// enter the template argument context
-	// o = expr_list::check_build(c);	// DON'T USE, override
-	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		count_ptr<const expr> e(*i);
-		assert(e);			// ever blank expression?
-		// this should cache parameter expressions
-		never_ptr<const object> eret(e->check_build(c));
-		if (eret) {
-			never_ptr<const param_expr>
-				exref(eret.is_a<param_expr>());
-			assert(exref);
-			targs->push_back(exref);
-		} else {
-			// failed!!!  better error handling later
-			cerr << "BAD template argument (not an expression)!"
-				<< endl;
-			exit(1);
-		}
-	}
-	// set context's template arguments
-	c->set_current_template_arguments(targs);
-	// leave the template argument context
-	return never_ptr<const object>(NULL);
-	// set the current_fundamental_type upon returning from this
-#endif
-}
-#endif
 
 //=============================================================================
 // class type_base method definitions

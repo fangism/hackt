@@ -1,11 +1,9 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.22 2004/12/05 05:06:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.23 2004/12/06 07:11:19 fang Exp $
  */
 
-#include <stdlib.h>			// for ltoa
-#include <assert.h>
 #include <iostream>
 #include <algorithm>
 
@@ -14,14 +12,12 @@
 #include "discrete_interval_set.tcc"
 
 #include "STL/list.tcc"
-#include "hash_qmap.tcc"
 #include "qmap.tcc"
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
-#include "art_parser_base.h"
 #include "art_object_expr.h"
 #include "art_object_instance.h"
 #include "art_object_assign.h"
