@@ -186,6 +186,20 @@ main(int argc, char* argv[]) {
 	str_map.dump(cout << endl << "Map: " << endl);
 	cout << "Map's population = " << str_map.population() << endl;
 	
+	{
+	// just check for implementation requirements of 1d specialization
+	test_map1d_type	map1d;
+	map1d[1] = "one";
+	assert(!map1d.empty());
+	map1d[2];
+	assert(!map1d.empty());
+	assert(map1d.population() == 2);
+	map1d.clean();
+	assert(map1d.population() == 1);
+	map1d.clear();
+	assert(map1d.empty());
+	assert(map1d.population() == 0);
+	}
 
 	return 0;
 }
