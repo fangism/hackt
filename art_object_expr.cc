@@ -89,6 +89,8 @@ param_expr_collective::hash_string(void) const {
 #endif
 
 //=============================================================================
+#if 0
+// replaced with instance_references directly
 // class param_literal method definitions
 #if 0
 OBSOLETE, inlined in header
@@ -279,6 +281,204 @@ pint_literal::static_constant_int(void) const {
 //	return var->get_param_inst_base()->
 //		default_value().is_a<pbool_expr>()->static_constant_bool();
 }
+#endif
+
+//=============================================================================
+// class pbool_instance_reference method definitions
+
+pbool_instance_reference::pbool_instance_reference(
+		never_ptr<pbool_instantiation> pi,
+		excl_ptr<index_list> i) :
+		param_instance_reference(i, pi->current_collection_state()),
+		pbool_expr(), 
+		pbool_inst_ref(pi) {
+}
+
+never_const_ptr<instantiation_base>
+pbool_instance_reference::get_inst_base(void) const {
+	return pbool_inst_ref;
+}
+
+never_const_ptr<param_instantiation>
+pbool_instance_reference::get_param_inst_base(void) const {
+	return pbool_inst_ref;
+}
+
+ostream&
+pbool_instance_reference::what(ostream& o) const {
+	return o << "pbool-inst-ref";
+}
+
+ostream&
+pbool_instance_reference::dump(ostream& o) const {
+	return simple_instance_reference::dump(o);
+}
+
+string
+pbool_instance_reference::hash_string(void) const {
+	return simple_instance_reference::hash_string();
+}
+
+/**
+	\return true if sucessfully initialized with valid expression.  
+ */
+bool
+pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
+	count_const_ptr<pbool_expr> b(i.is_a<pbool_expr>());
+	if (!b) {
+		i->what(cerr << "Cannot initialize a bool parameter with a ")
+			<< " expression, ERROR!  " << endl;
+		return false;
+	} else {
+		return pbool_inst_ref->initialize(b);
+	}
+}
+
+bool
+pbool_instance_reference::is_initialized(void) const {
+	return param_instance_reference::is_initialized();
+}
+
+bool
+pbool_instance_reference::is_static_constant(void) const {
+	return param_instance_reference::is_static_constant();
+}
+
+bool
+pbool_instance_reference::is_loop_independent(void) const {
+	return param_instance_reference::is_loop_independent();
+}
+
+bool
+pbool_instance_reference::is_unconditional(void) const {
+	return param_instance_reference::is_unconditional();
+}
+
+/**
+	Better make sure that this is_static_constant before calling, 
+	else will assert-fail.
+ */
+bool
+pbool_instance_reference::static_constant_bool(void) const {
+	assert(is_static_constant());
+	return pbool_inst_ref->initial_value()->static_constant_bool();
+}
+
+#if 0
+OBSOLETED AFTER CLASS SHIFT
+/**
+	\return newly constructed pbool literal if successful, 
+		returns NULL if type mismatches.  
+ */
+count_ptr<param_expr>
+pbool_instance_reference::make_param_literal(
+		count_ptr<param_instance_reference> pr) {
+	// make sure passed pointer is a self-ref count
+	assert(pr == this);
+	count_ptr<pbool_instance_reference> br(
+		pr.is_a<pbool_instance_reference>());
+	if (br)	return count_ptr<param_expr>(new pbool_literal(br));
+	else	return count_ptr<param_expr>(NULL);
+}
+#endif
+
+//=============================================================================
+// class pint_instance_reference method definitions
+
+pint_instance_reference::pint_instance_reference(
+		never_ptr<pint_instantiation> pi,
+		excl_ptr<index_list> i) :
+		param_instance_reference(i, pi->current_collection_state()),
+		pint_expr(), 
+		pint_inst_ref(pi) {
+}
+
+never_const_ptr<instantiation_base>
+pint_instance_reference::get_inst_base(void) const {
+	return pint_inst_ref;
+}
+
+never_const_ptr<param_instantiation>
+pint_instance_reference::get_param_inst_base(void) const {
+	return pint_inst_ref;
+}
+
+ostream&
+pint_instance_reference::what(ostream& o) const {
+	return o << "pint-inst-ref";
+}
+
+ostream&
+pint_instance_reference::dump(ostream& o) const {
+	return simple_instance_reference::dump(o);
+}
+
+string
+pint_instance_reference::hash_string(void) const {
+	return simple_instance_reference::hash_string();
+}
+
+/**
+	\return true if successfully initialized with valid expression.  
+ */
+bool
+pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
+	count_const_ptr<pint_expr> b(i.is_a<pint_expr>());
+	if (!b) {
+		i->what(cerr << "Cannot initialize an int parameter with a ")
+			<< " expression, ERROR!  " << endl;
+		return false;
+	} else {
+		return pint_inst_ref->initialize(b);
+	}
+}
+
+bool
+pint_instance_reference::is_initialized(void) const {
+	return param_instance_reference::is_initialized();
+}
+
+bool
+pint_instance_reference::is_static_constant(void) const {
+	return param_instance_reference::is_static_constant();
+}
+
+bool
+pint_instance_reference::is_loop_independent(void) const {
+	return param_instance_reference::is_loop_independent();
+}
+
+bool
+pint_instance_reference::is_unconditional(void) const {
+	return param_instance_reference::is_unconditional();
+}
+
+/**
+	Better make sure that this is_static_constant before calling, 
+	else will assert-fail.
+ */
+int
+pint_instance_reference::static_constant_int(void) const {
+	assert(is_static_constant());
+	return pint_inst_ref->initial_value()->static_constant_int();
+}
+
+#if 0
+/**
+	\return newly constructed pint literal if successful, 
+		returns NULL if type mismatches.  
+ */
+count_ptr<param_expr>
+pint_instance_reference::make_param_literal(
+		count_ptr<param_instance_reference> pr) {
+	// make sure passed pointer is a self-ref count
+	assert(pr == this);
+	count_ptr<pint_instance_reference> ir(
+		pr.is_a<pint_instance_reference>());
+	if (ir)	return count_ptr<param_expr>(new pint_literal(ir));
+	else	return count_ptr<param_expr>(NULL);
+}
+#endif
 
 //=============================================================================
 // class pint_const method definitions

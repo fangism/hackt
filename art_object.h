@@ -89,13 +89,13 @@ namespace entity {
 	class pbool_instantiation;
 
 	class instance_reference_base;
-	class single_instance_reference;
+	class simple_instance_reference;
 	class datatype_instance_reference;
 	class channel_instance_reference;
 	class process_instance_reference;
 	class param_instance_reference;
-	class pint_instance_reference;
-	class pbool_instance_reference;
+//	class pint_instance_reference;		// relocated "art_object_expr"
+//	class pbool_instance_reference;		// relocated "art_object_expr"
 
 	class connection_assignment_base;
 	class param_expression_assignment;
@@ -111,12 +111,17 @@ namespace entity {
 	class range_expr_list;
 	class const_range_list;
 	class dynamic_range_list;
-	class index_list;
+	class index_list;			// not ART::parser::index_list
 
 	typedef	count_const_ptr<range_expr_list>
 					index_collection_item_ptr_type;
+	/** we keep track of the state of instance collections at
+		various program points with this container */
 	typedef	deque<index_collection_item_ptr_type>
 					index_collection_type;
+
+	/** the state of an instance collection, kept track by each 
+		instance reference */
 	typedef	index_collection_type::const_iterator
 					instantiation_state;
 
@@ -536,7 +541,7 @@ protected:
 	 */
 	alias_map_type		open_aliases;
 
-	// later instroduce single symbol imports?
+	// later introduce single symbol imports?
 	// i.e. using A::my_type;
 
 public:
@@ -750,7 +755,7 @@ virtual	never_const_ptr<instantiation_base>
 	may appear both inside and outside definitions.  Instantiations
 	inside definitions will build as part of the definitions, 			whereas those outside definitions will register as actual 
 	instantiations in the object file.  
-	Instantiations may be single or collective.  
+	Instantiations may be simple or complex-aggregate.  
 	Rules for collective instantiations (two types):
 	1) dense...
 	2) sparse...
@@ -1011,12 +1016,12 @@ virtual	~param_type_reference();
 
 //=============================================================================
 /**
-	PHASE this back into what is currently single_instance_reference.  
+	PHASE this back into what is currently simple_instance_reference.  
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?
  */
-class instance_reference_base : public object {
+class instance_reference_base : virtual public object {
 public:
 	instance_reference_base() : object() { }
 virtual	~instance_reference_base() { }
@@ -1031,7 +1036,7 @@ virtual	string hash_string(void) const = 0;
 #if 0
 PHASE OUT, or needs a facelift
 	EVOLVE INTO: complex_aggregate_instance_reference, muhahahaha!
-/// in favor of using generic (single/collective) instance references
+/// in favor of using generic (simple/complex_aggregate) instance references
 //	all have potential indices, forget hierarchy
 // scheme has much changed since this idea was proposed...
 /**
@@ -1066,7 +1071,7 @@ virtual	string hash_string(void) const;
 		complex_aggregate_instance_reference...
 	Base class for a reference to a particular instance.  
 	Where a particular instance, either array or single, is 
-	connected or aliased, this object refers to a single instance
+	connected or aliased, this object refers to a simple instance
 	of a datatype, channel, or process.  
 	To check, that the instance references was actually in the 
 	dimension range of the array declared.  
@@ -1076,7 +1081,7 @@ virtual	string hash_string(void) const;
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class single_instance_reference : public instance_reference_base {
+class simple_instance_reference : public instance_reference_base {
 protected:
 	/**
 		JUST USE index_list, defined in "art_object_expr"
@@ -1097,9 +1102,9 @@ protected:
 //	never_const_ptr<instantiation_base>	inst_ref;
 
 public:
-	single_instance_reference(excl_ptr<index_list> i, 
+	simple_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& st);
-virtual	~single_instance_reference();
+virtual	~simple_instance_reference();
 
 	size_t dimensions(void) const;
 	bool add_index_list(excl_ptr<index_list> i);
@@ -1108,13 +1113,13 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const;
-};	// end class single_instance_reference
+};	// end class simple_instance_reference
 
 //-----------------------------------------------------------------------------
 /**
-	A reference to a single instance of datatype.  
+	A reference to a simple instance of datatype.  
  */
-class datatype_instance_reference : public single_instance_reference {
+class datatype_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	never_const_ptr<datatype_instantiation>	data_inst_ref;
@@ -1131,9 +1136,9 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	A reference to a single instance of channel.  
+	A reference to a simple instance of channel.  
  */
-class channel_instance_reference : public single_instance_reference {
+class channel_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	never_const_ptr<channel_instantiation>	channel_inst_ref;
@@ -1150,9 +1155,9 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	A reference to a single instance of process.  
+	A reference to a simple instance of process.  
  */
-class process_instance_reference : public single_instance_reference {
+class process_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	never_const_ptr<process_instantiation>	process_inst_ref;
@@ -1535,7 +1540,10 @@ virtual	never_const_ptr<fundamental_type_reference>
 virtual	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const = 0;
 
-virtual	void initialize(count_const_ptr<param_expr> e) = 0;
+#if 0
+// replacing sub-classes with type-specific initializations
+virtual	bool initialize(count_const_ptr<param_expr> e) = 0;
+#endif
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_const_ptr<param_expr> default_value(void) const = 0;
@@ -1589,7 +1597,7 @@ protected:
 		case where one is not supplied.  
 		Or should this be never deleted? cache-owned expressions?
 		Screw the cache.  
-		Only applicable for simple single instances.  
+		Only applicable for simple instances.  
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pbool_expr>		ival;
@@ -1607,8 +1615,9 @@ public:
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
 
-	void initialize(count_const_ptr<param_expr> e);
+	bool initialize(count_const_ptr<pbool_expr> e);
 	count_const_ptr<param_expr> default_value(void) const;
+	count_const_ptr<pbool_expr> initial_value(void) const;
 
 };	// end class pbool_instantiation
 
@@ -1627,7 +1636,7 @@ protected:
 		case where one is not supplied.  
 		Or should this be never deleted? cache-owned expressions?
 		Screw the cache.  
-		Only applicable for simple single instances.  
+		Only applicable for simple instances.  
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pint_expr>		ival;
@@ -1645,16 +1654,16 @@ public:
 	never_const_ptr<instance_reference_base>
 		make_instance_reference(context& c) const;
 
-	void initialize(count_const_ptr<param_expr> e);
+	bool initialize(count_const_ptr<pint_expr> e);
 	count_const_ptr<param_expr> default_value(void) const;
-
+	count_const_ptr<pint_expr> initial_value(void) const;
 };	// end class pint_instantiation
 
 //-----------------------------------------------------------------------------
 /**
-	A reference to a single instance of parameter.  
+	A reference to a simple instance of parameter.  
  */
-class param_instance_reference : public single_instance_reference {
+class param_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 
@@ -1679,13 +1688,17 @@ virtual	never_const_ptr<param_instantiation>
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 
-virtual	void initialize(count_const_ptr<param_expr> i) = 0;
+virtual	bool initialize(count_const_ptr<param_expr> i) = 0;
 
+#if 0
 virtual count_ptr<param_expr> make_param_literal(
 		count_ptr<param_instance_reference> pr) = 0;
+#endif
 };	// end class param_instance_reference
 
 //-----------------------------------------------------------------------------
+#if 0
+// moved to art_object_expr.h
 /**
 	A reference to a instance of built-in type pbool.  
 	Consider multiply deriving from pbool_expr, 
@@ -1704,9 +1717,11 @@ public:
 	never_const_ptr<param_instantiation>
 		get_param_inst_base(void) const;
 
-	void initialize(count_const_ptr<param_expr> i);
+	bool initialize(count_const_ptr<param_expr> i);
+#if 0
 	count_ptr<param_expr> make_param_literal(
 		count_ptr<param_instance_reference> pr);
+#endif
 };	// end class pbool_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -1728,10 +1743,13 @@ public:
 	never_const_ptr<param_instantiation>
 		get_param_inst_base(void) const;
 
-	void initialize(count_const_ptr<param_expr> i);
+	bool initialize(count_const_ptr<param_expr> i);
+#if 0
 	count_ptr<param_expr> make_param_literal(
 		count_ptr<param_instance_reference> pr);
+#endif
 };	// end class pint_instance_reference
+#endif
 
 //=============================================================================
 /**
@@ -1819,10 +1837,11 @@ public:
  */
 class port_connection : public instance_reference_connection {
 protected:
-	/** should be reference to a single instance, may be indexed.  */
-	count_const_ptr<single_instance_reference>	inst;
+	/** should be reference to a simple instance, may be indexed.  */
+	count_const_ptr<simple_instance_reference>	inst;
 public:
-	port_connection(count_const_ptr<single_instance_reference> i);
+	/** later, accept complex_aggregate_instance_references? */
+	port_connection(count_const_ptr<simple_instance_reference> i);
 	~port_connection() { }
 
 	void	append_instance_reference(

@@ -31,14 +31,17 @@ namespace entity {
 // class forward declarations
 	class object;
 
-	class param_instantiation;
-	class pbool_instantiation;
-	class pint_instantiation;
-
 	class param_type_reference;
 	class pbool_type_reference;
 	class pint_type_reference;
 
+	class param_instantiation;
+	class pbool_instantiation;
+	class pint_instantiation;
+
+	class param_instance_reference;
+	class pint_instance_reference;
+	class pbool_instance_reference;
 
 // forward declarations of classes defined here (table of contents)
 	class param_expr;
@@ -46,9 +49,9 @@ namespace entity {
 	class pbool_expr;
 	class pint_expr;
 //	class param_expr_collective;
-	class param_literal;
-	class pbool_literal;
-	class pint_literal;
+//	class param_literal;
+//	class pbool_literal;		// replaced by pbool_instance_reference
+//	class pint_literal;		// replaced by pint_instance_reference
 	class pint_const;
 	class pbool_const;
 	class param_unary_expr;
@@ -186,6 +189,7 @@ public:
 **/
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	THIS class is POINTLESS, PHASE THIS OUT after 
 		literals are merged with instance references.  
@@ -285,7 +289,81 @@ public:
 	void initialize(count_const_ptr<param_expr> i);
 };	// end class pint_literal
 
+// replaced by the following
+#endif
+
+//=============================================================================
+/**
+	A reference to a instance of built-in type pbool.  
+	Consider multiply deriving from pbool_expr, 
+	and replacing pbool_literal.  
+ */
+class pbool_instance_reference : public param_instance_reference, 
+		public pbool_expr {
+protected:
+	never_ptr<pbool_instantiation>		pbool_inst_ref;
+public:
+	pbool_instance_reference(never_ptr<pbool_instantiation> pi, 
+		excl_ptr<index_list> i);
+	~pbool_instance_reference() { }
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	using param_instance_reference::dump;
+	never_const_ptr<instantiation_base> get_inst_base(void) const;
+	never_const_ptr<param_instantiation>
+		get_param_inst_base(void) const;
+
+	bool initialize(count_const_ptr<param_expr> i);
+	string hash_string(void) const;
+	// implement later.
+	bool is_initialized(void) const;
+	bool is_static_constant(void) const;
+	bool is_unconditional(void) const;
+	bool is_loop_independent(void) const;
+	bool static_constant_bool(void) const;
+#if 0
+	count_ptr<param_expr> make_param_literal(
+		count_ptr<param_instance_reference> pr);
+#endif
+};	// end class pbool_instance_reference
+
 //-----------------------------------------------------------------------------
+/**
+	A reference to a instance of built-in type pint.  
+	Consider multiply deriving from pint_expr, 
+	and replacing pint_literal.  
+ */
+class pint_instance_reference : public param_instance_reference, 
+		public pint_expr {
+protected:
+	never_ptr<pint_instantiation>		pint_inst_ref;
+public:
+	pint_instance_reference(never_ptr<pint_instantiation> pi, 
+		excl_ptr<index_list> i);
+	~pint_instance_reference() { }
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+	never_const_ptr<instantiation_base> get_inst_base(void) const;
+	never_const_ptr<param_instantiation>
+		get_param_inst_base(void) const;
+
+	bool initialize(count_const_ptr<param_expr> i);
+	string hash_string(void) const;
+	// implement later.
+	bool is_initialized(void) const;
+	bool is_static_constant(void) const;
+	bool is_unconditional(void) const;
+	bool is_loop_independent(void) const;
+	int static_constant_int(void) const;
+#if 0
+	count_ptr<param_expr> make_param_literal(
+		count_ptr<param_instance_reference> pr);
+#endif
+};	// end class pint_instance_reference
+
+//=============================================================================
 /**
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  

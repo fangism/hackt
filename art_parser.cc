@@ -222,6 +222,11 @@ alias_list::rightmost(void) const {
 }
 
 /**
+	COMPLETELY REDO THIS, since param_literal has been ELIMINATED
+		so that param_instance_reference are now subclasses
+		of the respective expression types.  
+	TEMPORARILY made deletions so it still works as before...
+
 	Context-sensitive type-checking for parameter expression assignment
 	lists and other instance elements.  
 	Builds references bottom-up first.  
@@ -253,7 +258,11 @@ if (size() > 0) {		// non-empty
 			// Each expression or instance referenced
 			// will be pushed onto the context's object stack.
 		} else {
-			// need a place-holder item on stack?
+			// need a place-holder item on stack? No.
+			// can never be a NULL item in alias_list, 
+			//	according to the grammar.
+			// Thus we can use parent's check_build().
+
 			// the caller depends on the size of this list.
 			// for now stop.
 			assert(0);
@@ -303,8 +312,11 @@ if (size() > 0) {		// non-empty
 
 		count_const_ptr<param_expr> rhse(
 			connect[last].is_a<param_expr>());
+#if 0
+		// rhsi should no longer be necessary...
 		count_ptr<param_instance_reference> rhsi(
 			connect[last].is_a<param_instance_reference>());
+#endif
 		if (!connect[last]) {
 			cerr << "ERROR: rhs of expression assignment "
 				"is malformed (null)" << endl;
@@ -312,12 +324,15 @@ if (size() > 0) {		// non-empty
 		} else if (rhse) {
 			// last term must be initialized or be 
 			// dependent on formals
+			// if collective, conservative: may-be-initialized
 			if (!rhse->is_initialized()) {
 				rhse->dump(cerr << "ERROR: rhs of expr-"
 					"assignment is not initialized or "
 					"dependent on formals: ") << endl;
 				err = true;
+				exit(1);		// temporary
 			}
+#if 0
 		} else if (rhsi) {
 			if (!rhsi->is_initialized()) {
 				// not definitely initialized
@@ -327,11 +342,15 @@ if (size() > 0) {		// non-empty
 				err = true;
 			} else {
 				// may be initialized, resolve at unroll
+#if 0
 				rhse = count_const_ptr<param_expr>(
 					rhsi->make_param_literal(rhsi));
-//					new param_literal(rhsi);
+#else
+				rhse = rhsi;	// error: const to non-const
+#endif
 			}
 		// could also be a param_literal?
+#endif
 		} else {
 			connect[last]->what(
 				cerr << "ERROR: rhs is unexpected object: ")
@@ -343,14 +362,23 @@ if (size() > 0) {		// non-empty
 		for ( ; k<last; k++) {	// all but last one
 			// consider modularizing this loop
 			bool for_err = false;
+#if 0
+			// param_literal now equivalent to
+			//	param_instance_reference
 			count_ptr<param_literal> pl(
 				connect[k].is_a<param_literal>());
+#endif
+#if 0
 			count_ptr<param_instance_reference> ir(
 				connect[k].is_a<param_instance_reference>());
+#else
+			count_ptr<param_expr> ir(connect[k].is_a<param_expr>());
+#endif
 			if (!connect[k]) {
 				cerr << "ERROR: in creating item " << k+1 <<
 					" of alias-list." << endl;
 				for_err = true;
+#if 0
 			} else if (pl) {
 				// single expression
 				// can't handle collections of expressions yet.
@@ -376,7 +404,7 @@ if (size() > 0) {		// non-empty
 					exass->append_param_expression(
 						count_ptr<param_expr>(NULL));
 				else exass->append_param_expression(pl);
-
+#endif
 			} else if (ir) {
 				// a single parameter instance reference
 				// make sure not already initialized!
@@ -388,14 +416,43 @@ if (size() > 0) {		// non-empty
 					// don't care if it's same value...
 					for_err = true;
 				} else if (rhse) {
+					// what to do about collective arrays?
+#if 0
+					// missing virtual method...
 					ir->initialize(rhse);
-					assert(ir->is_initialized());
+#else
+					count_ptr<pbool_instance_reference>
+						bir(ir.is_a<pbool_instance_reference>());
+					count_ptr<pint_instance_reference>
+						pir(ir.is_a<pint_instance_reference>());
+					// gotta be one class or the other
+					// check this after re-write
+					assert(rhse);
+					bool init_ret;
+					if (bir)
+						init_ret = bir->initialize(rhse);
+					else {
+						assert(pir);
+						init_ret = pir->initialize(rhse);
+					}
+					if (!init_ret) {
+						cerr << "Error initializing "
+						"item " << k+1 << " of alias-"
+						"list.  " << endl;
+						for_err = true;
+					}
+#endif
+//					assert(ir->is_initialized());
 				} // else already error in rhse
 				if (for_err)
 					exass->append_param_expression(
 						count_ptr<param_expr>(NULL));
+#if 0
 				else exass->append_param_expression(
 						ir->make_param_literal(ir));
+#else
+				else exass->append_param_expression(ir);
+#endif
 			} else {
 				// is reference to something else
 				// or might be collective...

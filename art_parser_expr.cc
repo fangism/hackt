@@ -432,9 +432,12 @@ range_list::range_list(const range* r) : parent(r) {
 range_list::~range_list() { }
 
 /**
+	Note: limited to 4 dimensions.  
+
 	Parent's check_build will result in each index dimension
 	being pushed onto the context's object stack.  
 	Grab them off the stack to form an object list.  
+
 	Or just convert directly to a range list?
 	No range list has two different semantics
 	(depending on instantiation vs. reference),
@@ -469,7 +472,13 @@ range_list::check_build(never_ptr<context> c) const {
 		// else o is an index_expr
 		ol->push_front(o);
 	}
-	c->push_object_stack(ol->make_sparse_range_list());
+	if (size() > 4) {		// define constant somewhere
+		cerr << "ERROR!  Exceeded dimension limit of 4.  "
+			<< where() << endl;
+		c->push_object_stack(count_ptr<object>(NULL));
+	} else {
+		c->push_object_stack(ol->make_sparse_range_list());
+	}
 	return never_const_ptr<object>(NULL);
 }
 
@@ -482,6 +491,11 @@ dense_range_list::dense_range_list(const expr* r) : parent(r) {
 dense_range_list::~dense_range_list() {
 }
 
+/**
+	Dense range lists are reserved for formal parameters and ports, 
+	which must be dense arrays, cannot be sparse.  
+	Limited to 4 dimensions.  
+ */
 never_const_ptr<object>
 dense_range_list::check_build(never_ptr<context> c) const {
 	parent::check_build(c);
@@ -503,7 +517,13 @@ dense_range_list::check_build(never_ptr<context> c) const {
 		}
 		ol->push_front(o);
 	}
-	c->push_object_stack(ol->make_formal_dense_range_list());
+	if (size() > 4) {		// define constant somewhere
+		cerr << "ERROR!  Exceeded dimension limit of 4.  "
+			<< where() << endl;
+		c->push_object_stack(count_ptr<object>(NULL));
+	} else {
+		c->push_object_stack(ol->make_formal_dense_range_list());
+	}
 	return never_const_ptr<object>(NULL);
 }
 
@@ -669,8 +689,8 @@ index_expr::check_build(never_ptr<context> c) const {
 	// in particular a pint_instance_reference.
 	count_ptr<object> o(c->pop_top_object_stack());
 	if (o) {
-		count_ptr<single_instance_reference>
-			ir(o.is_a<single_instance_reference>());
+		count_ptr<simple_instance_reference>
+			ir(o.is_a<simple_instance_reference>());
 		assert(ir);		// sanity check
 		ranges->check_build(c);
 		count_ptr<object> i(c->pop_top_object_stack());

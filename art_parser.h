@@ -763,7 +763,10 @@ public:
 /// base class for range_list
 typedef node_list<range,none>	range_list_base;
 
-/// all range lists are comma-separated, until we discard for C-style arrays
+/**
+	All sparse range lists are no C-style x[N][M], 
+	now limited to 4-dimensions.  
+ */
 class range_list : public range_list_base {
 protected:
 	typedef	range_list_base				parent;
@@ -784,7 +787,10 @@ public:
 /// base class for dense_range_list
 typedef node_list<expr,none>	dense_range_list_base;
 
-/// all range lists are comma-separated, until we discard for C-style arrays
+/**
+	All dense range lists are no C-style x[N][M], 
+	now limited to 4-dimensions.  
+ */
 class dense_range_list : public dense_range_list_base {
 protected:
 	typedef	dense_range_list_base			parent;

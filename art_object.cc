@@ -2609,20 +2609,27 @@ pbool_instantiation::get_type_ref(void) const {
 	Note: a parameter is considered "usable" if it is 
 	initialized OR it is a template formal.  
 	\param e the rvalue expression.
+	\return true if properly initialized.  
 	\sa is_initialized
  */
-void
-pbool_instantiation::initialize(count_const_ptr<param_expr> e) {
-	assert(!ival);
-	count_const_ptr<pbool_expr> b(e.is_a<pbool_expr>());
-	assert(b);
-	ival = b;
+bool
+pbool_instantiation::initialize(count_const_ptr<pbool_expr> e) {
+	assert(e);
+	assert(!ival);		// must not already be initialized
+	ival = e;
+	return true;
 }
 
 count_const_ptr<param_expr>
 pbool_instantiation::default_value(void) const {
 	return ival;
 }
+
+count_const_ptr<pbool_expr>
+pbool_instantiation::initial_value(void) const {
+	return ival;
+}
+
 
 /**
 	Create a param reference object.
@@ -2702,16 +2709,21 @@ pint_instantiation::get_type_ref(void) const {
 	\param e the rvalue expression.
 	\sa is_initialized
  */
-void
-pint_instantiation::initialize(count_const_ptr<param_expr> e) {
+bool
+pint_instantiation::initialize(count_const_ptr<pint_expr> e) {
+	assert(e);
 	assert(!ival);
-	count_const_ptr<pint_expr> b(e.is_a<pint_expr>());
-	assert(b);
-	ival = b;
+	ival = e;
+	return true;
 }
 
 count_const_ptr<param_expr>
 pint_instantiation::default_value(void) const {
+	return ival;
+}
+
+count_const_ptr<pint_expr>
+pint_instantiation::initial_value(void) const {
 	return ival;
 }
 
@@ -2789,9 +2801,9 @@ channel_instantiation::make_instance_reference(context& c) const {
 }
 
 //=============================================================================
-// class single_instance_reference method definitions
+// class simple_instance_reference method definitions
 
-single_instance_reference::single_instance_reference(
+simple_instance_reference::simple_instance_reference(
 		excl_ptr<index_list> i, 
 		const instantiation_state& st) :
 		array_indices(i), 
@@ -2800,7 +2812,7 @@ single_instance_reference::single_instance_reference(
 	// assert(array_indices->size < get_inst_base->dimensions());
 }
 
-single_instance_reference::~single_instance_reference() {
+simple_instance_reference::~simple_instance_reference() {
 }
 
 /**
@@ -2812,7 +2824,7 @@ single_instance_reference::~single_instance_reference() {
 	\return the dimensions of the referenced array.  
  */
 size_t
-single_instance_reference::dimensions(void) const {
+simple_instance_reference::dimensions(void) const {
 	// THIS NEEDS FIXING
 	if (array_indices)
 		return array_indices->dimensions();
@@ -2820,7 +2832,7 @@ single_instance_reference::dimensions(void) const {
 }
 
 ostream&
-single_instance_reference::dump(ostream& o) const {
+simple_instance_reference::dump(ostream& o) const {
 	o << get_inst_base()->get_name();
 	if (array_indices) {
 		array_indices->dump(o);
@@ -2829,7 +2841,7 @@ single_instance_reference::dump(ostream& o) const {
 }
 
 string
-single_instance_reference::hash_string(void) const {
+simple_instance_reference::hash_string(void) const {
 	string ret(get_inst_base()->get_qualified_name());
 	if (array_indices) {
 		ret += array_indices->hash_string();
@@ -2886,7 +2898,7 @@ collective_instance_reference::hash_string(void) const {
 param_instance_reference::param_instance_reference(
 		excl_ptr<index_list> i, 
 		const instantiation_state& st) :
-		single_instance_reference(i, st) {
+		simple_instance_reference(i, st) {
 }
 
 /**
@@ -2995,6 +3007,8 @@ param_instance_reference::is_unconditional(void) const {
 }
 
 //=============================================================================
+#if 0
+// moved to "art_object_expr.cc"
 // class pbool_instance_reference method definitions
 
 pbool_instance_reference::pbool_instance_reference(
@@ -3019,9 +3033,9 @@ pbool_instance_reference::what(ostream& o) const {
 	return o << "pbool-inst-ref";
 }
 
-void
+bool
 pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	pbool_inst_ref->initialize(i.is_a<pbool_expr>());
+	return pbool_inst_ref->initialize(i.is_a<pbool_expr>());
 }
 
 /**
@@ -3064,9 +3078,9 @@ pint_instance_reference::what(ostream& o) const {
 	return o << "pint-inst-ref";
 }
 
-void
+bool
 pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	pint_inst_ref->initialize(i.is_a<pint_expr>());
+	return pint_inst_ref->initialize(i.is_a<pint_expr>());
 }
 
 /**
@@ -3083,6 +3097,7 @@ pint_instance_reference::make_param_literal(
 	if (ir)	return count_ptr<param_expr>(new pint_literal(ir));
 	else	return count_ptr<param_expr>(NULL);
 }
+#endif
 
 //=============================================================================
 // class process_instance_reference method definitions
@@ -3090,7 +3105,7 @@ pint_instance_reference::make_param_literal(
 process_instance_reference::process_instance_reference(
 		const process_instantiation& pi,
 		excl_ptr<index_list> i) :
-		single_instance_reference(i, pi.current_collection_state()),
+		simple_instance_reference(i, pi.current_collection_state()),
 		process_inst_ref(&pi) {
 }
 
@@ -3113,7 +3128,7 @@ process_instance_reference::what(ostream& o) const {
 datatype_instance_reference::datatype_instance_reference(
 		const datatype_instantiation& di,
 		excl_ptr<index_list> i) :
-		single_instance_reference(i, di.current_collection_state()),
+		simple_instance_reference(i, di.current_collection_state()),
 		data_inst_ref(&di) {
 }
 
@@ -3141,7 +3156,7 @@ datatype_instance_reference::dump(ostream& o) const {
 channel_instance_reference::channel_instance_reference(
 		const channel_instantiation& ci,
 		excl_ptr<index_list> i) :
-		single_instance_reference(i, ci.current_collection_state()),
+		simple_instance_reference(i, ci.current_collection_state()),
 		channel_inst_ref(&ci) {
 }
 
@@ -3221,7 +3236,7 @@ aliases_connection::prepend_instance_reference(
 	\param i an instance of the definition that is to be connected.
  */
 port_connection::port_connection(
-		count_const_ptr<single_instance_reference> i) :
+		count_const_ptr<simple_instance_reference> i) :
 		instance_reference_connection(), inst(i) {
 }
 
