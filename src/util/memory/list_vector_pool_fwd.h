@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.4 2005/03/01 21:26:47 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.5 2005/03/06 04:36:49 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -33,7 +33,7 @@
 		This current definition is NOT guaranteed to work on 
 		types that are allocated during static initialization.  
  */
-#define	LIST_VECTOR_POOL_STATIC_DECLARATIONS				\
+#define	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS			\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
 	static void*	operator new (size_t, void*&);			\

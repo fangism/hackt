@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.10 2005/03/04 06:19:55 fang Exp $
+	$Id: art_object_expr_const.h,v 1.11 2005/03/06 04:36:48 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -829,7 +829,7 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 	// don't need robust declarations, unless dynamically allocating
 	// during global static initialization.
 };	// end class const_range

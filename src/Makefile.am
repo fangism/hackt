@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.48 2005/03/04 06:19:53 fang Exp $
+#	$Id: Makefile.am,v 1.49 2005/03/06 04:36:47 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -270,6 +270,7 @@ UTIL_HEADER_FILES = \
 	util/nullary_function.h \
 	util/null_construct.h \
 	util/numeric/integer_traits.h \
+	util/numeric/nibble_tables.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
 	util/packed_array.h \

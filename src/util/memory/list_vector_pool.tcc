@@ -3,7 +3,7 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.3 2005/02/27 22:12:02 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.4 2005/03/06 04:36:49 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
@@ -133,45 +133,14 @@ list_vector_pool<T,Threaded>::~list_vector_pool() {
 		cerr << '\t' << leak << ' ' << what<T>::name() <<
 			" are unaccounted for." << endl;
 	}
+	while (!free_list.empty()) {
+		// to prevent double-destruction!
+		// if a delete operator already implicitly called dtors!
+		lazy_construct(free_list.front(),
+			list_vector_pool_destruction_policy<T>());
+		free_list.pop();	// is queue::pop_front()
+	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
-		const eager_destruction_tag) {
-	_Destroy(p);		// p->~T();
-	// construct empty, else will double destruct!
-	_Construct(p);
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
-		const lazy_destruction_tag) {
-	// do nothing, absolutely nothing!
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
-		const eager_destruction_tag) {
-	// do nothing, absolutely nothing!
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
-		const lazy_destruction_tag) {
-	_Destroy(p);		// p->~T();
-	// no need to construct
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // some handy local macros for verbose debugging
@@ -226,7 +195,9 @@ list_vector_pool<T,Threaded>::allocate(void) {
 	if (!free_list.empty()) {
 		pointer ret = free_list.front();
 		INVARIANT_ASSERT(ret);
+#if 0
 		lazy_destroy(ret, list_vector_pool_destruction_policy<T>());
+#endif
 		free_list.pop();
 		ALLOCATED_FREE_LIST_MESSAGE;
 		return ret;
@@ -281,7 +252,9 @@ list_vector_pool<T,Threaded>::deallocate(pointer p) {
 	lock_type got_the_mutex(&the_mutex);
 	assert(p);
 	RETURN_TO_FREE_LIST_MESSAGE;
+#if 0
 	eager_destroy(p, list_vector_pool_destruction_policy<T>());
+#endif
 	free_list.push(p);
 	// lock will expire at end-of-scope
 }
@@ -320,10 +293,11 @@ list_vector_pool<T,Threaded>::construct(pointer p, const T& val) {
 		what<T>::name() <<
 #endif
 		" @ " << p;
-	new(p) T(val);
+#endif	// VERBOSE_ALLOC
+//	lazy_destroy(p, list_vector_pool_destruction_policy<T>());
+	_Construct(p, val);	// new(p) T(val);
+#if VERBOSE_ALLOC
 	cerr << " ... constructed." << endl;
-#else
-	new(p) T(val);
 #endif
 }
 
@@ -343,6 +317,13 @@ list_vector_pool<T,Threaded>::destroy(pointer p) {
 	assert(p);
 #if VERBOSE_ALLOC
 	cerr << "Punting destruction for " << p;
+#endif
+#if 0
+	// DO NOT DESTROY only, the vector will bulk destroy
+	_Destroy(p);
+	_Construct(p);		// must reconstruct to prevent double_deletion
+#elif 0
+	eager_destroy(p, list_vector_pool_destruction_policy<T>());
 #endif
 }
 

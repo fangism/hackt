@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.13 2005/03/04 06:19:54 fang Exp $
+	$Id: art_object_assign.h,v 1.14 2005/03/06 04:36:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -154,7 +154,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
 };	// end class pbool_expression_assignment
 
@@ -224,7 +224,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 };	// end class pint_expression_assignment
 
 //=============================================================================

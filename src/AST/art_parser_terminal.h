@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_terminal.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_terminal.h,v 1.2 2005/03/06 04:36:48 fang Exp $
  */
 
 #ifndef __ART_PARSER_TERMINAL_H__
@@ -10,7 +10,8 @@
 #include <string>
 #include "art_lex.h"
 #include "art_parser_expr_base.h"
-#include "memory/list_vector_pool_fwd.h"
+// #include "memory/list_vector_pool_fwd.h"
+#include "memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -84,7 +85,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+//	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 // private:
 };      // end class token_char
 

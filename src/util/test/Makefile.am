@@ -33,6 +33,7 @@ noinst_PROGRAMS = \
 	new_functor_test \
 	list_vector_test \
 	list_vector_pool_test \
+	chunk_map_pool_test \
 	static_count_ptr_test \
 	local_static_store_test \
 	multi_pool_module_test \
@@ -65,6 +66,7 @@ link_test_LDADD = liblinktest.la libbogusutil.la
 list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
+chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc

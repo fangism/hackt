@@ -1,0 +1,1037 @@
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x1
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x3
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x2
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x1
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x3
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x7
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xf
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x1f
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x3f
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x7f
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xff
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xfe
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xfc
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xf8
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xf0
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xe0
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0xc0
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0x80
+map_chunk<foo> @0xbffff640 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x1
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x3
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x7
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xf
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x1f
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x3f
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x7f
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x1ff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x3ff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x7ff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xfff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x1fff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x3fff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x7fff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xffff
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xfffe
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xff7e
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xbf7e
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xbf5e
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xaf5e
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xaf56
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xab56
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xab54
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xaa54
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x2a54
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x2a14
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xa14
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0xa04
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x204
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0x200
+map_chunk<foo> @0xbffff610 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xf
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1f
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3f
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7f
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1ff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3ff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7ff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1fff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3fff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7fff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1ffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3ffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7ffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1fffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3fffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7fffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1ffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3ffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7ffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x1fffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x3fffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x7fffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffffffff
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfffffffe
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffffffde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfffffbde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffff7bde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xffef7bde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xfdef7bde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbdef7bde
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbdef7bd6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbdef7ad6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbdef5ad6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbdeb5ad6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xbd6b5ad6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad6b5ad6
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad6b5ad4
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad6b5a94
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad6b5294
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad6a5294
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xad4a5294
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0xa94a5294
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x294a5294
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x294a5284
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x294a5084
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x294a1084
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x29421084
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x28421084
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8421084
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8421080
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8421000
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8420000
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8400000
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0x8000000
+map_chunk<foo> @0xbffff5c0 has the free_mask: (hex) 0
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801250 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801250 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801250 has the free_mask: (hex) 0x2
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xfe
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xfc
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xf8
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xf0
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xe0
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0xc0
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801268 has the free_mask: (hex) 0x80
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xff
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xfe
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xfc
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xf8
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xf0
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xe0
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0xc0
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x1801280 has the free_mask: (hex) 0x80
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xe
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0xc
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+	map_chunk<foo> @0x18012b0 has the free_mask: (hex) 0x8
+chunk_map_pool<foo> @0xbffff600 has the following chunks:
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x1ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x3ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x7ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xfff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x1fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x3fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x7fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7ff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xfff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7fff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xfffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xdffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xffff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xdffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xfbff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xdffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xfbff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xcffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xfbff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xcffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf9ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xcffe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf9ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc7fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf9ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc7fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf8ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc7fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf8ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc3fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf8ff
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc3fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf87f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc3fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf87f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc1fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf87f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc1fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf83f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc1fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf83f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc0fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf83f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc0fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf81f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc0fe
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf81f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc07e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf81f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc07e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf80f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc07e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf80f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc03e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf80f
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc03e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf807
+	map_chunk<foo> @0x1801448 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc03e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf807
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc01e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf807
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc01e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0xf803
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc01e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7803
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc00e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7803
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc00e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x7801
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc00e
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3801
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc006
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3801
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc006
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x3800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc006
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0xc002
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x4002
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x1800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x4002
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801408 has the free_mask: (hex) 0x4000
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+	map_chunk<foo> @0x1801428 has the free_mask: (hex) 0x800
+chunk_map_pool<foo> @0xbffff5b0 has the following chunks:
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xfff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xfffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xfffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x3fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x7fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xfff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7ffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xfffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7fffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7ffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xfffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x1fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x3fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x7fffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x3
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x7
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x3f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x7f
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x3ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xfff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x3fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x7fff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xfffffffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffffffff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xfffffffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffff7fff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffbffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xffff7fff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xffffbffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdfff7fff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xefffbffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdfff7fff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xffff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xefffbffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdfff7fff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xefffbffe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdfff7bff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xefffbdfe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdfff7bff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xefffbdfe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdeff7bff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7fbdfe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdeff7bff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7ff
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7fbdfe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdeff7bff
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7fbdfe
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdeff7bdf
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7fbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdeff7bdf
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7fbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef77bdf
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7bbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef77bdf
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bf
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7bbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef77bdf
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7bbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef77bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0xf7bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7bbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef77bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x77bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7bbdee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef73bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x77bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7b9dee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xdef73bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x77bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xef7b9dee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xcef73bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x77bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe77b9dee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xcef73bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x77bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe77b9dee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xcef73bde
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x73bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe77b9dee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xcef739de
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x73bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe77b9cee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xcef739de
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x73bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe77b9cee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7739de
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x73bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe73b9cee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7739de
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x73bd
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe73b9cee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7739de
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739d
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe73b9cee
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7739ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739d
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe73b9ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7739ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739d
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe73b9ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7339ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739d
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe7399ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7339ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739d
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0xe7399ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7339ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x67399ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7339ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x739c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x67399ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7339ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x339c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x67399ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7319ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x339c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x67398ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xce7319ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x339c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x67398ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc67319ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x339c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63398ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc67319ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x339c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63398ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc67319ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x319c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63398ce6
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc67318ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x319c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63398c66
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc67318ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x319c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63398c66
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63318ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x319c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63198c66
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63318ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x319c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63198c66
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63318ce
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63198c66
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63318c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63198c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63318c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63198c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63118c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63188c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0xc63118c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x63188c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x463118c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x23188c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x463118c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x318c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x23188c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x463118c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x118c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x23188c62
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x463108c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x118c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x23188462
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x463108c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x118c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x23188462
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x423108c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x118c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21188462
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x423108c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x118c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21188462
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x423108c6
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x108c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21188462
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42310846
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x108c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21188422
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42310846
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x108c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21188422
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42110846
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x108c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21088422
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42110846
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x108c
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21088422
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42110846
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21088422
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42110842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21088420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42110842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21088420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42100842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21080420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x42100842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x21080420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2100842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1080420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2100842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x1084
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1080420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2100842
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x84
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1080420
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2100042
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x84
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1080020
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2100042
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x84
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x1080020
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x100042
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x84
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x80020
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x100042
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x84
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x80020
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x100042
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x4
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x80020
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x100002
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x4
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x80000
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x100002
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x4
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801638 has the free_mask: (hex) 0x80000
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x4
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2
+	map_chunk<foo> @0x1801698 has the free_mask: (hex) 0x4
+chunk_map_pool<foo> @0xbffff510 has the following chunks:
+	map_chunk<foo> @0x1801668 has the free_mask: (hex) 0x2
+chunk_map_pool<foo> @0xbffff510 has the following chunks:

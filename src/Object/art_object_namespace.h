@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.11 2005/03/04 06:19:58 fang Exp $
+	$Id: art_object_namespace.h,v 1.12 2005/03/06 04:36:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -465,7 +465,7 @@ public:
 	static const never_ptr<const name_space>	null;
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
 };	// end class name_space
 

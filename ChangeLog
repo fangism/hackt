@@ -1,5 +1,40 @@
 "ChangeLog"
 
+2005-03-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-17-merged-chunkmap-03:
+	  Merged revisions from -chunkmap child branch (through -03).  
+
+	* ARTXX-00-01-04-main-00-16-chunkmap-01:
+	  This branch is for developing custom allocators.  
+	  Draft of working chunk_map_pool, tested.  
+	  Rule for allocators: they are NOT responsible for calling
+	  construct and destroy, only allocating.  
+	  Need to revisit list_vector_pool's use.  
+	  No more lazy- or eager- destruction business...
+	  Later revision will add macros to override new and delete
+	  using the chunk_map_pool.  
+
+	* -chunkmap-02:
+	  Realized mistake in list_vector_pool implementation.
+	  Even overloaded new/delete operators implicitly call
+	  ctors and dtors on the relevant pointers, thus rendering
+	  eager/lazy destruction somewhat irrelevant -- always destroyed
+	  afer delete.  To compensate, re-construct elements pointed
+	  in the free-list before destruction of the pool.  
+	  Cleaned up files a bit.  Will apply these concepts to chunk_map_pool.
+
+	* -chunkmap-03:
+	  Wrote CHUNK_MAP_POOL declaration and definition macros, 
+	  in the style ripped from list_vector_pool.  
+	  Updated LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS macro name.  
+	  Corrected little pointer arithmetic bug in 
+	  typeless_memory_chunk::__deallocate.
+	  Ported ART::parser::token_char to using chunk_map_pool now.  
+	  Everything still works.  Going to check with gcc4 before
+	  marking ready to merge to trunk... still good, no new issues.  
+
+
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-16-merged-collect-02:
