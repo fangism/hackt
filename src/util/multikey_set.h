@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.2.1 2005/02/08 06:41:24 fang Exp $
+	$Id: multikey_set.h,v 1.1.2.2 2005/02/08 22:45:12 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include "multikey_set_fwd.h"
+#include "maplikeset.h"
 #include "multikey_assoc.h"
 #include "multikey.h"
 
@@ -28,11 +29,12 @@ using std::ostream;
 	\param S the underlying set type, like std::set.
  */
 MULTIKEY_SET_TEMPLATE_SIGNATURE
-class multikey_set : public multikey_assoc<D, S<T> > {
+class multikey_set : public multikey_assoc<D, maplikeset<S<T> > > {
 private:
 	typedef	multikey_set<D, T, S>			this_type;
+	typedef	maplikeset<S<T> >			maplikeset_type;
 protected:
-	typedef	multikey_assoc<D, S<T> >		set_type;
+	typedef	multikey_assoc<D, maplikeset_type>	set_type;
 	typedef	T					element_type;
 public:
 	typedef	typename set_type::key_type		key_type;
@@ -74,6 +76,7 @@ public:
 
 	~multikey_set();
 
+#if 0
 	/**
 		Wraps around parent set_type's insert.  
 	 */
@@ -92,6 +95,22 @@ public:
 			impl_value_type()) {
 		return set_type::insert(value_type(k, v));
 	}
+#endif
+
+#if 1
+	iterator
+	insert(const key_type& k, const impl_value_type& v = 
+			impl_value_type()) {
+		return set_type::insert(k, v);
+	}
+
+	iterator
+	insert(const element_type& p) {
+		return set_type::insert(p);
+	}
+#else
+	using set_type::insert;
+#endif
 
 #if 0
 	/**
@@ -106,7 +125,7 @@ public:
 	}
 #endif
 
-#if 1
+#if 0
 	/**
 		Searches for an element with just the key part of the element, 
 		leaving the value field default constructed.  
@@ -126,14 +145,14 @@ public:
 		return set_type::find(value_type(k));
 	}
 #endif
-#else
-	using set_type::find;
 #endif
 
+#if 0
 	size_type
 	erase(const key_type& k) {
 		return set_type::erase(value_type(k));
 	}
+#endif
 
 	void
 	clean(void);
@@ -267,20 +286,21 @@ public:
 		std::pair<const key_type, value_type>.
  */
 MULTIKEY_SET_ELEMENT_TEMPLATE_SIGNATURE
-class multikey_set_element {
+class multikey_set_element : public maplikeset_element<multikey<D,K>, T> {
 private:
 	typedef	multikey_set_element<D,K,T>		this_type;
+	typedef	maplikeset_element<multikey<D,K>, T>	parent_type;
 public:
 	typedef	K					index_type;
-//	typedef	typename multikey<D,K>::implementation_type
-	typedef	multikey<D,K>				key_type;
-	typedef	T					value_type;
+	typedef	typename parent_type::key_type		key_type;
+	typedef	typename parent_type::value_type	value_type;
 	/**
 		Workaround for multikey_assoc breaking key's constness.
 	 */
 	typedef	key_type				self_key_type;
 	enum { dim = D };
 protected:
+#if 0
 	/**
 		Should this be const like map's value_type?
 		Yes, else the set may become unsorted through
@@ -297,9 +317,12 @@ protected:
 		Publicly accessible for convenience?
 	 */
 	value_type					value;
+#endif
 public:
+#if 0
 	// when does an element get default-constructed?
 	multikey_set_element() : key(), value() { }
+#endif
 
 #if 0
 	/**
@@ -311,7 +334,7 @@ public:
 
 	explicit
 	multikey_set_element(const key_type& k, const value_type& v =
-			value_type()) : key(k), value(v) { }
+			value_type()) : parent_type(k, v) { }
 
 	// default copy-constructor
 
@@ -320,7 +343,7 @@ public:
 	const key_type&
 	self_key(void) const { return key; }
 
-#if 1
+#if 0
 	value_type&
 	get_value(void) { return value; }
 
@@ -328,12 +351,14 @@ public:
 	get_value(void) const { return value; }
 #endif
 
+#if 0
 	/**
 		WARNING: abusing implicit conversion operator!
 	 */
 	operator value_type& () { return value; }
 
 	operator const value_type& () { return value; }
+#endif
 
 #if 0
 	// make it usable by find...
@@ -343,6 +368,13 @@ public:
 	const index_type&
 	operator [] (const size_t i) const { return key[i]; }
 
+	const this_type&
+	operator = (const value_type& v) const {
+		parent_type::operator = (v);
+		return *this;
+	}
+
+#if 0
 	/**
 		ALERT! confusing operator overload combination ahead!
 		When comparing order, compare key.  
@@ -370,6 +402,7 @@ public:
 	operator != (const this_type& p) const {
 		return !(value == p.value);
 	}
+#endif
 
 };	// end class multikey_set_element
 

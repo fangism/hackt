@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-02-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-15:
+	  Once again stable.  Introduced maplikeset interface to 
+	  adapt a set to have a map-like interface, where key components
+	  of set::value_type may be passed to method functions.  
+	  Stuck this into multikey_set and multikey_set_element, 
+	  and it works like magic, AFAICT.  
+	  Code is in real desparate need of housekeeping... next rev.
+
+
 2005-02-07	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-07-set-12:

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set_test.cc"
 	Test for multikey_set template class.  
-	$Id: multikey_set_test.cc,v 1.1.2.1 2005/02/08 06:41:27 fang Exp $
+	$Id: multikey_set_test.cc,v 1.1.2.2 2005/02/08 22:45:17 fang Exp $
  */
 
 #include <string>
@@ -9,9 +9,6 @@
 #include "multikey_set.tcc"
 #include "sstream.h"
 #include <set>
-
-// temporary, until clean is implemented
-#define CLEAN	1
 
 #include "using_ostream.h"
 
@@ -62,8 +59,13 @@ main(int argc, char* argv[]) {
 	cout << "Set's population = " << str_map.population() << endl;
 
 	{
+#if 0
+	// already occupied, will not actually replace!
 	string_element_3d foo(ind, "Goodbye.");
 	str_map.insert(foo);
+#else
+	str_map[ind] = "Goodbye.";
+#endif
 	}
 	str_map.dump(cout << endl << "Set: " << endl);
 	{
@@ -82,6 +84,8 @@ main(int argc, char* argv[]) {
 	cout << "Nothing should follow this colon on this line: "
 		<< i->get_value() << endl << endl;
 #endif
+	// create blank
+	str_map[ind];
 	}
 
 	cout << "The next dump should contain one blank entry.";
@@ -90,7 +94,10 @@ main(int argc, char* argv[]) {
 
 	(*third)++;
 	static_cast<const string_set_3d_type&>(str_map).find(ind);
-				// prevents blank creation
+				// find prevents blank creation
+	cout << "The next dump should still contain one blank entry.";
+	str_map.dump(cout << endl << "Set: " << endl) << endl;
+	str_map.find(ind);
 	cout << "The next dump should still contain one blank entry.";
 	str_map.dump(cout << endl << "Set: " << endl) << endl;
 	cout << "Set's population = " << str_map.population() << endl;
@@ -102,7 +109,7 @@ main(int argc, char* argv[]) {
 	cout << "Set's population = " << str_map.population() << endl;
 #endif
 
-	str_map.find(ind);		// creates a blank
+	str_map[ind];		// creates a blank
 	cout << "The next dump should contain two blank entries.";
 	str_map.dump(cout << endl << "Set: " << endl) << endl;
 	cout << "Set's population = " << str_map.population() << endl;
@@ -111,7 +118,7 @@ main(int argc, char* argv[]) {
 	for (*first = 2; *first < 4; (*first)++)
 		for (*second = 2; *second < 4; (*second)++)
 			for (*third = 2; *third < 4; (*third)++)
-				str_map.find(ind);
+				str_map[ind];
 	cout << "The next dump should contain many blank entries.";
 	str_map.dump(cout << endl << "Set: " << endl);
 	cout << "Set's population = " << str_map.population() << endl;
@@ -163,9 +170,7 @@ main(int argc, char* argv[]) {
 	cout << "Set's population = " << str_map.population() << endl;
 #endif
 
-#if CLEAN
 	str_map.clean();
-#endif
 	cout << "The next dump should contain no blank entries.";
 	str_map.dump(cout << endl << "Set: " << endl);
 	cout << "Set's population = " << str_map.population() << endl;
@@ -178,9 +183,9 @@ main(int argc, char* argv[]) {
 					// if sum of indices is odd
 					ostringstream o;
 					o << *first << *second << *third;
-					str_map.insert(ind, o.str());
+					str_map[ind] = o.str();
 				} else {
-					str_map.insert(ind);	// blank
+					str_map[ind];	// blank
 				}
 			}
 
@@ -188,9 +193,7 @@ main(int argc, char* argv[]) {
 	str_map.dump(cout << endl << "Set: " << endl);
 	cout << "Set's population = " << str_map.population() << endl;
 
-#if CLEAN
 	str_map.clean();
-#endif
 	cout << "The next dump should contain no blank entries.";
 	str_map.dump(cout << endl << "Set: " << endl);
 	cout << "Set's population = " << str_map.population() << endl;
@@ -259,9 +262,7 @@ main(int argc, char* argv[]) {
 #endif
 	assert(!map1d.empty());
 	assert(map1d.population() == 2);
-#if CLEAN
 	map1d.clean();
-#endif
 	assert(map1d.population() == 1);
 	map1d.clear();
 	assert(map1d.empty());

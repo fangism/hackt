@@ -2,7 +2,7 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.2.2 2005/02/08 06:41:23 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.2.3 2005/02/08 22:45:12 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -46,16 +46,16 @@ protected:
 	typedef	C					assoc_type;
 public:
 	typedef	typename assoc_type::value_type		value_type;
-#if 0
+#if 1
 	typedef	typename assoc_type::key_type		key_type;
+	typedef	typename assoc_type::mapped_type	mapped_type;
 #else
 	typedef	typename set_element_traits<value_type>::key_type
 							key_type;
 	typedef	typename set_element_traits<value_type>::mapped_type
 							mapped_type;
 #endif
-//	typedef	typename assoc_type::mapped_type	mapped_type;
-//	typedef	typename assoc_type::key_compare	key_compare;
+	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
 
 	typedef	typename assoc_type::reference		reference;

@@ -36,6 +36,7 @@ noinst_PROGRAMS = \
 	multi_pool_module_test \
 	multidimensional_sparse_set_test \
 	multidimensional_qmap_test \
+	maplikeset_test \
 	multikey_qmap_test \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
@@ -61,6 +62,7 @@ list_vector_pool_test_LDADD = libfangutil.la
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
+maplikeset_test_SOURCES = maplikeset_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
 multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h

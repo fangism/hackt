@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.3.2.4 2005/02/08 06:41:22 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.3.2.5 2005/02/08 22:45:11 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -199,6 +199,7 @@ UTIL_HEADER_FILES = \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
+	util/maplikeset.h \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
 	util/memory/list_vector_pool.tcc \

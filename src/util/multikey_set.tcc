@@ -2,7 +2,7 @@
 	\file "multikey_set.tcc"
 	Method definitions for multidimensional set, based on
 	multikey_assoc wrapper interface. 
-	$Id: multikey_set.tcc,v 1.1.2.1 2005/02/08 06:41:24 fang Exp $
+	$Id: multikey_set.tcc,v 1.1.2.2 2005/02/08 22:45:12 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_TCC__
@@ -31,7 +31,8 @@ multikey_set<D,T,S>::~multikey_set() { }
 MULTIKEY_SET_TEMPLATE_SIGNATURE
 void
 multikey_set<D,T,S>::clean(void) {
-	const mapped_type def(null_construct<mapped_type>());  // default value
+	const impl_value_type def(null_construct<impl_value_type>());
+		// default value
 	iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; ) {
@@ -53,7 +54,7 @@ multikey_set<D,T,S>::dump(ostream& o) const {
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
-		o << i->self_key() << " = " << i->get_value() << endl;
+		o << i->get_key() << " = " << i->get_value() << endl;
 	return o;
 }
 
