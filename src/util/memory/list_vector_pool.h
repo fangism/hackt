@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.1 2004/11/26 23:24:33 fang Exp $
+	$Id: list_vector_pool.h,v 1.2 2004/12/05 05:08:14 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -41,6 +41,7 @@
 #define INVARIANT_ASSERT(foo)	{ }
 #endif
 
+namespace util {
 //=============================================================================
 /**
 	Memory-management utility namespace.
@@ -368,7 +369,7 @@ operator != (const list_vector_pool<T>&, const list_vector_pool<T>&) {
 
 //=============================================================================
 }	// end namespace memory
-
+}	// end namespace util
 
 #undef	INVARIANT_ASSERT
 
