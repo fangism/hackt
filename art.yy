@@ -582,7 +582,9 @@ optional_port_formal_decl_list_in_parens
 	: '(' port_formal_decl_list ')'
 		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
 	| '(' ')'
-		{ $$ = (new port_formal_decl_list())->wrap($1, $2); }
+		{ $$ = (new port_formal_decl_list(NULL))->wrap($1, $2); }
+		// omitting NULL element can create problems with empty
+		// uninitialized list, better add NULL
 	;
 
 /***

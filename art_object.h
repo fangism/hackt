@@ -6,10 +6,11 @@
 #include <string>
 
 #include "map_of_ptr.h"
-#include "hash_map_of_ptr.h"
+#include "hash_map_of_ptr.h"	// phase out
 #include "hashlist.h"		// includes "list_of_ptr.h" and <hash_map>
 	// for now don't need hashlist...
 #include "art_macros.h"
+#include "ptrs.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -47,6 +48,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 using namespace std;
+using namespace fang;		// for experimental pointer classes
 
 //=============================================================================
 // forward declarations

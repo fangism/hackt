@@ -41,14 +41,15 @@ expr::~expr() { }
 // class paren_expr method definitions
 
 CONSTRUCTOR_INLINE
-paren_expr::paren_expr(token_char* l, expr* n, token_char* r) : expr(),
+paren_expr::paren_expr(const token_char* l, const expr* n, 
+		const token_char* r) : expr(),
 		lp(l), e(n), rp(r) {
 	assert(lp); assert(e); assert(rp);
 }
 
 DESTRUCTOR_INLINE
 paren_expr::~paren_expr() {
-	SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp);
+//	SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp);
 }
 
 ostream&
@@ -58,12 +59,14 @@ paren_expr::what(ostream& o) const {
 
 line_position
 paren_expr::leftmost(void) const {
-	return lp->leftmost();
+	if (lp)	return lp->leftmost();
+	else	return e->leftmost();
 }
 
 line_position
 paren_expr::rightmost(void) const {
-	return rp->rightmost();
+	if (rp)	return rp->rightmost();
+	else	return e->rightmost();
 }
 
 const object*
@@ -185,7 +188,8 @@ ostream& operator << (ostream& o, const qualified_id& id) {
 		qualified_id::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		token_identifier* tid = *i;
+//		token_identifier* tid = *i;
+		never_const_ptr<token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
@@ -335,13 +339,13 @@ range::check_build(context* c) const {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(expr* n, terminal* o) : expr(), 
+unary_expr::unary_expr(const expr* n, const terminal* o) : expr(), 
 		e(n), op(o) {
 }
 
 DESTRUCTOR_INLINE
 unary_expr::~unary_expr() {
-	SAFEDELETE(e); SAFEDELETE(op);
+//	SAFEDELETE(e); SAFEDELETE(op);
 }
 
 //=============================================================================
@@ -488,14 +492,15 @@ index_expr::check_build(context* c) const {
 // class binary_expr method definitions
 
 CONSTRUCTOR_INLINE
-binary_expr::binary_expr(expr* left, terminal* o, expr* right) : expr(),
-		l(left), op(o), r(right) {
+binary_expr::binary_expr(const expr* left, const terminal* o, 
+		const expr* right) :
+		expr(), l(left), op(o), r(right) {
 	assert(l); assert(op); assert(r);
 }
 
 DESTRUCTOR_INLINE
 binary_expr::~binary_expr() {
-	SAFEDELETE(l); SAFEDELETE(op); SAFEDELETE(r);
+//	SAFEDELETE(l); SAFEDELETE(op); SAFEDELETE(r);
 }
 
 line_position

@@ -11,20 +11,22 @@
 #include "art_macros.h"
 #include "art_utils.h"		// for token_position
 #include "list_of_ptr.h"	// includes <list>
+#include "ptrs.h"		// experimental pointer classes
 
 /**
 	This is the general namespace for all ART-related classes.  
  */
 namespace ART {
 //=============================================================================
-using namespace std;
 
 // forward declaration of outside namespace and classes
 namespace entity {
 	class object;		// defined in "art_object.h"
 };
 
+using namespace std;
 using namespace entity;
+using namespace fang;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -138,21 +140,31 @@ virtual	line_position rightmost(void) const;
 	separated the lists, if applicable.  
 	The specifier T, a derived class from node, is only used for 
 	type-checking.  
+	Consider deriving from list<base_const_ptr<T> > to allow 
+	copyable lists, using never_const_ptr<T>'s.  
+	Then dynamically casting elements may be a pain?
  */
 template <class T>
-class node_list_base : virtual public node, public list_of_ptr<T> {
+class node_list_base : virtual public node, public list<excl_const_ptr<T> > {
 private:
+#if 0
 	typedef		list<T*>			list_grandparent;
 	typedef		list_of_ptr<T>			list_parent;
+#else
+	typedef		list<excl_const_ptr<T> >	list_parent;
+	// read-only, but transferrable ownership
+#endif
 public:
 	typedef	typename list_parent::iterator		iterator;
 	typedef	typename list_parent::const_iterator	const_iterator;
 public:
 	node_list_base();
 // non-owner-transfer copy constructor
+	// BEWARE! need to make a list of never_ptr<T>!!!
+	// else will result in NULL lists!
 	node_list_base(const node_list_base<T>& l);
 // initializing with first element, T must be subclass of node!
-	node_list_base(T* n);
+	node_list_base(const T* n);
 
 virtual	~node_list_base();
 
@@ -160,7 +172,8 @@ using	list_parent::begin;
 using	list_parent::end;
 
 // later, use static functions (operator <<) to determine type name...
-virtual	ostream& what(ostream& o) const = 0;
+/// Prints out type of first element in list, if not null.  
+virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 virtual	const object* check_build(context* c) const;
@@ -191,10 +204,19 @@ public:
 	typedef	typename parent::const_iterator	const_iterator;
 	typedef	typename parent::reverse_iterator	reverse_iterator;
 	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
+#if 0
 	typedef	list_of_ptr<terminal>		delim_list;
+#else
+	typedef	list<excl_const_ptr<terminal> >	delim_list;
+#endif
 protected:
+#if 0
 	terminal*	open;		///< wrapping string, such as "("
 	terminal*	close;		///< wrapping string, such as ")"
+#else
+	excl_const_ptr<terminal>	open;	///< wrapping string, e.g. "("
+	excl_const_ptr<terminal>	close;	///< wrapping string, e.g. ")"
+#endif
 	/**
 		We now keep the delimiter tokens in a separate list
 		so they no longer collide with the useful elements.
@@ -210,7 +232,7 @@ protected:
 public:
 	node_list();
 	node_list(const node_list<T,D>& l);
-	node_list(T* n);
+	node_list(const T* n);
 virtual	~node_list();
 
 using	parent::begin;
@@ -224,7 +246,7 @@ using	parent::end;
 	\param e the end token such as open-parenthesis.  
 	\return this.
  */
-virtual	node_list<T,D>* wrap(terminal* b, terminal* e);
+virtual	node_list<T,D>* wrap(const terminal* b, const terminal* e);
 
 /**
 	Adds an element to a node list, along with the delimiting
@@ -234,12 +256,12 @@ virtual	node_list<T,D>* wrap(terminal* b, terminal* e);
 	\param n the useful node.  
 	\return this.
  */
-virtual	node_list<T,D>* append(terminal* d, T* n);
+virtual	node_list<T,D>* append(const terminal* d, const T* n);
 
 // the following methods are defined in "art_parser_template_methods.h"
 
 /// Prints out type of first element in list, if not null.  
-virtual	ostream& what(ostream& o) const;
+// virtual	ostream& what(ostream& o) const;
 
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
@@ -367,11 +389,11 @@ virtual	ostream& what(ostream& o) const;
  */
 class paren_expr : public expr {
 protected:
-	token_char*		lp;		///< left parenthesis
-	expr*			e;		///< enclosed expression
-	token_char*		rp;		///< right parenthesis
+	const excl_const_ptr<token_char>	lp;	///< left parenthesis
+	const excl_const_ptr<expr>		e;	///< enclosed expression
+	const excl_const_ptr<token_char>	rp;	///< right parenthesis
 public:
-	paren_expr(token_char* l, expr* n, token_char* r);
+	paren_expr(const token_char* l, const expr* n, const token_char* r);
 virtual	~paren_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -513,6 +535,7 @@ qualified_id*	force_absolute(token_string* s);
 bool		is_absolute(void) const { return absolute != NULL; }
 
 // want a method for splitting off the last id, isolating namespace portion
+// copy must be using never_ptrs! original must use excl_ptr
 qualified_id	copy_namespace_portion(void) const;
 		// remember to delete this after done using!
 qualified_id	copy_beheaded(void) const;
@@ -704,10 +727,15 @@ typedef node_list<range,comma>	range_list;
 /// abstract base class for unary expressions
 class unary_expr : public expr {
 protected:
+#if 0
 	expr*		e;		///< the argument expr
 	terminal*	op;		///< the operator, may be null
+#else
+	const excl_const_ptr<expr>	e;	///< the argument expr
+	const excl_const_ptr<terminal>	op;	///< the operator, may be null
+#endif
 public:
-	unary_expr(expr* n, terminal* o);
+	unary_expr(const expr* n, const terminal* o);
 virtual	~unary_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -779,11 +807,18 @@ virtual	const object* check_build(context* c) const;
 /// base class for general binary expressions
 class binary_expr : public expr {
 protected:
+#if 0
 	expr* 		l;			///< left-hand side
 	terminal*	op;			///< operator
 	expr*		r;			///< right-hand side
+#else
+	const excl_const_ptr<expr> 	l;	///< left-hand side
+	const excl_const_ptr<terminal>	op;	///< operator
+	const excl_const_ptr<expr>	r;	///< right-hand side
+#endif
 public:
-	binary_expr(expr* left, terminal* o, expr* right);
+//	binary_expr(expr* left, terminal* o, expr* right);
+	binary_expr(const expr* left, const terminal* o, const expr* right);
 virtual	~binary_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -1504,8 +1539,8 @@ virtual	~process_signature();
 
 // note: non-virtual
 	const token_identifier& get_name(void) const;
-	const template_formal_decl_list* get_template_formals(void) const;
-	const port_formal_decl_list* get_port_formals(void) const;
+//	const template_formal_decl_list* get_template_formals(void) const;
+//	const port_formal_decl_list* get_port_formals(void) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------

@@ -31,7 +31,13 @@ LD = $(CC)
 # use CDEFS to pass in preprocessor macros, such as debug flags
 # using gcc, because Mach ld needs some additional directives on Mac...
 #	will eventually get around to self-configuring
-CFLAGS = -O2 -Wall -c -g -pipe $(CDEFS)
+MORE_WARN = -Wcast-qual
+# other warnings not covered by -Wall
+NO_WARN = -Wno-unused
+# affects art.yy.o
+WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
+# extremely anal about warnings...
+CFLAGS = -O2 $(WARN_FLAGS) -g -pipe $(CDEFS)
 # -fkeep-inline-functions
 # turn on -O4 later...
 LDFLAGS = -lc -lstdc++
@@ -55,7 +61,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 .BEGIN:	.depend
 
 .cc.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .cc.d:
 	$(MAKEDEPEND) $< > $@
@@ -110,8 +116,8 @@ art.yy.cc: art.l y.tab.h
 
 # y.tab.cc will depend on y.output.h
 y.tab.h y.tab.cc y.output y.output.h: art.yy
-	$(YACC) $(YFLAGS) $?; \
-	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h; \
+	$(YACC) $(YFLAGS) $?
+	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
 	$(MV) y.tab.c y.tab.cc
 
 art.yy.types: art.yy

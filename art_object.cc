@@ -492,7 +492,8 @@ name_space::query_namespace_match(const qualified_id& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : this;
 	}
 	qualified_id::const_iterator i = id.begin();	assert(*i);
-	const token_identifier* tid = *i;
+//	const token_identifier* tid = *i;
+	never_const_ptr<token_identifier> tid(*i);
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	const name_space* ns = (id.is_absolute()) ? this
@@ -503,8 +504,12 @@ name_space::query_namespace_match(const qualified_id& id) const {
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
 			const name_space* next;
+//			never_const_ptr<name_space> next;
 			// no need to skip scope tokens anymore
-			tid = IS_A(token_identifier*, *i); assert(tid);
+//			tid = IS_A(token_identifier*, *i);
+//			tid = i->is_a<token_identifier>();
+			tid = (*i).is_a<token_identifier>();
+			assert(tid);
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
@@ -545,7 +550,8 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : this;
 	}
 	qualified_id::const_iterator i = id.begin();	// id may be empty!
-	const token_identifier* tid = *i;
+//	const token_identifier* tid = *i;
+	never_const_ptr<token_identifier> tid(*i);
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	const name_space* ns = 
@@ -558,7 +564,9 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 	// remember to skip scope tokens
 	for (i++; ns && i!=id.end(); i++) {
 		const name_space* next;
-		tid = IS_A(token_identifier*, *i); assert(tid);
+//		tid = IS_A(token_identifier*, *i);
+		tid = (*i).is_a<token_identifier>();
+		assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = IS_A(const name_space*, ns->used_id_map[*tid]);
 		// if not found in subspaces, check aliases list

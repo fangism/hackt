@@ -131,7 +131,8 @@ template_argument_list::check_build(context* c) const {
 	// o = expr_list::check_build(c);	// DON'T USE, override
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		const expr* e = *i;
+//		const expr* e = *i;
+		never_const_ptr<expr> e(*i);
 		assert(e);			// ever blank expression?
 		const object* eret = e->check_build(c);
 		if (eret) {
@@ -1564,6 +1565,7 @@ process_signature::get_name(void) const {
 	return *id;
 }
 
+#if 0
 const template_formal_decl_list*
 process_signature::get_template_formals(void) const {
 	return temp_spec;
@@ -1573,6 +1575,7 @@ const port_formal_decl_list*
 process_signature::get_port_formals(void) const {
 	return ports;
 }
+#endif
 
 //=============================================================================
 // class process_prototype method definitions

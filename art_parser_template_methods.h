@@ -7,10 +7,10 @@
 
 #include "art_parser_debug.h"
 #include "art_macros.h"
-#include "art_parser.h"
-#include "list_of_ptr_template_methods.h"
+#include "art_parser.h"			// includes "ptrs.h"
+#include "list_of_ptr_template_methods.h"	// PHASE OUT
 #include "art_symbol_table.h"
-	// for class context
+	// for class context, uses auto_indent()
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -46,6 +46,10 @@
 namespace ART {
 namespace parser {
 
+class terminal;
+class token_char;
+class token_string;
+
 //=============================================================================
 // TEMPLATE METHOD DEFINITIONS
 //=============================================================================
@@ -58,16 +62,9 @@ node_list_base<T>::node_list_base() : node(), list_parent() {
 
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
-node_list_base<T>::node_list_base(T* n) : node_list_base() {
-/***
-	// not needed, now that type is matched and checked
-	if(n && !IS_A(T*, n)) {
-		// throw type exception
-		n->what(cerr << "unexpected type: ") << endl;
-		exit(1);
-	}
-***/
-	push_back(n);
+node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
+//	push_back(n);
+	push_back(excl_const_ptr<T>(n));
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
@@ -85,6 +82,21 @@ node_list_base<T>::node_list_base(const node_list_base<T>& l) :
 	cerr << "\targument's size() = " << l.size() << endl;
 	cerr << "\tthis size() = " << this->size() << endl; 
 #endif
+}
+
+//-----------------------------------------------------------------------------
+NODE_LIST_BASE_TEMPLATE_SPEC
+ostream&
+node_list_base<T>::what(ostream& o) const {
+	// print first item to get type
+	const_iterator i = begin();
+	o << "(node_list): ";
+	if (*i) { 
+		(*i)->what(o) << " ";
+	} else {
+//		o << "<nothing> ";
+	}
+	return o << "...";
 }
 
 //-----------------------------------------------------------------------------
@@ -124,11 +136,22 @@ node_list_base<T>::check_build(context* c) const {
 /**
 	Releases memory owned by the list and copies over to the destination
 	list.  
+	Ownership of element pointers must be transferrable, hence
+	excl_const_ptr<T> as opposed to const excl_const_ptr<T>.  
+	Releasing memory also nullifies pointers, so the list will be
+	unusable after this operation.  
+	\param dest the destination list.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
 void
 node_list_base<T>::release_append(node_list_base<T>& dest) {
-	list_parent::release_append(dest);
+	// need to expand out operation in iterations
+//	list_parent::release_append(dest);
+	iterator i = begin();
+	for ( ; i!=end(); i++) {
+		// will release each element
+		push_back(excl_const_ptr<T>(*i));
+	}
 }
 
 //=============================================================================
@@ -141,17 +164,10 @@ node_list<T,D>::node_list() : parent(), open(NULL), close(NULL), delim() {
 
 /// constructor initialized with first element
 NODE_LIST_TEMPLATE_SPEC
-node_list<T,D>::node_list(T* n) :
-		node_list_base<T>(), open(NULL), close(NULL), delim() {
-/***
-	// not needed, now that type is matched and checked
-	if(n && !IS_A(T*, n)) {
-		// throw type exception
-		n->what(cerr << "unexpected type: ") << endl;
-		exit(1);
-	}
-***/
-	push_back(n);
+node_list<T,D>::node_list(const T* n) :
+		node_list_base<T>(n), open(NULL), close(NULL), delim() {
+//	push_back(n);
+//	push_back(excl_const_ptr<T>(n));
 }
 
 //-----------------------------------------------------------------------------
@@ -174,48 +190,47 @@ node_list<T,D>::node_list(const node_list<T,D>& l) :
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::~node_list() {
-	SAFEDELETE(open); SAFEDELETE(close);
+//	SAFEDELETE(open); SAFEDELETE(close);
 }
 
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
-node_list<T,D>::wrap(terminal* b, terminal* e) {
+node_list<T,D>::wrap(const terminal* b, const terminal* e) {
+#if 0
 	open = b;
 	if (b) assert(IS_A(token_char*, open) || IS_A(token_string*, open));
 	close = e;
 	if (e) assert(IS_A(token_char*, close) || IS_A(token_string*, close));
+#else
+// don't care what they are
+	open = excl_const_ptr<terminal>(b);
+//	if (b) assert(open.is_a<token_char>() || open.is_a<token_string>());
+	close = excl_const_ptr<terminal>(e);
+//	if (e) assert(close.is_a<token_char>() || close.is_a<token_string>());
+#endif
 	return this;
 }
 
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
-node_list<T,D>::append(terminal* d, T* n) {
+node_list<T,D>::append(const terminal* d, const T* n) {
 	if (d) {
 		// check for delimiter character match
 		// will fail if incorrect token is passed
 		assert(!(d->string_compare(D)));
 		// now use separate list for delimiters
-		delim.push_back(d);
+//		delim.push_back(d);
+		delim.push_back(excl_const_ptr<terminal>(d));
 	} else {
 		// consider using template specialization for this
 		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-	push_back(n);			// n may be null, is ok
+//	push_back(n);			// n may be null, is ok
+	push_back(excl_const_ptr<T>(n));	// n may be null, is ok
 	return this;
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SPEC
-ostream&
-node_list<T,D>::what(ostream& o) const {
-	// print first item to get type
-	const_iterator i = begin();
-	o << "(node_list): ";
-	if (*i) (*i)->what(o) << " ";
-	return o << "...";
 }
 
 //-----------------------------------------------------------------------------
@@ -273,7 +288,11 @@ NODE_LIST_TEMPLATE_SPEC
 void
 node_list<T,D>::release_append(node_list<T,D>& dest) {
 	parent::release_append(dest);
-	delim.release_append(dest.delim);
+//	delim.release_append(dest.delim);	// delim is now a list<>
+	delim_list::iterator i = delim.begin();
+	for ( ; i!=delim.end(); i++) {
+		dest.delim.push_back(*i);
+	}
 }
 
 //=============================================================================

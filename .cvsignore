@@ -1,6 +1,7 @@
 temp
 backup
 *.core
+core.*
 *.d
 .depend
 *.o
