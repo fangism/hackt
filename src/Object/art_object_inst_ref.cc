@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.2 2005/02/20 09:08:11 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.2.2.1 2005/02/20 20:35:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -16,7 +16,8 @@
 #include "art_object_instance.h"
 #include "art_object_instance_param.h"
 #include "art_object_namespace.h"
-#include "art_object_inst_ref.h"
+// #include "art_object_inst_ref.h"
+#include "art_object_inst_ref.tcc"
 #include "art_object_member_inst_ref.tcc"
 #include "art_object_inst_stmt_base.h"
 #include "art_object_expr.h"		// for dynamic_range_list
@@ -43,6 +44,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_member_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
 
+SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_reference, 
+		"process-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_reference, 
+		"channel-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::process_member_instance_reference, 
 		"process-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_instance_reference, 
@@ -1112,6 +1117,7 @@ param_instance_reference::is_unconditional(void) const {
 //=============================================================================
 // class process_instance_reference method definitions
 
+#if !USE_INSTANCE_REFERENCE_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -1252,6 +1258,7 @@ process_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	this->load_object_base(m, f);
 }
+#endif	// USE_INSTANCE_REFERENCE_TEMPLATE
 
 //=============================================================================
 // class datatype_instance_reference method definitions
@@ -1302,6 +1309,7 @@ datatype_instance_reference::dump(ostream& o) const {
 #endif
 
 //=============================================================================
+#if !USE_INSTANCE_REFERENCE_TEMPLATE
 // class channel_instance_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1451,9 +1459,14 @@ channel_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	this->load_object_base(m, f);
 }
+#endif	// USE_INSTANCE_REFERENCE_TEMPLATE
 
 //=============================================================================
 // explicit template instantiations
+template class
+instance_reference<channel_instance_collection, simple_instance_reference>;
+template class
+instance_reference<process_instance_collection, simple_instance_reference>;
 template class member_instance_reference<channel_instance_reference>;
 template class member_instance_reference<process_instance_reference>;
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.1 2005/02/20 09:08:12 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.1.2.1 2005/02/20 20:35:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -13,6 +13,7 @@
 #include "art_object_instance_enum.h"
 #include "art_object_instance_struct.h"
 #include "art_object_connect.h"
+#include "art_object_inst_ref.tcc"
 #include "art_object_member_inst_ref.tcc"
 
 #include "art_object_type_hash.h"
@@ -46,6 +47,14 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
 
 SPECIALIZE_UTIL_WHAT(
+	ART::entity::int_instance_reference, "int-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::bool_instance_reference, "bool-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::enum_instance_reference, "enum-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::datastruct_instance_reference, "struct-inst-ref")
+SPECIALIZE_UTIL_WHAT(
 	ART::entity::int_member_instance_reference, "int-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
 	ART::entity::bool_member_instance_reference, "bool-member-inst-ref")
@@ -68,6 +77,7 @@ using util::persistent_traits;
 //=============================================================================
 // class int_instance_reference method definitions
 
+#if !USE_INSTANCE_REFERENCE_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -495,9 +505,19 @@ datastruct_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	this->load_object_base(m, f);
 }
+#endif	// USE_INSTANCE_REFERENCE_TEMPLATE
 
 //=============================================================================
 // explicit template instantiations
+
+template class
+instance_reference<bool_instance_collection, datatype_instance_reference>;
+template class
+instance_reference<int_instance_collection, datatype_instance_reference>;
+template class
+instance_reference<enum_instance_collection, datatype_instance_reference>;
+template class
+instance_reference<struct_instance_collection, datatype_instance_reference>;
 
 template class member_instance_reference<bool_instance_reference>;
 template class member_instance_reference<int_instance_reference>;

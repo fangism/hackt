@@ -2,6 +2,12 @@
 
 2005-02-20	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-instref-01:
+	  Replaced copy-pasted *_instance_reference with template
+	  class definition instance_reference<Collection,Parent>, 
+	  which makes this code so much more maintainable!
+	  Next revision: clean-up.
+
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-merged-persistent-04:
 	  Merged -persistent-04 branch revisions into this branch.
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4.16.1.10.1 2005/02/20 09:08:12 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.16.1.10.1.2.1 2005/02/20 20:35:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -21,6 +21,7 @@ using namespace util::memory;
 // consider moving datatype_member_instance_reference here...
 
 //=============================================================================
+#if !USE_INSTANCE_REFERENCE_TEMPLATE
 /**
 	Instance reference to built-in int type.
  */
@@ -240,6 +241,7 @@ protected:
 public:
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class enum_instance_reference
+#endif	// USE_INSTANCE_REFERENCE_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

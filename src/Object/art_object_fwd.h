@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.3 2005/02/20 09:08:11 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.3.2.1 2005/02/20 20:35:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -35,28 +35,55 @@ namespace entity {
 	class channel_definition_base;
 	class channel_type_reference;
 	class channel_instance_collection;
-	class channel_instance_reference;
 	class datatype_definition_base;
 	class data_type_reference;
 	class datatype_instance_collection;
 	class datatype_instance_reference;
-	class bool_instance_reference;
-	class int_instance_reference;
-	class enum_instance_reference;
-	class datastruct_instance_reference;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
 	class process_instance_collection;
-	class process_instance_reference;
 	class built_in_param_def;
 	class typedef_base;
+
+	// subclasses of datatype_instance_collection
+	class bool_instance_collection;
+	class int_instance_collection;
+	class enum_instance_collection;
+	class struct_instance_collection;
+
 #if 0
-	class member_instance_reference_base;
-	class process_member_instance_reference;
-	class channel_member_instance_reference;
-	class datatype_member_instance_reference;
+	class process_instance_reference;
+	class channel_instance_reference;
+	class datastruct_instance_reference;
+	class bool_instance_reference;
+	class int_instance_reference;
+	class enum_instance_reference;
 #else
+	template <class, class>
+	class instance_reference;
+
+	typedef	instance_reference<channel_instance_collection, 
+			simple_instance_reference>
+		channel_instance_reference;
+	typedef	instance_reference<process_instance_collection, 
+			simple_instance_reference>
+		process_instance_reference;
+	typedef	instance_reference<bool_instance_collection, 
+			datatype_instance_reference>
+		bool_instance_reference;
+	typedef	instance_reference<int_instance_collection, 
+			datatype_instance_reference>
+		int_instance_reference;
+	typedef	instance_reference<enum_instance_collection, 
+			datatype_instance_reference>
+		enum_instance_reference;
+	typedef	instance_reference<struct_instance_collection, 
+			datatype_instance_reference>
+		datastruct_instance_reference;
+#endif
+
+
 	template <class>
 	class member_instance_reference;
 
@@ -72,7 +99,6 @@ namespace entity {
 		enum_member_instance_reference;
 	typedef	member_instance_reference<datastruct_instance_reference>
 		datastruct_member_instance_reference;
-#endif
 
 	class param_type_reference;
 	class pbool_type_reference;
@@ -81,12 +107,6 @@ namespace entity {
 	class param_instance_collection;
 	class pbool_instance_collection;
 	class pint_instance_collection;
-
-	// subclasses of datatype_instance_collection
-	class bool_instance_collection;
-	class int_instance_collection;
-	class enum_instance_collection;
-	class struct_instance_collection;
 
 	class pint_instance;
 	class pbool_instance;
