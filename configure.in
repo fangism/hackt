@@ -6,7 +6,7 @@
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(artxx, 0.1.3, fangism@gmail.com)
+AC_INIT(artxx, 0.1.3, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/art_main.cc])

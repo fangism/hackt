@@ -2,6 +2,24 @@ to do list:
 
 this TODO list is way outdated... clean TODO list.
 
+instantiation statement needs to check template arguments of type!
+
+before unrolling: need major rework
+put instance management items in the top-level in some
+	globally ordered list in the context object.
+		when instance is declared (or extended) either
+		add to definition or the global scope. 
+	remove connect_list and assign_list from scopespace?
+		replace them with list<ptr<instance_management> >
+		in certain definition types?
+		definition_base? only definitions with scopes?
+	either add to global action list or definition's list.
+	account for loop and conditional scopes, 
+		treat them as sequential items.  
+	in context, manage stack of instance_management spaces...
+
+psuedo code high level linking and unrolling, etc...
+
 UNROLL that sh--
 	keep definitions around
 	unpack instantiation_bases into live instances

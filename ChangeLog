@@ -1,5 +1,37 @@
 "ChangeLog"
 
+2004-09-10	David Fang	<fangism@users.sourceforge.net>
+
+	* Major reworking of instance management: all instantiations, 
+	  parameters, assignments, connections that appear outside of
+	  definitions will be globally ordered into a namespace-independent
+	  instance management list, to preserve source ordering.  
+	  Each definition will have its own local instance management list.
+	  Instance management lists will expand into sequentially scoped 
+	  bodies, such as loop scopes and conditional scopes.  
+	  Namespaces no longer have separate assignment or connection lists.  
+	  (most affected: Object/art_context.* Object/art_object_base.*)
+
+	* class instantiation_statement encapsulates a sequential 
+	  addition of instance (possible to an array).
+
+	* Object de/serialization interface now uses class "module" instead
+	  of the root namespace.  "module" implements standard
+	  de/serialization interface.  
+
+	* Introduced new top-level object "module" which includes a
+	  global namespace and a globally ordered instance management list.  
+	  Note: type enumeration shifts as a result.  
+
+	* Some more documentation on the language spec, for templates, 
+	  typedefs, and type-equivalence.
+
+	* Some general improvements and extensions to algorithm library
+	  interface (functors and adapters) in the util/ directory.  
+
+	* Minor insignificant shifts in object class hierarchy.  
+
+
 2004-09-03	David Fang	<fangism@users.sourceforge.net>
 
 	* Started a documentation directory dox/lang for the language
