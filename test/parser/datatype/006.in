@@ -1,0 +1,6 @@
+// should pass, re-use of identifiers in different scopes should be ok
+
+int foo;
+namespace bar {
+	int foo;		// is ok
+};

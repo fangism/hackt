@@ -1,0 +1,5 @@
+// should die, identifier already taken as an alias
+
+namespace A { };
+open A as B;
+bool B;

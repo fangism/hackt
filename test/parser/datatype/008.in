@@ -1,0 +1,12 @@
+// should pass, as overshadowing of identifiers is allowed
+
+namespace A {
+	int foo;
+};
+
+namespace B {
+	open A;
+	open A as C;
+	int foo;		// is ok
+};
+
