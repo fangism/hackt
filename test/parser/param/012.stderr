@@ -1,3 +1,3 @@
 Cannot initialize a bool parameter with a pint-const expression, ERROR!  
 Error initializing item 1 of alias-list.  
-HALT: at least one error in alias list.
+HALT: at least one error in alias list.  [3:11..13]
