@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2 2005/02/18 03:25:14 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1 2005/02/19 06:56:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -81,13 +81,19 @@ virtual	bool
 virtual	bool
 	must_be_type_equivalent(const instance_reference_base& i) const = 0;
 
-#if 0
+#if 1	// SUBTYPE_ALIASES_CONNECTION
 	/**
 		Start an aliases connection list based on the referenced type.  
+		We have the option of adding the first element to the list...
 	 */
+	static
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection(
-		const count_ptr<const instance_reference_base>&) const = 0;
+		const count_ptr<const instance_reference_base>&);
+
+private:
+virtual	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
 #endif
 };	// end class instance_reference_base
 

@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1 2005/02/18 06:07:45 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1.2.1 2005/02/19 06:56:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -145,8 +145,8 @@
 #define	DINT_ALIAS_CONNECTION_TYPE_KEY				"dialias"
 #define	ENUM_ALIAS_CONNECTION_TYPE_KEY				"enmalias"
 #define	STRUCT_ALIAS_CONNECTION_TYPE_KEY			"stralias"
-#define	CHAN_ALIAS_CONNECTION_TYPE_KEY				"chnalias"
-#define	PROC_ALIAS_CONNECTION_TYPE_KEY				"prcalias"
+#define	CHANNEL_ALIAS_CONNECTION_TYPE_KEY			"chnalias"
+#define	PROCESS_ALIAS_CONNECTION_TYPE_KEY			"prcalias"
 
 #define	PORT_CONNECTION_TYPE_KEY				"portconn"
 #define	LOOP_SCOPE_TYPE_KEY					"loopscop"

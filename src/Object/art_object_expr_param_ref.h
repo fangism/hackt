@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.5.2.2 2005/02/03 03:34:49 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.5.2.2.12.1 2005/02/19 06:56:48 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -164,6 +164,10 @@ public:
 		}
 	};	// end class assigner
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -296,6 +300,10 @@ public:
 			return this->operator()(b, *p);
 		}
 	};	// end class assigner
+
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
 
 protected:
 	using parent_type::collect_transient_info_base;

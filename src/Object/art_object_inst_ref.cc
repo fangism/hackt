@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1 2005/02/17 22:41:23 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.1 2005/02/19 06:56:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -17,9 +17,23 @@
 #include "art_object_instance_param.h"
 #include "art_object_namespace.h"
 #include "art_object_inst_ref.h"
+
+#if 1
+// this really needs to be moved to a separate file...
+#include "art_object_inst_ref_data.h"
+	// for datatype_member_instance_reference::make_aliases_connection_private
+
+	// to complete types, ugh...
+#include "art_object_instance_bool.h"
+#include "art_object_instance_int.h"
+#include "art_object_instance_enum.h"
+#include "art_object_instance_struct.h"
+#endif
+
 #include "art_object_inst_stmt_base.h"
 #include "art_object_expr.h"		// for dynamic_range_list
 #include "art_object_control.h"
+#include "art_object_connect.h"		// for aliases_connection_base
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
@@ -35,6 +49,21 @@ using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;
 using util::write_value;
 using util::read_value;
+
+//=============================================================================
+// class instance_reference_base method definitions
+
+/**
+	Wrapped interface to constructing type-specific alias connections.  
+ */
+excl_ptr<aliases_connection_base>
+instance_reference_base::make_aliases_connection(
+		const count_ptr<const instance_reference_base>& i) {
+	NEVER_NULL(i);
+	return i->make_aliases_connection_private();
+	// have the option of adding first instance here...
+	// ret->append_instance_reference(i);
+}
 
 //=============================================================================
 // class simple_instance_reference::mset_base definition
@@ -1177,6 +1206,12 @@ process_instance_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+process_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Visits children nodes and register pointers to object manager
 	for serialization.  
@@ -1364,6 +1399,12 @@ channel_instance_reference::dump(ostream& o) const {
 	return what(o);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+channel_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1582,6 +1623,31 @@ datatype_member_instance_reference::what(ostream& o) const {
 never_ptr<const instance_collection_base>
 datatype_member_instance_reference::get_inst_base(void) const {
 	return data_inst_ref;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+datatype_member_instance_reference::make_aliases_connection_private(void) const {
+	typedef	excl_ptr<aliases_connection_base>	return_type;
+	// no argument?
+	NEVER_NULL(data_inst_ref);
+	// temporary kludge because we don't have sub-type (datatype)-specific
+	// member_instance_references, 
+	// data_inst_ref is a generic datatype_instance_collection.  
+#if 0
+	return data_inst_ref->make_aliases_connection_private();
+#else
+	if (data_inst_ref.is_a<const bool_instance_collection>()) {
+		return return_type(new bool_alias_connection);
+	} else if (data_inst_ref.is_a<const int_instance_collection>()) {
+		return return_type(new int_alias_connection);
+	} else if (data_inst_ref.is_a<const enum_instance_collection>()) {
+		return return_type(new enum_alias_connection);
+	} else {
+		INVARIANT(data_inst_ref.is_a<const struct_instance_collection>());
+		return return_type(new datastruct_alias_connection);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

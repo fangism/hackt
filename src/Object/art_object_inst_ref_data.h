@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4.16.1 2005/02/03 03:34:50 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.1 2005/02/19 06:56:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -27,7 +27,9 @@ using namespace util::memory;
 class int_instance_reference : public datatype_instance_reference {
 private:
 	typedef	datatype_instance_reference		parent_type;
+public:
 	typedef	int_instance_collection		instance_collection_type;
+	typedef	int_alias_connection		alias_connection_type;
 private:
 	// excl_ptr<index_list>		array_indices;	// inherited
 
@@ -53,6 +55,10 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -69,7 +75,9 @@ public:
 class bool_instance_reference : public datatype_instance_reference {
 private:
 	typedef	datatype_instance_reference		parent_type;
+public:
 	typedef	bool_instance_collection	instance_collection_type;
+	typedef	bool_alias_connection		alias_connection_type;
 private:
 	// excl_ptr<index_list>		array_indices;	// inherited
 
@@ -96,6 +104,10 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class bool_instance_reference
@@ -107,7 +119,9 @@ public:
 class datastruct_instance_reference : public datatype_instance_reference {
 private:
 	typedef	datatype_instance_reference		parent_type;
+public:
 	typedef	struct_instance_collection	instance_collection_type;
+	typedef	datastruct_alias_connection		alias_connection_type;
 private:
 	// excl_ptr<index_list>		array_indices;	// inherited
 
@@ -135,6 +149,10 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class datastruct_instance_reference
@@ -146,7 +164,9 @@ public:
 class enum_instance_reference : public datatype_instance_reference {
 private:
 	typedef	datatype_instance_reference		parent_type;
+public:
 	typedef	enum_instance_collection	instance_collection_type;
+	typedef	enum_alias_connection		alias_connection_type;
 private:
 	// excl_ptr<index_list>		array_indices;	// inherited
 
@@ -173,6 +193,10 @@ public:
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

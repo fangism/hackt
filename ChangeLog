@@ -2,6 +2,22 @@
 
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-01:
+	  Subtype template classes for alias_connection s are enabled, 
+	  everything compiles, but there is some difficulty with 
+	  persistent type registration: the hash_key's are not retrieved
+	  properly by calls to static persistent_traits<T>::get_hash_key.
+	  Solution: we need proper specialization of persistent_traits, 
+	  which currently isn't done because type-keys are only registered
+	  dynamically by static objects, hence specialized definitions
+	  do not exist.  This branch will remedy this by using specialization
+	  and dynamic registration (for unique ID).  
+	  This initial revision compiles, but some tests will die while
+	  modifications are in transient state.  
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04:
 	  Draft of template code for alias_connection.  
 	  Need to write instance_reference_base::make_alias_connection

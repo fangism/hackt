@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14.2.3 2005/02/17 04:21:00 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.2.3.4.1 2005/02/19 06:56:50 fang Exp $
  */
 
 // flags and switches
@@ -274,13 +274,15 @@ persistent_object_manager::~persistent_object_manager() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Registers a persistent object that will be stored.  
-	Returns true if address was already visited.  
+	\return true if address was already visited.  
  */
 bool
 persistent_object_manager::register_transient_object(
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a) {
 	const long probe = addr_to_index_map[ptr];
+	if (ptr)
+		assert(t != persistent::hash_key::null);
 	if (probe >= 0) {
 		// sanity check
 		const reconstruction_table_entry& e = 

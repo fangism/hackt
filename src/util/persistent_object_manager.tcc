@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.3 2005/02/17 04:21:01 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.3.4.1 2005/02/19 06:56:50 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -388,7 +388,14 @@ persistent_traits<T>::persistent_traits(const string& s) {
 	INVARIANT(!type_id);
 	INVARIANT(type_key == persistent::hash_key::null);
 	type_key = s;
+	INVARIANT(get_type_key() == s);
 	type_id = persistent_object_manager::register_persistent_type<T>();
+}
+
+template <class T>
+const persistent::hash_key&
+persistent_traits<T>::get_type_key(void) {
+	return type_key;
 }
 
 //=============================================================================

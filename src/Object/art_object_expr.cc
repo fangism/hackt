@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.1 2005/02/18 06:07:42 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.1.2.1 2005/02/19 06:56:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -27,6 +27,7 @@
 // #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
+#include "art_object_connect.h"		// for ~aliases_connection_base
 #include "art_object_type_hash.h"
 
 #if 0
@@ -115,6 +116,7 @@ namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::const_range)
 }	// end namespace memory
 }	// end namespace util
 
@@ -1313,6 +1315,16 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Parameters have value semantics, not alias semantics!
+ */
+excl_ptr<aliases_connection_base>
+pbool_instance_reference::make_aliases_connection_private(void) const {
+	DIE;
+	return excl_ptr<aliases_connection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -1871,6 +1883,16 @@ pint_instance_reference::assign(const list<value_type>& l) const {
 	return pint_inst_ref->unroll_assign(l);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parameters have value semantics, not alias semantics!
+ */
+excl_ptr<aliases_connection_base>
+pint_instance_reference::make_aliases_connection_private(void) const {
+	DIE;
+	return excl_ptr<aliases_connection_base>(NULL);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3802,6 +3824,9 @@ pint_range::load_object(const persistent_object_manager& m, istream& f) {
 // class const_range method definitions
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range, CONST_RANGE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(const_range, 64)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2 2005/02/17 04:20:34 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.1 2005/02/19 06:56:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -12,6 +12,7 @@
 #include "art_object_instance_int.h"
 #include "art_object_instance_enum.h"
 #include "art_object_instance_struct.h"
+#include "art_object_connect.h"
 
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
@@ -59,6 +60,12 @@ int_instance_reference::what(ostream& o) const {
 never_ptr<const instance_collection_base>
 int_instance_reference::get_inst_base(void) const {
 	return int_inst_ref;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+int_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,6 +152,12 @@ bool_instance_reference::get_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+bool_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -228,6 +241,12 @@ enum_instance_reference::get_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+enum_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 enum_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -308,6 +327,12 @@ datastruct_instance_reference::what(ostream& o) const {
 never_ptr<const instance_collection_base>
 datastruct_instance_reference::get_inst_base(void) const {
 	return struct_inst_ref;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<aliases_connection_base>
+datastruct_instance_reference::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

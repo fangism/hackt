@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.2 2005/02/18 06:07:43 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.2.2.1 2005/02/19 06:56:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -84,8 +84,31 @@ namespace entity {
 	class instance_management_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
-	class aliases_connection_base;
 	class port_connection;
+	class aliases_connection_base;
+#if 1
+	// defined in "art_object_connect.h"
+	class data_alias_connection_base;
+	template <class, class>	class alias_connection;
+	typedef alias_connection<int_instance_reference, 
+			data_alias_connection_base>
+		int_alias_connection;
+	typedef alias_connection<bool_instance_reference, 
+			data_alias_connection_base>
+		bool_alias_connection;
+	typedef alias_connection<enum_instance_reference,
+			data_alias_connection_base>
+		enum_alias_connection;
+	typedef alias_connection<datastruct_instance_reference,
+			data_alias_connection_base>
+		datastruct_alias_connection;
+	typedef alias_connection<channel_instance_reference,
+			aliases_connection_base>
+		channel_alias_connection;
+	typedef alias_connection<process_instance_reference,
+			aliases_connection_base>
+		process_alias_connection;
+#endif
 
 	class instantiation_statement;
 	class param_instantiation_statement;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.4 2005/02/17 00:10:12 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.4.4.1 2005/02/19 06:56:48 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -691,6 +691,7 @@ class const_range : public range_expr, public const_index,
 		public pair<pint_value_type, pint_value_type> {
 friend class const_range_list;
 private:
+	typedef	const_range				this_type;
 	typedef	pair<pint_value_type,pint_value_type>	parent_type;
 	// typedef for interval_type (needs discrete_interval_set)
 	// relocated to source file
@@ -796,6 +797,10 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	// don't need robust declarations, unless dynamically allocating
+	// during global static initialization.
 };	// end class const_range
 
 //=============================================================================

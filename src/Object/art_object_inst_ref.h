@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1 2005/02/18 06:07:43 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1 2005/02/19 06:56:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -53,6 +53,10 @@ virtual	ostream&
 virtual	never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
 
+private:
+virtual	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -69,6 +73,7 @@ private:
 	typedef	simple_instance_reference		parent_type;
 public:
 	typedef	channel_instance_collection	instance_collection_type;
+	typedef	channel_alias_connection	alias_connection_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	const never_ptr<const channel_instance_collection>
@@ -98,6 +103,10 @@ virtual	ostream&
 	get_inst_base(void) const;
 
 protected:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
+protected:
 	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
@@ -118,6 +127,7 @@ private:
 	typedef	simple_instance_reference		parent_type;
 public:
 	typedef	process_instance_collection	instance_collection_type;
+	typedef	process_alias_connection	alias_connection_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	const never_ptr<const process_instance_collection>
@@ -145,6 +155,10 @@ virtual	ostream&
 	get_inst_base(void) const;
 
 protected:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
+protected:
 	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
@@ -167,6 +181,8 @@ class process_member_instance_reference :
 private:
 	typedef	process_instance_reference		parent_type;
 	typedef	member_instance_reference_base		interface_type;
+public:
+	typedef	parent_type::alias_connection_type	alias_connection_type;
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
@@ -184,6 +200,14 @@ public:
 	ostream&
 	what(ostream& o) const;
 // can also attach indices!
+
+private:
+#if 0
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+#else
+	using parent_type::make_aliases_connection_private;
+#endif
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -222,6 +246,10 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 
@@ -237,6 +265,8 @@ class channel_member_instance_reference :
 private:
 	typedef	channel_instance_reference		parent_type;
 	typedef	member_instance_reference_base		interface_type;
+public:
+	typedef	parent_type::alias_connection_type	alias_connection_type;
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
@@ -254,6 +284,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 // can also attach indices!
+private:
+#if 0
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+#else
+	using parent_type::make_aliases_connection_private;
+#endif
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
