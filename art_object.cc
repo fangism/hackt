@@ -1,5 +1,6 @@
 // "art_object.cc"
 
+#include "art_parser_debug.h"
 #include "art_parser.h"
 #include "map_of_ptr_template_methods.h"
 
@@ -8,9 +9,51 @@
 // about redefinition of struct hash<> template upon specialization of
 // hash<string>.  
 
-#include "hashlist_template_methods.h"
+#include "hash_specializations.h"		// substitute for the following
+
+// #include "hashlist_template_methods.h"
 	// includes "list_of_ptr_template_methods.h"
 #include "art_object.h"
+
+//=============================================================================
+// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+#define		DEBUG_NAMESPACE			1 && DEBUG_CHECK_BUILD
+#define		TRACE_QUERY			0	// bool, ok to change
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if		DEBUG_NAMESPACE
+// ok to change these values, but should be > TRACE_CHECK_BUILD (5)
+  #define	TRACE_NAMESPACE_NEW		8
+  #define	TRACE_NAMESPACE_USING		8
+  #define	TRACE_NAMESPACE_ALIAS		8
+  #if		TRACE_QUERY
+    #define	TRACE_NAMESPACE_QUERY		10
+    #define	TRACE_NAMESPACE_SEARCH		TRACE_NAMESPACE_QUERY+5
+  #else
+    #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
+    #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
+  #endif
+#else
+// defining as >= MASTER_DEBUG_LEVEL will turn it off
+  #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
+  #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
+  #define	TRACE_NAMESPACE_USING		MASTER_DEBUG_LEVEL
+  #define	TRACE_NAMESPACE_ALIAS		MASTER_DEBUG_LEVEL
+#endif
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if		DEBUG_DATATYPE && TRACE_QUERY
+// ok to change these values
+  #define	TRACE_DATATYPE_QUERY		10
+  #define	TRACE_DATATYPE_SEARCH		TRACE_DATATYPE_QUERY+5
+#else
+// defining as >= MASTER_DEBUG_LEVEL will turn it off
+  #define	TRACE_DATATYPE_QUERY		MASTER_DEBUG_LEVEL
+  #define	TRACE_DATATYPE_SEARCH		MASTER_DEBUG_LEVEL
+#endif
+
 
 //=============================================================================
 namespace ART {
@@ -165,7 +208,7 @@ name_space::add_open_namespace(const string& n) {
 		assert(!subns[n]);
 
 		// create it, linking this as its parent
-		cerr << " ... creating new";
+		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
 		ret = new name_space(n, this);
 		assert(ret);
 		subns[n] = ret;		// store it in map of sub-namespaces
@@ -175,7 +218,8 @@ name_space::add_open_namespace(const string& n) {
 	// silly sanity checks
 	assert(ret->parent == this);
 	assert(ret->key == n);
-	cerr << " with parent: " << ret->parent->key;
+	DEBUG(TRACE_NAMESPACE_NEW, 
+		cerr << " with parent: " << ret->parent->key)
 	return ret;
 }
 
@@ -219,8 +263,9 @@ name_space::add_using_directive(const id_expr& n) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	cerr << endl << "adding using-directive in space: " 
-		<< get_qualified_name();
+	DEBUG(TRACE_NAMESPACE_USING, 
+		cerr << endl << "adding using-directive in space: " 
+			<< get_qualified_name())
 	// see if namespace has already been declared within scope of search
 	// remember: the id_expr is a suffix to be appended onto root
 	// find it/them, record to list
@@ -278,8 +323,9 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	cerr << endl << "adding using-alias in space: " 
-		<< get_qualified_name() << " as " << a;
+	DEBUG(TRACE_NAMESPACE_ALIAS, 
+		cerr << endl << "adding using-alias in space: " 
+			<< get_qualified_name() << " as " << a)
 
 	probe = what_is(a);
 	if (probe) {
@@ -348,13 +394,14 @@ const name_space*
 name_space::query_namespace_match(const id_expr& id) const {
 	// recall that id_expr is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	cerr << "query_namespace_match: " << id 
-		<< " in " << get_qualified_name() << endl;
+	DEBUG(TRACE_NAMESPACE_QUERY, 
+		cerr << "query_namespace_match: " << id 
+			<< " in " << get_qualified_name() << endl)
 
 	id_expr::const_iterator i = id.begin();	assert(*i);
 	const token_identifier* tid = IS_A(const token_identifier*, *i);
 	assert(tid);
-	cerr << "\ttesting: " << *tid;
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	const name_space* ns = this;
 	if (ns->key.compare(*tid)) {
 		// if names differ, already failed, try alias spaces
@@ -364,7 +411,7 @@ name_space::query_namespace_match(const id_expr& id) const {
 			const name_space* next;
 			i++;	// remember to skip scope tokens
 			tid = IS_A(token_identifier*, *i); assert(tid);
-			cerr << scope << *tid;
+			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			next = ns->subns[*tid];
@@ -406,12 +453,13 @@ const name_space*
 name_space::query_subnamespace_match(const id_expr& id) const {
 	// recall that id_expr is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	cerr << endl << "query_subnamespace_match: " << id 
-		<< " in " << get_qualified_name() << endl;
+	DEBUG(TRACE_NAMESPACE_QUERY, 
+		cerr << endl << "query_subnamespace_match: " << id 
+			<< " in " << get_qualified_name() << endl)
 	id_expr::const_iterator i = id.begin();	assert(*i);
 	token_identifier* tid = IS_A(token_identifier*, *i);
 	assert(tid);
-	cerr << "\ttesting: " << *tid;
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	const name_space* ns = subns[*tid];	// lookup map of sub-namespaces
 	if (!ns) {				// else lookup in aliases
 //		ns = open_aliases[*tid];	// replaced for const semantics
@@ -423,7 +471,7 @@ name_space::query_subnamespace_match(const id_expr& id) const {
 		const name_space* next;
 		i++;
 		tid = IS_A(token_identifier*, *i); assert(tid);
-		cerr << scope << *tid;
+		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = ns->subns[*tid];
 		// if not found in subspaces, check aliases list
 
@@ -460,8 +508,9 @@ name_space::query_subnamespace_match(const id_expr& id) const {
 void
 name_space::
 query_import_namespace_match(namespace_list& m, const id_expr& id) const {
-	cerr << endl << "query_import_namespace_match: " << id 
-		<< " in " << get_qualified_name();
+	DEBUG(TRACE_NAMESPACE_QUERY, 
+		cerr << endl << "query_import_namespace_match: " << id 
+			<< " in " << get_qualified_name())
 	{
 		const name_space* ret = query_subnamespace_match(id);
 		if (ret) m.push_back(ret);
@@ -501,8 +550,9 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) const {
  */
 void
 name_space::query_type_def_match(type_def_list& m, const string& tid) const {
-	cerr << endl << "query_type_def_match: " << tid
-		<< " in " << get_qualified_name();
+	DEBUG(TRACE_DATATYPE_QUERY, 
+		cerr << endl << "query_type_def_match: " << tid
+			<< " in " << get_qualified_name())
 	{
 		const type_definition* ret = type_defs[tid];
 		if (ret) m.push_back(ret);

@@ -13,6 +13,7 @@
 #include <stdio.h>		// for sprintf
 #include <string.h>		// for a few C-string functions
 
+#include "art_parser_debug.h"
 #include "art_macros.h"
 #include "art_switches.h"
 #include "art_parser_template_methods.h"
@@ -24,6 +25,7 @@
 #define	CONSTRUCTOR_INLINE		
 #define	DESTRUCTOR_INLINE		
 
+//=============================================================================
 namespace ART {
 namespace parser {
 
@@ -588,7 +590,8 @@ namespace_body::rightmost(void) const {
 const object*
 namespace_body::
 check_build(context* c) const {
-	cerr << c->auto_indent() << "entering namespace: " << *name;
+	DEBUG(TRACE_CHECK_BUILD, 
+		cerr << c->auto_indent() << "entering namespace: " << *name)
 	// use context lookup: see if namespace already exists in super-scope
 		// name_space* ns = c->lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
@@ -597,7 +600,8 @@ check_build(context* c) const {
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
-	cerr << c->auto_indent() << "leaving namespace: " << *name;
+	DEBUG(TRACE_CHECK_BUILD, 
+		cerr << c->auto_indent() << "leaving namespace: " << *name)
 	c->close_namespace();
 	// if no errors, return pointer to the namespace just processed
 	return c->top_namespace();
@@ -671,10 +675,14 @@ const object*
 using_namespace::
 check_build(context* c) const {
 	if (alias) {
-		cerr << c->auto_indent() << "aliasing namespace: " << *id;
+		DEBUG(TRACE_CHECK_BUILD, 
+			cerr << c->auto_indent() << 
+				"aliasing namespace: " << *id)
 		c->alias_namespace(*id, *alias);
 	} else {
-		cerr << c->auto_indent() << "using namespace: " << *id;
+		DEBUG(TRACE_CHECK_BUILD, 
+			cerr << c->auto_indent() << 
+				"using namespace: " << *id)
 		// if aliased... print all, report as error (done inside)
 		c->using_namespace(*id);
 	}

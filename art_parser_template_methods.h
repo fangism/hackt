@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "art_parser_debug.h"
 #include "art_macros.h"
 #include "art_parser.h"
 #include "list_of_ptr_template_methods.h"
@@ -36,8 +37,10 @@
 // in the .cc source files.  
 // As a reminder, non-template methods should be defined in the .cc file.
 
+//=============================================================================
 namespace ART {
 namespace parser {
+
 //=============================================================================
 // TEMPLATE METHOD DEFINITIONS
 //=============================================================================
@@ -179,7 +182,8 @@ node_list<T,D>::check_build(context* c) const {
 	const object* ret = NULL;
 	const_iterator i = begin();
 	if (*i) {
-		(*i)->what(cerr << c->auto_indent() << "checking a ");
+		DEBUG(TRACE_CHECK_BUILD, 
+			(*i)->what(cerr << c->auto_indent() << "checking a "))
 		// check returned value for failure
 		ret = (*i)->check_build(c);
 		// context will be updated if there is an error
@@ -189,13 +193,16 @@ node_list<T,D>::check_build(context* c) const {
 		if (D != none)
 			i++;
 		if (*i) {
-			(*i)->what(cerr << c->auto_indent() << "checking a ");
+			DEBUG(TRACE_CHECK_BUILD, 
+				(*i)->what(cerr << c->auto_indent() << "checking a "))
 			// check returned value for failure
 			ret = (*i)->check_build(c);
 			// context will be updated if there is an error
 		}
 	}
-	// a generally useless return value, should disregard this
+	// a generally useless return value, as it only reflects the 
+	// return status of the last object in the list
+	// thus, should disregard this
 	// and use context object for error information
 	return ret;
 }

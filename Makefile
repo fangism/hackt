@@ -46,7 +46,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 .SUFFIXES: .cc .o .l .yy .d
 
 # careful using this..., only bsdmake uses .BEGIN
-.BEGIN:	makeinfo .depend
+.BEGIN:	.depend
 
 .cc.o:
 	$(CC) $(CFLAGS) $< -o $@
@@ -66,11 +66,12 @@ makeinfo:
 	@$(ECHO) "#	YACC = $(YACC) $(YFLAGS)"
 	@$(ECHO) "############################################################"
 
-all: .depend $(TARGETS)
+all: makeinfo .depend $(TARGETS)
 
 # figure out how to pass in regression flags
 # TO DO: regression test Makefile targets in subdirectories
-regression: clobber .depend $(TARGETS)
+regression: clobber
+	$(MAKE) CDEFS="-DREGRESSION_TEST_MODE=1" all
 
 ART_OBJ = y.tab.o art.yy.o art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \

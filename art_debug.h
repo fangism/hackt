@@ -19,10 +19,11 @@
 
 // The higher the level of debugging, the more detailed reporting to stderr.  
 // Other local debug flags should be derived based on this.  
-#if 	!defined(MASTER_DEBUG_LEVEL) && !REGRESSION_TEST_MODE
-#define	MASTER_DEBUG_LEVEL	2		// default, ok to change
-#else
+#if	REGRESSION_TEST_MODE
+#undef	MASTER_DEBUG_LEVEL			// override whatever is passed
 #define	MASTER_DEBUG_LEVEL	0		// DO NOT CHANGE
+#elif	!defined(MASTER_DEBUG_LEVEL)
+#define	MASTER_DEBUG_LEVEL	2		// default, ok to change this
 #endif
 
 #if	REGRESSION_TEST_MODE
@@ -31,6 +32,7 @@
 #define	DEBUG(lvl, stmt)						\
 	if (MASTER_DEBUG_LEVEL > lvl) { stmt; }
 #endif
+// note: no semicolon needed after DEBUG, but it doesn't hurt either
 
 //////////////////// some useful reference levels /////////////////////////////
 

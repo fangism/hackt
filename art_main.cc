@@ -52,7 +52,7 @@ DEBUG(DEBUG_BASIC,
 	// global = new context();
 	top = root->check_build(the_context);
 }	// end if (root)
-	cerr << endl;
+DEBUG(DEBUG_BASIC, cerr << endl)
 
 	// massive recursive deletion of syntax tree, reclaim memory
 	SAFEDELETE(root);
