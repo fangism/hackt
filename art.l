@@ -38,8 +38,12 @@
 		case 1) start of source (anywhere): while the source
 		is on the 
 
-	This lexer doesn't single out any keywords yet.  
-		By default, they will match as plain identifiers.  
+	To do: 
+		See if we can use the single character tokens' characters
+		as the return values to the parser.  
+
+		Implement the #line directive to interpret the output
+		of flattened, preprocessed files.  
 
 ******************************************************************************/
 /****** DEFINITIONS **********************************************************/
@@ -122,47 +126,24 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-PERIOD		"."
-MEMBER		"."
-COMMA		","
-TILDE		"~"
-BANG		"!"
-QUERY		"?"
+UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.+-]
+
+AT		"@"
+POUND		"#"
+DOLLAR		"$"
+
 PLUSPLUS	"++"
 MINUSMINUS	"--"
-PIPE		"|"
-COLON		":"
-SEMICOLON	";"
-LBRACE		"{"
-RBRACE		"}"
-LBRACKET	"["
-RBRACKET	"]"
-LPAREN		"("
-RPAREN		")"
 LARROW		"<-"
 RARROW		"->"
 EQUAL		"=="
 NOTEQUAL	"!="
-LT		"<"
-GT		">"
 LE		"<="
 GE		">="
-ASSIGN		"="
-COLONASSIGN	":="
 IMPLIES		"=>"
 INSERT		">>"
 EXTRACT		"<<"
-PLUS		"+"
-MINUS		"-"
-STAR		"*"
-DIVIDE		"/"
 FWDSLASH	"\\"
-AT		"@"
-POUND		"#"
-DOLLAR		"$"
-PERCENT		"%"
-XOR		"^"
-AMPERSAND	"&"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
 BEGINLOOP	"*["
@@ -219,50 +200,27 @@ FALSE		"false"
 
 <INITIAL>{
 
-{SEMICOLON}	{ TOKEN_UPDATE; return SEMICOLON; }
-{COMMA}		{ TOKEN_UPDATE; return COMMA; }
-{COLON}		{ TOKEN_UPDATE; return COLON; }
-{LBRACE}	{ TOKEN_UPDATE; return LBRACE; }
-{RBRACE}	{ TOKEN_UPDATE; return RBRACE; }
-{LBRACKET}	{ TOKEN_UPDATE; return LBRACKET; }
-{RBRACKET}	{ TOKEN_UPDATE; return RBRACKET; }
-{LPAREN}	{ TOKEN_UPDATE; return LPAREN; }
-{RPAREN}	{ TOKEN_UPDATE; return RPAREN; }
-{ASSIGN}	{ TOKEN_UPDATE; return ASSIGN; }
-{LT}		{ TOKEN_UPDATE; return LT; }
 {LE}		{ TOKEN_UPDATE; return LE; }
-{GT}		{ TOKEN_UPDATE; return GT; }
 {GE}		{ TOKEN_UPDATE; return GE; }
 {EQUAL}		{ TOKEN_UPDATE; return EQUAL; }
 {NOTEQUAL}	{ TOKEN_UPDATE; return NOTEQUAL; }
 {THICKBAR}	{ TOKEN_UPDATE; return THICKBAR; }
-{MEMBER}	{ TOKEN_UPDATE; return MEMBER; }
 {SCOPE}		{ TOKEN_UPDATE; return SCOPE; }
-{COLONASSIGN}	{ TOKEN_UPDATE; return COLONASSIGN; }
 {RANGE}		{ TOKEN_UPDATE; return RANGE; }
 {IMPLIES}	{ TOKEN_UPDATE; return IMPLIES; }
 {RARROW}	{ TOKEN_UPDATE; return RARROW; }
 {BEGINLOOP}	{ TOKEN_UPDATE; return BEGINLOOP; }
 {BEGINPROB}	{ TOKEN_UPDATE; return BEGINPROB; }
 {ENDPROB}	{ TOKEN_UPDATE; return ENDPROB; }
-{PLUS}		{ TOKEN_UPDATE; return PLUS; }
-{MINUS}		{ TOKEN_UPDATE; return MINUS; }
-{STAR}		{ TOKEN_UPDATE; return STAR; }
-{DIVIDE}	{ TOKEN_UPDATE; return DIVIDE; }
-{PERCENT}	{ TOKEN_UPDATE; return PERCENT; }
-{BANG}		{ TOKEN_UPDATE; return BANG; }
-{QUERY}		{ TOKEN_UPDATE; return QUERY; }
 {PLUSPLUS}	{ TOKEN_UPDATE; return PLUSPLUS; }
 {MINUSMINUS}	{ TOKEN_UPDATE; return MINUSMINUS; }
 {DEFINEOP}	{ TOKEN_UPDATE; return DEFINEOP; }
-{TILDE}		{ TOKEN_UPDATE; return TILDE; }
-{AMPERSAND}	{ TOKEN_UPDATE; return AND; }
-{PIPE}		{ TOKEN_UPDATE; return PIPE; }
 {LOGICAL_AND}	{ TOKEN_UPDATE; return LOGICAL_AND; }
 {LOGICAL_OR}	{ TOKEN_UPDATE; return LOGICAL_OR; }
-{XOR}		{ TOKEN_UPDATE; return XOR; }
 {INSERT}	{ TOKEN_UPDATE; return INSERT; }
 {EXTRACT}	{ TOKEN_UPDATE; return EXTRACT; }
+
+{UNICHARTOKEN}	{ TOKEN_UPDATE; return yytext[0]; }
 
 {WHITESPACE}	TOKEN_UPDATE;
 {NEWLINE}	NEWLINE_UPDATE;

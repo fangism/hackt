@@ -16,13 +16,11 @@ using namespace ART::parser;
 
 extern	int yylex(void);
 extern "C" {
-	int yyparse(void);
-	void yyerror(const char* msg) {
-		cerr << "parse error: " << msg << endl;
-	/* line and col information? */
-		exit(1);
-	}
+	int yyparse(void);			// parser routine to call
+	void yyerror(const char* msg);		// defined below
+
 }
+
 
 
 %}
@@ -35,22 +33,41 @@ extern "C" {
 // parser members
 }
 
+/* the following single characters are legitimate tokens:
+	][(){}<>*%/=:;|!?~&^.+-
+
+	(can just copy these into a lex declaration)
+
+	note on character classes from grep's man page:
+		Most metacharacters  lose  their  special  meaning  inside
+		lists.  To include a literal ] place it first in the list.
+		Similarly, to include a literal ^ place  it  anywhere  but
+		first.  Finally, to include a literal - place it last.
+
+
+%token	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
+%token	LT GT				// angle brackets
+%token	SEMICOLON COMMA COLON MEMBER 
+%token	ASSIGN
+%token	PLUS MINUS STAR DIVIDE
+%token	BANG QUERY
+%token	TILDE AND PIPE XOR
+
+	the following tokens are defined below because they consist of
+	2 or more characters
+**/
 
 %token	ID
 %token	FLOAT
 %token	INT
 %token	STRING
-%token	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
-%token	LT GT				// angle brackets
+
 %token	LE GE EQUAL NOTEQUAL
-%token	SEMICOLON COMMA COLON THICKBAR MEMBER SCOPE
-%token	ASSIGN COLONASSIGN RANGE
+%token	THICKBAR SCOPE RANGE
 %token	IMPLIES RARROW
 %token	BEGINLOOP BEGINPROB ENDPROB
-%token	PLUS MINUS STAR DIVIDE PERCENT
-%token	BANG QUERY
 %token	DEFINEOP
-%token	TILDE AND PIPE LOGICAL_AND LOGICAL_OR XOR
+%token	LOGICAL_AND LOGICAL_OR
 %token	INSERT EXTRACT
 %token	PLUSPLUS MINUSMINUS
 
@@ -65,17 +82,23 @@ extern "C" {
 %token	CHANNEL
 %token	BOOL_TRUE BOOL_FALSE
 
-%start	body
+%start	top_root
 %%
 //------------------------------------------------------------------------
 //	Grammar -- re-written to be LALR(1)
 //------------------------------------------------------------------------
 
 // top level syntax
+top_root
+	: body
+	// allow empty file
+	|
+	;
+
 body
 	: body definition
 	| definition
-	| body SEMICOLON basic_item
+	| body ';' basic_item
 	| basic_item
 	;
 
@@ -86,7 +109,7 @@ basic_item
 
 // namespace management
 namespace_management
-	: NAMESPACE ID LBRACE body RBRACE
+	: NAMESPACE ID '{' body '}'
 	| NAMESPACE ID 
 	| OPEN id_expr AS ID
 	| OPEN id_expr 
@@ -114,20 +137,20 @@ defproc
 	// using <> to follow C+ template parameters
 	: def_or_proc ID
 	  optional_template_param_list_in_angles
-	  LPAREN optional_port_formal_list RPAREN
-	  LBRACE definition_body RBRACE
+	  '(' optional_port_formal_list ')'
+	  '{' definition_body '}'
 	;
 
 
 // Meta (template) language parameters
 
 optional_template_param_list_in_angles
-	: LT template_param_list GT
+	: '<' template_param_list '>'
 	|
 	;
 
 template_param_list
-	: template_param_list SEMICOLON template_param
+	: template_param_list ';' template_param
 	| template_param
 	;
 
@@ -138,7 +161,7 @@ template_param
 	;
 
 template_formal_id_list
-	: template_formal_id_list COMMA template_formal_id
+	: template_formal_id_list ',' template_formal_id
 	| template_formal_id
 	;
 
@@ -153,8 +176,8 @@ optional_port_formal_list
 
 // port parameters
 port_formal_list
-	// would rather use COMMA-delimiter, but wth...
-	: port_formal_list SEMICOLON port_formal
+	// would rather use ','-delimiter, but wth...
+	: port_formal_list ';' port_formal
 	| port_formal
 	;
 
@@ -164,7 +187,7 @@ port_formal
 	;
 
 port_formal_id_list
-	: port_formal_id_list COMMA port_formal_id
+	: port_formal_id_list ',' port_formal_id
 	| port_formal_id
 	;
 
@@ -196,19 +219,19 @@ base_template_type
 
 // channel type: channel, inport, outport
 base_chan_type
-	: chan_or_port LPAREN base_data_type_list RPAREN
+	: chan_or_port '(' base_data_type_list ')'
 	// eliminate defaulting? (to int?)
 //	| chan_or_port
 	;
 
 chan_or_port
 	: CHANNEL		// a channel
-	| CHANNEL BANG		// an output port
-	| CHANNEL QUERY		// an input port
+	| CHANNEL '!'		// an output port
+	| CHANNEL '?'		// an input port
 	;
 
 base_data_type_list
-	: base_data_type_list COMMA base_data_type
+	: base_data_type_list ',' base_data_type
 	| base_data_type
 	;
 
@@ -226,26 +249,26 @@ base_data_type
 // definition types
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
-	  LPAREN data_param_list RPAREN
-	  LBRACE
-		SET LBRACE chp_body RBRACE
-		GET LBRACE chp_body RBRACE
-	  RBRACE
+	  '(' data_param_list ')'
+	  '{'
+		SET '{' chp_body '}'
+		GET '{' chp_body '}'
+	  '}'
 	;
 
 defchan
        : DEFCHAN ID DEFINEOP base_chan_type 
-         LPAREN data_param_list RPAREN
-	 LBRACE
-		SEND LBRACE chp_body RBRACE
-		RECV LBRACE chp_body RBRACE
-	 RBRACE
+         '(' data_param_list ')'
+	 '{'
+		SEND '{' chp_body '}'
+		RECV '{' chp_body '}'
+	 '}'
 	;
 
 data_param_list
 	// like declarations in formals list
-	// consider using COLON, similar to C-style...
-	: data_param_list SEMICOLON data_param
+	// consider using ':', similar to C-style...
+	: data_param_list ';' data_param
 	| data_param
 	;
 
@@ -278,12 +301,12 @@ definition_body
 // foo(port-actuals);				// then connect
 
 instance_item
-	: instance_declaration SEMICOLON	// declaration: single or array
-	| instance_connection SEMICOLON		// single connection
+	: instance_declaration ';'	// declaration: single or array
+	| instance_connection ';'		// single connection
 	// loop instantiation
-	| LPAREN SEMICOLON ID COLON range COLON definition_body RPAREN
+	| '(' ';' ID ':' range ':' definition_body ')'
 	// conditional instantiation
-	| LBRACKET guarded_definition_body_list RBRACKET
+	| '[' guarded_definition_body_list ']'
 	;
 
 instance_declaration
@@ -292,7 +315,7 @@ instance_declaration
 	;
 
 declaration_id_list
-	: declaration_id_list COMMA declaration_id_item
+	: declaration_id_list ',' declaration_id_item
 	| declaration_id_item
 	;
 
@@ -310,7 +333,7 @@ instance_connection
 	// are brackets part of the array/membership chain?
 	: postfix_expr connection_actuals_list
 		// can this first id be scoped and/or membered?
-	| postfix_expr ASSIGN postfix_expr
+	| postfix_expr '=' postfix_expr
 	;
 
 connection_actuals_list
@@ -332,10 +355,10 @@ guarded_definition_body
 //------------------------------------------------------------------------
 
 language_body
-	: CHP LBRACE chp_body RBRACE
-	| HSE LBRACE hse_body RBRACE
-	| PRS LBRACE prs_body RBRACE
-//	| STACK LBRACE stack_body RBRACE
+	: CHP '{' chp_body '}'
+	| HSE '{' hse_body '}'
+	| PRS '{' prs_body '}'
+//	| STACK '{' stack_body '}'
 //	and more...
 	;
 
@@ -346,7 +369,7 @@ chp_body
 	;
 
 full_chp_body_item_list
-	: full_chp_body_item_list SEMICOLON full_chp_body_item
+	: full_chp_body_item_list ';' full_chp_body_item
 	| full_chp_body_item
 	;
 
@@ -373,16 +396,16 @@ chp_body_item
 
 chp_loop
 	// do-forever loop
-	: BEGINLOOP chp_body RBRACKET
+	: BEGINLOOP chp_body ']'
 	// do-until-all-guards-false
-	| BEGINLOOP chp_det_guarded_command_list RBRACKET
+	| BEGINLOOP chp_det_guarded_command_list ']'
 	;
 
 chp_selection
 	// wait for expr to become true
-	: LBRACKET expr RBRACKET
-	| LBRACKET chp_det_guarded_command_list RBRACKET
-	| LBRACKET chp_nondet_guarded_command_list RBRACKET
+	: '[' expr ']'
+	| '[' chp_det_guarded_command_list ']'
+	| '[' chp_nondet_guarded_command_list ']'
 
 	// wtf is this?... probalistic selection for FT
 //	| "%[" { chp_guarded_command ":" }** "]%"
@@ -391,8 +414,8 @@ chp_selection
 
 // note: these lists must have at least 2 clauses, will have to fix with "else"
 chp_nondet_guarded_command_list
-	: chp_nondet_guarded_command_list COLON chp_guarded_command
-	| chp_guarded_command COLON chp_guarded_command
+	: chp_nondet_guarded_command_list ':' chp_guarded_command
+	| chp_guarded_command ':' chp_guarded_command
 	// can't have else clause in non-deterministic selection?
 	;
 
@@ -414,14 +437,14 @@ chp_else_clause
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
 chp_assignment
-//	: postfix_expr PLUS
-//	| postfix_expr MINUS
+//	: postfix_expr '+'
+//	| postfix_expr '-'
 //	| postfix_expr COLONASSIGN expr
 	: assignment_expr
 	;
 
 chp_comm_list
-	: chp_comm_list COMMA chp_comm_action
+	: chp_comm_list ',' chp_comm_action
 	| chp_comm_action
 	;
 
@@ -433,13 +456,13 @@ chp_comm_action
 chp_send
 	// for now, require parens like function-call to
 	// disambiguate between ( expr ) and ( expr_list )
-	: postfix_expr BANG expr_list_in_parens
-//	| postfix_expr BANG expr
+	: postfix_expr '!' expr_list_in_parens
+//	| postfix_expr '!' expr
 	;
 
 chp_recv
-	: postfix_expr QUERY postfix_expr_list_in_parens
-//	| postfix_expr QUERY postfix_expr
+	: postfix_expr '?' postfix_expr_list_in_parens
+//	| postfix_expr '?' postfix_expr
 	;
 
 //--- Language: HSE ---
@@ -449,7 +472,7 @@ hse_body
 	;
 
 full_hse_body_item_list
-	: full_hse_body_item_list SEMICOLON full_hse_body_item
+	: full_hse_body_item_list ';' full_hse_body_item
 	| full_hse_body_item
 	;
 
@@ -467,14 +490,14 @@ hse_body_item
 	;
 
 hse_loop
-	: BEGINLOOP hse_body RBRACKET
-	| BEGINLOOP hse_det_guarded_command_list RBRACKET
+	: BEGINLOOP hse_body ']'
+	| BEGINLOOP hse_det_guarded_command_list ']'
 	;
 
 hse_selection
-	: LBRACKET expr RBRACKET
-	| LBRACKET hse_det_guarded_command_list RBRACKET
-	| LBRACKET hse_nondet_guarded_command_list RBRACKET
+	: '[' expr ']'
+	| '[' hse_det_guarded_command_list ']'
+	| '[' hse_nondet_guarded_command_list ']'
 	;
 
 hse_guarded_command
@@ -486,8 +509,8 @@ hse_else_clause
 	;
 
 hse_nondet_guarded_command_list
-	: hse_nondet_guarded_command_list COLON hse_guarded_command
-	| hse_guarded_command COLON hse_guarded_command
+	: hse_nondet_guarded_command_list ':' hse_guarded_command
+	| hse_guarded_command ':' hse_guarded_command
 	;
 
 hse_det_guarded_command_list
@@ -497,8 +520,8 @@ hse_det_guarded_command_list
 	;
 
 hse_assignment
-//	: postfix_expr PLUS
-//	| postfix_expr MINUS
+//	: postfix_expr '+'
+//	| postfix_expr '-'
 	: assignment_expr
 	;
 
@@ -524,8 +547,8 @@ prs_arrow
 	;
 
 dir
-	: PLUS 
-	| MINUS 
+	: '+' 
+	| '-' 
 	;
 
 // end of PRS language
@@ -543,14 +566,14 @@ prs_expr
 // mostly ripped from ANSI C++ grammar
 
 paren_expr
-	: LPAREN expr RPAREN
+	: '(' expr ')'
 	;
 
 primary_expr
 	: literal
 // split out, so postfix_expr doesn't recur, 
 // now unary_expr must accept paren_expr
-//	| LPAREN expr RPAREN		
+//	| '(' expr ')'		
 	| id_expr
 	;
 
@@ -572,7 +595,7 @@ qualified_id
 	;
 
 postfix_expr_list
-	: postfix_expr_list COMMA postfix_expr
+	: postfix_expr_list ',' postfix_expr
 	| postfix_expr
 	;
 
@@ -580,10 +603,10 @@ postfix_expr_list
 postfix_expr
 	: primary_expr
 	// array index
-	// | postfix_expr LBRACKET expr RBRACKET
+	// | postfix_expr '[' expr ']'
 	| postfix_expr range_list_in_brackets
 	// member (just ID?)
-	| postfix_expr MEMBER id_expr
+	| postfix_expr '.' id_expr
 	// no function calls in expressions... yet
 	;
 
@@ -593,22 +616,22 @@ unary_expr
 	: postfix_expr
 	| paren_expr
 	// no prefix operations, moved to assignment
-	| MINUS unary_expr
-	| BANG unary_expr
-	| TILDE unary_expr
+	| '-' unary_expr
+	| '!' unary_expr
+	| '~' unary_expr
 	;
 
 multiplicative_expr
 	: unary_expr
-	| multiplicative_expr STAR unary_expr
-	| multiplicative_expr DIVIDE unary_expr
-	| multiplicative_expr PERCENT unary_expr
+	| multiplicative_expr '*' unary_expr
+	| multiplicative_expr '/' unary_expr
+	| multiplicative_expr '%' unary_expr
 	;
 
 additive_expr
 	: multiplicative_expr
-	| additive_expr PLUS multiplicative_expr
-	| additive_expr MINUS multiplicative_expr
+	| additive_expr '+' multiplicative_expr
+	| additive_expr '-' multiplicative_expr
 	;
 
 
@@ -620,8 +643,8 @@ shift_expr
 
 relational_equality_expr
 	: shift_expr
-	| shift_expr LT shift_expr
-	| shift_expr GT shift_expr		// this makes s/r-conflict?
+	| shift_expr '<' shift_expr
+	| shift_expr '>' shift_expr		// this makes s/r-conflict?
 	| shift_expr LE shift_expr
 	| shift_expr GE shift_expr
 	| shift_expr EQUAL shift_expr
@@ -632,17 +655,17 @@ relational_equality_expr
 
 and_expr
 	: relational_equality_expr
-	| and_expr AND relational_equality_expr
+	| and_expr '&' relational_equality_expr
 	;
 
 exclusive_or_expr
 	: and_expr
-	| exclusive_or_expr XOR and_expr
+	| exclusive_or_expr '^' and_expr
 	;
 
 inclusive_or_expr
 	: exclusive_or_expr
-	| inclusive_or_expr PIPE exclusive_or_expr
+	| inclusive_or_expr '|' exclusive_or_expr
 	;
 
 logical_and_expr
@@ -658,15 +681,15 @@ logical_or_expr
 /** forget conditional expressions for now
 conditional_expr
 	: logical_or_expr
-	| logical_or_expr QUERY expr COLON conditional_expr
+	| logical_or_expr '?' expr ':' conditional_expr
 	;
 **/
 
 assignment_expr
 //	: conditional_expr
 	: logical_or_expr
-//	| logical_or_expr ASSIGN assignment_expr
-	| postfix_expr ASSIGN assignment_expr
+//	| logical_or_expr '=' assignment_expr
+	| postfix_expr '=' assignment_expr
 	;
 
 // forbid using assignment_expr?
@@ -681,7 +704,7 @@ expr
 
 /** temporarily not needed
 optional_expr_in_braces
-	: LBRACE expr RBRACE
+	: '{' expr '}'
 	|
 	;
 **/
@@ -692,19 +715,19 @@ optional_postfix_expr_list_in_angles
 	;
 
 postfix_expr_list_in_angles
-	: LT postfix_expr_list GT
+	: '<' postfix_expr_list '>'
 	;
 
 postfix_expr_list_in_parens
-	: LPAREN postfix_expr_list RPAREN
+	: '(' postfix_expr_list ')'
 	;
 
 expr_list_in_parens
-	: LPAREN expr_list RPAREN
+	: '(' expr_list ')'
 	;
 
 expr_list
-	: expr_list COMMA expr
+	: expr_list ',' expr
 	| expr
 	;
 
@@ -716,11 +739,11 @@ optional_range_list_in_brackets
 	;
 
 range_list_in_brackets
-	: LBRACKET range_list RBRACKET
+	: '[' range_list ']'
 	;
 
 range_list
-	: range_list COMMA range
+	: range_list ',' range
 	| range
 	;
 
@@ -733,4 +756,30 @@ range
 
 %%
 // user code, if any
+
+/**
+	The goal is to keep the grammar in this "art.yy" clean, and not
+	litter the various productions with error handling cases.  
+	When the parser fails to match any productions, we want it
+	to report what went wrong, not just give the useless "syntax error"
+	message.  Fortunately, all the information about the state of the 
+	parser is available, if we know where to look.  
+	This function attempts to unwind the parser's value and state stacks
+	and report precisely where the error occured -- WITHOUT having
+	to write productions that contain the special error token.  
+ */
+/*	as a reminder, these are the variables in the parser
+	hint: look at how they are used in the various yydebug blocks.  
+	short* yyss;
+	short* yyssp;
+	YYSTYPE* yyvs;
+	YYSTYPE* yyvsp;
+*/
+void yyerror(const char* msg) {
+	// msg is going to be "syntax error" from y.tab.cc
+	cerr << "parse error: " << msg << endl;
+	// we've kept track of the position of every token
+	cerr << "near line " << current.line << " col " << current.col << endl;
+	exit(1);
+}
 

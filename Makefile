@@ -15,7 +15,7 @@ LDFLAGS = -lc -lstdc++
 LEX = flex
 LEXFLAGS = -t
 YACC = yacc
-YACCFLAGS = -d -v
+YACCFLAGS = -d -t -v
 
 TARGETS = art_main
 TARBALL = art.tar.gz
