@@ -20,6 +20,8 @@ YACCFLAGS = -d -v
 TARGETS = art_main
 TARBALL = art.tar.gz
 
+DOXYGEN_CONFIG = art.doxygen.config
+
 .SUFFIXES: .c .cc .o .l .yy
 
 .cc.o:
@@ -45,6 +47,11 @@ y.tab.h y.tab.cc: art.yy
 	$(YACC) $(YACCFLAGS) $?
 	mv y.tab.c y.tab.cc
 
+# documentation targets
+docs:
+	doxygen $(DOXYGEN_CONFIG)
+	(cd dox/latex; make)
+
 clean:
 	-rm -f *.o
 	-rm -f *.yy.*
@@ -52,6 +59,11 @@ clean:
 	-rm -f y.tab.*
 	-rm -f *.output
 	-rm -f *.core
+
+# for now don't always clobber this, until everyone else can generate docs...
+nodocs:
+	-rm -rf dox/html
+	-rm -rf dox/latex
 
 clobber: clean
 	-rm -f $(TARGETS)

@@ -13,15 +13,27 @@
 
 using namespace std;
 
+//=============================================================================
+/// A list of exclusively owned pointers, based on std::list.  
+
+/**
+	The members of this class are pointers to objects of class T, 
+	as the name suggests.  The pointers should be exclusive, i.e., 
+	whereas other copies of the same pointer may read or write
+	the object, only this list has responsibility for de-allocating
+	the objects' memory.  This is generally useful for bottom-up 
+	constructed objects such as syntax trees.  
+ */
 template <class T>
 class list_of_ptr : public list<T*> {
 private:
 	// none
 public:
-// default constructor
+
+/// The default constructor just creates an empty list.  
 	list_of_ptr() : list<T*>() { }
 
-// destructor -- most critical modification
+/// The destructor frees memory to non-NULL pointers in the list.  
 virtual	~list_of_ptr() {
         typename list<T*>::iterator i;
         for (i=begin(); i!=end(); i++) if (*i) delete (*i);

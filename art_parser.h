@@ -21,8 +21,31 @@ using namespace __gnu_cxx;
 
 using namespace std;
 
+/// This is the general namespace for all ART-related classes.  
 namespace ART {
+
+/// This namespace is reserved for ART's parser-related classes.  
+/**
+	This contains all of the classes for the abstract syntax tree (AST).  
+	Each class should implement recursive methods of traversal.  
+	The created AST will only reflect a legal instance of the grammar, 
+	therefore, one should use the type-check and build phase to 
+	return a more useful manipulate ART object.  
+ */
 namespace parser {
+
+
+//=============================================================================
+/// This class extends functionality of the standard string for the parser.  
+
+/**
+	This class also keeps track of the line and column position in a 
+	file for a given token.  
+ */
+class token_string : public string {
+// will also contain a token_position
+
+};
 
 };
 };

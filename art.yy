@@ -52,6 +52,7 @@ extern "C" {
 %token	DEFINEOP
 %token	TILDE AND PIPE LOGICAL_AND LOGICAL_OR XOR
 %token	INSERT EXTRACT
+%token	PLUSPLUS MINUSMINUS
 
 // keywords
 %token	NAMESPACE
@@ -62,7 +63,7 @@ extern "C" {
 %token	INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
 %token	SET GET SEND RECV
 %token	CHANNEL
-%token	TRUE FALSE
+%token	BOOL_TRUE BOOL_FALSE
 
 %start	body
 %%
@@ -556,8 +557,8 @@ primary_expr
 literal
 	: INT
 	| STRING
-	| TRUE
-	| FALSE
+	| BOOL_TRUE
+	| BOOL_FALSE
 	;
 
 id_expr
