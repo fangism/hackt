@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-01-17	David Fang	<fangism@users.sourceforge.net>
+
+	* RELEASE 0.1.4
+	  The root tag for this series is ARTXX-00-01-04.
+
+	* Created branch: ARTXX-00-01-04-parser
+	  This branch is intended for modifications to the front-end
+	  lexer and parser.
+
+	* ARTXX-00-01-04-parser:
+	  Updated lexer: yy_current_buffer -> YY_CURRRENT_BUFFER
+	  The macro's definition differs slightly between the current stable
+	  version of flex (2.5.4) and the development version (2.5.31).
+	  This maintains compatibility.  
+
+	* Added LEX and YACC to configure.in with AC_ARG_VAR.
+
+
 2005-01-16	David Fang	<fangism@users.sourceforge.net>
 
 	* FIXED: issue with __PRETTY_FUNCTION__ (linux-gcc only).
