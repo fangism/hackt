@@ -129,7 +129,7 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.+-]
+UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,+-]
 
 AT		"@"
 POUND		"#"
