@@ -8,6 +8,7 @@
 #include "art_parser.h"
 #include "art_object.h"
 #include "art_object_expr.h"
+#include "list_of_ptr_template_methods.h"	// for array_dim_list
 
 namespace ART {
 namespace entity {
@@ -134,6 +135,11 @@ string
 param_binary_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
+
+//=============================================================================
+// EXPLICIT TEMPLATE INSTANTIATIONS
+
+template class list_of_ptr<param_expr>;		// array_dim_list
 
 //=============================================================================
 };	// end namepace entity

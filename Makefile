@@ -233,7 +233,7 @@ tarball: clobber
 # strongly suggest running with ccache to speedup re-build
 commit: regression
 	$(MAKE) clobberdepend
-	$(MAKE) cvsdiffs
+	-$(MAKE) cvsdiffs
 	$(CVS) commit
 
 cvsdiffs: force
