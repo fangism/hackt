@@ -21,6 +21,7 @@ noinst_PROGRAMS = \
 	pretty_function_test \
 	stacktrace_test \
 	friend_function_formal_bug \
+	link_test \
 	ptrs_test \
 	pointer_classes_test \
 	count_ptr_test \
@@ -46,7 +47,8 @@ noinst_PROGRAMS = \
 	ring_node_test
 
 
-noinst_LTLIBRARIES = libfangutil.la
+noinst_LTLIBRARIES = libfangutil.la libpooled.la \
+	liblinktest.la libbogusutil.la
 
 BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
 
@@ -57,6 +59,8 @@ sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
+link_test_SOURCES = link_test.cc
+link_test_LDADD = liblinktest.la libbogusutil.la
 list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
@@ -82,14 +86,21 @@ pretty_function_test_SOURCES = pretty_function_test.cc
 local_static_store_test_SOURCES = local_static_store_test.cc \
 	named_pooled_thing.cc named_pooled_thing.h
 local_static_store_test_LDADD = libfangutil.la
-multi_pool_module_test_SOURCES = multi_pool_module_test.cc \
-	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
-multi_pool_module_test_LDADD = libfangutil.la
+multi_pool_module_test_SOURCES = multi_pool_module_test.cc
+multi_pool_module_test_LDADD = libpooled.la libfangutil.la
+# note link ordering!
 static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
 static_count_ptr_test_LDADD = libfangutil.la
 ring_node_test_SOURCES = ring_node_test.cc
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
+libbogusutil_la_SOURCES = bogus_stacktrace.cc static_trace.cc
+libpooled_la_SOURCES = \
+	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
+liblinktest_la_SOURCES = \
+	link_mod_a.cc link_mod_b.cc link_mod_a.h link_mod_b.h
+
+# liblinktest_la_LDFLAGS = -multiply_defined
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
@@ -107,6 +118,9 @@ thread_lock.cc: ../memory/thread_lock.cc
 friend_function_formal_bug.stderr:
 	$(TOUCH) $@
 
+link_test.stderr:
+	$(TOUCH) $@
+
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \
 	local_static_store_test \
@@ -117,7 +131,8 @@ PREFILTER_FILES = \
 	$(MOREFILTER_TESTS:=.out.prefilter)
 
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
-EMPTY_STDERR_FILES = friend_function_formal_bug.stderr
+EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
+	link_test.stderr
 
 multikey_set_derived_test.stderr: multikey_set_test.stderr
 	$(CP) $< $@

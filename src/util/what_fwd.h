@@ -2,7 +2,7 @@
 	\file "what_fwd.h"
 	Forward declaration for user-defined type-names utility.
 	This files provides mostly macros for specialization.  
-	$Id: what_fwd.h,v 1.3 2005/03/01 04:51:00 fang Exp $
+	$Id: what_fwd.h,v 1.4 2005/03/01 21:26:47 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_FWD_H__
@@ -43,6 +43,7 @@ struct what;
 		return local_name;				\
 	}
 
+#if 1
 /**
 	Combined declaration of a specialization.
 	Note: in gcc4, when the same specialization appears in different
@@ -54,56 +55,6 @@ struct what;
 #define	SPECIALIZE_UTIL_WHAT(T, __name__)			\
 	SPECIALIZE_UTIL_WHAT_DECLARATION(T)			\
 	SPECIALIZE_UTIL_WHAT_DEFINITION(T, __name__)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE: these definitions are not needed because the above
-macros were made robust.  
-
-/**
-	When using what<> during debugging (or whatnot) of static
-	initializations, ordering is not guaranteed automatically!
-	Thus we need ways of guaranteeing proper initialization.  
-	This should be included in a header file, where it is 
-	globally visible to all users of class T.  
-	This macro must appear in the util namespace.  
- */
-#define	SPECIALIZE_UTIL_WHAT_ROBUST_DECLARATION(T)		\
-	template <>						\
-	struct what<T> {					\
-		typedef	const char*	name_type;		\
-		static name_type	name;			\
-		static int init_once(void);			\
-	};
-
-/**
-	This provides definitions for the static-init-robust variation.
-	This macro must appear in the util namespace.  
- */
-#define	SPECIALIZE_UTIL_WHAT_ROBUST_DEFINITION(T, __name__)	\
-	template <>						\
-	what<T>::name_type					\
-	what<T>::name = NULL;					\
-								\
-	int							\
-	what<T>::init_once(void) {				\
-		static const name_type local_name = __name__;	\
-		if (!name)					\
-			name = local_name;			\
-		return 1;					\
-	}
-
-/**
-	This macro will guarantee proper initialization ordering
-	across modules.  
-	This may appear in any namespace.  
- */
-#define	REQUIRES_UTIL_WHAT_STATIC_INIT(T)			\
-	static const int					\
-	__util_what_init_token_ ## T ## __ = ::util::what<T>::init_once();
-
-// no macro provided to combine this because they are intended 
-// to be used separately.
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

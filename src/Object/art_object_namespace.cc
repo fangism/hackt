@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.15 2005/03/01 04:50:59 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.16 2005/03/01 21:26:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -114,6 +114,10 @@
 
 //=============================================================================
 namespace util {
+#if 0
+SPECIALIZE_UTIL_WHAT_DEFINITION(ART::entity::name_space, "namespace")
+#endif
+
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::name_space, NAMESPACE_TYPE_KEY)
 }	// end namespace util
@@ -798,7 +802,11 @@ name_space::get_global_namespace(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 name_space::what(ostream& o) const {
+#if 0
+	return util::what<this_type>::name();
+#else
 	return o << "entity::namespace";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

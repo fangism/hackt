@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_b.h"
 	Header for one module of a multimodule memory pool test.
-	$Id: pool_module_b.h,v 1.2 2005/01/28 19:58:59 fang Exp $
+	$Id: pool_module_b.h,v 1.3 2005/03/01 21:26:50 fang Exp $
  */
 
 #ifndef	__POOL_MODULE_B_H__
@@ -21,6 +21,9 @@ private:
 public:
 	twiddle_dee();
 	~twiddle_dee();
+
+	void
+	foo(void) const;
 
 public:
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
