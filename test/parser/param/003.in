@@ -1,0 +1,9 @@
+// should pass, assigning parameters to other initialized parameters
+
+pint N;
+N = 5;
+pint M = N;
+
+pbool a = true;
+pbool b = a;
+

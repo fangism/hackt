@@ -1,0 +1,2 @@
+param-inst was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!
+ERROR with o at [5:6]

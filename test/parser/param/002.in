@@ -1,0 +1,10 @@
+// should pass, parameters with assignments to constants
+
+pint N;
+N = 3;
+
+pint M = 5;
+
+pbool a;
+pbool b = false;
+a = true;

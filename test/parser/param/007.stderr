@@ -1,0 +1,4 @@
+pointers: left = 0x810c040, right = 0x810c000
+ERROR: type of redeclaration of beans does not match previous declaration: 
+	was: pint<>, got: pbool<>
+ERROR with beans at [5:7..11]

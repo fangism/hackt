@@ -1,0 +1,6 @@
+// should fail, already declared
+
+pint p;
+pint o, beans;
+pbool beans;
+

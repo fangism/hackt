@@ -1,0 +1,4 @@
+// should fail, parameter not declared
+
+pint N = M;
+
