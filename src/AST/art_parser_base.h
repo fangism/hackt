@@ -7,6 +7,7 @@
 #define __ART_PARSER_BASE_H__
 
 #include "art_macros.h"
+#include "art_lex.h"
 #include "art_utils.h"		// for token_position
 	// includes <string> <iosfwd>
 #include "sublist.h"		// for efficient list slices
