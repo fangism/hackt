@@ -11,6 +11,17 @@
 	  Next revision will test the composability on
 	  "art_object_instance_bool.*".  
 
+	+ -multikey-04:
+	  Now using node_ring_derived for alias base.
+	  Now using multikey_set_element_derived in bool_array<D>.
+	  Trying replacing bool_instance_alias_base derived definition
+	  with typedef to ring_node_derived<bool_instance_alias_info>.
+	  Everything compiles, nothing dies, tests don't pass still
+	  because alias persistence hasn't been implemented yet.  
+	  Some updating in maplikeset.h, multikey_assoc.h now uses
+	  _Select1st, _Select2nd functors to allow specialization
+	  of key-value accessors.  (Needs clean-up.)
+
 
 2005-02-13	David Fang	<fangism@users.sourceforge.net>
 

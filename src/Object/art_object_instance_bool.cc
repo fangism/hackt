@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.4 2005/02/14 04:48:20 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.5 2005/02/15 02:04:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -129,6 +129,7 @@ bool_instance_alias_info::transient_info_collector::operator () (
 //=============================================================================
 // class bool_instance_alias_base method definitions
 
+#if 0
 bool_instance_alias_base::~bool_instance_alias_base() {
 	STACKTRACE_DTOR("~bool_alias_base()");
 }
@@ -140,7 +141,7 @@ bool_instance_alias_base::collect_transient_info(
 	// IF NOT ALREADY VISITED!, but who's tracking, if not the manager?
 	// visit ALL aliases
 	for_each(begin(), end(), 
-		bool_instance_alias_info::transient_info_collector(m)
+		info_type::transient_info_collector(m)
 	);
 }
 
@@ -148,23 +149,27 @@ bool_instance_alias_base::collect_transient_info(
 void
 bool_instance_alias_base::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
-	value.write_object_base(m, o);
+	info_type::write_object_base(m, o);
 	// the 'next' pointer needs to be handled with care!
 	// we're not going to write out the translated pointer for 'next', 
 	// but the information needed to reproduce it:
 	// a pointer to the collection, and a possible unrolled index.  
-	// next->value
+	// next points to ring_node<info_type>
+	const bool_instance_alias_base*
+		next_alias = IS_A(const bool_instance_alias_base*, next);
+	INVARIANT(next_alias);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_instance_alias_base::load_object(const persistent_object_manager& m, 
 		istream& i) {
-	value.load_object_base(m, i);
+	info_type::load_object_base(m, i);
 	// may require recursive instance collection construction!
 	// what if there is mutual recursion?  must prevent it!
 	// split into two phases!
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -342,8 +347,8 @@ bool_array<D>::dump_unrolled_instances(ostream& o) const {
 BOOL_ARRAY_TEMPLATE_SIGNATURE 
 ostream&
 bool_array<D>::key_dumper::operator () (
-		const typename collection_type::value_type& p) {
-	return os << auto_indent << p.first << endl;
+		const value_type& p) {
+	return os << auto_indent << _Select1st<value_type>()(p) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1.2.3 2005/02/14 21:35:35 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.4 2005/02/15 02:04:15 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -332,7 +332,7 @@ public:
 	get_key(void) const { return key; }
 
 	value_type&
-	value(void) { return *this; }
+	value(void) const { return const_cast<this_type&>(*this); }
 
 	const value_type&
 	const_value(void) const {
@@ -369,6 +369,27 @@ public:
 	operator < (const this_type& p) const {
 		return key < p.key;
 	}
+
+#if 1
+	/**
+		ALERT! confusing operator overload combination ahead!
+		When comparing equality, compare value only!
+		This is useful in determining whether or not
+		elements contained at a position are equal, 
+		by ignoring their sorting "keys".  
+		See where this applies in "multikey_assoc.tcc".
+	 */
+	bool
+	operator == (const this_type& p) const {
+		return static_cast<const value_type&>(*this) ==
+			static_cast<const value_type&>(p);
+	}
+
+	bool
+	operator != (const this_type& p) const {
+		return !(*this == p);
+	}
+#endif
 
 };	// end class maplikeset_element_derived
 

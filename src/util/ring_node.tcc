@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.1.2.2.6.3 2005/02/14 04:48:23 fang Exp $
+	$Id: ring_node.tcc,v 1.1.2.2.6.4 2005/02/15 02:04:16 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
@@ -91,7 +91,7 @@ ring_node_base::contains(const ring_node_base& r) const {
 //=============================================================================
 // class ring_node_derived method definitions
 
-template <class T>
+RING_NODE_DERIVED_TEMPLATE_SIGNATURE
 ring_node_derived<T>::~ring_node_derived() {
 	if (next != this) {
 		next_type walk = next;
@@ -106,7 +106,7 @@ ring_node_derived<T>::~ring_node_derived() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
+RING_NODE_DERIVED_TEMPLATE_SIGNATURE
 bool
 ring_node_derived<T>::contains(const this_type& r) const {
 	const_next_type walk1 = this;

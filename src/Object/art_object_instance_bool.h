@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.3 2005/02/14 04:48:20 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.4 2005/02/15 02:04:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -27,46 +27,26 @@ using std::set;
 using std::ostream;
 using std::string;
 using util::ring_node;
+using util::ring_node_derived;
 using namespace util::memory;
 using MULTIKEY_NAMESPACE::multikey;
 using util::multikey_set;
 using util::multikey_set_element;
+using util::multikey_set_element_derived;
 // using QMAP_NAMESPACE::qmap;
 // using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
+class bool_instance;
+
 // forward declaration
+#if 0
 class bool_instance_alias_base;
+#endif
 
 //=============================================================================
-/**
-	An actual instantiated instance of a bool, 
-	what used to be called "node".
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
-	This is like PrsNode from prsim.  
-
-	Should be pool allocated for efficiency.  
- */
-class bool_instance : public persistent {
-	// need back-reference(s) to owner(s) or hierarchical keys?
-//	int		state;
-
-	// need one back-reference to one alias (connected in a ring)
-	never_ptr<const bool_instance_alias_base>
-			back_ref;
-
-public:
-	bool_instance();
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class bool_instance
-
-//-----------------------------------------------------------------------------
 /**
 	Information structure for a heirarchical name for a bool.  
 	This may be extended arbitrarily to contain attributes.  
@@ -109,6 +89,23 @@ public:
 
 	// default assignment
 
+	/**
+		container is inherited from bool_instance_alias_info
+	 */
+	bool
+	valid(void) const { return container; }
+
+	/**
+		Instantiates officially by linking to parent collection.  
+	 */
+	void
+	instantiate(const never_ptr<const bool_instance_collection> p) {
+		NEVER_NULL(p);
+		INVARIANT(!container);
+		container = p;
+	}
+
+public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 
@@ -133,13 +130,25 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	Trying typedef of the alias_base class.  
+	Remember that this contains a pointer to the next alias!
+	Thus the aliases that derive from this are responsible
+	for managing the persistence of the continuation pointers!
+ */
+typedef	ring_node_derived<bool_instance_alias_info>
+						bool_instance_alias_base;
+
+#if 0
+/**
 	An uninitialized reference to a bool instance.  
 	Only after references are connected, are the actual bool instances
 	created.  
 	Contains attribute fields, later on.  
 	This is included directly by bool_array<0>.
  */
-class bool_instance_alias_base : public ring_node<bool_instance_alias_info> {
+class bool_instance_alias_base : 
+		public ring_node_derived<bool_instance_alias_info> {
+	typedef	bool_instance_alias_base		this_type;
 public:
 	/**
 		Information contained herein (inside the ring_node).
@@ -150,7 +159,11 @@ public:
 		which is initialized as pointing to itself.  
 		The field "value" (info_type) is inherited publicly.  
 	 */
-	typedef	ring_node<info_type>			ring_node_type;
+	typedef	ring_node_derived<info_type>		ring_node_type;
+#if 0
+protected:
+	info_type					info;
+#endif
 public:
 	/**
 		Default constructor will initialize the info.  
@@ -161,6 +174,7 @@ public:
 	bool_instance_alias_base(
 		const never_ptr<const bool_instance_collection> p) :
 		ring_node_type(info_type(p)) { }
+//		ring_node_type(), info(p) { }
 
 	// default copy constructor
 
@@ -174,8 +188,12 @@ public:
 	 */
 virtual	~bool_instance_alias_base();
 
+#if 0
+	/**
+		container is inherited from bool_instance_alias_info
+	 */
 	bool
-	valid(void) const { return value.container; }
+	valid(void) const { return container; }
 
 	/**
 		Instantiates officially by linking to parent collection.  
@@ -183,9 +201,11 @@ virtual	~bool_instance_alias_base();
 	void
 	instantiate(const never_ptr<const bool_instance_collection> p) {
 		NEVER_NULL(p);
-		INVARIANT(!value.container);
-		value.container = p;
+		INVARIANT(!container);
+		container = p;
 	}
+#endif
+
 #if 0
 	/// dereference, create
 	bool_instance&
@@ -215,29 +235,61 @@ virtual	~bool_instance_alias_base();
 	}
 #endif
 
+#if 0
 	/**
 		Whether or not they refer to the same node.
 		Check for instantiated?
+
+		Pushed down to children classes.  
 	 */
 	bool
 	operator == (const bool_instance_alias_base& b) const {
 		return this->contains(b);
 		// return &canonical() == &b.canonical();
 	}
+#endif
 
+#if 0
 	friend
 	ostream&
 	operator << (ostream&, const bool_instance_alias_base&);
+#endif
 
 public:
 	// this class is not truly persistent but contains
 	// pointers to persistent types.  
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-private:
 };	// end class bool_instance_alias_base
+#endif
 
 ostream&
 operator << (ostream&, const bool_instance_alias_base&);
+
+//-----------------------------------------------------------------------------
+/**
+	An actual instantiated instance of a bool, 
+	what used to be called "node".
+	These are not constructed until after unrolling.  
+	A final pass is required to construct the instances.  
+	This is like PrsNode from prsim.  
+
+	Should be pool allocated for efficiency.  
+ */
+class bool_instance : public persistent {
+	// need back-reference(s) to owner(s) or hierarchical keys?
+//	int		state;
+
+	// need one back-reference to one alias (connected in a ring)
+	never_ptr<const bool_instance_alias_base>
+			back_ref;
+
+public:
+	bool_instance();
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS
+
+};	// end class bool_instance
 
 //-----------------------------------------------------------------------------
 /**
@@ -279,6 +331,16 @@ public:
 	bool
 	operator < (const this_type& b) const {
 		return key < b.key;
+	}
+
+	/**
+		Not sure if this is the correct thing to do.  
+		TODO: Be sure to review when this is used in the context
+		of instance collections and connections.  
+	 */
+	bool
+	operator == (const parent_type& p) const {
+		return this->contains(p);
 	}
 
 #if 0
@@ -378,12 +440,12 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef	multikey_set_element<D, 
+	typedef	multikey_set_element_derived<D, 
 			pint_value_type, bool_instance_alias<D> >
 							element_type;
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
-
+	typedef	typename collection_type::value_type	value_type;
 protected:
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator

@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.3.2.2 2005/02/14 04:48:23 fang Exp $
+	$Id: ring_node.h,v 1.1.2.3.2.3 2005/02/15 02:04:16 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -31,6 +31,33 @@ class ring_node_iterator;
 
 template <class>
 class ring_node_derived;
+
+#if 0
+template <class>
+struct ring_node_derived_traits;
+
+/**
+	This may be specialized...
+ */
+template <class T>
+struct ring_node_derived_traits {
+	typedef	ring_node_derived<T, 
+		typename ring_node_derived_traits<T>::next_type>
+						next_type;
+};
+
+#define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
+template <class T, class N>
+
+template <class T, class N = typename ring_node_derived_traits<T>::next_type>
+class ring_node_derived;
+#else
+
+#define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
+template <class T>
+
+#endif
+
 
 //=============================================================================
 /**
@@ -603,8 +630,11 @@ public:
 	In contrast with the other ring_node template class, 
 	this does not have any dereference operators, because this
 	is already a sub-type of T.  
+
+	\param N the type pointed to by the next pointer.  
+		Defaults to a ring_node_derived of this type.  
  */
-template <class T>
+RING_NODE_DERIVED_TEMPLATE_SIGNATURE
 class ring_node_derived : public T {
 template <class> friend class ring_node_iterator_base;
 // template <class, class, class> friend class ring_node_derived_iterator;
@@ -654,8 +684,12 @@ public:
 		Note: non-virtual destructor.  
 		Thus, it is NOT safe to let pointers to this type
 		manage memory.  
+
+		We end up making this virtual to make this type polymorphic, 
+		want to be able to dynamically cast this_type to 
+		derived types.  
 	 */
-	~ring_node_derived();
+virtual	~ring_node_derived();
 
 public:
 
