@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-02-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-0-01-04-main-00-04-object-01-09-gcc:
+	  Branch created for the sake of isolating an ICE bug with
+	  gcc-4.0 prerelease 20050130.  
+
+	+ ICE-trigger example reduced to about 30 lines in "gcc4death.cc"
+	  Submitted to gcc bugzilla database as report # 19948.  
+
+
 2005-02-08	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-08-merged-set-16:
