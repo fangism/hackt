@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.4 2004/12/12 22:26:34 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.5 2004/12/12 23:32:07 fang Exp $
  */
 
 #include <iostream>
@@ -36,7 +36,8 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(int_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int_instance_collection::int_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n, const size_t d) :
+		parent_type(o, n, d), int_width(0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,6 +103,22 @@ int_instance_collection::construct_empty(const int i) {
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_collection::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	parent_type::write_object_base(m, o);
+	write_value(o, int_width);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_collection::load_object_base(
+		persistent_object_manager& m, istream& i) {
+	parent_type::load_object_base(m, i);
+	read_value(i, int_width);
 }
 
 //=============================================================================

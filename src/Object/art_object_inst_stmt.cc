@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.1 2004/12/07 02:22:08 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.2 2004/12/12 23:32:06 fang Exp $
  */
 
 #include <iostream>
@@ -102,6 +102,28 @@ instantiation_statement::dimensions(void) const {
 void
 instantiation_statement::unroll(void) const {
 	cerr << "instantiation_statement::unroll(): Fang, finish me!" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (indices)
+		indices->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, indices);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instantiation_statement::load_object_base(
+		persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, indices);
 }
 
 //=============================================================================
@@ -210,11 +232,10 @@ void
 pbool_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -232,7 +253,7 @@ pbool_instantiation_statement::write_object(
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);
-	m.write_pointer(f, indices);
+	parent_type::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -244,7 +265,7 @@ if (!m.flag_visit(this)) {
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);
-	m.read_pointer(f, indices);
+	parent_type::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 }
@@ -334,8 +355,7 @@ if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -353,7 +373,7 @@ pint_instantiation_statement::write_object(
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);
-	m.write_pointer(f, indices);
+	parent_type::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -365,7 +385,7 @@ if (!m.flag_visit(this)) {
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);
-	m.read_pointer(f, indices);
+	parent_type::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 }
@@ -447,11 +467,11 @@ void
 process_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
+	NEVER_NULL(type);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -468,9 +488,9 @@ process_instantiation_statement::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer(f, inst_base);		assert(inst_base);
-	m.write_pointer(f, type);		assert(type);
-	m.write_pointer(f, indices);
+	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.write_pointer(f, type);		NEVER_NULL(type);
+	parent_type::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -481,9 +501,9 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, inst_base);		assert(inst_base);
-	m.read_pointer(f, type);		assert(type);
-	m.read_pointer(f, indices);
+	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.read_pointer(f, type);		NEVER_NULL(type);
+	parent_type::load_object_base(m, f);
 #if 0
 	type->load_object(m);
 	inst_base->load_object(m);
@@ -574,8 +594,7 @@ if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -592,9 +611,9 @@ channel_instantiation_statement::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer(f, inst_base);		assert(inst_base);
-	m.write_pointer(f, type);		assert(type);
-	m.write_pointer(f, indices);
+	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.write_pointer(f, type);		NEVER_NULL(type);
+	parent_type::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -605,9 +624,9 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, inst_base);		assert(inst_base);
-	m.read_pointer(f, type);		assert(type);
-	m.read_pointer(f, indices);
+	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.read_pointer(f, type);		NEVER_NULL(type);
+	parent_type::load_object_base(m, f);
 #if 0
 	type->load_object(m);
 	inst_base->load_object(m);
@@ -698,8 +717,7 @@ if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
-	if (indices)
-		indices->collect_transient_info(m);
+	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
 
@@ -716,9 +734,9 @@ data_instantiation_statement::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer(f, inst_base);		assert(inst_base);
-	m.write_pointer(f, type);		assert(type);
-	m.write_pointer(f, indices);
+	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.write_pointer(f, type);		NEVER_NULL(type);
+	parent_type::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -729,9 +747,9 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, inst_base);		assert(inst_base);
-	m.read_pointer(f, type);		assert(type);
-	m.read_pointer(f, indices);
+	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
+	m.read_pointer(f, type);		NEVER_NULL(type);
+	parent_type::load_object_base(m, f);
 #if 0
 	type->load_object(m);
 	inst_base->load_object(m);

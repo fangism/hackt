@@ -1,7 +1,7 @@
 /**
-	\file "art_object_inst_stmt.h"
+	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.1 2004/12/07 02:22:08 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.2 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -13,6 +13,7 @@
 namespace ART {
 namespace entity {
 
+using std::istream;
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
 
@@ -62,6 +63,18 @@ virtual	void unroll(void) const;
 	case: won't happen?  instantiation inside definition called
 ***/
 	// unroll (context?)
+
+protected:
+
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream& ) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& );
+
 };	// end class instantiation_statement
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.3 2004/12/12 22:26:33 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.4 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -138,14 +138,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if 0
-	size_t
-	dimensions(void) const { return D; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
-
 	bool
 	is_partially_unrolled(void) const;
 
@@ -196,14 +188,6 @@ private:
 public:
 	chan_array(const scopespace& o, const string& n);
 	~chan_array();
-
-#if 0
-	size_t
-	dimensions(void) const { return 0; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
 
 	ostream&
 	what(ostream&) const;

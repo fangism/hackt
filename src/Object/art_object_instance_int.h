@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.4 2004/12/12 22:26:34 fang Exp $
+	$Id: art_object_instance_int.h,v 1.5 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -123,18 +123,24 @@ private:
 public:
 	typedef	never_ptr<int_instance_alias>		instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
+private:
+	/**
+		The bit-width of the integers in this collection.  
+		Per collection, this is set once at unroll-time.
+	 */
+	size_t					int_width;
 protected:
 	explicit
-	int_instance_collection(const size_t d) : parent_type(d) { }
+	int_instance_collection(const size_t d) :
+		parent_type(d), int_width(0) { }
 public:
 	int_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
 virtual	~int_instance_collection();
 
-#if 0
-virtual	size_t dimensions(void) const = 0;
-#endif
+	size_t
+	width(void) const { return int_width; }
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -182,8 +188,12 @@ public:
 	collect_transient_info(persistent_object_manager& m) const;
 
 protected:
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
+	void
+	write_object_base(const persistent_object_manager& m, ostream& ) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& );
+
 };	// end class int_instance_collection
 
 //-----------------------------------------------------------------------------
@@ -210,14 +220,6 @@ public:
 
 	ostream&
 	what(ostream& o) const;
-
-#if 0
-	size_t
-	dimensions(void) const { return D; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -269,14 +271,6 @@ private:
 public:
 	int_array(const scopespace& o, const string& n);
 	~int_array();
-
-#if 0
-	size_t
-	dimensions(void) const { return 0; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
 
 	ostream&
 	what(ostream&) const;

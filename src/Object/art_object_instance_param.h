@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.6 2004/12/12 22:26:35 fang Exp $
+	$Id: art_object_instance_param.h,v 1.7 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -205,10 +205,6 @@ public:
 
 virtual	~pbool_instance_collection();
 
-#if 0
-virtual	size_t dimensions(void) const = 0;
-#endif
-
 	ostream& what(ostream& o) const;
 
 virtual	bool
@@ -308,14 +304,6 @@ public:
 	pbool_array(const scopespace& o, const string& n);
 	~pbool_array();
 
-#if 0
-	size_t
-	dimensions(void) const { return D; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
-
 	bool
 	is_partially_unrolled(void) const;
 
@@ -375,14 +363,6 @@ public:
 		count_ptr<const pbool_expr> i);
 
 	~pbool_array() { }
-
-#if 0
-	size_t
-	dimensions(void) const { return 0; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -532,10 +512,6 @@ public:
 
 virtual	~pint_instance_collection();
 
-#if 0
-virtual	size_t dimensions(void) const = 0;
-#endif
-
 	ostream&
 	what(ostream& o) const;
 
@@ -644,14 +620,6 @@ public:
 
 	~pint_array();
 
-#if 0
-	size_t
-	dimensions(void) const { return D; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
-
 	bool
 	is_partially_unrolled(void) const;
 
@@ -714,14 +682,6 @@ public:
 		count_ptr<const pint_const> i);
 
 	~pint_array() { }
-
-#if 0
-	size_t
-	dimensions(void) const { return 0; }
-#elif 0
-	size_t
-	dimensions(void) const;
-#endif
 
 	bool
 	is_partially_unrolled(void) const;

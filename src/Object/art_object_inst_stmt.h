@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.2 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.3 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -24,17 +24,26 @@ using namespace MULTIKEY_MAP_NAMESPACE;
 	Abstract base class for built-in parameter type instantiations.  
  */
 class param_instantiation_statement : public instantiation_statement {
+private:
+	typedef	instantiation_statement		parent_type;
 protected:
 	param_instantiation_statement() : instantiation_statement() { }
 public:
 	param_instantiation_statement(const index_collection_item_ptr_type& i);
 virtual	~param_instantiation_statement() { }
 
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+
 };	// end class param_instantiation_statement
 
 //-----------------------------------------------------------------------------
 class pbool_instantiation_statement : public object, 
 		public param_instantiation_statement {
+private:
+	typedef	param_instantiation_statement	parent_type;
 public:
 	typedef	pbool_instance_collection	collection_type;
 	typedef	count_ptr<const param_type_reference>	type_ptr_type;
@@ -64,6 +73,8 @@ public:
 //-----------------------------------------------------------------------------
 class pint_instantiation_statement : public object, 
 		public param_instantiation_statement {
+private:
+	typedef	param_instantiation_statement	parent_type;
 public:
 	typedef	pint_instance_collection	collection_type;
 	typedef	count_ptr<const param_type_reference>	type_ptr_type;
@@ -93,6 +104,8 @@ public:
 //=============================================================================
 class process_instantiation_statement : public object, 
 		public instantiation_statement {
+private:
+	typedef	instantiation_statement		parent_type;
 public:
 	typedef	process_instance_collection	collection_type;
 	typedef	count_ptr<const process_type_reference>	type_ptr_type;
@@ -121,6 +134,8 @@ public:
 //=============================================================================
 class channel_instantiation_statement : public object, 
 		public instantiation_statement {
+private:
+	typedef	instantiation_statement		parent_type;
 public:
 	typedef	channel_instance_collection	collection_type;
 	typedef	count_ptr<const channel_type_reference>	type_ptr_type;
@@ -149,6 +164,8 @@ public:
 //=============================================================================
 class data_instantiation_statement : public object, 
 		public instantiation_statement {
+private:
+	typedef	instantiation_statement		parent_type;
 public:
 	typedef	datatype_instance_collection	collection_type;
 	typedef	count_ptr<const data_type_reference>	type_ptr_type;

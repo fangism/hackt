@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.6 2004/12/12 22:26:33 fang Exp $
+	$Id: art_object_instance_base.h,v 1.7 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -144,15 +144,6 @@ virtual	count_ptr<const fundamental_type_reference>
 
 	owner_ptr_type
 	get_owner(void) const { return owner; }
-
-#if 0
-	size_t
-	dimensions(void) const { return depth; }
-#elif 0
-	// phasing out
-virtual	size_t
-	dimensions(void) const = 0;
-#endif
 
 	instantiation_state
 	collection_state_end(void) const;

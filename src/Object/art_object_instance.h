@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.29 2004/12/12 22:26:33 fang Exp $
+	$Id: art_object_instance.h,v 1.30 2004/12/12 23:32:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -54,11 +54,6 @@ public:
 		const size_t d);
 
 virtual	~process_instance_collection();
-
-#if 0
-virtual	size_t
-	dimensions(void) const = 0;
-#endif
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -188,11 +183,6 @@ public:
 		const size_t d);
 
 virtual	~channel_instance_collection();
-
-#if 0
-virtual	size_t
-	dimensions(void) const = 0;
-#endif
 
 virtual	ostream&
 	what(ostream& o) const = 0;
