@@ -5,6 +5,9 @@
 
 .SUFFIXES: .cc .o .l .yy .d
 
+# disable implicit rule
+%.o:%.c
+
 .cc.o:
 	$(CC) $(ALL_CFLAGS) -c $< -o $@
 
@@ -53,6 +56,7 @@ y.tab.h y.tab.c y.output y.output.h: art.yy
 #	-$(MV) y.tab.c y.tab.cc
 
 # trying linking to avoid parallel make synchronization issues
+# .cc to forces use of C++ compiler
 y.tab.cc: y.tab.c
 	$(LN) y.tab.c y.tab.cc
 
