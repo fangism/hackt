@@ -1,5 +1,6 @@
 // "art_object.cc"
 
+#include <iostream>
 #include "art_parser_debug.h"
 #include "art_parser.h"
 #include "map_of_ptr_template_methods.h"
