@@ -16,7 +16,19 @@
 \label{sec:templates:forward}
 
 Not yet supported.  
+The idea is to declare only the template signature of an identifier, 
+without declaring its ports.  
+Much like the following in C++:
 
+\begin{verbatim}
+template <template <int, class> class>
+class my_template_class;
+\end{verbatim}
+
+\noindent
+\texttt{my_template_class} is a class that takes a 
+class that takes an integer and a class as a template argument 
+as a template argument.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Default values}
@@ -37,8 +49,18 @@ Two templated types are equivalence if and only if:
 \begin{itemize}
 \item They are of the same type class (channel, process,... ), obviously
 \item They refer to the same base definition.  
+\item The port types and dimensions are type-equivalent.  
 \item Their template arguments are equal.  
 \end{itemize}
+
+The third and fourth criteria are not necessary equivalent.  
+The ports of a template definition need not depend on template
+parameters themselves, as is the case with defining 
+cyclic source sequences for a channel.  
+
+\textbf{DEBATE:} should the fourth criterion be required for type-equivalence, 
+or can we allow non-equivalent template parameters as long as the
+ports interface is equivalent?  
 
 Implementation issues:
 It is not always possible to deduce at compile-time whether
