@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.2 2004/12/07 02:22:09 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.3 2004/12/12 06:27:56 fang Exp $
  */
 
 #include <iostream>
@@ -424,6 +424,7 @@ scopespace::exclude_population(void) const {
 	Register all pointers in the used_id_map with the 
 	serial object manager.  
  */
+inline
 void
 scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
@@ -444,17 +445,21 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::collect_transient_info_base(persistent_object_manager& m) const {
+	collect_used_id_map_pointers(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Serializes the used_id_map hash_map's pointers to an 
 	output stream, translating pointers to indices.  
  */
+inline
 void
-scopespace::write_object_used_id_map(const persistent_object_manager& m) const {
-	const persistent* p = IS_A(const persistent*, this);
-	assert(p);
-	ostream& f = m.lookup_write_buffer(p);
-	assert(f.good());
-
+scopespace::write_object_used_id_map(const persistent_object_manager& m, 
+		ostream& f) const {
+	MUST_BE_A(const persistent*, this);
 	// filter any objects out? yes
 	// how many objects to exclude? need to subtract
 	size_t s = used_id_map.size();
@@ -473,6 +478,13 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_object_used_id_map(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Deserializes a set of pointers and restores them into the
 	used_id_map.  
@@ -485,9 +497,7 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m) const {
 	That is intentional since we don't intend to keep around aliases.  
  */
 void
-scopespace::load_object_used_id_map(persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
@@ -508,6 +518,12 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 			load_used_id_map_object(m_obj);	// pure virtual
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::load_object_base(persistent_object_manager& m, istream& f) {
+	load_object_used_id_map(m, f);
 }
 
 //=============================================================================
@@ -1377,7 +1393,7 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
 #endif
-	collect_used_id_map_pointers(m);
+	scopespace::collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -1421,7 +1437,7 @@ name_space::write_object(const persistent_object_manager& m) const {
 	m.write_pointer(f, parent);
 
 	// do we need to sort objects into bins?
-	write_object_used_id_map(m);
+	scopespace::write_object_base(m, f);
 
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1447,7 +1463,7 @@ if (!m.flag_visit(this)) {
 	// Next, read in the parent namespace pointer.  
 	m.read_pointer(f, parent);
 
-	load_object_used_id_map(m);
+	scopespace::load_object_base(m, f);
 
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1483,96 +1499,6 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 			<< " back to namespace." << endl;
 	}
 }
-
-//=============================================================================
-// class sequential_scope method definitions
-
-#if 0
-sequential_scope::sequential_scope() : instance_management_list() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sequential_scope::~sequential_scope() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-sequential_scope::dump(ostream& o) const {
-	for_each(instance_management_list.begin(), 
-		instance_management_list.end(), 
-		instance_management_base::dumper(o)
-	);
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-sequential_scope::append_instance_management(
-		excl_ptr<const instance_management_base> i) {
-	instance_management_list.push_back(i);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This may be temporary.  
- */
-void
-sequential_scope::unroll(void) const {
-	for_each(instance_management_list.begin(), 
-		instance_management_list.end(), 
-	unary_compose_void(
-		mem_fun_ref(&instance_management_base::unroll), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
-	)
-	);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-sequential_scope::collect_object_pointer_list(
-		persistent_object_manager& m) const {
-	for_each(instance_management_list.begin(), 
-		instance_management_list.end(), 
-	unary_compose_void(
-		bind2nd_argval_void(mem_fun_ref(
-			&instance_management_base::collect_transient_info), m), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
-	)
-	);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-sequential_scope::write_object_pointer_list(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(IS_A(const persistent*, this));
-	assert(f.good());
-	m.write_pointer_list(f, instance_management_list);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-sequential_scope::load_object_pointer_list(const persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(IS_A(const persistent*, this));
-	assert(f.good());
-	m.read_pointer_list(f, instance_management_list);
-}
-
-//=============================================================================
-// class instance_management_base::dumper method definitions
-
-instance_management_base::dumper::dumper(ostream& o) : os(o) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <template <class> class P>
-ostream&
-instance_management_base::dumper::operator () (
-		const P<const instance_management_base>& i) const {
-	return i->dump(os) << endl;
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

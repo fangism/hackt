@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.2 2004/12/07 02:22:09 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.3 2004/12/12 06:27:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -20,6 +20,7 @@ class context;
 
 namespace entity {
 USING_LIST
+using std::istream;
 using std::ostream;
 using util::persistent;
 using util::persistent_object_manager;
@@ -94,10 +95,31 @@ virtual ~sequential_scope();
 	void append_instance_management(
 		excl_ptr<const instance_management_base> i);
 
-	void collect_object_pointer_list(persistent_object_manager& m) const;
-	void write_object_pointer_list(const persistent_object_manager& m) const;
-	void load_object_pointer_list(const persistent_object_manager& m);
+private:
+	void
+	collect_object_pointer_list(persistent_object_manager& m) const;
 
+
+	// why even have these at all?
+	void
+	write_object_pointer_list(const persistent_object_manager& m, 
+		ostream&) const;
+
+	void
+	load_object_pointer_list(const persistent_object_manager& m, 
+		istream&);
+
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager& m, istream&);
+
+public:
 // need not be virtual?
 // may need context later...
 	void unroll(void) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.3 2004/12/12 04:53:04 fang Exp $
+	$Id: art_object_definition_base.h,v 1.4 2004/12/12 06:27:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -36,6 +36,7 @@ using parser::token_identifier;
 namespace entity {
 //=============================================================================
 USING_LIST
+using std::istream;
 using namespace util;
 using namespace util::memory;
 using namespace HASH_QMAP_NAMESPACE;
@@ -220,11 +221,27 @@ virtual	never_ptr<const instance_collection_base>
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
 #endif
 
-protected:
-void	collect_template_formal_pointers(persistent_object_manager& m) const;
-void	write_object_template_formals(const persistent_object_manager& m) const;
-void	load_object_template_formals(persistent_object_manager& m);
+private:
+	void
+	collect_template_formal_pointers(persistent_object_manager& m) const;
 
+	void
+	write_object_template_formals(const persistent_object_manager& m, 
+		ostream&) const;
+
+	void
+	load_object_template_formals(persistent_object_manager& m, 
+		istream&);
+
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream&) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream&);
 
 public:
 	static const never_ptr<const definition_base>	null;

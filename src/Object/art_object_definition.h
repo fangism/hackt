@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.18 2004/12/12 04:53:04 fang Exp $
+	$Id: art_object_definition.h,v 1.19 2004/12/12 06:27:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -65,10 +65,14 @@ public:
  */
 class typedef_base : virtual public definition_base, public scopespace, 
 	public sequential_scope {
+private:
+	typedef	definition_base		definition_parent_type;
+	typedef	scopespace		scope_parent_type;
+	typedef	sequential_scope	sequential_parent_type;
 protected:
 	// no new members
 public:
-	typedef_base() { }
+	typedef_base() : definition_base(), scopespace(), sequential_scope() { }
 virtual	~typedef_base() { }
 
 virtual	const string& get_key(void) const = 0;
@@ -82,7 +86,7 @@ virtual	bool assign_typedef(excl_ptr<const fundamental_type_reference> f) = 0;
 	excl_ptr<const fundamental_type_reference>
 		resolve_complete_type(never_ptr<const param_expr_list> p) const;
 
-protected:
+private:
 virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class typedef_base
 
@@ -92,6 +96,8 @@ virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 	process definitions, and typedef process definitions. 
  */
 class process_definition_base : virtual public definition_base {
+private:
+	typedef	definition_base		parent_type;
 protected:
 	// no new members?
 public:
@@ -104,6 +110,10 @@ virtual	~process_definition_base() { }
 			const token_identifier& id) const;
 
 // inherited pure virtuals are still pure virtuals
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 };	// end class process_definition_base
 
 //=============================================================================
@@ -178,7 +188,9 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
+protected:
 	void write_object_port_formals(
 		const persistent_object_manager& m) const;
 	void load_object_port_formals(persistent_object_manager& m);
@@ -220,6 +232,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class process_definition_alias
 
@@ -228,9 +241,10 @@ public:
 	Base class interface for data type definitions.  
  */
 class datatype_definition_base : virtual public definition_base {
-protected:
+private:
+	typedef	definition_base				parent_type;
 public:
-	datatype_definition_base() { }
+	datatype_definition_base() : definition_base() { }
 //	datatype_definition_base(const string& n);
 virtual	~datatype_definition_base() { }
 
@@ -255,6 +269,10 @@ virtual	count_ptr<const fundamental_type_reference>
 
 virtual	bool
 	require_signature_match(never_ptr<const definition_base> d) const = 0;
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 };	// end class datatype_definition_base
 
 //=============================================================================
@@ -311,6 +329,7 @@ public:
 	// thus we need only collect and write...
 //	void collect_transient_info(persistent_object_manager& m) const;
 //	void write_object(const persistent_object_manager& m) const;
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class built_in_datatype_def
 
@@ -364,6 +383,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class enum_datatype_def
 
@@ -380,6 +400,8 @@ public:
 	type is hard-wired to the built-ins.  
  */
 class built_in_param_def : public definition_base {
+private:
+	typedef	definition_base			parent_type;
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
@@ -442,6 +464,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class user_def_datatype
 
@@ -479,15 +502,17 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class datatype_definition_alias
 
 //=============================================================================
 /// abstract base class for channels and their representations
 class channel_definition_base : virtual public definition_base {
-protected:
+private:
+	typedef	definition_base			parent_type;
 public:
-	channel_definition_base() { }
+	channel_definition_base() : parent_type() { }
 //	channel_definition_base(const string& n);
 virtual	~channel_definition_base() { }
 
@@ -500,6 +525,11 @@ virtual	~channel_definition_base() { }
 virtual	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
+
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 };	// end class channel_definition_base
 
 //-----------------------------------------------------------------------------
@@ -509,6 +539,10 @@ virtual	count_ptr<const fundamental_type_reference>
  */
 class user_def_chan : public channel_definition_base, public scopespace,
 		public sequential_scope {
+private:
+	typedef channel_definition_base		definition_parent_type;
+	typedef	scopespace			scope_parent_type;
+	typedef	sequential_scope		sequential_parent_type;
 protected:
 	// list of other type definitions
 	const string				key;
@@ -535,6 +569,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class user_def_chan
 
@@ -568,6 +603,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
+private:
 	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class channel_definition_alias
 

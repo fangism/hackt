@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.10 2004/12/07 02:22:09 fang Exp $
+ 	$Id: art_object_module.cc,v 1.11 2004/12/12 06:27:56 fang Exp $
  */
 
 #include <iostream>
@@ -101,7 +101,7 @@ module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
-	collect_object_pointer_list(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -115,7 +115,7 @@ module::write_object(const persistent_object_manager& m) const {
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
 	write_value(f, unrolled);
-	write_object_pointer_list(m);
+	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -130,7 +130,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, global_namespace);
 	read_value(f, unrolled);
 //	global_namespace->load_object(m);	// not necessary
-	load_object_pointer_list(m);
+	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 }

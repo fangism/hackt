@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.3 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_namespace.h,v 1.4 2004/12/12 06:27:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -40,6 +40,7 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using std::string;
+using std::istream;
 using util::persistent;
 using util::persistent_object_manager;
 using parser::token_identifier;
@@ -216,12 +217,30 @@ virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
 	bool exclude_object_val(const used_id_map_type::value_type i) const;
 
 // helper functions for object IO
-protected:
+private:
 	// for used_id_map
-	void collect_used_id_map_pointers(persistent_object_manager& m) const;
-	void write_object_used_id_map(const persistent_object_manager& m) const;
-	void load_object_used_id_map(persistent_object_manager& m);
+	void
+	collect_used_id_map_pointers(persistent_object_manager& m) const;
 
+	void
+	write_object_used_id_map(const persistent_object_manager& m, 
+		ostream&) const;
+
+	void
+	load_object_used_id_map(persistent_object_manager& m, 
+		istream&);
+
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream&) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream&);
+
+private:
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
 virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;

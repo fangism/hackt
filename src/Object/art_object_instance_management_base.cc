@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.1 2004/12/06 07:11:20 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.2 2004/12/12 06:27:56 fang Exp $
  */
 
 #include <iostream>
@@ -66,6 +66,7 @@ sequential_scope::unroll(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
 void
 sequential_scope::collect_object_pointer_list(
 		persistent_object_manager& m) const {
@@ -82,20 +83,41 @@ sequential_scope::collect_object_pointer_list(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+sequential_scope::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	collect_object_pointer_list(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+void
 sequential_scope::write_object_pointer_list(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(IS_A(const persistent*, this));
-	assert(f.good());
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer_list(f, instance_management_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-sequential_scope::load_object_pointer_list(const persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(IS_A(const persistent*, this));
-	assert(f.good());
+sequential_scope::write_object_base(
+		const persistent_object_manager& m, ostream& f) const {
+	write_object_pointer_list(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+void
+sequential_scope::load_object_pointer_list(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, instance_management_list);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+sequential_scope::load_object_base(
+		const persistent_object_manager& m, istream& f) {
+	load_object_pointer_list(m, f);
+}
+
 
 //=============================================================================
 // class instance_management_base::dumper method definitions

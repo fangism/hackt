@@ -22,6 +22,10 @@
 		run-time abort trap.  Beware of indirect calls to 
 		virtual functions through other functions as well.  
 
+	* Some more code clean-up, making base classes persistence
+	  helper methods named consistently with _base.  
+	  Privatized some methods that need not be visible.  
+
 
 2004-12-11	David Fang	<fangism@users.sourceforge.net>
 

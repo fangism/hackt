@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.21 2004/12/12 04:53:04 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.22 2004/12/12 06:27:55 fang Exp $
  */
 
 #include <iostream>
@@ -445,6 +445,7 @@ definition_base::add_port_formal(
 	the template formals are a strict subset of the used_id_map.  
 	However, it can't hurt to revisit pointers.
  */
+inline
 void
 definition_base::collect_template_formal_pointers(
 		persistent_object_manager& m) const {
@@ -459,15 +460,32 @@ definition_base::collect_template_formal_pointers(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Wrapper for consistent interface.
+ */
+void
+definition_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	collect_template_formal_pointers(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Template formals will need to be in list order.
 	Just write out the list, the hash_qmap is redundant.  
  */
+inline
 void
 definition_base::write_object_template_formals(
-		const persistent_object_manager& m) const {
-	assert(template_formals_list.size() == template_formals_map.size());
-	ostream& f = m.lookup_write_buffer(this);
-	m.write_pointer_list(f, template_formals_list);
+		const persistent_object_manager& m, ostream& o) const {
+	INVARIANT(template_formals_list.size() == template_formals_map.size());
+	m.write_pointer_list(o, template_formals_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+definition_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	write_object_template_formals(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -477,10 +495,10 @@ definition_base::write_object_template_formals(
 	Another method will add the entries to the corresponding
 	used_id_map where appropriate.  
  */
+inline
 void
 definition_base::load_object_template_formals(
-		persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
+		persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, template_formals_list);
 	// then copy list into hash_map to synchronize
 	template_formals_list_type::const_iterator
@@ -489,12 +507,19 @@ definition_base::load_object_template_formals(
 		end = template_formals_list.end();
 	for ( ; iter!=end; iter++) {
 		template_formals_value_type inst_ptr = *iter;
-		assert(inst_ptr);
+		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
 		const_cast<param_instance_collection*>(&*inst_ptr)->load_object(m);
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 	assert(template_formals_list.size() == template_formals_map.size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+definition_base::load_object_base(
+		persistent_object_manager& m, istream& f) {
+	load_object_template_formals(m, f);
 }
 
 //=============================================================================
@@ -748,7 +773,7 @@ user_def_chan::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE_KEY)) {
 
 	// recursively visit members...
-	sequential_scope::collect_object_pointer_list(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -772,11 +797,11 @@ user_def_chan::write_object(const persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
-	write_object_template_formals(m);
+	definition_base::write_object_base(m, f);
 //	write_object_port_formals(m);
-	write_object_used_id_map(m);
+	scopespace::write_object_base(m, f);
 	// connections and assignments
-	sequential_scope::write_object_pointer_list(m);
+	sequential_scope::write_object_base(m, f);
 	// body
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -793,11 +818,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
-	load_object_template_formals(m);
+	definition_base::load_object_base(m, f);
 //	load_object_port_formals(m);
-	load_object_used_id_map(m);
+	scopespace::load_object_base(m, f);
 	// connections and assignments
-	sequential_scope::load_object_pointer_list(m);
+	sequential_scope::load_object_base(m, f);
 	// body
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -878,9 +903,9 @@ channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
-//	collect_used_id_map_pointers(m);	// covers formals?
-	collect_template_formal_pointers(m);
-	sequential_scope::collect_object_pointer_list(m);
+//	scopespace::collect_transient_info_base(m);	// covers formals?
+	definition_base::collect_transient_info_base(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -907,8 +932,8 @@ channel_definition_alias::write_object(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
-	write_object_template_formals(m);
-	sequential_scope::write_object_pointer_list(m);
+	definition_base::write_object_base(m, f);
+	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -922,8 +947,8 @@ if (!m.flag_visit(this)) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
-	load_object_template_formals(m);
-	sequential_scope::load_object_pointer_list(m);
+	definition_base::load_object_base(m, f);
+	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1086,7 +1111,7 @@ built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
 	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
 	// don't bother with parent pointer to built-in namespace
-	collect_template_formal_pointers(m);
+	definition_base::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1107,13 +1132,13 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
-	write_object_template_formals(m);	// is empty
+	definition_base::write_object_base(m, f);	// is empty
 //	write_object_port_formals(m);
-	write_object_used_id_map(m);
+	scopespace::write_object_base(m, f);
 	// connections and assignments
 
-	// need to IMITATE sequential_scope::write_object_pointer_list
-	list<never_ptr<const instantiation_statement> > bogus;
+	// need to IMITATE sequential_scope::write_object_base
+	const list<never_ptr<const instantiation_statement> > bogus;
 	m.write_pointer_list(f, bogus);		// empty
 
 	WRITE_OBJECT_FOOTER(f);
@@ -1368,7 +1393,7 @@ enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE_KEY)) {
 
-// later: template formals
+// later: template formals... but enums cannot be templated!
 
 }
 }
@@ -1534,7 +1559,7 @@ user_def_datatype::collect_transient_info(
 if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY)) {
 
 // later: template formals
-	sequential_scope::collect_object_pointer_list(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -1560,11 +1585,11 @@ user_def_datatype::write_object(const persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
-	write_object_template_formals(m);
+	definition_base::write_object_base(m, f);
 //	write_object_port_formals(m);
-	write_object_used_id_map(m);
+	scopespace::write_object_base(m, f);
 	// connections and assignments
-	sequential_scope::write_object_pointer_list(m);
+	sequential_scope::write_object_base(m, f);
 	// body
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1578,11 +1603,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
-	load_object_template_formals(m);
+	definition_base::load_object_base(m, f);
 //	load_object_port_formals(m);
-	load_object_used_id_map(m);
+	scopespace::load_object_base(m, f);
 	// connections and assignments
-	sequential_scope::load_object_pointer_list(m);
+	sequential_scope::load_object_base(m, f);
 	// body
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1700,9 +1725,9 @@ datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
-//	collect_used_id_map_pointers(m);	// covers formals?
-	collect_template_formal_pointers(m);
-	sequential_scope::collect_object_pointer_list(m);
+//	scopespace::collect_transient_info_base(m);	// covers formals?
+	definition_base::collect_transient_info_base(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -1729,8 +1754,8 @@ datatype_definition_alias::write_object(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
-	write_object_template_formals(m);
-	sequential_scope::write_object_pointer_list(m);
+	definition_base::write_object_base(m, f);
+	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -1744,8 +1769,8 @@ if (!m.flag_visit(this)) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
-	load_object_template_formals(m);
-	sequential_scope::load_object_pointer_list(m);
+	definition_base::load_object_base(m, f);
+	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -2085,8 +2110,8 @@ process_definition::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE_KEY)) {
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
-	collect_used_id_map_pointers(m);
-	sequential_scope::collect_object_pointer_list(m);
+	scopespace::collect_transient_info_base(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -2110,11 +2135,11 @@ process_definition::write_object(const persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
-	write_object_template_formals(m);
+	definition_base::write_object_base(m, f);
 	write_object_port_formals(m);
-	write_object_used_id_map(m);
+	scopespace::write_object_base(m, f);
 	// connections and assignments
-	sequential_scope::write_object_pointer_list(m);
+	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -2127,11 +2152,11 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
-	load_object_template_formals(m);
+	definition_base::load_object_base(m, f);
 	load_object_port_formals(m);
-	load_object_used_id_map(m);
+	scopespace::load_object_base(m, f);
 	// connections and assignments
-	sequential_scope::load_object_pointer_list(m);
+	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -2282,9 +2307,9 @@ process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
-//	collect_used_id_map_pointers(m);	// covers formals?
-	collect_template_formal_pointers(m);
-	sequential_scope::collect_object_pointer_list(m);
+//	scopespace::collect_transient_info_base(m);	// covers formals?
+	definition_base::collect_transient_info_base(m);
+	sequential_scope::collect_transient_info_base(m);
 }
 }
 
@@ -2310,8 +2335,8 @@ process_definition_alias::write_object(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
-	write_object_template_formals(m);
-	sequential_scope::write_object_pointer_list(m);
+	definition_base::write_object_base(m, f);
+	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -2325,8 +2350,8 @@ if (!m.flag_visit(this)) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
-	load_object_template_formals(m);
-	sequential_scope::load_object_pointer_list(m);
+	definition_base::load_object_base(m, f);
+	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
