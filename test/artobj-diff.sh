@@ -29,7 +29,7 @@ $2 $4.artobj 2>&1 | cat > $4.indump
 
 $5 $4.outdump > $4.outdump.filter
 $5 $4.indump > $4.indump.filter
-diff $4.outdump.filter $4.indump.filter 2>&1 | cat > $4.objdiff
+diff -b $4.outdump.filter $4.indump.filter 2>&1 | cat > $4.objdiff
 
 if [ -s $4.objdiff ] ; then
 	echo "$4.objdiff is non-empty!  See $6."

@@ -1124,7 +1124,7 @@ scopespace::add_connection_to_scope(
 	By default, nothing is excluded, so this returns false.  
  */
 bool
-scopespace::exclude_object(const used_id_map_type::const_iterator i) const {
+scopespace::exclude_object(const used_id_map_type::const_iterator& i) const {
 	return false;
 }
 
@@ -1392,7 +1392,7 @@ name_space::dump(ostream& o) const {
 	inst_bin_type	inst_bin;
 
 	used_id_map_type::const_iterator i = used_id_map.begin();
-	const used_id_map_type::const_iterator end;
+	const used_id_map_type::const_iterator end = used_id_map.end();
 	for ( ; i!=end; i++) {
 		if (!exclude_object(i)) {
 			const never_const_ptr<object> o_p(i->second);
@@ -2182,9 +2182,10 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-name_space::exclude_object(const used_id_map_type::const_iterator i) const {
-	never_const_ptr<object> o(i->second);
-	if (o.is_a<object_handle>())
+name_space::exclude_object(const used_id_map_type::const_iterator& i) const {
+//	const never_const_ptr<object> o = i->second;
+//	if (o.is_a<object_handle>())
+	if (i->second.is_a<object_handle>())
 		return true;
 	else return false;
 }
