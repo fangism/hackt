@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.8 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_formal.cc,v 1.9 2005/01/14 00:00:52 fang Exp $
  */
+
+#ifndef	__ART_PARSER_FORMAL_CC__
+#define	__ART_PARSER_FORMAL_CC__
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -48,7 +51,7 @@ using util::stacktrace;
 data_param_id::data_param_id(const token_identifier* i, 
 		const dense_range_list* d) :
 		node(), id(i), dim(d) {
-	assert(id);
+	NEVER_NULL(id);
 	// dim is optional
 }
 
@@ -84,8 +87,8 @@ data_param_id_list::~data_param_id_list() { }
 data_param_decl::data_param_decl(const concrete_type_ref* t, 
 		const data_param_id_list* il) :
 		node(), type(t), ids(il) {
-	assert(type);
-	assert(ids);
+	NEVER_NULL(type);
+	NEVER_NULL(ids);
 }
 
 data_param_decl::~data_param_decl() {
@@ -121,7 +124,7 @@ CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const token_identifier* n,
 		const dense_range_list* d)
 		: node(), name(n), dim(d) {
-	assert(name);
+	NEVER_NULL(name);
 	// dim may be NULL
 }
 
@@ -154,31 +157,30 @@ port_formal_id::rightmost(void) const {
 	\return pointer to newly added formal instance.  
  */
 never_ptr<const object>
-port_formal_id::check_build(never_ptr<context> c) const {
+port_formal_id::check_build(context& c) const {
 	STACKTRACE("port_formal_id::check_build()");
-	never_ptr<const object> o;
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent()) <<
+		what(cerr << c.auto_indent()) <<
 			"port_formal_id::check_build(...): ";
 	)
 
 	if (dim) {
 		dim->check_build(c);	// useless return value
-		count_ptr<object> o(c->pop_top_object_stack());
+		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<const range_expr_list>
+		const count_ptr<const range_expr_list>
 			d(o.is_a<const range_expr_list>());
-		assert(d);
+		NEVER_NULL(d);
 		// attach array dimensions to current instantiation
-		t = c->add_port_formal(*name, d);
+		t = c.add_port_formal(*name, d);
 	} else {
-		t = c->add_port_formal(*name);
+		t = c.add_port_formal(*name);
 	}
 	return t;
 }
@@ -198,7 +200,7 @@ CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(const concrete_type_ref* t, 
 		const port_formal_id_list* i) : 
 		node(), type(t), ids(i) {
-	assert(type); assert(ids);
+	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
 DESTRUCTOR_INLINE
@@ -227,19 +229,15 @@ port_formal_decl::rightmost(void) const {
 		if there were no problems, else return NULL.  
  */
 never_ptr<const object>
-port_formal_decl::check_build(never_ptr<context> c) const {
+port_formal_decl::check_build(context& c) const {
+	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("port_formal_decl::check_build()");
-//	never_ptr<const object> t;
 	type->check_build(c);
 	// useless return value
 		// should set the current_fundamental_type in context
-	count_ptr<const fundamental_type_reference>
-		ftr(c->get_current_fundamental_type());
-#if 0
-	c->reset_current_definition_reference();
-#else
-	c->pop_current_definition_reference();
-#endif
+	const count_ptr<const fundamental_type_reference>
+		ftr(c.get_current_fundamental_type());
+	c.pop_current_definition_reference();
 		// no longer need the base definition
 	if (ftr) {
 		ids->check_build(c);
@@ -249,11 +247,9 @@ port_formal_decl::check_build(never_ptr<context> c) const {
 		cerr << "ERROR with concrete-type in port formal decl. at "
 			<< type->where() << endl;
 		exit(1);
-		return never_ptr<const object>(NULL);
 	}
-	c->reset_current_fundamental_type();
-	return never_ptr<const object>(NULL);
-//	return t;
+	c.reset_current_fundamental_type();
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -283,9 +279,9 @@ template_formal_id::template_formal_id(const token_identifier* n,
 		const dense_range_list* d, const token_char* e, 
 		const expr* v) : 
 		node(), name(n), dim(d), eq(e), dflt(v) {
-	assert(name);
-// dim may be NULL
-	if (eq) assert(dflt);
+	NEVER_NULL(name);
+	// dim may be NULL
+	if (eq) NEVER_NULL(dflt);
 }
 
 /**
@@ -322,13 +318,12 @@ template_formal_id::rightmost(void) const {
 	See also make_dense_range_list.  
  */
 never_ptr<const object>
-template_formal_id::check_build(never_ptr<context> c) const {
+template_formal_id::check_build(context& c) const {
 	STACKTRACE("template_formal_id::check_build()");
-	never_ptr<const object> o;
 	never_ptr<const instance_collection_base> t;
 		// should be param_instantiation
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent()) <<
+		what(cerr << c.auto_indent()) <<
 			"template_formal_id::check_build(...): ";
 	)
 	// there should be some open definition already
@@ -336,35 +331,35 @@ template_formal_id::check_build(never_ptr<context> c) const {
 	count_ptr<const param_expr> default_val;
 	if (dflt) {
 		dflt->check_build(c);
-		count_ptr<object> o(c->pop_top_object_stack());
+		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in default value expression " <<
 				dflt->where() << endl;
 			exit(1);
 		}
-		count_ptr<const param_expr> p(o.is_a<const param_expr>());
-		assert(p);
+		const count_ptr<const param_expr>
+			p(o.is_a<const param_expr>());
+		NEVER_NULL(p);
 		default_val = p;
 	}
 	if (dim) {
 		// attach array dimensions to current instantiation
 		dim->check_build(c);	// useless return value, check stack
 		// should already construct an range_expr_list
-		count_ptr<object> o(c->pop_top_object_stack());
+		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<const range_expr_list>
+		const count_ptr<const range_expr_list>
 			d(o.is_a<const range_expr_list>());
-		assert(d);
-		t = c->add_template_formal(*name, d, default_val);
+		NEVER_NULL(d);
+		t = c.add_template_formal(*name, d, default_val);
 	} else {
-		t = c->add_template_formal(*name, default_val);
+		t = c.add_template_formal(*name, default_val);
 	}
 	return t;
-//	return never_ptr<const object>(t);
 }
 
 //=============================================================================
@@ -383,7 +378,7 @@ template_formal_decl::template_formal_decl(
 		const token_paramtype* t, 	// why not concrete_type_ref?
 		const template_formal_id_list* i) :
 		node(), type(t), ids(i) {
-	assert(type); assert(ids);
+	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
 DESTRUCTOR_INLINE
@@ -411,35 +406,30 @@ template_formal_decl::rightmost(void) const {
 	\return the definition found, not particularly useful.
  */
 never_ptr<const object>
-template_formal_decl::check_build(never_ptr<context> c) const {
+template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-//	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent()) <<
+		what(cerr << c.auto_indent()) <<
 			"template_formal_decl::check_build(...): ";
 	)
-//	o = 
 	type->check_build(c);	// sets_current_definition_reference
 	// useless return value, always NULL
-	never_ptr<const definition_base>
-		def(c->get_current_definition_reference());
+	const never_ptr<const definition_base>
+		def(c.get_current_definition_reference());
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
 			type->where() << endl;
 		exit(1);
 	}
-//	c->set_current_fundamental_type();
-	c->set_current_fundamental_type(def->make_fundamental_type_reference());
+	c.set_current_fundamental_type(def->make_fundamental_type_reference());
 		// don't anticipate any problems here...
 		// built-in param types pint and pbool
 		// have no template parameters...
 		// after type is upgraded to a concrete_type_ref
 		// then it will already be set by its check_build()
-//	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
 	// catch return errors?
-	c->reset_current_fundamental_type();
-//	return o;
+	c.reset_current_fundamental_type();
 	return def;
 }
 
@@ -459,4 +449,5 @@ template_formal_decl_list::~template_formal_decl_list() { }
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
+#endif	// __ART_PARSER_FORMAL_CC__
 

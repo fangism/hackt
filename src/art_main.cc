@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.6 2004/11/30 01:24:57 fang Exp $
+	$Id: art_main.cc,v 1.7 2005/01/14 00:00:50 fang Exp $
  */
 
 #include <iostream>
@@ -39,7 +39,7 @@ DEBUG(DEBUG_BASIC,
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
-	top = root->check_build(never_ptr<parser::context>(&the_context));
+	top = root->check_build(the_context);
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 

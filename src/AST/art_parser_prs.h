@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.5 2005/01/13 22:47:55 fang Exp $
+	$Id: art_parser_prs.h,v 1.6 2005/01/14 00:00:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -67,7 +67,7 @@ public:
 
 #if 0
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 #endif
 };	// end class rule
 
@@ -104,7 +104,7 @@ public:
 
 #if 0
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 #endif
 };	// end class loop
 
@@ -163,7 +163,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class op_loop
 
 //=============================================================================

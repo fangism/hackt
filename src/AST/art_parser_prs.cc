@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_prs.cc,v 1.6 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -155,7 +155,7 @@ op_loop::rightmost(void) const {
 
 /** temporary: FINISH ME */
 never_ptr<const object>
-op_loop::check_build(never_ptr<context> c) const {
+op_loop::check_build(context& c) const {
 	return node::check_build(c);
 }
 

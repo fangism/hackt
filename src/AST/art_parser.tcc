@@ -1,13 +1,13 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.7 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser.tcc,v 1.8 2005/01/14 00:00:51 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
 #define	__ART_PARSER_TCC__
 
-#include <iostream>
+#include <ostream>
 
 #include "STL/list.tcc"
 
@@ -52,11 +52,6 @@
 //=============================================================================
 namespace ART {
 namespace parser {
-
-class terminal;
-class token_char;
-class token_string;
-
 using util::what;
 using util::stacktrace;
 
@@ -131,7 +126,7 @@ node_list_base<T>::what(ostream& o) const {
  */
 NODE_LIST_BASE_TEMPLATE_SIGNATURE
 never_ptr<const object>
-node_list_base<T>::check_build(never_ptr<context> c) const {
+node_list_base<T>::check_build(context& c) const {
 	static const string trace_root(util::what<T>::name);
 	static const char trace_suffix[] = "_list::check_build()";
 	static const string trace_str(trace_root + trace_suffix);

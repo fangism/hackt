@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_chp.cc,v 1.6 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
@@ -45,7 +45,6 @@ body::body(const token_keyword* t, const stmt_list* s) :
 
 DESTRUCTOR_INLINE
 body::~body() {
-//	SAFEDELETE(stmts);
 }
 
 ostream&
@@ -74,7 +73,6 @@ guarded_command::guarded_command(const chp_expr* g, const terminal* a,
 
 DESTRUCTOR_INLINE
 guarded_command::~guarded_command() {
-//	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
 }
 
 ostream&
@@ -154,9 +152,7 @@ wait::wait(const terminal* l, const expr* c, const terminal* r) :
 }
 
 DESTRUCTOR_INLINE
-wait::~wait() {
-//	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
-}
+wait::~wait() { }
 
 ostream&
 wait::what(ostream& o) const {
@@ -246,9 +242,7 @@ communication::communication(const expr* c, const token_char* d) :
 }
 
 DESTRUCTOR_INLINE
-communication::~communication() {
-//	SAFEDELETE(chan); SAFEDELETE(dir);
-}
+communication::~communication() { }
 
 line_position
 communication::leftmost(void) const {
@@ -293,9 +287,7 @@ send::send(const expr* c, const token_char* d, const expr_list* r) :
 }
 
 DESTRUCTOR_INLINE
-send::~send() {
-//	SAFEDELETE(rvalues);
-}
+send::~send() { }
 
 ostream&
 send::what(ostream& o) const {
@@ -317,9 +309,7 @@ receive::receive(const expr* c, const token_char* d, const expr_list* l) :
 }
 
 DESTRUCTOR_INLINE
-receive::~receive() {
-//	SAFEDELETE(lvalues);
-}
+receive::~receive() { }
 
 ostream&
 receive::what(ostream& o) const {
@@ -339,13 +329,6 @@ selection::selection() : statement() { }
 
 DESTRUCTOR_INLINE
 selection::~selection() { }
-
-#if 0
-ostream&
-selection::what(ostream& o) const {
-	return o << "(chp-selection)";
-}
-#endif
 
 //=============================================================================
 // class det_selection method definitions
@@ -434,9 +417,7 @@ loop::loop(const stmt_list* n) : statement(), commands(n) {
 }
 
 DESTRUCTOR_INLINE
-loop::~loop() {
-//	SAFEDELETE(commands);
-}
+loop::~loop() { }
 
 ostream&
 loop::what(ostream& o) const {
@@ -461,9 +442,7 @@ do_until::do_until(const det_selection* n) : statement(),
 		sel(n) { }
 
 DESTRUCTOR_INLINE
-do_until::~do_until() {
-//	SAFEDELETE(sel);
-}
+do_until::~do_until() { }
 
 ostream&
 do_until::what(ostream& o) const {
@@ -490,9 +469,7 @@ log::log(const token_keyword* l, const expr_list* n) : statement(),
 }
 
 DESTRUCTOR_INLINE
-log::~log() {
-//	SAFEDELETE(lc); SAFEDELETE(args);
-}
+log::~log() { }
 
 ostream&
 log::what(ostream& o) const {

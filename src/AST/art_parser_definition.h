@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.7 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_definition.h,v 1.8 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -61,7 +61,7 @@ public:
 virtual	~signature_base();
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class signature_base
 
 //=============================================================================
@@ -92,7 +92,7 @@ virtual	~process_signature();
 	get_name(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class process_prototype
 
 //-----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class process_def
 
 //=============================================================================
@@ -169,7 +169,7 @@ public:
 virtual	~user_data_type_signature();
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -196,7 +196,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class user_data_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -247,7 +247,7 @@ public:
 virtual	~enum_signature();
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class enum_signature
 
 //-----------------------------------------------------------------------------
@@ -275,7 +275,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class enum_prototype
 
 //-----------------------------------------------------------------------------
@@ -295,7 +295,7 @@ public:
 
 	/** overrides default */
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end enum_member_list
 
 #define enum_member_list_wrap(b,l,e)					\
@@ -327,7 +327,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class enum_def
 
 //=============================================================================
@@ -348,7 +348,7 @@ public:
 virtual	~user_chan_type_signature();
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -433,7 +433,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class typedef_alias
 
 //=============================================================================

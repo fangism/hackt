@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.15 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_base.h,v 1.16 2005/01/14 00:00:51 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -126,7 +126,7 @@ virtual	line_range
 	\return pointer to resulting object.  
  */
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class node
 
 //=============================================================================
@@ -158,7 +158,7 @@ virtual line_position
 	The created object will be pushed onto the context's stack.
  */
 virtual never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class expr
 
 //=============================================================================
@@ -272,7 +272,7 @@ virtual line_position
 	rightmost(void) const;
 
 // never really check the type of a string yet (no built-in type yet)
-// virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+// virtual	never_ptr<const object> check_build(context& c) const;
 };	// end class token_string
 
 //-----------------------------------------------------------------------------
@@ -301,7 +301,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };      // end class token_identifier
 
 //-----------------------------------------------------------------------------
@@ -380,7 +380,7 @@ virtual	line_position
 	rightmost(void) const = 0;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 
 /// Releases memory to the destination list, transfering ownership
 virtual	void
@@ -509,7 +509,7 @@ virtual	ostream&
 	using parent::rightmost;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class expr_list
 
 #define expr_list_wrap(b,l,e)						\
@@ -611,7 +611,7 @@ virtual	line_position
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 
 using parent::begin;
 using parent::end;
@@ -739,7 +739,7 @@ public:
 	rightmost(void) const;
 
 //	consider c->lookup_namespace()
-//	never_ptr<const object> check_build(never_ptr<context> c) const;
+//	never_ptr<const object> check_build(context& c) const;
 
 	never_ptr<const qualified_id>
 	get_id(void) const { return qid; }
@@ -784,7 +784,7 @@ virtual	line_position
 		parameter, data, channel, or process.  
 	 */
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class type_base
 
 //-----------------------------------------------------------------------------
@@ -813,7 +813,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 
 	friend
 	ostream&
@@ -868,7 +868,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class chan_type
 
 #define	chan_type_attach_data_types(ct,t)				\
@@ -1091,7 +1091,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class namespace_body
 
 //-----------------------------------------------------------------------------
@@ -1124,7 +1124,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class using_namespace
 
 //=============================================================================
@@ -1160,7 +1160,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class concrete_type_ref
 
 //=============================================================================

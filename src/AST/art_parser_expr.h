@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.7 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_expr.h,v 1.8 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -40,7 +40,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class paren_expr
 
 //=============================================================================
@@ -83,7 +83,7 @@ public:
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 
 	never_ptr<const qualified_id>
 	get_id(void) const { return qid; }
@@ -142,7 +142,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class range
 
 //-----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ public:
 	~range_list();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class range_list
 
 #define range_list_wrap(b,l,e)						\
@@ -190,7 +190,7 @@ public:
 	~dense_range_list();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class range_list
 
 #define dense_range_list_wrap(b,l,e)					\
@@ -219,7 +219,7 @@ virtual	line_position
 	rightmost(void) const = 0;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
@@ -266,7 +266,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class postfix_expr
 
 //-----------------------------------------------------------------------------
@@ -290,7 +290,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
@@ -311,7 +311,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class index_expr
 
 //=============================================================================
@@ -336,7 +336,7 @@ virtual	ostream&
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class binary_expr
 
 //-----------------------------------------------------------------------------
@@ -354,7 +354,7 @@ public:
 	what(ostream& o) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -372,7 +372,7 @@ public:
 	what(ostream& o) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -390,7 +390,7 @@ public:
 	what(ostream& o) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class logical_expr
 
 //=============================================================================
@@ -417,7 +417,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class array_concatenation
 
 #define array_concatenation_wrap(b,l,e)					\
@@ -459,7 +459,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class loop_concatenation
 
 //-----------------------------------------------------------------------------
@@ -489,7 +489,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class array_construction
 
 //=============================================================================

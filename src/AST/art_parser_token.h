@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.7 2005/01/13 22:47:55 fang Exp $
+	$Id: art_parser_token.h,v 1.8 2005/01/14 00:00:53 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_H__
@@ -46,7 +46,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_int
 
 //=============================================================================
@@ -75,7 +75,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_float
 
 //=============================================================================
@@ -97,7 +97,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_bool
 
 //-----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ public:
 	rightmost(void) const;
 	
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_else
 
 //-----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ public:
 
 // not until we have built-in type for string
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_quoted_string
 
 //=============================================================================
@@ -168,7 +168,7 @@ virtual	ostream&
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class token_type
 
 //-----------------------------------------------------------------------------
@@ -186,7 +186,7 @@ virtual	~token_datatype();
 	what(ostream& o) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class token_datatype
 
 //-----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ public:
 	~token_int_type();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_int_type
 
 //-----------------------------------------------------------------------------
@@ -216,7 +216,7 @@ public:
 	~token_bool_type();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_bool_type
 
 //-----------------------------------------------------------------------------
@@ -234,7 +234,7 @@ virtual	~token_paramtype();
 	what(ostream& o) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const = 0;
+	check_build(context& c) const = 0;
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ public:
 	~token_pbool_type();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_pbool_type
 
 //-----------------------------------------------------------------------------
@@ -264,7 +264,7 @@ public:
 	~token_pint_type();
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class token_pint_type
 
 //=============================================================================

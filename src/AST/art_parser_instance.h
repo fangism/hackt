@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.7 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_instance.h,v 1.8 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -29,7 +29,7 @@ using	expr_list::leftmost;
 using	expr_list::rightmost;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class connection_argument_list
 
 #define connection_argument_list_wrap(b,l,e)				\
@@ -83,7 +83,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class alias_list
 
 #define alias_list_wrap(b,l,e)						\
@@ -114,7 +114,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -143,7 +143,7 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -185,7 +185,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class instance_array
 
 //=============================================================================
@@ -220,7 +220,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class instance_declaration
 
 //=============================================================================
@@ -250,7 +250,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class instance_connection
 
 //-----------------------------------------------------------------------------
@@ -285,7 +285,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------
@@ -317,7 +317,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class instance_alias
 
 //=============================================================================

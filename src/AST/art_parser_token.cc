@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.13 2005/01/13 22:47:55 fang Exp $
+	$Id: art_parser_token.cc,v 1.14 2005/01/14 00:00:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -157,7 +157,8 @@ token_char::operator delete (void* p) {
  */
 int
 token_char::string_compare(const char* d) const {
-	const char cs[2] = { c, 0 }; return strcmp(cs,d);
+	const char cs[2] = { c, 0 };
+	return strcmp(cs,d);
 }
 
 ostream&
@@ -178,6 +179,7 @@ token_int::~token_int() { }
 
 /**
 	Performs string comparison for an integer token.
+	TODO: use ostringstream instead...
 	\param d string to match against
 	\return 0 if match
  */
@@ -209,10 +211,10 @@ token_int::rightmost(void) const {
 	\return NULL, useless.  
  */
 never_ptr<const object>
-token_int::check_build(never_ptr<context> c) const {
-	count_ptr<pint_const> pe(new pint_const(val));
-	assert(pe);
-	c->push_object_stack(pe);
+token_int::check_build(context& c) const {
+	const count_ptr<pint_const> pe(new pint_const(val));
+	NEVER_NULL(pe);
+	c.push_object_stack(pe);
 	return never_ptr<const object>(NULL);
 }
 
@@ -229,6 +231,7 @@ token_float::~token_float() { }
 
 /**
 	Performs string comparison for a floating-point token.
+	TODO: use ostringstream instead...
 	\param d string to match against
 	\return 0 if match
  */
@@ -256,7 +259,7 @@ token_float::rightmost(void) const {
 	Need built-in float type first.  
  */
 never_ptr<const object>
-token_float::check_build(never_ptr<context> c) const {
+token_float::check_build(context& c) const {
 	cerr << "token_float::check_build(): not quite done yet!" << endl;
 	return never_ptr<const object>(NULL);
 }
@@ -338,24 +341,24 @@ token_identifier::rightmost(void) const {
 	\return pointer to the instance named if found, else NULL.  
  */
 never_ptr<const object>
-token_identifier::check_build(never_ptr<context> c) const {
+token_identifier::check_build(context& c) const {
 	STACKTRACE("token_identifier::check_build()");
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_identifier::check_build(...)";
 	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	never_ptr<const instance_collection_base>
-		inst(c->lookup_instance(*this));
+	const never_ptr<const instance_collection_base>
+		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
 		// we will then make an instance_reference
 		// what about indexed instance references?
-		c->push_object_stack(inst->make_instance_reference());
+		c.push_object_stack(inst->make_instance_reference());
 	} else {
 		// push a NULL placeholder
-		c->push_object_stack(count_ptr<object>(NULL));
+		c.push_object_stack(count_ptr<object>(NULL));
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
 		exit(1);		// temporary termination
@@ -389,7 +392,7 @@ token_keyword::what(ostream& o) const {
 CONSTRUCTOR_INLINE
 token_bool::
 token_bool(const char* tf) : token_keyword(tf), expr() {
-	assert(!strcmp(tf,"true") || !strcmp(tf,"false"));
+	INVARIANT(!strcmp(tf,"true") || !strcmp(tf,"false"));
 } 
 
 DESTRUCTOR_INLINE
@@ -411,10 +414,10 @@ token_bool::rightmost(void) const {
 }
 
 never_ptr<const object>
-token_bool::check_build(never_ptr<context> c) const {
-	count_ptr<param_expr> pe(
-		new pbool_const(strcmp(c_str(),"true") == 0));
-	c->push_object_stack(pe);
+token_bool::check_build(context& c) const {
+	const count_ptr<param_expr>
+		pe(new pbool_const(strcmp(c_str(),"true") == 0));
+	c.push_object_stack(pe);
 	return never_ptr<const object>(NULL);
 }
 
@@ -429,7 +432,7 @@ token_bool::check_build(never_ptr<context> c) const {
 CONSTRUCTOR_INLINE
 token_else::
 token_else(const char* e) : token_keyword(e), expr() {
-	assert(!strcmp(e,"else"));
+	INVARIANT(!strcmp(e,"else"));
 } 
 
 DESTRUCTOR_INLINE
@@ -451,7 +454,7 @@ token_else::rightmost(void) const {
 }
 
 never_ptr<const object>
-token_else::check_build(never_ptr<context> c) const {
+token_else::check_build(context& c) const {
 	cerr << "token_else::check_build(): Don't call me!";
 	return never_ptr<const object>(NULL);
 }
@@ -487,7 +490,7 @@ token_quoted_string::rightmost(void) const {
 	Can't do this until we have a built-in type for strings.  
  */
 never_ptr<const object>
-token_quoted_string::check_build(never_ptr<context> c) const {
+token_quoted_string::check_build(context& c) const {
 	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
 	return never_ptr<const object>(NULL);
 }
@@ -527,12 +530,12 @@ token_datatype::what(ostream& o) const {
 
 #if 0
 never_ptr<const object>
-token_datatype::check_build(never_ptr<context> c) const {
+token_datatype::check_build(context& c) const {
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_datatype::check_build(...): ";
 	)
-	return c->set_datatype_def(*this);
+	return c.set_datatype_def(*this);
 }
 #endif
 
@@ -552,12 +555,12 @@ token_paramtype::what(ostream& o) const {
 
 #if 0
 never_ptr<const object>
-token_paramtype::check_build(never_ptr<context> c) const {
+token_paramtype::check_build(context& c) const {
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_paramtype::check_build(...): ";
 	)
-	return c->set_param_def(*this);
+	return c.set_param_def(*this);
 }
 #endif
 
@@ -571,14 +574,14 @@ DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
 
 never_ptr<const object>
-token_bool_type::check_build(never_ptr<context> c) const {
+token_bool_type::check_build(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_bool_type::check_build(...): ";
 	)
 	// bool_def declared in "art_built_ins.h"
-	return c->push_current_definition_reference(bool_def);
+	return c.push_current_definition_reference(bool_def);
 }
 
 //=============================================================================
@@ -591,14 +594,14 @@ DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
 
 never_ptr<const object>
-token_int_type::check_build(never_ptr<context> c) const {
+token_int_type::check_build(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_int_type::check_build(...): ";
 	)
 	// int_def declared in "art_built_ins.h"
-	return c->push_current_definition_reference(int_def);
+	return c.push_current_definition_reference(int_def);
 }
 
 //=============================================================================
@@ -618,14 +621,14 @@ token_pbool_type::~token_pbool_type() { }
 	to the definition.  
  */
 never_ptr<const object>
-token_pbool_type::check_build(never_ptr<context> c) const {
+token_pbool_type::check_build(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_pbool_type::check_build(...): ";
 	)
 	// pbool_def declared in "art_built_ins.h"
-	return c->push_current_definition_reference(pbool_def);
+	return c.push_current_definition_reference(pbool_def);
 }
 
 //=============================================================================
@@ -643,14 +646,14 @@ token_pint_type::~token_pint_type() { }
 //	to the definition.  
  */
 never_ptr<const object>
-token_pint_type::check_build(never_ptr<context> c) const {
+token_pint_type::check_build(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent())
+		what(cerr << c.auto_indent())
 			<< "token_pint_type::check_build(...): ";
 	)
 	// pint_def declared in "art_built_ins.h"
-	return c->push_current_definition_reference(pint_def);
+	return c.push_current_definition_reference(pint_def);
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_hse.cc,v 1.6 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -74,9 +74,7 @@ guarded_command::guarded_command(const hse_expr* g, const terminal* a,
 }
 
 DESTRUCTOR_INLINE
-guarded_command::~guarded_command() {
-//	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
-}
+guarded_command::~guarded_command() { }
 
 ostream&
 guarded_command::what(ostream& o) const {
@@ -117,7 +115,6 @@ else_clause::what(ostream& o) const {
 CONSTRUCTOR_INLINE
 skip::skip(const token_keyword* s) : statement(),
 		token_keyword(IS_A(const token_keyword*, s)->c_str()) {
-//	SAFEDELETE(s);
 	excl_ptr<const token_keyword> delete_me(s);
 }
 
@@ -151,9 +148,7 @@ wait::wait(const terminal* l, const expr* c, const terminal* r) :
 }
 
 DESTRUCTOR_INLINE
-wait::~wait() {
-//	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
-}
+wait::~wait() { }
 
 ostream&
 wait::what(ostream& o) const {
@@ -177,7 +172,6 @@ CONSTRUCTOR_INLINE
 assignment::assignment(base_assign* a) : ART::parser::HSE::statement(),
 		// destructive transfer of ownership
 		parser::incdec_stmt(a->release_expr(), a->release_op()) {
-	SAFEDELETE(a);
 	excl_ptr<base_assign> delete_me(a);
 }
 
@@ -207,13 +201,6 @@ selection::selection() : statement() { }
 
 DESTRUCTOR_INLINE
 selection::~selection() { }
-
-#if 0
-ostream&
-selection::what(ostream& o) const {
-	return o << "(hse-selection)";
-}
-#endif
 
 //=============================================================================
 // class det_selection method definitions
@@ -303,9 +290,7 @@ loop::loop(const stmt_list* n) : statement(), commands(n) {
 }
 
 DESTRUCTOR_INLINE
-loop::~loop() {
-//	SAFEDELETE(commands);
-}
+loop::~loop() { }
 
 ostream&
 loop::what(ostream& o) const {
@@ -330,9 +315,7 @@ do_until::do_until(const det_selection* n) : statement(),
 		sel(n) { }
 
 DESTRUCTOR_INLINE
-do_until::~do_until() {
-//	SAFEDELETE(sel);
-}
+do_until::~do_until() { }
 
 ostream&
 do_until::what(ostream& o) const {

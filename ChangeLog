@@ -2,10 +2,14 @@
 
 2005-01-13	David Fang	<fangism@users.sourceforge.net>
 
-	* Cleaned up the AST/*.h headers, with some corrections.
+	* Cleaned up the AST/* headers and definitions, with some corrections.
 	  De-virtualized some methods that did not require it.  
 	  Converted CHP/HSE class members to pointer-classes.  
 	  Purged unnecessary repetitive declarations.  
+	  Applied NEVER_NULL and INVARIANT macros gratuitously.  
+
+	* Globally changed node::check_build's signature to
+	  never_ptr<const object> check_build(context& c) const;
 
 	* More clean up in the src/Object directory, 
 	  replaced assert() with NEVER_NULL and INVARIANT macros.  

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.9 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_base.cc,v 1.10 2005/01/14 00:00:51 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -11,7 +11,7 @@
 // -fkeep-inline-functions
 
 #include <iostream>
-#include <vector>
+// #include <vector>
 
 #include "art_parser_debug.h"
 #include "art_switches.h"
@@ -88,11 +88,11 @@ node::where(void) const {
 	Should really take a context&...
  */
 never_ptr<const object>
-node::check_build(never_ptr<context> c) const {
+node::check_build(context& c) const {
 	// We DO want to print this message, even in regression testing. 
-	what(cerr << c->auto_indent() << 
+	what(cerr << c.auto_indent() << 
 		"check_build() not implemented yet for ");
-	return c->top_namespace();
+	return c.top_namespace();
 }
 
 //=============================================================================
@@ -165,25 +165,20 @@ type_id::rightmost(void) const {
 	\return pointer to type reference, else NULL if failure.  
  */
 never_ptr<const object>
-type_id::check_build(never_ptr<context> c) const {
+type_id::check_build(context& c) const {
 	STACKTRACE("type_id::check_build()");
-	never_ptr<const definition_base> d;
 	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() <<
+		cerr << c.auto_indent() <<
 			"type_id::check_build(...): " << endl;
 	)
-	d = c->lookup_definition(*base);
+	const never_ptr<const definition_base>
+		d(c.lookup_definition(*base));
 	if (!d) {
-//		cerr << "type_id::check_build(never_ptr<context>) : ERROR!" << endl;
+//		cerr << "type_id::check_build(context&) : ERROR!" << endl;
 		return never_ptr<const object>(NULL);
 	}
 	// set type definition reference
-#if 0
-	d = d->set_context_definition(*c);	// retarded
-	return d;
-#else
-	return c->push_current_definition_reference(*d);
-#endif
+	return c.push_current_definition_reference(*d);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,7 +194,7 @@ CONSTRUCTOR_INLINE
 chan_type::chan_type(const token_keyword* c, const token_char* d, 
 		const data_type_ref_list* t) : type_base(),
 		chan(c), dir(d), dtypes(t) {
-	assert(c);
+	NEVER_NULL(c);
 }
 
 DESTRUCTOR_INLINE
@@ -239,7 +234,7 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 }
 
 never_ptr<const object>
-chan_type::check_build(never_ptr<context> c) const {
+chan_type::check_build(context& c) const {
 	STACKTRACE("chan_type::check_build()");
 	cerr << "chan_type::check_build(): FINISH ME!";
 	return never_ptr<const object>(NULL);
@@ -262,7 +257,7 @@ statement::~statement() { }
 CONSTRUCTOR_INLINE
 incdec_stmt::incdec_stmt(const expr* n, const terminal* o) : statement(),
 		e(n), op(o) {
-	assert(e); assert(op);
+	NEVER_NULL(e); NEVER_NULL(op);
 }
 
 #if 0
@@ -333,7 +328,7 @@ CONSTRUCTOR_INLINE
 assign_stmt::assign_stmt(const expr* left, const terminal* o, 
 		const expr* right) : statement(),
 		lhs(left), op(o), rhs(right) {
-	assert(lhs); assert(op); assert(rhs);
+	NEVER_NULL(lhs); NEVER_NULL(op); NEVER_NULL(rhs);
 }
 
 #if 0
@@ -438,14 +433,14 @@ language_body*
 language_body::attach_tag(token_keyword* t) {
 	// need to safe-delete first?  nah...
 	tag = excl_ptr<const token_keyword>(t);
-	assert(tag);
+	NEVER_NULL(tag);
 	return this;
 }
 
 line_position
 language_body::leftmost(void) const {
 	// what if untagged?
-	assert(tag);
+	NEVER_NULL(tag);
 	return tag->leftmost();
 }
 
@@ -463,27 +458,25 @@ language_body::leftmost(void) const {
 	\param c the semicolon.  
  */
 CONSTRUCTOR_INLINE
-namespace_body::
-namespace_body(const token_keyword* s, const token_identifier* n, 
+namespace_body::namespace_body(
+		const token_keyword* s, const token_identifier* n, 
 		const terminal* l, const root_body* b,
 		const terminal* r, const terminal* c) :
 		root_item(),       
 		ns(s), name(n), lb(l), body(b), rb(r), semi(c) {
-	assert(ns); assert(name); assert(lb);
+	NEVER_NULL(ns); NEVER_NULL(name); NEVER_NULL(lb);
 	// body may be NULL
-	assert(rb); assert(semi);
+	NEVER_NULL(rb); NEVER_NULL(semi);
 }
 
 /// destructor
 DESTRUCTOR_INLINE
-namespace_body::
-~namespace_body() {
+namespace_body::~namespace_body() {
 }
 
 /// what eeeez it, man?
 ostream&
-namespace_body::
-what(ostream& o) const {
+namespace_body::what(ostream& o) const {
 	return o << "(namespace-body: " << *name << ")";
 }
 
@@ -504,48 +497,36 @@ namespace_body::rightmost(void) const {
 
 // recursive type-checker
 never_ptr<const object>
-namespace_body::check_build(never_ptr<context> c) const {
+namespace_body::check_build(context& c) const {
 	STACKTRACE("namespace_body::check_build()");
 	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() << 
+		cerr << c.auto_indent() << 
 			"namespace_body::check_build(...): " << *name;
 	)
 	// use context lookup: see if namespace already exists in super-scope
-		// name_space* ns = c->lookup_namespace(name);
+		// name_space* ns = c.lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
 	// otherwise register a new namespace, add it to context
-	c->open_namespace(*name);
+	c.open_namespace(*name);
 	// if there was error, would've exited...
-
-#if 0
-	cerr << "In namespace_body::check_build(), after c->open_namespace(), "
-		<< endl;
-	c->get_current_namespace()->dump(cerr) << endl;
-#endif
 
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
 //	TRACE_CHECK_BUILD(
-//		cerr << c->auto_indent() << "leaving namespace: " << *name;
+//		cerr << c.auto_indent() << "leaving namespace: " << *name;
 //	)
-	c->close_namespace();
-
-#if 0
-	cerr << "In namespace_body::check_build(), after c->close_namespace(), "
-		<< endl;
-	c->get_current_namespace()->dump(cerr) << endl;
-#endif
+	c.close_namespace();
 
 	// if no errors, return pointer to the namespace just processed
-	return c->top_namespace();
+	return c.top_namespace();
 }
 
 //=============================================================================
 // class namespace_id method definitions
 
 namespace_id::namespace_id(qualified_id* i) : node(), qid(i) {
-	assert(qid);
+	NEVER_NULL(qid);
 }
 
 namespace_id::~namespace_id() {
@@ -578,7 +559,7 @@ namespace_id::is_absolute(void) const {
 
 /*** NOT USED... yet
 never_ptr<const object>
-namespace_id::check_build(never_ptr<context> c) const {
+namespace_id::check_build(context& c) const {
 }
 ***/
 
@@ -600,11 +581,11 @@ operator << (ostream& o, const namespace_id& id) {
 	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
-using_namespace::
-using_namespace(const token_keyword* o, const namespace_id* i, 
+using_namespace::using_namespace(
+		const token_keyword* o, const namespace_id* i, 
 		const token_char* s) : root_item(),
 		open(o), id(i), as(NULL), alias(NULL), semi(s) {
-	assert(open); assert(id); assert(semi);
+	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
 }
 
 /**
@@ -616,12 +597,13 @@ using_namespace(const token_keyword* o, const namespace_id* i,
 	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
-using_namespace::
-using_namespace(const token_keyword* o, const namespace_id* i, 
+using_namespace::using_namespace(
+		const token_keyword* o, const namespace_id* i, 
 		const token_keyword* a, const token_identifier* n, 
 		const token_char* s) : root_item(),
 		open(o), id(i), as(a), alias(n), semi(s) {
-	assert(open); assert(id); assert(as); assert(alias); assert(semi);
+	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);
+	NEVER_NULL(alias); NEVER_NULL(semi);
 }
 
 /// default destructor
@@ -649,25 +631,25 @@ using_namespace::rightmost(void) const {
 
 /// returns a pointer to a valid namespace that's now mapped in this scope
 never_ptr<const object>
-using_namespace::check_build(never_ptr<context> c) const {
+using_namespace::check_build(context& c) const {
 	STACKTRACE("using_namespace::check_build()");
 if (alias) {
 	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() << 
+		cerr << c.auto_indent() << 
 			"using_namespace::check_build(...) (alias): "
 			<< *id;
 	)
-	c->alias_namespace(*id->get_id(), *alias);
+	c.alias_namespace(*id->get_id(), *alias);
 } else {
 	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() << 
+		cerr << c.auto_indent() << 
 			"using_namespace::check_build(...) (using): "
 			<< *id;
 	)
 	// if aliased... print all, report as error (done inside)
-	c->using_namespace(*id->get_id());
+	c.using_namespace(*id->get_id());
 }
-	return c->top_namespace();
+	return c.top_namespace();
 }
 
 //=============================================================================
@@ -676,7 +658,7 @@ if (alias) {
 CONSTRUCTOR_INLINE
 concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
 		node(), base(n), temp_spec(t) {
-	assert(base);
+	NEVER_NULL(base);
 }
 
 DESTRUCTOR_INLINE
@@ -695,8 +677,8 @@ concrete_type_ref::leftmost(void) const {
 
 line_position
 concrete_type_ref::rightmost(void) const {
-	if (temp_spec) return temp_spec->rightmost();
-	else return base->rightmost();
+	if (temp_spec)	return temp_spec->rightmost();
+	else		return base->rightmost();
 }
 
 never_ptr<const type_base>
@@ -719,29 +701,26 @@ concrete_type_ref::get_temp_spec(void) const {
 		else NULL.
  */
 never_ptr<const object>
-concrete_type_ref::check_build(never_ptr<context> c) const {
+concrete_type_ref::check_build(context& c) const {
+	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("concrete_type_ref::check_build()");
-#if 0
-	indent cerr_ind(cerr);
-	cerr << auto_indent << 
-		"concrete_type_ref::check_build(...): " << endl;
-#endif
 
 	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
-		what(cerr << c->auto_indent()) <<
+		what(cerr << c.auto_indent()) <<
 			"concrete_type_ref::check_build(...): ";
 	)
 
 	// sets context's current definition
 	o = base->check_build(c);
-	never_ptr<const definition_base> d(o.is_a<const definition_base>());
+	const never_ptr<const definition_base>
+		d(o.is_a<const definition_base>());
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << base->where() << endl;
 		exit(1);		// temporary
-		return never_ptr<const object>(NULL);
+		return return_type(NULL);
 	}
 
 	// check template arguments, if given
@@ -750,7 +729,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 		// using current_definition_reference
 		temp_spec->check_build(c);
 		// useless return value, grab object_list off the stack
-		count_ptr<object> o(c->pop_top_object_stack());
+		count_ptr<object> o(c.pop_top_object_stack());
 
 		// remember to check the list of template formals
 		// which aren't yet tied to a definition!
@@ -764,26 +743,27 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 				"bad template args!  ERROR " 
 				<< temp_spec->where() << endl;
 			exit(1);		// temporary
-			return never_ptr<const object>(NULL);
+			return return_type(NULL);
 		} 
-		count_ptr<object_list> ol(o.is_a<object_list>());
-		assert(ol);
-		excl_ptr<dynamic_param_expr_list> tpl =
-			ol->make_param_expr_list();
+		const count_ptr<object_list>
+			ol(o.is_a<object_list>());
+		NEVER_NULL(ol);
+		excl_ptr<dynamic_param_expr_list>
+			tpl = ol->make_param_expr_list();
 		if (!tpl) {
 			cerr << "ERROR building template parameter "
 				"expression list.  " << temp_spec->where()
 				<< endl;
 			exit(1);		// temporary
 		}
-		count_ptr<const fundamental_type_reference>
+		const count_ptr<const fundamental_type_reference>
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {
 			cerr << "ERROR making complete type reference.  "
 				<< where() << endl;
 			exit(1);
 		}
-		c->set_current_fundamental_type(type_ref);
+		c.set_current_fundamental_type(type_ref);
 	} else {
 		// if no args are supplied, 
 		// make sure that the definition doesn't require template args!
@@ -794,21 +774,20 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 			exit(1);		// temporary
 			return never_ptr<const object>(NULL);
 		} else {
-//			cerr << auto_indent << "Whoopie!" << endl;
-			count_ptr<const fundamental_type_reference>
+			const count_ptr<const fundamental_type_reference>
 				type_ref(d->make_fundamental_type_reference());
 			if (!type_ref) {
 				cerr << "ERROR making complete type reference.  "
 					<< where() << endl;
 				exit(1);
 			}
-			c->set_current_fundamental_type(type_ref);
+			c.set_current_fundamental_type(type_ref);
 		}
 	}
-	return never_ptr<const object>(NULL);
+	return return_type(NULL);
 
 // we've made it!  set the fundamental_type_reference for instantiation
-//	return c->set_current_fundamental_type();
+//	return c.set_current_fundamental_type();
 	// who should reset_current_fundamental_type?
 	// the decl_lists? or their containers?
 }
@@ -830,7 +809,7 @@ CONSTRUCTOR_INLINE
 guarded_definition_body::guarded_definition_body(const expr* e, 
 		const terminal* a, const definition_body* b) :
 		instance_management(), guard(e), arrow(a), body(b) {
-	assert(guard); assert(arrow); assert(body);
+	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
 }
 
 DESTRUCTOR_INLINE

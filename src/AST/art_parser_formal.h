@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.7 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_formal.h,v 1.8 2005/01/14 00:00:52 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -129,7 +129,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class port_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -176,7 +176,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class port_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,7 +233,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class template_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -285,7 +285,7 @@ public:
 	rightmost(void) const;
 
 	never_ptr<const object>
-	check_build(never_ptr<context> c) const;
+	check_build(context& c) const;
 };	// end class template_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

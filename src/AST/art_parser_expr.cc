@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
+	$Id: art_parser_expr.cc,v 1.10 2005/01/14 00:00:52 fang Exp $
  */
+
+#ifndef	__ART_PARSER_EXPR_CC__
+#define	__ART_PARSER_EXPR_CC__
 
 #include <iostream>
 
@@ -69,21 +72,21 @@ expr_list::what(ostream& o) const {
 	and go from there.  
  */
 never_ptr<const object>
-expr_list::check_build(never_ptr<context> c) const {
-	count_ptr<object_list> o(new object_list);
+expr_list::check_build(context& c) const {
+	const count_ptr<object_list> o(new object_list);
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		if (*i) {
 			(*i)->check_build(c);
 			// ignore useless return values (should be always NULL)
-			o->push_back(c->pop_top_object_stack());
+			o->push_back(c.pop_top_object_stack());
 			// do error checking on list elsewhere
 		} else {
 			// add NULL placeholder
 			o->push_back(count_ptr<object>(NULL));
 		}
 	}
-	c->push_object_stack(o);
+	c.push_object_stack(o);
 	return never_ptr<const object>(NULL);
 }
 
@@ -94,12 +97,11 @@ CONSTRUCTOR_INLINE
 paren_expr::paren_expr(const token_char* l, const expr* n, 
 		const token_char* r) : expr(),
 		lp(l), e(n), rp(r) {
-	assert(lp); assert(e); assert(rp);
+	NEVER_NULL(lp); NEVER_NULL(e); NEVER_NULL(rp);
 }
 
 DESTRUCTOR_INLINE
-paren_expr::~paren_expr() {
-}
+paren_expr::~paren_expr() { }
 
 ostream&
 paren_expr::what(ostream& o) const {
@@ -119,7 +121,7 @@ paren_expr::rightmost(void) const {
 }
 
 never_ptr<const object>
-paren_expr::check_build(never_ptr<context> c) const {
+paren_expr::check_build(context& c) const {
 	return e->check_build(c);
 }
 
@@ -142,13 +144,12 @@ qualified_id::qualified_id(const qualified_id& i) :
 		absolute = excl_ptr<const token_string>(
 			new token_string(*i.absolute));
 		// actually *copy* the token
-		assert(absolute);
+		NEVER_NULL(absolute);
 	}
 }
 
 DESTRUCTOR_INLINE
-qualified_id::~qualified_id() {
-}
+qualified_id::~qualified_id() { }
 
 /**
 	Call this function in the parser to mark an un/qualified identifier
@@ -160,7 +161,7 @@ qualified_id::~qualified_id() {
 qualified_id*
 qualified_id::force_absolute(const token_string* s) {
 	absolute = excl_ptr<const token_string>(s);
-	assert(absolute);
+	INVARIANT(absolute);
 	return this;
 }
 
@@ -220,8 +221,8 @@ qualified_id::copy_beheaded(void) const {
 			might be collective, in the case of an array
  */
 never_ptr<const object>
-qualified_id::check_build(never_ptr<context> c) const {
-	return c->lookup_object(*this);
+qualified_id::check_build(context& c) const {
+	return c.lookup_object(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -238,11 +239,11 @@ operator << (ostream& o, const qualified_id& id) {
 		if (id.is_absolute())
 			o << scope;
 		count_ptr<const token_identifier> tid(*i);
-		assert(tid);
+		NEVER_NULL(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
 			tid = *i;
-			assert(tid);
+			NEVER_NULL(tid);
 			o << scope << *tid;
 		}
 		return o;
@@ -295,11 +296,10 @@ id_expr::id_expr(qualified_id* i) : expr(), qid(i) {
 
 id_expr::id_expr(const id_expr& i) :
 		node(), expr(), qid(new qualified_id(*i.qid)) {
-	assert(qid);
+	NEVER_NULL(qid);
 }
 
-id_expr::~id_expr() {
-}
+id_expr::~id_expr() { }
 
 ostream&
 id_expr::what(ostream& o) const {
@@ -337,16 +337,16 @@ id_expr::is_absolute(void) const {
 	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
 never_ptr<const object>
-id_expr::check_build(never_ptr<context> c) const {
-	never_ptr<const object> o;
-	never_ptr<const instance_collection_base> inst;
-	o = qid->check_build(c);		// will lookup_object
+id_expr::check_build(context& c) const {
+	const never_ptr<const object>
+		o(qid->check_build(c));		// will lookup_object
 	if (o) {
-		inst = o.is_a<const instance_collection_base>();
+		const never_ptr<const instance_collection_base>
+			inst(o.is_a<const instance_collection_base>());
 		if (inst) {
 			// we found an instance which may be single
 			// or collective... info is in inst.
-			c->push_object_stack(inst->make_instance_reference());
+			c.push_object_stack(inst->make_instance_reference());
 			// pushes the created reference onto
 			// context's instance_reference_stack.
 			// if indexed, check in the caller, and modify
@@ -367,7 +367,7 @@ id_expr::check_build(never_ptr<context> c) const {
 		exit(1);
 	}
 	return never_ptr<const object>(NULL);
-//	return c->lookup_instance(*qid);
+//	return c.lookup_instance(*qid);
 // also accomplishes same thing?
 }
 
@@ -382,18 +382,17 @@ ostream& operator << (ostream& o, const id_expr& id) {
 
 CONSTRUCTOR_INLINE
 range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
-	assert(lower); 
+	NEVER_NULL(lower); 
 }
 
 CONSTRUCTOR_INLINE
 range::range(const expr* l, const terminal* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
-	assert(lower); assert(op); assert(upper);
+	NEVER_NULL(lower); NEVER_NULL(op); NEVER_NULL(upper);
 }
 
 DESTRUCTOR_INLINE
-range::~range() {
-}
+range::~range() { }
 
 ostream&
 range::what(ostream& o) const {
@@ -422,18 +421,18 @@ range::rightmost(void) const {
 	\return I don't know.
  */
 never_ptr<const object>
-range::check_build(never_ptr<context> c) const {
+range::check_build(context& c) const {
 //	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
-	never_ptr<const object> o;
 
-//	never_ptr<const param_type_reference> pint_type = c->global_namespace->
+//	never_ptr<const param_type_reference> pint_type = c.global_namespace->
 //		lookup_object("pint").is_a<param_type_reference>();
 //	assert(pint_type);
 
-	o = lower->check_build(c);	// useless return value
+	never_ptr<const object>
+		o(lower->check_build(c));	// useless return value
 	// puts param_expr on stack
-	count_ptr<object> l(c->pop_top_object_stack());
-	count_ptr<pint_expr> lp(l.is_a<pint_expr>());
+	const count_ptr<object> l(c.pop_top_object_stack());
+	const count_ptr<pint_expr> lp(l.is_a<pint_expr>());
 	if (l) {
 		if (!lp) {
 			cerr << "Expression is not a pint-type, ERROR!  " <<
@@ -454,8 +453,8 @@ range::check_build(never_ptr<context> c) const {
 		// grab the last two expressions, 
 		// check that they are both pints, 
 		// and make a range object
-		count_ptr<object> u(c->pop_top_object_stack());
-		count_ptr<pint_expr> up(u.is_a<pint_expr>());
+		const count_ptr<object> u(c.pop_top_object_stack());
+		const count_ptr<pint_expr> up(u.is_a<pint_expr>());
 		if (u) {
 			if (!up) {
 				cerr << "Expression is not a pint-type, "
@@ -481,25 +480,25 @@ range::check_build(never_ptr<context> c) const {
 					lower->where() << " is greater than "
 					"upper bound " << upper->where() <<
 					".  ERROR!" << endl;
-				c->push_object_stack(
+				c.push_object_stack(
 					count_ptr<const_range>(NULL));
 				// exit(1);
 				// or let error get caught elsewhere?
 			} else {
 				// make valid constant range
-				c->push_object_stack(count_ptr<const_range>(
+				c.push_object_stack(count_ptr<const_range>(
 					new const_range(lb, ub)));
 			}
 		} else {
 			// can't determine validity of bounds statically
-			c->push_object_stack(count_ptr<pint_range>(
+			c.push_object_stack(count_ptr<pint_range>(
 				new pint_range(lp, up)));
 		}
 	} else {
 		// but check that it is of type pint
 		// and push it back onto stack
 		// the caller will interpret it
-		c->push_object_stack(l);
+		c.push_object_stack(l);
 		// passing lp: ART::entity::object ambiguous base class
 		//	of pint_expr :S
 	}
@@ -541,12 +540,12 @@ range_list::~range_list() { }
 	\return NULL, useless.
  */
 never_ptr<const object>
-range_list::check_build(never_ptr<context> c) const {
+range_list::check_build(context& c) const {
 	parent::check_build(c);
-	count_ptr<object_list> ol(new object_list);
+	const count_ptr<object_list> ol(new object_list);
 	size_t i = 0;
 	for ( ; i<size(); i++) {
-		count_ptr<object> o(c->pop_top_object_stack());
+		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "Problem with dimension " << i+1 <<
 				" of sparse_range_list between "
@@ -568,12 +567,12 @@ range_list::check_build(never_ptr<context> c) const {
 	if (size() > 4) {		// define constant somewhere
 		cerr << "ERROR!  Exceeded dimension limit of 4.  "
 			<< where() << endl;
-		c->push_object_stack(count_ptr<object>(NULL));
+		c.push_object_stack(count_ptr<object>(NULL));
 	} else {
-//		c->push_object_stack(ol->make_sparse_range_list());
+//		c.push_object_stack(ol->make_sparse_range_list());
 		// don't necessarily want to interpret as sparse_range
 		// may want it as an index!
-		c->push_object_stack(ol);
+		c.push_object_stack(ol);
 	}
 	return never_ptr<const object>(NULL);
 }
@@ -593,12 +592,12 @@ dense_range_list::~dense_range_list() {
 	Limited to 4 dimensions.  
  */
 never_ptr<const object>
-dense_range_list::check_build(never_ptr<context> c) const {
+dense_range_list::check_build(context& c) const {
 	parent::check_build(c);
-	count_ptr<object_list> ol(new object_list);
+	const count_ptr<object_list> ol(new object_list);
 	size_t i = 0;
 	for ( ; i<size(); i++) {
-		count_ptr<object> o(c->pop_top_object_stack());
+		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "Problem with dimension " << i+1 <<
 				" of dense_range_list between "
@@ -616,9 +615,9 @@ dense_range_list::check_build(never_ptr<context> c) const {
 	if (size() > 4) {		// define constant somewhere
 		cerr << "ERROR!  Exceeded dimension limit of 4.  "
 			<< where() << endl;
-		c->push_object_stack(count_ptr<object>(NULL));
+		c.push_object_stack(count_ptr<object>(NULL));
 	} else {
-		c->push_object_stack(ol->make_formal_dense_range_list());
+		c.push_object_stack(ol->make_formal_dense_range_list());
 	}
 	return never_ptr<const object>(NULL);
 }
@@ -672,19 +671,20 @@ prefix_expr::rightmost(void) const {
 	Always returns NULL, rather useless.  
  */
 never_ptr<const object>
-prefix_expr::check_build(never_ptr<context> c) const {
+prefix_expr::check_build(context& c) const {
+	typedef	never_ptr<const object>		return_type;
 	e->check_build(c);	// useless return value
-	count_ptr<object> o(c->pop_top_object_stack());
+	const count_ptr<object> o(c.pop_top_object_stack());
 	if (!o) {
 		// error propagates up the stack
 		cerr << "ERROR building expression at " << e->where() << endl;
-		c->push_object_stack(count_ptr<object>(NULL));
-		return never_ptr<const object>(NULL);
+		c.push_object_stack(count_ptr<object>(NULL));
+		return return_type(NULL);
 	}
-	count_ptr<param_expr> pe(o.is_a<param_expr>());
-	assert(pe);	// must be a param expression!
-	count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
-	count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
+	const count_ptr<param_expr> pe(o.is_a<param_expr>());
+	NEVER_NULL(pe);	// must be a param expression!
+	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
+	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
 
 	const int ch = op.is_a<const token_char>()->get_char();
 	switch(ch) {
@@ -695,16 +695,16 @@ prefix_expr::check_build(never_ptr<context> c) const {
 					"pint argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< e->where() << endl;
-				c->push_object_stack(count_ptr<object>(NULL));
+				c.push_object_stack(count_ptr<object>(NULL));
 				break;
 			}
 			if (ie->is_static_constant()) {
 				// constant simplification
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(
 						- ie->static_constant_int())));
 			} else {
-				c->push_object_stack(count_ptr<pint_unary_expr>(
+				c.push_object_stack(count_ptr<pint_unary_expr>(
 					new pint_unary_expr(ch, ie)));
 			}
 			break;
@@ -715,16 +715,16 @@ prefix_expr::check_build(never_ptr<context> c) const {
 					"pint argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< e->where() << endl;
-				c->push_object_stack(count_ptr<object>(NULL));
+				c.push_object_stack(count_ptr<object>(NULL));
 				break;
 			}
 			if (ie->is_static_constant()) {
 				// constant simplification
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(
 						! ie->static_constant_int())));
 			} else {
-				c->push_object_stack(count_ptr<pint_unary_expr>(
+				c.push_object_stack(count_ptr<pint_unary_expr>(
 					new pint_unary_expr(ch, ie)));
 			}
 			break;
@@ -738,16 +738,16 @@ prefix_expr::check_build(never_ptr<context> c) const {
 					"pint argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< e->where() << endl;
-				c->push_object_stack(count_ptr<object>(NULL));
+				c.push_object_stack(count_ptr<object>(NULL));
 				break;
 			}
 			if (be->is_static_constant()) {
 				// constant simplification
-				c->push_object_stack(count_ptr<pbool_const>(
+				c.push_object_stack(count_ptr<pbool_const>(
 					new pbool_const(
 						!be->static_constant_bool())));
 			} else {
-				c->push_object_stack(
+				c.push_object_stack(
 					count_ptr<pbool_unary_expr>(
 						new pbool_unary_expr(be, ch)));
 			}
@@ -755,9 +755,9 @@ prefix_expr::check_build(never_ptr<context> c) const {
 		default:
 			cerr << "Bad operator char \'" << ch << "\' in "
 				"prefix_expr::check_build()!" << endl;
-			assert(0);
+			DIE;
 	}
-	return never_ptr<const object>(NULL);
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -788,7 +788,7 @@ CONSTRUCTOR_INLINE
 member_expr::member_expr(const expr* l, const terminal* op, 
 		const token_identifier* m) :
 		postfix_expr(l,op), member(m) {
-	assert(member);
+	NEVER_NULL(member);
 }
 
 DESTRUCTOR_INLINE
@@ -811,17 +811,17 @@ member_expr::rightmost(void) const {
 		context's object stack.  
  */
 never_ptr<const object>
-member_expr::check_build(never_ptr<context> c) const {
+member_expr::check_build(context& c) const {
 	e->check_build(c);
 	// useless return value
 	// expect: simple_instance_reference on object stack
-	count_ptr<const object> o(c->pop_top_object_stack());
+	const count_ptr<const object> o(c.pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< e->where() << endl;
 		exit(1);
 	}
-	count_ptr<const simple_instance_reference>
+	const count_ptr<const simple_instance_reference>
 		inst_ref(o.is_a<const simple_instance_reference>());
 	assert(inst_ref);
 	if (inst_ref->dimensions()) {
@@ -832,10 +832,10 @@ member_expr::check_build(never_ptr<context> c) const {
 		exit(1);
 	}
 
-	never_ptr<const definition_base>
+	const never_ptr<const definition_base>
 		base_def(inst_ref->get_base_def());
-	assert(base_def);
-	c->push_current_definition_reference(*base_def);
+	NEVER_NULL(base_def);
+	c.push_current_definition_reference(*base_def);
 	// this should return a reference to an instance
 	// of some type that has members, such as data, channel, process.  
 	// should resolve to a *single* instance of something, 
@@ -857,13 +857,13 @@ member_expr::check_build(never_ptr<context> c) const {
 			"\" at " << member->where() << endl;
 		exit(1);
 	}
-	c->push_object_stack(
+	c.push_object_stack(
 		member_inst->make_member_instance_reference(inst_ref));
 	// useless return value: NULL
 	// will result in member_instance_reference on object_stack
 
 	// reset definition reference in context
-	c->pop_current_definition_reference();
+	c.pop_current_definition_reference();
 
 	// what should this return?  the same thing it expects:
 	// a reference to an instance of some type.  
@@ -883,7 +883,7 @@ CONSTRUCTOR_INLINE
 index_expr::index_expr(const expr* l, const range_list* i) :
 		postfix_expr(l, NULL),
 		ranges(i) {
-	assert(ranges);
+	NEVER_NULL(ranges);
 }
 
 DESTRUCTOR_INLINE
@@ -908,20 +908,19 @@ index_expr::rightmost(void) const {
 	stack, modify it, and replace it back onto the stack.  
  */
 never_ptr<const object>
-index_expr::check_build(never_ptr<context> c) const {
-//	cerr << "index_expr::check_build(): FINISH ME!" << endl;
-//	never_ptr<const object> o;
-
+index_expr::check_build(context& c) const {
 	ranges->check_build(c);		// useless return value
 	// should result in a ART::entity::index_list on the stack
-	count_ptr<object> index_obj(c->pop_top_object_stack());
+	const count_ptr<object>
+		index_obj(c.pop_top_object_stack());
 	// see range_list::check_build()
 	if (!index_obj) {
 		cerr << "ERROR in indices!  " << ranges->where() << endl;
 		exit(1);
 	}
-	count_ptr<object_list> ol(index_obj.is_a<object_list>());
-	assert(ol);
+	const count_ptr<object_list>
+		ol(index_obj.is_a<object_list>());
+	NEVER_NULL(ol);
 	// would rather have excl_ptr...
 	excl_ptr<index_list> index_list_obj = ol->make_index_list();
 	if (!index_list_obj) {
@@ -929,11 +928,11 @@ index_expr::check_build(never_ptr<context> c) const {
 			<< ranges->where() << endl;
 		exit(1);
 	}
-	assert(index_list_obj);
+	NEVER_NULL(index_list_obj);
 
 	e->check_build(c);
 	// should result in an instance_reference on the stack.  
-	count_ptr<object> base_obj(c->pop_top_object_stack());
+	const count_ptr<object> base_obj(c.pop_top_object_stack());
 	if (!base_obj) {
 		cerr << "ERROR in base instance_reference!  "
 			<< e->where() << endl;
@@ -943,9 +942,9 @@ index_expr::check_build(never_ptr<context> c) const {
 	// later this may be a member_instance_reference...
 	// should cast to instance_reference_base instead, 
 	// abstract attach_indices
-	count_ptr<simple_instance_reference>
+	const count_ptr<simple_instance_reference>
 		base_inst(base_obj.is_a<simple_instance_reference>());
-	assert(base_inst);
+	NEVER_NULL(base_inst);
 
 	const bool ai = base_inst->attach_indices(index_list_obj);
 	if (!ai) {
@@ -953,7 +952,7 @@ index_expr::check_build(never_ptr<context> c) const {
 		exit(1);
 	}
 	// push indexed instance reference back onto stack
-	c->push_object_stack(base_inst);
+	c.push_object_stack(base_inst);
 	return never_ptr<const object>(NULL);
 }
 
@@ -964,7 +963,7 @@ CONSTRUCTOR_INLINE
 binary_expr::binary_expr(const expr* left, const terminal* o, 
 		const expr* right) :
 		expr(), l(left), op(o), r(right) {
-	assert(l); assert(op); assert(r);
+	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
 }
 
 DESTRUCTOR_INLINE
@@ -984,7 +983,7 @@ binary_expr::rightmost(void) const {
 #if 0
 /** this should be abstract, not exist */
 never_ptr<const object>
-binary_expr::check_build(never_ptr<context> c) const {
+binary_expr::check_build(context& c) const {
 	never_ptr<const object> lo, ro;
 	cerr << "binary_expr::check_build(): FINISH ME!";
 	lo = l->check_build(c);		// expect some object expression
@@ -1015,11 +1014,12 @@ arith_expr::what(ostream& o) const {
 }
 
 never_ptr<const object>
-arith_expr::check_build(never_ptr<context> c) const {
+arith_expr::check_build(context& c) const {
+	typedef	never_ptr<const object>		return_type;
 	l->check_build(c);	// useless return value
 	r->check_build(c);	// useless return value
-	count_ptr<object> ro(c->pop_top_object_stack());
-	count_ptr<object> lo(c->pop_top_object_stack());
+	const count_ptr<object> ro(c.pop_top_object_stack());
+	const count_ptr<object> lo(c.pop_top_object_stack());
 	if (!ro || !lo) {
 		if (!lo)
 			cerr << "ERROR building expression at " << 
@@ -1027,11 +1027,11 @@ arith_expr::check_build(never_ptr<context> c) const {
 		if (!ro)
 			cerr << "ERROR building expression at " << 
 				r->where() << endl;
-		c->push_object_stack(count_ptr<object>(NULL));
-		return never_ptr<const object>(NULL);
+		c.push_object_stack(count_ptr<object>(NULL));
+		return return_type(NULL);
 	}
-	count_ptr<pint_expr> li(lo.is_a<pint_expr>());
-	count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
+	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
 	if (!li || !ri) {
 		if (!li) {
 			cerr << "ERROR arith_expr expected a pint, but got a ";
@@ -1041,8 +1041,8 @@ arith_expr::check_build(never_ptr<context> c) const {
 			cerr << "ERROR arith_expr expected a pint, but got a ";
 			ro->what(cerr) << " at " << r->where() << endl;;
 		}
-		c->push_object_stack(count_ptr<object>(NULL));
-		return never_ptr<const object>(NULL);
+		c.push_object_stack(count_ptr<object>(NULL));
+		return return_type(NULL);
 	}
 	// else is safe to make arith_expr object
 	const char ch = op.is_a<const token_char>()->get_char();
@@ -1051,35 +1051,35 @@ arith_expr::check_build(never_ptr<context> c) const {
 		const int rc = ri->static_constant_int();
 		switch(ch) {
 			case '+':
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(lc +rc)));
 				break;
 			case '-':
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(lc -rc)));
 				break;
 			case '*':
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(lc *rc)));
 				break;
 			case '/':
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(lc /rc)));
 				break;
 			case '%':
-				c->push_object_stack(count_ptr<pint_const>(
+				c.push_object_stack(count_ptr<pint_const>(
 					new pint_const(lc %rc)));
 				break;
 			default:
 				cerr << "Bad operator char \'" << ch << "\' in "
 					"arith_expr::check_build()!" << endl;
-				assert(0);
+				DIE;
 		}
 	} else {
-		c->push_object_stack(count_ptr<entity::arith_expr>(
+		c.push_object_stack(count_ptr<entity::arith_expr>(
 			new entity::arith_expr(li, ch, ri)));
 	}
-	return never_ptr<const object>(NULL);
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -1100,7 +1100,7 @@ relational_expr::what(ostream& o) const {
 }
 
 never_ptr<const object>
-relational_expr::check_build(never_ptr<context> c) const {
+relational_expr::check_build(context& c) const {
 	// temporary
 	return node::check_build(c);
 }
@@ -1123,7 +1123,7 @@ logical_expr::what(ostream& o) const {
 }
 
 never_ptr<const object>
-logical_expr::check_build(never_ptr<context> c) const {
+logical_expr::check_build(context& c) const {
 	// temporary
 	return node::check_build(c);
 }
@@ -1132,7 +1132,7 @@ logical_expr::check_build(never_ptr<context> c) const {
 // class array_concatenation method definitions
 
 array_concatenation::array_concatenation(const expr* e) : expr(), parent(e) {
-	assert(e);
+	NEVER_NULL(e);
 }
 
 array_concatenation::~array_concatenation() {
@@ -1159,7 +1159,7 @@ array_concatenation::rightmost(void) const {
 	just do the check_build of the lone object.  
  */
 never_ptr<const object>
-array_concatenation::check_build(never_ptr<context> c) const {
+array_concatenation::check_build(context& c) const {
 	if (size() == 1) {
 		const const_iterator only = begin();
 		return (*only)->check_build(c);
@@ -1179,7 +1179,7 @@ loop_concatenation::loop_concatenation(
 		const token_char* r) :
 		lp(l), pd(h), col1(c1), id(i), col2(c2),
 		bounds(rng), col3(c3), ex(e), rp(r) {
-	assert(id); assert(bounds); assert(ex);
+	NEVER_NULL(id); NEVER_NULL(bounds); NEVER_NULL(ex);
 }
 		
 loop_concatenation::~loop_concatenation() {
@@ -1205,7 +1205,7 @@ loop_concatenation::rightmost(void) const {
 }
 
 never_ptr<const object>
-loop_concatenation::check_build(never_ptr<context> c) const {
+loop_concatenation::check_build(context& c) const {
 	return node::check_build(c);
 }
 
@@ -1215,7 +1215,7 @@ loop_concatenation::check_build(never_ptr<context> c) const {
 array_construction::array_construction(const token_char* l,
 		const expr* e, const token_char* r) : 
 		expr(), lb(l), ex(e), rb(r) {
-	assert(ex);
+	NEVER_NULL(ex);
 }
 
 array_construction::~array_construction() {
@@ -1239,7 +1239,7 @@ array_construction::rightmost(void) const {
 }
 
 never_ptr<const object>
-array_construction::check_build(never_ptr<context> c) const {
+array_construction::check_build(context& c) const {
 	return node::check_build(c);
 }
 
@@ -1258,4 +1258,5 @@ template class node_list<const range,comma>;			// range_list
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
+#endif	// __ART_PARSER_EXPR_CC__
 
