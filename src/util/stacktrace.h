@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.5.4.1.2.2 2005/01/24 20:51:40 fang Exp $
+	$Id: stacktrace.h,v 1.5.4.1.2.3 2005/01/24 22:28:45 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -114,7 +114,7 @@ public:
 	class init_token;
 
 private:
-	const string	local_str;	///< deep copy of string argument
+//	const string	local_str;	///< deep copy of string argument
 
 public:
 //	stacktrace(const char*);
