@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.29 2004/12/11 21:26:51 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.30 2004/12/12 04:53:04 fang Exp $
  */
 
 #include <iostream>
@@ -40,7 +40,11 @@ instance_collection_base::null(NULL);
  */
 instance_collection_base::instance_collection_base() :
 		object(), persistent(), 
-		owner(NULL), key(), index_collection(), depth(0) {
+		owner(NULL), key(), index_collection()
+#if 0
+		, depth(0)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,12 +62,18 @@ instance_collection_base::instance_collection_base() :
  */
 // inline
 instance_collection_base::instance_collection_base(const scopespace& o, 
-		const string& n,
-		const size_t d) : 
+		const string& n
+#if 0
+		, const size_t d
+#endif
+		) : 
 		object(), owner(never_ptr<const scopespace>(&o)),
 		key(n),
-		index_collection(), 
-		depth(d) {
+		index_collection()
+#if 0
+		, depth(d)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,8 +160,12 @@ instance_collection_base::collection_state_end(void) const {
 const_range_list
 instance_collection_base::detect_static_overlap(
 		index_collection_item_ptr_type r) const {
-	assert(r);
-	assert(r->dimensions() == depth);
+	NEVER_NULL(r);
+#if 0
+	INVARIANT(r->dimensions() == depth);
+#else
+	INVARIANT(r->dimensions() == dimensions());
+#endif
 #if 0
 	// DEBUG
 	cerr << "In instance_collection_base::detect_static_overlap with this = "
@@ -193,16 +207,19 @@ instance_collection_base::detect_static_overlap(
 const_range_list
 instance_collection_base::add_instantiation_statement(
 		index_collection_type::value_type r) {
-	assert(r);
+	NEVER_NULL(r);
 	index_collection_item_ptr_type i(r->get_indices());
-	assert(depth || index_collection.empty());	// catches 0-D
+#if 1
+	const size_t depth = dimensions();
+#endif
+	INVARIANT(depth || index_collection.empty());	// catches 0-D
 	// TYPE CHECK!!!
 	const_range_list overlap;
 	if (i) {
-		assert(depth == i->dimensions());
+		INVARIANT(depth == i->dimensions());
 		overlap = detect_static_overlap(i);
 	} else {
-		assert(!depth);
+		INVARIANT(!depth);
 	}
 	// can the following accept NULL?
 	index_collection.push_back(r);
@@ -305,7 +322,7 @@ bool
 instance_collection_base::formal_size_equivalent(
 		never_ptr<const instance_collection_base> b) const {
 	assert(b);
-	if (depth != b->depth) {
+	if (dimensions() != b->dimensions()) {
 		// useful error message here: dimensions don't match
 		return false;
 	}
@@ -358,10 +375,24 @@ instance_collection_base::formal_size_equivalent(
 	\return true if dimensions *may* match.  
  */
 bool
-instance_collection_base::check_expression_dimensions(const param_expr& pe) const {
-	assert(IS_A(const param_instance_collection*, this));
+instance_collection_base::check_expression_dimensions(
+		const param_expr& pe) const {
+	MUST_BE_A(const param_instance_collection*, this);
 	// else is not an expression class!
-
+#if 1
+	// problem when dimensions() is called during construction:
+	// error: pure virtual method called (during construction)
+	// this occurs during static construction of the global 
+	// built in definition object: ind_def, which is templated
+	// with int width.  
+	// Solutions: 
+	// 1) make an unsafe/unchecked constructor for this special case.
+	// 2) add the template parameter after contruction is complete, 
+	//	which is safe as long as no other global (outside of
+	//	art_built_ins.cc) depends on it.
+	// we choose 2 because it is a general solution.  
+	const size_t depth = dimensions();
+#endif
 	if (depth != pe.dimensions()) {
 		// number of dimensions doesn't even match!
 		// useful error message?
@@ -433,7 +464,9 @@ instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, owner);
 	write_string(o, key);
+#if 0
 	write_value(o, depth);
+#endif
 	m.write_pointer_list(o, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -455,7 +488,9 @@ inline
 void
 instance_collection_base::load_index_collection_pointers(
 		persistent_object_manager& m, istream& i) {
+#if 0
 	read_value(i, depth);
+#endif
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -483,10 +518,7 @@ datatype_instance_collection::datatype_instance_collection() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::datatype_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d)
-		{
+		const string& n) : instance_collection_base(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.2 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.3 2004/12/12 04:53:04 fang Exp $
  */
 
 #include <iostream>
@@ -34,7 +34,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(bool_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool_instance_collection::bool_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n) : parent_type(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -117,15 +117,12 @@ operator << (ostream& o, const bool_instance_alias& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array() : bool_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array(const scopespace& o, const string& n) :
-		bool_instance_collection(o, n, D), collection() {
-	// until we eliminate that field from instance_collection_base
+		bool_instance_collection(o, n), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,6 +141,13 @@ BOOL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 bool_array<D>::what(ostream& o) const {
 	return o << "bool-array<" << D << ">";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+size_t
+bool_array<D>::dimensions(void) const {
+	return D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -251,7 +255,7 @@ bool_array<D>::resolve_indices(const const_index_list& l) const {
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 typename bool_array<D>::instance_ptr_type
 bool_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const bool_instance_alias&
 		b(collection[i]);
@@ -332,13 +336,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_array<0>::bool_array() : bool_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_array<0>::bool_array(const scopespace& o, const string& n) :
-		bool_instance_collection(o, n, 0), the_instance() {
+		bool_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -355,6 +357,12 @@ bool_array<0>::is_partially_unrolled(void) const {
 ostream&
 bool_array<0>::what(ostream& o) const {
 	return o << "bool-scalar";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+bool_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

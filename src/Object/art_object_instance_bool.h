@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.3 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.4 2004/12/12 04:53:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -138,8 +138,7 @@ protected:
 	/// private empty constructor
 	bool_instance_collection() { }
 public:
-	bool_instance_collection(const scopespace& o, const string& n, 
-		const size_t d);	// size_t temporary
+	bool_instance_collection(const scopespace& o, const string& n);
 
 virtual	~bool_instance_collection();
 
@@ -219,8 +218,16 @@ public:
 	bool_array(const scopespace& o, const string& n);
 	~bool_array();
 
+#if 0
 	size_t
 	dimensions(void) const { return D; }
+#else
+	// cannot inline anymore because it is called by the base
+	// class will call it from other functions, we need the symbol
+	// to be emitted.  
+	size_t
+	dimensions(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;
@@ -272,8 +279,13 @@ public:
 	bool_array(const scopespace& o, const string& n);
 	~bool_array();
 
+#if 0
 	size_t
 	dimensions(void) const { return 0; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;

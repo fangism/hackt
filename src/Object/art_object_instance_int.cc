@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.2 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.3 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -36,7 +36,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(int_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 int_instance_collection::int_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n) : parent_type(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,14 +119,12 @@ operator << (ostream& o, const int_instance_alias& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INT_ARRAY_TEMPLATE_SIGNATURE
 int_array<D>::int_array() : int_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INT_ARRAY_TEMPLATE_SIGNATURE
 int_array<D>::int_array(const scopespace& o, const string& n) :
-		int_instance_collection(o, n, D), collection() {
+		int_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -139,6 +137,13 @@ INT_ARRAY_TEMPLATE_SIGNATURE
 bool
 int_array<D>::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INT_ARRAY_TEMPLATE_SIGNATURE
+size_t
+int_array<D>::dimensions(void) const {
+	return D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -253,7 +258,7 @@ int_array<D>::resolve_indices(const const_index_list& l) const {
 INT_ARRAY_TEMPLATE_SIGNATURE
 typename int_array<D>::instance_ptr_type
 int_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const int_instance_alias&
 		b(collection[i]);
@@ -334,13 +339,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_array<0>::int_array() : int_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_array<0>::int_array(const scopespace& o, const string& n) :
-		int_instance_collection(o, n, 0), the_instance() {
+		int_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -351,6 +354,12 @@ int_array<0>::~int_array() { }
 bool
 int_array<0>::is_partially_unrolled(void) const {
 	return the_instance.valid();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+int_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
-	\file "art_object_instance_param.cc"
+	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.3 2004/12/10 23:18:08 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.4 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "art_object_inst_ref.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
+// #include "art_object_expr.h"		// for range_expr_list
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
@@ -69,29 +70,54 @@ pint_instance_collection::pint_instance_collection() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n) :
+#if 0
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
+#else
+		param_instance_collection(o, n), 
+#endif
 		ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d) :
 		param_instance_collection(o, n, d), ival(NULL) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is a special case used by built-in definition construction, 
+	so we restrict the default argument to constant integer.  
+	This way, we can safely omit the call to
+	type_check_actual_param_expr(*i).
+ */
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
-		count_ptr<const pint_expr> i) :
+		count_ptr<const pint_const> i) :
+#if 0
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
+#else
+		param_instance_collection(o, n), 
+#endif
 		ival(i) {
+	/***
+		assert(type_check_actual_param_expr(*i));
+		This causes problem... calls pure virtual dimensions()
+		during construction phase, resulting in a run-time
+		"pure virtual method called" abort trap.  
+	***/
+#if 0
 	assert(type_check_actual_param_expr(*i));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d, 
@@ -99,6 +125,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 		param_instance_collection(o, n, d), ival(i) {
 	assert(type_check_actual_param_expr(*i));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::~pint_instance_collection() { }
@@ -314,20 +341,25 @@ pint_instance_collection::load_object_base(persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::pint_array() : pint_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::pint_array(const scopespace& o, const string& n) :
-		pint_instance_collection(o, n, D), collection() {
+		pint_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::~pint_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PINT_ARRAY_TEMPLATE_SIGNATURE
+size_t
+pint_array<D>::dimensions(void) const {
+	return D;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
@@ -452,7 +484,7 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 PINT_ARRAY_TEMPLATE_SIGNATURE
 bool
 pint_array<D>::lookup_value(int& v, const multikey_base<int>& i) const {
-	assert(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	const pint_instance& pi = collection[i];
 	if (pi.valid) {
 		v = pi.value;
@@ -549,21 +581,23 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array() : pint_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n) :
-		pint_instance_collection(o, n, 0), the_instance() {
-	// until we eliminate that field from instance_collection_base
+		pint_instance_collection(o, n), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n, 
-		count_ptr<const pint_expr> i) :
-		pint_instance_collection(o, n, 0, i), the_instance() {
-	// until we eliminate that field from instance_collection_base
+		count_ptr<const pint_const> i) :
+		pint_instance_collection(o, n, i), the_instance() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+pint_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

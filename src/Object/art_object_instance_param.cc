@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.1 2004/12/07 02:22:09 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.2 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -36,9 +36,8 @@ param_instance_collection::param_instance_collection() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instance_collection::param_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d) {
+		const string& n) :
+		instance_collection_base(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

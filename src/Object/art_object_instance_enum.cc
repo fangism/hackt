@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.2 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.3 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -36,7 +36,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 enum_instance_collection::enum_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n) : parent_type(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,14 +119,12 @@ operator << (ostream& o, const enum_instance_alias& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 enum_array<D>::enum_array() : enum_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 enum_array<D>::enum_array(const scopespace& o, const string& n) :
-		enum_instance_collection(o, n, D), collection() {
+		enum_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -139,6 +137,13 @@ ENUM_ARRAY_TEMPLATE_SIGNATURE
 bool
 enum_array<D>::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ENUM_ARRAY_TEMPLATE_SIGNATURE
+size_t
+enum_array<D>::dimensions(void) const {
+	return D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -253,7 +258,7 @@ enum_array<D>::resolve_indices(const const_index_list& l) const {
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 typename enum_array<D>::instance_ptr_type
 enum_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const enum_instance_alias&
 		b(collection[i]);
@@ -336,13 +341,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_array<0>::enum_array() : enum_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_array<0>::enum_array(const scopespace& o, const string& n) :
-		enum_instance_collection(o, n, 0), the_instance() {
+		enum_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -353,6 +356,12 @@ enum_array<0>::~enum_array() { }
 bool
 enum_array<0>::is_partially_unrolled(void) const {
 	return the_instance.valid();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+enum_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

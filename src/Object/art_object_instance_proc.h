@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.1 2004/12/11 21:26:51 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.2 2004/12/12 04:53:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -208,8 +208,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	size_t
 	dimensions(void) const { return D; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -262,8 +267,13 @@ public:
 	proc_array(const scopespace& o, const string& n);
 	~proc_array();
 
+#if 0
 	size_t
 	dimensions(void) const { return 0; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;

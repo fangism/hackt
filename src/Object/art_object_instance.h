@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.27 2004/12/11 21:26:51 fang Exp $
+	$Id: art_object_instance.h,v 1.28 2004/12/12 04:53:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -49,8 +49,8 @@ protected:
 	/// Private empty constructor.  
 	process_instance_collection() { }
 public:
-	process_instance_collection(const scopespace& o, 
-		const string& n, const size_t d);
+	process_instance_collection(const scopespace& o, const string& n);
+
 virtual	~process_instance_collection();
 
 virtual	size_t
@@ -122,8 +122,7 @@ private:
 protected:
 	datatype_instance_collection();
 public:
-	datatype_instance_collection(const scopespace& o, 
-		const string& n, const size_t d);
+	datatype_instance_collection(const scopespace& o, const string& n);
 
 virtual	~datatype_instance_collection();
 
@@ -206,8 +205,8 @@ protected:
 	/// Private empty constructor.  
 	channel_instance_collection() { }
 public:
-	channel_instance_collection(const scopespace& o, 
-		const string& n, const size_t d);
+	channel_instance_collection(const scopespace& o, const string& n);
+
 virtual	~channel_instance_collection();
 
 virtual	size_t

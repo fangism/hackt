@@ -6,7 +6,21 @@
 	  dimension-specific subclasses.  
 
 	* Working on phasing out the depth (dimensions) member
-	  of instance_collection_base.  
+	  of instance_collection_base... done!
+	  But at a minor cost :(.  
+	  Had to de-inline dimensions() in all instance_collections
+	  to force symbols to be generated.  
+	  The rememdy (if overhead is high) is to cache the 
+	  dimensions in a pseudo-const field of instance_collection_base.  
+	  (But wait, didn't we just eliminate it?)
+
+	* Lessons learned: 
+	  1) Inline virtual functions bad idea, because the base classes
+		will be missing the symbols to inlined functions.  
+	  2) Calling virtual functions of a class during its construction
+		is a no-no, will result in "pure virtual method called"
+		run-time abort trap.  Beware of indirect calls to 
+		virtual functions through other functions as well.  
 
 
 2004-12-11	David Fang	<fangism@users.sourceforge.net>

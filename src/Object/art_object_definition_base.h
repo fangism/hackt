@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.2 2004/12/07 02:22:07 fang Exp $
+	$Id: art_object_definition_base.h,v 1.3 2004/12/12 04:53:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -96,31 +96,51 @@ protected:
 	bool				defined;
 public:
 	definition_base();
+
 virtual	~definition_base();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const;	// temporary
-	ostream& dump_template_formals(ostream& o) const;
-	ostream& pair_dump(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const;	// temporary
+
+	ostream&
+	dump_template_formals(ostream& o) const;
+
+	ostream&
+	pair_dump(ostream& o) const;
+
 //	bool dump_cerr(void) const;		// historical artifact
 
-virtual	const string& get_key(void) const = 0;
-virtual	never_ptr<const scopespace> get_parent(void) const = 0;
+virtual	const string&
+	get_key(void) const = 0;
 
-	bool is_defined(void) const { return defined; }
-	void mark_defined(void) { assert(!defined); defined = true; }
+virtual	never_ptr<const scopespace>
+	get_parent(void) const = 0;
 
-	void fill_template_actuals_map(template_actuals_map_type& am, 
+	bool
+	is_defined(void) const { return defined; }
+
+	void
+	mark_defined(void) { assert(!defined); defined = true; }
+
+	void
+	fill_template_actuals_map(template_actuals_map_type& am, 
 		const param_expr_list& al) const;
 
 	never_ptr<const param_instance_collection>
-		lookup_template_formal(const string& id) const;
+	lookup_template_formal(const string& id) const;
+
 /** should be pure virtual, but let's default to NULL */
 virtual	never_ptr<const instance_collection_base>
-		lookup_port_formal(const string& id) const;
-virtual	never_ptr<const object>	lookup_object_here(const string& id) const;
+	lookup_port_formal(const string& id) const;
 
-virtual	bool check_null_template_argument(void) const;
+virtual	never_ptr<const object>
+	lookup_object_here(const string& id) const;
+
+virtual	bool
+	check_null_template_argument(void) const;
 
 
 protected:
@@ -129,27 +149,33 @@ protected:
 	// well, they must be at least initialized (usable).  
 	// need notion of formal equivalence
 	// MAY be equivalent
-	bool equivalent_template_formals(
-		never_ptr<const definition_base> d) const;
+	bool
+	equivalent_template_formals(
+	never_ptr<const definition_base> d) const;
 
 protected:
-	bool certify_template_arguments(
-		never_ptr<dynamic_param_expr_list> ta) const;
+	bool
+	certify_template_arguments(
+	never_ptr<dynamic_param_expr_list> ta) const;
+
 public:
 	excl_ptr<dynamic_param_expr_list>
-		make_default_template_arguments(void) const;
+	make_default_template_arguments(void) const;
+
 	/** by default returns false */
-virtual	bool certify_port_actuals(const object_list& ol) const;
+virtual	bool
+	certify_port_actuals(const object_list& ol) const;
 
 public:
 // proposing to replace set_context_fundamental_type with the following:
 virtual count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const = 0;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list> ta) const = 0;
+
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(void) const;
+	make_fundamental_type_reference(void) const;
 // why virtual? special cases for built-in types?
 
 /**
@@ -157,17 +183,20 @@ virtual count_ptr<const fundamental_type_reference>
 	invoker's type.  
  */
 virtual	excl_ptr<definition_base>
-		make_typedef(never_ptr<const scopespace> s, 
-			const token_identifier& id) const = 0;
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const = 0;
 
 // need not be virtual?
-virtual	string get_name(void) const;
+virtual	string
+	get_name(void) const;
+
 // need not be virtual?
-virtual	string get_qualified_name(void) const;
+virtual	string
+	get_qualified_name(void) const;
 
 /** definition signature comparison, true if equal */
-virtual	bool require_signature_match(
-		never_ptr<const definition_base> d) const
+virtual	bool
+	require_signature_match(never_ptr<const definition_base> d) const
 		{ return false; }	// temporary, should be pure
 
 /**
@@ -177,15 +206,15 @@ virtual	bool require_signature_match(
 		to a different interface!
  */
 virtual	never_ptr<const instance_collection_base>
-		add_template_formal(never_ptr<instantiation_statement> f, 
-			const token_identifier& id);
+	add_template_formal(never_ptr<instantiation_statement> f, 
+		const token_identifier& id);
 
 /**
 	Really, only some definitions should have ports...
  */
 virtual	never_ptr<const instance_collection_base>
-		add_port_formal(never_ptr<instantiation_statement> f, 
-			const token_identifier& id);
+	add_port_formal(never_ptr<instantiation_statement> f, 
+		const token_identifier& id);
 
 #if 0
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
@@ -195,6 +224,8 @@ protected:
 void	collect_template_formal_pointers(persistent_object_manager& m) const;
 void	write_object_template_formals(const persistent_object_manager& m) const;
 void	load_object_template_formals(persistent_object_manager& m);
+
+
 public:
 	static const never_ptr<const definition_base>	null;
 };	// end class definition_base

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.4 2004/12/10 23:18:08 fang Exp $
+	$Id: art_object_instance_base.h,v 1.5 2004/12/12 04:53:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -88,6 +88,7 @@ protected:
 	 */
 	index_collection_type			index_collection;
 
+#if 0
 	/**
 		Dimensions, >= 0, limit is 4.  
 		Once set, is fixed.  
@@ -95,8 +96,14 @@ protected:
 		This will be PHASED OUT as we subtype collections
 		by dimensionality.  
 		Keep maintaining until we can eliminate it completely.  
+
+		Although... this could result in faster calls, 
+		avoiding virtual function, if this is cached.  
+		Ah, screw it.
+		Can be cached/initialized with depth = dimensions().
 	 */
 	size_t	depth;
+#endif
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
@@ -105,16 +112,31 @@ explicit instance_collection_base();
 
 public:
 	// o should be reference, not pointer
+#if 0
 	instance_collection_base(const scopespace& o, const string& n, 
 		const size_t d);
+#else
+	instance_collection_base(const scopespace& o, const string& n);
+#endif
 virtual	~instance_collection_base();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const;	// temporary
-	ostream& pair_dump(ostream& o) const;
-	string get_name(void) const { return key; }
-virtual	string get_qualified_name(void) const;
-virtual	string hash_string(void) const { return key; }
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const;	// temporary
+
+	ostream&
+	pair_dump(ostream& o) const;
+
+	string
+	get_name(void) const { return key; }
+
+virtual	string
+	get_qualified_name(void) const;
+
+virtual	string
+	hash_string(void) const { return key; }
 
 /**
 	Why is this a count_ptr?  because type_references can be reused
@@ -124,13 +146,26 @@ virtual	string hash_string(void) const { return key; }
  */
 virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
+
 	never_ptr<const definition_base>
 		get_base_def(void) const;
 
-	never_ptr<const scopespace> get_owner(void) const { return owner; }
-	size_t dimensions(void) const { return depth; }
-	instantiation_state collection_state_end(void) const;
-	instantiation_state current_collection_state(void) const;
+	never_ptr<const scopespace>
+	get_owner(void) const { return owner; }
+
+#if 0
+	size_t
+	dimensions(void) const { return depth; }
+#else
+virtual	size_t
+	dimensions(void) const = 0;
+#endif
+
+	instantiation_state
+	collection_state_end(void) const;
+
+	instantiation_state
+	current_collection_state(void) const;
 
 	const_range_list
 	detect_static_overlap(index_collection_item_ptr_type r) const;
@@ -139,18 +174,27 @@ virtual	count_ptr<const fundamental_type_reference>
 	add_instantiation_statement(index_collection_type::value_type r);
 
 private:
-	bool formal_size_equivalent(
+	bool
+	formal_size_equivalent(
 		never_ptr<const instance_collection_base> b) const;
 public:
-	bool is_template_formal(void) const;
-	bool is_port_formal(void) const;
-	bool template_formal_equivalent(
+	bool
+	is_template_formal(void) const;
+
+	bool
+	is_port_formal(void) const;
+
+	bool
+	template_formal_equivalent(
 		never_ptr<const instance_collection_base> b) const;
-	bool port_formal_equivalent(
+
+	bool
+	port_formal_equivalent(
 		never_ptr<const instance_collection_base> b) const;
 
 protected:
-	bool check_expression_dimensions(const param_expr& pr) const;
+	bool
+	check_expression_dimensions(const param_expr& pr) const;
 
 public:
 /**
@@ -158,18 +202,24 @@ public:
 	currently always returns NULL, useless
  */
 virtual	count_ptr<instance_reference_base>
-		make_instance_reference(void) const = 0;
+	make_instance_reference(void) const = 0;
+
 virtual	count_ptr<member_instance_reference_base>
-		make_member_instance_reference(
-			count_ptr<const simple_instance_reference> b) const = 0;
+	make_member_instance_reference(
+		count_ptr<const simple_instance_reference> b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
-	void collect_index_collection_pointers(
-			persistent_object_manager& m) const;
-	void write_index_collection_pointers(
-			const persistent_object_manager& m, ostream& ) const;
-	void load_index_collection_pointers(
-			persistent_object_manager& m, istream&);
+	void
+	collect_index_collection_pointers(
+		persistent_object_manager& m) const;
+
+	void
+	write_index_collection_pointers(
+		const persistent_object_manager& m, ostream& ) const;
+
+	void
+	load_index_collection_pointers(
+		persistent_object_manager& m, istream&);
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -180,6 +230,7 @@ protected:
 
 	void
 	load_object_base(persistent_object_manager&, istream&);
+
 public:
 	/** just for convenience */
 	static const never_ptr<const instance_collection_base>	null;

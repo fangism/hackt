@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.17 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_definition.h,v 1.18 2004/12/12 04:53:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -272,8 +272,13 @@ protected:
 	const never_ptr<const name_space>		parent;
 public:
 	built_in_datatype_def(never_ptr<const name_space> o, const string& n);
+
+#if 0
+	// special case for int_def built-in definition object
 	built_in_datatype_def(never_ptr<const name_space> o, const string& n, 
 		excl_ptr<param_instance_collection> p);
+#endif
+
 	~built_in_datatype_def();
 
 	ostream& what(ostream& o) const;

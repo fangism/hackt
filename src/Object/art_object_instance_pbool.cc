@@ -1,7 +1,7 @@
 /**
-	\file "art_object_instance_param.cc"
+	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.3 2004/12/10 23:18:08 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.4 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "art_object_inst_ref.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
+// #include "art_object_expr.h"		// for range_expr_list
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
@@ -69,17 +70,23 @@ pbool_instance_collection::pbool_instance_collection() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n) :
+#if 0
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
+#else
+		param_instance_collection(o, n), 
+#endif
 		ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d) :
 		param_instance_collection(o, n, d), ival(NULL) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -291,20 +298,25 @@ pbool_instance_collection::load_object_base(persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
 pbool_array<D>::pbool_array() : pbool_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
 pbool_array<D>::pbool_array(const scopespace& o, const string& n) :
-		pbool_instance_collection(o, n, D), collection() {
+		pbool_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
 pbool_array<D>::~pbool_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+size_t
+pbool_array<D>::dimensions(void) const {
+	return D;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
@@ -430,7 +442,7 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value(bool& v, const multikey_base<int>& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	const pbool_instance& pi(collection[i]);
 	if (pi.valid) {
 		v = pi.value;
@@ -519,13 +531,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_array<0>::pbool_array() : pbool_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_array<0>::pbool_array(const scopespace& o, const string& n) :
-		pbool_instance_collection(o, n, 0), the_instance() {
+		pbool_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -537,6 +547,12 @@ pbool_array<0>::pbool_array(const scopespace& o, const string& n,
 	// until we eliminate that field from instance_collection_base
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+pbool_array<0>::dimensions(void) const {
+	return 0;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

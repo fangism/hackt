@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.1 2004/12/11 21:26:51 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.2 2004/12/12 04:53:05 fang Exp $
  */
 
 #include <iostream>
@@ -38,7 +38,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 process_instance_collection::process_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n) : parent_type(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,14 +165,12 @@ operator << (ostream& o, const proc_instance_alias& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PROC_ARRAY_TEMPLATE_SIGNATURE
 proc_array<D>::proc_array() : process_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PROC_ARRAY_TEMPLATE_SIGNATURE
 proc_array<D>::proc_array(const scopespace& o, const string& n) :
-		process_instance_collection(o, n, D), collection() {
+		process_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -185,6 +183,13 @@ PROC_ARRAY_TEMPLATE_SIGNATURE
 bool
 proc_array<D>::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PROC_ARRAY_TEMPLATE_SIGNATURE
+size_t
+proc_array<D>::dimensions(void) const {
+	return D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -299,7 +304,7 @@ proc_array<D>::resolve_indices(const const_index_list& l) const {
 PROC_ARRAY_TEMPLATE_SIGNATURE
 typename proc_array<D>::instance_ptr_type
 proc_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const proc_instance_alias&
 		b(collection[i]);
@@ -382,13 +387,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_array<0>::proc_array() : process_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_array<0>::proc_array(const scopespace& o, const string& n) :
-		process_instance_collection(o, n, 0), the_instance() {
+		process_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -399,6 +402,12 @@ proc_array<0>::~proc_array() { }
 bool
 proc_array<0>::is_partially_unrolled(void) const {
 	return the_instance.valid();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+proc_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

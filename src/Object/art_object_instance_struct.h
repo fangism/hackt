@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.2 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.3 2004/12/12 04:53:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -125,12 +125,12 @@ public:
 protected:
 	struct_instance_collection() { }
 public:
-	struct_instance_collection(const scopespace& o, const string& n, 
-		const size_t d);
+	struct_instance_collection(const scopespace& o, const string& n);
 
 virtual	~struct_instance_collection();
 
-virtual	size_t dimensions(void) const = 0;
+virtual	size_t
+	dimensions(void) const = 0;
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -207,8 +207,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	size_t
 	dimensions(void) const { return D; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -261,8 +266,13 @@ public:
 	struct_array(const scopespace& o, const string& n);
 	~struct_array();
 
+#if 0
 	size_t
 	dimensions(void) const { return 0; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;

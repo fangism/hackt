@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.2 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.3 2004/12/12 04:53:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -125,8 +125,7 @@ public:
 protected:
 	enum_instance_collection() { }
 public:
-	enum_instance_collection(const scopespace& o, const string& n, 
-		const size_t d);
+	enum_instance_collection(const scopespace& o, const string& n);
 
 virtual	~enum_instance_collection();
 
@@ -207,8 +206,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	size_t
 	dimensions(void) const { return D; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -261,8 +265,13 @@ public:
 	enum_array(const scopespace& o, const string& n);
 	~enum_array();
 
+#if 0
 	size_t
 	dimensions(void) const { return 0; }
+#else
+	size_t
+	dimensions(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.20 2004/12/10 22:02:15 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.21 2004/12/12 04:53:04 fang Exp $
  */
 
 #include <iostream>
@@ -963,6 +963,8 @@ built_in_datatype_def::built_in_datatype_def(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// special case phased out
 /**
 	Same constructor, but with one template formal parameter.  
 	This constructor is dedicated to int<pint width>.  
@@ -981,6 +983,7 @@ built_in_datatype_def::built_in_datatype_def(
 	add_template_formal(p.as_a_xfer<instance_collection_base>());
 	mark_defined();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 built_in_datatype_def::~built_in_datatype_def() { }

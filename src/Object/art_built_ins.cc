@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.10 2004/12/07 02:22:05 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.11 2004/12/12 04:53:03 fang Exp $
  */
 
 #include "memory/pointer_classes.h"
@@ -52,6 +52,7 @@ bool_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "bool");
 
 /** built-in data int type definition initialization */
+#if 0
 const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace),
@@ -70,7 +71,22 @@ int_def = built_in_datatype_def(
 ***/
 			int_def, 		// need valid reference.
 			"width",
-			count_ptr<const pint_expr>(new pint_const(32)))));
+			count_ptr<const pint_const>(new pint_const(32)))));
+#else
+
+// not really necessary, but this may make things cleaner in future
+// this eliminates need for special-case built-in definition constructor
+const built_in_datatype_def
+int_def = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "int");
+
+static const never_ptr<const instance_collection_base>
+__int_def_width__ =
+const_cast<built_in_datatype_def&>(int_def).add_template_formal(
+	excl_ptr<instance_collection_base>(
+		new pint_scalar(int_def, "width",
+			count_ptr<const pint_const>(new pint_const(32)))));
+#endif
 
 #if 0
 /** built-in data int type reference */

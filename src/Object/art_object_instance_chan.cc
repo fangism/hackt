@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.1 2004/12/11 21:26:51 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.2 2004/12/12 04:53:04 fang Exp $
  */
 
 #include <iostream>
@@ -38,7 +38,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 channel_instance_collection::channel_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
+		const string& n) : parent_type(o, n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,14 +165,12 @@ operator << (ostream& o, const chan_instance_alias& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 chan_array<D>::chan_array() : channel_instance_collection(), collection() {
-	depth = D;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 chan_array<D>::chan_array(const scopespace& o, const string& n) :
-		channel_instance_collection(o, n, D), collection() {
+		channel_instance_collection(o, n), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -192,6 +190,13 @@ CHAN_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 chan_array<D>::what(ostream& o) const {
 	return o << "chan-array<" << D << ">";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHAN_ARRAY_TEMPLATE_SIGNATURE
+size_t
+chan_array<D>::dimensions(void) const {
+	return D;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -299,7 +304,7 @@ chan_array<D>::resolve_indices(const const_index_list& l) const {
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 typename chan_array<D>::instance_ptr_type
 chan_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(depth == i.dimensions());
+	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const chan_instance_alias&
 		b(collection[i]);
@@ -382,13 +387,11 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chan_array<0>::chan_array() : channel_instance_collection(), the_instance() {
-	depth = 0;
-	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chan_array<0>::chan_array(const scopespace& o, const string& n) :
-		channel_instance_collection(o, n, 0), the_instance() {
+		channel_instance_collection(o, n), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -405,6 +408,12 @@ chan_array<0>::is_partially_unrolled(void) const {
 ostream&
 chan_array<0>::what(ostream& o) const {
 	return o << "chan-scalar";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+chan_array<0>::dimensions(void) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
