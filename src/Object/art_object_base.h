@@ -65,7 +65,7 @@ static	object* construct_empty(void);					\
 	read_value(f, index);						\
 	if (index != m.lookup_ptr_index(this)) {			\
 		long hohum = m.lookup_ptr_index(this);			\
-		cerr << "<object>::load_object(): " << endl	\
+		cerr << "<object>::load_object(): " << endl		\
 			<< "\tthis = " << this << ", index = " << index	\
 			<< ", expected: " << hohum << endl;		\
 		assert(index == m.lookup_ptr_index(this));		\
@@ -889,33 +889,8 @@ virtual	excl_ptr<instantiation_statement>
 			count_const_ptr<fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const = 0;
 
-#if 0
-/** wrapper for the next private function */
-static	excl_ptr<instance_collection_base>
-		make_instance_collection(
-			count_const_ptr<fundamental_type_reference> t, 
-			never_const_ptr<scopespace> s, 
-			const token_identifier& id, 
-			const size_t d);
-private:
-#else
-
-public:
-#endif
-
-/**
-	UPDATE COMMENT: instance_collections no longer contain
-	count_ptr to fundamental type reference.  
-
-	Since context's current_fundamental type is now a count_ptr, 
-	we can't invoke it and copy the 'this' pointer.  
-	't' is used to invoke.  
- */
 virtual	excl_ptr<instance_collection_base>
 		make_instance_collection(
-#if 0
-			count_const_ptr<fundamental_type_reference> t, 
-#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const = 0;

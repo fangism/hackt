@@ -1051,17 +1051,9 @@ scopespace::add_instance(
 		}
 	} else {
 		// didn't exist before, just create and add new instance
-#if 0
-		excl_ptr<instance_collection_base> new_inst =
-			fundamental_type_reference::make_instance_collection(
-				inst_stmt->get_type_ref(), 
-				never_const_ptr<scopespace>(this), 
-				id, dim);
-#else
 		excl_ptr<instance_collection_base> new_inst =
 			inst_stmt->get_type_ref()->make_instance_collection(
 				never_const_ptr<scopespace>(this), id, dim);
-#endif
 		// attach non-const back-reference
 		inst_stmt->attach_collection(new_inst);
 		new_inst->add_instantiation_statement(inst_stmt);
@@ -2077,20 +2069,6 @@ name_space::lookup_open_alias(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-name_space::unroll_instances(void) {
-
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-name_space::unroll_connections(void) {
-
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collect pointer information about contituents.  
  */
@@ -2200,12 +2178,6 @@ name_space::load_used_id_map_object(excl_ptr<object> o) {
 	// ownership restored here!
 	else if (o.is_a<instance_collection_base>()) {
 		add_instance(o.is_a_xfer<instance_collection_base>());
-#if 0
-		excl_ptr<instance_collection_base>
-			inst_base = o.is_a_xfer<instance_collection_base>();
-		assert(inst_base);
-		used_id_map[inst_base->get_name()] = inst_base;
-#endif
 	}
 	else {
 		o->what(cerr << "TO DO: define method for adding ")
@@ -2238,15 +2210,6 @@ sequential_scope::append_instance_management(
 		excl_const_ptr<instance_management_base> i) {
 	instance_management_list.push_back(i);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// NOT YET
-void
-sequential_scope::unroll(...) {
-
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

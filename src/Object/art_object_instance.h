@@ -39,23 +39,10 @@ namespace entity {
 //=============================================================================
 /**
 	Process instantiation.  
+	Type information is now in the instance_collection_list.
  */
 class process_instance_collection : public instance_collection_base {
 protected:
-#if 0
-	/**
-		PHASE THIS OUT -- in favor of keeping type information
-			in the instantiation_statement list.
-		Eliminate later, doesn't hurt for now.
-
-		The type of process being instantiated.  
-		Need to chance to excl_const_ptr... everywhere.  
-		Or some_ptr, beause built in type_references are static...  
-		Can only use never_ptr if SOMEONE else owns it, e.g. cache.  
-	 */
-	count_const_ptr<process_type_reference>		type;
-#endif
-
 	// reserve these for connections between instance_references
 	// list of template actuals
 	// list of port actuals
@@ -64,9 +51,6 @@ private:
 	process_instance_collection();
 public:
 	process_instance_collection(const scopespace& o, 
-#if 0
-		count_const_ptr<process_type_reference> pt,
-#endif
 		const string& n, 
 		const size_t d);
 	~process_instance_collection();
@@ -90,18 +74,11 @@ public:
 /// Instantiation of a data type, either inside or outside definition.  
 class datatype_instance_collection : public instance_collection_base {
 protected:
-#if 0
-	count_const_ptr<data_type_reference>	type;	///< the actual type
-#endif
 private:
 	datatype_instance_collection();
 public:
 	datatype_instance_collection(const scopespace& o, 
-#if 0
-		count_const_ptr<data_type_reference> t,
-#endif
-		const string& n, 
-		const size_t d);
+		const string& n, const size_t d);
 	~datatype_instance_collection();
 
 	ostream& what(ostream& o) const;
@@ -126,18 +103,11 @@ public:
  */
 class channel_instance_collection : public instance_collection_base {
 protected:
-#if 0
-	count_const_ptr<channel_type_reference>	type;
-#endif
 private:
 	channel_instance_collection();
 public:
 	channel_instance_collection(const scopespace& o, 
-#if 0
-		count_const_ptr<channel_type_reference> ct,
-#endif
-		const string& n, 
-		const size_t d);
+		const string& n, const size_t d);
 	~channel_instance_collection();
 
 	ostream& what(ostream& o) const;

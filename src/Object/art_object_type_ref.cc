@@ -64,22 +64,9 @@ string
 fundamental_type_reference::template_param_string(void) const {
 	string ret("<");
 	if (template_params) {
-#if 0
-		param_expr_list::const_iterator i =
-			template_params->begin();
-		count_const_ptr<param_expr> e(*i);
-		if (e)	ret += e->hash_string();
-		for (i++; i!=template_params->end(); i++) {
-			ret += ",";		// add commas?
-			e = *i;
-			if (e)	ret += e->hash_string();
-			// can e ever be NULL? yes...
-		}
-#else
 		ostringstream o;
 		template_params->dump(o);
 		ret += o.str();
-#endif
 	}
 	ret += ">";
 	return ret;
@@ -156,29 +143,6 @@ fundamental_type_reference::make_instantiation_statement(
 		index_collection_item_ptr_type d) {
 	return t->make_instantiation_statement_private(t, d);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Please explain.  
-	Can't just use t->make_instance_collection() because t is a counted
-	pointer, and the instanatiations share the reference to the type.  
-	Can't discard counting into never_ptr.  
- */
-// is static
-excl_ptr<instance_collection_base>
-fundamental_type_reference::make_instance_collection(
-		count_const_ptr<fundamental_type_reference> t,
-		never_const_ptr<scopespace> s,
-		const token_identifier& id,
-		const size_t d) {
-#if 0
-	return t->make_instance_collection_private(t, s, id, d);
-#else
-	return t->make_instance_collection_private(s, id, d);
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -409,18 +373,11 @@ data_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 data_type_reference::make_instance_collection(
-#if 0
-		count_const_ptr<fundamental_type_reference> t, 
-#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		new datatype_instance_collection(*s,
-#if 0
-			t.is_a<data_type_reference>(),
-#endif
-			id, d));
+		new datatype_instance_collection(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -548,18 +505,11 @@ channel_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 channel_type_reference::make_instance_collection(
-#if 0
-		count_const_ptr<fundamental_type_reference> t, 
-#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		new channel_instance_collection(*s, 
-#if 0
-			t.is_a<channel_type_reference>(),
-#endif
-			id, d));
+		new channel_instance_collection(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -670,18 +620,11 @@ process_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 process_type_reference::make_instance_collection(
-#if 0
-		count_const_ptr<fundamental_type_reference> t, 
-#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		new process_instance_collection(*s, 
-#if 0
-			t.is_a<process_type_reference>(), 
-#endif
-			id, d));
+		new process_instance_collection(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -786,16 +729,10 @@ param_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 param_type_reference::make_instance_collection(
-#if 0
-		count_const_ptr<fundamental_type_reference> t, 
-#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	// hard coded... yucky, but efficient.  
-#if 0
-	assert(t == this);
-#endif
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			new pbool_instance_collection(*s, id, d));
