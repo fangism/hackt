@@ -61,6 +61,7 @@ extern	const char	scope[];
 extern	const char	thickbar[];
 extern	const char	colon[];
 extern	const char	alias[];
+extern	const char	pound[];	// calling it "hash" would be confusing
 
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type

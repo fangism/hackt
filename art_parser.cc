@@ -47,6 +47,7 @@ const char scope[] = "::";	///< delimiter for node_list template argument
 const char thickbar[] = "[]";	///< delimiter for node_list template argument
 const char colon[] = ":";	///< delimiter for node_list template argument
 const char alias[] = "=";	///< delimiter for node_list template argument
+const char pound[] = "#";	///< delimiter for node_list template argument
 
 // eventually token keywords here too? or "art_parser_token.cc"
 

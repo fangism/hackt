@@ -16,8 +16,6 @@ namespace ART {
 namespace entity {
 	// defined in "art_object.h"
 	class object;
-	class enum_datatype_def;
-	class process_definition;
 }
 
 using namespace std;
@@ -36,11 +34,6 @@ using namespace fang;		// for experimental pointer classes
 namespace parser {
 //=============================================================================
 // forward declarations in this namespace
-	class expr;		// family defined in "art_parser_expr.h"
-	class id_expr;
-	class token_char;	// defined here
-	class token_string;	// defined here
-	class qualified_id;	// defined here
 	class concrete_type_ref;	// defined here
 	class context;		// defined in "art_symbol_table.h"
 
@@ -119,8 +112,6 @@ virtual	~process_signature();
 
 // note: non-virtual
 	const token_identifier& get_name(void) const;
-//	excl_ptr<process_definition>
-//		make_process_signature(never_ptr<context> c) const;
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class process_signature
 
@@ -241,8 +232,6 @@ public:
 	enum_signature(const token_keyword* e, const token_identifier* i);
 virtual	~enum_signature();
 
-//	excl_ptr<enum_datatype_def>
-//		make_enum_signature(never_const_ptr<context> c) const;
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class enum_signature
 
@@ -336,11 +325,11 @@ public:
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
 		const data_param_decl_list* p, const token_char* s);
-virtual	~user_chan_type_prototype();
+	~user_chan_type_prototype();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class user_chan_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -369,6 +358,26 @@ public:
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
 };	// end class user_chan_type_def
+
+//=============================================================================
+
+class typedef_alias : public def_body_item, public root_item {
+protected:
+	const excl_const_ptr<template_formal_decl_list>	temp_spec;
+	const excl_const_ptr<token_keyword>		td;
+	const excl_const_ptr<concrete_type_ref>		base;
+	const excl_const_ptr<token_identifier>		id;
+	const excl_const_ptr<token_char>		semi;
+public:
+	typedef_alias(const template_formal_decl_list* t, 
+		const token_keyword* k, const concrete_type_ref* b, 
+		const token_identifier* i, const token_char* s);
+	~typedef_alias();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+};	// end class typedef_alias
 
 //=============================================================================
 

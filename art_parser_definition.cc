@@ -561,6 +561,7 @@ process_def::rightmost(void) const {
 
 /**
 	To do: port_formals in process_signature...
+	FINISH ME!!! or START ME!!!
  */
 never_const_ptr<object>
 process_def::check_build(never_ptr<context> c) const {
@@ -613,6 +614,38 @@ user_data_type_signature::check_build(never_ptr<context> c) const {
 	return c->set_current_prototype(dd);
 }
 
+
+//=============================================================================
+// class typedef_alias method definitions
+
+typedef_alias::typedef_alias(const template_formal_decl_list* t,
+		const token_keyword* k, const concrete_type_ref* b,
+		const token_identifier* i, const token_char* s) :
+		def_body_item(), root_item(), 
+		temp_spec(t), td(k), base(b), id(i), semi(s) {
+	assert(base); assert(id);
+}
+
+typedef_alias::~typedef_alias() {
+}
+
+ostream&
+typedef_alias::what(ostream& o) const {
+	return o << "(typedef-alias)";
+}
+
+line_position
+typedef_alias::leftmost(void) const {
+	if (temp_spec)	return temp_spec->leftmost();
+	else if (td)	return td->leftmost();
+	else		return base->leftmost();
+}
+
+line_position
+typedef_alias::rightmost(void) const {
+	if (semi)	return semi->rightmost();
+	else		return id->rightmost();
+}
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes

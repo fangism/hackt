@@ -260,11 +260,11 @@ protected:
 public:
 	member_expr(const expr* l, const terminal* op, 
 		const token_identifier* m);
-virtual	~member_expr();
+	~member_expr();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
@@ -275,11 +275,11 @@ protected:
 	const excl_const_ptr<range_list>	ranges;		///< index
 public:
 	index_expr(const expr* l, const range_list* i);
-virtual	~index_expr();
+	~index_expr();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class index_expr
 
 //=============================================================================
@@ -294,8 +294,8 @@ public:
 virtual	~binary_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;	// = 0;
 };	// end class binary_expr
 
@@ -304,10 +304,10 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;	// = 0;
 class arith_expr : public binary_expr {
 public:
 	arith_expr(const expr* left, const terminal* o, const expr* right);
-virtual	~arith_expr();
+	~arith_expr();
 
-virtual	ostream& what(ostream& o) const;
-// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+//	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -315,10 +315,10 @@ virtual	ostream& what(ostream& o) const;
 class relational_expr : public binary_expr {
 public:
 	relational_expr(const expr* left, const terminal* o, const expr* right);
-virtual	~relational_expr();
+	~relational_expr();
 
-virtual	ostream& what(ostream& o) const;
-// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+//	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -326,11 +326,85 @@ virtual	ostream& what(ostream& o) const;
 class logical_expr : public binary_expr {
 public:
 	logical_expr(const expr* left, const terminal* o, const expr* right);
-virtual	~logical_expr();
+	~logical_expr();
 
-virtual	ostream& what(ostream& o) const;
-// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+//	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class logical_expr
+
+//=============================================================================
+typedef	node_list<expr,pound>		array_concatenation_base;
+/**
+	Concatenation of arrays to make bigger arrays.  
+ */
+class array_concatenation : public expr, public array_concatenation_base {
+protected:
+	typedef	array_concatenation_base		parent;
+public:
+	array_concatenation(const expr* e);
+	~array_concatenation();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class array_concatenation
+
+#define array_concatenation_wrap(b,l,e)					\
+	IS_A(array_concatenation*, l->wrap(b,e))
+#define array_concatenation_append(l,d,n)				\
+	IS_A(array_concatenation*, l->append(d,n))
+
+//-----------------------------------------------------------------------------
+/**
+	Iterative concatenation, when the number elements is dynamic.  
+ */
+class loop_concatenation : public expr {
+protected:
+	const excl_const_ptr<token_char>		lp;
+	const excl_const_ptr<token_char>		pd;
+	const excl_const_ptr<token_char>		col1;
+	const excl_const_ptr<token_identifier>		id;
+	const excl_const_ptr<token_char>		col2;
+	const excl_const_ptr<range>			bounds;
+	const excl_const_ptr<token_char>		col3;
+	const excl_const_ptr<expr>			ex;
+	const excl_const_ptr<token_char>		rp;
+public:
+	loop_concatenation(const token_char* l, const token_char* h, 
+		const token_char* c1, const token_identifier* i, 
+		const token_char* c2, const range* rng, 
+		const token_char* c3, const expr* e, 
+		const token_char* r);
+	~loop_concatenation();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class loop_concatenation
+
+//-----------------------------------------------------------------------------
+/**
+	Constructing a higher dimension array from an existing array.  
+	Basically wrapping in braces adds one dimension.  
+ */
+class array_construction : public expr {
+protected:
+	const excl_const_ptr<token_char>	lb;
+	/** either simple expression or concatenation */
+	const excl_const_ptr<expr>		ex;
+	const excl_const_ptr<token_char>	rb;
+public:
+	array_construction(const token_char* l, 
+		const expr* e, const token_char* r);
+	~array_construction();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class array_construction
 
 //=============================================================================
 

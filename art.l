@@ -140,7 +140,7 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,+-]
+UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
 
 AT		"@"
 POUND		"#"
@@ -189,6 +189,7 @@ DEFINE		"define"
 DEFCHAN		"defchan"
 DEFTYPE		"deftype"
 DEFPROC		"defproc"
+TYPEDEF		"typedef"
 CHP		"chp"
 HSE		"hse"
 PRS		"prs"
@@ -251,6 +252,7 @@ FALSE		"false"
 {DEFCHAN}	{ KEYWORD_UPDATE; return DEFCHAN; }
 {DEFTYPE}	{ KEYWORD_UPDATE; return DEFTYPE; }
 {DEFPROC}	{ KEYWORD_UPDATE; return DEFPROC; }
+{TYPEDEF}	{ KEYWORD_UPDATE; return TYPEDEF; }
 {CHP}		{ KEYWORD_UPDATE; return CHP_LANG; }
 {HSE}		{ KEYWORD_UPDATE; return HSE_LANG; }
 {PRS}		{ KEYWORD_UPDATE; return PRS_LANG; }

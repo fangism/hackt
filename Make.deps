@@ -46,11 +46,15 @@ art.yy.cc: art.l y.tab.h
 	$(LEX) $(LFLAGS) art.l > $@
 
 # y.tab.cc will depend on y.output.h
-y.tab.h y.tab.cc y.output y.output.h: art.yy
+y.tab.h y.tab.c y.output y.output.h: art.yy
 	$(YACC) $(YFLAGS) $?
 	@if $(GREP) "conflict" y.output; then exit 1; fi
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
-	-$(MV) y.tab.c y.tab.cc
+#	-$(MV) y.tab.c y.tab.cc
+
+# trying linking to avoid parallel make synchronization issues
+y.tab.cc: y.tab.c
+	$(LN) y.tab.c y.tab.cc
 
 art.yy.types: art.yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
@@ -169,8 +173,8 @@ tarball: clobber
 
 # if regression fails, make will abort and abandon commit
 # strongly suggest running with ccache to speedup re-build
+# no longer need to clobberdepend before committing, b/c no self-modification
 commit: regression
-	$(RECURSIVE_MAKE) clobberdepend
 	$(RECURSIVE_MAKE) cvsdiffs
 	$(CVS) commit
 

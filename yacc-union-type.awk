@@ -100,13 +100,20 @@ BEGIN {
 	print "/* basic linked-list node with state key and union member type enumeration */";
 	print "typedef struct _yy_state_map_link_ yy_state_map_link;";
 	print "struct _yy_state_map_link_ {";
-        print "\tconst int state;\t\t/* state number to match */";
-        print "\tconst int type_enum;\t\t/* enumerated type */";
-        print "\tconst yy_state_map_link* next;";
+
+# no need for const-ness if the links are all static global constants
+# also eliminates need for explicit constructor in gcc-3.2, 
+# can use struct assignment, costs less compile-time memory than
+# using constructors.  
+#	print "\tconst int state;\t\t/* state number to match */";
+#	print "\tconst int type_enum;\t\t/* enumerated type */";
+	print "\tint state;\t\t/* state number to match */";
+	print "\tint type_enum;\t\t/* enumerated type */";
+	print "\tconst yy_state_map_link* next;";
 
 #	gcc-3.2 requires constructor-style with non-static consts
-	print "\t_yy_state_map_link_(const int s, const int e, const yy_state_map_link* n) :";
-	print "\t\tstate(s), type_enum(e), next(n) { }";
+#	print "\t_yy_state_map_link_(const int s, const int e, const yy_state_map_link* n) :";
+#	print "\t\tstate(s), type_enum(e), next(n) { }";
 
 	print "};";
 	print "";
@@ -238,10 +245,10 @@ function string_char_to_int(char,
 	if ($2 == "shift") {
 # struct-style assignment is deprecated, use constructor instead.
 		printf("static const yy_state_map_link yysml_" state_count \
-			"_" sc "(" $3 ", " enum_of[symbol_type[$1]] ", ");
+			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "); /* shift */";
+		print " }; /* shift */";
 		sc++;
 	}	# else ignore reduce
 	} else if (NF == 2) {
@@ -262,10 +269,10 @@ function string_char_to_int(char,
 		# collect goto actions
 # struct-style assignment is deprecated, use constructor instead.
 		printf("static const yy_state_map_link yysml_" state_count \
-			"_" sc "(" $3 ", " enum_of[symbol_type[$1]] ", ");
+			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "); /* goto */";
+		print " }; /* goto */";
 		sc++;
 	}
 	print "";
@@ -294,7 +301,7 @@ END {
 			print "\t&yysml_" i "_" shift_count[i] -1 ", ";
 		else print "\tNULL, ";
 	}
-	print "};";
+	print " };";
 	print "static " type "* (*yy_union_get[" member_count "])(const YYSTYPE&) = {"
 	for (i=0; i<member_count; i++) {
 		type_str = type_of[member_id_array[i]];

@@ -11,6 +11,7 @@ DIFF = diff -B
 ECHO = echo
 GREP = grep
 SED = sed
+LN = ln -fs
 RM = rm -f
 MV = mv -f
 SYNC = sync

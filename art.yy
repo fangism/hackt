@@ -177,6 +177,7 @@ extern const char* const yyrule[];
 	namespace_body*		_namespace_body;
 	using_namespace*	_using_namespace;
 	namespace_id*		_namespace_id;
+	typedef_alias*		_typedef_alias;
 	ART::parser::definition*	_definition;
 	def_body_item*		_def_body_item;
 	language_body*		_language_body;
@@ -247,6 +248,9 @@ extern const char* const yyrule[];
 	range*			_range;
 	range_list*		_range_list;
 	dense_range_list*	_dense_range_list;
+	array_concatenation*	_array_concatenation;
+	loop_concatenation*	_loop_concatenation;
+	array_construction*	_array_construction;
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
@@ -307,7 +311,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 	(using memory pools) to replace the default.  
 
 	The following single characters are legitimate tokens:
-	][(){}<>*%/=:;|!?~&^.,+-
+	][(){}<>*%/=:;|!?~&^.,#+-
 
 	(can just copy these into a lex declaration, enclosed in [])
 
@@ -331,6 +335,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_token_char>	',' '.' ';' ':'
 %type	<_token_char>	'=' '+' '-' '*' '/' '%'
 %type	<_token_char>	'!' '?' '~' '&' '|' '^'
+%type	<_token_char>	'#'
 
 /*
 	the following tokens are defined below because they consist of
@@ -358,6 +363,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
 %token	<_token_keyword>	SKIP LOG
 %token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
+%token	<_token_keyword>	TYPEDEF
 %token	<_token_keyword>	SET GET SEND RECV
 %token	<_token_keyword>	CHANNEL
 %token	<_token_keyword>	TEMPLATE
@@ -380,6 +386,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_root_item>	namespace_item
 %type	<_root_item>	namespace_management
 %type	<_namespace_id>	namespace_id
+%type	<_typedef_alias>	type_alias
 %type	<_definition>	definition
 %type	<_process_def>	defproc
 %type	<_token_keyword>	def_or_proc
@@ -417,6 +424,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_data_param_id_list>	data_param_id_list
 %type	<_data_param_id>	data_param_id
 %type	<_definition_body>	definition_body optional_definition_body
+%type	<_def_body_item>	definition_body_item
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
@@ -477,6 +485,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_expr_list>	member_index_expr_list
 %type	<_expr>	optional_member_index_expr
+%type	<_expr> simple_expr
 %type	<_expr>	member_index_expr unary_expr
 %type	<_member_expr>	member_expr
 %type	<_index_expr>	index_expr
@@ -501,7 +510,13 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_expr>		bracketed_dense_range
 %type	<_range>	bracketed_sparse_range
 %type	<_range>	range
-
+%type	<_expr>		complex_aggregate_reference
+%type	<_expr>		optional_complex_aggregate_reference
+%type	<_expr>		complex_expr_term
+%type	<_array_concatenation>		array_concatenation
+%type	<_loop_concatenation>		loop_concatenation
+%type	<_array_construction>		array_construction
+%type	<_expr_list>	complex_aggregate_reference_list
 
 %start	module
 %%
@@ -540,6 +555,7 @@ namespace_item
 	: namespace_management { $$ = $1; }
 /* instance_item already includes semicolon where needed */
 	| instance_item { $$ = $1; }
+	| type_alias { $$ = $1; }
 	;
 
 namespace_management
@@ -573,6 +589,14 @@ prototype_declaration
 	| declare_datatype_proto { $$ = $1; }
 	| declare_chan_proto { $$ = $1; }
 	| declare_enum { $$ = $1; }
+	;
+
+/** type_id is either physical_type_ref or base_param_type */
+type_alias
+/* C-style typedef, but allowing templates */
+	: optional_template_specification TYPEDEF physical_type_ref ID ';'
+		{ $$ = new typedef_alias($1, $2, $3, $4, $5); }
+/*	other proposal, use {deftype,defchan,defproc} new<> = old<> */
 	;
 
 template_specification
@@ -920,14 +944,16 @@ data_param_id
 
 /* --- definition_body --- */
 definition_body
-	: definition_body instance_item
+	: definition_body definition_body_item
 		{ $$ = definition_body_append($1, NULL, $2); }
-	| instance_item
+	| definition_body_item
 		{ $$ = new definition_body($1); }
-	| definition_body language_body
-		{ $$ = definition_body_append($1, NULL, $2); }
-	| language_body
-		{ $$ = new definition_body($1); }
+	;
+
+definition_body_item
+	: instance_item { $$ = $1; }
+	| language_body { $$ = $1; }
+	| type_alias { $$ = $1; }
 	;
 
 optional_definition_body
@@ -1018,15 +1044,19 @@ rvalue_optional_alias_list
 /* aliasing syntax, or data types is value assignment (general expr?)
 	type check this, of course */
 alias_list
-	: alias_list '=' member_index_expr
+	: alias_list '=' complex_aggregate_reference
 		{ $$ = alias_list_append($1, $2, $3); }
-	| member_index_expr
+	/* to type-check: first term must contain only rvalues */
+	| complex_aggregate_reference
 		{ $$ = new alias_list($1); }
 	;
+/* used to be member_index_expr */
 
 connection_actuals_list
 	/* down-cast to more specific type?  internal to consumer */
-	: member_index_expr_list_in_parens
+/*	: member_index_expr_list_in_parens	*/
+	: '(' complex_aggregate_reference_list ')'
+		{ $$ = expr_list_wrap($1, $2, $3); }
 	;
 
 guarded_definition_body_list
@@ -1492,9 +1522,14 @@ member_expr
 		{ $$ = new member_expr($1, $2, $3); }
 	;
 
-unary_expr
-	: member_index_expr
+/* single term */
+simple_expr
+	: member_index_expr { $$ = $1; }
 	| literal { $$ = $1; }
+	;
+
+unary_expr
+	: simple_expr { $$ = $1; }
 	| paren_expr { $$ = $1; }
 	/* no prefix operations, moved to assignment */
 	| '-' unary_expr
@@ -1661,6 +1696,10 @@ member_index_expr_list_in_angles
 member_index_expr_list_in_parens
 	: '(' member_index_expr_list ')'
 		{ $$ = expr_list_wrap($1, $2, $3); }
+/**
+	| '(' ')'
+		{ $$ = expr_list_wrap($1, new expr_list, $2); }
+**/
 	;
 
 expr_list_in_parens
@@ -1744,7 +1783,57 @@ bracketed_sparse_range
 	;
 
 /* ----end array ---------------------------------------------------------- */
+/* ---- complex expressions ----------------------------------------------- */
 
+complex_aggregate_reference
+	: array_concatenation { $$ = $1; }
+	;
+
+/* pasting arrays together */
+array_concatenation
+	: array_concatenation '#' complex_expr_term
+		{ $$ = array_concatenation_append($1, $2, $3); }
+	| complex_expr_term
+		{ $$ = new array_concatenation($1); }
+	;
+
+complex_expr_term
+	: array_construction { $$ = $1; }
+	| loop_concatenation { $$ = $1; }
+	| simple_expr { $$ = $1; }
+	;
+
+/* building up to higher-dimensions */
+array_construction
+	: '{' array_concatenation '}'
+		{ $$ = new array_construction($1, $2, $3); }
+	;
+
+/**
+	Later, introduces loop concatenations?
+	Don't always know number of terms statically...
+	For now, add to grammar, but don't implement for a while.  
+**/
+loop_concatenation
+	: '(' '#' ':' ID ':' range ':' complex_expr_term ')'
+		{ $$ = new loop_concatenation(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
+	;
+
+optional_complex_aggregate_reference
+	: complex_aggregate_reference { $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+/** items are optional! */
+complex_aggregate_reference_list
+	: complex_aggregate_reference_list ',' optional_complex_aggregate_reference
+		{ $$ = expr_list_append($1, $2, $3); }
+	| optional_complex_aggregate_reference
+		{ $$ = new expr_list($1); }
+	;
+
+/* ---- end complex expressions ------------------------------------------- */
 %%
 /**
 	The goal is to keep the grammar in this "art.yy" clean, and not

@@ -842,6 +842,121 @@ logical_expr::what(ostream& o) const {
 }
 
 //=============================================================================
+// class array_concatenation method definitions
+
+array_concatenation::array_concatenation(const expr* e) : expr(), parent(e) {
+	assert(e);
+}
+
+array_concatenation::~array_concatenation() {
+}
+
+ostream&
+array_concatenation::what(ostream& o) const {
+	return o << "(array-concatenation)";
+}
+
+line_position
+array_concatenation::leftmost(void) const {
+	return parent::leftmost();
+}
+
+line_position
+array_concatenation::rightmost(void) const {
+	return parent::rightmost();
+}
+
+/**
+	If list contains only a single element, don't bother 
+	constructing an aggregate object on the stack, 
+	just do the check_build of the lone object.  
+ */
+never_const_ptr<object>
+array_concatenation::check_build(never_ptr<context> c) const {
+	if (size() == 1) {
+		const const_iterator only = begin();
+		return (*only)->check_build(c);
+	} else {
+		return node::check_build(c);
+	}
+}
+
+//=============================================================================
+// class loop_concatenation method definitions
+
+loop_concatenation::loop_concatenation(
+		const token_char* l, const token_char* h,
+		const token_char* c1, const token_identifier* i,   
+		const token_char* c2, const range* rng,
+		const token_char* c3, const expr* e,
+		const token_char* r) :
+		lp(l), pd(h), col1(c1), id(i), col2(c2),
+		bounds(rng), col3(c3), ex(e), rp(r) {
+	assert(id); assert(bounds); assert(ex);
+}
+		
+loop_concatenation::~loop_concatenation() {
+}
+
+ostream&
+loop_concatenation::what(ostream& o) const {
+	return o << "(loop-concatenation)";
+}
+
+line_position
+loop_concatenation::leftmost(void) const {
+	if (lp)		return lp->leftmost();
+	else if (pd)	return pd->leftmost();
+	else if (col1)	return col1->leftmost();
+	else		return id->leftmost();
+}
+
+line_position
+loop_concatenation::rightmost(void) const {
+	if (rp)		return rp->rightmost();
+	else 		return ex->rightmost();
+}
+
+never_const_ptr<object>
+loop_concatenation::check_build(never_ptr<context> c) const {
+	return node::check_build(c);
+}
+
+//=============================================================================
+// class array_construction method definitions
+
+array_construction::array_construction(const token_char* l,
+		const expr* e, const token_char* r) : 
+		expr(), lb(l), ex(e), rb(r) {
+	assert(ex);
+}
+
+array_construction::~array_construction() {
+}
+
+ostream&
+array_construction::what(ostream& o) const {
+	return o << "(array-construction)";
+}
+
+line_position
+array_construction::leftmost(void) const {
+	if (lb)		return lb->leftmost();
+	else		return ex->leftmost();
+}
+
+line_position
+array_construction::rightmost(void) const {
+	if (rb)		return rb->rightmost();
+	else		return ex->rightmost();
+}
+
+never_const_ptr<object>
+array_construction::check_build(never_ptr<context> c) const {
+	return node::check_build(c);
+}
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 template class node_list<expr,comma>;			// expr_list
