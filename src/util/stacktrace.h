@@ -1,11 +1,11 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.5 2005/01/15 06:20:46 fang Exp $
+	$Id: stacktrace.h,v 1.5.10.1 2005/01/23 01:25:49 fang Exp $
  */
 
-#ifndef	__STACK_TRACE_H__
-#define	__STACK_TRACE_H__
+#ifndef	__UTIL_STACKTRACE_H__
+#define	__UTIL_STACKTRACE_H__
 
 // macros for enabling/disabling stacktrace code
 /**
@@ -22,6 +22,15 @@
 #if ENABLE_STACKTRACE
 	#define	USING_STACKTRACE	using util::stacktrace;
 	#define	STACKTRACE(str)	stacktrace __stacktrace__(str)
+	/**
+		No user-supplied string required, uses __PRETTY_FUNCTION__
+		built-in internal string.  Is this gcc-only?
+		There's always __func__ for brevity.
+	 */
+	#define	STACKTRACE_BRIEF					\
+			stacktrace __stacktrace__(__func__)
+	#define	STACKTRACE_VERBOSE					\
+			stacktrace __stacktrace__(__PRETTY_FUNCTION__)
 	/**
 		This enables echoing each time trace stack is updated, i.e., 
 		upon entering and leaving function call stack 
@@ -40,6 +49,8 @@
 #else
 	#define	USING_STACKTRACE
 	#define	STACKTRACE(str)
+	#define	STACKTRACE_BRIEF
+	#define	STACKTRACE_VERBOSE
 	#define STACKTRACE_ECHO_ON
 	#define STACKTRACE_ECHO_OFF
 	#define	STACKTRACE_STREAM		std::cerr
@@ -124,5 +135,5 @@ struct stacktrace::redirect {
 	// don't even bother processing class declaration!
 #endif	// ENABLE_STACKTRACE
 
-#endif	// __STACK_TRACE_H__
+#endif	// __UTIL_STACKTRACE_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.12.4.1.4.1 2005/01/23 00:48:54 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12.4.1.4.2 2005/01/23 01:25:49 fang Exp $
  */
 
 #include <fstream>
@@ -38,27 +38,6 @@ persistent_object_manager::reconstruction_table_entry::mode =
 
 bool
 persistent_object_manager::dump_reconstruction_table = false;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if 0
-/**
-	Is statically initialized to NULL before any objects use it.  
- */
-persistent_object_manager::reconstruction_function_map_type*
-persistent_object_manager::the_reconstruction_function_map_ptr = NULL;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Proper orderly initialization to guarantee that this
-	is properly deleted upon program termination.  
-	Note the use of unsafe "address-taking" of reference to 
-	initialize the pointer-class object.  
- */
-excl_ptr<persistent_object_manager::reconstruction_function_map_type>
-persistent_object_manager::the_reconstruction_function_map_ptr_wrapped(
-	&reconstruction_function_map());
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
@@ -238,13 +217,6 @@ void
 persistent_object_manager::initialize_null(void) {
 	assert(!reconstruction_table.size());
 	register_transient_object(NULL, persistent::hash_key::null);
-#if 0
-	reconstruction_table_entry& e = reconstruction_table[0];
-	e.set_head(0);
-	e.set_tail(0);
-	assert(!e.head_pos());
-	assert(!e.tail_pos());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -370,19 +342,10 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
  */
 persistent_object_manager::reconstruction_function_map_type&
 persistent_object_manager::reconstruction_function_map(void) {
-#if 0
-	if (!the_reconstruction_function_map_ptr) {
-		the_reconstruction_function_map_ptr = 
-			new reconstruction_function_map_type;
-		assert(the_reconstruction_function_map_ptr);
-	}
-	return *the_reconstruction_function_map_ptr;
-#else
 	// function-local static initialized once upon first entry
 	static reconstruction_function_map_type
 		the_reconstruction_function_map;
 	return the_reconstruction_function_map;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,6 +593,8 @@ persistent_object_manager::finish_load(ifstream& f) {
 #if 1
 		// is there a better way to do this, 
 		// eliminating intermediate? and need to allocate/free?
+		// CONSIDER: valarray for fast buffer
+		// or an auto-expanding function-local static array
 		if (size <= 64) {
 			char sbuf[64];	// fixed size buffer on the stack
 			f.read(sbuf, size);

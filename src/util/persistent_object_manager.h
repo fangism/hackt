@@ -1,11 +1,11 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.11.10.1 2005/01/23 00:48:54 fang Exp $
+	$Id: persistent_object_manager.h,v 1.11.10.2 2005/01/23 01:25:49 fang Exp $
  */
 
-#ifndef	__PERSISTENT_OBJECT_MANAGER_H__
-#define	__PERSISTENT_OBJECT_MANAGER_H__
+#ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
+#define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>
 #include "persistent.h"
@@ -86,34 +86,63 @@ private:
 	public:
 	// need default constructor to create an invalid object
 		reconstruction_table_entry();
+
 		reconstruction_table_entry(const persistent::hash_key& t, 
 			const aux_alloc_arg_type a, 
 			const streampos h, const streampos t);
+
 		reconstruction_table_entry(const persistent::hash_key& t, 
 			const streampos h, const streampos t);
+
 		reconstruction_table_entry(const persistent* p,
 			const persistent::hash_key& t, 
 			const aux_alloc_arg_type a);
+
 		// default copy constructor suffices
+
 		~reconstruction_table_entry();
 
 		const persistent::hash_key&
-				type(void) const { return otype; }
+		type(void) const { return otype; }
+
 		const persistent*
-				addr(void) const { return recon_addr; }
+		addr(void) const { return recon_addr; }
+
 		aux_alloc_arg_type
-				get_alloc_arg(void) const { return alloc_arg; }
-		size_t*		count(void) const;
-		void		assign_addr(persistent* ptr);
-		void		reset_addr();
-		void		flag(void) { scratch = true; }
-		void		unflag(void) { scratch = false; }
-		bool		flagged(void) const { return scratch; }
-		stringstream&	get_buffer(void) const { return *buffer; }
-		void		initialize_offsets(void);
-		void		adjust_offsets(const streampos s);
-		streampos	head_pos(void) const { return buf_head; }
-		streampos	tail_pos(void) const { return buf_tail; }
+		get_alloc_arg(void) const { return alloc_arg; }
+
+		size_t*
+		count(void) const;
+
+		void
+		assign_addr(persistent* ptr);
+
+		void
+		reset_addr();
+
+		void
+		flag(void) { scratch = true; }
+
+		void
+		unflag(void) { scratch = false; }
+
+		bool
+		flagged(void) const { return scratch; }
+
+		stringstream&
+		get_buffer(void) const { return *buffer; }
+
+		void
+		initialize_offsets(void);
+
+		void
+		adjust_offsets(const streampos s);
+
+		streampos
+		head_pos(void) const { return buf_head; }
+
+		streampos
+		tail_pos(void) const { return buf_tail; }
 	};	// end class reconstruction_table_entry
 
 	/**
@@ -172,6 +201,7 @@ public:
 
 public:
 	persistent_object_manager();
+
 	~persistent_object_manager();
 
 	/**
@@ -180,31 +210,10 @@ public:
 	 */
 	template <class T>
 	static
-	int register_persistent_type(void);
+	int
+	register_persistent_type(void);
 
 private:
-#if 0
-	/**
-		Why naked pointer?  because objects of non-built-in type
-		are not guaranteed to be initialized.  
-		Built-in types, such as pointers, are guaranteed
-		to be initialized before static objects are initialized.  
-		The memory is deallocated by wrapping the naked pointer
-		with an excl_ptr, the_reconstruction_function_map_ptr_wrapped.  
-	 */
-	static
-	reconstruction_function_map_type*
-	the_reconstruction_function_map_ptr;
-
-	/**
-		Extra hackery to ensure that the global private static
-		naked pointer is properly deleted.  
-	 */
-	static
-	excl_ptr<reconstruction_function_map_type>
-	the_reconstruction_function_map_ptr_wrapped;
-#endif
-
 	/**
 		The safe accessor to global private static table.  
 	 */
@@ -214,28 +223,44 @@ private:
 
 public:
 	static
-	bool verify_registered_type(const persistent::hash_key& k);
+	bool
+	verify_registered_type(const persistent::hash_key& k);
 
 	static
 	ostream&
 	dump_registered_type_map(ostream& o);
 
 // for debugging
-	ostream& dump_text(ostream& o) const;
+	ostream&
+	dump_text(ostream& o) const;
 
 // public interface functions to object class hierarchy
 	/** pointer registration interface */
-	bool register_transient_object(
+	bool
+	register_transient_object(
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a = 0);
-	bool flag_visit(const persistent* ptr);
-	ostream& lookup_write_buffer(const persistent* ptr) const;
-	istream& lookup_read_buffer(const persistent* ptr) const;
 
-	long lookup_ptr_index(const persistent* ptr) const;
-	persistent*	lookup_obj_ptr(const long i) const;
-	size_t*	lookup_ref_count(const long i) const;
-	size_t*	lookup_ref_count(const persistent* i) const;
+	bool
+	flag_visit(const persistent* ptr);
+
+	ostream&
+	lookup_write_buffer(const persistent* ptr) const;
+
+	istream&
+	lookup_read_buffer(const persistent* ptr) const;
+
+	long
+	lookup_ptr_index(const persistent* ptr) const;
+
+	persistent*
+	lookup_obj_ptr(const long i) const;
+
+	size_t*
+	lookup_ref_count(const long i) const;
+
+	size_t*
+	lookup_ref_count(const persistent* i) const;
 
 private:
 	/// private helper method for writing plain pointers
@@ -277,23 +302,16 @@ public:
 			write out.
 	 */
 	template <class P>
-	void write_pointer(ostream& f, const P& ptr) const;
+	void
+	write_pointer(ostream& f, const P& ptr) const;
 
 	/**
 		ALERT: this intentially and coercively discards const-ness!
 		Need to specialize for reference counter pointers!
 	 */
 	template <class P>
-	void read_pointer(istream& f, const P& ptr) const;
-
-#if 0
-	/**
-		Partial specialization of read_pointer for 
-		reference-counted pointers.
-	 */
-	template <class T>
-	void read_pointer(istream& f, const count_ptr<T>& ptr) const;
-#endif
+	void
+	read_pointer(istream& f, const P& ptr) const;
 
 private:
 	/**
@@ -332,14 +350,16 @@ public:
 		Container only needs a simple forward iterator interface.  
 	 */
 	template <class L>
-	void write_pointer_list(ostream& f, const L& l) const;
+	void
+	write_pointer_list(ostream& f, const L& l) const;
 
 	/**
 		Reconstructs a sequence of pointers, mapped to indices.  
 		Container only needs a simple forward iterator interface.  
 	 */
 	template <class L>
-	void read_pointer_list(istream& f, L& l) const;
+	void
+	read_pointer_list(istream& f, L& l) const;
 
 #if 0
 	/**
@@ -373,23 +393,39 @@ public:
 	self_test_no_file(const T& m);
 
 private:
-	void initialize_null(void);
-	void collect_objects(void);
-	void load_objects(void);
-	void write_header(ofstream& f);
-	void load_header(ifstream& f);
+	void
+	initialize_null(void);
+
+	void
+	collect_objects(void);
+
+	void
+	load_objects(void);
+
+	void
+	write_header(ofstream& f);
+
+	void
+	load_header(ifstream& f);
+
 	/** completes table of computed offsets and writes out all buffers */
-	void finish_write(ofstream& f);
+	void
+	finish_write(ofstream& f);
+
 	/** reads in buffer into pieces */
-	void finish_load(ifstream& f);
+	void
+	finish_load(ifstream& f);
+
 	/** just allocate objects without initializing */
-	void reconstruct(void);
+	void
+	reconstruct(void);
 
 	template <class T>
 	excl_ptr<T>
 	get_root(void);
 
-	void reset_for_loading(void);
+	void
+	reset_for_loading(void);
 
 };	// end class persistent_object_manager
 
@@ -450,5 +486,5 @@ public:
 //=============================================================================
 }	// end namespace util
 
-#endif	//	__PERSISTENT_OBJECT_MANAGER_H__
+#endif	//	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 

@@ -1,11 +1,11 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.10.10.1 2005/01/23 00:48:55 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.10.10.2 2005/01/23 01:25:49 fang Exp $
  */
 
-#ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
-#define	__PERSISTENT_OBJECT_MANAGER_TCC__
+#ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
+#define	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
 #include <fstream>
 
@@ -376,5 +376,5 @@ persistent_traits<T>::persistent_traits(const string& s) {
 //=============================================================================
 }	// end namespace util
 
-#endif	//	__PERSISTENT_OBJECT_MANAGER_TCC__
+#endif	//	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
