@@ -1,5 +1,32 @@
 "ChangeLog"
 
+2004-12-24	David Fang	<fangism@users.sourceforge.net>
+
+	* New expression class for multidimensional collections
+	  of constant integers, pint_const_collection, which is implemented
+	  as packed_array_generic.  (will add pbool_const_collection next)
+	  Thinking of reworking expr class hierarchy...
+
+	* IO_utils.{h,tcc}: replaced template signatures with 
+	  template template parameters with simpler non-template parameter
+	  class with explicit concept requirements in the implementation
+	  definitions.  Added write_array for valarray, or anything similar
+	  that doesn't have an iterator interface, relying only on
+	  random access.  write_array is complemented by 
+	  read_sequence_resize().  
+	  Consider future container traits to avoid multiple definition 
+	  names -- consolidation is good.  
+
+	* multikey.{h,tcc}: added comparison and addition and subtraction
+	  operator overloads.  
+
+	* packed_array.{h,tcc}: some methods should've been public.
+	  added ostream-write and istream-read methods to 
+	  packed_array_generic.  
+	  Minor bug fix in constructing coeffs member when size_t argument
+	  is 0 (zero-detection for unsigned size-1).  
+
+
 2004-12-22	David Fang	<fangism@users.sourceforge.net>
 
 	* Eliminated last template argument of multikey, the default value. 

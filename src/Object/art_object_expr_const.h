@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.3 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_expr_const.h,v 1.4 2004/12/25 03:12:21 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -10,6 +10,7 @@
 #include "STL/pair_fwd.h"
 #include "art_object_expr_base.h"
 #include "multikey_fwd.h"
+#include "packed_array.h"
 #include "persistent.h"
 
 //=============================================================================
@@ -142,9 +143,12 @@ virtual	bool range_size_equivalent(const const_index& i) const = 0;
  */
 class const_index_list : public index_list, 
 		private list<count_ptr<const_index> > {
+public:
+	typedef	count_ptr<const_index>		const_index_ptr_type;
+	typedef	const_index_ptr_type		value_type;
 protected:
 	/** need list of pointers b/c const_index is abstract */
-	typedef	list<count_ptr<const_index> >	parent;
+	typedef	list<const_index_ptr_type>	parent;
 public:
 	typedef parent::iterator		iterator;
 	typedef parent::const_iterator		const_iterator;
@@ -172,7 +176,7 @@ public:
 	using parent::end;
 	using parent::rbegin;
 	using parent::rend;
-	void push_back(const count_ptr<const_index>& i);
+	void push_back(const const_index_ptr_type& i);
 
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -299,6 +303,85 @@ private:
 public:
 	PERSISTENT_METHODS
 };	// end class pint_const
+
+//-----------------------------------------------------------------------------
+/**
+	Packed collection of constant integer values, arbitrary dimension.  
+	Note: this is only usable for aggregates of constants.  
+	Complex aggregates of non-const expressions will require
+	a more advanced structure (dynamic_pint_collection?).  
+ */
+class pint_const_collection : public pint_expr, public const_param {
+public:
+	typedef	long					value_type;
+	typedef	util::packed_array_generic<value_type>	array_type;
+protected:
+	array_type					values;
+public:
+	pint_const_collection(const size_t d);
+	~pint_const_collection();
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	string
+	hash_string(void) const;
+
+	size_t
+	dimensions(void) const;
+
+	bool
+	is_static_constant(void) const { return true; }
+
+	count_ptr<const const_param>
+	static_constant_param(void) const;
+
+	bool
+	has_static_constant_dimensions(void) const;
+
+	const_range_list
+	static_constant_dimensions(void) const;
+
+	bool
+	may_be_initialized(void) const { return true; }
+
+	bool
+	must_be_initialized(void) const { return true; }
+
+	bool
+	may_be_equivalent(const param_expr& ) const;
+
+	bool
+	must_be_equivalent(const param_expr& ) const;
+
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
+
+	// only makes sense for scalars
+	int
+	static_constant_int(void) const;
+
+	// only makes sense for scalars
+	bool
+	resolve_value(int& ) const;
+
+	const_index_list
+	resolve_dimensions(void) const;
+
+	// flat-list needs to be replaced
+	bool
+	resolve_values_into_flat_list(list<int>& ) const;
+
+public:
+	PERSISTENT_METHODS
+
+};	// end class pint_const_collection
 
 //-----------------------------------------------------------------------------
 /**

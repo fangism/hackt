@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.2 2004/12/23 00:07:44 fang Exp $
+	$Id: multikey.tcc,v 1.3 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -295,6 +295,53 @@ multikey_generic<K>::operator = (const multikey_base<K>& k) {
 		impl_type::resize(k_size);
 	copy(k.begin(), k.end(), this->begin());
 	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if dimensions are equal and values are equal.  
+ */
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+bool
+multikey_generic<K>::operator == (const this_type& m) const {
+	return (size() == m.size() && 
+		std::equal(this->begin(), this->end(), m.begin()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+multikey_generic<K>
+multikey_generic<K>::operator + (const this_type& m) const {
+	INVARIANT(size() == m.size());
+	this_type ret(size());
+	transform(this->begin(), this->end(), m.begin(), ret.begin(),
+		std::plus<K>());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+multikey_generic<K>
+multikey_generic<K>::operator - (const this_type& m) const {
+	INVARIANT(size() == m.size());
+	this_type ret(size());
+	transform(this->begin(), this->end(), m.begin(), ret.begin(),
+		std::minus<K>());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+ostream&
+multikey_generic<K>::write(ostream& o) const {
+	write_array(o, AS_A(const impl_type&, *this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+istream&
+multikey_generic<K>::read(istream& i) {
+	read_sequence_resize(i, AS_A(impl_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

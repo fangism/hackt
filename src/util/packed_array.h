@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.6 2004/12/23 00:07:45 fang Exp $
+	$Id: packed_array.h,v 1.7 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_H__
@@ -22,6 +22,7 @@ template <size_t D>
 
 namespace util {
 using MULTIKEY_NAMESPACE::multikey;
+using std::istream;
 using std::ostream;
 
 //=============================================================================
@@ -144,13 +145,13 @@ protected:
 	size_t
 	key_to_index(const key_type& k) const;
 
+public:
+
 	key_type
 	size(void) const { return sizes; }
 
 	bool
 	empty(void) const { return !values.size(); }
-
-public:
 
 	reference
 	operator [] (const key_type& k);
@@ -284,13 +285,13 @@ protected:
 	size_t
 	key_to_index(const key_type& k) const;
 
+public:
+
 	key_type
 	size(void) const { return sizes; }
 
 	bool
 	empty(void) const { return !values.size(); }
-
-public:
 
 	reference
 	operator [] (const key_type& k);
@@ -319,7 +320,7 @@ public:
 
 //=============================================================================
 #define	PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE		template <class T>
-#if 1
+
 /**
 	Variable dimensions array.  
 	When you're too lazy to make dimension-specific arrays.  
@@ -332,14 +333,13 @@ class packed_array_generic : public packed_array_base<T> {
 private:
 	typedef	packed_array_base<T>			parent_type;
 	typedef	std::vector<T>				impl_type;
+	typedef	packed_array_generic<T>			this_type;
 public:
 	typedef	T					value_type;
-#if 1
 	typedef	util::multikey_generic<size_t>		key_type;
 	typedef	key_type				zeros_type;
 	typedef	key_type				ones_type;
-//	typedef	multikey_generator<D, size_t>		key_generator_type;
-#endif
+	typedef	multikey_generator_generic<size_t>	key_generator_type;
 	typedef	typename impl_type::pointer		pointer;
 	typedef	typename impl_type::const_pointer	const_pointer;
 	typedef	typename impl_type::reference		reference;
@@ -392,6 +392,9 @@ public:
 
 	~packed_array_generic();
 
+	size_t
+	dimensions(void) const { return dim; }
+
 	iterator
 	begin(void) { return values.begin(); }
 
@@ -439,13 +442,13 @@ protected:
 	size_t
 	key_to_index(const key_type& k) const;
 
+public:
+
 	key_type
 	size(void) const { return sizes; }
 
 	bool
 	empty(void) const { return !values.size(); }
-
-public:
 
 	reference
 	operator [] (const key_type& k);
@@ -467,11 +470,24 @@ public:
 		return (*this)[k];
 	}
 
+	bool
+	operator == (const this_type& ) const;
+
+	bool
+	operator != (const this_type& a) const {
+		return !(*this == a);
+	}
+
 	ostream&
 	dump(ostream& o) const;
 
+	ostream&
+	write(ostream& o) const;
+
+	istream&
+	read(istream& i);
+
 };	// end class packed_array_generic
-#endif
 
 //=============================================================================
 }	// end namespace util

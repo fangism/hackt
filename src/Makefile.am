@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2004/12/20 23:21:11 fang Exp $
+#	$Id: Makefile.am,v 1.35 2004/12/25 03:12:19 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -165,6 +165,7 @@ UTIL_HEADER_FILES = \
 	util/STL/map.tcc \
 	util/STL/namespace.h \
 	util/STL/pair_fwd.h \
+	util/STL/valarray_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
@@ -229,6 +230,7 @@ UTIL_HEADER_FILES = \
 	util/obsolete/count_ptr.h \
 	util/obsolete/count_ptr_fwd.h
 
+# the generated lexer and parser sources aren't supposed to be distributed!
 libart___la_SOURCES = \
 	parser/yacc_or_bison.h \
 	parser/art++-parse-prefix.h \

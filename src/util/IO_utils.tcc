@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.4 2004/12/16 01:08:53 fang Exp $
+	$Id: IO_utils.tcc,v 1.5 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef __IO_UTILS_TCC__
@@ -58,14 +58,15 @@ void    read_value(istream& f, T& v) {
 	For pointers, you will need a persistent object manager 
 	for memory reconstruction: see "persistent_object_manager.h".
 	\param S a sequence that has concepts: size, forward iterator.
-	\param T a writable value.
 	\param f the output stream.
 	\param l the sequence of data values.
  */
-template <template <class> class S, class T>
+template <class S>
 void
-write_sequence(ostream& f, const S<T>& l) {
-	typedef S<T>	sequence_type;
+write_sequence(ostream& f, const S& l) {
+	typedef S	sequence_type;
+	typedef	typename sequence_type::value_type	value_type;
+	typedef	typename sequence_type::const_iterator	const_iterator;
 	write_value(f, l.size());
 #if 0
 	for_each(l.begin(), l.end(), 
@@ -74,11 +75,35 @@ write_sequence(ostream& f, const S<T>& l) {
 	);
 #else
 	// explicit for-loop
-	typename sequence_type::const_iterator i = l.begin();
-	const typename sequence_type::const_iterator e = l.end();
+	const_iterator i = l.begin();
+	const const_iterator e = l.end();
 	for ( ; i!=e; i++)
-		write_value<T>(f, *i);
+		write_value<value_type>(f, *i);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic function for writing value arrays.  
+	Use this on classes that do not satisfy the iterator concept
+	(such as valarray) nor have a begin() or end() method, 
+	but only provide random access, array-like, using operator [].
+	Won't work on raw arrays because they have no size() method.  
+	This is complemented by read_sequence_resize.  
+	\param S a sequence that meets array concept requirements.  
+	\param f the output stream.
+	\param s the sequence of data values.
+ */
+template <class S>
+void
+write_array(ostream& f, const S& s) {
+	typedef	S	array_type;
+	typedef	typename array_type::value_type	value_type;
+	write_value(f, s.size());
+	size_t i = 0;
+	for ( ; i < s.size(); i++) {
+		write_value<value_type>(f, s[i]);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,14 +113,15 @@ write_sequence(ostream& f, const S<T>& l) {
 	For pointers, you will need a persistent object manager 
 	for memory reconstruction: see "persistent_object_manager.h".
 	\param S a sequence that has concepts: size, forward iterator.
-	\param T a writable value.
 	\param f the input stream.
 	\param l the sequence of data values to which to load values in-place.
  */
-template <template <class> class S, class T>
+template <class S>
 void
-read_sequence_in_place(istream& f, S<T>& l) {
-	typedef S<T>	sequence_type;
+read_sequence_in_place(istream& f, S& l) {
+	typedef S	sequence_type;
+	typedef	typename sequence_type::iterator	iterator;
+	typedef	typename sequence_type::value_type	value_type;
 	size_t size;
 	read_value(f, size);
 	INVARIANT(l.size() == size);	// or >= ?
@@ -107,12 +133,36 @@ read_sequence_in_place(istream& f, S<T>& l) {
 #else
 	// alternative, explicit for-loop
 	size_t j = 0;
-	typename sequence_type::iterator i = l.begin();
+	iterator i = l.begin();
 	for ( ; j < size; j++, i++)
-		read_value<T>(f, *i);
+		read_value<value_type>(f, *i);
 	// if sizes were asserted equal
 	INVARIANT(i == l.end());
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant of sequence reading resizes the container argument
+	with the read size, and proceeds to read in values in-places.  
+	Requires random access instead of iteration.  
+	Works on vectors and valarrays.  
+	This complements write_array().
+	\param S a sequence that has concepts: size, forward iterator.
+	\param f the input stream.
+	\param l the sequence of data values to which to load values in-place.
+ */
+template <class S>
+void
+read_sequence_resize(istream& f, S& l) {
+	typedef	S		sequence_type;
+	typedef	typename sequence_type::value_type	value_type;
+	size_t size;
+	read_value(f, size);
+	l.resize(size);
+	size_t j = 0;
+	for ( ; j < size; j++)
+		read_value<value_type>(f, l[j]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -123,18 +173,19 @@ read_sequence_in_place(istream& f, S<T>& l) {
 	For pointers, you will need a persistent object manager 
 	for memory reconstruction: see "persistent_object_manager.h".
 	\param S a sequence that has concepts: size, forward iterator.
-	\param T a writable value.
 	\param f the input stream.
 	\param l the sequence of data values to which to append values.
  */
-template <template <class> class S, class T>
+template <class S>
 void
-read_sequence_back_insert(istream& f, S<T>& l) {
+read_sequence_back_insert(istream& f, S& l) {
+	typedef S		sequence_type;
+	typedef	typename sequence_type::value_type	value_type;
 	size_t size;
 	read_value(f, size);
 	size_t i = 0;
 	for ( ; i < size; i++) {
-		T t;
+		value_type t;
 		read_value(f, t);
 		l.push_back(t);
 	}
@@ -179,14 +230,15 @@ read_key_value_pair(istream& f, pair<K, T>& p) {
 		size, copy-constructible elements.
 	Writes out values one pair at a time.
 	\param M the map type.
-	\param K the map's key type.
-	\param T the map's value type.
 	\param m the map to write-out.
  */
-template <template <class, class> class M, class K, class T>
+template <class M>
 void
-write_map(ostream& f, const M<K,T>& m) {
-	typedef	M<K,T>	map_type;
+write_map(ostream& f, const M& m) {
+	typedef	M	map_type;
+	typedef	typename map_type::key_type	key_type;
+	typedef	typename map_type::mapped_type	mapped_type;
+	typedef	typename map_type::const_iterator	const_iterator;
 	INVARIANT(f.good());
 	write_value(f, m.size());
 #if 0
@@ -194,10 +246,10 @@ write_map(ostream& f, const M<K,T>& m) {
 		bind1st_argval(ptr_fun(write_key_value_pair<K,T>), f)
 	);
 #else
-	typename map_type::const_iterator i = m.begin();
-	const typename map_type::const_iterator e = m.end();
+	const_iterator i = m.begin();
+	const const_iterator e = m.end();
 	for ( ; i!=e; i++)
-		write_key_value_pair<K,T>(f, *i);
+		write_key_value_pair<key_type,mapped_type>(f, *i);
 #endif
 }
 
@@ -213,17 +265,22 @@ write_map(ostream& f, const M<K,T>& m) {
 	\param T the map's value type.
 	\param m the map to read-in.
  */
-template <template <class, class> class M, class K, class T>
+template <class M>
 void
-read_map(istream& f, const M<K,T>& m) {
+read_map(istream& f, M& m) {
+	typedef	M	map_type;
+	typedef	typename map_type::key_type	key_type;
+	typedef	typename map_type::mapped_type	mapped_type;
+	typedef	typename map_type::const_iterator	const_iterator;
+	typedef	pair<key_type, mapped_type>	pair_type;
 	INVARIANT(f.good());
 	// INVARIANT(m.empty()); // ?
 	size_t size;
 	read_value(f, size);
 	size_t i = 0;
 	for( ; i < size; i++) {
-		pair<K, T> p;
-		read_key_value_pair<K,T>(f, p);
+		pair_type p;
+		read_key_value_pair<key_type,mapped_type>(f, p);
 		m[p.first] = p.second;
 	}
 }

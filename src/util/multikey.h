@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.16 2004/12/23 00:07:44 fang Exp $
+	$Id: multikey.h,v 1.17 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -373,6 +373,26 @@ public:
 		return impl_type::operator[](i);
 	}
 
+	bool
+	operator == (const this_type&) const;
+
+	bool
+	operator != (const this_type& m) const {
+		return !(*this == m);
+	}
+
+	this_type
+	operator + (const this_type& m) const;
+
+	this_type
+	operator - (const this_type& m) const;
+
+	ostream&
+	write(ostream&) const;
+
+	istream&
+	read(istream&);
+
 };	// end class multikey_generic
 
 //=============================================================================
@@ -688,7 +708,7 @@ public:
 
 	// all other methods inherited
 
-};	// end class multikey_generator
+};	// end class multikey_generator_generic
 
 //-----------------------------------------------------------------------------
 #if 0

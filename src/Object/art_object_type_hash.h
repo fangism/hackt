@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.3 2004/12/10 22:02:18 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4 2004/12/25 03:12:21 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -99,6 +99,8 @@
 
 #define	CONST_PBOOL_TYPE_KEY					"cnstpb"
 #define	CONST_PINT_TYPE_KEY					"cnstpi"
+#define	CONST_PBOOL_COLLECTION_TYPE_KEY				"cnstpbc"
+#define	CONST_PINT_COLLECTION_TYPE_KEY				"cnstpic"
 
 #define	CONST_RANGE_TYPE_KEY					"cnstrng"
 #define	DYNAMIC_RANGE_TYPE_KEY					"dynrng"

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.28 2004/12/20 23:21:14 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.29 2004/12/25 03:12:20 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
 #include "multikey.tcc"
+#include "packed_array.tcc"
 #include "persistent_object_manager.tcc"
 
 #include "art_object_type_hash.h"
@@ -985,23 +986,23 @@ pbool_instance_reference::resolve_values_into_flat_list(list<bool>& l) const {
 const_index_list
 pbool_instance_reference::resolve_dimensions(void) const {
 	// criterion 1: indices (if any) must be resolved to constant values.  
-	const_index_list c_i;
 	if (array_indices) {
-		c_i = array_indices->resolve_index_list();
+		const const_index_list c_i(array_indices->resolve_index_list());
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to resolve index list." << endl;
 			return c_i;
 		}
+		// else let c_i remain empty, underspecified
+		// check for implicit indices, that sub-arrays are
+		// densely packed with the same dimensions.  
+		const const_index_list
+			r_i(pbool_inst_ref->resolve_indices(c_i));
+		if (r_i.empty()) {
+			cerr << "ERROR: implicitly resolving index list."
+				<< endl;
+		}
 	}
-	// else let c_i remain empty, underspecified
-	// check for implicit indices, that sub-arrays are
-	// densely packed with the same dimensions.  
-	const const_index_list
-		r_i(pbool_inst_ref->resolve_indices(c_i));
-	if (r_i.empty()) {
-		cerr << "ERROR: implicitly resolving index list." << endl;
-	}
-	return r_i;
+	return const_index_list();
 	// Elsewhere (during assign) check for initialization.  
 }
 
@@ -1423,9 +1424,11 @@ pint_instance_reference::resolve_dimensions(void) const {
 		// but indices may be underspecified... 
 		// check for implicit indices, that sub-arrays are
 		// densely packed with the same dimensions.  
-		const const_index_list r_i(pint_inst_ref->resolve_indices(c_i));
+		const const_index_list
+			r_i(pint_inst_ref->resolve_indices(c_i));
 		if (r_i.empty()) {
-			cerr << "ERROR: implicitly resolving index list." << endl;
+			cerr << "ERROR: implicitly resolving index list."
+				<< endl;
 		}
 		return r_i;
 		// Elsewhere (during assign) check for initialization.  
@@ -1759,6 +1762,9 @@ pint_const::make_param_expression_assignment_private(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Does nothing, no pointers to visit.  
+ */
 void
 pint_const::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, CONST_PINT_TYPE_KEY);
@@ -1789,6 +1795,209 @@ if (!m.flag_visit(this)) {
 	STRIP_OBJECT_FOOTER(f);			// wasteful
 }
 // else already visited
+}
+
+//=============================================================================
+// class pint_const_collection method definitions
+
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const_collection, 
+		CONST_PINT_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_const_collection::pint_const_collection(const size_t d) :
+		pint_expr(), const_param(), values(d) {
+	INVARIANT(d <= 4);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_const_collection::~pint_const_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_const_collection::what(ostream& o) const {
+	return o << "pint-const-collection";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_const_collection::dump(ostream& o) const {
+	return values.dump(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+pint_const_collection::hash_string(void) const {
+	cerr << "FANG, write pint_const_collection::hash_string()!" << endl;
+	exit(1);
+	return string();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+pint_const_collection::dimensions(void) const {
+	return values.dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return heap-allocated copy.  
+ */
+count_ptr<const const_param>
+pint_const_collection::static_constant_param(void) const {
+	typedef	count_ptr<const const_param>	return_type;
+	return return_type(new pint_const_collection(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A packed array of constants always has constant dimensions.  
+ */
+bool
+pint_const_collection::has_static_constant_dimensions(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return dense range list representation of the instance
+		collection if it is indeed compact, else an empty list.  
+	No dimensions or indices are implicit.  
+ */
+const_range_list
+pint_const_collection::static_constant_dimensions(void) const {
+	const_range_list ret;
+	const array_type::key_type first(values.first_key());
+	const array_type::key_type last(values.last_key());
+	array_type::key_type::const_iterator f_iter = first.begin();
+	array_type::key_type::const_iterator l_iter = last.begin();
+	for ( ; f_iter != first.end(); f_iter++, l_iter++) {
+		ret.push_back(const_range(*f_iter, *l_iter));
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if expressions may be equivalent (conservative).
+ */
+bool
+pint_const_collection::may_be_equivalent(const param_expr& e) const {
+	const pint_const_collection* p = IS_A(const pint_const_collection*, &e);
+	if (p) {
+		// precisely
+		return (values.dimensions() == p->values.dimensions() &&
+			values.size() == p->values.size() &&
+			values == p->values);
+	} else {
+		// conservatively
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if the expressions must be equivalent, 
+		conservatively false.
+ */
+bool
+pint_const_collection::must_be_equivalent(const param_expr& e) const {
+	const pint_const_collection* p = IS_A(const pint_const_collection*, &e);
+	if (p) {
+		// precisely
+		return (values.dimensions() == p->values.dimensions() &&
+			values.size() == p->values.size() &&
+			values == p->values);
+	} else {
+		// conservatively
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const_collection::resolve_value(int& ) const {
+	cerr << "Never supposed to call pint_const_collection::resolve_value()."
+		<< endl;
+	exit(1);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+pint_const_collection::static_constant_int(void) const {
+	cerr << "Never supposed to call pint_const_collection::static_constant_int()." << endl;
+	exit(1);
+	return -1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Straight copy of constant values to list.  
+	May become obsolete in future.  
+ */
+bool
+pint_const_collection::resolve_values_into_flat_list(list<int>& l) const {
+	copy(values.begin(), values.end(), back_inserter(l));
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+pint_const_collection::resolve_dimensions(void) const {
+	const_index_list ret;
+	const array_type::key_type first(values.first_key());
+	const array_type::key_type last(values.last_key());
+	array_type::key_type::const_iterator f_iter = first.begin();
+	array_type::key_type::const_iterator l_iter = last.begin();
+	for ( ; f_iter != first.end(); f_iter++, l_iter++) {
+		ret.push_back(
+			// is reference-counted pointer type
+			const_index_list::const_index_ptr_type(
+				new const_range(*f_iter, *l_iter)));
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Does nothing because there are no pointers to collect and visit.  
+ */
+void
+pint_const_collection::collect_transient_info(
+		persistent_object_manager& m) const {
+	const char s = values.dimensions();
+	INVARIANT(s >= 0);
+	INVARIANT(s <= 4);
+	m.register_transient_object(this, CONST_PINT_COLLECTION_TYPE_KEY, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+persistent*
+pint_const_collection::construct_empty(const int d) {
+	INVARIANT(d >= 0);
+	INVARIANT(d <= 4);
+	return new pint_const_collection(d);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const_collection::write_object(const persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// wasteful
+	values.write(f);
+	WRITE_OBJECT_FOOTER(f);			// wasteful
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const_collection::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// wasteful
+	values.read(f);
+	STRIP_OBJECT_FOOTER(f);			// wasteful
+}
+// else already loaded
 }
 
 //=============================================================================

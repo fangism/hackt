@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.11 2004/12/15 23:31:14 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12 2004/12/25 03:12:23 fang Exp $
  */
 
 #include <fstream>
@@ -397,6 +397,8 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 		get_reconstruction_function_map().size() << " entries." << endl;
 	o << "\tkey\t\twhat" << endl;
 	for ( ; iter != end; iter++) {
+		// this calls the appropriate construct_empty()
+		// really should be a unique_ptr, after I finish it...
 		excl_ptr<persistent> tmp((*iter->second)(0));
 		assert(tmp);
 		// DANGER: may not be safe to call what() on uninitialized

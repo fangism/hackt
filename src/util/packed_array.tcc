@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.6 2004/12/23 00:07:45 fang Exp $
+	$Id: packed_array.tcc,v 1.7 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_TCC__
@@ -366,8 +366,6 @@ packed_array<D,bool>::dump(ostream& o) const {
 }
 
 //=============================================================================
-#if 1
-// not ready yet
 // class packed_array_generic method definitions
 
 /**
@@ -387,7 +385,8 @@ packed_array_generic<T>::ones(const size_t d) {
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 packed_array_generic<T>::packed_array_generic(const size_t d) :
-		dim(d), sizes(d, 0), values(), offset(d, 0), coeffs(d-1, 1) {
+		dim(d), sizes(d, 0), values(), offset(d, 0), 
+		coeffs(d ? d-1 : d, 1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -395,6 +394,7 @@ packed_array_generic<T>::packed_array_generic(const size_t d) :
 /**
 	Constructs a packed array given an array of dimensions.
 	\param s the dimensions of the new array.
+	\pre s.size() > 0.
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 packed_array_generic<T>::packed_array_generic(const key_type& s) :
@@ -408,7 +408,7 @@ packed_array_generic<T>::packed_array_generic(const key_type& s) :
 	Constructs a packed array with index offsets in each dimension.
 	\param s dimensions of the new array.
 	\oaram o the offset of the new array.
-	\pre s and o have the same size.
+	\pre s and o have the same size and size is > 0.
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 packed_array_generic<T>::packed_array_generic(
@@ -469,7 +469,12 @@ packed_array_generic<T>::first_key(void) const {
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename packed_array_generic<T>::key_type
 packed_array_generic<T>::last_key(void) const {
+#if 1
 	return sizes +offset -key_type(dim, 1);
+#else
+	return std::plus<key_type>(sizes, offset)();
+//	return std::minus(std::plus(sizes, offset), key_type(dim, 1));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -553,6 +558,18 @@ packed_array_generic<T>::operator [] (const key_type& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if arguments are equal.
+	NOTE: equality only requires that sizes and values are equivalent, 
+		the offset does not matter.  
+ */
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+bool
+packed_array_generic<T>::operator == (const this_type& a) const {
+	return (sizes == a.sizes && values == a.values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 void
 packed_array_generic<T>::resize(const key_type& s) {
@@ -572,7 +589,29 @@ packed_array_generic<T>::dump(ostream& o) const {
 	copy(begin(), end(), osi);
 	return o << " }" << endl;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+ostream&
+packed_array_generic<T>::write(ostream& o) const {
+	write_value(o, dim);
+	sizes.write(o);
+	offset.write(o);
+	write_sequence(o, values);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+istream&
+packed_array_generic<T>::read(istream& i) {
+	read_value(i, dim);
+	sizes.read(i);
+	offset.read(i);
+	resize(sizes);		// optional
+	read_sequence_resize(i, values);
+	return i;
+}
 
 //=============================================================================
 }	// end namespace util

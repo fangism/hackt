@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.2 2004/12/16 01:08:53 fang Exp $
+	$Id: IO_utils.h,v 1.3 2004/12/25 03:12:22 fang Exp $
  */
 
 #ifndef __IO_UTILS_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "string_fwd.h"
 #include "STL/pair_fwd.h"
+#include "STL/valarray_fwd.h"
 
 #define	USING_IO_UTILS							\
 using util::read_value;							\
@@ -17,7 +18,9 @@ using util::write_value;						\
 using util::read_string;						\
 using util::write_string;						\
 using util::write_sequence;						\
+using util::write_array;						\
 using util::read_sequence_in_place;					\
+using util::read_sequence_resize;					\
 using util::read_sequence_back_insert;					\
 using util::write_key_value_pair;					\
 using util::read_key_value_pair;					\
@@ -54,14 +57,26 @@ extern
 void	read_string(istream& f, string& s);
 
 
-template <template <class> class S, class T>
-void	write_sequence(ostream& f, const S<T>& s);
+/***
+	Consider container read/writing policies with trait tags...
+***/
 
-template <template <class> class S, class T>
-void	read_sequence_in_place(istream& f, S<T>& s);
+template <class S>
+void	write_sequence(ostream& f, const S& s);
 
-template <template <class> class S, class T>
-void	read_sequence_back_insert(istream& f, S<T>& s);
+/// does not require iterator concept, just operator [] access
+// cannot partial specialize functions, drat
+template <class S>
+void	write_array(ostream&, const S& );
+
+template <class S>
+void	read_sequence_in_place(istream& f, S& s);
+
+template <class S>
+void	read_sequence_resize(istream& f, S& s);
+
+template <class S>
+void	read_sequence_back_insert(istream& f, S& s);
 
 
 template <class K, class T>
@@ -70,11 +85,11 @@ void	write_key_value_pair(ostream& f, const pair<const K, T>& p);
 template <class K, class T>
 void	read_key_value_pair(istream& f, pair<K, T>& p);
 
-template <template <class, class> class M, class K, class T>
-void	write_map(ostream& f, const M<K,T>& m);
+template <class M>
+void	write_map(ostream& f, const M& m);
 
-template <template <class, class> class M, class K, class T>
-void	read_map(istream& f, M<K,T>& m);
+template <class M>
+void	read_map(istream& f, M& m);
 
 }	// end namespace util
 
