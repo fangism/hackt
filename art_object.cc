@@ -1350,8 +1350,6 @@ fundamental_type_reference::may_be_equivalent(
 	never_const_ptr<definition_base> left(get_base_def());
 	never_const_ptr<definition_base> right(t->get_base_def());
 	if (left != right) {
-		cerr << "pointers: left = " << left.unprotected_const_ptr() <<
-			", right = " << right.unprotected_const_ptr() << endl;
 		return false;
 	}
 	// TO DO: compare template arguments
