@@ -115,53 +115,6 @@ protected:
 	 */
 	bool			check_against_previous_definition_signature;
 
-#if 0
-	/**
-		Pointer to current channel type, 
-		which is being declared or defined.  Do not delete.  
-		No stack needed, as definitions may not be nested.  
-	 */
-	user_def_chan*		current_chan_def;
-	/**
-		Flag that indicates whether the current channel definition
-		in this context is new (first-encounter) or is a repeat, 
-		in which case, the current prototype's formals
-		should be type-matched one-for-one against the previous
-		declaration.  
-	 */
-	bool			check_against_prev_chan;
-
-	/**
-		Pointer to current data type, 
-		which is being declared or defined.  Do not delete.  
-		No stack needed, as definitions may not be nested.  
-	 */
-	user_def_type*		current_type_def;
-	/**
-		Flag that indicates whether the current data type definition
-		in this context is new (first-encounter) or is a repeat, 
-		in which case, the current prototype's formals
-		should be type-matched one-for-one against the previous
-		declaration.  
-	 */
-	bool			check_against_prev_type;
-
-	/**
-		Reference to the current process, which is being declared
-		or defined.
-		Do not delete.
-	 */
-	process_definition*	current_proc_def;
-	/**
-		Flag that indicates whether the current process definition
-		in this context is new (first-encounter) or is a repeat, 
-		in which case, the current prototype's formals
-		should be type-matched one-for-one against the previous
-		declaration.  
-	 */
-	bool			check_against_prev_process;
-#endif
-
 	/**
 		Pointer to the current definition referenced, usually
 		resolved by the last identifier.  
@@ -172,51 +125,10 @@ protected:
 	 */
 	const definition_base*		current_definition_reference;
 
-#if 0
 	/**
-		Reference to the current parameter type being declared
-		or type-checked.
-		Parameters are different in that the are not templatable, 
-		thus, they are referenced directly by instantiations, 
-		as opposed to using type_references.  
+		Pointer to the concrete type to instantiate.  
 	 */
-	const built_in_param_def*	inst_param_def;
-	/// reference to the base process definition
-	const process_definition*	inst_proc_def;
-	/// reference to the base data type definition
-	const datatype_definition*	inst_data_def;
-	/// reference to the base channel definition
-	const channel_definition*	inst_chan_def;
-#endif
-
 	const fundamental_type_reference*	current_fundamental_type;
-
-#if 0
-	/**
-		Reference to the current param type being instantiated
-		or type-checked.  
-		(Kind of redundant, but kept for consistency.)
-	 */
-	const param_type_reference*	inst_param_type_ref;
-
-	/**
-		Reference to the current process type being instantiated
-		or type-checked.  
-	 */
-	const process_type_reference*	inst_proc_type_ref;
-
-	/**
-		Reference to the current data type being instantiated
-		or type-checked.  
-	 */
-	const data_type_reference*	inst_data_type_ref;
-
-	/**
-		Reference to the current channel being instantiated
-		or type-checked.  
-	 */
-	const channel_type_reference*	inst_chan_type_ref;
-#endif
 
 	/**
 		Instance(s) referenced to connect.  
@@ -312,10 +224,6 @@ const fundamental_type_reference*	get_current_fundamental_type(void) const
 
 const datatype_definition*	get_current_datatype_definition(void) const;
 
-/*** OBSOLETE
-const datatype_definition*	set_datatype_def(const qualified_id& tid);
-const datatype_definition*	set_datatype_def(const token_string& tid);
-***/
 	// for keyword: int or bool
 const datatype_definition*	set_datatype_def(const token_datatype& tid);
 	// set template argument separately!
@@ -326,7 +234,6 @@ const data_type_reference*	set_inst_data_type_ref(const data_type_reference& dr)
 // should be called by parser after done using definitions
 void	reset_current_definition_reference(void);
 void	reset_current_fundamental_type(void);
-// void	unset_datatype_def(void);
 
 const built_in_param_def*	get_current_param_definition(void) const;
 const built_in_param_def*	set_inst_param_def(const built_in_param_def& );

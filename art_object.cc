@@ -66,78 +66,16 @@ namespace entity {
 //=============================================================================
 // non-member function prototypes
 
-/***
-OBSOLETE:
-
-static bool temp_formal_set_equals(
-	const process_definition::temp_formal_set& ts,       
-	const template_formal_decl_list* tl);
-
-static bool port_formals_set_equals(
-	const process_definition::port_formals_set& ps,             
-	const port_formal_decl_list* pl);        
-***/
-
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace(const string& n, const scopespace* p) : 
 		object(), parent(p), key(n), 
-		used_id_map()
-//		type_ref_cache(), 
-//		param_expr_cache()
-		{
+		used_id_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 scopespace::~scopespace() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	When reading from used_id_map, always automatically indirect
-	in case object actually is a handle.  
- */
-const object*
-scopespace::operator [] (const string& id) const {
-	const object* ret = used_id_map[id];
-	if (ret) return &ret->self();
-	else return NULL;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	When writing, don't indirect, just return reference to the 
-	pointer stored in used_id_map.  
-	Any potential memory problems?
-	What if an owned pointer gets overwritten?
- */
-object*&
-scopespace::operator [] (const string& id) {
-	object*& ret = used_id_map[id];
-	if (!IS_A(object_handle*, ret))
-		delete ret;
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-scopespace::used_id_map_type::iterator
-scopespace::find(const string& id) {
-	return used_id_map.find(id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-scopespace::used_id_map_type::const_iterator
-scopespace::find(const string& id) const {
-	return used_id_map.find(id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-scopespace::erase(used_id_map_type::iterator it) {
-	used_id_map.erase(it);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -263,14 +201,8 @@ scopespace::query_instance_match(instance_list& m, const string& tid) const {
  */
 name_space::name_space(const string& n, const name_space* p) : 
 		scopespace(n, p), 
-		parent(p), 	// doubly-initialized? override?
-//		subns(), 
-		open_spaces(), open_aliases()
-//		data_defs(), data_insts(),
-//		param_defs(), param_insts(),
-//		proc_defs(), proc_insts()
-		{
-//	inherit_built_in_types();
+		parent(p), 
+		open_spaces(), open_aliases() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -289,7 +221,6 @@ name_space::~name_space() {
 	// will already clear those respective sets without deleting.  
 //	open_spaces.clear();		// without deleting, don't own
 //	open_aliases.clear();		// without deleting, don't own
-
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,22 +285,14 @@ name_space::add_open_namespace(const string& n) {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
 			DEBUG(TRACE_NAMESPACE_NEW, 
 				cerr << n << " is already exists as subspace, re-opening")
-//			assert(probe_ns == subns[n]);
-//			ret = subns[n];		// return modifiable pointer
 			ret = IS_A(name_space*, used_id_map[n]);
 		}
 		assert(ret);
 	} else {
-		// consistency check: 
-		// since we're keeping subns and used_id_map consistent, 
-		// not finding it in used_id_map => must not exist in subns!
-//		assert(!subns[n]);
-
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
 		ret = new name_space(n, this);
 		assert(ret);
-//		subns[n] = ret;		// store it in map of sub-namespaces
 		used_id_map[n] = ret;	// register it as a used id
 	}
 
@@ -494,12 +417,6 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 		// we report the conflict precisely as follows:
 		ret = IS_A(const name_space*, probe);
 		if (ret) {
-//			if(subns[a])
-//			if(used_id_map[a]) {
-//				used_id_map[a]->what(
-//					cerr << a << " is already a ")
-//					<< ", ERROR! ";
-//			} else
 			if(open_aliases[a]) {
 				cerr << a << " is already an open alias, ERROR! ";
 			} else {
@@ -591,7 +508,6 @@ name_space::query_namespace_match(const qualified_id& id) const {
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
-//			next = ns->subns[*tid];
 			next = IS_A(const name_space*, ns->used_id_map[*tid]);
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
@@ -636,8 +552,6 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 		IS_A(const name_space*, 
 			((id.is_absolute()) ? get_global_namespace() : this)
 				->used_id_map[*tid]);
-//		((id.is_absolute()) ? get_global_namespace() : this)
-//			->subns[*tid];	// lookup map of sub-namespaces
 	if (!ns) {				// else lookup in aliases
 		ns = open_aliases[*tid];	// replaced for const semantics
 	}
@@ -646,7 +560,6 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 		const name_space* next;
 		tid = IS_A(token_identifier*, *i); assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-//		next = ns->subns[*tid];
 		next = IS_A(const name_space*, ns->used_id_map[*tid]);
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->open_aliases[*tid];
@@ -807,7 +720,6 @@ name_space::query_datatype_def_match(data_def_list& m, const string& tid) const 
 		cerr << endl << "query_datatype_def_match: " << tid
 			<< " in " << get_qualified_name())
 	{
-//		const datatype_definition* ret = data_defs[tid];
 		const datatype_definition* ret =
 			IS_A(const datatype_definition*, used_id_map[tid]);
 		if (ret) m.push_back(ret);
@@ -817,7 +729,6 @@ name_space::query_datatype_def_match(data_def_list& m, const string& tid) const 
 		// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-//			const datatype_definition* ret = (*i)->data_defs[tid];
 			const datatype_definition* ret = 
 				IS_A(const datatype_definition*, 
 					(*i)->used_id_map[tid]);
@@ -886,58 +797,6 @@ name_space::add_definition(definition_base* db) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Adds a built-in datatype definition, generally reserved only for use 
-	with the global scope.  
- */
-built_in_datatype_def*
-name_space::add_built_in_datatype_definition(built_in_datatype_def* d) {
-if (parent) {
-	cerr << "Adding of built-in data types is reserved for the "
-		"global namespace only!";
-	return NULL;
-} else {
-	assert(d);
-	string k = d->get_name();
-	const object* probe = used_id_map[k];
-	assert(!probe);
-	// else "ERROR: identifier already taken, failed to add built-in type!";
-
-	// used_id_map owns this type is reponsible for deleting it
-//	data_defs[k] = d;
-	used_id_map[k] = d;
-	return d;
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Adds a built-in parameter definition, generally reserved only for use 
-	with the global scope.  
- */
-built_in_param_def*
-name_space::add_built_in_param_definition(built_in_param_def* d) {
-if (parent) {
-	cerr << "Adding of built-in params is reserved for the "
-		"global namespace only!";
-	return NULL;
-} else {
-	assert(d);
-	string k = d->get_name();
-	const object* probe = used_id_map[k];
-	assert(!probe);
-	// else "ERROR: identifier already taken, failed to add built-in type!";
-
-	// used_id_map owns this type is reponsible for deleting it
-//	param_defs[k] = d;
-	used_id_map[k] = d;
-	return d;
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition*
 name_space::add_type_alias(const qualified_id& t, const string& a) {
 	return NULL;
@@ -969,7 +828,6 @@ name_space::add_type_alias(const qualified_id& t, const string& a) {
 	// else we've narrowed it down to one
 		case 1: {
 			ret = (*i);
-//			data_defs[a] = ret;
 			used_id_map[a] = ret;
 			break;
 			}
@@ -1003,8 +861,8 @@ name_space::add_type_alias(const qualified_id& t, const string& a) {
 	TO DO: be able to lookup type in advance before creating...
 	\param tb the fundamental_type_reference to lookup and add --
 		MAY BE DELETED if a matching reference is found.
-	\return the same fundamental_type_reference if none was previously found, 
-		otherwise the existing matching reference.  
+	\return the same fundamental_type_reference if none was previously 
+		found, otherwise the existing matching reference.  
  */
 const fundamental_type_reference*
 name_space::add_type_reference(fundamental_type_reference* tb) {
@@ -1189,7 +1047,6 @@ name_space::lookup_qualified_datatype(const qualified_id& id) const {
 		const datatype_definition* ret;
 		qualified_id::const_reverse_iterator e = id.rbegin();
 		assert(*e);
-//		ret = root->data_defs[**e];
 		ret = IS_A(const datatype_definition*, root->used_id_map[**e]);
 		if (!ret)
 			cerr << "data-type " << id << " ... not found, ERROR! ";
@@ -1208,7 +1065,6 @@ name_space::lookup_qualified_datatype(const qualified_id& id) const {
 const datatype_definition*
 name_space::lookup_built_in_datatype(const token_datatype& id) const {
 	const built_in_datatype_def* ret;
-//	ret = get_global_namespace()->data_defs[id];
 	ret = IS_A(const built_in_datatype_def*, 
 			get_global_namespace()->used_id_map[id]);
 	assert(ret);		// better already be there!
@@ -1223,7 +1079,6 @@ name_space::lookup_built_in_datatype(const token_datatype& id) const {
 const built_in_param_def*
 name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
 	const built_in_param_def* ret;
-//	ret = get_global_namespace()->param_defs[id];
 	ret = IS_A(const built_in_param_def*, 
 		get_global_namespace()->used_id_map[id]);
 	assert(ret);		// better already be there!
@@ -1286,13 +1141,11 @@ name_space::add_datatype_instantiation(
 		return NULL;
 	}
 	// consistency check
-//	assert(!data_insts[id]);
 	// else safe to proceed
 
 	new_inst = new datatype_instantiation(*this, t, id);
 	assert(new_inst);
 	// new_inst will be owned by used_id_map
-//	data_insts[id] = new_inst;
 	used_id_map[id] = new_inst;
 	return new_inst;
 }
@@ -1319,14 +1172,11 @@ name_space::add_paramtype_instantiation(
 			<< ", ERROR! ";
 		return NULL;
 	}
-	// consistency check
-//	assert(!param_insts[id]);
 	// else safe to proceed
 
 	new_inst = new param_instantiation(*this, t, id);
 	assert(new_inst);
 	// new_inst will be owned by used_id_map
-//	param_insts[id] = new_inst;
 	used_id_map[id] = new_inst;
 	return new_inst;
 }
@@ -1342,25 +1192,6 @@ name_space::add_paramtype_instantiation(
 const process_definition*
 name_space::probe_process(const string& s) const {
 	const object* probe = used_id_map[s];
-#if 0
-	// OBSOLETE
-	if (probe) {
-		const process_definition* probe_pd = 
-			IS_A(const process_definition*, probe);
-		if (probe_pd) {
-			const process_definition* pd;
-			pd = proc_defs[s];
-			assert(pd == probe_pd);
-			return pd;
-		} else {
-			// actually found something else
-			return NULL;
-		}
-	} else {
-		assert(!proc_defs[s]);
-		return NULL;
-	}
-#endif
 	return IS_A(const process_definition*, probe);
 }
 
@@ -1385,9 +1216,6 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 			// see if this declaration matches EXACTLY
 			// or punt check until check_build() on the templates
 			//	and ports?
-//			pd = proc_defs[pname];
-//			assert(pd == probe_pd);
-//			return pd;
 			return IS_A(process_definition*, used_id_map[pname]);
 		} else {
 			// already declared as something else in this scope.
@@ -1399,7 +1227,6 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, false);
 		assert(pd);
-//		proc_defs[pname] = pd;
 		used_id_map[pname] = pd;
 	}
 	return pd;
@@ -1429,9 +1256,6 @@ name_space::add_proc_definition(const token_identifier& pname) {
 			} else {
 			// probably already declared
 			// punt check, until traversing templates/ports
-//				pd = proc_defs[pname];
-//				assert(pd == probe_pd);
-//				return pd;
 				return IS_A(process_definition*, used_id_map[pname]);
 			}
 		} else {
@@ -1444,7 +1268,6 @@ name_space::add_proc_definition(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, true);
 		assert(pd);
-//		proc_defs[pname] = pd;
 		used_id_map[pname] = pd;
 	}
 	return pd;
@@ -1578,7 +1401,8 @@ definition_base::add_template_formal(instantiation_base* f) {
 //=============================================================================
 // class fundamental_type_reference method definitions
 
-fundamental_type_reference::fundamental_type_reference(template_param_list* pl) : type_reference_base(), 
+fundamental_type_reference::fundamental_type_reference(template_param_list* pl)
+		: type_reference_base(), 
 		template_params(pl) {
 }
 
@@ -2136,22 +1960,6 @@ datatype_instantiation::equals_template_formal(
 }
 
 /**
-	OBSOLETE.
-	Takes a port formal, resolves its type first, looking up
-	through parents' scopes if necessary.  
-	If successful, compares for type-equivalence, 
-	and identifier match.  
-	TO DO:
-	\param tf the port formal from the syntax tree.
-	\return true if type and identifier match exactly.  
-bool
-datatype_instantiation::equals_port_formal(
-		const port_formal_decl& pf) const {
-	return false;
-}
-**/
-
-/**
 	Create a datatype reference object.
 	See if it's already registered in the current context.  
 	If so, delete the new one (inefficient), 
@@ -2209,109 +2017,8 @@ process_definition::set_context_fundamental_type(context& c) const {
 	return c.set_current_fundamental_type(*dtr);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	OBSOLETE.  
-	Compares an unchecked process_signature's formal list against
-	a bound formal list (this).  
-	Name must match, template formals (if applicable) must
-	match precisely with type and formal identifier name.  
-	Port formals must also match type and formal identifier.  
-	\param ps the process signature.
-	\return true if signatures are equivalent.  
-bool
-process_definition::equals_signature(const process_signature& ps) const {
-	if (key != ps.get_name())
-		return false;
-	// continue comparing template formals
-	if (!temp_formal_set_equals(temp_formals, ps.get_template_formals()))
-		return false;
-	// continue comparing port formals
-	if (!port_formals_set_equals(port_formals, ps.get_port_formals()))
-		return false;
-	return true;
-}
-**/
-
 //=============================================================================
 // non-member functions related to process_definition
-
-/**
-	OBSOLETE.  
-	Compares a temp_formal_set against a template_formal_decl_list from
-	the syntax tree.  
-	\param ts the already type-checked template formal list.
-	\param tl the syntax tree template formal list to be checked.
-	\return true if template formal lists are equivalent.  
-bool
-temp_formal_set_equals(const process_definition::temp_formal_set& ts,
-	const template_formal_decl_list* tl) {
-	if (tl) {
-		template_formal_decl_list::const_iterator i = tl->begin();
-		process_definition::temp_formal_set::const_iterator 
-			j = ts.begin();
-		for ( ; i != tl->end() && j != ts.end(); i++, j++) {
-			const template_formal_decl* ti = 
-				IS_A(const template_formal_decl*, *i);
-			const datatype_instantiation* tj = *j;
-			if (ti && !tj || !ti && tj) {
-				// then mismatch in number of arguments
-				return false;
-			} else if (ti && tj) {
-				// compare them, item-for-item
-				if (!tj->equals_template_formal(*ti))
-					return false;
-				// else continue
-			}
-			// else end of both lists reached, proceed
-		}
-	} else {
-		// tl is NULL, then ts should also be empty
-		if (!ts.empty())
-			return false;
-	}
-	return true;
-}
-**/
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	OBSOLETE.  
-	Compares a port_formals_set against a port_formal_decl_list from
-	the syntax tree.  
-	\param ps the already type-checked port formal list.
-	\param pl the syntax tree port formal list to be checked.
-	\return true if port formal lists are equivalent.  
-bool
-port_formals_set_equals(const process_definition::port_formals_set& ps,
-	const port_formal_decl_list* pl) {
-	if (pl) {
-		port_formal_decl_list::const_iterator i = pl->begin();
-		process_definition::port_formals_set::const_iterator 
-			j = ps.begin();
-		for ( ; i != pl->end() && j != ps.end(); i++, j++) {
-			const port_formal_decl* pi = 
-				IS_A(const port_formal_decl*, *i);
-			const instantiation* pj = *j;
-			if (pi && !pj || !pi && pj) {
-				// then mismatch in number of arguments
-				return false;
-			} else if (pi && pj) {
-				// compare them, item-for-item
-				if (!pj->equals_port_formal(*pi))
-					return false;
-				// else continue
-			}
-			// else end of both lists reached, proceed
-		}
-	} else {
-		// pl is NULL, then ts should also be empty
-		if (!ps.empty())
-			return false;
-	}
-	return true;
-}
-**/
 
 //=============================================================================
 // class process_instantiation method definitions
@@ -2334,14 +2041,6 @@ const fundamental_type_reference*
 process_instantiation::get_type_ref(void) const {
 	return type;
 }
-
-/*** OBSOLETE
-bool
-process_instantiation::equals_port_formal(const port_formal_decl& pf) const {
-	// a process can never be passed on a port.  
-	return false;
-}
-***/
 
 /**
 	Create a process reference object.
@@ -2506,13 +2205,6 @@ ostream&
 collective_instance_reference::what(ostream& o) const {
 	return o << "collective-inst-ref";
 }
-
-/*** don't need
-const instantiation_base*
-collective_instance_reference::get_inst_base(void) const {
-	return base_array->get_inst_base();
-}
-***/
 
 string
 collective_instance_reference::hash_string(void) const {

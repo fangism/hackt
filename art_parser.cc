@@ -66,7 +66,6 @@ node::check_build(context* c) const {
 	// We DO want to print this message, even in regression testing. 
 	what(cerr << c->auto_indent() << 
 		"check_build() not implemented yet for ");
-//	return NULL;
 	return c->top_namespace();
 }
 
@@ -315,7 +314,6 @@ type_id::check_build(context* c) const {
 		cerr << c->auto_indent() <<
 			"type_id::check_build(...): " << endl;
 	)
-//	o = base->check_build(c);
 	o = c->lookup_definition(*base);
 	d = IS_A(const definition_base*, o);
 	if (!d) {
@@ -328,73 +326,11 @@ type_id::check_build(context* c) const {
 	return d;
 }
 
-/*** OBSOLETE
-const id_expr&
-type_id::get_base_type(void) const {
-	assert(base);
-	return *base;
-}
-***/
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 ostream& operator << (ostream& o, const type_id& id) {
 	return o << *id.base;
 }
-
-//=============================================================================
-#if 0
-// OBSOLETE
-// class data_type_base method definitions
-
-/**
-	After transferring list members, 
-	also deletes expression list argument.  
- */
-CONSTRUCTOR_INLINE
-data_type_base::data_type_base(token_type* t) :
-		type_base(),
-		type(t) {
-	assert(type); 
-}
-
-DESTRUCTOR_INLINE
-data_type_base::~data_type_base() {
-	SAFEDELETE(type);
-}
-
-ostream&
-data_type_base::what(ostream& o) const {
-	return o << "(data-type-base)";
-}
-
-line_position
-data_type_base::leftmost(void) const {
-	return type->leftmost();
-}
-
-line_position
-data_type_base::rightmost(void) const {
-	return type->rightmost();
-}
-
-/**
-	Looks up a built-in datatype definition.  
-	Remember to reset_current_definition_reference after the list is done.  
- */
-const object*
-data_type_base::check_build(context* c) const {
-	const object* o;
-	TRACE_CHECK_BUILD(
-		cerr << c->auto_indent() <<
-			"data_type_base::check_build(...): ";
-	)
-	assert(type);
-	// here, we know it's a data type
-	o = c->set_datatype_def(*type);
-	return o;
-}
-#endif
 
 //=============================================================================
 // class user_data_type_prototype method definitions
@@ -403,7 +339,6 @@ CONSTRUCTOR_INLINE
 user_data_type_prototype::user_data_type_prototype(
 	template_formal_decl_list* tf, token_keyword* df, 
 	token_identifier* n, token_string* dp, 
-//	data_type_base* b, 
 	concrete_type_ref* b, 
 	data_param_list* p, token_char* s) :
 		prototype(), 
@@ -461,7 +396,6 @@ CONSTRUCTOR_INLINE
 user_data_type_def::user_data_type_def(template_formal_decl_list* tf, 
 	token_keyword* df, token_identifier* n, 
 	token_string* dp, 
-//	data_type_base* b, 
 	concrete_type_ref* b, 
 	data_param_list* p, 
 	token_char* l, language_body* s, language_body* g, token_char* r) :
@@ -1052,17 +986,6 @@ instance_base::check_build(context* c) const {
 		return NULL;
 	}
 	// need current_instance?  no, not using as reference.
-#if 0
-	dd = c->get_current_datatype_definition();
-	pd = c->get_current_param_definition();
-	if (dd) {
-		assert(!pd);
-		c->add_datatype_instance(*id);	// ignored return value?
-	} else {
-		assert(pd);
-		c->add_paramtype_instance(*id);
-	}
-#endif
 	// return inst;
 	return c->top_namespace();
 }
@@ -1164,9 +1087,6 @@ instance_declaration::check_build(context* c) const {
 	}
 	// instance could be ANY type
 	c->reset_current_fundamental_type();	// the type to instantiate
-//	c->unset_datatype_def();
-//	c->unset_paramtype_def();
-//	return t;
 	return c->top_namespace();
 }
 
@@ -1202,13 +1122,6 @@ instance_connection::rightmost(void) const {
 	if (semi) return semi->rightmost();
 	else return actuals->rightmost();
 }
-
-/***
-line_range
-instance_connection::where(void) const {
-	return node::where();
-}
-***/
 
 const object*
 instance_connection::check_build(context* c) const {
@@ -1308,7 +1221,6 @@ instance_alias::check_build(context* c) const {
 		IS_A(const fundamental_type_reference*, o);
 	assert(tr);
 	// set the instance to match or just set current instantiation
-//	tr = tr->set_context_fundamental_type_reference(*c);
 	tr = c->set_current_fundamental_type(*tr);
 
 	if (aliases)
@@ -1434,7 +1346,6 @@ template_formal_id::template_formal_id(token_identifier* n, range_list* d) :
 		node(), name(n), dim(d) {
 	assert(name);
 // dim may be NULL
-	if (d) assert(dim);
 }
 
 DESTRUCTOR_INLINE
@@ -1484,7 +1395,7 @@ template_formal_id::check_build(context* c) const {
 CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(
 //	type_base* t, 
-	token_paramtype* t, 
+	token_paramtype* t, 		// why not concrete_type_ref?
 	template_formal_id_list* i) :
 		node(), type(t), ids(i) {
 	assert(type); assert(ids);
@@ -1523,7 +1434,6 @@ template_formal_decl::check_build(context* c) const {
 	o = type->check_build(c);
 	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
-//	c->unset_paramtype_def();	// don't forget to unset!
 	c->reset_current_definition_reference();
 	return o;
 }
@@ -1557,19 +1467,6 @@ concrete_type_ref::rightmost(void) const {
 	if (temp_spec) return temp_spec->rightmost();
 	else return base->rightmost();
 }
-
-/*** OBSOLETE
-const token_identifier&
-concrete_type_ref::get_name(void) const {
-	assert(base);
-	return *base;
-}
-
-const template_formal_decl_list*
-concrete_type_ref::get_template_formals(void) const {
-	return temp_spec;
-}
-***/
 
 /**
 	Type-check a type reference, a definition with optional template
@@ -1718,12 +1615,9 @@ process_prototype::check_build(context* c) const {
 		id->what(cerr << c->auto_indent() << 
 			"process_prototype::check_build(...): ");
 	)
-//	c->declare_process(get_name());		// will handle errors
 	c->declare_process(*id);		// will handle errors
-//	o = id->check_build(c);			// always returns NULL
 
 	o = ports->check_build(c);		// ignore return value
-//	c->unset_datatype_def();		// unset port type
 	c->reset_current_definition_reference();
 	c->close_process_definition();
 	// nothing better to do
@@ -1791,7 +1685,6 @@ user_data_type_signature::user_data_type_signature(
 		template_formal_decl_list* tf, 
 		token_keyword* df, token_identifier* n, 
 		token_string* dp, 
-//		data_type_base* b, 
 		concrete_type_ref* b, 
 		data_param_list* p) :
 		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {

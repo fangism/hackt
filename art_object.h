@@ -256,26 +256,10 @@ protected:	// typedefs -- keep these here for re-use
 	 */
 //	typedef	hash_map_of_const_ptr<string, object>	used_id_map_type;
 	typedef	hash_map_of_ptr<string, object>		used_id_map_type;
+	// later: hash_map<string, excl_ptr<object> >
 
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
-#if 0
-	/**
-		A cache of type references for template-able types.  
-		This set owns pointers to the type_references.  
-		Order doesn't matter, thus we choose hash_map.  
-		Hash keys should be function of the type's expanded string.  
-	 */
-	typedef	hash_map_of_ptr<string, fundamental_type_reference>	type_ref_set;
-
-	/**
-		A cache of parameter expressions, owned by this class.  
-		For sub-expression re-use of parameter expressions.  
-		Order doesn't matter, thus we choose hash_map.  
-		TO DO: sophisticated associativity/commutativity symmetrizing.  
-	 */
-	typedef	hash_map_of_ptr<string, param_expr>		param_expr_set;
-#endif
 
 protected:	// members
 	// should really only contain instantiations? no definitions?
@@ -310,34 +294,12 @@ protected:	// members
 	 */
 	used_id_map_type	used_id_map;
 
-#if 0
-	/**
-		Keeps around a cache of types specified with template
-		arguments, which may be null.  
-	 */
-	type_ref_set		type_ref_cache;
-
-	/**
-		Cache of owned parameter expressions, for efficient re-use.  
-	 */
-	param_expr_set		param_expr_cache;
-#endif
-
 public:
 	scopespace(const string& n, const scopespace* p);
 virtual	~scopespace();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	string get_qualified_name(void) const = 0;
-
-#if 0
-// hash_map_of_ptr imitation
-virtual	const object* operator [] (const string& id) const;
-virtual	object*& operator [] (const string& id);
-virtual used_id_map_type::iterator find(const string& id);
-virtual used_id_map_type::const_iterator find(const string& id) const;
-virtual void erase(used_id_map_type::iterator it);
-#endif
 
 virtual	const object*	lookup_object_here(const token_identifier& id) const;
 virtual	const object*	lookup_object(const token_identifier& id) const;
@@ -381,14 +343,6 @@ protected:
 	const name_space*		parent;		// override parent
 
 	/**
-		A set of sub-namespaces, mapped by name.  
-		Not const-pointers, because they are "owned" by 
-		this namespace.
-		TO DO: phase out, use used_id_map only
-	subns_map_type			subns;
-	**/
-
-	/**
 		The set of namespaces which are open to search within
 		this namespace's scope.  The imported namespaces may be 
 		re-opened and renamed.  When this namespace closes, however, 
@@ -411,47 +365,6 @@ protected:
 		not deleted at destruction time.  
 	 */
 	alias_map_type		open_aliases;
-//	subns_map_type		open_aliases;
-
-#if 0
-	/**
-		Container of data type definitions in this scope.
-		Also contains local type aliases.  
-		These definitions are owned by this scope, and should
-		be deleted in the destructor.  
-	 */
-	data_def_set		data_defs;
-	/**
-		Container of data type instantiations in this scope.
-		These definitions are owned by this scope, and should
-		be deleted in the destructor.  
-	 */
-	data_inst_set		data_insts;
-
-	/**
-		Parameter types, only existing in the global namespace.
-	 */
-	param_def_set		param_defs;
-
-	/**
-		Local parameter instantiations.  
-		Should be in scopespace?
-	 */
-	param_inst_set		param_insts;
-
-	/**
-		Container of process definitions in this scope.
-		These definitions are owned by this scope, and should
-		be deleted in the destructor.  
-	 */
-	proc_def_set		proc_defs;
-	/**
-		Container of process instantiations in this scope.
-		These definitions are owned by this scope, and should
-		be deleted in the destructor.  
-	 */
-	proc_inst_set		proc_insts;
-#endif
 
 	// later instroduce single symbol imports?
 	// i.e. using A::my_type;
@@ -475,8 +388,6 @@ const name_space*	add_using_alias(const qualified_id& n, const string& a);
 // do we really need to specialize adding definitions by class?
 // to be used ONLY by the global namespace
 definition_base*	add_definition(definition_base* db);
-// built_in_datatype_def*	add_built_in_datatype_definition(built_in_datatype_def* d);
-// built_in_param_def*	add_built_in_param_definition(built_in_param_def* d);
 datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
 
 // for generic concrete types, built-in and user-defined
@@ -600,11 +511,6 @@ public:
 	typedef	hashlist_of_const_ptr<string,param_instantiation>
 					template_formals_set;
 protected:
-	/**
-		Back-pointer to the namespace to which this definition 
-		belongs.  Should be const?  Do not delete.  
-	const name_space*		parent;	// read-only override
-	**/
 	// inherited:
 	// const scopespace*		parent;
 	// string			key;
@@ -677,7 +583,6 @@ public:
 virtual	~instantiation_base();
 
 virtual	ostream& what(ostream& o) const = 0;
-// virtual	bool equals_port_formal(const port_formal_decl& tf) const = 0;
 	string get_name(void) const { return key; }
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
@@ -880,7 +785,6 @@ public:
 virtual	~collective_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
-// virtual const instantiation_base* get_inst_base(void) const;
 virtual	string hash_string(void) const;
 };	// end class instance_reference_base
 
@@ -1003,15 +907,6 @@ public:
 	typedef hashlist_of_const_ptr<string, instantiation_base>
 							port_formals_set;
 
-#if 0
-	/**
-		Table of local instantiations (orderless) of 
-		data-types and channels.  
-		These instantiations are owned by this process.  
-	 */
-	typedef map_of_ptr<string, instantiation_base>	inst_set;
-#endif
-
 	// List of language bodies, separate or merged?
 
 protected:
@@ -1039,13 +934,6 @@ virtual	const fundamental_type_reference*
 // just a thought...
 void	add_port_formal(const instantiation_base* d, const port_formal_id& p);
 
-/*** to add (non-virtual):
-void	add_process_instantiation(...);
-void	add_datatype_instantiation(...);
-void	add_channel_instantiation(...);
-void	add_language_body(...);
-***/
-
 };	// end class process_definition
 
 //=============================================================================
@@ -1072,7 +960,6 @@ public:
 
 	ostream& what(ostream& o) const;
 	const fundamental_type_reference* get_type_ref(void) const;
-// virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 // virtual	string hash_string(void) const;
 	instance_reference_base* make_instance_reference(context& c) const;
 };	// end class process_instantiation

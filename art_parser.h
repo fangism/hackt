@@ -346,18 +346,6 @@ virtual	const object* check_build(context* c) const;
 	IS_A(connection_argument_list*, l->append(d,n))
 
 //=============================================================================
-/*** not used
-/// special EOF (end-of-file) token
-class token_EOF : public terminal {
-public:
-	token_EOF();
-virtual	~token_EOF();
-virtual	int string_compare(const char* d) const;
-virtual	ostream& what(ostream& o) const;
-};
-***/
-
-//=============================================================================
 /// single token characters
 class token_char : public terminal {
 protected:
@@ -369,7 +357,7 @@ virtual	~token_char();
 
 virtual	int string_compare(const char* d) const;
 virtual	ostream& what(ostream& o) const;
-};
+};	// end class token_char
 
 //=============================================================================
 /**
@@ -862,7 +850,7 @@ virtual	const object* check_build(context* c) const = 0;
 //-----------------------------------------------------------------------------
 /**
 	Abstract base class for keywords that correspond to built-in types, 
-	(for both data-types and parameter types).  
+	sub-classed into data-types and parameter types).  
  */
 class token_type : public token_keyword, public type_base {
 public:
@@ -874,7 +862,7 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const = 0;
-};
+};	// end class token_type
 
 //-----------------------------------------------------------------------------
 /**
@@ -889,7 +877,7 @@ virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class token_datatype
 
 //-----------------------------------------------------------------------------
 /**
@@ -904,7 +892,7 @@ virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
 /**
@@ -930,35 +918,11 @@ friend	ostream& operator << (ostream& o, const type_id& id);
 };	// end class type_id
 
 //-----------------------------------------------------------------------------
-#if 0
-// OBSOLETE
-/**
-	Base type for data, such as int, and bool, not to be confused with 
-	pbool and pint.  
-	Currently, the width member only accepts constant integers, 
-	but may eventually allow pints as well.  
-	Remember, these are only references to the base definitions, 
-	template arguments are supplied in concrete_type_ref.  
- */
-class data_type_base : public type_base {
-protected:
-	token_type*		type;		// generalize to structs?
-public:
-	data_type_base(token_type* t);
-virtual	~data_type_base();
-
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
-};	// end class data_type_base
-#endif
 
 /// list of base data types
-// typedef node_list<data_type_base,comma>	data_type_ref_list;
-// typedef node_list<token_datatype,comma>	data_type_ref_list;
 typedef node_list<concrete_type_ref,comma>	data_type_ref_list;
 	// consider making concrete_datatype_ref sub-class
+	// or overriding class's check_build
 
 // construction macros
 #define data_type_ref_list_wrap(b,l,e)					\
@@ -1020,7 +984,7 @@ virtual	line_position rightmost(void) const;
 
 virtual	expr* release_expr(void);
 virtual	terminal* release_op(void);
-};
+};	// end class incdec_stmt
 
 //-----------------------------------------------------------------------------
 /// class for binary expression statements, with left- and right-hand sides
@@ -1040,7 +1004,7 @@ virtual	line_position rightmost(void) const;
 virtual	expr* release_lhs(void);
 virtual	terminal* release_op(void);
 virtual	expr* release_rhs(void);
-};
+};	// end class assign_stmt
 
 //=============================================================================
 /**
@@ -1056,7 +1020,7 @@ virtual	~def_body_item();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-};
+};	// end class def_body_item
 
 /// definition body is just a list of definition items
 typedef	node_list<def_body_item>	definition_body;
@@ -1086,7 +1050,7 @@ virtual language_body* attach_tag(token_keyword* t);
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const = 0;
-};
+};	// end class language_body
 
 //=============================================================================
 /// namespace enclosed body
@@ -1108,7 +1072,7 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
 virtual	const object* check_build(context* c) const;
-};
+};	// end class namespace_body
 
 //-----------------------------------------------------------------------------
 /// command to search namespace for identifiers
@@ -1147,7 +1111,7 @@ virtual	~instance_management();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-};
+};	// end class instance_management
 
 //-----------------------------------------------------------------------------
 /**
@@ -1164,7 +1128,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class alias_list
 
 #define alias_list_wrap(b,l,e)						\
 	IS_A(alias_list*, l->wrap(b,e))
@@ -1188,7 +1152,7 @@ virtual	~actuals_base();
 // virtual	line_position leftmost(void) const;
 // virtual	line_position rightmost(void) const;
 // virtual	const object* check_build(context* c) const;
-};
+};	// end class actuals_base
 
 //=============================================================================
 /**
@@ -1228,7 +1192,7 @@ virtual	~instance_array();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class instance_array
 
 //=============================================================================
 /**
@@ -1285,7 +1249,7 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 // virtual	line_range where(void) const;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class instance_connection
 
 //-----------------------------------------------------------------------------
 /**
@@ -1296,8 +1260,8 @@ virtual	const object* check_build(context* c) const;
  */
 class connection_statement : public actuals_base {
 protected:
-	expr*			lvalue;
 //	expr_list*		actuals;	// inherited
+	expr*			lvalue;
 	terminal*		semi;
 public:
 	connection_statement(expr* l, expr_list* a, terminal* s = NULL);
@@ -1307,7 +1271,7 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 // virtual	line_range where(void) const;
 // virtual	const object* check_build(context* c) const;
-};
+};	// end class connection_statement
 
 //-----------------------------------------------------------------------------
 /**
@@ -1354,7 +1318,7 @@ virtual	~loop_instantiation();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class loop_instantiation
 
 //=============================================================================
 /// single port formal identifier, with optional dimension array specification
@@ -1369,7 +1333,7 @@ virtual	~port_formal_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class port_formal_id
 
 /// list of port-formal identifiers (optional arrays)
 typedef	node_list<port_formal_id,comma>	port_formal_id_list;
@@ -1392,7 +1356,7 @@ virtual	~port_formal_decl();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class port_formal_decl
 
 /// list of port-formal declarations
 typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
@@ -1432,6 +1396,7 @@ class template_formal_decl : public node {
 protected:
 //	type_base*			type;	// too general
 	token_paramtype*		type;	///< formal base type
+		// why not concrete_type_ref?
 	template_formal_id_list*	ids;	///< identifier list
 public:
 //	template_formal_decl(type_base* t, template_formal_id_list* i);
@@ -1442,7 +1407,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class template_formal_decl
 
 /// list of template-formal declarations
 typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
@@ -1490,7 +1455,7 @@ virtual	~definition();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-};
+};	// end class definition
 
 //-----------------------------------------------------------------------------
 /// abstract base class for prototypes
@@ -1500,7 +1465,7 @@ public:
 virtual	~prototype();
 
 // don't bother re-declaring virtual methods
-};
+};	// end class prototype
 
 //=============================================================================
 /**
@@ -1541,7 +1506,7 @@ virtual	~process_signature();
 	const token_identifier& get_name(void) const;
 	const template_formal_decl_list* get_template_formals(void) const;
 	const port_formal_decl_list* get_port_formals(void) const;
-};
+};	// end class process_signature
 
 //-----------------------------------------------------------------------------
 /// process prototype declaration
@@ -1558,14 +1523,14 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const;
-};
+};	// end class process_prototype
 
 //-----------------------------------------------------------------------------
 /// process definition
 class process_def : public definition, public process_signature {
 protected:
 //	token_keyword*			def;	//  inherited
-//	concrete_type_ref*			idt;	//  inherited
+//	concrete_type_ref*		idt;	//  inherited
 //	port_formal_decl_list*		ports;	//  inherited
 	definition_body*		body;	///< definition body
 public:
@@ -1577,7 +1542,7 @@ virtual	~process_def();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class process_def
 
 //=============================================================================
 /// conditional instantiations in definition body
@@ -1593,7 +1558,7 @@ virtual	~guarded_definition_body();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class guarded_definition_body
 
 /// list of template-formal declarations
 typedef	node_list<guarded_definition_body,thickbar>
@@ -1616,7 +1581,7 @@ virtual	~conditional_instantiation();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class conditional_instantiation
 
 //=============================================================================
 /// user-defined data type
@@ -1624,14 +1589,12 @@ class user_data_type_signature : public signature_base {
 protected:
 	token_keyword*		def;		///< "deftype" keyword
 	token_string*		dop;		///< <: operator
-//	data_type_base*		bdt;		///< the represented type
 	concrete_type_ref*	bdt;		///< the represented type
 	data_param_list*	params;		///< the implementation type
 public:
 	user_data_type_signature(template_formal_decl_list* tf, 
 		token_keyword* df, token_identifier* n, 
 		token_string* dp, 
-//		data_type_base* b, 
 		concrete_type_ref* b, 		// or concrete_datatype_ref
 		data_param_list* p);
 virtual	~user_data_type_signature();
@@ -1647,7 +1610,6 @@ public:
 	user_data_type_prototype(template_formal_decl_list* tf, 
 		token_keyword* df, token_identifier* n, 
 		token_string* dp, 
-//		data_type_base* b, 
 		concrete_type_ref* b, 
 		data_param_list* p, token_char* s);
 virtual	~user_data_type_prototype();
@@ -1665,7 +1627,6 @@ protected:
 //	token_keyword*		def;		// inherited
 //	token_identifier*	name;		// inherited
 //	token_string*		dop;		// inherited
-//	data_type_base*		bdt;		// inherited
 //	concrete_type_ref*	bdt;		// inherited
 //	data_param_list*	params;		// inherited
 	token_char*		lb;		///< left brace
@@ -1676,7 +1637,6 @@ public:
 	user_data_type_def(template_formal_decl_list* tf, 
 		token_keyword* df, token_identifier* n, 
 		token_string* dp, 
-//		data_type_base* b, 
 		concrete_type_ref* b, 
 		data_param_list* p, 
 		token_char* l, language_body* s, language_body* g, 
@@ -1719,7 +1679,7 @@ virtual	~user_chan_type_prototype();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class user_chan_type_prototype
 
 //-----------------------------------------------------------------------------
 /// user-defined channel type definition
@@ -1745,7 +1705,7 @@ virtual	~user_chan_type_def();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class user_chan_type_def
 
 //=============================================================================
 
