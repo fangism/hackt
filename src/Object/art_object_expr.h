@@ -5,6 +5,7 @@
 
 #include "art_object_inst_ref.h"		// includes "art_object_base.h"
 #include "discrete_interval_set_fwd.h"
+#include "multikey_fwd.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -21,6 +22,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+	using namespace MULTIKEY_NAMESPACE;
 	using std::string;
 	using std::ostream;
 
@@ -372,13 +374,15 @@ virtual	bool must_be_initialized(void) const = 0;
 virtual	bool is_static_constant(void) const = 0;
 virtual	bool is_loop_independent(void) const = 0;
 virtual	bool is_unconditional(void) const = 0;
+
+virtual	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
 };	// end class index_list
 
 //-----------------------------------------------------------------------------
 /**
 	Index list whose indices are all constant.
 	This means we need a const_index interface to objects.  
-	Because of aribtrary pointer copying,
+	Because of arbitrary pointer copying,
 	members must be reference counted.  
  */
 class const_index_list : public index_list, 
@@ -416,6 +420,8 @@ public:
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
+
+	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class const_index_list
@@ -456,6 +462,8 @@ public:
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
+
+	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class dynamic_index_list
@@ -480,6 +488,8 @@ virtual	size_t size(void) const = 0;
 	size_t dimensions(void) const { return size(); }
 virtual	bool is_static_constant(void) const = 0;
 virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
+
+virtual	bool resolve_ranges(const_range_list& r) const = 0;
 };	// end class range_expr_list
 
 //-----------------------------------------------------------------------------
@@ -497,6 +507,23 @@ public:
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
+#if 0
+	// maybe don't need?
+	/**
+		Utility class for generating keys within a multidimensional
+		range.  
+	 */
+	template <size_t D>
+	class multikey_generator {
+	protected:
+		const_range_list	range_list;
+	public:
+		multikey_generator(const const_range_list& rl);
+		// default destructor
+
+	};	// end class multikey_generator
+#endif
+public:
 	const_range_list();
 	const_range_list(const list_type& l);
 explicit const_range_list(const const_index_list& i);
@@ -508,21 +535,10 @@ explicit const_range_list(const const_index_list& i);
 	bool is_static_constant(void) const { return true; }
 	const_range_list static_overlap(const range_expr_list& r) const;
 
-#if 0
-	const_index_list revert_to_indices(const const_index_list& il) const;
-#endif
-
-#if 0
-	const_range_list collapsed_dimension_ranges(
-		const const_index_list& il) const;
-#endif
-#if 0
-	// don't like modifying self, unreliable, prefer copy above
-	void collapse_dimensions_wrt_indices(const const_index_list& il);
-#endif
-
 	bool is_size_equivalent(const const_range_list& il) const;
 	bool operator == (const const_range_list& c) const;
+
+	bool resolve_ranges(const_range_list& r) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class const_range_list
@@ -561,6 +577,7 @@ virtual	~dynamic_range_list();
 	bool is_static_constant(void) const;
 	const_range_list static_overlap(const range_expr_list& r) const;
 		// false, will be empty
+	bool resolve_ranges(const_range_list& r) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class dynamic_range_list
@@ -616,6 +633,8 @@ virtual	count_const_ptr<const_param>
 virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual int static_constant_int(void) const = 0;
+
+virtual	bool resolve_value(int& i) const = 0;
 };	// end class pint_expr
 
 //-----------------------------------------------------------------------------
@@ -720,6 +739,8 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	int static_constant_int(void) const;
+
+	bool resolve_value(int& i) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_instance_reference
@@ -757,6 +778,8 @@ public:
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 	bool operator == (const const_range& c) const;
+
+	bool resolve_value(int& i) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_const
@@ -826,6 +849,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	int static_constant_int(void) const;
+
+	bool resolve_value(int& i) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_unary_expr
@@ -898,6 +923,7 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	int static_constant_int(void) const;
+	bool resolve_value(int& i) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class arith_expr
@@ -1021,6 +1047,8 @@ virtual bool is_loop_independent(void) const = 0;
 
 /** doesn't depend on conditional variables */
 virtual bool is_unconditional(void) const = 0;
+
+virtual	bool resolve_range(const_range& r) const = 0;
 };	// end class range_expr
 
 //-----------------------------------------------------------------------------
@@ -1064,6 +1092,8 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 	bool is_loop_independent(void) const { return false; }
 	bool is_unconditional(void) const { return false; }
 	const_range static_constant_range(void) const;
+
+	bool resolve_range(const_range& r) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_range
@@ -1121,6 +1151,8 @@ public:
 	bool is_static_constant(void) const { return !empty(); }
 	bool is_loop_independent(void) const { return !empty(); }
 	bool is_unconditional(void) const { return !empty(); }
+
+	bool resolve_range(const_range& r) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class const_range

@@ -75,6 +75,11 @@ virtual	~connection_assignment_base() { }
 /**
 	Class for saving and managing expression assignments.  
 	Includes both static and dynamic expressions.  
+	Consider separating, rhs from the rest?
+		rhs is any param_expr, while the rest are 
+		instance_references, may eventually be complex-aggregate.
+	Consider sub-typing into pint and pbool assignments, 
+		since types are static.  
  */
 class param_expression_assignment : public object, 
 		public instance_management_base {
@@ -93,10 +98,12 @@ public:
 
 	void	append_param_expression(count_const_ptr<param_expr> e);
 	void	prepend_param_expression(count_const_ptr<param_expr> e);
+
+	void unroll(void) const;
 public:
 	ART_OBJECT_IO_METHODS
 
-	void unroll_params(void) const;
+//	void unroll_params(void) const;
 };	// end class param_expression_assignment
 
 //-----------------------------------------------------------------------------
@@ -139,6 +146,8 @@ public:
 	void	prepend_instance_reference(
 			count_const_ptr<instance_reference_base> i);
 
+	void unroll(void) const;
+
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class aliases_connection
@@ -166,6 +175,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void	append_instance_reference(
 			count_const_ptr<instance_reference_base> i);
+
+	void unroll(void) const;
 
 public:
 	ART_OBJECT_IO_METHODS

@@ -7,6 +7,9 @@
 #include "count_ptr.h"
 #include "art_macros.h"
 
+#include "multikey_fwd.h"
+#include "multikey_qmap_fwd.h"
+
 namespace ART {
 //=============================================================================
 // forward declarations from outside namespaces
@@ -32,6 +35,8 @@ namespace entity {
 //=============================================================================
 	using namespace std;
 	using namespace fang;		// for experimental pointer classes
+	using namespace MULTIKEY_NAMESPACE;
+	using namespace MULTIKEY_MAP_NAMESPACE;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_base.h"
@@ -203,10 +208,47 @@ NOTE: these functions should only be applicable to param_instance_references.
 };	// end class param_instance_collection
 
 //-----------------------------------------------------------------------------
+struct pbool_instance {
+public:
+	/**
+		The unroll-time value of this pbool parameter.
+	 */
+	bool		value : 1;
+	/**
+		Whether or not this instance was truly instantiated,
+		Safeguards against extraneous instances in arrays.  
+	 */
+	bool		instantiated : 1;
+	/**	Whether or not value has been initialized exactly 
+		once to a value
+	 */
+	bool		valid : 1;
+public:
+	pbool_instance() : value(false), instantiated(false), valid(false) { }
+	pbool_instance(const bool b) :
+		value(false), instantiated(b), valid(false) { }
+	pbool_instance(const int v) :
+		value(v), instantiated(true), valid(true) { }
+	// default copy constructor
+	// default destructor
+};	// end struct pbool_instance
+
+bool
+operator == (const pbool_instance& p, const pbool_instance& q);
+
+ostream&
+operator << (ostream& o, const pbool_instance& p);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
 class pbool_instance_collection : public param_instance_collection {
+// friend class pbool_instantiation_statement;
+public:
+	// int or size_t (unsigned)?
+	typedef	multikey_qmap_base<int, pbool_instance>		collection_type;
+	typedef	multikey_qmap<0, int, pbool_instance>		scalar_type;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -221,6 +263,11 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pbool_expr>		ival;
+	/**
+		The unrolled collection of pbool instances.  
+	excl_ptr<collection_type>		collection;
+	**/
+
 private:
 	pbool_instance_collection();
 public:
@@ -248,10 +295,47 @@ public:
 };	// end class pbool_instance_collection
 
 //-----------------------------------------------------------------------------
+struct pint_instance {
+public:
+	/**
+		The unroll-time value of this pint parameter.
+	 */
+	int		value;
+	/**
+		Whether or not this instance was truly instantiated,
+		Safeguards against extraneous instances in arrays.  
+	 */
+	bool		instantiated : 1;
+	/**	Whether or not value has been initialized exactly 
+		once to a value
+	 */
+	bool		valid : 1;
+public:
+	pint_instance() : value(-1), instantiated(false), valid(false) { }
+	pint_instance(const bool b) :
+		value(-1), instantiated(b), valid(false) { }
+	pint_instance(const int v) :
+		value(v), instantiated(true), valid(true) { }
+	// default copy constructor
+	// default destructor
+};	// end struct pint_instance
+
+bool
+operator == (const pint_instance& p, const pint_instance& q);
+
+ostream&
+operator << (ostream& o, const pint_instance& p);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
+// friend class pint_instantiation_statement;
+public:
+	// int or size_t (unsigned)?
+	typedef	multikey_qmap_base<int, pint_instance>		collection_type;
+	typedef	multikey_qmap<0, int, pint_instance>		scalar_type;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -266,6 +350,11 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pint_expr>		ival;
+	/**
+		The unrolled collection of pint instances.  
+	 */
+	excl_ptr<collection_type>		collection;
+
 private:
 	pint_instance_collection();
 public:
@@ -292,6 +381,13 @@ public:
 	count_const_ptr<pint_expr> initial_value(void) const;
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
+
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+
+	bool lookup_value(int& v) const;
+	bool lookup_value(int& v, const multikey_base<int>& i) const;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_instance_collection
@@ -303,28 +399,20 @@ public:
 	This node retains the information for an instantiation statement.  
 	This is what will be unrolled.  
 	No parent, is a globally sequential item.  
+	Every sub-class will contain a modifiable
+	back-reference to an (sub-type of) instance_collection_base, 
+	where the collection will be unrolled.  
+	Should this point to an unrolled instance?
+	No, it will be looked up.  
  */
 class instantiation_statement : public instance_management_base {
 protected:
-	/**
-		A back-reference to an instance_collection_base, 
-		where the collection will be unrolled.  
-		Needs to be modifiable for unrolling.  
-		Should this point to an unrolled instance?
-		No, it will be looked up.  
-	 */
-//	never_ptr<instance_collection_base>	inst_base;
-
-//	count_const_ptr<fundamental_type_reference>	type_base;
-
 	index_collection_item_ptr_type		indices;
 
 protected:
 	instantiation_statement();
 public:
 	instantiation_statement(
-//		never_ptr<instance_collection_base> b, 
-//		count_const_ptr<fundamental_type_reference> t, 
 		const index_collection_item_ptr_type& i);
 virtual	~instantiation_statement();
 
@@ -340,9 +428,11 @@ virtual	never_const_ptr<instance_collection_base>
 	size_t dimensions(void) const;
 	index_collection_item_ptr_type get_indices(void) const;
 
-	// may eventually virtualize
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
+
+// should be pure virtual eventually
+virtual	void unroll(void) const;
 
 /***
 	case: A top-level instantiation is called.
@@ -386,6 +476,8 @@ public:
 	never_const_ptr<instance_collection_base> get_inst_base(void) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
+//	void unroll(void) const;
+
 public:
 	ART_OBJECT_IO_METHODS
 
@@ -412,6 +504,8 @@ public:
 	never_ptr<instance_collection_base> get_inst_base(void);
 	never_const_ptr<instance_collection_base> get_inst_base(void) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+
+	void unroll(void) const;
 
 public:
 	ART_OBJECT_IO_METHODS

@@ -62,6 +62,22 @@ param_expression_assignment::prepend_param_expression(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unpacks the right-most (last) expression and assigns its
+	value(s) to all other expressions in the list on the left. 
+ */
+void
+param_expression_assignment::unroll(void) const {
+	cerr << "param_expression_assignment::unroll(): "
+		"Fang, finish me!" << endl;
+	assert(ex_list.size() > 1);		// sanity check
+	// Evaluate last expression
+	const ex_list_type::value_type& rhs = ex_list.back();
+	// need to verify sizes and types?
+	// should already be type verified (pint vs. pbool)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 param_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -111,6 +127,8 @@ if (!m.flag_visit(this)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+UNBORN OBSOLETE
 void
 param_expression_assignment::unroll_params(void) const {
 	// first make sure rhs is initialized
@@ -140,6 +158,7 @@ param_expression_assignment::unroll_params(void) const {
 	}
 #endif
 }
+#endif
 
 //=============================================================================
 // class instance_reference_connection method definitions
@@ -191,6 +210,13 @@ aliases_connection::prepend_instance_reference(
 		count_const_ptr<instance_reference_base> i) {
 	assert(i);
 	inst_list.push_front(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+aliases_connection::unroll(void) const {
+	cerr << "aliases_connection::unroll(): "
+		"Fang, finish me!" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -294,6 +320,13 @@ port_connection::append_instance_reference(
 		count_const_ptr<instance_reference_base> i) {
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_connection::unroll(void) const {
+	cerr << "port_connection::unroll(): "
+		"Fang, finish me!" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

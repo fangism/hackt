@@ -2212,6 +2212,21 @@ sequential_scope::append_instance_management(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This may be temporary.  
+ */
+void
+sequential_scope::unroll(void) const {
+	for_each(instance_management_list.begin(), 
+		instance_management_list.end(), 
+	unary_compose_void(
+		mem_fun_ref(&instance_management_base::unroll), 
+		const_dereference<excl_const_ptr, instance_management_base>()
+	)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::collect_object_pointer_list(
 		persistent_object_manager& m) const {

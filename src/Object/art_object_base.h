@@ -1070,7 +1070,8 @@ virtual	~sequential_scope();
 	void load_object_pointer_list(const persistent_object_manager& m);
 
 // need not be virtual?
-//	void unroll(...) = 0;
+// may need context later...
+	void unroll(void) const;
 
 };	// end class sequential_scope
 
@@ -1109,6 +1110,7 @@ virtual	void load_object(persistent_object_manager& m) = 0;
 
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
+virtual	void unroll(void) const = 0;
 };	// end class instance_management_base
 
 //=============================================================================

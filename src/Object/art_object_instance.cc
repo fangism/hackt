@@ -9,6 +9,7 @@
 #include "art_built_ins.h"
 #include "art_object_IO.tcc"
 
+#include "multikey_qmap.h"
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
@@ -1074,13 +1075,34 @@ if (!m.flag_visit(this)) {
 }
 
 //=============================================================================
+// struct pint_instance method definitions
+// not really methods...
+
+bool
+operator == (const pint_instance& p, const pint_instance& q) {
+	assert(p.instantiated && q.instantiated);
+	if (p.valid && q.valid) {
+		return p.value == q.value;
+	} else return (p.valid == q.valid); 
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+operator << (ostream& o, const pint_instance& p) {
+	assert(p.instantiated);
+	if (p.valid) {
+		return o << "?";
+	} else	return o << p.value;
+}
+
+//=============================================================================
 // class pint_instance_collection method definitions
 
 /**
 	Private empty constructor.
  */
 pint_instance_collection::pint_instance_collection() :
-		param_instance_collection(), ival(NULL) {
+		param_instance_collection(), ival(NULL), collection(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1228,6 +1250,144 @@ pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) con
 	assert(index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return check_expression_dimensions(*pi);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_instance_collection::instantiate_indices(
+		const index_collection_item_ptr_type& i) {
+	if (!collection)
+		collection = excl_ptr<collection_type>(
+			collection_type::make_multikey_qmap(depth));
+	assert(collection);
+	if (i) {
+#if 0
+		cerr << "multidimensional index instantiation!  "
+			"let's not get too fancy here..." << endl;
+#endif
+		// indices is a range_expr_list (base class)
+		// resolve into constants now using const_range_list
+		// if unable, (b/c uninitialized) then report error
+		const_range_list ranges;	// initially empty
+		if (!i->resolve_ranges(ranges)) {
+			// fail
+			cerr << "ERROR: unable to resolve indices "
+				"for instantiation: ";
+			i->dump(cerr) << endl;
+			exit(1);
+		} 
+		// else success
+		// now iterate through, unrolling one at a time...
+		// stop as soon as there is a conflict
+		// later: factor this out into common helper class
+		excl_ptr<multikey_generator_base<int> > key_gen = 
+			excl_ptr<multikey_generator_base<int> >(
+			multikey_generator_base<int>::make_multikey_generator(
+				ranges.size()));
+		assert(key_gen);
+		multikey_base<int>::iterator li =
+			key_gen->get_lower_corner().begin();
+		multikey_base<int>::iterator ui =
+			key_gen->get_upper_corner().begin();
+		const_range_list::const_iterator ri = ranges.begin();
+		const const_range_list::const_iterator re = ranges.end();
+		for ( ; ri != re; ri++, li++, ui++) {
+			*li = ri->first;
+			*ui = ri->second;
+		}
+		key_gen->initialize();
+		excl_ptr<multikey_base<int> > key_end = 
+			excl_ptr<multikey_base<int> >(
+			multikey_base<int>::make_multikey(ranges.size()));
+		assert(key_end);
+		copy(key_gen->begin(), key_gen->end(), key_end->begin());
+		never_const_ptr<multikey_base<int> >
+			key_gen_base(key_gen.is_a<multikey_base<int> >());
+		assert(key_gen_base);
+		never_const_ptr<multikey_base<int> >
+			key_end_base(key_end.is_a<multikey_base<int> >());
+		assert(key_end_base);
+		do {
+#if 0
+			multikey_base<int>::const_iterator ci =
+				key_gen->begin();
+			for ( ; ci!=key_gen->end(); ci++) {
+				cerr << '[' << *ci << ']';
+			}
+			cerr << endl;
+#endif
+			pint_instance& pi = (*collection)[*key_gen_base];
+			if (pi.instantiated) {
+				cerr << "ERROR: Index already instantiated!"
+					<< endl;
+				exit(1);
+			}
+			pi.instantiated = true;
+			assert(!pi.valid);
+			(*key_gen)++;
+		} while (*key_gen_base != *key_end_base);
+	} else {
+		// 0-D, or scalar
+		assert(!depth);
+		const never_ptr<scalar_type>
+			the(collection.is_a<scalar_type>());
+		assert(the);
+		pint_instance& pi = *the;
+		if (pi.instantiated) {
+			cerr << "ERROR: Already instantiated!" << endl;
+			exit(1);
+		}
+		pi.instantiated = true;
+		assert(!pi.valid);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version assumes collection is a scalar.  
+ */
+bool
+pint_instance_collection::lookup_value(int& v) const {
+	assert(!depth);
+	if (!collection) {
+		// hasn't been instantiated yet!
+		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
+		return false;
+	}
+	const never_const_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	assert(the);
+	const pint_instance& pi = *the;
+	if (pi.valid) {
+		v = pi.value;
+	} else {
+		dump(cerr << "ERROR: use of uninitialized ") << endl;
+	}
+	return pi.valid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assumes that index resolves down to a single integer.  
+	Returns value of a single integer, if it can be resolved.  
+	If integer is uninitialized, report as error.  
+ */
+bool
+pint_instance_collection::lookup_value(int& v,
+		 const multikey_base<int>& i) const {
+	assert(depth == i.dimensions());
+	if (!collection) {
+		// hasn't been instantiated yet!
+		cerr << "ERROR: reference to uninstantiated pint!" << endl;
+		return false;
+	}
+	const pint_instance& pi = (*collection)[i];
+	if (pi.valid) {
+		v = pi.value;
+	} else {
+		cerr << "ERROR: reference to uninitialized pint " <<
+			get_qualified_name() << " at index: " << i << endl;
+	}
+	return pi.valid;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1465,6 +1625,15 @@ instantiation_statement::dimensions(void) const {
 	else return 0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary, should be pure virtual in the end.
+ */
+void
+instantiation_statement::unroll(void) const {
+	cerr << "instantiation_statement::unroll(): Fang, finish me!" << endl;
+}
+
 //=============================================================================
 // class param_instantiation_statement method definitions
 
@@ -1658,6 +1827,13 @@ pint_instantiation_statement::get_inst_base(void) const {
 count_const_ptr<fundamental_type_reference>
 pint_instantiation_statement::get_type_ref(void) const {
 	return pint_type_ptr;		// built-in type pointer
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_instantiation_statement::unroll(void) const {
+	assert(inst_base);
+	inst_base->instantiate_indices(indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

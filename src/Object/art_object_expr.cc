@@ -17,6 +17,7 @@
 #include "art_parser_base.h"
 #include "art_object_expr.h"
 #include "art_object_instance.h"
+#include "multikey.h"
 
 #include "art_utils.tcc"
 #include "art_object_IO.tcc"
@@ -1079,6 +1080,30 @@ pint_instance_reference::static_constant_int(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This version specifically asks for one integer value, 
+	thus the array indices must be scalar (0-D).  
+ */
+bool
+pint_instance_reference::resolve_value(int& i) const {
+	// lookup pint_instance_collection
+	if (array_indices) {
+		// convert to multikey_base
+		excl_ptr<multikey_base<int> > key;
+		// pass and return by reference
+		if (array_indices->resolve_multikey(key)) {
+			assert(key);
+			return pint_inst_ref->lookup_value(i, *key);
+		} else {
+			cerr << "Unable to resolve array_indices!" << endl;
+			return false;
+		}
+	} else {
+		return pint_inst_ref->lookup_value(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -1186,6 +1211,13 @@ pint_const::static_constant_param(void) const {
 bool
 pint_const::operator == (const const_range& c) const {
 	return (val == c.first) && (val == c.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const::resolve_value(int& i) const {
+	i = val;
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1355,6 +1387,19 @@ int
 pint_unary_expr::static_constant_int(void) const {
 	// depends on op
 	return -ex->static_constant_int();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns resolved value of negation expression.  
+ */
+bool
+pint_unary_expr::resolve_value(int& i) const {
+	int j;
+	assert(ex);
+	const bool ret = ex->resolve_value(j);
+	i = -j;		// regardless of ret
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1567,8 +1612,41 @@ arith_expr::static_constant_int(void) const {
 		case '*':	return a / b;
 		case '/':	return a * b;
 		case '%':	return a % b;
-		default:	assert(0); return 0;
+		default:
+			cerr << "FATAL: Unexpected operator \'" << op <<
+				"\', aborting." << endl;
+			assert(0); return 0;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+arith_expr::resolve_value(int& i) const {
+	int a, b;
+	assert(lx);	assert(rx);
+	const bool lret = lx->resolve_value(a);
+	const bool rret = rx->resolve_value(b);
+	if (!lret) {
+		cerr << "ERROR: resolving left operand of: ";
+		dump(cerr) << endl;
+		return false;
+	} else if (!rret) {
+		cerr << "ERROR: resolving right operand of: ";
+		dump(cerr) << endl;
+		return false;
+	}
+	switch(op) {
+		case '+':	i = a + b;	break;
+		case '-':	i = a - b;	break;
+		case '*':	i = a / b;	break;
+		case '/':	i = a * b;	break;
+		case '%':	i = a % b;	break;
+		default:	
+			cerr << "FATAL: Unexpected operator \'" << op <<
+				"\', aborting." << endl;
+			assert(0); return false;
+	}
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1910,6 +1988,14 @@ pint_range::static_constant_range(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_range::resolve_range(const_range& r) const {
+	if (!lower->resolve_value(r.first))	return false;
+	if (!upper->resolve_value(r.second))	return false;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_range::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2079,6 +2165,13 @@ const_range::operator == (const const_range& c) const {
 bool
 const_range::is_sane(void) const {
 	return !empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_range::resolve_range(const_range& r) const {
+	r = *this;
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2407,6 +2500,13 @@ const_range_list::operator == (const const_range_list& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_range_list::resolve_ranges(const_range_list& r) const {
+	r = *this;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, CONST_RANGE_LIST_TYPE);
@@ -2519,6 +2619,30 @@ dynamic_range_list::is_static_constant(void) const {
 const_range_list
 dynamic_range_list::static_overlap(const range_expr_list& r) const {
 	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param r reference to return value of const_range_list, 
+		where final range bounds are saved.  
+	\return true if success, false if fail.  
+ */
+bool
+dynamic_range_list::resolve_ranges(const_range_list& r) const {
+	// resolve ranges each step, each dynamic_range
+	r.clear();
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const_range c;
+		const count_const_ptr<pint_range> ip(*i);
+		if (ip->resolve_range(c)) {
+			r.push_back(c);
+		} else {
+			return false;
+		}
+	}
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2727,6 +2851,31 @@ const_index_list::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Each index should be a scalar integer.  
+	Error otherwise.
+	\param k placeholder for returning allocated and assigned key.  
+	\return true if resolved successfully.
+ */
+bool
+const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
+	k = excl_ptr<multikey_base<int> >(
+		multikey_base<int>::make_multikey(size()));
+	assert(k);
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j=0;
+	for ( ; i!=e; i++, j++) {
+		const count_const_ptr<const_index> ip(*i);
+		const count_const_ptr<pint_const> pc(ip.is_a<pint_const>());
+		if (pc)
+			(*k)[j] = pc->static_constant_int();
+		else 	return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
  */
@@ -2926,6 +3075,35 @@ dynamic_index_list::is_unconditional(void) const {
 		if (!(*i)->is_unconditional())
 			return false;
 	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
+	k = excl_ptr<multikey_base<int> >(
+		multikey_base<int>::make_multikey(size()));
+	assert(k);
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j = 0;
+	for ( ; i!=e; i++) {
+		const count_const_ptr<index_expr> ip(*i);
+		const count_const_ptr<pint_expr> pi(ip.is_a<pint_expr>());
+		// assert(pi); ?
+		if (pi) {
+			if (!pi->resolve_value((*k)[j])) {
+				cerr << "Unable to resolve pint_expr at "
+					"index position " << j << endl;
+				return false;
+			}
+		} else {
+			cerr << "Index at position " << j << 
+				"is not a pint_expr!" << endl;
+			return false;
+		}
+	}
+	// nothing went wrong
 	return true;
 }
 
