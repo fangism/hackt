@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.34 2005/02/27 22:54:10 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.34.2.1 2005/02/28 20:35:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -245,11 +245,11 @@ definition_base::lookup_object_here(const string& id) const {
 		or the template formals signature is empty, 
 		or default parameters are available for all formals.  
  */
-bool
+good_bool
 definition_base::check_null_template_argument(void) const {
 //	STACKTRACE("definition_base::check_null_template_argument()");
 	if (template_formals_list.empty())
-		return true;
+		return good_bool(true);
 	// else make sure each formal has a default parameter value
 	template_formals_list_type::const_iterator i =
 		template_formals_list.begin();
@@ -260,12 +260,12 @@ definition_base::check_null_template_argument(void) const {
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
 		if (!(*p).default_value()) {
-			return false;
+			return good_bool(false);
 		}
 		// else continue;	// keep checking
 	}
 	// if we've reached end of list, we're good!
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -343,7 +343,7 @@ definition_base::get_qualified_name(void) const {
 	\return true if arguments successfully type-checked 
 		and default arguments supplied in missing places.  
  */
-bool
+good_bool
 definition_base::certify_template_arguments(
 		const never_ptr<dynamic_param_expr_list> ta) const {
 if (ta) {
@@ -356,7 +356,7 @@ if (ta) {
 		template_formals_list.begin();
 	if (a_size != f_size) {
 		if (a_size)
-			return false;
+			return good_bool(false);
 		// else a_size == 0, passed actuals list is empty, 
 		// try to fill in all default arguments
 		for ( ; f_iter!=f_end; f_iter++) {
@@ -367,14 +367,14 @@ if (ta) {
 				default_expr(pinst->default_value());
 			if (!default_expr) {
 				// no default value to supply
-				return false;
+				return good_bool(false);
 			} else {
 				ta->push_back(default_expr);
 			}
 		}
 		// if it fails, then list will be incomplete.  
 		// if this point is reached, then fill-in was successfull
-		return true;
+		return good_bool(true);
 	}
 	dynamic_param_expr_list::iterator p_iter = ta->begin();
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
@@ -387,9 +387,9 @@ if (ta) {
 		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex)) {
+			if (!pinst->type_check_actual_param_expr(*pex).good) {
 				// error message?
-				return false;
+				return good_bool(false);
 			}
 			// else continue checking successive arguments
 		} else {
@@ -400,7 +400,7 @@ if (ta) {
 				default_expr(pinst->default_value());
 			if (!default_expr) {
 				// error message?
-				return false;
+				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list
 				*p_iter = default_expr;
@@ -408,7 +408,7 @@ if (ta) {
 		}
 	}
 	// end of checking reached, everything passed
-	return true;
+	return good_bool(true);
 } else {
 	// no arguments supplied, make sure template specification is
 	// null, or every formal has default values.  
@@ -421,11 +421,11 @@ if (ta) {
 	Default: return false (if unimplemented)
 	Temporarily prints an error message.  
  */
-bool
+good_bool
 definition_base::certify_port_actuals(const object_list& ol) const {
 	cerr << "Default definition_base::certify_port_actuals() = false."
 		<< endl;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -437,7 +437,7 @@ definition_base::certify_port_actuals(const object_list& ol) const {
 excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
 	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
-	INVARIANT(check_null_template_argument());
+	INVARIANT(check_null_template_argument().good);
 	if (template_formals_list.empty())
 		return return_type(NULL);
 	// defaulting to dynamic_param_expr_list
@@ -808,7 +808,7 @@ count_ptr<const fundamental_type_reference>
 channel_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new channel_type_reference(
@@ -1159,7 +1159,7 @@ count_ptr<const fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
@@ -1459,7 +1459,7 @@ enum_datatype_def::make_fundamental_type_reference(
 	\param d the definition (signature) to compare, 
 		the name MUST match, else comparison is pointless!
  */
-bool
+good_bool
 enum_datatype_def::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
@@ -1469,13 +1469,13 @@ enum_datatype_def::require_signature_match(
 	if (ed) {
 		// only names need to match...
 		// no other signature information!  easy.
-		return true;
+		return good_bool(true);
 	} else {
 		// class type doesn't even match!  report error.
 		d->what(cerr << key << " is already declared as a ")
 			<< " but is being redeclared as a ";
 		what(cerr) << "  ERROR!  ";
-		return false;
+		return good_bool(false);
 	}
 }
 
@@ -1666,7 +1666,7 @@ count_ptr<const fundamental_type_reference>
 user_def_datatype::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
@@ -1822,7 +1822,7 @@ count_ptr<const fundamental_type_reference>
 datatype_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
@@ -1836,11 +1836,11 @@ datatype_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 datatype_definition_alias::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2058,7 +2058,7 @@ process_definition::lookup_port_formal(const string& id) const {
 	the port formal specification.  
 	\return true if type checks (is conservative).
  */
-bool
+good_bool
 process_definition::certify_port_actuals(const object_list& ol) const {
 #if 0
 	cerr << "process_definition::certify_port_actuals(): FINISH ME!"
@@ -2070,7 +2070,7 @@ process_definition::certify_port_actuals(const object_list& ol) const {
 		cerr << "Number of port actuals (" << num_actuals <<
 			") doesn\'t match the number of port formals (" <<
 			num_formals << ").  ERROR!  " << endl;
-		return false;
+		return good_bool(false);
 	}
 	object_list::const_iterator
 		a_iter = ol.begin();
@@ -2097,14 +2097,14 @@ process_definition::certify_port_actuals(const object_list& ol) const {
 				a_iref->dump_type_size(cerr);
 				f_iref->dump_type_size(
 					cerr << ", expected: ") << endl;
-				return false;
+				return good_bool(false);
 			}
 			// else continue checking
 		}
 		// else is NULL, no connection to check, just continue
 	}
 	// if we've made it here, then no errors!
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2112,7 +2112,7 @@ count_ptr<const fundamental_type_reference>
 process_definition::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(new process_type_reference(
 				never_ptr<const process_definition>(this),
@@ -2170,7 +2170,7 @@ process_definition::add_port_formal(
 	\param d the definition to check against.  
 	\return true if equivalent, else false.  
  */
-bool
+good_bool
 process_definition::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
@@ -2179,31 +2179,31 @@ process_definition::require_signature_match(
 	if (!pd) {
 		cerr << "ERROR: definition " << d->get_name() <<
 			" is not even a process!" << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for name match
 	if (key != pd->get_name()) {
 		cerr << "ERROR: names " << key << " and " << d->get_name() <<
 			" don\'t even match!" << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for owner-namespace match
 	if (parent != pd->parent) {
 		cerr << "ERROR: definition owner namespaces don\'t match: "
 			<< endl << "\tgot: " << parent->get_qualified_name()
 			<< " and " << pd->parent->get_qualified_name() << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for template formal list match (in order)
 	if (!equivalent_template_formals(pd)) {
 		cerr << "ERROR: template formals do not match!  " << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for port formal list match (in order)
 	if (!equivalent_port_formals(pd)) {
-		return false;
+		return good_bool(false);
 	}
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2417,7 +2417,7 @@ count_ptr<const fundamental_type_reference>
 process_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new process_type_reference(

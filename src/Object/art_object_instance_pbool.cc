@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.13.2.1 2005/02/28 03:11:32 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.13.2.2 2005/02/28 20:36:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -209,7 +209,7 @@ pbool_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);		// must not already be initialized or assigned
 	if (dimensions == 0) {
-		if (type_check_actual_param_expr(*e)) {
+		if (type_check_actual_param_expr(*e).good) {
 			ival = e;
 			return true;
 		} else {
@@ -223,7 +223,7 @@ pbool_instance_collection::initialize(const init_arg_type& e) {
 bool
 pbool_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
 	count_ptr<const pbool_expr> b(p.is_a<const pbool_expr>());
-	if (b && type_check_actual_param_expr(*b)) {
+	if (b && type_check_actual_param_expr(*b).good) {
 		ival = b;
 		return true;
 	}
@@ -276,13 +276,13 @@ pbool_instance_collection::make_instance_reference(void) const {
 	pbool parameter in a template.  
 	Should also check dimensionality and size.  
  */
-bool
+good_bool
 pbool_instance_collection::type_check_actual_param_expr(
 		const param_expr& pe) const {
 	const never_ptr<const pbool_expr> pb(IS_A(const pbool_expr*, &pe));
 	if (!pb) {
 		// useful error message?
-		return false;
+		return good_bool(false);
 	}
 	// only for formal parameters is this assertion valid.  
 	INVARIANT(index_collection.size() <= 1);

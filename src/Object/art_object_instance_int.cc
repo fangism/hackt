@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.13 2005/02/27 22:54:16 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.13.2.1 2005/02/28 20:36:04 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -120,7 +120,7 @@ struct collection_type_committer<int_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
-	bool
+	bad_bool
 	operator () (instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) const {
 		// resolve type def?
@@ -143,10 +143,10 @@ struct collection_type_committer<int_tag> {
 		INVARIANT(new_width);
 		if (c.is_partially_unrolled()) {
 			INVARIANT(c.type_parameter);
-			return (new_width != c.type_parameter);
+			return bad_bool(new_width != c.type_parameter);
 		} else { 
 			c.type_parameter = new_width;
-			return false;
+			return bad_bool(false);
 		}
 	}
 };      // end struct collection_type_committer

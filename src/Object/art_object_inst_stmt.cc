@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.13 2005/02/27 22:54:12 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.13.2.1 2005/02/28 20:36:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -519,8 +519,8 @@ process_instantiation_statement::unroll(unroll_context& c) const {
 			<< endl;
 		return;
 	}
-	const bool err = inst_base->commit_type(final_type_ref);
-	if (err) {
+	const bad_bool err(inst_base->commit_type(final_type_ref));
+	if (err.bad) {
 		cerr << "ERROR during process_instantiation_statement::unroll()"
 			<< endl;
 		THROW_EXIT;
@@ -778,8 +778,8 @@ data_instantiation_statement::unroll(unroll_context& c) const {
 			<< endl;
 		return;
 	}
-	const bool err = inst_base->commit_type(final_type_ref);
-	if (err) {
+	const bad_bool err(inst_base->commit_type(final_type_ref));
+	if (err.bad) {
 		cerr << "ERROR during data_instantiation_statement::unroll()"
 			<< endl;
 		THROW_EXIT;

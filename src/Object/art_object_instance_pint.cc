@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.14.2.1 2005/02/28 03:11:32 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.14.2.2 2005/02/28 20:36:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -194,7 +194,7 @@ pint_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {
-		if (type_check_actual_param_expr(*e)) {
+		if (type_check_actual_param_expr(*e).good) {
 			ival = e;
 			return true;
 		} else {
@@ -212,7 +212,7 @@ pint_instance_collection::initialize(const init_arg_type& e) {
 bool
 pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
 	const count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
-	if (i && type_check_actual_param_expr(*i)) {
+	if (i && type_check_actual_param_expr(*i).good) {
 		ival = i;
 		return true;
 	}
@@ -274,12 +274,12 @@ pint_instance_collection::make_instance_reference(void) const {
 	pint parameter in a template.  
 	Should also check dimensionality and size.  
  */
-bool
+good_bool
 pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) const {
 	const never_ptr<const pint_expr> pi(IS_A(const pint_expr*, &pe));
 	if (!pi) {
 		// useful error message?
-		return false;
+		return good_bool(false);
 	}
 	// only for formal parameters is this assertion valid.  
 	INVARIANT(index_collection.size() <= 1);

@@ -12,6 +12,11 @@
 		+ A few standard-conforming tweaks.  
 		+ Better namespace injection workaround "pointer_manipluator.h"
 
+	* -bool-04:
+	  Upgraded bool return values for methods in definition classes, 
+	  some expression classes, instantiation statements, 
+	  instance collections.  
+
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 

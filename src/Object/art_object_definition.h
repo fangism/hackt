@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.25 2005/02/27 22:54:10 fang Exp $
+	$Id: art_object_definition.h,v 1.25.2.1 2005/02/28 20:36:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -202,14 +202,14 @@ public:
 	add_port_formal(const never_ptr<instantiation_statement> f, 
 		const token_identifier& id);
 
-	bool
+	good_bool
 	certify_port_actuals(const object_list& ol) const;
 
 	bool
 	equivalent_port_formals(
 		const never_ptr<const process_definition> p) const;
 
-	bool
+	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 // methods for object file I/O
@@ -316,8 +316,9 @@ virtual	count_ptr<const fundamental_type_reference>
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
 
-virtual	bool
-	require_signature_match(const never_ptr<const definition_base> d) const = 0;
+virtual	good_bool
+	require_signature_match(
+		const never_ptr<const definition_base> d) const = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;
@@ -379,9 +380,9 @@ public:
 	never_ptr<const instance_collection_base>
 	add_template_formal(excl_ptr<instance_collection_base>& f);
 
-	bool
+	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
-		{ assert(d); return key == d->get_name(); }
+		{ assert(d); return good_bool(key == d->get_name()); }
 		// really, this should never be called...
 public:
 	// actually going to de/serialize built-in type, only to be
@@ -456,7 +457,7 @@ public:
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
-	bool
+	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 	bool
@@ -553,15 +554,18 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	bool
+	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
-		{ return false; }
+		{ return good_bool(false); }	// temporary
 
 	count_ptr<const fundamental_type_reference>
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
-//	bool certify_port_actuals(const object_list& ol) const;
+#if 0
+	good_bool
+	certify_port_actuals(const object_list& ol) const;
+#endif
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 
@@ -611,7 +615,7 @@ public:
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
-	bool
+	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 public:
@@ -691,7 +695,10 @@ public:
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 #endif
-//	bool certify_port_actuals(const object_list& ol) const;
+#if 0
+	good_bool
+	certify_port_actuals(const object_list& ol) const;
+#endif
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 

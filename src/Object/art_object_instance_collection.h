@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.2 2005/02/27 22:54:14 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.2.2.1 2005/02/28 20:36:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -12,7 +12,7 @@
 
 #include "memory/pointer_classes.h"
 #include "multikey_set.h"
-
+#include "boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -22,6 +22,7 @@ using std::ostream;
 using std::set;
 using std::string;
 using namespace util::memory;
+using util::bad_bool;
 using util::multikey_set;
 using util::multikey_set_element_derived;
 
@@ -82,7 +83,7 @@ struct collection_type_committer {
 					type_ref_ptr_type;
 
 	// return true on error, false on success
-	bool
+	bad_bool
 	operator () (instance_collection_generic_type&, 
 		const type_ref_ptr_type&) const;
 };	// end struct collection_type_committer
@@ -165,7 +166,7 @@ virtual	bool
 	get_type_ref(void) const;
 #endif
 
-	bool
+	bad_bool
 	commit_type(const type_ref_ptr_type& );
 
 	count_ptr<instance_reference_base>

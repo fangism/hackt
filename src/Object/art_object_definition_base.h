@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.10 2005/02/27 22:54:10 fang Exp $
+	$Id: art_object_definition_base.h,v 1.10.2.1 2005/02/28 20:36:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -13,6 +13,7 @@
 #include "macros.h"
 #include "art_object_base.h"
 
+#include "boolean_types.h"
 #include "persistent.h"		// for persistent object interface
 #include "hash_qmap.h"		// need complete definition
 #include "memory/pointer_classes.h"
@@ -39,6 +40,8 @@ namespace entity {
 // USING_LIST
 using std::string;
 using std::istream;
+using util::bad_bool;
+using util::good_bool;
 using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
@@ -152,7 +155,8 @@ virtual	never_ptr<const instance_collection_base>
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;
 
-virtual	bool
+	// incidentally, this is never overridden, need not be virtual
+virtual	good_bool
 	check_null_template_argument(void) const;
 
 
@@ -167,7 +171,7 @@ protected:
 		const never_ptr<const definition_base> d) const;
 
 protected:
-	bool
+	good_bool
 	certify_template_arguments(
 		const never_ptr<dynamic_param_expr_list> ta) const;
 
@@ -176,7 +180,7 @@ public:
 	make_default_template_arguments(void) const;
 
 	/** by default returns false */
-virtual	bool
+virtual	good_bool
 	certify_port_actuals(const object_list& ol) const;
 
 public:
@@ -208,9 +212,9 @@ virtual	string
 	get_qualified_name(void) const;
 
 /** definition signature comparison, true if equal */
-virtual	bool
+virtual	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
-		{ return false; }	// temporary, should be pure
+		{ return good_bool(false); }	// temporary, should be pure
 
 /**
 	f should be const and owned -- pointer type conflict...  

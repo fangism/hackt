@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.40 2005/02/27 22:54:13 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.40.2.1 2005/02/28 20:36:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -439,7 +439,7 @@ instance_collection_base::formal_size_equivalent(
 	May be useful else where for connections.  
 	\return true if dimensions *may* match.  
  */
-bool
+good_bool
 instance_collection_base::check_expression_dimensions(
 		const param_expr& pe) const {
 	MUST_BE_A(const param_instance_collection*, this);
@@ -461,7 +461,7 @@ instance_collection_base::check_expression_dimensions(
 	if (dimensions != pe.dimensions()) {
 		// number of dimensions doesn't even match!
 		// useful error message?
-		return false;
+		return good_bool(false);
 	}
 	// dimensions match
 	if (dimensions != 0) {
@@ -475,20 +475,20 @@ instance_collection_base::check_expression_dimensions(
 			if (pe.has_static_constant_dimensions()) {
 				const const_range_list
 					d(pe.static_constant_dimensions());
-				return (*crl == d);
+				return good_bool(*crl == d);
 			} else {
 				// is dynamic, conservatively return true
-				return true;
+				return good_bool(true);
 			}
 		} else {
 			// is dynamic, conservatively return true
-			return true;
+			return good_bool(true);
 		}
 	} else {
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
 		INVARIANT(index_collection.size() <= 1);
-		return (pe.dimensions() == 0);
+		return good_bool(pe.dimensions() == 0);
 	}
 }
 

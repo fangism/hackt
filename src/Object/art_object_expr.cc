@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.38.2.1 2005/02/28 03:11:30 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.38.2.2 2005/02/28 20:36:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1340,7 +1340,7 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 		key_gen.get_lower_corner() = *rdim.lower_multikey();
 		key_gen.get_upper_corner() = *rdim.upper_multikey();
 		key_gen.initialize();
-		bool lookup_err = false;
+		bad_bool lookup_err(false);
 		pbool_const_collection::iterator coll_iter(ret->begin());
 		do {
 			// populate the collection with values
@@ -1351,13 +1351,13 @@ pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 					key_gen << " of pbool collection " <<
 					pbool_inst_ref->get_qualified_name() <<
 					"." << endl;
-				lookup_err = true;
+				lookup_err.bad = true;
 			}
 			coll_iter++;			// unsafe, but checked
 			key_gen++;
 		} while (key_gen != key_gen.get_upper_corner());
 		INVARIANT(coll_iter == ret->end());	// sanity check
-		if (lookup_err) {
+		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
 				"pbool_instance_reference." << endl;
@@ -1909,7 +1909,7 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 		key_gen.get_lower_corner() = rdim.lower_multikey();
 		key_gen.get_upper_corner() = rdim.upper_multikey();
 		key_gen.initialize();
-		bool lookup_err = false;
+		bad_bool lookup_err(false);
 		pint_const_collection::iterator coll_iter(ret->begin());
 		do {
 			// populate the collection with values
@@ -1919,13 +1919,13 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 					key_gen << " of pint collection " <<
 					pint_inst_ref->get_qualified_name() <<
 					"." << endl;
-				lookup_err = true;
+				lookup_err.bad = true;
 			}
 			coll_iter++;			// unsafe, but checked
 			key_gen++;
 		} while (key_gen != key_gen.get_upper_corner());
 		INVARIANT(coll_iter == ret->end());	// sanity check
-		if (lookup_err) {
+		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
 				"pint_instance_reference." << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.14 2005/02/27 22:54:18 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.14.2.1 2005/02/28 20:36:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -1419,7 +1419,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
 			INVARIANT(k == probe_def->get_name());	// consistency
-			if (probe_def->require_signature_match(db)) {
+			if (probe_def->require_signature_match(db).good) {
 				// definition signatures match
 				// can discard new declaration
 				// to delete db, we steal ownership, 

@@ -2,7 +2,7 @@
 	\file "art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.9 2005/02/27 22:54:17 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.9.2.1 2005/02/28 20:36:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -118,7 +118,7 @@ struct collection_type_committer<process_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
-	bool
+	bad_bool
 	operator () (instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) const {
 		// make sure this is the canonical definition
@@ -129,10 +129,12 @@ struct collection_type_committer<process_tag> {
 		// only needs to be "collectibly" type equivalent, 
 		// not necessarily "connectible".
 		if (c.type_parameter)
-			return (!c.type_parameter->must_be_equivalent(*t));
-		else
+			return bad_bool(
+				!c.type_parameter->must_be_equivalent(*t));
+		else {
 			c.type_parameter = t;
-		return false;
+			return bad_bool(false);
+		}
 	}
 };
 

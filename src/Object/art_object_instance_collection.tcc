@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.2 2005/02/27 22:54:15 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.2.2.1 2005/02/28 20:36:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -460,7 +460,7 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 	\post the integer width is fixed for the rest of the program.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-bool
+bad_bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	// functor, specialized for each class
 	return collection_type_committer<Tag>()(*this, t);
