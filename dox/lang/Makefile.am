@@ -8,7 +8,7 @@ LATEX = latex
 PDFLATEX = pdflatex
 BIBTEX = bibtex
 MAKEINDEX = makeindex
-MAKETEXDEPEND = $(AWK) -f maketexdepend.awk \
+MAKETEXDEPEND = $(AWK) -f $(srcdir)/maketexdepend.awk \
 	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
 
 SUFFIXES = .ps .dvi .tex .pdf .depend
@@ -38,8 +38,8 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	chapters/connections.tex \
 	chapters/linkage.tex
 
-# automatically generated dependencies
--include $(srcdir)/artxx.depend
+# automatically generated dependencies in this (built) dir
+-include artxx.depend
 
 .tex.depend:
 	@$(ECHO) "Generating auto-dependencies $@..."
