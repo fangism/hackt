@@ -158,6 +158,23 @@ explicit count_ptr(T* p = NULL) : parent((p) ? new size_t(1) : NULL), ptr(p) { }
 			(*this->ref_count)++;
 	}
 
+	/**
+		UNSAFE: constructor that corecively sets the 
+		reference pointer and the count pointer 
+		and increments the pointer.  
+		The manager should initially allocate a counter set to zero.  
+		The manager should not own the pointer or the counter.  
+		Needed for transient pointer to object reconstruction.  
+		Use this only if you know what you're doing.
+	 */
+	count_ptr(T* p, size_t* c) : parent(c), ptr(p) {
+		if (p) {
+			assert(c);		// counter must be valid
+			(*c)++;			// increment here
+		} else
+			assert(!c);		// counter must also be NULL
+	}
+
 protected:
 	/**
 		Overkill safety checks.  
@@ -331,6 +348,23 @@ explicit count_const_ptr(const T* p = NULL) :
 		parent(c.ref_count), cptr(c.cptr) {
 		if (this->ref_count)
 			(*this->ref_count)++;
+	}
+
+	/**
+		UNSAFE: constructor that corecively sets the 
+		reference pointer and the count pointer 
+		and increments the pointer.  
+		The manager should initially allocate a counter set to zero.  
+		The manager should not own the pointer or the counter.  
+		Needed for transient pointer to object reconstruction.  
+		Use this only if you know what you're doing.
+	 */
+	count_const_ptr(const T* p, size_t* c) : parent(c), cptr(p) {
+		if (p) {
+			assert(c);		// counter must be valid
+			(*c)++;			// increment here
+		} else
+			assert(!c);		// counter must also be NULL
 	}
 
 protected:
