@@ -29,7 +29,6 @@ Maps...
 ********************** end note **************************/
 //=============================================================================
 // temporary switches
-#define NEW_DEF_HIER	1
 
 //=============================================================================
 namespace ART {
@@ -67,16 +66,10 @@ namespace entity {
 	class conditional_scope;
 
 	class definition_base;
-#if NEW_DEF_HIER
 	class channel_definition_base;
 	class datatype_definition_base;
 	class process_definition_base;
 	class process_definition;
-#else
-	class channel_definition;
-	class datatype_definition;
-	class process_definition;
-#endif
 	class enum_datatype_def;
 	class built_in_datatype_def;
 	class built_in_param_def;
@@ -571,12 +564,7 @@ public:
 	name-resolving functionality.  
 	All definitions are potentially templatable.  
  */
-#if NEW_DEF_HIER
-class definition_base : virtual public object
-#else
-class definition_base : public scopespace
-#endif
-{
+class definition_base : virtual public object {
 public:
 	/**
 		Table of template formals.  
@@ -604,14 +592,8 @@ public:
 					template_formals_list_type;
 
 protected:
-#if NEW_DEF_HIER
 	const string			key;
 	const never_const_ptr<name_space>	parent;
-#else
-	// never_const_ptr<scopespace>	parent;		// inherited
-	// string			key;		// inherited
-	// used_id_map_type		used_id_map;	// inherited
-#endif
 
 protected:
 	/** subset of used_id_map, must be coherent with list */
@@ -659,11 +641,6 @@ public:
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 
-#if 0
-virtual	never_const_ptr<fundamental_type_reference>
-		set_context_fundamental_type(context& c) const = 0;
-#endif
-
 protected:
 	bool certify_template_arguments(never_ptr<param_expr_list> ta) const;
 public:
@@ -689,11 +666,6 @@ virtual	string get_name(void) const;
 // need not be virtual?
 virtual	string get_qualified_name(void) const;
 
-#if 0
-never_const_ptr<definition_base> resolve_canonical(void) const;
-count_const_ptr<fundamental_type_reference> resolve_canonical(void) const;
-#endif
-
 /** definition signature comparison, true if equal */
 virtual	bool require_signature_match(
 		never_const_ptr<definition_base> d) const
@@ -705,6 +677,7 @@ virtual	bool require_signature_match(
  */
 virtual	never_const_ptr<instantiation_base>
 		add_template_formal(excl_ptr<instantiation_base> f);
+
 /**
 	Really, only some definitions should have ports...
  */
@@ -755,10 +728,6 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 	string template_param_string(void) const;
 	string get_qualified_name(void) const;
 	string hash_string(void) const;
-#if 0
-	never_const_ptr<fundamental_type_reference>
-		set_context_type_reference(context& c) const;
-#endif
 
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
@@ -788,7 +757,6 @@ virtual	excl_ptr<instantiation_base>
 			index_collection_item_ptr_type d) const = 0;
 
 public:
-// TO DO: type equivalence relationship
 	bool may_be_equivalent(const fundamental_type_reference& t) const;
 	bool must_be_equivalent(const fundamental_type_reference& t) const;
 };	// end class fundamental_type_reference
@@ -853,13 +821,8 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
 
-#if 0
-virtual	never_const_ptr<fundamental_type_reference>
-		get_type_ref(void) const = 0;
-#else
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
-#endif
 
 	never_const_ptr<scopespace> get_owner(void) const { return owner; }
 	size_t dimensions(void) const { return depth; }

@@ -34,12 +34,10 @@ namespace entity {
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
-//	class channel_definition;
 	class channel_type_reference;
 	class channel_instantiation;
 	class channel_instance_reference;
 	class datatype_definition_base;
-//	class datatype_definition;
 	class data_type_reference;
 	class datatype_instantiation;
 	class datatype_instance_reference;
@@ -65,9 +63,6 @@ namespace entity {
 	class param_expression_assignment;
 	class instance_reference_connection;
 
-	// replicated typedefs from "art_object.h"
-//	typedef class list<never_const_ptr<param_expr> >	array_dim_list;
-	typedef class list<never_const_ptr<param_expr> >	template_param_list;
 }
 using namespace entity;
 
@@ -156,28 +151,8 @@ protected:
 		Pointer to the concrete type to instantiate.  
 		Use shared count_ptr until type-cache is implemented.  
 	 */
-//	never_const_ptr<fundamental_type_reference>
 	count_const_ptr<fundamental_type_reference>
 						current_fundamental_type;
-
-#if 0
-	/**
-		List of parameter expressions to use as template
-		arguments with the current_definition_reference, 
-		to create a concrete fundamental_type_reference.  
-		Should not be const? will be owned by type_reference?
-		TO DO:
-		Now that these are declared before the definition, 
-		we need to hold on to these until the definition is open, 
-		and then add them to the definition's used_id_map.  
-		Remember to search this list for parameters that depend on
-		other parameters, such as in the case of array dimensions.  
-	 */
-	excl_ptr<template_param_list>		current_template_arguments;
-#endif
-
-	// need current_blah_inst for array/dimension/range additions
-//	const array_dim_list*		current_array_dimensions;
 
 
 	/**
@@ -206,7 +181,6 @@ protected:
 			expressions on the stack.
 	 */
 	stack<count_ptr<object> >		object_stack;
-//	stack<excl_ptr<object> >		object_stack;
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -268,18 +242,6 @@ never_const_ptr<name_space>
 			return current_namespace;
 		}
 
-#if 0
-/**
-	Note: non-const because of destructive transfer.
-	Returning pointer by reference.  
-	This needs work.  
- */
-excl_ptr<template_param_list>&
-		get_current_template_arguments(void) {
-			return current_template_arguments;
-		}
-#endif
-
 // sets context's definition for instantiation
 never_const_ptr<definition_base>	
 		get_current_definition_reference(void) const
@@ -308,13 +270,8 @@ excl_ptr<definition_base>
 never_const_ptr<definition_base>
 	get_current_prototype(void) const { return current_prototype; }
 
-#if 0
-never_const_ptr<datatype_definition>
-		get_current_datatype_definition(void) const;
-#else
 never_const_ptr<datatype_definition_base>
 		get_current_datatype_definition(void) const;
-#endif
 
 // should be called by parser after done using definitions
 void	reset_current_definition_reference(void);
@@ -329,22 +286,8 @@ never_const_ptr<channel_definition_base>
 never_const_ptr<process_definition_base>
 	get_current_process_definition(void) const;
 
-#if 0
-// to be called from parser's check_build
-never_const_ptr<fundamental_type_reference>
-	set_current_fundamental_type(void);
-// to be called from symbol_table type_reference_base classes 
-never_const_ptr<fundamental_type_reference>
-	set_current_fundamental_type(const fundamental_type_reference& tr);
-#else
 void	set_current_fundamental_type(
 		count_const_ptr<fundamental_type_reference> tr);
-#endif
-
-#if 0
-void	set_current_template_arguments(excl_ptr<template_param_list>& tl);
-void	reset_current_template_arguments(void);
-#endif
 
 never_const_ptr<object>	lookup_object(const qualified_id& id) const;
 never_const_ptr<definition_base>
@@ -376,13 +319,8 @@ never_const_ptr<instantiation_base>
 			add_port_formal(const token_identifier& id, 
 				index_collection_item_ptr_type dim);
 
-#if 1
 void	push_object_stack(count_ptr<object> i);
 count_ptr<object> pop_top_object_stack(void);
-#else
-void	push_object_stack(excl_ptr<object> i);
-excl_ptr<object> pop_top_object_stack(void);
-#endif
 
 // repeat for processes and channels...
 

@@ -76,15 +76,11 @@ fundamental_type_reference::get_qualified_name(void) const {
 	return get_base_def()->get_qualified_name() +template_param_string();
 }
 
-#if 0
-never_const_ptr<fundamental_type_reference>
-fundamental_type_reference::set_context_type_reference(context& c) const {
-	return c.set_current_fundamental_type(*this);
-}
-#endif
-
 /**
 	Please explain.  
+	Can't just use t->make_instantiation() because t is a counted
+	pointer, and the instanatiations share the reference to the type.  
+	Can't discard counting into never_ptr.  
  */
 // is static
 excl_ptr<instantiation_base>
@@ -201,23 +197,14 @@ collective_type_reference::dump(ostream& o) const {
 // class data_type_reference method definitions
 
 data_type_reference::data_type_reference(
-#if NEW_DEF_HIER
-		never_const_ptr<datatype_definition_base> td
-#else
-		never_const_ptr<datatype_definition> td
-#endif
-		) :
+		never_const_ptr<datatype_definition_base> td) :
 		fundamental_type_reference(), 
 		base_type_def(td) {
 	assert(base_type_def);
 }
 
 data_type_reference::data_type_reference(
-#if NEW_DEF_HIER
 		never_const_ptr<datatype_definition_base> td, 
-#else
-		never_const_ptr<datatype_definition> td, 
-#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
@@ -246,16 +233,6 @@ data_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if 0
-excl_ptr<instantiation_base>
-data_type_reference::make_instantiation(
-		never_const_ptr<scopespace> s, 
-		const token_identifier& id, 
-		index_collection_item_ptr_type d) const {
-	return excl_ptr<instantiation_base>(
-		new datatype_instantiation(*s, *this, id, d));
-}
-#else
 excl_ptr<instantiation_base>
 data_type_reference::make_instantiation_private(
 		count_const_ptr<fundamental_type_reference> t, 
@@ -266,7 +243,6 @@ data_type_reference::make_instantiation_private(
 		new datatype_instantiation(*s,
 			t.is_a<data_type_reference>(), id, d));
 }
-#endif
 
 //=============================================================================
 // class channel_type_reference method definitions
@@ -277,11 +253,7 @@ data_type_reference::make_instantiation_private(
 	\param pl (optional) parameter list for templates.  
  */
 channel_type_reference::channel_type_reference(
-#if NEW_DEF_HIER
 		never_const_ptr<channel_definition_base> cd, 
-#else
-		never_const_ptr<channel_definition> cd, 
-#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
@@ -289,12 +261,7 @@ channel_type_reference::channel_type_reference(
 }
 
 channel_type_reference::channel_type_reference(
-#if NEW_DEF_HIER
-		never_const_ptr<channel_definition_base> cd
-#else
-		never_const_ptr<channel_definition> cd
-#endif
-		) :
+		never_const_ptr<channel_definition_base> cd) :
 		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -316,15 +283,6 @@ channel_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed channel instance object.  
  */
-#if 0
-excl_ptr<instantiation_base>
-channel_type_reference::make_instantiation(never_const_ptr<scopespace> s, 
-		const token_identifier& id, 
-		index_collection_item_ptr_type d) const {
-	return excl_ptr<instantiation_base>(
-		new channel_instantiation(*s, *this, id, d));
-}
-#else
 excl_ptr<instantiation_base>
 channel_type_reference::make_instantiation_private(
 		count_const_ptr<fundamental_type_reference> t, 
@@ -335,29 +293,19 @@ channel_type_reference::make_instantiation_private(
 		new channel_instantiation(*s, 
 			t.is_a<channel_type_reference>(), id, d));
 }
-#endif
 
 //=============================================================================
 // class process_type_reference method definitions
 
 process_type_reference::process_type_reference(
-#if NEW_DEF_HIER
-		never_const_ptr<process_definition_base> pd
-#else
-		never_const_ptr<process_definition> pd
-#endif
-		) :
+		never_const_ptr<process_definition_base> pd) :
 		fundamental_type_reference(), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
 }
 
 process_type_reference::process_type_reference(
-#if NEW_DEF_HIER
 		never_const_ptr<process_definition_base> pd, 
-#else
-		never_const_ptr<process_definition> pd, 
-#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
@@ -383,16 +331,6 @@ process_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if 0
-excl_ptr<instantiation_base>
-process_type_reference::make_instantiation(
-		never_const_ptr<scopespace> s, 
-		const token_identifier& id, 
-		index_collection_item_ptr_type d) const {
-	return excl_ptr<instantiation_base>(
-		new process_instantiation(*s, *this, id, d));
-}
-#else
 excl_ptr<instantiation_base>
 process_type_reference::make_instantiation_private(
 		count_const_ptr<fundamental_type_reference> t, 
@@ -403,7 +341,6 @@ process_type_reference::make_instantiation_private(
 		new process_instantiation(*s, 
 			t.is_a<process_type_reference>(), id, d));
 }
-#endif
 
 //=============================================================================
 // class param_type_reference method definitions
@@ -438,27 +375,6 @@ param_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if 0
-excl_ptr<instantiation_base>
-param_type_reference::make_instantiation(never_const_ptr<scopespace> s, 
-		const token_identifier& id, 
-		index_collection_item_ptr_type d) const {
-	// hard coded... yucky, but efficient.  
-	if (this->must_be_equivalent(*pbool_type_ptr))
-		return excl_ptr<instantiation_base>(
-			new pbool_instantiation(*s, id, d));
-	else if (this->must_be_equivalent(*pint_type_ptr))
-		return excl_ptr<instantiation_base>(
-			new pint_instantiation(*s, id, d));
-	else {
-		pbool_type.dump(cerr) << " at " << &pbool_type << endl;
-		pint_type.dump(cerr) << " at " << &pint_type << endl;
-		dump(cerr) << " at " << this << endl;
-		assert(0);		// WTF?
-		return excl_ptr<instantiation_base>(NULL);
-	}
-}
-#else
 excl_ptr<instantiation_base>
 param_type_reference::make_instantiation_private(
 		count_const_ptr<fundamental_type_reference> t, 
@@ -481,7 +397,6 @@ param_type_reference::make_instantiation_private(
 		return excl_ptr<instantiation_base>(NULL);
 	}
 }
-#endif
 
 /**
 	Special case of make_instantiation, designated for making

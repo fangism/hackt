@@ -663,66 +663,9 @@ object_list::make_param_expr_list(void) const {
 }
 
 //=============================================================================
-#if 0
-OBSOLETE
-// class instance_collection_stack_item method definitions
-
-bool
-instance_collection_stack_item::static_overlap(
-		const instance_collection_stack_item& c) const {
-	return false;
-}
-
-//=============================================================================
-// class static_collection_addition method definitions
-
-static_collection_addition::static_collection_addition(
-//		excl_const_ptr<static_array_index_list>& i
-		excl_const_ptr<const_range_list>& i) :
-	parent(), indices(i) {
-}
-
-size_t
-static_collection_addition::dimensions(void) const {
-	return indices->size();
-}
-
-bool
-static_collection_addition::static_overlap(
-		const instance_collection_stack_item& c) const {
-	const static_collection_addition* s = 
-		IS_A(const static_collection_addition*, &c);
-	if (s) {
-		return indices->static_overlap(*s->indices);
-	} else {	// argument is dynamic, not static
-		// conservatively return false
-		return false;
-	}
-}
-
-//=============================================================================
-// class dynamic_collection_addition method definitions
-
-dynamic_collection_addition::dynamic_collection_addition(
-		excl_const_ptr<dynamic_range_list>& i) :
-		parent(), indices(i) {
-}
-
-size_t
-dynamic_collection_addition::dimensions(void) const {
-	return indices->size();
-}
-#endif
-
-//=============================================================================
 // class scopespace method definitions
-scopespace::scopespace(
-//		const string& n, never_const_ptr<scopespace> p
-		) : 
-		object(),
-//		parent(p), key(n), 
+scopespace::scopespace() : object(),
 		used_id_map(), connect_assign_list() {
-	// note that parent may be NULL, is this ok?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -976,7 +919,6 @@ scopespace::add_connection_to_scope(
  */
 name_space::name_space(const string& n, never_const_ptr<name_space> p) : 
 		scopespace(), 
-//		scopespace(n, p), 
 		key(n), 
 		parent(p), 
 		open_spaces(), open_aliases() {
@@ -990,10 +932,8 @@ name_space::name_space(const string& n, never_const_ptr<name_space> p) :
 	default arguments (NULL) for class object formals.  
  */
 name_space::name_space(const string& n) :
-//		scopespace(n, never_const_ptr<scopespace>(NULL)),
 		scopespace(), 
 		key(n), 
-			// NULL parent
 		parent(NULL), 
 		open_spaces(), open_aliases() {
 }
@@ -1563,69 +1503,6 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 		return ret;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Adds an alias for a type, like typedef in C.  
-	Later: template typedefs, ooooh!
- */
-datatype_definition*
-name_space::add_type_alias(const qualified_id& t, const string& a) {
-	return NULL;
-/*** not done yet
-	datatype_definition* ret;
-	object* probe;
-	namespace_list::iterator i;
-	namespace_list candidates;		// empty list
-
-	cerr << endl << "adding type-alias in space: " 
-		<< get_qualified_name() << " as " << a;
-
-	probe = lookup_object_here(a);
-	if (probe) {
-		// then already, it conflicts with some other id
-		probe->what(cerr << a << " is already declared ")
-			<< ", ERROR! ";
-		return NULL;
-	}
-
-	// else we're ok to proceed to add alias
-	// first find the referenced type name...
-	query_datatype_def_match(candidates, t);
-	i = candidates.begin();
-
-	switch (candidates.size()) {
-	// if list's size > 1, ambiguity
-	// else if list is empty, unresolved type
-	// else we've narrowed it down to one
-		case 1: {
-			ret = (*i);
-			used_id_map[a] = ret;
-			// will need excl_ptr
-			break;
-			}
-		case 0:	{
-			cerr << " ... not found, ERROR! ";
-			ret = NULL;
-			break;	// no matches
-			}
-		default: {	// > 1
-			ret = NULL;
-			cerr << " ERROR: ambiguous type alias, "
-				"need to be more specific.  candidates are: ";
-				for ( ; i!=candidates.end(); i++)
-					cerr << endl << "\t" << 
-						(*i)->get_qualified_name();
-			}
-	}
-
-	return ret;		// NULL => error
-	// candidates will automatically be cleared (not owned pointers)
-*** not done ***/
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

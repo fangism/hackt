@@ -31,13 +31,9 @@ namespace entity {
 inline
 definition_base::definition_base(const string& n,
 		never_const_ptr<name_space> p) :
-#if NEW_DEF_HIER
 		object(), 
 		key(n), 
 		parent(p), 
-#else
-		scopespace(n, p),
-#endif
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {
@@ -279,26 +275,6 @@ definition_base::make_default_template_arguments(void) const {
 }
 
 /**
-	Only definition aliases will return a different pointer, 
-	the one for the original definition.  
-	Remember to use this in type-checking.  
- */
-#if 0
-never_const_ptr<definition_base>
-definition_base::resolve_canonical(void) const {
-	return never_const_ptr<definition_base>(this);
-}
-
-/**
-	Maybe de-virtualize...
- */
-never_const_ptr<fundamental_type_reference>
-definition_base::resolve_canonical(void) const {
-	return never_const_ptr<fundamental_type_reference>(NULL);
-}
-#endif
-
-/**
 	DO ME NOW!
 	Adds an instantiation to the current definition's scope, and 
 	also registers it in the list of template formals for 
@@ -329,13 +305,11 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 
 	// COMPILE: pf is const, but used_id_map members are not
 	// wrap around with object_handle?
-#if NEW_DEF_HIER
+
 	scopespace* ss = IS_A(scopespace*, this);
 	assert(ss);
 	ss->add_instance(f);
-#else
-	used_id_map[pf->hash_string()] = f;
-#endif
+//	used_id_map[pf->hash_string()] = f;		// used to be this
 
 	// sanity check
 	assert(lookup_template_formal(pf->hash_string()));
@@ -355,7 +329,6 @@ definition_base::add_port_formal(excl_ptr<instantiation_base> f) {
 }
 
 //=============================================================================
-#if NEW_DEF_HIER
 // class datatype_definition_base method definitions
 
 // make sure that this constructor is never invoked outside this file
@@ -392,52 +365,7 @@ datatype_definition_base::make_fundamental_type_reference(
 	}
 }
 
-#else
-// class datatype_definition method definitions
-
-// make sure that this constructor is never invoked outside this file
-inline
-datatype_definition::datatype_definition(
-		never_const_ptr<name_space> o,
-		const string& n) :
-		definition_base(n, o) {
-}
-
-inline
-datatype_definition::~datatype_definition() {
-}
-
-#if 0
-never_const_ptr<fundamental_type_reference>
-datatype_definition::set_context_fundamental_type(context& c) const {
-	data_type_reference* dtr = new data_type_reference(
-		never_const_ptr<datatype_definition>(this),
-		c.get_current_template_arguments());
-	assert(dtr);
-	// CACHE the type_reference...
-	// type reference check checking? where?
-	return c.set_current_fundamental_type(*dtr);
-}
-#endif
-
-count_const_ptr<fundamental_type_reference>
-datatype_definition::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
-	if (certify_template_arguments(ta)) {
-		return count_const_ptr<fundamental_type_reference>(
-			new data_type_reference(
-				never_const_ptr<datatype_definition>(this), 
-				excl_const_ptr<param_expr_list>(ta)));
-	} else {
-		cerr << "ERROR: failed to make data_type_reference "
-			"because template argument types do not match." << endl;
-		return count_const_ptr<fundamental_type_reference>(NULL);
-	}
-}
-#endif
-
 //=============================================================================
-#if NEW_DEF_HIER
 // class channel_definition_base method definitions
 
 // make sure that this constructor is never invoked outside this file
@@ -466,48 +394,13 @@ channel_definition_base::make_fundamental_type_reference(
 	}
 }
 
-#else
-// class channel_definition method definitions
-
-// make sure that this constructor is never invoked outside this file
-inline
-channel_definition::channel_definition(
-		never_const_ptr<name_space> o, 
-		const string& n) :
-		definition_base(n, o) {
-}
-
-channel_definition::~channel_definition() {
-}
-
-count_const_ptr<fundamental_type_reference>
-channel_definition::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
-	if (certify_template_arguments(ta)) {
-		return count_const_ptr<fundamental_type_reference>(
-			new channel_type_reference(
-				never_const_ptr<channel_definition>(this), 
-				excl_const_ptr<param_expr_list>(ta)));
-	} else {
-		cerr << "ERROR: failed to make channel_type_reference "
-			"because template argument types do not match." << endl;
-		return count_const_ptr<fundamental_type_reference>(NULL);
-	}
-}
-#endif
-
 //=============================================================================
 // class user_def_chan method definitions
 
 user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
 		const string& name) :
-#if NEW_DEF_HIER
 		channel_definition_base(o, name), 
-		scopespace()
-#else
-		channel_definition(o, name)
-#endif
-		{
+		scopespace() {
 	// FINISH ME
 }
 
@@ -546,91 +439,6 @@ user_def_chan::lookup_object_here(const string& id) const {
 }
 
 //=============================================================================
-#if !NEW_DEF_HIER
-// class type_alias method definitions
-
-/**
-	Constructor without canonical alias yet, will attach it later.  
- */
-type_alias::type_alias(
-		never_const_ptr<name_space> o, 
-		const string& n) :
-		definition_base(n, o),
-		canonical(NULL)
-		{
-}
-
-#if 0
-/**
-	Type alias constructor follows the argument pointer until, 
-	it encounters a canonical type, one that is not an alias.  
-	Later: allow template typdefs!
-	\param o the namespace to which this belongs.  
-	\param n the name of the aliased type.  
-	\param t pointer to the actual type being aliased.  
- */
-type_alias::type_alias(
-		never_const_ptr<name_space> o, 
-		const string& n, 
-		never_const_ptr<definition_base> t) :
-		definition_base(n, o),
-		canonical(t->resolve_canonical()) {
-	assert(canonical);
-	// just in case t is not a canonical type, i.e. another alias...
-}
-#endif
-
-/**
-	Destructor, never deletes the canonical type pointer.  
- */
-type_alias::~type_alias() { }
-
-/**
-	Fancy name for "just return the canonical pointer."
-	\return the canonical pointer.  
- */
-#if 0
-inline
-never_const_ptr<definition_base>
-type_alias::resolve_canonical(void) const {
-	return canonical;
-}
-
-inline
-never_const_ptr<fundamental_type_reference>
-type_alias::resolve_canonical(void) const {
-	return canonical;
-}
-#endif
-
-ostream&
-type_alias::what(ostream& o) const {
-	return o << "aliased-type: " << key;
-}
-
-count_const_ptr<fundamental_type_reference>
-type_alias::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
-#if 0
-	cerr << "type_alias::make_fundamental_type_reference(): FINISH ME!"
-		<< endl;
-	return count_const_ptr<fundamental_type_reference>(NULL);
-#else
-	if (certify_template_arguments(ta)) {
-		return count_const_ptr<fundamental_type_reference>(
-			new data_type_reference(
-				never_const_ptr<built_in_datatype_def>(this), 
-				excl_const_ptr<param_expr_list>(ta)));
-	} else {
-		cerr << "ERROR: failed to make built_in_data_type_reference "
-			"because template argument types do not match." << endl;
-		return count_const_ptr<fundamental_type_reference>(NULL);
-	}
-#endif
-}
-#endif	// NEW_DEF_HIER
-
-//=============================================================================
 // class built_in_datatype_def method definitions
 
 /**
@@ -639,12 +447,7 @@ type_alias::make_fundamental_type_reference(
 built_in_datatype_def::built_in_datatype_def(
 		never_const_ptr<name_space> o, 
 		const string& n) :
-#if NEW_DEF_HIER
-		datatype_definition_base(o, n)
-#else
-		datatype_definition(o, n)
-#endif
-		{
+		datatype_definition_base(o, n) {
 	mark_defined();
 }
 
@@ -656,12 +459,7 @@ built_in_datatype_def::built_in_datatype_def(
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		excl_ptr<param_instantiation> p) :
-#if NEW_DEF_HIER
-		datatype_definition_base(o, n)
-#else
-		datatype_definition(o, n)
-#endif
-		{
+		datatype_definition_base(o, n) {
 	add_template_formal(p.as_a<instantiation_base>());
 	mark_defined();
 }
@@ -672,31 +470,6 @@ ostream&
 built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
-
-#if 0
-/**
-	WRONG: this is not used to open definitions for modification.  
-	Built-in data types should never be opened for modification.  
-	Assert fails.  
- */
-never_const_ptr<definition_base>
-built_in_datatype_def::set_context_definition(context& c) const {
-	assert(0);
-	return c.set_current_definition_reference(*this);
-}
-#endif
-
-#if 0
-never_const_ptr<fundamental_type_reference>
-built_in_datatype_def::set_context_fundamental_type(context& c) const {
-	data_type_reference* dtr = new data_type_reference(
-		never_const_ptr<built_in_datatype_def>(this),
-		c.get_current_template_arguments());
-	assert(dtr);
-	// type reference check checking? where?
-	return c.set_current_fundamental_type(*dtr);
-}
-#endif
 
 count_const_ptr<fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
@@ -712,28 +485,6 @@ built_in_datatype_def::make_fundamental_type_reference(
 		return count_const_ptr<fundamental_type_reference>(NULL);
 	}
 }
-
-#if 0
-/**
-	Checks data type equivalence.
-	TO DO:
-	Currently does NOT check template signature, which need to be 
-	implemented eventually, but punting for now.  
-	\param t the datatype_definition to be checked.
-	\return true if types are equivalent.  
- */
-bool
-built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
-	never_const_ptr<built_in_datatype_def> b = 
-		t.resolve_canonical().is_a<built_in_datatype_def>();
-	if (b) {
-		// later: check template signature! (for int<>)
-		return key == b->key;
-	} else {
-		return false;
-	}
-}
-#endif
 
 /**
 	Since built-in types do not correspond to scopespaces, 
@@ -774,9 +525,7 @@ built_in_datatype_def::add_template_formal(excl_ptr<instantiation_base> f) {
 built_in_param_def::built_in_param_def(
 		never_const_ptr<name_space> p,
 		const string& n) :
-//		const param_type_reference& t
 		definition_base(n, p) {
-//		, type_ref(&t) {
 	mark_defined();
 }
 
@@ -787,34 +536,6 @@ ostream&
 built_in_param_def::what(ostream& o) const {
 	return o << key;
 }
-
-#if 0
-/**
-	WRONG: not used to open definitions for modification.  
-	Really this should never be called, as built-in definitions
-	cannot be opened for modification.  
-	Assert fails.
- */
-never_const_ptr<definition_base>
-built_in_param_def::set_context_definition(context& c) const {
-	assert(0);
-	return c.set_current_definition_reference(*this);
-}
-#endif
-
-#if 0
-/**
-	Consider built-in type references, is this even used?
-	Now uses hard-coded param_type_references.  
-	Kludge object comparison...
-	Consider passing default type_reference into constructor
-		as a forward pointer.  
- */
-never_const_ptr<fundamental_type_reference>
-built_in_param_def::set_context_fundamental_type(context& c) const {
-	return c.set_current_fundamental_type(*type_ref);
-}
-#endif
 
 /**
 	PROBLEM: built_in types cannot be owned with excl_ptr!!!
@@ -857,13 +578,8 @@ enum_member::dump(ostream& o) const {
 
 enum_datatype_def::enum_datatype_def(never_const_ptr<name_space> o, 
 		const string& n) : 
-#if NEW_DEF_HIER
 		datatype_definition_base(o, n), 
-		scopespace()
-#else
-		datatype_definition(o, n)
-#endif
-		{
+		scopespace() {
 }
 
 enum_datatype_def::~enum_datatype_def() {
@@ -894,30 +610,6 @@ never_const_ptr<scopespace>
 enum_datatype_def::get_parent(void) const {
 	return parent;
 }
-
-#if 0
-never_const_ptr<fundamental_type_reference>
-enum_datatype_def::set_context_fundamental_type(context& c) const {
-	data_type_reference* dtr = new data_type_reference(
-		never_const_ptr<enum_datatype_def>(this));
-	assert(dtr);
-	// type reference check checking? where?
-	return c.set_current_fundamental_type(*dtr);
-}
-#endif
-
-#if 0
-/**
-	Type equivalence of enumerated types:
-	must point to same definition, namely this!
- */
-bool
-enum_datatype_def::type_equivalent(const datatype_definition& t) const {
-	never_const_ptr<enum_datatype_def> b = 
-		t.resolve_canonical().is_a<enum_datatype_def>();
-	return b == this;
-}
-#endif
 
 /**
 	Not the same as type-equivalence, which requires precise 
@@ -954,11 +646,7 @@ enum_datatype_def::require_signature_match(
  */
 bool
 enum_datatype_def::add_member(const token_identifier& em) {
-#if NEW_DEF_HIER
 	never_const_ptr<object> probe(scopespace::lookup_object_here(em));
-#else
-	never_const_ptr<object> probe(lookup_object_here(em));
-#endif
 	if (probe) {
 		never_const_ptr<enum_member> probe_em(
 			probe.is_a<enum_member>());
@@ -978,13 +666,8 @@ enum_datatype_def::add_member(const token_identifier& em) {
 user_def_datatype::user_def_datatype(
 		never_const_ptr<name_space> o,
 		const string& name) :
-#if NEW_DEF_HIER
 		datatype_definition_base(o, name), 
-		scopespace()
-#else
-		datatype_definition(o, name)
-#endif
-		{
+		scopespace() {
 }
 
 user_def_datatype::~user_def_datatype() {
@@ -1021,29 +704,6 @@ user_def_datatype::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
 }
 
-#if 0
-/**
-	Equivalance operator for user-defined types.  
-	TO DO: actually write comparison, for now, just always returns false.  
-	\param t the datatype_definition to be checked;
-	\return true if the type names match, the (optional) template
-		formals match, and the data formals match.  
- */
-bool
-user_def_datatype::type_equivalent(const datatype_definition& t) const {
-	never_const_ptr<user_def_datatype> u = 
-		t.resolve_canonical().is_a<user_def_datatype>();
-	if (u) {
-		// compare template_params
-		// compare data members
-		// for now...
-		return false;
-	} else {
-		return false;
-	}
-}
-#endif
-
 //=============================================================================
 // class proces_definition_base method definitions
 
@@ -1063,12 +723,8 @@ process_definition_base::~process_definition_base() { }
 process_definition::process_definition(
 		never_const_ptr<name_space> o, 
 		const string& s) :
-#if NEW_DEF_HIER
 		process_definition_base(s, o),
 		scopespace(),
-#else
-		definition_base(s, o),
-#endif
 		port_formals_list(), 
 		port_formals_map()
 		{
@@ -1256,7 +912,6 @@ process_definition::equivalent_port_formals(
 }
 
 //=============================================================================
-#if NEW_DEF_HIER
 // class process_definition_alias method definitions
 
 process_definition_alias::process_definition_alias(const string& n, 
@@ -1265,7 +920,6 @@ process_definition_alias::process_definition_alias(const string& n,
 }
 
 process_definition_alias::~process_definition_alias() { }
-#endif
 
 //=============================================================================
 }	// end namespace entity
