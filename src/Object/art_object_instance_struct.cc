@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.9.2.4 2005/02/17 00:43:11 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.2.4.4.1 2005/02/19 08:41:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -33,6 +33,12 @@
 #include "compose.h"
 #include "binders.h"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::struct_instance_collection, 
+		STRUCT_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 #include "using_ostream.h"
@@ -49,9 +55,6 @@ using util::auto_indent;
 
 //=============================================================================
 // class struct_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(struct_instance_collection,
-	STRUCT_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

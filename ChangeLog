@@ -15,6 +15,11 @@
 	  This initial revision compiles, but some tests will die while
 	  modifications are in transient state.  
 
+	+ -persistent-02:
+	  Overhauled persistent type registration as promised.  
+	  Compiles, runs most tests, some unexpected deaths in 
+	  tests/parser/connect.  Must sleep first...
+
 
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 

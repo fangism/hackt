@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.2 2005/02/19 08:40:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -17,6 +17,21 @@
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::int_instance_reference, 
+		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::bool_instance_reference, 
+		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_instance_reference, 
+		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datastruct_instance_reference, 
+		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 #include "using_ostream.h"
@@ -26,9 +41,6 @@ using util::read_value;
 
 //=============================================================================
 // class int_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(int_instance_reference, 
-		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -114,9 +126,6 @@ int_instance_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class bool_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(bool_instance_reference, 
-		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -204,9 +213,6 @@ bool_instance_reference::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class enum_instance_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_instance_reference, 
-		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -292,9 +298,6 @@ enum_instance_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class datastruct_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datastruct_instance_reference, 
-		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

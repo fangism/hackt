@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.1.2.1 2005/02/19 06:56:47 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.1.2.2 2005/02/19 08:40:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -67,6 +67,10 @@
 #endif
 
 //=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("object-expr")
+
+//=============================================================================
 namespace util {
 // specializations of the class what, needed to override the default
 // mangled names returned by type_info::name().
@@ -112,6 +116,45 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_param_expr_list, CONST_PARAM_EXPR_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_param_expr_list, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_reference, 
+		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_reference, 
+		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const, CONST_PINT_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const_collection, CONST_PINT_COLLECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::arith_expr, ARITH_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::relational_expr, RELATIONAL_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::logical_expr, LOGICAL_EXPR_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range, CONST_RANGE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY)
+
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
@@ -119,10 +162,6 @@ namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::const_range)
 }	// end namespace memory
 }	// end namespace util
-
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace ART {
@@ -357,9 +396,6 @@ param_expr_list::~param_expr_list() { }
 
 //=============================================================================
 // class const_param_expr_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_param_expr_list, 
-	CONST_PARAM_EXPR_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
@@ -599,9 +635,6 @@ const_param_expr_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class dynamic_param_expr_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_param_expr_list, 
-	DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list() :
@@ -958,9 +991,6 @@ param_expr_collective::hash_string(void) const {
 
 //=============================================================================
 // class pbool_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_reference, 
-	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1515,9 +1545,6 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 
 //=============================================================================
 // class pint_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_reference, 
-	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2086,8 +2113,6 @@ pint_instance_reference::assigner::operator() (const bool b,
 //=============================================================================
 // class pint_const method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 	ALERT: we allocate one of these during the static initialization
@@ -2245,9 +2270,6 @@ pint_const::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class pint_const_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const_collection, 
-		CONST_PINT_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const_collection::pint_const_collection(const size_t d) :
@@ -2474,8 +2496,6 @@ pint_const_collection::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class pbool_const method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pbool_const, 1024)
 
@@ -2579,8 +2599,6 @@ pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class pint_unary_expr method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2753,9 +2771,6 @@ pint_unary_expr::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class pbool_unary_expr method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_unary_expr, 
-	PBOOL_UNARY_EXPR_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -2915,8 +2930,6 @@ pbool_unary_expr::load_object(const persistent_object_manager& m,
 // class arith_expr method definitions
 
 // static member initializations (order matters!)
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(arith_expr, ARITH_EXPR_TYPE_KEY)
 
 const plus<pint_value_type, pint_value_type>		arith_expr::adder;
 const minus<pint_value_type, pint_value_type>		arith_expr::subtractor;
@@ -3187,8 +3200,6 @@ arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class relational_expr method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
-
 // static member initializations (order matters!)
 
 const equal_to<pbool_value_type, pint_value_type>
@@ -3440,8 +3451,6 @@ relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class logical_expr method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(logical_expr, LOGICAL_EXPR_TYPE_KEY)
-
 // static member initializations (order matters!)
 
 const util::logical_and<pbool_value_type, pbool_value_type>
@@ -3674,8 +3683,6 @@ logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class pint_range method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_range, DYNAMIC_RANGE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -3822,8 +3829,6 @@ pint_range::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 // class const_range method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range, CONST_RANGE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(const_range, 64)
@@ -4112,9 +4117,6 @@ range_expr_list::range_expr_list() : object(), persistent() {
 
 //=============================================================================
 // class const_range_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range_list, 
-	CONST_RANGE_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list::const_range_list() : range_expr_list(), list_type() {
@@ -4550,9 +4552,6 @@ const_range_list::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class dynamic_range_list method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_range_list, 
-	DYNAMIC_RANGE_LIST_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_range_list::dynamic_range_list() : range_expr_list(), list_type() {
 }
@@ -4743,9 +4742,6 @@ index_list::~index_list() { }
 
 //=============================================================================
 // class const_index_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_index_list, 
-	CONST_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::const_index_list() : index_list(), parent_type() { }
@@ -5118,9 +5114,6 @@ const_index_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class dynamic_index_list method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_index_list, 
-	DYNAMIC_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_index_list::dynamic_index_list() : index_list(), parent_type() { }

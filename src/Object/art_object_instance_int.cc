@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.4.1 2005/02/19 08:40:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -73,6 +73,13 @@ struct _Select2nd<int_instance_alias<D> > :
 
 //=============================================================================
 STATIC_TRACE_BEGIN("instance-int")
+
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::int_instance_collection, 
+		DINT_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 
 namespace ART {
 namespace entity {
@@ -276,9 +283,6 @@ int_instance_alias<0>::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class int_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(int_instance_collection,
-	DINT_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

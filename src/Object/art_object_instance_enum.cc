@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.5 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.4.1 2005/02/19 08:40:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -33,6 +33,12 @@
 #include "compose.h"
 #include "binders.h"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_instance_collection, 
+		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::string;
@@ -48,9 +54,6 @@ using util::auto_indent;
 
 //=============================================================================
 // class enum_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_instance_collection,
-	ENUM_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

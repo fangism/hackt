@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.5 2005/02/17 00:43:10 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.4.1 2005/02/19 08:41:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -35,6 +35,14 @@
 #include "binders.h"
 
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::proc_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance_collection, 
+		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 #include "using_ostream.h"
@@ -51,9 +59,6 @@ using util::auto_indent;
 
 //=============================================================================
 // class proc_instance method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(proc_instance,
-	UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 proc_instance::proc_instance() : state(0) { }
@@ -154,9 +159,6 @@ proc_instance_alias::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection,
-	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_collection::process_instance_collection(const size_t d) :

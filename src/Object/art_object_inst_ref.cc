@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.1 2005/02/19 06:56:48 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2 2005/02/19 08:40:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -40,6 +40,24 @@
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance_reference, 
+		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instance_reference, 
+		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_member_instance_reference, 
+		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datatype_member_instance_reference, 
+		MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_member_instance_reference, 
+		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
@@ -1158,9 +1176,6 @@ param_instance_reference::is_unconditional(void) const {
 //=============================================================================
 // class process_instance_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_reference, 
-	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -1345,9 +1360,6 @@ datatype_instance_reference::dump(ostream& o) const {
 //=============================================================================
 // class channel_instance_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_reference, 
-	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -1491,9 +1503,6 @@ channel_instance_reference::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class process_member_instance_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_member_instance_reference, 
-	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -1586,9 +1595,6 @@ process_member_instance_reference::load_object(
 
 //=============================================================================
 // class datatype_member_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_member_instance_reference, 
-	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1715,9 +1721,6 @@ datatype_member_instance_reference::load_object(
 
 //=============================================================================
 // class channel_member_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_member_instance_reference, 
-	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

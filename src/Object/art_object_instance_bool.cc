@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.4.1 2005/02/19 08:40:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -67,6 +67,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<2>, "bool_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<3>, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<4>, "bool_array_4D")
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::bool_instance_collection, 
+		DBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
@@ -400,9 +405,6 @@ bool_instance_alias<0>::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class bool_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(bool_instance_collection,
-	DBOOL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

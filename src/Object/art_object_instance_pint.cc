@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.5 2005/02/17 00:43:10 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.5.4.1 2005/02/19 08:40:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -50,6 +50,10 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<2>, "pint_array<2>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_collection, 
+		PINT_INSTANCE_COLLECTION_TYPE_KEY)
 
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
@@ -100,9 +104,6 @@ operator << (ostream& o, const pint_instance& p) {
 
 //=============================================================================
 // class pint_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection, 
-	PINT_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.8.2.4 2005/02/17 00:43:09 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.2.4.4.1 2005/02/19 08:40:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -32,6 +32,12 @@
 #include "compose.h"
 #include "binders.h"
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instance_collection, 
+		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::string;
@@ -47,9 +53,6 @@ using util::auto_indent;
 
 //=============================================================================
 // class channel_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection,
-	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.1 2005/02/18 06:07:45 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.1.2.1 2005/02/19 08:41:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -33,6 +33,15 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::ostringstream;
@@ -357,9 +366,6 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_type_reference, 
-	DATA_TYPE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -555,9 +561,6 @@ data_type_reference::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class channel_type_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_type_reference, 
-	CHANNEL_TYPE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -665,9 +668,6 @@ channel_type_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference, 
-	PROCESS_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

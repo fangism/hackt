@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12.2.2.2.1.2.1 2005/02/19 06:56:50 fang Exp $
+	$Id: persistent_object_manager.h,v 1.12.2.2.2.1.2.2 2005/02/19 08:41:02 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -18,6 +18,7 @@
 //=============================================================================
 // macros
 
+#if 0
 /**
 	Default manner for static persistent type registration.  
 	Using this macro will invoke type registration per object
@@ -25,6 +26,7 @@
  */
 #define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
 static const util::persistent_traits<T> __persistent_traits_ ## T ## __(str);
+#endif
 
 //=============================================================================
 namespace util {
@@ -448,6 +450,7 @@ private:
 };	// end class persistent_object_manager
 
 //=============================================================================
+#if 0
 /**
 	Using per-class traits removes the burden of adding
 	static const members to persistent classes.  
@@ -503,6 +506,7 @@ public:
 	get_type_key(void);
 
 };	// end class persistent_traits
+#endif
 
 //=============================================================================
 }	// end namespace util

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.14.2.1.10.1 2005/02/18 01:25:34 fang Exp $
+ 	$Id: art_object_module.cc,v 1.14.2.1.10.1.2.1 2005/02/19 08:41:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -33,6 +33,10 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::module, MODULE_TYPE_KEY)
+}	// end namespace util
 
 namespace ART {
 namespace entity {
@@ -46,8 +50,6 @@ USING_STACKTRACE
 
 //=============================================================================
 // class module method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(module, MODULE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

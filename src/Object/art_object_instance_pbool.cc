@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.5 2005/02/17 00:43:10 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.5.4.1 2005/02/19 08:40:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -35,6 +35,11 @@
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+
+//=============================================================================
+// stat of static initializations
+
+STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -73,12 +78,11 @@ read_value(istream& i, pbool_instance& b) {
 	b.valid = c & 4;
 }
 
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_collection, 
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
 }	// end namespace util
-
-//=============================================================================
-// stat of static initializations
-
-STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 namespace ART {
@@ -116,9 +120,6 @@ operator << (ostream& o, const pbool_instance& p) {
 
 //=============================================================================
 // class pbool_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection, 
-	PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

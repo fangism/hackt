@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.1 2005/02/19 06:56:46 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.2 2005/02/19 08:40:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -50,16 +50,38 @@
 
 
 //=============================================================================
-#if SUBTYPE_ALIASES_CONNECTION
 namespace util {
+#if SUBTYPE_ALIASES_CONNECTION
 SPECIALIZE_UTIL_WHAT(ART::entity::bool_alias_connection, "bool_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::int_alias_connection, "int_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::enum_alias_connection, "enum_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::datastruct_alias_connection, "struct_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::channel_alias_connection, "channel_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::process_alias_connection, "process_connection")
-}	// end namespace util
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::bool_alias_connection, DBOOL_ALIAS_CONNECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::int_alias_connection, DINT_ALIAS_CONNECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_alias_connection, ENUM_ALIAS_CONNECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datastruct_alias_connection, 
+		STRUCT_ALIAS_CONNECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_alias_connection, 
+		CHANNEL_ALIAS_CONNECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_alias_connection, 
+		PROCESS_ALIAS_CONNECTION_TYPE_KEY)
+
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::aliases_connection_base, ALIAS_CONNECTION_TYPE_KEY)
 #endif
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::port_connection, PORT_CONNECTION_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
@@ -104,11 +126,6 @@ instance_reference_connection::append_instance_reference(
 
 //=============================================================================
 // class aliases_connection_base method definitions
-
-#if !SUBTYPE_ALIASES_CONNECTION
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection_base,
-	ALIAS_CONNECTION_TYPE_KEY)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 aliases_connection_base::aliases_connection_base() : 
@@ -209,19 +226,6 @@ aliases_connection_base::load_object(
 #if SUBTYPE_ALIASES_CONNECTION
 // class alias_connection method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		bool_alias_connection, DBOOL_ALIAS_CONNECTION_TYPE_KEY)
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		int_alias_connection, DINT_ALIAS_CONNECTION_TYPE_KEY)
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		enum_alias_connection, ENUM_ALIAS_CONNECTION_TYPE_KEY)
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		datastruct_alias_connection, STRUCT_ALIAS_CONNECTION_TYPE_KEY)
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		channel_alias_connection, CHANNEL_ALIAS_CONNECTION_TYPE_KEY)
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(
-		process_alias_connection, PROCESS_ALIAS_CONNECTION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 ALIAS_CONNECTION_CLASS::alias_connection() :
@@ -291,10 +295,10 @@ void
 ALIAS_CONNECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::get_type_key())) {
+		persistent_traits<this_type>::type_key)) {
 	// improper key!!!
 	STACKTRACE_PERSISTENT("alias_connection<>::collect_transients()");
-	cerr << persistent_traits<this_type>::get_type_key() << endl;
+//	cerr << persistent_traits<this_type>::type_key << endl;
 #if 1
 	const_iterator iter = inst_list.begin();
 	const const_iterator end = inst_list.end();
@@ -335,8 +339,6 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 #endif	// SUBTYPE_ALIASES_CONNECTION
 //=============================================================================
 // class port_connection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(port_connection, PORT_CONNECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.6 2005/02/17 04:20:33 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.6.4.1 2005/02/19 08:40:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -41,6 +41,23 @@
 
 //=============================================================================
 STATIC_TRACE_BEGIN("object-definition")
+
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
@@ -806,9 +823,6 @@ channel_definition_base::make_fundamental_type_reference(
 //=============================================================================
 // class user_def_chan method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_chan, 
-	USER_DEF_CHAN_DEFINITION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 user_def_chan::user_def_chan(never_ptr<const name_space> o, 
 		const string& name) :
@@ -932,9 +946,6 @@ user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 // class channel_definition_alias method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_definition_alias, 
-	CHANNEL_TYPEDEF_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::channel_definition_alias(
@@ -1353,9 +1364,6 @@ enum_member::dump(ostream& o) const {
 //=============================================================================
 // class enum_datatype_def method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_datatype_def, 
-	ENUM_DEFINITION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::enum_datatype_def(never_ptr<const name_space> o, 
 		const string& n) : 
@@ -1587,9 +1595,6 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class user_def_datatype method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_datatype, 
-	USER_DEF_DATA_DEFINITION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// constructor for user defined type
 user_def_datatype::user_def_datatype(
@@ -1742,9 +1747,6 @@ user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 // class datatype_definition_alias method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_definition_alias, 
-	DATA_TYPEDEF_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::datatype_definition_alias(
@@ -1931,9 +1933,6 @@ process_definition_base::make_typedef(never_ptr<const scopespace> s,
 
 //=============================================================================
 // class process_definition method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition, 
-	PROCESS_DEFINITION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2339,9 +2338,6 @@ process_definition::load_object_port_formals(
 
 //=============================================================================
 // class process_definition_alias method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition_alias, 
-	PROCESS_TYPEDEF_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
