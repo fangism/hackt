@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.8 2005/01/28 19:58:52 fang Exp $
+	$Id: list_vector_pool.h,v 1.8.22.1 2005/02/27 21:57:09 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -11,6 +11,7 @@
 
 #include "memory/list_vector_pool_fwd.h"
 #include "memory/thread_lock.h"
+#include "memory/destruction_policy.h"
 #include "macros.h"
 
 #include <queue>
@@ -126,7 +127,6 @@ T::operator delete (void* p) {						\
 	pool.deallocate(t);						\
 }
 
-									
 
 //=============================================================================
 
@@ -142,32 +142,6 @@ using std::vector;
 using std::ostream;
 
 //=============================================================================
-/**
-	Tag to dictate when destruction occurs in pool-managed resources.  
- */
-struct lazy_destruction_tag { };
-
-/**
-	Tag to dictate when destruction occurs in pool-managed resources.  
- */
-struct eager_destruction_tag { };
-
-/**
-	Default to eager / early destruction.  
-	Is safe to use lazy destruction for non-recursive 
-	destructors, i.e. object that do not contain pointers
-	to other likewise pooled objects.  
-	To override the default eager destruction, 
-	define a specialization of this (in the util::memory namespace)
-	in the module where the pool is instantiated.  
-	A macro is provided below.  
-	\param T the class type to be pooled.  
- */
-template <class T>
-struct list_vector_pool_policy {
-	typedef	eager_destruction_tag	destruction_policy;
-};	// end struct list_vector_pool_policy
-
 /**
 	This macro must appear in the util::memory namespace.  
  */
@@ -308,7 +282,7 @@ public:
 
 	// other miscellaneous methods
 	size_type
-	max_size() const;
+	max_size(void) const;
 
 	// rebinding typedef
 
@@ -316,6 +290,7 @@ public:
 	ostream&
 	status(ostream& o) const;
 
+#if 0
 private:
 	// policy-based variations
 
@@ -334,7 +309,7 @@ private:
 	static
 	void
 	lazy_destroy(const pointer, const lazy_destruction_tag);
-
+#endif
 };	// end class list_vector_pool
 
 //-----------------------------------------------------------------------------

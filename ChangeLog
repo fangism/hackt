@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-02-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-05:
+	  Slight reorganization of some util library headers.  
+	  Added placeholder code for chunk_map_pool.  
+	  Definition is pending a merge to the main trunk, 
+	  will depend on maplikeset, defined in -object-01 branch.  
+	  It's time for convergence!
+
+
 2005-02-24	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-parser-01-03:

@@ -3,15 +3,16 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.2 2005/01/28 19:58:52 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.2.26.1 2005/02/27 21:57:09 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 
-#include "memory/list_vector_pool.h"
-
 #include <iostream>
+#include "memory/list_vector_pool.h"
+#include "memory/destruction_policy.tcc"
+
 
 // turn invariant assertions on or off
 #ifndef	DEBUG_LIST_VECTOR_POOL
@@ -135,6 +136,7 @@ list_vector_pool<T,Threaded>::~list_vector_pool() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
 inline
 void
@@ -169,6 +171,7 @@ list_vector_pool<T,Threaded>::lazy_destroy(const pointer p,
 	_Destroy(p);		// p->~T();
 	// no need to construct
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // some handy local macros for verbose debugging
