@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.7 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.8 2005/01/14 03:46:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -22,6 +22,7 @@
 // for debugging only, before inclusion of header file
 #define	DEBUG_LIST_VECTOR_POOL		0
 
+#include "what.tcc"
 #include "memory/list_vector_pool.h"
 #include "persistent_object_manager.tcc"
 #include "stacktrace.h"
@@ -720,10 +721,14 @@ data_instantiation_statement::operator delete (void* p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 data_instantiation_statement::what(ostream& o) const {
 	return o << "data-instantiation_statement";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(data_instantiation_statement)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

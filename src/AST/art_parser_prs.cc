@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.6 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_prs.cc,v 1.7 2005/01/14 03:46:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -12,8 +12,18 @@
 #include "art_parser_expr.h"
 #include "art_parser_token.h"
 
+#include "what.h"
+
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
+
+// for specializing util::what
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::rule, "(prs-rule)")
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::loop, "(prs-loop)")
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::body, "(prs-body)")
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "op-loop")
+}
 
 namespace ART {
 namespace parser {
@@ -44,10 +54,14 @@ DESTRUCTOR_INLINE
 rule::~rule() {
 }
 
+#if 0
 ostream&
 rule::what(ostream& o) const {
 	return o << "(prs-rule)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(rule)
+#endif
 
 line_position
 rule::leftmost(void) const {
@@ -75,10 +89,14 @@ loop::loop(const token_char* l, const token_char* c1,
 loop::~loop() {
 }
 
+#if 0
 ostream&
 loop::what(ostream& o) const {
 	return o << "(prs-loop)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop)
+#endif
 
 line_position
 loop::leftmost(void) const {
@@ -106,8 +124,12 @@ DESTRUCTOR_INLINE
 body::~body() {
 }
 
+#if 0
 ostream&
 body::what(ostream& o) const { return o << "(prs-body)"; }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(body)
+#endif
 
 line_position
 body::leftmost(void) const {
@@ -137,7 +159,11 @@ op_loop::~op_loop() {
 
 ostream&
 op_loop::what(ostream& o) const {
+#if 0
 	o << "(op-loop ";
+#else
+	o << '(' << util::what<op_loop>::name << ' ';
+#endif
 	return op->what(o) << ")";
 }
 

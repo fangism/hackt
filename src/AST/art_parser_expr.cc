@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.10 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_expr.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -20,6 +20,8 @@
 #include "art_object_inst_ref_base.h"
 #include "art_object_expr.h"
 
+#include "what.h"
+
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
@@ -28,6 +30,25 @@
 //=============================================================================
 // debug flags
 #define	DEBUG_ID_EXPR	0
+
+//=============================================================================
+// for specializing util::what
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
+SPECIALIZE_UTIL_WHAT(ART::parser::paren_expr, "(paren-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::id_expr, "(id-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::range, "(range)")
+SPECIALIZE_UTIL_WHAT(ART::parser::prefix_expr, "(prefix-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::member_expr, "(member-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::index_expr, "(index-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::arith_expr, "(arith-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::relational_expr, "(relational-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::logical_expr, "(logical-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::array_concatenation, "(array-concatenation)")
+SPECIALIZE_UTIL_WHAT(ART::parser::loop_concatenation, "(loop-concatenation)")
+SPECIALIZE_UTIL_WHAT(ART::parser::array_construction, "(array-construction)")
+}
 
 //=============================================================================
 namespace ART {
@@ -58,10 +79,14 @@ expr_list::expr_list(const expr* e) : parent(e) { }
 
 expr_list::~expr_list() { }
 
+#if 0
 ostream&
 expr_list::what(ostream& o) const {
 	return o << "(expr-list)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(expr_list)
+#endif
 
 /**
 	Type-checker checks each individual expression and 
@@ -103,10 +128,14 @@ paren_expr::paren_expr(const token_char* l, const expr* n,
 DESTRUCTOR_INLINE
 paren_expr::~paren_expr() { }
 
+#if 0
 ostream&
 paren_expr::what(ostream& o) const {
 	return o << "(paren-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(paren_expr)
+#endif
 
 line_position
 paren_expr::leftmost(void) const {
@@ -165,10 +194,14 @@ qualified_id::force_absolute(const token_string* s) {
 	return this;
 }
 
+#if 0
 ostream&
 qualified_id::what(ostream& o) const {
 	return o << "(id-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(qualified_id)
+#endif
 
 qualified_id*
 qualified_id::append(terminal* d, token_identifier* n) {
@@ -303,7 +336,11 @@ id_expr::~id_expr() { }
 
 ostream&
 id_expr::what(ostream& o) const {
+#if 0
         return o << "(namespace-id): " << *qid;
+#else
+        return o << util::what<id_expr>::name << ": " << *qid;
+#endif
 }
 
 line_position     
@@ -394,10 +431,14 @@ range::range(const expr* l, const terminal* o, const expr* u) :
 DESTRUCTOR_INLINE
 range::~range() { }
 
+#if 0
 ostream&
 range::what(ostream& o) const {
 	return o << "(range)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(range)
+#endif
 
 line_position
 range::leftmost(void) const {
@@ -650,10 +691,14 @@ prefix_expr::prefix_expr(const terminal* o, const expr* n) :
 DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
 
+#if 0
 ostream&
 prefix_expr::what(ostream& o) const {
 	return o << "(prefix-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(prefix_expr)
+#endif
 
 line_position
 prefix_expr::leftmost(void) const {
@@ -794,10 +839,14 @@ member_expr::member_expr(const expr* l, const terminal* op,
 DESTRUCTOR_INLINE
 member_expr::~member_expr() { }
 
+#if 0
 ostream&
 member_expr::what(ostream& o) const {
 	return o << "(member-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(member_expr)
+#endif
 
 line_position
 member_expr::rightmost(void) const {
@@ -889,10 +938,14 @@ index_expr::index_expr(const expr* l, const range_list* i) :
 DESTRUCTOR_INLINE
 index_expr::~index_expr() { }
 
+#if 0
 ostream&
 index_expr::what(ostream& o) const {
 	return o << "(index-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(index_expr)
+#endif
 
 line_position
 index_expr::rightmost(void) const {
@@ -1008,10 +1061,14 @@ arith_expr::arith_expr(const expr* left, const terminal* o,
 DESTRUCTOR_INLINE
 arith_expr::~arith_expr() { }
 
+#if 0
 ostream&
 arith_expr::what(ostream& o) const {
 	return o << "(arith-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
+#endif
 
 never_ptr<const object>
 arith_expr::check_build(context& c) const {
@@ -1094,10 +1151,14 @@ relational_expr::relational_expr(const expr* left, const terminal* o,
 DESTRUCTOR_INLINE
 relational_expr::~relational_expr() { }
 
+#if 0
 ostream&
 relational_expr::what(ostream& o) const {
 	return o << "(relational-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
+#endif
 
 never_ptr<const object>
 relational_expr::check_build(context& c) const {
@@ -1117,10 +1178,14 @@ logical_expr::logical_expr(const expr* left, const terminal* o,
 DESTRUCTOR_INLINE
 logical_expr::~logical_expr() { }
 
+#if 0
 ostream&
 logical_expr::what(ostream& o) const {
 	return o << "(logical-expr)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
+#endif
 
 never_ptr<const object>
 logical_expr::check_build(context& c) const {
@@ -1138,10 +1203,14 @@ array_concatenation::array_concatenation(const expr* e) : expr(), parent(e) {
 array_concatenation::~array_concatenation() {
 }
 
+#if 0
 ostream&
 array_concatenation::what(ostream& o) const {
 	return o << "(array-concatenation)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_concatenation)
+#endif
 
 line_position
 array_concatenation::leftmost(void) const {
@@ -1185,10 +1254,14 @@ loop_concatenation::loop_concatenation(
 loop_concatenation::~loop_concatenation() {
 }
 
+#if 0
 ostream&
 loop_concatenation::what(ostream& o) const {
 	return o << "(loop-concatenation)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_concatenation)
+#endif
 
 line_position
 loop_concatenation::leftmost(void) const {
@@ -1221,10 +1294,14 @@ array_construction::array_construction(const token_char* l,
 array_construction::~array_construction() {
 }
 
+#if 0
 ostream&
 array_construction::what(ostream& o) const {
 	return o << "(array-construction)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_construction)
+#endif
 
 line_position
 array_construction::leftmost(void) const {

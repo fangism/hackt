@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.9 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_formal.cc,v 1.10 2005/01/14 03:46:38 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -29,6 +29,7 @@
 #include "art_object_definition.h"
 #include "art_object_expr_base.h"
 
+#include "what.h"
 #include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -37,7 +38,15 @@
 #define	DESTRUCTOR_INLINE		
 
 //=============================================================================
-// debug section
+// for specializing util::what
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::data_param_id, "(data-param-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::data_param_decl, "(data-param-decl)")
+SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_id, "(port-formal-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_decl, "(port-formal-decl)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_id, "(template-formal-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl, "(template-formal-decl)")
+}
 
 //=============================================================================
 namespace ART {
@@ -58,10 +67,14 @@ data_param_id::data_param_id(const token_identifier* i,
 data_param_id::~data_param_id() {
 }
 
+#if 0
 ostream&
 data_param_id::what(ostream& o) const {
 	return o << "(data-param-id)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(data_param_id)
+#endif
 
 line_position
 data_param_id::leftmost(void) const {
@@ -94,10 +107,14 @@ data_param_decl::data_param_decl(const concrete_type_ref* t,
 data_param_decl::~data_param_decl() {
 }
 
+#if 0
 ostream&
 data_param_decl::what(ostream& o) const {
 	return o << "(data-param-decl)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(data_param_decl)
+#endif
 
 line_position
 data_param_decl::leftmost(void) const {
@@ -134,7 +151,11 @@ port_formal_id::~port_formal_id() {
 
 ostream&
 port_formal_id::what(ostream& o) const {
+#if 0
 	name->what(o << "(port-formal-id): ");
+#else
+	name->what(o << util::what<port_formal_id>::name << ": ");
+#endif
 	if (dim) dim->what(o);
 	return o;
 }
@@ -207,10 +228,14 @@ DESTRUCTOR_INLINE
 port_formal_decl::~port_formal_decl() {
 }
 
+#if 0
 ostream&
 port_formal_decl::what(ostream& o) const {
 	return o << "(port-formal-decl)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(port_formal_decl)
+#endif
 
 line_position
 port_formal_decl::leftmost(void) const {
@@ -294,7 +319,11 @@ template_formal_id::~template_formal_id() {
 
 ostream&
 template_formal_id::what(ostream& o) const {
+#if 0
 	name->what(o << "(template-formal-id): ");
+#else
+	name->what(o << util::what<template_formal_id>::name << ": ");
+#endif
 	if (dim) dim->what(o << " with ");
 	return o;
 }
@@ -385,10 +414,14 @@ DESTRUCTOR_INLINE
 template_formal_decl::~template_formal_decl() {
 }
 
+#if 0
 ostream&
 template_formal_decl::what(ostream& o) const {
 	return o << "(template-formal-decl)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_formal_decl)
+#endif
 
 line_position
 template_formal_decl::leftmost(void) const {

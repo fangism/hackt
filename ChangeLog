@@ -8,6 +8,9 @@
 	  Purged unnecessary repetitive declarations.  
 	  Applied NEVER_NULL and INVARIANT macros gratuitously.  
 
+	* Specialized util::what for most classes in the ART::parser
+	  namespace.
+
 	* Globally changed node::check_build's signature to
 	  never_ptr<const object> check_build(context& c) const;
 

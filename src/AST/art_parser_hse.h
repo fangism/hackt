@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_hse.h,v 1.6 2005/01/14 03:46:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -28,7 +28,7 @@ public:
 virtual	~statement();
 
 virtual	ostream&
-	what(ostream& o) const;
+	what(ostream& o) const = 0;
 
 virtual	line_position
 	leftmost(void) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.14 2005/01/14 00:00:53 fang Exp $
+	$Id: art_parser_token.cc,v 1.15 2005/01/14 03:46:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -23,6 +23,7 @@
 #include "art_object_expr_const.h"
 #include "art_built_ins.h"
 
+#include "what.h"
 #include "stacktrace.h"
 #include "memory/list_vector_pool.h"
 
@@ -31,10 +32,26 @@
 #define	CONSTRUCTOR_INLINE		
 #define	DESTRUCTOR_INLINE		
 
+// for specializing util::what
+#if 0
+// not really needed in this module
+namespace util {
+// SPECIALIZE_UTIL_WHAT(ART::parser::token_EOF, "END-OF-FILE")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_char, "char")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_int, "int")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_float, "float")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_string, "token")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_identifier, "identifier")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_keyword, "keyword")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_bool, "bool")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_else, "else")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_quoted_string, "quoted-string")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_datatype, "datatype")
+SPECIALIZE_UTIL_WHAT(ART::parser::token_paramtype, "paramtype")
+}
+#endif
 
 namespace ART {
-using namespace entity;
-
 namespace parser {
 #include "using_ostream.h"
 using util::stacktrace;
@@ -243,7 +260,9 @@ token_float::string_compare(const char* d) const {
 }
 
 ostream&
-token_float::what(ostream& o) const { return o << "float: " << val; }
+token_float::what(ostream& o) const {
+	return o << "float: " << val;
+}
 
 line_position
 token_float::leftmost(void) const {

@@ -2,8 +2,11 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.10 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_definition.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
  */
+
+#ifndef	__ART_PARSER_DEFINITION_CC__
+#define	__ART_PARSER_DEFINITION_CC__
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -11,11 +14,7 @@
 // inline methods other than defining in the header or using
 // -fkeep-inline-functions
 
-#ifndef	__ART_PARSER_DEFINITION_CC__
-#define	__ART_PARSER_DEFINITION_CC__
-
 #include <iostream>
-// #include <vector>
 
 #include "art_parser_debug.h"
 #include "art_switches.h"
@@ -30,6 +29,7 @@
 #include "art_object_definition.h"
 #include "art_object_expr_base.h"
 
+#include "what.h"
 #include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -38,7 +38,28 @@
 #define	DESTRUCTOR_INLINE		
 
 //=============================================================================
-// debug section
+// for specializing util::what
+
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::user_data_type_prototype,
+	"(user-data-type-proto)")
+SPECIALIZE_UTIL_WHAT(ART::parser::user_data_type_def,
+	"(user-data-type-def)")
+SPECIALIZE_UTIL_WHAT(ART::parser::enum_prototype,
+	"(enum-declaration)")
+SPECIALIZE_UTIL_WHAT(ART::parser::enum_def,
+	"(enum-definition)")
+SPECIALIZE_UTIL_WHAT(ART::parser::user_chan_type_prototype,
+	"(user-chan-type-proto)")
+SPECIALIZE_UTIL_WHAT(ART::parser::user_chan_type_def,
+	"(user-chan-type-def)")
+SPECIALIZE_UTIL_WHAT(ART::parser::process_prototype,
+	"(process-prototype)")
+SPECIALIZE_UTIL_WHAT(ART::parser::process_def,
+	"(process-definition)")
+SPECIALIZE_UTIL_WHAT(ART::parser::typedef_alias,
+	"(typedef-alias)")
+}
 
 //=============================================================================
 namespace ART {
@@ -92,10 +113,14 @@ DESTRUCTOR_INLINE
 user_data_type_prototype::~user_data_type_prototype() {
 }
 
+#if 0
 ostream&
 user_data_type_prototype::what(ostream& o) const {
 	return o << "(user-data-type-proto)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_data_type_prototype)
+#endif
 
 line_position
 user_data_type_prototype::leftmost(void) const {
@@ -150,10 +175,14 @@ user_data_type_def::user_data_type_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 user_data_type_def::~user_data_type_def() { }
 
+#if 0
 ostream&
 user_data_type_def::what(ostream& o) const {
 	return o << "(user-data-type-def)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_data_type_def)
+#endif
 
 line_position
 user_data_type_def::leftmost(void) const {
@@ -234,10 +263,14 @@ enum_prototype::enum_prototype(const token_keyword* e,
 
 enum_prototype::~enum_prototype() { }
 
+#if 0
 ostream&
 enum_prototype::what(ostream& o) const {
 	return o << "(enum-declaration)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(enum_prototype)
+#endif
 
 line_position
 enum_prototype::leftmost(void) const {
@@ -300,10 +333,14 @@ enum_def::enum_def(const token_keyword* e, const token_identifier* i,
 enum_def::~enum_def() {
 }
 
+#if 0
 ostream&
 enum_def::what(ostream& o) const {
 	return o << "(enum-definition)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(enum_def)
+#endif
 
 line_position
 enum_def::leftmost(void) const {
@@ -389,10 +426,14 @@ user_chan_type_prototype::user_chan_type_prototype(
 DESTRUCTOR_INLINE
 user_chan_type_prototype::~user_chan_type_prototype() { }
 
+#if 0
 ostream&
 user_chan_type_prototype::what(ostream& o) const {
 	return o << "(user-chan-type-proto)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_chan_type_prototype)
+#endif
 
 line_position
 user_chan_type_prototype::leftmost(void) const {
@@ -425,10 +466,14 @@ user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 user_chan_type_def::~user_chan_type_def() { }
 
+#if 0
 ostream&
 user_chan_type_def::what(ostream& o) const {
 	return o << "(user-chan-type-def)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(user_chan_type_def)
+#endif
 
 line_position
 user_chan_type_def::leftmost(void) const {
@@ -528,10 +573,14 @@ DESTRUCTOR_INLINE
 process_prototype::~process_prototype() {
 }
 
+#if 0
 ostream&
 process_prototype::what(ostream& o) const {
 	return o << "(process-prototype)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_prototype)
+#endif
 
 line_position
 process_prototype::leftmost(void) const {
@@ -569,10 +618,14 @@ process_def::process_def(const template_formal_decl_list* tf,
 DESTRUCTOR_INLINE
 process_def::~process_def() { }
 
+#if 0
 ostream&
 process_def::what(ostream& o) const {
 	return o << "(process-definition)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_def)
+#endif
 
 line_position
 process_def::leftmost(void) const {
@@ -657,10 +710,14 @@ typedef_alias::typedef_alias(const template_formal_decl_list* t,
 
 typedef_alias::~typedef_alias() { }
 
+#if 0
 ostream&
 typedef_alias::what(ostream& o) const {
 	return o << "(typedef-alias)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(typedef_alias)
+#endif
 
 line_position
 typedef_alias::leftmost(void) const {

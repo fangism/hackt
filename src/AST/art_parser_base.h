@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.16 2005/01/14 00:00:51 fang Exp $
+	$Id: art_parser_base.h,v 1.17 2005/01/14 03:46:38 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -17,6 +17,17 @@
 #include "art_parser_fwd.h"
 #include "memory/list_vector_pool_fwd.h"
 
+/**
+	Macro for convenient definition of the node::what member function.  
+	util::what is defined in "what.h".
+ */
+#define PARSER_WHAT_DEFAULT_IMPLEMENTATION(T)				\
+std::ostream&								\
+T::what(std::ostream& o) const {					\
+        return o << util::what<T >::name;				\
+}
+
+//=============================================================================
 /**
 	This is the general namespace for all ART-related classes.  
  */

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.13 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_instance.cc,v 1.14 2005/01/14 03:46:39 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -31,6 +31,7 @@
 #include "art_object_assign.h"
 #include "art_object_connect.h"
 
+#include "what.h"
 #include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -39,7 +40,29 @@
 #define	DESTRUCTOR_INLINE		
 
 //=============================================================================
-// debug section
+// for specializing util::what
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::connection_argument_list, 
+	"(connection-arg-list)")
+SPECIALIZE_UTIL_WHAT(ART::parser::instance_base, 
+	"(declaration-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::instance_array, 
+	"(declaration-array)")
+SPECIALIZE_UTIL_WHAT(ART::parser::instance_declaration, 
+	"(instance-decl)")
+SPECIALIZE_UTIL_WHAT(ART::parser::instance_connection, 
+	"(actuals-connection)")
+SPECIALIZE_UTIL_WHAT(ART::parser::connection_statement, 
+	"(connection-statement)")
+SPECIALIZE_UTIL_WHAT(ART::parser::instance_alias, 
+	"(alias-assign)")
+SPECIALIZE_UTIL_WHAT(ART::parser::loop_instantiation, 
+	"(loop-instance)")
+SPECIALIZE_UTIL_WHAT(ART::parser::guarded_definition_body, 
+	"(guarded-def-body)")
+SPECIALIZE_UTIL_WHAT(ART::parser::conditional_instantiation, 
+	"(conditional-instance)")
+}
 
 //=============================================================================
 namespace ART {
@@ -217,10 +240,14 @@ DESTRUCTOR_INLINE
 connection_argument_list::~connection_argument_list() {
 }
 
-ostream&  
+#if 0
+ostream&
 connection_argument_list::what(ostream& o) const {
 	return o << "(connection-arg-list)";       
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_argument_list)
+#endif
 
 /**
 	Type checks a expression list in the connection argument context.
@@ -289,7 +316,11 @@ instance_base::~instance_base() {
 
 ostream&
 instance_base::what(ostream& o) const {
+#if 0
 	return id->what(o << "(declaration-id): ");
+#else
+	return id->what(o << util::what<instance_base>::name << ": ");
+#endif
 }
 
 line_position
@@ -342,7 +373,12 @@ instance_array::~instance_array() {
 
 ostream&
 instance_array::what(ostream& o) const {
+#if 0
 	return ranges->what(id->what(o << "(declaration-array): "));
+#else
+	return ranges->what(
+		id->what(o << util::what<instance_array>::name << ": "));
+#endif
 }
 
 line_position
@@ -423,10 +459,14 @@ DESTRUCTOR_INLINE
 instance_declaration::~instance_declaration() {
 }
 
+#if 0
 ostream&
 instance_declaration::what(ostream& o) const {
 	return o << "(instance-decl)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_declaration)
+#endif
 
 line_position
 instance_declaration::leftmost(void) const {
@@ -479,10 +519,14 @@ instance_connection::~instance_connection() {
 
 // remember to check for declaration context when checking id
 
+#if 0
 ostream&
 instance_connection::what(ostream& o) const {
 	return o << "(actuals-connection)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_connection)
+#endif
 
 line_position
 instance_connection::leftmost(void) const {
@@ -561,10 +605,14 @@ DESTRUCTOR_INLINE
 connection_statement::~connection_statement() {
 }
 
+#if 0
 ostream&
 connection_statement::what(ostream& o) const {
 	return o << "(connection-statement)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_statement)
+#endif
 
 line_position
 connection_statement::leftmost(void) const {
@@ -663,10 +711,14 @@ DESTRUCTOR_INLINE
 instance_alias::~instance_alias() {
 }
 
+#if 0
 ostream&
 instance_alias::what(ostream& o) const {
 	return o << "(alias-assign)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_alias)
+#endif
 
 line_position
 instance_alias::leftmost(void) const {
@@ -727,10 +779,14 @@ DESTRUCTOR_INLINE
 loop_instantiation::~loop_instantiation() {
 }
 
+#if 0
 ostream&
 loop_instantiation::what(ostream& o) const {
 	return o << "(loop-instance)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_instantiation)
+#endif
 
 line_position
 loop_instantiation::leftmost(void) const {
@@ -760,10 +816,14 @@ DESTRUCTOR_INLINE
 guarded_definition_body::~guarded_definition_body() {
 }       
 
+#if 0
 ostream&
 guarded_definition_body::what(ostream& o) const {      
 	return o << "(guarded-def-body)";
-}   
+}
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_definition_body)
+#endif
 
 line_position
 guarded_definition_body::leftmost(void) const {
@@ -798,10 +858,14 @@ DESTRUCTOR_INLINE
 conditional_instantiation::~conditional_instantiation() {
 }
 
+#if 0
 ostream&
 conditional_instantiation::what(ostream& o) const {
 	return o << "(conditional-instance)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(conditional_instantiation)
+#endif
 
 line_position
 conditional_instantiation::leftmost(void) const {

@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.10 2005/01/14 00:00:51 fang Exp $
+	$Id: art_parser_base.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
  */
+
+#ifndef	__ART_PARSER_BASE_CC__
+#define	__ART_PARSER_BASE_CC__
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -11,7 +14,6 @@
 // -fkeep-inline-functions
 
 #include <iostream>
-// #include <vector>
 
 #include "art_parser_debug.h"
 #include "art_switches.h"
@@ -27,6 +29,7 @@
 #include "art_object_namespace.h"
 
 #include "indent.h"
+#include "what.h"
 #include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -35,7 +38,17 @@
 #define	DESTRUCTOR_INLINE		
 
 //=============================================================================
-// debug section
+// for specializing util::what
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::type_id, "(type-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::chan_type, "(chan-type)")
+SPECIALIZE_UTIL_WHAT(ART::parser::incdec_stmt, "(inc/dec-stmt)")
+SPECIALIZE_UTIL_WHAT(ART::parser::assign_stmt, "(assign-stmt)")
+SPECIALIZE_UTIL_WHAT(ART::parser::namespace_body, "namespace-body")
+SPECIALIZE_UTIL_WHAT(ART::parser::namespace_id, "(namespace-id)")
+SPECIALIZE_UTIL_WHAT(ART::parser::using_namespace, "(using-namespace)")
+SPECIALIZE_UTIL_WHAT(ART::parser::concrete_type_ref, "(type-ref)")
+}
 
 //=============================================================================
 namespace ART {
@@ -145,7 +158,7 @@ type_id::~type_id() {
 
 ostream&
 type_id::what(ostream& o) const {
-	return base->what(o << "(type-id): ");
+	return base->what(o << util::what<type_id>::name << ": ");
 }
 
 line_position
@@ -201,10 +214,14 @@ DESTRUCTOR_INLINE
 chan_type::~chan_type() {
 }
 
+#if 0
 ostream&
 chan_type::what(ostream& o) const {
 	return o << "(chan-type)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(chan_type)
+#endif
 
 line_position
 chan_type::leftmost(void) const {
@@ -304,10 +321,14 @@ incdec_stmt::release_op(void) {
 }
 #endif
 
+#if 0
 ostream&
 incdec_stmt::what(ostream& o) const {
 	return o << "(inc/dec-stmt)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(incdec_stmt)
+#endif
 
 line_position
 incdec_stmt::leftmost(void) const {
@@ -383,10 +404,14 @@ assign_stmt::release_rhs(void) {
 }
 #endif
 
+#if 0
 ostream&
 assign_stmt::what(ostream& o) const {
 	return o << "(assign-stmt)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(assign_stmt)
+#endif
 
 line_position
 assign_stmt::leftmost(void) const {
@@ -477,7 +502,12 @@ namespace_body::~namespace_body() {
 /// what eeeez it, man?
 ostream&
 namespace_body::what(ostream& o) const {
+#if 0
 	return o << "(namespace-body: " << *name << ")";
+#else
+	return o << '(' << util::what<namespace_body>::name <<
+		": " << *name << ')';
+#endif
 }
 
 line_position
@@ -534,7 +564,11 @@ namespace_id::~namespace_id() {
 
 ostream&
 namespace_id::what(ostream& o) const {
+#if 0
 	return o << "(namespace-id): " << *qid;
+#else
+	return o << util::what<namespace_id>::name << ": " << *qid;
+#endif
 }
 
 line_position
@@ -611,10 +645,14 @@ DESTRUCTOR_INLINE
 using_namespace::~using_namespace() {
 }
 
+#if 0
 ostream&
 using_namespace::what(ostream& o) const {
 	return o << "(using-namespace)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(using_namespace)
+#endif
 
 line_position
 using_namespace::leftmost(void) const {
@@ -665,10 +703,14 @@ DESTRUCTOR_INLINE
 concrete_type_ref::~concrete_type_ref() {
 }
 
+#if 0
 ostream&
 concrete_type_ref::what(ostream& o) const {
 	return o << "(type-ref)";
 }
+#else
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(concrete_type_ref)
+#endif
 
 line_position
 concrete_type_ref::leftmost(void) const {
@@ -848,4 +890,5 @@ guarded_definition_body_list::~guarded_definition_body_list() { }
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
+#endif	// __ART_PARSER_BASE_CC__
 
