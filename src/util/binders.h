@@ -116,7 +116,31 @@ public:
 	operator() (const argument_type& x) const {
 		return op(x, arg2);
 	}
-};	// end class binder2nd_val
+};	// end class binder2nd_argval
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization for void return type.  
+ */
+template <class B>
+class binder2nd_argval_void :
+	public unary_function<typename B::first_argument_type, void> {
+public:
+	typedef	typename B::second_argument_type	arg2_type;
+	typedef	typename B::first_argument_type		argument_type;
+	typedef	typename B::result_type			result_type;
+protected:
+	B		op;
+	arg2_type	arg2;
+public:
+	binder2nd_argval_void(const B& b, const arg2_type v) : 
+		op(b), arg2(v) { }
+
+	void
+	operator() (const argument_type& x) const {
+		op(x, arg2);
+	}
+};	// end class binder2nd_argval_void
 
 //-----------------------------------------------------------------------------
 /**
@@ -147,6 +171,22 @@ inline
 binder2nd_argval<B>
 bind2nd_argval(const B& op, T& v) {
 	return binder2nd_argval<B>(op, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class B, class T>
+inline
+binder2nd_argval_void<B>
+bind2nd_argval_void(const B& op, const T& v) {
+	return binder2nd_argval_void<B>(op, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class B, class T>
+inline
+binder2nd_argval_void<B>
+bind2nd_argval_void(const B& op, T& v) {
+	return binder2nd_argval_void<B>(op, v);
 }
 
 //=============================================================================

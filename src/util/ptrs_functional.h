@@ -12,6 +12,36 @@
 
 namespace std {
 //=============================================================================
+template <template <class> class P, class T>
+class dereference_t : public unary_function<P<T>, T&> {
+public:
+	T& operator() (const P<T>& p) const { return *p; }
+};	// end class dereference_t
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <template <class> class P, class T>
+class const_dereference_t : public unary_function<P<T>, const T&> {
+public:
+	const T& operator() (const P<T>& p) const { return *p; }
+};	// end class const_dereference_t
+
+//-----------------------------------------------------------------------------
+template <template <class> class P, class T>
+inline
+dereference_t<P,T>
+dereference () {
+	return dereference_t<P,T>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <template <class> class P, class T>
+inline
+const_dereference_t<P,T>
+const_dereference () {
+	return const_dereference_t<P,T>();
+}
+
+//=============================================================================
 // adapters for pointer-class member functors
 //=============================================================================
 /**

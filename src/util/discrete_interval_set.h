@@ -12,6 +12,7 @@
 
 #include "discrete_interval_set_fwd.h"
 
+#include <assert.h>
 #include <map>
 #include <iostream>
 

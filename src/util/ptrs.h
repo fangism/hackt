@@ -469,6 +469,14 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 	template <class S>
 	excl_ptr<S>	is_a_xfer(void);
 
+	/** static cast */
+	template <class S>
+	never_ptr<S>	as_a(void) const;
+
+	/** static cast with xfer */
+	template <class S>
+	excl_ptr<S>	as_a_xfer(void);
+
 	/**
 		Dynamic cast assertion.  
 		No return value.  
@@ -489,7 +497,7 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 			// potentially dangerous
 		return reinterpret_cast<excl_ptr<S>&>(*this);
 	}
-#else	// old, can't overload
+
 	template <class S>
 	excl_ptr<S>	as_a(void) {
 		return excl_ptr<S>(static_cast<S*>(this->release()));
@@ -649,6 +657,14 @@ excl_const_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 	template <class S>
 	excl_const_ptr<S>	is_a_xfer(void);
 
+	/** static cast */
+	template <class S>
+	never_const_ptr<S>	as_a(void) const;
+
+	/** static cast with xfer */
+	template <class S>
+	excl_const_ptr<S>	as_a_xfer(void);
+
 	/**
 		Dynamic cast assertion.  
 		No return value.  
@@ -658,6 +674,7 @@ excl_const_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		assert(dynamic_cast<const S*>(this->cptr));
 	}
 
+#if 0
 	/**
 		Destructive transfer, safe up-cast.  
 		constructor probably not available yet...
@@ -669,6 +686,7 @@ excl_const_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		// shouldn't be necessary to static_cast
 		// but this make it clear what it's intended for
 	}
+#endif
 
 // permissible assignments
 
@@ -1255,6 +1273,20 @@ excl_ptr<T>::is_a_xfer(void) {
 
 template <class T>
 template <class S>
+never_ptr<S>
+excl_ptr<T>::as_a(void) const {
+	return never_ptr<S>(static_cast<S*>(this->ptr));
+}
+
+template <class T>
+template <class S>
+excl_ptr<S>
+excl_ptr<T>::as_a_xfer(void) {
+	return excl_ptr<S>(static_cast<S*>(this->release()));
+}
+
+template <class T>
+template <class S>
 never_const_ptr<S>
 excl_const_ptr<T>::is_a(void) const {
 	return never_const_ptr<S>(dynamic_cast<const S*>(this->cptr));
@@ -1282,6 +1314,20 @@ template <class S>
 never_const_ptr<S>
 never_const_ptr<T>::is_a(void) const {
 	return never_const_ptr<S>(dynamic_cast<const S*>(this->cptr));
+}
+
+template <class T>
+template <class S>
+never_const_ptr<S>
+excl_const_ptr<T>::as_a(void) const {
+	return never_const_ptr<S>(static_cast<S*>(this->cptr));
+}
+
+template <class T>
+template <class S>
+excl_const_ptr<S>
+excl_const_ptr<T>::as_a_xfer(void) {
+	return excl_const_ptr<S>(static_cast<S*>(this->release()));
 }
 
 template <class T>

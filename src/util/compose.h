@@ -44,6 +44,31 @@ public:
 	operator() (const argument_type& x ) const { return _f( _g( x ) ); }
 };	// end class unary_compose_unary_unary
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Composes f(g(x), but without any return value.
+ */
+template <class F, class G>
+class unary_compose_unary_unary_void
+	: public unary_function< typename G::argument_type, void > {
+private:
+	typedef unary_function< typename G::argument_type, void > base_type;
+protected:
+	F _f;
+	G _g;
+
+public:
+	typedef typename base_type::argument_type argument_type;
+	typedef typename base_type::result_type	result_type;
+
+	unary_compose_unary_unary_void() : _f(), _g() { }
+	unary_compose_unary_unary_void( const F& f, const G& g )
+		: _f( f ), _g( g ) { }
+
+	void
+	operator() (const argument_type& x ) const { _f( _g( x ) ); }
+};	// end class unary_compose_unary_unary_void
+
 //-----------------------------------------------------------------------------
 // helper wrapper function
 template <class F, class G>
@@ -54,12 +79,12 @@ unary_compose(F f, G g) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <class G>
+template <class F, class G>
 inline
-unary_compose_unary_unary<void, G>
-// hold that thought
-#endif
+unary_compose_unary_unary_void<F, G>
+unary_compose_void(F f, G g) {
+	return unary_compose_unary_unary_void<F, G>(f, g);
+}
 
 //=============================================================================
 /**
