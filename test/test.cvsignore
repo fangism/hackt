@@ -10,6 +10,9 @@ core.*
 *.indump
 *.outdump
 *.objdiff
+*.artobjunroll
+*.unrolldump
+*.unrolldiff
 ignore
 Makefile
 Makefile.in
