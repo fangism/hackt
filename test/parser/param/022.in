@@ -1,0 +1,11 @@
+// should pass type-checking, but not unrolling
+// has one more indirection that 021.in
+
+pint milk[4];
+
+milk[0] = 1;
+milk[1] = 2;
+milk[2] = 3;
+milk[3] = milk[milk[milk[milk[milk[0]]]]];
+	// unroll death indexing with uninitialized value!
+

@@ -1,0 +1,9 @@
+// should pass type-checking, but not unrolling
+
+pint milk[4];
+
+milk[0] = 1;
+milk[1] = 2;
+milk[2] = 3;
+milk[3] = milk[milk[milk[milk[0]]]];	// unroll-death bad initialization!
+
