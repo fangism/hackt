@@ -15,7 +15,8 @@ using namespace std;
 extern  YYSTYPE yyval;			// root token
 extern "C" {
 	int yyparse(void);              // in "y.tab.cc"
-	void yyerror(const char*);
+	void yyerror(const char*);	// ancient compiler rejects
+//	void yyerror(char*);	// replace with this if necessary
 }
 
 int main(int argc, char* argv[]) {

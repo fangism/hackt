@@ -6,6 +6,7 @@
 	walk through yyssp, yyvsp... in y.tab.cc
 	state stack pointer and value stack pointer?
 
+	note: ancient versions of yacc reject // end-of-line comments
 */
 
 %{
@@ -17,10 +18,11 @@
 using namespace std;
 using namespace ART::parser;
 
-extern	int yylex(void);
+extern	int yylex(void);		// ancient compiler rejects
 extern "C" {
 	int yyparse(void);			// parser routine to call
-	void yyerror(const char* msg);		// defined below
+	void yyerror(const char* msg);		// ancient compiler rejects
+//	void yyerror(char* msg);	// replace with this if necessary
 }
 
 // useful typedefs are defined in art_parser.h
@@ -100,7 +102,7 @@ extern "C" {
 %token	<n>	INSERT EXTRACT
 %token	<n>	PLUSPLUS MINUSMINUS
 
-// keywords
+/* keywords */
 %token	<n>	NAMESPACE
 %token	<n>	OPEN AS
 %token	<n>	CHP_LANG HSE_LANG PRS_LANG
@@ -111,7 +113,7 @@ extern "C" {
 %token	<n>	CHANNEL
 %token	<n>	BOOL_TRUE BOOL_FALSE
 
-// non-terminals
+/* non-terminals */
 %type	<n>	top_root body basic_item namespace_management
 %type	<n>	definition def_or_proc defproc def_type_id
 %type	<n>	optional_template_formal_decl_list_in_angles
@@ -120,7 +122,7 @@ extern "C" {
 %type	<n>	optional_port_formal_decl_list_in_parens port_formal_decl_list
 %type	<n>	port_formal_decl port_formal_id_list port_formal_id
 %type	<n>	type_id base_template_type
-//%type	<n>	formal_id
+/* %type	<n>	formal_id */
 %type	<n>	base_chan_type chan_or_port
 %type	<n>	base_data_type_list_in_parens
 %type	<n>	base_data_type_list base_data_type
@@ -151,7 +153,7 @@ extern "C" {
 %type	<n>	hse_assignment
 %type	<n>	prs_body single_prs prs_arrow dir prs_expr
 %type	<n>	paren_expr expr
-//%type	<n>	primary_expr
+/* %type	<n>	primary_expr */
 %type	<n>	literal id_expr qualified_id
 %type	<n>	member_index_expr_list member_index_expr unary_expr
 %type	<n>	multiplicative_expr additive_expr shift_expr
@@ -159,7 +161,7 @@ extern "C" {
 %type	<n>	exclusive_or_expr inclusive_or_expr
 %type	<n>	logical_and_expr logical_or_expr
 %type	<n>	assignment_stmt binary_assignment unary_assignment
-//%type	<n>	conditional_expr optional_expr_in_braces
+/* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<n>	optional_member_index_expr_list_in_angles
 %type	<n>	member_index_expr_list_in_angles
 %type	<n>	member_index_expr_list_in_parens
@@ -170,14 +172,14 @@ extern "C" {
 
 %start	top_root
 %%
-//------------------------------------------------------------------------
+/******************************************************************************
 //	Grammar -- re-written to be LALR(1)
-//------------------------------------------------------------------------
+******************************************************************************/
 
-// top level syntax
+/* top level syntax */
 top_root
 	: body
-	// allow empty file
+	/* allow empty file */
 	| { $$ = NULL; }
 	;
 
@@ -189,46 +191,43 @@ body
 	;
 
 basic_item
-// namespace_management already includes semicolon where needed
+/* namespace_management already includes semicolon where needed */
 	: namespace_management
-// instance_item already includes semicolon where needed
+/* instance_item already includes semicolon where needed */
 	| instance_item
 	;
 
-// namespace management
 namespace_management
-	// C++ style classes/namespaces require semicolon
+	/* C++ style classes/namespaces require semicolon */
 	: NAMESPACE ID '{' top_root '}' ';'
 		{ $$ = new namespace_body($1, $2, $3, $4, $5, $6); }
-	// or C++ style: using namespace blah;
+	/* or C++ style: using namespace blah; */
 	| OPEN id_expr AS ID ';'
 		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
 	| OPEN id_expr ';'
 		{ $$ = new using_namespace($1, $2, $3); }
-	// ever close namespace?
+	/* ever close namespace? */
 	;
 
-// Process, datatype, and channel definition.
+/* Process, datatype, and channel definition. */
 definition
-	// default actions
 	: defproc 
 	| deftype
 	| defchan
 	;
 
 
-//------------------------------------------------------------------------
+/******************************************************************************
 //	Process
-//------------------------------------------------------------------------
+******************************************************************************/
 
 def_or_proc
-	// default actions
 	: DEFINE
 	| DEFPROC
 	;
 
 defproc
-	// using <> to follow C+ template parameters
+	/* using <> to follow C+ template parameters */
 	: def_or_proc def_type_id
 	  optional_port_formal_decl_list_in_parens
 	  '{' definition_body '}'
@@ -238,7 +237,7 @@ defproc
 	;
 
 optional_port_formal_decl_list_in_parens
-	// note: the parens are NOT optional!
+	/* note: the parens are NOT optional! */
 	: '(' port_formal_decl_list ')'
 		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
 	| '(' ')'
@@ -250,7 +249,7 @@ def_type_id
 		{ $$ = new def_type_id($1, $2); }
 	;
 
-// Meta (template) language parameters
+/******** Meta (template) language parameters ********/
 
 optional_template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
@@ -266,8 +265,8 @@ template_formal_decl_list
 	;
 
 template_formal_decl
-	// changing to C-style formal parameters, allowing comma-lists
-	// is there any need for user-defined types in template argument?
+/* changing to C-style formal parameters, allowing comma-lists
+	is there any need for user-defined types in template argument? */
 	: base_template_type template_formal_id_list
 		{ $$ = new template_formal_decl($1, $2); }
 	;
@@ -284,9 +283,8 @@ template_formal_id
 		{ $$ = new template_formal_id($1, $2); }
 	;
 
-// port parameters
 port_formal_decl_list
-	// would rather use ','-delimiter, but wth...
+	/* would rather use ','-delimiter, but wth... */
 	: port_formal_decl_list ';' port_formal_decl
 		{ $$ = port_formal_decl_list_append($1, $2, $3); }
 	| port_formal_decl
@@ -294,7 +292,7 @@ port_formal_decl_list
 	;
 
 port_formal_decl
-	// must switch to C-style formals, eliminate id_list
+	/* must switch to C-style formals, eliminate id_list */
 	: type_id port_formal_id_list
 		{ $$ = new port_formal_decl($1, $2); }
 	;
@@ -313,36 +311,34 @@ port_formal_id
 
 type_id
 	: id_expr optional_member_index_expr_list_in_angles
-		// for userdef or chan type, and templating
+		/* for userdef or chan type, and templating */
 		{ $$ = new type_id($1, $2); }
 	| base_chan_type
 	| base_data_type
 	;
 
-//------------------------------------------------------------------------
+/******************************************************************************
 //	base types
-//------------------------------------------------------------------------
+******************************************************************************/
 
-// template type
 base_template_type
-	// default actions
-	: PINT_TYPE 		// integer parameter
-	| PBOOL_TYPE		// boolean parameter
+	: PINT_TYPE 		/* integer parameter */
+	| PBOOL_TYPE		/* boolean parameter */
 	;
 
-// channel type: channel, inport, outport, and data types
+/* channel type: channel, inport, outport, and data types */
 base_chan_type
-	// eliminate defaulting? (to int?), use <template> style?
+	/* eliminate defaulting? (to int?), use <template> style? */
 	: chan_or_port base_data_type_list_in_parens
 		{ $$ = chan_type_attach_data_types($1, $2); }
 	;
 
 chan_or_port
-	: CHANNEL		// a channel
+	: CHANNEL		/* a channel */
 		{ $$ = new chan_type($1); }
-	| CHANNEL '!'		// an output port
+	| CHANNEL '!'		/* an output port */
 		{ $$ = new chan_type($1, $2); }
-	| CHANNEL '?'		// an input port
+	| CHANNEL '?'		/* an input port */
 		{ $$ = new chan_type($1, $2); }
 	;
 
@@ -358,11 +354,11 @@ base_data_type_list
 		{ $$ = new base_data_type_list($1); }
 	;
 
-// actual data: int<width> or bool
+/* actual data: int<width> or bool */
 base_data_type
-	// ever need user-defined types? eventually...
-	// optional parens get confused with template-parameters
-	// going to use angle brackets <> in the template-fashion
+/* ever need user-defined types? eventually...
+	optional parens get confused with template-parameters
+	going to use angle brackets <> in the template-fashion */
 	: INT_TYPE '<' INT '>'
 		{ $$ = new data_type_base($1, $2, $3, $4); }
 	| INT_TYPE
@@ -371,8 +367,7 @@ base_data_type
 		{ $$ = new data_type_base($1); }
 	;
 
-// TO DO
-// definition types
+/* definition types */
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
           data_param_list_in_parens
@@ -413,8 +408,8 @@ data_param_list_in_parens
 	;
 
 data_param_list
-	// like declarations in formals list
-	// consider using ':', similar to C-style...
+/* like declarations in formals list
+	consider using ';', similar to C-style... */
 	: data_param_list ';' data_param
 		{ $$ = data_param_list_append($1, $2, $3); }
 	| data_param
@@ -422,10 +417,12 @@ data_param_list
 	;
 
 data_param
-	// forseen problem: array brackets are with data_type
-	// but to follow C-style, we want the arrays to go with identifiers
-	// thinking of forbidding list, restricting to single
-	// semicolon-delimited declarations
+/*
+	forseen problem: array brackets are with data_type
+	but to follow C-style, we want the arrays to go with identifiers
+	thinking of forbidding list, restricting to single
+	semicolon-delimited declarations
+*/
 	: base_data_type data_param_id_list
 		{ $$ = new instance_declaration($1, $2); }
 	;
@@ -444,8 +441,7 @@ data_param_id
 	;
 
 
-//--- definition_body ---
-
+/* --- definition_body --- */
 definition_body
 	: definition_body instance_item
 		{ $$ = definition_body_append($1, NULL, $2); }
@@ -457,6 +453,7 @@ definition_body
 		{ $$ = new definition_body($1); }
 	;
 
+/*
 // considering splitting declarations from connection, e.g.
 //		// declare first
 // myprocesstype<template-params> foo[N,M];		// may be ranges as well
@@ -466,11 +463,12 @@ definition_body
 // myprocesstype bar(port-actuals);		// for single instance and decl
 // myprocesstype<X,Y> foo;			// declare without connection
 // foo(port-actuals);				// then connect
+*/
 
 instance_item
-	: instance_declaration			// declaration: single or array
-	| instance_connection			// connection of ports
-	| instance_alias			// aliasing connection
+	: instance_declaration			/* single or array */
+	| instance_connection			/* connection of ports */
+	| instance_alias			/* aliasing connection */
 	| loop_instantiation
 	| conditional_instantiation
 	;
@@ -487,7 +485,7 @@ conditional_instantiation
 	;
 
 instance_declaration
-	// type template is included in type_id, and is part of the type
+	/* type template is included in type_id, and is part of the type */
 	: type_id declaration_id_list ';'
 		{ $$ = new instance_declaration($1, $2, $3); }
 	;
@@ -500,37 +498,37 @@ declaration_id_list
 	;
 
 declaration_id_item
-	// array declaration: forbid connection, must connect later
+	/* array declaration: forbid connection, must connect later */
 	: ID range_list_in_brackets
 		{ $$ = new declaration_array($1, $2); }
-	// single instance declaration without connection
+	/* single instance declaration without connection */
 	| ID
 		{ $$ = new declaration_base($1); }
-	// single instance declaration with connection
+	/* single instance declaration with connection */
 	| ID connection_actuals_list
 		{ $$ = new actuals_connection($1, $2); }
-	// alias or assignment (not just member_id expression?)
+	/* alias or assignment (not just member_id expression?) */
 	| ID '=' expr
 		{ $$ = new alias_assign($1, $2, $3); }
 	;
 
 instance_connection
-	// taking a declared array or single instance and connecting ports
-	// are brackets part of the array/membership chain?
+/* taking a declared array or single instance and connecting ports
+	are brackets part of the array/membership chain? */
 	: member_index_expr connection_actuals_list ';'
-		// can this first id be scoped and/or membered?
+		/* can this first id be scoped and/or membered? */
 		{ $$ = new actuals_connection($1, $2, $3); }
 	;
 
 instance_alias
-	// aliasing syntax, or data types is value assignment (general expr?)
-	// type check this, of course
-//	: member_index_expr '=' member_index_expr ';'
+/* aliasing syntax, or data types is value assignment (general expr?)
+	type check this, of course */
+/*	: member_index_expr '=' member_index_expr ';'	*/
 	: member_index_expr '=' expr ';'
 		{ $$ = new alias_assign($1, $2, $3, $4); }
 	;
 
-// this rule is sort of redundant, oh well...
+/* this rule is sort of redundant, oh well... */
 connection_actuals_list
 	: member_index_expr_list_in_parens
 	;
@@ -542,7 +540,7 @@ guarded_definition_body_list
 		{ $$ = new guarded_definition_body_list($1); }
 	;
 
-// any else clause?
+/* any else clause? */
 
 guarded_definition_body
 	: expr RARROW definition_body
@@ -550,9 +548,9 @@ guarded_definition_body
 	;
 
 
-//------------------------------------------------------------------------
+/******************************************************************************
 //	Supported Languages
-//------------------------------------------------------------------------
+******************************************************************************/
 
 language_body
 	: CHP_LANG '{' chp_body '}'
@@ -561,12 +559,14 @@ language_body
 		{ $$ = new HSE::body($1, hse_stmt_list_wrap($2, $3, $4)); }
 	| PRS_LANG '{' prs_body '}'
 		{ $$ = new PRS::body($1, prs_rule_list_wrap($2, $3, $4)); }
+/*
 //	| STACK_LANG '{' stack_body '}'
 //		{ $$ = new stack::body($1, stack_rule_list_wrap($2, $3, $4)); }
 //	and more...
+*/
 	;
 
-//--- Language: CHP ---
+/* --- Language: CHP --- */
 
 chp_body
 	: full_chp_body_item_list
@@ -579,18 +579,21 @@ full_chp_body_item_list
 		{ $$ = new CHP::stmt_list($1); }
 	;
 
+/*
 // make _this_ string together the pieces, rather than having the item
 // add itself to a global list. If we do that, then everything will be
 // properly scoped and the walk stack will store the correct state...
+*/
 
 full_chp_body_item
-	// expr_in_braces are assertions
+	/* expr_in_braces are assertions */
+/*
 //	: optional_expr_in_braces chp_body_item optional_expr_in_braces
 	// temporarily simplify
+*/
 	: chp_body_item
 	;
 
-// statement
 chp_body_item
 	: chp_loop
 	| chp_do_until
@@ -604,19 +607,19 @@ chp_body_item
 	;
 
 chp_loop
-	// do-forever loop
+	/* do-forever loop */
 	: BEGINLOOP chp_body ']'
 		{ $$ = new CHP::loop(hse_stmt_list_wrap($1, $2, $3)); }
 	;
 
 chp_do_until
-	// do-until-all-guards-false
+	/* do-until-all-guards-false */
 	: BEGINLOOP chp_matched_det_guarded_command_list ']'
 		{ $$ = new CHP::do_until(chp_det_selection_wrap($1, $2, $3)); }
 	;
 
 chp_wait
-	// wait for expr to become true
+	/* wait for expr to become true */
 	: '[' expr ']'
 		{ $$ = new CHP::wait($1, $2, $3); }
 	;
@@ -626,18 +629,21 @@ chp_selection
 		{ $$ = chp_det_selection_wrap($1, $2, $3); }
 	| '[' chp_nondet_guarded_command_list ']'
 		{ $$ = chp_nondet_selection_wrap($1, $2, $3); }
-
-	// wtf is this?... probalistic selection for FT
+/*
+// wtf is this?... probalistic selection for FT
 //	| "%[" { chp_guarded_command ":" }** "]%"
 //	| BEGINPROB chp_nondet_guarded_command_list ENDPROB
+*/
 	;
 
-// note: these lists must have at least 2 clauses, will have to fix with "else"
+/*
+note: these lists must have at least 2 clauses, will have to fix with "else"
+*/
 chp_nondet_guarded_command_list
 	: chp_nondet_guarded_command_list ':' chp_guarded_command
 		{ $$ = chp_nondet_selection_append($1, $2, $3); }
 	| chp_guarded_command ':' chp_guarded_command
-	// can't have else clause in non-deterministic selection?
+	/* can't have else clause in non-deterministic selection? */
 		{ $$ = (new CHP::nondet_selection($1))->append($2, $3); }
 	;
 
@@ -664,15 +670,17 @@ chp_else_clause
 		{ $$ = new CHP::else_clause($1, $2, $3); }
 	;
 
+/*
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
+*/
 chp_assignment
-// allow binary and unary assignments
+/* allow binary and unary assignments */
 	: assignment_stmt
 	;
 
 chp_comm_list
-	// gives comma-separated communications precedence
+	/* gives comma-separated communications precedence */
 	: chp_comm_list ',' chp_comm_action
 		{ $$ = chp_comm_list_append($1, $2, $3); }
 	| chp_comm_action
@@ -685,19 +693,21 @@ chp_comm_action
 	;
 
 chp_send
+/*
 	// for now, require parens like function-call to
 	// disambiguate between ( expr ) and ( expr_list )
+*/
 	: member_index_expr '!' expr_list_in_parens
 		{ $$ = new CHP::send($1, $2, $3); }
 	;
 
 chp_recv
-	// parens are now required
+	/* parens are now required */
 	: member_index_expr '?' member_index_expr_list_in_parens
 		{ $$ = new CHP::receive($1, $2, $3); }
 	;
 
-//--- Language: HSE ---
+/* --- Language: HSE --- */
 
 hse_body
 	: full_hse_body_item_list
@@ -711,14 +721,16 @@ full_hse_body_item_list
 	;
 
 full_hse_body_item
+/*
 	// temporary removal of assertions
 //	: optional_expr_in_braces hse_body_item optional_expr_in_braces
 //		{ $$ = $2; }
+*/
 	: hse_body_item
 	;
 
 hse_body_item
-	// returns an HSE::statement
+	/* returns an HSE::statement */
 	: hse_loop
 	| hse_do_until
 	| hse_wait
@@ -733,7 +745,7 @@ hse_loop
 	;
 
 hse_do_until
-	// keep entering loop until all guards false
+	/* keep entering loop until all guards false */
 	: BEGINLOOP hse_matched_det_guarded_command_list ']'
 		{ $$ = new HSE::do_until(hse_det_selection_wrap($1, $2, $3)); }
 	;
@@ -773,7 +785,6 @@ hse_matched_det_guarded_command_list
 	| hse_unmatched_det_guarded_command_list
 	;
 
-// this is wrong, else clause may appear at END only... fix me
 hse_unmatched_det_guarded_command_list
 	: hse_unmatched_det_guarded_command_list THICKBAR hse_guarded_command
 		{ $$ = hse_det_selection_append($1, $2, $3); }
@@ -782,16 +793,20 @@ hse_unmatched_det_guarded_command_list
 	;
 
 hse_assignment
+/*
 //	: assignment_stmt
 // only allow ++ and -- assignments
+*/
 	: unary_assignment
 		{ $$ = new HSE::assignment(
 			dynamic_cast<ART::parser::incdec_stmt*>($1)); }
 	;
 
+/*
 //--- Language: PRS ---
 // to do: add support for overriding default connection to Vdd, GND
 // for power/ground isolation, and other tricks, pass gating... <-> <+> <=>
+*/
 
 prs_body
 	: prs_body single_prs 
@@ -806,9 +821,9 @@ single_prs
 
 prs_arrow
 	: RARROW 
-	// generates combinatorial inverse
+	/* generates combinatorial inverse */
 	| IMPLIES
-	// what about #> for c-element?
+	/* what about #> for c-element? */
 	;
 
 dir
@@ -816,20 +831,18 @@ dir
 	| '-' 
 	;
 
-// end of PRS language
+/* end of PRS language */
 
-// want prs expr to be only ~, & and | expressions
+/* want prs expr to be only ~, & and | expressions */
+/* for now, allow any expression and type-check for bool later */
 prs_expr
-	// for now, allow any expression and type-check for bool later
 	: expr
 	;
 
-// eventually combine expressions together and type-check later
-
-// need to define expr
+/******************************************************************************
 // Expressions, expressions, expressions
 // mostly ripped from ANSI C++ grammar
-
+******************************************************************************/
 paren_expr
 	: '(' expr ')'
 		{ $$ = new paren_expr($1, $2, $3); }
@@ -847,7 +860,7 @@ primary_expr
 ***/
 
 literal
-	// all default actions, all are expr subclasses
+	/* all default actions, all are expr subclasses */
 	: INT
 	| FLOAT
 	| STRING
@@ -857,7 +870,7 @@ literal
 
 id_expr
 	: ID
-		{ $$ = new id_expr($1); }	// wrap in id_expr
+		{ $$ = new id_expr($1); }	/* wrap in id_expr */
 	| qualified_id
 	;
 
@@ -874,24 +887,24 @@ member_index_expr_list
 	| member_index_expr { $$ = new expr_list($1); }
 	;
 
-// this is what we want for expression arguments, without operators
+/* this is what we want for expression arguments, without operators */
 member_index_expr
-//	: primary_expr
+/*	: primary_expr */
 	: id_expr
-	// array index
+	/* array index */
 	| member_index_expr range_list_in_brackets
 		{ $$ = new index_expr($1, $2); }
 	| member_index_expr '.' id_expr
 		{ $$ = new member_expr($1, $2, $3); }
-	//			or just ID?
-	// no function calls in expressions... yet
+	/*			or just ID? */
+	/* no function calls in expressions... yet */
 	;
 
 unary_expr
 	: member_index_expr
 	| literal
 	| paren_expr
-	// no prefix operations, moved to assignment
+	/* no prefix operations, moved to assignment */
 	| '-' unary_expr
 		{ $$ = new prefix_expr($1, $2); }
 	| '!' unary_expr
@@ -941,8 +954,10 @@ relational_equality_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 	| shift_expr NOTEQUAL shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
+/*
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr
+*/
 	;
 
 and_expr
@@ -988,10 +1003,13 @@ assignment_stmt
 	;
 
 binary_assignment
+/*
 //	: conditional_expr		// not supported
 //	: logical_or_expr		// not supported
+*/
 	: member_index_expr '=' expr
 		{ $$ = new assign_stmt($1, $2, $3); }
+/*
 //	| member_index_expr STARASSIGN expr
 //	| member_index_expr DIVIDEASSIGN expr
 //	| member_index_expr PLUSASSIGN expr
@@ -1002,6 +1020,7 @@ binary_assignment
 //	| member_index_expr ANDMASK expr
 //	| member_index_expr ORMASK expr
 //	| member_index_expr XORMASK expr
+*/
 	;
 
 unary_assignment
@@ -1011,13 +1030,17 @@ unary_assignment
 		{ $$ = new incdec_stmt($1, $2); }
 	;
 
+/*
 // for simplicity, forbid the use of assignments as expressions, 
 //	reserve them as statements only
+*/
 
-// THE BASIC EXPRESSION
+/* THE BASIC EXPRESSION */
 expr
+/*
 //	: conditional_expr		// not supported
 //	: assignment_stmt
+*/
 	: logical_or_expr
 	;
 
@@ -1054,7 +1077,7 @@ expr_list
 	| expr { $$ = new expr_list($1); }
 	;
 
-//--- array declaration syntax -------------------------------------------
+/* --- array declaration syntax ------------------------------------------- */
 
 optional_range_list_in_brackets
 	: range_list_in_brackets { $$ = $1; }
@@ -1078,11 +1101,9 @@ range
 	| expr { $$ = new range($1); }
 	;
 
-//----end array ----------------------------------------------------------
+/* ----end array ---------------------------------------------------------- */
 
 %%
-// user code, if any
-
 /**
 	The goal is to keep the grammar in this "art.yy" clean, and not
 	litter the various productions with error handling cases.  
@@ -1102,7 +1123,8 @@ range
 	YYSTYPE* yyvsp;		// value stack pointer
 	YYSTYPE yylval;		// the last token received
 */
-void yyerror(const char* msg) {
+// void yyerror(char* msg)		// replace with this if necessary
+void yyerror(const char* msg) { 	// ancient compiler rejects
 	short* s;
 	YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
