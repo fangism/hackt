@@ -1,5 +1,39 @@
 "ChangeLog"
 
+2004-10-13	David Fang	<fangism@users.sourceforge.net>
+
+	* A day of compiler infamy.  
+	  GCC nightmares have forever scarred me.  
+
+	* Minor update on how static global persistent type registry
+	  is initialized.  The table itself is maintained as a
+	  pointer initialized NULL, and access to it is granted through 
+	  a static accessor function that allocates upon first use.  
+	  Not making static table as an object because is not guaranteed
+	  to be properly initialized in order, if not at all!
+
+	* De-allocation of the type registry is managed by a little
+	  hackery using a pointer class.  
+
+	* Template method bug in gcc-3.3.x and earlier was worked around
+	  by inserting keyword template in the middle of the member
+	  function call.  See persistent_object_manager::get_root<T>().  
+
+	* SEVERE PROBLEM (worked-around) with "artobjdump" and 
+	  "artobjunroll" on Apple's gcc-3.3:
+	  The ART::entity::module class was only referenced as a 
+	  pointer, not a static object, in the main executables' source.  
+	  In "artc" and "art++2obj" the module references in main()
+	  were local objects, NOT pointers.  
+	  Apple's gcc failed to link in the majority of modules 
+	  in libart++.la, resulting in failure to properly register
+	  any and all persistent types.  
+	  This is evidenced by the size of the resulting executable, 
+	  which ended up as 1/10 of the size it should have been.  
+	  The workaround to force proper linkage was to create
+	  an artificial local object of type entity::module. 
+
+
 2004-10-12	David Fang	<fangism@users.sourceforge.net>
 
 	* MAJOR REWORK:
