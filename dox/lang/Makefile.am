@@ -9,7 +9,7 @@ PDFLATEX = pdflatex
 BIBTEX = bibtex
 MAKEINDEX = makeindex
 MAKETEXDEPEND = $(AWK) -f $(srcdir)/maketexdepend.awk \
-	-v script=$(srcdir)/maketexdepend.awk \
+	-v script=$(srcdir)/maketexdepend.awk -v srcdir=$(srcdir) \
 	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
 
 SUFFIXES = .ps .dvi .tex .pdf .depend
