@@ -34,7 +34,9 @@
 		with function-local static objects.
 		This makes stacktrace safe to use for debugging
 		during static initialization and destruction.  
-		Also added ostream check protection, in case ostream
+		+ New macros STACKTRACE_BRIEF and STACKTRACE_VERBOSE
+		so user need not pass custom string everywhere.  
+		+ Also added ostream check protection, in case ostream
 		is destroyed before a trace is printed.  
 	persistent_object_manager:
 		you guessed it, replaced static members 
