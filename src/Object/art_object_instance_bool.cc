@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.7 2005/02/18 01:39:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -106,6 +106,35 @@ using util::value_writer;
 using util::value_reader;
 using util::read_value;
 using util::write_value;
+
+//=============================================================================
+// class bool_instance method definitions
+
+bool_instance::bool_instance() : persistent(), back_ref() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_instance::~bool_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance::collect_transient_info(persistent_object_manager& m) const {
+	// register me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// load me!
+}
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
@@ -222,9 +251,9 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 template <size_t D>
 void
 bool_instance_alias<D>::dump_alias(ostream& o) const {
-	NEVER_NULL(container);
-	o << container->get_qualified_name() <<
-		multikey<D, pint_value_type>(key);
+	NEVER_NULL(this->container);
+	o << this->container->get_qualified_name() <<
+		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
 		// bah, not important
@@ -240,10 +269,10 @@ void
 bool_instance_alias<D>::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
 	// which container did this alias come from?
-	m.write_pointer(o, container);
+	m.write_pointer(o, this->container);
 	// what's its key in the container?
 	value_writer<key_type> write_key(o);
-	write_key(key);
+	write_key(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -251,22 +280,23 @@ template <size_t D>
 void
 bool_instance_alias<D>::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, container);
+	m.read_pointer(i, this->container);
 	// reconstruction ordering problem:
 	// container must have its instances alread loaded, though 
 	// not necessarily constructed.
 	// This is why instance re-population MUST be decoupled from
 	// connection re-establishment *GRIN*.  
 	// See? there's a reason for everything.  
-	NEVER_NULL(container);
+	NEVER_NULL(this->container);
 	// this is the safe way of ensuring that object is loaded once only.
-	m.load_object_once(const_cast<bool_instance_collection*>(&*container));
+	m.load_object_once(
+		const_cast<bool_instance_collection*>(&*this->container));
 
 	// the CONTAINER should read the key, because it is dimension-specific!
 	// it should return a reference to the alias node, 
 	// which can then be linked.  
-	bool_instance_alias_base& n(container->load_reference(i));
-	merge(n);	// re-link
+	bool_instance_alias_base& n(this->container->load_reference(i));
+	this->merge(n);	// re-link
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -277,8 +307,8 @@ bool_instance_alias<D>::collect_transient_info(
 	STACKTRACE_PERSISTENT("bool_alias::collect_transients()");
 	// this isn't truly a persistent type, so we don't register this addr.
 	bool_instance_alias_info::collect_transient_info_base(m);
-	if (next != this)
-		next->collect_transient_info_base(m);	// CYCLE?
+	if (this->next != this)
+		this->next->collect_transient_info_base(m);	// CYCLE?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

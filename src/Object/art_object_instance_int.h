@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3 2005/02/17 00:10:15 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.4 2005/02/18 01:39:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -31,29 +31,10 @@ using util::multikey_set_element_derived;
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
-#if 1
 class int_instance;
 
 template <size_t>
 class int_array;
-#endif
-
-//=============================================================================
-#if 0
-/**
-	An actual instantiated instance of a int.
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
- */
-struct int_instance {
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
-
-public:
-	int_instance();
-
-};	// end class int_instance
-#endif
 
 //=============================================================================
 class int_instance_alias_info {
@@ -130,9 +111,10 @@ class int_instance : public persistent {
 	never_ptr<int_instance_alias_base>	back_ref;
 public:
 	int_instance();
+	~int_instance();
 
+public:
 	PERSISTENT_METHODS_DECLARATIONS
-
 };	// end class int_instance
 
 //-----------------------------------------------------------------------------
@@ -236,7 +218,7 @@ public:
 	bool
 	operator == (const parent_type& i) const {
 		// return &canonical() == &i.canonical();
-		return this->contains(p);
+		return this->contains(i);
 	}
 
 #if 0

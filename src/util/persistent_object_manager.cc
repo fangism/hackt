@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14.2.3 2005/02/17 04:21:00 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.2.4 2005/02/18 01:39:26 fang Exp $
  */
 
 // flags and switches
@@ -912,8 +912,7 @@ persistent_object_manager::self_test(const string& s, const persistent& m) {
 excl_ptr<persistent>
 persistent_object_manager::get_root(void) {
 	assert(root);           // necessary?
-	// the template keyword is required for gcc-3.3.x, but not for 3.4.x
-	return root.template is_a_xfer<persistent>();
+	return root.is_a_xfer<persistent>();
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr
 }

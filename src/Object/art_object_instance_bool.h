@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4 2005/02/17 04:20:35 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.5 2005/02/18 01:39:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -183,6 +183,7 @@ class bool_instance : public persistent {
 	never_ptr<const bool_instance_alias_base>	back_ref;
 public:
 	bool_instance();
+	~bool_instance();
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

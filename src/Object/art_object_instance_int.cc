@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5 2005/02/17 19:45:19 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.6 2005/02/18 01:39:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -93,6 +93,35 @@ using util::indent;
 using util::auto_indent;
 
 //=============================================================================
+// class int_instance method definitions
+
+int_instance::int_instance() : persistent(), back_ref() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_instance::~int_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance::collect_transient_info(persistent_object_manager& m) const {
+	// register me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// load me!
+}
+
+//=============================================================================
 // class int_instance_alias_info method definitions
 
 // inline
@@ -166,9 +195,9 @@ int_instance_alias<D>::~int_instance_alias() {
 template <size_t D>
 void
 int_instance_alias<D>::dump_alias(ostream& o) const {
-	NEVER_NULL(container);
-	o << container->get_qualified_name() <<
-		multikey<D, pint_value_type>(key);
+	NEVER_NULL(this->container);
+	o << this->container->get_qualified_name() <<
+		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
 		// bah, not important
@@ -179,7 +208,7 @@ template <size_t D>
 void
 int_instance_alias<D>::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, container);
+	m.write_pointer(o, this->container);
 #if 0
 	value_writer<key_type> kw(os);
 	kw(e.key);
