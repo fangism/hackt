@@ -10,6 +10,8 @@
 
 %{
 #include "art_parser.h"
+#include "art_parser_prs.h"
+#include "art_parser_hse.h"
 
 using namespace std;
 using namespace ART::parser;
@@ -23,20 +25,37 @@ extern "C" {
 
 // useful typedefs, delimiter strings are defined in "art_parser.cc"
 typedef	node_list<token_string,scope>	id_expr;
-typedef	node_list<expr,comma>		expr_list;	// use for postfix too
+typedef	node_list<expr,comma>		expr_list;	// use for member_index too
 typedef	node_list<range,comma>		range_list;
 
-// macros
-#define	id_expr_append(rl,d,n)						\
-	dynamic_cast<id_expr*>(rl)->append(d,n);
-#define	expr_list_wrap(rl,b,e)						\
-	dynamic_cast<expr_list*>(rl)->wrap(b,e);
-#define	expr_list_append(rl,d,n)					\
-	dynamic_cast<expr_list*>(rl)->append(d,n);
-#define	range_list_wrap(rl,b,e)						\
-	dynamic_cast<range_list*>(rl)->wrap(b,e);
-#define	range_list_append(rl,d,n)					\
-	dynamic_cast<range_list*>(rl)->append(d,n);
+// macros: d = delimiter, n = node, b = begin, e = end, l = list
+#define	hse_body_wrap(b,l,e)						\
+	dynamic_cast<HSE::body*>(l)->wrap(b,e)
+#define	hse_body_append(l,d,n)						\
+	dynamic_cast<HSE::body*>(l)->append(d,n)
+
+#define	hse_det_selection_wrap(b,l,e)					\
+	dynamic_cast<HSE::det_selection*>(l)->wrap(b,e)
+#define	hse_det_selection_append(l,d,n)					\
+	dynamic_cast<HSE::det_selection*>(l)->append(d,n)
+
+#define	hse_nondet_selection_wrap(b,l,e)				\
+	dynamic_cast<HSE::nondet_selection*>(l)->wrap(b,e)
+#define	hse_nondet_selection_append(l,d,n)				\
+	dynamic_cast<HSE::nondet_selection*>(l)->append(d,n)
+
+#define	id_expr_append(l,d,n)						\
+	dynamic_cast<id_expr*>(l)->append(d,n)
+
+#define	expr_list_wrap(b,l,e)						\
+	dynamic_cast<expr_list*>(l)->wrap(b,e)
+#define	expr_list_append(l,d,n)						\
+	dynamic_cast<expr_list*>(l)->append(d,n)
+
+#define	range_list_wrap(b,l,e)						\
+	dynamic_cast<range_list*>(l)->wrap(b,e)
+#define	range_list_append(l,d,n)					\
+	dynamic_cast<range_list*>(l)->append(d,n)
 
 %}
 
@@ -102,7 +121,7 @@ typedef	node_list<range,comma>		range_list;
 // keywords
 %token	<n>	NAMESPACE
 %token	<n>	OPEN AS
-%token	<n>	CHP HSE PRS
+%token	<n>	CHP_LANG HSE_LANG PRS_LANG
 %token	<n>	SKIP ELSE LOG
 %token	<n>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<n>	INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
@@ -132,27 +151,31 @@ typedef	node_list<range,comma>		range_list;
 %type	<n>	chp_body full_chp_body_item_list full_chp_body_item
 %type	<n>	chp_body_item chp_loop chp_selection
 %type	<n>	chp_nondet_guarded_command_list
-%type	<n>	chp_det_guarded_command_list
+%type	<n>	chp_unmatched_det_guarded_command_list
+%type	<n>	chp_matched_det_guarded_command_list
 %type	<n>	chp_guarded_command chp_else_clause chp_assignment
 %type	<n>	chp_comm_list chp_comm_action chp_send chp_recv
 %type	<n>	hse_body full_hse_body_item_list full_hse_body_item
-%type	<n>	hse_body_item hse_loop hse_selection
+%type	<n>	hse_body_item hse_loop hse_do_until hse_selection
 %type	<n>	hse_guarded_command hse_else_clause
 %type	<n>	hse_nondet_guarded_command_list
-%type	<n>	hse_det_guarded_command_list
+%type	<n>	hse_matched_det_guarded_command_list
+%type	<n>	hse_unmatched_det_guarded_command_list
 %type	<n>	hse_assignment
 %type	<n>	prs_body single_prs prs_arrow dir prs_expr
-%type	<n>	paren_expr primary_expr expr
+%type	<n>	paren_expr expr
+//%type	<n>	primary_expr
 %type	<n>	literal id_expr qualified_id
-%type	<n>	postfix_expr_list postfix_expr unary_expr
+%type	<n>	member_index_expr_list member_index_expr unary_expr
 %type	<n>	multiplicative_expr additive_expr shift_expr
 %type	<n>	relational_equality_expr and_expr
 %type	<n>	exclusive_or_expr inclusive_or_expr
 %type	<n>	logical_and_expr logical_or_expr
-%type	<n>	assignment_expr
+%type	<n>	assignment_stmt
 //%type	<n>	conditional_expr optional_expr_in_braces
-%type	<n>	optional_postfix_expr_list_in_angles
-%type	<n>	postfix_expr_list_in_angles postfix_expr_list_in_parens
+%type	<n>	optional_member_index_expr_list_in_angles
+%type	<n>	member_index_expr_list_in_angles
+%type	<n>	member_index_expr_list_in_parens
 %type	<n>	expr_list_in_parens expr_list
 %type	<n>	optional_range_list_in_brackets range_list_in_brackets
 %type	<n>	range_list range
@@ -272,8 +295,8 @@ port_formal_list
 
 port_formal
 	// must switch to C-style formals, eliminate id_list
-	: type_id formal_id port_formal_id_list
-	//	{ $$ = new port_formal($1, $2, $3); }
+	: type_id port_formal_id_list
+	//	{ $$ = new port_formal($1, $2); }
 	;
 
 port_formal_id_list
@@ -289,7 +312,7 @@ port_formal_id
 	;
 
 type_id
-	: id_expr optional_postfix_expr_list_in_angles
+	: id_expr optional_member_index_expr_list_in_angles
 		// for userdef or chan type, and templating
 	//	{ $$ = new type_id($1, $2); }
 	| base_chan_type
@@ -337,8 +360,7 @@ base_data_type
 	// ever need user-defined types?
 	// optional parens get confused with template-parameters
 	// going to use angle brackets <> in the template-fashion
-	: INT_TYPE postfix_expr_list_in_angles
-		// really, only one expr (INT) allowed inside
+	: INT_TYPE '<' INT '>'
 	| INT_TYPE
 	| BOOL_TYPE
 	;
@@ -438,13 +460,14 @@ declaration_id_item
 instance_connection
 	// taking a declared array or single instance and connecting ports
 	// are brackets part of the array/membership chain?
-	: postfix_expr connection_actuals_list
+	: member_index_expr connection_actuals_list
 		// can this first id be scoped and/or membered?
-	| postfix_expr '=' postfix_expr
+	| member_index_expr '=' member_index_expr
 	;
 
+// this rule is sort of redundant, oh well...
 connection_actuals_list
-	: postfix_expr_list_in_parens
+	: member_index_expr_list_in_parens
 	;
 
 guarded_definition_body_list
@@ -462,10 +485,10 @@ guarded_definition_body
 //------------------------------------------------------------------------
 
 language_body
-	: CHP '{' chp_body '}'
-	| HSE '{' hse_body '}'
-	| PRS '{' prs_body '}'
-//	| STACK '{' stack_body '}'
+	: CHP_LANG '{' chp_body '}'
+	| HSE_LANG '{' hse_body '}'
+	| PRS_LANG '{' prs_body '}'
+//	| STACK_LANG '{' stack_body '}'
 //	and more...
 	;
 
@@ -505,13 +528,13 @@ chp_loop
 	// do-forever loop
 	: BEGINLOOP chp_body ']'
 	// do-until-all-guards-false
-	| BEGINLOOP chp_det_guarded_command_list ']'
+	| BEGINLOOP chp_matched_det_guarded_command_list ']'
 	;
 
 chp_selection
 	// wait for expr to become true
 	: '[' expr ']'
-	| '[' chp_det_guarded_command_list ']'
+	| '[' chp_matched_det_guarded_command_list ']'
 	| '[' chp_nondet_guarded_command_list ']'
 
 	// wtf is this?... probalistic selection for FT
@@ -526,11 +549,14 @@ chp_nondet_guarded_command_list
 	// can't have else clause in non-deterministic selection?
 	;
 
-chp_det_guarded_command_list
-	: chp_det_guarded_command_list THICKBAR chp_guarded_command
-	| chp_guarded_command THICKBAR chp_guarded_command
-	// matched case statement (with else)
-	| chp_guarded_command THICKBAR chp_else_clause
+chp_matched_det_guarded_command_list
+	: chp_unmatched_det_guarded_command_list THICKBAR chp_else_clause
+	| chp_unmatched_det_guarded_command_list
+	;
+
+chp_unmatched_det_guarded_command_list
+	: chp_unmatched_det_guarded_command_list THICKBAR chp_guarded_command
+	| chp_guarded_command
 	;
 
 chp_guarded_command
@@ -538,16 +564,13 @@ chp_guarded_command
 	;
 
 chp_else_clause
-	: THICKBAR ELSE RARROW chp_body
+	: ELSE RARROW chp_body
 	;
 
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
 chp_assignment
-//	: postfix_expr '+'
-//	| postfix_expr '-'
-//	| postfix_expr COLONASSIGN expr
-	: assignment_expr
+	: assignment_stmt
 	;
 
 chp_comm_list
@@ -564,13 +587,13 @@ chp_comm_action
 chp_send
 	// for now, require parens like function-call to
 	// disambiguate between ( expr ) and ( expr_list )
-	: postfix_expr '!' expr_list_in_parens
-//	| postfix_expr '!' expr
+	: member_index_expr '!' expr_list_in_parens
+//	| member_index_expr '!' expr
 	;
 
 chp_recv
-	: postfix_expr '?' postfix_expr_list_in_parens
-//	| postfix_expr '?' postfix_expr
+	: member_index_expr '?' member_index_expr_list_in_parens
+//	| member_index_expr '?' member_index_expr
 	;
 
 //--- Language: HSE ---
@@ -581,69 +604,96 @@ hse_body
 
 full_hse_body_item_list
 	: full_hse_body_item_list ';' full_hse_body_item
+		{ $$ = hse_body_append($1, $2, $3); }
 	| full_hse_body_item
+		{ $$ = new HSE::body($1); }
 	;
 
 full_hse_body_item
-	// temporary removal
+	// temporary removal of assertions
 //	: optional_expr_in_braces hse_body_item optional_expr_in_braces
 	: hse_body_item
 	;
 
 hse_body_item
+	// returns an HSE::statement
 	: hse_loop
+	| hse_do_until
 	| hse_selection
 	| hse_assignment
-	| SKIP
+	| SKIP { $$ = new HSE::skip($1); }
 	;
 
 hse_loop
 	: BEGINLOOP hse_body ']'
-	| BEGINLOOP hse_det_guarded_command_list ']'
+		{ $$ = new HSE::loop(hse_body_wrap($1, $2, $3)); }
+	;
+
+hse_do_until
+	// keep entering loop until all guards false
+	: BEGINLOOP hse_matched_det_guarded_command_list ']'
+		{ $$ = new HSE::do_until(hse_det_selection_wrap($1, $2, $3)); }
 	;
 
 hse_selection
 	: '[' expr ']'
-	| '[' hse_det_guarded_command_list ']'
+		{ $$ = new HSE::wait($1, $2, $3); }
+	| '[' hse_matched_det_guarded_command_list ']'
+		{ $$ = hse_nondet_selection_wrap($1, $2, $3); }
 	| '[' hse_nondet_guarded_command_list ']'
+		{ $$ = hse_det_selection_wrap($1, $2, $3); }
 	;
 
 hse_guarded_command
 	: expr RARROW hse_body 
+		{ $$ = new HSE::guarded_command($1, $2, $3); }
 	;
 
 hse_else_clause
-	: THICKBAR ELSE RARROW hse_body
+	: ELSE RARROW hse_body
+		{ $$ = new HSE::else_clause($1, $2, $3); }
 	;
 
 hse_nondet_guarded_command_list
 	: hse_nondet_guarded_command_list ':' hse_guarded_command
+		{ $$ = hse_nondet_selection_append($1, $2, $3); }
 	| hse_guarded_command ':' hse_guarded_command
+		{ $$ = (new HSE::nondet_selection($1))->append($2, $3); }
 	;
 
-hse_det_guarded_command_list
-	: hse_det_guarded_command_list THICKBAR hse_guarded_command
-	| hse_guarded_command THICKBAR hse_guarded_command
-	| hse_guarded_command THICKBAR hse_else_clause
+hse_matched_det_guarded_command_list
+	: hse_unmatched_det_guarded_command_list THICKBAR hse_else_clause
+		{ $$ = hse_det_selection_append($1, $2, $3); }
+	| hse_unmatched_det_guarded_command_list
+	;
+
+// this is wrong, else clause may appear at END only... fix me
+hse_unmatched_det_guarded_command_list
+	: hse_unmatched_det_guarded_command_list THICKBAR hse_guarded_command
+		{ $$ = hse_det_selection_append($1, $2, $3); }
+	| hse_guarded_command
+		{ $$ = new HSE::det_selection($1); }
 	;
 
 hse_assignment
-//	: postfix_expr '+'
-//	| postfix_expr '-'
-	: assignment_expr
+	: assignment_stmt
+		{ $$ = new HSE::assignment(
+			dynamic_cast<ART::parser::incdec_stmt*>($1)); }
 	;
 
 //--- Language: PRS ---
 // to do: add support for overriding default connection to Vdd, GND
-// for power/ground isolation, and other tricks
+// for power/ground isolation, and other tricks, pass gating... <-> <+> <=>
 
 prs_body
 	: prs_body single_prs 
-	| single_prs
+		{ $$ = dynamic_cast<PRS::body*>($1)->append(NULL, $2); }
+	| single_prs { $$ = new PRS::body($1); }
 	;
 
 single_prs
-	: prs_expr prs_arrow postfix_expr dir
+	: prs_expr prs_arrow member_index_expr dir
+		{ $$ = new PRS::rule($1, $2, $3, $4); }
 	;
 
 prs_arrow
@@ -677,14 +727,16 @@ paren_expr
 		{ $$ = $2; }
 	;
 
+/***
 primary_expr
 	// all default actions: $$ = $1;
 	: literal
-// split out, so postfix_expr doesn't recur, 
+// split out, so member_index_expr doesn't recur, 
 // now unary_expr must accept paren_expr
 //	| '(' expr ')'		
 	| id_expr
 	;
+***/
 
 literal
 	// all default actions, all are expr subclasses
@@ -703,32 +755,32 @@ id_expr
 
 qualified_id
 	: qualified_id SCOPE ID
-		{ $$ = $1; id_expr_append($$, $2, $3); }
+		{ $$ = id_expr_append($1, $2, $3); }
 	| ID SCOPE ID
-		{ $$ = new id_expr($1); id_expr_append($$, $2, $3); }
+		{ $$ = (new id_expr($1))->append($2, $3); }
 	;
 
-postfix_expr_list
-	: postfix_expr_list ',' postfix_expr
-		{ $$ = $1; expr_list_append($$, $2, $3); }
-	| postfix_expr { $$ = new expr_list($1); }
+member_index_expr_list
+	: member_index_expr_list ',' member_index_expr
+		{ $$ = expr_list_append($1, $2, $3); }
+	| member_index_expr { $$ = new expr_list($1); }
 	;
 
 // this is what we want for expression arguments, without operators
-postfix_expr
-	: primary_expr
+member_index_expr
+//	: primary_expr
+	: id_expr
 	// array index
-	| postfix_expr range_list_in_brackets
+	| member_index_expr range_list_in_brackets
 		{ $$ = new index_expr($1, $2); }
-	| postfix_expr '.' id_expr
+	| member_index_expr '.' id_expr
 		{ $$ = new member_expr($1, $2, $3); }
 	// no function calls in expressions... yet
 	;
 
-// this rule makes problems because of expression cycles
-// look for any possible way for expr_list to conflict with expr
 unary_expr
-	: postfix_expr
+	: member_index_expr
+	| literal
 	| paren_expr
 	// no prefix operations, moved to assignment
 	| '-' unary_expr
@@ -821,21 +873,35 @@ conditional_expr
 	;
 **/
 
-assignment_expr
+assignment_stmt
 //	: conditional_expr		// not supported
-	: logical_or_expr		// expression-statement, does nothing
-	| postfix_expr '=' assignment_expr
-		{ $$ = new assign_expr($1, $2, $3); }
+//	: logical_or_expr		// not supported
+	: member_index_expr '=' expr
+		{ $$ = new assign_stmt($1, $2, $3); }
+//	| member_index_expr STARASSIGN expr
+//	| member_index_expr DIVIDEASSIGN expr
+//	| member_index_expr PLUSASSIGN expr
+//	| member_index_expr MINUSASSIGN expr
+//	| member_index_expr PERCENTASSIGN expr
+//	| member_index_expr RIGHTSHIFTASSIGN expr
+//	| member_index_expr LEFTSHIFTASSIGN expr
+//	| member_index_expr ANDMASK expr
+//	| member_index_expr ORMASK expr
+//	| member_index_expr XORMASK expr
+	| member_index_expr PLUSPLUS
+		{ $$ = new incdec_stmt($1, $2); }
+	| member_index_expr MINUSMINUS
+		{ $$ = new incdec_stmt($1, $2); }
 	;
 
-// forbid using assignment_expr?
-//	assignment_operator: one of
-//		=  *=  /=  %=   +=  -=  >>=  <<=  &=  ^=  |=  ++  --
+// for simplicity, forbid the use of assignments as expressions, 
+//	reserve them as statements only
 
-// THE EXPRESSION
+// THE BASIC EXPRESSION
 expr
 //	: conditional_expr		// not supported
-	: assignment_expr
+//	: assignment_stmt
+	: logical_or_expr
 	;
 
 /** temporarily not needed
@@ -845,29 +911,29 @@ optional_expr_in_braces
 	;
 **/
 
-optional_postfix_expr_list_in_angles
-	: postfix_expr_list_in_angles { $$ = $1; }
+optional_member_index_expr_list_in_angles
+	: member_index_expr_list_in_angles { $$ = $1; }
 	| { $$ = NULL; }
 	;
 
-postfix_expr_list_in_angles
-	: '<' postfix_expr_list '>'
-		{ $$ = $2; expr_list_wrap($$, $1, $3); }
+member_index_expr_list_in_angles
+	: '<' member_index_expr_list '>'
+		{ $$ = expr_list_wrap($1, $2, $3); }
 	;
 
-postfix_expr_list_in_parens
-	: '(' postfix_expr_list ')'
-		{ $$ = $2; expr_list_wrap($$, $1, $3); }
+member_index_expr_list_in_parens
+	: '(' member_index_expr_list ')'
+		{ $$ = expr_list_wrap($1, $2, $3); }
 	;
 
 expr_list_in_parens
 	: '(' expr_list ')'
-		{ $$ = $2; expr_list_wrap($$, $1, $3); }
+		{ $$ = expr_list_wrap($1, $2, $3); }
 	;
 
 expr_list
 	: expr_list ',' expr 
-		{ $$ = $1; expr_list_append($$, $2, $3); }
+		{ $$ = expr_list_append($1, $2, $3); }
 	| expr { $$ = new expr_list($1); }
 	;
 
@@ -880,12 +946,12 @@ optional_range_list_in_brackets
 
 range_list_in_brackets
 	: '[' range_list ']'
-		{ $$ = $2; range_list_wrap($$, $1, $3); }
+		{ $$ = range_list_wrap($1, $2, $3); }
 	;
 
 range_list
 	: range_list ',' range 
-		{ $$ = $1; range_list_append($$, $2, $3); }
+		{ $$ = range_list_append($1, $2, $3); }
 	| range { $$ = new range_list($1); }
 	;
 

@@ -42,9 +42,12 @@ namespace parser {
 
 //=============================================================================
 // some constant delimiter strings
+extern	const char	none[];
 extern	const char	comma[];
 extern	const char	semicolon[];
 extern	const char	scope[];
+extern	const char	thickbar[];
+extern	const char	colon[];
 
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type
@@ -63,7 +66,7 @@ virtual	~node() { }
 	Shows representation without recursive descent.  
 	Derived classes of non-terminals should just print their type name.  
  */
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& what(ostream& o) const { return o << "(node)"; }
 
 // will type-check and return a usable ART::object
 // virtual object* check_build(const context* c) const = 0;
@@ -85,7 +88,7 @@ public:
 virtual	~terminal() { }
 
 virtual	int string_compare(const char* d) const = 0;
-virtual	ostream& what(ostream& o) const { return o << "(node)"; }
+virtual	ostream& what(ostream& o) const { return o << "(terminal)"; }
 };
 
 //=============================================================================
@@ -159,11 +162,13 @@ virtual	ostream& what(ostream& o) const { return o << "float: " << val; }
 };
 
 //=============================================================================
-/// This class extends functionality of the standard string for the parser.  
 /**
+	This class extends functionality of the standard string for 
+	the lexer and parser.  
+	Subclasses thereof are intended for use by the lexer.  
 	This class also keeps track of the line and column position in a 
 	file for a given token.  
-	For now, this class is used for punctuation tokens.  
+	For now, this class is used for punctuation tokens.  How silly.  
 	For identifier, use token_identifier.  
 	For quoted strings, use token_quoted_string.  
  */
@@ -212,6 +217,18 @@ virtual	ostream& what(ostream& o) const
 };
 
 //-----------------------------------------------------------------------------
+/// class for "else" keyword, which is a legitimate expr
+class token_else : public token_keyword, public expr {
+public:
+	token_else(const char* tf) : token_keyword(tf), expr()
+		{ assert(!strcmp(tf,"true") || !strcmp(tf,"false")); }
+virtual	~token_else() { }
+
+virtual	ostream& what(ostream& o) const
+		{ return o << "keyword: " << *((const string*) this); }
+};
+
+//-----------------------------------------------------------------------------
 /// quoted-string version of token_string class
 class token_quoted_string : public token_string, public expr {
 public:
@@ -255,7 +272,7 @@ virtual	ostream& what(ostream& o) const { return o << "(node_list_base<>)"; }
 	The delimiter specifier, D, is used for checking that every other
 	token is separated by a D character (if D is not '\0').  
  */
-template <class T, const char D[] = "">
+template <class T, const char D[] = none>
 class node_list : public node_list_base<T> {
 protected:
 	terminal*	begin;		///< wrapping string, such as "("
@@ -270,7 +287,7 @@ virtual	~node_list() { if (begin) delete begin; if (end) delete end; }
 	This attaches enclosing text, such as brackets, braces, parentheses, 
 	around a node_list.  The arguments are type-checked as token_strings.  
  */
-	node_list<T,D>* wrap(node* b, node* e) {
+virtual	node_list<T,D>* wrap(node* b, node* e) {
 		begin = dynamic_cast<terminal*>(b);
 		assert(begin);
 		assert(dynamic_cast<token_char*>(begin) || 
@@ -287,7 +304,7 @@ virtual	~node_list() { if (begin) delete begin; if (end) delete end; }
 	character token.  Also checks that delimiter matchs, and
 	that type of argument matches.
  */
-	node_list<T,D>* append(node* d, node* n) {
+virtual	node_list<T,D>* append(node* d, node* n) {
 		if (d) {
 			// check for delimiter character match
 			terminal* t = dynamic_cast<terminal*>(d);
@@ -464,14 +481,67 @@ virtual	~logical_expr() { }
 virtual	ostream& what(ostream& o) const { return o << "(logical-expr)"; }
 };
 
-//-----------------------------------------------------------------------------
-class assign_expr : public binary_expr {
+//=============================================================================
+/// base class for statements (assignments, increment, decrement...)
+class statement : public nonterminal {
 public:
-	assign_expr(node* left, node* o, node* right) : 
-		binary_expr(left, o, right) { }
-virtual	~assign_expr() { }
+	statement() : nonterminal() { }
+virtual	~statement() { }
 
-virtual	ostream& what(ostream& o) const { return o << "(assign-expr)"; }
+virtual	ostream& what(ostream& o) const { return o << "(statement)"; }
+};
+
+//-----------------------------------------------------------------------------
+/// class for unary expression statements, such as increment and decrement
+class incdec_stmt : virtual public statement {
+protected:
+	expr*		e;
+	terminal*	op;
+public:
+	incdec_stmt(node* n, node* o) : statement(), 
+		e(dynamic_cast<expr*>(n)), 
+		op(dynamic_cast<terminal*>(o))
+		{ assert(e); assert(op); }
+virtual	~incdec_stmt() { if (e) delete e; if (op) delete op; }
+
+/**
+	Release operations are needed for destructive transfer of ownership.  
+	The consumers of the return pointers are thus responsible for the 
+	memory at their location.  
+ */
+virtual	expr* release_expr(void) { expr* r = e; e = NULL; return r; }
+virtual	terminal* release_op(void) { terminal* r = op; op = NULL; return r; }
+
+virtual	ostream& what(ostream& o) const { return o << "(inc/dec-stmt)"; }
+};
+
+//-----------------------------------------------------------------------------
+/// class for binary expression statements, with left- and right-hand sides
+class assign_stmt : virtual public statement {
+protected:
+	expr*		lhs;
+	terminal*	op;
+	expr*		rhs;
+public:
+	assign_stmt(node* left, node* o, node* right) : statement(), 
+		lhs(dynamic_cast<expr*>(left)), 
+		op(dynamic_cast<terminal*>(o)), 
+		rhs(dynamic_cast<expr*>(right))
+		{ assert(lhs); assert(op); assert(rhs); }
+virtual	~assign_stmt() { if (lhs) delete lhs; if (op) delete op;
+		if (rhs) delete rhs; }
+
+virtual	ostream& what(ostream& o) const { return o << "(assign-stmt)"; }
+};
+
+//=============================================================================
+/// abstract base class for language bodies
+class language_body : public nonterminal {
+public:
+	language_body() : nonterminal() { }
+virtual	~language_body() { }
+
+virtual	ostream& what(ostream& o) const { return o << "(language-body)"; }
 };
 
 //=============================================================================

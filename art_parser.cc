@@ -10,9 +10,12 @@ namespace parser {
 
 //=============================================================================
 // global constants
-const char comma[] = ",";
-const char semicolon[] = ";";
-const char scope[] = "::";
+const char none[] = "";		///< delimiter for node_list template argument
+const char comma[] = ",";	///< delimiter for node_list template argument
+const char semicolon[] = ";";	///< delimiter for node_list template argument
+const char scope[] = "::";	///< delimiter for node_list template argument
+const char thickbar[] = "[]";	///< delimiter for node_list template argument
+const char colon[] = ":";	///< delimiter for node_list template argument
 
 //=============================================================================
 // method definitions for node_list<>
