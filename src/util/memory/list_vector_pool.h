@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.10.1 2005/01/22 06:38:28 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.10.2 2005/01/22 20:53:07 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -54,6 +54,9 @@
 #if DEBUG_USING_WHAT
 #include "what.tcc"
 #endif
+
+// TEMPORARY
+#include "stacktrace.h"
 
 //=============================================================================
 // interface macros
@@ -111,12 +114,14 @@ T::get_pool(void) {							\
 }									\
 									\
 void* T::operator new (size_t s) {					\
+	STACKTRACE("operator new");					\
 	return get_pool().allocate();					\
 }									\
 inline void* T::operator new (size_t s, void*& p) {			\
 	NEVER_NULL(p); return p;					\
 }									\
 void T::operator delete (void* p) {					\
+	STACKTRACE("operator delete");					\
 	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);			\
 	get_pool().deallocate(t);					\
 }
@@ -312,6 +317,7 @@ public:
 	explicit
 	list_vector_pool(const size_type C = 16) : 
 			chunk_size(C), pool(), free_list(), peak(0) {
+		STACKTRACE("list_vector_pool::list_vector_pool()");
 		assert(chunk_size);
 		// worry about alignment, placement and pages sizes later
 		pool.push_back(chunk_type());
@@ -343,6 +349,7 @@ public:
 		corrupting memory reference by the old non-freed pointers!
 	 */
 	~list_vector_pool() {
+		STACKTRACE("list_vector_pool::~list_vector_pool()");
 #if VERBOSE_ALLOC
 		status(cerr << "~list_vector_pool<" <<
 #if DEBUG_USING_WHAT
@@ -386,6 +393,7 @@ public:
 	 */
 	pointer
 	allocate(void) {
+		STACKTRACE("list_vector_pool::allocate()");
 #if THREADED_ALLOC
 		// volatile? do not optimize away?
 		Lock got_the_mutex;
@@ -450,6 +458,7 @@ public:
 	// if so, use set<pointer> for the free_list
 	void
 	deallocate(pointer p) {
+		STACKTRACE("list_vector_pool::deallocate()");
 #if THREADED_ALLOC
 		Lock got_the_mutex;
 #endif
@@ -477,6 +486,7 @@ public:
 	 */
 	void
 	construct(pointer p, const T& val) {
+		STACKTRACE("list_vector_pool::construct()");
 		assert(p);
 #if VERBOSE_ALLOC
 		cerr << "Constructing " <<
@@ -501,6 +511,7 @@ public:
 	 */
 	void
 	destroy(pointer p) {
+		STACKTRACE("list_vector_pool::destroy()");
 		assert(p);
 #if VERBOSE_ALLOC
 		cerr << "Punting destruction for " << p;
@@ -516,6 +527,7 @@ public:
 	/// feedback IO, indented one-tab by default
 	ostream&
 	status(ostream& o) const {
+		STACKTRACE("list_vector_pool::status()");
 		o << '\t' << pool.size() << " chunks of " << chunk_size <<
 			"*" << sizeof(T) << " " <<
 #if DEBUG_USING_WHAT
