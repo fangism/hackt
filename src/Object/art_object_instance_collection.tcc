@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.8 2005/02/25 23:01:14 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.9 2005/02/26 04:56:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -533,13 +533,20 @@ INSTANCE_COLLECTION_CLASS::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
+INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
+	collection_parameter_persistence<Tag>::collect(m, *this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+void
 INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
-	// USE value_writer...
-	// specialization functor parameter_writer
-	const collection_parameter_persistence<Tag> write_param(m);
-	write_param(o, *this);
+	// specialization functor parameter writer
+	collection_parameter_persistence<Tag>::write(m, o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -548,10 +555,8 @@ void
 INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
-	// USE value_reader
-	// specialization functor parameter_writer
-	const collection_parameter_persistence<Tag> load_param(m);
-	load_param(i, *this);
+	// specialization functor parameter loader
+	collection_parameter_persistence<Tag>::load(m, i, *this);
 }
 
 //=============================================================================

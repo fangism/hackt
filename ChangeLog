@@ -17,6 +17,19 @@
 	  same story as before.  They now have alias connections.  
 	  Sweet, that was easy... structs, you're next.
 
+	* -instance-12:
+	  Ported datastruct, channel and process collections using 
+	  instance_collection template in one fell swoop.  
+	  Added a physical_instance_collection type between
+	  instance_collection_base and datatype/channel/process collections.  
+	  Wrote appropriate functor specializations for them.  
+	  Updated interface of collection_persistence to use 
+	  static function calls: collect, write, load. 
+	  Process and channels (aliases) are now initially connected
+	  to themselves.  
+	  This branch is nearly mature,  next revision will be 
+	  massive cleanup before merging to parent.  
+
 
 2005-02-24	David Fang	<fangism@users.sourceforge.net>
 

@@ -2,19 +2,19 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x33006c4	module__	0	0	32
-	2	 0x3300170	namespc_	0	32	60
-	3	 0x33019f0	procdefn	0	60	108
-	4	 0x3806450	pintcoll	0	108	145
-	5	 0x3803004	pintinst	0	145	161
-	6	 0x3301a64	proccoll	0	161	201
-	7	 0x33006e4	procinst	0	201	221
-	8	 0x3300704	proctprf	0	221	237
-	9	 0x3300714	dprmlst_	0	237	253
-	10	 0x2672024	cnstpi__	0	253	265
-	11	 0x3300724	proctprf	0	265	281
-	12	 0x3301ac4	cprmlst_	0	281	297
-	13	 0x2672038	cnstpi__	0	297	309
+	1	 0x2b006c0	module__	0	0	32
+	2	 0x2b00170	namespc_	0	32	60
+	3	 0x2b019f0	procdefn	0	60	108
+	4	 0x4006050	pintcoll	0	108	145
+	5	 0x4003600	pintinst	0	145	161
+	6	 0x2b01a64	proccoll	0	161	201
+	7	 0x2b006e0	procinst	0	201	221
+	8	 0x2b00700	proctprf	0	221	237
+	9	 0x2b00714	dprmlst_	0	237	253
+	10	 0x28df024	cnstpi__	0	253	265
+	11	 0x2b00720	proctprf	0	265	281
+	12	 0x2b01ac4	cprmlst_	0	281	297
+	13	 0x28df038	cnstpi__	0	297	309
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -34,6 +34,6 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<13>^0 bar (instantiated)
+    bar = process foo<13>^0 bar (instantiated) = ::bar
 }
 

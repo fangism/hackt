@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.2.3.2.4.2.2 2005/02/25 23:01:15 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.2.3.2.4.2.3 2005/02/26 04:56:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -42,7 +42,7 @@ using util::multikey_map;
  */
 class enum_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<enum_instance_alias_base>	back_ref;
+	never_ptr<const enum_instance_alias_base>	back_ref;
 public:
 	enum_instance();
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7.2.1 2005/02/20 09:08:13 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.2.1.4.1 2005/02/26 04:56:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -173,6 +173,13 @@ instance_collection_base::get_qualified_name(void) const {
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+instance_collection_base::get_type_ref(void) const {
+	INVARIANT(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -575,6 +582,39 @@ instance_collection_base::load_object_base(
 }
 
 //=============================================================================
+// class physical_instance_collection method definitions
+
+physical_instance_collection::physical_instance_collection(
+		const scopespace& o, const string& n, const size_t d) :
+		parent_type(o, n, d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+physical_instance_collection::~physical_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+physical_instance_collection::dump(ostream& o) const {
+	parent_type::dump(o);
+	if (is_partially_unrolled()) {
+		if (dimensions) {
+			indent indenter(o);
+			o << auto_indent << "unrolled indices: {" << endl;
+			{
+				indent indenter(o);
+				dump_unrolled_instances(o);
+			}
+			o << auto_indent << "}";        // << endl;
+		} else {
+			// else nothing to say, just one scalar instance
+			dump_unrolled_instances(o << " (instantiated)");
+		}
+	}
+	return o;
+}
+
+//=============================================================================
 // class datatype_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -583,7 +623,7 @@ instance_collection_base::load_object_base(
 	Private empty constructor.
  */
 datatype_instance_collection::datatype_instance_collection() :
-		instance_collection_base() {
+		parent_type() {
 	// no assert
 }
 #endif
@@ -591,7 +631,7 @@ datatype_instance_collection::datatype_instance_collection() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::datatype_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
-		instance_collection_base(o, n, d) {
+		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -599,6 +639,7 @@ datatype_instance_collection::~datatype_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 datatype_instance_collection::dump(ostream& o) const {
 	parent_type::dump(o);
@@ -618,13 +659,16 @@ datatype_instance_collection::dump(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.3 2005/02/20 09:08:12 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.3.4.1 2005/02/26 04:56:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -26,6 +26,11 @@
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 #include "art_object_unroll_context.h"
+
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_classification_details.h"
+#include "art_object_instance_collection.h"
+#endif
 
 #include "what.tcc"
 #include "memory/list_vector_pool.tcc"

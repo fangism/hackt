@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.7 2005/02/25 21:08:31 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.8 2005/02/26 04:56:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -56,16 +56,21 @@ struct collection_parameter_persistence {
 					instance_collection_parameter_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
-	const persistent_object_manager& pom;
 
-	collection_parameter_persistence(const persistent_object_manager& m) :
-		pom(m) { }
-
+	static
 	void
-	operator () (ostream&, const instance_collection_generic_type&) const;
+	collect(persistent_object_manager&, 
+		const instance_collection_generic_type&);
 
+	static
 	void
-	operator () (istream&, instance_collection_generic_type&) const;
+	write(const persistent_object_manager&, ostream&, 
+		const instance_collection_generic_type&);
+
+	static
+	void
+	load(const persistent_object_manager&, istream&, 
+		instance_collection_generic_type&);
 };	// end struct collection_parameter
 
 //-----------------------------------------------------------------------------
@@ -206,6 +211,9 @@ virtual	instance_alias_base_type&
 	construct_empty(const int);
 
 protected:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
 	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
 

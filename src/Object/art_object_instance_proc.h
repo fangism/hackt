@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.4.2.2 2005/02/22 03:00:59 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.4.2.2.2.1 2005/02/26 04:56:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -9,18 +9,26 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "art_object_classification_details.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.h"
+#include "art_object_instance_alias.h"
+#else
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
+#endif
 
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 USING_LIST
 using std::string;
 using namespace util::memory;
 using util::qmap;
 using util::multikey_map;
+#endif
 
 //=============================================================================
 // class process_instance_collection declared in "art_object_instance.h"
@@ -33,11 +41,11 @@ using util::multikey_map;
 	Needs to be pool allocated for efficient unique construction. 
 	Derive from unique_instance_base.  
  */
-class proc_instance : public persistent {
-	typedef	proc_instance		this_type;
+class process_instance : public persistent {
+	typedef	process_instance		this_type;
 private:
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
+	never_ptr<const process_instance_alias_base>	back_ref;
 
 	// TODO: contain a vector of pointers to sub-structures
 	// concrete definition map will map member names to index/offsets
@@ -45,8 +53,8 @@ private:
 	// empty for now
 
 public:
-	proc_instance();
-	~proc_instance();
+	process_instance();
+	~process_instance();
 
 	ostream&
 	what(ostream&) const;
@@ -56,6 +64,7 @@ public:
 };	// end class proc_instance
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	An uninitialized reference to an enum instance.  
 	Only after references are connected, are the actual enum instances
@@ -240,6 +249,16 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class proc_array (specialized)
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+typedef	instance_array<process_tag, 0>	process_scalar;
+typedef	instance_array<process_tag, 1>	process_array_1D;
+typedef	instance_array<process_tag, 2>	process_array_2D;
+typedef	instance_array<process_tag, 3>	process_array_3D;
+typedef	instance_array<process_tag, 4>	process_array_4D;
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8.2.3.2.1 2005/02/22 03:00:57 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.2.3.2.1.2.1 2005/02/26 04:56:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -9,18 +9,26 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "art_object_classification_details.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.h"
+#include "art_object_instance_alias.h"
+#else
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
+#endif
 
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 USING_LIST
 using std::string;
 using namespace util::memory;
 using util::qmap;
 using util::multikey_map;
+#endif
 
 //=============================================================================
 // class channel_instance_collection declared in "art_object_instance.h"
@@ -31,16 +39,17 @@ using util::multikey_map;
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-struct chan_instance {
+struct channel_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
-
+	never_ptr<const channel_instance_alias_base>	back_ref;
 public:
-	chan_instance();
+	channel_instance();
 
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class chan_instance
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	An uninitialized reference to an enum instance.  
 	Only after references are connected, are the actual enum instances
@@ -221,6 +230,16 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class chan_array (specialized)
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+typedef	instance_array<channel_tag, 0>	channel_scalar;
+typedef	instance_array<channel_tag, 1>	channel_array_1D;
+typedef	instance_array<channel_tag, 2>	channel_array_2D;
+typedef	instance_array<channel_tag, 3>	channel_array_3D;
+typedef	instance_array<channel_tag, 4>	channel_array_4D;
+#endif
 
 //=============================================================================
 }	// end namespace entity

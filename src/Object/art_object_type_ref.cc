@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2.4.3 2005/02/25 23:01:15 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2.4.4 2005/02/26 04:56:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -490,7 +490,12 @@ data_type_reference::make_instance_collection(
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
 		return return_type(struct_instance_collection
-			::make_struct_array(*s, id, d));
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+			::make_array(*s, id, d)
+#else
+			::make_struct_array(*s, id, d)
+#endif
+			);
 	} else if (alias.is_a<const enum_datatype_def>()) {
 		return return_type(enum_instance_collection
 #if USE_INSTANCE_COLLECTION_TEMPLATE
@@ -651,7 +656,12 @@ channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_chan_array(*s, id, d));
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+		channel_instance_collection::make_array(*s, id, d)
+#else
+		channel_instance_collection::make_chan_array(*s, id, d)
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -789,7 +799,12 @@ process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		process_instance_collection::make_proc_array(*s, id, d));
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+		process_instance_collection::make_array(*s, id, d)
+#else
+		process_instance_collection::make_proc_array(*s, id, d)
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

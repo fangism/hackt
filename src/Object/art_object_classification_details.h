@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.1.4.7 2005/02/25 23:01:13 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.8 2005/02/26 04:56:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -120,25 +120,20 @@ struct null_parameter_type { };
 
 #if 0
 class bool_instance_alias_info;
-#else
-typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
-#endif
-
-#if 0
 class int_instance_alias_info;
-#else
-typedef	instance_alias_info<int_tag>		int_instance_alias_info;
-#endif
-
-#if 0
 class enum_instance_alias_info;
-#else
-typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
-#endif
-
 class datastruct_instance_alias_info;
 class channel_instance_alias_info;
 class process_instance_alias_info;
+#else
+typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
+typedef	instance_alias_info<int_tag>		int_instance_alias_info;
+typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
+typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
+typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
+typedef	instance_alias_info<process_tag>	process_instance_alias_info;
+#endif
+
 
 typedef ring_node_derived<bool_instance_alias_info>
 						bool_instance_alias_base;
@@ -149,8 +144,10 @@ typedef ring_node_derived<enum_instance_alias_info>
 typedef ring_node_derived<datastruct_instance_alias_info>
 						struct_instance_alias_base;
 
+#if 0
 class chan_instance_alias;	// temporary
 class proc_instance_alias;	// temporary
+#endif
 typedef ring_node_derived<channel_instance_alias_info>
 						channel_instance_alias_base;
 typedef ring_node_derived<process_instance_alias_info>
@@ -268,9 +265,7 @@ struct class_traits<datastruct_tag> {
 	static const char			tag_name[];
 	typedef	struct_instance			instance_type;
 
-	// temporary
-	typedef	struct_instance_alias		instance_alias_base_type;
-//	typedef	struct_instance_alias_base	instance_alias_base_type;
+	typedef	struct_instance_alias_base	instance_alias_base_type;
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
@@ -295,7 +290,8 @@ struct class_traits<datastruct_tag> {
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_collection_parameter_type;
+	typedef	count_ptr<const data_type_reference>
+						instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -308,9 +304,7 @@ struct class_traits<process_tag> {
 	static const char			tag_name[];
 	typedef	process_instance		instance_type;
 
-	// temporary
-//	typedef	process_instance_alias_base	instance_alias_base_type;
-	typedef	proc_instance_alias		instance_alias_base_type;
+	typedef	process_instance_alias_base	instance_alias_base_type;
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
@@ -320,7 +314,7 @@ struct class_traits<process_tag> {
 	};
 
 	typedef	process_instance_collection	instance_collection_generic_type;
-	typedef	instance_collection_base	instance_collection_parent_type;
+	typedef	physical_instance_collection	instance_collection_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;
@@ -335,7 +329,8 @@ struct class_traits<process_tag> {
 	typedef	process_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_collection_parameter_type;
+	typedef	count_ptr<const process_type_reference>
+						instance_collection_parameter_type;
 	typedef	process_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -348,9 +343,7 @@ struct class_traits<channel_tag> {
 	static const char			tag_name[];
 	typedef	channel_instance		instance_type;
 
-	// temporary
-//	typedef	channel_instance_alias_base	instance_alias_base_type;
-	typedef	chan_instance_alias		instance_alias_base_type;
+	typedef	channel_instance_alias_base	instance_alias_base_type;
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
@@ -360,7 +353,7 @@ struct class_traits<channel_tag> {
 	};
 
 	typedef	channel_instance_collection	instance_collection_generic_type;
-	typedef	instance_collection_base	instance_collection_parent_type;
+	typedef	physical_instance_collection	instance_collection_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;
@@ -375,7 +368,8 @@ struct class_traits<channel_tag> {
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_collection_parameter_type;
+	typedef	count_ptr<const channel_type_reference>
+						instance_collection_parameter_type;
 	typedef	channel_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;

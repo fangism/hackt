@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.4.2.9 2005/02/25 23:01:13 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.4.2.10 2005/02/26 04:56:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -32,13 +32,13 @@ namespace entity {
 	class fundamental_type_reference;
 	class simple_instance_reference;
 	class instance_collection_base;
+	class physical_instance_collection;
 	class instance_reference_base;
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
 	class channel_type_reference;
-	class channel_instance_collection;
 	class datatype_definition_base;
 	class enum_datatype_def;
 	class data_type_reference;
@@ -47,7 +47,6 @@ namespace entity {
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
-	class process_instance_collection;
 	class built_in_param_def;
 	class typedef_base;
 
@@ -62,6 +61,9 @@ namespace entity {
 	class bool_instance_collection;
 	class int_instance_collection;
 	class enum_instance_collection;
+	class struct_instance_collection;
+	class channel_instance_collection;
+	class process_instance_collection;
 #else
 	typedef	instance_collection<bool_tag>
 		bool_instance_collection;
@@ -69,8 +71,13 @@ namespace entity {
 		int_instance_collection;
 	typedef	instance_collection<enum_tag>
 		enum_instance_collection;
+	typedef	instance_collection<datastruct_tag>
+		struct_instance_collection;
+	typedef	instance_collection<channel_tag>
+		channel_instance_collection;
+	typedef	instance_collection<process_tag>
+		process_instance_collection;
 #endif
-	class struct_instance_collection;
 
 	template <class>
 	class instance_reference;
@@ -128,10 +135,10 @@ namespace entity {
 	template <size_t>	class int_instance_alias;
 	template <size_t>	class bool_instance_alias;
 	class enum_instance_alias;
-#endif
 	class struct_instance_alias;
 	class proc_instance_alias;
 	class chan_instance_alias;
+#endif
 
 	class instance_management_base;
 	class param_expression_assignment;

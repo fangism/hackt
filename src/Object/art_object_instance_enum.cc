@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.3.2.2 2005/02/25 23:01:14 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.3.2.3 2005/02/26 04:56:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -93,23 +93,27 @@ struct collection_parameter_persistence<enum_tag> {
 					instance_collection_generic_type;
 	typedef class_traits<enum_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	const persistent_object_manager& pom;
 
-	collection_parameter_persistence(const persistent_object_manager& m) :
-		pom(m) { }
-
-	// transient collection?
-
+	static
 	void
-	operator () (ostream& o,
-		const instance_collection_generic_type& c) const {
-		pom.write_pointer(o, c.type_parameter);
+	collect(persistent_object_manager& m, 
+		const instance_collection_generic_type& c) {
+		if (c.type_parameter)
+			c.type_parameter->collect_transient_info(m);
 	}
 
+	static
 	void
-	operator () (istream& i,
-		instance_collection_generic_type& c) const {
-		pom.read_pointer(i, c.type_parameter);
+	write(const persistent_object_manager& m, ostream& o,
+		const instance_collection_generic_type& c) {
+		m.write_pointer(o, c.type_parameter);
+	}
+
+	static
+	void
+	load(const persistent_object_manager& m, istream& i,
+		instance_collection_generic_type& c) {
+		m.read_pointer(i, c.type_parameter);
 	}
 };      // end struct collection_parameter_persistence
 
@@ -144,8 +148,6 @@ struct collection_type_committer<enum_tag> {
 		return false;
 	}
 };
-
-
 #endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9.2.3.2.4.2.1 2005/02/24 19:34:40 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.3.2.4.2.2 2005/02/26 04:56:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -10,17 +10,25 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "art_object_classification_details.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.h"
+#include "art_object_instance_alias.h"
+#else
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
+#endif
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 USING_LIST
 using std::string;
 using namespace util::memory;
 using util::qmap;
 using util::multikey_map;
+#endif
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
@@ -31,16 +39,17 @@ using util::multikey_map;
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-struct struct_instance {
+struct struct_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
-
+	never_ptr<const struct_instance_alias_base>	back_ref;
 public:
 	struct_instance();
 
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class struct_instance
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	An uninitialized reference to an enum instance.  
 	Only after references are connected, are the actual enum instances
@@ -299,6 +308,13 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class struct_array (specialized)
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+//=============================================================================
+typedef	instance_array<datastruct_tag, 0>	struct_scalar;
+typedef	instance_array<datastruct_tag, 1>	struct_array_1D;
+typedef	instance_array<datastruct_tag, 2>	struct_array_2D;
+typedef	instance_array<datastruct_tag, 3>	struct_array_3D;
+typedef	instance_array<datastruct_tag, 4>	struct_array_4D;
 
 //=============================================================================
 }	// end namespace entity

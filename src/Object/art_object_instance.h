@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.2.3.2.2 2005/02/24 19:34:38 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.2.3.2.3 2005/02/26 04:56:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -12,7 +12,9 @@
 #include "art_object_instance_base.h"
 #include "art_object_index.h"
 #include "memory/pointer_classes.h"
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #include "packed_array_fwd.h"
+#endif
 
 
 namespace ART {
@@ -20,12 +22,75 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 using util::packed_array_generic;
+#endif
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
 
+#if 1
+class physical_instance_collection : public instance_collection_base {
+private:
+	typedef	instance_collection_base	parent_type;
+protected:
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	
+						member_inst_ref_ptr_type;
+protected:
+	explicit
+	physical_instance_collection(const size_t d) : parent_type(d) { }
+
+	physical_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
+
+public:
+
+virtual	~physical_instance_collection();
+
+	ostream&
+	dump(ostream& o) const;
+
+#if 0
+	/** returns the type of the first instantiation statement */
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+#endif
+
+virtual bool
+	is_partially_unrolled(void) const = 0;
+
+virtual ostream&
+	dump_unrolled_instances(ostream& o) const = 0;
+
+#if 0
+	// a better return type?
+virtual	bool
+	commit_type(const type_ref_ptr_type& ) = 0;
+
+// methods for connection and aliasing?
+
+// need to do this for real... using object not parse tree
+//	bool equals_template_formal(const template_formal_decl& tf) const;
+virtual	count_ptr<instance_reference_base>
+	make_instance_reference(void) const = 0;
+
+virtual void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+virtual	never_ptr<const const_param_expr_list>
+	get_actual_param_list(void) const;	// = 0;
+#endif
+
+protected:	// propagate to children
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+};	// end class datatype_instance_collection
+#endif
+
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Process instantiation.  
 	Type information is now in the instance_collection_list.
@@ -131,15 +196,26 @@ protected:
 	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class process_instance_collection
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 /**
 	Base class for instantiation of a data type, 
 	either inside or outside definition.  
  */
-class datatype_instance_collection : public instance_collection_base {
+class datatype_instance_collection :
+#if 0
+	public instance_collection_base
+#else
+	public physical_instance_collection
+#endif
+{
 private:
+#if 0
 	typedef	instance_collection_base	parent_type;
+#else
+	typedef	physical_instance_collection	parent_type;
+#endif
 protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
@@ -159,12 +235,16 @@ virtual	~datatype_instance_collection();
 virtual	ostream&
 	what(ostream& o) const = 0;
 
+#if 0
 	ostream&
 	dump(ostream& o) const;
+#endif
 
+#if 0
 	/** returns the type of the first instantiation statement */
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+#endif
 
 virtual bool
 	is_partially_unrolled(void) const = 0;
@@ -196,6 +276,7 @@ protected:	// propagate to children
 };	// end class datatype_instance_collection
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Channel instantiation.  
 	Type information is now in the instance_collection_list.
@@ -287,6 +368,7 @@ protected:
 	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class channel_instance_collection
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

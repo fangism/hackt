@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.3 2005/02/25 23:01:15 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.4 2005/02/26 04:56:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -145,24 +145,30 @@ struct collection_parameter_persistence<int_tag> {
 					instance_collection_generic_type;
 	typedef class_traits<int_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	const persistent_object_manager& pom;
 
-	collection_parameter_persistence(const persistent_object_manager& m) :
-		pom(m) { }
-
+	static
 	void
-	operator () (ostream& o,
-		const instance_collection_generic_type& c) const {
+	collect(persistent_object_manager& m, 
+		const instance_collection_generic_type& c) {
+		// c.type_parameter contains no pointers
+	}
+
+	static
+	void
+	write(const persistent_object_manager&, ostream& o,
+		const instance_collection_generic_type& c) {
 		// parameter is just an int
 		write_value(o, c.type_parameter);
 	}
 
+	static
 	void
-	operator () (istream& i,
-		instance_collection_generic_type& c) const {
+	load(const persistent_object_manager&, istream& i,
+		instance_collection_generic_type& c) {
 		// parameter is just an int
 		read_value(i, c.type_parameter);
 	}
+
 };      // end struct collection_parameter_persistence
 
 //-----------------------------------------------------------------------------

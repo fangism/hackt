@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11.2.2.10.1 2005/02/20 09:08:13 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.2.10.1.4.1 2005/02/26 04:56:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -164,9 +164,12 @@ virtual	string
 	all over the place, so we reference count all type references.  
 	Unfortunately this forces us to do the same with static 
 	built-in types.  
+
+	Note: that this doesn't return the unrolled actual type, 
+	need a different method for that.  
  */
-virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;

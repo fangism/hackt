@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.7 2005/02/25 23:01:13 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.8 2005/02/26 04:56:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -160,18 +160,25 @@ struct collection_parameter_persistence<bool_tag> {
 					instance_collection_generic_type;
 	typedef class_traits<bool_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	const persistent_object_manager& pom;
 
-	collection_parameter_persistence(const persistent_object_manager& m) :
-		pom(m) { }
-
+	static
 	void
-	operator () (ostream&, const instance_collection_generic_type&) const {
+	collect(persistent_object_manager&,
+		const instance_collection_generic_type&) {
 		// do nothing! bool has no parameters!
 	}
 
+	static
 	void
-	operator () (istream&, instance_collection_generic_type&) const {
+	write(const persistent_object_manager&, ostream&,
+		const instance_collection_generic_type&) {
+		// do nothing! bool has no parameters!
+	}
+
+	static
+	void
+	load(const persistent_object_manager&, istream&,
+		instance_collection_generic_type&) {
 		// do nothing! bool has no parameters!
 	}
 };	// end struct collection_parameter_persistence

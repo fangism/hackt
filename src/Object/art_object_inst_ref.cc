@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.3.2.3 2005/02/24 02:26:49 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.3.2.4 2005/02/26 04:56:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -26,6 +26,9 @@
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 #include "art_object_classification_details.h"
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.h"
+#endif
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"

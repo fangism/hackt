@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.3.2.1 2005/02/23 21:21:29 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.3.2.2 2005/02/26 04:56:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -24,11 +24,12 @@
 #include "art_object_expr_const.h"
 #include "art_object_type_hash.h"
 
-#include "art_object_classification_details.h"
-
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.tcc"
+#else
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "packed_array.tcc"
@@ -38,18 +39,27 @@
 #include "dereference.h"
 #include "compose.h"
 #include "binders.h"
+#endif
 
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::proc_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
+	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_instance_collection, 
 		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_scalar, "process_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_1D, "process_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_2D, "process_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_3D, "process_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_4D, "process_array_4D")
+#endif
 }	// end namespace util
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #include "using_ostream.h"
 using std::string;
 using util::multikey_generator;
@@ -62,31 +72,125 @@ using util::read_value;
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
+#endif
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template <>
+struct type_dumper<process_tag> {
+	typedef class_traits<process_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<process_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
+	ostream& os;
+	type_dumper(ostream& o) : os(o) { }
+
+	ostream&
+	operator () (const instance_collection_generic_type& c) {
+		os << "process ";
+#if 0
+		c.get_base_def()->get_qualified_name() <<
+#else
+		const instance_collection_parameter_type&
+			tr = c.get_type_parameter();
+		INVARIANT(tr);
+		tr->dump(os) <<
+#endif
+			'^' << c.get_dimensions();
+		return os;
+	}
+};      // end struct type_dumper<process_tag>
+
+//-----------------------------------------------------------------------------
+template <>
+struct collection_parameter_persistence<process_tag> {
+	typedef class_traits<process_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<process_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
+
+	static
+	void
+	collect(persistent_object_manager& m, 
+		const instance_collection_generic_type& c) {
+		if (c.type_parameter)
+			c.type_parameter->collect_transient_info(m);
+	}
+
+	static
+	void
+	write(const persistent_object_manager& m, ostream& o,
+		const instance_collection_generic_type& c) {
+		m.write_pointer(o, c.type_parameter);
+	}
+
+	static
+	void
+	load(const persistent_object_manager& m, istream& i,
+		instance_collection_generic_type& c) {
+		m.read_pointer(i, c.type_parameter);
+	}
+};      // end struct collection_parameter_persistence
+
+//-----------------------------------------------------------------------------
+
+template <>
+struct collection_type_committer<process_tag> {
+	typedef class_traits<process_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<process_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	/**
+		During unroll phase, this commits the type of the collection.  
+		\param t the data integer type reference, containing width, 
+			must already be resolved to a const_param_expr_list.  
+		\return false on success, true on error.  
+		\post the integer width is fixed for the rest of the program.  
+	 */
+	bool
+	operator () (instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) const {
+		// make sure this is the canonical definition
+		//      in case type is typedef!
+		// this really should be statically type-checked
+		// until we allow templates to include type parameters.  
+
+		// only needs to be "collectibly" type equivalent, 
+		// not necessarily "connectible".
+		if (c.type_parameter)
+			return (!c.type_parameter->must_be_equivalent(*t));
+		else
+			c.type_parameter = t;
+		return false;
+	}
+};
+#endif  // USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class proc_instance method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-proc_instance::proc_instance() : state(0) { }
+process_instance::process_instance() : back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-proc_instance::~proc_instance() { }
+process_instance::~process_instance() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-proc_instance::what(ostream& o) const {
-	return o << "proc_instance";
+process_instance::what(ostream& o) const {
+	return o << "process_instance";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent*
-proc_instance::construct_empty(const int) {
-	return new proc_instance;
+process_instance::construct_empty(const int) {
+	return new process_instance;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-proc_instance::collect_transient_info(persistent_object_manager& m) const {
+process_instance::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	// walk vector of pointers...
@@ -95,19 +199,24 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-proc_instance::write_object(const persistent_object_manager& m, 
+process_instance::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
+#if 0
 	write_value(f, state);
 	// write pointer sequence...
+#endif
 }
 
 void
-proc_instance::load_object(const persistent_object_manager& m, istream& f) {
+process_instance::load_object(const persistent_object_manager& m, istream& f) {
+#if 0
 	read_value(f, state);
 	// read pointer sequence...
+#endif
 }
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class proc_instance_alias method definitions
 
 // don't register as persistent type...
@@ -766,6 +875,16 @@ proc_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 //	cerr << "FANG: finish proc_array<0>::load_object()" << endl;
 	the_instance.load_object(m, f);
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template class instance_collection<process_tag>;
+template class instance_array<process_tag, 0>;
+template class instance_array<process_tag, 1>;
+template class instance_array<process_tag, 2>;
+template class instance_array<process_tag, 3>;
+template class instance_array<process_tag, 4>;
+#endif
 
 //=============================================================================
 }	// end namespace entity
