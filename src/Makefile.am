@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2005/01/06 17:44:47 fang Exp $
+#	$Id: Makefile.am,v 1.37 2005/01/11 01:55:39 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -165,6 +165,7 @@ UTIL_HEADER_FILES = \
 	util/STL/map.tcc \
 	util/STL/namespace.h \
 	util/STL/pair_fwd.h \
+	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
@@ -183,6 +184,7 @@ UTIL_HEADER_FILES = \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
+	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
