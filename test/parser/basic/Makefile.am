@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.4.4.3 2005/01/21 01:55:42 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.4 2005/01/21 02:48:07 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -9,9 +9,12 @@ ARTC_TEST_SUBJECTS = \
 	000 001 002 003 004 005 006 007 008 009 \
 	010 011 012 013
 
+ARTC_TEST_PASSES = \
+	000 001 002 003 006
+
 # should be the subset of ART_TEST_SUBJECTS that type-checks
 ARTOBJ_TEST_SUBJECTS = \
-	000 001 002 003 006
+	$(ARTC_TEST_PASSES)
 
 # should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
 ARTOBJUNROLL_TEST_SUBJECTS = \

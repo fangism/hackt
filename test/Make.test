@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.5.4.2 2005/01/20 15:42:55 fang Exp $
+#	$Id: Make.test,v 1.5.4.3 2005/01/21 02:48:04 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -62,6 +62,7 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 	$(ARTC_TEST_SUBJECTS:=.test) \
 	$(ARTC_TEST_SUBJECTS:=.test.filter) \
 	$(ARTC_TEST_SUBJECTS:=.stderr.filter) \
+	$(ARTC_TEST_PASSES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison.filter) \
 	$(BISON_OUTPUTS:=.stderr.bison.diff) \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump) \
@@ -79,7 +80,8 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 # is this really needed?
 # DISTCLEANFILES += Makefile
 
-all-local: .cvsignore subdir.not_a_test $(TESTS)
+all-local: .cvsignore subdir.not_a_test \
+	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
 # might as well include this for non-maintainers too
 .cvsignore: $(top_srcdir)/test/test.cvsignore

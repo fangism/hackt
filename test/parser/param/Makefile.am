@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.4.4.1 2005/01/18 04:25:34 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.2 2005/01/21 02:48:15 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -14,11 +14,14 @@ ARTC_TEST_SUBJECTS = \
 BISON_OUTPUTS =
 
 # the type-checked subset of the above
-ARTOBJ_TEST_SUBJECTS = \
+ARTC_TEST_PASSES = \
 	001 002 003 004 008 \
 	014 017 019 \
 	020 021 022 028 \
 	033
+
+ARTOBJ_TEST_SUBJECTS = \
+	$(ARTC_TEST_PASSES)
 
 # subset of ARTOBJ_TEST_SUBJECTS
 ARTOBJUNROLL_TEST_SUBJECTS = \

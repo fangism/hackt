@@ -1,9 +1,9 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2004/11/02 07:52:31 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.1 2005/01/21 02:48:17 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
-SUFFIXES = .in .artctest .artobjtest
+SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_SUBJECTS = \
 	    001 002 003 004 005 006 007 008 009 \
@@ -13,13 +13,19 @@ ARTC_TEST_SUBJECTS = \
 	040 041 042 043 044 045 046 047 048 049 \
 	050
 
-ARTOBJ_TEST_SUBJECTS = \
+ARTC_TEST_PASSES = \
 	020 022 024 027 028 029 \
 	030 035 036 037 \
 	040 041 042 043 049
 
+ARTOBJ_TEST_SUBJECTS = \
+	$(ARTC_TEST_PASSES)
+
+ARTOBJUNROLL_TEST_SUBJECTS =
+
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest)
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS = 001 002 003 004 005 006 007 008 009 010 \

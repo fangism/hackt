@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.4.4.2 2005/01/21 01:55:44 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.3 2005/01/21 02:48:14 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -11,10 +11,13 @@ ARTC_TEST_SUBJECTS = \
 	020 021 022 023 024 025 026
 
 # should be the subset of ARTC_TEST_SUBJECTS that type-checks
-ARTOBJ_TEST_SUBJECTS = \
+ARTC_TEST_PASSES = \
 	    001 002 003 004 005 007 008 009 \
 	010 014 015 016 017 018 019 \
 	020 022 025
+
+ARTOBJ_TEST_SUBJECTS = \
+	$(ARTC_TEST_PASSES)
 
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)

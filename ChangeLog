@@ -17,6 +17,11 @@
 	  (pbool_const_collection to be created).  
 	  Also updated util/multikey.* to provide reverse iterator interface.  
 
+	* ARTXX-00-01-04-object-00-06:
+	  Removed a TON of empty .stderr files from the repository, 
+	  they are now automatically generated and cleaned by
+	  the rules in the template makefile Make.test.
+
 
 2005-01-19	David Fang	<fangism@users.sourceforge.net>
 
