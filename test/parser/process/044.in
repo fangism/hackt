@@ -1,0 +1,6 @@
+// should fail: ports name mismatch
+
+defproc fang(int food; bool now);
+
+defproc fang(int good; bool now);
+

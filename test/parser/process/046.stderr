@@ -1,0 +1,2 @@
+ERROR: number of port formal parameters doesn't match!
+new declaration for "food" doesn't match previous declaration.  ERROR! [5:1..24]

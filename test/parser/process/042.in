@@ -1,0 +1,6 @@
+// should pass: ports match
+
+defproc fang(int food; bool now);
+
+defproc fang(int food; bool now);
+

@@ -1,0 +1,6 @@
+// should pass: ports match
+
+defproc food(int<32> sleep);
+
+defproc food(int sleep);		// default 32
+

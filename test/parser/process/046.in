@@ -1,0 +1,6 @@
+// should fail: ports mismatch
+
+defproc food();
+
+defproc food(int sleep);
+
