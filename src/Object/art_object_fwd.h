@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7 2005/02/27 22:54:11 fang Exp $
+	$Id: art_object_fwd.h,v 1.8 2005/03/11 08:47:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -55,6 +55,8 @@ namespace entity {
 
 	template <class, size_t>
 	class instance_array;
+	template <class, size_t>
+	class value_array;
 
 	// subclasses of datatype_instance_collection
 	typedef	instance_collection<bool_tag>
@@ -106,9 +108,13 @@ namespace entity {
 	class pbool_type_reference;
 	class pint_type_reference;
 
+	template <class>
+	class value_collection;
 	class param_instance_collection;
-	class pbool_instance_collection;
-	class pint_instance_collection;
+	typedef	value_collection<pint_tag>
+		pint_instance_collection;
+	typedef	value_collection<pbool_tag>
+		pbool_instance_collection;
 
 	class pint_instance;
 	class pbool_instance;
@@ -144,18 +150,30 @@ namespace entity {
 	typedef alias_connection<process_tag>
 		process_alias_connection;
 
+	template <class>
 	class instantiation_statement;
+	class instantiation_statement_base;
 	class param_instantiation_statement;
-	class pbool_instantiation_statement;
-	class pint_instantiation_statement;
-	class channel_instantiation_statement;
-	class data_instantiation_statement;
-	class process_instantiation_statement;
+
+	typedef	instantiation_statement<pbool_tag>
+		pbool_instantiation_statement;
+	typedef	instantiation_statement<pint_tag>
+		pint_instantiation_statement;
+	typedef	instantiation_statement<datatype_tag>
+		data_instantiation_statement;
+	typedef	instantiation_statement<channel_tag>
+		channel_instantiation_statement;
+	typedef	instantiation_statement<process_tag>
+		process_instantiation_statement;
 
 // expressions and family
 	class param_instance_reference;
-	class pint_instance_reference;
-	class pbool_instance_reference;
+	template <class>
+	class value_reference;
+	typedef	value_reference<pint_tag>
+		pint_instance_reference;
+	typedef	value_reference<pbool_tag>
+		pbool_instance_reference;
 
 	class param_expr;
 	class const_param;
@@ -188,8 +206,17 @@ namespace entity {
 	class const_index_list;
 	class dynamic_index_list;
 
+	template <class>
+	class const_collection;
+	typedef	const_collection<pint_tag>
+		pint_const_collection;
+	typedef	const_collection<pbool_tag>
+		pbool_const_collection;
+
 	/**
 		The global integer-type for parameter integers.  
+		This may have to be changed to int32 in the future, 
+		for 64b portability...
 	 */
 	typedef	long		pint_value_type;
 
@@ -214,8 +241,10 @@ namespace entity {
 
 		We keep track of the state of instance collections at
 		various program points with this container.
+
+		Eventually work with sub-types only?
 	 */
-	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement>)
+	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
 			index_collection_type;
 
 	class unroll_context;

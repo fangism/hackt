@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.20 2005/03/06 22:45:52 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.21 2005/03/11 08:47:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -280,7 +280,7 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
  */
 never_ptr<const instance_collection_base>
 scopespace::add_instance(
-		never_ptr<instantiation_statement> inst_stmt, 
+		const never_ptr<instantiation_statement_base> inst_stmt, 
 		const token_identifier& id) {
 	STACKTRACE("scopespace::add_instance(never_ptr<inst_stmt>, id)");
 	typedef never_ptr<const instance_collection_base>	return_type;
@@ -293,7 +293,7 @@ scopespace::add_instance(
 	// DEBUG
 	cerr << "In scopespace::add_instance with this = " << this << endl;
 //	i->dump(cerr << "excl_ptr<instance_collection_base> i = ") << endl;
-	inst_stmt->dump(cerr << "never_ptr<instantiation_statement> inst_stmt = ") << endl;
+	inst_stmt->dump(cerr << "never_ptr<instantiation_statement_base> inst_stmt = ") << endl;
 	dump(cerr);	// dump the entire namespace
 #endif
 	const never_ptr<object> probe(lookup_object_here_with_modify(id));

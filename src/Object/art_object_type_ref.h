@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.20 2005/03/04 06:19:59 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.21 2005/03/11 08:47:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -100,7 +100,7 @@ public:
 	unroll_resolve(unroll_context&) const;
 
 private:
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -144,7 +144,7 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 private:
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -196,7 +196,7 @@ public:
 	unroll_resolve(unroll_context& ) const;
 
 private:
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -240,7 +240,7 @@ public:
 	get_base_def(void) const;
 
 private:
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;

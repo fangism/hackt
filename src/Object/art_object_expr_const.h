@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.11 2005/03/06 04:36:48 fang Exp $
+	$Id: art_object_expr_const.h,v 1.12 2005/03/11 08:47:27 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -71,11 +71,13 @@ virtual	const_range_list
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 virtual bool
 	may_be_equivalent(const param_expr& p) const = 0;
 
 virtual bool
 	must_be_equivalent(const param_expr& p) const = 0;
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -370,6 +372,9 @@ public:
 	multikey_index_type
 	resolve_sizes(void) const;
 
+	good_bool
+	unroll_resolve(const_range_list&, const unroll_context&) const;
+
 	bool
 	must_be_formal_size_equivalent(const range_expr_list& ) const;
 
@@ -426,13 +431,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pint_expr::may_be_equivalent(e); }
+		{ return pint_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pint_expr::must_be_equivalent(e); }
+		{ return pint_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -442,10 +449,10 @@ public:
 
 	// may chop '_int' off for templating
 	value_type
-	static_constant_int(void) const { return val; }
+	static_constant_value(void) const { return val; }
 
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const pint_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -500,115 +507,6 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	Packed collection of constant integer values, arbitrary dimension.  
-	Note: this is only usable for aggregates of constants.  
-	Complex aggregates of non-const expressions will require
-	a more advanced structure (dynamic_pint_collection?).  
- */
-class pint_const_collection : public pint_expr, public const_param {
-	typedef	pint_const_collection			this_type;
-public:
-	typedef	pint_value_type				value_type;
-	typedef	util::packed_array_generic<pint_value_type, value_type>
-							array_type;
-	typedef	array_type::iterator			iterator;
-	typedef	array_type::const_iterator		const_iterator;
-protected:
-	array_type					values;
-public:
-	explicit
-	pint_const_collection(const size_t d);
-
-	explicit
-	pint_const_collection(const array_type::key_type&);
-
-	~pint_const_collection();
-
-	iterator
-	begin(void) { return values.begin(); }
-
-	const_iterator
-	begin(void) const { return values.begin(); }
-
-	iterator
-	end(void) { return values.end(); }
-
-	const_iterator
-	end(void) const { return values.end(); }
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
-
-	size_t
-	dimensions(void) const;
-
-	bool
-	is_static_constant(void) const { return true; }
-
-	count_ptr<const const_param>
-	static_constant_param(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	bool
-	may_be_initialized(void) const { return true; }
-
-	bool
-	must_be_initialized(void) const { return true; }
-
-	bool
-	may_be_equivalent(const param_expr& ) const;
-
-	bool
-	must_be_equivalent(const param_expr& ) const;
-
-	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
-
-	// only makes sense for scalars
-	value_type
-	static_constant_int(void) const;
-
-	// only makes sense for scalars
-	good_bool
-	resolve_value(value_type& ) const;
-
-	good_bool
-	unroll_resolve_value(const unroll_context&, value_type& i) const;
-
-	const_index_list
-	resolve_dimensions(void) const;
-
-	// flat-list needs to be replaced
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& ) const;
-
-	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class pint_const_collection
-
-//-----------------------------------------------------------------------------
-/**
 	Constant boolean parameters, true or false.  
  */
 class pbool_const : public pbool_expr, public const_param {
@@ -654,13 +552,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent(e); }
+		{ return pbool_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent(e); }
+		{ return pbool_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -669,10 +569,10 @@ public:
 	static_constant_param(void) const;
 
 	bool
-	static_constant_bool(void) const { return val; }
+	static_constant_value(void) const { return val; }
 
 	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const;
+	must_be_equivalent(const pbool_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.5 2005/03/06 04:36:48 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.6 2005/03/11 08:47:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -177,7 +177,7 @@ virtual	bool
 	make_member_instance_reference(const inst_ref_ptr_type&) const;
 
 virtual	void
-	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+	instantiate_indices(const const_range_list& i) = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -291,7 +291,7 @@ public:
 	dump_unrolled_instances(ostream& o) const;
 
 	void
-	instantiate_indices(const index_collection_item_ptr_type& i);
+	instantiate_indices(const const_range_list& i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -414,7 +414,7 @@ public:
 	dump_unrolled_instances(ostream& o) const;
 
 	void
-	instantiate_indices(const index_collection_item_ptr_type& i);
+	instantiate_indices(const const_range_list& i);
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

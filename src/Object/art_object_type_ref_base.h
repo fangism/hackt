@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.6 2005/02/27 22:54:18 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.7 2005/03/11 08:47:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -123,13 +123,13 @@ virtual never_ptr<const definition_base>
 	resolve_canonical_type(void) const;
 
 	static	
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d);
 
 private:
-virtual	excl_ptr<instantiation_statement>
+virtual	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.6 2005/02/27 22:54:13 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.7 2005/03/11 08:47:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -28,19 +28,19 @@ using namespace util::memory;	// for experimental pointer classes
 	Should this point to an unrolled instance?
 	No, it will be looked up.  
  */
-class instantiation_statement : public instance_management_base {
+class instantiation_statement_base : public instance_management_base {
 protected:
 	index_collection_item_ptr_type		indices;
 
 protected:
-	instantiation_statement() : instance_management_base(), 
+	instantiation_statement_base() : instance_management_base(), 
 		indices(NULL) { }
 public:
 	explicit
-	instantiation_statement(
+	instantiation_statement_base(
 		const index_collection_item_ptr_type& i);
 
-virtual	~instantiation_statement();
+virtual	~instantiation_statement_base();
 
 	ostream&
 	dump(ostream& o) const;
@@ -62,6 +62,10 @@ virtual	never_ptr<const instance_collection_base>
 
 	index_collection_item_ptr_type
 	get_indices(void) const;
+
+	good_bool
+	resolve_instantiation_range(const_range_list&, 
+		const unroll_context&) const;
 
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
@@ -87,7 +91,7 @@ protected:
 	void
 	load_object_base(const persistent_object_manager& m, istream& );
 
-};	// end class instantiation_statement
+};	// end class instantiation_statement_base
 
 //=============================================================================
 }	// end namespace entity

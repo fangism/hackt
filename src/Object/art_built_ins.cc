@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.16 2005/01/28 19:58:39 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.17 2005/03/11 08:47:24 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
@@ -18,6 +18,8 @@
 #include "art_object_instance_param.h"
 #include "art_object_expr_const.h"
 #include "static_trace.h"
+#include "art_object_value_collection.h"
+#include "art_object_classification_details.h"
 
 STATIC_TRACE_BEGIN("built-ins");
 
@@ -38,7 +40,10 @@ namespace entity {
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
+#if 0
+// re-enable this when it switches back to pooled...
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
+#endif
 // this early because int_def contains a pint_scalar, 
 // and built_in_namespace contains the int_def.
 
@@ -110,12 +115,24 @@ dummy_bool(new pbool_const(true));
 ***/
 
 // will transfer ownership to definition
+static excl_ptr<pint_scalar>
+int_def_width(
+//	new pint_scalar(int_def, "width", int_def_width_default) // was this
+	new pint_scalar(int_def, "width")
+);
+
+static const good_bool
+__good_int_width(int_def_width->assign_default_value(int_def_width_default));
+
+// INVARIANT(__good_int_width.good);
+
 static excl_ptr<instance_collection_base>
-int_def_width(new pint_scalar(int_def, "width", int_def_width_default));
+int_def_width_base(int_def_width);
 
 static const never_ptr<const instance_collection_base>
 int_def_width_ref =
-const_cast<built_in_datatype_def&>(int_def).add_template_formal(int_def_width);
+const_cast<built_in_datatype_def&>(int_def)
+	.add_template_formal(int_def_width_base);
 
 #if 0
 // can't hurt to keep this initialization check...

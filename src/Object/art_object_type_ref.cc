@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29 2005/03/06 22:45:52 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.30 2005/03/11 08:47:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -19,12 +19,18 @@
 #include "art_object_instance_enum.h"
 #include "art_object_instance_struct.h"
 #include "art_object_instance_param.h"
+#include "art_object_value_collection.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_base.h"
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 #include "art_object_classification_details.h"
+
+#include "art_object_inst_stmt_param.h"
+#include "art_object_inst_stmt_data.h"
+#include "art_object_inst_stmt_chan.h"
+#include "art_object_inst_stmt_proc.h"
 
 #include "sstream.h"
 #include "stacktrace.h"
@@ -168,7 +174,7 @@ if (base_def.is_a<typedef_base>()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
@@ -451,11 +457,11 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 /**
 	Returns a newly constructed data instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d));
 }
@@ -614,11 +620,11 @@ channel_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed channel instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
 			t.is_a<const channel_type_reference>(), d));
 }
@@ -743,11 +749,11 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 /**
 	Returns a newly constructed process instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d));
 }
@@ -827,17 +833,19 @@ param_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed param instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	typedef	excl_ptr<instantiation_statement>	return_type;
+	typedef	excl_ptr<instantiation_statement_base>	return_type;
 	INVARIANT(t == this);
-	if (this->must_be_equivalent(*pbool_type_ptr))
-		return return_type(new pbool_instantiation_statement(d));
-	else if (this->must_be_equivalent(*pint_type_ptr))
-		return return_type(new pint_instantiation_statement(d));
-	else {
+	if (this->must_be_equivalent(*pbool_type_ptr)) {
+		return return_type(new pbool_instantiation_statement(
+			pbool_type_ptr, d));
+	} else if (this->must_be_equivalent(*pint_type_ptr)) {
+		return return_type(new pint_instantiation_statement(
+			pint_type_ptr, d));
+	} else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		dump(cerr) << " at " << this << endl;
@@ -861,10 +869,10 @@ param_type_reference::make_instance_collection(
 	// hard coded... yucky, but efficient.  
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
-			pbool_instance_collection::make_pbool_array(*s, id, d));
+			pbool_instance_collection::make_array(*s, id, d));
 	else if (this->must_be_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
-			pint_instance_collection::make_pint_array(*s, id, d));
+			pint_instance_collection::make_array(*s, id, d));
 	else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;

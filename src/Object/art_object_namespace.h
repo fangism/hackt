@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.12 2005/03/06 04:36:48 fang Exp $
+	$Id: art_object_namespace.h,v 1.13 2005/03/11 08:47:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -230,7 +230,7 @@ protected:
 public:
 	// need id because instantiation statement won't be named yet!
 	never_ptr<const instance_collection_base>
-	add_instance(never_ptr<instantiation_statement> i, 
+	add_instance(const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id);
 
 	good_bool

@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.26 2005/03/06 22:45:51 fang Exp $
+ 	$Id: art_context.cc,v 1.27 2005/03/11 08:47:24 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -23,7 +23,7 @@
 #include "art_object_inst_stmt_base.h"
 #include "art_object_assign.h"
 #include "art_object_connect.h"
-#include "art_object_instance.h"	// for instantiation_statement
+#include "art_object_instance.h"	// for instantiation_statement_base
 #include "art_object_instance_param.h"	// for param_instantiation_statement
 #include "art_object_module.h"
 
@@ -756,7 +756,7 @@ context::add_instance(const token_identifier& id,
 		current_named_scope(get_current_named_scope());
 	NEVER_NULL(current_named_scope);
 
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
@@ -807,7 +807,7 @@ context::add_template_formal(const token_identifier& id,
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
 	NEVER_NULL(inst_stmt);
@@ -877,7 +877,7 @@ context::add_port_formal(const token_identifier& id,
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
