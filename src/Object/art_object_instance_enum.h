@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.2.3 2005/02/17 00:10:14 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.2.3.2.1 2005/02/18 06:07:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -116,8 +116,9 @@ class enum_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
 public:
+	typedef	enum_instance_alias			instance_alias_type;
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
-	typedef	never_ptr<enum_instance_alias>		instance_ptr_type;
+	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
 protected:
 	explicit
 	enum_instance_collection(const size_t d) : parent_type(d) { }

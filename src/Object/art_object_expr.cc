@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5 2005/02/17 04:20:33 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.1 2005/02/18 06:07:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -15,7 +15,7 @@
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 
 #include <exception>
-#include <iostream>
+// #include <iostream>
 #include <algorithm>
 
 // consider: (for reducing expression storage overhead)
@@ -24,7 +24,7 @@
 
 #include "art_object_index.h"
 #include "art_object_expr.h"		// includes "art_object_expr_const.h"
-#include "art_object_expr_param_ref.h"
+// #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
 #include "art_object_type_hash.h"
@@ -44,7 +44,7 @@
 #include "static_trace.h"
 #include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
-#include "memory/pointer_classes.h"
+// #include "memory/pointer_classes.h"
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.tcc"
 #include "compose.h"
@@ -126,7 +126,7 @@ STATIC_TRACE_BEGIN("object-expr")
 namespace ART {
 namespace entity {
 //=============================================================================
-#include "using_ostream.h"
+// #include "using_ostream.h"
 using namespace util::memory;
 USING_UTIL_COMPOSE
 USING_UTIL_OPERATIONS

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04:
+	  Draft of template code for alias_connection.  
+	  Need to write instance_reference_base::make_alias_connection
+	  before enabling new class heirarchy (conditional now).
+	  Happened to do some header clean-up in this revision too.  
+
+
 2005-02-17	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-01:

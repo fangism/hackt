@@ -2,15 +2,16 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.2 2005/02/18 03:25:14 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.3 2005/02/18 06:07:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
 #define	__ART_OBJECT_CONNECT_H__
 
-#include "art_object_base.h"
+#include "art_object_fwd.h"
 #include "art_object_instance_management_base.h"
 #include "memory/pointer_classes.h"
+#include "packed_array.h"
 
 #define	SUBTYPE_ALIASES_CONNECTION			0
 
@@ -19,6 +20,7 @@ namespace entity {
 
 USING_LIST
 using std::ostream;
+using util::packed_array_generic;
 using namespace util::memory;	// for experimental pointer classes
 class unroll_context;
 
@@ -27,8 +29,7 @@ class unroll_context;
 	Class for saving and managing expression assignments.  
 	Includes both static and dynamic instance references.  
  */
-class instance_reference_connection : 
-		public instance_management_base {
+class instance_reference_connection : public instance_management_base {
 protected:
 	typedef	instance_reference_base			generic_instance_type;
 	typedef	count_ptr<const generic_instance_type>	generic_inst_ptr_type;
@@ -75,14 +76,18 @@ public:
 
 #if SUBTYPE_ALIASES_CONNECTION
 virtual	~aliases_connection_base();
+
+virtual	ostream&
+	what(ostream& ) const = 0;
+
+virtual	ostream&
+	dump(ostream& ) const = 0;
 #else
 	~aliases_connection_base();
-#endif
 
 	ostream&
 	what(ostream& o) const;
 
-#if !SUBTYPE_ALIASES_CONNECTION
 	ostream&
 	dump(ostream& o) const;
 
@@ -98,32 +103,88 @@ public:
 };	// end class aliases_connection_base
 
 //-----------------------------------------------------------------------------
-#if 0
-class data_aliases_connection_base : public aliases_connection_base {
-};
+#if SUBTYPE_ALIASES_CONNECTION
+/**
+	Pointless class, for the sake of classifying data subtype aliases.  
+	Just another abstract base class in the heirarchy.  
+ */
+class data_alias_connection_base : public aliases_connection_base {
+	typedef	data_alias_connection_base	this_type;
+protected:
+	typedef	aliases_connection_base		parent_type;
+public:
+	data_alias_connection_base() : parent_type() { }
+
+virtual	~data_alias_connection_base() { }
+
+};	// end class data_aliases_connection_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	ALIAS_CONNECTION_TEMPLATE_SIGNATURE				\
+template <class InstRef, class Parent>
+
+#define	ALIAS_CONNECTION_CLASS						\
+alias_connection<InstRef,Parent>
+
 /**
 	Re-usable pattern for type-specific alias connection lists, 
 	intended for leaf classes because methods are non-virtual.
  */
-template <class InstRef, class Parent>
-class aliases_connection : public Parent {
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+class alias_connection : public Parent {
+	typedef	alias_connection		this_type;
 public:
 	typedef	Parent				parent_type;
 	typedef	InstRef				instance_reference_type;
+	typedef	typename parent_type::generic_inst_ptr_type
+						generic_inst_ptr_type;
+	typedef	typename instance_reference_type::instance_collection_type
+						instance_collection_type;
+	typedef	typename instance_collection_type::instance_alias_type
+						instance_alias_type;
 	typedef	count_ptr<const InstRef>	inst_ref_ptr_type;
 	typedef	list<inst_ref_ptr_type>		inst_list_type;
+	typedef	typename inst_list_type::iterator
+						iterator;
+	typedef	typename inst_list_type::const_iterator
+						const_iterator;
+	typedef	packed_array_generic<never_ptr<instance_alias_type> >
+						alias_collection_type;
 protected:
 	inst_list_type				inst_list;
 public:
+	alias_connection();
+
+	~alias_connection();
+
 	ostream&
 	what(ostream& ) const;
 
 	ostream&
 	dump(ostream& ) const;
 
-};
+	void
+	append_instance_reference(const generic_inst_ptr_type& );
+
+	void
+	unroll(unroll_context& ) const;
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class alias_connection
+
+typedef	alias_connection<int_instance_reference, data_alias_connection_base>
+						int_alias_connection;
+typedef	alias_connection<bool_instance_reference, data_alias_connection_base>
+						bool_alias_connection;
+typedef	alias_connection<enum_instance_reference, data_alias_connection_base>
+						enum_alias_connection;
+typedef	alias_connection<datastruct_instance_reference, data_alias_connection_base>
+						datastruct_alias_connection;
+typedef	alias_connection<channel_instance_reference, aliases_connection_base>
+						chan_alias_connection;
+typedef	alias_connection<process_instance_reference, aliases_connection_base>
+						proc_alias_connection;
 #endif
 
 //-----------------------------------------------------------------------------

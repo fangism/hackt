@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.2 2005/02/18 03:25:14 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.3 2005/02/18 06:07:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -12,6 +12,7 @@
 #include "art_object_connect.h"
 #include "art_object_inst_ref_base.h"
 
+#include "what.tcc"
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
 #include "art_object_type_hash.h"
@@ -151,6 +152,83 @@ aliases_connection_base::load_object(
 
 #endif	// SUBTYPE_ALIASES_CONNECTION
 
+//=============================================================================
+#if SUBTYPE_ALIASES_CONNECTION
+// class alias_connection method definitions
+
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+ALIAS_CONNECTION_CLASS::alias_connection() :
+		parent_type(), inst_list() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+ALIAS_CONNECTION_CLASS::~alias_connection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+ostream&
+ALIAS_CONNECTION_CLASS::what(ostream& o) const {
+	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+ostream&
+ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
+	INVARIANT(inst_list.size() > 1);
+	const_iterator iter = inst_list.begin();
+	const const_iterator end = inst_list.end();
+	NEVER_NULL(*iter);
+	(*iter)->dump(o);
+	for (iter++ ; iter!=end; iter++) {
+		NEVER_NULL(*iter);
+		(*iter)->dump(o << " = ");
+	}
+	return o << ';';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::append_instance_reference(
+		const generic_inst_ptr_type& i) {
+	NEVER_NULL(i);
+	inst_list.push_back(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
+	cerr << "Fang, finish alias_connection<>::unroll()!" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::collect_transient_info(
+		persistent_object_manager& m) const {
+	// register me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
+		istream& i) {
+	// load me!
+}
+
+#endif	// SUBTYPE_ALIASES_CONNECTION
 //=============================================================================
 // class port_connection method definitions
 

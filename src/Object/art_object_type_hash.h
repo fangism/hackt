@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.4.16.1 2005/02/03 03:34:54 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1 2005/02/18 06:07:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -137,7 +137,17 @@
 
 #define	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY				"pbassign"
 #define	PINT_EXPR_ASSIGNMENT_TYPE_KEY				"piassign"
+
+// will be obsolete if it is subclassed into the following
 #define	ALIAS_CONNECTION_TYPE_KEY				"aliascon"
+
+#define	DBOOL_ALIAS_CONNECTION_TYPE_KEY				"dbalias"
+#define	DINT_ALIAS_CONNECTION_TYPE_KEY				"dialias"
+#define	ENUM_ALIAS_CONNECTION_TYPE_KEY				"enmalias"
+#define	STRUCT_ALIAS_CONNECTION_TYPE_KEY			"stralias"
+#define	CHAN_ALIAS_CONNECTION_TYPE_KEY				"chnalias"
+#define	PROC_ALIAS_CONNECTION_TYPE_KEY				"prcalias"
+
 #define	PORT_CONNECTION_TYPE_KEY				"portconn"
 #define	LOOP_SCOPE_TYPE_KEY					"loopscop"
 #define	CONDITIONAL_SCOPE_TYPE_KEY				"condscop"

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.1 2005/02/18 03:25:14 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.2 2005/02/18 06:07:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -40,6 +40,10 @@ namespace entity {
 	class data_type_reference;
 	class datatype_instance_collection;
 	class datatype_instance_reference;
+	class bool_instance_reference;
+	class int_instance_reference;
+	class enum_instance_reference;
+	class datastruct_instance_reference;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;

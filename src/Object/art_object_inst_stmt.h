@@ -1,13 +1,12 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9.2.2.2.1 2005/02/18 01:25:34 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.2.2.2.2 2005/02/18 06:07:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
 #define	__ART_OBJECT_INST_STMT_H__
 
-#include "art_object_instance_management_base.h"
 #include "art_object_inst_stmt_base.h"
 #include "memory/count_ptr.h"
 #include "memory/list_vector_pool_fwd.h"
@@ -45,11 +44,7 @@ protected:
 /**
 	Boolean parameter instantiation statement.
  */
-class pbool_instantiation_statement : 
-#if 0
-		public object, 
-#endif
-		public param_instantiation_statement {
+class pbool_instantiation_statement : public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
 	typedef	pbool_instantiation_statement	this_type;
@@ -100,11 +95,7 @@ public:
 /**
 	Integer parameter instantiation statement.
  */
-class pint_instantiation_statement : 
-#if 0
-		public object, 
-#endif
-		public param_instantiation_statement {
+class pint_instantiation_statement : public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
 	typedef	pint_instantiation_statement	this_type;
@@ -155,11 +146,7 @@ public:
 /**
 	Process instantiation statement.
  */
-class process_instantiation_statement : 
-#if 0
-		public object, 
-#endif
-		public instantiation_statement {
+class process_instantiation_statement : public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
 public:
@@ -206,11 +193,7 @@ public:
 /**
 	Channel instantiation statement.
  */
-class channel_instantiation_statement : 
-#if 0
-		public object, 
-#endif
-		public instantiation_statement {
+class channel_instantiation_statement : public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
 public:
@@ -254,11 +237,7 @@ public:
 /**
 	Data-type instantiation statement.
  */
-class data_instantiation_statement : 
-#if 0
-		public object, 
-#endif
-		public instantiation_statement {
+class data_instantiation_statement : public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
 	typedef	data_instantiation_statement	this_type;
