@@ -1,13 +1,13 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.4.2.1 2005/01/22 06:38:19 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.4.2.2 2005/01/22 22:34:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
-#define	DEBUG_LIST_VECTOR_POOL		1
+// #define	DEBUG_LIST_VECTOR_POOL		1
 
 #include <exception>
 #include <iostream>

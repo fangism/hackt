@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.15.10.1 2005/01/22 06:38:19 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15.10.2 2005/01/22 22:34:47 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
@@ -65,14 +65,25 @@ const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
 
+#if 0
+OBSOLETE
 // needed to ensure that pint_const pool is ready to dish out pints
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const);
 // this holds onto a reference count that will be guaranteed to be
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
+#endif
 
 static const count_ptr<const pint_const>
 int_def_width_default(new pint_const(32));
+
+#if 0
+// OBSERVATION:
+// enabling this causes pbool_const pool to not be destroyed upon
+// program termination.  
+static const excl_ptr<const pbool_const>
+dummy_bool(new pbool_const(true));
+#endif
 
 /***
 	Really the formal should "belong" to the definition, 
