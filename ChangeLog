@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-01-31	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-docs-00:
+	  New branch created for documentation of the ART++ language spec.  
+	  (Not for doxygenating code comments.)
+
+	* ARTXX-00-01-04-main-00-04-docs-00-01:
+	  Defined template signature equivalence.  
+	  Minor text tweaks.  
+	  Consider using the listings.sty package, or converting
+	  grammar into latex interpreter...
+
+
 2005-01-27	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-13:

@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.5 2004/12/01 02:50:04 fang Exp $
+%	$Id: templates.tex,v 1.5.18.1 2005/01/31 19:37:25 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -28,9 +28,65 @@ class my_template_class;
 \end{verbatim}
 
 \noindent
-\ttt{my\_template\_class} is a class that takes a 
+\verb|my_template_class| is a class that takes a 
 class that takes an integer and a class as a template argument 
 as a template argument.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Template signature equivalence}
+\label{sec:templates:forward:equiv}
+
+The formal parameters of a forward signature are allowed to have identifiers, 
+which facilitates latter parameters depending on former parameters.  
+Forward declarations are equivalent if the prototype name matches (in the
+same namespace) and their template signatures are equivalent.  
+The following forward declarations are equivalent (in C++):
+
+\begin{verbatim}
+template <int> class foo;
+template <int P> class foo;
+template <int Q> class foo;
+\end{verbatim}
+
+However, only the identifiers used in template class \emph{definitions}
+may be referenced from within the definition.  
+
+\begin{verbatim}
+template <int R>
+class foo {
+  /* R may be referenced as the first parameter */
+};
+\end{verbatim}
+
+Note that nowhere outside of the definition, 
+can template parameters be referenced (just as in C++).  
+In \artxx, one may declare an instance of a declared but undefined type, 
+which may not necessarily contain any named parameters.  
+
+\begin{verbatim}
+foo<7> bar;
+int N = bar.R; // ERROR: no public member named R
+\end{verbatim}
+
+Here is an example of equivalent template signatures:
+
+\begin{verbatim}
+template <int N, int [N]> ...
+template <int N, int A[N]> ...
+template <int N, int B[N]> ...
+template <int M, int A[M]> ...
+template <int M, int B[M]> ...
+\end{verbatim}
+
+In all cases, the first parameter must be named because the second
+parmeter depends on the first.  
+Since nothing else depends on the second parameter, its name is optional.  
+Again, only the parameter names used in the definition 
+may be referenced from within the definition.  
+
+The same rules in this section (ripped off of C++) pertain to
+process, channel, and datatype template definitions in \artxx.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Default values}

@@ -1,50 +1,38 @@
 % "chapters/intro.tex"
 
-%	$Id: intro.tex,v 1.7 2005/01/16 21:55:58 fang Exp $
+%	$Id: intro.tex,v 1.7.18.1 2005/01/31 19:37:23 fang Exp $
 
 \chapter{Introduction}
 \label{sec:intro}
 
 % a better quote:
-\begin{comment}
+\begin{quotation}
 But in our enthusiasm, we could not resist a radical overhaul of the
 system, in which all of its major weaknesses have been exposed,
 analyzed, and replaced with new weaknesses.
-	-- Bruce Leverett, "Register Allocation in Optimizing Compilers"
-\end{comment}
+\end{quotation}
 
 \begin{flushright}
-% \begin{quotation}
-{ \ttfamily
-You have acquired a scroll entitled\\
-'irk gleknow mizk'(n).--More--
-
-\medskip
-This is an IBM Manual scroll.--More--
-
-\medskip
-You are permanently confused.
+{\itshape -- Bruce Leverett, ``Register Allocation in Optimizing Compilers''}
+\end{flushright}
 
 \bigskip
-}	% end \ttfamily
-{\itshape -- Dave Decot}
-% \end{quotation}
-\end{flushright}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In the beginning, there was \index{CSP}CSP\cite{ref:csp}.
 
-This document describes the language specification for the \artxx\ language.  
+This document describes the language specification for the \artxx\ Language.  
 
 Should be largely implementation-independent.  
 But we discuss some of the issues.  
 
-Our implementation is a multi-phase compiler with three-phases:
+Our implementation is a multi-phase compiler with four phases:
 \begin{itemize}
 \item Compile -- like precompiling modules
 \item Link
-\item Unroll -- expand top-level instantiations.  
+\item Unroll -- heirarchical expansion of top-level instantiations.  
+\item Finalize -- \emph{unique} instantiation after connections.  
 \end{itemize}
 
 Compile-time is ...
@@ -52,6 +40,9 @@ Compile-time is ...
 Link-time is ...
 
 Unroll-time is ...
+
+Finalize is ...
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -89,7 +80,7 @@ predecessor named ART.  :P
 implying that this version is in some ways superior.)
 
 Religious differences, much like the
-\texttt{vi} versus \texttt{emacs} holy war, 
+\verb|vi| versus \verb|emacs| holy war, 
 led to a divergence of implementations and interpretations.  
 
 
