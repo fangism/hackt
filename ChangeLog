@@ -26,6 +26,18 @@
 	  Introduced (preliminary) unrolling test, finally!  
 	  Need to write {bool,int}_instance_collection::unroll().  
 
+	* Added unroll tests to tests/parser/param directory.
+	  Updated artobjunroll-expect.sh script to handle 
+		  expected unroll errors.
+	  Test suite is coming along...
+
+	* Minor stuff:
+	  In util/indent.cc: fixed disable_indent.
+	  Updated dump() method to use better indentation in
+		many Object class definitions.
+	  artobjdump and artobjunroll handles exceptions from unrolling, 
+		and also if input object file is empty.
+
 
 2005-01-16	David Fang	<fangism@users.sourceforge.net>
 
