@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.22 2004/12/03 02:46:39 fang Exp $
+ 	$Id: art_object_base.cc,v 1.23 2004/12/05 05:06:52 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "hash_specializations.h"		// substitute for the following
 #include "hash_qmap.tcc"
 #include "qmap.tcc"
+#include "STL/list.tcc"
 
 #include "art_parser_debug.h"
 #include "art_parser_base.h"
@@ -84,7 +85,7 @@
 namespace ART {
 namespace entity {
 
-using namespace std;
+#include "using_ostream.h"
 using namespace util::memory;
 
 // for function compositions
@@ -773,7 +774,7 @@ if (id.is_absolute()) {
 		never_ptr<const name_space> ns = 
 			lookup_namespace(idc.betail()).is_a<const name_space>();
 		if (ns)
-			return ns->lookup_object(**id.rend());
+			return ns->lookup_object(**(--id.end()));
 		else return never_ptr<const object>(NULL);
 	}
 } else if (id.size() <= 1) {
@@ -784,7 +785,7 @@ if (id.is_absolute()) {
 	never_ptr<const name_space> ns = 
 		lookup_namespace(idc.betail()).is_a<const name_space>();
 	if (ns)
-		return ns->lookup_object(**id.rend());
+		return ns->lookup_object(**(--id.end()));
 	else return never_ptr<const object>(NULL);
 }
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.12 2004/11/30 01:25:09 fang Exp $
+	$Id: art_object_definition.h,v 1.13 2004/12/05 05:06:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -45,7 +45,8 @@ using namespace parser;
  */
 namespace entity {
 //=============================================================================
-	using namespace std;
+	using std::ostream;
+	USING_LIST
 	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================

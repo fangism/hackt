@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
-	$Id: art_object_instance.h,v 1.20 2004/12/02 02:08:52 fang Exp $
+	$Id: art_object_instance.h,v 1.21 2004/12/05 05:06:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -36,7 +36,7 @@ using namespace parser;
  */
 namespace entity {
 //=============================================================================
-	using namespace std;
+	USING_LIST
 	using namespace util::memory;	// for experimental pointer classes
 	using namespace MULTIKEY_NAMESPACE;
 	using namespace MULTIKEY_MAP_NAMESPACE;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.7 2004/11/02 07:51:50 fang Exp $
+ 	$Id: art_object_module.cc,v 1.8 2004/12/05 05:06:54 fang Exp $
  */
 
 #include <iostream>
@@ -10,7 +10,8 @@
 
 namespace ART {
 namespace entity {
-using namespace std;
+#include "using_ostream.h"
+
 //=============================================================================
 // class module method definitions
 

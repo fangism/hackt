@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.4 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_formal.h,v 1.5 2004/12/05 05:06:50 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -24,7 +24,7 @@ namespace entity {
 	class object;
 }
 
-using namespace std;
+using std::ostream;
 using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 

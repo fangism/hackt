@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2004-12-04	David Fang	<fangism@users.sourceforge.net>
+
+	* Re-organized util/ library directory.  
+	  Split many template classes into declarations and definition files. 
+
+	* Added util/STL subdirectory with wrappers to split the 
+	  standard containers into declarations and definitions files.  
+	  Not terribly useful yet.  Current revision is safe
+	  to switch arbitrarily between unified and split headers.  
+
+	* Touched up ART source files to work with new headers.  
+	  No functionality has changed.  
+
+
 2004-12-02	David Fang	<fangism@users.sourceforge.net>
 
 	* Further elaborated on pointer_traits.

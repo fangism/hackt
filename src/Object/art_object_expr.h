@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.13 2004/12/03 02:46:39 fang Exp $
+	$Id: art_object_expr.h,v 1.14 2004/12/05 05:06:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -29,6 +29,7 @@ namespace ART {
 namespace entity {
 	using namespace MULTIKEY_NAMESPACE;
 	using namespace	DISCRETE_INTERVAL_SET_NAMESPACE;
+	USING_LIST
 	using std::string;
 	using std::ostream;
 	USING_UTIL_OPERATIONS
@@ -742,7 +743,7 @@ private:
 public:
 	pbool_instance_reference(never_ptr<pbool_instance_collection> pi, 
 		excl_ptr<index_list> i);
-	~pbool_instance_reference() { }
+	~pbool_instance_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -823,7 +824,7 @@ private:
 public:
 	pint_instance_reference(never_ptr<pint_instance_collection> pi, 
 		excl_ptr<index_list> i);
-	~pint_instance_reference() { }
+	~pint_instance_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1328,7 +1329,7 @@ explicit pint_range(count_ptr<const pint_expr> n);
 	pint_range(count_ptr<const pint_expr> l,
 		count_ptr<const pint_expr> u);
 	pint_range(const pint_range& pr);
-	~pint_range() { }
+	~pint_range();
 
 	// first, second? pair interface?
 

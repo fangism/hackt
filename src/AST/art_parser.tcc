@@ -1,13 +1,15 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.4 2004/11/30 01:25:01 fang Exp $
+	$Id: art_parser.tcc,v 1.5 2004/12/05 05:06:49 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
 #define	__ART_PARSER_TCC__
 
 #include <iostream>
+
+#include "STL/list.tcc"
 
 #include "art_parser_debug.h"
 #include "art_parser_base.h"		// includes "ptrs.h", "count_ptr.h"

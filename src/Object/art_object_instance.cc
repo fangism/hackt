@@ -2,7 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
- 	$Id: art_object_instance.cc,v 1.23 2004/12/03 02:46:40 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.24 2004/12/05 05:06:53 fang Exp $
  */
 
 #include <iostream>
@@ -13,8 +13,9 @@
 #include "art_object_expr.h"
 #include "art_built_ins.h"
 
+#include "STL/list.tcc"
 #include "qmap.tcc"
-#include "multikey_qmap.h"
+#include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "compose.h"
 #include "binders.h"

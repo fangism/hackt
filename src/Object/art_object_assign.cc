@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.5 2004/11/30 01:25:08 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.6 2004/12/05 05:06:52 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,7 @@
 #include "art_parser_base.h"
 #include "art_object_assign.h"
 #include "art_object_expr.h"
+#include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
 
 #include "binders.h"

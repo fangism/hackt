@@ -1,13 +1,15 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.20 2004/11/30 01:25:08 fang Exp $
+	$Id: art_object_base.h,v 1.21 2004/12/05 05:06:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
 #define	__ART_OBJECT_BASE_H__
 
-#include <list>
+// #include <list>
+#include "STL/list.h"
+
 #include <deque>
 
 #include "macros.h"
@@ -54,7 +56,9 @@ using namespace parser;
  */
 namespace entity {
 //=============================================================================
-	using namespace std;
+//	using namespace std;
+	USING_LIST
+	using std::deque;
 	using namespace util;
 	using namespace util::memory;
 	using namespace QMAP_NAMESPACE;

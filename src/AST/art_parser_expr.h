@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.4 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_expr.h,v 1.5 2004/12/05 05:06:49 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -26,7 +26,7 @@ namespace entity {
 	class process_definition;
 }
 
-using namespace std;
+using std::ostream;
 using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 

@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.8 2004/11/30 01:25:08 fang Exp $
+	$Id: art_context.h,v 1.9 2004/12/05 05:06:52 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -11,7 +11,8 @@
 #include <stdlib.h>
 #include <string>
 #include <stack>
-#include <list>
+
+#include "STL/list.h"
 
 #include "memory/pointer_classes.h"
 
@@ -21,7 +22,7 @@ namespace ART {
 // forward declarations from another namespace, from "art_object.h"
 // avoids having to include "art_object.h"
 namespace entity {
-	using std::list;			
+	USING_LIST
 	using namespace util::memory;	// for pointer classes
 
 	// ... and more as they are needed
@@ -73,7 +74,10 @@ using namespace entity;
 
 namespace parser {
 //=============================================================================
-using namespace std;
+using std::ostream;
+using std::stack;
+using std::string;
+USING_LIST
 using namespace util::memory;		// for pointer classes
 
 //=============================================================================
@@ -227,136 +231,187 @@ public:
 // TO DO: sort methods by where they are expected to be invoked
 //	i.e. from the syntax tree check_build, or from the symbol_table objects
 
-void	open_namespace(const token_identifier& id);
-void	close_namespace(void);
-void	using_namespace(const qualified_id& id);
-void	alias_namespace(const qualified_id& id, const string& a);
-never_ptr<const name_space>	top_namespace(void) const;
+	void
+	open_namespace(const token_identifier& id);
 
-never_ptr<definition_base>
+	void
+	close_namespace(void);
+
+	void
+	using_namespace(const qualified_id& id);
+
+	void
+	alias_namespace(const qualified_id& id, const string& a);
+
+	never_ptr<const name_space>
+	top_namespace(void) const;
+
+	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base> d);
 
 // void	declare_process(const token_identifier& ps);
-void	open_process_definition(const token_identifier& ps);
-void	close_process_definition(void);
+	void
+	open_process_definition(const token_identifier& ps);
 
-void	declare_datatype(const token_identifier& ds);
-void	open_datatype(const token_identifier& ds);
-void	close_datatype_definition(void);
+	void
+	close_process_definition(void);
+
+	void
+	declare_datatype(const token_identifier& ds);
+	void
+	open_datatype(const token_identifier& ds);
+
+	void
+	close_datatype_definition(void);
 
 // void	declare_enum(const token_identifier& en);
-void	open_enum_definition(const token_identifier& en);
-bool	add_enum_member(const token_identifier& em);
-void	close_enum_definition(void);
+	void
+	open_enum_definition(const token_identifier& en);
 
-void	declare_chantype(const token_identifier& ds);
-void	open_chantype(const token_identifier& ds);
-void	close_chantype_definition(void);
+	bool
+	add_enum_member(const token_identifier& em);
 
-bool	alias_definition(never_ptr<const definition_base> d, 
+	void
+	close_enum_definition(void);
+
+	void
+	declare_chantype(const token_identifier& ds);
+
+	void
+	open_chantype(const token_identifier& ds);
+
+	void
+	close_chantype_definition(void);
+
+	bool
+	alias_definition(never_ptr<const definition_base> d, 
 		const token_identifier& id);
 
-void	add_connection(excl_ptr<const instance_reference_connection> c);
-void	add_assignment(excl_ptr<const param_expression_assignment> a);
+	void
+	add_connection(excl_ptr<const instance_reference_connection> c);
+
+	void
+	add_assignment(excl_ptr<const param_expression_assignment> a);
 
 /**
 	Need to make distinctions:
 	call this get_current_named_scope.
 	Make another get_current_sequential_scope.
  */
-never_ptr<const scopespace>	get_current_named_scope(void) const;
-never_ptr<scopespace>		get_current_named_scope(void);
+	never_ptr<const scopespace>
+	get_current_named_scope(void) const;
 
-never_ptr<const name_space>
-		get_current_namespace(void) const {
-			return current_namespace;
-		}
+	never_ptr<scopespace>
+	get_current_named_scope(void);
+
+	never_ptr<const name_space>
+	get_current_namespace(void) const { return current_namespace; }
 
 // sets context's definition for instantiation, or for member lookup
-never_ptr<const definition_base>	
-		get_current_definition_reference(void) const
-			{ return current_definition_reference; }
+	never_ptr<const definition_base>	
+	get_current_definition_reference(void) const
+		{ return current_definition_reference; }
 
 // pointer instead of reference?
-never_ptr<const definition_base>
-		push_current_definition_reference(const definition_base& d) {
-			definition_stack.push(
-				never_ptr<const definition_base>(&d));
-			return current_definition_reference;
-		}
+	never_ptr<const definition_base>
+	push_current_definition_reference(const definition_base& d) {
+		definition_stack.push(
+			never_ptr<const definition_base>(&d));
+		return current_definition_reference;
+	}
 
 // never_ptr<const fundamental_type_reference>
-count_ptr<const fundamental_type_reference>
-		get_current_fundamental_type(void) const;
+	count_ptr<const fundamental_type_reference>
+	get_current_fundamental_type(void) const;
 
-never_ptr<definition_base>
-		set_current_prototype(excl_ptr<definition_base> d);
+	never_ptr<definition_base>
+	set_current_prototype(excl_ptr<definition_base> d);
 // void	reset_current_prototype(void);
 
 /** destructive transfer return */
-excl_ptr<definition_base>
+	excl_ptr<definition_base>
 	get_current_prototype(void) { return current_prototype; }
-never_ptr<const definition_base>
+
+	never_ptr<const definition_base>
 	get_current_prototype(void) const { return current_prototype; }
 
-never_ptr<const datatype_definition_base>
-		get_current_datatype_definition(void) const;
+	never_ptr<const datatype_definition_base>
+	get_current_datatype_definition(void) const;
 
 // should be called by parser after done using definitions
-void	pop_current_definition_reference(void);
-void	reset_current_fundamental_type(void);
+	void
+	pop_current_definition_reference(void);
 
-never_ptr<const built_in_param_def>
+	void
+	reset_current_fundamental_type(void);
+
+	never_ptr<const built_in_param_def>
 	get_current_param_definition(void) const;
 
-never_ptr<const channel_definition_base>
+	never_ptr<const channel_definition_base>
 	get_current_channel_definition(void) const;
 
-never_ptr<const process_definition_base>
+	never_ptr<const process_definition_base>
 	get_current_process_definition(void) const;
 
-void	set_current_fundamental_type(
+	void
+	set_current_fundamental_type(
 		count_ptr<const fundamental_type_reference> tr);
 
-never_ptr<const object>	lookup_object(const qualified_id& id) const;
-never_ptr<const definition_base>
-			lookup_definition(const token_identifier& id) const;
-never_ptr<const definition_base>
-			lookup_definition(const qualified_id& id) const;
-never_ptr<const instance_collection_base>
-			lookup_instance(const token_identifier& id) const;
-never_ptr<const instance_collection_base>
-			lookup_instance(const qualified_id& id) const;
+	never_ptr<const object>
+	lookup_object(const qualified_id& id) const;
 
-never_ptr<const instance_collection_base>
-			add_instance(const token_identifier& id);
-never_ptr<const instance_collection_base>
-			add_instance(const token_identifier& id, 
-				index_collection_item_ptr_type dim);
+	never_ptr<const definition_base>
+	lookup_definition(const token_identifier& id) const;
 
-never_ptr<const instance_collection_base>	// should be param_instance_collection
-			add_template_formal(const token_identifier& id, 
-				count_ptr<const param_expr> d);
-never_ptr<const instance_collection_base>	// should be param_instance_collection
-			add_template_formal(const token_identifier& id, 
-				index_collection_item_ptr_type dim, 
-				count_ptr<const param_expr> d);
+	never_ptr<const definition_base>
+	lookup_definition(const qualified_id& id) const;
 
-never_ptr<const instance_collection_base>
-			add_port_formal(const token_identifier& id);
-never_ptr<const instance_collection_base>
-			add_port_formal(const token_identifier& id, 
-				index_collection_item_ptr_type dim);
+	never_ptr<const instance_collection_base>
+	lookup_instance(const token_identifier& id) const;
 
-void	push_object_stack(count_ptr<object> i);
-count_ptr<object> pop_top_object_stack(void);
+	never_ptr<const instance_collection_base>
+	lookup_instance(const qualified_id& id) const;
+
+	never_ptr<const instance_collection_base>
+	add_instance(const token_identifier& id);
+
+	never_ptr<const instance_collection_base>
+	add_instance(const token_identifier& id, 
+		index_collection_item_ptr_type dim);
+
+	// should be param_instance_collection
+	never_ptr<const instance_collection_base>
+	add_template_formal(const token_identifier& id, 
+		count_ptr<const param_expr> d);
+
+	// should be param_instance_collection
+	never_ptr<const instance_collection_base>
+	add_template_formal(const token_identifier& id, 
+		index_collection_item_ptr_type dim, 
+		count_ptr<const param_expr> d);
+
+	never_ptr<const instance_collection_base>
+	add_port_formal(const token_identifier& id);
+
+	never_ptr<const instance_collection_base>
+	add_port_formal(const token_identifier& id, 
+		index_collection_item_ptr_type dim);
+
+	void
+	push_object_stack(count_ptr<object> i);
+
+	count_ptr<object>
+	pop_top_object_stack(void);
 
 // repeat for processes and channels...
 
-string		auto_indent(void) const;
+	string
+	auto_indent(void) const;
 
 private:
-void close_current_definition(void);
+	void
+	close_current_definition(void);
 };	// end class context
 
 //=============================================================================

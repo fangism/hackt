@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2004/12/03 02:46:36 fang Exp $
+#	$Id: Makefile.am,v 1.27 2004/12/05 05:06:44 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -122,10 +122,21 @@ UTIL_HEADER_FILES = \
 	util/art_debug.h \
 	util/art_switches.h \
 	util/macros.h \
+	util/STL/allocator_fwd.h \
+	util/STL/functional_fwd.h \
+	util/STL/list_fwd.h \
+	util/STL/list.h \
+	util/STL/list.tcc \
+	util/STL/map_fwd.h \
+	util/STL/map.h \
+	util/STL/map.tcc \
+	util/STL/namespace.h \
+	util/STL/pair_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
-	util/discrete_interval_set.h \
 	util/discrete_interval_set_fwd.h \
+	util/discrete_interval_set.h \
+	util/discrete_interval_set.tcc \
 	util/getopt_portable.h \
 	util/hash_map.h \
 	util/hash_qmap_fwd.h \
@@ -141,16 +152,20 @@ UTIL_HEADER_FILES = \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
-	util/multidimensional_qmap.h \
 	util/multidimensional_qmap_fwd.h \
-	util/multidimensional_sparse_set.h \
+	util/multidimensional_qmap.h \
+	util/multidimensional_qmap.tcc \
 	util/multidimensional_sparse_set_fwd.h \
+	util/multidimensional_sparse_set.h \
+	util/multidimensional_sparse_set.tcc \
 	util/multikey_fwd.h \
 	util/multikey.h \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
+	util/multikey_map.tcc \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
+	util/multikey_qmap.tcc \
 	util/nested_iterator.h \
 	util/operators.h \
 	util/persistent.h \
@@ -160,8 +175,12 @@ UTIL_HEADER_FILES = \
 	util/qmap.h \
 	util/qmap.tcc \
 	util/sstream.h \
+	util/string_fwd.h \
 	util/sublist.h \
+	util/sublist.tcc \
 	util/unique_list.h \
+	util/unique_list.tcc \
+	util/using_ostream.h \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
@@ -296,7 +315,9 @@ EXTRA_DIST = \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
+	util/README \
 	util/TODO \
+	util/STL/README \
 	util/obsolete/README \
 	wc-l
 

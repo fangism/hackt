@@ -1,7 +1,7 @@
 /**
 	\file "art_object_control.cc"
 	Control-flow related class method definitions.  
- 	$Id: art_object_control.cc,v 1.5 2004/11/30 01:25:09 fang Exp $
+ 	$Id: art_object_control.cc,v 1.6 2004/12/05 05:06:52 fang Exp $
  */
 
 #include "art_object_control.h"
@@ -9,7 +9,6 @@
 
 namespace ART {
 namespace entity {
-using namespace std;
 //=============================================================================
 // class loop_scope method definitions
 

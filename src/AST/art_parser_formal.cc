@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_formal.cc,v 1.6 2004/12/05 05:06:49 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -36,7 +36,7 @@
 //=============================================================================
 namespace ART {
 namespace parser {
-using namespace std;
+#include "using_ostream.h"
 
 //=============================================================================
 // class data_param_id method definitions

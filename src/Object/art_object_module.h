@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.5 2004/11/02 07:51:50 fang Exp $
+	$Id: art_object_module.h,v 1.6 2004/12/05 05:06:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__
@@ -14,7 +14,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 
-using namespace std;
+using std::ostream;
 
 /**
 	A module corresponds to a compilation unit, a file.  

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.3 2004/11/30 01:25:08 fang Exp $
+	$Id: art_object_assign.h,v 1.4 2004/12/05 05:06:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -28,7 +28,8 @@ using namespace parser;
 
 //=============================================================================
 namespace entity {
-	using namespace std;
+	USING_LIST
+	using std::ostream;
 	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================

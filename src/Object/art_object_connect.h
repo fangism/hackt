@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.10 2004/11/30 01:25:08 fang Exp $
+	$Id: art_object_connect.h,v 1.11 2004/12/05 05:06:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -28,7 +28,8 @@ using namespace parser;
 
 //=============================================================================
 namespace entity {
-	using namespace std;
+	USING_LIST
+	using std::ostream;
 	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
@@ -45,7 +46,7 @@ protected:
 	inst_list_type						inst_list;
 public:
 	instance_reference_connection();
-virtual	~instance_reference_connection() { }
+virtual	~instance_reference_connection();
 
 // non-virtual
 virtual	void	append_instance_reference(
@@ -95,7 +96,7 @@ private:
 public:
 	/** later, accept complex_aggregate_instance_references? */
 	port_connection(count_ptr<const simple_instance_reference> i);
-	~port_connection() { }
+	~port_connection();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;

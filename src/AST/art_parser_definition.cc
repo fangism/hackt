@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_definition.cc,v 1.6 2004/12/05 05:06:49 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -37,7 +37,7 @@
 //=============================================================================
 namespace ART {
 namespace parser {
-using namespace std;
+#include "using_ostream.h"
 
 //=============================================================================
 // abstract class prototype method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.8 2004/11/30 01:25:10 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.9 2004/12/05 05:06:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -34,7 +34,9 @@ using namespace parser;
  */
 namespace entity {
 //=============================================================================
-	using namespace std;
+	using std::ostream;
+	using std::istream;
+	USING_LIST
 	using namespace util::memory;
 	using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 

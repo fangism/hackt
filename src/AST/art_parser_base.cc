@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.4 2004/11/30 01:25:01 fang Exp $
+	$Id: art_parser_base.cc,v 1.5 2004/12/05 05:06:49 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -34,7 +34,7 @@
 //=============================================================================
 namespace ART {
 namespace parser {
-using namespace std;
+#include "using_ostream.h"
 
 //=============================================================================
 // global constants

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.12 2004/11/30 01:25:08 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.13 2004/12/05 05:06:52 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,8 @@
 #include "art_parser_base.h"
 #include "art_object_connect.h"
 #include "art_object_expr.h"
+
+#include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -24,6 +26,10 @@ namespace entity {
 
 instance_reference_connection::instance_reference_connection() :
 		object(), instance_management_base(), inst_list() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+instance_reference_connection::~instance_reference_connection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,6 +143,13 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(port_connection, PORT_CONNECTION_TYPE_KEY)
 port_connection::port_connection() :
 		instance_reference_connection(), inst(NULL) {
 	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default destructor.
+ */
+port_connection::~port_connection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

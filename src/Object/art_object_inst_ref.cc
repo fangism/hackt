@@ -1,13 +1,14 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.11 2004/12/03 02:46:40 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.12 2004/12/05 05:06:53 fang Exp $
  */
 
 #include <iostream>
 
+#include "STL/list.tcc"
 #include "qmap.tcc"
-#include "multidimensional_sparse_set.h"
+#include "multidimensional_sparse_set.tcc"
 
 #include "art_parser_base.h"
 #include "art_object_instance.h"

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_expr.cc,v 1.6 2004/12/05 05:06:49 fang Exp $
  */
 
 #include <iostream>
@@ -9,6 +9,7 @@
 #include "art_parser_token.h"
 #include "art_parser_expr.h"
 #include "art_parser.tcc"
+#include "sublist.tcc"
 
 // will need these come time for type-checking
 // #include "art_symbol_table.h"	// this file is context-independent!
@@ -28,6 +29,7 @@ namespace ART {
 using namespace entity;
 
 namespace parser {
+#include "using_ostream.h"
 
 //=============================================================================
 // class expr method definitions
@@ -222,7 +224,8 @@ qualified_id::check_build(never_ptr<context> c) const {
 // non-member functions
 
 // friend operator
-ostream& operator << (ostream& o, const qualified_id& id) {
+ostream&
+operator << (ostream& o, const qualified_id& id) {
 //	o << "(size = " << id.size() << ", empty = " << id.empty() << ")";
 	if (id.empty()) {
 		return o << "<null qualified_id>";
@@ -243,7 +246,8 @@ ostream& operator << (ostream& o, const qualified_id& id) {
 }
 
 // friend operator
-ostream& operator << (ostream& o, const qualified_id_slice& id) {
+ostream&
+operator << (ostream& o, const qualified_id_slice& id) {
 	if (id.empty()) {
 		return o << "<null qualified_id_slice>";
 	} else {
@@ -260,6 +264,22 @@ ostream& operator << (ostream& o, const qualified_id_slice& id) {
 		}
 		return o;
 	}
+}
+
+//=============================================================================
+// class qualified_id_slice method definitions
+
+qualified_id_slice::qualified_id_slice(const qualified_id& qid) :
+		parent(qid), absolute(qid.is_absolute()) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+qualified_id_slice::qualified_id_slice(const qualified_id_slice& qid) :
+		parent(qid.parent), absolute(qid.absolute) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+qualified_id_slice::~qualified_id_slice() {
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.4 2004/11/30 01:25:04 fang Exp $
+	$Id: art_parser_token.h,v 1.5 2004/12/05 05:06:50 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_H__
@@ -27,7 +27,7 @@ namespace entity {
 	class process_definition;
 }
 
-using namespace std;
+using std::ostream;
 using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 

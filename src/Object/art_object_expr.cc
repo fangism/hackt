@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.21 2004/12/03 02:46:39 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.22 2004/12/05 05:06:53 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa
@@ -11,7 +11,9 @@
 
 #include "memory/pointer_classes.h"
 #include "sstream.h"			// for ostringstring, used by dump
-#include "discrete_interval_set.h"
+#include "discrete_interval_set.tcc"
+
+#include "STL/list.tcc"
 #include "hash_qmap.tcc"
 #include "qmap.tcc"
 
@@ -33,7 +35,7 @@
 namespace ART {
 namespace entity {
 //=============================================================================
-using namespace std;
+#include "using_ostream.h"
 using namespace ADS;
 using namespace util::memory;
 USING_UTIL_OPERATIONS
@@ -785,6 +787,13 @@ pbool_instance_reference::pbool_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default destructor.
+ */
+pbool_instance_reference::~pbool_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 pbool_instance_reference::get_inst_base(void) const {
 	return pbool_inst_ref;
@@ -1184,6 +1193,13 @@ pint_instance_reference::pint_instance_reference(
 		param_instance_reference(i, pi->current_collection_state()),
 		pint_expr(), 
 		pint_inst_ref(pi) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default destructor.
+ */
+pint_instance_reference::~pint_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2752,6 +2768,15 @@ pint_range::pint_range() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Default destructor.  
+pint_range::~pint_range() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Construct a range given one integer expression, 
+	implicitly from 0 too expr -1, inclusive.
+ */
 pint_range::pint_range(count_ptr<const pint_expr> n) :
 		range_expr(),
 		lower(new pint_const(0)),

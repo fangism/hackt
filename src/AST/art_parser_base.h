@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.9 2004/11/30 01:25:01 fang Exp $
+	$Id: art_parser_base.h,v 1.10 2004/12/05 05:06:49 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -28,10 +28,11 @@ namespace entity {
 	class process_definition;
 }
 
-using namespace std;
+using std::string;
+USING_LIST
 using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
-using namespace SUBLIST_NAMESPACE;
+using util::sublist;
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -508,11 +509,17 @@ friend	ostream& operator << (ostream& o, const qualified_id& id);
 	IS_A(qualified_id*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class qualified_id_slice : public sublist<count_ptr<const token_identifier> > {
+class qualified_id_slice {
 protected:
-	typedef	sublist<count_ptr<const token_identifier> >	parent;
+	typedef	sublist<count_ptr<const token_identifier> >	parent_type;
+	parent_type		parent;
+public:
+ 	typedef	parent_type::list_type::size_type
+				size_type;
+ 	typedef	parent_type::list_type::const_iterator
+				const_iterator;
 protected:
-	const bool	 absolute;
+	const bool		absolute;
 public:
 	/**
 		Constructor (implicit) that take a plain qualified_id.  
@@ -521,13 +528,16 @@ public:
 		By default, just wrap with begin and end iterators 
 		around the entire list.  
 	 */
-	qualified_id_slice(const qualified_id& qid) :
-		parent(qid), absolute(qid.is_absolute()) { }
-	qualified_id_slice(const qualified_id_slice& qid) :
-		parent(qid.the_list), absolute(qid.absolute) { }
-	~qualified_id_slice() { }
+	qualified_id_slice(const qualified_id& qid);
+	qualified_id_slice(const qualified_id_slice& qid);
+	~qualified_id_slice();
 
-bool	is_absolute(void) const { return absolute; }
+	bool
+	is_absolute(void) const { return absolute; }
+
+	size_type
+	size(void) const { return std::distance(parent.begin(), parent.end()); }
+
 /***
 using parent::begin;
 using parent::end;
@@ -535,11 +545,24 @@ using parent::rbegin;
 using parent::rend;
 using parent::empty;
 ***/
+	const_iterator
+	begin(void) const { return parent.begin(); }
 
-qualified_id_slice& behead(void) { parent::behead(); return *this; }
-qualified_id_slice& betail(void) { parent::betail(); return *this; }
+	const_iterator
+	end(void) const { return parent.end(); }
 
-friend ostream& operator << (ostream& o, const qualified_id_slice& q);
+	bool
+	empty(void) const { return parent.empty(); }
+
+	qualified_id_slice&
+	behead(void) { parent.behead(); return *this; }
+
+	qualified_id_slice&
+	betail(void) { parent.betail(); return *this; }
+
+	friend
+	ostream&
+	operator << (ostream& o, const qualified_id_slice& q);
 };	// end class qualified_id_slice
 #endif
 
