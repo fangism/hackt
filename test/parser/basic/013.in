@@ -1,7 +1,6 @@
 // this should fail to type check because "b" is not declared
-// 013.in replaces node with bool
 
-defproc badinverter(node a) {
+defproc badinverter(bool a) {
 int k;
 prs {
 	a		-> b-
