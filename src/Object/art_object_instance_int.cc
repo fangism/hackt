@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.6 2005/02/27 01:09:31 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.7 2005/02/27 03:37:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -123,6 +123,7 @@ struct collection_type_committer<int_tag> {
 	bool
 	operator () (instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) const {
+		// resolve type def?
 		INVARIANT(t->get_base_def() == &int_def);
 		const never_ptr<const param_expr_list>
 			params(t->get_template_params());

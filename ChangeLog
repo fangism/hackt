@@ -17,6 +17,14 @@
 		Other minor changes:
 		+ cleaned up packed_array*, removing packed_array_base.
 
+	* -alias-12:
+	  Added more tests for alias connections in connect directory.  
+	  Many unroll tests disabled because required features aren't
+	  implemented yet, such as port connections and member instance
+	  references.  (Member instance references will require
+	  type/definition layout first.)  
+	  This branch is now ready to merge to parent.  
+
 
 2005-02-25	David Fang	<fangism@users.sourceforge.net>
 
