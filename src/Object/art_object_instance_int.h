@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.8.4.1 2005/01/17 22:08:29 fang Exp $
+	$Id: art_object_instance_int.h,v 1.8.4.2 2005/01/20 18:43:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -161,6 +161,9 @@ virtual	bool
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+	never_ptr<const const_param_expr_list>
+	get_actual_param_list(void) const;
 
 virtual instance_ptr_type
 	lookup_instance(const unroll_index_type& i) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.33 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance.h,v 1.33.4.1 2005/01/20 18:43:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -145,6 +145,12 @@ virtual	count_ptr<instance_reference_base>
 	make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const;
 
+virtual void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+virtual	never_ptr<const const_param_expr_list>
+	get_actual_param_list(void) const;	// = 0;
+	
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.5 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.5.4.1 2005/01/20 18:43:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -164,8 +164,13 @@ protected:
 		Why modifiable pointer?
 		May need method to deep-copy the indices, unless
 		this pointer becomes counted.  
+
+		This pointer may be null, when no explicit indices are given, 
+		not necessarily zero-dimensional (scalar).
+		Could be implicit reference to entire collection.  
 	 */
 	excl_ptr<index_list>			array_indices;
+
 	/**
 		The current state of the instantiation collection
 		at the point of reference.

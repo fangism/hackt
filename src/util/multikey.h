@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.18 2005/01/14 19:40:13 fang Exp $
+	$Id: multikey.h,v 1.18.4.1 2005/01/20 18:43:59 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -309,7 +309,7 @@ multikey<D,K>::ones = multikey<D,K,1>();
 	\param K the key type, usually integer-like.
  */
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
-class multikey_generic : public multikey_base<K>, public valarray<K> {
+class multikey_generic : virtual public multikey_base<K>, public valarray<K> {
 protected:
 	typedef	multikey_base<K>			interface_type;
 	typedef	valarray<K>				impl_type;
@@ -696,6 +696,12 @@ public:
 	size_t
 	size(void) const { return base_type::dimensions(); }
 
+	size_t
+	dimensions(void) const { return base_type::dimensions(); }
+
+	value_type
+	default_value(void) const { return value_type(); }
+
 	iterator
 	begin(void) { return base_type::begin(); }
 
@@ -719,6 +725,12 @@ public:
 
 	const multikey_base<K>&
 	get_upper_corner(void) const { return upper_corner; }
+
+	K&
+	operator [] (size_t i) { return base_type::operator[](i); }
+
+	const K&
+	operator [] (size_t i) const { return base_type::operator[](i); }
 
 	// can be used directly as key, no need to convert
 	multikey_base<K>&

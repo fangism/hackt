@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.18 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr.h,v 1.18.4.1 2005/01/20 18:43:51 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -102,6 +102,8 @@ private:
 	bool
 	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
+	excl_ptr<const_param_expr_list>
+	unroll_resolve(const unroll_context&) const;
 public:
 	PERSISTENT_METHODS
 };	// end class dynamic_param_expr_list
@@ -286,6 +288,10 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<int>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class pint_unary_expr
@@ -353,6 +359,10 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<bool>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class pbool_unary_expr
@@ -445,6 +455,9 @@ public:
 	bool
 	resolve_values_into_flat_list(list<int>& l) const;
 
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class arith_expr
@@ -536,6 +549,10 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<bool>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class relational_expr
@@ -624,6 +641,10 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<bool>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class logical_expr

@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.4.4.1 2005/01/17 22:08:59 fang Exp $
+#	$Id: Makefile.am,v 1.4.4.2 2005/01/20 18:44:02 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -15,7 +15,7 @@ ARTOBJ_TEST_SUBJECTS = \
 
 # should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
 ARTOBJUNROLL_TEST_SUBJECTS = \
-	000
+	000 001
 
 #	001 002 003 006		# need int_instantiation_statement::unroll()
 

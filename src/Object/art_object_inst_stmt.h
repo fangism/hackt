@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.8 2005/01/16 04:47:23 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.8.4.1 2005/01/20 18:43:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -281,7 +281,7 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-#if 0
+#if 1
 	// almost ready to unveil...
 	void
 	unroll(void) const;

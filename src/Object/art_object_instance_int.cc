@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11 2005/01/16 02:44:19 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11.4.1 2005/01/20 18:43:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -69,6 +69,16 @@ int_instance_collection::make_instance_reference(void) const {
 			never_ptr<const int_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to return a legitmate reference to a parameter list!
+ */
+never_ptr<const const_param_expr_list>
+int_instance_collection::get_actual_param_list(void) const {
+	STACKTRACE("int_instance_collection::get_actual_param_list()");
+	return never_ptr<const const_param_expr_list>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,6 +205,7 @@ int_array<D>::key_dumper::operator () (
 INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	STACKTRACE("int_array<D>::instantiate_indices()");
 	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
@@ -396,6 +407,7 @@ int_array<0>::dump_unrolled_instances(ostream& o) const {
  */
 void
 int_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	STACKTRACE("int_array<0>::instantiate_indices()");
 	INVARIANT(!i);
 	if (the_instance.valid()) {
 		// should never happen, but just in case...

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.4.4.1 2005/01/20 18:43:52 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -124,6 +124,10 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<bool>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 public:
 	/**
 		Helper class for assigning values to instances.
@@ -243,6 +247,9 @@ public:
 
 	bool
 	resolve_values_into_flat_list(list<int>& l) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 protected:
 //	bool assign(const list<int>& l) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6.4.1 2005/01/20 18:43:51 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -83,6 +83,9 @@ virtual	count_ptr<const const_param>
 
 	bool
 	is_unconditional(void) const { return true; }
+
+virtual	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const = 0;
 };	// end class const_param
 
 //-----------------------------------------------------------------------------
@@ -94,12 +97,12 @@ class const_param_expr_list : public param_expr_list,
 		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 protected:
-	typedef	list<count_ptr<const const_param> >	parent;
+	typedef	list<count_ptr<const const_param> >	parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_param_expr_list();
 // lazy: use default copy constructor
@@ -154,6 +157,9 @@ private:
 	bool
 	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
+
+	excl_ptr<const_param_expr_list>
+	unroll_resolve(const unroll_context&) const;
 public:
 	PERSISTENT_METHODS
 };	// end class const_param_expr_list
@@ -287,7 +293,7 @@ public:
 class const_range_list : public range_expr_list, public list<const_range> {
 protected:
 	// no need for pointers here
-	typedef	list<const_range>	list_type;
+	typedef	list<const_range>			list_type;
 public:
 	typedef	list_type::iterator			iterator;
 	typedef	list_type::const_iterator		const_iterator;
@@ -337,6 +343,11 @@ public:
 	template <size_t D>
 	void
 	make_multikey_generator(multikey_generator<D, int>& k) const;
+
+	// is a pint_const_collection::array_type::key_type
+	multikey_generic<size_t>
+	resolve_sizes(void) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class const_range_list
@@ -345,11 +356,13 @@ public:
 /**
 	Constant integer parameters.  
 	Currently limited in width by the machine's long size.  
+	Going to need a pool allocator...
  */
 class pint_const : public pint_expr, public const_index, public const_param {
 public:
 	typedef long			value_type;
 protected:
+	// might have to remove constness for assignability
 	const value_type		val;
 public:
 	explicit
@@ -430,6 +443,9 @@ public:
 	bool
 	resolve_values_into_flat_list(list<int>& l) const;
 
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
@@ -449,11 +465,29 @@ class pint_const_collection : public pint_expr, public const_param {
 public:
 	typedef	pint_expr::value_type			value_type;
 	typedef	util::packed_array_generic<value_type>	array_type;
+	typedef	array_type::iterator			iterator;
+	typedef	array_type::const_iterator		const_iterator;
 protected:
 	array_type					values;
 public:
+	explicit
 	pint_const_collection(const size_t d);
+
+	pint_const_collection(const array_type::key_type&);
+
 	~pint_const_collection();
+
+	iterator
+	begin(void) { return values.begin(); }
+
+	const_iterator
+	begin(void) const { return values.begin(); }
+
+	iterator
+	end(void) { return values.end(); }
+
+	const_iterator
+	end(void) const { return values.end(); }
 
 	ostream&
 	what(ostream& o) const;
@@ -511,6 +545,9 @@ public:
 	// flat-list needs to be replaced
 	bool
 	resolve_values_into_flat_list(list<int>& ) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 public:
 	PERSISTENT_METHODS
@@ -590,6 +627,9 @@ public:
 	bool
 	resolve_values_into_flat_list(list<bool>& l) const;
 
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
+
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
@@ -637,14 +677,23 @@ public:
 
 	int
 	lower(void) const {
-		assert(!empty());
+		INVARIANT(!empty());
 		return first;
 	}
 
 	int
 	upper(void) const {
-		assert(!empty());
+		INVARIANT(!empty());
 		return second;
+	}
+
+	/**
+		\return The size spanned by this range.
+	 */
+	size_t
+	size(void) const {
+		INVARIANT(!empty());
+		return second -first +1;
 	}
 
 	ostream&

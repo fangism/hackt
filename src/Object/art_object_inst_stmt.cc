@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.1 2005/01/18 04:22:49 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.2 2005/01/20 18:43:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -9,7 +9,7 @@
 
 // for debugging only, before inclusion of header file
 // #define	DEBUG_LIST_VECTOR_POOL		1
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <algorithm>
@@ -741,18 +741,26 @@ data_instantiation_statement::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if 1
 // almost ready to unveil
 void
 data_instantiation_statement::unroll(void) const {
+	STACKTRACE("data_instantiation_statement::unroll()");
+	NEVER_NULL(inst_base);
 	// we need to type-check against template parameters!
 	// perhaps this should be made virtual...
-	type->unroll_resolve();
-	if (inst_base->partially_unrolled()) {
+//	type->unroll_resolve();
+#if 1
+	if (inst_base->is_partially_unrolled()) {
 		// then we must check type-consistency
+		// need a method for obtaining the parameter list
+		cerr << "Someone was here first." << endl;
 	} else {
 		// is first instance, which will determine the type
+		// set the actual parameters
+		cerr << "I'm first!" << endl;
 	}
+#endif
 	inst_base->instantiate_indices(indices);
 }
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22 2005/01/16 04:47:24 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22.4.1 2005/01/20 18:43:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -402,6 +402,34 @@ data_type_reference::get_base_def(void) const {
 never_ptr<const datatype_definition_base>
 data_type_reference::get_base_datatype_def(void) const {
 	return base_type_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	Will eventually require a context-like object.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const data_type_reference>
+data_type_reference::unroll_resolve(unroll_context& c) const {
+	STACKTRACE("data_type_reference::unroll_resolve()");
+	typedef	count_ptr<const data_type_reference>	return_type;
+	// eventually pass a context argument
+	if (template_params) {
+		excl_ptr<const_param_expr_list>
+			actuals = template_params->unroll_resolve(c);
+		if (actuals) {
+			return return_type(new data_type_reference(
+				base_type_def, actuals));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		return return_type(new data_type_reference(base_type_def));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

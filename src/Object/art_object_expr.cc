@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.1 2005/01/20 18:43:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -287,7 +287,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_param_expr_list,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
-		param_expr_list(), parent() { }
+		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() { }
@@ -315,7 +315,7 @@ const_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_param_expr_list::size(void) const {
-	return parent::size();
+	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -435,6 +435,20 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return newly allocated copy of itself, always succeeds.  
+	Eventually will add some context argument, though it is not needed
+	because this is already constant.  
+ */
+excl_ptr<const_param_expr_list>
+const_param_expr_list::unroll_resolve(const unroll_context& c) const {
+	// safe to use default copy construction because
+	// count_ptr's are copy-constructible
+	return excl_ptr<const_param_expr_list>(
+		new const_param_expr_list(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -711,6 +725,32 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return constant-resolved parameter list, 
+		else NULL if resolution failed.
+	TODO: add context argument for resolution.  
+ */
+excl_ptr<const_param_expr_list>
+dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
+	typedef	excl_ptr<const_param_expr_list>		return_type;
+	return_type ret(new const_param_expr_list);
+	NEVER_NULL(ret);
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_ptr<const param_expr> ip(*i);
+		count_ptr<const_param> pc(ip->unroll_resolve(c));
+		if (pc) {
+			ret->push_back(pc);
+		} else {
+			cerr << "ERROR in dynamic_param_expr_list::unroll_resolve()" << endl;
+			return return_type(NULL);
+		}
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1462,6 +1502,8 @@ pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
 
 	Really this should be independent of type?
 	Except for checking implicit indices...
+
+	TODO: add unroll_context argument
  */
 const_index_list
 pint_instance_reference::resolve_dimensions(void) const {
@@ -1486,6 +1528,87 @@ pint_instance_reference::resolve_dimensions(void) const {
 		// Elsewhere (during assign) check for initialization.  
 	}
 	else return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: pass context to call to resolve_dimensions.
+ */
+count_ptr<const_param>
+pint_instance_reference::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	if (pint_inst_ref->dimensions) {
+		// dimension resolution should depend on current 
+		// state of instance collection, not static analysis
+		// from compile phase.
+		const const_index_list rdim(resolve_dimensions(/*c*/));
+		if (rdim.empty())
+			return return_type(NULL);
+		// else we have fully specified dimensions
+
+		const const_range_list crl(rdim.collapsed_dimension_ranges());
+		INVARIANT(!crl.empty());
+		// pint_const_collection::array_type::key_type
+		// is a multikey_generic<size_t>
+		const count_ptr<pint_const_collection>
+			ret(new pint_const_collection(crl.resolve_sizes()));
+			// no index offset
+		NEVER_NULL(ret);
+
+#if 0
+		const excl_ptr<multikey_generator_base<int> >
+			key_gen(multikey_generator_base<int>::make_multikey_generator(rdim.size()));
+#else
+		const excl_ptr<multikey_generator_generic<int> >
+			key_gen(new multikey_generator_generic<int>(rdim.size()));
+#endif
+		NEVER_NULL(key_gen);
+		// automatic and temporarily allocated
+		key_gen->get_lower_corner() = *rdim.lower_multikey();
+		key_gen->get_upper_corner() = *rdim.upper_multikey();
+		key_gen->initialize();
+		bool lookup_err = false;
+		pint_const_collection::iterator coll_iter(ret->begin());
+		multikey_generator_base<int>& key_gen_ref(*key_gen);
+		do {
+			// populate the collection with values
+			// lookup_value returns true on success, false on error
+			if (!pint_inst_ref->lookup_value(
+					*coll_iter, key_gen_ref)) {
+				cerr << "ERROR: looking up index " <<
+					key_gen_ref << 
+					" of pint collection " <<
+					pint_inst_ref->get_qualified_name() <<
+					"." << endl;
+				lookup_err = true;
+			}
+			coll_iter++;			// unsafe, but checked
+			key_gen_ref++;
+		} while (key_gen_ref != key_gen_ref.get_upper_corner());
+		INVARIANT(coll_iter == ret->end());	// sanity check
+		if (lookup_err) {
+			// discard incomplete results
+			cerr << "ERROR: in unroll_resolve-ing "
+				"pint_instance_reference." << endl;
+			return return_type(NULL);
+		} else {
+			return return_type(ret);
+		}
+	} else {
+		// is 0-dimensional, scalar
+		int _int;
+		const never_ptr<pint_scalar>
+			ps(pint_inst_ref.is_a<pint_scalar>());
+		INVARIANT(ps);
+		const bool valid(ps->lookup_value(_int));
+		if (!valid) {
+			cerr << "ERROR: in unroll_resolve-ing "
+				"pint_instance_reference, "
+				"uninitialized value." << endl;
+			return return_type(NULL);
+		} else
+			return return_type(new pint_const(_int));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1792,6 +1915,12 @@ pint_const::make_param_expression_assignment_private(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const_param>
+pint_const::unroll_resolve(const unroll_context& c) const {
+	return count_ptr<const_param>(new pint_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does nothing, no pointers to visit.  
  */
@@ -1988,6 +2117,12 @@ pint_const_collection::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const_param>
+pint_const_collection::unroll_resolve(const unroll_context& c) const {
+	return count_ptr<const_param>(new pint_const_collection(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does nothing because there are no pointers to collect and visit.  
  */
@@ -2086,6 +2221,12 @@ bool
 pbool_const::resolve_values_into_flat_list(list<bool>& l) const {
 	l.push_back(val);
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const_param>
+pbool_const::unroll_resolve(const unroll_context& c) const {
+	return count_ptr<const_param>(new pbool_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2228,6 +2369,30 @@ pint_unary_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The only unary pint operation is negation.  
+ */
+count_ptr<const_param>
+pint_unary_expr::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	const return_type ret(ex->unroll_resolve(c));
+	if (ret) {
+		count_ptr<pint_const> pc(ret.is_a<pint_const>());
+		INVARIANT(pc);
+		// would like to just modify pc, but pint_const's 
+		// value_type is const :( consider un-const-ing it...
+		return return_type(
+			new pint_const(- pc->static_constant_int()));
+	} else {
+		// there is an error
+		// discard intermediate result
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2356,6 +2521,30 @@ pbool_unary_expr::resolve_values_into_flat_list(list<bool>& l) const {
 	const bool ret = resolve_value(b);
 	l.push_back(b);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The only unary pbool operation is logical negation.  
+ */
+count_ptr<const_param>
+pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	const return_type ret(ex->unroll_resolve(c));
+	if (ret) {
+		count_ptr<pbool_const> pc(ret.is_a<pbool_const>());
+		INVARIANT(pc);
+		// would like to just modify pc, but pint_const's 
+		// value_type is const :( consider un-const-ing it...
+		return return_type(
+			new pbool_const(!pc->static_constant_bool()));
+	} else {
+		// there is an error
+		// discard intermediate result
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2589,6 +2778,34 @@ arith_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pint_const of the resolved value.
+ */
+count_ptr<const_param>
+arith_expr::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	const return_type lex(lx->unroll_resolve(c));
+	const return_type rex(rx->unroll_resolve(c));
+	if (lex && rex) {
+		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
+		const count_ptr<pint_const> rpc(rex.is_a<pint_const>());
+		INVARIANT(lpc);
+		INVARIANT(rpc);
+		// would like to just modify pc, but pint_const's 
+		// value_type is const :( consider un-const-ing it...
+		return return_type(new pint_const(
+			(*op)(lpc->static_constant_int(), 
+				rpc->static_constant_int())));
+	} else {
+		// there is an error in at least one sub-expression
+		// discard intermediate result
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 arith_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2789,6 +3006,34 @@ relational_expr::resolve_values_into_flat_list(list<bool>& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pbool_const of the resolved value.
+ */
+count_ptr<const_param>
+relational_expr::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	const return_type lex(lx->unroll_resolve(c));
+	const return_type rex(rx->unroll_resolve(c));
+	if (lex && rex) {
+		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
+		const count_ptr<pint_const> rpc(rex.is_a<pint_const>());
+		INVARIANT(lpc);
+		INVARIANT(rpc);
+		// would like to just modify pc, but pint_const's 
+		// value_type is const :( consider un-const-ing it...
+		return return_type(new pbool_const(
+			(*op)(lpc->static_constant_int(), 
+				rpc->static_constant_int())));
+	} else {
+		// there is an error in at least one sub-expression
+		// discard intermediate result
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2980,6 +3225,34 @@ logical_expr::resolve_values_into_flat_list(list<bool>& l) const {
 	const bool ret = resolve_value(b);
 	l.push_back(b);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pbool_const of the resolved value.
+ */
+count_ptr<const_param>
+logical_expr::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	const return_type lex(lx->unroll_resolve(c));
+	const return_type rex(rx->unroll_resolve(c));
+	if (lex && rex) {
+		const count_ptr<pbool_const> lpc(lex.is_a<pbool_const>());
+		const count_ptr<pbool_const> rpc(rex.is_a<pbool_const>());
+		INVARIANT(lpc);
+		INVARIANT(rpc);
+		// would like to just modify pc, but pint_const's 
+		// value_type is const :( consider un-const-ing it...
+		return return_type(new pbool_const(
+			(*op)(lpc->static_constant_bool(), 
+				rpc->static_constant_bool())));
+	} else {
+		// there is an error in at least one sub-expression
+		// discard intermediate result
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3767,6 +4040,26 @@ INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(2)
 INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(3)
 INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 
+#undef	INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the sizes of the ranges spanned.  
+	Return type should be pint_const_collection::array_type::key_type
+ */
+multikey_generic<size_t>
+const_range_list::resolve_sizes(void) const {
+	typedef	multikey_generic<size_t>	return_type;
+	return_type ret(size());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		ret[j] = i->size();
+	}
+	return ret;
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
@@ -4060,7 +4353,8 @@ string
 const_index_list::hash_string(void) const {
 	string ret;
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		const bool b = (i->is_a<const pint_expr>());
 		if (b) ret += '[';
@@ -4088,7 +4382,8 @@ size_t
 const_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
 		if (i->is_a<const pint_const>())
 			ret++;
 		else INVARIANT(i->is_a<const const_range>());
@@ -4098,11 +4393,18 @@ const_index_list::dimensions_collapsed(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return list of ranges without the collapsed dimensions.  
+		No error is possible, since indices are resolved as constants.  
+
+	Useful for finding actual dimensions and sizes of the reference.  
+ */
 const_range_list
 const_index_list::collapsed_dimension_ranges(void) const {
 	const_range_list ret;
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
 		const count_ptr<const const_range>
 			cr(i->is_a<const const_range>());
 		if (cr)
@@ -4115,7 +4417,7 @@ const_index_list::collapsed_dimension_ranges(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Wrapper to list paren'ts push_back that checks that
+	Wrapper to list parent's push_back that checks that
 	expression is a 0-dimensional pint_inst reference.  
  */
 void

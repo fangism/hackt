@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.4 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr_base.h,v 1.4.4.1 2005/01/20 18:43:51 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -89,6 +89,10 @@ virtual bool
 	virtual multikey_qmap<D,size_t,pbool_instance>
 			evaluate(void) const;
 #endif
+
+virtual	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const = 0;
+
 private:
 virtual	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
@@ -141,6 +145,10 @@ virtual	bool
 
 virtual	bool
 	is_loop_independent(void) const = 0;
+
+// TODO: add a context argument for unroll-time resolution
+virtual	excl_ptr<const_param_expr_list>
+	unroll_resolve(const unroll_context&) const = 0;
 
 };	// end class param_expr_list
 

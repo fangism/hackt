@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38.4.1 2005/01/18 04:22:49 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.38.4.2 2005/01/20 18:43:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -577,6 +577,18 @@ datatype_instance_collection::make_member_instance_reference(
 			never_ptr<const datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default action for request for resolved param list.  
+	This is appropriate for collection types that have no 
+	template parameters.  
+	\return null list of parameters.  
+ */
+never_ptr<const const_param_expr_list>
+datatype_instance_collection::get_actual_param_list(void) const {
+	return never_ptr<const const_param_expr_list>(NULL);
 }
 
 //=============================================================================
