@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.5.4.1 2005/01/17 22:08:55 fang Exp $
+#	$Id: Make.test,v 1.5.4.2 2005/01/20 15:42:55 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -72,6 +72,8 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 	$(ARTOBJ_TEST_SUBJECTS:=.objdiff) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr.filter) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
 
 # is this really needed?
@@ -79,13 +81,14 @@ CLEANFILES += $(TESTS) subdir.not_a_test \
 
 all-local: .cvsignore subdir.not_a_test $(TESTS)
 
+# might as well include this for non-maintainers too
 .cvsignore: $(top_srcdir)/test/test.cvsignore
 	$(LN_S) $< $@
 
 # automatically removes $(CLEANFILES)
 clean-local:
 	-$(RM) *.core core.*
-	-$(RM) *.filter *.diff
+#	-$(RM) *.filter *.diff
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
