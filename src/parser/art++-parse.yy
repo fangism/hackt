@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.6 2004/11/30 01:25:14 fang Exp $
+	$Id: art++-parse.yy,v 1.7 2004/12/06 07:11:42 fang Exp $
  */
 
 %{
@@ -239,7 +239,7 @@ extern const char* const yyrule[];
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
-	index_expr*		_index_expr;
+	ART::parser::index_expr*	_index_expr;
 	member_expr*		_member_expr;
 /*** not needed
 	prefix_expr*		_prefix_expr;
