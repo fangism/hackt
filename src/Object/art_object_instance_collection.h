@@ -1,0 +1,338 @@
+/**
+	\file "art_object_instance_collection.h"
+	Class declarations for scalar instances and instance collections.  
+	$Id: art_object_instance_collection.h,v 1.1.2.1 2005/02/23 21:12:37 fang Exp $
+ */
+
+#ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
+#define	__ART_OBJECT_INSTANCE_COLLECTION_H__
+
+// #include "art_object_instance.h"
+#include "memory/pointer_classes.h"
+
+#include <set>
+#include "multikey_set.h"
+// #include "ring_node.h"
+#include "packed_array_fwd.h"
+
+
+namespace ART {
+namespace entity {
+USING_LIST
+using std::set;
+using std::string;
+using namespace util::memory;
+using util::ring_node_derived;
+using util::multikey_set;
+using util::multikey_set_element_derived;
+using util::packed_array_generic;
+
+//=============================================================================
+// class datatype_instance_collection declared in "art_object_instance.h"
+
+//-----------------------------------------------------------------------------
+#define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
+template <class Tag>
+
+#define	INSTANCE_COLLECTION_CLASS					\
+instance_collection<Tag>
+
+/**
+	Interface to collection of data-int instance aliases.  
+	TODO: need to add a width parameter, or at least reference
+		the fully-specified type.
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+class instance_collection :
+	public class_traits<Tag>::instance_collection_parent_type {
+private:
+	typedef	Tag					category_type;
+	typedef	typename class_traits<Tag>::instance_collection_parent_type
+							parent_type;
+	typedef	INSTANCE_COLLECTION_CLASS		this_type;
+public:
+	typedef	typename class_traits<Tag>::type_ref_type
+							type_ref_type;
+	typedef	typename class_traits<Tag>::type_ref_ptr_type
+							type_ref_ptr_type;
+	typedef	typename class_traits<Tag>::instance_alias_type
+							instance_alias_type;
+	typedef	never_ptr<instance_alias_type>		instance_alias_ptr_type;
+	typedef	typename class_traits<Tag>::alias_collection_type
+							alias_collection_type;
+	typedef	typename class_traits<Tag>::instance_parameter_type
+							instance_parameter_type;
+	typedef	typename class_traits<Tag>::instance_reference_type
+							instance_reference_type;
+	typedef	typename class_traits<Tag>::member_instance_reference_type
+						member_instance_reference_type;
+//	typedef	instance_reference_base		instance_reference_base_type;
+// public:
+protected:
+	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	typename parent_type::member_inst_ref_ptr_type
+							member_inst_ref_ptr_type;
+private:
+	/**
+		General parameter object for type checking.  
+	 */
+	instance_parameter_type				type_parameter;
+protected:
+	explicit
+	instance_collection(const size_t d) :
+		parent_type(d), type_parameter() { }
+public:
+	instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
+
+virtual	~instance_collection();
+
+#if 0
+	size_t
+	width(void) const { return type_parameter; }
+#endif
+
+virtual	ostream&
+	what(ostream&) const = 0;
+
+	ostream&
+	type_dump(ostream&) const;
+
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
+#if 0
+	// this could just return hard-coded built-in type...
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+#endif
+
+	bool
+	commit_type(const type_ref_ptr_type& );
+
+	count_ptr<instance_reference_base>
+	make_instance_reference(void) const;
+
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type&) const;
+
+virtual	void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+	never_ptr<const const_param_expr_list>
+	get_actual_param_list(void) const;
+
+virtual instance_alias_ptr_type
+	lookup_instance(const multikey_index_type& i) const = 0;
+
+virtual	bool
+	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+		const const_range_list& r) const = 0;
+
+virtual	const_index_list
+	resolve_indices(const const_index_list& l) const = 0;
+
+#if 0
+virtual int
+	connect(const multikey_index_type& k, const instance_alias& b) = 0;
+#endif
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const = 0;
+
+public:
+
+	static
+	this_type*
+	make_array(const scopespace& o, const string& n, const size_t d);
+
+	static
+	persistent*
+	construct_empty(const int);
+
+protected:
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end class instance_collection
+
+//-----------------------------------------------------------------------------
+#define	INSTANCE_ARRAY_TEMPLATE_SIGNATURE				\
+template <class Tag, size_t D>
+
+#define	INSTANCE_SCALAR_TEMPLATE_SIGNATURE				\
+template <class Tag>
+
+
+#define	INSTANCE_ARRAY_CLASS						\
+instance_array<Tag,D>
+
+#define	INSTANCE_SCALAR_CLASS						\
+instance_array<Tag,0>
+
+/**
+	Multidimensional collection of int instance aliases.  
+	\param D the number of dimensions (max. 4).  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class instance_array :
+	public typename class_traits<Tag>::instance_collection_type {
+friend class instance_collection;
+	typedef	instance_array<Tag,D>			this_type;
+	typedef	typename class_traits<Tag>::instance_collection_type
+							parent_type;
+public:
+	typedef	typename parent_type::instance_alias_ptr_type
+							instance_alias_ptr_type;
+	typedef	typename parent_type::alias_collection_type
+							alias_collection_type;
+	typedef	instance_alias<Tag,D>			element_type;
+	/**
+		This is the data structure used to implement the collection.  
+	 */
+	typedef	multikey_set<D, element_type>		collection_type;
+	typedef	typename element_type::key_type		key_type;
+	typedef	typename collection_type::value_type	value_type;
+private:
+	typedef	typename util::multikey<D, pint_value_type>::generator_type
+							key_generator_type;
+	typedef	element_type&				reference;
+	typedef	typename collection_type::iterator	iterator;
+	typedef	typename collection_type::const_iterator
+							const_iterator;
+private:
+	collection_type					collection;
+private:
+	instance_array();
+public:
+	instance_array(const scopespace& o, const string& n);
+	~instance_array();
+
+	ostream&
+	what(ostream& o) const;
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_instances(ostream& o) const;
+
+	void
+	instantiate_indices(const index_collection_item_ptr_type& i);
+
+	const_index_list
+	resolve_indices(const const_index_list& l) const;
+
+	instance_alias_ptr_type
+	lookup_instance(const multikey_index_type& l) const;
+
+	// is this used? or can it be replaced by unroll_aliases?
+	bool
+	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+		const const_range_list& r) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
+
+	class element_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		element_writer(const persistent_object_manager& m, ostream& o)
+			: os(o), pom(m) { }
+
+		void
+		operator () (const element_type& ) const;
+	};      // end struct element_writer
+
+	class connection_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		connection_writer(const persistent_object_manager& m,
+			ostream& o) : os(o), pom(m) { }
+
+		void
+		operator () (const element_type& ) const;
+	};      // end struct connection_writer
+
+
+	struct key_dumper {
+		ostream& os;
+
+		key_dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const value_type& );
+	};	// end struct key_dumper
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+};	// end class instance_array
+
+//-----------------------------------------------------------------------------
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+class instance_array<Tag,0> :
+		public typename class_traits<Tag>::instance_collection_type {
+friend class instance_collection<Tag>;
+	typedef	typename class_traits<Tag>::instance_collection_type
+							parent_type;
+	typedef	instance_array<Tag,0>			this_type;
+public:
+	typedef	typename parent_type::instance_alias_ptr_type
+							instance_alias_ptr_type;
+	typedef	typename parent_type::alias_collection_type
+							alias_collection_type;
+	typedef	instance_alias<Tag,0>			instance_type;
+private:
+	instance_type					the_instance;
+
+private:
+	instance_array();
+
+public:
+	instance_array(const scopespace& o, const string& n);
+
+	~instance_array();
+
+	ostream&
+	what(ostream&) const;
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_instances(ostream& o) const;
+
+	void
+	instantiate_indices(const index_collection_item_ptr_type& i);
+
+	instance_alias_ptr_type
+	lookup_instance(const multikey_index_type& l) const;
+
+	bool
+	lookup_instance_collection(list<instance_alias_ptr_type>& l, 
+		const const_range_list& r) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
+
+	const_index_list
+	resolve_indices(const const_index_list& l) const;
+
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+};	// end class array (specialized)
+
+//=============================================================================
+}	// end namespace entity
+}	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_COLLECTION_H__
+

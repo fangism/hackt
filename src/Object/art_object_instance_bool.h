@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5 2005/02/22 05:05:46 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.6 2005/02/23 21:12:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -11,6 +11,7 @@
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool_fwd.h"
+#include "art_object_classification_details.h"
 
 #include <set>
 #include "multikey_set.h"
@@ -156,6 +157,7 @@ public:
 };	// end class bool_instance_alias_info
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Trying typedef of the alias_base class.  
 	Remember that this contains a pointer to the next alias!
@@ -164,6 +166,7 @@ public:
  */
 typedef	ring_node_derived<bool_instance_alias_info>
 						bool_instance_alias_base;
+#endif
 
 ostream&
 operator << (ostream&, const bool_instance_alias_base&);

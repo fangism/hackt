@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-01:
+	  New branch for the purpose of making the instance_collection
+	  class framework consistent.  
+	  This revision introduces classification tag which control the 
+	  infrastructure of template class patterns with a set of
+	  traits-class specializations.  
+	  So far, we applied this to member_instance_references as a 
+	  test case, and everything is hunky-dory.  
+
+
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.4 2005/02/20 20:59:18 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.5 2005/02/23 21:12:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -11,6 +11,7 @@
 
 #include "memory/pointer_classes_fwd.h"
 #include "STL/deque_fwd.h"
+#include "art_object_classification_tags.h"
 
 namespace ART {
 namespace entity {
@@ -18,6 +19,9 @@ namespace entity {
 	using namespace util::memory;
 
 // TODO: organize into groups by where full declarations are found
+
+	template <class>
+	struct class_traits;
 
 	class module;
 	class object;
@@ -87,6 +91,7 @@ namespace entity {
 	template <class>
 	class member_instance_reference;
 
+#if 0
 	typedef	member_instance_reference<process_instance_reference>
 		process_member_instance_reference;
 	typedef	member_instance_reference<channel_instance_reference>
@@ -99,6 +104,20 @@ namespace entity {
 		enum_member_instance_reference;
 	typedef	member_instance_reference<datastruct_instance_reference>
 		datastruct_member_instance_reference;
+#else
+	typedef	member_instance_reference<process_tag>
+		process_member_instance_reference;
+	typedef	member_instance_reference<channel_tag>
+		channel_member_instance_reference;
+	typedef	member_instance_reference<bool_tag>
+		bool_member_instance_reference;
+	typedef	member_instance_reference<int_tag>
+		int_member_instance_reference;
+	typedef	member_instance_reference<enum_tag>
+		enum_member_instance_reference;
+	typedef	member_instance_reference<datastruct_tag>
+		datastruct_member_instance_reference;
+#endif
 
 	class param_type_reference;
 	class pbool_type_reference;
@@ -114,6 +133,8 @@ namespace entity {
 	class bool_instance;
 	class enum_instance;
 	class struct_instance;
+	class channel_instance;
+	class process_instance;
 
 	template <size_t>	class int_instance_alias;
 	template <size_t>	class bool_instance_alias;

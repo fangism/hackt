@@ -1,7 +1,7 @@
 /**
 	\file "art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.2 2005/02/21 19:48:10 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.1.6.3 2005/02/23 21:12:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -10,7 +10,7 @@
 #include <iostream>
 #include "what.h"
 #include "persistent_object_manager.h"
-#include "art_object_inst_ref_base.h"
+#include "art_object_member_inst_ref.h"
 
 //=============================================================================
 namespace ART {
@@ -36,7 +36,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::member_instance_reference() :
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 MEMBER_INSTANCE_REFERENCE_CLASS::member_instance_reference(
 		const base_inst_ptr_type& b, 
-		const never_ptr<const instance_collection_type> m) :
+		const instance_collection_ptr_type m) :
 		parent_type(m), base_inst_ref(b) {
 }
 

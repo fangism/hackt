@@ -1,11 +1,13 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.4 2005/02/21 19:48:08 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.5 2005/02/23 21:12:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
 #define	__ART_OBJECT_INST_REF_BASE_H__
+
+#define	USE_CLASSIFICATION_TAGS			1
 
 #include "art_object_base.h"
 #include "persistent.h"
@@ -293,11 +295,22 @@ private:
 };	// end class simple_instance_reference
 
 //=============================================================================
+#if 0
+#if USE_CLASSIFICATION_TAGS
+#define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
+template <class Tag>
+
+#define	MEMBER_INSTANCE_REFERENCE_CLASS					\
+member_instance_reference<Tag>
+
+#else
 #define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
 template <class InstRef>
 
 #define	MEMBER_INSTANCE_REFERENCE_CLASS					\
 member_instance_reference<InstRef>
+
+#endif
 
 /**
 	Re-usable type-specific member_instance_reference class template.  
@@ -306,21 +319,38 @@ member_instance_reference<InstRef>
 	\param InstRef must be a type derived from simple_instance_reference.
 	Consider moving this class definition to "art_object_inst_ref.h"?
  */
-template <class InstRef>
-class member_instance_reference : public InstRef {
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+#if USE_CLASSIFICATION_TAGS
+class member_instance_reference :
+	public class_traits<Tag>::instance_reference_type
+#else
+class member_instance_reference : public InstRef
+#endif
+{
 private:
-	typedef	member_instance_reference<InstRef>	this_type;
+	typedef	MEMBER_INSTANCE_REFERENCE_CLASS		this_type;
 public:
 	/// the underlying type of the member instance referenced
+#if USE_CLASSIFICATION_TAGS
+	typedef	typename class_traits<Tag>::instance_reference_type
+							parent_type;
+	typedef	typename class_traits<Tag>::instance_collection_type
+						instance_collection_type;
+	typedef	typename class_traits<Tag>::alias_collection_type
+						alias_collection_type;
+#else
 	typedef	InstRef					parent_type;
-	/// the containing type, whose member is referenced
-	typedef	instance_reference_base			base_inst_type;
 	/// the instance alias collection type
 	typedef	typename parent_type::instance_collection_type
 						instance_collection_type;
 	/// the type used to unroll collections of instance aliases
 	typedef	typename parent_type::alias_collection_type
 						alias_collection_type;
+#endif
+	typedef	never_ptr<const instance_collection_type>
+						instance_collection_ptr_type;
+	/// the containing type, whose member is referenced
+	typedef	instance_reference_base			base_inst_type;
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
@@ -335,7 +365,7 @@ private:
 	member_instance_reference();
 public:
 	member_instance_reference(const base_inst_ptr_type& b, 
-		const never_ptr<const instance_collection_type> m);
+		const instance_collection_ptr_type m);
 
 	~member_instance_reference();
 
@@ -353,6 +383,7 @@ public:
 	// final, non-virtual
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class member_instance_reference
+#endif
 
 //=============================================================================
 /**
