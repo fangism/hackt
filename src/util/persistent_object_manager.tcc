@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.1.2.2 2005/02/02 07:59:50 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.1.2.3 2005/02/02 15:15:52 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -339,75 +339,6 @@ persistent_object_manager::get_root(void) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-        Loads hierarchical object collection from file.
-	\returns a dynamically cast owned pointer to the root object.
- */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::load_object_from_file(const string& s) {
-	ifstream f(s.c_str(), ios_base::binary);
-	persistent_object_manager pom;
-	// don't initialize_null, will be loaded in from table
-	pom.load_header(f);
-	pom.finish_load(f);
-	f.close();				// done with file
-	pom.reconstruct();			// allocate-only pass
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-	// Oh no, partially initialized objects!
-	pom.load_objects();
-	return pom.get_root<T>();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Write the reconstruction table, and loads it back, without
-	going through an intermediate file.
-	Should essentially make a deep copy of the hierarchical object
-	rooted at the global namespace.
- */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::self_test_no_file(const T& m) {
-	STACKTRACE("pom::self_test_no_file()");
-	persistent_object_manager pom;
-	pom.initialize_null();			// reserved 0th entry
-	m.collect_transient_info(pom);		// recursive visitor
-	pom.collect_objects();			// buffers output in segments
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// for debugging
-
-	// need to set start of objects? no
-	// pretend we wrote it out and read it back in...
-	pom.reset_for_loading();
-	pom.reconstruct();			// allocate-only pass
-
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-
-	pom.load_objects();
-	// must acquire root object in some owned pointer!
-	return pom.get_root<T>();		// only this is templated
-	// will get de-allocated after return statement is evaluated
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes out and reads back in, through an intermediate file.
- */
-template <class T>
-excl_ptr<T>
-persistent_object_manager::self_test(const string& s, const T& m) {
-	save_object_to_file(s, m);
-	return load_object_from_file<T>(s);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param P is generic pointer to a persistent type.  
  */
@@ -453,8 +384,8 @@ persistent_traits<T>::null = static_cast<T*>(NULL);
 
 template <class T>
 persistent_traits<T>::persistent_traits(const string& s) {
-	assert(!type_id);
-	assert(type_key == persistent::hash_key::null);
+	INVARIANT(!type_id);
+	INVARIANT(type_key == persistent::hash_key::null);
 	type_key = s;
 	type_id = persistent_object_manager::register_persistent_type<T>();
 }

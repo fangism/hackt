@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14.6.1 2005/02/02 07:59:39 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.14.6.2 2005/02/02 15:15:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -284,27 +284,16 @@ pbool_expression_assignment::construct_empty(const int i) {
 void
 pbool_expression_assignment::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_expression_assignment::load_object(
 		const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -466,27 +455,16 @@ pint_expression_assignment::construct_empty(const int i) {
 void
 pint_expression_assignment::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_expression_assignment::load_object(
 		const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================

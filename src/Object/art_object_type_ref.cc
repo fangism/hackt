@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.6.1 2005/02/02 07:59:48 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.6.2 2005/02/02 15:15:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -519,11 +519,8 @@ void
 data_type_reference::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	STACKTRACE("data_type_ref::write_object()");
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -533,13 +530,9 @@ data_type_reference::write_object(const persistent_object_manager& m,
 void
 data_type_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-// if (!m.flag_visit(this)) {
 	STACKTRACE("data_type_ref::load_object()");
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);			// sanity check
 
 	// MINOR HACK: recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
@@ -552,8 +545,6 @@ data_type_reference::load_object(const persistent_object_manager& m,
 			never_ptr<const datatype_definition_base>(&int_def);
 	// else leave the base definition as is
 	// reference count will take care of discarded memory :)
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -655,25 +646,16 @@ channel_type_reference::construct_empty(const int i) {
 void
 channel_type_reference::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_chan_def);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_type_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_chan_def);
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);			// sanity check
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -774,25 +756,16 @@ process_type_reference::construct_empty(const int i) {
 void
 process_type_reference::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_proc_def);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_type_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_proc_def);
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);			// sanity check
-// }
-// else already visited
 }
 
 //=============================================================================

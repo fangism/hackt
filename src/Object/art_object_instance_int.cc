@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.6.1 2005/02/02 07:59:46 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.6.2 2005/02/02 15:15:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -395,26 +395,16 @@ INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	parent_type::write_object_base(m, f);
 	collection.write(f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::load_object(const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	parent_type::load_object_base(m, f);
 	collection.read(f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
 }
 
 //=============================================================================
@@ -519,25 +509,15 @@ int_array<0>::lookup_instance_collection(
 void
 int_array<0>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	parent_type::write_object_base(m, f);
 	write_value(f, the_instance);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_array<0>::load_object(const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	parent_type::load_object_base(m, f);
 	read_value(f, the_instance);
-//	STRIP_OBJECT_FOOTER(f);
-// }
 }
 
 //=============================================================================

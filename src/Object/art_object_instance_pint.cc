@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.1.2.1 2005/02/02 07:59:46 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.1.2.2 2005/02/02 15:15:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -559,28 +559,18 @@ PINT_ARRAY_TEMPLATE_SIGNATURE
 void
 pint_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance map
 	collection.write(f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 void
 pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance map
 	collection.read(f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
 }
 
 //-----------------------------------------------------------------------------
@@ -735,28 +725,18 @@ void
 pint_array<0>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	STACKTRACE("pint_scalar::write_object()");
-//	ostream& f = m.lookup_write_buffer(this);
-//	INVARIANT(f.good());
-//	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_array<0>::load_object(const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
 	STACKTRACE("pint_scalar::load_object()");
-//	istream& f = m.lookup_read_buffer(this);
-//	INVARIANT(f.good());
-//	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
-//	STRIP_OBJECT_FOOTER(f);
-// }
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.6.1 2005/02/02 07:59:43 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.6.2 2005/02/02 15:15:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -1105,10 +1105,7 @@ process_instance_reference::write_object_base(
 void
 process_instance_reference::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);
 	this->write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1139,13 +1136,7 @@ process_instance_reference::load_object_base(
 void
 process_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);
 	this->load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -1303,10 +1294,7 @@ channel_instance_reference::write_object_base(
 void
 channel_instance_reference::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);
 	this->write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1336,13 +1324,7 @@ channel_instance_reference::load_object_base(
 void
 channel_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);
 	this->load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -1416,12 +1398,9 @@ process_member_instance_reference::construct_empty(const int i) {
 void
 process_member_instance_reference::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);
 	interface_type::write_object_base(m, f);
 	m.write_pointer(f, process_inst_ref);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1436,18 +1415,12 @@ process_member_instance_reference::write_object(
 void
 process_member_instance_reference::load_object(
 		const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, process_inst_ref);
 	NEVER_NULL(process_inst_ref);
 	m.load_object(const_cast<process_instance_collection*>(
 		&*process_inst_ref));
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -1529,12 +1502,9 @@ datatype_member_instance_reference::construct_empty(const int i) {
 void
 datatype_member_instance_reference::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);
 	interface_type::write_object_base(m, f);
 	m.write_pointer(f, data_inst_ref);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1549,18 +1519,12 @@ datatype_member_instance_reference::write_object(
 void
 datatype_member_instance_reference::load_object(
 		const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, data_inst_ref);
 	NEVER_NULL(data_inst_ref);
 	m.load_object(const_cast<datatype_instance_collection*>(
 		&*data_inst_ref));
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
@@ -1634,12 +1598,9 @@ channel_member_instance_reference::construct_empty(const int i) {
 void
 channel_member_instance_reference::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-//	ostream& f = m.lookup_write_buffer(this);
-//	WRITE_POINTER_INDEX(f, m);
 	interface_type::write_object_base(m, f);
 	m.write_pointer(f, channel_inst_ref);
 	parent_type::write_object_base(m, f);
-//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1654,18 +1615,12 @@ channel_member_instance_reference::write_object(
 void
 channel_member_instance_reference::load_object(
 		const persistent_object_manager& m, istream& f) {
-// if (!m.flag_visit(this)) {
-//	istream& f = m.lookup_read_buffer(this);
-//	STRIP_POINTER_INDEX(f, m);
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, channel_inst_ref);
 	NEVER_NULL(channel_inst_ref);
 	m.load_object(const_cast<channel_instance_collection*>(
 		&*channel_inst_ref));
 	parent_type::load_object_base(m, f);
-//	STRIP_OBJECT_FOOTER(f);
-// }
-// else already visited
 }
 
 //=============================================================================
