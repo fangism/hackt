@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.4 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.4.4.1 2005/01/17 22:08:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -39,6 +39,17 @@ virtual	~type_reference_base() { }
 	This level of indirection...
 	Sub-classes thereof should contain const pointers to 
 	definitions of the specific classes.  
+
+	This object is a pre-unroll type-reference, which corresponds to
+	an appearance of a type reference in the source code.  
+	We need a separate unroll-time type-reference, one that is actually
+	created from unrolling.  
+	These template parameters contained herein merely contain expressions.  
+	The final unrolled template parameters must be resolved constants.  
+	We only need actual type references for non-primary (not built-in)
+	types.  
+	Perhaps the unrolled actuals should be contained in the
+	instance_collection family of classes...
  */
 class fundamental_type_reference : public type_reference_base {
 protected:

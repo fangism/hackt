@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.13 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_module.cc,v 1.13.4.1 2005/01/17 22:08:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -55,7 +55,7 @@ module::get_global_namespace(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-module::set_global_namespace(excl_ptr<name_space> n) {
+module::set_global_namespace(excl_ptr<name_space>& n) {
 	// automatically memory-managed
 	global_namespace = n;
 }
@@ -69,8 +69,13 @@ module::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 module::dump(ostream& o) const {
-	o << "In module created from: " << name << endl;
+	o << "In module created from: " << name;
+	if (unrolled)
+		o << " (unrolled)";
+	o << endl;
+
 	global_namespace->dump(o) << endl;
+
 	o << "Sequential instance management: " << endl;
 	return sequential_scope::dump(o);
 }

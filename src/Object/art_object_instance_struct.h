@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.8 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.8.4.1 2005/01/17 22:08:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -15,14 +15,10 @@
 #include "multikey_qmap_fwd.h"
 
 namespace ART {
-namespace parser {
-class token_identifier;
-}
 
 namespace entity {
 USING_LIST
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
 using MULTIKEY_NAMESPACE::multikey_base;
@@ -123,6 +119,7 @@ private:
 public:
 	typedef	never_ptr<struct_instance_alias>	instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
+	// typedef	param_type			vector<...>
 protected:
 	explicit
 	struct_instance_collection(const size_t d) : parent_type(d) { }

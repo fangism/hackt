@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.8 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_int.h,v 1.8.4.1 2005/01/17 22:08:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -124,12 +124,13 @@ private:
 public:
 	typedef	never_ptr<int_instance_alias>		instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
+	typedef	size_t					param_type;
 private:
 	/**
 		The bit-width of the integers in this collection.  
 		Per collection, this is set once at unroll-time.
 	 */
-	size_t					int_width;
+	param_type					int_width;
 protected:
 	explicit
 	int_instance_collection(const size_t d) :

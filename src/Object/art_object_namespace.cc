@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11 2005/01/15 06:17:00 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.1 2005/01/17 22:08:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -634,11 +634,11 @@ scopespace::const_bin_sort::operator () (
 
 void
 scopespace::const_bin_sort::stats(ostream& o) const {
-	o << param_bin.size() << " parameter-collections" << endl;
-	o << inst_bin.size() << " instantiation-collections" << endl;
-	o << ns_bin.size() << " sub-namespaces" << endl;
-	o << def_bin.size() << " definitions" << endl;
-	o << alias_bin.size() << " typedefs" << endl;
+	o << auto_indent << param_bin.size() << " parameter-collections" << endl;
+	o << auto_indent << inst_bin.size() << " instantiation-collections" << endl;
+	o << auto_indent << ns_bin.size() << " sub-namespaces" << endl;
+	o << auto_indent << def_bin.size() << " definitions" << endl;
+	o << auto_indent << alias_bin.size() << " typedefs" << endl;
 }
 
 //=============================================================================
@@ -765,6 +765,8 @@ name_space::dump(ostream& o) const {
 	);
 
 	o << "In namespace \"" << key << "\", we have: {" << endl;
+{
+	indent ns_ind(o);
 	bins.stats(o);
 
 	// maps are already sorted by key
@@ -835,6 +837,7 @@ name_space::dump(ostream& o) const {
 		)
 		);
 	}
+}
 
 	return o << "}" << endl;
 }

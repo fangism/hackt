@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.1 2005/01/17 22:08:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -98,7 +98,8 @@ definition_base::dump_template_formals(ostream& o) const {
 	// sanity check
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
-		o << "<" << endl;
+		o << "<" << endl;	// continued from last print
+		indent tfl_ind(o);
 		template_formals_list_type::const_iterator
 			i = template_formals_list.begin();
 		const template_formals_list_type::const_iterator
@@ -107,9 +108,9 @@ definition_base::dump_template_formals(ostream& o) const {
 			// sanity check
 			NEVER_NULL(*i);
 			INVARIANT((*i)->is_template_formal());
-			(*i)->dump(o) << endl;
+			(*i)->dump(o << auto_indent) << endl;
 		}
-		o << ">" << endl;
+		o << auto_indent << ">" << endl;
 	}
 	return o;
 }
