@@ -21,5 +21,6 @@ multidimensional_qmap_test
 multikey_qmap_test
 multikey_generator_test
 multikey_qmap_slice_test
+list_vector_test
 list_vector_pool_test
 

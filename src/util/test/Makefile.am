@@ -20,6 +20,7 @@ noinst_PROGRAMS = \
 	deque_iterator_test \
 	hash_qmap_test \
 	discrete_interval_set_test \
+	list_vector_test \
 	list_vector_pool_test \
 	multidimensional_sparse_set_test \
 	multidimensional_qmap_test \
@@ -33,6 +34,7 @@ count_ptr_test_SOURCES = count_ptr_test.cc var.h
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
+list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
