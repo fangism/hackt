@@ -1,11 +1,13 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1.2.2 2005/02/19 19:39:42 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1.2.3 2005/02/20 06:36:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
 #define	__ART_OBJECT_INST_REF_BASE_H__
+
+#define	SUBTYPE_MEMBER_INSTANCE_REFERENCE		1
 
 #include "art_object_base.h"
 #include "persistent.h"
@@ -295,6 +297,7 @@ private:
 };	// end class simple_instance_reference
 
 //=============================================================================
+#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
 /**
 	Abstract interface class for member instance references.  
 	Make type-specific {process,data,channel}?
@@ -335,6 +338,68 @@ protected:	// for children only
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class member_instance_reference_base
+
+#else	// SUBTYPE_MEMBER_INSTANCE_REFERENCE
+//=============================================================================
+#define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
+template <class InstRef>
+
+#define	MEMBER_INSTANCE_REFERENCE_CLASS					\
+member_instance_reference<InstRef>
+
+/**
+	Re-usable type-specific member_instance_reference class template.  
+	\param InstRef must be a type derived from simple_instance_reference.
+ */
+template <class InstRef>
+class member_instance_reference : public InstRef {
+private:
+	typedef	member_instance_reference<InstRef>	this_type;
+public:
+	typedef	InstRef					parent_type;
+	// consider changing this to instance_reference_base?
+	typedef	instance_reference_base			base_inst_type;
+	typedef	typename parent_type::instance_collection_type
+						instance_collection_type;
+	// should be kept consistent with
+	//	instance_collection_base::inst_ref_ptr_type
+	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
+protected:
+	/**
+		The owning base instance reference, 
+		must have dimension-0, scalar... for now
+		Is type limited to simple? or can it be nested member?
+	 */
+	const base_inst_ptr_type			base_inst_ref;
+protected:
+	member_instance_reference();
+public:
+	member_instance_reference(const base_inst_ptr_type& b, 
+		const never_ptr<const instance_collection_type> m);
+
+	~member_instance_reference();
+
+	ostream&
+	what(ostream&) const;
+
+//	using parent_type::make_aliases_connection_private;
+
+#if 0
+protected:	// for children only
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#else
+public:
+	PERSISTENT_METHODS_DECLARATIONS
+#endif
+};	// end class member_instance_reference
+#endif
 
 //=============================================================================
 /**

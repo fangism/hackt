@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2.2.1 2005/02/19 18:57:14 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2.2.2 2005/02/20 06:36:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -17,6 +17,7 @@
 #include "art_object_instance_param.h"
 #include "art_object_namespace.h"
 #include "art_object_inst_ref.h"
+#include "art_object_member_inst_ref.tcc"
 
 #if 1
 // this really needs to be moved to a separate file...
@@ -51,9 +52,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_member_instance_reference, 
 		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
+#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::datatype_member_instance_reference, 
 		MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_member_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
@@ -938,6 +941,7 @@ simple_instance_reference::load_instance_collection_state(istream& f) {
 //=============================================================================
 // class member_instance_reference_base method definitions
 
+#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
 /**
 	Private empty constructor.  
  */
@@ -990,6 +994,7 @@ member_instance_reference_base::load_object_base(
 	m.read_pointer(i, base_inst_ref);
 	NEVER_NULL(base_inst_ref);
 }
+#endif
 
 //=============================================================================
 #if 0
@@ -1228,6 +1233,15 @@ process_instance_reference::make_aliases_connection_private(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_instance_reference::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
+	process_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Visits children nodes and register pointers to object manager
 	for serialization.  
@@ -1236,10 +1250,9 @@ process_instance_reference::make_aliases_connection_private(void) const {
 void
 process_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	process_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
+if (!m.register_transient_object(this, 
+		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -1420,6 +1433,15 @@ channel_instance_reference::make_aliases_connection_private(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instance_reference::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
+	channel_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Visits children nodes and register pointers to object manager
 	for serialization.  
@@ -1428,10 +1450,9 @@ channel_instance_reference::make_aliases_connection_private(void) const {
 void
 channel_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	channel_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
+if (!m.register_transient_object(this, 
+		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -1502,6 +1523,7 @@ channel_instance_reference::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
 // class process_member_instance_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1812,6 +1834,12 @@ channel_member_instance_reference::load_object(
 		&*channel_inst_ref));
 	parent_type::load_object_base(m, f);
 }
+
+#else
+// explicit template instantiation
+template class member_instance_reference<channel_instance_reference>;
+template class member_instance_reference<process_instance_reference>;
+#endif	// SUBTYPE_MEMBER_INSTANCE_REFERENCE
 
 //=============================================================================
 }	// end namespace entity

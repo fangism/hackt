@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.1.2.1 2005/02/20 06:36:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -34,14 +34,14 @@ private:
 	// excl_ptr<index_list>		array_indices;	// inherited
 
 	const never_ptr<const instance_collection_type>	int_inst_ref;
-private:
+protected:
 	int_instance_reference();
 public:
 	explicit
 	int_instance_reference(
 		const never_ptr<const instance_collection_type> iic);
 
-	~int_instance_reference();
+virtual	~int_instance_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -60,12 +60,23 @@ private:
 	make_aliases_connection_private(void) const;
 
 protected:
+#if 0
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
+#else
+	void
+	collect_transient_info_base(persistent_object_manager& ) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#endif
 
 public:
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class int_instance_reference
 
 //=============================================================================
@@ -83,14 +94,14 @@ private:
 
 	const never_ptr<const instance_collection_type>	bool_inst_ref;
 
-private:
+protected:
 	bool_instance_reference();
 public:
 	explicit
 	bool_instance_reference(
 		const never_ptr<const instance_collection_type> bic);
 
-	~bool_instance_reference();
+virtual	~bool_instance_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -108,8 +119,18 @@ private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& ) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
 public:
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class bool_instance_reference
 
 //=============================================================================
@@ -128,14 +149,14 @@ private:
 	const never_ptr<const instance_collection_type>
 					struct_inst_ref;
 
-private:
+protected:
 	datastruct_instance_reference();
 public:
 	explicit
 	datastruct_instance_reference(
 		const never_ptr<const instance_collection_type> sic);
 
-	~datastruct_instance_reference();
+virtual	~datastruct_instance_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -153,8 +174,18 @@ private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& ) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
 public:
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class datastruct_instance_reference
 
 //=============================================================================
@@ -173,14 +204,14 @@ private:
 	const never_ptr<const instance_collection_type>
 					enum_inst_ref;
 
-private:
+protected:
 	enum_instance_reference();
 public:
 	explicit
 	enum_instance_reference(
 		const never_ptr<const instance_collection_type> eic);
 
-	~enum_instance_reference();
+virtual	~enum_instance_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -198,8 +229,18 @@ private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& ) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
 public:
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class enum_instance_reference
 
 //=============================================================================

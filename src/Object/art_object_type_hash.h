@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1.2.1 2005/02/19 06:56:50 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.4.16.1.10.1.2.1.2.1 2005/02/20 06:36:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_HASH_H__
@@ -89,7 +89,11 @@
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
 #define	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"mchanref"
-#define	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY			"mdataref"
+// #define	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY		"mdataref"
+#define	MEMBER_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"mdbolref"
+#define	MEMBER_DINT_INSTANCE_REFERENCE_TYPE_KEY			"mdintref"
+#define	MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"menumref"
+#define	MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"mstrtref"
 	// no such thing as param member instance reference
 
 // Expressions:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7.6.1 2005/02/19 19:39:42 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.6.2 2005/02/20 06:36:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -646,22 +646,24 @@ datatype_instance_collection::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Creates a member reference to a datatype, 
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-count_ptr<member_instance_reference_base>
+datatype_instance_collection::member_inst_ref_ptr_type
 datatype_instance_collection::make_member_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
-	return count_ptr<datatype_member_instance_reference>(
+	return member_inst_ref_ptr_type(
 		new datatype_member_instance_reference(b,
 			never_ptr<const datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

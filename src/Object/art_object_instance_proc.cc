@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.5.4.1.2.1 2005/02/19 19:39:43 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.4.1.2.2 2005/02/20 06:36:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -270,12 +270,12 @@ process_instance_collection::make_instance_reference(void) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-count_ptr<member_instance_reference_base>
+process_instance_collection::member_inst_ref_ptr_type
 process_instance_collection::make_member_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
-	return count_ptr<process_member_instance_reference>(
+	return member_inst_ref_ptr_type(
 		new process_member_instance_reference(
 			b, never_ptr<const process_instance_collection>(this)));
 		// omitting index argument, set it later...

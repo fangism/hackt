@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.4.1.2.1 2005/02/19 19:39:42 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.4.1.2.2 2005/02/20 06:36:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -33,6 +33,8 @@ public:
 	typedef	proc_instance_alias		instance_alias_type;
 	typedef never_ptr<instance_alias_type>	instance_ptr_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	
+						member_inst_ref_ptr_type;
 	typedef	process_type_reference		type_reference_type;
 	typedef	count_ptr<const type_reference_type>
 						final_ptr_type;
@@ -78,7 +80,7 @@ virtual ostream&
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	count_ptr<member_instance_reference_base>
+	member_inst_ref_ptr_type
 	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 	bool
@@ -129,8 +131,10 @@ protected:
 class datatype_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
-	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 protected:
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	
+						member_inst_ref_ptr_type;
 	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
 protected:
 	explicit
@@ -170,8 +174,10 @@ virtual	bool
 virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
-	count_ptr<member_instance_reference_base>
+#if 0
+	member_inst_ref_ptr_type
 	make_member_instance_reference(const inst_ref_ptr_type& b) const;
+#endif
 
 virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
@@ -197,6 +203,8 @@ public:
 	typedef chan_instance_alias		instance_alias_type;
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	
+						member_inst_ref_ptr_type;
 protected:
 	// reserve these for connections between instance_references
 	// list of template actuals
@@ -229,7 +237,7 @@ virtual	bool
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	count_ptr<member_instance_reference_base>
+	member_inst_ref_ptr_type
 	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 virtual void

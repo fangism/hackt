@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.1 2005/02/18 06:07:44 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.1.4.1 2005/02/20 06:36:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -281,12 +281,15 @@ public:
 class int_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
+	typedef	int_instance_collection			this_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	int_instance_alias_base			instance_alias_type;
 //	typedef	never_ptr<int_instance_alias>		instance_ptr_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
 	typedef	pint_value_type				param_type;
+	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 private:
 	/**
 		The bit-width of the integers in this collection.  
@@ -326,6 +329,9 @@ virtual	bool
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
+
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type&) const;
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;

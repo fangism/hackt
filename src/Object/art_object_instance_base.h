@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11.2.2.14.2 2005/02/19 19:39:43 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.2.14.3 2005/02/20 06:36:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -66,6 +66,9 @@ public:
 	//	member_instance_reference_base::base_inst_ptr_type
 	typedef	count_ptr<const instance_reference_base>
 						inst_ref_ptr_type;
+	// needs to be of a type that can be pushed onto object stack
+	typedef	count_ptr<instance_reference_base>
+						member_inst_ref_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -215,7 +218,7 @@ virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
 // return type may become generic...
-virtual	count_ptr<member_instance_reference_base>
+virtual	member_inst_ref_ptr_type
 	make_member_instance_reference(const inst_ref_ptr_type& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)

@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9.2.3.2.1 2005/02/18 06:07:44 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.3.2.1.4.1 2005/02/20 06:36:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -114,10 +114,13 @@ operator << (ostream&, const struct_instance_alias&);
 class struct_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
+	typedef	struct_instance_collection		this_type;
 public:
 	typedef	struct_instance_alias			instance_alias_type;
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 	// typedef	param_type			vector<...>
 protected:
 	explicit
@@ -148,6 +151,9 @@ virtual	bool
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
+
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type& ) const;
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;

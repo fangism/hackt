@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.5.6.1 2005/02/19 18:57:15 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.5.6.2 2005/02/20 06:36:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -37,6 +37,8 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type
+						member_inst_ref_ptr_type;
 
 protected:
 	param_instance_collection(const size_t d);
@@ -65,7 +67,7 @@ virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
 	/** should just assert fail, forbid reference to param members */
-	count_ptr<member_instance_reference_base>
+	member_inst_ref_ptr_type
 	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 	/** appropriate for the context of a template parameter formal */

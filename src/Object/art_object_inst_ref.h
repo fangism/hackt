@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1.2.1 2005/02/19 18:57:14 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1.2.2 2005/02/20 06:36:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -76,8 +76,7 @@ public:
 	typedef	channel_alias_connection	alias_connection_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const channel_instance_collection>
-							channel_inst_ref;
+	const never_ptr<const instance_collection_type>	channel_inst_ref;
 
 protected:
 	channel_instance_reference();
@@ -108,6 +107,9 @@ protected:
 
 protected:
 	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
 	void
@@ -115,7 +117,7 @@ protected:
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -130,8 +132,7 @@ public:
 	typedef	process_alias_connection	alias_connection_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const process_instance_collection>
-							process_inst_ref;
+	const never_ptr<const instance_collection_type>	process_inst_ref;
 
 protected:
 	process_instance_reference();
@@ -160,6 +161,9 @@ protected:
 
 protected:
 	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
 	void
@@ -167,10 +171,11 @@ protected:
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS_DECLARATIONS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class process_instance_reference
 
 //=============================================================================
+#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
 /**
 	Reference to a process instance member of something else.
 	Derive from some generic member_instance_reference?
@@ -302,6 +307,8 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class channel_member_instance_reference
+
+#endif	// SUBTYPE_MEMBER_INSTANCE_REFERENCE
 
 //=============================================================================
 // classes pint_instance_reference and pbool_instance_reference

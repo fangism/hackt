@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.1 2005/02/18 06:07:44 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.1.4.1 2005/02/20 06:36:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -315,10 +315,13 @@ public:
 class bool_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
+	typedef	bool_instance_collection		this_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	bool_instance_alias_base		instance_alias_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 	/// boolean data (node) has no parameters
 	typedef	void					param_type;
 protected:
@@ -351,6 +354,9 @@ virtual	bool
 
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
+
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;

@@ -16,6 +16,13 @@
 	  to be complex-aggregate, so perhaps deriving from nothing 
 	  (instead of instance_reference_base) is the correct thing to do.  
 
+	+ -member-03:
+	  Replaced all member_instance_references with template
+	  versions, extended datatypes members into subtype-specific
+	  versions.  ALL tests pass in this revision!
+	  This revision is littered with commented out code, next revision
+	  must clean up.  
+
 
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 
