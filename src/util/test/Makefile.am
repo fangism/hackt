@@ -39,7 +39,8 @@ noinst_PROGRAMS = \
 	multikey_qmap_test \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
-	packed_array_test
+	packed_array_test \
+	ring_node_test
 
 noinst_LTLIBRARIES = libfangutil.la
 
@@ -79,6 +80,7 @@ multi_pool_module_test_SOURCES = multi_pool_module_test.cc \
 multi_pool_module_test_LDADD = libfangutil.la
 static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
 static_count_ptr_test_LDADD = libfangutil.la
+ring_node_test_SOURCES = ring_node_test.cc
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
 
