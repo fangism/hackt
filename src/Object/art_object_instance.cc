@@ -26,6 +26,10 @@ namespace entity {
 //=============================================================================
 // class instantiation_base method definitions
 
+const never_const_ptr<instantiation_base>
+instantiation_base::null(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -74,6 +78,13 @@ instantiation_base::dump(ostream& o) const {
 		(*i)->dump(o) << endl;
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instantiation_base::pair_dump(ostream& o) const {
+	o << "  " << get_name() << " = ";
+	return dump(o) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -25,6 +25,10 @@ namespace entity {
 //=============================================================================
 // class definition_base method definitions
 
+const never_const_ptr<definition_base>
+definition_base::null(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Definition basic constructor.  
  */
@@ -54,6 +58,28 @@ definition_base::dump(ostream& o) const {
 	dump_template_formals(o);
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+ostream&
+definition_base::pair_dump(ostream& o) const {
+	o << "  " << get_key() << " = ";
+	return dump(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// historical artifact
+/**
+	Useless return value, for the sake of avoiding void-return 
+	specialization when passed as a member functor.  
+ */
+bool
+definition_base::dump_cerr(void) const {
+	pair_dump(cerr);
+	return true;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -135,6 +135,7 @@ namespace entity {
 	class conditional_scope;
 
 	class definition_base;
+	class typedef_base;
 	class channel_definition_base;
 	class datatype_definition_base;
 	class process_definition_base;
@@ -413,6 +414,29 @@ protected:	// typedefs -- keep these here for re-use
 	typedef	list<excl_const_ptr<connection_assignment_base> >
 						connect_assign_list_type;
 
+	/** convenience struct for dumping */
+	class bin_sort {
+	// public unary_function<const used_id_map_type::const_iterator&, void>
+	public:
+		typedef qmap<string, never_const_ptr<name_space> >
+							ns_bin_type;
+		typedef qmap<string, never_const_ptr<definition_base> >
+							def_bin_type;
+		typedef qmap<string, never_const_ptr<typedef_base> >
+							alias_bin_type;
+		typedef qmap<string, never_const_ptr<instantiation_base> >
+							inst_bin_type;
+
+		ns_bin_type		ns_bin;
+		def_bin_type		def_bin;
+		alias_bin_type		alias_bin;
+		inst_bin_type		inst_bin;
+
+		// only default constructor
+
+		void operator() (const used_id_map_type::value_type& i);
+	};	// end class bin_sort
+
 protected:	// members
 	// should really only contain instantiations? no definitions?
 	// what should a generic scopespace contain?
@@ -466,7 +490,8 @@ virtual	never_const_ptr<instantiation_base>
 		excl_const_ptr<connection_assignment_base> c);
 
 	size_t exclude_population(void) const;
-virtual	bool exclude_object(const used_id_map_type::const_iterator& i) const;
+virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
+	bool exclude_object_val(const used_id_map_type::value_type i) const;
 
 // helper functions for object IO
 protected:
@@ -537,6 +562,8 @@ protected:
 	 */
 	alias_map_type		open_aliases;
 
+	// need some structure for unrolled_instances
+
 	// later introduce single symbol imports?
 	// i.e. using A::my_type;
 private:
@@ -552,6 +579,7 @@ explicit name_space(const string& n);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+	ostream& pair_dump(ostream& o) const;
 
 string	get_qualified_name(void) const;
 never_const_ptr<name_space>	get_global_namespace(void) const;
@@ -614,13 +642,17 @@ void	find_namespace_starting_with(namespace_list& m,
 // if we don't know a priori what an identifier's class is?
 // single symbol table or separate?
 
-bool	exclude_object(const used_id_map_type::const_iterator& i) const;
+bool	exclude_object(const used_id_map_type::value_type& i) const;
+
+	bool unroll(void);
 
 // methods for object file I/O
 public:
 	ART_OBJECT_IO_METHODS
 /** helper method for adding a variety of objects */
 void	load_used_id_map_object(excl_ptr<object> o);
+public:
+	static const never_const_ptr<name_space>	null;
 };	// end class name_space
 
 //=============================================================================
@@ -725,14 +757,14 @@ protected:
 	 */
 	bool				defined;
 public:
-//	definition_base(const string& n, never_const_ptr<name_space> p);
-//	definition_base(const string& n);
 	definition_base();
 virtual	~definition_base();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;	// temporary
 	ostream& dump_template_formals(ostream& o) const;
+	ostream& pair_dump(ostream& o) const;
+//	bool dump_cerr(void) const;		// historical artifact
 
 virtual	const string& get_key(void) const = 0;
 virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
@@ -814,7 +846,7 @@ virtual	never_const_ptr<instantiation_base>
 		add_port_formal(excl_ptr<instantiation_base> f);
 
 #if 0
-virtual	bool exclude_object(const used_id_map_type::const_iterator& i) const;
+virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
 #endif
 
 #if 0
@@ -830,6 +862,8 @@ protected:
 void	collect_template_formal_pointers(persistent_object_manager& m) const;
 void	write_object_template_formals(persistent_object_manager& m) const;
 void	load_object_template_formals(persistent_object_manager& m);
+public:
+	static const never_const_ptr<definition_base>	null;
 };	// end class definition_base
 
 //=============================================================================
@@ -983,6 +1017,7 @@ virtual	~instantiation_base();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;	// temporary
+	ostream& pair_dump(ostream& o) const;
 	string get_name(void) const { return key; }
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
@@ -1041,6 +1076,9 @@ protected:
 			persistent_object_manager& m) const;
 	void load_index_collection_pointers(
 			persistent_object_manager& m);
+public:
+	/** just for convenience */
+	static const never_const_ptr<instantiation_base>	null;
 };	// end class instantiation_base
 
 //=============================================================================

@@ -2,6 +2,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+
+#include "ptrs_functional.h"
+#include "compose.h"
+#include "binders.h"
+#include "conditional.h"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -68,6 +74,11 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+
+using namespace std;
+
+// for function compositions
+using namespace ADS;
 
 //=============================================================================
 // general non-member function definitions
@@ -1124,8 +1135,17 @@ scopespace::add_connection_to_scope(
 	By default, nothing is excluded, so this returns false.  
  */
 bool
-scopespace::exclude_object(const used_id_map_type::const_iterator& i) const {
+scopespace::exclude_object(const used_id_map_type::value_type& i) const {
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper to pass by value, instead of by reference.  
+ */
+bool
+scopespace::exclude_object_val(const used_id_map_type::value_type i) const {
+	return exclude_object(i);	// is virtual
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1135,14 +1155,20 @@ scopespace::exclude_object(const used_id_map_type::const_iterator& i) const {
  */
 size_t
 scopespace::exclude_population(void) const {
+#if 0
 	size_t ret = 0;
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
-		if (exclude_object(m_iter))
+		if (exclude_object(*m_iter))
 			ret++;
 	}
 	return ret;
+#else
+	return count_if(used_id_map.begin(), used_id_map.end(), 
+		bind1st(mem_fun(&scopespace::exclude_object_val), this)
+	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1158,7 +1184,7 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 		const never_const_ptr<object> m_obj(m_iter->second);
 		assert(m_obj);			// no NULLs in hash_map
 		// checks for excluded objects, virtual call
-		if (!exclude_object(m_iter))
+		if (!exclude_object(*m_iter))
 			m_obj->collect_transient_info(m);
 	}
 }
@@ -1184,7 +1210,7 @@ scopespace::write_object_used_id_map(persistent_object_manager& m) const {
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	for ( ; m_iter!=m_end; m_iter++) {
 		// any distinction between aliases and non-owners?
-		if (!exclude_object(m_iter)) {
+		if (!exclude_object(*m_iter)) {
 			const never_const_ptr<object> m_obj(m_iter->second);
 			m.write_pointer(f, m_obj);
 		}
@@ -1266,8 +1292,47 @@ scopespace::load_object_connect_assign_list(
 }
 
 //=============================================================================
+// class bin_sort method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pred is a boolean functor.  
+ */
+void
+scopespace::bin_sort::operator () (
+		const used_id_map_type::value_type& i) {
+	const never_const_ptr<object> o_p(i.second);
+	assert(o_p);
+	const never_const_ptr<name_space>
+		n_b(o_p.is_a<name_space>());
+	const never_const_ptr<definition_base>
+		d_b(o_p.is_a<definition_base>());
+	const never_const_ptr<instantiation_base>
+		i_b(o_p.is_a<instantiation_base>());
+	const string& k = i.first;
+	if (n_b) {
+		ns_bin[k] = n_b;
+	} else if (d_b) {
+		const never_const_ptr<typedef_base>
+			t_b(d_b.is_a<typedef_base>());
+		if (t_b)
+			alias_bin[k] = t_b;
+		else	def_bin[k] = d_b;
+	} else if (i_b) {
+		inst_bin[k] = i_b;
+	} else {
+		o_p->dump(cerr << "object ") << 
+			"not binned for dumping." << endl;
+	}
+}
+
+//=============================================================================
 // class name_space method definitions
 
+const never_const_ptr<name_space>
+name_space::null(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor, just allocate with bogus fields.
  */
@@ -1381,6 +1446,14 @@ name_space::what(ostream& o) const {
 ostream&
 name_space::dump(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
+#if 1
+	bin_sort bins;
+	for_each_if(used_id_map.begin(), used_id_map.end(), 
+		not1(bind1st(mem_fun(&scopespace::exclude_object_val), this)),
+		bins
+	);
+#endif
+#if 0
 	typedef	map<string, never_const_ptr<name_space> >	ns_bin_type;
 	typedef	map<string, never_const_ptr<definition_base> >	def_bin_type;
 	typedef	map<string, never_const_ptr<typedef_base> >	alias_bin_type;
@@ -1394,7 +1467,7 @@ name_space::dump(ostream& o) const {
 	used_id_map_type::const_iterator i = used_id_map.begin();
 	const used_id_map_type::const_iterator end = used_id_map.end();
 	for ( ; i!=end; i++) {
-		if (!exclude_object(i)) {
+		if (!exclude_object(*i)) {
 			const never_const_ptr<object> o_p(i->second);
 			assert(o_p);
 			const never_const_ptr<name_space>
@@ -1417,59 +1490,66 @@ name_space::dump(ostream& o) const {
 				o_p->dump(cerr << "object ") << 
 					"not binned for dumping." << endl;
 			}
-//			o << "  " << i->first << " = ";
-//			i->second->dump(o) << endl;
 		}
 	}
+#endif
 
 	o << "In namespace \"" << key << "\", we have: {" << endl;
 
-	if (!ns_bin.empty()) {
-		// maps are already sorted
-		// use for_each()?  later...
-		o << "Definitions:" << endl;
-		ns_bin_type::const_iterator iter = ns_bin.begin();
-		const ns_bin_type::const_iterator end = ns_bin.end();
-		for ( ; iter!=end; iter++) {
-			o << "  " << iter->first << " = ";
-			iter->second->dump(o) << endl;
-		}
+	// maps are already sorted by key
+	if (!bins.ns_bin.empty()) {
+		o << "Namespaces:" << endl;
+		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
+			unary_compose(
+				bind2nd_argval(
+					mem_fun(&name_space::pair_dump, 
+						name_space::null), 
+					cerr), 
+				_Select2nd<bin_sort::ns_bin_type::value_type>()
+			)
+//			This does the following (in pair_dump):
+//			o << "  " << i->first << " = ";
+//			i->second->dump(o) << endl;
+		);
 	}
 	
-	if (!def_bin.empty()) {
-		// maps are already sorted
-		// use for_each()?  later...
+	if (!bins.def_bin.empty()) {
 		o << "Definitions:" << endl;
-		def_bin_type::const_iterator iter = def_bin.begin();
-		const def_bin_type::const_iterator end = def_bin.end();
-		for ( ; iter!=end; iter++) {
-			o << "  " << iter->first << " = ";
-			iter->second->dump(o) << endl;
-		}
+		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
+			unary_compose(
+				bind2nd_argval(
+					mem_fun(&definition_base::pair_dump,
+						definition_base::null),
+					cerr), 
+				_Select2nd<bin_sort::def_bin_type::value_type>()
+			)
+		);
 	}
 	
-	if (!alias_bin.empty()) {
-		// maps are already sorted
-		// use for_each()?  later...
+	if (!bins.alias_bin.empty()) {
 		o << "Typedefs:" << endl;
-		alias_bin_type::const_iterator iter = alias_bin.begin();
-		const alias_bin_type::const_iterator end = alias_bin.end();
-		for ( ; iter!=end; iter++) {
-			o << "  " << iter->first << " = ";
-			iter->second->dump(o) << endl;
-		}
+		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
+			unary_compose(
+				bind2nd_argval(
+					mem_fun(&definition_base::pair_dump,
+						definition_base::null),
+					cerr), 
+				_Select2nd<bin_sort::alias_bin_type::value_type>()
+			)
+		);
 	}
 	
-	if (!inst_bin.empty()) {
-		// maps are already sorted
-		// use for_each()?  later...
+	if (!bins.inst_bin.empty()) {
 		o << "Instances:" << endl;
-		inst_bin_type::const_iterator iter = inst_bin.begin();
-		const inst_bin_type::const_iterator end = inst_bin.end();
-		for ( ; iter!=end; iter++) {
-			o << "  " << iter->first << " = ";
-			iter->second->dump(o) << endl;
-		}
+		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
+			unary_compose(
+				bind2nd_argval(
+					mem_fun(&instantiation_base::pair_dump,
+						instantiation_base::null),
+					cerr), 
+				_Select2nd<bin_sort::inst_bin_type::value_type>()
+			)
+		);
 	}
 
 	if (!connect_assign_list.empty()) {
@@ -1485,6 +1565,13 @@ name_space::dump(ostream& o) const {
 		}
 	}
 	return o << "}" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+name_space::pair_dump(ostream& o) const {
+        o << "  " << get_key() << " = ";
+        return dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2182,10 +2269,8 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-name_space::exclude_object(const used_id_map_type::const_iterator& i) const {
-//	const never_const_ptr<object> o = i->second;
-//	if (o.is_a<object_handle>())
-	if (i->second.is_a<object_handle>())
+name_space::exclude_object(const used_id_map_type::value_type& i) const {
+	if (i.second.is_a<object_handle>())
 		return true;
 	else return false;
 }
