@@ -124,7 +124,10 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace fang;		// for experimental pointer classes
+	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace COUNT_PTR_NAMESPACE;
+	using namespace QMAP_NAMESPACE;
+	using namespace HASH_QMAP_NAMESPACE;
 
 //=============================================================================
 // forward declarations
@@ -171,7 +174,7 @@ namespace entity {
 //	class pint_instance_reference;		// relocated "art_object_expr"
 //	class pbool_instance_reference;		// relocated "art_object_expr"
 
-	class connection_assignment_base;
+//	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
 	class aliases_connection;
@@ -408,14 +411,56 @@ protected:	// typedefs -- keep these here for re-use
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
 
+#if 0
 	/**
 		Ordered list of connections and assignments.  
 	 */
 	typedef	list<excl_const_ptr<connection_assignment_base> >
 						connect_assign_list_type;
+#endif
+	/**
+		Ordered list of parameter assignments.  
+	 */
+	typedef	list<excl_const_ptr<param_expression_assignment> >
+						assign_list_type;
+	/**
+		Ordered list of instance connections.  
+	 */
+	typedef	list<excl_const_ptr<instance_reference_connection> >
+						connect_list_type;
 
 	/** convenience struct for dumping */
 	class bin_sort {
+	// public unary_function<const used_id_map_type::const_iterator&, void>
+	public:
+		typedef qmap<string, never_ptr<name_space> >
+							ns_bin_type;
+		typedef qmap<string, never_ptr<definition_base> >
+							def_bin_type;
+		typedef qmap<string, never_ptr<typedef_base> >
+							alias_bin_type;
+		typedef qmap<string, never_ptr<instantiation_base> >
+							inst_bin_type;
+		typedef qmap<string, never_ptr<param_instantiation> >
+							param_bin_type;
+
+		ns_bin_type		ns_bin;
+		def_bin_type		def_bin;
+		alias_bin_type		alias_bin;
+		inst_bin_type		inst_bin;
+		param_bin_type		param_bin;
+
+		// only default constructor
+	private:
+		// prevent accidental copying
+		explicit bin_sort(const bin_sort&);
+	public:
+		bin_sort();
+		void operator() (const used_id_map_type::value_type& i);
+	};	// end class bin_sort
+
+	/** read-only version of sorted bins */
+	class const_bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
 		typedef qmap<string, never_const_ptr<name_space> >
@@ -426,16 +471,24 @@ protected:	// typedefs -- keep these here for re-use
 							alias_bin_type;
 		typedef qmap<string, never_const_ptr<instantiation_base> >
 							inst_bin_type;
+		typedef qmap<string, never_const_ptr<param_instantiation> >
+							param_bin_type;
 
 		ns_bin_type		ns_bin;
 		def_bin_type		def_bin;
 		alias_bin_type		alias_bin;
 		inst_bin_type		inst_bin;
+		param_bin_type		param_bin;
 
 		// only default constructor
-
+	private:
+		// prevent accidental copying
+		explicit const_bin_sort(const const_bin_sort&);
+	public:
+		const_bin_sort();
 		void operator() (const used_id_map_type::value_type& i);
-	};	// end class bin_sort
+		void stats(ostream& o) const;
+	};	// end class const_bin_sort
 
 protected:	// members
 	// should really only contain instantiations? no definitions?
@@ -459,7 +512,9 @@ protected:	// members
 		Conditional and loop scopes are kept in program order
 		in this list.
 	 */
-	connect_assign_list_type	connect_assign_list;
+//	connect_assign_list_type	connect_assign_list;
+	assign_list_type		assign_list;
+	connect_list_type		connect_list;
 
 public:
 	scopespace();
@@ -486,8 +541,10 @@ virtual	never_const_ptr<instantiation_base>
 	bool add_definition_alias(never_const_ptr<definition_base> d, 
 		const string& a);
 
+	void add_assignment_to_scope(
+		excl_const_ptr<param_expression_assignment> c);
 	void add_connection_to_scope(
-		excl_const_ptr<connection_assignment_base> c);
+		excl_const_ptr<instance_reference_connection> c);
 
 	size_t exclude_population(void) const;
 virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
@@ -500,13 +557,13 @@ protected:
 	void write_object_used_id_map(persistent_object_manager& m) const;
 	void load_object_used_id_map(persistent_object_manager& m);
 
-	// for connect_assign_list
-	void collect_connect_assign_list_pointers(
-			persistent_object_manager& m) const;
-	void write_object_connect_assign_list(
-			persistent_object_manager& m) const;
-	void load_object_connect_assign_list(
-			persistent_object_manager& m);
+	void collect_assign_list_pointers(persistent_object_manager& m) const;
+	void write_object_assign_list(persistent_object_manager& m) const;
+	void load_object_assign_list(persistent_object_manager& m);
+
+	void collect_connect_list_pointers(persistent_object_manager& m) const;
+	void write_object_connect_list(persistent_object_manager& m) const;
+	void load_object_connect_list(persistent_object_manager& m);
 
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
@@ -644,7 +701,10 @@ void	find_namespace_starting_with(namespace_list& m,
 
 bool	exclude_object(const used_id_map_type::value_type& i) const;
 
-	bool unroll(void);
+public:
+	void unroll_params(void);
+	void unroll_instances(void);
+	void unroll_connections(void);
 
 // methods for object file I/O
 public:
@@ -1006,6 +1066,8 @@ protected:
 	 */
 	size_t	depth;
 
+	// children will implement unrolled collection of instances?
+	// but only instances that are not found in definitions?
 protected:
 explicit instantiation_base();
 

@@ -58,7 +58,7 @@ namespace entity {
 	typedef count_const_ptr<range_expr_list>
 				index_collection_item_ptr_type;
 
-	class connection_assignment_base;
+//	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
 
@@ -234,9 +234,8 @@ void	close_chantype_definition(void);
 bool	alias_definition(never_const_ptr<definition_base> d, 
 		const token_identifier& id);
 
-void	add_connection(excl_const_ptr<connection_assignment_base> c);
-void	add_assignment(excl_const_ptr<connection_assignment_base> a)
-		{ add_connection(a); }
+void	add_connection(excl_const_ptr<instance_reference_connection> c);
+void	add_assignment(excl_const_ptr<param_expression_assignment> a);
 
 never_const_ptr<scopespace>	get_current_scope(void) const;
 never_ptr<scopespace>		get_current_scope(void);

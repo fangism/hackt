@@ -158,7 +158,7 @@ public:
 virtual	~param_instantiation();
 
 virtual	ostream& what(ostream& o) const = 0;
-// virtual	ostream& dump(ostream& o) const;
+	ostream& dump(ostream& o) const;
 
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;

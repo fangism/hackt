@@ -1851,7 +1851,7 @@ pint_range::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_range::dump(ostream& o) const {
-	return o << hash_string();
+	return o << '[' << hash_string() << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2017,7 +2017,7 @@ const_range::dump(ostream& o) const {
 string
 const_range::hash_string(void) const {
 	ostringstream o;
-	dump(o);
+	dump(o);		// will include braces?
 	return o.str();
 }
 
@@ -2601,9 +2601,10 @@ const_index_list::hash_string(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		assert(*i);
-		ret += "[";
+		const bool b = (i->is_a<pint_expr>());
+		if (b) ret += '[';
 		ret += (*i)->hash_string();
-		ret += "]";
+		if (b) ret += ']';
 	}
 	return ret;
 }
@@ -2791,9 +2792,10 @@ dynamic_index_list::hash_string(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		assert(*i);
-		ret += "[";
+		const bool b = (i->is_a<pint_expr>());
+		if (b) ret += '[';
 		ret += (*i)->hash_string();
-		ret += "]";
+		if (b) ret += ']';
 	}
 	return ret;
 }

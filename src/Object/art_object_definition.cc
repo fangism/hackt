@@ -84,11 +84,17 @@ definition_base::dump_cerr(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
+	// sanity check
+	assert(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
 		o << "<" << endl;
-		template_formals_list_type::const_iterator i =
-			template_formals_list.begin();
-		for ( ; i!=template_formals_list.end(); i++) {
+		template_formals_list_type::const_iterator
+			i = template_formals_list.begin();
+		const template_formals_list_type::const_iterator
+			e = template_formals_list.end();
+		for ( ; i!=e; i++) {
+			// sanity check
+			assert((*i)->is_template_formal());
 			(*i)->dump(o) << endl;
 		}
 		o << ">" << endl;
@@ -453,6 +459,7 @@ definition_base::collect_template_formal_pointers(
 void
 definition_base::write_object_template_formals(
 		persistent_object_manager& m) const {
+	assert(template_formals_list.size() == template_formals_map.size());
 	ostream& f = m.lookup_write_buffer(this);
 	m.write_pointer_list(f, template_formals_list);
 }
@@ -477,8 +484,11 @@ definition_base::load_object_template_formals(
 	for ( ; iter!=end; iter++) {
 		template_formals_value_type inst_ptr = *iter;
 		assert(inst_ptr);
+		// we need to load the instantiation to use its key!
+		const_cast<param_instantiation*>(&*inst_ptr)->load_object(m);
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
+	assert(template_formals_list.size() == template_formals_map.size());
 }
 
 //=============================================================================
@@ -2010,6 +2020,7 @@ process_definition::load_object_port_formals(
 	for ( ; iter!=end; iter++) {
 		port_formals_value_type inst_ptr = *iter;
 		assert(inst_ptr);
+		const_cast<instantiation_base*>(&*inst_ptr)->load_object(m);
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 }

@@ -22,6 +22,7 @@
 
 #include "art_object_base.h"
 #include "art_object_definition.h"
+#include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
 #include "art_object_IO.tcc"
@@ -155,7 +156,7 @@ object_handle::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 object_handle::dump(ostream& o) const {
-	return obj.dump(o << "(handle)");
+	return obj.dump(o << "(handle) ");
 }
 
 //=============================================================================
@@ -866,7 +867,10 @@ object_list::make_port_connection(
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : object(),
-		used_id_map(), connect_assign_list() {
+		used_id_map(),
+//		connect_assign_list(), 
+		assign_list(), 
+		connect_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1122,11 +1126,17 @@ scopespace::add_definition_alias(never_const_ptr<definition_base> d,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::add_assignment_to_scope(
+		excl_const_ptr<param_expression_assignment> c) {
+	assign_list.push_back(c);
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 scopespace::add_connection_to_scope(
-		excl_const_ptr<connection_assignment_base> c) {
-	connect_assign_list.push_back(c);
+		excl_const_ptr<instance_reference_connection> c) {
+	connect_list.push_back(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1261,12 +1271,47 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::collect_connect_assign_list_pointers(
-		persistent_object_manager& m) const {
-	connect_assign_list_type::const_iterator
-		l_iter = connect_assign_list.begin();
-	const connect_assign_list_type::const_iterator
-		l_end = connect_assign_list.end();
+scopespace::collect_assign_list_pointers(persistent_object_manager& m) const {
+#if 0
+	for_each(assign_list.begin(), assign_list.end(), 
+	bind1st(mem_fun(
+		&param_expression_assignment::collect_transient_info, m))
+	);
+#else
+	assign_list_type::const_iterator
+		l_iter = assign_list.begin();
+	const assign_list_type::const_iterator
+		l_end = assign_list.end();
+	for ( ; l_iter!=l_end; l_iter++) {
+		assert(*l_iter);
+		(*l_iter)->collect_transient_info(m);
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::write_object_assign_list(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	m.write_pointer_list(f, assign_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::load_object_assign_list(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	m.read_pointer_list(f, assign_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::collect_connect_list_pointers(persistent_object_manager& m) const {
+	connect_list_type::const_iterator
+		l_iter = connect_list.begin();
+	const connect_list_type::const_iterator
+		l_end = connect_list.end();
 	for ( ; l_iter!=l_end; l_iter++) {
 		assert(*l_iter);
 		(*l_iter)->collect_transient_info(m);
@@ -1275,32 +1320,83 @@ scopespace::collect_connect_assign_list_pointers(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::write_object_connect_assign_list(
-		persistent_object_manager& m) const {
+scopespace::write_object_connect_list(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
-	m.write_pointer_list(f, connect_assign_list);
+	m.write_pointer_list(f, connect_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::load_object_connect_assign_list(
-		persistent_object_manager& m) {
+scopespace::load_object_connect_list(persistent_object_manager& m) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
-	m.read_pointer_list(f, connect_assign_list);
+	m.read_pointer_list(f, connect_list);
 }
 
 //=============================================================================
 // class bin_sort method definitions
 
+scopespace::bin_sort::bin_sort() :
+		ns_bin(), def_bin(), alias_bin(), inst_bin(), param_bin() {
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Pred is a boolean functor.  
+	\param i is essentially a pair<const string, some_ptr<object> >.  
+		See definition of used_id_map_type.  
  */
 void
-scopespace::bin_sort::operator () (
+scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
+	const never_ptr<object> o_p(i.second);
+	assert(o_p);
+	const never_ptr<name_space>
+		n_b(o_p.is_a<name_space>());
+	const never_ptr<definition_base>
+		d_b(o_p.is_a<definition_base>());
+	const never_ptr<instantiation_base>
+		i_b(o_p.is_a<instantiation_base>());
+	const string& k = i.first;
+	if (n_b) {
+		ns_bin[k] = n_b;
+	} else if (d_b) {
+		const never_ptr<typedef_base>
+			t_b(d_b.is_a<typedef_base>());
+		if (t_b)
+			alias_bin[k] = t_b;
+		else	def_bin[k] = d_b;
+	} else if (i_b) {
+		const never_ptr<param_instantiation>
+			p_b(i_b.is_a<param_instantiation>());
+		if (p_b)
+			param_bin[k] = p_b;
+		else	inst_bin[k] = i_b;
+	} else {
+		o_p->dump(cerr << "object ") << 
+			"not binned for modification." << endl;
+	}
+}
+
+//=============================================================================
+// class const_bin_sort method definitions
+
+scopespace::const_bin_sort::const_bin_sort() :
+		ns_bin(), def_bin(), alias_bin(), inst_bin(), param_bin() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pred is a boolean functor.  
+	\param i is essentially a pair<const string, some_ptr<object> >.  
+		See definition of used_id_map_type.  
+ */
+void
+scopespace::const_bin_sort::operator () (
 		const used_id_map_type::value_type& i) {
+#if 0
+	cerr << "In scopespace::const_bin_sort::operator (): " << endl;
+#endif
 	const never_const_ptr<object> o_p(i.second);
 	assert(o_p);
 	const never_const_ptr<name_space>
@@ -1311,19 +1407,38 @@ scopespace::bin_sort::operator () (
 		i_b(o_p.is_a<instantiation_base>());
 	const string& k = i.first;
 	if (n_b) {
-		ns_bin[k] = n_b;
+		ns_bin[k] = n_b;		assert(ns_bin[k]);
 	} else if (d_b) {
 		const never_const_ptr<typedef_base>
 			t_b(d_b.is_a<typedef_base>());
-		if (t_b)
-			alias_bin[k] = t_b;
-		else	def_bin[k] = d_b;
+		if (t_b) {
+			alias_bin[k] = t_b;	assert(alias_bin[k]);
+		} else {
+			def_bin[k] = d_b;	assert(def_bin[k]);
+		}
 	} else if (i_b) {
-		inst_bin[k] = i_b;
+		const never_const_ptr<param_instantiation>
+			p_b(i_b.is_a<param_instantiation>());
+		if (p_b) {
+			param_bin[k] = p_b;	assert(param_bin[k]);
+		} else {
+			inst_bin[k] = i_b;	assert(inst_bin[k]);
+		}
 	} else {
 		o_p->dump(cerr << "object ") << 
-			"not binned for dumping." << endl;
+			"not binned for reading." << endl;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void
+scopespace::const_bin_sort::stats(ostream& o) const {
+	o << param_bin.size() << " parameter-collections" << endl;
+	o << inst_bin.size() << " instantiation-collections" << endl;
+	o << ns_bin.size() << " sub-namespaces" << endl;
+	o << def_bin.size() << " definitions" << endl;
+	o << alias_bin.size() << " typedefs" << endl;
 }
 
 //=============================================================================
@@ -1446,67 +1561,41 @@ name_space::what(ostream& o) const {
 ostream&
 name_space::dump(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
-#if 1
-	bin_sort bins;
+	const_bin_sort bins;
+	const_bin_sort& bins_ref = bins;
+	bins_ref =
 	for_each_if(used_id_map.begin(), used_id_map.end(), 
-		not1(bind1st(mem_fun(&scopespace::exclude_object_val), this)),
-		bins
+		not1(bind1st(mem_fun(&name_space::exclude_object_val), this)),
+		bins_ref	// explicitly pass by REFERENCE not VALUE
 	);
-#endif
-#if 0
-	typedef	map<string, never_const_ptr<name_space> >	ns_bin_type;
-	typedef	map<string, never_const_ptr<definition_base> >	def_bin_type;
-	typedef	map<string, never_const_ptr<typedef_base> >	alias_bin_type;
-	typedef	map<string, never_const_ptr<instantiation_base> > inst_bin_type;
-
-	ns_bin_type	ns_bin;
-	def_bin_type	def_bin;
-	alias_bin_type	alias_bin;
-	inst_bin_type	inst_bin;
-
-	used_id_map_type::const_iterator i = used_id_map.begin();
-	const used_id_map_type::const_iterator end = used_id_map.end();
-	for ( ; i!=end; i++) {
-		if (!exclude_object(*i)) {
-			const never_const_ptr<object> o_p(i->second);
-			assert(o_p);
-			const never_const_ptr<name_space>
-				n_b(o_p.is_a<name_space>());
-			const never_const_ptr<definition_base>
-				d_b(o_p.is_a<definition_base>());
-			const never_const_ptr<instantiation_base>
-				i_b(o_p.is_a<instantiation_base>());
-			if (n_b) {
-				ns_bin[i->first] = n_b;
-			} else if (d_b) {
-				const never_const_ptr<typedef_base>
-					t_b(d_b.is_a<typedef_base>());
-				if (t_b)
-					alias_bin[i->first] = t_b;
-				else	def_bin[i->first] = d_b;
-			} else if (i_b) {
-				inst_bin[i->first] = i_b;
-			} else {
-				o_p->dump(cerr << "object ") << 
-					"not binned for dumping." << endl;
-			}
-		}
-	}
-#endif
 
 	o << "In namespace \"" << key << "\", we have: {" << endl;
+	bins.stats(o);
 
 	// maps are already sorted by key
+	if (!bins.param_bin.empty()) {
+		o << "Parameters:" << endl;
+		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&instantiation_base::pair_dump, 
+					instantiation_base::null), 
+				cerr), 
+			_Select2nd<const_bin_sort::param_bin_type::value_type>()
+		)
+		);
+	}
+
 	if (!bins.ns_bin.empty()) {
 		o << "Namespaces:" << endl;
 		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
-			unary_compose(
-				bind2nd_argval(
-					mem_fun(&name_space::pair_dump, 
-						name_space::null), 
-					cerr), 
-				_Select2nd<bin_sort::ns_bin_type::value_type>()
-			)
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&name_space::pair_dump, 
+					name_space::null), 
+				cerr), 
+			_Select2nd<const_bin_sort::ns_bin_type::value_type>()
+		)
 //			This does the following (in pair_dump):
 //			o << "  " << i->first << " = ";
 //			i->second->dump(o) << endl;
@@ -1516,50 +1605,64 @@ name_space::dump(ostream& o) const {
 	if (!bins.def_bin.empty()) {
 		o << "Definitions:" << endl;
 		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
-			unary_compose(
-				bind2nd_argval(
-					mem_fun(&definition_base::pair_dump,
-						definition_base::null),
-					cerr), 
-				_Select2nd<bin_sort::def_bin_type::value_type>()
-			)
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&definition_base::pair_dump,
+					definition_base::null),
+				cerr), 
+			_Select2nd<const_bin_sort::def_bin_type::value_type>()
+		)
 		);
 	}
 	
 	if (!bins.alias_bin.empty()) {
 		o << "Typedefs:" << endl;
 		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
-			unary_compose(
-				bind2nd_argval(
-					mem_fun(&definition_base::pair_dump,
-						definition_base::null),
-					cerr), 
-				_Select2nd<bin_sort::alias_bin_type::value_type>()
-			)
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&definition_base::pair_dump,
+					definition_base::null),
+				cerr), 
+			_Select2nd<const_bin_sort::alias_bin_type::value_type>()
+		)
 		);
 	}
 	
 	if (!bins.inst_bin.empty()) {
 		o << "Instances:" << endl;
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
-			unary_compose(
-				bind2nd_argval(
-					mem_fun(&instantiation_base::pair_dump,
-						instantiation_base::null),
-					cerr), 
-				_Select2nd<bin_sort::inst_bin_type::value_type>()
-			)
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&instantiation_base::pair_dump,
+					instantiation_base::null),
+				cerr), 
+			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
+		)
 		);
 	}
 
-	if (!connect_assign_list.empty()) {
-		cerr << "Assignments and connections: " << endl;
-		connect_assign_list_type::const_iterator
-			a_iter = connect_assign_list.begin();
-		const connect_assign_list_type::const_iterator
-			a_end = connect_assign_list.end();
+	if (!assign_list.empty()) {
+		cerr << "Assignments: " << endl;
+		assign_list_type::const_iterator
+			a_iter = assign_list.begin();
+		const assign_list_type::const_iterator
+			a_end = assign_list.end();
 		for ( ; a_iter!=a_end; a_iter++) {
-			never_const_ptr<connection_assignment_base> ap(*a_iter);
+			never_const_ptr<param_expression_assignment>
+				ap(*a_iter);
+			assert(ap);
+			ap->dump(o << '\t') << endl;
+		}
+	}
+	if (!connect_list.empty()) {
+		cerr << "Connections: " << endl;
+		connect_list_type::const_iterator
+			a_iter = connect_list.begin();
+		const connect_list_type::const_iterator
+			a_end = connect_list.end();
+		for ( ; a_iter!=a_end; a_iter++) {
+			never_const_ptr<instance_reference_connection>
+				ap(*a_iter);
 			assert(ap);
 			ap->dump(o << '\t') << endl;
 		}
@@ -2169,6 +2272,65 @@ name_space::lookup_open_alias(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This pass walks through all parameter assignments, expanding
+	parameter instantiations as needed.  
+ */
+void
+name_space::unroll_params(void) {
+	// need the modifiable bin_sort
+	bin_sort bins;
+	bin_sort& bins_ref = bins;
+	// consider using predicated iterators
+	bins_ref =
+	for_each_if(used_id_map.begin(), used_id_map.end(), 
+		not1(bind1st(mem_fun(&name_space::exclude_object_val), this)),
+		bins_ref
+	);
+
+	// unroll parameters first?
+	// what if parameters initialized in other namespaces?
+	// some parameters depend on assignments, etc...
+	// unroll assignments?
+	// dependencies across namespaces?
+
+	// no need to walk param_bin
+
+	assign_list_type::iterator a_i = assign_list.begin();
+	const assign_list_type::const_iterator a_e = assign_list.end();
+#if 0
+	for_each(a_i, a_e, 
+		mem_fun(&param_expression_assignment::unroll_params)
+	);
+#endif
+
+	if (!bins.ns_bin.empty()) {
+		// not transform
+		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
+			unary_compose(
+				mem_fun(&name_space::unroll_params, 
+					never_ptr<name_space>()), 
+				_Select2nd<bin_sort::ns_bin_type::value_type>()
+			)
+		);
+	}
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void
+name_space::unroll_instances(void) {
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+name_space::unroll_connections(void) {
+
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 // not used
 type_index_enum
@@ -2189,7 +2351,8 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 		<< this << endl;
 #endif
 	collect_used_id_map_pointers(m);
-	collect_connect_assign_list_pointers(m);
+	collect_assign_list_pointers(m);
+	collect_connect_list_pointers(m);
 }
 // else already visited
 }
@@ -2233,7 +2396,8 @@ name_space::write_object(persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	write_object_used_id_map(m);
-	write_object_connect_assign_list(m);
+	write_object_assign_list(m);
+	write_object_connect_list(m);
 
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -2260,7 +2424,8 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	load_object_used_id_map(m);
-	load_object_connect_assign_list(m);
+	load_object_assign_list(m);
+	load_object_connect_list(m);
 
 	STRIP_OBJECT_FOOTER(f);
 }

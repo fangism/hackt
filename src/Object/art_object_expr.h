@@ -115,6 +115,12 @@ virtual bool is_loop_independent(void) const = 0;
 
 /** doesn't depend on conditional variables */
 virtual bool is_unconditional(void) const = 0;
+
+#if 0
+	// can't make template virtual functions...
+	virtual multikey_qmap<D,size_t,pbool_instance>
+			evaluate(void) const;
+#endif
 };	// end class param_expr
 
 //-----------------------------------------------------------------------------

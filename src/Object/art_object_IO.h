@@ -26,6 +26,8 @@ namespace entity {
 //=============================================================================
 using namespace std;
 using namespace HASH_QMAP_NAMESPACE;
+using namespace COUNT_PTR_NAMESPACE;
+using namespace PTRS_NAMESPACE;
 
 // forward declaration
 class object;

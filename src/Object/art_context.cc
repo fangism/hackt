@@ -32,14 +32,8 @@ context::context(never_ptr<name_space> g) :
 		namespace_stack(), 
 		current_open_definition(NULL), 
 		current_prototype(NULL), 
-#if 0
-		current_definition_reference(NULL), 
-#else
 		definition_stack(), 
-#endif
 		current_fundamental_type(NULL), 
-//		current_template_arguments(NULL), 
-//		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
 		object_stack(), 
 		global_namespace(g) {
@@ -547,8 +541,21 @@ context::alias_definition(never_const_ptr<definition_base> d,
 	\param c the new connection or assignment list.
  */
 void
-context::add_connection(excl_const_ptr<connection_assignment_base> c) {
+context::add_connection(excl_const_ptr<instance_reference_connection> c) {
 	get_current_scope()->add_connection_to_scope(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a (partially) type-checked connection or assignment 
+	to the current scope, which may be dynamic.  
+	Note: may have to keep global ordering of all expression assignments, 
+	by adding them all to the global namespace (break const-ness?).  
+	\param c the new connection or assignment list.
+ */
+void
+context::add_assignment(excl_const_ptr<param_expression_assignment> c) {
+	get_current_scope()->add_assignment_to_scope(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -181,6 +181,14 @@ never_const_ptr<instantiation_base>
 // methods for object file I/O
 public:
 	ART_OBJECT_IO_METHODS
+#if 0
+	void write_object(persistent_object_manager& m) const;
+static	process_definition* construct_empty(void);	// can't do this
+		// b/c invalid conversion of function pointer type
+	void load_object(persistent_object_manager& m);
+	void collect_transient_info(persistent_object_manager& m) const;
+#endif
+
 	void load_used_id_map_object(excl_ptr<object> o);
 	void write_object_port_formals(persistent_object_manager& m) const;
 	void load_object_port_formals(persistent_object_manager& m);

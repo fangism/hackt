@@ -20,7 +20,8 @@ namespace entity {
 // class param_expression_assignment method definitions
 	
 param_expression_assignment::param_expression_assignment() :
-		connection_assignment_base(), ex_list() {
+//		connection_assignment_base(), 
+		object(), ex_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,11 +67,17 @@ void
 param_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE)) {
+#if 0
+	for_each(ex_list.begin(), ex_list.end(), 
+	bind2nd(mem_fun(&ex_list_type::value_type::collect_transient_info), m)
+	);
+#else
 	ex_list_type::const_iterator iter = ex_list.begin();
 	const ex_list_type::const_iterator end = ex_list.end();
 	for ( ; iter!=end; iter++) {
 		(*iter)->collect_transient_info(m);
 	}
+#endif
 }
 // else already visited
 }
@@ -104,11 +111,43 @@ if (!m.flag_visit(this)) {
 // else already visited
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_expression_assignment::unroll_params(void) const {
+	// first make sure rhs is initialized
+	// what if rhs expression refers to not-yet-unroll instantiation?
+	// need to follow dependencies
+	// need a method to search for writers to 
+
+	const ex_list_type::const_iterator last = --ex_list.end();
+	const size_t dim = (*last)->dimensions();
+	// Evaluate:
+	// is the reference valid?
+	// is it initialized?
+	// what type, what dimension?
+	// may be collective, if so, must be dense.  
+
+#if 0
+	switch (dim) {
+	case 0:
+		param_const foo = (*last)->evaluate();
+
+		// Dispatch dimension-specific unrolling sub-routine?
+
+		ex_list_type::iterator iter = ex_list.begin();
+		for ( ; iter!=last; iter++) {
+			assign
+		}
+	}
+#endif
+}
+
 //=============================================================================
 // class instance_reference_connection method definitions
 
 instance_reference_connection::instance_reference_connection() :
-		connection_assignment_base(), inst_list() {
+//		connection_assignment_base(), 
+		object(), inst_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,6 +348,8 @@ if (!m.flag_visit(this)) {
 }
 
 //=============================================================================
+#if 0
+NOT READY TO UNVEIL
 // class dynamic_connection_assignment method definitions
 
 dynamic_connection_assignment::dynamic_connection_assignment(
@@ -319,6 +360,7 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+#endif
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART

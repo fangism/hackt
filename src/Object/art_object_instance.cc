@@ -6,7 +6,6 @@
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
-#include "art_utils.tcc"
 #include "art_object_IO.tcc"
 
 //=============================================================================
@@ -69,6 +68,9 @@ instantiation_base::~instantiation_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overridden by param_instantiation.  
+ */
 ostream&
 instantiation_base::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
@@ -750,13 +752,34 @@ param_instantiation::~param_instantiation() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	Override instantiation_base's what() to suppress output of <>.
+	Override instantiation_base's dump() to suppress output of <>.
+ */
 ostream&
 param_instantiation::what(ostream& o) const {
 	return o << 
 }
-**/
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+param_instantiation::dump(ostream& o) const {
+	get_type_ref()->dump(o) << " " << key;
+	index_collection_type::const_iterator i = index_collection.begin();
+	const index_collection_type::const_iterator e = index_collection.end();
+	for ( ; i!=e; i++) {
+		assert(*i);
+		(*i)->dump(o) << endl;
+	}
+	count_const_ptr<param_expr> init_def(default_value());
+	if (init_def) {
+		if (is_template_formal())
+			init_def->dump(o << " (default = ") << ")";
+		else	init_def->dump(o << " (init = ") << ")";
+	}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1052,6 +1075,8 @@ if (!m.register_transient_object(this, PBOOL_INSTANTIATION_TYPE)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
+	if (ival)
+		ival->collect_transient_info(m);
 }
 // else already visited
 }
@@ -1070,6 +1095,7 @@ pbool_instantiation::write_object(persistent_object_manager& m) const {
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
+	m.write_pointer(f, ival);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -1082,6 +1108,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
+	m.read_pointer(f, ival);
 	STRIP_OBJECT_FOOTER(f);
 	if (index_collection.empty())
 		depth = 0;
@@ -1260,6 +1287,8 @@ if (!m.register_transient_object(this, PINT_INSTANTIATION_TYPE)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
+	if (ival)
+		ival->collect_transient_info(m);
 }
 // else already visited
 }
@@ -1278,6 +1307,7 @@ pint_instantiation::write_object(persistent_object_manager& m) const {
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
+	m.write_pointer(f, ival);
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -1290,6 +1320,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
+	m.read_pointer(f, ival);
 	STRIP_OBJECT_FOOTER(f);
 	if (index_collection.empty())
 		depth = 0;

@@ -32,7 +32,9 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace fang;		// for experimental pointer classes
+	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace COUNT_PTR_NAMESPACE;
+	using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
 /**
