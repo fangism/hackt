@@ -1,5 +1,7 @@
 % "chapters/typedefs.tex"
 
+%	$Id: typedefs.tex,v 1.4 2004/12/01 02:50:04 fang Exp $
+
 \chapter{Typedefs}
 \label{sec:typedefs}
 
@@ -9,17 +11,20 @@ Can be in namespace, or local to a definition.
 
 Two kinds of typedefs, with three syntaces.  
 
+\medskip
+\noindent
+\tit{typedef-declaration}:
 \begin{enumerate}
 \item \ttt{typedef} \tit{existing-definition} \tit{identifier}\ttt{;}
 \item \ttt{typedef} \tit{existing-definition} 
 	\ttt{<} \tit{template argument list} \ttt{>} \tit{identifier}\ttt{;}
-\item \ttt{template} \ttt{<} \tit{template-signature} \ttt{>}\\
+\item \tit{template-signature}\\
 	\ttt{typedef} \tit{existing-definition} 
 	\ttt{<} \tit{template-argument-list} \ttt{>} \tit{identifier}\ttt{;}
 \end{enumerate}
 
-In all three forms the \tit{identifier} is the name of the new
-typedef.  
+In all three forms, 
+the \tit{identifier} is the name of the new typedef.  
 The only prerequisite for the existing definition is that it has already 
 been declared.  
 
@@ -64,6 +69,11 @@ and are evaluated by the transformations defined by each typedef indirection.
 \label{sec:typedefs:equivalence}
 
 \index{type-equivalence|(}
+
+\textbf{NOTE:} This section needs to be revised
+since the introduction of strict and relaxed template parameters!  
+(Should basically forbid relaxed template parameters in typedef templates.)
+Old text follows:
 
 We extend the notion of \emph{type-equivalence} to include typedefs as follows:
 

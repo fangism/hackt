@@ -1,5 +1,7 @@
 % "chapters/templates.tex"
 
+%	$Id: templates.tex,v 1.5 2004/12/01 02:50:04 fang Exp $
+
 \chapter{Templates}
 \label{sec:templates}
 
@@ -26,7 +28,7 @@ class my_template_class;
 \end{verbatim}
 
 \noindent
-\texttt{my\_template\_class} is a class that takes a 
+\ttt{my\_template\_class} is a class that takes a 
 class that takes an integer and a class as a template argument 
 as a template argument.  
 
@@ -38,13 +40,60 @@ In C++, default values can only appear as a suffix formal parameter list.
 In \artxx\ we allow default values in any position of the formal 
 parameter list.  
 However, each defaulting argument position in a type reference
-must be given a placeholder, even if it is at the end of the argument list.  
+must be given a placeholder (a blank space between commas), 
+even if it is at the end of the argument list.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type-equivalence}
 \label{sec:templates:equivalence}
 
+\textbf{NEW:}
+In \artxx, there are two subclasses of template parameters:
+\emph{strict parameters} are required to be equivalent for type-matching,
+whereas \emph{relaxed parameters} are ignored when type matching.  
+We refer to the \emph{strict type} of an entity as the 
+underlying template type with fully-specified strict parameters, 
+disregarding its relaxed parameters.  
+The rationale for making this distinction is that frequently, 
+one wishes to declare sparse or dense collections of the same 
+logical type while allowing some internal variation.  
+For example, ROM cells hard-wired to $0$ or $1$ are permitted
+in the same collection, and would be templated with one relaxed 
+parameter for the cell's value.  
+The user has the freedom to decide what parameters may be ignored.  
+
+The proposed syntax for distinguishing the two types of parameters is:
+
+\medskip
+\noindent
+\tit{template-signature}:
+\begin{itemize}
+\item \ttt{template} \ttt{<} \tit{strict-parameter-list}$_{opt}$ \ttt{>}
+\item \ttt{template} \ttt{<} \tit{strict-parameter-list}$_{opt}$ \ttt{>}
+	\ttt{<} \tit{relaxed-parameter-list} \ttt{>}
+\end{itemize}
+Both parameter lists are syntactically identical.  
+When there are no relaxed parameters, the second set of angle-brackets
+may be omitted.  
+If there are only relaxed paramters, the first set of angle-brackets
+are still required but empty.  
+
+
+There are two levels of type equivalence.  
+Two entities are \emph{collection-equivalent} or \emph{collectible}
+if their underlying template type is the same and their 
+strict parameters are equivalent.  
+Two entities are \emph{connection-equivalent} or \emph{connectible}
+if they are collectible and their public interface 
+(port-for-port) is connectible, i.e., 
+the dimensions, sizes, and strict types of the ports are themselves, 
+connection-equivalent.  
+(Note the recursive definition.)
+Connectibility implies collectibility, but not vice versa.  
+
+
+\textbf{OUTDATED:}
 Two templated types are equivalence if and only if:
 \begin{itemize}
 \item They are of the same type class (channel, process,... ), obviously
@@ -58,7 +107,8 @@ The ports of a template definition need not depend on template
 parameters themselves, as is the case with defining 
 cyclic source sequences for a channel.  
 
-\textbf{DEBATE:} should the fourth criterion be required for type-equivalence, 
+\textbf{DEBATE:} (Resolved, see above: NEW)
+Should the fourth criterion be required for type-equivalence, 
 or can we allow non-equivalent template parameters as long as the
 ports interface is equivalent?  
 
