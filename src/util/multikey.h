@@ -31,11 +31,24 @@ using namespace std;
 template <class K>
 class multikey_base {
 public:
+	typedef	K*				iterator;
+	typedef	const K*			const_iterator;
+public:
+	static const size_t			LIMIT = 4;
+public:
 virtual	~multikey_base() { }
 virtual	size_t dimensions(void) const = 0;
 virtual	K default_value(void) const = 0;
+
+virtual	iterator begin(void) = 0;
+virtual	const_iterator begin(void) const = 0;
+virtual	iterator end(void) = 0;
+virtual	const_iterator end(void) const = 0;
+
 virtual	K& operator [] (const size_t i) = 0;
 virtual	const K& operator [] (const size_t i) const = 0;
+
+static	multikey_base<K>* make_multikey(const size_t d);
 };	// end class multikey_base
 
 //=============================================================================
@@ -53,6 +66,10 @@ template <size_t D, class K, K init>
 class multikey : public multikey_base<K> {
 	template <size_t, class C, C>
 	friend class multikey;
+public:
+	typedef	multikey_base<K>			base_type;
+	typedef	typename base_type::iterator		iterator;
+	typedef	typename base_type::const_iterator	const_iterator;
 public:
 	K indices[D];
 
@@ -85,6 +102,18 @@ public:
 		}
 	}
 
+	iterator
+	begin(void) { return &indices[0]; }
+
+	const_iterator
+	begin(void) const { return &indices[0]; }
+
+	iterator
+	end(void) { return &indices[D]; }
+
+	const_iterator
+	end(void) const { return &indices[D]; }
+
 	/**
 		Safe indexing with array-bound check.  
 		indices is public, so one can always access it directly...
@@ -104,6 +133,34 @@ public:
 };	// end class multikey
 
 //-----------------------------------------------------------------------------
+template <class K>
+multikey_base<K>*
+multikey_base<K>::make_multikey(const size_t d) {
+	assert(d > 0 && d <= LIMIT);
+	// there may be some clever way to make a call table to
+	// the various constructors, but this is a rare operation: who cares?
+	switch(d) {
+		case 1: return new multikey<1,K>();
+		case 2: return new multikey<2,K>();
+		case 3: return new multikey<3,K>();
+		case 4: return new multikey<4,K>();
+		// add more cases if LIMIT is ever extended.
+		default: return NULL;
+	}
+}
+
+//-----------------------------------------------------------------------------
+template <class K>
+ostream&
+operator << (ostream& o, const multikey_base<K>& k) {
+	typename multikey_base<K>::const_iterator i = k.begin();
+	const typename multikey_base<K>::const_iterator e = k.end();
+	for ( ; i!=e; i++)
+		o << '[' << *i << ']';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 ostream&
 operator << (ostream& o, const multikey<D,K>& k) {
@@ -118,8 +175,7 @@ template <size_t D, class K>
 bool
 operator < (const multikey<D,K>& l, const multikey<D,K>& r) {
 #if USE_STL_ALGORITHM
-	return lexicographical_compare(&l.indices[0], &l.indices[D],
-		&r.indices[0], &r.indices[D]);
+	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
 #else
 	register size_t i = 0;
 	for ( ; i<D; i++) {
@@ -136,8 +192,7 @@ operator < (const multikey<D,K>& l, const multikey<D,K>& r) {
 template <size_t D1, size_t D2, class K>
 bool
 operator < (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return lexicographical_compare(&l.indices[0], &l.indices[D1],
-		&r.indices[0], &r.indices[D2]);
+	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
 }
 #endif
 
@@ -146,8 +201,7 @@ template <size_t D, class K>
 bool
 operator > (const multikey<D,K>& l, const multikey<D,K>& r) {
 #if USE_STL_ALGORITHM
-	return lexicographical_compare(&r.indices[0], &r.indices[D],
-		&l.indices[0], &l.indices[D]);
+	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
 #else
 	register size_t i = 0;
 	for ( ; i<D; i++) {
@@ -164,8 +218,7 @@ operator > (const multikey<D,K>& l, const multikey<D,K>& r) {
 template <size_t D1, size_t D2, class K>
 bool
 operator > (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return lexicographical_compare(&r.indices[0], &r.indices[D2],
-		&l.indices[0], &l.indices[D1]);
+	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
 }
 #endif
 
@@ -174,7 +227,7 @@ template <size_t D, class K>
 bool
 operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
 #if USE_STL_ALGORITHM
-	return equals(&l.indices[0], &l.indices[D], &r.indices[0]);
+	return equal(l.begin(), l.end(), r.begin());
 #else
 	register size_t i = 0;
 	for ( ; i<D; i++) {
@@ -188,9 +241,30 @@ operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dimensions must match!
+ */
+template <class K>
+bool
+operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
+	if (l.dimensions() != r.dimensions())
+		return false;
+#if USE_STL_ALGORITHM
+	return equal(l.begin(), l.end(), r.begin());
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 bool
 operator != (const multikey<D,K>& l, const multikey<D,K>& r) {
+	return !(l == r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class K>
+bool
+operator != (const multikey_base<K>& l, const multikey_base<K>& r) {
 	return !(l == r);
 }
 
@@ -224,11 +298,150 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 }
 #endif
 
-//-----------------------------------------------------------------------------
+//=============================================================================
+template <class K>
+class multikey_generator_base {
+public:
+	typedef	typename multikey_base<K>::iterator		iterator;
+	typedef	typename multikey_base<K>::const_iterator	const_iterator;
+public:
+virtual	~multikey_generator_base() { }
 
-}	// end namespace MULTIKEY_NAMESPACE
+virtual	void validate(void) const = 0;
+virtual	void initialize(void) = 0;
+
+virtual	iterator begin(void) = 0;
+virtual	const_iterator begin(void) const = 0;
+virtual	iterator end(void) = 0;
+virtual	const_iterator end(void) const = 0;
+
+virtual multikey_base<K>& get_lower_corner(void) = 0;
+virtual const multikey_base<K>& get_lower_corner(void) const = 0;
+virtual multikey_base<K>& get_upper_corner(void) = 0;
+virtual const multikey_base<K>& get_upper_corner(void) const = 0;
+
+virtual	multikey_base<K>& operator ++ (int) = 0;
+
+static	multikey_generator_base<K>*
+		make_multikey_generator(const size_t d);
+};	// end class multikey_generator_base
+
+//-----------------------------------------------------------------------------
+/**
+	Only works for integer-like keys.  
+	Extension of a standard multikey, with knowledge of bounds.  
+ */
+template <size_t D, class K>
+class multikey_generator : public multikey<D,K>, 
+		public multikey_generator_base<K> {
+public:
+	typedef	multikey<D,K>				base_type;
+	typedef	typename base_type::iterator		iterator;
+	typedef	typename base_type::const_iterator	const_iterator;
+// protected:
+public:		// for sake of laziness and convenience
+	/** vector of lower bounds */
+	base_type		lower_corner;
+	/** vector of upper bounds */
+	base_type		upper_corner;
+public:
+	multikey_generator() : base_type(), lower_corner(), upper_corner() { }
+	multikey_generator(const multikey<D,K>& l, const multikey<D,K>& u) :
+		base_type(), lower_corner(l), upper_corner(u) { }
+	// use default destructor
+
+	/**
+		Make sure bounds are sane.  
+	 */
+	void
+	validate(void) const {
+		const_iterator min = lower_corner.begin();
+		const_iterator max = upper_corner.begin();
+		const const_iterator min_end = lower_corner.end();
+		for ( ; min != min_end; min++, max++) {
+			assert(*min <= *max);
+		}
+	}
+
+	void
+	initialize(void) {
+		validate();
+		copy(lower_corner.begin(), lower_corner.end(), this->begin());
+	}
+
+	iterator
+	begin(void) { return base_type::begin(); }
+
+	const_iterator
+	begin(void) const { return base_type::begin(); }
+
+	iterator
+	end(void) { return base_type::end(); }
+
+	const_iterator
+	end(void) const { return base_type::end(); }
+
+	multikey_base<K>&
+	get_lower_corner(void) { return lower_corner; }
+
+	const multikey_base<K>&
+	get_lower_corner(void) const { return lower_corner; }
+
+	multikey_base<K>&
+	get_upper_corner(void) { return upper_corner; }
+
+	const multikey_base<K>&
+	get_upper_corner(void) const { return upper_corner; }
+
+	// can be used directly as key, no need to convert
+	multikey_base<K>&
+	operator ++ (int) {
+#if 0
+		iterator inc = --(base_type::end());
+		const const_iterator msp = --(base_type::begin());
+		const_iterator min = --(lower_corner.end());
+		const_iterator max = --(upper_corner.end());
+#else
+		iterator inc = &this->indices[D-1];
+		const const_iterator msp = &this->indices[-1];
+		const_iterator min = &lower_corner.indices[D-1];
+		const_iterator max = &upper_corner.indices[D-1];
+#endif
+		for ( ; inc != msp; inc--, min--, max--) {
+			if (*inc >= *max)
+				*inc = *min;
+			else {
+				(*inc)++;
+				break;
+			}
+		}
+		return *this;
+	}
+
+	// all other methods inherited
+
+};	// end class multikey_generator
+
+//-----------------------------------------------------------------------------
+template <class K>
+multikey_generator_base<K>*
+multikey_generator_base<K>::make_multikey_generator(const size_t d) {
+	assert(d > 0 && d <= multikey_base<K>::LIMIT);
+	// there may be some clever way to make a call table to
+	// the various constructors, but this is a rare operation: who cares?
+	switch(d) {
+		case 1: return new multikey_generator<1,K>();
+		case 2: return new multikey_generator<2,K>();
+		case 3: return new multikey_generator<3,K>();
+		case 4: return new multikey_generator<4,K>();
+		// add more cases if LIMIT is ever extended.
+		default: return NULL;
+	}
+}
 
 //=============================================================================
+}	// end namespace MULTIKEY_NAMESPACE
+
 
 
 #endif	//	__MULTIKEY_H__

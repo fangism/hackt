@@ -7,6 +7,7 @@
 #include "multikey_map.h"
 
 namespace MULTIKEY_MAP_NAMESPACE {
+using namespace MULTIKEY_NAMESPACE;
 using namespace QMAP_NAMESPACE;
 
 //=============================================================================
@@ -30,6 +31,9 @@ virtual bool empty(void) const = 0;
 virtual void clear(void) = 0;
 
 virtual ostream& dump(ostream& o) const = 0;
+
+virtual T& operator [] (const multikey_base<K>& k) = 0;
+virtual T operator [] (const multikey_base<K>& k) const = 0;
 
 static  this_type* make_multikey_qmap(const size_t d);
 
@@ -85,6 +89,22 @@ public:
 		map_type::map_type::clean();
 	}
 
+	T& operator [] (const typename map_type::key_type& k) {
+		return map_type::operator[](k);
+	}
+
+	T operator [] (const typename map_type::key_type& k) const {
+		return map_type::operator[](k);
+	}
+
+	T& operator [] (const multikey_base<K>& k) {
+		return map_type::operator[](k);
+	}
+
+	T operator [] (const multikey_base<K>& k) const {
+		return map_type::operator[](k);
+	}
+
 	ostream&
 	dump(ostream& o) const { return map_type::dump(o); }
 
@@ -93,16 +113,64 @@ public:
 };	// end class multikey_qmap
 
 //=============================================================================
+// no need for 1-D specialization, already done in multikey_map
+
+//=============================================================================
+// No, I am NOT crazy, this is indeed a 0-D specialization
+// class K is useless, but is kept for interface purposes
+
+template <class K, class T>
+class multikey_qmap<0,K,T> : public multikey_qmap_base<K,T> {
+protected:
+	T			val;
+
+public:
+	// only default constructor
+	~multikey_qmap() { }
+
+	size_t dimensions(void) const { return 0; }
+	size_t population(void) const { return 1; }
+	bool empty(void) const { return false; }
+
+	/** writes with default value */
+	void clear(void) { val = T(); }
+
+	operator const T& () const { return val; }
+	operator T& () { return val; }
+
+	/** should we allow this? */
+	T& operator [] (const multikey_base<K>& k) {
+		assert(0);
+		return val;
+	}
+
+	/** should we allow this? */
+	T operator [] (const multikey_base<K>& k) const {
+		assert(0);
+		return val;
+	}
+
+	ostream& dump(ostream& o) const {
+		return o << val;
+	}
+
+};	// end class multikey_qmap_base
+
+//=============================================================================
 // static function definitions
 
+/**
+	\param d dimensions of collection, may be 0.
+ */
 template <class K, class T>
 multikey_qmap_base<K,T>*
 multikey_qmap_base<K,T>::make_multikey_qmap(const size_t d) {
 	// slow switch-case, but we need constants
-	assert(d > 0 && d <= LIMIT);
+	assert(d <= LIMIT);
 	// there may be some clever way to make a call table to
 	// the various constructors, but this is a rare operation: who cares?
 	switch(d) {
+		case 0: return new multikey_qmap<0,K,T>();      
 		case 1: return new multikey_qmap<1,K,T>();      
 		case 2: return new multikey_qmap<2,K,T>();
 		case 3: return new multikey_qmap<3,K,T>();

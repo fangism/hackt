@@ -15,10 +15,24 @@ namespace MULTIKEY_NAMESPACE {
 using namespace std;
 
 //=============================================================================
+template <class K>
+class multikey_base;
+
 template <size_t D, class K = int, K init = 0>
 class multikey;
 
+template <class K>
+class multikey_generator_base;
+
+template <size_t D, class K>
+class multikey_generator;
+
 //-----------------------------------------------------------------------------
+template <class K>
+ostream&
+operator << (ostream& o, const multikey_base<K>& k); 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 ostream&
 operator << (ostream& o, const multikey<D,K>& k); 
@@ -39,6 +53,11 @@ bool
 operator == (const multikey<D,K>& l, const multikey<D,K>& r);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class K>
+bool
+operator == (const multikey_base<K>& l, const multikey_base<K>& r);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 bool
 operator <= (const multikey<D,K>& l, const multikey<D,K>& r);
@@ -53,6 +72,12 @@ template <size_t D, class K>
 bool
 operator != (const multikey<D,K>& l, const multikey<D,K>& r);
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class K>
+bool
+operator != (const multikey_base<K>& l, const multikey_base<K>& r);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //-----------------------------------------------------------------------------
 
 }	// end namespace MULTIKEY_NAMESPACE

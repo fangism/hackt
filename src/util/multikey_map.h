@@ -9,6 +9,7 @@
 #include "multikey_map_fwd.h"
 
 namespace MULTIKEY_MAP_NAMESPACE {
+using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_NAMESPACE::multikey;
 
 //=============================================================================
@@ -30,6 +31,9 @@ virtual	size_t population(void) const = 0;
 virtual	bool empty(void) const = 0;
 virtual	void clear(void) = 0;
 virtual	void clean(void) = 0;
+
+virtual	T& operator [] (const multikey_base<K>& k) = 0;
+virtual	T operator [] (const multikey_base<K>& k) const = 0;
 
 virtual	ostream& dump(ostream& o) const = 0;
 
@@ -227,6 +231,30 @@ public:
 		return ret;
 	}
 
+	T& operator [] (const typename map_type::key_type& k) {
+		return map_type::operator[](k);
+	}
+
+	T operator [] (const typename map_type::key_type& k) const {
+		return map_type::operator[](k);
+	}
+
+	T& operator [] (const multikey_base<K>& k) {
+		// what if initial value is different?
+		const multikey<D,K>* dk =
+			dynamic_cast<const multikey<D,K>*>(&k);
+		assert(dk);
+		return map_type::operator[](*dk);
+	}
+
+	T operator [] (const multikey_base<K>& k) const {
+		// what if initial value is different?
+		const multikey<D,K>* dk =
+			dynamic_cast<const multikey<D,K>*>(&k);
+		assert(dk);
+		return map_type::operator[](*dk);
+	}
+
 	ostream&
 	dump(ostream& o) const {
 		const_iterator i = this->begin();
@@ -302,6 +330,31 @@ public:
 			}
 		}
 	}
+
+	T& operator [] (const typename map_type::key_type& k) {
+		return map_type::operator[](k);
+	}
+
+	T operator [] (const typename map_type::key_type& k) const {
+		return map_type::operator[](k);
+	}
+
+	T& operator [] (const multikey_base<K>& k) {
+		// what if initial value is different?
+		const multikey<1,K>* dk =
+			dynamic_cast<const multikey<1,K>*>(&k);
+		assert(dk);
+		return map_type::operator[]((*dk)[0]);
+	}
+
+	T operator [] (const multikey_base<K>& k) const {
+		// what if initial value is different?
+		const multikey<1,K>* dk =
+			dynamic_cast<const multikey<1,K>*>(&k);
+		assert(dk);
+		return map_type::operator[]((*dk)[0]);
+	}
+
 
 	ostream&
 	dump(ostream& o) const {
