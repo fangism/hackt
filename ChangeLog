@@ -5,6 +5,7 @@
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-01:
 	  We need to port many expressions classes to follow consistent
 	  templates, this has been punted for way too long. 
+	  Need to rename some methods to conform to standard interface.  
 
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
 	  Porting parameter instance collections to use new value_collection
