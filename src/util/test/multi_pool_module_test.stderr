@@ -122,7 +122,7 @@ at 0x805b23b
 END---initialization: twiddle_dum module
 START-initialization: test-main
 END---initialization: test-main
-\- MAIN
+\- MAIN()
 done with static initialization, start of main()
 | \- never_let_go()
 | | \- operator new
@@ -159,7 +159,7 @@ at 0x805b554
 | \- never_let_go()
 | /- never_let_go()
 done with main(), begin static destruction.
-/- MAIN
+/- MAIN()
 \- destroy twiddle_dee
 at 0x805b554
 /- destroy twiddle_dee

@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.3 2005/01/25 22:33:46 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.4 2005/01/27 06:04:50 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -78,10 +78,20 @@ public:									\
 
 /**
 	Friends needed only if default constructor is private.
+	NOTE: the formal parameters identifiers for the second _Construct 
+	friend declaration (__P, __value) are kept to work around a 
+	major lookup bug in gcc-3.3.
+	Otherwise, it would be better off without it.  
+	Fortunately, there's no harm in keeping it; only the definition's
+	formal parameters matter -- it's just an eyesore.  
+
+	See "util/test/friend_function_formal_bug.cc" for example.  
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
 	friend class list_vector_pool<this_type>;			\
-	friend void _Construct<this_type>(this_type*);
+	friend void _Construct<this_type>(this_type*);			\
+	friend void _Construct<this_type, this_type>(			\
+		this_type* __p, const this_type& __value);
 
 namespace util {
 //=============================================================================

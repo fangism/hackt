@@ -20,7 +20,7 @@ Allocated named_thing from pool @ 0x8057238
 \- dummy ctor
 0x8057238
 /- dummy ctor
-\- main()
+\- MAIN()
 anon_static sitting at 0x8056b34
 anon_dynamic sitting at 0x8057238
 | \- actually_called_one()
@@ -65,7 +65,7 @@ Allocated named_thing from pool @ 0x805723a
 | /- actually_called_two()
 | \- actually_called_two()
 | /- actually_called_two()
-/- main()
+/- MAIN()
 \- dtor
 0x805723a
 /- dtor

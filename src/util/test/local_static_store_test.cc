@@ -8,7 +8,7 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behoavior...
 
-	$Id: local_static_store_test.cc,v 1.1.4.1.2.1 2005/01/24 19:47:57 fang Exp $
+	$Id: local_static_store_test.cc,v 1.1.4.1.2.2 2005/01/27 06:04:53 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
@@ -68,7 +68,7 @@ anon_dynamic(new named_thing("Eve"));
 
 int
 main(int argc, char* argv[]) {
-	STACKTRACE("main()");
+	STACKTRACE("MAIN()");	// magic expression used to filter for test
 	cerr << "anon_static sitting at " << &anon_static << endl;
 	cerr << "anon_dynamic sitting at " << &*anon_dynamic << endl;
 

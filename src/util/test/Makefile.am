@@ -19,6 +19,7 @@ noinst_PROGRAMS = \
 	what_test \
 	pretty_function_test \
 	stacktrace_test \
+	friend_function_formal_bug \
 	ptrs_test \
 	pointer_classes_test \
 	count_ptr_test \
@@ -46,6 +47,7 @@ count_ptr_test_SOURCES = count_ptr_test.cc var.h
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
+friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
@@ -88,6 +90,21 @@ static_trace.cc: ../static_trace.cc
 thread_lock.cc: ../memory/thread_lock.cc
 	$(LN_S) $< $@
 
+friend_function_formal_bug.stderr:
+	$(TOUCH) $@
+
+# some tests require more than the default filtering
+MOREFILTER_TESTS = \
+	local_static_store_test \
+	multi_pool_module_test
+
+PREFILTER_FILES = \
+	$(MOREFILTER_TESTS:=.stderr.prefilter) \
+	$(MOREFILTER_TESTS:=.out.prefilter)
+
+# but is included in distribution, EXTRA_DIST? don't bother cleaning?
+EMPTY_STDERR_FILES = friend_function_formal_bug.stderr
+
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
 
@@ -98,13 +115,15 @@ AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CFLAGS)
 
 EXTRA_DIST = test-expect.sh test.cvsignore \
-	$(noinst_PROGRAMS:=.stderr)
+	$(noinst_PROGRAMS:=.stderr) \
+	$(MOREFILTER_TESTS:=.morefilter.sh)
 
 CLEANFILES = \
 	$(noinst_PROGRAMS:=.test) \
 	$(noinst_PROGRAMS:=.diff) \
 	$(noinst_PROGRAMS:=.filter) \
-	$(noinst_PROGRAMS:=.out)
+	$(noinst_PROGRAMS:=.out) \
+	$(PREFILTER_FILES)
 
 DISTCLEANFILES = .cvsignore $(libfangutil_la_SOURCES)
 
@@ -112,7 +131,8 @@ TESTS = $(noinst_PROGRAMS:=.test)
 
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
-AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES)
+AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
+	$(EMPTY_STDERR_FILES) $(PREFILTER_FILES)
 
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
@@ -123,7 +143,7 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES)
 
 .cvsignore: Makefile.am Makefile.in
 
-all-local: .cvsignore
+all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES)
 
 clean-local:
 	-$(RM) *.core core.*
