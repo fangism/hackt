@@ -304,7 +304,6 @@ instance_base::check_build(never_ptr<context> c) const {
 			<< "instance_base::check_build(...): ";
 	)
 
-	// ACTUALLY: need current_fundamental_type()
 	// uses c->current_fundamental_type
 	inst = c->add_instance(*id);		// check return value?
 	if (!inst) {
@@ -496,7 +495,47 @@ instance_connection::check_build(never_ptr<context> c) const {
 		what(cerr << c->auto_indent()) <<
 			"instance_connection::check_build(...): ";
 	)
-	return node::check_build(c);
+	never_const_ptr<object> o = instance_base::check_build(c);
+	if (!o) {
+		// instance_base already prints error message...
+//		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+		exit(1);
+		return never_const_ptr<object>(NULL);
+	}
+
+	// lookup the instantiation we just created
+	id->check_build(c);
+	// expect instance_reference on object_stack
+	count_const_ptr<object> obj(c->pop_top_object_stack());
+	assert(obj);		// we just created it!
+	count_const_ptr<simple_instance_reference>
+		inst_ref(obj.is_a<simple_instance_reference>());
+	assert(inst_ref);
+
+	actuals_base::check_build(c);
+	obj = c->pop_top_object_stack();
+	if (!obj) {
+		cerr << "ERROR in object_list produced at "
+			<< actuals_base::where() << endl;
+		exit(1);
+	}
+	count_const_ptr<object_list>
+		obj_list(obj.is_a<object_list>());
+	assert(obj_list);
+
+	excl_const_ptr<port_connection> port_con = 
+		obj_list->make_port_connection(inst_ref);
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where() << endl;
+		exit(1);
+	} else {
+		c->add_connection(
+			excl_const_ptr<connection_assignment_base>(
+				port_con));
+		assert(!port_con.owned());	// explicit transfer
+	}
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================

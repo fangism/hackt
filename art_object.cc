@@ -750,7 +750,12 @@ object_list::make_port_connection(
 	never_const_ptr<definition_base>
 		base_def(ir->get_base_def());
 
-	if (base_def->certify_port_actuals(*this)) {
+	const size_t ir_dim = ir->dimensions();
+	if (ir_dim) {
+		cerr << "Instance reference port connection must be scalar, "
+			"but got a " << ir_dim << "-dim reference!" << endl;
+		return return_type(NULL);
+	} else if (base_def->certify_port_actuals(*this)) {
 		const_iterator i = begin();
 		for ( ; i!=end(); i++) {
 			count_const_ptr<instance_reference_base>
