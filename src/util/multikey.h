@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.12 2004/12/15 23:31:13 fang Exp $
+	$Id: multikey.h,v 1.13 2004/12/16 03:50:56 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -16,11 +16,10 @@
 
 #include "IO_utils.tcc"
 
-#ifndef	USE_STL_ALGORITHM
-#define	USE_STL_ALGORITHM		1
-#endif
-
 #include "multikey_fwd.h"
+
+#define	MULTIKEY_TEMPLATE_SIGNATURE					\
+template <size_t D, class K, K init>
 
 /***
 	Later be able to compare between keys of different dimensions.  
@@ -90,7 +89,7 @@ static	multikey_base<K>* make_multikey(const size_t d);
 	overhead from vector or valarray.  
 	Perhaps add another field for default value?
  */
-template <size_t D, class K, K init>
+MULTIKEY_TEMPLATE_SIGNATURE
 class multikey : virtual public multikey_base<K> {
 	template <size_t, class C, C>
 	friend class multikey;
@@ -102,6 +101,11 @@ public:
 	typedef	typename base_type::const_iterator	const_iterator;
 	typedef	typename base_type::reference		reference;
 	typedef	typename base_type::const_reference	const_reference;
+
+#if 0
+public:
+	static const this_type				ones;
+#endif
 public:
 	K indices[D];
 
@@ -222,6 +226,32 @@ public:
 		return *this;
 	}
 
+	this_type&
+	operator += (const this_type& k) {
+		transform(this->begin(), this->end(), k.begin(), 
+			this->begin(), std::plus<K>());
+		return *this;
+	}
+
+	this_type&
+	operator -= (const this_type& k) {
+		transform(this->begin(), this->end(), k.begin(), 
+			this->begin(), std::minus<K>());
+		return *this;
+	}
+
+	this_type
+	operator + (const this_type& k) {
+		this_type ret(*this);
+		return ret += k;
+	}
+
+	this_type
+	operator - (const this_type& k) {
+		this_type ret(*this);
+		return ret -= k;
+	}
+
 	/**
 		Helper class for finding index extremities in sets.  
 	 */
@@ -309,6 +339,13 @@ public:
 };	// end class multikey
 
 //-----------------------------------------------------------------------------
+#if 0
+MULTIKEY_TEMPLATE_SIGNATURE
+const multikey<D,K>
+multikey<D,K>::ones = multikey<D,K,1>();
+#endif
+
+//-----------------------------------------------------------------------------
 template <class K>
 multikey_base<K>*
 multikey_base<K>::make_multikey(const size_t d) {
@@ -352,70 +389,33 @@ operator << (ostream& o, const multikey<D,K>& k) {
 template <size_t D, class K>
 bool
 operator < (const multikey<D,K>& l, const multikey<D,K>& r) {
-#if USE_STL_ALGORITHM
 	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
-#else
-	register size_t i = 0;
-	for ( ; i<D; i++) {
-		register const size_t x = l.indices[i], y = r.indices[i];
-		if (x != y)
-			return (x < y);
-	}
-	// else all equal
-	return false;
-#endif	// USE_STL_ALGORITHM
 }
 
-#if USE_STL_ALGORITHM
 template <size_t D1, size_t D2, class K>
 bool
 operator < (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 bool
 operator > (const multikey<D,K>& l, const multikey<D,K>& r) {
-#if USE_STL_ALGORITHM
 	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
-#else
-	register size_t i = 0;
-	for ( ; i<D; i++) {
-		register const size_t x = l.indices[i], y = r.indices[i];
-		if (x != y)
-			return (x > y);
-	}
-	// else all equal
-	return false;
-#endif
 }
 
-#if USE_STL_ALGORITHM
 template <size_t D1, size_t D2, class K>
 bool
 operator > (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
 bool
 operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
-#if USE_STL_ALGORITHM
 	return equal(l.begin(), l.end(), r.begin());
-#else
-	register size_t i = 0;
-	for ( ; i<D; i++) {
-		register const size_t x = l.indices[i], y = r.indices[i];
-		if (!equal(x,y))
-			return false;
-	}
-	// else all equal
-	return true;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -427,9 +427,7 @@ bool
 operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
 	if (l.dimensions() != r.dimensions())
 		return false;
-#if USE_STL_ALGORITHM
 	return std::equal(l.begin(), l.end(), r.begin());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -453,13 +451,11 @@ operator <= (const multikey<D,K>& l, const multikey<D,K>& r) {
 	return !(l > r);
 }
 
-#if USE_STL_ALGORITHM
 template <size_t D1, size_t D2, class K>
 bool
 operator <= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 	return !(l > r);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
@@ -468,13 +464,11 @@ operator >= (const multikey<D,K>& l, const multikey<D,K>& r) {
 	return !(l < r);
 }
 
-#if USE_STL_ALGORITHM
 template <size_t D1, size_t D2, class K>
 bool
 operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 	return !(l < r);
 }
-#endif
 
 //=============================================================================
 /**
