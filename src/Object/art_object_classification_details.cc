@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.cc"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.cc,v 1.2 2005/02/27 22:54:08 fang Exp $
+	$Id: art_object_classification_details.cc,v 1.2.14.1 2005/03/09 19:24:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_CC__
@@ -29,6 +29,12 @@ class_traits<process_tag>::tag_name[] = "process";
 
 const char
 class_traits<channel_tag>::tag_name[] = "channel";
+
+const char
+class_traits<pint_tag>::tag_name[] = "pint";
+
+const char
+class_traits<pbool_tag>::tag_name[] = "pbool";
 
 //=============================================================================
 }	// end namespace entity

@@ -1,35 +1,42 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.17.8.1 2005/03/09 19:24:55 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.1.2.1 2005/03/09 19:24:56 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
-#define	__ART_OBJECT_INSTANCE_PINT_CC__
+#ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
+#define	__ART_OBJECT_VALUE_COLLECTION_TCC__
 
+#ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL				0
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#endif
+
+#ifndef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0 && DEBUG_LIST_VECTOR_POOL
+#endif
+
+#ifndef ENABLE_STACKTRACE
 #define ENABLE_STACKTRACE				0
+#endif
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
+#include "art_object_value_collection.h"
+
+#if 0
 #include "art_object_type_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_inst_ref.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
 #include "art_built_ins.h"
-#include "art_object_type_hash.h"
+#endif
 
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-#if USE_VALUE_COLLECTION_TEMPLATE
-#include "art_object_value_collection.tcc"
-#include "art_object_classification_details.h"
-#else
 #include "memory/list_vector_pool.tcc"
 #include "what.h"
 #include "STL/list.tcc"
@@ -41,45 +48,6 @@
 #include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
-#endif
-#include "static_trace.h"
-
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("instance_pint")
-
-//=============================================================================
-namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_scalar, "pint_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_1D, "pint_array<1>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_2D, "pint_array<2>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_3D, "pint_array<3>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_4D, "pint_array<4>")
-
-template <>
-struct persistent_traits<ART::entity::pint_instance_collection> {
-	static const persistent::hash_key	type_key;
-};
-
-const persistent::hash_key
-persistent_traits<ART::entity::pint_instance_collection>::type_key(
-	PINT_INSTANCE_COLLECTION_TYPE_KEY);
-
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_scalar, PINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_1D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_2D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
-
-namespace memory {
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
-}	// end namespace memory
-}	// end namespace util
 
 //=============================================================================
 namespace ART {
@@ -103,6 +71,7 @@ REQUIRES_STACKTRACE_STATIC_INIT
 // struct pint_instance method definitions
 // not really methods...
 
+#if 0
 bool
 operator == (const pint_instance& p, const pint_instance& q) {
 	INVARIANT(p.instantiated && q.instantiated);
@@ -119,33 +88,37 @@ operator << (ostream& o, const pint_instance& p) {
 		return o << p.value;
 	} else	return o << "?";
 }
+#endif
 
 //=============================================================================
-// class pint_instance_collection method definitions
+// class value_collection method definitions
 
-#if !USE_VALUE_COLLECTION_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
-pint_instance_collection::pint_instance_collection(const size_t d) :
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection(const size_t d) :
 		parent_type(d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_instance_collection::pint_instance_collection(const scopespace& o, 
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	This is a special case used by built-in definition construction, 
 	so we restrict the default argument to constant scalar integer.  
 	This way, we can safely omit the call to
 	type_check_actual_param_expr(*i).
  */
-pint_instance_collection::pint_instance_collection(const scopespace& o, 
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
 		const string& n, const size_t d, 
 		const count_ptr<const pint_const>& i) :
 		parent_type(o, n, d), 
@@ -160,27 +133,36 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 	INVARIANT(type_check_actual_param_expr(*i));
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_instance_collection::~pint_instance_collection() {
-//	STACKTRACE("~pint_instance_collection()");
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::~value_collection() {
+//	STACKTRACE("~value_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
-pint_instance_collection::what(ostream& o) const {
+VALUE_COLLECTION_CLASS::what(ostream& o) const {
+#if 0
 	return o << "pint-inst<" << dimensions << ">";
+#else
+	return o << util::what<this_type>::name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
-pint_instance_collection::type_dump(ostream& o) const {
-	return o << "pint^" << dimensions;
+VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
+	return o << class_traits<Tag>::tag_name << '^' << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-pint_instance_collection::get_type_ref(void) const {
+VALUE_COLLECTION_CLASS::get_type_ref(void) const {
 	return pint_type_ptr;
 		// defined in "art_built_ins.h"
 }
@@ -207,8 +189,9 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa may_be_initialized
 	\sa must_be_initialized
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-pint_instance_collection::initialize(const init_arg_type& e) {
+VALUE_COLLECTION_CLASS::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {
@@ -227,10 +210,11 @@ pint_instance_collection::initialize(const init_arg_type& e) {
 	Assigning default value(s) to parameters is only valid
 	in the context of template-formal parameters.  
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-pint_instance_collection::assign_default_value(
+VALUE_COLLECTION_CLASS::assign_default_value(
 		const count_ptr<const param_expr>& p) {
-	const count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
+	const count_ptr<const expr_type> i(p.template is_a<const expr_type>());
 	if (i && type_check_actual_param_expr(*i).good) {
 		ival = i;
 		return good_bool(true);
@@ -244,9 +228,10 @@ pint_instance_collection::assign_default_value(
 	formal parameters.
 	\return pointer to default value expression.
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const param_expr>
-pint_instance_collection::default_value(void) const {
-//	STACKTRACE("pint_instance_collection::default_value()");
+VALUE_COLLECTION_CLASS::default_value(void) const {
+//	STACKTRACE("VALUE_COLLECTION_CLASS::default_value()");
 	return ival;
 }
 
@@ -256,8 +241,9 @@ pint_instance_collection::default_value(void) const {
 	of template formals.  
 	\return pointer to initial value expression.  
  */
-count_ptr<const pint_expr>
-pint_instance_collection::initial_value(void) const {
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const typename VALUE_COLLECTION_CLASS::expr_type>
+VALUE_COLLECTION_CLASS::initial_value(void) const {
 	return ival;
 }
 
@@ -274,28 +260,30 @@ pint_instance_collection::initial_value(void) const {
 		Therefore, cache them in the global (or built-in) namespace.  
 	\return NULL.
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<instance_reference_base>
-pint_instance_collection::make_instance_reference(void) const {
+VALUE_COLLECTION_CLASS::make_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
 	return count_ptr<param_instance_reference>(
-		new pint_instance_reference(
-			never_ptr<pint_instance_collection>(
-			const_cast<pint_instance_collection*>(this))));
+		new instance_reference_type(
+			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Checks whether or not a pint was passed to a formal 
-	pint parameter in a template.  
+	Checks whether or not a param was passed to a formal 
+	parameter in a template.  
 	Should also check dimensionality and size.  
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) const {
-	const never_ptr<const pint_expr> pi(IS_A(const pint_expr*, &pe));
+VALUE_COLLECTION_CLASS::type_check_actual_param_expr(
+		const param_expr& pe) const {
+	const never_ptr<const expr_type> pi(IS_A(const expr_type*, &pe));
 	if (!pi) {
 		// useful error message?
 		return good_bool(false);
@@ -312,8 +300,9 @@ pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) con
 	the dimension-specific subclasses have no pointers that 
 	need to be visited.  
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
-pint_instance_collection::collect_transient_info(
+VALUE_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key, dimensions)) {
@@ -328,15 +317,16 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_instance_collection*
-pint_instance_collection::make_pint_array(
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS*
+VALUE_COLLECTION_CLASS::make_array(
 		const scopespace& o, const string& n, const size_t D) {
 	switch(D) {
-		case 0:	return new pint_array<0>(o, n);
-		case 1:	return new pint_array<1>(o, n);
-		case 2:	return new pint_array<2>(o, n);
-		case 3:	return new pint_array<3>(o, n);
-		case 4:	return new pint_array<4>(o, n);
+		case 0:	return new value_array<Tag,0>(o, n);
+		case 1:	return new value_array<Tag,1>(o, n);
+		case 2:	return new value_array<Tag,2>(o, n);
+		case 3:	return new value_array<Tag,3>(o, n);
+		case 4:	return new value_array<Tag,4>(o, n);
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
@@ -348,8 +338,9 @@ pint_instance_collection::make_pint_array(
 /**
 	Later: will become dimension-specific.
  */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 persistent*
-pint_instance_collection::construct_empty(const int i) {
+VALUE_COLLECTION_CLASS::construct_empty(const int i) {
 	// later convert to lookup table...
 	switch(i) {
 		case 0:	return new pint_array<0>();
@@ -365,61 +356,63 @@ pint_instance_collection::construct_empty(const int i) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
-pint_instance_collection::write_object_base(
+VALUE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE("pint_inst_coll::write_object_base()");
+	STACKTRACE("value_collection<>::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
-pint_instance_collection::load_object_base(const persistent_object_manager& m, 
+VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
-	STACKTRACE("pint_inst_coll::load_object_base()");
+	STACKTRACE("value_collection<>::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
 }
 
 //=============================================================================
-// class pint_array method_definitions
+// class value_array method_definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
-pint_array<D>::pint_array() : parent_type(D), collection() {
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_CLASS::value_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
-pint_array<D>::pint_array(const scopespace& o, const string& n) :
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
-pint_array<D>::~pint_array() { }
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_CLASS::~value_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 bool
-pint_array<D>::is_partially_unrolled(void) const {
+VALUE_ARRAY_CLASS::is_partially_unrolled(void) const {
 	return !collection.empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
-pint_array<D>::dump_unrolled_values(ostream& o) const {
+VALUE_ARRAY_CLASS::dump_unrolled_values(ostream& o) const {
 	for_each(collection.begin(), collection.end(), key_value_dumper(o));
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
-pint_array<D>::key_value_dumper::operator () (
+VALUE_ARRAY_CLASS::key_value_dumper::operator () (
 		const typename collection_type::value_type& p) {
 	return os << auto_indent << p.first << " = " << p.second << endl;
 }
@@ -429,9 +422,9 @@ pint_array<D>::key_value_dumper::operator () (
 	Instantiates integer parameters at the specified indices.  
 	\param i fully-specified range of indices to instantiate.  
  */
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
+VALUE_ARRAY_CLASS::instantiate_indices(const index_collection_item_ptr_type& i) {
 	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
@@ -460,7 +453,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			cerr << '[' << *ci << ']';
 		cerr << endl;
 #endif
-		pint_instance& pi = collection[key_gen];
+		element_type& pi = collection[key_gen];
 		if (pi.instantiated) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
 				get_qualified_name() <<
@@ -483,9 +476,9 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		or even empty.
 	\return fully-specified index list, or empty list if there is error.
  */
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
-pint_array<D>::resolve_indices(const const_index_list& l) const {
+VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	const size_t l_size = l.size();
 	if (D == l_size) {
 		// already fully specified
@@ -496,7 +489,7 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 		return const_index_list(l, collection.is_compact());
 	}
 	// else construct slice
-	list<value_type> lower_list, upper_list;
+	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
@@ -520,19 +513,20 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 	If integer is uninitialized, report as error.  
 
 	TODO: really this should take a const_index_list argument, 
-	to valid dynamic allocation in pint_instance_reference methods.  
+	to valid dynamic allocation in instance_reference methods.  
  */
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-pint_array<D>::lookup_value(value_type& v, 
+VALUE_ARRAY_CLASS::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
-	const pint_instance& pi = collection[index];
+	const element_type& pi = collection[index];
 	if (pi.valid) {
 		v = pi.value;
 	} else {
-		cerr << "ERROR: reference to uninitialized pint " <<
+		cerr << "ERROR: reference to uninitialized " <<
+			class_traits<Tag>::tag_name << ' ' <<
 			get_qualified_name() << " at index: " << i << endl;
 	}
 	return good_bool(pi.valid);
@@ -545,9 +539,9 @@ pint_array<D>::lookup_value(value_type& v,
 	\return false on error, e.g. if value doesn't exist or 
 		is uninitialized; true on success.
  */
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-pint_array<D>::lookup_value_collection(
+VALUE_ARRAY_CLASS::lookup_value_collection(
 		list<value_type>& l, const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	multikey_generator<D, pint_value_type> key_gen;
@@ -555,18 +549,20 @@ pint_array<D>::lookup_value_collection(
 	key_gen.initialize();
 	good_bool ret(true);
 	do {
-		const pint_instance& pi = collection[key_gen];
+		const element_type& pi = collection[key_gen];
 		// INVARIANT(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated) {
 			// this should NOT happen
-			cerr << "FATAL: reference to uninstantiated pint "
-				<< get_qualified_name() << " at index "
-				<< key_gen << endl;
+			cerr << "FATAL: reference to uninstantiated " <<
+				class_traits<Tag>::tag_name << ' ' <<
+				get_qualified_name() << " at index " <<
+				key_gen << endl;
 			ret.good = false;
 		} else if (!pi.valid) {
-			cerr << "ERROR: reference to uninitialized pint "
-				<< get_qualified_name() << " at index "
-				<< key_gen << endl;
+			cerr << "ERROR: reference to uninitialized " <<
+				class_traits<Tag>::tag_name << ' ' <<
+				get_qualified_name() << " at index " <<
+				key_gen << endl;
 			ret.good = false;
 		}
 		l.push_back(pi.value);
@@ -581,20 +577,20 @@ pint_array<D>::lookup_value_collection(
 	Only call this if this is non-scalar (array).  
 	\return true on error.
  */
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 bad_bool
-pint_array<D>::assign(const multikey_index_type& k, const value_type i) {
+VALUE_ARRAY_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
 	const key_type index(k);
-	pint_instance& pi = collection[index];
+	element_type& pi = collection[index];
 	return (pi = i);	// convert good_bool to bad_bool implicitly
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::write_object(const persistent_object_manager& m, 
+VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
@@ -604,9 +600,9 @@ pint_array<D>::write_object(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PINT_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
+VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
 #if 1
@@ -615,41 +611,51 @@ pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 }
 
 //-----------------------------------------------------------------------------
-// class pint_array<0> specialization method definitions
+// class value_array<Tag,0> specialization method definitions
 
+#if 1 && 0
 // reminder: pint_scalar == pint_array<0>
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_array<0>::pint_array() : parent_type(0), the_instance() {
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+VALUE_SCALAR_CLASS::value_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_array<0>::pint_array(const scopespace& o, const string& n) :
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n) :
 		parent_type(o, n, 0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_array<0>::pint_array(const scopespace& o, const string& n, 
+#if 0
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n, 
 		const count_ptr<const pint_const>& i) :
 		parent_type(o, n, 0, i), the_instance() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_array<0>::~pint_array() {
-	STACKTRACE("~pint_scalar()");
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+VALUE_SCALAR_CLASS::~value_array() {
+	STACKTRACE("~value_scalar()");
 //	STACKTRACE_STREAM << "@ " << this << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 bool
-pint_array<0>::is_partially_unrolled(void) const {
+VALUE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return the_instance.instantiated;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
-pint_array<0>::dump_unrolled_values(ostream& o) const {
+VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
 	return o << auto_indent << the_instance;	// << endl;
 }
 
@@ -661,8 +667,9 @@ pint_array<0>::dump_unrolled_values(ostream& o) const {
 	is easily detected (and actually detected) during the compile phase.  
 	\param i indices must be NULL because this is not an array.
  */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-pint_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
+VALUE_SCALAR_CLASS::instantiate_indices(const index_collection_item_ptr_type& i) {
 	INVARIANT(!i);
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
@@ -681,9 +688,10 @@ pint_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		or even empty.
 	\return empty index list, always.
  */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 const_index_list
-pint_array<0>::resolve_indices(const const_index_list& l) const {
-	cerr << "WARNING: pint_array<0>::resolve_indices(const_index_list) "
+VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
+	cerr << "WARNING: VALUE_SCALAR_CLASS::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	// calling this is probably not intended, and is an error.  
 	// DIE;
@@ -695,10 +703,12 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 	This version assumes collection is a scalar.  
 	\return true if lookup found a valid value.  
  */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-pint_array<0>::lookup_value(value_type& v) const {
+VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
-		cerr << "ERROR: Reference to uninstantiated pint " <<
+		cerr << "ERROR: Reference to uninstantiated " <<
+			class_traits<Tag>::tag_name << ' ' <<
 			get_qualified_name() << "!" << endl;
 		return good_bool(false);
 	}
@@ -711,10 +721,11 @@ pint_array<0>::lookup_value(value_type& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-pint_array<0>::lookup_value_collection(
+VALUE_SCALAR_CLASS::lookup_value_collection(
 		list<value_type>& l, const const_range_list& r) const {
-	cerr << "WARNING: pint_array<0>::lookup_value_collection(...) "
+	cerr << "WARNING: VALUE_SCALAR_CLASS::lookup_value_collection(...) "
 		"should never be called." << endl;
 	// DIE;
 	INVARIANT(r.empty());
@@ -728,10 +739,11 @@ pint_array<0>::lookup_value_collection(
 /**
 	This should never be called.  
  */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-pint_array<0>::lookup_value(value_type& v, 
+VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
-	cerr << "FATAL: pint_array<0>::lookup_value(int&, multikey) "
+	cerr << "FATAL: VALUE_SCALAR_CLASS::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;
 	return good_bool(false);
@@ -744,66 +756,49 @@ pint_array<0>::lookup_value(value_type& v,
 	Decision: should we allow multiple assignments of the same value?
 	\return true on error, false on success.  
  */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
-pint_array<0>::assign(const value_type i) {
+VALUE_SCALAR_CLASS::assign(const value_type i) {
 	// convert good_bool to bad_bool implicitly
 	return (the_instance = i);
 	// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
-pint_array<0>::assign(const multikey_index_type& k, const value_type i) {
+VALUE_SCALAR_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	// this should never be called
-	cerr << "FATAL: pint_array<0>::assign(multikey, int) "
+	cerr << "FATAL: VALUE_SCALAR_CLASS::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
 	return bad_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-pint_array<0>::write_object(const persistent_object_manager& m, 
+VALUE_SCALAR_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	STACKTRACE("pint_scalar::write_object()");
+	STACKTRACE("value_scalar::write_object()");
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-pint_array<0>::load_object(const persistent_object_manager& m, istream& f) {
-	STACKTRACE("pint_scalar::load_object()");
+VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE("value_scalar::load_object()");
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
 }
-#else
-template class value_collection<pint_tag>;
-template class value_array<pint_tag,0>;
-template class value_array<pint_tag,1>;
-template class value_array<pint_tag,2>;
-template class value_array<pint_tag,3>;
-template class value_array<pint_tag,4>;
-#endif	// USE_VALUE_COLLECTION_TEMPLATE
-
-//=============================================================================
-// explicit template instantiations (not needed)
-
-#if 0
-template class pint_array<0>;
-template class pint_array<1>;
-template class pint_array<2>;
-template class pint_array<3>;
-template class pint_array<4>;
-#endif
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("instance_pint")
-
-#endif	// __ART_OBJECT_INSTANCE_PINT_CC__
+#endif	// __ART_OBJECT_VALUE_COLLECTION_TCC__
 

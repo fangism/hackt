@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.15 2005/03/04 06:19:57 fang Exp $
+	$Id: art_object_instance_param.h,v 1.15.8.1 2005/03/09 19:24:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
 #define	__ART_OBJECT_INSTANCE_PARAM_H__
+
+#define	USE_VALUE_COLLECTION_TEMPLATE		1
 
 #include "boolean_types.h"
 #include "art_object_instance_base.h"
@@ -27,6 +29,11 @@ using util::good_bool;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
+
+#if USE_VALUE_COLLECTION_TEMPLATE
+template <class, size_t>
+class value_array;
+#endif
 
 //=============================================================================
 /**
@@ -183,6 +190,7 @@ ostream&
 operator << (ostream& o, const pbool_instance& p);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_VALUE_COLLECTION_TEMPLATE
 /**
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
@@ -432,6 +440,13 @@ typedef	pbool_array<1>			pbool_array_1D;
 typedef	pbool_array<2>			pbool_array_2D;
 typedef	pbool_array<3>			pbool_array_3D;
 typedef	pbool_array<4>			pbool_array_4D;
+#else
+typedef	value_array<pbool_tag,0>	pbool_scalar;
+typedef	value_array<pbool_tag,1>	pbool_array_1D;
+typedef	value_array<pbool_tag,2>	pbool_array_2D;
+typedef	value_array<pbool_tag,3>	pbool_array_3D;
+typedef	value_array<pbool_tag,4>	pbool_array_4D;
+#endif	// USE_VALUE_COLLECTION_TEMPLATE
 
 //=============================================================================
 /**
@@ -508,6 +523,7 @@ ostream&
 operator << (ostream& o, const pint_instance& p);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_VALUE_COLLECTION_TEMPLATE
 /**
 	Collection of parameter integers, 
 	generalized to any number of dimensions.  
@@ -771,6 +787,13 @@ typedef	pint_array<1>			pint_array_1D;
 typedef	pint_array<2>			pint_array_2D;
 typedef	pint_array<3>			pint_array_3D;
 typedef	pint_array<4>			pint_array_4D;
+#else
+typedef	value_array<pint_tag,0>	pint_scalar;
+typedef	value_array<pint_tag,1>	pint_array_1D;
+typedef	value_array<pint_tag,2>	pint_array_2D;
+typedef	value_array<pint_tag,3>	pint_array_3D;
+typedef	value_array<pint_tag,4>	pint_array_4D;
+#endif	// USE_VALUE_COLLECTION_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41 2005/03/04 07:00:05 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.8.1 2005/03/09 19:24:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -26,6 +26,10 @@
 #include "art_object_expr.h"		// includes "art_object_expr_const.h"
 // #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
+#if USE_VALUE_COLLECTION_TEMPLATE
+#include "art_object_classification_details.h"
+#include "art_object_value_collection.h"
+#endif
 #include "art_object_assign.h"
 #include "art_object_connect.h"		// for ~aliases_connection_base
 #include "art_object_type_hash.h"
@@ -1284,7 +1288,7 @@ good_bool
 pbool_instance_reference::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	// base collection must be non-scalar
-	INVARIANT(pbool_inst_ref->dimensions);
+	INVARIANT(pbool_inst_ref->get_dimensions());
 	const const_index_list
 		ranges(resolve_dimensions());
 	if (ranges.empty()) {
@@ -1339,7 +1343,7 @@ pbool_instance_reference::resolve_dimensions(void) const {
 count_ptr<const_param>
 pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
-	if (pbool_inst_ref->dimensions) {
+	if (pbool_inst_ref->get_dimensions()) {
 #if 0
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -1841,7 +1845,7 @@ good_bool
 pint_instance_reference::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	// base collection must be non-scalar
-	INVARIANT(pint_inst_ref->dimensions);
+	INVARIANT(pint_inst_ref->get_dimensions());
 	const const_index_list
 		ranges(resolve_dimensions());
 	if (ranges.empty()) {
@@ -1900,7 +1904,7 @@ count_ptr<const_param>
 pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	STACKTRACE("pint_inst_ref::unroll_resolve()");
-	if (pint_inst_ref->dimensions) {
+	if (pint_inst_ref->get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
 		// from compile phase.

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.17.2.1 2005/03/09 05:21:42 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.17.2.1.2.1 2005/03/09 19:24:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -22,6 +22,10 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#if USE_VALUE_COLLECTION_TEMPLATE
+#include "art_object_classification_details.h"
+#include "art_object_value_collection.tcc"
+#else
 #include "STL/list.tcc"
 #include "multikey_qmap.tcc"		// include "qmap.tcc"
 #include "persistent_object_manager.tcc"
@@ -31,6 +35,7 @@
 #include "dereference.h"
 #include "indent.h"
 #include "stacktrace.h"
+#endif
 #include "static_trace.h"
 
 //=============================================================================
@@ -140,6 +145,7 @@ operator << (ostream& o, const pbool_instance& p) {
 //=============================================================================
 // class pbool_instance_collection method definitions
 
+#if !USE_VALUE_COLLECTION_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -776,6 +782,14 @@ pbool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	// load the instance
 	read_value(f, the_instance);
 }
+#else
+template class value_collection<pbool_tag>;
+template class value_array<pbool_tag,0>;
+template class value_array<pbool_tag,1>;
+template class value_array<pbool_tag,2>;
+template class value_array<pbool_tag,3>;
+template class value_array<pbool_tag,4>;
+#endif	// USE_VALUE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // explicit template instantiations (not needed)

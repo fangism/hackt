@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.12.2.3 2005/03/09 05:21:40 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.12.2.3.2.1 2005/03/09 19:24:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -52,7 +52,7 @@ private:
 		class_traits<Tag>::instantiation_statement_type_ref_base
 							type_ref_parent_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename class_traits<Tag>::value_collection_generic_type
 							collection_type;
 	typedef	never_ptr<collection_type>		collection_ptr_type;
 	typedef	typename class_traits<Tag>::type_ref_ptr_type

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.50.2.1 2005/03/07 23:28:46 fang Exp $
+#	$Id: Makefile.am,v 1.50.2.1.2.1 2005/03/09 19:24:48 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -185,7 +185,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_member_inst_ref.h \
 	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_type_ref_base.h \
-	Object/art_object_type_hash.h
+	Object/art_object_type_hash.h \
+	Object/art_object_value_collection.h \
+	Object/art_object_value_collection.tcc
 
 UTIL_HEADER_FILES = \
 	util/macros.h \
