@@ -96,8 +96,8 @@ $(ARTC): $(ART_OBJ)
 .depend: $(ART_DEPS)
 	@$(ECHO) "$(CAT) *.d > $@"
 	@$(CAT) $(ART_DEPS) > $@
-	@if $(GREP) -q "^include \.depend" $(THISMAKEFILE); then \
-	else $(ECHO) "patching $(THISMAKEFILE) ..."; \
+	@if ! $(GREP) -q "^include \.depend" $(THISMAKEFILE); then \
+		$(ECHO) "patching $(THISMAKEFILE) ..."; \
 		$(ECHO) "include .depend" >> $(THISMAKEFILE); \
 	fi
 
