@@ -1,0 +1,7 @@
+// should pass: properly initialized params
+
+pint M = 2;
+pint foo[M];
+
+foo[0] = M;
+

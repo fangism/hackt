@@ -1,0 +1,7 @@
+// should fail: too many dimensions in index
+
+pint M = 2;
+pint foo[M];
+
+foo[0][0] = M;
+

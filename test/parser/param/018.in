@@ -1,0 +1,8 @@
+// should fail: statically detected overlap
+
+pint M = 2;
+pint foo[M];
+
+pint foo[2..4];		// entending array ok
+pint foo[4..8];		// bad overlap
+

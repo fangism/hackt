@@ -1,0 +1,3 @@
+ERROR: The following referenced indices have definitely not been instantiated: {
+[2]
+} [6:5]
