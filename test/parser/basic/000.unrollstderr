@@ -7,11 +7,10 @@ Persistent Object Manager text dump:
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
-0 parameter-collections
-0 instantiation-collections
-0 sub-namespaces
-0 definitions
-0 typedefs
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
 }
 
-Sequential instance management: 

@@ -1,2 +1,4 @@
-pint<> y[0..1]
+pint<> y with indices: {
+  [0..1]
+}
  was originally declared as a 1-D array, so the new declaration cannot add a 0-D array, ERROR!  [4:6]
