@@ -20,6 +20,10 @@
 	  alias_connections converted to class_traits, muahahaha...
 	  Code needs some serious clean-up before proceeding.  
 
+	* -instance-04:
+	  Cleaned-up, no more conditionals on SUBTYPE_ALIAS_CONNECTION
+	  and USE_CLASSIFICATION_TAGS.  
+
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.1.4.1 2005/02/23 21:21:29 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.1.4.2 2005/02/24 02:27:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_H__
@@ -18,21 +18,11 @@ USING_LIST
 using namespace util::memory;
 
 //=============================================================================
-#if USE_CLASSIFICATION_TAGS
 #define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
 template <class Tag>
 
 #define	MEMBER_INSTANCE_REFERENCE_CLASS					\
 member_instance_reference<Tag>
-
-#else
-#define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
-template <class InstRef>
-
-#define	MEMBER_INSTANCE_REFERENCE_CLASS					\
-member_instance_reference<InstRef>
-
-#endif
 
 /**
 	Re-usable type-specific member_instance_reference class template.  
@@ -42,33 +32,18 @@ member_instance_reference<InstRef>
 	Consider moving this class definition to "art_object_inst_ref.h"?
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-#if USE_CLASSIFICATION_TAGS
 class member_instance_reference :
-	public class_traits<Tag>::instance_reference_type
-#else
-class member_instance_reference : public InstRef
-#endif
-{
+	public class_traits<Tag>::instance_reference_type {
 private:
 	typedef	MEMBER_INSTANCE_REFERENCE_CLASS		this_type;
 public:
 	/// the underlying type of the member instance referenced
-#if USE_CLASSIFICATION_TAGS
 	typedef	typename class_traits<Tag>::instance_reference_type
 							parent_type;
 	typedef	typename class_traits<Tag>::instance_collection_type
 						instance_collection_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 						alias_collection_type;
-#else
-	typedef	InstRef					parent_type;
-	/// the instance alias collection type
-	typedef	typename parent_type::instance_collection_type
-						instance_collection_type;
-	/// the type used to unroll collections of instance aliases
-	typedef	typename parent_type::alias_collection_type
-						alias_collection_type;
-#endif
 	typedef	never_ptr<const instance_collection_type>
 						instance_collection_ptr_type;
 	/// the containing type, whose member is referenced

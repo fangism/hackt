@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.1.2.1 2005/02/24 02:03:46 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.1.2.2 2005/02/24 02:26:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_TCC__
@@ -54,7 +54,6 @@ USING_UTIL_COMPOSE
 USING_STACKTRACE
 
 //=============================================================================
-#if SUBTYPE_ALIASES_CONNECTION
 // class alias_connection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,6 +92,11 @@ ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initializes an instance reference connection with the
+	first instance reference.  
+	\param i instance reference to connect, may not be NULL.
+ */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 void
 ALIAS_CONNECTION_CLASS::append_instance_reference(
@@ -196,7 +200,6 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 	m.read_pointer_list(i, inst_list);
 }
 
-#endif	// SUBTYPE_ALIASES_CONNECTION
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
