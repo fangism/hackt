@@ -1,0 +1,8 @@
+.deps
+.libs
+Makefile
+*.la
+artc
+art++2obj
+artobjdump
+
