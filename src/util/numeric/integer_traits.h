@@ -2,7 +2,7 @@
 	\file "numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.1.2.1 2005/01/19 01:21:32 fang Exp $
+	$Id: integer_traits.h,v 1.1.2.2 2005/01/19 03:52:10 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -125,6 +125,10 @@ struct is_square {
 };
 
 //=============================================================================
+/**
+	For unsigned int (size_t), N >= 14 will overflow.
+	Is there a way to catch?
+ */
 template <size_t N>
 struct factorial {
 	enum { value = N * factorial<N-1>::value };
@@ -182,32 +186,59 @@ struct nth_fibonacci<2> {
 //=============================================================================
 // primality: not ready yet
 
-#if 0
 template <size_t>
 struct is_prime;
 
+#if 0
 template <size_t>
 struct prime_after_prime;
-
-#if 0
-template <>
-struct prime_after_prime<0> {	typedef	enum { value = 2 } value_type;	};
-
-template <>
-struct prime_after_prime<1> {	typedef	enum { value = 2 } value_type;	};
 #endif
 
+// the greatest odd number strictly less than
+template <size_t N>
+struct next_odd {
+	enum { value = ((N-1) | 1) +2 };
+};
+
+// the greatest odd number strictly less than
+template <size_t N>
+struct prev_odd {
+	enum { value = (N & -2) -1 };
+};
+
+#if 0
 template <>
 struct prime_after_prime<2> {	typedef	enum { value = 3 } value_type;	};
 
 template <>
 struct prime_after_prime<3> {	typedef	enum { value = 5 } value_type;	};
-
-#if 0
-template <>
-struct prime_after_prime<3> {	typedef	enum { value = 5 } value_type;	};
 #endif
 
+/**
+	Value is the greatest prime number strictly less than N.
+	\param N must be odd if it is greater than 2.  
+ */
+template <size_t N>
+struct prev_prime {
+	enum {
+		value = ifthenelse_value<is_prime<N-2>::value, 
+			size_t, N-2, prev_prime<N-2>::value>::value
+	};
+};
+
+template <>
+struct prev_prime<3> {	typedef	enum { value = 2 } value_type;	};
+
+template <>
+struct prev_prime<2> {	typedef	enum { value = 2 } value_type;	};
+
+template <>
+struct prev_prime<1> {	typedef	enum { value = 2 } value_type;	};
+
+template <>
+struct prev_prime<0> {	typedef	enum { value = 2 } value_type;	};
+
+#if 0
 /**
 	Stops when N is prime.
 	\param N is not prime, must be odd.
@@ -215,10 +246,16 @@ struct prime_after_prime<3> {	typedef	enum { value = 5 } value_type;	};
 template <size_t N>
 struct next_prime {
 	enum {
-		value = ifthenelse_value<is_prime<N>::value, 
-			size_t, N, next_prime<N+2>::value>::value
+		value = ifthenelse_value<is_prime<N+2>::value, 
+			size_t, N+2, next_prime<N+2>::value>::value
 	};
 };
+
+template <>
+struct next_prime<2> {	typedef	enum { value = 3 } value_type;	};
+#endif
+
+#if 0
 /**
 	General algorithm for finding next prime at compile time.  
 	If this is prime, the result is itself, to prevent unbounded
@@ -227,57 +264,50 @@ struct next_prime {
  */
 template <size_t N>
 struct prime_after_prime {
-#if 0
-	typedef	enum {
-		// try next odd number
-		try_next = N + ifthenelse_value<is_prime<N>::value, size_t, 
-				0, 
-				ifthenelse_value<(N & 1), size_t, 2, 1>::value
-			>::value
-	} try_next_type;
-#endif
-#if 0
-	typedef	typename ifthenelse_type<is_prime<N+2>::value, 
-				size_t, 
-				typename prime_after_prime<try_next>::value_type
-			>::result_type
-		value_type;
-	enum {
-		value = ifthenelse_value<is_prime<N>::value, value_type, 
-				N, value_type::value>::value
-	};
-#endif
-#if 1
-	enum {
-		value = next_prime<N+2>::value
-	};
-#endif
+	...
 };
+#endif
+
+template <size_t N>
+struct prime_before_prime {
+	enum { value = prev_prime<N-2>::value };
+};
+
+template <>
+struct prime_before_prime<3> { enum { value = 2 }; };
 
 /**
 	Assumes that all primes < MIN have been tested.
-	\param MIN the smallest number tried.
+	\param N the integer in question.  
+	\param Q the next prime factor to try.
  */
-template <size_t N, size_t MIN>
+template <size_t N, size_t Q>
 struct prime_test_loop {
+	/**
+		Value is false if there are factors.  
+	 */
 	enum {
-		value =
-		ifthenelse_value<(N <= MIN * MIN), bool,
-			true, 
-			ifthenelse_value<(N % MIN), bool,
-				prime_test_loop<N,
-					prime_after_prime<MIN>::value
-				>::value, 
-				false
+		// order of evaluation should be switched...
+		value = (N % Q) &&
+			prime_test_loop<N, prime_before_prime<Q>::value
 			>::value
-		>::value
 	};
+};
+
+// specialization terminate counting down
+template <size_t N>
+struct prime_test_loop<N, 2> {
+	enum {	value = (N % 2) };
 };
 
 template <size_t N>
 struct is_prime {
-	enum {
-		value = prime_test_loop<N, 2>::value
+	// start with first prime less than or equal to...
+	enum {	value = prime_test_loop<N, 
+			prev_prime<
+				next_odd<sqrt_floor<N>::value>::value
+			>::value
+		>::value
 	};
 };
 
@@ -289,11 +319,6 @@ struct is_prime<1> {	enum { value = false };	};
 
 template <>
 struct is_prime<2> {	enum { value = true };	};
-
-template <>
-struct is_prime<3> {	enum { value = true };	};
-
-#endif	// not ready yet
 
 //=============================================================================
 }	// end namespace numeric
