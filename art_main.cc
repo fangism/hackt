@@ -58,7 +58,7 @@ DEBUG(DEBUG_BASIC, cerr << endl)
 	SAFEDELETE(root);
 
 	// IMPORTANT: should be the same, don't delete both
-	assert(top == global);
+	if (top) assert(top == global);
 	// delete ART object and its hierarchy
 	SAFEDELETE(global);
 	return 0;

@@ -57,8 +57,9 @@ node::where(void) const {
  */
 const object*
 node::check_build(context* c) const {
+	// We DO want to print this message, even in regression testing. 
 	cerr << c->auto_indent() << 
-		"check_build() not fully-implmented yet for ";
+		"check_build() not fully-implemented yet for ";
 	what(cerr);
 //	return NULL;
 	return c->top_namespace();
@@ -741,7 +742,8 @@ declaration_base::where(void) const {
 
 const object*
 declaration_base::check_build(context* c) const {
-//	what(cerr << c->auto_indent()) << ": ";
+	DEBUG(TRACE_CHECK_BUILD, 
+		what(cerr << c->auto_indent()) << ": ")
 	c->add_type_instance(*id);		// ignored return value
 	return c->top_namespace();
 }
@@ -829,7 +831,8 @@ instance_declaration::rightmost(void) const {
 const object*
 instance_declaration::check_build(context* c) const {
 	const object* t;
-	what(cerr << c->auto_indent()) << ": ";
+	DEBUG(TRACE_CHECK_BUILD, 
+		what(cerr << c->auto_indent()) << ": ")
 	t = type->check_build(c);
 	if (t) {
 		ids->check_build(c);

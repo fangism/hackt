@@ -10,4 +10,5 @@ y.output.h
 y.union.cc
 *.tar.gz
 artc
+test-report.txt
 
