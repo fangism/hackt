@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(node_list): (process-prototype) ... [3:1--5:34]
 22	(type-ref) [7:1..6]
 35	(node_list): (declaration-id): identifier: load ... [7:8..11]

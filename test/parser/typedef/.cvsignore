@@ -1,4 +1,5 @@
 *.core
+core.*
 *.test
 *.diff
 *.filter

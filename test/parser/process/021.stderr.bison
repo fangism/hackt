@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(node_list): (template-formal-decl) ... [3:10..41]
 30	keyword: defproc [4:1..7]
 109	identifier: barbar [4:9..14]

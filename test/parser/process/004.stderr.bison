@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(null) 
 30	keyword: defproc [3:1..7]
 109	identifier: foo [3:9..11]

@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	keyword: template [3:1..8]
 8	< [3:10]
 87	paramtype: pint [3:11..14]

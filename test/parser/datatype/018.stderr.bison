@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	keyword: enum [3:1..4]
 13	; [3:5]
 in state 13, possible rules are:

@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(node_list): (process-prototype) ... [3:1--8:9]
 22	(type-ref) [10:1..9]
 35	(node_list): (declaration-array): identifier: p(node_list): (range) ... ... [10:11..13]

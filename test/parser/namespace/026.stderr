@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	keyword: namespace [3:1..9]
 9	identifier: close_me [3:11..18]
 94	{ [3:20]

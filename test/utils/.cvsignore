@@ -1,1 +1,3 @@
+*.core
+core.*
 hashlist_test

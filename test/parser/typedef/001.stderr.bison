@@ -1,7 +1,6 @@
 parse error: syntax error
 parser stacks:
 state	value
-	(null) 
 0	(null) 
 30	keyword: typedef [3:1..7]
 108	paramtype: pbool [3:9..13]
