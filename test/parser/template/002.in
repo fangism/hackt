@@ -1,0 +1,5 @@
+// should pass: array size dependent on formal parameter
+
+template <pint N, A[N]>
+defproc array_me();
+
