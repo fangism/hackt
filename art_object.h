@@ -6,8 +6,22 @@
 #include <string>
 
 #include "map_of_ptr.h"
-#include "hashlist.h"		// includes "list_of_ptr.h"
+#include "hashlist.h"		// includes "list_of_ptr.h" and <hash_map>
+	// for now don't need hashlist...
 #include "art_macros.h"
+
+/*********** note on use of data structures ***************
+Lists are needed for sets that need to maintain sequence, such as
+formal declarations in definitions.  Type-checking is done in order
+of elements, comparing actuals against formals one-by-one.  
+For some lists, however, we'd like constant time access to 
+elements in the sequence by hashing indices.  Hashlist provides
+this added functionality by associating a key to each element in the 
+list.  
+
+Maps...
+
+********************** end note **************************/
 
 namespace ART {
 //=============================================================================
@@ -46,6 +60,7 @@ class process_instantiation;
 class object {
 public:
 virtual ~object() { }
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //=============================================================================
@@ -55,8 +70,20 @@ class name_space : public object {
 	// table of type definitions (user-defined data types)
 	// table of process definitions
 	// table of real instantiations (outside of definitions)
+
+	// determine for which elements the order matters:
+
+	// does order of type definitions matter?
+	// for now yes, because there is no support for prototype declarations
+	// yet, which enforces an ordering on the declarations.  
+	// or this may just be a temporary restriction on the ordering of defs
+
+	// order of instantiations? shouldn't matter.
+
 private:
-	/// may become hash_map if need be, for now map suffices (r/b-tree)
+	/**
+		Container owned sub-namespaces.  Needs no ordering.  
+	 */
 	typedef	map_of_ptr<string, name_space>		subns_map_type;
 
 	/**
@@ -68,29 +95,29 @@ private:
 		This structure owns the pointers to these definitions,
 		and thus, is responsible for deleteing them.  
 	 */
-	typedef	hashlist_of_ptr<string, type_definition>	type_def_list;
+	typedef	map_of_ptr<string, type_definition>	type_def_set;
 
 	/// resolves identifier to actual data type, we own these pointers
-	typedef	hashlist_of_ptr<string, type_instantiation>	type_inst_list;
+	typedef	map_of_ptr<string, type_instantiation>	type_inst_set;
 
 	/// resolves identifier to actual process type, we own these pointers
-	typedef	hashlist_of_ptr<string, process_definition>	proc_def_list;
+	typedef	map_of_ptr<string, process_definition>	proc_def_set;
 
 	/// resolves identifier to actual process type, we own these pointers
-	typedef	hashlist_of_ptr<string, process_instantiation>	proc_inst_list;
+	typedef	map_of_ptr<string, process_instantiation>	proc_inst_set;
 
 	/**
 		Container for open namespaces with optional aliases.  
 		Doesn't have to be a map because never any need to search
 		by key.  List implementation is sufficient, because
-		whole list will always be searched.  
+		whole list will always be searched, if it is searched at all.  
 		These pointers are not owned by this namespace.  
 	 */
 	typedef list<name_space*>			namespace_list;
 
 	/**
 		This set contains the list of identifiers for this namespace
-		that have been mapped to some clas: either another namespace, 
+		that have been mapped to some class: either another namespace, 
 		a process/data-type/channel definitions/instantiation.  
 		The language currently forbids reuse of identifiers within
 		this namespace, so one cannot say namespace x {}; followed
@@ -104,8 +131,12 @@ private:
 		port parameters, or local definitions and instantiations.  
 		The stored value is a generic polymorphic object pointer 
 		whose type is deduced in the grammar.  
+		EVERY addition to this namespace must register
+		through this hash_map.  
+		Again, these pointers are not owned.  
 	 */
 	typedef	hash_map<string,object*>		used_id_map_type;
+
 protected:
 	/**
 		Reference to the parent namespace, if applicable.  
@@ -159,25 +190,25 @@ protected:
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	type_def_list		type_defs;
+	type_def_set		type_defs;
 	/**
 		Container of data type instantiations in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	type_inst_list		type_insts;
+	type_inst_set		type_insts;
 	/**
 		Container of process definitions in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	proc_def_list		proc_defs;
+	proc_def_set		proc_defs;
 	/**
 		Container of process instantiations in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	proc_inst_list		proc_insts;
+	proc_inst_set		proc_insts;
 
 	// later instroduce single symbol imports?
 	// i.e. using A::my_type;
@@ -196,6 +227,8 @@ public:
 	~name_space();
 
 string	get_qualified_name(void) const;
+
+virtual	ostream& what(ostream& o) const;
 
 // update these return types later
 name_space*	add_open_namespace(const string& n);
@@ -217,10 +250,10 @@ void	query_import_namespace_match(namespace_list& m, const id_expr& id);
 
 // these will not be recursive, but iteratively invoked by
 // add_blah_inst/def();
-void	query_type_def_match(type_def_list& m, const id_expr& pid);
-void	query_type_inst_match(type_def_list& m, const id_expr& pid);
-void	query_proc_def_match(type_def_list& m, const id_expr& pid);
-void	query_proc_inst_match(type_def_list& m, const id_expr& pid);
+void	query_type_def_match(type_def_set& m, const id_expr& pid);
+void	query_type_inst_match(type_def_set& m, const id_expr& pid);
+void	query_proc_def_match(type_def_set& m, const id_expr& pid);
+void	query_proc_inst_match(type_def_set& m, const id_expr& pid);
 
 object*	what_is(const string& id);
 
@@ -248,6 +281,7 @@ public:
 	definition(const name_space* o) : object(), owner(o) { }
 virtual	~definition() { }
 
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //=============================================================================
@@ -268,6 +302,7 @@ public:
 	instantiation(const name_space* o) : object(), owner(o) { }
 virtual	~instantiation() { }
 
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //=============================================================================
@@ -305,6 +340,7 @@ public:
 	process_instantiation(const name_space* o) : instantiation(o) { }
 virtual	~process_instantiation();
 
+virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -317,6 +353,7 @@ public:
 		definition(o), key(n) { }
 virtual	~type_definition() { }
 
+// virtual	ostream& what(ostream& o) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -327,6 +364,7 @@ public:
 		type_definition(o, n) { }
 virtual	~built_in_type_def() { }
 
+// virtual	ostream& what(ostream& o) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -354,6 +392,7 @@ public:
 	user_type_def(const name_space* o, const string& name);
 virtual	~user_type_def() { }
 
+// virtual	ostream& what(ostream& o) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -369,6 +408,7 @@ public:
 		type_definition(o, n), canonical(t) { assert(canonical); }
 virtual	~type_alias() { }
 
+// virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -383,6 +423,7 @@ public:
 		const string& n) : instantiation(o), type(t), key(n) { }
 virtual	~type_instantiation() { }
 
+// virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================

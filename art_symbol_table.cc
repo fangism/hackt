@@ -35,17 +35,36 @@ context::~context() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// opens up namespace, error occurs if name conflicts
+/**
+	Attempts to open up namespace, modifying the context, and updating
+	current_ns.
+	Error occurs if name conflicts, as defined by the implementation
+	within add_open_namespace.  
+	\param id is the name of the namespace to enter.  
+	\return pointer to opened namespace.
+	\sa close_namespace
+ */
 name_space*
 context::open_namespace(const token_identifier& id) {
-	indent++;
-	current_ns = current_ns->add_open_namespace(id);
-	if (!current_ns) {
+	name_space* insub;
+	insub = current_ns->add_open_namespace(id);
+	
+	// caution: assigning to NULL may ruin the context!
+	// if this returns NULL, we signal to the caller to skip
+	// over this malformed namespace body, don't even enter it...
+	// which means no need to leave it.  
+
+	if (!insub) {
+		// leave current_ns as it is
 		type_error_count++;
 		cerr << id.where() << endl;
 		exit(1);			// temporary
+		// return NULL
+	} else {
+		current_ns = insub;
+		indent++;
 	}
-	else return current_ns;
+	return insub;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,6 +75,7 @@ context::close_namespace(void) {
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
 	current_ns = current_ns->leave_namespace();
+	// should always be safe, right?
 	return current_ns;
 }
 

@@ -64,30 +64,62 @@ name_space::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// either creates a new sub-namespace or opens if it already exists
+ostream&
+name_space::what(ostream& o) const {
+	return o << "entity::namespace";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Downward (deeper) traversal of namespace hierarchy.  
+	Either creates a new sub-namespace or opens if it already exists.  
+	\param n the name of the namespace to enter.
+	\return pointer to the referenced namespace, if found, else NULL.
+	\sa leave_namespace
+	Details: First searches list of aliased namespaces to check for
+	collision, which is currently reported as an error.  
+	(We want to simply head off potential ambiguity here.)
+	Then sees if name is already taken by some other definition 
+	or instance in the used_id_map.  
+	Then searches subnamespace to determine if already exists.
+	If exists, re-open, else create new and link to parent.  
+ */
 name_space*
 name_space::add_open_namespace(const string& n) {
-	// see if namespace already exists
-	//	note: name clashes are permitted with namespaces in higher
-	//	scopes, and in open (unaliased) spaces, however, 
-	//	name conflict with existing subspaces and ALIASED
-	//	namespaces (alias names) will be reported as errors, 
-	//	to head off certain ambiguity.  
+	name_space* ret;
+	object* probe = used_id_map[n];
+	if (probe) {
+		ret = IS_A(name_space*, probe);
+		// an alias may return with valid pointer!
+		if (!ret) {
+			probe->what(cerr << " ... already taken as a ")
+				<< ", ERROR! ";
+			return NULL;
+		} else if (open_aliases[n]) {
+		// we have a valid namespace pointer, 
+		// now we see if this is an alias, or true sub-namespace
+			cerr << " ... already an open alias, ERROR! ";
+			return NULL;
+		} else {
+		// therefore, ret is a pointer to a valid sub-namespace
+			cerr << " ... already exists as subspace, re-opening";
+			assert(ret == subns[n]);
+			// we can return this
+		}
+	} else {
+		// consistency check: 
+		// since we're keeping subns and used_id_map consistent, 
+		// not finding it in used_id_map => must not exist in subns!
+		assert(!subns[n]);
 
-	name_space* ret = open_aliases[n];
-	if (ret) {
-		cerr << " ... already an open alias, ERROR! ";
-		return NULL;
-	}
-	ret = subns[n];
-	// if sub-namespace already exists, return reference to it
-	if (ret) {
-		cerr << " ... already exists as subspace, re-opening";
-	} else {	// else create it, linking this as its parent
+		// create it, linking this as its parent
 		cerr << " ... creating new";
 		ret = new name_space(n, this);
 		subns[n] = ret;		// store it in map of sub-namespaces
+		used_id_map[n] = ret;	// register it as a used id
 	}
+
+	// silly sanity checks
 	assert(ret);
 	assert(ret->parent == this);
 	assert(ret->key == n);
@@ -96,18 +128,39 @@ name_space::add_open_namespace(const string& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Leaves the namespace.  
+	The list of imported and aliased namespaces will be reset each time 
+	this namespace is closed.  They will have to be added back the 
+	next time it is re-opened.  
+	Also reclaims the identifiers that were associated with namespace
+	aliases.  
+	Non-aliased imported namespace do not take up any identifier space, 
+	and thus, are not checked against the used_id_map.  
+	\return pointer to the parent namespace, should never be NULL.  
+	\sa add_open_namespace
+ */
 name_space*
 name_space::leave_namespace(void) {
-	// the list of open/using namespaces (and their aliases) will
-	// be reset each time this namespace is closed.  They will have to
-	// be added back the next time it is re-opened.  
+	// for all open_aliases, release their names from used-map
+	subns_map_type::iterator i = open_aliases.begin();
+	for ( ; i!=open_aliases.end(); i++) {
+		used_id_map.erase(used_id_map.find((*i).first));
+	}
 	open_spaces.clear();
+	open_aliases.clear();
 	return parent;
+	// never NULL, can't leave global namespace!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// adding a namespace using directive to current namespace
-// idea: use ::id[::id]* as a way of specifying absolute namespace
+/**
+	Adds a namespace using directive (import) to current namespace.  
+	\param n the qualified identifier of the referenced namespace.
+	\return valid pointer to imported namespace, or NULL if error. 
+	\sa add_using_alias
+ */
+// idea: use ::id[::id]* as a way of specifying absolute namespace path
 name_space*
 name_space::add_using_directive(const id_expr& n) {
 	name_space* ret;
@@ -152,33 +205,51 @@ name_space::add_using_directive(const id_expr& n) {
 /// adding a namespace alias directive to current namespace
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// should be similar to add_using_directive above, but using a different name
+/**
+	Aliases another namespace as a pseudo-sub-namespace with a different
+	name.  Similar to add_using_directive, 
+	but using a different name, and taking a spot in used_id_map.  
+	\param n the referenced namespace qualified identifier
+	\param a the new name local identifier
+	\sa add_using_directive
+	Procedure outline: 
+	Check if alias name is already taken by something else
+	in this namespace.  Any local collision is reported as an error.  
+	Note: name clashes with namespaces in higher scopes are permitted, 
+	and in imported (unaliased) spaces.  
+	This allows one to overshadow identifiers in higher namespaces.  
+ */
 name_space*
 name_space::add_using_alias(const id_expr& n, const string& a) {
+	object* probe;
 	name_space* ret;
 	namespace_list::iterator i;
 	namespace_list candidates;		// empty list
 
-	// see if namespace already exists
-	//	note: name clashes are permitted with namespaces in higher
-	//	scopes, and in open (unaliased) spaces, however, 
-	//	name conflict with existing subspaces and ALIASED
-	//	namespaces (alias names) will be reported as errors, 
-	//	to head off certain ambiguity.  
-
 	cerr << endl << "adding using-alias in space: " 
 		<< get_qualified_name() << " as " << a;
 
-	ret = subns[a];
-	if (ret) {
-		cerr << " ... already as open alias, ERROR! ";
+	probe = used_id_map[a];
+	if (probe) {
+		// then already, it conflicts with some other id
+		// we report the conflict precisely as follows:
+		ret = IS_A(name_space*, probe);
+		if (ret) {
+			if(subns[a]) {
+				cerr << " ... already a sub-namespace, ERROR! ";
+			} else if(open_aliases[a]) {
+				cerr << " ... already an open alias, ERROR! ";
+			} else {
+				// cannot possibly be anything else!
+				cerr << "WTF!!???";
+			}
+		} else {
+			probe->what(cerr << " ... already declared ")
+				<< ", ERROR! ";
+		}
 		return NULL;
 	}
-	ret = open_aliases[a];
-	if (ret) {
-		cerr << " ... already exists as subspace, ERROR! ";
-		return NULL;
-	}
+
 	// else we're ok to proceed to add alias
 	// first find the referenced namespace...
 	query_import_namespace_match(candidates, n);
@@ -188,7 +259,12 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	// if list's size > 1, ambiguity
 	// else if list is empty, unresolved namespace
 	// else we've narrowed it down to one
-		case 1: ret = (*i); open_aliases[a] = ret; break;
+		case 1: {
+			ret = (*i);
+			open_aliases[a] = ret;
+			used_id_map[a] = ret;
+			break;
+			}
 		case 0:	{
 			cerr << " ... not found, ERROR! ";
 			ret = NULL;
@@ -213,7 +289,8 @@ name_space::add_using_alias(const id_expr& n, const string& a) {
 	(at most one precise match)
 	This will serach both true subnamespaces and aliased subspaces.  
 	This variation includes the invoking namespace in the pattern match.  
-	\param id the qualified/scoped name of the namespace to match
+	\param id the qualified/scoped name of the namespace to match.
+	\return pointer to found namespace.
  */
 name_space*
 name_space::query_namespace_match(const id_expr& id) {
