@@ -2,7 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
- 	$Id: art_object_instance.cc,v 1.21 2004/12/02 01:38:50 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.22 2004/12/02 02:08:52 fang Exp $
  */
 
 #include <iostream>
@@ -914,11 +914,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection,
 	Private empty constructor.  
  */
 pbool_instance_collection::pbool_instance_collection() :
-		param_instance_collection(), ival(NULL)
-#if !SUBCLASS_PBOOL_ARRAY
-		, collection(NULL)
-#endif
-		{
+		param_instance_collection(), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -926,22 +922,14 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 		const string& n) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
-		ival(NULL)
-#if !SUBCLASS_PBOOL_ARRAY
-		, collection(NULL)
-#endif
-		{
+		ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d) :
-		param_instance_collection(o, n, d), ival(NULL)
-#if !SUBCLASS_PBOOL_ARRAY
-		, collection(NULL)
-#endif
-		{
+		param_instance_collection(o, n, d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -974,16 +962,6 @@ ostream&
 pbool_instance_collection::what(ostream& o) const {
 	return o << "pbool-inst";
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-ostream&
-pbool_instance_collection::dump_unrolled_values(ostream& o) const {
-	return o << auto_indent <<
-		"pbool_instance_collection::dump_unrolled_values(): "
-		"(only temporary)" << endl;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
@@ -1097,283 +1075,11 @@ pbool_instance_collection::type_check_actual_param_expr(const param_expr& pe) co
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-void
-pbool_instance_collection::instantiate_indices(
-		const index_collection_item_ptr_type& i) {
-	if (!collection)
-		collection = excl_ptr<collection_type>(
-			collection_type::make_multikey_qmap(depth));
-	assert(collection);
-	collection_type& collection_ref = *collection;
-	if (i) {
-#if 0
-		cerr << "multidimensional index instantiation!  "
-			"let's not get too fancy here..." << endl;
-#endif
-		// indices is a range_expr_list (base class)
-		// resolve into constants now using const_range_list
-		// if unable, (b/c uninitialized) then report error
-		const_range_list ranges;	// initially empty
-		if (!i->resolve_ranges(ranges)) {
-			// fail
-			cerr << "ERROR: unable to resolve indices "
-				"for instantiation: ";
-			i->dump(cerr) << endl;
-			exit(1);
-		} 
-		// else success
-		// now iterate through, unrolling one at a time...
-		// stop as soon as there is a conflict
-		// later: factor this out into common helper class
-		excl_ptr<multikey_generator_base<int> > key_gen = 
-			excl_ptr<multikey_generator_base<int> >(
-			multikey_generator_base<int>::make_multikey_generator(
-				ranges.size()));
-		assert(key_gen);
-		multikey_base<int>::iterator li =
-			key_gen->get_lower_corner().begin();
-		multikey_base<int>::iterator ui =
-			key_gen->get_upper_corner().begin();
-		const_range_list::const_iterator ri = ranges.begin();
-		const const_range_list::const_iterator re = ranges.end();
-		for ( ; ri != re; ri++, li++, ui++) {
-			*li = ri->first;
-			*ui = ri->second;
-		}
-		key_gen->initialize();
-#if 0
-		excl_ptr<multikey_base<int> > key_end = 
-			excl_ptr<multikey_base<int> >(
-			multikey_base<int>::make_multikey(ranges.size()));
-		assert(key_end);
-		copy(key_gen->begin(), key_gen->end(), key_end->begin());
-		never_ptr<const multikey_base<int> >
-			key_gen_base(key_gen.is_a<multikey_base<int> >());
-		assert(key_gen_base);
-		never_ptr<const multikey_base<int> >
-			key_end_base(key_end.is_a<multikey_base<int> >());
-		assert(key_end_base);
-#endif
-		multikey_generator_base<int>& key_gen_ref = *key_gen;
-		const multikey_base<int>& key_end_ref =
-			key_gen_ref.get_lower_corner();
-		do {
-#if 0
-			multikey_base<int>::const_iterator ci =
-				key_gen->begin();
-			for ( ; ci!=key_gen->end(); ci++) {
-				cerr << '[' << *ci << ']';
-			}
-			cerr << endl;
-#endif
-//			pbool_instance& pi = collection_ref[*key_gen_base];
-			pbool_instance& pi = collection_ref[key_gen_ref];
-			if (pi.instantiated) {
-				cerr << "ERROR: Index already instantiated!"
-					<< endl;
-				exit(1);
-			}
-			pi.instantiated = true;
-			assert(!pi.valid);
-//			(*key_gen)++;
-			key_gen_ref++;
-		// while (*key_gen_base != *key_end_base);
-		} while (key_gen_ref != key_end_ref);
-	} else {
-		// 0-D, or scalar
-		assert(!depth);
-		const never_ptr<scalar_type>
-			the(collection.is_a<scalar_type>());
-		assert(the);
-		pbool_instance& pi = *the;
-		if (pi.instantiated) {
-			cerr << "ERROR: Already instantiated!" << endl;
-			exit(1);
-		}
-		pi.instantiated = true;
-		assert(!pi.valid);
-	}
-}
-#endif	// SUBCLASS_PBOOL_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-/**
-	This version assumes collection is a scalar.  
- */
-bool
-pbool_instance_collection::lookup_value(bool& v) const {
-	assert(!depth);
-	if (!collection) {
-		// hasn't been instantiated yet!
-		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
-		return false;
-	}
-	const never_ptr<const scalar_type> the(collection.is_a<const scalar_type>());
-	assert(the);
-	const pbool_instance& pi = *the;
-	if (pi.valid) {
-		v = pi.value;
-	} else {
-		dump(cerr << "ERROR: use of uninitialized ") << endl;
-	}
-	return pi.valid;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assumes that index resolves down to a single integer.  
-	Returns value of a single integer, if it can be resolved.  
-	If integer is uninitialized, report as error.  
- */
-bool
-pbool_instance_collection::lookup_value(bool& v,
-		 const multikey_base<int>& i) const {
-	assert(depth == i.dimensions());
-	if (!collection) {
-		// hasn't been instantiated yet!
-		cerr << "ERROR: reference to uninstantiated pbool!" << endl;
-		return false;
-	}
-	const pbool_instance& pi = (*collection)[i];
-	if (pi.valid) {
-		v = pi.value;
-	} else {
-		cerr << "ERROR: reference to uninitialized pbool " <<
-			get_qualified_name() << " at index: " << i << endl;
-	}
-	return pi.valid;
-}
-#endif	// SUBCLASS_PBOOL_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-/**
-	\param l list in which to accumulate values.
-	\param r the ranges, must be valid.
-	\return false on error, e.g. if value doesn't exist or 
-		is uninitialized; true on success.
- */
-bool
-pbool_instance_collection::lookup_value_collection(
-		list<bool>& l, const const_range_list& r) const {
-	assert(collection);
-	const collection_type& collection_ref = *collection;
-	assert(!r.empty());
-	const sticky_ptr<const multikey_base<int> > lower(r.lower_multikey());
-	const sticky_ptr<const multikey_base<int> > upper(r.upper_multikey());
-	assert(lower);
-	assert(upper);
-	const sticky_ptr<multikey_generator_base<int> >
-		key_gen(multikey_generator_base<int>::make_multikey_generator(
-			lower->dimensions()));
-	assert(key_gen);
-	multikey_generator_base<int>& key_gen_ref = *key_gen;
-	copy(lower->begin(), lower->end(), key_gen->get_lower_corner().begin());
-	copy(upper->begin(), upper->end(), key_gen->get_upper_corner().begin());
-	key_gen->initialize();
-	bool ret = true;
-	do {
-		const pbool_instance& pi = collection_ref[key_gen_ref];
-		// assert(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pbool index "
-				<< key_gen_ref << endl;
-		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pbool index "
-				<< key_gen_ref << endl;
-		ret &= (pi.valid && pi.instantiated);
-		l.push_back(pi.value);
-		key_gen_ref++;
-	} while (key_gen_ref != key_gen_ref.get_lower_corner());
-	return ret;
-}
-#endif	// SUBCLASS_BOOL_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-/**
-	Expands indices which may be under-specified into explicit
-	indices for the implicit subslice, if it is densely packed.  
-	Depends on the current state of the collection.  
-	\param l is list of indices, which may be under-specified, 
-		or even empty.
-	\return fully-specified index list, or empty list if there is error.
- */
-const_index_list
-pbool_instance_collection::resolve_indices(const const_index_list& l) const {
-	const size_t l_size = l.size();
-	assert(collection);
-	if (dimensions() == l_size) {
-		// already fully specified
-		return l;
-	}
-	// convert indices to pair of list of multikeys
-	if (!l_size) {
-		return const_index_list(l, collection->is_compact());
-	}
-	// else construct slice
-	list<int> lower_list, upper_list;
-	transform(l.begin(), l.end(), back_inserter(lower_list), 
-		unary_compose(
-			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	transform(l.begin(), l.end(), back_inserter(upper_list), 
-		unary_compose(
-			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	return const_index_list(l, 
-		collection->is_compact_slice(lower_list, upper_list));
-}
-#endif	// SUBCLASS_PBOOL_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PBOOL_ARRAY
-/**
-	Assigns a single value.
-	Only call this if this is scalar, 0-D.
-	Decision: should we allow multiple assignments of the same value?
-	\return true on error.  
- */
-bool
-pbool_instance_collection::assign(const bool b) {
-	assert(collection);
-	const never_ptr<scalar_type> the(collection.is_a<scalar_type>());
-	assert(the);
-	pbool_instance& pi = *the;
-	return !(pi = b);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assigns a single value, using an index.
-	Only call this if this is non-scalar (array).  
-	\return true on error.
- */
-bool
-pbool_instance_collection::assign(const multikey_base<int>& k, const bool b) {
-	assert(collection);
-	pbool_instance& pi = (*collection)[k];
-	return !(pi = b);
-}
-#endif	// SUBCLASS_PBOOL_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-#if SUBCLASS_PBOOL_ARRAY
 if (!m.register_transient_object(this, 
-		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions()))
-#else
-if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY))
-#endif
-{
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -1384,7 +1090,6 @@ if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY))
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBCLASS_PBOOL_ARRAY
 pbool_instance_collection*
 pbool_instance_collection::make_pbool_array(
 		const scopespace& o, const string& n, const size_t D) {
@@ -1399,14 +1104,10 @@ pbool_instance_collection::make_pbool_array(
 			return NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent*
 pbool_instance_collection::construct_empty(const int i) {
-#if !SUBCLASS_PBOOL_ARRAY
-	return new pbool_instance_collection();
-#else
 	switch(i) {
 		case 0: return new pbool_array<0>();
 		case 1: return new pbool_array<1>();
@@ -1417,59 +1118,30 @@ pbool_instance_collection::construct_empty(const int i) {
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-#if SUBCLASS_PBOOL_ARRAY
-pbool_instance_collection::write_object_base
-#else
-pbool_instance_collection::write_object
-#endif
-		(const persistent_object_manager& m) const {
+pbool_instance_collection::write_object_base(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-#if !SUBCLASS_PBOOL_ARRAY
-	WRITE_POINTER_INDEX(f, m);
-#endif
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
 	m.write_pointer(f, ival);
-#if !SUBCLASS_PBOOL_ARRAY
-	WRITE_OBJECT_FOOTER(f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-#if SUBCLASS_PBOOL_ARRAY
-pbool_instance_collection::load_object_base
-#else
-pbool_instance_collection::load_object
-#endif
-		(persistent_object_manager& m) {
-#if !SUBCLASS_PBOOL_ARRAY
-if (!m.flag_visit(this))
-#endif
-{
+pbool_instance_collection::load_object_base(persistent_object_manager& m) {
 	istream& f = m.lookup_read_buffer(this);
-#if !SUBCLASS_PBOOL_ARRAY
-	STRIP_POINTER_INDEX(f, m);
-#endif
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
 	m.read_pointer(f, ival);
-#if !SUBCLASS_PBOOL_ARRAY
-	STRIP_OBJECT_FOOTER(f);
-#endif
-}
-// else already visited
 }
 
 //=============================================================================
-#if SUBCLASS_PBOOL_ARRAY
 // class pbool_array method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1877,8 +1549,6 @@ if (!m.flag_visit(this)) {
 }
 }
 
-#endif	// SUBCLASS_PBOOL_ARRAY
-
 //=============================================================================
 // struct pint_instance method definitions
 // not really methods...
@@ -1911,11 +1581,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection,
 	Private empty constructor.
  */
 pint_instance_collection::pint_instance_collection() :
-		param_instance_collection(), ival(NULL)
-#if !SUBCLASS_PINT_ARRAY
-		, collection(NULL)
-#endif
-		{
+		param_instance_collection(), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1923,22 +1589,14 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 		const string& n) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
-		ival(NULL)
-#if !SUBCLASS_PINT_ARRAY
-		, collection(NULL)
-#endif
-		{
+		ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d) :
-		param_instance_collection(o, n, d), ival(NULL)
-#if !SUBCLASS_PINT_ARRAY
-		, collection(NULL)
-#endif
-		{
+		param_instance_collection(o, n, d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1947,11 +1605,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 		count_ptr<const pint_expr> i) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
-		ival(i)
-#if !SUBCLASS_PINT_ARRAY
-		, collection(NULL)
-#endif
-		{
+		ival(i) {
 	assert(type_check_actual_param_expr(*i));
 }
 
@@ -1960,11 +1614,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 		const string& n, 
 		const size_t d, 
 		count_ptr<const pint_expr> i) :
-		param_instance_collection(o, n, d), ival(i)
-#if !SUBCLASS_PINT_ARRAY
-		, collection(NULL)
-#endif
-		{
+		param_instance_collection(o, n, d), ival(i) {
 	assert(type_check_actual_param_expr(*i));
 }
 
@@ -2105,258 +1755,6 @@ pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) con
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PINT_ARRAY
-void
-pint_instance_collection::instantiate_indices(
-		const index_collection_item_ptr_type& i) {
-	if (!collection)
-		collection = excl_ptr<collection_type>(
-			collection_type::make_multikey_qmap(depth));
-	assert(collection);
-	collection_type& collection_ref = *collection;
-	if (i) {
-#if 0
-		cerr << "multidimensional index instantiation!  "
-			"let's not get too fancy here..." << endl;
-#endif
-		// indices is a range_expr_list (base class)
-		// resolve into constants now using const_range_list
-		// if unable, (b/c uninitialized) then report error
-		const_range_list ranges;	// initially empty
-		if (!i->resolve_ranges(ranges)) {
-			// fail
-			cerr << "ERROR: unable to resolve indices "
-				"for instantiation: ";
-			i->dump(cerr) << endl;
-			exit(1);
-		} 
-		// else success
-		// now iterate through, unrolling one at a time...
-		// stop as soon as there is a conflict
-		// later: factor this out into common helper class
-		excl_ptr<multikey_generator_base<int> > key_gen = 
-			excl_ptr<multikey_generator_base<int> >(
-			multikey_generator_base<int>::make_multikey_generator(
-				ranges.size()));
-		assert(key_gen);
-		multikey_base<int>::iterator li =
-			key_gen->get_lower_corner().begin();
-		multikey_base<int>::iterator ui =
-			key_gen->get_upper_corner().begin();
-		const_range_list::const_iterator ri = ranges.begin();
-		const const_range_list::const_iterator re = ranges.end();
-		for ( ; ri != re; ri++, li++, ui++) {
-			*li = ri->first;
-			*ui = ri->second;
-		}
-		key_gen->initialize();
-		multikey_generator_base<int>& key_gen_ref = *key_gen;
-		const multikey_base<int>& key_end_ref =
-			key_gen_ref.get_lower_corner();
-		do {
-#if 0
-			multikey_base<int>::const_iterator ci =
-				key_gen->begin();
-			for ( ; ci!=key_gen->end(); ci++) {
-				cerr << '[' << *ci << ']';
-			}
-			cerr << endl;
-#endif
-			pint_instance& pi = collection_ref[key_gen_ref];
-			if (pi.instantiated) {
-				cerr << "ERROR: Index already instantiated!"
-					<< endl;
-				exit(1);
-			}
-			pi.instantiated = true;
-			assert(!pi.valid);
-			key_gen_ref++;
-		} while (key_gen_ref != key_end_ref);
-	} else {
-		// 0-D, or scalar
-		assert(!depth);
-		const never_ptr<scalar_type>
-			the(collection.is_a<scalar_type>());
-		assert(the);
-		pint_instance& pi = *the;
-		if (pi.instantiated) {
-			cerr << "ERROR: Already instantiated!" << endl;
-			exit(1);
-		}
-		pi.instantiated = true;
-		assert(!pi.valid);
-	}
-}
-#endif	// SUBCLASS_PINT_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PINT_ARRAY
-/**
-	This version assumes collection is a scalar.  
- */
-bool
-pint_instance_collection::lookup_value(int& v) const {
-	assert(!depth);
-	if (!collection) {
-		// hasn't been instantiated yet!
-		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
-		return false;
-	}
-	const never_ptr<const scalar_type>
-		the(collection.is_a<const scalar_type>());
-	assert(the);
-	const pint_instance& pi = *the;
-	if (pi.valid) {
-		v = pi.value;
-	} else {
-		dump(cerr << "ERROR: use of uninitialized ") << endl;
-	}
-	return pi.valid;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assumes that index resolves down to a single integer.  
-	Returns value of a single integer, if it can be resolved.  
-	If integer is uninitialized, report as error.  
- */
-bool
-pint_instance_collection::lookup_value(int& v,
-		 const multikey_base<int>& i) const {
-	assert(depth == i.dimensions());
-	if (!collection) {
-		// hasn't been instantiated yet!
-		cerr << "ERROR: reference to uninstantiated pint!" << endl;
-		return false;
-	}
-	const pint_instance& pi = (*collection)[i];
-	if (pi.valid) {
-		v = pi.value;
-	} else {
-		cerr << "ERROR: reference to uninitialized pint " <<
-			get_qualified_name() << " at index: " << i << endl;
-	}
-	return pi.valid;
-}
-#endif	// SUBCLASS_PINT_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PINT_ARRAY
-/**
-	\param l list in which to accumulate values.
-	\param r the ranges, must be valid.
-	\return false on error, e.g. if value doesn't exist or 
-		is uninitialized; true on success.
- */
-bool
-pint_instance_collection::lookup_value_collection(
-		list<int>& l, const const_range_list& r) const {
-	assert(collection);
-	const collection_type& collection_ref = *collection;
-	assert(!r.empty());
-	const excl_ptr<const multikey_base<int> > lower(r.lower_multikey());
-	const excl_ptr<const multikey_base<int> > upper(r.upper_multikey());
-	assert(lower);
-	assert(upper);
-	const excl_ptr<multikey_generator_base<int> >
-		key_gen(multikey_generator_base<int>::make_multikey_generator(
-			lower->dimensions()));
-	assert(key_gen);
-	multikey_generator_base<int>& key_gen_ref = *key_gen;
-	copy(lower->begin(), lower->end(), key_gen->get_lower_corner().begin());
-	copy(upper->begin(), upper->end(), key_gen->get_upper_corner().begin());
-	key_gen->initialize();
-	bool ret = true;
-	do {
-		const pint_instance& pi = collection_ref[key_gen_ref];
-		// assert(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pint index "
-				<< key_gen_ref << endl;
-		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pint index "
-				<< key_gen_ref << endl;
-		ret &= (pi.valid && pi.instantiated);
-		l.push_back(pi.value);
-		key_gen_ref++;
-	} while (key_gen_ref != key_gen_ref.get_lower_corner());
-	return ret;
-}
-#endif	// SUBCLASS_PINT_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PINT_ARRAY
-/**
-	Expands indices which may be under-specified into explicit
-	indices for the implicit subslice, if it is densely packed.  
-	Depends on the current state of the collection.  
-	\param l is list of indices, which may be under-specified, 
-		or even empty.
-	\return fully-specified index list, or empty list if there is error.
- */
-const_index_list
-pint_instance_collection::resolve_indices(const const_index_list& l) const {
-	const size_t l_size = l.size();
-	assert(collection);
-	if (dimensions() == l_size) {
-		// already fully specified
-		return l;
-	}
-	// convert indices to pair of list of multikeys
-	if (!l_size) {
-		return const_index_list(l, collection->is_compact());
-	}
-	// else construct slice
-	list<int> lower_list, upper_list;
-	transform(l.begin(), l.end(), back_inserter(lower_list), 
-		unary_compose(
-			mem_fun_ref(&const_index::lower_bound), 
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	transform(l.begin(), l.end(), back_inserter(upper_list), 
-		unary_compose(
-			mem_fun_ref(&const_index::upper_bound), 
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	return const_index_list(l, 
-		collection->is_compact_slice(lower_list, upper_list));
-}
-#endif	// SUBCLASS_PINT_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SUBCLASS_PINT_ARRAY
-/**
-	Assigns a single value.
-	Only call this if this is scalar, 0-D.
-	Decision: should we allow multiple assignments of the same value?
-	\return true on error.  
- */
-bool
-pint_instance_collection::assign(const int i) {
-	assert(collection);
-	const never_ptr<scalar_type> the(collection.is_a<scalar_type>());
-	assert(the);
-	pint_instance& pi = *the;
-	return !(pi = i);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assigns a single value, using an index.
-	Only call this if this is non-scalar (array).  
-	\return true on error.
- */
-bool
-pint_instance_collection::assign(const multikey_base<int>& k, const int i) {
-	assert(collection);
-	pint_instance& pi = (*collection)[k];
-	return !(pi = i);
-}
-#endif	// SUBCLASS_PINT_ARRAY
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	No need to virtualize this method as long as 
 	the dimension-specific subclasses have no pointers that 
@@ -2365,13 +1763,8 @@ pint_instance_collection::assign(const multikey_base<int>& k, const int i) {
 void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-#if SUBCLASS_PINT_ARRAY
 if (!m.register_transient_object(this,
-		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions()))
-#else
-if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE_KEY))
-#endif
-{
+		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -2383,7 +1776,6 @@ if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE_KEY))
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBCLASS_PINT_ARRAY
 pint_instance_collection*
 pint_instance_collection::make_pint_array(
 		const scopespace& o, const string& n, const size_t D) {
@@ -2398,7 +1790,6 @@ pint_instance_collection::make_pint_array(
 			return NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2406,9 +1797,6 @@ pint_instance_collection::make_pint_array(
  */
 persistent*
 pint_instance_collection::construct_empty(const int i) {
-#if !SUBCLASS_PINT_ARRAY
-	return new pint_instance_collection();
-#else
 	// later convert to lookup table...
 	switch(i) {
 		case 0:	return new pint_array<0>();
@@ -2420,61 +1808,30 @@ pint_instance_collection::construct_empty(const int i) {
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-#if SUBCLASS_PINT_ARRAY
-pint_instance_collection::write_object_base
-#else
-pint_instance_collection::write_object
-#endif
-		(const persistent_object_manager& m) const {
+pint_instance_collection::write_object_base(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-#if !SUBCLASS_PINT_ARRAY
-	WRITE_POINTER_INDEX(f, m);
-#endif
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
 	m.write_pointer(f, ival);
-
-#if !SUBCLASS_PINT_ARRAY
-	WRITE_OBJECT_FOOTER(f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-#if SUBCLASS_PINT_ARRAY
-pint_instance_collection::load_object_base
-#else
-pint_instance_collection::load_object
-#endif
-	(persistent_object_manager& m) {
-#if !SUBCLASS_PINT_ARRAY
-if (!m.flag_visit(this))
-#endif
-{
+pint_instance_collection::load_object_base(persistent_object_manager& m) {
 	istream& f = m.lookup_read_buffer(this);
-#if !SUBCLASS_PINT_ARRAY
-	STRIP_POINTER_INDEX(f, m);
-#endif
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
 	m.read_pointer(f, ival);
-
-#if !SUBCLASS_PINT_ARRAY
-	STRIP_OBJECT_FOOTER(f);
-#endif
-}
-// else already visited
 }
 
 //=============================================================================
-#if SUBCLASS_PINT_ARRAY
 // class pint_array method_definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2877,8 +2234,6 @@ if (!m.flag_visit(this)) {
 }
 }
 
-#endif	// SUBCLASS_PINT_ARRAY
-
 //=============================================================================
 // class channel_instance_collection method definitions
 
@@ -3184,7 +2539,8 @@ pbool_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
-	inst_base->collect_transient_info(m);
+	// let the scopespace take care of it
+	// inst_base->collect_transient_info(m);
 	if (indices)
 		indices->collect_transient_info(m);
 }	// else already visited
@@ -3304,7 +2660,8 @@ pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
-	inst_base->collect_transient_info(m);
+	// let the scopespace take care of it
+	// inst_base->collect_transient_info(m);
 	if (indices)
 		indices->collect_transient_info(m);
 }	// else already visited
@@ -3716,21 +3073,17 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // explicit template instantiations
 
-#if SUBCLASS_PBOOL_ARRAY
 template class pbool_array<0>;
 template class pbool_array<1>;
 template class pbool_array<2>;
 template class pbool_array<3>;
 template class pbool_array<4>;
-#endif
 
-#if SUBCLASS_PINT_ARRAY
 template class pint_array<0>;
 template class pint_array<1>;
 template class pint_array<2>;
 template class pint_array<3>;
 template class pint_array<4>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

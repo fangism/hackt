@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.19 2004/12/02 01:38:50 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.20 2004/12/02 02:08:52 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa
@@ -910,14 +910,10 @@ pbool_instance_reference::resolve_value(bool& i) const {
 			return false;
 		}
 	} else {
-#if SUBCLASS_PBOOL_ARRAY
 		never_ptr<pbool_scalar>
 			scalar_inst(pbool_inst_ref.is_a<pbool_scalar>());
 		assert(scalar_inst);
 		return scalar_inst->lookup_value(i);
-#else
-		return pbool_inst_ref->lookup_value(i);
-#endif
 	}
 }
 
@@ -1097,18 +1093,11 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	if (ranges.empty()) {
 		assert(vals.size() == 1);
 		// is scalar assignment, but may be indexed
-#if SUBCLASS_PBOOL_ARRAY
 		never_ptr<pbool_scalar> 
 			scalar_inst(p.pbool_inst_ref.is_a<pbool_scalar>());
 		if (scalar_inst) {
 			return scalar_inst->assign(vals.front()) || b;
 		}
-#else
-		if (!p.pbool_inst_ref->dimensions()) {
-			// p.pbool_inst_ref is scalar
-			return p.pbool_inst_ref->assign(vals.front()) || b;
-		}
-#endif
 	}
 	// else is scalar or array, but must resolve indices
 	const const_index_list dim(p.resolve_dimensions());
@@ -1325,14 +1314,10 @@ pint_instance_reference::resolve_value(int& i) const {
 			return false;
 		}
 	} else {
-#if SUBCLASS_PINT_ARRAY
 		never_ptr<pint_scalar>
 			scalar_inst(pint_inst_ref.is_a<pint_scalar>());
 		assert(scalar_inst);
 		return scalar_inst->lookup_value(i);
-#else
-		return pint_inst_ref->lookup_value(i);
-#endif
 	}
 }
 
@@ -1531,18 +1516,11 @@ pint_instance_reference::assigner::operator() (const bool b,
 	if (ranges.empty()) {
 		assert(vals.size() == 1);
 		// is scalar assignment, but may be indexed
-#if SUBCLASS_PINT_ARRAY
 		never_ptr<pint_scalar> 
 			scalar_inst(p.pint_inst_ref.is_a<pint_scalar>());
 		if (scalar_inst) {
 			return scalar_inst->assign(vals.front()) || b;
 		}
-#else
-		if (!p.pint_inst_ref->dimensions()) {
-			// p.pint_inst_ref is scalar
-			return p.pint_inst_ref->assign(vals.front()) || b;
-		}
-#endif
 	}
 	// else is scalar or array, but must resolve indices
 	const const_index_list dim(p.resolve_dimensions());

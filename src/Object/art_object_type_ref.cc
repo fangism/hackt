@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.13 2004/12/02 01:38:51 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.14 2004/12/02 02:08:52 fang Exp $
  */
 
 #include <iostream>
@@ -750,20 +750,10 @@ param_type_reference::make_instance_collection(
 	// hard coded... yucky, but efficient.  
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
-#if SUBCLASS_PBOOL_ARRAY
-			pbool_instance_collection::make_pbool_array(*s, id, d)
-#else
-			new pbool_instance_collection(*s, id, d)
-#endif
-		);
+			pbool_instance_collection::make_pbool_array(*s, id, d));
 	else if (this->must_be_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
-#if SUBCLASS_PINT_ARRAY
-			pint_instance_collection::make_pint_array(*s, id, d)
-#else
-			new pint_instance_collection(*s, id, d)
-#endif
-		);
+			pint_instance_collection::make_pint_array(*s, id, d));
 	else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
