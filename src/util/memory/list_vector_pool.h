@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.4.1.2.2 2005/01/24 22:29:57 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.4.1.2.3 2005/01/25 05:25:02 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -99,6 +99,7 @@ void T::operator delete (void* p)					\
 	Convenient macro for explicitly requiring that a memory pool
 	be ready during static initialization of a particular module.
 	This is not required now... kept in comments for historical reference.
+	\param T cannot be a template-id, use a convenient simple typedef.
  */
 #define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
 static const T::pool_ref_type						\

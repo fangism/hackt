@@ -17,6 +17,7 @@ noinst_PROGRAMS = \
 	exit_test \
 	throw_test \
 	what_test \
+	pretty_function_test \
 	stacktrace_test \
 	ptrs_test \
 	pointer_classes_test \
@@ -35,8 +36,9 @@ noinst_PROGRAMS = \
 	multikey_qmap_test \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
-	packed_array_test \
-	pretty_function_test
+	packed_array_test
+
+noinst_LTLIBRARIES = libfangutil.la
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -55,21 +57,29 @@ multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
 packed_array_test_SOURCES = packed_array_test.cc
 exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
 throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
-stacktrace_test_SOURCES = stacktrace_test.cc stacktrace.cc
+stacktrace_test_SOURCES = stacktrace_test.cc
+stacktrace_test_LDADD = libfangutil.la
 what_test_SOURCES = what_test.cc
 pretty_function_test_SOURCES = pretty_function_test.cc
-local_static_store_test_SOURCES = local_static_store_test.cc stacktrace.cc \
+local_static_store_test_SOURCES = local_static_store_test.cc \
 	named_pooled_thing.cc named_pooled_thing.h
-multi_pool_module_test_SOURCES = multi_pool_module_test.cc stacktrace.cc \
+local_static_store_test_LDADD = libfangutil.la
+multi_pool_module_test_SOURCES = multi_pool_module_test.cc \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
-static_count_ptr_test_SOURCES = static_count_ptr_test.cc stacktrace.cc \
-	named_pooled_thing.cc
+multi_pool_module_test_LDADD = libfangutil.la
+static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
+static_count_ptr_test_LDADD = libfangutil.la
+
+libfangutil_la_SOURCES = stacktrace.cc static_trace.cc
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
 # possibly confusing the parent directories when they expect .deps to
 # exist, especially on make distclean.  
 stacktrace.cc: ../stacktrace.cc
+	$(LN_S) $< $@
+
+static_trace.cc: ../static_trace.cc
 	$(LN_S) $< $@
 
 # the util/ source directory
@@ -90,16 +100,18 @@ CLEANFILES = \
 	$(noinst_PROGRAMS:=.filter) \
 	$(noinst_PROGRAMS:=.out)
 
-DISTCLEANFILES = .cvsignore
+DISTCLEANFILES = .cvsignore $(libfangutil_la_SOURCES)
 
 TESTS = $(noinst_PROGRAMS:=.test)
 
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
+AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES)
+
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
 .cvsignore: test.cvsignore
-	@$(ECHO) $(noinst_PROGRAMS) | $(SPACES_TO_NEWLINE) > $@.temp
+	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
 

@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.5.4.1.2.3 2005/01/24 22:28:44 fang Exp $
+	$Id: stacktrace.cc,v 1.5.4.1.2.4 2005/01/25 05:24:19 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -17,6 +17,9 @@
 #include "likely.h"
 #include "STL/list.tcc"
 #include "qmap.tcc"
+#include "static_trace.h"
+
+STATIC_TRACE_BEGIN("stacktrace")
 
 namespace util {
 USING_LIST
@@ -287,4 +290,6 @@ stacktrace::redirect::~redirect() {
 
 //=============================================================================
 }	// end namespace util
+
+STATIC_TRACE_END("stacktrace")
 
