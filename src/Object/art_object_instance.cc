@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7 2005/02/17 19:45:18 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.6.1 2005/02/19 19:39:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -653,7 +653,7 @@ datatype_instance_collection::get_type_ref(void) const {
  */
 count_ptr<member_instance_reference_base>
 datatype_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
+		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<datatype_member_instance_reference>(

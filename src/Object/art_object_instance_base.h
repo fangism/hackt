@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11.2.2.14.1 2005/02/19 18:57:15 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.2.14.2 2005/02/19 19:39:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -64,7 +64,7 @@ public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
 	// should be consistent with 
 	//	member_instance_reference_base::base_inst_ptr_type
-	typedef	count_ptr<const simple_instance_reference>
+	typedef	count_ptr<const instance_reference_base>
 						inst_ref_ptr_type;
 protected:
 	/**

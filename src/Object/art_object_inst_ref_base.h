@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1.2.1 2005/02/19 18:57:15 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1.2.2 2005/02/19 19:39:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -305,7 +305,9 @@ private:
 class member_instance_reference_base : virtual public instance_reference_base {
 public:
 	// consider changing this to instance_reference_base?
-	typedef	simple_instance_reference		base_inst_type;
+	typedef	instance_reference_base			base_inst_type;
+	// should be kept consistent with
+	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
 protected:
 	/**

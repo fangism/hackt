@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.4.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.4.1.2.1 2005/02/19 19:39:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -32,7 +32,9 @@ private:
 public:
 	typedef	proc_instance_alias		instance_alias_type;
 	typedef never_ptr<instance_alias_type>	instance_ptr_type;
-	typedef	count_ptr<const process_type_reference>
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	process_type_reference		type_reference_type;
+	typedef	count_ptr<const type_reference_type>
 						final_ptr_type;
 protected:
 	// reserve these for connections between instance_references
@@ -77,8 +79,7 @@ virtual ostream&
 	make_instance_reference(void) const;
 
 	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const;
+	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 	bool
 	commit_type(const final_ptr_type& );
@@ -128,6 +129,7 @@ protected:
 class datatype_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 protected:
 	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
 protected:
@@ -169,8 +171,7 @@ virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
 	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const;
+	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
@@ -195,7 +196,7 @@ private:
 public:
 	typedef chan_instance_alias		instance_alias_type;
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
-
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 protected:
 	// reserve these for connections between instance_references
 	// list of template actuals
@@ -229,8 +230,7 @@ virtual	bool
 	make_instance_reference(void) const;
 
 	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const;
+	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;

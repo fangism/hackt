@@ -10,6 +10,12 @@
 	  should really be generic.
 	  (a few connect tests will still die until announced otherwise)
 
+	+ -member-02:
+	  Changed base type of member_instance_reference_base to generic
+	  instance_reference_base.  Later, the base type shouldn't be allowed
+	  to be complex-aggregate, so perhaps deriving from nothing 
+	  (instead of instance_reference_base) is the correct thing to do.  
+
 
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 
