@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-03-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
+	  Porting parameter instance collections to use new value_collection
+	  template, similar to instance_collection class template.  
+	  Updated "art_built_ins.cc" to follow more procedural
+	  default parameter initialization.  
+	  More of class_traits<{pint,pbool}_tag> fleshed out, giving them
+	  some parameter-specific traits.  
+	  Next: param_instance_reference upgrading.  
+
+
 2005-03-07	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-18-inststmt-03:
