@@ -2,13 +2,14 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.3 2005/01/28 19:58:52 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.3.32.1 2005/03/01 20:47:55 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
 #define	__LIST_VECTOR_POOL_FWD_H__
 
 #include "STL/construct_fwd.h"
+// #include "memory/count_ptr.h"
 
 /**
 	These are the enw and delete operators required when

@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-03-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-10-what-01:
+	  This branch attempting to work around some multiple definition
+	  linking issues with implicitly instantiated symbols, 
+	  particularly from util::what.  This issue only arises with
+	  gcc-4.0 with odcctools' ld linker.  
+	  This is going to be nearly impossible to fix in the near future, 
+	  but nothing is broken, I'm only easily irritated by warnings.  
+	  Will revisit this issue another day.  
+
+
 2005-02-28	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-10-merged-bool-06:

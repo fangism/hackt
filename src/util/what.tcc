@@ -1,7 +1,7 @@
 /**
 	\file "what.tcc"
 	Default implementation for user-defined type-names.
-	$Id: what.tcc,v 1.4 2005/01/28 19:58:49 fang Exp $
+	$Id: what.tcc,v 1.4.32.1 2005/03/01 20:47:54 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_TCC__
@@ -10,6 +10,17 @@
 #include "what.h"
 #include <string>
 #include <typeinfo>
+
+/***
+	NOTE: Starting with gcc4, the linker complains about multiple 
+	definitions of implicitly instantiated function-local symbols, 
+	such as those declared in the name() static member functions.  
+	These warnings are not fatal, they still allow the program to 
+	compile and run fine, however the warnings are irritating
+	enough to warrant a workaround.  
+
+	Precisely the problem is...
+***/
 
 namespace util {
 using std::string;

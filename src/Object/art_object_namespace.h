@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.9 2005/03/01 04:50:59 fang Exp $
+	$Id: art_object_namespace.h,v 1.9.2.1 2005/03/01 20:47:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -18,6 +18,9 @@
 #include "hash_qmap.h"		// need complete definition
 #include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
 #include "memory/list_vector_pool_fwd.h"
+
+// #include "what.h"
+// including declarations of partial specializations prevents
 
 namespace ART {
 //=============================================================================
@@ -469,5 +472,15 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
+//=============================================================================
+// specializations in other namespaces
+
+#if 0
+namespace util {
+	SPECIALIZE_UTIL_WHAT_DECLARATION(ART::entity::name_space)
+}	// end namespace util
+#endif
+
+//=============================================================================
 #endif	// __ART_OBJECT_NAMESPACE_H__
 
