@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1.2.1 2005/02/19 18:57:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -303,19 +303,22 @@ private:
 	and indices.  
  */
 class member_instance_reference_base : virtual public instance_reference_base {
+public:
+	// consider changing this to instance_reference_base?
+	typedef	simple_instance_reference		base_inst_type;
+	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
 protected:
 	/**
 		The owning base instance reference, 
 		must have dimension-0, scalar... for now
-		Is type limiter to simple? or can it be nested member?
+		Is type limited to simple? or can it be nested member?
 	 */
-	const count_ptr<const simple_instance_reference>	base_inst_ref;
+	const base_inst_ptr_type			base_inst_ref;
 protected:
 	member_instance_reference_base();
 public:
 	explicit
-	member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b);
+	member_instance_reference_base(const base_inst_ptr_type& b);
 
 virtual	~member_instance_reference_base();
 

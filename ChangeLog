@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-02-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-02-member-01:
+	  Child branch created for the sake of revising the 
+	  member_instance_reference system.  
+	  Testing to see if member_instance_reference_base
+	  really requires simple_instance_reference as the base type, 
+	  should really be generic.
+	  (a few connect tests will still die until announced otherwise)
+
+
 2005-02-18	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-01:
@@ -19,6 +30,7 @@
 	  Overhauled persistent type registration as promised.  
 	  Compiles, runs most tests, some unexpected deaths in 
 	  tests/parser/connect.  Must sleep first...
+	  Deaths related to datatype_member_instance_references.
 
 
 2005-02-18	David Fang	<fangism@users.sourceforge.net>

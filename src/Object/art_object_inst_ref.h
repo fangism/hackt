@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1.2.1 2005/02/19 18:57:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -183,6 +183,8 @@ private:
 	typedef	member_instance_reference_base		interface_type;
 public:
 	typedef	parent_type::alias_connection_type	alias_connection_type;
+	typedef	parent_type::instance_collection_type	instance_collection_type;
+	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
@@ -192,8 +194,8 @@ private:
 	process_member_instance_reference();
 public:
 	process_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const process_instance_collection> m);
+		const base_inst_ptr_type& b, 
+		const never_ptr<const instance_collection_type> m);
 
 	~process_member_instance_reference();
 
@@ -218,6 +220,7 @@ public:
 	Reference to a datatype instance member of another struct.  
 	Potential problem to address: nested structs (easy, just fix)
 		Containership vs. inheritance.  
+	This will become sub-typed via template...
  */
 class datatype_member_instance_reference : 
 		public member_instance_reference_base, 
@@ -225,6 +228,7 @@ class datatype_member_instance_reference :
 private:
 	typedef	datatype_instance_reference		parent_type;
 	typedef	member_instance_reference_base		interface_type;
+	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
@@ -234,7 +238,7 @@ private:
 	datatype_member_instance_reference();
 public:
 	datatype_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
+		const base_inst_ptr_type& b, 
 		const never_ptr<const datatype_instance_collection> m);
 
 	~datatype_member_instance_reference();
@@ -267,6 +271,8 @@ private:
 	typedef	member_instance_reference_base		interface_type;
 public:
 	typedef	parent_type::alias_connection_type	alias_connection_type;
+	typedef	parent_type::instance_collection_type	instance_collection_type;
+	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
@@ -276,7 +282,7 @@ private:
 	channel_member_instance_reference();
 public:
 	channel_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
+		const base_inst_ptr_type& b, 
 		const never_ptr<const channel_instance_collection> m);
 
 	~channel_member_instance_reference();

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2 2005/02/19 08:40:58 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2.2.1 2005/02/19 18:57:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -948,10 +948,11 @@ member_instance_reference_base::member_instance_reference_base() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 member_instance_reference_base::member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b) :
+		const base_inst_ptr_type& b) :
 		base_inst_ref(b) {
 	NEVER_NULL(base_inst_ref);
-	INVARIANT(!base_inst_ref->dimensions());	// must be scalar! (for now)
+	INVARIANT(!base_inst_ref->dimensions());
+		// must be scalar! (for now)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1514,7 +1515,7 @@ process_member_instance_reference::process_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_member_instance_reference::process_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
+		const base_inst_ptr_type& b, 
 		const never_ptr<const process_instance_collection> m) :
 		member_instance_reference_base(b), 
 		process_instance_reference(m) {
@@ -1608,7 +1609,7 @@ datatype_member_instance_reference::datatype_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_member_instance_reference::datatype_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
+		const base_inst_ptr_type& b, 
 		const never_ptr<const datatype_instance_collection> m) :
 		member_instance_reference_base(b), 
 		datatype_instance_reference(m->current_collection_state()), 
@@ -1733,7 +1734,7 @@ channel_member_instance_reference::channel_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_member_instance_reference::channel_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
+		const base_inst_ptr_type& b, 
 		const never_ptr<const channel_instance_collection> m) :
 		member_instance_reference_base(b), 
 		channel_instance_reference(m) {
