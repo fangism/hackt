@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.4.4 2005/02/24 20:35:11 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.4.5 2005/02/25 01:40:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -303,7 +303,7 @@ public:
  */
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 class instance_alias<Tag,0> :
-	public instance_alias_info<Tag>::instance_alias_base_type {
+	public class_traits<Tag>::instance_alias_base_type {
 private:
 	typedef	KEYLESS_INSTANCE_ALIAS_CLASS		this_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type

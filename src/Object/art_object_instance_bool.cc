@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.3 2005/02/24 20:35:11 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.4 2005/02/25 01:40:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -49,7 +49,7 @@
 #include "binders.h"
 #include "dereference.h"
 
-
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // conditional defines, after including "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
 	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
@@ -62,6 +62,7 @@
 #else
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 
 STATIC_TRACE_BEGIN("instance-bool")
@@ -70,11 +71,19 @@ STATIC_TRACE_BEGIN("instance-bool")
 // module-local specializations
 
 namespace util {
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_scalar, "bool_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_1D, "bool_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_2D, "bool_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_3D, "bool_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_4D, "bool_array_4D")
+#else
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<0>, "bool_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<1>, "bool_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<2>, "bool_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<3>, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<4>, "bool_array_4D")
+#endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::bool_instance_collection, 
@@ -122,6 +131,24 @@ using util::value_reader;
 using util::read_value;
 using util::write_value;
 using util::persistent_traits;
+
+//=============================================================================
+// struct type_dumper specialization
+
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template <>
+struct type_dumper<bool_tag> {
+	typedef	class_traits<bool_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	ostream& os;
+	type_dumper(ostream& o) : os(o) { }
+
+	ostream&
+	operator () (const instance_collection_generic_type& c) {
+		return os << "bool^" << c.get_dimensions();
+	}
+};	// end struct type_dumper<bool_tag>
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
@@ -419,10 +446,10 @@ bool_instance_alias<0>::load_object(const persistent_object_manager& m,
 #endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class bool_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 bool_instance_collection::bool_instance_collection(const scopespace& o, 
 		const string& n, const size_t d) : parent_type(o, n, d) {
 }
@@ -1102,6 +1129,17 @@ bool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	// the_instance.load_object may load the continuation information
 	// because this collection has been sufficiently loaded
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template class instance_collection<bool_tag>;
+template class instance_array<bool_tag, 0>;
+template class instance_array<bool_tag, 1>;
+template class instance_array<bool_tag, 2>;
+template class instance_array<bool_tag, 3>;
+template class instance_array<bool_tag, 4>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -18,6 +18,13 @@
 	  and bool_instance_alias<D> to class_traits template version.  
 	  All test still intact!  Next: porting instance_collections.
 
+	* -instance-08:
+	  Converted bool_instance_collection and arrays over using
+	  template instance_collection.  Nothing died, but code is 
+	  messy with conditionals...
+	  To do: define functors for type-specific variations
+	  in methods... may have to make them 'friendly'.  
+
 
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 

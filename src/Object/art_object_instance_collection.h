@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.4 2005/02/24 20:35:12 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.5 2005/02/25 01:40:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -27,9 +27,23 @@ using util::multikey_set_element_derived;
 using util::packed_array_generic;
 
 //=============================================================================
-// class datatype_instance_collection declared in "art_object_instance.h"
+/**
+	This is a functor for specializing the formatting of printed types.  
+	We provide a default implementation.  
+	Specializations should follow the same pattern.  
+ */
+template <class Tag>
+struct type_dumper {
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	ostream& os;
+	type_dumper(ostream& o) : os(o) { }
 
-//-----------------------------------------------------------------------------
+	ostream&
+	operator () (const instance_collection_generic_type&);
+};	// end struct type_dumper
+
+//=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <class Tag>
 
@@ -56,7 +70,7 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 							instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>		instance_alias_base_ptr_type;
+	typedef	never_ptr<instance_alias_base_type>	instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	typename class_traits<Tag>::instance_parameter_type
@@ -140,6 +154,8 @@ virtual	bool
 		alias_collection_type&) const = 0;
 
 public:
+virtual	instance_alias_base_type&
+	load_reference(istream& i) const = 0;
 
 	static
 	this_type*
@@ -179,7 +195,7 @@ instance_array<Tag,0>
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 class instance_array :
 	public class_traits<Tag>::instance_collection_generic_type {
-friend class instance_collection;
+friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
@@ -191,7 +207,12 @@ public:
 							instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
+#if 0
 	typedef	instance_alias<Tag,D>			element_type;
+#else
+	typedef	typename class_traits<Tag>::instance_alias<D>::type
+							element_type;
+#endif
 	/**
 		This is the data structure used to implement the collection.  
 	 */
@@ -240,6 +261,9 @@ public:
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
 
+	instance_alias_base_type&
+	load_reference(istream& i) const;
+
 	class element_writer {
 		ostream& os;
 		const persistent_object_manager& pom;
@@ -250,6 +274,19 @@ public:
 		void
 		operator () (const element_type& ) const;
 	};      // end struct element_writer
+
+	class element_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+		collection_type& coll;
+	public:
+		element_loader(const persistent_object_manager& m,
+			istream& i, collection_type& c) :
+			is(i), pom(m), coll(c) { }
+
+		void
+		operator () (void);
+	};      // end class element_loader
 
 	class connection_writer {
 		ostream& os;
@@ -262,6 +299,16 @@ public:
 		operator () (const element_type& ) const;
 	};      // end struct connection_writer
 
+	class connection_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+	public:
+		connection_loader(const persistent_object_manager& m,
+			istream& i) : is(i), pom(m) { }
+
+		void
+		operator () (const element_type& );
+	};      // end class connection_loader
 
 	struct key_dumper {
 		ostream& os;
@@ -286,12 +333,13 @@ friend class instance_collection<Tag>;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
 	typedef	typename class_traits<Tag>::instance_alias_base_type
-							instance_alias_base_type;
+						instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
-							instance_alias_base_ptr_type;
+						instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
-	typedef	instance_alias<Tag,0>			instance_type;
+	typedef	typename class_traits<Tag>::instance_alias<0>::type
+							instance_type;
 private:
 	instance_type					the_instance;
 
@@ -325,6 +373,9 @@ public:
 	bool
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
+
+	instance_alias_base_type&
+	load_reference(istream& i) const;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;

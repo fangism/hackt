@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.4 2005/02/24 20:35:11 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.5 2005/02/25 01:40:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -41,8 +41,10 @@ using util::multikey_set_element_derived;
 
 class bool_instance;
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 template <size_t>
 class bool_array;
+#endif
 
 //=============================================================================
 #if !USE_INSTANCE_COLLECTION_TEMPLATE
@@ -326,6 +328,7 @@ public:
 #endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Interface to collection of data-bool instance aliases.  
  */
@@ -336,7 +339,7 @@ private:
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	bool_instance_alias_base		instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>		instance_ptr_type;
+	typedef	never_ptr<instance_alias_base_type>	instance_ptr_type;
 	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
 							alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
@@ -605,6 +608,13 @@ public:
 };	// end class bool_array (specialized)
 
 typedef	bool_array<0>	bool_scalar;
+#else
+typedef	instance_array<bool_tag, 0>	bool_scalar;
+typedef	instance_array<bool_tag, 1>	bool_array_1D;
+typedef	instance_array<bool_tag, 2>	bool_array_2D;
+typedef	instance_array<bool_tag, 3>	bool_array_3D;
+typedef	instance_array<bool_tag, 4>	bool_array_4D;
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 }	// end namespace entity

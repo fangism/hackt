@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.4 2005/02/24 19:34:37 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.5 2005/02/25 01:40:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -112,6 +112,10 @@ struct class_traits {
 //=============================================================================
 // some useful forward declarations, because I can't find a better place...
 
+
+// for classes without parameter (bool)
+struct null_parameter_type { };
+
 #if 0
 class bool_instance_alias_info;
 #else
@@ -200,7 +204,7 @@ struct class_traits<bool_tag> {
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	typedef	void				instance_parameter_type;
+	typedef	null_parameter_type		instance_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
