@@ -1,0 +1,18 @@
+// should pass: appropriate cascading typedefs
+
+typedef	bool	node;
+typedef node	my_bool;
+typedef	my_bool	my_node;
+
+my_node	tada;
+
+namespace fang {
+
+	my_node crazy;
+
+	defproc foo(node a, b; bool c);
+
+	defproc foo(my_node a, b, c);	// actually equivalent!
+
+};
+
