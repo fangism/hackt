@@ -301,29 +301,60 @@ public:
 };	// end class pbool_instance_collection
 
 //-----------------------------------------------------------------------------
+/**
+	Run-time instance of integer parameter.  
+ */
 struct pint_instance {
+public:
+	typedef int	value_type;
 public:
 	/**
 		The unroll-time value of this pint parameter.
 	 */
-	int		value;
+	value_type	value;
 	/**
 		Whether or not this instance was truly instantiated,
 		Safeguards against extraneous instances in arrays.  
 	 */
 	bool		instantiated : 1;
-	/**	Whether or not value has been initialized exactly 
-		once to a value
+	/**
+		Whether or not value has been initialized exactly 
+		once to a value.
 	 */
 	bool		valid : 1;
 public:
 	pint_instance() : value(-1), instantiated(false), valid(false) { }
-	pint_instance(const bool b) :
+explicit pint_instance(const bool b) :
 		value(-1), instantiated(b), valid(false) { }
-	pint_instance(const int v) :
+explicit pint_instance(const int v) :
 		value(v), instantiated(true), valid(true) { }
 	// default copy constructor
 	// default destructor
+
+	bool operator = (const int i) {
+		assert(instantiated);
+		if (valid)
+			// error: already initialized
+			// or allow multiple assignments with the same value?
+			return false;
+		else {
+			value = i;
+			valid = true;
+			return true;
+		}
+	}
+
+	struct is_valid {
+		/** for unary predication */
+		bool
+		operator () (const pint_instance& pi) const { return pi.valid; }
+
+		/** for validity accumulation */
+		bool
+		operator () (const bool b, const pint_instance& pi) const {
+			return b && pi.valid;
+		}
+	};	// end struct is_valid
 };	// end struct pint_instance
 
 bool
@@ -338,10 +369,13 @@ operator << (ostream& o, const pint_instance& p);
  */
 class pint_instance_collection : public param_instance_collection {
 // friend class pint_instantiation_statement;
+friend class pint_instance_reference;
+// friend class pint_instance_reference::assigner;
 public:
 	// int or size_t (unsigned)?
 	typedef	multikey_qmap_base<int, pint_instance>		collection_type;
 	typedef	multikey_qmap<0, int, pint_instance>		scalar_type;
+	typedef	multikey_qmap_base<int, int>			value_type;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -394,6 +428,15 @@ public:
 	bool lookup_value(int& v, const multikey_base<int>& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
+	bool lookup_value_collection(list<int>& l, 
+		const const_range_list& r) const;
+
+	const_index_list resolve_indices(const const_index_list& l) const;
+
+public:
+// really should be protected, usable by pint_instance_reference::assigner
+	bool assign(const int i);
+	bool assign(const multikey_base<int>& k, const int i);
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS

@@ -12,6 +12,7 @@
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_expr.h"
+#include "art_object_assign.h"
 #include "art_object_connect.h"
 #include "art_object_instance.h"	// for instantiation_statement
 #include "art_object_module.h"

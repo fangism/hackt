@@ -28,6 +28,7 @@
 #include "art_object_definition.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
+#include "art_object_assign.h"
 #include "art_object_connect.h"
 #include "persistent_object_manager.tcc"
 

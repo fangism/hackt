@@ -9,13 +9,12 @@
 
 #include <assert.h>
 #include <iostream>
+#include <algorithm>		// for transform
+#include <functional>
+// #include <numeric>
 
 #ifndef	USE_STL_ALGORITHM
 #define	USE_STL_ALGORITHM		1
-#endif
-
-#if USE_STL_ALGORITHM
-#include <algorithm>
 #endif
 
 #include "multikey_fwd.h"
@@ -36,6 +35,8 @@ class multikey_base {
 public:
 	typedef	K*				iterator;
 	typedef	const K*			const_iterator;
+	typedef	K&				reference;
+	typedef	const K&			const_reference;
 public:
 	static const size_t			LIMIT = 4;
 public:
@@ -47,9 +48,19 @@ virtual	iterator begin(void) = 0;
 virtual	const_iterator begin(void) const = 0;
 virtual	iterator end(void) = 0;
 virtual	const_iterator end(void) const = 0;
+	reference front(void) { return *begin(); }
+	const_reference front(void) const { return *begin(); }
+	reference back(void) {
+		iterator e = end();
+		return *(--e);
+	}
+	const_reference back(void) const {
+		const_iterator e = end();
+		return *(--e);
+	}
 
-virtual	K& operator [] (const size_t i) = 0;
-virtual	const K& operator [] (const size_t i) const = 0;
+virtual	reference operator [] (const size_t i) = 0;
+virtual	const_reference operator [] (const size_t i) const = 0;
 
 static	multikey_base<K>* make_multikey(const size_t d);
 };	// end class multikey_base
@@ -66,13 +77,16 @@ static	multikey_base<K>* make_multikey(const size_t d);
 	Perhaps add another field for default value?
  */
 template <size_t D, class K, K init>
-class multikey : public multikey_base<K> {
+class multikey : virtual public multikey_base<K> {
 	template <size_t, class C, C>
 	friend class multikey;
 public:
 	typedef	multikey_base<K>			base_type;
+	typedef	multikey<D,K>				this_type;
 	typedef	typename base_type::iterator		iterator;
 	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reference		reference;
+	typedef	typename base_type::const_reference	const_reference;
 public:
 	K indices[D];
 
@@ -83,14 +97,8 @@ public:
 	 */
 	multikey(const K i = init) { fill(indices, &indices[D], i); }
 
-	size_t
-	dimensions(void) const { return D; }
-
-	K
-	default_value(void) const { return init; }
-
 	/**
-		Copy construtor compatible with other dimensions.  
+		Copy constructor compatible with other dimensions.  
 		If this is larger than argument, fill remaining
 		dimensions with 0.  
 	 */
@@ -104,6 +112,46 @@ public:
 			fill(&indices[D2], &indices[D], i);
 		}
 	}
+
+#if 0
+	multikey(const multikey_base<K>& k) {
+		// depends on <algorithm>
+		const size_t D2 = k.dimensions();
+		if (D <= D2) {
+			copy(k.indices, &k.indices[D], indices);
+		} else {
+			copy(k.indices, &k.indices[D2], indices);
+			fill(&indices[D2], &indices[D], init);
+		}
+	}
+#endif
+
+	/**
+		\param S is sequence type container.
+		\param s is const reference to sequence object.
+	 */
+	template <template <class> class S>
+	explicit
+//	multikey(const S<K>& s)
+	multikey(const S<K>& s, const K i = init)
+	{
+		const size_t sz = s.size();
+		if (D < sz) {
+			size_t i = 0;
+			typename S<K>::const_iterator iter = s.begin();
+			for ( ; i<sz; i++)
+				indices[i] = *iter;
+		} else {
+			copy(s.begin(), s.end(), indices);
+			fill(&indices[sz], &indices[D], i);
+		}
+	}
+
+	size_t
+	dimensions(void) const { return D; }
+
+	K
+	default_value(void) const { return init; }
 
 	iterator
 	begin(void) { return &indices[0]; }
@@ -121,7 +169,7 @@ public:
 		Safe indexing with array-bound check.  
 		indices is public, so one can always access it directly...
 	 */
-	K& operator [] (const size_t i) {
+	reference operator [] (const size_t i) {
 		assert(i < D);
 		return indices[i];
 	}
@@ -129,10 +177,60 @@ public:
 	/**
 		Const version of array indexing.  
 	 */
-	const K& operator [] (const size_t i) const {
+	const_reference operator [] (const size_t i) const {
 		assert(i < D);
 		return indices[i];
 	}
+
+	/**
+		Helper class for finding index extremities in sets.  
+	 */
+	struct accumulate_extremities {
+		typedef pair<this_type, this_type>	key_pair;
+		this_type		min, max;
+
+		accumulate_extremities() : min(), max() { }
+		explicit accumulate_extremities(const multikey<D,K>& i) :
+			min(i), max(i) { }
+	private:
+		// has trouble finding std::min/max in stl_algobase... grrr...
+		static 
+		K mymin(const K& a, const K& b) { return (a<b)?a:b; }
+		static 
+		K mymax(const K& a, const K& b) { return (a>b)?a:b; }
+	public:
+		void
+		operator () (const multikey<D,K>& k) {
+			transform(min.begin(), min.end(), k.begin(), 
+				min.begin(), ptr_fun(mymin));
+			transform(max.begin(), max.end(), k.begin(), 
+				max.begin(), ptr_fun(mymax));
+		}
+
+		key_pair
+		operator () (const key_pair& a, const multikey<D,K>& b) {
+			key_pair ret;
+			transform(a.first.begin(), a.first.end(), b.begin(), 
+				ret.first.begin(), ptr_fun(mymin));
+			transform(a.second.begin(), a.second.end(), b.begin(), 
+				ret.second.begin(), ptr_fun(mymax));
+			return ret;
+		}
+
+		template <class T>
+		void
+		operator () (const pair<const multikey<D,K>, T>& p) {
+			this->operator()(p.first);
+		}
+
+		template <class T>
+		key_pair
+		operator () (const key_pair& a,
+				const pair<const multikey<D,K>, T>& p) {
+			return this->operator()(a, p.first);
+		}
+
+	};	// end struct accumulate_extremities
 };	// end class multikey
 
 //-----------------------------------------------------------------------------
@@ -164,6 +262,7 @@ operator << (ostream& o, const multikey_base<K>& k) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template <size_t D, class K>
 ostream&
 operator << (ostream& o, const multikey<D,K>& k) {
@@ -172,6 +271,7 @@ operator << (ostream& o, const multikey<D,K>& k) {
 		o << '[' << k.indices[i] << ']';
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
@@ -302,8 +402,11 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 #endif
 
 //=============================================================================
+/**
+	Interface for generating cyclic keys.  
+ */
 template <class K>
-class multikey_generator_base {
+class multikey_generator_base : virtual public multikey_base<K> {
 public:
 	typedef	typename multikey_base<K>::iterator		iterator;
 	typedef	typename multikey_base<K>::const_iterator	const_iterator;
@@ -312,6 +415,8 @@ virtual	~multikey_generator_base() { }
 
 virtual	void validate(void) const = 0;
 virtual	void initialize(void) = 0;
+
+virtual	size_t size(void) const = 0;
 
 virtual	iterator begin(void) = 0;
 virtual	const_iterator begin(void) const = 0;
@@ -371,6 +476,9 @@ public:
 		validate();
 		copy(lower_corner.begin(), lower_corner.end(), this->begin());
 	}
+
+	size_t
+	size(void) const { return base_type::dimensions(); }
 
 	iterator
 	begin(void) { return base_type::begin(); }
@@ -441,6 +549,18 @@ multikey_generator_base<K>::make_multikey_generator(const size_t d) {
 		default: return NULL;
 	}
 }
+
+//-----------------------------------------------------------------------------
+#if 0
+template <class K>
+ostream&
+operator << (ostream& o, const multikey_generator_base<K>& k) {
+	const multikey_base<K>* mk =
+		dynamic_cast<const multikey_base<K>*>(&k);
+	assert(mk);
+	return o << *mk;
+}
+#endif
 
 //=============================================================================
 }	// end namespace MULTIKEY_NAMESPACE

@@ -35,9 +35,11 @@ ostream&
 operator << (ostream& o, const multikey_base<K>& k); 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template <size_t D, class K>
 ostream&
 operator << (ostream& o, const multikey<D,K>& k); 
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>

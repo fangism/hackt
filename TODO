@@ -57,6 +57,10 @@ and beyond...
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation statement needs to check template arguments of type!
 
+multikey_map type -- extend to accept generic sequences of key_types
+	as multidimensional index arguments.
+	(much like multidimensional_qmap and _sparse_set)
+
 Object serialization rework: (*DONE* -- 10/12/04)
 	sub-type instance collections by dimension, using size_t template
 	extend reconstruction table entry to contain additional
@@ -85,6 +89,7 @@ param_expression_assignment: split apart rhs from rest (done)
 language front-end: parser:
 	modular parsers for extensible sub-languages.  
 	Will they share the same lexer?  or have their own?
+		Consider FILE* manipulations...
 	@LANG extensions to "escape" into another language, 
 		useful for new languages, before reserving new keywords.  
 	Re-use AST classes?

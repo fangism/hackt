@@ -106,6 +106,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
 	Object/art_object_inst_ref.cc \
+	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \

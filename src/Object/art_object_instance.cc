@@ -1404,6 +1404,138 @@ pint_instance_collection::lookup_value(int& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+ABANDONED
+/**
+	Without arguments, this is an implicit reference to the entire
+	collection.  
+	If this collection is not dense, then this returns NULL.  
+	Shouldn't call this function for scalar (0-D)?
+	\return pointer to N-dimensional collection of integers, if all
+		values are successfully resolved, else NULL.  
+ */
+count_const_ptr<pint_instance_collection::value_type>
+pint_instance_collection::lookup_value_collection(void) const {
+	typedef	count_const_ptr<pint_instance_collection::value_type>
+			return_type;
+	// first: are all pint_instances valid?  find the first invalid one...
+	assert(collection);
+	const collection_type::const_iterator cend = collection->end();
+	collection_type::const_iterator invalid =
+		find_if(collection->begin(), cend, 
+			not(pint_instance::is_valid()));
+
+	return return_type(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param l list in which to accumulate values.
+	\param r the ranges, must be valid.
+	\return false on error, e.g. if value doesn't exist or 
+		is uninitialized; true on success.
+ */
+bool
+pint_instance_collection::lookup_value_collection(
+		list<int>& l, const const_range_list& r) const {
+	assert(collection);
+	assert(!r.empty());
+	excl_ptr<multikey_base<int> > lower = r.lower_multikey();
+	excl_ptr<multikey_base<int> > upper = r.upper_multikey();
+	assert(lower);
+	assert(upper);
+	excl_ptr<multikey_generator_base<int> >
+		key_gen(multikey_generator_base<int>::make_multikey_generator(
+			lower->dimensions()));
+	assert(key_gen);
+	copy(lower->begin(), lower->end(), key_gen->get_lower_corner().begin());
+	copy(upper->begin(), upper->end(), key_gen->get_upper_corner().begin());
+	key_gen->initialize();
+	bool ret = true;
+	do {
+		const pint_instance& pi = (*collection)[*key_gen];
+		// assert(pi.instantiated);	// else earlier check failed
+		if (!pi.instantiated)
+			cerr << "FATAL: reference to uninstantiated pint index "
+				<< *key_gen << endl;
+		else if (!pi.valid)
+			cerr << "ERROR: reference to uninitialized pint index "
+				<< *key_gen << endl;
+		ret &= (pi.valid && pi.instantiated);
+		l.push_back(pi.value);
+		(*key_gen)++;
+	} while (*key_gen != key_gen->get_lower_corner());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands indices which may be under-specified into explicit
+	indices for the implicit subslice, if it is densely packed.  
+	Depends on the current state of the collection.  
+	\param l is list of indices, which may be under-specified, 
+		or even empty.
+	\return fully-specified index list, or empty list if there is error.
+ */
+const_index_list
+pint_instance_collection::resolve_indices(const const_index_list& l) const {
+	const size_t l_size = l.size();
+	assert(collection);
+	if (dimensions() == l_size) {
+		// already fully specified
+		return l;
+	}
+	// convert indices to pair of list of multikeys
+	if (!l_size) {
+		return const_index_list(l, collection->is_compact());
+	}
+	// else construct slice
+	list<int> lower_list, upper_list;
+	transform(l.begin(), l.end(), back_inserter(lower_list), 
+		unary_compose(
+			mem_fun_ref(&const_index::lower_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	transform(l.begin(), l.end(), back_inserter(upper_list), 
+		unary_compose(
+			mem_fun_ref(&const_index::upper_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	return const_index_list(l, 
+		collection->is_compact_slice(lower_list, upper_list));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a single value.
+	Only call this if this is scalar, 0-D.
+	Decision: should we allow multiple assignments of the same value?
+	\return true if successful.  
+ */
+bool
+pint_instance_collection::assign(const int i) {
+	assert(collection);
+	const never_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	assert(the);
+	pint_instance& pi = *the;
+	return pi = i;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if successful.
+ */
+bool
+pint_instance_collection::assign(const multikey_base<int>& k, const int i) {
+	assert(collection);
+	pint_instance& pi = (*collection)[k];
+	return pi = i;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {

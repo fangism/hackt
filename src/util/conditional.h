@@ -76,6 +76,32 @@ for_each_if<In, Pred, Op&> (In first, In last, Pred p, Op& f) {
 **/
 
 //=============================================================================
+/**
+	Compare, in order, the elements of two sequences that meet 
+	certain criteria, predicates.  
+	Ranges that do not satisfy predicate will be ignored.  
+	The number of predicate-satisfying elements in each sequence
+	must also be equal for the comparison to return true.  
+	\return true if sequences are equal.
+ */
+template <class In1, class In2, class Pred1, class Pred2, class Comp>
+bool
+compare_if(In1 l_first, In1 l_last, In2 r_first, In2 r_last, 
+		Pred1 p1, Pred2 p2, Comp comp) {
+	while (l_first != l_last && r_first != r_last) {
+		while (l_first != l_last && !p1(*l_first))
+			l_first++;
+		while (r_first != r_last && !p2(*r_first))
+			r_first++;
+		if (!comp(*l_first, *r_first)) {
+			return false;
+		}	// else continue comparing
+	}
+	// if both are at end, then they are equal
+	return (l_first == l_last && r_first == r_last);
+}
+
+//=============================================================================
 }	// end namespace std
 
 #endif	//	__CONDITIONAL_H__

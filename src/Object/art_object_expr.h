@@ -338,6 +338,8 @@ virtual bool is_static_constant(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool is_unconditional(void) const = 0;
 
+virtual	count_ptr<const_index> resolve_index(void) const = 0;
+
 // additional virtual functions for dimensionality...
 };	// end class index_expr
 
@@ -351,8 +353,13 @@ public:
 	const_index();
 virtual	~const_index();
 
-// same pure virtual functions
+// same pure virtual functions, and more...
+
+virtual	count_ptr<const_index> resolve_index(void) const = 0;
+virtual	int lower_bound(void) const = 0;
+virtual	int upper_bound(void) const = 0;
 virtual	bool operator == (const const_range& c) const = 0;
+virtual	bool range_size_equivalent(const const_index& i) const = 0;
 };	// end class const_index
 
 //-----------------------------------------------------------------------------
@@ -388,7 +395,10 @@ virtual	bool is_static_constant(void) const = 0;
 virtual	bool is_loop_independent(void) const = 0;
 virtual	bool is_unconditional(void) const = 0;
 
+virtual	const_index_list resolve_index_list(void) const = 0;
+#if 0
 virtual	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
+#endif
 };	// end class index_list
 
 //-----------------------------------------------------------------------------
@@ -410,6 +420,8 @@ public:
 	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_index_list();
+	const_index_list(const const_index_list& l, 
+		const pair<list<int>, list<int> >& f);
 	~const_index_list();
 
 	ostream& what(ostream& o) const;
@@ -422,6 +434,8 @@ public:
 
 	const_range_list collapsed_dimension_ranges(void) const;
 
+	using parent::empty;
+	using parent::clear;
 	using parent::begin;
 	using parent::end;
 	using parent::rbegin;
@@ -434,7 +448,14 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 
+	const_index_list resolve_index_list(void) const;
+#if 0
 	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+#endif
+	excl_ptr<multikey_base<int> > upper_multikey(void) const;
+	excl_ptr<multikey_base<int> > lower_multikey(void) const;
+
+	bool equal_dimensions(const const_index_list& ) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -477,7 +498,10 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 
+	const_index_list resolve_index_list(void) const;
+#if 0
 	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+#endif
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -554,6 +578,8 @@ explicit const_range_list(const const_index_list& i);
 	bool operator == (const const_range_list& c) const;
 
 	bool resolve_ranges(const_range_list& r) const;
+	excl_ptr<multikey_base<int> > upper_multikey(void) const;
+	excl_ptr<multikey_base<int> > lower_multikey(void) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -656,7 +682,10 @@ virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
 virtual int static_constant_int(void) const = 0;
 
+	count_ptr<const_index> resolve_index(void) const;
 virtual	bool resolve_value(int& i) const = 0;
+virtual	const_index_list resolve_dimensions(void) const = 0;
+virtual	bool resolve_values_into_flat_list(list<int>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>
@@ -716,11 +745,7 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-#if 0
-	bool initialize(count_const_ptr<param_expr> i);
-#else
 	bool initialize(count_const_ptr<pbool_expr> i);
-#endif
 	string hash_string(void) const;
 	// try these
 	// using param_instance_reference::may_be_initialized;
@@ -745,6 +770,10 @@ public:
 class pint_instance_reference : public param_instance_reference, 
 		public pint_expr {
 protected:
+	/**
+		Back-reference to integer collection.  
+		Non-const because it may be modifiable via assignment.  
+	 */
 	never_ptr<pint_instance_collection>		pint_inst_ref;
 private:
 	pint_instance_reference();
@@ -763,11 +792,7 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-#if 0
-	bool initialize(count_const_ptr<param_expr> i);
-#else
 	bool initialize(count_const_ptr<pint_expr> i);
-#endif
 	string hash_string(void) const;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -777,6 +802,40 @@ public:
 	int static_constant_int(void) const;
 
 	bool resolve_value(int& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<int>& l) const;
+
+protected:
+//	bool assign(const list<int>& l) const;
+
+public:
+	/**
+		Helper class for assigning values to instances.
+	 */
+	class assigner {
+	protected:
+		/** reference to the source of values */
+		const pint_expr&	src;
+		/** resolved range list */
+		const_index_list	ranges;
+		/** flat list of unrolled values */
+		list<int>		vals;
+	public:
+		assigner(const pint_expr& p);
+		// default destructor
+		bool
+		operator () (const bool b,
+			const pint_instance_reference& p) const;
+
+		template <template <class> class P>
+		bool
+		operator () (const bool b,
+			const P<pint_instance_reference>& p) const {
+			assert(p);
+			return this->operator()(b, *p);
+		}
+	};	// end class pint_assigner
+
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -815,8 +874,14 @@ public:
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 	bool operator == (const const_range& c) const;
+	bool range_size_equivalent(const const_index& i) const;
 
+	int lower_bound(void) const;
+	int upper_bound(void) const;
 	bool resolve_value(int& i) const;
+	count_ptr<const_index> resolve_index(void) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<int>& l) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -900,6 +965,8 @@ public:
 	int static_constant_int(void) const;
 
 	bool resolve_value(int& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<int>& l) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -975,6 +1042,8 @@ public:
 	bool is_unconditional(void) const;
 	int static_constant_int(void) const;
 	bool resolve_value(int& i) const;
+	const_index_list resolve_dimensions(void) const;
+	bool resolve_values_into_flat_list(list<int>& l) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -1102,6 +1171,7 @@ virtual bool is_loop_independent(void) const = 0;
 /** doesn't depend on conditional variables */
 virtual bool is_unconditional(void) const = 0;
 
+	count_ptr<const_index> resolve_index(void) const;
 virtual	bool resolve_range(const_range& r) const = 0;
 };	// end class range_expr
 
@@ -1165,8 +1235,6 @@ protected:
 	typedef	pair<int,int>			parent;
 	/** implementation type for range-checking */
 	typedef	discrete_interval_set<int>	interval_type;
-protected:
-//	const interval_type			interval;
 public:
 	// dispense with pint_const objects here
 	const_range();
@@ -1186,12 +1254,10 @@ public:
 	int lower(void) const {
 		assert(!empty());
 		return first;
-//		return interval.begin()->first;
 	}
 	int upper(void) const {
 		assert(!empty());
 		return second;
-//		return interval.begin()->second;
 	}
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1206,8 +1272,12 @@ public:
 	bool is_static_constant(void) const { return !empty(); }
 	bool is_loop_independent(void) const { return !empty(); }
 	bool is_unconditional(void) const { return !empty(); }
+	bool range_size_equivalent(const const_index& i) const;
 
+	int lower_bound(void) const;
+	int upper_bound(void) const;
 	bool resolve_range(const_range& r) const;
+	count_ptr<const_index> resolve_index(void) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS

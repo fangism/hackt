@@ -6,6 +6,7 @@
 #include <stdlib.h>			// for ltoa
 #include <assert.h>
 #include <iostream>
+#include <algorithm>
 
 #include "ptrs.h"
 #include "count_ptr.h"
@@ -19,15 +20,19 @@
 #include "art_parser_base.h"
 #include "art_object_expr.h"
 #include "art_object_instance.h"
-#include "art_object_connect.h"
+#include "art_object_assign.h"
 #include "multikey.h"
-
 #include "persistent_object_manager.tcc"
+
+#include "compose.h"
+#include "conditional.h"		// for compare_if
+#include "ptrs_functional.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
 using namespace std;
+using namespace ADS;
 using namespace PTRS_NAMESPACE;
 using namespace COUNT_PTR_NAMESPACE;
 
@@ -199,6 +204,20 @@ pint_expr::make_param_expression_assignment_private(
 	assert(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<pint_expr>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return deep copy of resolve constant integer value, 
+	if it is successfully resolved.  
+ */
+count_ptr<const_index>
+pint_expr::resolve_index(void) const {
+	typedef count_ptr<const_index> return_type;
+	int i;
+	return (resolve_value(i)) ? 
+		return_type(new pint_const(i)) :
+		return_type(NULL);
 }
 
 //=============================================================================
@@ -1101,6 +1120,7 @@ pint_instance_reference::resolve_value(int& i) const {
 	// lookup pint_instance_collection
 	if (array_indices) {
 		// convert to multikey_base
+#if 0
 		excl_ptr<multikey_base<int> > key;
 		// pass and return by reference
 		if (array_indices->resolve_multikey(key)) {
@@ -1110,10 +1130,91 @@ pint_instance_reference::resolve_value(int& i) const {
 			cerr << "Unable to resolve array_indices!" << endl;
 			return false;
 		}
+#else
+		const_index_list indices(array_indices->resolve_index_list());
+		if (indices.empty()) {
+			const excl_ptr<multikey_base<int> > lower = 
+				indices.lower_multikey();
+			const excl_ptr<multikey_base<int> > upper = 
+				indices.upper_multikey();
+			assert(lower);
+			assert(upper);
+			if (*lower != *upper) {
+				cerr << "ERROR: upper != lower" << endl;
+				return false;
+			}
+			return pint_inst_ref->lookup_value(i, *lower);
+		} else {
+			cerr << "Unable to resolve array_indices!" << endl;
+			return false;
+		}
+#endif
 	} else {
 		return pint_inst_ref->lookup_value(i);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param l the list in which to accumulate values.
+	\return false if there was error.  
+ */
+bool
+pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
+	const_index_list ranges(resolve_dimensions());
+	if (ranges.empty()) {
+		cerr << "ERROR: could not unroll values with bad index."
+			<< endl;
+		return false;
+	}
+	else	return pint_inst_ref->lookup_value_collection(
+			l, const_range_list(ranges));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the dimensions of the collection in the current state, 
+	ONLY IF, the indexed reference to the current state is all valid.  
+	Otherwise, returns an empty list, which is interpreted as an error.  
+
+	Really this should be independent of type?
+	Except for checking implicit indices...
+ */
+const_index_list
+pint_instance_reference::resolve_dimensions(void) const {
+	// criterion 1: indices (if any) must be resolved to constant values.  
+	if (array_indices) {
+		const const_index_list c_i(array_indices->resolve_index_list());
+		if (c_i.empty()) {
+			cerr << "ERROR: failed to resolve index list." << endl;
+			return c_i;
+		}
+		// but indices may be underspecified... 
+		// check for implicit indices, that sub-arrays are
+		// densely packed with the same dimensions.  
+		const const_index_list r_i(pint_inst_ref->resolve_indices(c_i));
+		if (r_i.empty()) {
+			cerr << "ERROR: implicitly resolving index list." << endl;
+		}
+		return r_i;
+		// Elsewhere (during assign) check for initialization.  
+	}
+	else return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Assigns a flat list if integer values to a possibly multidimensional
+	slice of integer references.  
+	This is considered unsafe, so call this only if dimensions and 
+	sizes have been checked.  
+ */
+bool
+pint_instance_reference::assign(const list<int>& l) const {
+	return pint_inst_ref->unroll_assign(l);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1124,7 +1225,8 @@ pint_instance_reference::resolve_value(int& i) const {
 void
 pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
+if (!m.register_transient_object(this, 
+		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	pint_inst_ref->collect_transient_info(m);
@@ -1187,6 +1289,119 @@ if (!m.flag_visit(this)) {
 // else already visited
 }
 
+//-----------------------------------------------------------------------------
+// class pint_instance_reference::assigner method definitions
+
+/**
+	Constructor caches the sequence of values for assigning to 
+	an integer instance collection.  
+ */
+pint_instance_reference::assigner::assigner(const pint_expr& p) :
+		src(p), ranges(), vals() {
+	if (src.dimensions()) {
+		ranges = src.resolve_dimensions();
+		if (ranges.empty()) {
+			// if empty list returned, there was an error,
+			// because we know that the # dimensions is > 0.
+			cerr << "ERROR: assignment unrolling expecting "
+				"valid dimensions!" << endl;
+			// or throw exception
+			exit(1);
+		}
+		// load values into cache list as a sequence
+		// pass list by reference to a virtual func?
+		const bool err = src.resolve_values_into_flat_list(vals);
+		if (err) {
+			cerr << "ERROR: in flattening integer values." << endl;
+			exit(1);
+		}
+	} else {	// is just scalar value
+		// leave ranges empty
+		int i;
+		if (src.resolve_value(i)) {
+			vals.push_back(i);
+		} else {
+			cerr << "ERROR: resolving scalar integer value!"
+				<< endl;
+			exit(1);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns cached list of unrolled values to the destination
+	instance collection.  
+	\param b the cumulative error status.
+	\param p the destination instance reference.  
+	\return error (true) if anything goes wrong, or has gone wrong before.  
+ */
+bool
+pint_instance_reference::assigner::operator() (const bool b, 
+		const pint_instance_reference& p) const {
+	// check dimensions for match first
+	if (ranges.empty()) {
+		// is scalar assignment
+		assert(p.resolve_dimensions().empty());
+		assert(vals.size() == 1);
+		return p.pint_inst_ref->assign(vals.front()) || b;
+	} else {
+		const_index_list dim(p.resolve_dimensions());
+		if (dim.empty()) {
+			cerr << "ERROR: unable to resolve constant dimensions."
+				<< endl;
+			exit(1);
+			// return true;
+		}
+		// We are assured that the dimensions of the references
+		// are equal, b/c dimensionality is statically checked.  
+		// However, ranges may be of different length because
+		// of collapsible dimensions.  
+		// Compare dim against ranges: sizes of each dimension...
+		// but what about collapsed dimensions?
+		if (!ranges.equal_dimensions(dim)) {
+			cerr << "ERROR: resolved indices are not "
+				"dimension equivalent!" << endl;
+			ranges.what(cerr << "got: ");
+			dim.what(cerr << " and: ") << endl;
+			exit(1);
+			// return true;
+		}
+		// else good to continue
+		excl_const_ptr<multikey_base<int> > lower(
+			dim.lower_multikey());
+		const excl_const_ptr<multikey_base<int> > upper(
+			dim.upper_multikey());
+		assert(lower);
+		assert(upper);
+		excl_ptr<multikey_generator_base<int> >
+			key_gen(
+			multikey_generator_base<int>::make_multikey_generator(
+				dim.size()));
+		assert(key_gen);
+		key_gen->get_lower_corner() = *lower;
+		key_gen->get_upper_corner() = *upper;
+		key_gen->initialize();
+		list<int>::const_iterator list_iter = vals.begin();
+		bool assign_err = false;
+		// alias for key_gen
+		const never_ptr<multikey_base<int> >
+			kp(key_gen.is_a<multikey_base<int> >());
+		assert(kp);
+		do {
+			if (p.pint_inst_ref->assign(*kp, *list_iter)) {
+				cerr << "ERROR: assigning index " << *kp
+					<< endl;
+				assign_err = true;
+			}
+			list_iter++;			// unsafe, but checked
+			(*key_gen)++;
+		} while (*kp != *upper);
+		assert(list_iter == vals.end());	// sanity check
+		return assign_err;
+	}
+}
+
 //=============================================================================
 // class pint_const method definitions
 
@@ -1231,10 +1446,57 @@ pint_const::operator == (const const_range& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+pint_const::lower_bound(void) const {
+	return val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+pint_const::upper_bound(void) const {
+	return val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_const::resolve_value(int& i) const {
 	i = val;
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return deep copy of this constant integer, always succeeds.  
+ */
+count_ptr<const_index>
+pint_const::resolve_index(void) const {
+	return count_ptr<const_index>(new pint_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return empty range list signifying that expression is scalar, 0-D.  
+ */
+const_index_list
+pint_const::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const::resolve_values_into_flat_list(list<int>& l) const {
+	l.push_back(val);
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is range equivalent in size?
+	\return always false, because an int is really a collapsed range.
+ */
+bool
+pint_const::range_size_equivalent(const const_index& i) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1437,6 +1699,28 @@ pint_unary_expr::resolve_value(int& i) const {
 	const bool ret = ex->resolve_value(j);
 	i = -j;		// regardless of ret
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false if there is error in resolving.
+ */
+bool
+pint_unary_expr::resolve_values_into_flat_list(list<int>& l) const {
+	int i = 0;
+	const bool ret = resolve_value(i);
+	l.push_back(i);		// regardless of validity
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return empty list, signifying a scalar value, because all 
+		expressions operations only work on scalars.  
+ */
+const_index_list
+pint_unary_expr::resolve_dimensions(void) const {
+	return const_index_list();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1691,6 +1975,28 @@ arith_expr::resolve_value(int& i) const {
 			assert(0); return false;
 	}
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false if there is error in resolving.
+ */
+bool
+arith_expr::resolve_values_into_flat_list(list<int>& l) const {
+	int i = 0;
+	const bool ret = resolve_value(i);
+	l.push_back(i);		// regardless of validity
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return empty list, signifying a scalar value, because all 
+		expressions operations only work on scalars.  
+ */
+const_index_list
+arith_expr::resolve_dimensions(void) const {
+	return const_index_list();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2227,10 +2533,43 @@ const_range::is_sane(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+const_range::lower_bound(void) const {
+	return first;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+const_range::upper_bound(void) const {
+	return second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_range::resolve_range(const_range& r) const {
 	r = *this;
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return deep copy of this constant range, always succeeds.  
+ */
+count_ptr<const_index>
+const_range::resolve_index(void) const {
+	return count_ptr<const_index>(new const_range(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the index to compare against, may be a range or int.  
+	\return true if the ranges spanned are equal in size, 
+		no necessarily equal in index.  
+ */
+bool
+const_range::range_size_equivalent(const const_index& i) const {
+	const const_range* r = IS_A(const const_range*, &i);
+	return r && (r->second - r->first == second -first);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2281,6 +2620,19 @@ range_expr::~range_expr() {
 ostream&
 range_expr::dump(ostream& o) const {
 	return o << hash_string();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a resolve constant range, or NULL if resolution fails.  
+ */
+count_ptr<const_index>
+range_expr::resolve_index(void) const {
+	typedef	count_ptr<const_index>	return_type;
+	const_range tmp;
+	return (resolve_range(tmp)) ?
+		return_type(new const_range(tmp)) :
+		return_type(NULL);
 }
 
 //=============================================================================
@@ -2570,6 +2922,26 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<multikey_base<int> >
+const_range_list::lower_multikey(void) const {
+	typedef	excl_ptr<multikey_base<int> >	return_type;
+	return_type ret(multikey_base<int>::make_multikey(size()));
+	assert(ret);
+	transform(begin(), end(), ret->begin(), _Select1st<const_range>());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<multikey_base<int> >
+const_range_list::upper_multikey(void) const {
+	typedef	excl_ptr<multikey_base<int> >	return_type;
+	return_type ret(multikey_base<int>::make_multikey(size()));
+	assert(ret);
+	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, CONST_RANGE_LIST_TYPE_KEY);
@@ -2805,6 +3177,48 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_index_list,
 const_index_list::const_index_list() : index_list(), parent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Special constructor: copies index list from first argument, 
+	and the second argument is a pair of lists that explicitly
+	fills in the remaining implicit indices, as resolved from
+	multikey_map::is_compact_slice.
+	\param l the base index list, may be under-specified.
+	\param f the fill lists of explicit indices (upper and lower), 
+		or empty if the set's subslice was not densely populated.
+ */
+const_index_list::const_index_list(const const_index_list& l, 
+		const pair<list<int>, list<int> >& f) :
+		index_list(), parent(l) {
+	if (f.first.empty()) {
+		assert(f.second.empty());
+		clear();
+	} else {
+		assert(!f.second.empty());
+		const size_t f_size = f.first.size();
+		const size_t s_size = f.second.size();
+		assert(f_size == s_size);
+		const size_t skip = size();
+		assert(skip <= f_size);
+		size_t i = 0;
+		const_iterator this_iter = begin();
+		list<int>::const_iterator f_iter = f.first.begin();
+		list<int>::const_iterator s_iter = f.second.begin();
+		for ( ; i<skip; i++, this_iter++, f_iter++, s_iter++) {
+			// sanity check against arguments
+			assert(*this_iter);
+			assert((*this_iter)->lower_bound() == *f_iter);
+			assert((*this_iter)->upper_bound() == *s_iter);
+		}
+		for ( ; i<f_size; i++, f_iter++, s_iter++) {
+			assert(*f_iter <= *s_iter);
+			push_back(count_ptr<const_range>(
+				new const_range(*f_iter, *s_iter)));
+		}
+		assert(size() == f_size);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::~const_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2921,6 +3335,13 @@ const_index_list::is_unconditional(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+const_index_list::resolve_index_list(void) const {
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Each index should be a scalar integer.  
 	Error otherwise.
@@ -2943,6 +3364,57 @@ const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 		else 	return false;
 	}
 	return true;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<multikey_base<int> >
+const_index_list::lower_multikey(void) const {
+	typedef	excl_ptr<multikey_base<int> >	return_type;
+	return_type ret(multikey_base<int>::make_multikey(size()));
+	assert(ret);
+	transform(begin(), end(), ret->begin(), 
+		unary_compose(
+			mem_fun_ref(&const_index::lower_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<multikey_base<int> >
+const_index_list::upper_multikey(void) const {
+	typedef	excl_ptr<multikey_base<int> >	return_type;
+	return_type ret(multikey_base<int>::make_multikey(size()));
+	assert(ret);
+	transform(begin(), end(), ret->begin(), 
+		unary_compose(
+			mem_fun_ref(&const_index::upper_bound), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Given two resolved lists of constant indices, determine
+	whether they are dimensionally equal.  
+	Bear in mind that collapsed dimensions are to be ignored. 
+ */
+bool
+const_index_list::equal_dimensions(const const_index_list& l) const {
+	// compare_if defined in "util/conditional.h"
+	return compare_if(begin(), end(), l.begin(), l.end(), 
+		mem_fun_ref(&count_ptr<const_index>::is_a<const_range>), 
+		mem_fun_ref(&count_ptr<const_index>::is_a<const_range>), 
+		binary_compose(
+			mem_fun_ref(&const_index::range_size_equivalent), 
+			const_dereference<count_ptr, const_index>(), 
+			const_dereference<count_ptr, const_index>()
+		)
+	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3154,6 +3626,41 @@ dynamic_index_list::is_unconditional(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For now const_index_list constains count_ptr<const_index>, 
+	not count_const_ptr, so we have to make deep copies, 
+	until it is changed?
+	\return resolve list of constant indices if every term can be resolved, 
+		otherwise, returns an empty list.  
+ */
+const_index_list
+dynamic_index_list::resolve_index_list(void) const {
+	const_index_list ret;
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<index_expr> ind(*i);
+		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
+		if (c_ind) {
+			// direct reference copy
+			ret.push_back(c_ind);
+		} else {
+			const count_ptr<const_index>
+				r_ind(ind->resolve_index());
+			if (r_ind) {
+				ret.push_back(r_ind);
+			} else {
+				// failed to resolve as constant!
+				return const_index_list();
+			}
+		}
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 bool
 dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	k = excl_ptr<multikey_base<int> >(
@@ -3162,7 +3669,7 @@ dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 0;
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; i++, j++) {
 		const count_const_ptr<index_expr> ip(*i);
 		const count_const_ptr<pint_expr> pi(ip.is_a<pint_expr>());
 		// assert(pi); ?
@@ -3181,6 +3688,7 @@ dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	// nothing went wrong
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -23,6 +23,11 @@ template <class K, class T>
 class multikey_qmap_base {
 public:
 	typedef multikey_qmap_base<K,T>			this_type;
+	typedef typename multikey_map_base<K,T>::key_list_type
+							key_list_type;
+	typedef typename multikey_map_base<K,T>::key_list_pair_type
+							key_list_pair_type;
+
 public:
 	static const size_t				LIMIT = 4;
 public:
@@ -38,6 +43,11 @@ virtual ostream& dump(ostream& o) const = 0;
 virtual T& operator [] (const multikey_base<K>& k) = 0;
 virtual T operator [] (const multikey_base<K>& k) const = 0;
 
+virtual key_list_pair_type is_compact_slice(
+		const key_list_type& l, const key_list_type& u) const = 0;
+virtual key_list_pair_type is_compact_slice(const key_list_type& l) const = 0;
+virtual key_list_pair_type is_compact(void) const = 0;
+
 static  this_type* make_multikey_qmap(const size_t d);
 
 };      // end class multikey_qmap_base
@@ -48,6 +58,7 @@ class multikey_qmap : public multikey_map<D, K, T, qmap>,
 		public multikey_qmap_base<K,T> {
 private:
 	/** this is the representation-type */
+	typedef	multikey_qmap_base<K,T>			interface_type;
 	typedef multikey_map<D,K,T,qmap>		map_type;
 	typedef map_type				mt;
 public:
@@ -68,6 +79,11 @@ public:
 	typedef typename mt::pointer			pointer;
 	typedef typename mt::const_pointer		const_pointer;
 	typedef typename mt::allocator_type		allocator_type;
+
+        typedef typename interface_type::key_list_type  key_list_type;
+        typedef typename interface_type::key_list_pair_type
+                                                        key_list_pair_type;
+        typedef pair<key_type, key_type>		key_pair_type;
 
 public:
 
@@ -108,6 +124,19 @@ public:
 		return map_type::operator[](k);
 	}
 
+	key_list_pair_type is_compact_slice(
+		const key_list_type& l, const key_list_type& u) const {
+		return map_type::is_compact_slice(l, u);
+	}
+
+	key_list_pair_type is_compact_slice(const key_list_type& l) const {
+		return map_type::is_compact_slice(l);
+	}
+
+	key_list_pair_type is_compact(void) const {
+		return map_type::is_compact();
+	}
+
 	ostream&
 	dump(ostream& o) const { return map_type::dump(o); }
 
@@ -124,6 +153,12 @@ public:
 
 template <class K, class T>
 class multikey_qmap<0,K,T> : public multikey_qmap_base<K,T> {
+private:
+	typedef	multikey_qmap_base<K,T>			interface_type;
+        typedef typename interface_type::key_list_type  key_list_type;
+        typedef typename interface_type::key_list_pair_type
+                                                        key_list_pair_type;
+
 protected:
 	T			val;
 
@@ -151,6 +186,31 @@ public:
 	T operator [] (const multikey_base<K>& k) const {
 		assert(0);
 		return val;
+	}
+
+	/**
+		Silly to even call this... perhaps assert-fail?
+		\return empty pair of index lists, always.
+	 */
+	key_list_pair_type is_compact_slice(
+		const key_list_type& l, const key_list_type& u) const {
+		return key_list_pair_type();
+	}
+
+	/**
+		Silly to even call this...
+		\return empty pair of index lists, always.
+	 */
+	key_list_pair_type is_compact_slice(const key_list_type& l) const {
+		return key_list_pair_type();
+	}
+
+	/**
+		Silly to even call this...
+		\return empty pair of index lists, always.
+	 */
+	key_list_pair_type is_compact(void) const {
+		return key_list_pair_type();
 	}
 
 	ostream& dump(ostream& o) const {

@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2004-10-19	David Fang	<fangism@users.sourceforge.net>
+
+	* Finished first draft code for unrolling collections of
+	  parameter integers, but remains largely untested.  
+	  Most other existing code is unaffected.  
+	  (Just needed to commit 2+k lines of code...)
+
+
+2004-10-18	David Fang	<fangism@users.sourceforge.net>
+
+	* Finished developing and testing classes for detecting
+	  compacts subslices of multidimensional sparse maps, 
+	  namely multikey_map.  
+	  See testing class in util/test/cube_slice.h for rigorous testing.  
+
+	* Split parameter assignments into separate compilation module, 
+	  art_object_assign, used to be in art_object_connect.
+
+
 2004-10-13	David Fang	<fangism@users.sourceforge.net>
 
 	* A day of compiler infamy.  
