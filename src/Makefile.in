@@ -461,6 +461,7 @@ CLEANLEXER = \
 
 CLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 DISTCLEANFILES = 
+CLEANSUBDIRS = lexer parser AST Object util
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -1051,13 +1052,13 @@ clean-Object:
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser
-	for d in $(SUBDIRS); do \
-		$(RM) $$d/*.loT ; 
+	for d in $(CLEANSUBDIRS); do \
+		$(RM) $$d/*.loT ; \
 	done
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
-		rm -f $(distdir)/$$f ; \
+		$(RM) $(distdir)/$$f ; \
 	done
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

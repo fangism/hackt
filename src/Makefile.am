@@ -295,14 +295,16 @@ clean-Object:
 	-$(RM) Object/*.$(OBJEXT)
 	-$(RM) Object/*.lo
 
+CLEANSUBDIRS = lexer parser AST Object util
+
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser
-	for d in $(SUBDIRS); do \
-		$(RM) $$d/*.loT ; 
+	for d in $(CLEANSUBDIRS); do \
+		$(RM) $$d/*.loT ; \
 	done
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
-		rm -f $(distdir)/$$f ; \
+		$(RM) $(distdir)/$$f ; \
 	done
 
