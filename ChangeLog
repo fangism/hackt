@@ -2,6 +2,17 @@
 
 2005-03-06	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-02:
+	  Ported pbool and pint_instantiation_statement to using
+	  new instantiation_statement template, everything works still.  
+	  Leveraging specialization of a parent type-reference base
+	  through class_traits, so that built-in types need not
+	  include unnecessary pointers (optimization).  
+	  Will continue with data, channel, and process inst-stmts.  
+
+
+2005-03-06	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-18-inststmt-01:
 	  Spawned branch for reworking instantiation statement classes
 	  into easier-to-maintain templates, using class_traits<Tag>.

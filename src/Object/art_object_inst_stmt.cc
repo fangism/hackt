@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.1 2005/03/07 01:29:22 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.2 2005/03/07 23:28:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -29,6 +29,13 @@
 #include "art_object_classification_details.h"
 #include "art_object_instance_collection.h"
 
+#if USE_INST_STMT_TEMPLATE
+#include "art_object_inst_stmt_param.h"
+// #include "art_object_inst_stmt_data.h"
+// #include "art_object_inst_stmt_chan.h"
+// #include "art_object_inst_stmt_proc.h"
+#endif
+
 #include "what.tcc"
 #include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
@@ -46,6 +53,10 @@
 	#define	STACKTRACE_PERSISTENT(x)		STACKTRACE(x)
 #else
 	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
+#if USE_INST_STMT_TEMPLATE
+#include "art_object_inst_stmt.tcc"
 #endif
 
 //=============================================================================
@@ -219,6 +230,7 @@ param_instantiation_statement::~param_instantiation_statement() {
 //=============================================================================
 // class pbool_instantiation_statement method definitions
 
+#if !USE_INST_STMT_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_instantiation_statement, 128)
 
@@ -423,6 +435,7 @@ pint_instantiation_statement::load_object(const persistent_object_manager& m,
 	m.read_pointer(f, inst_base);
 	parent_type::load_object_base(m, f);
 }
+#endif	// USE_INST_STMT_TEMPLATE
 
 //=============================================================================
 // class process_instantiation_statement method definitions
@@ -794,6 +807,14 @@ data_instantiation_statement::load_object(const persistent_object_manager& m,
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
 }
+
+//=============================================================================
+// explicit template class instantiations
+
+#if USE_INST_STMT_TEMPLATE
+template class instantiation_statement<pbool_tag>;
+template class instantiation_statement<pint_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

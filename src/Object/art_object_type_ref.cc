@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29.2.1 2005/03/07 01:29:23 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29.2.2 2005/03/07 23:28:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -25,6 +25,10 @@
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 #include "art_object_classification_details.h"
+
+#if USE_INST_STMT_TEMPLATE
+#include "art_object_inst_stmt_param.h"
+#endif
 
 #include "sstream.h"
 #include "stacktrace.h"
@@ -834,9 +838,19 @@ param_type_reference::make_instantiation_statement_private(
 	typedef	excl_ptr<instantiation_statement_base>	return_type;
 	INVARIANT(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr))
+#if USE_INST_STMT_TEMPLATE
+		return return_type(new pbool_instantiation_statement(
+			pbool_type_ptr, d));
+#else
 		return return_type(new pbool_instantiation_statement(d));
+#endif
 	else if (this->must_be_equivalent(*pint_type_ptr))
+#if USE_INST_STMT_TEMPLATE
+		return return_type(new pint_instantiation_statement(
+			pint_type_ptr, d));
+#else
 		return return_type(new pint_instantiation_statement(d));
+#endif
 	else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
