@@ -76,6 +76,7 @@ static	char* string_buf_ptr = NULL;
 #define	NEWLINE_UPDATE	{ current.line++; current.col = 1; }
 #define	KEYWORD_UPDATE	{ yylval.n = new token_keyword(yytext); TOKEN_UPDATE; }
 #define	BOOL_UPDATE	{ yylval.n = new token_bool(yytext); TOKEN_UPDATE; }
+#define	TYPE_UPDATE	{ yylval.n = new token_type(yytext); TOKEN_UPDATE; }
 #define	MULTICHAR_UPDATE						\
 			{ yylval.n = new token_string(yytext); TOKEN_UPDATE; }
 #define	STRING_UPDATE	{ TOKEN_UPDATE; 				\
@@ -245,10 +246,10 @@ FALSE		"false"
 {RECV}		{ KEYWORD_UPDATE; return RECV; }
 {SET}		{ KEYWORD_UPDATE; return SET; }
 {GET}		{ KEYWORD_UPDATE; return GET; }
-{INT_TYPE}	{ KEYWORD_UPDATE; return INT_TYPE; }
-{BOOL_TYPE}	{ KEYWORD_UPDATE; return BOOL_TYPE; }
-{PINT_TYPE}	{ KEYWORD_UPDATE; return PINT_TYPE; }
-{PBOOL_TYPE}	{ KEYWORD_UPDATE; return PBOOL_TYPE; }
+{INT_TYPE}	{ TYPE_UPDATE; return INT_TYPE; }
+{BOOL_TYPE}	{ TYPE_UPDATE; return BOOL_TYPE; }
+{PINT_TYPE}	{ TYPE_UPDATE; return PINT_TYPE; }
+{PBOOL_TYPE}	{ TYPE_UPDATE; return PBOOL_TYPE; }
 {CHANNEL}	{ KEYWORD_UPDATE; return CHANNEL; }
 {TRUE}		{ BOOL_UPDATE; return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE; return BOOL_FALSE; }

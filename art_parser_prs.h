@@ -1,6 +1,7 @@
 // "art_parser_prs.h"
 // PRS-specific syntax tree
 
+#include "art_macros.h"
 #include "art_parser.h"
 
 namespace ART {
@@ -33,8 +34,8 @@ public:
 		dir(dynamic_cast<terminal*>(dir)) {
 			// various assertion statments here
 		}
-virtual	~rule() { if (guard) delete guard; if (arrow) delete arrow;
-		if (r) delete r; if (dir) delete (dir); }
+virtual	~rule() { SAFEDELETE(guard); SAFEDELETE(arrow);
+		SAFEDELETE(r); SAFEDELETE(dir); }
 
 virtual	ostream& what(ostream& o) const { return o << "(prs-rule)"; }
 };

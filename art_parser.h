@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <string>
+#include <typeinfo>
 
 #include <stdio.h>		// just for sprintf
 #include <string.h>		// for a few C-string functions
@@ -21,6 +22,7 @@ using namespace __gnu_cxx;
 #include <hash_map>
 #endif
 
+#include "art_macros.h"
 #include "art_switches.h"
 #include "list_of_ptr.h"	// includes <list>
 
@@ -55,13 +57,16 @@ extern	const char	colon[];
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type
 /**
+	The mother class.  
 	Rather than have to rely on unions in the lexer and parser, 
 	we prefer to use a single type of node for manipulation.  
 	This will be useful when we wish to dump the parser's value stack
 	in error reporting and debugging.  
+	All immediate subclasses of node must be virtually inherited.  
  */
 class node {
 public:
+	node() { }
 ///	standard virtual destructor
 virtual	~node() { }
 
@@ -71,8 +76,8 @@ virtual	~node() { }
  */
 virtual	ostream& what(ostream& o) const { return o << "(node)"; }
 // virtual	ostream& where(ostream& o) const = 0;
-// virtual	ostream& left_most(ostream& o) const = 0;
-// virtual	ostream& right_most(ostream& o) const = 0;
+// virtual	ostream& leftmost(ostream& o) const = 0;
+// virtual	ostream& rightmost(ostream& o) const = 0;
 
 // will type-check and return a usable ART::object
 // virtual object* check_build(const context* c) const = 0;
@@ -83,28 +88,31 @@ virtual	ostream& what(ostream& o) const { return o << "(node)"; }
 class terminal : virtual public node {
 protected:
 /// the position in the file where token was found, pos.off is unused
-	token_position	pos;
+	long		line;
+	long		col;
+// file name will be kept separate?
+//	token_position	pos;		// too big
 public:
 ///	base constructor always records the current position of the token
 //	"current" is defined in art_switches.h
-	terminal() { pos.line = current.line; pos.leng = current.leng;
-		pos.col = current.col; }
+	terminal() : node() { line = current.line; col = current.col; }
 
 ///	standard virtual destructor
 virtual	~terminal() { }
 
 virtual	int string_compare(const char* d) const = 0;
-virtual	ostream& what(ostream& o) const { return o << "(terminal)"; }
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //=============================================================================
 /// abstract base class for non-terminal symbols, mainly to be used by parser
 class nonterminal : virtual public node {
 public:
+	nonterminal() : node() { }
 ///	standard virtual destructor
 virtual ~nonterminal() { }
 
-virtual	ostream& what(ostream& o) const { return o << "(non-terminal)"; }
+virtual	ostream& what(ostream& o) const = 0;
 // virtual	ostream& where(ostream& o) const = 0;
 	// includes token position information
 };
@@ -128,14 +136,22 @@ public:
 public:
 	node_list_base() : nonterminal(), list_of_ptr<node>() { }
 // initializing with first element, T must be subclass of node!
-	node_list_base(node* n) : node_list_base() 
-		{ assert(dynamic_cast<T*>(n)); push_back(n); }
+	node_list_base(node* n) : node_list_base() {
+//		assert(dynamic_cast<T*>(n));		// unfriendly
+		if(n && !dynamic_cast<T*>(n)) {
+			// throw type exception
+			n->what(cerr << "unexpected type: ") << endl;
+			exit(1);
+		}
+		push_back(n);
+	}
+
 virtual	~node_list_base() { }
 
 using	list_parent::begin;
 using	list_parent::end;
 
-virtual	ostream& what(ostream& o) const { return o << "(node_list_base<>)"; }
+virtual	ostream& what(ostream& o) const { return o << "(node_list_base)"; }
 // later, use static functions (operator <<) to determine type name...
 };
 
@@ -156,12 +172,17 @@ protected:
 	terminal*	open;		///< wrapping string, such as "("
 	terminal*	close;		///< wrapping string, such as ")"
 public:
-	node_list() : node_list_base<T>() { open = close = NULL; }
-	node_list(node* n) : node_list_base<T>() {
-			if (n) assert(dynamic_cast<T*>(n));
-			push_back(n);
+	node_list() : node_list_base<T>(), open(NULL), close(NULL) { }
+	node_list(node* n) : node_list_base<T>(), open(NULL), close(NULL) {
+//		if (n) assert(dynamic_cast<T*>(n));	// unfriendly
+		if(n && !dynamic_cast<T*>(n)) {
+			// throw type exception
+			n->what(cerr << "unexpected type: ") << endl;
+			exit(1);
 		}
-virtual	~node_list() { if (open) delete open; if (close) delete close; }
+		push_back(n);
+	}
+virtual	~node_list() { SAFEDELETE(open); SAFEDELETE(close); }
 
 using	parent::begin;
 using	parent::end;
@@ -196,7 +217,7 @@ virtual	node_list<T,D>* append(node* d, node* n) {
 			assert(!(t->string_compare(D)));
 			push_back(d);
 		} else {
-			assert(!strlen(D));	// no delimiter was expected
+			assert(D == none);	// no delimiter was expected
 		}
 		assert(dynamic_cast<T*>(n));	// type-check
 		push_back(n);			// n may be null
@@ -208,20 +229,43 @@ virtual	node_list<T,D>* append(node* d, node* n) {
 virtual	ostream& what(ostream& o) const {
 		// print first item to get type
 		const_iterator i = begin();
-		o << "(node_list<>): ";
+		o << "(node_list): ";
 		if (*i) (*i)->what(o) << " ";
 		return o << "...";
 	}
 };
 
 //=============================================================================
-/// abstract base class for general expressions
-class expr : public nonterminal {
+/**
+	Abstract base class for root-level items.  
+	Assertion: all root items are nonterimnals.  
+ */
+class root_item : public nonterminal {
 public:
-	expr() : nonterminal() { }
+	root_item() : nonterminal() { }
+virtual	~root_item() { }
+virtual	ostream& what(ostream& o) const = 0;
+};
+
+typedef node_list<root_item>	root_body;
+
+#define root_body_wrap(b,l,e)					\
+	dynamic_cast<root_body*>(l)->wrap(b,e)
+#define root_body_append(l,d,n)					\
+	dynamic_cast<root_body*>(l)->append(d,n) 
+
+
+//=============================================================================
+/**
+	Abstract base class for general expressions.  
+	Expressions may be terminal or nonterminal.  
+ */
+class expr : virtual public node {
+public:
+	expr() : node() { }
 virtual	~expr() { }
 
-virtual	ostream& what(ostream& o) const { return o << "(expr)"; }
+virtual	ostream& what(ostream& o) const  = 0;
 };
 
 ///	all expression lists are comma-separated
@@ -234,6 +278,7 @@ typedef node_list<expr,comma>	expr_list;
 
 
 //=============================================================================
+/// single token characters
 class token_char : public terminal {
 protected:
 /// the character
@@ -321,7 +366,7 @@ typedef node_list<token_identifier,scope>	id_expr;
 	dynamic_cast<id_expr*>(l)->append(d,n)
 
 //-----------------------------------------------------------------------------
-/// keyword version of token_string class, not an expr
+/// keyword version of token_string class, not necessarily an expr
 class token_keyword : public token_string {
 public:
 	token_keyword(const char* s) : token_string(s) { }
@@ -373,6 +418,7 @@ virtual	ostream& what(ostream& o) const {
 	Can describe either a range of integers (inclusive) or a 
 	single integer.  Often found in sparse or multidimensional 
 	array declarations and expressions.  
+	Ranges are considered expressions, and consist of expressions.  
  */
 class range : public expr {
 protected:
@@ -395,8 +441,7 @@ public:
 			if (o && !op) delete o;
 			if (u && !upper) delete u;
 		}
-virtual	~range() { if (lower) delete lower; 
-		if (op) delete op; if (upper) delete upper; }
+virtual	~range() { SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper); }
 
 virtual	ostream& what(ostream& o) const { return o << "(range)"; }
 };
@@ -412,7 +457,7 @@ typedef node_list<range,comma>	range_list;
 
 //=============================================================================
 /// abstract base class for unary expressions
-class unary_expr : public expr {
+class unary_expr : public expr, public nonterminal {
 protected:
 	expr*		e;		///< the argument expr
 	terminal*	op;		///< the operator, may be null
@@ -423,12 +468,13 @@ public:
 	which will be detected, and properly memory managed, assuming
 	that the arguments exclusively "owned" their memory locations.  
  */
-	unary_expr(node* n, node* o) : expr(), e(dynamic_cast<expr*>(n)), 
+	unary_expr(node* n, node* o) : expr(), nonterminal(), 
+		e(dynamic_cast<expr*>(n)), 
 		op(dynamic_cast<terminal*>(o)) {
 			if (n && !e) delete n;	// or use assert?
 			if (o && !op) delete o;
 		}
-virtual	~unary_expr() { if (e) delete e; if (op) delete op; }
+virtual	~unary_expr() { SAFEDELETE(e); SAFEDELETE(op); }
 
 virtual	ostream& what(ostream& o) const = 0;
 };
@@ -450,7 +496,7 @@ public:
 	postfix_expr(node* n, node* op) : unary_expr(n,op) { }
 virtual	~postfix_expr() { }
 
-virtual	ostream& what(ostream& o) const { return o << "(postfix-expr)"; }
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -461,26 +507,27 @@ protected:
 public:
 	member_expr(node* l, node* op, node* m) : postfix_expr(l,op), 
 		member(dynamic_cast<expr*>(m)) { assert(member); }
-virtual	~member_expr() { if (member) delete member; }
+virtual	~member_expr() { SAFEDELETE(member); }
 
 virtual	ostream& what(ostream& o) const { return o << "(member-expr)"; }
 };
 
 //-----------------------------------------------------------------------------
+/// class for array indexing, with support for multiple dimensions and ranges
 class index_expr : public postfix_expr {
 protected:
 	expr*		ranges;			// should be range_list
 public:
 	index_expr(node* l, node* i) : postfix_expr(l, NULL), 
 		ranges(dynamic_cast<expr*>(i)) { }
-virtual	~index_expr() { if (ranges) delete ranges; }
+virtual	~index_expr() { SAFEDELETE(ranges); }
 
 virtual	ostream& what(ostream& o) const { return o << "(index-expr)"; }
 };
 
 //=============================================================================
 /// base class for general binary expressions
-class binary_expr : public expr {
+class binary_expr : public expr, public nonterminal {
 protected:
 	expr* 		l;			///< left-hand side
 	terminal*	op;			///< operator
@@ -490,9 +537,9 @@ public:
 		l(dynamic_cast<expr*>(left)), op(dynamic_cast<terminal*>(o)), 
 		r(dynamic_cast<expr*>(right))
 		{ assert(l); assert(op); assert(r); }
-virtual	~binary_expr() { if (l) delete l; if (op) delete op; if (r) delete r; }
+virtual	~binary_expr() { SAFEDELETE(l); SAFEDELETE(op); SAFEDELETE(r); }
 
-// virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -530,11 +577,23 @@ virtual	ostream& what(ostream& o) const { return o << "(logical-expr)"; }
 
 //=============================================================================
 /// abstract base class for type
-class type_base : public nonterminal {
+class type_base : virtual public node {
 public:
-	type_base() : nonterminal() { }
+	type_base() : node() { }
 virtual	~type_base() { }
 
+virtual	ostream& what(ostream& o) const = 0;
+};
+
+//-----------------------------------------------------------------------------
+/// keywords that are also types
+class token_type : public token_keyword, public type_base {
+public:
+	token_type(const char* tf) : token_keyword(tf), type_base() { }
+//		{ assert(!strcmp(tf,"true") || !strcmp(tf,"false")); }
+virtual	~token_type() { }
+virtual	ostream& what(ostream& o) const
+		{ return o << "type: " << *((const string*) this); }
 };
 
 //-----------------------------------------------------------------------------
@@ -549,7 +608,7 @@ public:
 			// may be id_expr, or chan_type, or data_type
 		temp_spec(dynamic_cast<expr_list*>(t))	// may be NULL
 		{ }
-virtual	~type_id() { if (base) delete base; if (temp_spec) delete temp_spec; }
+virtual	~type_id() { SAFEDELETE(base); SAFEDELETE(temp_spec); }
 
 virtual	ostream& what(ostream& o) const { 
 		base->what(o << "(type-id): ");
@@ -569,12 +628,13 @@ public:
 		chan(dynamic_cast<token_keyword*>(c)), 
 		dir(dynamic_cast<token_char*>(d))
 		{ assert(chan); }		// dir may be null
-virtual	~chan_type_root() { if (chan) delete chan; if (dir) delete dir; }
+virtual	~chan_type_root() { SAFEDELETE(chan); SAFEDELETE(dir); }
 
 virtual	ostream& what(ostream& o) const { return o << "(chan/port-base)"; }
 };
 
 //-----------------------------------------------------------------------------
+/// base type for data, such as int...
 class data_type_base : public type_base {
 protected:
 	token_keyword*		type;		// generalize to structs?
@@ -591,8 +651,8 @@ public:
 	data_type_base(node* t) : type_base(), 
 		type(dynamic_cast<token_keyword*>(t)), 
 		la(NULL), width(NULL), ra(NULL) { assert(type); }
-virtual	~data_type_base() { if (type) delete type; if (la) delete la;
-		if (width) delete width; if (ra) delete ra; }
+virtual	~data_type_base() { SAFEDELETE(type); SAFEDELETE(la);
+		SAFEDELETE(width); SAFEDELETE(ra); }
 
 virtual	ostream& what(ostream& o) const { return o << "(data-type-base)"; }
 };
@@ -617,7 +677,7 @@ public:
 		base(dynamic_cast<chan_type_root*>(b)), 
 		dtypes(dynamic_cast<base_data_type_list*>(dt))
 		{ assert(base); assert(dtypes); }
-virtual	~chan_type() { if (base) delete base; if (dtypes) delete dtypes; }
+virtual	~chan_type() { SAFEDELETE(base); SAFEDELETE(dtypes); }
 
 virtual	ostream& what(ostream& o) const { return o << "(chan-type)"; }
 };
@@ -625,17 +685,24 @@ virtual	ostream& what(ostream& o) const { return o << "(chan-type)"; }
 //-----------------------------------------------------------------------------
 /// user-defined data type
 class data_type : public type_base {
+protected:
+	token_keyword*		def;		///< "deftype" keyword
+	token_identifier*	name;		///< name of new type
+//	...
 
 };
 
 //=============================================================================
-/// base class for statements (assignments, increment, decrement...)
+/**
+	Base class for statements (assignments, increment, decrement...)
+	Assertion: all statements are nonterminals
+ */
 class statement : public nonterminal {
 public:
 	statement() : nonterminal() { }
 virtual	~statement() { }
 
-virtual	ostream& what(ostream& o) const { return o << "(statement)"; }
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -649,7 +716,7 @@ public:
 		e(dynamic_cast<expr*>(n)), 
 		op(dynamic_cast<terminal*>(o))
 		{ assert(e); assert(op); }
-virtual	~incdec_stmt() { if (e) delete e; if (op) delete op; }
+virtual	~incdec_stmt() { SAFEDELETE(e); SAFEDELETE(op); }
 
 /**
 	Release operations are needed for destructive transfer of ownership.  
@@ -664,7 +731,7 @@ virtual	ostream& what(ostream& o) const { return o << "(inc/dec-stmt)"; }
 
 //-----------------------------------------------------------------------------
 /// class for binary expression statements, with left- and right-hand sides
-class assign_stmt : virtual public statement {
+class assign_stmt : public statement {
 protected:
 	expr*		lhs;			///< destination
 	terminal*	op;			///< operation
@@ -675,8 +742,7 @@ public:
 		op(dynamic_cast<terminal*>(o)), 
 		rhs(dynamic_cast<expr*>(right))
 		{ assert(lhs); assert(op); assert(rhs); }
-virtual	~assign_stmt() { if (lhs) delete lhs; if (op) delete op;
-		if (rhs) delete rhs; }
+virtual	~assign_stmt() { SAFEDELETE(lhs); SAFEDELETE(op); SAFEDELETE(rhs); }
 
 virtual	ostream& what(ostream& o) const { return o << "(assign-stmt)"; }
 };
@@ -707,7 +773,7 @@ protected:
 public:
 	language_body(node* t) : def_body_item(), 
 		tag(dynamic_cast<token_keyword*>(t)) { if (t) assert(tag); }
-virtual	~language_body() { if (tag) delete tag; }
+virtual	~language_body() { SAFEDELETE(tag); }
 
 virtual language_body* attach_tag(node* t) {
 		tag = dynamic_cast<token_keyword*>(t);
@@ -720,7 +786,7 @@ virtual	ostream& what(ostream& o) const { return o << "(language-body)"; }
 
 //=============================================================================
 /// namespace enclosed body
-class namespace_body : public statement {
+class namespace_body : public root_item {
 protected:
 	token_keyword*		ns;		///< keyword "namespace"
 	token_identifier*	name;		///< name of namespace
@@ -730,7 +796,7 @@ protected:
 	terminal*		semi;		///< semicolon token
 public:
 	namespace_body(node* s, node* n, node* l, node* b, node* r, node* c) : 
-		statement(), 
+		root_item(), 
 		ns(dynamic_cast<token_keyword*>(s)), 
 		name(dynamic_cast<token_identifier*>(n)), 
 		lb(dynamic_cast<terminal*>(l)), 
@@ -741,15 +807,15 @@ public:
 			// body may be NULL
 			assert(rb); assert(semi);
 		}
-virtual	~namespace_body() { if (name) delete name; if (lb) delete lb;
-		if (body) delete body; if (rb) delete rb; }
+virtual	~namespace_body() { SAFEDELETE(name); SAFEDELETE(lb);
+		SAFEDELETE(body); SAFEDELETE(rb); }
 
 virtual	ostream& what(ostream& o) const { return o << "(namespace-body)"; }
 };
 
 //-----------------------------------------------------------------------------
 /// command to search namespace for identifiers
-class using_namespace : public statement {
+class using_namespace : public root_item {
 protected:
 	token_keyword*		open;
 	id_expr*		id;
@@ -758,7 +824,7 @@ protected:
 	token_string*		semi;
 public:
 	using_namespace(node* o, node* i, node* a, node* n, node* s) : 
-		statement(), 
+		root_item(), 
 		open(dynamic_cast<token_keyword*>(o)),
 		id(dynamic_cast<id_expr*>(i)),
 		as(dynamic_cast<token_keyword*>(a)),		// optional
@@ -768,58 +834,166 @@ public:
 			if (a && !as) delete a;
 			if (n && !alias) delete n;
 		}
-virtual	~using_namespace() { if (open) delete open; if (id) delete id;
-		if (as) delete as; if (alias) delete alias; }
+virtual	~using_namespace() { SAFEDELETE(open); SAFEDELETE(id);
+		SAFEDELETE(as); SAFEDELETE(alias); }
 
 virtual	ostream& what(ostream& o) const { return o << "(using-namespace)"; }
 };
 
 //=============================================================================
-/// abstract base class of instance items
-class instance_item : public def_body_item {
+/// basic declaration or instance identifier, no trimmings
+class declaration_base : virtual public def_body_item, 
+		virtual public root_item {
+protected:
+/**
+	In declaration context, id should only be a token_identifier, 
+	but in instantiation contect, id may be a qualified identifier
+	with postfix member/indexing.  
+ */
+	expr*		id;
+public:
+	declaration_base(node* i) : def_body_item(), root_item(), 
+		id(dynamic_cast<expr*>(i)) { assert(id); }
+virtual	~declaration_base() { SAFEDELETE(id); }
 
+virtual	ostream& what(ostream& o) const 
+		{ return id->what(o << "(declaration-id): "); }
+};
+
+typedef	node_list<declaration_base,comma>	declaration_id_list;
+
+#define declaration_id_list_wrap(b,l,e)					\
+	dynamic_cast<declaration_id_list*>(l)->wrap(b,e)
+#define declaration_id_list_append(l,d,n)				\
+	dynamic_cast<declaration_id_list*>(l)->append(d,n) 
+
+//-----------------------------------------------------------------------------
+/// declaration identifier with ranges
+class declaration_array : public declaration_base {
+protected:
+	range_list*		ranges;		///< optional ranges
+public:
+	declaration_array(node* i, node* rl) : declaration_base(i), 
+		ranges(dynamic_cast<range_list*>(rl)) { }
+		// ranges may be NULL, equivalent to declaration base
+virtual	~declaration_array() { SAFEDELETE(ranges); }
+
+virtual	ostream& what(ostream& o) const 
+		{ return ranges->what(id->what(o << "(declaration-array): ")); }
+};
+
+//=============================================================================
+/// abstract base class of instance items
+class instance_base : virtual public def_body_item, virtual public root_item {
+public:
+	instance_base() : def_body_item(), root_item() { }
+virtual	~instance_base() { }
+
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //-----------------------------------------------------------------------------
 /// class for an instance declaration
-class instance_declaration : virtual public instance_item {
-	// and is a node_list<declaration_id>
+class instance_declaration : public instance_base {
 protected:
-	type_id*		type;
+	type_base*		type;
+	declaration_id_list*	ids;
+	terminal*		semi;
 public:
+	instance_declaration(node* t, node* i, node* s = NULL) : 
+		instance_base(), 
+		type(dynamic_cast<type_base*>(t)), 
+		ids(dynamic_cast<declaration_id_list*>(i)), 
+		semi(dynamic_cast<terminal*>(s)) 
+		{ assert(type); assert(ids); if(s) assert(semi); }
+virtual	~instance_declaration() { SAFEDELETE(type); SAFEDELETE (ids);
+		SAFEDELETE(semi); }
 
+virtual	ostream& what(ostream& o) const { return o << "(instance-decl)"; }
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// clever re-use of declaration classes
+typedef	node_list<instance_declaration,semicolon>	data_param_list;
+
+#define data_param_list_wrap(b,l,e)					\
+	dynamic_cast<data_param_list*>(l)->wrap(b,e)
+#define data_param_list_append(l,d,n)					\
+	dynamic_cast<data_param_list*>(l)->append(d,n) 
+
+//-----------------------------------------------------------------------------
+/// class for an or instance port connection or declaration connection
+class actuals_connection : public instance_base, public declaration_base {
+protected:
+//	expr*			id;		// inherited
+	expr_list*		actuals;	///< connection actuals
+	terminal*		semi;		///< semicolon (optional)
+public:
+	actuals_connection(node* i, node* a, node* s = NULL) : 
+		instance_base(), declaration_base(i), 
+		actuals(dynamic_cast<expr_list*>(a)), 
+		semi(dynamic_cast<terminal*>(s)) 
+		{ assert(actuals); if (s) assert(semi); }
+virtual	~actuals_connection()
+		{ SAFEDELETE(actuals); SAFEDELETE(semi); }
+
+// remember to check for declaration context when checking id
+
+virtual	ostream& what(ostream& o) const { return o << "(actuals-connection)"; }
 };
 
 //-----------------------------------------------------------------------------
-/// class for an instance connection
-class instance_connection : virtual public instance_item {
+/// aliasing identifiers is establishing a connection, or assigning a value
+class alias_assign : public instance_base, public declaration_base {
+protected:
+	terminal*		op;		///< assign operator
+	expr*			rhs;		///< right-hand side
+	terminal*		semi;		///< semicolon
+public:
+	alias_assign(node* i, node* o, node* r, node* s = NULL) :
+		instance_base(), declaration_base(i), 
+		op(dynamic_cast<terminal*>(o)), 
+		rhs(dynamic_cast<expr*>(r)), 
+		semi(dynamic_cast<terminal*>(s)) 
+		{ assert(op); assert(rhs); if (s) assert(semi); }
+virtual	~alias_assign() { SAFEDELETE(op); SAFEDELETE(rhs); SAFEDELETE(semi); }
 
+// type check here
+
+virtual	ostream& what(ostream& o) const { return o << "(alias-assign)"; }
 };
 
 //-----------------------------------------------------------------------------
-class instance_actuals : public instance_connection {
+/// class for loop instantiations, to be unrolled in the build phase
+class loop_instantiation : public instance_base {
+protected:
+	terminal*		lp;
+	terminal*		delim;
+	token_identifier*	index;
+	terminal*		colon;
+	range*			rng;
+	definition_body*	body;
+	terminal*		rp;
+public:
+	loop_instantiation(node* l, node* d, node* i, node* c, node* g, 
+		node* b, node* r) : instance_base(), 
+		lp(dynamic_cast<terminal*>(l)), 
+		delim(dynamic_cast<terminal*>(d)), 
+		index(dynamic_cast<token_identifier*>(i)), 
+		colon(dynamic_cast<terminal*>(c)), 
+		rng(dynamic_cast<range*>(g)), 
+		body(dynamic_cast<definition_body*>(b)), 
+		rp(dynamic_cast<terminal*>(r)) {
+			assert(lp); assert(delim); assert(index);
+			assert(colon); assert(rng); assert(body); assert(lp);
+	}
+virtual	~loop_instantiation() {
+		SAFEDELETE(lp); SAFEDELETE(delim); SAFEDELETE(index);
+		SAFEDELETE(colon); SAFEDELETE(rng); SAFEDELETE(body);
+		SAFEDELETE(rp);
+	}
 
-};
-
-//-----------------------------------------------------------------------------
-class instance_assign : public instance_connection {
-
-};
-
-//-----------------------------------------------------------------------------
-class instance_decl_connection : public instance_declaration, 
-		public instance_connection {
-
-};
-
-//-----------------------------------------------------------------------------
-class loop_instantiation : public instance_item {
-
-};
-
-//-----------------------------------------------------------------------------
-class conditional_instantiation : public instance_item {
-
+virtual	ostream& what(ostream& o) const { return o << "(loop-instance)"; }
 };
 
 //=============================================================================
@@ -833,7 +1007,7 @@ public:
 		name(dynamic_cast<token_identifier*>(n)), 
 		dim(dynamic_cast<range_list*>(d))
 		{ assert(name); }		// dim may be NULL
-virtual	~port_formal_id() { if (name) delete name; if (dim) delete dim; }
+virtual	~port_formal_id() { SAFEDELETE(name); SAFEDELETE(dim); }
 
 virtual	ostream& what(ostream& o) const { 
 		name->what(o << "(port-formal-id): "); 
@@ -862,7 +1036,7 @@ public:
 		ids(dynamic_cast<port_formal_id_list*>(i)) {
 			assert(type); assert(ids);
 		}
-virtual	~port_formal_decl() { if (type) delete type; if (ids) delete ids; }
+virtual	~port_formal_decl() { SAFEDELETE(type); SAFEDELETE(ids); }
 
 virtual	ostream& what(ostream& o) const { return o << "(port-formal-decl)"; }
 };
@@ -886,7 +1060,7 @@ public:
 		name(dynamic_cast<token_identifier*>(n)), 
 		dim(dynamic_cast<range_list*>(d))
 		{ assert(name); }		// dim may be NULL
-virtual	~template_formal_id() { if (name) delete name; if (dim) delete dim; }
+virtual	~template_formal_id() { SAFEDELETE(name); SAFEDELETE(dim); }
 
 virtual	ostream& what(ostream& o) const { 
 		name->what(o << "(template-formal-id): "); 
@@ -915,7 +1089,7 @@ public:
 		ids(dynamic_cast<template_formal_id_list*>(i)) {
 			assert(type); assert(ids);
 		}
-virtual	~template_formal_decl() { if (type) delete type; if (ids) delete ids; }
+virtual	~template_formal_decl() { SAFEDELETE(type); SAFEDELETE(ids); }
 
 virtual	ostream& what(ostream& o) const
 		{ return o << "(template-formal-decl)"; }
@@ -931,32 +1105,31 @@ typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
 
 //=============================================================================
 /// definition type identifier, with optional template specifier list
-class def_type_id : public nonterminal {
+class def_type_id : public type_base {
 protected:
 	token_identifier*		name;	///< definition name base
 	/// optional template specifier
 	template_formal_decl_list*	temp_spec;
 public:
-	def_type_id(node* n, node* t) : nonterminal(), 
+	def_type_id(node* n, node* t) : type_base(), 
 		name(dynamic_cast<token_identifier*>(n)), 
 		temp_spec(dynamic_cast<template_formal_decl_list*>(t))
 		{ assert(name); if (t) assert(temp_spec); }
-virtual	~def_type_id() { if (name) delete name;
-		if (temp_spec) delete temp_spec; }
+virtual	~def_type_id() { SAFEDELETE(name); SAFEDELETE(temp_spec); }
 
 virtual	ostream& what(ostream& o) const { return o << "(def-type-id)"; }
 };
 
 //=============================================================================
 /// abstract base class for definitions
-class definition : public statement {
+class definition : public root_item {
 protected:
 	definition_body*		body;	///< definition body
 public:
-	definition(node* b) : statement(), 
+	definition(node* b) : root_item(), 
 		body(dynamic_cast<definition_body*>(b))
 		{ assert(body); }
-virtual	~definition() { if (body) delete body; }
+virtual	~definition() { SAFEDELETE(body); }
 
 virtual	ostream& what(ostream& o) const { return o << "(definition)"; }
 };
@@ -980,7 +1153,46 @@ virtual	ostream& what(ostream& o) const { return o << "(process-definition)"; }
 };
 
 //=============================================================================
+/// conditional instantiations in definition body
+class guarded_definition_body : public nonterminal {
+protected:
+	expr*				guard;	///< condition expression
+	terminal*			arrow;	///< right arrow
+	definition_body*		body;
+public:
+	guarded_definition_body(node* e, node* a, node* b) : nonterminal(), 
+		guard(dynamic_cast<expr*>(e)), 
+		arrow(dynamic_cast<terminal*>(a)), 
+		body(dynamic_cast<definition_body*>(b))
+		{ assert(guard); assert(arrow); assert(body); }
+virtual	~guarded_definition_body() { SAFEDELETE(guard);
+		SAFEDELETE(arrow); SAFEDELETE(body); }
 
+virtual	ostream& what(ostream& o) const { return o << "(guarded-def-body)"; }
+};
+
+/// list of template-formal declarations
+typedef	node_list<guarded_definition_body,thickbar>
+		guarded_definition_body_list;
+
+#define guarded_definition_body_list_wrap(b,l,e)			\
+	dynamic_cast<guarded_definition_body_list*>(l)->wrap(b,e)
+#define guarded_definition_body_list_append(l,d,n)			\
+	dynamic_cast<guarded_definition_body_list*>(l)->append(d,n) 
+
+//-----------------------------------------------------------------------------
+/// wrapper class for conditional instantiations
+class conditional_instantiation : public instance_base {
+protected:
+	guarded_definition_body_list*	gd;
+public:
+	conditional_instantiation(node* n) : instance_base(), 
+		gd(dynamic_cast<guarded_definition_body_list*>(n))
+		{ assert(gd); }
+
+virtual	ostream& what(ostream& o) const
+	{ return o << "(conditional-instance)"; }
+};
 
 //=============================================================================
 };	// end namespace parser

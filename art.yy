@@ -21,31 +21,28 @@ extern	int yylex(void);
 extern "C" {
 	int yyparse(void);			// parser routine to call
 	void yyerror(const char* msg);		// defined below
-
 }
 
 // useful typedefs are defined in art_parser.h
-
 // macros: d = delimiter, n = node, b = begin, e = end, l = list
-#define	hse_body_wrap(b,l,e)						\
-	dynamic_cast<HSE::body*>(l)->wrap(b,e)
-#define	hse_body_append(l,d,n)						\
-	dynamic_cast<HSE::body*>(l)->append(d,n)
-
-#define	hse_det_selection_wrap(b,l,e)					\
-	dynamic_cast<HSE::det_selection*>(l)->wrap(b,e)
-#define	hse_det_selection_append(l,d,n)					\
-	dynamic_cast<HSE::det_selection*>(l)->append(d,n)
-
-#define	hse_nondet_selection_wrap(b,l,e)				\
-	dynamic_cast<HSE::nondet_selection*>(l)->wrap(b,e)
-#define	hse_nondet_selection_append(l,d,n)				\
-	dynamic_cast<HSE::nondet_selection*>(l)->append(d,n)
 
 %}
 
 %union {
-/// use this universal symbol type for both lexer and parser
+/**
+	Use this universal symbol type for both lexer and parser.  
+	The reason we stick to a single abstract type as opposed to 
+	a union is so that in error handling, we don't have to keep track
+	of token tags to figure out which union member is actually in
+	a particular symbol stack entry when we dump the stack.  
+	(see yyerror() for details)
+	We leverage polymorphism for clean, modular error reporting.  
+	Since all return types are abstract nodes, 
+	a consequence of this choice is that we perform some run-time
+	sanity type checks in the constructors for the various classes.  
+	This keeps the art.yy grammar file as clean as possible.  
+	Let the constructors bear the burden.  
+ */
 	node* n;
 // let the various constructors perform optional dynamic type-cast checks
 }
@@ -127,11 +124,13 @@ extern "C" {
 %type	<n>	base_chan_type chan_or_port
 %type	<n>	base_data_type_list base_data_type
 %type	<n>	deftype defchan
-%type	<n>	data_param_list data_param
+%type	<n>	data_param_list data_param data_param_list_in_parens
+%type	<n>	data_param_id_list data_param_id
 %type	<n>	definition_body
 %type	<n>	instance_item instance_declaration 
+%type	<n>	loop_instantiation conditional_instantiation
 %type	<n>	declaration_id_list declaration_id_item
-%type	<n>	instance_connection connection_actuals_list
+%type	<n>	instance_connection instance_alias connection_actuals_list
 %type	<n>	guarded_definition_body_list guarded_definition_body
 %type	<n>	language_body
 %type	<n>	chp_body full_chp_body_item_list full_chp_body_item
@@ -181,10 +180,10 @@ top_root
 	;
 
 body
-	: body definition { $$ = $1; /* append */ }
-	| definition { /* create new list */ }
-	| body basic_item { $$ = $1; /* append */ }
-	| basic_item { /* create new list */ }
+	: body definition { $$ = root_body_append($1, NULL, $2); }
+	| definition { $$ = new root_body($1); }
+	| body basic_item { $$ = root_body_append($1, NULL, $2); }
+	| basic_item { $$ = new root_body($1); }
 	;
 
 basic_item
@@ -211,8 +210,8 @@ namespace_management
 definition
 	// default actions
 	: defproc 
-	| deftype 
-	| defchan 
+	| deftype 			// not done yet
+	| defchan 			// not done yet
 	;
 
 
@@ -283,13 +282,6 @@ template_formal_id
 		{ $$ = new template_formal_id($1, $2); }
 	;
 
-/*** obsolete
-optional_port_formal_decl_list
-	: port_formal_decl_list
-	| { $$ = NULL; }
-	;
-***/
-
 // port parameters
 port_formal_decl_list
 	// would rather use ','-delimiter, but wth...
@@ -325,12 +317,6 @@ type_id
 	| base_data_type
 	;
 
-/*** obsolete
-formal_id
-	: ID
-	;
-***/
-
 //------------------------------------------------------------------------
 //	base types
 //------------------------------------------------------------------------
@@ -338,8 +324,8 @@ formal_id
 // template type
 base_template_type
 	// default actions
-	: PINT_TYPE  // integer parameter
-	| PBOOL_TYPE // boolean parameter
+	: PINT_TYPE 		// integer parameter
+	| PBOOL_TYPE		// boolean parameter
 	;
 
 // channel type: channel, inport, outport, and data types
@@ -384,7 +370,7 @@ base_data_type
 // definition types
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
-	  '(' data_param_list ')'
+          data_param_list_in_parens
 	  '{'
 		SET '{' chp_body '}'
 		GET '{' chp_body '}'
@@ -393,20 +379,25 @@ deftype
 
 defchan
        : DEFCHAN ID DEFINEOP base_chan_type 
-         '(' data_param_list ')'
+         data_param_list_in_parens
 	 '{'
 		SEND '{' chp_body '}'
 		RECV '{' chp_body '}'
 	 '}'
 	;
 
+data_param_list_in_parens
+	: '(' data_param_list ')'
+		{ $$ = data_param_list_wrap($1, $2, $3); }
+	;
+
 data_param_list
 	// like declarations in formals list
 	// consider using ':', similar to C-style...
 	: data_param_list ';' data_param
-	//	{ $$ = $1; data_param_list_append($$, $2, $3); }
+		{ $$ = data_param_list_append($1, $2, $3); }
 	| data_param
-	//	{ $$ = new data_param_list($1); }
+		{ $$ = new data_param_list($1); }
 	;
 
 data_param
@@ -414,8 +405,21 @@ data_param
 	// but to follow C-style, we want the arrays to go with identifiers
 	// thinking of forbidding list, restricting to single
 	// semicolon-delimited declarations
-	: base_data_type ID optional_range_list_in_brackets
-	//	{ $$ = new data_param($1, $2, $3); }
+	: base_data_type data_param_id_list
+		{ $$ = new instance_declaration($1, $2); }
+	;
+
+data_param_id_list
+	: data_param_id_list ',' data_param_id
+		{ $$ = declaration_id_list_append($1, $2, $3); }
+	| data_param_id
+		{ $$ = new declaration_id_list($1); }
+	;
+
+data_param_id
+	: ID optional_range_list_in_brackets
+		{ $$ = ($2) ? new declaration_array($1, $2)
+			: new declaration_base($1); }
 	;
 
 
@@ -423,11 +427,11 @@ data_param
 
 definition_body
 	: definition_body instance_item
-		{ $$ = definition_body_append($$, $1, $2); }
+		{ $$ = definition_body_append($1, NULL, $2); }
 	| instance_item
 		{ $$ = new definition_body($1); }
 	| definition_body language_body
-		{ $$ = definition_body_append($$, $1, $2); }
+		{ $$ = definition_body_append($1, NULL, $2); }
 	| language_body
 		{ $$ = new definition_body($1); }
 	;
@@ -443,42 +447,66 @@ definition_body
 // foo(port-actuals);				// then connect
 
 instance_item
-	: instance_declaration ';'	// declaration: single or array
-	| instance_connection ';'		// single connection
-	// loop instantiation
-	| '(' ';' ID ':' range ':' definition_body ')'
-	// conditional instantiation
-	| '[' guarded_definition_body_list ']'
+	: instance_declaration			// declaration: single or array
+	| instance_connection			// connection of ports
+	| instance_alias			// aliasing connection
+	| loop_instantiation
+	| conditional_instantiation
+	;
+
+loop_instantiation
+	: '(' ';' ID ':' range ':' definition_body ')'
+		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7); }
+	;
+
+conditional_instantiation
+	: '[' guarded_definition_body_list ']'
+		{ $$ = new conditional_instantiation(
+			guarded_definition_body_list_wrap($1, $2, $3)); }
 	;
 
 instance_declaration
 	// type template is included in type_id, and is part of the type
-	: type_id declaration_id_list
-	//	{ $$ = new instance_declaration($1, $2); }
+	: type_id declaration_id_list ';'
+		{ $$ = new instance_declaration($1, $2, $3); }
 	;
 
 declaration_id_list
 	: declaration_id_list ',' declaration_id_item
-	//	{ $$ = $1; declaration_id_list_append($2, $3); }
+		{ $$ = declaration_id_list_append($1, $2, $3); }
 	| declaration_id_item
-	//	{ $$ = new declaration_id_list($1); }
+		{ $$ = new declaration_id_list($1); }
 	;
 
 declaration_id_item
 	// array declaration: forbid connection, must connect later
 	: ID range_list_in_brackets
+		{ $$ = new declaration_array($1, $2); }
 	// single instance declaration without connection
 	| ID
+		{ $$ = new declaration_base($1); }
 	// single instance declaration with connection
 	| ID connection_actuals_list
+		{ $$ = new actuals_connection($1, $2); }
+	// alias or assignment (not just member_id expression?)
+	| ID '=' expr
+		{ $$ = new alias_assign($1, $2, $3); }
 	;
 
 instance_connection
 	// taking a declared array or single instance and connecting ports
 	// are brackets part of the array/membership chain?
-	: member_index_expr connection_actuals_list
+	: member_index_expr connection_actuals_list ';'
 		// can this first id be scoped and/or membered?
-	| member_index_expr '=' member_index_expr
+		{ $$ = new actuals_connection($1, $2, $3); }
+	;
+
+instance_alias
+	// aliasing syntax, or data types is value assignment (general expr?)
+	// type check this, of course
+//	: member_index_expr '=' member_index_expr ';'
+	: member_index_expr '=' expr ';'
+		{ $$ = new alias_assign($1, $2, $3, $4); }
 	;
 
 // this rule is sort of redundant, oh well...
@@ -488,15 +516,16 @@ connection_actuals_list
 
 guarded_definition_body_list
 	: guarded_definition_body_list THICKBAR guarded_definition_body
+		{ $$ = guarded_definition_body_list_append($1, $2, $3); }
 	| guarded_definition_body
-//		{ $$ = new node_list<guarded_definition_body>($1); }
+		{ $$ = new guarded_definition_body_list($1); }
 	;
 
 // any else clause?
 
 guarded_definition_body
 	: expr RARROW definition_body
-//		{ $$ = new guarded_definition_body($1, $2, $3); }
+		{ $$ = new guarded_definition_body($1, $2, $3); }
 	;
 
 
