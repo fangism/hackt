@@ -50,7 +50,7 @@ node_list_base<T>::node_list_base() : nonterminal(), list_of_ptr<node>() {
 
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(node* n) : node_list_base() {
-	if(n && !dynamic_cast<T*>(n)) {
+	if(n && !IS_A(T*, n)) {
 		// throw type exception
 		n->what(cerr << "unexpected type: ") << endl;
 		exit(1);
@@ -88,7 +88,7 @@ node_list<T,D>::node_list() : parent(), open(NULL), close(NULL) {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::node_list(node* n) :
 		node_list_base<T>(), open(NULL), close(NULL) {
-	if(n && !dynamic_cast<T*>(n)) {
+	if(n && !IS_A(T*, n)) {
 		// throw type exception
 		n->what(cerr << "unexpected type: ") << endl;
 		exit(1);
@@ -112,14 +112,14 @@ node_list<T,D>::~node_list() {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
 node_list<T,D>::wrap(node* b, node* e) {
-	open = dynamic_cast<terminal*>(b);
+	open = IS_A(terminal*, b);
 	assert(open);
-	assert(dynamic_cast<token_char*>(open) ||
-		dynamic_cast<token_string*>(open));
-	close = dynamic_cast<terminal*>(e);
+	assert(IS_A(token_char*, open) ||
+		IS_A(token_string*, open));
+	close = IS_A(terminal*, e);
 	assert(close);
-	assert(dynamic_cast<token_char*>(close) ||
-		dynamic_cast<token_string*>(close));
+	assert(IS_A(token_char*, close) ||
+		IS_A(token_string*, close));
 	return this;
 }
 
@@ -129,7 +129,7 @@ node_list<T,D>*
 node_list<T,D>::append(node* d, node* n) {
 	if (d) {
 		// check for delimiter character match
-		terminal* t = dynamic_cast<terminal*>(d);
+		terminal* t = IS_A(terminal*, d);
 		assert(t);		// throw exception
 		// will fail if incorrect type is passed
 		assert(!(t->string_compare(D)));
@@ -137,7 +137,7 @@ node_list<T,D>::append(node* d, node* n) {
 	} else {
 		assert(D == none);	// no delimiter was expected
 	}
-	assert(dynamic_cast<T*>(n));	// type-check
+	assert(IS_A(T*, n));	// type-check
 	push_back(n);			// n may be null
 	return this;
 }

@@ -1132,6 +1132,15 @@ conditional_instantiation::rightmost(void) const {
 	return gd->rightmost();
 }
 
+//=============================================================================
+// abstract class prototype method definitions
+
+inline
+prototype::prototype() : root_item() { }
+
+DESTRUCTOR_INLINE
+prototype::~prototype() { }
+
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes

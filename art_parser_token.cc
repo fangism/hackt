@@ -7,7 +7,7 @@
 #include <stdio.h>		// for sprintf
 #include <string.h>		// for a few C-string functions
 
-#include "art_macros.h"
+#include "art_macros.h"		// actually not needed
 #include "art_switches.h"
 #include "art_parser.h"
 // #include "art_parser_template_methods.h"	// no templates here

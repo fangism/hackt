@@ -12,7 +12,7 @@
 %{
 #include <iostream>
 
-#include "art_parser.h"
+#include "art_parser.h"			// should be first
 #include "art_parser_prs.h"
 #include "art_parser_hse.h"
 #include "art_parser_chp.h"
@@ -116,8 +116,10 @@ extern "C" {
 %token	<n>	BOOL_TRUE BOOL_FALSE
 
 /* non-terminals */
-%type	<n>	top_root body basic_item namespace_management
+%type	<n>	top_root body body_item basic_item namespace_management
 %type	<n>	definition def_or_proc defproc def_type_id
+%type	<n>	declaration declare_proc_proto
+%type	<n>	declare_type_proto declare_chan_proto
 %type	<n>	optional_template_formal_decl_list_in_angles
 %type	<n>	template_formal_decl_list template_formal_decl
 %type	<n>	template_formal_id_list template_formal_id
@@ -156,7 +158,7 @@ extern "C" {
 %type	<n>	prs_body single_prs prs_arrow dir prs_expr
 %type	<n>	paren_expr expr
 /* %type	<n>	primary_expr */
-%type	<n>	literal id_expr qualified_id
+%type	<n>	literal id_expr qualified_id absolute_id relative_id
 %type	<n>	member_index_expr_list member_index_expr unary_expr
 %type	<n>	multiplicative_expr additive_expr shift_expr
 %type	<n>	relational_equality_expr and_expr
@@ -186,10 +188,14 @@ top_root
 	;
 
 body
-	: body definition { $$ = root_body_append($1, NULL, $2); }
-	| definition { $$ = new root_body($1); }
-	| body basic_item { $$ = root_body_append($1, NULL, $2); }
-	| basic_item { $$ = new root_body($1); }
+	: body body_item { $$ = root_body_append($1, NULL, $2); }
+	| body_item { $$ = new root_body($1); }
+	;
+
+body_item
+	: basic_item
+	| definition
+	| declaration
 	;
 
 basic_item
@@ -218,6 +224,12 @@ definition
 	| defchan
 	;
 
+/* declaration prototypes, like forward declarations */
+declaration
+	: declare_proc_proto
+	| declare_type_proto
+	| declare_chan_proto
+	;
 
 /******************************************************************************
 //	Process
@@ -228,8 +240,13 @@ def_or_proc
 	| DEFPROC
 	;
 
+declare_proc_proto
+	: def_or_proc def_type_id
+	  optional_port_formal_decl_list_in_parens ';'
+	;
+
 defproc
-	/* using <> to follow C+ template parameters */
+	/* using <> to follow C+ template parameters in def_type_id */
 	: def_or_proc def_type_id
 	  optional_port_formal_decl_list_in_parens
 	  '{' definition_body '}'
@@ -370,6 +387,11 @@ base_data_type
 	;
 
 /* definition types */
+declare_type_proto
+	: DEFTYPE ID DEFINEOP base_data_type 
+          data_param_list_in_parens ';'
+	;
+
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
           data_param_list_in_parens
@@ -387,10 +409,15 @@ get_body
 		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	;
 
+declare_chan_proto
+	: DEFCHAN ID DEFINEOP base_chan_type 
+	  data_param_list_in_parens ';'
+	;
+	
 defchan
-       : DEFCHAN ID DEFINEOP base_chan_type 
-         data_param_list_in_parens
-	 '{' send_body recv_body '}'
+	: DEFCHAN ID DEFINEOP base_chan_type 
+          data_param_list_in_parens
+	  '{' send_body recv_body '}'
 		{ $$ = new user_chan_type($1, $2, $3, $4, $5, $6, $7, $8, $9); }
 	;
 
@@ -801,7 +828,7 @@ hse_assignment
 */
 	: unary_assignment
 		{ $$ = new HSE::assignment(
-			dynamic_cast<ART::parser::incdec_stmt*>($1)); }
+			IS_A(ART::parser::incdec_stmt*, $1)); }
 	;
 
 /*
@@ -871,9 +898,21 @@ literal
 	;
 
 id_expr
-	: ID
+		/* for identfiers that need to be searched upwards */
+	: relative_id
+		/* for specifying unambiguous type from global scope */
+	| absolute_id
+	;
+
+absolute_id
+	: SCOPE relative_id
+		{ $$ = IS_A(id_expr*, $2)->force_absolute($1); }
+	;
+
+relative_id
+	: qualified_id
+	| ID
 		{ $$ = new id_expr($1); }	/* wrap in id_expr */
-	| qualified_id
 	;
 
 qualified_id

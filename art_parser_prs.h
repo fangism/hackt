@@ -2,10 +2,15 @@
 // PRS-specific syntax tree
 
 #include "art_macros.h"
-#include "art_parser.h"
 
 namespace ART {
 namespace parser {
+//=============================================================================
+// forward declarations
+class expr;
+class terminal;
+class language_body;
+
 /**
 	This is the namespace for the PRS sub-language.  
  */
@@ -27,26 +32,19 @@ protected:
 	prs_expr*	r;
 	terminal*	dir;
 public:
-	rule(node* g, node* a, node* rhs, node* d) : expr(), 
-		guard(dynamic_cast<prs_expr*>(g)), 
-		arrow(dynamic_cast<terminal*>(a)), 
-		r(dynamic_cast<prs_expr*>(rhs)), 
-		dir(dynamic_cast<terminal*>(dir)) {
-			// various assertion statments here
-		}
-virtual	~rule() { SAFEDELETE(guard); SAFEDELETE(arrow);
-		SAFEDELETE(r); SAFEDELETE(dir); }
+	rule(node* g, node* a, node* rhs, node* d);
+virtual	~rule();
 
-virtual	ostream& what(ostream& o) const { return o << "(prs-rule)"; }
-virtual	line_position leftmost(void) const { return guard->leftmost(); }
-virtual	line_position rightmost(void) const { return dir->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 typedef node_list<rule>		rule_list;
 #define prs_rule_list_wrap(b,l,e)					\
-	dynamic_cast<PRS::rule_list*>(l)->wrap(b,e)
+	IS_A(PRS::rule_list*, l)->wrap(b,e)
 #define prs_rule_list_append(l,d,n)					\
-	dynamic_cast<PRS::rule_list*>(l)->append(d,n)
+	IS_A(PRS::rule_list*, l)->append(d,n)
 
 
 //=============================================================================
@@ -55,16 +53,12 @@ class body : public language_body {
 protected:
 	rule_list*		rules;
 public:
-	body(node* t, node* r) : language_body(t), 
-		rules(dynamic_cast<rule_list*>(r))
-		{ if (r) assert(rules); }
-virtual	~body() { SAFEDELETE(rules); }
+	body(node* t, node* r);
+virtual	~body();
 
-virtual	ostream& what(ostream& o) const { return o << "(prs-body)"; }
-virtual	line_position leftmost(void) const
-	{ return language_body::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return rules->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================

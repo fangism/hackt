@@ -36,9 +36,9 @@ expr::~expr() { }
 
 CONSTRUCTOR_INLINE
 paren_expr::paren_expr(node* l, node* n, node* r) : expr(),
-		lp(dynamic_cast<token_char*>(l)),
-		e(dynamic_cast<expr*>(n)),
-		rp(dynamic_cast<token_char*>(r)) {
+		lp(IS_A(token_char*, l)),
+		e(IS_A(expr*, n)),
+		rp(IS_A(token_char*, r)) {
 	assert(lp); assert(e); assert(rp);
 }
 
@@ -67,7 +67,7 @@ paren_expr::rightmost(void) const {
 // class id_expr method definitions
 
 CONSTRUCTOR_INLINE
-id_expr::id_expr(node* n) : expr(), id_expr_base(n) { }
+id_expr::id_expr(node* n) : expr(), id_expr_base(n), absolute(NULL) { }
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
@@ -75,6 +75,20 @@ id_expr::id_expr(const id_expr& i) : id_expr_base(i) { }
 
 DESTRUCTOR_INLINE
 id_expr::~id_expr() { }
+
+/**
+	Call this function in the parser to mark an un/qualified identifier
+	as absolute, as oppposed to relative.  
+	See class definition of id_expr for an explanation.  
+	\param s should be a scope (::) token.  
+	\return pointer to this object
+ */
+id_expr*
+id_expr::force_absolute(node* s) {
+	absolute = IS_A(token_string*, s);
+	assert(absolute);
+	return this;
+}
 
 ostream&
 id_expr::what(ostream& o) const {
@@ -94,12 +108,12 @@ id_expr::rightmost(void) const {
 // friend operator (not a method)
 ostream& operator << (ostream& o, const id_expr& id) {
 	id_expr::const_iterator i = id.begin();
-	token_identifier* tid = dynamic_cast<token_identifier*>(*i);
+	token_identifier* tid = IS_A(token_identifier*, *i);
 	assert(tid);
 	o << *tid;
 	for (i++ ; i!=id.end(); i++) {
 		i++;		// skip scope operator token
-		tid = dynamic_cast<token_identifier*>(*i);
+		tid = IS_A(token_identifier*, *i);
 		assert(tid);
 		o << scope << *tid;
 	}
@@ -111,15 +125,15 @@ ostream& operator << (ostream& o, const id_expr& id) {
 
 CONSTRUCTOR_INLINE
 range::range(node* l) : expr(), 
-		lower(dynamic_cast<expr*>(l)), op(NULL), upper(NULL) {
+		lower(IS_A(expr*, l)), op(NULL), upper(NULL) {
 	assert(lower); 
 }
 
 CONSTRUCTOR_INLINE
 range::range(node* l, node* o, node* u) : expr(),
-		lower(dynamic_cast<expr*>(l)),
-		op(dynamic_cast<terminal*>(o)),
-		upper(dynamic_cast<expr*>(u)) {
+		lower(IS_A(expr*, l)),
+		op(IS_A(terminal*, o)),
+		upper(IS_A(expr*, u)) {
 	assert(lower); assert(op); assert(u);
 }
 
@@ -155,8 +169,8 @@ range::rightmost(void) const {
  */
 CONSTRUCTOR_INLINE
 unary_expr::unary_expr(node* n, node* o) : expr(), nonterminal(),
-	e(dynamic_cast<expr*>(n)),
-	op(dynamic_cast<terminal*>(o)) {
+	e(IS_A(expr*, n)),
+	op(IS_A(terminal*, o)) {
 		if (n && !e) delete n;  // or use assert?
 		if (o && !op) delete o;
 	}
@@ -214,7 +228,7 @@ postfix_expr::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 member_expr::member_expr(node* l, node* op, node* m) :
-		postfix_expr(l,op), member(dynamic_cast<expr*>(m)) {
+		postfix_expr(l,op), member(IS_A(expr*, m)) {
 	assert(member);
 }
 
@@ -236,7 +250,7 @@ member_expr::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 index_expr::index_expr(node* l, node* i) : postfix_expr(l, NULL),
-	ranges(dynamic_cast<range_list*>(i)) { }
+	ranges(IS_A(range_list*, i)) { }
 
 DESTRUCTOR_INLINE
 index_expr::~index_expr() { SAFEDELETE(ranges); }
@@ -256,9 +270,9 @@ index_expr::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 binary_expr::binary_expr(node* left, node* o, node* right) : expr(),
-		l(dynamic_cast<expr*>(left)),
-		op(dynamic_cast<terminal*>(o)),
-		r(dynamic_cast<expr*>(right)) {
+		l(IS_A(expr*, left)),
+		op(IS_A(terminal*, o)),
+		r(IS_A(expr*, right)) {
 	assert(l); assert(op); assert(r);
 }
 

@@ -2,10 +2,18 @@
 // CHP-specific syntax tree
 
 #include "art_macros.h"
-#include "art_parser.h"
 
 namespace ART {
 namespace parser {
+//=============================================================================
+// forward declarations
+class statement;
+class expr;
+class language_body;
+class terminal;
+class assign_stmt;
+class incdec_stmt;
+
 /**
 	This is the namespace for the CHP sub-language.  
  */
@@ -23,10 +31,10 @@ typedef	expr	chp_expr;
 /// CHP statement base class
 class statement : virtual public ART::parser::statement {
 public:
-	statement() : ART::parser::statement() { }
-virtual	~statement() { }
+	statement();
+virtual	~statement();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-statement)"; }
+virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 };
@@ -34,9 +42,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef	node_list<statement,semicolon>	stmt_list;
 
 #define chp_stmt_list_wrap(b,l,e)					\
-	dynamic_cast<CHP::stmt_list*>(l)->wrap(b,e)
+	IS_A(CHP::stmt_list*, l)->wrap(b,e)
 #define chp_stmt_list_append(l,d,n)					\
-	dynamic_cast<CHP::stmt_list*>(l)->append(d,n)
+	IS_A(CHP::stmt_list*, l)->append(d,n)
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -44,18 +52,13 @@ class body : public language_body {
 protected:
 	stmt_list*		stmts;		///< list of CHP statements
 public:
-	body(node* t, node* s) : language_body(t), 
-		stmts(dynamic_cast<stmt_list*>(s))
-		{ if(s) assert(stmts); }
-virtual	~body() { SAFEDELETE(stmts); }
+	body(node* t, node* s);
+virtual	~body();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-body)"; }
-virtual	line_position leftmost(void) const
-	{ return language_body::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return stmts->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+using	language_body::leftmost;
+virtual	line_position rightmost(void) const;
 };
-
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
@@ -65,31 +68,22 @@ protected:
 	terminal*		arrow;		///< right-arrow
 	body*			command;	///< statement body
 public:
-	guarded_command(node* g, node* a, node* c) : nonterminal(), 
-		guard(dynamic_cast<chp_expr*>(g)), 
-			// remember, may be keyword: else
-		arrow(dynamic_cast<terminal*>(a)), 
-		command(dynamic_cast<body*>(c)) { }
-virtual	~guarded_command() { SAFEDELETE(guard); 
-		SAFEDELETE(arrow); SAFEDELETE(command); }
+	guarded_command(node* g, node* a, node* c);
+virtual	~guarded_command();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-guarded-cmd)"; }
-virtual	line_position leftmost(void) const
-	{ return guard->leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return command->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(node* g, node* a, node* c) : guarded_command(g,a,c) {
-		// check for keyword else, right-arrow terminal
-		}
-virtual	~else_clause() { }
+	else_clause(node* g, node* a, node* c);
+virtual	~else_clause();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-else-clause)"; }
+	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -100,39 +94,31 @@ public:
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
-	skip(node* s) : statement(), 
-		token_keyword(dynamic_cast<token_keyword*>(s)->c_str()) 
-		{ SAFEDELETE(s); }
-virtual	~skip() { }
+	skip(node* s);
+virtual	~skip();
 
 // check that nothing appears after skip statement
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-skip)"; }
-virtual	line_position leftmost(void) const
-	{ return token_keyword::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return token_keyword::rightmost(); }
-virtual	line_range where(void) const
-	{ return token_keyword::where(); }
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+using	token_keyword::where;
 };
 
 //=============================================================================
 /// CHP wait contains just an expression
 class wait : public statement {
 protected:
-	terminal*	lb;
-	expr*		cond;
-	terminal*	rb;
+	terminal*	lb;			///< left bracket
+	expr*		cond;			///< wait until condition
+	terminal*	rb;			///< right bracket
 public:
-	wait(node* l, node* c, node* r) : statement(), 
-		lb(dynamic_cast<terminal*>(l)), cond(dynamic_cast<expr*>(c)), 
-		rb(dynamic_cast<terminal*>(r))
-		{ assert(cond); assert(lb); assert(rb); }
-virtual	~wait() { SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb); }
+	wait(node* l, node* c, node* r);
+virtual	~wait();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-wait)"; }
-virtual	line_position leftmost(void) const { return lb->leftmost(); }
-virtual	line_position rightmost(void) const { return rb->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
@@ -141,23 +127,15 @@ class assignment : public statement, public assign_stmt {
 private:
 	typedef ART::parser::assign_stmt	base_assign;
 public:
-	assignment(base_assign* a) : ART::parser::CHP::statement(), 
-		// destructive transfer of ownership
-		assign_stmt(a->release_lhs(), a->release_op(), 
-			a->release_rhs()) {
-		SAFEDELETE(a);
-	}
-virtual	~assignment() { }
+	assignment(base_assign* a);
+virtual	~assignment();
 
 // remember to type check in CHP language mode
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-assignment)"; }
-virtual	line_position leftmost(void) const
-	{ return assign_stmt::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return assign_stmt::rightmost(); }
-virtual	line_range where(void) const
-	{ return assign_stmt::where(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+using	assign_stmt::where;
 };
 
 //-----------------------------------------------------------------------------
@@ -166,22 +144,15 @@ class incdec_stmt : public statement, public parser::incdec_stmt {
 private:
 	typedef ART::parser::incdec_stmt	base_assign;
 public:
-	incdec_stmt(base_assign* a) : ART::parser::CHP::statement(),
-		// destructive transfer of ownership
-		parser::incdec_stmt(a->release_expr(), a->release_op()) {
-		SAFEDELETE(a);
-	}
-virtual ~incdec_stmt() { }
+	incdec_stmt(base_assign* a);
+virtual ~incdec_stmt();
 
 // remember to type check in CHP language mode
 
-virtual ostream& what(ostream& o) const { return o << "(chp-assignment)"; }
-virtual line_position leftmost(void) const   
-	{ return incdec_stmt::leftmost(); }
-virtual line_position rightmost(void) const
-	{ return incdec_stmt::rightmost(); }
-virtual line_range where(void) const
-	{ return incdec_stmt::where(); }
+virtual ostream& what(ostream& o) const;
+virtual line_position leftmost(void) const;
+virtual line_position rightmost(void) const;
+using	incdec_stmt::where;
 };
 
 //=============================================================================
@@ -191,21 +162,18 @@ protected:
 	expr*		chan;
 	token_char*	dir;
 public:
-	communication(node* c, node* d) : statement(), 
-		chan(dynamic_cast<expr*>(c)), 
-		dir(dynamic_cast<token_char*>(d))
-		{ assert(chan); assert(dir); }
-virtual	~communication() { SAFEDELETE(chan); SAFEDELETE(dir); }
+	communication(node* c, node* d);
+virtual	~communication();
 
-virtual	line_position leftmost(void) const { return chan->leftmost(); }
+virtual	line_position leftmost(void) const;
 };
 
 typedef	node_list<communication,comma>		comm_list;
 
 #define chp_comm_list_wrap(b,l,e)					\
-	dynamic_cast<CHP::det_selection*>(l)->wrap(b,e)
+	IS_A(CHP::det_selection*, l)->wrap(b,e)
 #define chp_comm_list_append(l,d,n)					\
-	dynamic_cast<CHP::det_selection*>(l)->append(d,n)
+	IS_A(CHP::det_selection*, l)->append(d,n)
 
 
 //-----------------------------------------------------------------------------
@@ -214,13 +182,10 @@ class send : public communication {
 protected:
 	expr_list*	rvalues;
 public:
-	send(node* c, node* d, node* r) : communication(c, d), 
-		rvalues(dynamic_cast<expr_list*>(r))
-		{ assert(rvalues); }
-virtual	~send() { SAFEDELETE(rvalues); }
+	send(node* c, node* d, node* r);
+virtual	~send();
 
-virtual	line_position rightmost(void) const
-	{ return rvalues->rightmost(); }
+virtual	line_position rightmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -229,13 +194,10 @@ class receive : public communication {
 protected:
 	expr_list*	lvalues;
 public:
-	receive(node* c, node* d, node* l) : communication(c, d), 
-		lvalues(dynamic_cast<expr_list*>(l))
-		{ assert(lvalues); }
-virtual	~receive() { SAFEDELETE(lvalues); }
+	receive(node* c, node* d, node* l);
+virtual	~receive();
 
-virtual	line_position rightmost(void) const
-	{ return lvalues->rightmost(); }
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
@@ -243,10 +205,10 @@ virtual	line_position rightmost(void) const
 class selection : public statement {
 // is this class even necessary?
 public:
-	selection() : statement() { }
-virtual	~selection() { }
+	selection();
+virtual	~selection();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-selection)"; }
+virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -256,23 +218,19 @@ class det_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	det_sel_base;
 public:
-	det_selection(node* n) : selection(), 
-		node_list<guarded_command,thickbar>(n) { }
-virtual	~det_selection() { }
+	det_selection(node* n);
+virtual	~det_selection();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-det-sel)"; }
-virtual	line_position leftmost(void) const
-	{ return det_sel_base::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return det_sel_base::rightmost(); }
-virtual	line_range where(void) const
-	{ return det_sel_base::where(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+using	det_sel_base::where;
 };
 
 #define chp_det_selection_wrap(b,l,e)					\
-	dynamic_cast<CHP::det_selection*>(l)->wrap(b,e)
+	IS_A(CHP::det_selection*, l)->wrap(b,e)
 #define chp_det_selection_append(l,d,n)					\
-	dynamic_cast<CHP::det_selection*>(l)->append(d,n)
+	IS_A(CHP::det_selection*, l)->append(d,n)
 
 //=============================================================================
 /// container for non-deterministic selection statement
@@ -281,23 +239,19 @@ class nondet_selection : public selection,
 private:
 	typedef	node_list<guarded_command,colon>	nondet_sel_base;
 public:
-	nondet_selection(node* n) : selection(), 
-		node_list<guarded_command,colon>(n) { }
-virtual	~nondet_selection() { }
+	nondet_selection(node* n);
+virtual	~nondet_selection();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-nondet-sel)"; }
-virtual	line_position leftmost(void) const
-	{ return nondet_sel_base::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return nondet_sel_base::rightmost(); }
-virtual	line_range where(void) const
-	{ return nondet_sel_base::where(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+using	nondet_sel_base::where;
 };
 
 #define chp_nondet_selection_wrap(b,l,e)				\
-	dynamic_cast<CHP::nondet_selection*>(l)->wrap(b,e)
+	IS_A(CHP::nondet_selection*, l)->wrap(b,e)
 #define chp_nondet_selection_append(l,d,n)				\
-	dynamic_cast<CHP::nondet_selection*>(l)->append(d,n)
+	IS_A(CHP::nondet_selection*, l)->append(d,n)
 
 //=============================================================================
 /// container for probablistic selection statement
@@ -306,23 +260,19 @@ class prob_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
 public:
-	prob_selection(node* n) : selection(), 
-		node_list<guarded_command,thickbar>(n) { }
-virtual	~prob_selection() { }
+	prob_selection(node* n);
+virtual	~prob_selection();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-prob-sel)"; }
-virtual	line_position leftmost(void) const
-	{ return prob_sel_base::leftmost(); }
-virtual	line_position rightmost(void) const
-	{ return prob_sel_base::rightmost(); }
-virtual	line_range where(void) const
-	{ return prob_sel_base::where(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+using	prob_sel_base::where;
 };
 
 #define chp_prob_selection_wrap(b,l,e)					\
-	dynamic_cast<CHP::prob_selection*>(l)->wrap(b,e)
+	IS_A(CHP::prob_selection*, l)->wrap(b,e)
 #define chp_prob_selection_append(l,d,n)				\
-	dynamic_cast<CHP::prob_selection*>(l)->append(d,n)
+	IS_A(CHP::prob_selection*, l)->append(d,n)
 
 //=============================================================================
 /// CHP loop contains a list of statements
@@ -330,12 +280,12 @@ class loop : public statement {
 protected:
 	body*			command;
 public:
-	loop(node* n) : statement(), command(dynamic_cast<body*>(n)) { }
-virtual	~loop() { SAFEDELETE(command); }
+	loop(node* n);
+virtual	~loop();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-loop)"; }
-virtual	line_position leftmost(void) const { return command->leftmost(); }
-virtual	line_position rightmost(void) const { return command->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
@@ -344,15 +294,14 @@ class do_until : public statement {
 protected:
 	det_selection*		sel;
 public:
-	do_until(node* n) : statement(), 
-		sel(dynamic_cast<det_selection*>(n)) { }
-virtual	~do_until() { SAFEDELETE(sel); }
+	do_until(node* n);
+virtual	~do_until();
 
 // type-check: cannot contain an else clause, else infinite loop!
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-do-until)"; }
-virtual	line_position leftmost(void) const { return sel->leftmost(); }
-virtual	line_position rightmost(void) const { return sel->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
@@ -362,15 +311,12 @@ protected:
 	token_keyword*		lc;
 	expr_list*		args;
 public:
-	log(node* l, node* n) : statement(), 
-		lc(dynamic_cast<token_keyword*>(l)), 
-		args(dynamic_cast<expr_list*>(n))
-		{ assert(lc); assert(args); }
-virtual	~log() { SAFEDELETE(lc); SAFEDELETE(args); }
+	log(node* l, node* n);
+virtual	~log();
 
-virtual	ostream& what(ostream& o) const { return o << "(chp-log)"; }
-virtual	line_position leftmost(void) const { return lc->leftmost(); }
-virtual	line_position rightmost(void) const { return args->rightmost(); }
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================

@@ -8,6 +8,7 @@
 #include <iosfwd>
 #include <string>
 
+#include "art_macros.h"
 #include "art_utils.h"		// for token_position
 #include "list_of_ptr.h"	// includes <list>
 
@@ -230,9 +231,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef node_list<root_item>	root_body;
 
 #define root_body_wrap(b,l,e)					\
-	dynamic_cast<root_body*>(l)->wrap(b,e)
+	IS_A(root_body*, l)->wrap(b,e)
 #define root_body_append(l,d,n)					\
-	dynamic_cast<root_body*>(l)->append(d,n) 
+	IS_A(root_body*, l)->append(d,n) 
 
 
 //=============================================================================
@@ -254,9 +255,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef node_list<expr,comma>	expr_list;
 
 #define expr_list_wrap(b,l,e)						\
-	dynamic_cast<expr_list*>(l)->wrap(b,e)
+	IS_A(expr_list*, l)->wrap(b,e)
 #define expr_list_append(l,d,n)						\
-	dynamic_cast<expr_list*>(l)->append(d,n) 
+	IS_A(expr_list*, l)->append(d,n) 
 
 
 //=============================================================================
@@ -362,16 +363,38 @@ virtual	line_position rightmost(void) const;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	node_list<token_identifier,scope>	id_expr_base;
 
-/// generalized scoped identifier expression
+/**
+	Generalized scoped identifier expression.  
+	Has two modes: absolute or relative, depending on whether or 
+	not the un/qualified identifier was prefixed by an additional
+	scope (::) operator.  
+	Even short unqualified identifiers are wrapped into this class
+	for uniform use.  
+	When type checking with this class, remember to check the 
+	path mode before searching, and use all but the last identifier
+	chain as the namespace path prefix.  
+	e.g. for A::B::C, search for namespace match of A::B with member C.  
+ */
 class id_expr : public expr, public id_expr_base {
 public:
 	typedef	id_expr_base::iterator		iterator;
 	typedef	id_expr_base::const_iterator	const_iterator;
-
+protected:
+	/**
+		Indicates whether identifier is absolute, meaning
+		that it is to be resolved from the global scope down, 
+		as opposed to inner scope outward (relative).
+		Particularly useful for disambiguation.
+	 */
+	token_string*			absolute;
+public:
 explicit id_expr(node* n);
 	id_expr(const id_expr& i);
 	
 virtual	~id_expr();
+
+/// Tags this id_expr as absolute, to be resolved from the global scope.  
+id_expr*	force_absolute(node* s);
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
@@ -386,7 +409,7 @@ friend	ostream& operator << (ostream& o, const id_expr& id);
 
 // no need for wrap, ever
 #define id_expr_append(l,d,n)						\
-	dynamic_cast<id_expr*>(l)->append(d,n)
+	IS_A(id_expr*, l)->append(d,n)
 
 //-----------------------------------------------------------------------------
 /// keyword version of token_string class, not necessarily an expr
@@ -466,9 +489,9 @@ virtual	line_position rightmost(void) const;
 typedef node_list<range,comma>	range_list;
 
 #define range_list_wrap(b,l,e)						\
-	dynamic_cast<range_list*>(l)->wrap(b,e)
+	IS_A(range_list*, l)->wrap(b,e)
 #define range_list_append(l,d,n)					\
-	dynamic_cast<range_list*>(l)->append(d,n)
+	IS_A(range_list*, l)->append(d,n)
 
 
 //=============================================================================
@@ -648,9 +671,9 @@ typedef node_list<data_type_base,comma>	base_data_type_list;
 
 // construction macros
 #define base_data_type_list_wrap(b,l,e)					\
-	dynamic_cast<base_data_type_list*>(l)->wrap(b,e)
+	IS_A(base_data_type_list*, l)->wrap(b,e)
 #define base_data_type_list_append(l,d,n)				\
-        dynamic_cast<base_data_type_list*>(l)->append(d,n)
+        IS_A(base_data_type_list*, l)->append(d,n)
 
 //-----------------------------------------------------------------------------
 /// full base channel type, including base type list
@@ -671,7 +694,7 @@ virtual	line_position rightmost(void) const;
 };
 
 #define	chan_type_attach_data_types(ct,t)				\
-	dynamic_cast<chan_type*>(ct)->attach_data_types(t)
+	IS_A(chan_type*, ct)->attach_data_types(t)
 
 //=============================================================================
 /**
@@ -727,7 +750,11 @@ virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-/// abstract base class for items that may be found in a definition body
+/**
+	Abstract base class for items that may be found in a definition body.  
+	All definition body items are root_item.
+	Except language_body...
+ */
 class def_body_item : public nonterminal {
 public:
 	def_body_item();
@@ -742,9 +769,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef	node_list<def_body_item>	definition_body;
 
 #define definition_body_wrap(b,l,e)					\
-	dynamic_cast<definition_body*>(l)->wrap(b,e)
+	IS_A(definition_body*, l)->wrap(b,e)
 #define definition_body_append(l,d,n)					\
-	dynamic_cast<definition_body*>(l)->append(d,n) 
+	IS_A(definition_body*, l)->append(d,n) 
 
 //=============================================================================
 /// abstract base class for language bodies
@@ -832,9 +859,9 @@ virtual	object* check_build(context* c) const;
 typedef	node_list<declaration_base,comma>	declaration_id_list;
 
 #define declaration_id_list_wrap(b,l,e)					\
-	dynamic_cast<declaration_id_list*>(l)->wrap(b,e)
+	IS_A(declaration_id_list*, l)->wrap(b,e)
 #define declaration_id_list_append(l,d,n)				\
-	dynamic_cast<declaration_id_list*>(l)->append(d,n) 
+	IS_A(declaration_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
 /// declaration identifier with ranges
@@ -884,9 +911,9 @@ virtual object* check_build(context* c) const;
 typedef	node_list<instance_declaration,semicolon>	data_param_list;
 
 #define data_param_list_wrap(b,l,e)					\
-	dynamic_cast<data_param_list*>(l)->wrap(b,e)
+	IS_A(data_param_list*, l)->wrap(b,e)
 #define data_param_list_append(l,d,n)					\
-	dynamic_cast<data_param_list*>(l)->append(d,n) 
+	IS_A(data_param_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
 /// class for an or instance port connection or declaration connection
@@ -967,9 +994,9 @@ virtual	line_position rightmost(void) const;
 typedef	node_list<port_formal_id,comma>	port_formal_id_list;
 
 #define port_formal_id_list_wrap(b,l,e)					\
-	dynamic_cast<port_formal_id_list*>(l)->wrap(b,e)
+	IS_A(port_formal_id_list*, l)->wrap(b,e)
 #define port_formal_id_list_append(l,d,n)				\
-	dynamic_cast<port_formal_id_list*>(l)->append(d,n) 
+	IS_A(port_formal_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
 /// port formal declaration contains a type and identifier list
@@ -990,9 +1017,9 @@ virtual	line_position rightmost(void) const;
 typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
 
 #define port_formal_decl_list_wrap(b,l,e)				\
-	dynamic_cast<port_formal_decl_list*>(l)->wrap(b,e)
+	IS_A(port_formal_decl_list*, l)->wrap(b,e)
 #define port_formal_decl_list_append(l,d,n)				\
-	dynamic_cast<port_formal_decl_list*>(l)->append(d,n) 
+	IS_A(port_formal_decl_list*, l)->append(d,n) 
 
 //=============================================================================
 /// single template formal identifier, with optional dimension array spec.  
@@ -1013,9 +1040,9 @@ virtual	line_position rightmost(void) const;
 typedef	node_list<template_formal_id,comma>	template_formal_id_list;
 
 #define template_formal_id_list_wrap(b,l,e)				\
-	dynamic_cast<template_formal_id_list*>(l)->wrap(b,e)
+	IS_A(template_formal_id_list*, l)->wrap(b,e)
 #define template_formal_id_list_append(l,d,n)				\
-	dynamic_cast<template_formal_id_list*>(l)->append(d,n) 
+	IS_A(template_formal_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
 /// template formal declaration contains a type and identifier list
@@ -1036,9 +1063,9 @@ virtual	line_position rightmost(void) const;
 typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
 
 #define template_formal_decl_list_wrap(b,l,e)				\
-	dynamic_cast<template_formal_decl_list*>(l)->wrap(b,e)
+	IS_A(template_formal_decl_list*, l)->wrap(b,e)
 #define template_formal_decl_list_append(l,d,n)				\
-	dynamic_cast<template_formal_decl_list*>(l)->append(d,n) 
+	IS_A(template_formal_decl_list*, l)->append(d,n) 
 
 //=============================================================================
 /// definition type identifier, with optional template specifier list
@@ -1106,9 +1133,9 @@ typedef	node_list<guarded_definition_body,thickbar>
 		guarded_definition_body_list;
 
 #define guarded_definition_body_list_wrap(b,l,e)			\
-	dynamic_cast<guarded_definition_body_list*>(l)->wrap(b,e)
+	IS_A(guarded_definition_body_list*, l)->wrap(b,e)
 #define guarded_definition_body_list_append(l,d,n)			\
-	dynamic_cast<guarded_definition_body_list*>(l)->append(d,n) 
+	IS_A(guarded_definition_body_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
 /// wrapper class for conditional instantiations
@@ -1168,6 +1195,34 @@ virtual	~user_chan_type();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+};
+
+//=============================================================================
+/// abstract base class for prototypes
+class prototype : virtual public root_item {
+public:
+	prototype();
+virtual	~prototype();
+
+// don't bother re-declaring virtual methods
+};
+
+//-----------------------------------------------------------------------------
+// process prototype declaration
+class process_prototype : public prototype {
+
+};
+
+//-----------------------------------------------------------------------------
+// data type prototype declaration
+class data_type_prototype : public prototype {
+
+};
+
+//-----------------------------------------------------------------------------
+// channel prototype declaration
+class channel_prototype : public prototype {
+
 };
 
 //=============================================================================

@@ -304,7 +304,7 @@ name_space::query_namespace_match(const id_expr& id) {
 		<< " in " << get_qualified_name() << endl;
 
 	id_expr::const_iterator i = id.begin();	assert(*i);
-	token_identifier* tid = dynamic_cast<token_identifier*>(*i);
+	token_identifier* tid = IS_A(token_identifier*, *i);
 	assert(tid);
 	cerr << "\ttesting: " << *tid;
 	name_space* ns = this;
@@ -315,7 +315,7 @@ name_space::query_namespace_match(const id_expr& id) {
 		for (i++; ns && i!=id.end(); i++) {
 			name_space* next;
 			i++;	// remember to skip scope tokens
-			tid = dynamic_cast<token_identifier*>(*i); assert(tid);
+			tid = IS_A(token_identifier*, *i); assert(tid);
 			cerr << scope << *tid;
 			next = ns->subns[*tid];
 			// if not found in subspaces, check aliases list
@@ -350,7 +350,7 @@ name_space::query_subnamespace_match(const id_expr& id) {
 	cerr << endl << "query_subnamespace_match: " << id 
 		<< " in " << get_qualified_name() << endl;
 	id_expr::const_iterator i = id.begin();	assert(*i);
-	token_identifier* tid = dynamic_cast<token_identifier*>(*i);
+	token_identifier* tid = IS_A(token_identifier*, *i);
 	assert(tid);
 	cerr << "\ttesting: " << *tid;
 	name_space* ns = subns[*tid];		// lookup map of sub-namespaces
@@ -359,7 +359,7 @@ name_space::query_subnamespace_match(const id_expr& id) {
 	for (i++; ns && i!=id.end(); i++) {
 		name_space* next;
 		i++;
-		tid = dynamic_cast<token_identifier*>(*i); assert(tid);
+		tid = IS_A(token_identifier*, *i); assert(tid);
 		cerr << scope << *tid;
 		next = ns->subns[*tid];
 		// if not found in subspaces, check aliases list
