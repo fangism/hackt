@@ -246,11 +246,12 @@ built_in_type_def*	add_built_in_type_definition(built_in_type_def* d);
 type_definition*	add_type_alias(const id_expr& t, const string& a);
 
 // returns type if unique match found, else NULL
-type_definition*	instance_type(const string& id);
+type_definition*	lookup_unique_type(const string& id);
 
 
 type_definition*	add_type_definition();
-type_instantiation*	add_type_instantiation();
+type_instantiation*	add_type_instantiation(const type_definition& t, 
+				const string& i);
 process_definition*	add_proc_definition();
 process_instantiation*	add_proc_instantiation();
 
@@ -265,6 +266,7 @@ void	query_import_namespace_match(namespace_list& m, const id_expr& id);
 // add_blah_inst/def();
 void	query_type_def_match(type_def_list& m, const string& tid);
 void	query_type_def_match(type_def_list& m, const type_id& tid);
+void	query_type_inst_match(type_def_list& m, const string& tid);
 void	query_type_inst_match(type_def_list& m, const id_expr& tid);
 void	query_proc_def_match(proc_def_list& m, const type_id& pid);
 void	query_proc_inst_match(proc_def_list& m, const id_expr& pid);

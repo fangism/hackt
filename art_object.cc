@@ -394,6 +394,7 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 		name_space* ret = query_subnamespace_match(id);
 		if (ret) m.push_back(ret);
 	}
+	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
@@ -415,8 +416,11 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Searches this namespace, then imported (unaliased) namespaces, 
-	and then parents' namespace.  Does not search down subnamespaces, 
+	Searches this namespace for a matched type, 
+	then if not found locally, searches imported (unaliased) namespaces.  
+	If match list is still empty, then searches parents' namespace
+	until one (grand) parent finds results.  
+	Does not search down subnamespaces, 
 	or aliased imported namespaces.  Searching in those places
 	requires that the identifier be qualified with scope.  
 	\param m the list of accumulated matches (also returned).  
@@ -431,14 +435,14 @@ name_space::query_type_def_match(type_def_list& m, const string& tid) {
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
-	{	// with open namespaces list
+	if (m.empty()) {
+		// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			// type_definition* ret = 
-			//	(*i)->query_type_def_match(tid);
 			type_definition* ret = (*i)->type_defs[tid];
 			if (ret) m.push_back(ret);
 		}
+		// don't search aliased imports
 	}
 
 	// until list is not empty, keep querying parents
@@ -522,8 +526,9 @@ if (parent) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_definition*
 name_space::add_type_alias(const id_expr& t, const string& a) {
-	type_definition* ret = NULL;
+	return NULL;
 /*** not done yet
+	type_definition* ret;
 	object* probe;
 	namespace_list::iterator i;
 	namespace_list candidates;		// empty list
@@ -539,10 +544,9 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 		return NULL;
 	}
 
-*** not done yet
 	// else we're ok to proceed to add alias
 	// first find the referenced type name...
-	query_type_definition_match(candidates, t);
+	query_type_def_match(candidates, t);
 	i = candidates.begin();
 
 	switch (candidates.size()) {
@@ -551,7 +555,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 	// else we've narrowed it down to one
 		case 1: {
 			ret = (*i);
-			def_types[a] = ret;
+			type_defs[a] = ret;
 			used_id_map[a] = ret;
 			break;
 			}
@@ -569,10 +573,10 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 						(*i)->get_qualified_name();
 			}
 	}
-***/
 
 	return ret;		// NULL => error
 	// candidates will automatically be cleared (not owned pointers)
+*** not done ***/
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -588,7 +592,7 @@ name_space::add_type_alias(const id_expr& t, const string& a) {
 
 // const?
 type_definition*
-name_space::instance_type(const string& id) {
+name_space::lookup_unique_type(const string& id) {
 	// const
 	type_definition* ret;
 	type_def_list::iterator i;
@@ -617,6 +621,37 @@ name_space::instance_type(const string& id) {
 			}
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create an instance of a data type and add it local symbol table.  
+	First checks to see if name is already taken in the used_id_map.  
+	If it collides with anything, then error.  
+	Doesn't check ever other namespace (imports, parents...)
+	because local identifiers are allowed to overshadow.  
+	\param t the type of the instance.
+	\param id the names of the instance.  
+ */
+type_instantiation*
+name_space::add_type_instantiation(const type_definition& t, 
+		const string& id) {
+	object* probe;
+	type_instantiation* new_inst;
+	probe = used_id_map[id];
+	if (probe) {
+		probe->what(cerr << " ... already declared ")
+			<< ", ERROR! ";
+		return NULL;
+	}
+	// consistency check
+	assert(!type_insts[id]);
+	// else safe to proceed
+	new_inst = new type_instantiation(this, &t, id);
+	assert(new_inst);
+	type_insts[id] = new_inst;
+	used_id_map[id] = new_inst;
+	return new_inst;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

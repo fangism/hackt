@@ -102,6 +102,9 @@ type_definition*	set_type_def(const token_string& tid, const expr& w);
 	// for int<width>, for now only accept token_int... later expressions
 void	unset_type_def(void);
 
+type_instantiation*	add_type_instance(const token_identifier& id);
+	// make another version overloaded for arrays
+
 string		auto_indent(void) const;
 
 };

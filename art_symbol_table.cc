@@ -125,7 +125,8 @@ context::alias_namespace(const id_expr& id, const string& a) {
 type_definition*
 context::set_type_def(const token_string& id) {
 	// lookup type (will be built-in int or bool)
-	type_definition* ret = current_ns->instance_type(id);
+	assert(current_ns);
+	type_definition* ret = current_ns->lookup_unique_type(id);
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -138,10 +139,31 @@ context::set_type_def(const token_string& id) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the current type definition to NULL.
+ */
 void
 context::unset_type_def(void) {
-	indent--;
-	current_dt = NULL;
+	if (current_dt) {
+		indent--;
+		current_dt = NULL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+type_instantiation*
+context::add_type_instance(const token_identifier& id) {
+	type_instantiation* ret;
+	assert(current_ns);
+	assert(current_dt);
+	ret = current_ns->add_type_instantiation(*current_dt, id);
+	if (!ret) {
+		type_error_count++;
+		cerr << id.where() << endl;
+		exit(1);			// temporary
+	} 
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -610,7 +610,10 @@ virtual	line_position rightmost(void) const;
 /// type identifier with optional template parameters
 class type_id : public type_base {
 protected:
-	node*			base;		///< base type's name
+/**
+	Base type's name.  Can only be an id_expr.  
+ */
+	id_expr*		base;
 	expr_list*		temp_spec;	///< template arguments
 public:
 	type_id(node* b, node* t);
@@ -811,8 +814,10 @@ protected:
 	In declaration context, id should only be a token_identifier, 
 	but in instantiation contect, id may be a qualified identifier
 	with postfix member/indexing.  
+	PUNT: Let's not worry about it until the grammar is updated to 
+	reflect this.  
  */
-	expr*		id;
+	token_identifier*		id;
 public:
 	declaration_base(node* i);
 virtual	~declaration_base();
@@ -821,6 +826,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 virtual	line_range where(void) const;
+virtual	object* check_build(context* c) const;
 };
 
 typedef	node_list<declaration_base,comma>	declaration_id_list;

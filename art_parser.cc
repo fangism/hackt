@@ -94,11 +94,12 @@ type_base::~type_base() { }
 
 CONSTRUCTOR_INLINE
 type_id::type_id(node* b, node* t) : type_base(),
-	base(b),        // can't restrict type yet...
-		// may be id_expr, or chan_type, or data_type
-		// or user-defined qualified id...
-	temp_spec(dynamic_cast<expr_list*>(t))  // may be NULL
-	{ }
+		base(IS_A(id_expr*, b)),
+		temp_spec(IS_A(expr_list*, t))  // may be NULL
+		{
+	assert(base);
+	if (t) assert(temp_spec);
+}
 
 DESTRUCTOR_INLINE
 type_id::~type_id() {
@@ -128,16 +129,16 @@ type_id::rightmost(void) const {
 CONSTRUCTOR_INLINE
 data_type_base::data_type_base(node* t, node* l, node* w, node* r) :
 		type_base(),
-		type(dynamic_cast<token_keyword*>(t)),
-		la(dynamic_cast<token_char*>(l)),
-		width(dynamic_cast<token_int*>(w)),
-		ra(dynamic_cast<token_char*>(r)) {
+		type(IS_A(token_keyword*, t)),
+		la(IS_A(token_char*, l)),
+		width(IS_A(token_int*, w)),
+		ra(IS_A(token_char*, r)) {
 	assert(type); assert(la); assert(width); assert(ra);
 }
 
 CONSTRUCTOR_INLINE
 data_type_base::data_type_base(node* t) : type_base(),
-		type(dynamic_cast<token_keyword*>(t)),
+		type(IS_A(token_keyword*, t)),
 		la(NULL), width(NULL), ra(NULL) {
 	assert(type);
 }
@@ -184,15 +185,15 @@ CONSTRUCTOR_INLINE
 data_type::data_type(node* df, node* n, node* dp, node* b, node* p,
                 node* l, node* s, node* g, node* r) :
 		type_base(), 
-		def(dynamic_cast<token_keyword*>(df)), 
-		name(dynamic_cast<token_identifier*>(n)), 
-		dop(dynamic_cast<token_string*>(dp)), 
-		bdt(dynamic_cast<data_type_base*>(b)), 
-		params(dynamic_cast<data_param_list*>(p)), 
-		lb(dynamic_cast<token_char*>(l)), 
-		setb(dynamic_cast<language_body*>(s)), 
-		getb(dynamic_cast<language_body*>(g)), 
-		rb(dynamic_cast<token_char*>(r)) {
+		def(IS_A(token_keyword*, df)), 
+		name(IS_A(token_identifier*, n)), 
+		dop(IS_A(token_string*, dp)), 
+		bdt(IS_A(data_type_base*, b)), 
+		params(IS_A(data_param_list*, p)), 
+		lb(IS_A(token_char*, l)), 
+		setb(IS_A(language_body*, s)), 
+		getb(IS_A(language_body*, g)), 
+		rb(IS_A(token_char*, r)) {
 	assert(def); assert(name); assert(dop);
 	assert(bdt); assert(params); assert(lb);
 	assert(setb); assert(getb); assert(rb);
@@ -227,9 +228,9 @@ data_type::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 chan_type::chan_type(node* c, node* d, node* t) : type_base(),
-		chan(dynamic_cast<token_keyword*>(c)),
-		dir(dynamic_cast<token_char*>(d)),
-		dtypes(dynamic_cast<base_data_type_list*>(t)) {
+		chan(IS_A(token_keyword*, c)),
+		dir(IS_A(token_char*, d)),
+		dtypes(IS_A(base_data_type_list*, t)) {
 	assert(c);
 	if(d) assert(dir);
 	if (t) assert(dtypes);
@@ -267,15 +268,15 @@ CONSTRUCTOR_INLINE
 user_chan_type::user_chan_type(node* df, node* n, node* dp, node* b, node* p,
                 node* l, node* s, node* g, node* r) :
 		type_base(), 
-		def(dynamic_cast<token_keyword*>(df)), 
-		name(dynamic_cast<token_identifier*>(n)), 
-		dop(dynamic_cast<token_string*>(dp)), 
-		bct(dynamic_cast<chan_type*>(b)), 
-		params(dynamic_cast<data_param_list*>(p)), 
-		lb(dynamic_cast<token_char*>(l)), 
-		sendb(dynamic_cast<language_body*>(s)), 
-		recvb(dynamic_cast<language_body*>(g)), 
-		rb(dynamic_cast<token_char*>(r)) {
+		def(IS_A(token_keyword*, df)), 
+		name(IS_A(token_identifier*, n)), 
+		dop(IS_A(token_string*, dp)), 
+		bct(IS_A(chan_type*, b)), 
+		params(IS_A(data_param_list*, p)), 
+		lb(IS_A(token_char*, l)), 
+		sendb(IS_A(language_body*, s)), 
+		recvb(IS_A(language_body*, g)), 
+		rb(IS_A(token_char*, r)) {
 	assert(def); assert(name); assert(dop);
 	assert(bct); assert(params); assert(lb);
 	assert(sendb); assert(recvb); assert(rb);
@@ -319,8 +320,8 @@ statement::~statement() { }
 
 CONSTRUCTOR_INLINE
 incdec_stmt::incdec_stmt(node* n, node* o) : statement(),
-		e(dynamic_cast<expr*>(n)),
-		op(dynamic_cast<terminal*>(o)) {
+		e(IS_A(expr*, n)),
+		op(IS_A(terminal*, o)) {
 	assert(e); assert(op);
 }
 
@@ -364,9 +365,9 @@ incdec_stmt::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 assign_stmt::assign_stmt(node* left, node* o, node* right) : statement(),
-		lhs(dynamic_cast<expr*>(left)),
-		op(dynamic_cast<terminal*>(o)),
-		rhs(dynamic_cast<expr*>(right)) {
+		lhs(IS_A(expr*, left)),
+		op(IS_A(terminal*, o)),
+		rhs(IS_A(expr*, right)) {
 	assert(lhs); assert(op); assert(rhs);
 }
 
@@ -419,7 +420,7 @@ def_body_item::~def_body_item() { }
 
 CONSTRUCTOR_INLINE
 language_body::language_body(node* t) : def_body_item(),
-		tag(dynamic_cast<token_keyword*>(t)) {
+		tag(IS_A(token_keyword*, t)) {
 	if (t) assert(tag);
 }
 
@@ -428,7 +429,7 @@ language_body::~language_body() { SAFEDELETE(tag); }
 
 language_body*
 language_body::attach_tag(node* t) {
-	tag = dynamic_cast<token_keyword*>(t);
+	tag = IS_A(token_keyword*, t);
 	assert(tag);
 	return this;
 }
@@ -457,12 +458,12 @@ CONSTRUCTOR_INLINE
 namespace_body::
 namespace_body(node* s, node* n, node* l, node* b, node* r, node* c) :
 		root_item(),       
-		ns(dynamic_cast<token_keyword*>(s)),
-		name(dynamic_cast<token_identifier*>(n)),
-		lb(dynamic_cast<terminal*>(l)),
-		body(dynamic_cast<root_body*>(b)),     
-		rb(dynamic_cast<terminal*>(r)),
-		semi(dynamic_cast<terminal*>(c)) {
+		ns(IS_A(token_keyword*, s)),
+		name(IS_A(token_identifier*, n)),
+		lb(IS_A(terminal*, l)),
+		body(IS_A(root_body*, b)),     
+		rb(IS_A(terminal*, r)),
+		semi(IS_A(terminal*, c)) {
 	assert(ns); assert(name); assert(lb);
 	if (b) assert(body);		// body may be NULL
 	assert(rb); assert(semi);
@@ -526,10 +527,10 @@ CONSTRUCTOR_INLINE
 using_namespace::
 using_namespace(node* o, node* i, node* s) :
 		root_item(),
-		open(dynamic_cast<token_keyword*>(o)),
-		id(dynamic_cast<id_expr*>(i)),     
+		open(IS_A(token_keyword*, o)),
+		id(IS_A(id_expr*, i)),     
 		as(NULL), alias(NULL), 
-		semi(dynamic_cast<token_char*>(s)) {
+		semi(IS_A(token_char*, s)) {
 	assert(open); assert(id); assert(semi);
 }
 
@@ -545,11 +546,11 @@ CONSTRUCTOR_INLINE
 using_namespace::
 using_namespace(node* o, node* i, node* a, node* n, node* s) :
 		root_item(),
-		open(dynamic_cast<token_keyword*>(o)),
-		id(dynamic_cast<id_expr*>(i)),     
-		as(dynamic_cast<token_keyword*>(a)),		// optional
-		alias(dynamic_cast<token_identifier*>(n)),	// optional
-		semi(dynamic_cast<token_char*>(s)) {
+		open(IS_A(token_keyword*, o)),
+		id(IS_A(id_expr*, i)),     
+		as(IS_A(token_keyword*, a)),		// optional
+		alias(IS_A(token_identifier*, n)),	// optional
+		semi(IS_A(token_char*, s)) {
 	assert(open); assert(id); assert(as); assert(alias); assert(semi);
 }
 
@@ -599,7 +600,7 @@ check_build(context* c) const {
 chan_type*
 chan_type::attach_data_types(node* t) {
 	assert(t); assert(!dtypes);     // sanity check    
-	dtypes = dynamic_cast<base_data_type_list*>(t);
+	dtypes = IS_A(base_data_type_list*, t);
 	assert(dtypes);
 	return this;
 }
@@ -610,7 +611,7 @@ chan_type::attach_data_types(node* t) {
 CONSTRUCTOR_INLINE
 declaration_base::declaration_base(node* i) :
 		def_body_item(), root_item(),
-		id(dynamic_cast<expr*>(i)) {
+		id(IS_A(token_identifier*, i)) {
 	assert(id);
 }
 
@@ -639,13 +640,19 @@ declaration_base::where(void) const {
 	return node::where();
 }
 
+object*
+declaration_base::check_build(context* c) const {
+//	what(cerr << c->auto_indent()) << ": ";
+	return c->add_type_instance(*id);
+}
+
 //=============================================================================
 // class declaration_array method definitions
 
 CONSTRUCTOR_INLINE
 declaration_array::declaration_array(node* i, node* rl) :
 		declaration_base(i),
-		ranges(dynamic_cast<range_list*>(rl)) {
+		ranges(IS_A(range_list*, rl)) {
 	// ranges may be NULL, equivalent to declaration base
 }
 
@@ -691,9 +698,9 @@ instance_base::where(void) const {
 CONSTRUCTOR_INLINE
 instance_declaration::instance_declaration(node* t, node* i, node* s) :
 		instance_base(),
-		type(dynamic_cast<type_base*>(t)),
-		ids(dynamic_cast<declaration_id_list*>(i)),
-		semi(dynamic_cast<terminal*>(s)) {
+		type(IS_A(type_base*, t)),
+		ids(IS_A(declaration_id_list*, i)),
+		semi(IS_A(terminal*, s)) {
 	assert(type);
 	assert(ids);
 	if(s) assert(semi);
@@ -737,8 +744,8 @@ instance_declaration::check_build(context* c) const {
 CONSTRUCTOR_INLINE
 actuals_connection::actuals_connection(node* i, node* a, node* s) :
 		instance_base(), declaration_base(i),
-		actuals(dynamic_cast<expr_list*>(a)),
-		semi(dynamic_cast<terminal*>(s)) {
+		actuals(IS_A(expr_list*, a)),
+		semi(IS_A(terminal*, s)) {
 	assert(actuals);
 	if (s) assert(semi);
 }
@@ -776,9 +783,9 @@ actuals_connection::where(void) const {
 CONSTRUCTOR_INLINE
 alias_assign::alias_assign(node* i, node* o, node* r, node* s) :
 		instance_base(), declaration_base(i),
-		op(dynamic_cast<terminal*>(o)),
-		rhs(dynamic_cast<expr*>(r)),
-		semi(dynamic_cast<terminal*>(s)) {
+		op(IS_A(terminal*, o)),
+		rhs(IS_A(expr*, r)),
+		semi(IS_A(terminal*, s)) {
 	assert(op); assert(rhs);
 	if (s) assert(semi);
 }
@@ -815,13 +822,13 @@ CONSTRUCTOR_INLINE
 loop_instantiation::loop_instantiation(node* l, node* d, node* i, node* c, 
 		node* g, node* b, node* r) :
 		instance_base(),
-		lp(dynamic_cast<terminal*>(l)),
-		delim(dynamic_cast<terminal*>(d)),
-		index(dynamic_cast<token_identifier*>(i)),
-		colon(dynamic_cast<terminal*>(c)),
-		rng(dynamic_cast<range*>(g)),
-		body(dynamic_cast<definition_body*>(b)),
-		rp(dynamic_cast<terminal*>(r)) {
+		lp(IS_A(terminal*, l)),
+		delim(IS_A(terminal*, d)),
+		index(IS_A(token_identifier*, i)),
+		colon(IS_A(terminal*, c)),
+		rng(IS_A(range*, g)),
+		body(IS_A(definition_body*, b)),
+		rp(IS_A(terminal*, r)) {
 	assert(lp); assert(delim); assert(index);
 	assert(colon); assert(rng); assert(body); assert(lp);
 }
@@ -853,8 +860,8 @@ loop_instantiation::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(node* n, node* d) : nonterminal(),
-		name(dynamic_cast<token_identifier*>(n)),
-		dim(dynamic_cast<range_list*>(d)) {
+		name(IS_A(token_identifier*, n)),
+		dim(IS_A(range_list*, d)) {
 	assert(name);
 	// dim may be NULL
 }
@@ -886,8 +893,8 @@ port_formal_id::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(node* t, node* i) : nonterminal(),
-		type(dynamic_cast<type_id*>(t)),
-		ids(dynamic_cast<port_formal_id_list*>(i)) {
+		type(IS_A(type_id*, t)),
+		ids(IS_A(port_formal_id_list*, i)) {
 	assert(type); assert(ids);
 }
 
@@ -916,8 +923,8 @@ port_formal_decl::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(node* n, node* d) : nonterminal(),
-		name(dynamic_cast<token_identifier*>(n)),
-		dim(dynamic_cast<range_list*>(d)) {
+		name(IS_A(token_identifier*, n)),
+		dim(IS_A(range_list*, d)) {
 	assert(name);
 // dim may be NULL
 }
@@ -950,8 +957,8 @@ template_formal_id::rightmost(void) const {
 CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(node* t, node* i) :
 		nonterminal(),
-		type(dynamic_cast<type_id*>(t)),
-		ids(dynamic_cast<template_formal_id_list*>(i)) {
+		type(IS_A(type_id*, t)),
+		ids(IS_A(template_formal_id_list*, i)) {
 	assert(type); assert(ids);
 }
 
@@ -980,8 +987,8 @@ template_formal_decl::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 def_type_id::def_type_id(node* n, node* t) : type_base(),
-		name(dynamic_cast<token_identifier*>(n)),
-		temp_spec(dynamic_cast<template_formal_decl_list*>(t)) {
+		name(IS_A(token_identifier*, n)),
+		temp_spec(IS_A(template_formal_decl_list*, t)) {
 	assert(name);
 	if (t) assert(temp_spec);
 }
@@ -1012,7 +1019,7 @@ def_type_id::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 definition::definition(node* b) : root_item(),
-		body(dynamic_cast<definition_body*>(b)) {
+		body(IS_A(definition_body*, b)) {
 	assert(body);
 }
 
@@ -1042,9 +1049,9 @@ definition::rightmost(void) const {
 CONSTRUCTOR_INLINE
 process_def::process_def(node* d, node* i, node* p, node* b) :
 		definition(b),
-		def(dynamic_cast<token_keyword*>(d)),
-		idt(dynamic_cast<def_type_id*>(i)),
-		ports(dynamic_cast<port_formal_decl_list*>(p)) {
+		def(IS_A(token_keyword*, d)),
+		idt(IS_A(def_type_id*, i)),
+		ports(IS_A(port_formal_decl_list*, p)) {
 	assert(def); assert(idt); assert(ports);
 }
 
@@ -1069,9 +1076,9 @@ process_def::leftmost(void) const {
 CONSTRUCTOR_INLINE
 guarded_definition_body::guarded_definition_body(node* e, node* a, node* b) :
 		instance_base(),
-		guard(dynamic_cast<expr*>(e)),
-		arrow(dynamic_cast<terminal*>(a)),
-		body(dynamic_cast<definition_body*>(b)) {
+		guard(IS_A(expr*, e)),
+		arrow(IS_A(terminal*, a)),
+		body(IS_A(definition_body*, b)) {
 	assert(guard); assert(arrow); assert(body);
 }
 
@@ -1101,7 +1108,7 @@ guarded_definition_body::rightmost(void) const {
 CONSTRUCTOR_INLINE
 conditional_instantiation::conditional_instantiation(node* n) :
 		instance_base(),
-		gd(dynamic_cast<guarded_definition_body_list*>(n)) {
+		gd(IS_A(guarded_definition_body_list*, n)) {
 	assert(gd);
 }
 
