@@ -123,7 +123,7 @@ class node_list_base : public nonterminal, public list_of_ptr<node> {
 private:
 	typedef		list_of_ptr<node>		list_parent;
 public:
-	typedef		list_parent::iterator	iterator;
+	typedef		list_parent::iterator		iterator;
 	typedef		list_parent::const_iterator	const_iterator;
 public:
 	node_list_base() : nonterminal(), list_of_ptr<node>() { }
@@ -149,8 +149,8 @@ class node_list : public node_list_base<T> {
 private:
 	typedef		node_list_base<T>	parent;
 public:
-	typedef		parent::iterator	iterator;
-	typedef		parent::const_iterator	const_iterator;
+	typedef	typename parent::iterator	iterator;
+	typedef	typename parent::const_iterator	const_iterator;
 
 protected:
 	terminal*	open;		///< wrapping string, such as "("

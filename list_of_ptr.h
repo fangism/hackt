@@ -27,10 +27,11 @@ using namespace std;
 template <class T>
 class list_of_ptr : public list<T*> {
 public:
-	typedef	list<T*>::iterator			iterator;
-	typedef	list<T*>::const_iterator		const_iterator;
-	typedef	list<T*>::reverse_iterator		reverse_iterator;
-	typedef	list<T*>::const_reverse_iterator	const_reverse_iterator;
+	typedef	typename list<T*>::iterator		iterator;
+	typedef	typename list<T*>::const_iterator	const_iterator;
+	typedef	typename list<T*>::reverse_iterator	reverse_iterator;
+	typedef	typename list<T*>::const_reverse_iterator
+							const_reverse_iterator;
 private:
 	// none
 public:
@@ -40,7 +41,7 @@ public:
 
 /// The destructor frees memory to non-NULL pointers in the list.  
 virtual	~list_of_ptr() {
-        typename list<T*>::iterator i;
+        iterator i;
         for (i=begin(); i!=end(); i++) if (*i) delete (*i);
         clear();
 }
