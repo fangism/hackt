@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.4 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_hse.h,v 1.5 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -12,17 +12,6 @@
 namespace ART {
 namespace parser {
 //=============================================================================
-// forward declarations
-class node;
-class statement;
-class expr;
-class language_body;
-class terminal;
-class incdec_stmt;
-
-class terminal;
-class token_else;
-
 /**
 	This is the namespace for the HSE sub-language.  
  */
@@ -31,7 +20,6 @@ namespace HSE {
 /// for now, just a carbon copy of expr class type, type-check later
 typedef	expr	hse_expr;
 
-
 //=============================================================================
 /// HSE statement base class
 class statement : virtual public node {
@@ -39,9 +27,14 @@ public:
 	statement();
 virtual	~statement();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class statement
 
 typedef	node_list<const statement,semicolon>	stmt_list;
@@ -55,40 +48,53 @@ typedef	node_list<const statement,semicolon>	stmt_list;
 /// HSE body is just a list of statements
 class body : public language_body {
 protected:
-	stmt_list*		stmts;		///< list of HSE statements
+	const excl_ptr<const stmt_list>	stmts;	///< list of HSE statements
 public:
-	body(token_keyword* t, stmt_list* s);
-virtual	~body();
+	body(const token_keyword* t, const stmt_list* s);
+	~body();
 
-virtual	ostream& what(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
+
 using	language_body::leftmost;
-virtual	line_position rightmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class body
 
 //=============================================================================
 /// HSE guarded command contains an expression condition and body
 class guarded_command : public node {
 protected:
-	hse_expr*		guard;		///< guard expression
-	terminal*		arrow;		///< right-arrow
-	stmt_list*		command;	///< statement body
+	const excl_ptr<const hse_expr>	guard;		///< guard expression
+	const excl_ptr<const terminal>	arrow;		///< right-arrow
+	const excl_ptr<const stmt_list>	command;	///< statement body
 public:
-	guarded_command(hse_expr* g, terminal* a, stmt_list* c);
+	guarded_command(const hse_expr* g, const terminal* a,
+		const stmt_list* c);
+
 virtual	~guarded_command();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class guarded_command
 
 //=============================================================================
 /// HSE else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(token_else* g, terminal* a, stmt_list* c);
-virtual	~else_clause();
+	else_clause(const token_else* g, const terminal* a, const stmt_list* c);
 
-virtual	ostream& what(ostream& o) const;
+	~else_clause();
+
+	ostream&
+	what(ostream& o) const;
 };	// end class else_clause
 
 //=============================================================================
@@ -99,14 +105,22 @@ public:
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
-	skip(token_keyword* s);
-virtual	~skip();
+	explicit
+	skip(const token_keyword* s);
+
+	~skip();
 
 // check that nothing appears after skip statement
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	token_keyword::where;
 };	// end class skip
 
@@ -114,16 +128,22 @@ using	token_keyword::where;
 /// HSE wait contains just an expression
 class wait : public statement {
 protected:
-	terminal*	lb;
-	expr*		cond;
-	terminal*	rb;
+	const excl_ptr<const terminal>	lb;
+	const excl_ptr<const expr>	cond;
+	const excl_ptr<const terminal>	rb;
 public:
-	wait(terminal* l, expr* c, terminal* r);
-virtual	~wait();
+	wait(const terminal* l, const expr* c, const terminal* r);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~wait();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class wait
 
 //=============================================================================
@@ -132,14 +152,22 @@ class assignment : public statement, public incdec_stmt {
 private:
 	typedef ART::parser::incdec_stmt	base_assign;
 public:
+	explicit
 	assignment(base_assign* a);
-virtual	~assignment();
+
+	~assignment();
 
 // remember to type check in HSE language mode
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	incdec_stmt::where;
 };	// end class assignment
 
@@ -151,7 +179,8 @@ public:
 	selection();
 virtual	~selection();
 
-virtual	ostream& what(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
 };	// end class selection
 
 //=============================================================================
@@ -161,12 +190,20 @@ class det_selection : public selection,
 private:
 	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
 public:
-	det_selection(guarded_command* n);
-virtual	~det_selection();
+	explicit
+	det_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~det_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	det_sel_base::where;
 };	// end class det_selection
 
@@ -182,12 +219,20 @@ class nondet_selection : public selection,
 private:
 	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
 public:
-	nondet_selection(guarded_command* n);
-virtual	~nondet_selection();
+	explicit
+	nondet_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~nondet_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	nondet_sel_base::where;
 };	// end class nondet_selection
 
@@ -204,12 +249,20 @@ class prob_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
 public:
-	prob_selection(guarded_command* n);
-virtual	~prob_selection();
+	explicit
+	prob_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~prob_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	prob_sel_base::where;
 };	// end class prob_selection
 *** not available ***/
@@ -218,30 +271,44 @@ using	prob_sel_base::where;
 /// HSE loop contains a list of statements
 class loop : public statement {
 protected:
-	stmt_list*			commands;
+	const excl_ptr<const stmt_list>			commands;
 public:
-	loop(stmt_list* n);
-virtual	~loop();
+	explicit
+	loop(const stmt_list* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~loop();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class loop
 
 //=============================================================================
 /// HSE do-until: re-enter selection statement until all guards are false
 class do_until : public statement {
 protected:
-	det_selection*		sel;
+	const excl_ptr<const det_selection>		sel;
 public:
-	do_until(det_selection* n);
-virtual	~do_until();
+	explicit
+	do_until(const det_selection* n);
+
+	~do_until();
 
 // type-check: cannot contain an else clause, else infinite loop!
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class do_until
 
 //=============================================================================

@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.4 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_hse.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
  */
+
+#ifndef	__ART_PARSER_HSE_CC__
+#define	__ART_PARSER_HSE_CC__
 
 #include "art_parser.tcc"
 #include "art_parser_hse.h"
@@ -15,6 +18,8 @@
 namespace ART {
 namespace parser {
 namespace HSE {
+
+using util::memory::excl_ptr;
 
 //=============================================================================
 // class statement method definitions
@@ -34,14 +39,14 @@ statement::what(ostream& o) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(token_keyword* t, stmt_list* s) : language_body(t),
-		stmts(s) {
-	if(s) assert(stmts);
+body::body(const token_keyword* t, const stmt_list* s) :
+		language_body(t), stmts(s) {
+	if(s) NEVER_NULL(stmts);
 }
 
 DESTRUCTOR_INLINE
 body::~body() {
-	SAFEDELETE(stmts);
+//	SAFEDELETE(stmts);
 }
 
 ostream&
@@ -58,19 +63,19 @@ body::rightmost(void) const {
 // class guarded_command method definitions
 
 CONSTRUCTOR_INLINE
-guarded_command::guarded_command(hse_expr* g, terminal* a, stmt_list* c) : 
-		node(),
-		guard(g),
+guarded_command::guarded_command(const hse_expr* g, const terminal* a, 
+		const stmt_list* c) : 
+		node(), guard(g),
 		// remember, may be keyword: else   
 		arrow(a), command(c) {
-	assert(guard);
-	assert(arrow);
-	if (c) assert(command);
+	NEVER_NULL(guard);
+	NEVER_NULL(arrow);
+	if (c) NEVER_NULL(command);
 }
 
 DESTRUCTOR_INLINE
 guarded_command::~guarded_command() {
-	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
+//	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
 }
 
 ostream&
@@ -92,7 +97,8 @@ guarded_command::rightmost(void) const {
 // class else_clause method definitions
 
 CONSTRUCTOR_INLINE
-else_clause::else_clause(token_else* g, terminal* a, stmt_list* c) :
+else_clause::else_clause(const token_else* g, const terminal* a, 
+		const stmt_list* c) :
 		guarded_command(g,a,c) {
 	// check for keyword else, right-arrow terminal
 }
@@ -109,9 +115,10 @@ else_clause::what(ostream& o) const {
 // class skip method definitions
 
 CONSTRUCTOR_INLINE
-skip::skip(token_keyword* s) : statement(),
-		token_keyword(IS_A(token_keyword*, s)->c_str()) {
-	SAFEDELETE(s);
+skip::skip(const token_keyword* s) : statement(),
+		token_keyword(IS_A(const token_keyword*, s)->c_str()) {
+//	SAFEDELETE(s);
+	excl_ptr<const token_keyword> delete_me(s);
 }
 
 DESTRUCTOR_INLINE
@@ -138,14 +145,14 @@ skip::rightmost(void) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(terminal* l, expr* c, terminal* r) :
+wait::wait(const terminal* l, const expr* c, const terminal* r) :
 		statement(), lb(l), cond(c), rb(r) {
-	assert(cond); assert(lb); assert(rb);
+	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
 }
 
 DESTRUCTOR_INLINE
 wait::~wait() {
-	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
+//	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
 }
 
 ostream&
@@ -171,6 +178,7 @@ assignment::assignment(base_assign* a) : ART::parser::HSE::statement(),
 		// destructive transfer of ownership
 		parser::incdec_stmt(a->release_expr(), a->release_op()) {
 	SAFEDELETE(a);
+	excl_ptr<base_assign> delete_me(a);
 }
 
 DESTRUCTOR_INLINE
@@ -200,16 +208,18 @@ selection::selection() : statement() { }
 DESTRUCTOR_INLINE
 selection::~selection() { }
 
+#if 0
 ostream&
 selection::what(ostream& o) const {
 	return o << "(hse-selection)";
 }
+#endif
 
 //=============================================================================
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
-det_selection::det_selection(guarded_command* n) :
+det_selection::det_selection(const guarded_command* n) :
 		selection(), det_sel_base(n) {
 }
 
@@ -235,7 +245,7 @@ det_selection::rightmost(void) const {
 // class nondet_selection method definitions
 
 CONSTRUCTOR_INLINE
-nondet_selection::nondet_selection(guarded_command* n) :
+nondet_selection::nondet_selection(const guarded_command* n) :
 		selection(), nondet_sel_base(n) {
 }
 
@@ -262,7 +272,7 @@ nondet_selection::rightmost(void) const {
 // class prob_selection method definitions
 
 CONSTRUCTOR_INLINE
-prob_selection::prob_selection(guarded_command* n) : selection(),
+prob_selection::prob_selection(const guarded_command* n) : selection(),
 		node_list<guarded_command,thickbar>(n) {
 }
 
@@ -289,12 +299,12 @@ prob_selection::rightmost(void) const {
 // class loop method definitions
 
 CONSTRUCTOR_INLINE
-loop::loop(stmt_list* n) : statement(), commands(n) {
+loop::loop(const stmt_list* n) : statement(), commands(n) {
 }
 
 DESTRUCTOR_INLINE
 loop::~loop() {
-	SAFEDELETE(commands);
+//	SAFEDELETE(commands);
 }
 
 ostream&
@@ -316,12 +326,12 @@ loop::rightmost(void) const {
 // class do_until method definitions
 
 CONSTRUCTOR_INLINE
-do_until::do_until(det_selection* n) : statement(),
+do_until::do_until(const det_selection* n) : statement(),
 		sel(n) { }
 
 DESTRUCTOR_INLINE
 do_until::~do_until() {
-	SAFEDELETE(sel);
+//	SAFEDELETE(sel);
 }
 
 ostream&
@@ -348,10 +358,12 @@ template class node_list<const guarded_command,thickbar>;	// HSE::det_sel_base
 template class node_list<const guarded_command,colon>;	// HSE::nondet_sel_base
 
 //=============================================================================
-};	// end namespace HSE
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace HSE
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
+
+#endif	// __ART_PARSER_HSE_CC__
 

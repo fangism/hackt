@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.14 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_base.h,v 1.15 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -9,6 +9,7 @@
 
 #include <string>
 #include <iosfwd>
+
 #include "macros.h"
 #include "art_lex.h"		// for token_position
 #include "sublist.h"		// for efficient list slices
@@ -28,10 +29,8 @@ extern	token_position current;
 
 // forward declaration of outside namespace and classes
 namespace entity {
-	// defined in "art_object.h"
+	// defined in "art_object_base.h"
 	class object;
-	class enum_datatype_def;
-	class process_definition;
 }
 
 using lexer::current;			// current token position
@@ -39,8 +38,6 @@ using std::string;
 using std::ostream;
 USING_LIST
 using entity::object;
-using entity::enum_datatype_def;
-using entity::process_definition;
 using util::sublist;
 using namespace util::memory;		// for experimental pointer classes
 
@@ -84,8 +81,10 @@ private:
 	the first one is chosen as the "key method" for the class, 
 	and the vtable is only emitted in the translation unit where 
 	the key method is defined."
+	This bogus method is defined in "art_parser_base.cc".
  */
-virtual	void bogus(void) const;
+virtual	void
+	bogus(void) const;
 public:
 
 /** Standard virtual destructor, mother-of-all virtual destructors */
@@ -97,32 +96,37 @@ virtual	~node() { }
 	\param o the output stream.  
 	\return the output stream.
  */
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
 /**
 	Shows the position where the node's subtree starts.  
 	\return the starting position.
  */
-virtual	line_position leftmost(void) const = 0;
+virtual	line_position
+	leftmost(void) const = 0;
 
 /**
 	Shows the position where the node's subtree ends.  
 	\return the ending position.
  */
-virtual	line_position rightmost(void) const = 0;
+virtual	line_position
+	rightmost(void) const = 0;
 
 /**
 	Shows the range of file position covered by a particular node's
 	subtree.  
  */
-virtual	line_range where(void) const;
+virtual	line_range
+	where(void) const;
 
 /**
 	Type-check and return a usable ART::entity::object, which 
 	contains a hierarchical symbol table.  
 	\return pointer to resulting object.  
  */
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class node
 
 //=============================================================================
@@ -141,14 +145,20 @@ public:
 	expr() { }
 virtual ~expr() { }
 
-virtual ostream& what(ostream& o) const = 0;
-virtual line_position leftmost(void) const = 0;
-virtual line_position rightmost(void) const = 0;
+virtual ostream&
+	what(ostream& o) const = 0;
+
+virtual line_position
+	leftmost(void) const = 0;
+
+virtual line_position
+	rightmost(void) const = 0;
 /**
 	In all implementations, must create a param_expr object.
 	The created object will be pushed onto the context's stack.
  */
-virtual never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class expr
 
 //=============================================================================
@@ -169,10 +179,17 @@ public:
 virtual	~terminal() { }
 
 public:
-virtual	int string_compare(const char* d) const = 0;
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	int
+	string_compare(const char* d) const = 0;
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
 };	// end class terminal
 
 //-----------------------------------------------------------------------------
@@ -187,7 +204,10 @@ protected:
 public:
 	/// inlined, intended only for allocator use
 	token_char();
-explicit token_char(const int i) : terminal(), c(i) { }
+
+	explicit
+	token_char(const int i) : terminal(), c(i) { }
+
 	~token_char() { }
 
 	// overloaded to use pool allocation
@@ -206,9 +226,14 @@ explicit token_char(const int i) : terminal(), c(i) { }
 	void
 	operator delete (void* t);
 
-	int get_char(void) const { return c; }
-	int string_compare(const char* d) const;
-	ostream& what(ostream& o) const;
+	int
+	get_char(void) const { return c; }
+
+	int
+	string_compare(const char* d) const;
+
+	ostream&
+	what(ostream& o) const;
 
 private:
 	typedef	list_vector_pool<token_char>	pool_type;
@@ -229,13 +254,22 @@ private:
 class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
-explicit token_string(const char* s) : node(), string(s), terminal() { }
+	explicit
+	token_string(const char* s) : node(), string(s), terminal() { }
+
+	/// default copy-constructor
 	token_string(const token_string& s) : node(), string(s), terminal() { }
+
 virtual ~token_string() { }
 
-virtual int string_compare(const char* d) const;
-virtual ostream& what(ostream& o) const;
-virtual line_position rightmost(void) const;
+virtual int
+	string_compare(const char* d) const;
+
+virtual ostream&
+	what(ostream& o) const;
+
+virtual line_position
+	rightmost(void) const;
 
 // never really check the type of a string yet (no built-in type yet)
 // virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
@@ -249,29 +283,42 @@ virtual line_position rightmost(void) const;
 class token_identifier : public token_string, public expr {
 					// consider postfix_expr?
 public:
-explicit token_identifier(const char* s) : node(), token_string(s), expr() { }
+	explicit
+	token_identifier(const char* s) : node(), token_string(s), expr() { }
+
 	token_identifier(const token_identifier& i) :
 		node(), token_string(i), expr() { }
+
 	~token_identifier() { }
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };      // end class token_identifier
 
 //-----------------------------------------------------------------------------
 /// keyword version of token_string class, not necessarily an expr
 class token_keyword : public token_string {
 public:
+	explicit
 	token_keyword(const char* s) : token_string(s) { }
+
 virtual ~token_keyword() { }
 
-virtual ostream& what(ostream& o) const;
+virtual ostream&
+	what(ostream& o) const;
 };	// end class token_keyword
 
 //=============================================================================
-#define	NODE_LIST_BASE_TEMPLATE_SPEC					\
+#define	NODE_LIST_BASE_TEMPLATE_SIGNATURE				\
 	template <class T>
 
 /**
@@ -295,6 +342,7 @@ private:
 	typedef		list<count_ptr<T> >	list_parent;
 	// read-only, but transferrable ownership
 public:
+	typedef	typename list_parent::value_type	value_type;
 	typedef	typename list_parent::iterator		iterator;
 	typedef	typename list_parent::const_iterator	const_iterator;
 public:
@@ -312,6 +360,7 @@ public:
 		Constructor with initializing first element, 
 		T should be subclass of node!
 	 */
+	explicit
 	node_list_base(const T* n);
 
 virtual	~node_list_base();
@@ -321,29 +370,37 @@ using	list_parent::end;
 
 // later, use static functions (operator <<) to determine type name...
 /// Prints out type of first element in list, if not null.  
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 
 /// Releases memory to the destination list, transfering ownership
-virtual	void release_append(node_list_base<T>& dest);
+virtual	void
+	release_append(node_list_base<T>& dest);
 };	// end template class node_list_base
 
 //-----------------------------------------------------------------------------
-#define	NODE_LIST_TEMPLATE_SPEC_DEFAULT					\
+#define	NODE_LIST_TEMPLATE_SIGNATURE_DEFAULT				\
 	template <class T, const char D[] = none>
-#define	NODE_LIST_TEMPLATE_SPEC						\
+#define	NODE_LIST_TEMPLATE_SIGNATURE					\
 	template <class T, const char D[]>
-#define	NODE_LIST_TEMPLATE_SPEC_EXPORT					\
-	export NODE_LIST_TEMPLATE_SPEC
+#define	NODE_LIST_TEMPLATE_SIGNATURE_EXPORT				\
+	export NODE_LIST_TEMPLATE_SIGNATURE
 	// "export" is ignored by gcc, even 3.3
 
 /**
 	The delimiter specifier, D, is used for checking that every other
 	token is separated by a D character (if D is not '\0').  
  */
-template <class T, const char D[] = none>
+NODE_LIST_TEMPLATE_SIGNATURE_DEFAULT
 class node_list : public node_list_base<T> {
 private:
 	typedef		node_list_base<T>	parent;
@@ -370,8 +427,12 @@ protected:
 	delim_list	delim;
 public:
 	node_list();
+
 	node_list(const node_list<T,D>& l);
+
+	explicit
 	node_list(const T* n);
+
 virtual	~node_list();
 
 using	parent::begin;
@@ -385,7 +446,8 @@ using	parent::end;
 	\param e the end token such as open-parenthesis.  
 	\return this.
  */
-virtual	node_list<T,D>* wrap(const terminal* b, const terminal* e);
+virtual	node_list<T,D>*
+	wrap(const terminal* b, const terminal* e);
 
 /**
 	Adds an element to a node list, along with the delimiting
@@ -395,17 +457,22 @@ virtual	node_list<T,D>* wrap(const terminal* b, const terminal* e);
 	\param n the useful node.  
 	\return this.
  */
-virtual	node_list<T,D>* append(const terminal* d, const T* n);
+virtual	node_list<T,D>*
+	append(const terminal* d, const T* n);
 
 // the following methods are defined in "art_parser_template_methods.h"
 
 /// Prints out type of first element in list, if not null.  
 // virtual	ostream& what(ostream& o) const;
 
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	line_position
+	leftmost(void) const;
 
-virtual	void release_append(node_list<T,D>& dest);
+virtual	line_position
+	rightmost(void) const;
+
+virtual	void
+	release_append(node_list<T,D>& dest);
 };	// end of template class node_list<>
 
 //=============================================================================
@@ -415,21 +482,34 @@ virtual	void release_append(node_list<T,D>& dest);
 	All expression lists are comma-separated.  
 	No need to sub-class expression lists into 
 	template args and actuals.  
+
  */
 typedef node_list<const expr,comma>			expr_list_base;
 
+/**
+	General parser expression list.  
+	Class connection_argument_list is derived from expr_list, 
+	so we should keep methods virtual.
+ */
 class expr_list : public expr_list_base {
 protected:
 	typedef	expr_list_base			parent;
 public:
 	expr_list();
-	expr_list(const expr* e);
-	~expr_list();
 
-	ostream& what(ostream& o) const;
+	explicit
+	expr_list(const expr* e);
+
+virtual	~expr_list();
+
+virtual	ostream&
+	what(ostream& o) const;
+
 	using parent::leftmost;
 	using parent::rightmost;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class expr_list
 
 #define expr_list_wrap(b,l,e)						\
@@ -447,11 +527,17 @@ public:
 class root_item : virtual public node {
 public:
 	root_item() : node() { }
+
 virtual	~root_item() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class root_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -462,7 +548,9 @@ class root_body : public root_item_list {
 protected:
 	typedef	root_item_list			parent;
 public:
+	explicit
 	root_body(const root_item* r);
+
 	~root_body();
 };	// end class root_body
 
@@ -472,7 +560,6 @@ public:
 	IS_A(root_body*, l->append(d,n))
 
 //=============================================================================
-#if 1
 typedef	node_list<const token_identifier,scope>	qualified_id_base;
 
 /**
@@ -505,36 +592,53 @@ protected:
 	 */
 	excl_ptr<const token_string>			absolute;
 public:
-explicit qualified_id(const token_identifier* n);
+	explicit
+	qualified_id(const token_identifier* n);
+
 	qualified_id(const qualified_id& i);
+
 virtual	~qualified_id();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 
 using parent::begin;
 using parent::end;
 using parent::empty;
 
 // overshadow parent's
-virtual	qualified_id* append(terminal* d, token_identifier* n);
+virtual	qualified_id*
+	append(terminal* d, token_identifier* n);
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
-qualified_id*	force_absolute(const token_string* s);
-bool		is_absolute(void) const { return absolute; }
+	qualified_id*
+	force_absolute(const token_string* s);
+
+	bool
+	is_absolute(void) const { return absolute; }
 
 // want a method for splitting off the last id, isolating namespace portion
 // copy must be using never_ptrs! original must use excl_ptr
-qualified_id	copy_namespace_portion(void) const;
+	qualified_id
+	copy_namespace_portion(void) const;
 		// remember to delete this after done using!
-qualified_id	copy_beheaded(void) const;
+	qualified_id
+	copy_beheaded(void) const;
 
-friend	ostream& operator << (ostream& o, const qualified_id& id);
+	friend
+	ostream&
+	operator << (ostream& o, const qualified_id& id);
 };	// end class qualified_id
 
 // no need for wrap, ever
@@ -562,7 +666,9 @@ public:
 		around the entire list.  
 	 */
 	qualified_id_slice(const qualified_id& qid);
+
 	qualified_id_slice(const qualified_id_slice& qid);
+
 	~qualified_id_slice();
 
 	bool
@@ -597,7 +703,6 @@ using parent::empty;
 	ostream&
 	operator << (ostream& o, const qualified_id_slice& q);
 };	// end class qualified_id_slice
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -619,80 +724,39 @@ protected:
 	 */
 	const excl_ptr<qualified_id>	qid;
 public:
-explicit namespace_id(qualified_id* i);
+	explicit
+	namespace_id(qualified_id* i);
+
 	~namespace_id();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 
 //	consider c->lookup_namespace()
 //	never_ptr<const object> check_build(never_ptr<context> c) const;
 
-	never_ptr<const qualified_id> get_id(void) const
-		{ return qid; }
+	never_ptr<const qualified_id>
+	get_id(void) const { return qid; }
 //		{ return never_ptr<const qualified_id>(qid); }
 		// gcc-2.95.3 dies on this.
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
-	qualified_id*	force_absolute(const token_string* s);
-	bool	is_absolute(void) const;
+	qualified_id*
+	force_absolute(const token_string* s);
 
-	friend	ostream& operator << (ostream& o, const namespace_id& id);
+	bool
+	is_absolute(void) const;
+
+	friend
+	ostream&
+	operator << (ostream& o, const namespace_id& id);
 };	// end class namespace_id
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Generalized scoped identifier expression.  
-	Has two modes: absolute or relative, depending on whether or 
-	not the un/qualified identifier was prefixed by an additional
-	scope (::) operator.  
-	Even short unqualified identifiers are wrapped into this class
-	for uniform use.  
-	When type checking with this class, remember to check the 
-	path mode before searching, and use all but the last identifier
-	chain as the namespace path prefix.  
-	e.g. for A::B::C, search for namespace match of A::B with member C.  
- */
-class id_expr : public expr {
-protected:
-	/**
-		Wraps around a qualified_id.  
-		Is owned and non-transferrable.  
-	 */
-	const excl_ptr<qualified_id>	qid;
-public:
-explicit id_expr(qualified_id* i);
-	id_expr(const id_expr& i);
-virtual	~id_expr();
-
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-
-// should return a type object, with which one may pointer compare
-//	with typedefs, follow to canonical
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
-
-never_ptr<const qualified_id> get_id(void) const
-		{ return qid; }
-//		{ return never_ptr<const qualified_id>(qid); }
-		// gcc-2.95.3 dies on this.
-
-/// Tags this id_expr as absolute, to be resolved from the global scope.  
-qualified_id*	force_absolute(token_string* s)
-			{ return qid->force_absolute(s); }
-bool		is_absolute(void) const { return qid->is_absolute(); }
-
-// want a method for splitting off the last id, isolating namespace portion
-qualified_id	copy_namespace_portion(void) const
-			{ return qid->copy_namespace_portion(); }
-		// remember to delete this after done using!?
-
-friend	ostream& operator << (ostream& o, const id_expr& id);
-};	// end class id_expr
-#endif
 
 //=============================================================================
 /**
@@ -703,17 +767,24 @@ friend	ostream& operator << (ostream& o, const id_expr& id);
 class type_base : virtual public node {
 public:
 	type_base() : node() { }
+
 virtual	~type_base() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-/**
-	Should return valid pointer to a fundamental type definition, 
-	parameter, data, channel, or process.  
- */
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
+
+	/**
+		Should return valid pointer to a fundamental type definition, 
+		parameter, data, channel, or process.  
+	 */
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class type_base
 
 //-----------------------------------------------------------------------------
@@ -727,19 +798,29 @@ class type_id : public type_base {
 protected:
 	const excl_ptr<const qualified_id>	base;
 public:
+	explicit
 	type_id(const qualified_id* b);
+
 virtual	~type_id();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	ostream&
+	what(ostream& o) const;
 
-friend	ostream& operator << (ostream& o, const type_id& id);
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
+
+	friend
+	ostream&
+	operator << (ostream& o, const type_id& id);
 };	// end class type_id
 
 //-----------------------------------------------------------------------------
-#if 1
 typedef node_list<const concrete_type_ref,comma>	data_type_ref_list_base;
 	// consider making concrete_datatype_ref sub-class
 	// or overriding class's check_build
@@ -749,7 +830,9 @@ class data_type_ref_list : public data_type_ref_list_base {
 protected:
 	typedef	data_type_ref_list_base			parent;
 public:
+	explicit
 	data_type_ref_list(const concrete_type_ref* c);
+
 	~data_type_ref_list();
 };
 
@@ -758,8 +841,6 @@ public:
 	IS_A(data_type_ref_list*, l->wrap(b,e))
 #define data_type_ref_list_append(l,d,n)				\
         IS_A(data_type_ref_list*, l->append(d,n))
-
-#endif
 
 //-----------------------------------------------------------------------------
 /// full base channel type, including base type list
@@ -771,14 +852,23 @@ protected:
 public:
 	chan_type(const token_keyword* c, const token_char* d = NULL, 
 		const data_type_ref_list* t = NULL);
+
 virtual	~chan_type();
 
-chan_type* attach_data_types(const data_type_ref_list* t);
+	chan_type*
+	attach_data_types(const data_type_ref_list* t);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class chan_type
 
 #define	chan_type_attach_data_types(ct,t)				\
@@ -792,11 +882,17 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 class statement : virtual public node {
 public:
 	statement() : node() { }
+
 virtual	~statement() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class statement
 
 //-----------------------------------------------------------------------------
@@ -819,15 +915,27 @@ public:
 //	incdec_stmt(excl_ptr<const expr> n, excl_ptr<const terminal> o);
 virtual	~incdec_stmt();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	ostream&
+	what(ostream& o) const;
 
-	const expr* release_expr(void);
-	const terminal* release_op(void);
-#if 0
-	excl_ptr<const expr> release_expr(void);
-	excl_ptr<const terminal> release_op(void);
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+#if 1
+	const expr*
+	release_expr(void);
+
+	const terminal*
+	release_op(void);
+#else
+	excl_ptr<const expr>
+	release_expr(void);
+
+	excl_ptr<const terminal>
+	release_op(void);
 #endif
 };	// end class incdec_stmt
 
@@ -852,18 +960,33 @@ public:
 #endif
 virtual	~assign_stmt();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
 
 #if 0
-	excl_ptr<const expr> release_lhs(void);
-	excl_ptr<const terminal> release_op(void);
-	excl_ptr<const expr> release_rhs(void);
+	excl_ptr<const expr>
+	release_lhs(void);
+
+	excl_ptr<const terminal>
+	release_op(void);
+
+	excl_ptr<const expr>
+	release_rhs(void);
 #else
-	const expr* release_lhs(void);
-	const terminal* release_op(void);
-	const expr* release_rhs(void);
+	const expr*
+	release_lhs(void);
+
+	const terminal*
+	release_op(void);
+
+	const expr*
+	release_rhs(void);
 #endif
 };	// end class assign_stmt
 
@@ -876,11 +999,17 @@ virtual	line_position rightmost(void) const;
 class def_body_item : virtual public node {
 public:
 	def_body_item() : node() { }
+
 virtual	~def_body_item() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class def_body_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -892,7 +1021,10 @@ protected:
 	typedef	def_body_item_list		parent;
 public:
 	definition_body();
+
+	explicit
 	definition_body(const def_body_item* d);
+
 	~definition_body();
 
 };	// end class definition_body
@@ -914,14 +1046,22 @@ class language_body : public def_body_item {
 protected:
 	excl_ptr<const token_keyword>	tag;	///< what language
 public:
+	explicit
 	language_body(const token_keyword* t);
+
 virtual	~language_body();
 
-virtual language_body* attach_tag(token_keyword* t);
+virtual language_body*
+	attach_tag(token_keyword* t);
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class language_body
 
 //=============================================================================
@@ -938,13 +1078,20 @@ public:
 	namespace_body(const token_keyword* s, const token_identifier* n, 
 		const terminal* l, const root_body* b,
 		const terminal* r, const terminal* c);
-virtual	~namespace_body();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~namespace_body();
 
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class namespace_body
 
 //-----------------------------------------------------------------------------
@@ -960,16 +1107,24 @@ public:
 	using_namespace(const token_keyword* o, const namespace_id* i,
 		const token_char* s);
 		// a "AS" and n (alias) are optional
+
 	using_namespace(const token_keyword* o, const namespace_id* i, 
 		const token_keyword* a, const token_identifier* n,
 		const token_char* s);
-virtual	~using_namespace();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~using_namespace();
 
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class using_namespace
 
 //=============================================================================
@@ -982,18 +1137,30 @@ protected:
 	/** definition name base */
 	const excl_ptr<const type_base>			base;
 	/** optional template arguments */
-	const excl_ptr<const expr_list>	temp_spec;
+	const excl_ptr<const expr_list>			temp_spec;
 public:
+	explicit
 	concrete_type_ref(const type_base* n, const expr_list* t = NULL);
-virtual	~concrete_type_ref();
 
-	never_ptr<const type_base> get_base_def(void) const;
-	never_ptr<const expr_list> get_temp_spec(void) const;
+	~concrete_type_ref();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const type_base>
+	get_base_def(void) const;
+
+	never_ptr<const expr_list>
+	get_temp_spec(void) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class concrete_type_ref
 
 //=============================================================================

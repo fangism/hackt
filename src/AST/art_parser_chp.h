@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.4 2004/11/30 01:25:02 fang Exp $
+	$Id: art_parser_chp.h,v 1.5 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -11,42 +11,31 @@
 
 namespace ART {
 namespace parser {
-//=============================================================================
-// forward declarations
-class node;
-class statement;
-class expr;
-class language_body;
-class terminal;
-class assign_stmt;
-class incdec_stmt;
-
-class terminal;
-class token_else;
-
 /**
 	This is the namespace for the CHP sub-language.  
  */
 namespace CHP {
 
 //=============================================================================
-// forward declarations
-
-//=============================================================================
 /// for now, just a carbon copy of expr class type, type-check later
 typedef	expr	chp_expr;
-
 
 //=============================================================================
 /// CHP statement base class
 class statement : virtual public node {
 public:
 	statement();
+
 virtual	~statement();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };
 
 typedef	node_list<const statement,semicolon>	stmt_list;
@@ -60,38 +49,51 @@ typedef	node_list<const statement,semicolon>	stmt_list;
 /// CHP body is just a list of statements
 class body : public language_body {
 protected:
-	stmt_list*		stmts;		///< list of CHP statements
+	const excl_ptr<const stmt_list>	stmts;	///< list of CHP statements
 public:
-	body(token_keyword* t, stmt_list* s);
-virtual	~body();
+	body(const token_keyword* t, const stmt_list* s);
 
-virtual	ostream& what(ostream& o) const;
+	~body();
+
+	ostream&
+	what(ostream& o) const;
+
 using	language_body::leftmost;
-virtual	line_position rightmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
 class guarded_command : public node {
 protected:
-	chp_expr*		guard;		///< guard expression
-	terminal*		arrow;		///< right-arrow
-	stmt_list*		command;	///< statement body
+	const excl_ptr<const chp_expr>	guard;		///< guard expression
+	const excl_ptr<const terminal>	arrow;		///< right-arrow
+	const excl_ptr<const stmt_list>	command;	///< statement body
 public:
-	guarded_command(chp_expr* g, terminal* a, stmt_list* c);
+	guarded_command(const chp_expr* g, const terminal* a,
+		const stmt_list* c);
+
 virtual	~guarded_command();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(token_else* g, terminal* a, stmt_list* c);
-virtual	~else_clause();
+	else_clause(const token_else* g, const terminal* a, const stmt_list* c);
+
+	~else_clause();
 
 	ostream& what(ostream& o) const;
 };
@@ -104,14 +106,22 @@ public:
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
-	skip(token_keyword* s);
-virtual	~skip();
+	explicit
+	skip(const token_keyword* s);
+
+	~skip();
 
 // check that nothing appears after skip statement
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	token_keyword::where;
 };
 
@@ -119,32 +129,47 @@ using	token_keyword::where;
 /// CHP wait contains just an expression
 class wait : public statement {
 protected:
-	terminal*	lb;			///< left bracket
-	expr*		cond;			///< wait until condition
-	terminal*	rb;			///< right bracket
+	const excl_ptr<const terminal>	lb;	///< left bracket
+	const excl_ptr<const expr>	cond;	///< wait until condition
+	const excl_ptr<const terminal>	rb;	///< right bracket
 public:
-	wait(terminal* l, expr* c, terminal* r);
-virtual	~wait();
+	wait(const terminal* l, const expr* c, const terminal* r);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~wait();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP assignment statement in binary form
 class assignment : public statement, public assign_stmt {
 private:
+	typedef	CHP::statement			parent_type;
 	typedef ART::parser::assign_stmt	base_assign;
 public:
+	explicit
 	assignment(base_assign* a);
-virtual	~assignment();
+
+	~assignment();
 
 // remember to type check in CHP language mode
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	assign_stmt::where;
 };
 
@@ -152,16 +177,25 @@ using	assign_stmt::where;
 /// CHP assignment statement is only boolean
 class incdec_stmt : public statement, public parser::incdec_stmt {
 private:
+	typedef	CHP::statement			parent_type;
 	typedef ART::parser::incdec_stmt	base_assign;
 public:
+	explicit
 	incdec_stmt(base_assign* a);
-virtual ~incdec_stmt();
+
+	~incdec_stmt();
 
 // remember to type check in CHP language mode
 
-virtual ostream& what(ostream& o) const;
-virtual line_position leftmost(void) const;
-virtual line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	incdec_stmt::where;
 };
 
@@ -169,13 +203,15 @@ using	incdec_stmt::where;
 /// CHP communication action base class
 class communication : public statement {
 protected:
-	expr*		chan;
-	token_char*	dir;
+	const excl_ptr<const expr>		chan;
+	const excl_ptr<const token_char>	dir;
 public:
-	communication(expr* c, token_char* d);
+	communication(const expr* c, const token_char* d);
+
 virtual	~communication();
 
-virtual	line_position leftmost(void) const;
+	line_position
+	leftmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
@@ -184,12 +220,20 @@ class comm_list : public statement,
 private:
 	typedef	node_list<const communication,comma>		comm_list_base;
 public:
-	comm_list(communication* c);
-virtual	~comm_list();
+	explicit
+	comm_list(const communication* c);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~comm_list();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	comm_list_base::where;
 };
 
@@ -203,24 +247,34 @@ using	comm_list_base::where;
 /// CHP send action
 class send : public communication {
 protected:
-	expr_list*	rvalues;
+	const excl_ptr<const expr_list>	rvalues;
 public:
-	send(expr* c, token_char* d, expr_list* r);
-virtual	~send();
+	send(const expr* c, const token_char* d, const expr_list* r);
 
-virtual	line_position rightmost(void) const;
+	~send();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
 /// CHP receive action
 class receive : public communication {
 protected:
-	expr_list*	lvalues;
+	const excl_ptr<const expr_list>	lvalues;
 public:
-	receive(expr* c, token_char* d, expr_list* l);
-virtual	~receive();
+	receive(const expr* c, const token_char* d, const expr_list* l);
 
-virtual	line_position rightmost(void) const;
+	~receive();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
@@ -229,9 +283,11 @@ class selection : public statement {
 // is this class even necessary?
 public:
 	selection();
+
 virtual	~selection();
 
-virtual	ostream& what(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
 };
 
 //=============================================================================
@@ -241,12 +297,20 @@ class det_selection : public selection,
 private:
 	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
 public:
-	det_selection(guarded_command* n);
-virtual	~det_selection();
+	explicit
+	det_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~det_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	det_sel_base::where;
 };
 
@@ -262,12 +326,20 @@ class nondet_selection : public selection,
 private:
 	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
 public:
-	nondet_selection(guarded_command* n);
-virtual	~nondet_selection();
+	explicit
+	nondet_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~nondet_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	nondet_sel_base::where;
 };
 
@@ -283,12 +355,20 @@ class prob_selection : public selection,
 private:
 	typedef	node_list<const guarded_command,thickbar>	prob_sel_base;
 public:
-	prob_selection(guarded_command* n);
-virtual	~prob_selection();
+	explicit
+	prob_selection(const guarded_command* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~prob_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
 using	prob_sel_base::where;
 };
 
@@ -301,45 +381,65 @@ using	prob_sel_base::where;
 /// CHP loop contains a list of statements
 class loop : public statement {
 protected:
-	stmt_list*			commands;
+	const excl_ptr<const stmt_list>		commands;
 public:
-	loop(stmt_list* n);
-virtual	~loop();
+	explicit
+	loop(const stmt_list* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~loop();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP do-until: re-enter selection statement until all guards are false
 class do_until : public statement {
 protected:
-	det_selection*		sel;
+	const excl_ptr<const det_selection>		sel;
 public:
-	do_until(det_selection* n);
-virtual	~do_until();
+	explicit
+	do_until(const det_selection* n);
+
+	~do_until();
 
 // type-check: cannot contain an else clause, else infinite loop!
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================
 /// CHP log statement
 class log : public statement {
 protected:
-	token_keyword*		lc;
-	expr_list*		args;
+	const excl_ptr<const token_keyword>		lc;
+	const excl_ptr<const expr_list>			args;
 public:
-	log(token_keyword* l, expr_list* n);
-virtual	~log();
+	log(const token_keyword* l, const expr_list* n);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	~log();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };
 
 //=============================================================================

@@ -1,43 +1,20 @@
 /**
 	\file "art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.6 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_token.h,v 1.7 2005/01/13 22:47:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_H__
 #define __ART_PARSER_TOKEN_H__
 
-#include <iosfwd>
-#include <string>
-
 #include "art_parser_base.h"
 #include "art_parser_expr.h"
 
 namespace ART {
-
-// forward declaration of outside namespace and classes
-namespace entity {
-	// defined in "art_object.h"
-	class object;
-	class enum_datatype_def;
-	class process_definition;
-}
-
-using std::ostream;
-using namespace entity;
-using namespace util::memory;		// for experimental pointer classes
-
 namespace parser {
-// forward declarations in this namespace
-class expr;			// family defined in "art_parser_expr.h"
-class id_expr;
-class token_char;		// defined here
-class token_string;		// defined here
-class qualified_id;		// defined here
-class concrete_type_ref;	// defined here
-class context;			// defined in "art_symbol_table.h"
-
 //=============================================================================
+// forward declarations in this namespace appear in "art_parser_fwd.h"
+
 // class terminal is defined in "art_parser.h"
 // class token_string is defined in "art_parser.h"
 // class token_identifier is defined in "art_parser.h"
@@ -50,15 +27,26 @@ protected:
 	long val;			///< the value
 public:
 /// standard constructor
-explicit token_int(const long v) : terminal(), expr(), val(v) { }
-/// standard virtual destructor
+	explicit
+	token_int(const long v) : terminal(), expr(), val(v) { }
+
+/// standard destructor
 	~token_int() { }
 
-	int string_compare(const char* d) const;
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	int
+	string_compare(const char* d) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_int
 
 //=============================================================================
@@ -68,56 +56,93 @@ protected:
 	double val;			///< the value
 public:
 /// standard constructor
-explicit token_float(const double v) : terminal(), expr(), val(v) { }
-/// standard virtual destructor
+	explicit
+	token_float(const double v) : terminal(), expr(), val(v) { }
+
+/// standard destructor
 	~token_float() { }
 
-	int string_compare(const char* d) const;
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	int
+	string_compare(const char* d) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_float
 
 //=============================================================================
 /// class for expression keywords, which happen to be only bools
 class token_bool : public token_keyword, public expr {
 public:
+	explicit
 	token_bool(const char* tf);
+
 	~token_bool();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_bool
 
 //-----------------------------------------------------------------------------
 /// class for "else" keyword, which is a legitimate expr
 class token_else : public token_keyword, public expr {
 public:
+	explicit
 	token_else(const char* tf);
+
 	~token_else();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+	
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_else
 
 //-----------------------------------------------------------------------------
 /// quoted-string version of token_string class
 class token_quoted_string : public token_string, public expr {
 public:
+	explicit
 	token_quoted_string(const char* s);
+
 	~token_quoted_string();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 
 // not until we have built-in type for string
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_quoted_string
 
 //=============================================================================
@@ -127,14 +152,23 @@ public:
  */
 class token_type : public token_keyword, public type_base {
 public:
+	explicit
 	token_type(const char* tf);
+
 virtual	~token_type();
 
 // just use parent's
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class token_type
 
 //-----------------------------------------------------------------------------
@@ -143,13 +177,16 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
  */
 class token_datatype : public token_type {
 public:
+	explicit
 	token_datatype(const char* dt);
+
 virtual	~token_datatype();
 
-virtual	ostream& what(ostream& o) const;
-using token_type::leftmost;
-using token_type::rightmost;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+	ostream&
+	what(ostream& o) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class token_datatype
 
 //-----------------------------------------------------------------------------
@@ -158,11 +195,13 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
  */
 class token_int_type : public token_datatype {
 public:
+	explicit
 	token_int_type(const char* dt);
+
 	~token_int_type();
 
-//	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_int_type
 
 //-----------------------------------------------------------------------------
@@ -171,11 +210,13 @@ public:
  */
 class token_bool_type : public token_datatype {
 public:
+	explicit
 	token_bool_type(const char* dt);
+
 	~token_bool_type();
 
-//	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_bool_type
 
 //-----------------------------------------------------------------------------
@@ -184,13 +225,16 @@ public:
  */
 class token_paramtype : public token_type {
 public:
+	explicit
 	token_paramtype(const char* dt);
+
 virtual	~token_paramtype();
 
-virtual	ostream& what(ostream& o) const;
-using token_type::leftmost;
-using token_type::rightmost;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+	ostream&
+	what(ostream& o) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -199,11 +243,13 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
  */
 class token_pbool_type : public token_paramtype {
 public:
+	explicit
 	token_pbool_type(const char* dt);
+
 	~token_pbool_type();
 
-//	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_pbool_type
 
 //-----------------------------------------------------------------------------
@@ -212,11 +258,13 @@ public:
  */
 class token_pint_type : public token_paramtype {
 public:
+	explicit
 	token_pint_type(const char* dt);
+
 	~token_pint_type();
 
-//	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class token_pint_type
 
 //=============================================================================

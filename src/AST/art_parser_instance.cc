@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.11 2005/01/13 05:28:25 fang Exp $
+	$Id: art_parser_instance.cc,v 1.12 2005/01/13 22:47:54 fang Exp $
  */
+
+#ifndef	__ART_PARSER_INSTANCE_CC__
+#define	__ART_PARSER_INSTANCE_CC__
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -62,7 +65,8 @@ instance_management::~instance_management() {
 	\param e should be a member/index expression, an lvalue.  
  */
 CONSTRUCTOR_INLINE
-alias_list::alias_list(expr* e) : instance_management(), alias_list_base(e) {
+alias_list::alias_list(const expr* e) :
+		instance_management(), alias_list_base(e) {
 }
 
 DESTRUCTOR_INLINE
@@ -203,8 +207,10 @@ if (size() > 0) {		// non-empty
 // class connection_argument_list method definition
 
 CONSTRUCTOR_INLINE
-connection_argument_list::connection_argument_list(expr_list* e) : expr_list() {
+connection_argument_list::connection_argument_list(expr_list* e) :
+		expr_list() {
 	e->release_append(*this);
+	excl_ptr<expr_list> delete_me(e);
 }
 
 DESTRUCTOR_INLINE
@@ -372,10 +378,12 @@ instance_array::check_build(never_ptr<context> c) const {
 		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
 		assert(d);
 #else
-		count_ptr<object_list> ol(o.is_a<object_list>());
+		const count_ptr<object_list>
+			ol(o.is_a<object_list>());
 		assert(ol);
 		// would rather have excl_ptr...
-		count_ptr<range_expr_list> d(ol->make_sparse_range_list());
+		const count_ptr<range_expr_list>
+			d(ol->make_sparse_range_list());
 		if (!d) {
 			cerr << "ERROR in building sparse range list!  "
 				<< ranges->where() << endl;
@@ -820,4 +828,5 @@ conditional_instantiation::rightmost(void) const {
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
+#endif	// __ART_PARSER_INSTANCE_CC__
 

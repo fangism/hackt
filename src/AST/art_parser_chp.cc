@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.4 2004/11/30 01:25:01 fang Exp $
+	$Id: art_parser_chp.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
  */
+
+#ifndef	__ART_PARSER_CHP_CC__
+#define	__ART_PARSER_CHP_CC__
 
 #include "art_parser.tcc"
 #include "art_parser_chp.h"
@@ -24,23 +27,25 @@ statement::statement() : node() { }
 DESTRUCTOR_INLINE
 statement::~statement() { }
 
+#if 0
 ostream&
 statement::what(ostream& o) const {
 	return o << "(chp-statement)";
 }
+#endif
 
 //=============================================================================
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(token_keyword* t, stmt_list* s) : language_body(t),
-		stmts(s) {
-	if(s) assert(stmts);
+body::body(const token_keyword* t, const stmt_list* s) :
+		language_body(t), stmts(s) {
+	if(s) NEVER_NULL(stmts);
 }
 
 DESTRUCTOR_INLINE
 body::~body() {
-	SAFEDELETE(stmts);
+//	SAFEDELETE(stmts);
 }
 
 ostream&
@@ -57,20 +62,19 @@ body::rightmost(void) const {
 // class guarded_command method definitions
 
 CONSTRUCTOR_INLINE
-guarded_command::guarded_command(chp_expr* g, terminal* a, stmt_list* c) : 
-		node(),
-		guard(g),
+guarded_command::guarded_command(const chp_expr* g, const terminal* a,
+		const stmt_list* c) : 
+		node(), guard(g),
 		// remember, may be keyword: else   
-		arrow(a),
-		command(c) {
-	assert(guard);
-	assert(arrow);
-	if (c) assert(command);
+		arrow(a), command(c) {
+	NEVER_NULL(guard);
+	NEVER_NULL(arrow);
+	if (c) NEVER_NULL(command);
 }
 
 DESTRUCTOR_INLINE
 guarded_command::~guarded_command() {
-	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
+//	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(command);
 }
 
 ostream&
@@ -85,6 +89,7 @@ guarded_command::leftmost(void) const {
 
 line_position
 guarded_command::rightmost(void) const {
+	NEVER_NULL(command);
 	return command->rightmost();
 }
 
@@ -92,7 +97,8 @@ guarded_command::rightmost(void) const {
 // class else_clause method definitions
 
 CONSTRUCTOR_INLINE
-else_clause::else_clause(token_else* g, terminal* a, stmt_list* c) :
+else_clause::else_clause(const token_else* g, const terminal* a, 
+		const stmt_list* c) :
 		guarded_command(g,a,c) {
 	// check for keyword else, right-arrow terminal
 }
@@ -109,9 +115,10 @@ else_clause::what(ostream& o) const {
 // class skip method definitions
 
 CONSTRUCTOR_INLINE
-skip::skip(token_keyword* s) : statement(),
-		token_keyword(IS_A(token_keyword*, s)->c_str()) {
-	SAFEDELETE(s);
+skip::skip(const token_keyword* s) : statement(),
+		token_keyword(IS_A(const token_keyword*, s)->c_str()) {
+	// transfers string contents
+	excl_ptr<const token_keyword> delete_me(s);
 }
 
 DESTRUCTOR_INLINE
@@ -138,17 +145,17 @@ skip::rightmost(void) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(terminal* l, expr* c, terminal* r) :
+wait::wait(const terminal* l, const expr* c, const terminal* r) :
 		statement(),
-		lb(IS_A(terminal*, l)),
-		cond(IS_A(expr*, c)),
-		rb(IS_A(terminal*, r)) {
-	assert(cond); assert(lb); assert(rb);
+		lb(IS_A(const terminal*, l)),
+		cond(IS_A(const expr*, c)),
+		rb(IS_A(const terminal*, r)) {
+	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
 }
 
 DESTRUCTOR_INLINE
 wait::~wait() {
-	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
+//	SAFEDELETE(lb); SAFEDELETE(cond); SAFEDELETE(rb);
 }
 
 ostream&
@@ -177,10 +184,10 @@ wait::rightmost(void) const {
 	\param a the constructed assign_stmt.
  */
 CONSTRUCTOR_INLINE
-assignment::assignment(base_assign* a) : ART::parser::CHP::statement(),
+assignment::assignment(base_assign* a) : parent_type(),
 	// destructive transfer of ownership
 	assign_stmt(a->release_lhs(), a->release_op(), a->release_rhs()) {
-	SAFEDELETE(a);
+	excl_ptr<base_assign> delete_me(a);
 }
 
 DESTRUCTOR_INLINE
@@ -205,11 +212,10 @@ assignment::rightmost(void) const {
 // class incdec_stmt method definitions
 
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(base_assign* a) :
-		ART::parser::CHP::statement(),
+incdec_stmt::incdec_stmt(base_assign* a) : parent_type(), 
 		// destructive transfer of ownership
 		parser::incdec_stmt(a->release_expr(), a->release_op()) {
-	SAFEDELETE(a);
+	excl_ptr<base_assign> delete_me(a);
 }
 
 DESTRUCTOR_INLINE
@@ -234,14 +240,14 @@ incdec_stmt::rightmost(void) const {
 // class communication method definitions
 
 CONSTRUCTOR_INLINE
-communication::communication(expr* c, token_char* d) : statement(),
-		chan(c), dir(d) {
-	assert(chan); assert(dir);
+communication::communication(const expr* c, const token_char* d) :
+		statement(), chan(c), dir(d) {
+	NEVER_NULL(chan); NEVER_NULL(dir);
 }
 
 DESTRUCTOR_INLINE
 communication::~communication() {
-	SAFEDELETE(chan); SAFEDELETE(dir);
+//	SAFEDELETE(chan); SAFEDELETE(dir);
 }
 
 line_position
@@ -253,7 +259,8 @@ communication::leftmost(void) const {
 // class comm_list method definitions
 
 CONSTRUCTOR_INLINE
-comm_list::comm_list(communication* c) : statement(), comm_list_base(c) {
+comm_list::comm_list(const communication* c) :
+		statement(), comm_list_base(c) {
 }
 
 DESTRUCTOR_INLINE
@@ -262,7 +269,7 @@ comm_list::~comm_list() {
 
 ostream&
 comm_list::what(ostream& o) const {
-	return o << "(comm-list)";
+	return o << "(chp-comm-list)";
 }
 
 line_position
@@ -280,14 +287,19 @@ comm_list::rightmost(void) const {
 // class send method definitions
 
 CONSTRUCTOR_INLINE
-send::send(expr* c, token_char* d, expr_list* r) : communication(c, d),
-		rvalues(r) {
-	assert(rvalues);
+send::send(const expr* c, const token_char* d, const expr_list* r) :
+		communication(c, d), rvalues(r) {
+	NEVER_NULL(rvalues);
 }
 
 DESTRUCTOR_INLINE
 send::~send() {
-	SAFEDELETE(rvalues);
+//	SAFEDELETE(rvalues);
+}
+
+ostream&
+send::what(ostream& o) const {
+	return o << "(chp-send)";
 }
 
 line_position
@@ -299,14 +311,19 @@ send::rightmost(void) const {
 // class receive method definitions
 
 CONSTRUCTOR_INLINE
-receive::receive(expr* c, token_char* d, expr_list* l) : communication(c, d),
-		lvalues(l) {
-	assert(lvalues);
+receive::receive(const expr* c, const token_char* d, const expr_list* l) :
+		communication(c, d), lvalues(l) {
+	NEVER_NULL(lvalues);
 }
 
 DESTRUCTOR_INLINE
 receive::~receive() {
-	SAFEDELETE(lvalues);
+//	SAFEDELETE(lvalues);
+}
+
+ostream&
+receive::what(ostream& o) const {
+	return o << "(chp-receive)";
 }
 
 line_position
@@ -323,16 +340,18 @@ selection::selection() : statement() { }
 DESTRUCTOR_INLINE
 selection::~selection() { }
 
+#if 0
 ostream&
 selection::what(ostream& o) const {
 	return o << "(chp-selection)";
 }
+#endif
 
 //=============================================================================
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
-det_selection::det_selection(guarded_command* n) :
+det_selection::det_selection(const guarded_command* n) :
 		selection(), det_sel_base(n) {
 }
 
@@ -358,7 +377,7 @@ det_selection::rightmost(void) const {
 // class nondet_selection method definitions
 
 CONSTRUCTOR_INLINE
-nondet_selection::nondet_selection(guarded_command* n) :
+nondet_selection::nondet_selection(const guarded_command* n) :
 		selection(), nondet_sel_base(n) {
 }
 
@@ -384,7 +403,7 @@ nondet_selection::rightmost(void) const {
 // class prob_selection method definitions
 
 CONSTRUCTOR_INLINE
-prob_selection::prob_selection(guarded_command* n) : selection(),
+prob_selection::prob_selection(const guarded_command* n) : selection(),
 		prob_sel_base(n) {
 }
 
@@ -411,12 +430,12 @@ prob_selection::rightmost(void) const {
 // class loop method definitions
 
 CONSTRUCTOR_INLINE
-loop::loop(stmt_list* n) : statement(), commands(n) {
+loop::loop(const stmt_list* n) : statement(), commands(n) {
 }
 
 DESTRUCTOR_INLINE
 loop::~loop() {
-	SAFEDELETE(commands);
+//	SAFEDELETE(commands);
 }
 
 ostream&
@@ -438,12 +457,12 @@ loop::rightmost(void) const {
 // class do_until method definitions
 
 CONSTRUCTOR_INLINE
-do_until::do_until(det_selection* n) : statement(),
+do_until::do_until(const det_selection* n) : statement(),
 		sel(n) { }
 
 DESTRUCTOR_INLINE
 do_until::~do_until() {
-	SAFEDELETE(sel);
+//	SAFEDELETE(sel);
 }
 
 ostream&
@@ -465,14 +484,14 @@ do_until::rightmost(void) const {
 // class log method definitions
 
 CONSTRUCTOR_INLINE
-log::log(token_keyword* l, expr_list* n) : statement(),
+log::log(const token_keyword* l, const expr_list* n) : statement(),
 		lc(l), args(n) {
-	assert(lc); assert(args);
+	NEVER_NULL(lc); NEVER_NULL(args);
 }
 
 DESTRUCTOR_INLINE
 log::~log() {
-	SAFEDELETE(lc); SAFEDELETE(args);
+//	SAFEDELETE(lc); SAFEDELETE(args);
 }
 
 ostream&
@@ -502,10 +521,12 @@ template class node_list<const guarded_command,colon>;	// CHP::nondet_sel_base
 template class node_list<const communication,comma>;	// CHP::comm_list_base
 
 //=============================================================================
-};	// end namespace CHP
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace CHP
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
+
+#endif	// __ART_PARSER_CHP_CC__
 

@@ -1,42 +1,16 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.6 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_expr.h,v 1.7 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
 #define __ART_PARSER_EXPR_H__
 
-#include <iosfwd>
-#include <string>
-
 #include "art_parser_base.h"
 
 namespace ART {
-//=============================================================================
-
-// forward declaration of outside namespace and classes
-namespace entity {
-	// defined in "art_object.h"
-	class object;
-	class enum_datatype_def;
-	class process_definition;
-}
-
-using std::ostream;
-using namespace entity;
-using namespace util::memory;		// for experimental pointer classes
-
-//=============================================================================
 namespace parser {
-// forward declarations in this namespace
-	class node;		// from "art_parser.h"
-	class token_char;	// defined here
-	class token_string;	// defined here
-	class qualified_id;	// defined here
-	class concrete_type_ref;	// defined here
-	class context;		// defined in "art_symbol_table.h"
-
 //=============================================================================
 // class expr defined in "art_parser.h"
 
@@ -53,16 +27,23 @@ protected:
 	const excl_ptr<const token_char>	rp;	///< right parenthesis
 public:
 	paren_expr(const token_char* l, const expr* n, const token_char* r);
-virtual	~paren_expr();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	~paren_expr();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class paren_expr
 
 //=============================================================================
-#if 1
 /**
 	Generalized scoped identifier expression.  
 	Has two modes: absolute or relative, depending on whether or 
@@ -83,35 +64,49 @@ protected:
 	 */
 	const excl_ptr<qualified_id>	qid;
 public:
-explicit id_expr(qualified_id* i);
-	id_expr(const id_expr& i);
-virtual	~id_expr();
+	explicit
+	id_expr(qualified_id* i);
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	id_expr(const id_expr& i);
+
+	~id_expr();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 
-never_ptr<const qualified_id> get_id(void) const
-		{ return qid; }
+	never_ptr<const qualified_id>
+	get_id(void) const { return qid; }
 //		{ return never_ptr<const qualified_id>(qid); }
 		// gcc-2.95.3 dies on this.
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
-qualified_id*	force_absolute(token_string* s);
-bool		is_absolute(void) const;
+	qualified_id*
+	force_absolute(token_string* s);
+
+	bool
+	is_absolute(void) const;
 
 // want a method for splitting off the last id, isolating namespace portion
-qualified_id	copy_namespace_portion(void) const
-			{ return qid->copy_namespace_portion(); }
+	qualified_id
+	copy_namespace_portion(void) const
+		{ return qid->copy_namespace_portion(); }
 		// remember to delete this after done using!?
 
-friend	ostream& operator << (ostream& o, const id_expr& id);
+	friend
+	ostream&
+	operator << (ostream& o, const id_expr& id);
 };	// end class id_expr
-#endif
 
 //=============================================================================
 /**
@@ -128,17 +123,26 @@ protected:
 	const excl_ptr<const expr>	upper;	///< inclusive upper bound
 public:
 /// simple constructor for when range is just one integer expression
+	explicit
 	range(const expr* l);
 /**
 	Full range constructor with min and max.  
  */
 	range(const expr* l, const terminal* o, const expr* u);
+
 	~range();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class range
 
 //-----------------------------------------------------------------------------
@@ -155,9 +159,11 @@ protected:
 	// no additional members
 public:
 	range_list(const range* r);
+
 	~range_list();
 
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class range_list
 
 #define range_list_wrap(b,l,e)						\
@@ -178,10 +184,13 @@ protected:
 	typedef	dense_range_list_base			parent;
 	// no additional members
 public:
+	explicit
 	dense_range_list(const expr* r);
+
 	~dense_range_list();
 
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class range_list
 
 #define dense_range_list_wrap(b,l,e)					\
@@ -197,38 +206,67 @@ protected:
 	const excl_ptr<const terminal>	op;	///< the operator, may be null
 public:
 	unary_expr(const expr* n, const terminal* o);
+
 virtual	~unary_expr();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
-/// class for prefix unary expressions
+/**
+	Prefix unary expressions.  
+	Has no children classes, so members need not be virtual. 
+ */
 class prefix_expr : public unary_expr {
 public:
 	prefix_expr(const terminal* o, const expr* n);
 virtual	~prefix_expr();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
-/// class for postfix unary expressions
+/**
+	Postfix unary expressions.  
+	Members should be virtual, b/c there are children classes.  
+ */
 class postfix_expr : public unary_expr {
 public:
 	postfix_expr(const expr* n, const terminal* o);
+
 virtual	~postfix_expr();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const;
+
+virtual	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class postfix_expr
 
 //-----------------------------------------------------------------------------
@@ -242,11 +280,17 @@ protected:
 public:
 	member_expr(const expr* l, const terminal* op, 
 		const token_identifier* m);
+
 	~member_expr();
 
-	ostream& what(ostream& o) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
@@ -257,11 +301,17 @@ protected:
 	const excl_ptr<const range_list>	ranges;		///< index
 public:
 	index_expr(const expr* l, const range_list* i);
+
 	~index_expr();
 
-	ostream& what(ostream& o) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class index_expr
 
 //=============================================================================
@@ -273,12 +323,20 @@ protected:
 	const excl_ptr<const expr>	r;	///< right-hand side
 public:
 	binary_expr(const expr* left, const terminal* o, const expr* right);
+
 virtual	~binary_expr();
 
-virtual	ostream& what(ostream& o) const = 0;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class binary_expr
 
 //-----------------------------------------------------------------------------
@@ -289,10 +347,14 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
 class arith_expr : public binary_expr {
 public:
 	arith_expr(const expr* left, const terminal* o, const expr* right);
+
 	~arith_expr();
 
-	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -303,10 +365,14 @@ public:
 class relational_expr : public binary_expr {
 public:
 	relational_expr(const expr* left, const terminal* o, const expr* right);
+
 	~relational_expr();
 
-	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -317,10 +383,14 @@ public:
 class logical_expr : public binary_expr {
 public:
 	logical_expr(const expr* left, const terminal* o, const expr* right);
+
 	~logical_expr();
 
-	ostream& what(ostream& o) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class logical_expr
 
 //=============================================================================
@@ -332,13 +402,22 @@ class array_concatenation : public expr, public array_concatenation_base {
 protected:
 	typedef	array_concatenation_base		parent;
 public:
+	explicit
 	array_concatenation(const expr* e);
+
 	~array_concatenation();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class array_concatenation
 
 #define array_concatenation_wrap(b,l,e)					\
@@ -367,12 +446,20 @@ public:
 		const token_char* c2, const range* rng, 
 		const token_char* c3, const expr* e, 
 		const token_char* r);
+
 	~loop_concatenation();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class loop_concatenation
 
 //-----------------------------------------------------------------------------
@@ -389,12 +476,20 @@ protected:
 public:
 	array_construction(const token_char* l, 
 		const expr* e, const token_char* r);
+
 	~array_construction();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class array_construction
 
 //=============================================================================

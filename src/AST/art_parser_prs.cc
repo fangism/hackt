@@ -1,8 +1,11 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.4 2004/11/30 01:25:03 fang Exp $
+	$Id: art_parser_prs.cc,v 1.5 2005/01/13 22:47:54 fang Exp $
  */
+
+#ifndef	__ART_PARSER_PRS_CC__
+#define	__ART_PARSER_PRS_CC__
 
 #include "art_parser.tcc"
 #include "art_parser_prs.h"
@@ -30,14 +33,11 @@ body_item::~body_item() {
 CONSTRUCTOR_INLINE
 rule::rule(const expr* g, const terminal* a,
 		const expr* rhs, const terminal* d) :
-		body_item(),
-		guard(g),
-		arrow(a),
-		r(rhs),
-		dir(d) {
-	assert(guard); assert(arrow); assert(r); assert(dir);
-	assert(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
-//	assert(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
+		body_item(), guard(g), arrow(a),
+		r(rhs), dir(d) {
+	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
+	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
+//	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
 DESTRUCTOR_INLINE
@@ -69,7 +69,7 @@ loop::loop(const token_char* l, const token_char* c1,
 		body_item(), 
 		lp(l), col1(c1), index(id), col2(c2), bounds(b), 
 		col3(c3), rules(rl), rp(r) {
-	assert(index); assert(bounds); assert(rules);
+	NEVER_NULL(index); NEVER_NULL(bounds); NEVER_NULL(rules);
 }
 
 loop::~loop() {
@@ -99,7 +99,7 @@ loop::rightmost(void) const {
 CONSTRUCTOR_INLINE
 body::body(const token_keyword* t, const rule_list* r) :
 		language_body(t), rules(r) {
-	if (r) assert(rules);
+	if (r) NEVER_NULL(rules);
 }
 
 DESTRUCTOR_INLINE
@@ -129,7 +129,7 @@ op_loop::op_loop(const token_char* l, const token_char* o, const token_char* c1,
 		expr(), 
 		lp(l), op(o), col1(c1), index(id), col2(c2), bounds(b), 
 		col3(c3), ex(e), rp(r) {
-	assert(op); assert(index); assert(bounds); assert(ex);
+	NEVER_NULL(op); NEVER_NULL(index); NEVER_NULL(bounds); NEVER_NULL(ex);
 }
 
 op_loop::~op_loop() {
@@ -165,10 +165,12 @@ op_loop::check_build(never_ptr<context> c) const {
 template class node_list<const body_item>;		// PRS::rule_list
 
 //=============================================================================
-};	// end namespace PRS
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace PRS
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
+
+#endif	// __ART_PARSER_PRS_CC__
 

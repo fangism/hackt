@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.4 2004/11/30 01:25:03 fang Exp $
+	$Id: art_parser_prs.h,v 1.5 2005/01/13 22:47:55 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -11,21 +11,13 @@
 
 namespace ART {
 namespace parser {
-//=============================================================================
-// forward declarations
-class node;
-class expr;
-class terminal;
-class language_body;
-class range;
-
 /**
 	This is the namespace for the PRS sub-language.  
  */
 namespace PRS {
 
 //=============================================================================
-// forward declarations
+// local forward declarations
 
 class rule;
 class body;
@@ -37,6 +29,7 @@ protected:
 	// no members
 public:
 	body_item();
+
 virtual	~body_item();
 
 };	// end class body_item
@@ -60,12 +53,22 @@ protected:
 public:
 	rule(const expr* g, const terminal* a,
 		const expr* rhs, const terminal* d);
+
 	~rule();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-//	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+#if 0
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
+#endif
 };	// end class rule
 
 //=============================================================================
@@ -87,12 +90,22 @@ public:
 		const token_identifier* id, const token_char* c2, 
 		const range* b, const token_char* c3, 
 		const rule_list* rl, const token_char* r);
+
 	~loop();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-//	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+#if 0
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
+#endif
 };	// end class loop
 
 //=============================================================================
@@ -106,9 +119,14 @@ public:
 	body(const token_keyword* t, const rule_list* r);
 	~body();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class body
 
 //=============================================================================
@@ -132,12 +150,20 @@ public:
 		const token_identifier* id, const token_char* c2, 
 		const range* b, const token_char* c3, 
 		const expr* e, const token_char* r);
+
 	~op_loop();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class op_loop
 
 //=============================================================================

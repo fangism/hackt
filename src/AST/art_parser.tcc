@@ -1,7 +1,7 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.6 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser.tcc,v 1.7 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -66,12 +66,15 @@ using util::stacktrace;
 // for class node_list_base<>
 
 /// empty constructor
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 node_list_base<T>::node_list_base() : node(), list_parent() {
 }
 
-/// base constructor, initialized with one element
-NODE_LIST_BASE_TEMPLATE_SPEC
+/**
+	Base constructor, initialized with one element.
+	\param n newly allocated node element.  
+ */
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
 	push_back(count_ptr<T>(n));	// implicit
 #if 0
@@ -83,13 +86,13 @@ node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
 #endif
 }
 
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 node_list_base<T>::~node_list_base() {
 }
 
 //-----------------------------------------------------------------------------
 /// copy constructor, no transfer of ownership
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 node_list_base<T>::node_list_base(const node_list_base<T>& l) : 
 		node(), list_parent(l) {
 #if DEBUG_NODE_LIST_BASE
@@ -100,7 +103,7 @@ node_list_base<T>::node_list_base(const node_list_base<T>& l) :
 }
 
 //-----------------------------------------------------------------------------
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 ostream&
 node_list_base<T>::what(ostream& o) const {
 	// print first item to get type
@@ -126,7 +129,7 @@ node_list_base<T>::what(ostream& o) const {
 		last object in the list, and thus should be disregarded.  
 		The context object collects the necessary error information.  
  */
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 never_ptr<const object>
 node_list_base<T>::check_build(never_ptr<context> c) const {
 	static const string trace_root(util::what<T>::name);
@@ -165,13 +168,13 @@ node_list_base<T>::check_build(never_ptr<context> c) const {
 	unusable after this operation.  
 	\param dest the destination list.  
  */
-NODE_LIST_BASE_TEMPLATE_SPEC
+NODE_LIST_BASE_TEMPLATE_SIGNATURE
 void
 node_list_base<T>::release_append(node_list_base<T>& dest) {
 	iterator i = this->begin();
 	for ( ; i!=this->end(); i++) {
 		// will release each element
-		push_back(*i);		// will this actually release?
+		dest.push_back(*i);		// will this actually release?
 //		push_back(excl_ptr<const T>(*i));	// implicit
 //		push_back(some_ptr<const T>(excl_ptr<const T>(*i)));
 	}
@@ -181,12 +184,12 @@ node_list_base<T>::release_append(node_list_base<T>& dest) {
 // for class node_list<>
 
 /// default empty constructor
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>::node_list() : parent(), open(NULL), close(NULL), delim() {
 }
 
 /// constructor initialized with first element
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>::node_list(const T* n) :
 		node_list_base<T>(n), open(NULL), close(NULL), delim() {
 //	push_back(excl_ptr<const T>(n));
@@ -198,7 +201,7 @@ node_list<T,D>::node_list(const T* n) :
 	which does NOT transfer ownership of the pointer elements.  
 	Does not copy the open and close delimiters, which aren't applicable.  
  */
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>::node_list(const node_list<T,D>& l) : 
 		node(), node_list_base<T>(l),
 		open(NULL), close(NULL), delim(l.delim) {
@@ -211,13 +214,13 @@ node_list<T,D>::node_list(const node_list<T,D>& l) :
 }
 
 //-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>::~node_list() {
 //	SAFEDELETE(open); SAFEDELETE(close);
 }
 
 //-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>*
 node_list<T,D>::wrap(const terminal* b, const terminal* e) {
 // don't care what they are
@@ -229,7 +232,7 @@ node_list<T,D>::wrap(const terminal* b, const terminal* e) {
 }
 
 //-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T,D>*
 node_list<T,D>::append(const terminal* d, const T* n) {
 	if (d) {
@@ -274,7 +277,7 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 	and even checks delimiter token list in parallel if necessary.  
 	\return the position of left-most token in list.  
  */
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 line_position
 node_list<T,D>::leftmost(void) const {
 	const_iterator i = begin();
@@ -297,7 +300,7 @@ node_list<T,D>::leftmost(void) const {
 	and even checks delimiter token list in parallel if necessary.  
 	\return the position of right-most token in list.  
  */
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 line_position
 node_list<T,D>::rightmost(void) const {
 	const_reverse_iterator i = this->rbegin();
@@ -318,8 +321,9 @@ node_list<T,D>::rightmost(void) const {
 /**
 	Releases memory owned by the list and copies over to the destination
 	list.  
+	\param dest the node-list to which items are transferred.  
  */
-NODE_LIST_TEMPLATE_SPEC
+NODE_LIST_TEMPLATE_SIGNATURE
 void
 node_list<T,D>::release_append(node_list<T,D>& dest) {
 	parent::release_append(dest);

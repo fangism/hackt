@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.6 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_definition.h,v 1.7 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -9,33 +9,8 @@
 
 #include "art_parser_base.h"
 
-/**
-	This is the general namespace for all ART-related classes.  
- */
 namespace ART {
-//=============================================================================
-
-// forward declaration of outside namespace and classes
-namespace entity {
-	// defined in "art_object.h"
-	class object;
-}
-
-using std::ostream;
-using namespace entity;
-using namespace util::memory;		// for experimental pointer classes
-
 namespace parser {
-//=============================================================================
-// forward declarations in this namespace
-class concrete_type_ref;	// defined here
-class context;		// defined in "art_symbol_table.h"
-
-// defined in "art_parser_formal.h"
-class data_param_decl_list;
-class template_formal_decl_list;
-class port_formal_decl_list;
-
 //=============================================================================
 /**
 	Abstract base class for definitions of complex types, 
@@ -48,9 +23,14 @@ public:
 	definition();
 virtual	~definition();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 };	// end class definition
 
 //-----------------------------------------------------------------------------
@@ -77,9 +57,11 @@ public:
 	signature_base(const template_formal_decl_list* tf, 
 		const token_identifier* i) :
 		node(), temp_spec(tf), id(i) { }
+
 virtual	~signature_base();
 
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const = 0;
 };	// end class signature_base
 
 //=============================================================================
@@ -102,11 +84,15 @@ public:
 	process_signature(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
+
 virtual	~process_signature();
 
 // note: non-virtual
-	const token_identifier& get_name(void) const;
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+	const token_identifier&
+	get_name(void) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------
@@ -118,12 +104,20 @@ public:
 	process_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const token_char* s);
+
 	~process_prototype();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class process_prototype
 
 //-----------------------------------------------------------------------------
@@ -140,12 +134,20 @@ public:
 	process_def(const template_formal_decl_list*, 
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b);
+
 	~process_def();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class process_def
 
 //=============================================================================
@@ -163,8 +165,11 @@ public:
 		const token_string* dp, 
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
 		const data_param_decl_list* p);
+
 virtual	~user_data_type_signature();
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -178,12 +183,20 @@ public:
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, const token_char* s);
+
 	~user_data_type_prototype();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class user_data_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -206,11 +219,17 @@ public:
 		const data_param_decl_list* p, 
 		const token_char* l, const language_body* s,
 		const language_body* g, const token_char* r);
+
 	~user_data_type_def();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class user_data_type_def
 
 //-----------------------------------------------------------------------------
@@ -224,9 +243,11 @@ protected:
 	const excl_ptr<const token_keyword>	en;
 public:
 	enum_signature(const token_keyword* e, const token_identifier* i);
+
 virtual	~enum_signature();
 
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class enum_signature
 
 //-----------------------------------------------------------------------------
@@ -241,12 +262,20 @@ protected:
 public:
 	enum_prototype(const token_keyword* e, const token_identifier* i, 
 		const token_char* s);
+
 	~enum_prototype();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class enum_prototype
 
 //-----------------------------------------------------------------------------
@@ -259,11 +288,14 @@ class enum_member_list : public enum_member_list_base {
 protected:	// no new members
 	typedef	enum_member_list_base		parent;
 public:
+	explicit
 	enum_member_list(const token_identifier* i);
+
 	~enum_member_list();
 
 	/** overrides default */
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end enum_member_list
 
 #define enum_member_list_wrap(b,l,e)					\
@@ -282,12 +314,20 @@ protected:
 public:
 	enum_def(const token_keyword* e, const token_identifier* i,      
 		const enum_member_list*	m);
+
 	~enum_def();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class enum_def
 
 //=============================================================================
@@ -304,8 +344,11 @@ public:
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const chan_type* b, 
 		const data_param_decl_list* p);
+
 virtual	~user_chan_type_signature();
-virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
+
+virtual	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -321,9 +364,14 @@ public:
 		const data_param_decl_list* p, const token_char* s);
 	~user_chan_type_prototype();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class user_chan_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -346,11 +394,17 @@ public:
 		const data_param_decl_list* p, 
 		const token_char* l, const language_body* s, 
 		const language_body* g, const token_char* r);
+
 	~user_chan_type_def();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class user_chan_type_def
 
 //=============================================================================
@@ -366,12 +420,20 @@ public:
 	typedef_alias(const template_formal_decl_list* t, 
 		const token_keyword* k, const concrete_type_ref* b, 
 		const token_identifier* i, const token_char* s);
+
 	~typedef_alias();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class typedef_alias
 
 //=============================================================================

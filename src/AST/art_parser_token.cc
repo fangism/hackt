@@ -1,12 +1,15 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.12 2005/01/13 05:28:25 fang Exp $
+	$Id: art_parser_token.cc,v 1.13 2005/01/13 22:47:55 fang Exp $
  */
 
-#include <iostream>
-#include <stdio.h>		// for sprintf
-#include <string.h>		// for a few C-string functions
+#ifndef	__ART_PARSER_TOKEN_CC__
+#define	__ART_PARSER_TOKEN_CC__
+
+#include <ostream>
+#include <cstdio>		// for sprintf
+#include <cstring>		// for a few C-string functions
 
 #include "art_switches.h"
 #include "art_parser_debug.h"
@@ -567,13 +570,6 @@ token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
 
-#if 0
-ostream&
-token_bool_type::what(ostream& o) const {
-	return o << "bool_type: " << AS_A(const string&, *this);
-}
-#endif
-
 never_ptr<const object>
 token_bool_type::check_build(never_ptr<context> c) const {
 	STACKTRACE("token_bool_type::check_build()");
@@ -582,11 +578,7 @@ token_bool_type::check_build(never_ptr<context> c) const {
 			<< "token_bool_type::check_build(...): ";
 	)
 	// bool_def declared in "art_built_ins.h"
-#if 0
-	return c->set_current_definition_reference(bool_def);
-#else
 	return c->push_current_definition_reference(bool_def);
-#endif
 }
 
 //=============================================================================
@@ -598,13 +590,6 @@ token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
 
-#if 0
-ostream&
-token_int_type::what(ostream& o) const {
-	return o << "int_type: " << AS_A(const string&, *this);
-}
-#endif
-
 never_ptr<const object>
 token_int_type::check_build(never_ptr<context> c) const {
 	STACKTRACE("token_int_type::check_build()");
@@ -613,11 +598,7 @@ token_int_type::check_build(never_ptr<context> c) const {
 			<< "token_int_type::check_build(...): ";
 	)
 	// int_def declared in "art_built_ins.h"
-#if 0
-	return c->set_current_definition_reference(int_def);
-#else
 	return c->push_current_definition_reference(int_def);
-#endif
 }
 
 //=============================================================================
@@ -628,13 +609,6 @@ token_pbool_type::token_pbool_type(const char* dt) : token_paramtype(dt) { }
 
 DESTRUCTOR_INLINE
 token_pbool_type::~token_pbool_type() { }
-
-#if 0
-ostream&
-token_pbool_type::what(ostream& o) const {
-	return o << "pbool_type: " << AS_A(const string&, *this);
-}
-#endif
 
 /**
 	Return pointer to the definition, 
@@ -651,11 +625,7 @@ token_pbool_type::check_build(never_ptr<context> c) const {
 			<< "token_pbool_type::check_build(...): ";
 	)
 	// pbool_def declared in "art_built_ins.h"
-#if 0
-	return c->set_current_definition_reference(pbool_def);
-#else
 	return c->push_current_definition_reference(pbool_def);
-#endif
 }
 
 //=============================================================================
@@ -666,13 +636,6 @@ token_pint_type::token_pint_type(const char* dt) : token_paramtype(dt) { }
 
 DESTRUCTOR_INLINE
 token_pint_type::~token_pint_type() { }
-
-#if 0
-ostream&
-token_pint_type::what(ostream& o) const {
-	return o << "pint_type: " << AS_A(const string&, *this);
-}
-#endif
 
 /**
 	Let caller resolve to concrete type reference with the definition.  
@@ -687,11 +650,7 @@ token_pint_type::check_build(never_ptr<context> c) const {
 			<< "token_pint_type::check_build(...): ";
 	)
 	// pint_def declared in "art_built_ins.h"
-#if 0
-	return c->set_current_definition_reference(pint_def);
-#else
 	return c->push_current_definition_reference(pint_def);
-#endif
 }
 
 //=============================================================================
@@ -701,4 +660,5 @@ token_pint_type::check_build(never_ptr<context> c) const {
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
+#endif	// __ART_PARSER_TOKEN_CC__
 

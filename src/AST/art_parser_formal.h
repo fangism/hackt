@@ -1,40 +1,16 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.6 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_formal.h,v 1.7 2005/01/13 22:47:54 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
 #define __ART_PARSER_FORMAL_H__
 
-#include <iosfwd>
-#include <string>
-
 #include "art_parser_base.h"
 
 namespace ART {
-// forward declaration of outside namespace and classes
-namespace entity {
-	// defined in "art_object.h"
-	class object;
-}
-
-using std::ostream;
-using namespace entity;
-using namespace util::memory;		// for experimental pointer classes
-
-//=============================================================================
 namespace parser {
-// forward declarations in this namespace
-class expr;			// family defined in "art_parser_expr.h"
-class id_expr;
-class token_char;		// defined here
-class token_string;		// defined here
-class qualified_id;		// defined here
-class concrete_type_ref;	// defined here
-class context;			// defined in "art_symbol_table.h"
-class dense_range_list;		// defined in "art_parser_expr.*"
-
 //=============================================================================
 /**
 	Class for port data (rather, members) of a user-defined channels.  
@@ -48,19 +24,29 @@ public:
 	data_param_id(const token_identifier* i, const dense_range_list* d);
 	~data_param_id();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class data_param_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	node_list<const data_param_id,comma>	data_param_id_list_base;
 
+/**
+	Data or parameter identifier list.  
+ */
 class data_param_id_list : public data_param_id_list_base {
 protected:
 	typedef	data_param_id_list_base			parent;
 public:
+	explicit
 	data_param_id_list(const data_param_id* d);
+
 	~data_param_id_list();
 
 };	// end class data_param_id_list
@@ -84,22 +70,33 @@ protected:
 public:
 	data_param_decl(const concrete_type_ref* t, 
 		const data_param_id_list* il);
+
 	~data_param_decl();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
 };	// end class data_param_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	node_list<const data_param_decl,semicolon>
 		data_param_decl_list_base;
 
+/**
+	Data or parameter declaration list.  
+ */
 class data_param_decl_list : public data_param_decl_list_base {
 protected:
 	typedef	data_param_decl_list_base		parent;
 public:
+	explicit
 	data_param_decl_list(const data_param_decl* d);
+
 	~data_param_decl_list();
 
 };	// end class data_param_decl_list
@@ -110,7 +107,10 @@ public:
 	IS_A(data_param_decl_list*, l->append(d,n))
 
 //=============================================================================
-/// single port formal identifier, with optional dimension array specification
+/**
+	Single port formal identifier, 
+	with optional dimension array specification
+ */
 class port_formal_id : public node {
 protected:
 	const excl_ptr<const token_identifier>	name;	///< formal name
@@ -119,10 +119,17 @@ public:
 	port_formal_id(const token_identifier* n, const dense_range_list* d);
 	~port_formal_id();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class port_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -133,7 +140,9 @@ class port_formal_id_list : public port_formal_id_list_base {
 protected:
 	typedef	port_formal_id_list_base		parent;
 public:
+	explicit
 	port_formal_id_list(const port_formal_id* p);
+
 	~port_formal_id_list();
 
 };	// end class port_formal_id_list
@@ -154,12 +163,20 @@ protected:
 public:
 	port_formal_decl(const concrete_type_ref* t, 
 		const port_formal_id_list* i);
+
 	~port_formal_decl();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class port_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,7 +192,10 @@ protected:
 	typedef	port_formal_decl_list_base		parent;
 public:
 	port_formal_decl_list();
+
+	explicit
 	port_formal_decl_list(const port_formal_decl* p);
+
 	~port_formal_decl_list();
 };	// end class port_formal_decl_list
 
@@ -200,12 +220,20 @@ public:
 	template_formal_id(const token_identifier* n,
 		const dense_range_list* d, 
 		const token_char* e = NULL, const expr* v = NULL);
+
 	~template_formal_id();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class template_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,7 +245,9 @@ class template_formal_id_list : public template_formal_id_list_base {
 protected:
 	typedef	template_formal_id_list_base		parent;
 public:
+	explicit
 	template_formal_id_list(const template_formal_id* t);
+
 	~template_formal_id_list();
 };	// end class template_formal_id_list
 
@@ -242,23 +272,36 @@ protected:
 public:
 	template_formal_decl(const token_paramtype* t, 
 		const template_formal_id_list* i);
+
 	~template_formal_decl();
 
-	ostream& what(ostream& o) const;
-	line_position leftmost(void) const;
-	line_position rightmost(void) const;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(never_ptr<context> c) const;
 };	// end class template_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	node_list<const template_formal_decl,semicolon>
 					template_formal_decl_list_base;
 
+/**
+	Template formal declaration list.  
+ */
 class template_formal_decl_list : public template_formal_decl_list_base {
 protected:
 	typedef	template_formal_decl_list_base		parent;
 public:
+	explicit
 	template_formal_decl_list(const template_formal_decl* t);
+
 	~template_formal_decl_list();
 };	// end class template_formal_decl_list
 
