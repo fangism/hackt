@@ -3,24 +3,33 @@ parser stacks:
 state	value
 	(null) 
 0	(node_list): (template-formal-decl) ... [3:10..41]
-26	keyword: defproc [4:1..7]
-89	identifier: barbar [4:9..14]
-143	(node_list): ... [4:15..16]
-199	{ [4:18]
-234	end-of-file
-in state 234, possible rules are:
-	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens '{' . optional_definition_body '}'  (27)
-	optional_definition_body : .  (81)
+34	keyword: defproc [4:1..7]
+108	identifier: barbar [4:9..14]
+173	(node_list): ... [4:15..16]
+244	{ [4:18]
+281	end-of-file
+in state 281, possible rules are:
+	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens '{' . optional_definition_body '}'  (31)
+	optional_template_specification : .  (27)
+	optional_definition_body : .  (91)
 acceptable tokens are: 
 	'(' (shift)
 	'[' (shift)
+	'{' (shift)
 	'}' (reduce)
 	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
 	SCOPE (shift)
 	CHP_LANG (shift)
 	HSE_LANG (shift)
 	PRS_LANG (shift)
+	TYPEDEF (reduce)
 	CHANNEL (shift)
+	TEMPLATE (shift)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)
 	PINT_TYPE (shift)

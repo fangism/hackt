@@ -3,18 +3,22 @@ parser stacks:
 state	value
 	(null) 
 0	keyword: namespace [3:1..9]
-5	identifier: close_me [3:11..18]
-80	{ [3:20]
-139	end-of-file
-in state 139, possible rules are:
-	namespace_management : NAMESPACE ID '{' . top_root '}' ';'  (11)
+9	identifier: close_me [3:11..18]
+94	{ [3:20]
+160	end-of-file
+in state 160, possible rules are:
+	namespace_management : NAMESPACE ID '{' . top_root '}' ';'  (12)
 	top_root : .  (3)
-	optional_template_specification : .  (25)
+	optional_template_specification : .  (27)
 acceptable tokens are: 
 	'(' (shift)
 	'[' (shift)
+	'{' (shift)
 	'}' (reduce)
 	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
 	SCOPE (shift)
 	NAMESPACE (shift)
 	OPEN (shift)
@@ -22,9 +26,12 @@ acceptable tokens are:
 	DEFPROC (reduce)
 	DEFCHAN (reduce)
 	DEFTYPE (reduce)
+	TYPEDEF (reduce)
 	CHANNEL (shift)
 	TEMPLATE (shift)
 	ENUM (shift)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)
 	PINT_TYPE (shift)
