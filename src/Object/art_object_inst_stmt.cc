@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.2.2.2 2005/02/20 07:25:52 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.2.2.3 2005/02/20 09:02:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -83,6 +83,7 @@ STATIC_TRACE_BEGIN("inst_stmt")
 namespace ART {
 namespace entity {
 USING_STACKTRACE
+using util::persistent_traits;
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif
@@ -291,7 +292,8 @@ pbool_instantiation_statement::unroll(unroll_context& c) const {
 void
 pbool_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
@@ -401,7 +403,8 @@ void
 pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 STACKTRACE_PERSISTENT("pint_instantiation_statement::collect_transient_info()");
-if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
@@ -527,7 +530,8 @@ process_instantiation_statement::unroll(unroll_context& c) const {
 void
 process_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	NEVER_NULL(type);
 	inst_base->collect_transient_info(m);
@@ -639,7 +643,8 @@ channel_instantiation_statement::get_type_ref(void) const {
 void
 channel_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	INVARIANT(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
@@ -785,7 +790,8 @@ void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 // STACKTRACE("data_instantiation_statement::collect_transient_info()");
-if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.4.2 2005/02/20 07:25:55 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.4.3 2005/02/20 09:02:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -98,6 +98,7 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // class int_instance_alias_info method definitions
@@ -378,19 +379,6 @@ int_instance_collection::get_actual_param_list(void) const {
 	STACKTRACE("int_instance_collection::get_actual_param_list()");
 	return never_ptr<const const_param_expr_list>(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-int_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-STACKTRACE("int_instance_collection::collect_transient_info()");
-if (!m.register_transient_object(this, 
-		DINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
-	parent_type::collect_transient_info_base(m);
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_collection*
@@ -718,7 +706,8 @@ int_array<D>::connection_writer::operator() (const element_type& e) const {
 INT_ARRAY_TEMPLATE_SIGNATURE
 void
 int_array<D>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("int_array<D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 }
@@ -885,7 +874,8 @@ int_array<0>::lookup_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_array<0>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("int_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	the_instance.collect_transient_info(m);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.4.4.1 2005/02/20 07:25:56 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.4.4.2 2005/02/20 09:02:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -34,6 +34,8 @@ using util::multikey_map;
 	Derive from unique_instance_base.  
  */
 class proc_instance : public persistent {
+	typedef	proc_instance		this_type;
+private:
 	// need back-reference(s) to owner(s) or hierarchical keys?
 	int		state;
 

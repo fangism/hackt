@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.5.4.1 2005/02/20 07:25:55 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.5.4.2 2005/02/20 09:02:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -188,6 +188,7 @@ public:
 	typedef	pbool_instance_reference	reference_type;
 	typedef	reference_type::init_arg_type	init_arg_type;
 private:
+	typedef	pbool_instance_collection	this_type;
 	typedef	param_instance_collection	parent_type;
 // friend class pbool_instantiation_statement;
 friend class pbool_instance_reference;
@@ -306,6 +307,7 @@ protected:
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 class pbool_array : public pbool_instance_collection {
 private:
+	typedef pbool_array<D>				this_type;
 	typedef	pbool_instance_collection		parent_type;
 friend class pbool_instance_collection;
 public:
@@ -508,6 +510,7 @@ public:
 	typedef	pint_instance_reference		reference_type;
 	typedef	reference_type::init_arg_type	init_arg_type;
 private:
+	typedef	pint_instance_collection	this_type;
 	typedef	param_instance_collection	parent_type;
 protected:
 	/**
@@ -629,6 +632,7 @@ protected:
 PINT_ARRAY_TEMPLATE_SIGNATURE
 class pint_array : public pint_instance_collection {
 private:
+	typedef	pint_array<D>				this_type;
 	typedef	pint_instance_collection		parent_type;
 public:
 	typedef	pint_instance::value_type		value_type;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.4.2 2005/02/20 07:25:53 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.4.3 2005/02/20 09:02:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -28,6 +28,7 @@ using namespace util::memory;	// for experimental pointer classes
  */
 class process_instance_collection : public instance_collection_base {
 private:
+	typedef	process_instance_collection	this_type;
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef	proc_instance_alias		instance_alias_type;
@@ -191,6 +192,7 @@ protected:	// propagate to children
  */
 class channel_instance_collection : public instance_collection_base {
 private:
+	typedef	channel_instance_collection	this_type;
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef chan_instance_alias		instance_alias_type;

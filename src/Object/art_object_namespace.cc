@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.4.4.1 2005/02/19 08:41:00 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.4.4.2 2005/02/20 09:02:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -135,6 +135,7 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // general non-member function definitions
@@ -1477,7 +1478,8 @@ name_space::lookup_open_alias(const string& id) const {
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;

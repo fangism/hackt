@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.4.2 2005/02/20 07:25:54 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.4.3 2005/02/20 09:02:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -111,6 +111,7 @@ using util::value_writer;
 using util::value_reader;
 using util::read_value;
 using util::write_value;
+using util::persistent_traits;
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
@@ -820,7 +821,8 @@ bool_array<D>::connection_loader::operator() (const element_type& e) {
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, D)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("bool_array<D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 }
@@ -999,7 +1001,8 @@ bool_array<0>::load_reference(istream& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_array<0>::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<parent_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("bool_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	the_instance.collect_transient_info(m);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.4.4.1 2005/02/19 06:56:48 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.4.4.2 2005/02/20 09:02:45 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -101,6 +101,7 @@ virtual	count_ptr<const_param>
 class const_param_expr_list : public param_expr_list, 
 		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
+	typedef	const_param_expr_list			this_type;
 protected:
 	typedef	list<count_ptr<const const_param> >	parent_type;
 public:
@@ -208,6 +209,7 @@ virtual	bool
  */
 class const_index_list : public index_list, 
 		private list<count_ptr<const_index> > {
+	typedef	const_index_list		this_type;
 public:
 	typedef	count_ptr<const_index>		const_index_ptr_type;
 	typedef	const_index_ptr_type		value_type;
@@ -301,6 +303,7 @@ public:
 	Would a vector be more appropriate?   consider changing later...
  */
 class const_range_list : public range_expr_list, public list<const_range> {
+	typedef	const_range_list			this_type;
 protected:
 	// no need for pointers here
 	typedef	list<const_range>			list_type;
@@ -490,6 +493,7 @@ public:
 	a more advanced structure (dynamic_pint_collection?).  
  */
 class pint_const_collection : public pint_expr, public const_param {
+	typedef	pint_const_collection			this_type;
 public:
 	typedef	pint_value_type				value_type;
 	typedef	util::packed_array_generic<value_type>	array_type;

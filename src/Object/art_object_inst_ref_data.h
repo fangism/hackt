@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.2 2005/02/20 07:25:52 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.3 2005/02/20 09:02:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -26,6 +26,7 @@ using namespace util::memory;
  */
 class int_instance_reference : public datatype_instance_reference {
 private:
+	typedef	int_instance_reference			this_type;
 	typedef	datatype_instance_reference		parent_type;
 public:
 	typedef	int_instance_collection		instance_collection_type;
@@ -79,6 +80,7 @@ public:
  */
 class bool_instance_reference : public datatype_instance_reference {
 private:
+	typedef	bool_instance_reference			this_type;
 	typedef	datatype_instance_reference		parent_type;
 public:
 	typedef	bool_instance_collection	instance_collection_type;
@@ -133,6 +135,7 @@ public:
  */
 class datastruct_instance_reference : public datatype_instance_reference {
 private:
+	typedef	datastruct_instance_reference		this_type;
 	typedef	datatype_instance_reference		parent_type;
 public:
 	typedef	struct_instance_collection	instance_collection_type;
@@ -188,6 +191,7 @@ public:
  */
 class enum_instance_reference : public datatype_instance_reference {
 private:
+	typedef	enum_instance_reference			this_type;
 	typedef	datatype_instance_reference		parent_type;
 public:
 	typedef	enum_instance_collection	instance_collection_type;

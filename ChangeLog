@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-02-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-04:
+	  Substituted direct use of TYPE_KEY macros with
+	  persistent_traits<...>::type_key for less copying, 
+	  better maintainability.  
+	  This revision is clean and ready to merge with parent branch.
+
+
 2005-02-19	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-02-member-01:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14.2.2.8.1 2005/02/19 08:40:56 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.14.2.2.8.2 2005/02/20 09:02:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -49,6 +49,7 @@ USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;
 using std::bind2nd_argval;
+using util::persistent_traits;
 
 //=============================================================================
 // class param_expression_assignment method definitions
@@ -266,7 +267,8 @@ pbool_expression_assignment::unroll(unroll_context& c) const {
 void
 pbool_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(
@@ -434,7 +436,8 @@ pint_expression_assignment::unroll(unroll_context& c) const {
 void
 pint_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	src->collect_transient_info(m);
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(

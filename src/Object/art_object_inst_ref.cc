@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.3 2005/02/20 07:25:51 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.4 2005/02/20 09:02:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -57,6 +57,7 @@ using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;
 using util::write_value;
 using util::read_value;
+using util::persistent_traits;
 
 //=============================================================================
 // class instance_reference_base method definitions
@@ -1180,7 +1181,7 @@ void
 process_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited
@@ -1380,7 +1381,7 @@ void
 channel_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited

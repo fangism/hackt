@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.3 2005/02/20 07:25:52 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.4 2005/02/20 09:02:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -63,6 +63,7 @@ namespace entity {
 using std::istream;
 using util::write_value;
 using util::read_value;
+using util::persistent_traits;
 
 //=============================================================================
 // class int_instance_reference method definitions
@@ -118,7 +119,7 @@ void
 int_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited
@@ -226,7 +227,7 @@ void
 bool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited
@@ -334,7 +335,7 @@ void
 enum_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited
@@ -442,7 +443,7 @@ void
 datastruct_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)) {
+		persistent_traits<this_type>::type_key)) {
 	this->collect_transient_info_base(m);
 }
 // else already visited

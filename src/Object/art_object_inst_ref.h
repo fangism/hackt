@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.2 2005/02/20 07:25:52 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.3 2005/02/20 09:02:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -64,6 +64,7 @@ public:
  */
 class channel_instance_reference : public simple_instance_reference {
 private:
+	typedef	channel_instance_reference		this_type;
 	typedef	simple_instance_reference		parent_type;
 public:
 	typedef	channel_instance_collection	instance_collection_type;
@@ -114,6 +115,7 @@ public:
  */
 class process_instance_reference : public simple_instance_reference {
 private:
+	typedef	process_instance_reference		this_type;
 	typedef	simple_instance_reference		parent_type;
 public:
 	typedef	process_instance_collection	instance_collection_type;

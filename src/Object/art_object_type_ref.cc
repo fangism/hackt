@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.1.2.1 2005/02/19 08:41:01 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.1.2.2 2005/02/20 09:02:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -47,6 +47,7 @@ namespace entity {
 using std::ostringstream;
 #include "using_ostream.h"
 USING_STACKTRACE
+using util::persistent_traits;
 
 //=============================================================================
 // class fundamental_type_reference method definitions
@@ -511,7 +512,8 @@ data_type_reference::make_instance_collection(
 void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -638,7 +640,8 @@ channel_type_reference::make_instance_collection(
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_chan_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -775,7 +778,8 @@ process_type_reference::make_instance_collection(
 void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_proc_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }

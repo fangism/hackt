@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.1.2.2 2005/02/19 08:40:57 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.1.2.3 2005/02/20 09:02:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -182,6 +182,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 USING_STACKTRACE
+using util::persistent_traits;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -573,7 +574,8 @@ const_param_expr_list::unroll_resolve(const unroll_context& c) const {
 void
 const_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -880,7 +882,8 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 void
 dynamic_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -1362,7 +1365,8 @@ pbool_instance_reference::make_aliases_connection_private(void) const {
 void
 pbool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY))
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key))
 {  
 	collect_transient_info_base(m);
 	pbool_inst_ref->collect_transient_info(m);
@@ -1931,7 +1935,7 @@ void
 pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
+		persistent_traits<this_type>::type_key)) {  
 	collect_transient_info_base(m);
 	pint_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
@@ -2247,7 +2251,8 @@ pint_const::unroll_resolve(const unroll_context& c) const {
  */
 void
 pint_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PINT_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2468,7 +2473,8 @@ pint_const_collection::collect_transient_info(
 	const char s = values.dimensions();
 	INVARIANT(s >= 0);
 	INVARIANT(s <= 4);
-	m.register_transient_object(this, CONST_PINT_COLLECTION_TYPE_KEY, s);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2575,7 +2581,8 @@ pbool_const::must_be_equivalent_pbool(const pbool_expr& b) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PBOOL_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2741,7 +2748,8 @@ pint_unary_expr::unroll_resolve(const unroll_context& c) const {
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_UNARY_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	ex->collect_transient_info(m);
 }
 }
@@ -2899,7 +2907,8 @@ pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
 void
 pbool_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_UNARY_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	ex->collect_transient_info(m);
 }
 }
@@ -3165,7 +3174,8 @@ arith_expr::unroll_resolve(const unroll_context& c) const {
 void
 arith_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ARITH_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3414,7 +3424,8 @@ relational_expr::unroll_resolve(const unroll_context& c) const {
 void
 relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, RELATIONAL_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3646,7 +3657,8 @@ logical_expr::unroll_resolve(const unroll_context& c) const {
 void
 logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, LOGICAL_EXPR_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
@@ -3801,7 +3813,8 @@ pint_range::must_be_formal_size_equivalent(const range_expr& re) const {
 void
 pint_range::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	lower->collect_transient_info(m);
 	upper->collect_transient_info(m);
 }
@@ -4042,7 +4055,8 @@ const_range::range_size_equivalent(const const_index& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4501,7 +4515,8 @@ const_range_list::resolve_sizes(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_LIST_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4670,7 +4685,8 @@ dynamic_range_list::must_be_formal_size_equivalent(
 void
 dynamic_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -5053,7 +5069,8 @@ const_index_list::must_be_equivalent_indices(const index_list& l) const {
 void
 const_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -5342,7 +5359,8 @@ dynamic_index_list::resolve_multikey(
 void
 dynamic_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {

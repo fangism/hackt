@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.3 2005/02/20 07:25:51 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.4 2005/02/20 09:02:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -193,7 +193,8 @@ aliases_connection_base::unroll(unroll_context& c) const {
 void
 aliases_connection_base::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	const_iterator iter = inst_list.begin();
 	const const_iterator end = inst_list.end();
 	for ( ; iter!=end; iter++) {
@@ -431,7 +432,8 @@ port_connection::unroll(unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 port_connection::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PORT_CONNECTION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(ported_inst);
 	ported_inst->collect_transient_info(m);
 	inst_list_type::const_iterator iter = inst_list.begin();
