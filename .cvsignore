@@ -26,4 +26,5 @@ configure_with_ccache.sh
 art++.doxygen.config
 art++.doxygen.log
 artxx-*.*.*
+DevelopmentPlan.ps
 

@@ -1,0 +1,29 @@
+# "DevelopmentPlan.dot"
+
+digraph G {
+
+ARTXX_00_01_04		[shape=box, label="ART++ 0.1.4"];
+ARTXX_00_01_04_b	[shape=box, label="ART++ 0.1.4 (b)"];
+ARTXX_00_01_05		[shape=box, label="HACKT 0.1.5"];
+
+DOCS_00_01_04		[shape=ellipse, label="documentation"];
+PARSER_00_01_04		[shape=ellipse, label="parser"];
+UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
+ALIAS_00_01_04		[shape=ellipse, label="alias connection"];
+PORT_00_01_04		[shape=ellipse, label="port connection"];
+MEMBER_00_01_04		[shape=ellipse, label="member reference unrolling"];
+TYPEDEF_00_01_04	[shape=ellipse, label="typedef unrolling resolution"];
+DEFLAYOUT_00_01_04	[shape=ellipse, label="definition layout"];
+INSTSTMT_00_01_04	[shape=ellipse, label="rework inst. stmt. templates"];
+CONNECTEQ_00_01_04	[shape=ellipse, label="connection type-equivalence"];
+
+ARTXX_00_01_04 -> DOCS_00_01_04;
+ARTXX_00_01_04 -> PARSER_00_01_04;
+ARTXX_00_01_04 -> ALIAS_00_01_04;
+PARSER_00_01_04 -> ARTXX_00_01_04_b;
+
+
+DOCS_00_01_04 -> ARTXX_00_01_05;
+
+}
+
