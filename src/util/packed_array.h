@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.2 2004/12/16 03:50:57 fang Exp $
+	$Id: packed_array.h,v 1.3 2004/12/19 07:51:09 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_H__
@@ -51,7 +51,9 @@ private:
 public:
 	typedef	T					value_type;
 	typedef	multikey<D, size_t, 0>			key_type;
+	typedef	key_type				zeros_type;
 	typedef	multikey<D, size_t, 1>			ones_type;
+	typedef	multikey_generator<D, size_t>		key_generator_type;
 	typedef	T*					pointer;
 	typedef	const T*				const_pointer;
 	typedef	T&					reference;
@@ -151,6 +153,8 @@ public:
 	typedef	bool					value_type;
 	typedef	multikey<D, size_t, 0>			key_type;
 	typedef	multikey<D, size_t, 1>			ones_type;
+	typedef	key_type				zeros_type;
+	typedef	multikey_generator<D, size_t>		key_generator_type;
 	typedef	typename impl_type::pointer		pointer;
 	typedef	typename impl_type::const_pointer	const_pointer;
 	typedef	typename impl_type::reference		reference;

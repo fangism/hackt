@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.2 2004/12/16 03:50:57 fang Exp $
+	$Id: packed_array.tcc,v 1.3 2004/12/19 07:51:09 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_TCC__
@@ -93,6 +93,7 @@ packed_array<D,T>::sizes_product(const key_type& k) {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 void
 packed_array<D,T>::reset_coeffs(void) {
+	coeffs = ones;
 	size_t i = 1;	// skip first
 	for ( ; i < D; i++) {
 		size_t j = 0;
@@ -124,10 +125,16 @@ packed_array<D,T>::range_check(const key_type& k) {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 size_t
 packed_array<D,T>::key_to_index(const key_type& k) const {
-	key_type diff;
+	const key_type diff(k -offset);
+#if 0
 	std::transform(k.begin(), k.end(), offset.begin(), 
 		diff.begin(), std::minus<size_t>());
-	return std::inner_product(diff.begin(), --diff.end(), coeffs.begin(), 
+#endif
+//	const size_t* diff_last = diff.end();
+//	--diff_last;			// this is ok
+//	const typename key_type::const_iterator
+//		diff_last(--diff.end());	// doesn't like this
+	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
 		diff.back());
 }
 
@@ -160,10 +167,10 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 packed_array<D,T>::dump(ostream& o) const {
 	o << "packed_array: size = " << sizes <<
-		", offset = " << offset << endl;
+		", offset = " << offset << ", coeffs = " << coeffs << endl;
 	o << "{ ";
 	ostream_iterator<T> osi(o, ", ");
-	copy(&values[0], &values[values.size() -1], osi);
+	copy(&values[0], &values[values.size()], osi);
 	return o << " }" << endl;
 }
 

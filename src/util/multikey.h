@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.13 2004/12/16 03:50:56 fang Exp $
+	$Id: multikey.h,v 1.14 2004/12/19 07:51:09 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -241,13 +241,13 @@ public:
 	}
 
 	this_type
-	operator + (const this_type& k) {
+	operator + (const this_type& k) const {
 		this_type ret(*this);
 		return ret += k;
 	}
 
 	this_type
-	operator - (const this_type& k) {
+	operator - (const this_type& k) const {
 		this_type ret(*this);
 		return ret -= k;
 	}
@@ -415,7 +415,7 @@ operator > (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 template <size_t D, class K>
 bool
 operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return equal(l.begin(), l.end(), r.begin());
+	return std::equal(l.begin(), l.end(), r.begin());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
