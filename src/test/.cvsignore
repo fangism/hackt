@@ -6,4 +6,5 @@
 *.lo
 core.*
 *.core
+*.swp
 

@@ -6,6 +6,7 @@ Makefile.in
 *.lo
 core.*
 *.core
+*.swp
 *.test
 *.out
 *.diff
