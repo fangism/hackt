@@ -1,5 +1,32 @@
 "ChangeLog"
 
+2005-01-06	David Fang	<fangism@users.sourceforge.net>
+
+	* MAJOR BUG: see the 2005-01-05 entry of src/NOTES.  
+	  Will address the pointer class bug after isolation.  
+	  (release vs. reset in destructor)
+	  Much debugging code in-place is commented out.  
+	  MUST FIX this before release 0.1.4.
+
+	* Many instance reference constructors no longer need a
+	  NULL index argument, just uses default of NULL.
+
+
+2005-01-02	David Fang	<fangism@users.sourceforge.net>
+
+	* New way of "naming" classes for using a "what" trait-like class.
+	  By default it uses typeinfo's built-in .name() function, 
+	  but may be partially specialized and overridden, especially if
+	  name is mangled.  
+
+	* Experimented around with allocating new tokens (token_char)
+	  using list_vector_pool, accomplished with overloaded new/delete
+	  static member operators.  
+	  
+	* Parser bothers freeing memory of symbol stack tokens and symbols
+	  before exit(1) on error.  (Not necessary, but a good exercise.)
+
+
 2004-12-24	David Fang	<fangism@users.sourceforge.net>
 
 	* New expression class for multidimensional collections
