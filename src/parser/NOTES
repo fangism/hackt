@@ -38,6 +38,14 @@ void yyerror(const char*);
 	stack before exit(1)-ing.  Just showing off the power of my hacks.  
 
 ===============================================================================
+Interface:
+	Something to consider trying:
+	bison only (I think):
+	%parse-param to add arguments to the prototype of int yyparse().
+	flex only (I think):
+	%lex-param to add arguments to the prototype of int yylex().
+
+===============================================================================
 Parser-generator-specific notes:
 
 yacc:
@@ -56,6 +64,12 @@ yacc:
 
 bison:
 	Versions 1.35 and 1.875 ... not many issues.  
+
+	A documented option for generating pure (reentrant) parsers 
+	is the %pure-parser directive.  
+	This will store yylval as only a local variable, making it
+	globally inaccessible, which may be useless.  
+	I haven't explored this option yet.  
 	
 bison-2.0:
 	According to the manual, a new feature for invoking destructors
