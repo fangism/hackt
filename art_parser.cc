@@ -15,6 +15,7 @@
 #include "art_macros.h"
 #include "art_switches.h"
 #include "art_parser_template_methods.h"
+
 #include "art_symbol_table.h"
 #include "art_object.h"
 #include "art_object_expr.h"

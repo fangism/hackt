@@ -1,11 +1,12 @@
 // "art_object.cc"
 
 #include <iostream>
-#include "art_parser_debug.h"
+
+#include "art_parser_debug.h"		// need this?
 #include "art_parser.h"
 #include "art_symbol_table.h"
-#include "map_of_ptr_template_methods.h"
-#include "hash_map_of_ptr_template_methods.h"
+// #include "map_of_ptr_template_methods.h"	// PHASE OUT
+// #include "hash_map_of_ptr_template_methods.h"	// PHASE OUT
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -87,7 +88,10 @@ scopespace::~scopespace() {
  */
 const object*
 scopespace::lookup_object_here(const token_string& id) const {
-	return used_id_map[id];
+//	return used_id_map[id];
+	// NOT WORKING... need to use some_ptr...
+	never_const_ptr<object> ret(used_id_map[id]);
+	return ret.unprotected_const_ptr();	// temporary
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,7 +106,8 @@ scopespace::lookup_object_here(const token_string& id) const {
  */
 const object*
 scopespace::lookup_object(const token_string& id) const {
-	const object* o = used_id_map[id];
+//	const object* o = used_id_map[id];
+	const object* o = used_id_map[id].unprotected_const_ptr();
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
 	else return NULL;
@@ -160,7 +165,10 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 
 const instantiation_base*
 scopespace::add_instance(instantiation_base& i) {
-	used_id_map[i.get_name()] = &i;
+//	used_id_map[i.get_name()] = &i;
+//	used_id_map[i.get_name()] = excl_ptr<instantiation_base>(&i);
+	used_id_map[i.get_name()] = some_ptr<instantiation_base>(
+		excl_ptr<instantiation_base>(&i));
 	return &i;
 }
 
@@ -236,7 +244,8 @@ name_space::what(ostream& o) const {
 name_space*
 name_space::add_open_namespace(const string& n) {
 	name_space* ret;
-	const object* probe = used_id_map[n];
+//	const object* probe = used_id_map[n];
+	const object* probe = used_id_map[n].unprotected_const_ptr();
 	if (probe) {
 		const name_space* probe_ns = IS_A(const name_space*, probe);
 		// an alias may return with valid pointer!
@@ -253,15 +262,20 @@ name_space::add_open_namespace(const string& n) {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
 			DEBUG(TRACE_NAMESPACE_NEW, 
 				cerr << n << " is already exists as subspace, re-opening")
-			ret = IS_A(name_space*, used_id_map[n]);
+//			ret = IS_A(name_space*, used_id_map[n]);
+			ret = IS_A(name_space*, used_id_map[n].unprotected_ptr());
 		}
 		assert(ret);
 	} else {
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
+//		ret = excl_ptr<name_space>(new name_space(n, this));
 		ret = new name_space(n, this);
 		assert(ret);
-		used_id_map[n] = ret;	// register it as a used id
+		// register it as a used id
+//		used_id_map[n] = ret;
+		used_id_map[n] = some_ptr<name_space>(
+			excl_ptr<name_space>(ret));
 	}
 
 	// silly sanity checks
@@ -382,7 +396,8 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 		cerr << endl << "adding using-alias in space: " 
 			<< get_qualified_name() << " as " << a)
 
-	probe = used_id_map[a];
+//	probe = used_id_map[a];
+	probe = used_id_map[a].unprotected_const_ptr();
 	if (probe)
 		probe = &probe->self();		// resolve handles
 	if (probe) {
@@ -422,7 +437,9 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 			open_aliases[a] = never_const_ptr<name_space>(ret);
 			// remember that open_aliases owns ret, 
 			// not used_id_map, thus we use a const_handle.  
-			used_id_map[a] = new object_handle(ret);
+//			used_id_map[a] = new object_handle(ret);
+			used_id_map[a] = some_ptr<object_handle>(
+				excl_ptr<object_handle>(new object_handle(ret)));
 			break;
 			}
 		case 0:	{
@@ -485,7 +502,8 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
-			next = IS_A(const name_space*, ns->used_id_map[*tid]);
+//			next = IS_A(const name_space*, ns->used_id_map[*tid]);
+			next = IS_A(const name_space*, ns->used_id_map[*tid].unprotected_const_ptr());
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
 			ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temporary
@@ -532,7 +550,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	const name_space* ns =
 		IS_A(const name_space*, 
 			((id.is_absolute()) ? get_global_namespace() : this)
-				->used_id_map[*tid]);
+				->used_id_map[*tid].unprotected_const_ptr());
+//				->used_id_map[*tid]
 	if (!ns) {				// else lookup in aliases
 		ns = open_aliases[*tid].unprotected_const_ptr();	// temp
 //		ns = open_aliases[*tid];	// replaced for const semantics
@@ -543,7 +562,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		tid = i->is_a<token_identifier>();
 		assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-		next = IS_A(const name_space*, ns->used_id_map[*tid]);
+//		next = IS_A(const name_space*, ns->used_id_map[*tid]);
+		next = IS_A(const name_space*, ns->used_id_map[*tid].unprotected_const_ptr());
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temp
 //		ns = (next) ? next : ns->open_aliases[*tid];
@@ -645,14 +665,17 @@ definition_base*
 name_space::add_definition(definition_base* db) {
 	assert(db);
 	string k = db->get_name();
-	const object* probe = used_id_map[k];
+//	const object* probe = used_id_map[k];
+	const object* probe = used_id_map[k].unprotected_const_ptr();
 	if (probe) {
 		probe->what(cerr << "ERROR: identifier already taken by ")
 			<< "  Failed to add definition!";
 		return NULL;
 	} else {
 		// used_id_map owns this type is reponsible for deleting it
-		used_id_map[k] = db;
+//		used_id_map[k] = db;
+		used_id_map[k] = some_ptr<definition_base>(
+			excl_ptr<definition_base>(db));
 		return db;
 	}
 }
@@ -735,7 +758,8 @@ name_space::add_type_reference(fundamental_type_reference* tb) {
 	const fundamental_type_reference* trb;
 	assert(tb);
 	string k = tb->hash_string();
-	o = used_id_map[k];
+//	o = used_id_map[k];
+	o = used_id_map[k].unprotected_const_ptr();
 	// see what is already there...
 	trb = IS_A(const fundamental_type_reference*, o);
 
@@ -761,7 +785,9 @@ name_space::add_type_reference(fundamental_type_reference* tb) {
 		// 3) just add it locally to this namespace regardless...
 		//	who gives a rat's a** about redundancy?
 		// 3:
-		used_id_map[k] = tb;
+//		used_id_map[k] = tb;
+		used_id_map[k] = some_ptr<fundamental_type_reference>(
+			excl_ptr<fundamental_type_reference>(tb));
 		return tb;
 	}
 }
@@ -793,7 +819,8 @@ name_space::add_datatype_instantiation(
 		const string& id) {
 	const object* probe;
 	datatype_instantiation* new_inst;
-	probe = used_id_map[id];
+//	probe = used_id_map[id];
+	probe = used_id_map[id].unprotected_const_ptr();
 	if (probe) {
 		probe->what(cerr << id << " is already declared ")
 			<< ", ERROR! ";
@@ -805,7 +832,9 @@ name_space::add_datatype_instantiation(
 	new_inst = new datatype_instantiation(*this, t, id);
 	assert(new_inst);
 	// new_inst will be owned by used_id_map
-	used_id_map[id] = new_inst;
+//	used_id_map[id] = new_inst;
+	used_id_map[id] = some_ptr<datatype_instantiation>(
+		excl_ptr<datatype_instantiation>(new_inst));
 	return new_inst;
 }
 
@@ -825,7 +854,8 @@ name_space::add_paramtype_instantiation(
 		const string& id) {
 	const object* probe;
 	param_instantiation* new_inst;
-	probe = used_id_map[id];
+//	probe = used_id_map[id];
+	probe = used_id_map[id].unprotected_const_ptr();
 	if (probe) {
 		probe->what(cerr << id << " is already declared ")
 			<< ", ERROR! ";
@@ -836,7 +866,9 @@ name_space::add_paramtype_instantiation(
 	new_inst = new param_instantiation(*this, t, id);
 	assert(new_inst);
 	// new_inst will be owned by used_id_map
-	used_id_map[id] = new_inst;
+//	used_id_map[id] = new_inst;
+	used_id_map[id] = some_ptr<param_instantiation>(
+		excl_ptr<param_instantiation>(new_inst));
 	return new_inst;
 }
 
@@ -850,7 +882,8 @@ name_space::add_paramtype_instantiation(
  */
 const process_definition*
 name_space::probe_process(const string& s) const {
-	const object* probe = used_id_map[s];
+//	const object* probe = used_id_map[s];
+	const object* probe = used_id_map[s].unprotected_const_ptr();
 	return IS_A(const process_definition*, probe);
 }
 
@@ -866,7 +899,8 @@ name_space::probe_process(const string& s) const {
 process_definition*
 name_space::add_proc_declaration(const token_identifier& pname) {
 	process_definition* pd = NULL;
-	const object* probe = used_id_map[pname];
+//	const object* probe = used_id_map[pname];
+	const object* probe = used_id_map[pname].unprotected_const_ptr();
 	if (probe) {
 		// something already exists with name...
 		const process_definition* probe_pd = 
@@ -875,7 +909,8 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 			// see if this declaration matches EXACTLY
 			// or punt check until check_build() on the templates
 			//	and ports?
-			return IS_A(process_definition*, used_id_map[pname]);
+			return IS_A(process_definition*, used_id_map[pname].unprotected_ptr());
+//			return IS_A(process_definition*, used_id_map[pname]);
 		} else {
 			// already declared as something else in this scope.
 			probe->what(cerr << pname << " is already declared as ")
@@ -886,7 +921,9 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, false);
 		assert(pd);
-		used_id_map[pname] = pd;
+		used_id_map[pname] = some_ptr<process_definition>(
+			excl_ptr<process_definition>(pd));
+//		used_id_map[pname] = pd;
 	}
 	return pd;
 }
@@ -901,7 +938,8 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 process_definition*
 name_space::add_proc_definition(const token_identifier& pname) {
 	process_definition* pd = NULL;
-	const object* probe = used_id_map[pname];	// looks up used_id_map
+//	const object* probe = used_id_map[pname];	// looks up used_id_map
+	const object* probe = used_id_map[pname].unprotected_const_ptr();	// looks up used_id_map
 	if (probe) {
 		// something already exists with name...
 		const process_definition* probe_pd = 
@@ -915,7 +953,8 @@ name_space::add_proc_definition(const token_identifier& pname) {
 			} else {
 			// probably already declared
 			// punt check, until traversing templates/ports
-				return IS_A(process_definition*, used_id_map[pname]);
+//				return IS_A(process_definition*, used_id_map[pname]);
+				return IS_A(process_definition*, used_id_map[pname].unprotected_ptr());
 			}
 		} else {
 			// already declared as something else in this scope.
@@ -927,7 +966,9 @@ name_space::add_proc_definition(const token_identifier& pname) {
 		// slot is free, allocate new entry for process definition
 		pd = new process_definition(this, pname, true);
 		assert(pd);
-		used_id_map[pname] = pd;
+		used_id_map[pname] = some_ptr<process_definition>(
+			excl_ptr<process_definition>(pd));
+//		used_id_map[pname] = pd;
 	}
 	return pd;
 }
@@ -1039,7 +1080,8 @@ definition_base::add_template_formal(instantiation_base* f) {
 		assert(template_formals);
 	}
 	// check and make sure identifier wasn't repeated in formal list!
-	const object* probe = used_id_map[pf->get_name()];
+//	const object* probe = used_id_map[pf->get_name()];
+	const object* probe = used_id_map[pf->get_name()].unprotected_const_ptr();
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return NULL;
@@ -1058,7 +1100,8 @@ definition_base::add_template_formal(instantiation_base* f) {
 
 	// COMPILE: pf is const, but used_id_map members are not
 	// wrap around with object_handle?
-	used_id_map[pf->hash_string()] = pf;
+	used_id_map[pf->hash_string()] = some_ptr<param_instantiation>(
+		excl_ptr<param_instantiation>(pf));
 	return pf;
 }
 

@@ -9,6 +9,7 @@
 #include <string>
 #include <stack>
 #include <list>
+#include "ptrs.h"
 
 namespace ART {
 
@@ -16,7 +17,11 @@ namespace ART {
 // forward declarations from another namespace, from "art_object.h"
 // avoids having to include "art_object.h"
 namespace entity {
+	using std::list;			
+	using namespace fang;			// for pointer classes
+
 	// ... and more as they are needed
+	class object;
 	class scopespace;
 	class name_space;
 	class built_in_type_def;
@@ -45,14 +50,15 @@ namespace entity {
 
 	class param_expr;
 	// replicated typedefs from "art_object.h"
-	typedef list<never_const_ptr<param_expr> >	array_dim_list;
-	typedef list<never_const_ptr<param_expr> >	template_param_list;
+	typedef class list<never_const_ptr<param_expr> >	array_dim_list;
+	typedef class list<never_const_ptr<param_expr> >	template_param_list;
 }
 using namespace entity;
 
 namespace parser {
 //=============================================================================
 using namespace std;
+using namespace fang;			// for pointer classes
 
 //=============================================================================
 // forward declarations

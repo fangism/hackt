@@ -90,6 +90,8 @@ friend class excl_ptr<T>;
 friend class never_ptr<T>;
 friend class excl_const_ptr<T>;
 friend class never_const_ptr<T>;
+friend class some_ptr<T>;
+friend class some_const_ptr<T>;
 
 protected:
 	T*	ptr;
@@ -220,6 +222,34 @@ struct base_const_ptr_ref {
 
 //=============================================================================
 /**
+	Helper class for type-casting for the some_ptr class.  
+ */
+// really don't want this visible to the outside...
+template <class S>
+struct base_some_ptr_ref {
+	S*	ptr;
+	bool	own;
+	explicit	base_some_ptr_ref(S* p, bool o) throw() :
+				ptr(p), own(o) { }
+};	// end struct base_some_ptr_ref
+
+//-----------------------------------------------------------------------------
+/**
+	Helper class for type-casting of read-only pointers.  
+ */
+template <class S>
+struct base_some_const_ptr_ref {
+	const S*	cptr;
+	bool		own;
+	explicit	base_some_const_ptr_ref(const S* p, bool o) throw() :
+				cptr(p), own(o) { }
+	explicit	base_some_const_ptr_ref(
+				const base_some_ptr_ref<S>& p) throw() :
+				cptr(p.ptr), own(p.own) { }
+};	// end struct base_some_const_ptr_ref
+
+//=============================================================================
+/**
 	This pointer is the exclusive owner of the pointed memory, 
 	no one else may delete it.  Others who use it must promise
 	not to delete it.  Very similar to auto_ptr, with destructive
@@ -235,6 +265,8 @@ class excl_ptr : public virtual base_ptr<T> {
 friend class excl_const_ptr<T>;
 friend class never_ptr<T>;
 friend class never_const_ptr<T>;
+friend class some_ptr<T>;
+friend class some_const_ptr<T>;
 
 protected:
 /**
@@ -542,6 +574,8 @@ never_ptr<T>& operator = (const base_ptr<T>& e) throw() {
 			return *this;
 		}
 
+// should some operators have const?
+
 	// safe type-casting
 	template <class S>
 	operator base_ptr_ref<S>() throw() {
@@ -623,6 +657,105 @@ never_const_ptr<T>& operator = (base_const_ptr_ref<T> r) throw() {
 
 // non-member functions
 };	// end class never_const_ptr
+
+//=============================================================================
+/**
+	Pointer class with dynamic ownership.  
+	Is sometimes an excl ptr, sometimes a never_ptr.  
+	Simply uses an extra bool to keep track.  
+	Consider trick, use LSB of address and alignment?
+ */
+template <class T>
+class some_ptr : public virtual base_ptr<T> {
+protected:
+	bool	own;
+protected:
+
+public:
+	some_ptr(void) : base_ptr<T>(NULL), own(false) { }
+	/**
+		Never steals ownership, shares by default.  
+		Ownership can only be transferred by explicit conversion
+		to an excl_ptr.  
+	 */
+explicit some_ptr(const base_ptr<T>& p) : base_ptr<T>(p.ptr), own(false) { }
+	// need some constructor where this owns the pointer...
+
+explicit some_ptr(excl_ptr<T>& p) : base_ptr<T>(p.release()), own(true) { }
+
+	/**
+		Conditional destructor.  De-allocates only if it owns.  
+	 */
+	~some_ptr(void) { if (ptr && own) delete ptr; }
+
+// cannot accept naked pointer, must wrap with excl or never pointer
+// explicit some_ptr(T* p) : base_ptr<T>(ptr), own(true) { }
+
+// conversion operators:
+// copied from auto_ptr_ref
+	some_ptr(base_some_ptr_ref<T> r) throw() :
+		base_ptr<T>(r.ptr), own(r.o) { }
+
+some_ptr<T>& operator = (base_some_ptr_ref<T> r) throw() {
+		own = r.own;
+		r.own = false;
+		ptr = r.ptr;
+		return *this;
+	}
+
+	// safe type-casting
+	template <class S>
+	operator base_some_ptr_ref<S>() throw() {
+		bool o = own;
+		own = false;
+		return base_some_ptr_ref<S>(ptr, o);
+	}
+
+
+};	// end class some_ptr
+
+//=============================================================================
+template <class T>
+class some_const_ptr : public virtual base_const_ptr<T> {
+protected:
+	bool	own;
+public:
+	some_const_ptr(void) : base_const_ptr<T>(NULL), own(false) { }
+
+	/**
+		Never steals ownership, shares by default.  
+		Ownership can only be transferred by explicit conversion
+		to an excl_ptr.  
+	 */
+explicit some_const_ptr(const base_const_ptr<T>& p) :
+		base_const_ptr<T>(p.cptr), own(false) { }
+
+explicit some_const_ptr(excl_const_ptr<T>& p) :
+		base_const_ptr<T>(p.release()), own(true) { }
+
+	/**
+		Conditional destructor.  De-allocates only if it owns.  
+	 */
+	~some_const_ptr(void) { if (cptr && own) delete cptr; }
+
+// copied from auto_ptr_ref
+	some_const_ptr(base_const_ptr_ref<T> r) throw() :
+		base_const_ptr<T>(r.cptr) { }
+
+some_const_ptr<T>& operator = (base_const_ptr_ref<T> r) throw() {
+		reset(r.cptr);
+		r.cptr = NULL;
+		return *this;
+	}
+
+	// safe type-casting
+	template <class S>
+	operator base_const_ptr_ref<S>() throw() {
+		return base_const_ptr_ref<S>(this->release());
+	}
+
+
+};	// end class some_const_ptr
 
 //=============================================================================
 

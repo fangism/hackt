@@ -3,8 +3,8 @@
 #include <assert.h>
 #include <iostream>
 
-#include "art_parser.h"
 #include "art_symbol_table.h"
+#include "art_parser.h"
 #include "art_object.h"
 #include "art_object_expr.h"
 

@@ -3,11 +3,13 @@
 #ifndef	__ART_OBJECT_H__
 #define	__ART_OBJECT_H__
 
+#include <iosfwd>
 #include <string>
 
 #include "qmap.h"
-// #include "map_of_ptr.h"	// PHASE OUT
-#include "hash_map_of_ptr.h"	// PHASE OUT
+#include "hash_qmap.h"
+
+// #include "hash_map_of_ptr.h"	// PHASE OUT
 
 #include "hashlist.h"		// includes "list_of_ptr.h" and <hash_map>
 	// for now don't need hashlist...
@@ -87,7 +89,6 @@ class param_instance_reference;
 
 // from "art_object_expr.h"
 class param_expr;
-// typedef	list_of_ptr<param_expr>		array_dim_list;
 typedef	list<never_const_ptr<param_expr> >	array_dim_list;
 
 /**
@@ -100,7 +101,6 @@ typedef	list<never_const_ptr<param_expr> >	array_dim_list;
 	These parameter expressions are not owned!  
  */
 typedef	list<never_const_ptr<param_expr> >	template_param_list;
-// typedef	list_of_const_ptr<param_expr>	template_param_list;
 
 
 //=============================================================================
@@ -212,8 +212,9 @@ protected:	// typedefs -- keep these here for re-use
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
 	 */
-	typedef	hash_map_of_ptr<string, object>		used_id_map_type;
-	// later: hash_map<string, excl_ptr<object> >
+//	typedef	hash_map_of_ptr<string, object>		used_id_map_type;
+//	typedef	hash_qmap<string, excl_ptr<object> >	used_id_map_type;
+	typedef	hash_qmap<string, some_ptr<object> >	used_id_map_type;
 
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
