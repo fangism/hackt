@@ -3,12 +3,9 @@
 #ifndef	__HASH_QMAP_H__
 #define	__HASH_QMAP_H__
 
+#include "hash_qmap_fwd.h"		// forward declarations only
 #include "hash_map.h"			// version independent
 // using directive should be in the below namespace...
-
-#ifndef	HASH_QMAP_NAMESPACE
-#define	HASH_QMAP_NAMESPACE		fang
-#endif
 
 namespace HASH_QMAP_NAMESPACE {
 

@@ -1,20 +1,24 @@
 // "art_object.cc"
 
 #include <iostream>
-
-#include "art_parser_debug.h"
-#include "art_parser_base.h"
+#include <fstream>
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
 // about redefinition of struct hash<> template upon specialization of
 // hash<string>.  
 
+// include this as early as possible
 #include "hash_specializations.h"		// substitute for the following
+
+#include "art_utils.tcc"
+#include "art_parser_debug.h"
+#include "art_parser_base.h"
 
 #include "art_object_base.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
+#include "art_object_IO.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -64,7 +68,33 @@ namespace entity {
 // general non-member function definitions
 
 //=============================================================================
+// class object method definitions
+
+/**
+	Default behavior for undefined writing to stream.  
+ */
+void
+object::write_object(persistent_object_manager& m) const {
+	what(cerr << "WARNING: write_object() not implemented for ")
+		<< " yet." << endl;
+}
+
+/**
+	Default behavior for undefined loading from stream.  
+ */
+void
+object::load_object(persistent_object_manager& m) {
+	what(cerr << "WARNING: load_object() not implemented for ")
+		<< " yet." << endl;
+}
+
+//=============================================================================
 // class object_handle method definitions
+
+object_handle::object_handle(never_const_ptr<object> o) :
+		object(), obj(*o) {
+	assert(!o.is_a<object_handle>());
+}
 
 ostream&
 object_handle::what(ostream& o) const {
@@ -803,7 +833,15 @@ scopespace::lookup_object_here(const string& id) const {
  */
 never_ptr<object>
 scopespace::lookup_object_here_with_modify(const string& id) const {
+#if 1
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
+#else
+	// sanity checking
+	some_ptr<object> ret(
+		static_cast<const used_id_map_type&>(used_id_map)[id]);
+	assert(!ret.owned());
+	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1161,6 +1199,9 @@ name_space::dump(ostream& o) const {
  */
 never_ptr<name_space>
 name_space::add_open_namespace(const string& n) {
+#if 0
+	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
+#endif
 	never_ptr<name_space> ret;
 	never_const_ptr<object> probe = lookup_object_here(n);
 	if (probe) {
@@ -1170,7 +1211,7 @@ name_space::add_open_namespace(const string& n) {
 			probe->what(cerr << n << " is already declared as a ")
 				<< ", ERROR! ";
 			return never_ptr<name_space>(NULL);
-		} else if (open_aliases[n]) {
+		} else if (lookup_open_alias(n)) {
 		// we have a valid namespace pointer, 
 		// now we see if this is an alias, or true sub-namespace
 			cerr << n << " is already declared an open alias, "
@@ -1183,6 +1224,7 @@ name_space::add_open_namespace(const string& n) {
 					"re-opening")
 			ret = lookup_object_here_with_modify(n)
 				.is_a<name_space>();
+//			assert(lookup_object_here(n).is_a<name_space>());
 			assert(probe_ns->key == ret->key);
 		}
 		assert(ret);
@@ -1223,13 +1265,26 @@ name_space::add_open_namespace(const string& n) {
  */
 never_const_ptr<name_space>
 name_space::leave_namespace(void) {
+#if 0
+	cerr << "Beginning of name_space::leave_namespace(): " << endl;
+	dump(cerr) << endl;
+#endif
 	// for all open_aliases, release their names from used-map
 	alias_map_type::const_iterator i = open_aliases.begin();
-	for ( ; i!=open_aliases.end(); i++) {
-		used_id_map.erase(used_id_map.find((*i).first));
+	const alias_map_type::const_iterator a_end = open_aliases.end();
+	for ( ; i!=a_end; i++) {
+#if 0
+		cerr << "Removing \"" << i->first << "\" from used_id_map."
+			<< endl;
+#endif
+		used_id_map.erase(used_id_map.find(i->first));
 	}
 	open_spaces.clear();
 	open_aliases.clear();
+#if 0
+	cerr << "End of name_space::leave_namespace(): " << endl;
+	dump(cerr) << endl;
+#endif
 	return parent;
 	// never NULL, can't leave global namespace!
 }
@@ -1327,7 +1382,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 		// we report the conflict precisely as follows:
 		ret = probe.is_a<name_space>();
 		if (ret) {
-			if(open_aliases[a]) {
+			if(lookup_open_alias(a)) {
 				cerr << a << " is already an open alias, "
 					"ERROR! ";
 			} else {
@@ -1432,7 +1487,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			next = ns->lookup_object_here(*tid).is_a<name_space>();
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-			ns = (next) ? next : ns->open_aliases[*tid];
+			ns = (next) ? next : ns->lookup_open_alias(*tid);
 		}
 
 	// for loop terminates when ns is NULL or i is at the end
@@ -1485,7 +1540,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	}
 
 	if (!ns) {				// else lookup in aliases
-		ns = open_aliases[*tid];	// replaced for const semantics
+		ns = lookup_open_alias(*tid);	// replaced for const semantics
 	}
 	for (i++; ns && i!=id.end(); i++) {
 		never_const_ptr<name_space> next;
@@ -1494,7 +1549,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = ns->lookup_object_here(*tid).is_a<name_space>();
 		// if not found in subspaces, check aliases list
-		ns = (next) ? next : ns->open_aliases[*tid];
+		ns = (next) ? next : ns->lookup_open_alias(*tid);
 	}
 	// for loop terminates when ns is NULL or i is at the end
 	// if i is not at the end, then we didn't find a matched namespace
@@ -1693,6 +1748,190 @@ name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
 never_const_ptr<scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
 	return query_subnamespace_match(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a namespace in ONLY the open_aliases set.  
+ */
+never_const_ptr<name_space>
+name_space::lookup_open_alias(const string& id) const {
+	// need static cast to guarantee non-modification
+	return static_cast<const alias_map_type&>(open_aliases)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+type_index_enum
+name_space::get_type_index(void) const {
+	return NAMESPACE_TYPE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collect pointer information about contituents.  
+ */
+void
+name_space::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
+#if 0
+	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
+		<< this << endl;
+#endif
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	for ( ; m_iter!=m_end; m_iter++) {
+		some_ptr<object> m_obj(m_iter->second);
+		assert(!m_obj.owned());		// local copy is not owned
+
+		// for now, just walk namespaces only
+		never_const_ptr<name_space>
+			m_ns(m_obj.is_a<name_space>());
+		if (m_ns) {
+			// but write it to table...
+			m_ns->collect_transient_info(m);
+		}
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out object binary.  
+	Not recursive, as manager will sequentially visit each object
+	exactly once.  
+	Temporarily only write out namespaces, will extend later...
+	Make sure read_object reverses this process exactly.  
+	\param f output file stream, must be in binary mode.  
+	\param m object manager, must already be loaded with all pointer info, 
+		only modifies the flagged state of the entries.  
+ */
+void
+name_space::write_object(persistent_object_manager& m) const {
+// if (!m.flag_visit(this)) {
+	ostream& f = m.lookup_write_buffer(this);
+	// First, write out the index number associated with this address.  
+	write_value(f, m.lookup_ptr_index(this));
+
+	// Second, write out the name of this namespace.
+	// name MUST be available for use by other visitors right away
+	write_string(f, key);
+
+	// WHAT ABOUT NULL?
+	if (parent) {
+		write_value(f, m.lookup_ptr_index(&*parent));
+	} else {
+		write_value(f, m.lookup_ptr_index(NULL));
+	}
+
+	// only write out namespaces
+	// how many namespaces in the used_id_map?
+	// eventually won't have to count?
+	// ah, but aliases (also in used_id_map) won't be saved...
+	typedef	list<never_const_ptr<name_space> >	ns_list_type;
+	ns_list_type ns_list;
+
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	for ( ; m_iter!=m_end; m_iter++) {
+		some_ptr<object> m_obj(m_iter->second);
+		never_const_ptr<name_space>
+			m_ns(m_obj.is_a<name_space>());
+		if (m_ns) {
+			ns_list.push_back(m_ns);
+		}
+		// sort into bins by base type
+		// else if ... definitions, instances, etc...
+	}
+
+	// how many pointers to expect?
+	write_value(f, ns_list.size());
+	// write individual pointers
+	ns_list_type::const_iterator l_iter = ns_list.begin();
+	const ns_list_type::const_iterator l_end = ns_list.end();
+	for ( ; l_iter!=l_end; l_iter++) {
+		never_const_ptr<name_space> l_obj(*l_iter);
+		write_value(f, m.lookup_ptr_index(&*l_obj));
+	}
+
+	// write a tail or delimiter for checking alignment?
+	write_value(f, -1L);		// must be long
+// }	// else we already visited this object, don't write it out.
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only allocates and initializes non-transient members
+	(non-members) of the namespace object.  
+	Constructs with bogus arguments temporarily, if necessary.  
+	After this, namespace won't be usable until load_object is called.  
+ */
+object*
+name_space::construct_empty(void) {
+	return new name_space("");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initializes and loads this namespace with actual contents.  
+	Have to cast some const qualifiers away because object
+	was only partially initialized on allocation.  
+ */
+void
+name_space::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	// First, strip away the index number associated with this address.
+	{
+	long index;
+	read_value(f, index);
+	}
+
+	// Second, read in the name of the namespace.  
+	{
+	string tmp_str;
+	read_string(f, tmp_str);
+	// coercive cast
+	const_cast<string&>(key) = tmp_str;
+	}
+
+	// Next, read in the parent namespace pointer.  
+	{
+	long i;
+	read_value(f, i);
+	const_cast<never_const_ptr<name_space>& >(parent) =
+		never_const_ptr<name_space>(m.lookup_obj_ptr(i));
+	}
+
+	{
+	size_t s;
+	// how many pointers to expect?
+	read_value(f, s);
+	size_t i = 0;
+	for ( ; i<s; i++) {
+		long index;
+		read_value(f, index);
+		object* o = m.lookup_obj_ptr(index);
+		assert(o);
+		o->load_object(m);	// recursion!!!
+		name_space* ns = IS_A(name_space*, o);
+		assert(ns);
+		// see name_space::add_open_namespace for how
+		// it is added as a excl_ptr
+		// TO DO: make a common private method.  
+		used_id_map[ns->get_key()] = excl_ptr<name_space>(ns);
+		// ownership restored here!
+	}
+	}
+
+	{
+	// write a tail or delimiter for checking alignment?
+	long neg_one;
+	read_value(f, neg_one);		// must be long
+	assert(neg_one == -1L);
+	}
+}
+// else already visited, don't reload
 }
 
 //=============================================================================

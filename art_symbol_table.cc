@@ -89,8 +89,18 @@ context::~context() {
  */
 void
 context::open_namespace(const token_identifier& id) {
+#if 0
+	cerr << "In context::open_namespace(\"" << id << "\"):" << endl;
+	cerr << "Before add_open_namespace(), " << endl;
+	current_namespace->dump(cerr) << endl;
+#endif
 	never_ptr<name_space> insub;
 	insub = current_namespace->add_open_namespace(id);
+
+#if 0
+	cerr << "After add_open_namespace(), " << endl;
+	current_namespace->dump(cerr) << endl;
+#endif
 
 	// caution: assigning to NULL may ruin the context!
 	// if this returns NULL, we signal to the caller to skip

@@ -1,15 +1,21 @@
 // "art_utils.h"
+// handy utilities
 
 #ifndef __ART_UTILS_H__
 #define __ART_UTILS_H__
 
 #include <assert.h>
 #include <iosfwd>
+#include <string>
 
 #include "art_lex.h"
 
-namespace ART {
+//=============================================================================
+using std::string;
 using std::ostream;
+using std::istream;
+
+namespace ART {
 
 //=============================================================================
 /// just a line number and column position
@@ -44,8 +50,24 @@ public:
 friend ostream& operator << (ostream& o, const line_range& l);
 };
 
+}	// end namespace ART
+
 //=============================================================================
-};
+// general utility functions
+
+template <class T>
+void	write_value(ostream& f, const T& v);
+
+template <class T>
+void	read_value(istream& f, T& v);
+
+extern
+void	write_string(ostream& f, const string& s);
+
+extern
+void	read_string(istream& f, string& s);
+
+//=============================================================================
 
 #endif	// __ART_UTILS_H__
 

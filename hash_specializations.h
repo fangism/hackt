@@ -1,5 +1,8 @@
 // "hash_specializations.h"
 
+// Include this file before using any hash_map for specializations
+// to take effect.
+
 #ifndef	__HASH_SPECIALIZATIONS_H__
 #define	__HASH_SPECIALIZATIONS_H__
 
@@ -26,14 +29,29 @@ namespace
 	Explicit template specialization of hash of a string class, 
 	which just uses the internal char* representation as a wrapper.
  */
-template <>   
+template <>
 struct hash<string> {
 	size_t operator() (const string& x) const {
 		return hash<const char*>()(x.c_str());
 	}
 };	// end hash<>
+
+/**
+	May want to shuffle around bits because pointers tend to be aligned, 
+	rendering the lower bits useless.  
+	Caution: don't want to make this machine-dependent.
+ */
+template <>
+struct hash<const void*> {
+	size_t operator() (const void* x) const {
+		register const long y = (long) x;	// C-style cast!
+		return hash<long>()(y ^ (y >> 7));
+	}
+};	// end hash<>
+
 };	// end namespace
 
 //=============================================================================
 
 #endif	// __HASH_SPECIALIZATIONS_H__
+

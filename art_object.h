@@ -12,6 +12,7 @@
 #include "art_object_instance.h"
 #include "art_object_inst_ref.h"
 #include "art_object_expr.h"
+#include "art_object_connect.h"
 
 #endif	// __ART_OBJECT_H__
 

@@ -5,6 +5,7 @@
 
 #include "art_macros.h"
 #include "art_object_base.h"
+#include "count_ptr.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as

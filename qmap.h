@@ -1,13 +1,11 @@
 // "qmap.h"
+// queryable map with non-modifying (const) lookup method
 
 #ifndef	__QMAP_H__
 #define	__QMAP_H__
 
 #include <map>
-
-#ifndef	QMAP_NAMESPACE
-#define	QMAP_NAMESPACE		fang
-#endif
+#include "qmap_fwd.h"		// forward declarations only
 
 namespace QMAP_NAMESPACE {
 using std::map;

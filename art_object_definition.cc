@@ -468,6 +468,16 @@ if (pa) {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper for making a type reference with default template args.  
+ */
+count_const_ptr<fundamental_type_reference>
+definition_base::make_fundamental_type_reference(void) const {
+	return make_fundamental_type_reference(
+		make_default_template_arguments());
+}
+
 //=============================================================================
 // class datatype_definition_base method definitions
 

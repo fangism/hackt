@@ -563,6 +563,14 @@ check_build(never_ptr<context> c) const {
 	// if so, open it up, and work with existing namespace
 	// otherwise register a new namespace, add it to context
 	c->open_namespace(*name);
+	// if there was error, would've exited...
+
+#if 0
+	cerr << "In namespace_body::check_build(), after c->open_namespace(), "
+		<< endl;
+	c->get_current_namespace()->dump(cerr) << endl;
+#endif
+
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
 
@@ -570,6 +578,13 @@ check_build(never_ptr<context> c) const {
 //		cerr << c->auto_indent() << "leaving namespace: " << *name;
 //	)
 	c->close_namespace();
+
+#if 0
+	cerr << "In namespace_body::check_build(), after c->close_namespace(), "
+		<< endl;
+	c->get_current_namespace()->dump(cerr) << endl;
+#endif
+
 	// if no errors, return pointer to the namespace just processed
 	return c->top_namespace();
 }

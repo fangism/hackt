@@ -9,11 +9,12 @@
 #include <deque>
 
 #include "art_macros.h"
+#include "art_object_IO_fwd.h"	// forward declarations only
 
-#include "qmap.h"
-#include "hash_qmap.h"
-#include "ptrs.h"
-#include "count_ptr.h"
+#include "qmap.h"		// need complete definition
+#include "hash_qmap.h"		// need complete definition
+#include "ptrs.h"		// need complete definition (never_ptr members)
+#include "count_ptr_fwd.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -31,6 +32,8 @@ Maps...
 // temporary switches
 
 //=============================================================================
+// forward declarations
+
 namespace ART {
 //=============================================================================
 // forward declarations from outside namespaces
@@ -181,6 +184,12 @@ virtual const object& self(void) const { return *this; }
 	Consider an interface to hierarchical errors embedded in the objects.  
 	Mmmm... fancy.
 **/
+
+// virtual type_index_enum	get_type_index(void) const = 0;
+/** Writes the object out to a managed buffer */
+virtual	void write_object(persistent_object_manager& m) const;
+/** Loads the object from a managed buffer */
+virtual	void load_object(persistent_object_manager& m);
 };	// end class object
 
 //=============================================================================
@@ -209,8 +218,7 @@ public:
 		\param o may not be a handle.  
 			Someone else should have responsibility for deleting.  
 	 */
-	object_handle(never_const_ptr<object> o) : object(), obj(*o)
-		{ assert(!o.is_a<object_handle>()); }
+	object_handle(never_const_ptr<object> o);
 
 	/**
 		No intention to de-allocate reference object.  
@@ -488,6 +496,7 @@ never_const_ptr<fundamental_type_reference>
 
 // returns type if unique match found, else NULL
 never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
+never_const_ptr<name_space>	lookup_open_alias(const string& id) const;
 
 // type-specific counterparts, obsolete
 
@@ -515,6 +524,17 @@ void	find_namespace_starting_with(namespace_list& m,
 // will we need generalized versions of queries that return object*
 // if we don't know a priori what an identifier's class is?
 // single symbol table or separate?
+
+// methods for object file I/O
+public:
+// static const type_index_enum	type_index = NAMESPACE_TYPE;
+type_index_enum	get_type_index(void) const;
+
+/** gathers pointer information about immediate pointer members */
+void	collect_transient_info(persistent_object_manager& m) const;
+void	write_object(persistent_object_manager& m) const;
+static	object*	construct_empty(void);
+void	load_object(persistent_object_manager& m);
 
 };	// end class name_space
 
@@ -685,10 +705,7 @@ virtual count_const_ptr<fundamental_type_reference>
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
 	count_const_ptr<fundamental_type_reference>
-		make_fundamental_type_reference(void) const {
-			return make_fundamental_type_reference(
-				make_default_template_arguments());
-		}
+		make_fundamental_type_reference(void) const;
 // why virtual? special cases for built-in types?
 
 /**

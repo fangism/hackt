@@ -6,6 +6,7 @@
 #include "art_macros.h"
 #include "art_object_base.h"
 #include "multidimensional_sparse_set_fwd.h"
+#include "count_ptr.h"
 
 namespace ART {
 //=============================================================================

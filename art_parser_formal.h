@@ -13,7 +13,6 @@
 #include "art_utils.h"		// for token_position
 #include "sublist.h"		// for efficient list slices
 #include "ptrs.h"		// experimental pointer classes
-#include "count_ptr.h"		// reference-counted pointers
 
 /**
 	This is the general namespace for all ART-related classes.  

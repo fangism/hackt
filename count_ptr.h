@@ -15,25 +15,16 @@
 #define	__COUNT_PTR_H__
 
 #include <assert.h>
+#include "count_ptr_fwd.h"
 
 #ifndef NULL
 #define	NULL		0
-#endif
-
-#ifndef COUNT_PTR_NAMESPACE
-#define COUNT_PTR_NAMESPACE		fang
 #endif
 
 /**
 	Namespace for reference-count pointer-classes.  
  */
 namespace COUNT_PTR_NAMESPACE {
-//=============================================================================
-// forward declarations
-class abstract_base_count_ptr;
-template <class>	class count_ptr;
-template <class>	class count_const_ptr;
-
 //=============================================================================
 /**
 	Base class for all reference-count pointers.  

@@ -1,27 +1,11 @@
 // "art_main.cc"
 
 #include <iostream>
-#include "getopt_portable.h"		// for getopt()
+#include <fstream>
+#include "art++.h"			// has everything you need
 
-#include "ptrs.h"
-#include "art_debug.h"
-#include "art_parser.h"			// everything needed for "y.tab.h"
-#include "art_object_base.h"
-#include "art_symbol_table.h"
-using namespace ART;
-using namespace ART::entity;
-using namespace ART::parser;
-#include "art_switches.h"
-#include "y.tab.h"
-
-using namespace std;
-
-extern  YYSTYPE yyval;			// root token
-extern "C" {
-	int yyparse(void);              // in "y.tab.cc"
-}
-
-int main(int argc, char* argv[]) {
+int
+main(int argc, char* argv[]) {
 	excl_ptr<parser::node> root;		///< root of the syntax tree
 	never_const_ptr<entity::object> top;	///< root type-checked object
 	excl_ptr<entity::name_space> global(new name_space(""));
@@ -50,6 +34,15 @@ DEBUG(DEBUG_BASIC, cerr << endl)
 		assert(global == the_context->get_current_namespace());
 DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
+
+//	global->dump(cerr);
+	const string fname("fang.artobj");	// name of file
+	persistent_object_manager::save_object_to_file(fname, global);
+	excl_ptr<entity::name_space> global2 =
+		persistent_object_manager::load_object_from_file(fname);
+	assert(global2);
+//	global2->dump(cerr);			// should match
+
 	// massive recursive deletion of syntax tree, reclaim memory
 	// root will delete itself (also recursively)
 	// global will delete itself (also recursively)

@@ -4,6 +4,7 @@
 #define	__ART_OBJECT_INSTANCE_H__
 
 #include "art_object_base.h"
+#include "count_ptr.h"
 #include "art_macros.h"
 
 namespace ART {
