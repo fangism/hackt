@@ -60,21 +60,12 @@ namespace entity {
 	Consider sub-typing into pint and pbool assignments, 
 		since types are static.  
  */
-class param_expression_assignment : // public object, 
-		public instance_management_base {
+class param_expression_assignment : public instance_management_base {
 public:
 	typedef	count_ptr<param_expr>				src_ptr_type;
 	typedef	count_const_ptr<param_expr>			src_const_ptr_type;
 	typedef	count_ptr<param_instance_reference>		dest_ptr_type;
 	typedef	count_const_ptr<param_instance_reference>	dest_const_ptr_type;
-#if 0
-protected:
-	typedef	list<count_const_ptr<param_expr> >	ex_list_type;
-	// really should be exclusive pointers
-	// param_expr may contain references to parameter instances, ok
-protected:
-	ex_list_type					ex_list;
-#endif
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -89,13 +80,7 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	size_t	size(void) const = 0;
 
-// virtualize
-#if 0
-	void	append_param_expression(count_const_ptr<param_expr> e);
-	void	prepend_param_expression(count_const_ptr<param_expr> e);
-#else
 virtual	bool	append_param_instance_reference(const dest_ptr_type& e) = 0;
-#endif
 
 	/**
 		Helper class for appending instance references to
@@ -120,13 +105,6 @@ protected:
 	bool	validate_reference_is_uninitialized(
 			const dest_const_ptr_type&) const;
 
-//	void unroll(void) const;
-#if 0
-public:
-	ART_OBJECT_IO_METHODS
-#endif
-
-//	void unroll_params(void) const;
 };	// end class param_expression_assignment
 
 //-----------------------------------------------------------------------------
@@ -175,7 +153,8 @@ public:
 	};	// end class dumper
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class pbool_expression_assignment
 
@@ -225,7 +204,8 @@ public:
 	};	// end class dumper
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class pint_expression_assignment
 
@@ -272,7 +252,8 @@ public:
 	void unroll(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class aliases_connection
 
 //-----------------------------------------------------------------------------
@@ -302,7 +283,8 @@ public:
 	void unroll(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class port_connection
 
 //-----------------------------------------------------------------------------

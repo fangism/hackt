@@ -783,6 +783,7 @@ explicit never_ptr(void) throw() : base_ptr<T>(NULL) { }
 	This covers all pointer types.  
  */
 	never_ptr(const excl_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
+	// defined below
 	never_ptr(const some_ptr<T>& p) throw();
 	never_ptr(const never_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
 
@@ -905,6 +906,7 @@ explicit never_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
  */
 	never_const_ptr(const never_ptr<T>& p) throw() :
 		base_const_ptr<T>(p.ptr) { }
+	// defined below
 	never_const_ptr(const some_ptr<T>& p) throw();
 	never_const_ptr(const excl_ptr<T>& p) throw() :
 		base_const_ptr<T>(p.ptr) { }
@@ -1302,6 +1304,11 @@ never_const_ptr<T>::never_const_ptr(const some_ptr<T>& p) throw() :
 template <class T>
 never_const_ptr<T>::never_const_ptr(const some_const_ptr<T>& p) throw() :
 	base_const_ptr<T>(p.cptr) { }
+
+template <class T>
+template <class S>
+never_const_ptr<T>::never_const_ptr(const some_ptr<S>& p) throw() :
+	base_const_ptr<T>(p.ptr) { }
 
 //-----------------------------------------------------------------------------
 #if 0

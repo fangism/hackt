@@ -97,7 +97,8 @@ private:
 			const token_identifier& id, 
 			const size_t d) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class data_type_reference
 
 //-----------------------------------------------------------------------------
@@ -133,7 +134,8 @@ private:
 			const token_identifier& id, 
 			const size_t d) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class channel_type_reference
 
 //-----------------------------------------------------------------------------
@@ -172,7 +174,8 @@ private:
 			const size_t d) const;
 public:
 	// macro expand to method prototypes
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class process_type_reference
 
 //-----------------------------------------------------------------------------
@@ -206,6 +209,9 @@ private:
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
+
+private:
+	PERSISTENT_METHODS
 
 };	// end class param_type_reference
 

@@ -11,22 +11,13 @@
 #include "hash_map.h"		// wrapper for <hash_map>
 
 #include <string>
-using std::string;
 
 //=============================================================================
 // template specializations
 
-namespace
-#ifdef	__GNUC__
-#if	(__GNUC__ >= 3)
-	__gnu_cxx
-#else	// (__GNUC__ <= 2)
-	std
-#endif
-#else	// __GNUC__
-	DEATH
-#endif	// __GNUC__
-{
+namespace HASH_MAP_NAMESPACE {
+using std::string;
+
 /**
 	Explicit template specialization of hash of a string class, 
 	which just uses the internal char* representation as a wrapper.
@@ -51,7 +42,7 @@ struct hash<const void*> {
 	}
 };	// end hash<>
 
-};	// end namespace
+};	// end namespace HASH_MAP_NAMESPACE
 
 //=============================================================================
 

@@ -12,7 +12,7 @@
 #include "art_object_inst_ref.h"
 #include "art_object_expr.h"
 #include "art_object_control.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 
 //=============================================================================
@@ -884,6 +884,10 @@ param_instance_reference::is_unconditional(void) const {
 //=============================================================================
 // class process_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_reference, 
+	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -926,7 +930,7 @@ process_instance_reference::what(ostream& o) const {
 void
 process_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	process_inst_ref->collect_transient_info(m);
@@ -939,8 +943,8 @@ if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE)) 
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-process_instance_reference::construct_empty(void) {
+persistent*
+process_instance_reference::construct_empty(const int i) {
 	return new process_instance_reference();
 }
 
@@ -992,6 +996,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class datatype_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_instance_reference, 
+	SIMPLE_DATA_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1047,7 +1055,7 @@ datatype_instance_reference::dump(ostream& o) const {
 void
 datatype_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_DATA_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, SIMPLE_DATA_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	data_inst_ref->collect_transient_info(m);
@@ -1060,8 +1068,8 @@ if (!m.register_transient_object(this, SIMPLE_DATA_INSTANCE_REFERENCE_TYPE)) {
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-datatype_instance_reference::construct_empty(void) {
+persistent*
+datatype_instance_reference::construct_empty(const int i) {
 	return new datatype_instance_reference();
 }
 
@@ -1113,6 +1121,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class channel_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_reference, 
+	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1163,7 +1175,7 @@ channel_instance_reference::dump(ostream& o) const {
 void
 channel_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	channel_inst_ref->collect_transient_info(m);
@@ -1176,8 +1188,8 @@ if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE)) 
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-channel_instance_reference::construct_empty(void) {
+persistent*
+channel_instance_reference::construct_empty(const int i) {
 	return new channel_instance_reference();
 }
 
@@ -1229,6 +1241,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class process_member_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_member_instance_reference, 
+	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1264,7 +1280,7 @@ process_member_instance_reference::what(ostream& o) const {
 void
 process_member_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	base->collect_transient_info(m);
@@ -1278,8 +1294,8 @@ if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) 
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-process_member_instance_reference::construct_empty(void) {
+persistent*
+process_member_instance_reference::construct_empty(const int i) {
 	return new process_member_instance_reference();
 }
 
@@ -1333,6 +1349,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class datatype_member_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_member_instance_reference, 
+	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1368,7 +1388,7 @@ datatype_member_instance_reference::what(ostream& o) const {
 void
 datatype_member_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	base->collect_transient_info(m);
@@ -1382,8 +1402,8 @@ if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE)) {
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-datatype_member_instance_reference::construct_empty(void) {
+persistent*
+datatype_member_instance_reference::construct_empty(const int i) {
 	return new datatype_member_instance_reference();
 }
 
@@ -1437,6 +1457,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class channel_member_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_member_instance_reference, 
+	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1472,7 +1496,7 @@ channel_member_instance_reference::what(ostream& o) const {
 void
 channel_member_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	base->collect_transient_info(m);
@@ -1486,8 +1510,8 @@ if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) 
 /**
 	Just allocates with bogus contents, first pass of reconstruction.  
  */
-object*
-channel_member_instance_reference::construct_empty(void) {
+persistent*
+channel_member_instance_reference::construct_empty(const int i) {
 	return new channel_member_instance_reference();
 }
 

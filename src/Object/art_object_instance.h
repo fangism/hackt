@@ -73,7 +73,8 @@ public:
 			count_const_ptr<simple_instance_reference> b) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class process_instance_collection
 
@@ -100,7 +101,8 @@ public:
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class datatype_instance_collection
 
 //=============================================================================
@@ -125,7 +127,8 @@ public:
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class channel_instance_collection
 
 //=============================================================================
@@ -293,7 +296,8 @@ public:
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pbool_instance_collection
 
 //-----------------------------------------------------------------------------
@@ -391,7 +395,8 @@ public:
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pint_instance_collection
 
 //=============================================================================
@@ -481,7 +486,8 @@ public:
 //	void unroll(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class pbool_instantiation_statement
 
@@ -510,7 +516,8 @@ public:
 	void unroll(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class pint_instantiation_statement
 
@@ -538,7 +545,8 @@ public:
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class process_instantiation_statement
 
@@ -566,7 +574,8 @@ public:
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class channel_instantiation_statement
 
@@ -594,7 +603,8 @@ public:
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class data_instantiation_statement
 

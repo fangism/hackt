@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2004-10-12	David Fang	<fangism@users.sourceforge.net>
+
+	* MAJOR REWORK:
+	  Extracted serializable/persistent object functionality
+	  and interface into ART-independent framework classes.  
+	  Now in "util/persistent.h" and "util/persistent_object_manager.h".
+
+	* Replaced class type enumeration system ("art_object_type_enum.h")
+	  with a static type registration system, where each type
+	  calls a static function to register itself with the global
+	  type map.  Registration requires a unique type-key (here, a 
+	  short string), and a pointer to a (possibly static) allocator
+	  of the mapped type.  
+
+	* Rewrote some what() functions in object classes, because it
+	  should NOT depend on any members being initialized, such as 'key'.
+
+
 2004-10-10	David Fang	<fangism@users.sourceforge.net>
 
 	* Re-typed ::write_object() with *const* persistent_object_manager&.

@@ -13,7 +13,7 @@
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -34,7 +34,7 @@ definition_base::null(NULL);
  */
 inline
 definition_base::definition_base() :
-		object(), 
+		object(), persistent(), 
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {
@@ -664,6 +664,10 @@ channel_definition_base::make_fundamental_type_reference(
 //=============================================================================
 // class user_def_chan method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_chan, 
+	USER_DEF_CHAN_DEFINITION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
 		const string& name) :
 		definition_base(), 
@@ -721,7 +725,7 @@ user_def_chan::lookup_object_here(const string& id) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
 user_def_chan::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE)) {
+if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE_KEY)) {
 
 	// recursively visit members...
 	sequential_scope::collect_object_pointer_list(m);
@@ -732,8 +736,8 @@ if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE)) {
 /**
 	Just allocate with bogus arguments.  
  */
-object*
-user_def_chan::construct_empty(void) {
+persistent*
+user_def_chan::construct_empty(const int i) {
 	return new user_def_chan(never_const_ptr<object>(NULL), "");
 }
 
@@ -782,7 +786,7 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-user_def_chan::load_used_id_map_object(excl_ptr<object> o) {
+user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
 		add_instance(o.is_a_xfer<instance_collection_base>());
 	} else {
@@ -794,6 +798,10 @@ user_def_chan::load_used_id_map_object(excl_ptr<object> o) {
 //=============================================================================
 // class channel_definition_alias method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_definition_alias, 
+	CHANNEL_TYPEDEF_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::channel_definition_alias(
 		const string& n, never_const_ptr<scopespace> p) :
 		definition_base(), 
@@ -848,7 +856,7 @@ channel_definition_alias::assign_typedef(
 void
 channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE)) {
+if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
 //	collect_used_id_map_pointers(m);	// covers formals?
 	collect_template_formal_pointers(m);
@@ -860,8 +868,8 @@ if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE)) {
 /**
 	Empty allocator.  
  */
-object*
-channel_definition_alias::construct_empty(void) {
+persistent*
+channel_definition_alias::construct_empty(const int i) {
 	return new channel_definition_alias("",
 		never_const_ptr<scopespace>(NULL));
 }
@@ -906,7 +914,7 @@ if (!m.flag_visit(this)) {
 	Really, typedefs shouldn't have any non-formal members...
  */
 void
-channel_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"channel_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
@@ -960,7 +968,11 @@ built_in_datatype_def::~built_in_datatype_def() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::what(ostream& o) const {
+#if 0
 	return o << key;
+#else
+	return o << "built-in-datatype-def";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1047,7 +1059,7 @@ built_in_datatype_def::add_template_formal(
 void
 built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
-	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE);
+	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
 	// don't bother with parent pointer to built-in namespace
 	collect_template_formal_pointers(m);
 }
@@ -1084,7 +1096,16 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-built_in_datatype_def::load_used_id_map_object(excl_ptr<object> o) {
+built_in_datatype_def::load_object(persistent_object_manager& m) {
+	cerr << "ERROR: built_in_datatype_def::load_object() "
+		"should never be called!" << endl;
+	assert(0);
+	exit(1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+built_in_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
 		"should never be called!" << endl;
 	assert(0);
@@ -1113,7 +1134,11 @@ built_in_param_def::~built_in_param_def() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_param_def::what(ostream& o) const {
+#if 0
 	return o << key;
+#else
+	return o << "built-in-param-def";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1160,6 +1185,10 @@ built_in_param_def::make_fundamental_type_reference(
 			never_const_ptr<built_in_param_def>(this)));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(built_in_param_def)
+
 //=============================================================================
 // class enum_member method definitions
 
@@ -1183,6 +1212,10 @@ enum_member::dump(ostream& o) const {
 //=============================================================================
 // class enum_datatype_def method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_datatype_def, 
+	ENUM_DEFINITION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::enum_datatype_def(never_const_ptr<name_space> o, 
 		const string& n) : 
 		definition_base(), 
@@ -1199,14 +1232,22 @@ enum_datatype_def::~enum_datatype_def() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::what(ostream& o) const {
+#if 0
 	return o << key;
+#else
+	return o << "enum-datatype-def";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
+#if 0
 	return o << "fang, get off your lazy ass and "
 		"write enum_datatype_def::dump()!" << endl;
+#else
+	return what(o) << ": " << key;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1287,7 +1328,7 @@ enum_datatype_def::add_member(const token_identifier& em) {
 void
 enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE)) {
+if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE_KEY)) {
 
 // later: template formals
 
@@ -1298,8 +1339,8 @@ if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE)) {
 /**
 	Empty allocator.  
  */
-object*
-enum_datatype_def::construct_empty(void) {
+persistent*
+enum_datatype_def::construct_empty(const int i) {
 	return new enum_datatype_def(never_const_ptr<name_space>(NULL), "");
 }
 
@@ -1355,7 +1396,7 @@ if (!m.flag_visit(this)) {
 	This should never be called.  
  */
 void
-enum_datatype_def::load_used_id_map_object(excl_ptr<object> o) {
+enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "ERROR: not supposed to call "
 		"enum_datatype_def::load_used_id_map_object()!" << endl;
 	assert(0);
@@ -1364,6 +1405,10 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<object> o) {
 //=============================================================================
 // class user_def_datatype method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_datatype, 
+	USER_DEF_DATA_DEFINITION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// constructor for user defined type
 user_def_datatype::user_def_datatype(
 		never_const_ptr<name_space> o,
@@ -1382,14 +1427,18 @@ user_def_datatype::~user_def_datatype() {
 
 ostream&
 user_def_datatype::what(ostream& o) const {
-	return o << "used-defined-datatype: " << key;
+	return o << "user-defined-datatype";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
+#if 0
 	return o << "fang, get off your lazy ass and "
 		"write user_def_datatype::dump()!" << endl;
+#else
+	return what(o) << ": " << key;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1426,7 +1475,7 @@ user_def_datatype::lookup_object_here(const string& id) const {
 void
 user_def_datatype::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE)) {
+if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY)) {
 
 // later: template formals
 	sequential_scope::collect_object_pointer_list(m);
@@ -1437,8 +1486,8 @@ if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE)) {
 /**
 	Empty allocator.  
  */
-object*
-user_def_datatype::construct_empty(void) {
+persistent*
+user_def_datatype::construct_empty(const int i) {
 	return new user_def_datatype(never_const_ptr<name_space>(NULL), "");
 }
 
@@ -1486,7 +1535,7 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-user_def_datatype::load_used_id_map_object(excl_ptr<object> o) {
+user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
 		add_instance(o.is_a_xfer<instance_collection_base>());
 	} else {
@@ -1498,6 +1547,10 @@ user_def_datatype::load_used_id_map_object(excl_ptr<object> o) {
 //=============================================================================
 // class datatype_definition_alias method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_definition_alias, 
+	DATA_TYPEDEF_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::datatype_definition_alias(
 		const string& n, never_const_ptr<scopespace> p) :
 		definition_base(), 
@@ -1577,7 +1630,7 @@ datatype_definition_alias::require_signature_match(
 void
 datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE)) {
+if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
 //	collect_used_id_map_pointers(m);	// covers formals?
 	collect_template_formal_pointers(m);
@@ -1589,8 +1642,8 @@ if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE)) {
 /**
 	Empty allocator.  
  */
-object*
-datatype_definition_alias::construct_empty(void) {
+persistent*
+datatype_definition_alias::construct_empty(const int i) {
 	return new datatype_definition_alias("",
 		never_const_ptr<scopespace>(NULL));
 }
@@ -1635,7 +1688,7 @@ if (!m.flag_visit(this)) {
 	Really, typedefs shouldn't have any non-formal members...
  */
 void
-datatype_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"datatype_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
@@ -1665,6 +1718,10 @@ process_definition_base::make_typedef(never_const_ptr<scopespace> s,
 //=============================================================================
 // class process_definition method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition, 
+	PROCESS_DEFINITION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructor for a process definition symbol table entry.  
  */
@@ -1954,7 +2011,7 @@ process_definition::equivalent_port_formals(
  */
 void
 process_definition::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE)) {
+if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE_KEY)) {
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 	collect_used_id_map_pointers(m);
@@ -1966,8 +2023,8 @@ if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE)) {
 /**
 	Temporary allocation.  
  */
-object*
-process_definition::construct_empty(void) {
+persistent*
+process_definition::construct_empty(const int i) {
 	return new process_definition(never_const_ptr<name_space>(NULL), "");
 }
 
@@ -2011,7 +2068,7 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition::load_used_id_map_object(excl_ptr<object> o) {
+process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
 		add_instance(o.is_a_xfer<instance_collection_base>());
 	} else {
@@ -2060,6 +2117,10 @@ process_definition::load_object_port_formals(
 //=============================================================================
 // class process_definition_alias method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition_alias, 
+	PROCESS_TYPEDEF_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -2148,7 +2209,7 @@ process_definition_alias::make_fundamental_type_reference(
 void
 process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE)) {
+if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
 //	collect_used_id_map_pointers(m);	// covers formals?
 	collect_template_formal_pointers(m);
@@ -2160,8 +2221,8 @@ if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE)) {
 /**
 	Empty allocator.  
  */
-object*
-process_definition_alias::construct_empty(void) {
+persistent*
+process_definition_alias::construct_empty(const int i) {
 	return new process_definition_alias();
 }
 
@@ -2205,7 +2266,7 @@ if (!m.flag_visit(this)) {
 	Really, typedefs shouldn't have any non-formal members...
  */
 void
-process_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"process_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {

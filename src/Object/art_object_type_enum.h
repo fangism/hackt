@@ -1,5 +1,11 @@
 /**
  *	\file "art_object_type_enum.h"
+ *	NOTE: This file is OBSOLETE, and is kept here for historical
+ *	purposes... I'm too lazy to delete it.  
+ *	The type enumeration concept has been replaced by using unique
+ *	type hash strings, so developers no longer need to worry about
+ *	maintaining order and value of enumerations. 
+ *
  *	This contains enumerations for all serializable classes
  *	in the ART language.  
  *	This file needs to be kept consistent with the Cyclone implementation
@@ -7,6 +13,9 @@
  *	To define this enumeration in a namespace, just #include this file
  *	withing a namespace foo { ... } declaration in the referencing file.  
  */
+
+#if 0
+OBSOLETE
 
 //=============================================================================
 /**
@@ -126,4 +135,6 @@ enum type_index_enum {
 
 	MAX_TYPE_INDEX_ENUM		// reserved, use this as a size_t
 };	// end enum type_index_enum
+
+#endif
 

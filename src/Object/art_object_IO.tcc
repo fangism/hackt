@@ -3,6 +3,9 @@
 	Template methods for persistent_object_manager class.
  */
 
+#if 0
+ENTIRE FILE IS OBSOLETE, replaced by "util/persistent_object_manager.tcc"
+
 #ifndef	__ART_OBJECT_IO_TCC__
 #define	__ART_OBJECT_IO_TCC__
 
@@ -186,4 +189,6 @@ persistent_object_manager::write_pointer_map(
 }	// end namespace ART
 
 #endif	//	__ART_OBJECT_IO_TCC__
+
+#endif
 

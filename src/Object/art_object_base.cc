@@ -29,7 +29,7 @@
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -91,6 +91,8 @@ using namespace ADS;
 //=============================================================================
 // class object method definitions
 
+#if 0
+PURE VIRTUALIZED in class persistent
 /**
 	Enable or disable warning messages for unimplemented types, 
 	for persistent object management.  
@@ -142,6 +144,7 @@ object::load_object(persistent_object_manager& m) {
 			<< " yet." << endl;
 	}
 }
+#endif
 
 //=============================================================================
 // class object_handle method definitions
@@ -876,7 +879,7 @@ object_list::make_port_connection(
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : 
-		object(), used_id_map() {
+		object(), persistent(), used_id_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1196,8 +1199,14 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 		const never_const_ptr<object> m_obj(m_iter->second);
 		assert(m_obj);			// no NULLs in hash_map
 		// checks for excluded objects, virtual call
-		if (!exclude_object(*m_iter))
-			m_obj->collect_transient_info(m);
+		if (!exclude_object(*m_iter)) {
+			never_const_ptr<persistent>
+				m_p(m_obj.is_a<persistent>());
+			if (m_p)
+				m_p->collect_transient_info(m);
+			// else skip non-persistent objects, 
+			// such as namespace aliases
+		}
 	}
 }
 
@@ -1208,7 +1217,9 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
  */
 void
 scopespace::write_object_used_id_map(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
+	const persistent* p = IS_A(const persistent*, this);
+	assert(p);
+	ostream& f = m.lookup_write_buffer(p);
 	assert(f.good());
 
 	// filter any objects out? yes
@@ -1249,7 +1260,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 	for ( ; i<s; i++) {
 		long index;
 		read_value(f, index);
-		excl_ptr<object> m_obj(m.lookup_obj_ptr(index));
+		excl_ptr<persistent> m_obj(m.lookup_obj_ptr(index));
 //		m.read_pointer(f, m_obj);	// replaced, b/c need index
 		// need to add it back through hash_map.  
 		if (!m_obj) {
@@ -1373,6 +1384,9 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 //=============================================================================
 // class name_space method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const never_const_ptr<name_space>
 name_space::null(NULL);
 
@@ -2116,7 +2130,7 @@ name_space::lookup_open_alias(const string& id) const {
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
+if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
@@ -2132,9 +2146,10 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 	(non-members) of the namespace object.  
 	Constructs with bogus arguments temporarily, if necessary.  
 	After this, namespace won't be usable until load_object is called.  
+	\param i is not used, just ignored.
  */
-object*
-name_space::construct_empty(void) {
+persistent*
+name_space::construct_empty(const int i) {
 	return new name_space();
 }
 
@@ -2211,7 +2226,7 @@ name_space::exclude_object(const used_id_map_type::value_type& i) const {
 	\pre object must already be loaded, so its hash key can be used.  
  */
 void
-name_space::load_used_id_map_object(excl_ptr<object> o) {
+name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 	assert(o);
 	if (o.is_a<name_space>())
 		add_namespace(o.is_a_xfer<name_space>());
@@ -2286,7 +2301,7 @@ sequential_scope::collect_object_pointer_list(
 void
 sequential_scope::write_object_pointer_list(
 		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(dynamic_cast<const object*>(this));
+	ostream& f = m.lookup_write_buffer(IS_A(const persistent*, this));
 	assert(f.good());
 	m.write_pointer_list(f, instance_management_list);
 }
@@ -2294,7 +2309,7 @@ sequential_scope::write_object_pointer_list(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::load_object_pointer_list(const persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(dynamic_cast<const object*>(this));
+	istream& f = m.lookup_read_buffer(IS_A(const persistent*, this));
 	assert(f.good());
 	m.read_pointer_list(f, instance_management_list);
 }

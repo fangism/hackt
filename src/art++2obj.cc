@@ -37,13 +37,8 @@ main(int argc, char* argv[]) {
 
 
 	excl_ptr<parser::node> root;		///< root of the syntax tree
-#if 0
-	excl_ptr<entity::name_space> global(new name_space(""));
-	excl_ptr<parser::context> the_context(new context(global));
-#else
 	entity::module the_module("-stdin-");
 	excl_ptr<parser::context> the_context(new context(the_module));
-#endif
 
 	// make sure yyin (in our case, artxx_in)  is set
 	artxx_parse();
@@ -66,7 +61,7 @@ if (root) {
 
 if (argc >= 3) {
 	const string fname(argv[2]);	// name of file
-	entity::object::warn_unimplemented = true;	// just for verbosity
+	persistent::warn_unimplemented = true;	// just for verbosity
 	persistent_object_manager::dump_reconstruction_table = true;
 	persistent_object_manager::save_object_to_file(
 		fname, the_module);

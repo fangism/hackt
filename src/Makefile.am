@@ -104,11 +104,11 @@ OBJECT_CC_FILES = \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
-	Object/art_object_IO.cc \
-	Object/art_built_ins.cc
+	Object/art_built_ins.cc \
+	Object/art_object_IO.cc
 
-OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
-	Object/art_object_IO_fwd.h
+OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h)
+#	Object/art_object_IO_fwd.h
 
 UTIL_HEADER_FILES = \
 	util/art_debug.h \
@@ -135,6 +135,9 @@ UTIL_HEADER_FILES = \
 	util/multikey_map.h \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
+	util/persistent.h \
+	util/persistent_object_manager.h \
+	util/persistent_object_manager.tcc \
 	util/ptrs.h \
 	util/ptrs_fwd.h \
 	util/qmap.h \
@@ -157,12 +160,14 @@ libart___la_SOURCES = \
 	$(AST_CC_FILES) $(AST_H_FILES) \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
+	$(UTIL_HEADER_FILES) \
+	util/art_utils.cc \
+	util/persistent.cc \
+	util/persistent_object_manager.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	Object/art_object_IO.tcc \
 	Object/art_object.h \
-	Object/art_object_type_enum.h \
-	util/art_utils.cc \
-	$(UTIL_HEADER_FILES) \
+	Object/art_object_type_hash.h \
 	art++.h
 
 # don't actually need -l[f]l

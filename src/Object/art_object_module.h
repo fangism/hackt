@@ -21,7 +21,7 @@ using namespace std;
 	1) order-independent data
 	2) source-order-dependent data
  */
-class module : public sequential_scope, public object {
+class module : public sequential_scope, public object, public persistent {
 friend class context;
 protected:
 	/**
@@ -50,7 +50,8 @@ explicit	module(const string& s);
 	ostream& dump(ostream& o) const;
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class module
 
@@ -76,7 +77,7 @@ public:
 	// note: destructive merge (link-phase)
 	bool	merge_module(module& m);
 
-};	// end class super_module
+};	// end class multi_module
 
 //=============================================================================
 }	// end namespace entity

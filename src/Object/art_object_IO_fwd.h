@@ -3,6 +3,9 @@
 	Forward declarations for persistent object management classes.  
  */
 
+#if 0
+ENTIRE FILE IS OBSOLETE
+
 #ifndef	__ART_OBJECT_IO_FWD_H__
 #define	__ART_OBJECT_IO_FWD_H__
 
@@ -17,4 +20,6 @@ class persistent_object_manager;
 }	// end namespace ART
 
 #endif	//	__ART_OBJECT_IO_FWD_H__
+
+#endif
 

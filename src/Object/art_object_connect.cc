@@ -9,7 +9,7 @@
 #include "art_parser_base.h"
 #include "art_object_connect.h"
 #include "art_object_expr.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -150,7 +150,7 @@ param_expression_assignment::validate_reference_is_uninitialized(
 void
 param_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE)) {
+if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE_KEY)) {
 #if 0
 	for_each(ex_list.begin(), ex_list.end(), 
 	bind2nd(mem_fun(&ex_list_type::value_type::collect_transient_info), m)
@@ -167,8 +167,8 @@ if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-param_expression_assignment::construct_empty(void) {
+persistent*
+param_expression_assignment::construct_empty(const int i) {
 	return new param_expression_assignment();
 }
 
@@ -234,6 +234,10 @@ param_expression_assignment::unroll_params(void) const {
 //=============================================================================
 // class pbool_expression_assignment method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_expression_assignment,
+	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -341,7 +345,7 @@ pbool_expression_assignment::unroll(void) const {
 void
 pbool_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE)) {
+if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	src->collect_transient_info(m);
 #if 0
 	for_each(dests.begin(), dests.end(), 
@@ -360,8 +364,8 @@ if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pbool_expression_assignment::construct_empty(void) {
+persistent*
+pbool_expression_assignment::construct_empty(const int i) {
 	return new pbool_expression_assignment();
 }
 
@@ -394,6 +398,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_expression_assignment method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_expression_assignment,
+	PINT_EXPR_ASSIGNMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -501,7 +509,7 @@ pint_expression_assignment::unroll(void) const {
 void
 pint_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE)) {
+if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	src->collect_transient_info(m);
 #if 0
 	for_each(dests.begin(), dests.end(), 
@@ -520,8 +528,8 @@ if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_expression_assignment::construct_empty(void) {
+persistent*
+pint_expression_assignment::construct_empty(const int i) {
 	return new pint_expression_assignment();
 }
 
@@ -572,6 +580,10 @@ instance_reference_connection::append_instance_reference(
 //=============================================================================
 // class aliases_connection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection,
+	ALIAS_CONNECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 aliases_connection::aliases_connection() : instance_reference_connection() { };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -614,7 +626,7 @@ aliases_connection::unroll(void) const {
 void
 aliases_connection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE)) {
+if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE_KEY)) {
 	inst_list_type::const_iterator iter = inst_list.begin();
 	const inst_list_type::const_iterator end = inst_list.end();
 	for ( ; iter!=end; iter++) {
@@ -625,8 +637,8 @@ if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-aliases_connection::construct_empty(void) {
+persistent*
+aliases_connection::construct_empty(const int i) {
 	return new aliases_connection();
 }
 
@@ -656,6 +668,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class port_connection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(port_connection, PORT_CONNECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -724,7 +739,7 @@ port_connection::unroll(void) const {
 void
 port_connection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PORT_CONNECTION_TYPE)) {
+if (!m.register_transient_object(this, PORT_CONNECTION_TYPE_KEY)) {
 	assert(inst);
 	inst->collect_transient_info(m);
 	inst_list_type::const_iterator iter = inst_list.begin();
@@ -739,8 +754,8 @@ if (!m.register_transient_object(this, PORT_CONNECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-port_connection::construct_empty(void) {
+persistent*
+port_connection::construct_empty(const int i) {
 	return new port_connection();
 }
 

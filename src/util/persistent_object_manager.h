@@ -1,55 +1,38 @@
 /**
-	\file "art_object_IO.h"
+	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
  */
 
-#if 0
-ENTIRE FILE IS OBSOLETE, replaced by "util/persistent_object_manager.h"
-
-#ifndef	__ART_OBJECT_IO_H__
-#define	__ART_OBJECT_IO_H__
+#ifndef	__PERSISTENT_OBJECT_MANAGER_H__
+#define	__PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>
 
-#include "art_object_IO_fwd.h"
+#include "persistent.h"
+
 #include "hash_qmap.h"
 #include "sstream.h"			// reduce to forward decl?
 #include "ptrs.h"			// need complete definition
 #include "count_ptr.h"			// need complete definition
 #include "art_utils.h"			// for read and write to streams
 
-namespace ART {
-namespace entity {
-#include "art_object_type_enum.h"	// in this namespace
-}
-}
-
-namespace ART {
-namespace entity {
 //=============================================================================
+// macros
+
+/**
+	Default manner for static persistent type registration.  
+ */
+#define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
+	const persistent::hash_key T::persistent_type_key(str);		\
+	const int T::persistent_type_id = 				\
+		persistent_object_manager::register_persistent_type<T>();
+
+//=============================================================================
+namespace util {
 using namespace std;
 using namespace HASH_QMAP_NAMESPACE;
 using namespace COUNT_PTR_NAMESPACE;
 using namespace PTRS_NAMESPACE;
-
-// forward declaration
-class object;
-class module;
-class name_space;
-
-//=============================================================================
-/**
-	This is the signature for a function that reconstructs
-	a persistent object from a binary input stream.  
-	Each class for which objects persist, should implement such
-	a function as a static function, to be called indirectly
-	from a lookup table.  
- */
-typedef	object*	reconstruct_function_type(void);
-
-// typedef	never_ptr<reconstruct_function_type>		// won't work
-typedef	reconstruct_function_type*
-		reconstruct_function_ptr_type;
 
 //=============================================================================
 /**
@@ -59,13 +42,6 @@ typedef	reconstruct_function_type*
 	deleting the memory created.  
  */
 class persistent_object_manager {
-public:
-	/**
-		Can't use void, b/c can't dynamic cast from void.  
-	 */
-	typedef	object			ptr_type;
-	// void or object
-
 private:
 	/**
 		The class contains the information necessary for reconstructing
@@ -77,9 +53,13 @@ private:
 		static const ios_base::openmode	mode;
 	private:
 		/** object type enumeration */
-		type_index_enum		otype;
+		persistent::hash_key	otype;
 		/** location of reconstruction, consider object*? */
-		const object*		recon_addr;
+		const persistent*	recon_addr;
+
+		// add entry for auxiliary allocator argument
+		// int			alloc_arg;
+
 		/** reference count for counter pointers */
 	mutable	size_t*			ref_count;
 		/** scratch flag, general purpose flag */
@@ -94,17 +74,19 @@ private:
 	public:
 	// need default constructor to create an invalid object
 		reconstruction_table_entry();
-		reconstruction_table_entry(const type_index_enum t, 
+		reconstruction_table_entry(const persistent::hash_key& t, 
 			const streampos h, const streampos t);
-		reconstruction_table_entry(const object* p,
-			const type_index_enum t);
+		reconstruction_table_entry(const persistent* p,
+			const persistent::hash_key& t);
 		// default copy constructor suffices
 		~reconstruction_table_entry();
 
-		type_index_enum	type(void) const { return otype; }
-		const object*	addr(void) const { return recon_addr; }
+		const persistent::hash_key&
+				type(void) const { return otype; }
+		const persistent*
+				addr(void) const { return recon_addr; }
 		size_t*		count(void) const;
-		void		assign_addr(object* ptr);
+		void		assign_addr(persistent* ptr);
 		void		reset_addr();
 		void		flag(void) { scratch = true; }
 		void		unflag(void) { scratch = false; }
@@ -129,24 +111,38 @@ private:
 			operator long () { return val; }
 	};	// end class Long
 
-/**
-	Type of map from address to table entry index.  
-	Every pointer will be mapped to an auxiliary index.  
-	Is the reverse map of reconstruction_table_type.
- */
-typedef	hash_qmap<const void*, Long>		addr_to_index_map_type;
-/**
-	Each persistent object in memory corresponds to one entry
-	in this table, whose entries contain information on how to 
-	fully reconstruct itself.  
-	Is the reverse map of addr_to_index_map_type.  
- */
-typedef	vector<reconstruction_table_entry>	reconstruction_table_type;
+	/**
+		Type of map from address to table entry index.  
+		Every pointer will be mapped to an auxiliary index.  
+		Is the reverse map of reconstruction_table_type.
+	 */
+	typedef	hash_qmap<const void*, Long>	addr_to_index_map_type;
+
+	/**
+		Each persistent object in memory corresponds to one entry
+		in this table, whose entries contain information on how to 
+		fully reconstruct itself.  
+		Is the reverse map of addr_to_index_map_type.  
+	 */
+	typedef	vector<reconstruction_table_entry>
+						reconstruction_table_type;
+
+	/**
+		Map from of persistent type's key to allocator function.  
+	 */
+	typedef hash_qmap<persistent::hash_key, reconstruct_function_ptr_type>
+					reconstruction_function_map_type;
 
 private:
-	/** lookup table of reconstruction functions (allocators) */
-	static const reconstruct_function_ptr_type
-		reconstruction_function_table[MAX_TYPE_INDEX_ENUM];
+#if 0
+	/**
+		Lookup map of reconstruction functions (allocators).
+		Every persistent type must statically register 
+		its type in this map.  
+	 */
+	static reconstruction_function_map_type	reconstruction_function_map;
+#endif
+
 	/** maps pointer address to entry index */
 	addr_to_index_map_type			addr_to_index_map;
 	/** entries containing reconstruction information */
@@ -154,7 +150,7 @@ private:
 	/** file position after the header */
 	streampos				start_of_objects;
 	/** temporary place to keep ownership of root pointer */
-	excl_ptr<module>			root;
+	excl_ptr<persistent>			root;
 
 public:
 	static bool				dump_reconstruction_table;
@@ -163,19 +159,41 @@ public:
 	persistent_object_manager();
 	~persistent_object_manager();
 
+	/**
+		Generic way of registering persistent type.
+		May be specialized, of course, where interface is different.  
+	 */
+	template <class T>
+	static
+	int register_persistent_type(void);
+
+	/** Wrapping static object in accessor guarantees orderly initialization */
+private:
+	static
+	reconstruction_function_map_type&
+	get_reconstruction_function_map(void);
+
+public:
+	static
+	bool verify_registered_type(const persistent::hash_key& k);
+
+	static
+	ostream&
+	dump_registered_type_map(ostream& o);
+
 // for debugging
 	ostream& dump_text(ostream& o) const;
 
 // public interface functions to object class hierarchy
 	/** pointer registration interface */
 	bool register_transient_object(
-		const ptr_type* ptr, const type_index_enum t);
-	bool flag_visit(const ptr_type* ptr);
-	ostream& lookup_write_buffer(const ptr_type* ptr) const;
-	istream& lookup_read_buffer(const ptr_type* ptr) const;
+		const persistent* ptr, const persistent::hash_key& t);
+	bool flag_visit(const persistent* ptr);
+	ostream& lookup_write_buffer(const persistent* ptr) const;
+	istream& lookup_read_buffer(const persistent* ptr) const;
 
-	long lookup_ptr_index(const ptr_type* ptr) const;
-	object*	lookup_obj_ptr(const long i) const;
+	long lookup_ptr_index(const persistent* ptr) const;
+	persistent*	lookup_obj_ptr(const long i) const;
 	size_t*	lookup_ref_count(const long i) const;
 
 	// the following template methods are defined in "art_object_IO.tcc"
@@ -203,6 +221,7 @@ public:
 	 */
 	template <class T>
 	void read_pointer(istream& f, const count_ptr<T>& ptr) const;
+
 	template <class T>
 	void read_pointer(istream& f, const count_const_ptr<T>& ptr) const;
 
@@ -229,15 +248,21 @@ public:
 
 
 // two interface functions suffice for file interaction:
-	static void	save_object_to_file(const string& s, const module& m);
-	static excl_ptr<module>
+	static void	save_object_to_file(const string& s, 
+				const persistent& m);
+
+	template <class T>
+	static excl_ptr<T>
 			load_object_from_file(const string& s);
 
 // self-test functions
-	static excl_ptr<module>
-			self_test(const string& s, const module& m);
-	static excl_ptr<module>
-			self_test_no_file(const module& m);
+	template <class T>
+	static excl_ptr<T>
+			self_test(const string& s, const T& m);
+
+	template <class T>
+	static excl_ptr<T>
+			self_test_no_file(const T& m);
 
 private:
 	void initialize_null(void);
@@ -251,16 +276,15 @@ private:
 	void finish_load(ifstream& f);
 	/** just allocate objects without initializing */
 	void reconstruct(void);
-	excl_ptr<module>	get_root_module(void);
+
+	template <class T>
+	excl_ptr<T>	get_root(void);
 	void reset_for_loading(void);
 
 };	// end class persistent_object_manager
 
 //=============================================================================
-}	// end namespace entity
-}	// end namespace ART
+}	// end namespace util
 
-#endif	//	__ART_OBJECT_IO_H__
-
-#endif
+#endif	//	__PERSISTENT_OBJECT_MANAGER_H__
 

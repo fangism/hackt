@@ -89,7 +89,7 @@ namespace entity {
 	scopespaces' used_id_map.  
 	Should statically sub-type into pints and pbools and pranges...
  */
-class param_expr : virtual public object {
+class param_expr : virtual public object, virtual public persistent {
 public:
 	param_expr();
 virtual	~param_expr();
@@ -179,7 +179,7 @@ virtual	count_const_ptr<const_param>
 	A list of parameter expressions.  
 	Consider splitting into dynamic vs. const?
  */
-class param_expr_list : public object {
+class param_expr_list : public object, public persistent {
 public:
 	param_expr_list();
 virtual	~param_expr_list();
@@ -256,7 +256,8 @@ private:
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class const_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -307,7 +308,8 @@ private:
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -320,7 +322,7 @@ public:
 	1-dimensional sub-array of x, size 1, in this case.  
 	A "range_expr" (below) may be an index, but not vice versa.  
  */
-class index_expr : virtual public object {
+class index_expr : virtual public object, virtual public persistent {
 protected:
 public:
 	index_expr();
@@ -366,7 +368,7 @@ virtual	bool operator == (const const_range& c) const = 0;
 	Instead the index list can tell one how may dimensions
 	are *collapsed* by the element types.  
  */
-class index_list : public object {
+class index_list : public object, public persistent {
 public:
 	index_list();
 virtual	~index_list();
@@ -434,7 +436,8 @@ public:
 
 	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class const_index_list
 
 //-----------------------------------------------------------------------------
@@ -476,7 +479,8 @@ public:
 
 	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class dynamic_index_list
 
 //=============================================================================
@@ -488,7 +492,7 @@ public:
 	Elements of range_expr_list must be range_expr, 
 	i.e. fully expanded, no shorthand ranges.  
  */
-class range_expr_list : public object {
+class range_expr_list : public object, public persistent {
 protected:
 //	never_const_ptr<instance_collection_base>	owner;
 public:
@@ -551,7 +555,8 @@ explicit const_range_list(const const_index_list& i);
 
 	bool resolve_ranges(const_range_list& r) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class const_range_list
 
 //-----------------------------------------------------------------------------
@@ -590,7 +595,8 @@ virtual	~dynamic_range_list();
 		// false, will be empty
 	bool resolve_ranges(const_range_list& r) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class dynamic_range_list
 
 //=============================================================================
@@ -726,7 +732,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool static_constant_bool(void) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pbool_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -771,7 +778,8 @@ public:
 
 	bool resolve_value(int& i) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pint_instance_reference
 
 //=============================================================================
@@ -815,7 +823,8 @@ private:
 	make_param_expression_assignment_private(
 		const count_const_ptr<param_expr>& p) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------
@@ -855,7 +864,8 @@ private:
 	make_param_expression_assignment_private(
 		const count_const_ptr<param_expr>& p) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pbool_const
 
 //-----------------------------------------------------------------------------
@@ -891,7 +901,8 @@ public:
 
 	bool resolve_value(int& i) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pint_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -926,7 +937,8 @@ public:
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pbool_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -964,7 +976,8 @@ public:
 	int static_constant_int(void) const;
 	bool resolve_value(int& i) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -1002,7 +1015,8 @@ public:
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -1040,7 +1054,8 @@ public:
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class logical_expr
 
 //=============================================================================
@@ -1134,7 +1149,8 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 
 	bool resolve_range(const_range& r) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class pint_range
 
 //-----------------------------------------------------------------------------
@@ -1193,7 +1209,8 @@ public:
 
 	bool resolve_range(const_range& r) const;
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class const_range
 
 //=============================================================================

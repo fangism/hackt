@@ -25,19 +25,15 @@ main(int argc, char* argv[]) {
 	}
 	string fname(argv[1]);
 
-	persistent_object_manager::dump_reconstruction_table = true;
-	entity::object::warn_unimplemented = true;	// for verbosity
+//	persistent_object_manager::dump_registered_type_map(cerr);
 
-#if 0
-	excl_ptr<entity::name_space> global =
-		persistent_object_manager::load_object_from_file(fname);
-	assert(global);
-	global->dump(cerr);
-#else
+	persistent_object_manager::dump_reconstruction_table = true;
+	persistent::warn_unimplemented = true;	// for verbosity
+
 	excl_ptr<entity::module> the_module =
-		persistent_object_manager::load_object_from_file(fname);
+		persistent_object_manager::load_object_from_file
+			<entity::module>(fname);
 	the_module->dump(cerr);
-#endif
 
 	// global will delete itself (recursively)
 	return 0;

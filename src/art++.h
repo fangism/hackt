@@ -9,12 +9,15 @@
 #include "art_debug.h"
 #include "art_parser.h"			// everything needed for "y.tab.h"
 #include "art_object_base.h"
-#include "art_object_IO.h"
 #include "art_object_module.h"
 #include "art_context.h"
+#include "persistent_object_manager.h"
+
 using namespace ART;
 using namespace ART::entity;
 using namespace ART::parser;
+using namespace util;
+
 #include "art_switches.h"
 #include "yacc_or_bison.h"
 #include "art++-parse-prefix.h"

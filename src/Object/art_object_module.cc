@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include "art_object_module.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 namespace ART {
 namespace entity {
@@ -13,16 +13,19 @@ using namespace std;
 //=============================================================================
 // class module method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(module, MODULE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
-module::module() : sequential_scope(), object(), name(""), 
-		global_namespace(NULL) {
+module::module() : sequential_scope(), object(), persistent(), 
+		name(""), global_namespace(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-module::module(const string& s) : sequential_scope(), object(), name(s), 
-		global_namespace(new name_space("")) {
+module::module(const string& s) : sequential_scope(), object(), persistent(), 
+		name(s), global_namespace(new name_space("")) {
 	assert(global_namespace);
 }
 
@@ -63,15 +66,15 @@ module::dump(ostream& o) const {
 	Default empty constructor.  
 	Not really used, because module will be stack allocated.  
  */
-object*
-module::construct_empty(void) {
+persistent*
+module::construct_empty(const int i) {
 	return new module();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MODULE_TYPE)) {
+if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	collect_object_pointer_list(m);

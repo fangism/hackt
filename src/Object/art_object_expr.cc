@@ -22,7 +22,7 @@
 #include "art_object_connect.h"
 #include "multikey.h"
 
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 namespace ART {
 namespace entity {
@@ -67,7 +67,7 @@ class dynamic_index_list;
 // class param_expr method_definitions
 
 // inline
-param_expr::param_expr() : object() { }
+param_expr::param_expr() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
@@ -204,7 +204,7 @@ pint_expr::make_param_expression_assignment_private(
 //=============================================================================
 // class param_expr_list method definitions
 
-param_expr_list::param_expr_list() : object() { }
+param_expr_list::param_expr_list() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
@@ -249,6 +249,10 @@ param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 //=============================================================================
 // class const_param_expr_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_param_expr_list, 
+	CONST_PARAM_EXPR_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent() { }
 
@@ -410,7 +414,7 @@ if (cpl) {
 void
 const_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE)) {
+if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -426,8 +430,8 @@ if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE)) {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-const_param_expr_list::construct_empty(void) {
+persistent*
+const_param_expr_list::construct_empty(const int i) {
 	return new const_param_expr_list();
 }
 
@@ -479,6 +483,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class dynamic_param_expr_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_param_expr_list, 
+	DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent() { }
 
@@ -685,7 +693,7 @@ if (cpl) {
 void
 dynamic_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE)) {
+if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -701,8 +709,8 @@ if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE)) {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-dynamic_param_expr_list::construct_empty(void) {
+persistent*
+dynamic_param_expr_list::construct_empty(const int) {
 	return new dynamic_param_expr_list();
 }
 
@@ -755,7 +763,7 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class index_expr method definitions
 
-index_expr::index_expr() : object() { }
+index_expr::index_expr() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_expr::~index_expr() { }
@@ -804,6 +812,10 @@ param_expr_collective::hash_string(void) const {
 //=============================================================================
 // class pbool_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_reference, 
+	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -948,7 +960,7 @@ pbool_instance_reference::static_constant_bool(void) const {
 void
 pbool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE))
+if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY))
 {  
 	if (array_indices)
 		array_indices->collect_transient_info(m);
@@ -962,8 +974,8 @@ if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE))
 /**
 	Just allocates with bogus contents, first pass of reconstruction.
  */
-object*
-pbool_instance_reference::construct_empty(void) {
+persistent*
+pbool_instance_reference::construct_empty(const int i) {
 	return new pbool_instance_reference();
 }
  
@@ -1015,6 +1027,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_instance_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_reference, 
+	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1183,7 +1199,7 @@ pint_instance_reference::resolve_value(int& i) const {
 void
 pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE)) {  
+if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	pint_inst_ref->collect_transient_info(m);
@@ -1196,8 +1212,8 @@ if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE)) {
 /**
 	Just allocates with bogus contents, first pass of reconstruction.
  */
-object*
-pint_instance_reference::construct_empty(void) {
+persistent*
+pint_instance_reference::construct_empty(const int i) {
 	return new pint_instance_reference();
 }
  
@@ -1249,6 +1265,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_const method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_const::what(ostream& o) const {
 	return o << "pint-const";
@@ -1303,12 +1322,12 @@ pint_const::make_param_expression_assignment_private(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PINT_TYPE);
+	m.register_transient_object(this, CONST_PINT_TYPE_KEY);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_const::construct_empty(void) {
+persistent*
+pint_const::construct_empty(const int i) {
 	return new pint_const(0);
 }
 
@@ -1336,6 +1355,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pbool_const method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_const::what(ostream& o) const {
 	return o << "pbool-const";
@@ -1375,12 +1397,12 @@ pbool_const::make_param_expression_assignment_private(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_const::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_PBOOL_TYPE);
+	m.register_transient_object(this, CONST_PBOOL_TYPE_KEY);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pbool_const::construct_empty(void) {
+persistent*
+pbool_const::construct_empty(const int i) {
 	return new pbool_const(0);
 }
 
@@ -1408,6 +1430,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_unary_expr method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1493,14 +1518,14 @@ pint_unary_expr::resolve_value(int& i) const {
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_UNARY_EXPR_TYPE)) {
+if (!m.register_transient_object(this, PINT_UNARY_EXPR_TYPE_KEY)) {
 	ex->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_unary_expr::construct_empty(void) {
+persistent*
+pint_unary_expr::construct_empty(const int i) {
 	return new pint_unary_expr();
 }
 
@@ -1529,6 +1554,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pbool_unary_expr method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_unary_expr, 
+	PBOOL_UNARY_EXPR_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1599,14 +1628,14 @@ pbool_unary_expr::static_constant_bool(void) const {
 void
 pbool_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_UNARY_EXPR_TYPE)) {
+if (!m.register_transient_object(this, PBOOL_UNARY_EXPR_TYPE_KEY)) {
 	ex->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pbool_unary_expr::construct_empty(void) {
+persistent*
+pbool_unary_expr::construct_empty(const int i) {
 	return new pbool_unary_expr();
 }
 
@@ -1635,6 +1664,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class arith_expr method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(arith_expr, ARITH_EXPR_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1740,15 +1772,15 @@ arith_expr::resolve_value(int& i) const {
 void
 arith_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ARITH_EXPR_TYPE)) {
+if (!m.register_transient_object(this, ARITH_EXPR_TYPE_KEY)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-arith_expr::construct_empty(void) {
+persistent*
+arith_expr::construct_empty(const int i) {
 	return new arith_expr();
 }
 
@@ -1779,11 +1811,18 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class relational_expr method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
+	Note: pass string, not null char.  
  */
 relational_expr::relational_expr() :
-		lx(NULL), rx(NULL), op('\0') {
+		lx(NULL), rx(NULL), op("") {
+#if 0
+	cerr << "relational_expr: empty constructor." << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1848,15 +1887,15 @@ relational_expr::static_constant_bool(void) const {
 void
 relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, RELATIONAL_EXPR_TYPE)) {
+if (!m.register_transient_object(this, RELATIONAL_EXPR_TYPE_KEY)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-relational_expr::construct_empty(void) {
+persistent*
+relational_expr::construct_empty(const int i) {
 	return new relational_expr();
 }
 
@@ -1887,11 +1926,14 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class logical_expr method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(logical_expr, LOGICAL_EXPR_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
 logical_expr::logical_expr() :
-		lx(NULL), rx(NULL), op('\0') {
+		lx(NULL), rx(NULL), op("") {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1956,15 +1998,15 @@ logical_expr::static_constant_bool(void) const {
 void
 logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, LOGICAL_EXPR_TYPE)) {
+if (!m.register_transient_object(this, LOGICAL_EXPR_TYPE_KEY)) {
 	lx->collect_transient_info(m);
 	rx->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-logical_expr::construct_empty(void) {
+persistent*
+logical_expr::construct_empty(const int i) {
 	return new logical_expr();
 }
 
@@ -1995,6 +2037,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_range method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_range, DYNAMIC_RANGE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -2023,7 +2068,7 @@ pint_range::pint_range(count_const_ptr<pint_expr> l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(const pint_range& pr) :
-		object(), index_expr(), range_expr(), 
+		object(), persistent(), index_expr(), range_expr(), 
 		// virtual base object() needs to be explicitly invoked
 		// in this copy constructor
 		lower(pr.lower), upper(pr.upper) {
@@ -2086,15 +2131,15 @@ pint_range::resolve_range(const_range& r) const {
 void
 pint_range::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_TYPE)) {
+if (!m.register_transient_object(this, DYNAMIC_RANGE_TYPE_KEY)) {
 	lower->collect_transient_info(m);
 	upper->collect_transient_info(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_range::construct_empty(void) {
+persistent*
+pint_range::construct_empty(const int i) {
 	return new pint_range();
 }
 
@@ -2123,6 +2168,9 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class const_range method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range, CONST_RANGE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default empty constructor. 
 	Makes an invalid range.  
@@ -2178,6 +2226,7 @@ const_range::const_range(const int l, const int u) :
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
 		object(), 
+		persistent(), 
 		index_expr(),
 		range_expr(), 
 		const_index(), 
@@ -2188,6 +2237,7 @@ const_range::const_range(const const_range& r) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range::const_range(const parent r) :
 		object(), 
+		persistent(), 
 		index_expr(),
 		range_expr(), 
 		const_index(), 
@@ -2264,12 +2314,12 @@ const_range::resolve_range(const_range& r) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_TYPE);
+	m.register_transient_object(this, CONST_RANGE_TYPE_KEY);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-const_range::construct_empty(void) {
+persistent*
+const_range::construct_empty(const int i) {
 	return new const_range();
 }
 
@@ -2314,12 +2364,16 @@ range_expr::dump(ostream& o) const {
 //=============================================================================
 // class range_expr_list method definitions
 
-range_expr_list::range_expr_list() : object() {
+range_expr_list::range_expr_list() : object(), persistent() {
 }
 
 //=============================================================================
 // class const_range_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range_list, 
+	CONST_RANGE_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list::const_range_list() : range_expr_list(), list_type() {
 }
 
@@ -2596,7 +2650,7 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 const_range_list::collect_transient_info(persistent_object_manager& m) const {
-	m.register_transient_object(this, CONST_RANGE_LIST_TYPE);
+	m.register_transient_object(this, CONST_RANGE_LIST_TYPE_KEY);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2604,8 +2658,8 @@ const_range_list::collect_transient_info(persistent_object_manager& m) const {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-const_range_list::construct_empty(void) {
+persistent*
+const_range_list::construct_empty(const int i) {
 	return new const_range_list();
 }
 
@@ -2655,6 +2709,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class dynamic_range_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_range_list, 
+	DYNAMIC_RANGE_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_range_list::dynamic_range_list() : range_expr_list(), list_type() {
 }
 
@@ -2740,7 +2798,7 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 void
 dynamic_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE)) {
+if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -2756,8 +2814,8 @@ if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE)) {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-dynamic_range_list::construct_empty(void) {
+persistent*
+dynamic_range_list::construct_empty(const int i) {
 	return new dynamic_range_list();
 }
 
@@ -2810,7 +2868,7 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class index_list method definitions
 
-index_list::index_list() : object() { }
+index_list::index_list() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_list::~index_list() { }
@@ -2818,6 +2876,10 @@ index_list::~index_list() { }
 //=============================================================================
 // class const_index_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_index_list, 
+	CONST_INDEX_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::const_index_list() : index_list(), parent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2969,7 +3031,7 @@ const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 void
 const_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE)) {
+if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -2985,8 +3047,8 @@ if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE)) {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-const_index_list::construct_empty(void) {
+persistent*
+const_index_list::construct_empty(const int i) {
 	return new const_index_list();
 }
 
@@ -3038,6 +3100,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class dynamic_index_list method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_index_list, 
+	DYNAMIC_INDEX_LIST_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3202,7 +3268,7 @@ dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 void
 dynamic_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE)) {
+if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -3218,8 +3284,8 @@ if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE)) {
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
  */
-object*
-dynamic_index_list::construct_empty(void) {
+persistent*
+dynamic_index_list::construct_empty(const int i) {
 	return new dynamic_index_list();
 }
 

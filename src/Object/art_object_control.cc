@@ -4,6 +4,7 @@
  */
 
 #include "art_object_control.h"
+#include "persistent_object_manager.tcc"
 
 namespace ART {
 namespace entity {

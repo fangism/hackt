@@ -38,10 +38,11 @@ main(int argc, char* argv[]) {
 	const string ofname(argv[2]);
 
 	persistent_object_manager::dump_reconstruction_table = true;
-	entity::object::warn_unimplemented = true;	// for verbosity
+	persistent::warn_unimplemented = true;	// for verbosity
 
 	excl_ptr<entity::module> the_module =
-	persistent_object_manager::load_object_from_file(ifname);
+		persistent_object_manager::load_object_from_file
+			<entity::module>(ifname);
 
 //	the_module->dump(cerr);
 

@@ -12,16 +12,21 @@
 #include <deque>
 
 #include "art_macros.h"
-#include "art_object_IO_fwd.h"	// forward declarations only
+#include "persistent.h"		// for persistent object interface
 
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition
 #include "ptrs.h"		// need complete definition (never_ptr members)
 #include "count_ptr_fwd.h"
 
+// for convenience
+#include "art_object_type_hash.h"
+
 //=============================================================================
 // macros
 
+#if 0
+DEFINITIONS OF THESE MACROS HAVE MOVED
 /***
 	Standard set of prototypes for persistent object IO-related
 	methods.  
@@ -97,6 +102,8 @@ static	object* construct_empty(void);					\
 	}
 #endif
 
+#endif
+
 //=============================================================================
 // temporary switches
 
@@ -127,6 +134,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
+	using namespace util;
 	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
 	using namespace COUNT_PTR_NAMESPACE;
 	using namespace QMAP_NAMESPACE;
@@ -260,6 +268,8 @@ virtual const object& self(void) const { return *this; }
 	Mmmm... fancy.
 **/
 
+#if 0
+FACTORED OUT INTO class persistent;
 /** walks object hierarchy and registers reachable pointers with manager */
 virtual	void collect_transient_info(persistent_object_manager& m) const;
 /** Writes the object out to a managed buffer */
@@ -269,6 +279,7 @@ virtual	void load_object(persistent_object_manager& m);
 
 public:
 	static bool			warn_unimplemented;
+#endif
 };	// end class object
 
 //=============================================================================
@@ -362,7 +373,7 @@ public:
 	process definitions, and namespaces do not contain formals or
 	naked language bodies.  
  */
-class scopespace : virtual public object {
+class scopespace : virtual public object, virtual public persistent {
 protected:	// typedefs -- keep these here for re-use
 
 	/**
@@ -527,7 +538,7 @@ protected:
 
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
-virtual	void load_used_id_map_object(excl_ptr<object> o) = 0;
+virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class scopespace
 
 //=============================================================================
@@ -658,9 +669,11 @@ public:
 
 // methods for object file I/O
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
 /** helper method for adding a variety of objects */
-void	load_used_id_map_object(excl_ptr<object> o);
+void	load_used_id_map_object(excl_ptr<persistent>& o);
 public:
 	static const never_const_ptr<name_space>	null;
 };	// end class name_space
@@ -672,7 +685,7 @@ public:
 	name-resolving functionality.  
 	All definitions are potentially templatable.  
  */
-class definition_base : virtual public object {
+class definition_base : virtual public object, virtual public persistent {
 public:
 	/**
 		Table of template formals.  
@@ -825,10 +838,10 @@ public:
 };	// end class definition_base
 
 //=============================================================================
-class type_reference_base : public object {
+class type_reference_base : public object, public persistent {
 protected:
 public:
-	type_reference_base() : object() { }
+	type_reference_base() : object(), persistent() { }
 virtual	~type_reference_base() { }
 
 };	// end class type_reference_base
@@ -929,7 +942,7 @@ public:
 	Instead of list of indices in index_collection, 
 	use list of statements that contain indices.  
  */
-class instance_collection_base : public object {
+class instance_collection_base : public object, public persistent {
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -1086,7 +1099,7 @@ virtual	~sequential_scope();
 	including instantiations, parameters, assignments, connections.  
 	Don't bother deriving from object, unless it is necessary.  
  */
-class instance_management_base {
+class instance_management_base : public persistent {
 protected:
 	// none
 public:
@@ -1109,9 +1122,11 @@ public:
 public:
 virtual	ostream& dump(ostream& o) const = 0;
 
+#if 0
 virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
 virtual	void write_object(const persistent_object_manager& m) const = 0;
 virtual	void load_object(persistent_object_manager& m) = 0;
+#endif
 
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values

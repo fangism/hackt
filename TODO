@@ -57,7 +57,7 @@ and beyond...
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation statement needs to check template arguments of type!
 
-Object serialization rework:
+Object serialization rework: (*DONE* -- 10/12/04)
 	sub-type instance collections by dimension, using size_t template
 	extend reconstruction table entry to contain additional
 		field for dimension subtype (another index)
@@ -71,16 +71,18 @@ Object serialization rework:
 		types added.  
 		Solution: run-time registration of types, using
 		unique strings (or hash) instead of compile-time constants.  
+	remaining: actually use/store/retrieve extra integer argument
+		for ::construct_empty()
 
 
+param_expression_assignment: sub-type into pint vs. pbool (*done*)
+	maybe even subtype by dimension.  (not yet...)
+	will need to update object_list::make_param_assignment... (done)
+param_expression_assignment: split apart rhs from rest (done)
+	lhs must be references. (done)
 
-param_expression_assignment: sub-type into pint vs. pbool
-	maybe even subtype by dimension.
-	will need to update object_list::make_param_assignment...
-param_expression_assignment: split apart rhs from rest
-	lhs must be references.
 
-language front-end:
+language front-end: parser:
 	modular parsers for extensible sub-languages.  
 	Will they share the same lexer?  or have their own?
 	@LANG extensions to "escape" into another language, 

@@ -35,13 +35,11 @@ DEBUG(DEBUG_BASIC,
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
-//	top = root->check_build(the_context);	// useless return value
 	top = root->check_build(never_ptr<parser::context>(&the_context));
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 
 	if (top) {
-//		assert(global == the_context->get_current_namespace());
 		assert(the_module.get_global_namespace() ==
 			the_context.get_current_namespace());
 DEBUG(DEBUG_BASIC, top->dump(cerr))
@@ -50,15 +48,8 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 //	global->dump(cerr);
 	{
 //	persistent_object_manager::dump_reconstruction_table = true;
-#if 0
-	excl_ptr<entity::name_space> global2 =
-		persistent_object_manager::self_test_no_file(global);
-	assert(global2);
-//	global2->dump(cerr);			// should match
-#else
 	assert(persistent_object_manager::self_test_no_file(the_module));
 //	the_module.dump(cerr);
-#endif
 	}
 
 	// massive recursive deletion of syntax tree, reclaim memory

@@ -9,7 +9,7 @@
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 
 #include "sstream.h"
@@ -308,6 +308,10 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_type_reference, 
+	DATA_TYPE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -386,7 +390,7 @@ data_type_reference::make_instance_collection(
 void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
 	base_type_def->collect_transient_info(m);
 	if (template_params)
 		template_params->collect_transient_info(m);
@@ -394,8 +398,8 @@ if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-data_type_reference::construct_empty(void) {
+persistent*
+data_type_reference::construct_empty(const int i) {
 	return new data_type_reference();
 }
 
@@ -441,6 +445,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class channel_type_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_type_reference, 
+	CHANNEL_TYPE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -518,7 +526,7 @@ channel_type_reference::make_instance_collection(
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
 	base_chan_def->collect_transient_info(m);
 	if (template_params)
 		template_params->collect_transient_info(m);
@@ -526,8 +534,8 @@ if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-channel_type_reference::construct_empty(void) {
+persistent*
+channel_type_reference::construct_empty(const int i) {
 	return new channel_type_reference();
 }
 
@@ -557,6 +565,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class process_type_reference method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference, 
+	PROCESS_TYPE_REFERENCE_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor only accessible to the construct_empty
 	method called during object allocation and de-serialization.  
@@ -633,7 +645,7 @@ process_type_reference::make_instance_collection(
 void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE)) {
+if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
 	base_proc_def->collect_transient_info(m);
 	if (template_params)
 		template_params->collect_transient_info(m);
@@ -641,8 +653,8 @@ if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-process_type_reference::construct_empty(void) {
+persistent*
+process_type_reference::construct_empty(const int i) {
 	return new process_type_reference();
 }
 
@@ -749,6 +761,10 @@ param_type_reference::make_instance_collection(
 		return excl_ptr<instance_collection_base>(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 
 //=============================================================================
 }	// end namespace entity

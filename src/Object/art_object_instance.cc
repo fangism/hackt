@@ -11,7 +11,7 @@
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
-#include "art_object_IO.tcc"
+#include "persistent_object_manager.tcc"
 
 #include "multikey_qmap.h"
 #include "compose.h"
@@ -36,7 +36,8 @@ instance_collection_base::null(NULL);
 /**
 	Private empty constructor.
  */
-instance_collection_base::instance_collection_base() : object(), 
+instance_collection_base::instance_collection_base() :
+		object(), persistent(), 
 		owner(NULL), key(), index_collection(), depth(0) {
 }
 
@@ -456,6 +457,10 @@ instance_collection_base::load_index_collection_pointers(
 //=============================================================================
 // class datatype_instance_collection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_instance_collection, 
+	DATA_INSTANCE_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -532,7 +537,7 @@ datatype_instance_collection::make_member_instance_reference(
 void
 datatype_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_INSTANCE_COLLECTION_TYPE)) {
+if (!m.register_transient_object(this, DATA_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -541,8 +546,8 @@ if (!m.register_transient_object(this, DATA_INSTANCE_COLLECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-datatype_instance_collection::construct_empty(void) {
+persistent*
+datatype_instance_collection::construct_empty(const int i) {
 	return new datatype_instance_collection();
 }
 
@@ -581,6 +586,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class process_instance_collection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection, 
+	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -656,7 +665,7 @@ process_instance_collection::make_member_instance_reference(
 void
 process_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE)) {
+if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -665,8 +674,8 @@ if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-process_instance_collection::construct_empty(void) {
+persistent*
+process_instance_collection::construct_empty(const int i) {
 	return new process_instance_collection();
 }
 
@@ -716,17 +725,6 @@ param_instance_collection::param_instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instance_collection::~param_instance_collection() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Override instance_collection_base's dump() to suppress output of <>.
- */
-ostream&
-param_instance_collection::what(ostream& o) const {
-	return o << 
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -873,6 +871,10 @@ param_instance_collection::make_member_instance_reference(
 //=============================================================================
 // class pbool_instance_collection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection, 
+	PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1037,7 +1039,7 @@ pbool_instance_collection::type_check_actual_param_expr(const param_expr& pe) co
 void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE)) {
+if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -1048,8 +1050,8 @@ if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pbool_instance_collection::construct_empty(void) {
+persistent*
+pbool_instance_collection::construct_empty(const int i) {
 	return new pbool_instance_collection();
 }
 
@@ -1105,6 +1107,10 @@ operator << (ostream& o, const pint_instance& p) {
 //=============================================================================
 // class pint_instance_collection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection, 
+	PINT_INSTANCE_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1401,7 +1407,7 @@ pint_instance_collection::lookup_value(int& v,
 void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE)) {
+if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -1412,8 +1418,8 @@ if (!m.register_transient_object(this, PINT_INSTANCE_COLLECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_instance_collection::construct_empty(void) {
+persistent*
+pint_instance_collection::construct_empty(const int i) {
 	return new pint_instance_collection();
 }
 
@@ -1448,6 +1454,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class channel_instance_collection method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection, 
+	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -1524,7 +1534,7 @@ channel_instance_collection::make_member_instance_reference(
 void
 channel_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE)) {
+if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -1533,8 +1543,8 @@ if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-channel_instance_collection::construct_empty(void) {
+persistent*
+channel_instance_collection::construct_empty(const int i) {
 	return new channel_instance_collection();
 }
 
@@ -1666,6 +1676,10 @@ param_instantiation_statement::~param_instantiation_statement() {
 //=============================================================================
 // class pbool_instantiation_statement method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instantiation_statement, 
+	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1733,7 +1747,7 @@ pbool_instantiation_statement::get_type_ref(void) const {
 void
 pbool_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE)) {
+if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	if (indices)
@@ -1742,8 +1756,8 @@ if (!m.register_transient_object(this, PBOOL_INSTANTIATION_STATEMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pbool_instantiation_statement::construct_empty(void) {
+persistent*
+pbool_instantiation_statement::construct_empty(const int i) {
 	return new pbool_instantiation_statement();
 }
 
@@ -1775,6 +1789,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class pint_instantiation_statement method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instantiation_statement, 
+	PINT_INSTANTIATION_STATEMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1849,7 +1867,7 @@ pint_instantiation_statement::unroll(void) const {
 void
 pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE)) {
+if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	if (indices)
@@ -1858,8 +1876,8 @@ if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-pint_instantiation_statement::construct_empty(void) {
+persistent*
+pint_instantiation_statement::construct_empty(const int i) {
 	return new pint_instantiation_statement();
 }
 
@@ -1891,6 +1909,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class process_instantiation_statement method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instantiation_statement, 
+	PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -1960,7 +1982,7 @@ process_instantiation_statement::get_type_ref(void) const {
 void
 process_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE)) {
+if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
@@ -1970,8 +1992,8 @@ if (!m.register_transient_object(this, PROCESS_INSTANTIATION_STATEMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-process_instantiation_statement::construct_empty(void) {
+persistent*
+process_instantiation_statement::construct_empty(const int i) {
 	return new process_instantiation_statement();
 }
 
@@ -2011,6 +2033,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class channel_instantiation_statement method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instantiation_statement, 
+	CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -2080,7 +2106,7 @@ channel_instantiation_statement::get_type_ref(void) const {
 void
 channel_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE)) {
+if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
@@ -2090,8 +2116,8 @@ if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-channel_instantiation_statement::construct_empty(void) {
+persistent*
+channel_instantiation_statement::construct_empty(const int i) {
 	return new channel_instantiation_statement();
 }
 
@@ -2131,6 +2157,10 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class data_instantiation_statement method definitions
 
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_instantiation_statement, 
+	DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -2200,7 +2230,7 @@ data_instantiation_statement::get_type_ref(void) const {
 void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE)) {
+if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
@@ -2210,8 +2240,8 @@ if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object*
-data_instantiation_statement::construct_empty(void) {
+persistent*
+data_instantiation_statement::construct_empty(const int i) {
 	return new data_instantiation_statement();
 }
 

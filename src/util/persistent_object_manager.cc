@@ -1,45 +1,15 @@
 /**
-	\file "art_object_IO.cc"
-	Template method instantiations for 
-	persistent object management, specific to ART.  
+	\file "persistent_object_manager.cc"
+	Method definitions for serial object manager.  
  */
-
-#include "art_object_module.h"
-#include "persistent_object_manager.tcc"
-
-using namespace PTRS_NAMESPACE;
-using ART::entity::module;
-
-namespace util {
-
-EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(module)
-
-}	// end namespace util
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//=============================================================================
-
-#if 0
-ENTIRE FILE IS OBSOLETE, replaced by "util/persistent_object_manager.cc"
 
 #include <iostream>
 #include <fstream>
+
 #include "hash_specializations.h"	// include this first
 	// for hash specialization to take effect
-#include "art_object_IO.h"
-#include "art_object.h"			// yes, ALL object classes
+#include "persistent_object_manager.h"
+#include "art_macros.h"
 #include "art_utils.tcc"
 #include "count_ptr.h"
 
@@ -50,10 +20,11 @@ ENTIRE FILE IS OBSOLETE, replaced by "util/persistent_object_manager.cc"
 
 //=============================================================================
 
-namespace ART {
-namespace entity {
+namespace util {
 //=============================================================================
 
+#if 0
+OBSOLETE, but kept here for one revision as a historic landmark
 /**
 	The entries in this table should correspond to the enumerations in
 	type_index_enum, defined in "art_object_type_enum.h".  
@@ -149,6 +120,7 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	NULL, 	// &conditional_scope::construct_empty, 
 	// more reconstructors here...
 };	// end recontruction_function_table
+#endif
 
 //=============================================================================
 // class reconstruction_table_entry method definitions
@@ -166,7 +138,7 @@ persistent_object_manager::dump_reconstruction_table = false;
 
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry() :
-		otype(NULL_TYPE), recon_addr(NULL), ref_count(NULL), 
+		otype(), recon_addr(NULL), ref_count(NULL), 
 		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
 	assert(buffer);
@@ -175,7 +147,7 @@ persistent_object_manager::reconstruction_table_entry::
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
-		const type_index_enum t, 
+		const persistent::hash_key& t, 
 		const streampos hd, const streampos tl) :
 		otype(t), recon_addr(NULL), ref_count(NULL), 
 		scratch(false), 
@@ -186,8 +158,8 @@ persistent_object_manager::reconstruction_table_entry::
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
-		const object* p, 
-		const type_index_enum t) :
+		const persistent* p, 
+		const persistent::hash_key& t) :
 		otype(t), recon_addr(p), ref_count(NULL), 
 		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
@@ -223,7 +195,7 @@ persistent_object_manager::reconstruction_table_entry::count(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resets the reconstruction address, and flags as unvisited.  
-	The type_index_enum is preserved.  
+	The persistent::hash_key is preserved.  
 	The state of the buffer is left as is.  
  */
 void
@@ -236,7 +208,7 @@ persistent_object_manager::reconstruction_table_entry::reset_addr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 persistent_object_manager::reconstruction_table_entry::assign_addr(
-		object* ptr) {
+		persistent* ptr) {
 	assert(!recon_addr);
 	recon_addr = ptr;
 }
@@ -293,29 +265,12 @@ persistent_object_manager::~persistent_object_manager() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	The first non-NULL object is special: it is the root module.  
-	Returning an excl_ptr guarantees that memory will
-	be managed properly.
-	When the excl_ptr hits the end of a scope, unless ownership
-	has been transferred, the memory should be recursively reclaimed.  
-	Thus, this is not a const method.  
- */
-excl_ptr<module>
-persistent_object_manager::get_root_module(void) {
-	assert(root);		// necessary?
-	return root;
-	// this relinquishes ownership and responsibility for deleting
-	// to whomever consumes the returned excl_ptr
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Registers a persistent object that will be stored.  
 	Returns true if address was already visited.  
  */
 bool
 persistent_object_manager::register_transient_object(
-		const ptr_type* ptr, const type_index_enum t) {
+		const persistent* ptr, const persistent::hash_key& t) {
 	const long probe = addr_to_index_map[ptr];
 	if (probe >= 0) {
 		// sanity check
@@ -327,7 +282,7 @@ persistent_object_manager::register_transient_object(
 	} else {
 		// else add new entry
 		addr_to_index_map[ptr] = reconstruction_table.size();
-		const object* o_ptr = IS_A(const object*, ptr);
+		const persistent* o_ptr = IS_A(const persistent*, ptr);
 		if (ptr) assert(o_ptr);
 		reconstruction_table.push_back(
 			reconstruction_table_entry(o_ptr, t));
@@ -344,7 +299,7 @@ persistent_object_manager::register_transient_object(
 void
 persistent_object_manager::initialize_null(void) {
 	assert(!reconstruction_table.size());
-	register_transient_object(NULL, NULL_TYPE);
+	register_transient_object(NULL, persistent::hash_key::null);
 #if 0
 	reconstruction_table_entry& e = reconstruction_table[0];
 	e.set_head(0);
@@ -361,7 +316,7 @@ persistent_object_manager::initialize_null(void) {
 	\return true if already visited, false if this is first time.
  */
 bool
-persistent_object_manager::flag_visit(const ptr_type* ptr) {
+persistent_object_manager::flag_visit(const persistent* ptr) {
 	const long probe = addr_to_index_map[ptr];
 	assert(probe >= 0);
 	reconstruction_table_entry& e = reconstruction_table[probe];
@@ -377,24 +332,17 @@ persistent_object_manager::flag_visit(const ptr_type* ptr) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns an integer index corresponding to this address.  
-	\param ptr must be a registered address in this object manager.  
+	\param ptr must be a registered address in this object manager, 
+		and may be NULL.  
 	\return index corresponding to the entry.  
  */
 long
-persistent_object_manager::lookup_ptr_index(const ptr_type* ptr) const {
-//	assert(ptr);
+persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 	const long probe = addr_to_index_map[ptr];
-//	assert(probe >= 0);
 	// because uninitialized value of Long is -1
 	if (probe < 0) {
 		// more useful diagnosis message
 		if (ptr) {
-			// can't dynamic cast from void b/c not polymorphic
-#if 0
-			const object* o_ptr =
-				reinterpret_cast<const object*>(ptr);
-			assert(o_ptr);
-#endif
 			ptr->what(cerr << "FATAL: Object (") << ") at addr "
 				<< ptr << " has not been registered with "
 				"the object manager!" << endl;
@@ -411,11 +359,11 @@ persistent_object_manager::lookup_ptr_index(const ptr_type* ptr) const {
 	Returns the pointer corresponding to the indexed
 	reconstruction table entry.  
  */
-object*
+persistent*
 persistent_object_manager::lookup_obj_ptr(const long i) const {
 	assert((unsigned long) i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
-	return const_cast<object*>(e.addr());
+	return const_cast<persistent*>(e.addr());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -436,7 +384,7 @@ persistent_object_manager::lookup_ref_count(const long i) const {
 	\return writeable reference to a stream buffer.  
  */
 ostream&
-persistent_object_manager::lookup_write_buffer(const ptr_type* ptr) const {
+persistent_object_manager::lookup_write_buffer(const persistent* ptr) const {
 	stringstream& ret =
 		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
 #if DEBUG_ME
@@ -453,7 +401,7 @@ persistent_object_manager::lookup_write_buffer(const ptr_type* ptr) const {
 	\return readable reference to a stream buffer.  
  */
 istream&
-persistent_object_manager::lookup_read_buffer(const ptr_type* ptr) const {
+persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
 	stringstream& ret =
 		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
 #if DEBUG_ME
@@ -461,6 +409,53 @@ persistent_object_manager::lookup_read_buffer(const ptr_type* ptr) const {
 		<< ", tellp = " << ret.tellp() << endl;
 #endif
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static accessor guarantees that when this function is called, 
+	the function map will have been initialized exactly once, 
+	before all uses.  
+	Needs to be be private for protection, because it returns
+	a non-const reference!  
+	Add-only access is granted through register_persistent_type.
+	\return valid reference to the only reconstruction function map.  
+ */
+persistent_object_manager::reconstruction_function_map_type&
+persistent_object_manager::get_reconstruction_function_map(void) {
+	static reconstruction_function_map_type
+		reconstruction_function_map;
+	return reconstruction_function_map;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+persistent_object_manager::verify_registered_type(
+		const persistent::hash_key& k) {
+	const reconstruct_function_ptr_type probe =
+		static_cast<const reconstruction_function_map_type&>(
+			get_reconstruction_function_map())[k];
+	return (probe != NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+persistent_object_manager::dump_registered_type_map(ostream& o) {
+	const reconstruction_function_map_type& m =
+		get_reconstruction_function_map();
+	reconstruction_function_map_type::const_iterator iter = m.begin();
+	const reconstruction_function_map_type::const_iterator end = m.end();
+	o << "persistent_object_manager::reconstruction_function_map has " <<
+		get_reconstruction_function_map().size() << " entries." << endl;
+	o << "\tkey\t\twhat" << endl;
+	for ( ; iter != end; iter++) {
+		excl_ptr<persistent> tmp((*iter->second)(0));
+		assert(tmp);
+		// DANGER: may not be safe to call what() on uninitialized
+		// objects, if it depends on internal field members!
+		tmp->what(o << '\t' << iter->first << "    \t") << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -519,13 +514,18 @@ persistent_object_manager::load_header(ifstream& f) {
 	read_value(f, max);
 	size_t i = 0;
 	for ( ; i<max; i++) {
-		type_index_enum	t;
+		persistent::hash_key t;
 		streampos head, tail;
 		read_value(f, t);
 		read_value(f, head);
 		read_value(f, tail);
-		assert(t >= 0);		// range check
-		assert(t < MAX_TYPE_INDEX_ENUM);
+		// make sure t is a registered type
+		if (t != persistent::hash_key::null && 
+				!verify_registered_type(t)) {
+			cerr << "FATAL: persistent type code \"" <<
+				t << "\" has not been registered!" << endl;
+			exit(1);
+		}
 		reconstruction_table.push_back(
 			reconstruction_table_entry(t, head, tail));
 	}
@@ -549,12 +549,13 @@ persistent_object_manager::reconstruct(void) {
 	size_t i = 1;
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
-		type_index_enum t = e.type();
-		if (t) {		// not NULL_TYPE
+		const persistent::hash_key& t = e.type();
+		if (t != persistent::hash_key::null) {	// not NULL_TYPE
 			const reconstruct_function_ptr_type f = 
-				reconstruction_function_table[t];
+				get_reconstruction_function_map()[t];
 			if (f) {
-				e.assign_addr((*f)());
+				// later: pass in real e.alloc_arg
+				e.assign_addr((*f)(0));
 				addr_to_index_map[e.addr()] = i;
 			} else {
 				cerr << "WARNING: don\'t know how to "
@@ -608,8 +609,8 @@ persistent_object_manager::collect_objects(void) {
 //	dump_text(cerr);		// DEBUG
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
-//		object* o = const_cast<object*>(e.addr());
-		const object* o = e.addr();
+//		persistent* o = const_cast<persistent*>(e.addr());
+		const persistent* o = e.addr();
 		assert(o);
 		o->write_object(*this);	// virtual
 		e.initialize_offsets();
@@ -681,7 +682,7 @@ persistent_object_manager::load_objects(void) {
 	size_t i = 1;
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
-		object* o = const_cast<object*>(e.addr());
+		persistent* o = const_cast<persistent*>(e.addr());
 		if (o)
 			o->load_object(*this);
 			// virtual call, unavoidable const cast
@@ -691,10 +692,8 @@ persistent_object_manager::load_objects(void) {
 	// for deleting all memory, by wrapping the root pointer
 	// to the module containing the global namespace in an excl_ptr
 	// Entry at position 1 is ALWAYS the root module.  
-	object* r = lookup_obj_ptr(1);
-	module* m = IS_A(module*, r);
-	assert(m);
-	root = excl_ptr<module>(m);
+	persistent* r = lookup_obj_ptr(1);
+	root = excl_ptr<persistent>(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -703,14 +702,11 @@ persistent_object_manager::load_objects(void) {
  */
 void
 persistent_object_manager::save_object_to_file(const string& s, 
-		const module& m) {
-//	never_const_ptr<name_space> g(m.get_global_namespace());
-//	assert(g);
+		const persistent& m) {
 	ofstream f(s.c_str(), ios_base::binary | ios_base::trunc);
 	assert(f.good());
 	persistent_object_manager pom;
 	pom.initialize_null();			// reserved 0th entry
-//	g->collect_transient_info(pom);		// recursive visitor
 	m.collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
 	if (dump_reconstruction_table)
@@ -718,27 +714,6 @@ persistent_object_manager::save_object_to_file(const string& s,
 	pom.write_header(f);		// after knowing size of each segment
 	pom.finish_write(f);			// serialize objects
 	f.close();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads hierarchical object collection from file.  
- */
-// excl_ptr<name_space>
-excl_ptr<module>
-persistent_object_manager::load_object_from_file(const string& s) {
-	ifstream f(s.c_str(), ios_base::binary);
-	persistent_object_manager pom;
-	// don't initialize_null, will be loaded in from table
-	pom.load_header(f);
-	pom.finish_load(f);
-	f.close();                              // done with file
-	pom.reconstruct();                      // allocate-only pass
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-	// Oh no, partially initialized objects!
-	pom.load_objects();
-	return pom.get_root_module();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -757,52 +732,6 @@ persistent_object_manager::reset_for_loading(void) {
 	}
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Write the reconstruction table, and loads it back, without
-	going through an intermediate file.  
-	Should essentially make a deep copy of the hierarchical object
-	rooted at the global namespace.  
- */
-// excl_ptr<name_space>
-excl_ptr<module>
-persistent_object_manager::self_test_no_file(const module& m) {
-	persistent_object_manager pom;
-	pom.initialize_null();			// reserved 0th entry
-	m.collect_transient_info(pom);		// recursive visitor
-	pom.collect_objects();			// buffers output in segments
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// for debugging
-
-	// need to set start of objects? no
-
-	// pretend we wrote it out and read it back in...
-	pom.reset_for_loading();
-	pom.reconstruct();                      // allocate-only pass
-
-	if (dump_reconstruction_table)
-		pom.dump_text(cerr << endl) << endl;	// debugging only
-
-	pom.load_objects();
-	// must acquire root object in some owned pointer!
-	return pom.get_root_module();
-	// will get de-allocated after return statement is evaluated
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes out and reads back in, through an intermediate file.  
- */
-// excl_ptr<name_space>
-excl_ptr<module>
-persistent_object_manager::self_test(const string& s, const module& m) {
-	save_object_to_file(s, m);
-	return load_object_from_file(s);
-}
-
 //=============================================================================
-}	// end namespace entity
-}	// end namespace ART
-
-#endif
+}	// end namespace util
 

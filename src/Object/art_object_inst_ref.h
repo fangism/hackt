@@ -45,9 +45,10 @@ namespace entity {
 	or collection thereof.  
 	Instance reference should be cacheable?
  */
-class instance_reference_base : virtual public object {
+class instance_reference_base : virtual public object, 
+		virtual public persistent {
 public:
-	instance_reference_base() : object() { }
+	instance_reference_base() : object(), persistent() { }
 virtual	~instance_reference_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -268,7 +269,8 @@ virtual	ostream& what(ostream& o) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class datatype_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -293,7 +295,8 @@ virtual	ostream& what(ostream& o) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class channel_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -317,7 +320,8 @@ virtual	ostream& what(ostream& o) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class process_instance_reference
 
 //=============================================================================
@@ -345,7 +349,8 @@ public:
 // can also attach indices!
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 };	// end class process_member_instance_reference
 
 //=============================================================================
@@ -372,7 +377,8 @@ public:
 // can also attach indices!
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class datatype_member_instance_reference
 
@@ -400,7 +406,8 @@ public:
 // can also attach indices!
 
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
 };	// end class channel_member_instance_reference
 

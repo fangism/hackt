@@ -1,5 +1,14 @@
 "NEWS"
 
+2004-10-12
+
+	Major rework of persistent object de/serialization framework
+	completed.  Persistent types can be statically registered
+	with the persistent_object_manager's global static type registry, 
+	using some convenient macros.  
+	This framework is now portable to any other project.  
+
+
 2004-09-03
 
 	Starting language specification documentation in dox/lang.  

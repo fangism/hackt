@@ -104,7 +104,7 @@ virtual	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f) = 0;
 		resolve_complete_type(never_const_ptr<param_expr_list> p) const;
 
 protected:
-virtual	void load_used_id_map_object(excl_ptr<object> o) = 0;
+virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class typedef_base
 
 //=============================================================================
@@ -197,9 +197,10 @@ public:
 
 // methods for object file I/O
 public:
-	ART_OBJECT_IO_METHODS
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
 
-	void load_used_id_map_object(excl_ptr<object> o);
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 	void write_object_port_formals(
 		const persistent_object_manager& m) const;
 	void load_object_port_formals(persistent_object_manager& m);
@@ -239,8 +240,10 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class process_definition_alias
 
 //=============================================================================
@@ -308,11 +311,11 @@ public:
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object
-//	ART_OBJECT_IO_METHODS
+	PERSISTENT_METHODS		// dummy methods
 	// thus we need only collect and write...
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(const persistent_object_manager& m) const;
-	void load_used_id_map_object(excl_ptr<object> o);
+//	void collect_transient_info(persistent_object_manager& m) const;
+//	void write_object(const persistent_object_manager& m) const;
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class_built_in_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -362,8 +365,10 @@ public:
 
 	bool add_member(const token_identifier& em);
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class enum_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -398,6 +403,8 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
+private:
+	PERSISTENT_METHODS
 };	// end class built_in_param_def
 
 //-----------------------------------------------------------------------------
@@ -428,8 +435,10 @@ public:
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
@@ -461,8 +470,10 @@ public:
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const;
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class datatype_definition_alias
 
 //=============================================================================
@@ -516,8 +527,10 @@ public:
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------
@@ -548,8 +561,10 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 public:
-	ART_OBJECT_IO_METHODS
-	void load_used_id_map_object(excl_ptr<object> o);
+	PERSISTENT_STATIC_MEMBERS_DECL
+	PERSISTENT_METHODS
+
+	void load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class channel_definition_alias
 
 //-----------------------------------------------------------------------------
