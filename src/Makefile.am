@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2004/12/05 05:06:44 fang Exp $
+#	$Id: Makefile.am,v 1.28 2004/12/06 07:10:55 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -99,6 +99,9 @@ AST_CC_FILES = \
 	AST/art_parser_prs.cc
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
+	AST/art_parser_fwd.h \
+	AST/art_parser.h \
+	AST/art_parser.tcc \
 	AST/art_parser_debug.h
 
 OBJECT_CC_FILES = \
@@ -108,21 +111,34 @@ OBJECT_CC_FILES = \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
+	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
+	Object/art_object_namespace.cc \
 	Object/art_built_ins.cc
 
 # for all Object files with corresponding header
-OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h)
+OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
+	Object/art_object_fwd.h \
+	Object/art_object.h \
+	Object/art_object_definition_base.h \
+	Object/art_object_expr_base.h \
+	Object/art_object_expr_const.h \
+	Object/art_object_instance_base.h \
+	Object/art_object_instance_management_base.h \
+	Object/art_object_inst_ref_base.h \
+	Object/art_object_type_ref_base.h \
+	Object/art_object_type_hash.h
 
 UTIL_HEADER_FILES = \
 	util/art_debug.h \
 	util/art_switches.h \
 	util/macros.h \
 	util/STL/allocator_fwd.h \
+	util/STL/deque_fwd.h \
 	util/STL/functional_fwd.h \
 	util/STL/list_fwd.h \
 	util/STL/list.h \
@@ -175,6 +191,7 @@ UTIL_HEADER_FILES = \
 	util/qmap.h \
 	util/qmap.tcc \
 	util/sstream.h \
+	util/stacktrace.h \
 	util/string_fwd.h \
 	util/sublist.h \
 	util/sublist.tcc \
@@ -200,17 +217,14 @@ libart___la_SOURCES = \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
 	$(AST_CC_FILES) $(AST_H_FILES) \
-	AST/art_parser.h \
-	AST/art_parser.tcc \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
+	util/stacktrace.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
-	Object/art_object.h \
 	Object/art_object_IO.cc \
-	Object/art_object_type_hash.h \
 	config.h \
 	art++.h
 

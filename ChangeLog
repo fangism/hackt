@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2004-12-05	David Fang	<fangism@users.sourceforge.net>
+
+	* Major source tree re-organization, partitioning large header
+	  files into chunks, usually pulling out the abstract base classes
+	  which need to be visible, where there implementers need not
+	  be visible.  
+	  Implementation source files (.cc) are kept the same.  
+
+	* Much clean-up and header file pruning.  
+	  Slightly smaller objects and binaries. 
+	  Slightly faster compile-time.  
+
+
 2004-12-04	David Fang	<fangism@users.sourceforge.net>
 
 	* Re-organized util/ library directory.  

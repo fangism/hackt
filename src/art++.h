@@ -2,7 +2,7 @@
 	\file "art++.h"
 	The only header file needed to write top-level applications for ART.
 
-	$Id: art++.h,v 1.5 2004/11/30 01:24:57 fang Exp $
+	$Id: art++.h,v 1.6 2004/12/06 07:10:55 fang Exp $
  */
 
 #ifndef	__ARTXX_H__
@@ -35,8 +35,9 @@ extern	excl_ptr<root_body>	AST_root;
 #error	"USING_YACC or USING_BISON?  Both can't be false."
 #endif
 extern	FILE* artxx_in;
+
 extern "C" {
-	int artxx_parse(void);		// in "art++-parse-prefix.cc"
+int	artxx_parse(void);		// in "art++-parse-prefix.cc"
 }
 
 using namespace std;
