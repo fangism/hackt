@@ -6,6 +6,17 @@
 	  Merged all revisions from -09-instance child branch (rev -13)
 	  in this branch, very critical for progress.  
 
+	* -alias-11: "breakthrough"
+	  The moment we've been waiting for...
+	  First successful unrolling of connections, with persistence!
+	  Tested one case with scalars, and one complicated case 
+	  with multidimensional slices, and they pass!
+	  Currently, connection-equivalence type-checking is not yet
+	  implemented, that will have to wait until the -object-02 phase.  
+
+		Other minor changes:
+		+ cleaned up packed_array*, removing packed_array_base.
+
 
 2005-02-25	David Fang	<fangism@users.sourceforge.net>
 

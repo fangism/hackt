@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.8.2.1 2005/02/09 04:14:12 fang Exp $
+	$Id: TODO,v 1.8.2.1.6.1 2005/02/27 01:09:34 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -31,6 +31,12 @@ hash_qmap, qmap: replace inheritance from hash_map and map
 	But I feel it's worth it.  
 
 Do this with hash_qmap, qmap, multikey_qmap, etc. first to see benefit.
+
+-------------------------------------------------------------------------------
+persistent_object_manager:
+	upon exception thrown during load_objects, 
+		properly delete all transients and rethrow, 
+		to prevent bogus memory leak on exception. 
 
 -------------------------------------------------------------------------------
 

@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.2.2 2005/02/26 06:11:54 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.2.3 2005/02/27 01:09:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -98,7 +98,10 @@ virtual	~instance_alias_info();
 		container is inherited from instance_alias_info
 	 */
 	bool
-	valid(void) const { return container; }
+	valid(void) const { return this->container; }
+
+	void
+	check(const container_type* p) const;
 
 	/**
 		Instantiates officially by linking to parent collection.  
@@ -106,8 +109,8 @@ virtual	~instance_alias_info();
 	void
 	instantiate(const container_ptr_type p) {
 		NEVER_NULL(p);
-		INVARIANT(!container);
-		container = p;
+		INVARIANT(!this->container);
+		this->container = p;
 	}
 
 	// consider: pure virtual multikey_generic<K>
@@ -118,7 +121,8 @@ virtual	~instance_alias_info();
 	 */
 	bool
 	operator == (const this_type& i) const {
-		return (instance == i.instance) && (container == i.container);
+		return (this->instance == i.instance) &&
+			(this->container == i.container);
 	}
 
 

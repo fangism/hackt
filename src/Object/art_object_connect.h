@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.7 2005/02/26 06:11:50 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.8 2005/02/27 01:09:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -10,6 +10,7 @@
 #include "art_object_fwd.h"
 #include "art_object_instance_management_base.h"
 #include "memory/pointer_classes.h"
+#include "multikey_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -126,7 +127,10 @@ public:
 	/// the type of collection for unrolled aliases
 	typedef	typename instance_reference_type::alias_collection_type
 						alias_collection_type;
-protected:
+private:
+	typedef	util::multikey_generator_generic<pint_value_type>
+						key_generator_type;
+private:
 	inst_list_type				inst_list;
 public:
 	alias_connection();

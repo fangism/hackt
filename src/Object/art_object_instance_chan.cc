@@ -2,7 +2,7 @@
 	\file "art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.8.2.4.2.5 2005/02/26 06:11:54 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.2.4.2.6 2005/02/27 01:09:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -33,6 +33,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_instance_collection, 
 		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
 
+	SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_collection,
+		"channel_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_scalar, "channel_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_1D, "channel_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_2D, "channel_array_2D")

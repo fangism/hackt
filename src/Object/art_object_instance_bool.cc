@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.5 2005/02/26 06:11:54 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.6 2005/02/27 01:09:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -41,6 +41,8 @@ STATIC_TRACE_BEGIN("instance-bool")
 // module-local specializations
 
 namespace util {
+	SPECIALIZE_UTIL_WHAT(ART::entity::bool_instance_collection,
+		"bool_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_scalar, "bool_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_1D, "bool_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_2D, "bool_array_2D")

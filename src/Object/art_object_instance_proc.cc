@@ -2,7 +2,7 @@
 	\file "art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.5 2005/02/26 06:11:56 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.6 2005/02/27 01:09:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -38,6 +38,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_instance_collection, 
 		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
 
+	SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_collection,
+		"process_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_scalar, "process_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_1D, "process_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_2D, "process_array_2D")

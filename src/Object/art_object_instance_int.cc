@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.5 2005/02/26 06:11:56 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.6 2005/02/27 01:09:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -42,6 +42,8 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::int_instance_collection, 
 		DINT_INSTANCE_COLLECTION_TYPE_KEY)
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_instance_collection,
+		"int_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::int_scalar, "int_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_1D, "int_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_2D, "int_array_2D")

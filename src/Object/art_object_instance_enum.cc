@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.5 2005/02/26 06:11:55 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.6 2005/02/27 01:09:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -34,6 +34,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::enum_instance_collection, 
 		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
 
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_instance_collection,
+		"enum_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_scalar, "enum_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_1D, "enum_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_2D, "enum_array_2D")

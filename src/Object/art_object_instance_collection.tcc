@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.1.2.2 2005/02/26 06:11:55 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.2.3 2005/02/27 01:09:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -119,8 +119,23 @@ INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
+INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
+	if (this->container && this->container != p) {
+		cerr << "FATAL: Inconsistent instance_alias_info parent-child!" << endl;
+		cerr << "this->container = " << &*this->container << endl;
+		this->container->dump(cerr) << endl;
+		cerr << "should point to: " << p << endl;
+		p->dump(cerr) << endl;
+		DIE;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::collect_base()");
 	if (this->instance)
 		this->instance->collect_transient_info(m);
 	// eventually need to implement this...
@@ -170,8 +185,8 @@ INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
-		const persistent_object_manager& m, 
-		ostream& o) const {
+		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	m.write_pointer(o, this->instance);
 	m.write_pointer(o, this->container);
 }
@@ -181,6 +196,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
 	m.read_pointer(i, this->instance);
 	m.read_pointer(i, this->container);
 }
@@ -230,12 +246,12 @@ INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_next_connection()");
 	NEVER_NULL(this->container);
 	m.write_pointer(o, this->container);
-#if 1
+
 	value_writer<key_type> write_key(o);
 	write_key(key);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,25 +260,28 @@ void
 INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	m.read_pointer(i, container);
-#if 1
+	instance_collection_generic_type* next_container;
+	m.read_pointer(i, next_container);
 	// reconstruction ordering problem:
 	// container must have its instances alread loaded, though 
 	// not necessarily constructed.
 	// This is why instance re-population MUST be decoupled from
 	// connection re-establishment *GRIN*.  
 	// See? there's a reason for everything.  
-	NEVER_NULL(this->container);
+	NEVER_NULL(next_container);
 	// this is the safe way of ensuring that object is loaded once only.
-	m.load_object_once(
-		const_cast<instance_collection_generic_type*>(
-			&*this->container));
+	m.load_object_once(next_container);
 
 	// the CONTAINER should read the key, because it is dimension-specific!
 	// it should return a reference to the alias node, 
 	// which can then be linked.  
-	instance_alias_base_type& n(this->container->load_reference(i));
-	merge(n);       // re-link
+#if STACKTRACE_PERSISTENTS
+	cerr << "ring size before = " << this->size();
+#endif
+	instance_alias_base_type& n(next_container->load_reference(i));
+	this->merge(n);       // re-link
+#if STACKTRACE_PERSISTENTS
+	cerr << ", after = " << this->size() << endl;
 #endif
 }
 
@@ -274,10 +293,8 @@ INSTANCE_ALIAS_CLASS::collect_transient_info(
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::collect_transients()");
 	// this isn't truly a persistent type, so we don't register this addr.
 	INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(m);
-#if 1
 	if (this->next != this)
 		this->next->collect_transient_info_base(m);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -288,11 +305,7 @@ void
 INSTANCE_ALIAS_CLASS::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_object()");
-#if 0
 	// DO NOT write out key now, that is the job of the next phase!
-	value_writer<key_type> write_key(os);
-	write_key(key);
-#endif
 	INSTANCE_ALIAS_INFO_CLASS::write_object_base(m, o);
 }
 
@@ -302,13 +315,8 @@ void
 INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_PERSISTENT("int_alias::load_object()");
-#if 0
 	// DO NOT load in key now, that is the job of the next phase!
-	value_reader<key_type> kr(os);
-	kr(e.key);
-#endif
 	INSTANCE_ALIAS_INFO_CLASS::load_object_base(m, i);
-	// TODO: copy draft code from "art_object_instance_bool.cc"
 }
 
 //=============================================================================
@@ -330,6 +338,7 @@ KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 KEYLESS_INSTANCE_ALIAS_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::write_next_connection()");
 	m.write_pointer(o, this->container);
 	// no key to write!
 }
@@ -348,16 +357,19 @@ void
 KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
-	m.read_pointer(i, this->container);
-#if 1
-	NEVER_NULL(this->container);
+	instance_collection_generic_type* next_container;
+	m.read_pointer(i, next_container);
+	NEVER_NULL(next_container);	// true?
 	// no key to read!
 	// problem: container is a never_ptr<const ...>, yucky
-	m.load_object_once(
-		const_cast<instance_collection_generic_type*>(
-			&*this->container));
-	instance_alias_base_type& n(this->container->load_reference(i));
-	merge(n);
+	m.load_object_once(next_container);
+#if STACKTRACE_PERSISTENTS
+	cerr << "ring size before = " << this->size();
+#endif
+	instance_alias_base_type& n(next_container->load_reference(i));
+	this->merge(n);
+#if STACKTRACE_PERSISTENTS
+	cerr << ", after = " << this->size() << endl;
 #endif
 }
 
@@ -371,7 +383,6 @@ KEYLESS_INSTANCE_ALIAS_CLASS::collect_transient_info(
 	INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(m);
 	if (this->next != this)
 		this->next->collect_transient_info_base(m);
-	// TODO: copy draft code from "art_object_instance_bool.cc"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -383,15 +394,16 @@ KEYLESS_INSTANCE_ALIAS_CLASS::write_object(const persistent_object_manager& m,
 	INSTANCE_ALIAS_INFO_CLASS::write_object_base(m, o);
 	// no key to write!
 	// continuation pointer?
-#if 1
 	NEVER_NULL(this->next);
 	if (this->next == this) {
 		write_value<char>(o, 0);
 	} else {
+#if STACKTRACE_PERSISTENTS
+		cerr << "Writing a real connection!" << endl;
+#endif
 		write_value<char>(o, 1);
 		this->next->write_next_connection(m, o);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -402,13 +414,14 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_object()");
 	INSTANCE_ALIAS_INFO_CLASS::load_object_base(m, i);
 	// no key to load!
-#if 1
 	char c;
 	read_value(i, c);
 	if (c) {
+#if STACKTRACE_PERSISTENTS
+		cerr << "Loading a real connection!" << endl;
+#endif
 		this->load_next_connection(m, i);
 	}
-#endif
 }
 
 //=============================================================================
@@ -759,7 +772,6 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 		list<instance_alias_base_ptr_type>& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
-//	multikey_generator<D, pvalue_type> key_gen;
 	key_generator_type key_gen;
 	r.make_multikey_generator(key_gen);
 	key_gen.initialize();
@@ -843,6 +855,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 typename INSTANCE_ARRAY_CLASS::instance_alias_base_type&
 INSTANCE_ARRAY_CLASS::load_reference(istream& i) const {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_reference()");
 	key_type k;
 	value_reader<key_type> read_key(i);
 	read_key(k);
@@ -944,11 +957,9 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	for_each(this->collection.begin(), this->collection.end(),
 		element_writer(m, f)
 	);
-#if 1
 	for_each(this->collection.begin(), this->collection.end(), 
 		connection_writer(m, f)
 	);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -971,11 +982,9 @@ INSTANCE_ARRAY_CLASS::load_object(
 		// construct the element locally first, then insert it into set
 		load_element();
 	}
-#if 1
 	for_each(collection.begin(), collection.end(),
 		connection_loader(m, f)
 	);
-#endif
 }
 
 //=============================================================================
@@ -1019,13 +1028,10 @@ INSTANCE_SCALAR_CLASS::what(ostream& o) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
-#if 0
-	return o << auto_indent << the_instance << endl;
-#else
-	// no auto-indent
+	// no auto-indent, continued on same line
+	// see physical_instance_collection::dump for reason why
 	this->the_instance.get_next()->dump_alias(o << " = ");
 	return o;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1048,7 +1054,6 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 			" already instantiated!" << endl;
 		THROW_EXIT;
 	}
-//	the_instance.instantiate();
 	this->the_instance.instantiate(never_ptr<const this_type>(this));
 }
 
@@ -1130,6 +1135,7 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 typename INSTANCE_SCALAR_CLASS::instance_alias_base_type&
 INSTANCE_SCALAR_CLASS::load_reference(istream& i) const {
+	STACKTRACE_PERSISTENT("instance_scalar::load_reference()");
 	// no key to read!
 	// const_cast: have to modify next pointers to re-establish connection, 
 	// which is semantically allowed because we allow the alias pointers
@@ -1146,6 +1152,7 @@ if (!m.register_transient_object(this,
 		persistent_traits<parent_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("instance_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
+	this->the_instance.check(this);
 	this->the_instance.collect_transient_info(m);
 }
 }
@@ -1155,6 +1162,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
 	this->the_instance.write_object(m, f);
 }
@@ -1164,8 +1172,10 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::load_object(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
-	this->the_instance.load_object(m, f);
+	this->the_instance.load_object(m, f);		// problem?
+	this->the_instance.check(this);
 }
 
 //=============================================================================

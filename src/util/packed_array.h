@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.8.2.1.2.3 2005/02/22 03:01:00 fang Exp $
+	$Id: packed_array.h,v 1.8.2.1.2.4 2005/02/27 01:09:34 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -25,36 +25,13 @@ using std::istream;
 using std::ostream;
 
 //=============================================================================
-#if USE_PACKED_ARRAY_BASE
-/**
-	Common abstract base class for packed array class family.
- */
-template <class T>
-class packed_array_base {
-public:
-	typedef	T			value_type;
-public:
-
-virtual	~packed_array_base() { }
-
-};	// end class packed_array_base
-#endif
-
-//=============================================================================
 /**
 	Abstraction of a dense multidimensionally indexed block, 
 	implemented as a valarray with dimension coefficients.  
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
-class packed_array
-#if USE_PACKED_ARRAY_BASE
-	: public packed_array_base<T>
-#endif
-{
+class packed_array {
 private:
-#if USE_PACKED_ARRAY_BASE
-	typedef	packed_array_base<T>			parent_type;
-#endif
 	typedef	std::valarray<T>			impl_type;
 public:
 	typedef	K					index_type;
@@ -191,15 +168,8 @@ public:
 	which, itself, is specialized.
  */
 PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-class packed_array<D, K, bool>
-#if USE_PACKED_ARRAY_BASE
-	: public packed_array_base<bool>
-#endif
-{
+class packed_array<D, K, bool> {
 private:
-#if USE_PACKED_ARRAY_BASE
-	typedef	packed_array_base<bool>			parent_type;
-#endif
 	typedef	std::vector<bool>			impl_type;
 public:
 	typedef	K					index_type;
@@ -339,15 +309,8 @@ public:
 	Key type is polymorphic, any sequence of size_t will do.  
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
-class packed_array_generic
-#if USE_PACKED_ARRAY_BASE
-	: public packed_array_base<T>
-#endif
-{
+class packed_array_generic {
 private:
-#if USE_PACKED_ARRAY_BASE
-	typedef	packed_array_base<T>			parent_type;
-#endif
 	typedef	std::vector<T>				impl_type;
 	typedef	packed_array_generic<K,T>		this_type;
 public:

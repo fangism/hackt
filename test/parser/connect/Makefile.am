@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:14 fang Exp $
+#	$Id: Makefile.am,v 1.5.18.1 2005/02/27 01:09:35 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -32,7 +32,7 @@ ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 ARTOBJ_TEST_SUBJECTS = \
 	$(ARTC_TEST_PASSES)
 
-ARTOBJUNROLL_TEST_SUBJECTS =
+ARTOBJUNROLL_TEST_SUBJECTS = 001
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \

@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.9.2.4.2.5 2005/02/26 06:11:57 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.2.4.2.6 2005/02/27 01:09:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -33,6 +33,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::struct_instance_collection, 
 		STRUCT_INSTANCE_COLLECTION_TYPE_KEY)
 
+	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
+		"struct_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_scalar, "struct_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_1D, "struct_array_1D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_2D, "struct_array_2D")
