@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.5 2004/11/02 07:51:52 fang Exp $
+ *	$Id: art++-lex.ll,v 1.6 2004/12/07 02:22:30 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -68,11 +68,17 @@ using namespace ART::parser;
 #endif
 
 #include "art_lex.h"
+
+namespace ART {
+/**
+	Namespace for the lexer variabls and functions.  
+ */
+namespace lexer {
 using ART::token_position;
 
 #define	STRING_MAX_LEN		1024
 
-/* line and position tracking data for tokens */
+/** line and position tracking data for tokens */
 	token_position current(1, 0, 1, 0);	/* globally accessible */
 static	token_position comment_pos(1, 0, 1, 0);
 static	token_position string_pos(1, 0, 1, 0);
@@ -135,6 +141,20 @@ int comment_feedback = 0;		/* reporting of comment state */
 
 /* checking whether or not we are at end of file, defined below */
 int at_eof(void);
+
+}	/* end namespace lexer */
+}	/* end namespace ART */
+
+using ART::lexer::current;
+using ART::lexer::comment_pos;
+using ART::lexer::string_pos;
+using ART::lexer::string_buf;
+using ART::lexer::string_buf_ptr;
+using ART::lexer::token_feedback;
+using ART::lexer::string_feedback;
+using ART::lexer::comment_feedback;
+using ART::lexer::allow_nested_comments;
+using ART::lexer::comment_level;
 
 %}
 
@@ -534,6 +554,8 @@ int yywrap(void) {
 	// or read another input file
 }
 
+namespace ART {
+namespace lexer {
 /**
 	Public function that indicates whether or not the lexer is
 	in the EOF (end-of-file) state.  
@@ -545,4 +567,7 @@ int at_eof(void) {
 	assert(yy_current_buffer);
 	return yy_current_buffer->yy_n_chars == 0;
 }
+
+}	/* end namespace lexer */
+}	/* end namespace ART */
 
