@@ -17,7 +17,7 @@
 
 # if the .test file exists, then program didn't crash, we can proceed.
 
-if ! [ -e $3/$4.test ] ; then exit 1 ; fi
+if ! [ -e $4.test ] ; then exit 1 ; fi
 
 $1 $3/$4.in 2> /dev/null
 if [ $? -ne 0 ] ; then exit 1; fi
