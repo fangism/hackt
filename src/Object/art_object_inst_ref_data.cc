@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.3 2005/02/23 21:12:36 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.4 2005/02/26 06:11:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -18,10 +18,7 @@
 
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
-
-#if USE_CLASSIFICATION_TAGS
 #include "art_object_classification_details.h"
-#endif
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -83,26 +80,15 @@ namespace entity {
 //=============================================================================
 // explicit template instantiations
 
-template class
-instance_reference<bool_instance_collection, datatype_instance_reference>;
-template class
-instance_reference<int_instance_collection, datatype_instance_reference>;
-template class
-instance_reference<enum_instance_collection, datatype_instance_reference>;
-template class
-instance_reference<struct_instance_collection, datatype_instance_reference>;
+template class instance_reference<bool_tag>;
+template class instance_reference<int_tag>;
+template class instance_reference<enum_tag>;
+template class instance_reference<datastruct_tag>;
 
-#if USE_CLASSIFICATION_TAGS
 template class member_instance_reference<bool_tag>;
 template class member_instance_reference<int_tag>;
 template class member_instance_reference<enum_tag>;
 template class member_instance_reference<datastruct_tag>;
-#else
-template class member_instance_reference<bool_instance_reference>;
-template class member_instance_reference<int_instance_reference>;
-template class member_instance_reference<enum_instance_reference>;
-template class member_instance_reference<datastruct_instance_reference>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.4 2005/02/23 21:12:35 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.5 2005/02/26 06:11:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -25,6 +25,8 @@
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
+#include "art_object_classification_details.h"
+#include "art_object_instance_collection.h"
 
 #if USE_CLASSIFICATION_TAGS
 #include "art_object_classification_details.h"
@@ -1176,21 +1178,10 @@ datatype_instance_reference::dump(ostream& o) const {
 //=============================================================================
 // explicit template instantiations
 
-#if USE_CLASSIFICATION_TAGS
-template class
-instance_reference<channel_instance_collection, simple_instance_reference>;
-template class
-instance_reference<process_instance_collection, simple_instance_reference>;
+template class instance_reference<channel_tag>;
+template class instance_reference<process_tag>;
 template class member_instance_reference<channel_tag>;
 template class member_instance_reference<process_tag>;
-#else
-template class
-instance_reference<channel_instance_collection, simple_instance_reference>;
-template class
-instance_reference<process_instance_collection, simple_instance_reference>;
-template class member_instance_reference<channel_instance_reference>;
-template class member_instance_reference<process_instance_reference>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

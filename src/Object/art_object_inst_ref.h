@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5 2005/02/22 03:00:56 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.6 2005/02/26 06:11:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -22,10 +22,10 @@ using util::packed_array_generic;
 
 //=============================================================================
 #define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
-template <class Collection, class Parent>
+template <class Tag>
 
 #define	INSTANCE_REFERENCE_CLASS					\
-instance_reference<Collection,Parent>
+instance_reference<Tag>
 
 /**
 	Class template for physical instance references.
@@ -36,25 +36,28 @@ instance_reference<Collection,Parent>
 		probably simple_instance_reference or descendant.  
  */
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class instance_reference : public Parent {
-	typedef	instance_reference<Collection,Parent>	this_type;
+class instance_reference :
+	public class_traits<Tag>::instance_reference_parent_type {
+	typedef	INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	Parent					parent_type;
+	typedef	typename class_traits<Tag>::instance_reference_parent_type
+						parent_type;
 public:
 	/// the instance collection base type
-	typedef	Collection			instance_collection_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+						instance_collection_generic_type;
 	/// the type of alias element contained by instance collections
-	typedef	typename instance_collection_type::instance_alias_type
-						instance_alias_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+						instance_alias_base_type;
 	/// the type of connections formed by the alias type
-	typedef	typename instance_collection_type::alias_connection_type
+	typedef	typename class_traits<Tag>::alias_connection_type
 						alias_connection_type;
-	/// pointer type for instance collections
-	typedef	never_ptr<const instance_collection_type>
-						instance_collection_ptr_type;
 	/// type used to unroll collections of instance aliases
-	typedef	packed_array_generic<pint_value_type, never_ptr<instance_alias_type> >
+	typedef	typename class_traits<Tag>::alias_collection_type
 						alias_collection_type;
+	/// pointer type for instance collections
+	typedef	never_ptr<const instance_collection_generic_type>
+						instance_collection_ptr_type;
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:

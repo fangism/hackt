@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7.2.1 2005/02/20 09:08:13 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.2.2 2005/02/26 06:11:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -173,6 +173,13 @@ instance_collection_base::get_qualified_name(void) const {
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+instance_collection_base::get_type_ref(void) const {
+	INVARIANT(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -575,32 +582,20 @@ instance_collection_base::load_object_base(
 }
 
 //=============================================================================
-// class datatype_instance_collection method definitions
+// class physical_instance_collection method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Private empty constructor.
- */
-datatype_instance_collection::datatype_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_collection::datatype_instance_collection(
+physical_instance_collection::physical_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
-		instance_collection_base(o, n, d) {
+		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_collection::~datatype_instance_collection() {
+physical_instance_collection::~physical_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-datatype_instance_collection::dump(ostream& o) const {
+physical_instance_collection::dump(ostream& o) const {
 	parent_type::dump(o);
 	if (is_partially_unrolled()) {
 		if (dimensions) {
@@ -619,30 +614,36 @@ datatype_instance_collection::dump(ostream& o) const {
 	return o;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
-datatype_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
+//=============================================================================
+// class datatype_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
-	Creates a member reference to a datatype, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
+	Private empty constructor.
  */
-datatype_instance_collection::member_inst_ref_ptr_type
-datatype_instance_collection::make_member_instance_reference(
-		const inst_ref_ptr_type& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return member_inst_ref_ptr_type(
-		new datatype_member_instance_reference(b,
-			never_ptr<const datatype_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
+datatype_instance_collection::datatype_instance_collection() :
+		parent_type() {
+	// no assert
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection::datatype_instance_collection(
+		const scopespace& o, const string& n, const size_t d) :
+		parent_type(o, n, d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection::~datatype_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+count_ptr<const fundamental_type_reference>
+datatype_instance_collection::get_type_ref(void) const {
+	INVARIANT(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
 }
 #endif
 

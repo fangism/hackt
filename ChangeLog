@@ -1,5 +1,79 @@
 "ChangeLog"
 
+2005-02-26	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-10-merged-instance-13:
+	  Merged all revisions from -09-instance child branch (rev -13)
+	  in this branch, very critical for progress.  
+
+
+2005-02-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-10:
+	  Ported all int-related instance classes (aliases, info, collection, 
+	  arrays) using the instance_collection template family.  
+	  This added ring-connection data to the binary, which resulted
+	  in updating tests because of increased object binary sizes.  
+	  New member of class_traits: tag_name (const char[]).
+	  90% of art_object_instance_{int,bool}.{h,cc} are commented out now.
+	  Will perform massive cleanup after applying instance collection
+	  template to remaining types: enum, struct, channel, process.
+
+	* -instance-11:
+	  Ported and upgraded enum to instance_collection template, 
+	  same story as before.  They now have alias connections.  
+	  Sweet, that was easy... structs, you're next.
+
+	* -instance-12:
+	  Ported datastruct, channel and process collections using 
+	  instance_collection template in one fell swoop.  
+	  Added a physical_instance_collection type between
+	  instance_collection_base and datatype/channel/process collections.  
+	  Wrote appropriate functor specializations for them.  
+	  Updated interface of collection_persistence to use 
+	  static function calls: collect, write, load. 
+	  Process and channels (aliases) are now initially connected
+	  to themselves.  
+	  This branch is nearly mature,  next revision will be 
+	  massive cleanup before merging to parent.  
+
+	* -instance-13:
+	  Ahhhh... code is 7000 lines lighter after the removal
+	  of blatantly replicated code in the old instance_collection
+	  implementations.  This branch is ready to merge to parent.  
+
+
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-05:
+	  Chose bool_instance_alias_info as the first guinea pig class
+	  to use instance_alias_info class template, 
+	  based on class_traits<Tag>.  
+	  Nothing blew up, all tests still intact.
+
+	* -instance-06:
+	  Major name clean-up and substitution to reduce ambiguity
+	  and provide template-typedef-like naming interface
+	  with class_traits for dimension-specific classes.  
+
+	* -instance-07:
+	  Ported bool_instance_alias_info, bool_instance_alias_base, 
+	  and bool_instance_alias<D> to class_traits template version.  
+	  All test still intact!  Next: porting instance_collections.
+
+	* -instance-08:
+	  Converted bool_instance_collection and arrays over using
+	  template instance_collection.  Nothing died, but code is 
+	  messy with conditionals...
+	  To do: define functors for type-specific variations
+	  in methods... may have to make them 'friendly'.  
+
+	* -instance-09:
+	  Added instance_collection functor prototypes for 
+	  collection parameter persistence, type-committing.  
+	  So far, only specialized for bool_tag, others will follow in time.  
+
+
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-01:
@@ -10,6 +84,19 @@
 	  traits-class specializations.  
 	  So far, we applied this to member_instance_references as a 
 	  test case, and everything is hunky-dory.  
+
+	* -instance-02:
+	  Converted instance_reference to use class_traits<Tag>.
+	  Next: alias_connections, then ... instance collections, 
+	  the final frontier!
+
+	* -instance-03:
+	  alias_connections converted to class_traits, muahahaha...
+	  Code needs some serious clean-up before proceeding.  
+
+	* -instance-04:
+	  Cleaned-up, no more conditionals on SUBTYPE_ALIAS_CONNECTION
+	  and USE_CLASSIFICATION_TAGS.  
 
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>

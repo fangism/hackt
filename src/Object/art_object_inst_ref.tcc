@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.1.4.3 2005/02/22 03:00:56 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.1.4.4 2005/02/26 06:11:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_TCC__
@@ -210,7 +210,7 @@ INSTANCE_REFERENCE_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, inst_collection_ref);
 	NEVER_NULL(inst_collection_ref);
-	m.load_object_once(const_cast<instance_collection_type*>(
+	m.load_object_once(const_cast<instance_collection_generic_type*>(
 		&*inst_collection_ref));
 	parent_type::load_object_base(m, i);
 }

@@ -2,7 +2,7 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3303484	module__	0	0	32
+	1	 0x3303480	module__	0	0	32
 	2	 0x3300170	namespc_	0	32	60
 	3	 0x33001a4	namespc_	0	60	99
 	4	 0x33001d8	namespc_	0	99	126
@@ -22,17 +22,17 @@ Persistent Object Manager text dump:
 	18	 0x3303670	namespc_	0	520	546
 	19	 0x33036a4	namespc_	0	546	572
 	20	 0x33036d8	namespc_	0	572	597
-	21	 0x33037e4	dintcoll	0	597	636
-	22	 0x3804604	datainst	0	636	656
-	23	 0x3303844	datatprf	0	656	672
-	24	 0x3303850	datadefn	0	672	704
-	25	 0x33038b4	dprmlst_	0	704	720
-	26	 0x2602024	cnstpi__	0	720	732
-	27	 0x330370c	namespc_	0	732	767
-	28	 0x3303740	namespc_	0	767	794
-	29	 0x3303774	namespc_	0	794	820
-	30	 0x33037a8	namespc_	0	820	845
-	31	 0x33037dc	namespc_	0	845	868
+	21	 0x33037e4	dintcoll	0	597	637
+	22	 0x3804800	datainst	0	637	657
+	23	 0x3303840	datatprf	0	657	673
+	24	 0x3303850	datadefn	0	673	705
+	25	 0x33038b4	dprmlst_	0	705	721
+	26	 0x2708024	cnstpi__	0	721	733
+	27	 0x330370c	namespc_	0	733	768
+	28	 0x3303740	namespc_	0	768	795
+	29	 0x3303774	namespc_	0	795	821
+	30	 0x33037a8	namespc_	0	821	846
+	31	 0x33037dc	namespc_	0	846	869
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

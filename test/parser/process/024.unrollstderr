@@ -2,13 +2,13 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300664	module__	0	0	32
-	2	 0x3300170	namespc_	0	32	60
-	3	 0x3300680	procdefn	0	60	96
-	4	 0x3301154	proccoll	0	96	136
-	5	 0x33006f4	procinst	0	136	156
-	6	 0x3300714	proctprf	0	156	172
-	7	 0x3300724	proctprf	0	172	188
+	1	 0x2b00660	module__	0	0	32
+	2	 0x2b00170	namespc_	0	32	60
+	3	 0x2b00680	procdefn	0	60	96
+	4	 0x2b01154	proccoll	0	96	136
+	5	 0x2b006f0	procinst	0	136	156
+	6	 0x2b00710	proctprf	0	156	172
+	7	 0x2b00720	proctprf	0	172	188
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -24,6 +24,6 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<>^0 bar (instantiated)
+    bar = process foo<>^0 bar (instantiated) = ::bar
 }
 

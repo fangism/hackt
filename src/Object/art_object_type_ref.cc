@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2 2005/02/20 09:08:17 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.3 2005/02/26 06:11:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -25,6 +25,7 @@
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
+#include "art_object_classification_details.h"
 
 #include "sstream.h"
 #include "stacktrace.h"
@@ -486,21 +487,21 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
-		return return_type(struct_instance_collection
-			::make_struct_array(*s, id, d));
+		return return_type(
+			struct_instance_collection::make_array(*s, id, d));
 	} else if (alias.is_a<const enum_datatype_def>()) {
-		return return_type(enum_instance_collection
-			::make_enum_array(*s, id, d));
+		return return_type(
+			enum_instance_collection::make_array(*s, id, d));
 	} else {
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
 		if (alias == &bool_def) {
-			return return_type(bool_instance_collection
-				::make_bool_array(*s, id, d));
+			return return_type(
+				bool_instance_collection::make_array(*s, id, d));
 		} else if (alias == &int_def) {
-			return return_type(int_instance_collection
-				::make_int_array(*s, id, d));
+			return return_type(
+				int_instance_collection::make_array(*s, id, d));
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);
@@ -633,7 +634,7 @@ channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_chan_array(*s, id, d));
+		channel_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -771,7 +772,7 @@ process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		process_instance_collection::make_proc_array(*s, id, d));
+		process_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

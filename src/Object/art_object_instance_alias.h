@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.2.1 2005/02/23 21:12:36 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.2.2 2005/02/26 06:11:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -27,12 +27,10 @@ using util::multikey_set_element_derived;
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
-#if 0
-class instance;
+// class instance;
 
-template <size_t>
-class array;
-#endif
+template <class, size_t>
+class instance_array;
 
 //=============================================================================
 #define	INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE				\
@@ -61,7 +59,7 @@ public:
 	/**
 		Container type.
 	 */
-	typedef	typename class_traits<Tag>::instance_collection_type
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
 						container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
@@ -156,7 +154,7 @@ public:
 			manager(m) { }
 
 		void
-		operator () (const instance_alias_info&);
+		operator () (const INSTANCE_ALIAS_INFO_CLASS&);
 	};	// end class transient_info_collector
 
 };	// end class instance_alias_info
@@ -176,30 +174,7 @@ typedef	ring_node_derived<instance_alias_info>
 template <class Tag>
 ostream&
 operator << (ostream&,
-	const typename instance_alias_info<Tag>::instance_alias_base&);
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	An actual instantiated instance of a bool, 
-	what used to be called "node".
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
-	This is like PrsNode from prsim.  
-
-	Should be pool allocated for efficiency.  
- */
-class instance : public persistent {
-	// need one back-reference to one alias (connected in a ring)
-	never_ptr<const instance_alias_base>	back_ref;
-public:
-	instance();
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class instance
-#endif
+	const typename instance_alias_info<Tag>::instance_alias_base_type&);
 
 //-----------------------------------------------------------------------------
 #define	INSTANCE_ALIAS_TEMPLATE_SIGNATURE				\
@@ -215,7 +190,7 @@ template <class Tag>
 instance_alias<Tag,0>
 
 /**
-	Extends a instance_alias_base with a multikey, to be used
+	Extends a instance_alias_base_type with a multikey, to be used
 	in a set.  
 
 	Note: Don't derive from multikey_set_element.  
@@ -225,13 +200,26 @@ instance_alias<Tag,0>
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 class instance_alias :
 	public multikey_set_element_derived<D, pint_value_type, 
-		typename instance_alias_info<Tag>::instance_alias_base> {
+		typename instance_alias_info<Tag>::instance_alias_base_type> {
 	typedef	INSTANCE_ALIAS_CLASS			this_type;
 public:
 	typedef	multikey_set_element_derived<D, pint_value_type, 
-		typename instance_alias_info<Tag>::instance_alias_base>
+		typename class_traits<Tag>::instance_alias_base_type>
 							parent_type;
-	typedef	instance_array<Tag,D>			container_type;
+	/**
+		Dimension-generic container type.  
+	 */
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	/**
+		Dimension-specific container type, 
+		should be sub-type of instance_collection_generic_type;
+	 */
+	typedef	typename class_traits<Tag>::instance_array<D>::type
+							container_type;
+
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+					instance_alias_base_type;
 private:
 	/**
 		grandparent_type is maplikeset_element_derived.
@@ -254,7 +242,7 @@ public:
 	instance_alias(const key_type& k) : parent_type(k) { }
 
 	instance_alias(const key_type& k, 
-		const never_ptr<const instance_collection> p) :
+		const never_ptr<const instance_collection_generic_type> p) :
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
 
@@ -315,13 +303,19 @@ public:
  */
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 class instance_alias<Tag,0> :
-	public typename instance_alias_info<Tag>::instance_alias_base {
+	public class_traits<Tag>::instance_alias_base_type {
 private:
-	typedef	instance_alias<Tag,0>			this_type;
-	typedef	typename instance_alias_info<Tag>::instance_alias_base
+	typedef	KEYLESS_INSTANCE_ALIAS_CLASS		this_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
 							parent_type;
 public:
-	typedef	instance_array<Tag,0>			container_type;
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+					instance_alias_base_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+//	typedef	instance_array<Tag,0>			container_type;
+	typedef	typename class_traits<Tag>::instance_array<0>::type
+							container_type;
 public:
 	~instance_alias();
 
@@ -338,7 +332,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-};	// end class instance_alias<0>
+};	// end class instance_alias<Tag,0>
 
 //=============================================================================
 }	// end namespace entity

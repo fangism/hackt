@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.5 2005/02/23 21:12:35 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.6 2005/02/26 06:11:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -32,79 +32,63 @@ namespace entity {
 	class fundamental_type_reference;
 	class simple_instance_reference;
 	class instance_collection_base;
+	class physical_instance_collection;
 	class instance_reference_base;
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
 	class channel_type_reference;
-	class channel_instance_collection;
 	class datatype_definition_base;
+	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
 	class datatype_instance_reference;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
-	class process_instance_collection;
 	class built_in_param_def;
 	class typedef_base;
 
-	// subclasses of datatype_instance_collection
-	class bool_instance_collection;
-	class int_instance_collection;
-	class enum_instance_collection;
-	class struct_instance_collection;
+	template <class>
+	class instance_collection;
 
-#if 0
-	class process_instance_reference;
-	class channel_instance_reference;
-	class datastruct_instance_reference;
-	class bool_instance_reference;
-	class int_instance_reference;
-	class enum_instance_reference;
-#else
-	template <class, class>
+	template <class, size_t>
+	class instance_array;
+
+	// subclasses of datatype_instance_collection
+	typedef	instance_collection<bool_tag>
+		bool_instance_collection;
+	typedef	instance_collection<int_tag>
+		int_instance_collection;
+	typedef	instance_collection<enum_tag>
+		enum_instance_collection;
+	typedef	instance_collection<datastruct_tag>
+		struct_instance_collection;
+	typedef	instance_collection<channel_tag>
+		channel_instance_collection;
+	typedef	instance_collection<process_tag>
+		process_instance_collection;
+
+	template <class>
 	class instance_reference;
 
-	typedef	instance_reference<channel_instance_collection, 
-			simple_instance_reference>
+	typedef	instance_reference<channel_tag>
 		channel_instance_reference;
-	typedef	instance_reference<process_instance_collection, 
-			simple_instance_reference>
+	typedef	instance_reference<process_tag>
 		process_instance_reference;
-	typedef	instance_reference<bool_instance_collection, 
-			datatype_instance_reference>
+	typedef	instance_reference<bool_tag>
 		bool_instance_reference;
-	typedef	instance_reference<int_instance_collection, 
-			datatype_instance_reference>
+	typedef	instance_reference<int_tag>
 		int_instance_reference;
-	typedef	instance_reference<enum_instance_collection, 
-			datatype_instance_reference>
+	typedef	instance_reference<enum_tag>
 		enum_instance_reference;
-	typedef	instance_reference<struct_instance_collection, 
-			datatype_instance_reference>
+	typedef	instance_reference<datastruct_tag>
 		datastruct_instance_reference;
-#endif
-
 
 	template <class>
 	class member_instance_reference;
 
-#if 0
-	typedef	member_instance_reference<process_instance_reference>
-		process_member_instance_reference;
-	typedef	member_instance_reference<channel_instance_reference>
-		channel_member_instance_reference;
-	typedef	member_instance_reference<bool_instance_reference>
-		bool_member_instance_reference;
-	typedef	member_instance_reference<int_instance_reference>
-		int_member_instance_reference;
-	typedef	member_instance_reference<enum_instance_reference>
-		enum_member_instance_reference;
-	typedef	member_instance_reference<datastruct_instance_reference>
-		datastruct_member_instance_reference;
-#else
 	typedef	member_instance_reference<process_tag>
 		process_member_instance_reference;
 	typedef	member_instance_reference<channel_tag>
@@ -117,7 +101,6 @@ namespace entity {
 		enum_member_instance_reference;
 	typedef	member_instance_reference<datastruct_tag>
 		datastruct_member_instance_reference;
-#endif
 
 	class param_type_reference;
 	class pbool_type_reference;
@@ -136,41 +119,30 @@ namespace entity {
 	class channel_instance;
 	class process_instance;
 
-	template <size_t>	class int_instance_alias;
-	template <size_t>	class bool_instance_alias;
-	class enum_instance_alias;
-	class struct_instance_alias;
-	class proc_instance_alias;
-	class chan_instance_alias;
+	template <class>		class instance_alias_info;
+	template <class, size_t>	class instance_alias;
 
 	class instance_management_base;
 	class param_expression_assignment;
+
+	// defined in "art_object_connect.h"
 	class instance_reference_connection;
 	class port_connection;
 	class aliases_connection_base;
-#if 1
-	// defined in "art_object_connect.h"
 	class data_alias_connection_base;
-	template <class, class>	class alias_connection;
-	typedef alias_connection<int_instance_reference, 
-			data_alias_connection_base>
+	template <class>	class alias_connection;
+	typedef alias_connection<int_tag>
 		int_alias_connection;
-	typedef alias_connection<bool_instance_reference, 
-			data_alias_connection_base>
+	typedef alias_connection<bool_tag>
 		bool_alias_connection;
-	typedef alias_connection<enum_instance_reference,
-			data_alias_connection_base>
+	typedef alias_connection<enum_tag>
 		enum_alias_connection;
-	typedef alias_connection<datastruct_instance_reference,
-			data_alias_connection_base>
+	typedef alias_connection<datastruct_tag>
 		datastruct_alias_connection;
-	typedef alias_connection<channel_instance_reference,
-			aliases_connection_base>
+	typedef alias_connection<channel_tag>
 		channel_alias_connection;
-	typedef alias_connection<process_instance_reference,
-			aliases_connection_base>
+	typedef alias_connection<process_tag>
 		process_alias_connection;
-#endif
 
 	class instantiation_statement;
 	class param_instantiation_statement;

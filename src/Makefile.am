@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.5.2.3 2005/02/23 21:12:33 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.5.2.4 2005/02/26 06:11:49 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -108,6 +108,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
+	Object/art_object_classification_details.cc \
 	Object/art_object_expr.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
@@ -142,7 +143,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
 	Object/art_object_classification_tags.h \
-	Object/art_object_classification_details.h \
+	Object/art_object_connect.tcc \
 	Object/art_object_definition_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
