@@ -11,6 +11,7 @@ CC = gcc
 # to use distcc, can even prefix compile command with "distcc"
 LD = $(CC)
 CFLAGS = -O3 -Wall -c -g
+# -fkeep-inline-functions
 # turn on -O4 later...
 LDFLAGS = -lc -lstdc++
 #	-lfl: don't need this for flex, because classes are self-contained

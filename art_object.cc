@@ -721,7 +721,8 @@ type_alias::what(ostream& o) const {
 //=============================================================================
 // class built_in_type_def method definitions
 
-inline
+// doesn't like inlining this, linker can't find definition on gcc-3.3
+// inline
 built_in_type_def::built_in_type_def(const name_space* o, const string& n) :
 	type_definition(o, n) {
 }
@@ -759,6 +760,40 @@ type_instantiation::~type_instantiation() { }
 ostream&
 type_instantiation::what(ostream& o) const {
 	return o << "type-inst";
+}
+
+//=============================================================================
+// class process_definition method definitions
+
+process_definition::process_definition(const name_space* o) : 
+		definition(o) {
+	// fill me in...
+}
+
+process_definition::~process_definition() {
+	// fill me in...
+}
+
+ostream&
+process_definition::what(ostream& o) const {
+	return o << "process-definition";
+}
+
+//=============================================================================
+// class process_instantiation method instantiations
+
+process_instantiation::process_instantiation(const name_space* o) : 
+		instantiation(o) {
+	// fill me in...
+}
+
+process_instantiation::~process_instantiation() {
+	// fill me in...
+}
+
+ostream&
+process_instantiation::what(ostream& o) const {
+	return o << "process-inst";
 }
 
 //=============================================================================

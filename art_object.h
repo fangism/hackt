@@ -336,8 +336,10 @@ private:
 protected:
 	
 public:
-	process_definition(const name_space* o) : definition(o) { }
+	process_definition(const name_space* o);
 virtual	~process_definition();
+
+virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -352,7 +354,7 @@ protected:
 	string			key;		///< name of instance
 
 public:
-	process_instantiation(const name_space* o) : instantiation(o) { }
+	process_instantiation(const name_space* o);
 virtual	~process_instantiation();
 
 virtual	ostream& what(ostream& o) const;
