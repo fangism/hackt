@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.11.6.1 2005/03/09 22:46:38 fang Exp $
+	$Id: art_object_expr_const.h,v 1.11.6.2 2005/03/10 00:23:30 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -73,11 +73,13 @@ virtual	const_range_list
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 virtual bool
 	may_be_equivalent(const param_expr& p) const = 0;
 
 virtual bool
 	must_be_equivalent(const param_expr& p) const = 0;
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -428,13 +430,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pint_expr::may_be_equivalent(e); }
+		{ return pint_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pint_expr::must_be_equivalent(e); }
+		{ return pint_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -447,7 +451,7 @@ public:
 	static_constant_value(void) const { return val; }
 
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const pint_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -569,14 +573,16 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& ) const;
 
 	bool
 	must_be_equivalent(const param_expr& ) const;
+#endif
 
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const pint_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -658,13 +664,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent(e); }
+		{ return pbool_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent(e); }
+		{ return pbool_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -676,7 +684,7 @@ public:
 	static_constant_value(void) const { return val; }
 
 	bool
-	must_be_equivalent_pbool(const pbool_expr& ) const;
+	must_be_equivalent(const pbool_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }

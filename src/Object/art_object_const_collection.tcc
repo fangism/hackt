@@ -1,7 +1,7 @@
 /**
 	\file "art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.1.2.1 2005/03/09 22:46:36 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.1.2.2 2005/03/10 00:23:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONST_COLLECTION_TCC__
@@ -71,6 +71,50 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 #endif
+
+//=============================================================================
+// partial specializations
+
+/**
+	Specialized specialization macro for const_collection template classes.
+	Must appear in the util namespace.  
+ */
+#define	SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(Tag, Key)\
+template <>								\
+struct persistent_traits<const_collection<Tag> > {			\
+	typedef	const_collection<Tag>		type;			\
+	static const persistent::hash_key	type_key;		\
+	static const int			type_ids[5];		\
+	static const binder_new_functor<type,persistent,int>		\
+					empty_constructors[5];		\
+};									\
+									\
+const persistent::hash_key						\
+persistent_traits<const_collection<Tag> >::type_key(Key);		\
+									\
+const binder_new_functor<const_collection<Tag>,persistent,int>		\
+persistent_traits<const_collection<Tag> >::empty_constructors[5] = {	\
+	binder_new_functor<const_collection<Tag>,persistent,int>(0),	\
+	binder_new_functor<const_collection<Tag>,persistent,int>(1),	\
+	binder_new_functor<const_collection<Tag>,persistent,int>(2),	\
+	binder_new_functor<const_collection<Tag>,persistent,int>(3),	\
+	binder_new_functor<const_collection<Tag>,persistent,int>(4)	\
+};									\
+									\
+const int								\
+persistent_traits<const_collection<Tag> >::type_ids[5] = {		\
+persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
+	0, &empty_constructors[0]),					\
+persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
+	1, &empty_constructors[1]),					\
+persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
+	2, &empty_constructors[2]),					\
+persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
+	3, &empty_constructors[3]),					\
+persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
+	4, &empty_constructors[4])					\
+};
+
 
 //=============================================================================
 namespace ART {
@@ -189,6 +233,7 @@ CONST_COLLECTION_CLASS::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Given constant values, this should be precise, i.e. may <=> must.
 	\return true if expressions may be equivalent (conservative).
@@ -230,15 +275,15 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const param_expr& e) const {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Identical to the regular must_be_equivalent method.  
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 bool
-CONST_COLLECTION_CLASS::must_be_equivalent_pint(const pint_expr& p) const {
+CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
 	const this_type* const
 		pcc = IS_A(const this_type*, &p);
 	if (pcc) {
@@ -250,7 +295,6 @@ CONST_COLLECTION_CLASS::must_be_equivalent_pint(const pint_expr& p) const {
 		return false;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.1.2.1 2005/03/09 22:46:35 fang Exp $
+	$Id: art_object_const_collection.h,v 1.1.2.2 2005/03/10 00:23:27 fang Exp $
  */
 
 #ifndef __ART_OBJECT_CONST_COLLECTION_H__
@@ -103,15 +103,20 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
+	// required by const_param
 	bool
 	may_be_equivalent(const param_expr& ) const;
 
+	// required by const_param
 	bool
 	must_be_equivalent(const param_expr& ) const;
+#endif
 
 #if 1
+	// required by pint_expr or pbool_expr
 	bool
-	must_be_equivalent_pint(const pint_expr& ) const;
+	must_be_equivalent(const expr_base_type& ) const;
 #endif
 
 	bool

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.17.2.1.2.1 2005/03/09 19:24:55 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.17.2.1.2.1.2.1 2005/03/10 00:23:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -85,6 +85,13 @@ read_value(istream& i, pbool_instance& b) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_scalar, "pbool_scalar")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_1D, "pbool_array<1>")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_2D, "pbool_array<2>")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_3D, "pbool_array<3>")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_4D, "pbool_array<4>")
+
 template <>
 struct persistent_traits<ART::entity::pbool_instance_collection> {
 	static const persistent::hash_key	type_key;

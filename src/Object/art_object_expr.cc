@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41.8.1.2.1 2005/03/09 22:46:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.8.1.2.2 2005/03/10 00:23:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -88,6 +88,8 @@ namespace util {
 
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_const_collection,
 		"pint-const-collection")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const_collection,
+		"pbool-const-collection")
 SPECIALIZE_UTIL_WHAT(ART::entity::const_param_expr_list,
 		"const-param-expr-list")
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_param_expr_list,
@@ -138,12 +140,20 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 
-using ART::entity::pint_const_collection;
-
 // pint_const_collection requires special treatment:
 // it has no empty constructor and requires an int argument
 // this example shows how we can register various bound constructor
 // functors with the persistent_object_manager type registry.  
+#if USE_CONST_COLLECTION_TEMPLATE
+using ART::entity::const_collection;
+// macros defined in "art_object_const_collection.tcc"
+SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
+	ART::entity::pint_tag, CONST_PINT_COLLECTION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
+	ART::entity::pbool_tag, CONST_PBOOL_COLLECTION_TYPE_KEY)
+#else
+using ART::entity::pint_const_collection;
+
 template <>
 struct persistent_traits<pint_const_collection> {
 	typedef pint_const_collection			type;
@@ -179,6 +189,7 @@ persistent_object_manager::register_persistent_type<pint_const_collection>(
 persistent_object_manager::register_persistent_type<pint_const_collection>(
 	4, &empty_constructors[4])
 };
+#endif	// USE_CONST_COLLECTION_TEMPLATE
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
@@ -301,7 +312,7 @@ pbool_expr::~pbool_expr() {
 }
 
 bool
-pbool_expr::may_be_equivalent(const param_expr& p) const {
+pbool_expr::may_be_equivalent_generic(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
 		if (is_static_constant() && b->is_static_constant())
@@ -314,7 +325,7 @@ pbool_expr::may_be_equivalent(const param_expr& p) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_expr::must_be_equivalent(const param_expr& p) const {
+pbool_expr::must_be_equivalent_generic(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
 #if 0
@@ -324,7 +335,7 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 		// else check template formals?  more cases needed
 		else	return false;
 #else
-		return must_be_equivalent_pbool(*b);
+		return must_be_equivalent(*b);
 #endif
 	}
 	else	return false;
@@ -360,7 +371,7 @@ pint_expr::~pint_expr() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_expr::may_be_equivalent(const param_expr& p) const {
+pint_expr::may_be_equivalent_generic(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
 		if (is_static_constant() && i->is_static_constant())
@@ -373,7 +384,7 @@ pint_expr::may_be_equivalent(const param_expr& p) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_expr::must_be_equivalent(const param_expr& p) const {
+pint_expr::must_be_equivalent_generic(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
 #if 0
@@ -382,7 +393,7 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 				i->static_constant_value();
 		else	return false;
 #else
-		return must_be_equivalent_pint(*i);
+		return must_be_equivalent(*i);
 #endif
 	}
 	else	return false;
@@ -444,7 +455,7 @@ bool
 pint_expr::must_be_equivalent_index(const index_expr& i) const {
 	const pint_expr* const p = IS_A(const pint_expr*, &i);
 	if (p) {
-		return must_be_equivalent_pint(*p);
+		return must_be_equivalent(*p);
 	} else {
 		return false;
 	}
@@ -549,7 +560,7 @@ if (cpl) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->may_be_equivalent(*jp))
+		if (!ip->may_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -567,7 +578,7 @@ if (cpl) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->may_be_equivalent(*jp))
+		if (!ip->may_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -590,7 +601,7 @@ if (cpl) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->must_be_equivalent(*jp))
+		if (!ip->must_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -608,7 +619,7 @@ if (cpl) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->must_be_equivalent(*jp))
+		if (!ip->must_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -835,7 +846,7 @@ if (cpl) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->may_be_equivalent(*jp))
+		if (!ip->may_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -853,7 +864,7 @@ if (cpl) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->may_be_equivalent(*jp))
+		if (!ip->may_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -876,7 +887,7 @@ if (cpl) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->must_be_equivalent(*jp))
+		if (!ip->must_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -894,7 +905,7 @@ if (cpl) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
 		INVARIANT(ip && jp);
-		if (!ip->must_be_equivalent(*jp))
+		if (!ip->must_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
@@ -1181,7 +1192,7 @@ pbool_instance_reference::static_constant_value(void) const {
 	\return true if boolean instance references are equivalent.  
  */
 bool
-pbool_instance_reference::must_be_equivalent_pbool(const pbool_expr& b) const {
+pbool_instance_reference::must_be_equivalent(const pbool_expr& b) const {
 	const pbool_instance_reference* const
 		br = IS_A(const pbool_instance_reference*, &b);
 	if (br) {
@@ -1733,7 +1744,7 @@ pint_instance_reference::static_constant_value(void) const {
 	\return true if boolean instance references are equivalent.  
  */
 bool
-pint_instance_reference::must_be_equivalent_pint(const pint_expr& i) const {
+pint_instance_reference::must_be_equivalent(const pint_expr& i) const {
 	const pint_instance_reference* const
 		ir = IS_A(const pint_instance_reference*, &i);
 	if (ir) {
@@ -2228,7 +2239,7 @@ pint_const::operator == (const const_range& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_const::must_be_equivalent_pint(const pint_expr& p) const {
+pint_const::must_be_equivalent(const pint_expr& p) const {
 	return p.is_static_constant() && (val == p.static_constant_value());
 }
 
@@ -2460,7 +2471,7 @@ pint_const_collection::must_be_equivalent(const param_expr& e) const {
 	Identical to the regular must_be_equivalent method.  
  */
 bool
-pint_const_collection::must_be_equivalent_pint(const pint_expr& p) const {
+pint_const_collection::must_be_equivalent(const pint_expr& p) const {
 	const pint_const_collection* const
 		pcc = IS_A(const pint_const_collection*, &p);
 	if (pcc) {
@@ -2649,7 +2660,7 @@ pbool_const::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_const::must_be_equivalent_pbool(const pbool_expr& b) const {
+pbool_const::must_be_equivalent(const pbool_expr& b) const {
 	return b.is_static_constant() && (val == b.static_constant_value());
 }
 
@@ -2744,10 +2755,10 @@ pint_unary_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_unary_expr::must_be_equivalent_pint(const pint_expr& p) const {
+pint_unary_expr::must_be_equivalent(const pint_expr& p) const {
 	const pint_unary_expr* const ue = IS_A(const pint_unary_expr*, &p);
 	if (ue) {
-		return op == ue->op && ex->must_be_equivalent_pint(*ue->ex);
+		return op == ue->op && ex->must_be_equivalent(*ue->ex);
 	} else {
 		// conservatively
 		return false;
@@ -2922,10 +2933,10 @@ pbool_unary_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_unary_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+pbool_unary_expr::must_be_equivalent(const pbool_expr& b) const {
 	const pbool_unary_expr* const be = IS_A(const pbool_unary_expr*, &b);
 	if (be) {
-		return ex->must_be_equivalent_pbool(*be->ex);
+		return ex->must_be_equivalent(*be->ex);
 	} else {
 		// conservatively
 		return false;
@@ -3128,7 +3139,7 @@ arith_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::must_be_equivalent_pint(const pint_expr& p) const {
+arith_expr::must_be_equivalent(const pint_expr& p) const {
 	const arith_expr* const ae = IS_A(const arith_expr*, &p);
 	if (ae) {
 		// for now structural equivalence only,
@@ -3400,12 +3411,12 @@ relational_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-relational_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+relational_expr::must_be_equivalent(const pbool_expr& b) const {
 	const relational_expr* const re = IS_A(const relational_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
-			lx->must_be_equivalent_pint(*re->lx) &&
-			rx->must_be_equivalent_pint(*re->rx);
+			lx->must_be_equivalent(*re->lx) &&
+			rx->must_be_equivalent(*re->rx);
 		// this is also conservative, 
 		// doesn't check symbolic equivalence... yet
 	} else {
@@ -3633,12 +3644,12 @@ logical_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::must_be_equivalent_pbool(const pbool_expr& b) const {
+logical_expr::must_be_equivalent(const pbool_expr& b) const {
 	const logical_expr* const re = IS_A(const logical_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
-			lx->must_be_equivalent_pbool(*re->lx) &&
-			rx->must_be_equivalent_pbool(*re->rx);
+			lx->must_be_equivalent(*re->lx) &&
+			rx->must_be_equivalent(*re->rx);
 		// this is also conservative, 
 		// doesn't check symbolic equivalence... yet
 	} else {
@@ -5497,7 +5508,7 @@ dynamic_index_list::load_object(const persistent_object_manager& m,
 
 #if USE_CONST_COLLECTION_TEMPLATE
 template class const_collection<pint_tag>;
-// template class const_collection<pbool_tag>;
+template class const_collection<pbool_tag>;
 #endif
 //=============================================================================
 }	// end namepace entity

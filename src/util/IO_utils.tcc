@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.7 2005/02/27 22:54:19 fang Exp $
+	$Id: IO_utils.tcc,v 1.7.16.1 2005/03/10 00:23:32 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -190,8 +190,17 @@ read_sequence_resize(istream& f, S& l) {
 	read_value(f, size);
 	l.resize(size);
 	size_t j = 0;
-	for ( ; j < size; j++)
+	for ( ; j < size; j++) {
+#if 0
+		// doesn't work with vector<bool> because of specialized
+		// implementation.
 		read_value<value_type>(f, l[j]);
+#else
+		value_type temp;
+		read_value<value_type>(f, temp);
+		l[j] = temp;
+#endif
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
