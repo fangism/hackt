@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.1 2005/02/03 03:34:52 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.1.4.1 2005/02/09 03:55:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -12,20 +12,30 @@
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool_fwd.h"
 
-#include "multikey_qmap_fwd.h"
+#include "ring_node.h"
+#include "multikey.h"
+#include <set>
+
+// #include "multikey_qmap_fwd.h"
 
 namespace ART {
 namespace entity {
 USING_LIST
 USING_CONSTRUCT
+using std::set;
 using std::ostream;
 using std::string;
+using util::ring_node;
 using namespace util::memory;
-using QMAP_NAMESPACE::qmap;
-using MULTIKEY_MAP_NAMESPACE::multikey_map;
+using MULTIKEY_NAMESPACE::multikey;
+// using QMAP_NAMESPACE::qmap;
+// using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
+
+// forward declaration
+class bool_instance_alias_base;
 
 //=============================================================================
 /**
@@ -34,6 +44,8 @@ using MULTIKEY_MAP_NAMESPACE::multikey_map;
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
 	This is like PrsNode from prsim.  
+
+	Should be pool allocated for efficiency.  
  */
 struct bool_instance {
 	// need back-reference(s) to owner(s) or hierarchical keys?
@@ -46,43 +58,119 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	An uninitialized reference to a bool instance.  
-	Only after references are connected, are the actual bool instances
-	created.  
-	Contains attribute fields.  
+	Information structure for a heirarchical name for a bool.  
+	This may be extended arbitrarily to contain attributes.  
+	Each object of this type represents a unique qualified name.  
  */
-class bool_instance_alias {
+class bool_instance_alias_info {
 public:
-	typedef	never_ptr<const bool_instance_alias>	alias_ptr_type;
-private:
-	// consider alloc_ptr...
-	count_ptr<bool_instance>		instance;
-	alias_ptr_type				alias;
-	// validity fields?
-	bool					instantiated;
+	/**
+		The reference count pointer type to the underlying
+		uniquely created instance.  
+	 */
+	typedef	count_ptr<bool_instance>		instance_ptr_type;
+
+	/**
+		Container type.
+	 */
+	typedef	bool_instance_collection		container_type;
+
 public:
+	/**
+		During finalization phase, this will be constructed, 
+		and references will be copied to neighbors.  
+	 */
+	instance_ptr_type				instance;
+	/**
+		Back-reference to the mother container.
+		Consider using this to determine "instantiated" state.  
+	 */
+	never_ptr<const container_type>			container;
+#if 0
+	/**
+		Whether or not this is truly instantiated.  
+		Depends on implementation.  
+	 */
+	bool						instantiated;
+#endif
+public:
+	bool_instance_alias_info() :
+		instance(NULL), container(NULL) { }
 
-	bool_instance_alias() : instance(NULL), alias(NULL), 
-		instantiated(false) { }
+	bool_instance_alias_info(const never_ptr<const container_type> m) :
+		instance(NULL), container(m) { }
 
-	explicit
-	bool_instance_alias(const alias_ptr_type& p) :
-		instance(NULL), alias(p), instantiated(true) { }
-
-	// default copy constructor
+	// default copy-constructor
 
 	// default destructor
 
+	// default assignment
+	
+};	// end class bool_instance_alias_info
+
+//-----------------------------------------------------------------------------
+/**
+	An uninitialized reference to a bool instance.  
+	Only after references are connected, are the actual bool instances
+	created.  
+	Contains attribute fields, later on.  
+ */
+class bool_instance_alias_base : public ring_node<bool_instance_alias_info> {
+public:
+	/**
+		Information contained herein (inside the ring_node).
+	 */
+	typedef	bool_instance_alias_info		info_type;
+	/**
+		This parent-type contains the next pointer to alias, 
+		which is initialized as pointing to itself.  
+		The field "value" (info_type) is inherited publicly.  
+	 */
+	typedef	ring_node<info_type>			ring_node_type;
+public:
+	/**
+		Default constructor will initialize the info.  
+	 */
+	bool_instance_alias_base() : ring_node_type() { }
+
+	bool_instance_alias_base(
+		const never_ptr<const bool_instance_collection> p) :
+		ring_node_type(info_type(p)) { }
+
+#if 0
+	explicit
+	bool_instance_alias(const alias_ptr_type& p) :
+		instance(NULL), alias(p), instantiated(true) { }
+#endif
+
+	// default copy constructor
+
+virtual	~bool_instance_alias_base() { }
+
 	bool
-	valid(void) const { return instantiated; }
+	valid(void) const { return value.container; }
 
+#if 0
 	void
-	instantiate(void) { INVARIANT(!instantiated); instantiated = true; }
-
+	instantiate(void) {
+		INVARIANT(!value.instantiated);
+		value.instantiated = true;
+	}
+#else
+	void
+	instantiate(const never_ptr<const bool_instance_collection> p) {
+		NEVER_NULL(p);
+		INVARIANT(!value.container);
+		value.container = p;
+	}
+#endif
+#if 0
 	/// dereference, create
 	bool_instance&
 	operator * () const;
+#endif
 
+#if 0
 	const bool_instance_alias&
 	canonical(void) const {
 		alias_ptr_type ptr = alias;
@@ -91,6 +179,7 @@ public:
 		}
 		return *ptr;
 	}
+#endif
 
 #if 0
 	// possible obfuscation
@@ -109,18 +198,54 @@ public:
 		Check for instantiated?
 	 */
 	bool
-	operator == (const bool_instance_alias& b) const {
-		return &canonical() == &b.canonical();
+	operator == (const bool_instance_alias_base& b) const {
+		return this->contains(b);
+		// return &canonical() == &b.canonical();
 	}
 
 	friend
 	ostream&
-	operator << (ostream&, const bool_instance_alias&);
+	operator << (ostream&, const bool_instance_alias_base&);
 
 };	// end class bool_instance_alias
 
 ostream&
-operator << (ostream&, const bool_instance_alias&);
+operator << (ostream&, const bool_instance_alias_base&);
+
+//-----------------------------------------------------------------------------
+/**
+	Extends a bool_instance_alias_base with a multikey, to be used
+	in a set.  
+
+	Alternate idea, use a multikey_generic instead of dimension-specific.
+ */
+template <size_t D>
+class bool_instance_alias : public bool_instance_alias_base {
+private:
+	typedef	bool_instance_alias<D>			this_type;
+public:
+	typedef	multikey<D, pint_value_type>		key_type;
+protected:
+	key_type					key;
+public:
+	/**
+		Implicit constructor for creating an empty alias element, 
+		used for creating keys to search sets.  
+	 */
+	bool_instance_alias(const key_type& k) : 
+			bool_instance_alias_base(), key(k) { }
+
+	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
+			const key_type& k) : 
+			bool_instance_alias_base(p), key(k) { }
+
+	~bool_instance_alias();
+
+	// compare keys
+	bool
+	operator < (const this_type& b) const;
+
+};	// end class bool_instance_alias
 
 //-----------------------------------------------------------------------------
 /**
@@ -131,7 +256,7 @@ private:
 	typedef	datatype_instance_collection		parent_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
-	typedef	never_ptr<bool_instance_alias>		instance_ptr_type;
+	typedef	never_ptr<bool_instance_alias_base>	instance_ptr_type;
 	/// boolean data (node) has no parameters
 	typedef	void					param_type;
 protected:
@@ -180,7 +305,7 @@ virtual	const_index_list
 
 #if 0
 virtual bool
-	connect(const unroll_index_type& k, const bool_instance_alias& b) = 0;
+	connect(const multikey_index_type& k, const bool_instance_alias& b) = 0;
 #endif
 public:
 
@@ -210,10 +335,16 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef	bool_instance_alias			element_type;
-	typedef	multikey_map<D, pint_value_type, element_type, qmap>
-							collection_type;
+	typedef	bool_instance_alias<D>			element_type;
+	typedef	typename element_type::key_type		key_type;
 
+//	typedef	multikey_map<D, pint_value_type, element_type, qmap>
+	typedef	set<element_type>
+							collection_type;
+protected:
+	typedef	typename collection_type::iterator	iterator;
+	typedef	typename collection_type::const_iterator
+							const_iterator;
 private:
 	collection_type					collection;
 
@@ -266,7 +397,7 @@ friend class bool_instance_collection;
 	typedef	bool_instance_collection	parent_type;
 	typedef	bool_array<0>			this_type;
 private:
-	bool_instance_alias			the_instance;
+	bool_instance_alias_base		the_instance;
 
 private:
 	bool_array();
