@@ -7,6 +7,7 @@ namespace ART {
 namespace parser {
 //=============================================================================
 // forward declarations
+class node;
 class expr;
 class terminal;
 class language_body;
@@ -20,16 +21,12 @@ namespace PRS {
 // forward declarations
 
 //=============================================================================
-/// for now, just a carbon copy of expr class type, type-check later
-typedef	expr	prs_expr;
-
-//=============================================================================
 /// a single production rule
-class rule : public expr {
+class rule : public node {
 protected:
-	prs_expr*	guard;
+	expr*		guard;
 	terminal*	arrow;
-	prs_expr*	r;
+	expr*		r;
 	terminal*	dir;
 public:
 	rule(node* g, node* a, node* rhs, node* d);

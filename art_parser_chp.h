@@ -7,6 +7,7 @@ namespace ART {
 namespace parser {
 //=============================================================================
 // forward declarations
+class node;
 class statement;
 class expr;
 class language_body;
@@ -29,7 +30,7 @@ typedef	expr	chp_expr;
 
 //=============================================================================
 /// CHP statement base class
-class statement : virtual public ART::parser::statement {
+class statement : virtual public node {
 public:
 	statement();
 virtual	~statement();
@@ -62,7 +63,7 @@ virtual	line_position rightmost(void) const;
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
-class guarded_command : public nonterminal {
+class guarded_command : public node {
 protected:
 	chp_expr*		guard;		///< guard expression
 	terminal*		arrow;		///< right-arrow

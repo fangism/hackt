@@ -105,19 +105,6 @@ virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-/// abstract base class for non-terminal symbols, mainly to be used by parser
-class nonterminal : virtual public node {
-public:
-///	standard virtual destructor
-virtual ~nonterminal();
-
-public:
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
-};
-
-//=============================================================================
 #define	NODE_LIST_BASE_TEMPLATE_SPEC					\
 	template <class T>
 
@@ -131,7 +118,7 @@ typedef	list_of_ptr<node>	node_list_base_parent;
 	type-checking.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
-class node_list_base : public nonterminal, public node_list_base_parent {
+class node_list_base : virtual public node, public node_list_base_parent {
 private:
 	typedef		list<node*>			list_grandparent;
 	typedef		list_of_ptr<node>		list_parent;
@@ -150,7 +137,7 @@ using	list_parent::begin;
 using	list_parent::end;
 
 // later, use static functions (operator <<) to determine type name...
-virtual	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 };
@@ -219,10 +206,11 @@ virtual	object* check_build(context* c) const;
 	Abstract base class for root-level items.  
 	Assertion: all root items are nonterimnals.  
  */
-class root_item : public nonterminal {
+class root_item : virtual public node {
 public:
 	root_item();
 virtual	~root_item();
+
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
@@ -294,8 +282,7 @@ virtual	line_position rightmost(void) const;
 /// stores an integer (long) in native form and retains position information
 class token_int : public terminal, public expr {
 protected:
-/// the value
-	long val;
+	long val;			///< the value
 public:
 /// standard constructor
 	token_int(const long v);
@@ -312,8 +299,7 @@ virtual	line_position rightmost(void) const;
 /// stores an float (double) in native form and retains position information
 class token_float : public terminal, public expr {
 protected:
-/// the value
-	double val;
+	double val;			///< the value
 public:
 /// standard constructor
 	token_float(const double v);
@@ -390,7 +376,6 @@ protected:
 public:
 explicit id_expr(node* n);
 	id_expr(const id_expr& i);
-	
 virtual	~id_expr();
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
@@ -493,10 +478,9 @@ typedef node_list<range,comma>	range_list;
 #define range_list_append(l,d,n)					\
 	IS_A(range_list*, l)->append(d,n)
 
-
 //=============================================================================
 /// abstract base class for unary expressions
-class unary_expr : public expr, public nonterminal {
+class unary_expr : public expr {
 protected:
 	expr*		e;		///< the argument expr
 	terminal*	op;		///< the operator, may be null
@@ -561,7 +545,7 @@ virtual	line_position rightmost(void) const;
 
 //=============================================================================
 /// base class for general binary expressions
-class binary_expr : public expr, public nonterminal {
+class binary_expr : public expr {
 protected:
 	expr* 		l;			///< left-hand side
 	terminal*	op;			///< operator
@@ -699,9 +683,9 @@ virtual	line_position rightmost(void) const;
 //=============================================================================
 /**
 	Base class for statements (assignments, increment, decrement...)
-	Assertion: all statements are nonterminals
+	Assertion: all statements are nonterminals.  
  */
-class statement : public nonterminal {
+class statement : virtual public node {
 public:
 	statement();
 virtual	~statement();
@@ -755,7 +739,7 @@ virtual	line_position rightmost(void) const;
 	All definition body items are root_item.
 	Except language_body...
  */
-class def_body_item : public nonterminal {
+class def_body_item : virtual public node {
 public:
 	def_body_item();
 virtual	~def_body_item();
@@ -774,7 +758,13 @@ typedef	node_list<def_body_item>	definition_body;
 	IS_A(definition_body*, l)->append(d,n) 
 
 //=============================================================================
-/// abstract base class for language bodies
+/**
+	Abstract base class for language bodies.  
+	language_body is the only subclass of def_body_item that is 
+	not also a subclass of root_item.  
+	Language bodies cannot syntactically or semantically appear
+	outside of a definition.  
+ */
 class language_body : public def_body_item {
 protected:
 	token_keyword*	tag;			///< what language
@@ -977,7 +967,7 @@ virtual	line_position rightmost(void) const;
 
 //=============================================================================
 /// single port formal identifier, with optional dimension array specification
-class port_formal_id : public nonterminal {
+class port_formal_id : public node {
 protected:
 	token_identifier*	name;		///< formal name
 	range_list*		dim;		///< optional dimensions
@@ -1000,7 +990,7 @@ typedef	node_list<port_formal_id,comma>	port_formal_id_list;
 
 //-----------------------------------------------------------------------------
 /// port formal declaration contains a type and identifier list
-class port_formal_decl : public nonterminal {
+class port_formal_decl : public node {
 protected:
 	type_id*		type;		///< formal base type
 	port_formal_id_list*	ids;		///< identifier list
@@ -1023,7 +1013,7 @@ typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
 
 //=============================================================================
 /// single template formal identifier, with optional dimension array spec.  
-class template_formal_id : public nonterminal {
+class template_formal_id : public node {
 protected:
 	token_identifier*	name;		///< formal name
 	range_list*		dim;		///< optional dimensions
@@ -1046,7 +1036,7 @@ typedef	node_list<template_formal_id,comma>	template_formal_id_list;
 
 //-----------------------------------------------------------------------------
 /// template formal declaration contains a type and identifier list
-class template_formal_decl : public nonterminal {
+class template_formal_decl : public node {
 protected:
 	type_id*			type;	///< formal base type
 	template_formal_id_list*	ids;	///< identifier list
@@ -1084,13 +1074,56 @@ virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-/// abstract base class for definitions
+/**
+	Abstract base class for definitions of complex types, 
+	including processes, user-defined channels and data-types.  
+ */
 class definition : public root_item {
-protected:
-	definition_body*		body;	///< definition body
 public:
-	definition(node* b);
+	definition();
 virtual	~definition();
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
+};
+
+//-----------------------------------------------------------------------------
+/// abstract base class for prototypes
+class prototype : public root_item {
+public:
+	prototype();
+virtual	~prototype();
+
+// don't bother re-declaring virtual methods
+};
+
+//=============================================================================
+/**
+	Abstract base class for basic process information
+	(prototype, basically).  
+	This class need not be a node or root_item because it's never 
+	constructed on the symbol stack.  
+ */
+class process_signature {		// not a node or root_item!
+protected:
+	token_keyword*			def;	///< definition keyword
+	def_type_id*			idt;	///< identifier [template]
+	port_formal_decl_list*		ports;	///< optional port formal list
+public:
+	process_signature(node* d, node* i, node* p);
+virtual	~process_signature();
+
+};
+
+//-----------------------------------------------------------------------------
+/// process prototype declaration
+class process_prototype : public prototype, public process_signature {
+protected:
+	token_char*		semi;		///< semicolon token
+public:
+	process_prototype(node* d, node* i, node* p, node* s);
+virtual	~process_prototype();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
@@ -1099,17 +1132,19 @@ virtual	line_position rightmost(void) const;
 
 //-----------------------------------------------------------------------------
 /// process definition
-class process_def : public definition {
+class process_def : public definition, public process_signature {
 protected:
-	token_keyword*			def;	///< definition keyword
-	def_type_id*			idt;	///< identifier [template]
-	port_formal_decl_list*		ports;	///< optional port formal list
+//	token_keyword*			def;	//  inherited
+//	def_type_id*			idt;	//  inherited
+//	port_formal_decl_list*		ports;	//  inherited
+	definition_body*		body;	///< definition body
 public:
 	process_def(node* d, node* i, node* p, node* b);
 virtual	~process_def();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
@@ -1151,23 +1186,30 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 };
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 /// user-defined data type
-class data_type : public type_base {
+class user_data_type_signature {
 protected:
 	token_keyword*		def;		///< "deftype" keyword
 	token_identifier*	name;		///< name of new type
 	token_string*		dop;		///< <: operator
 	data_type_base*		bdt;		///< the represented type
 	data_param_list*	params;		///< the implementation type
-	token_char*		lb;		///< left brace
-	language_body*		setb;		///< set body
-	language_body*		getb;		///< get body
-	token_char*		rb;		///< right brace
 public:
-	data_type(node* df, node* n, node* dp, node* b, node* p, 
-		node* l, node* s, node* g, node* r);
-virtual	~data_type();
+	user_data_type_signature(node* df, node* n, node* dp, node* b, node* p);
+virtual	~user_data_type_signature();
+};
+
+//-----------------------------------------------------------------------------
+/// user-defined data type prototype declaration
+class user_data_type_prototype : public prototype, 
+		public user_data_type_signature {
+protected:
+	token_char*		semi;		///< semicolon
+public:
+	user_data_type_prototype(node* df, node* n, node* dp, node* b, 
+		node* p, node* s);
+virtual	~user_data_type_prototype();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
@@ -1175,22 +1217,22 @@ virtual	line_position rightmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
-/// user-defined channel type
-class user_chan_type : public type_base {
+/// user-defined data type (is not a type_base)
+class user_data_type_def : public definition, public user_data_type_signature {
 protected:
-	token_keyword*		def;		///< "defchan" keyword
-	token_identifier*	name;		///< name of new channel
-	token_string*		dop;		///< <: operator
-	chan_type*		bct;		///< the represented type
-	data_param_list*	params;		///< the implementation type
+//	token_keyword*		def;		// inherited
+//	token_identifier*	name;		// inherited
+//	token_string*		dop;		// inherited
+//	data_type_base*		bdt;		// inherited
+//	data_param_list*	params;		// inherited
 	token_char*		lb;		///< left brace
-	language_body*		sendb;		///< set body
-	language_body*		recvb;		///< get body
+	language_body*		setb;		///< set body
+	language_body*		getb;		///< get body
 	token_char*		rb;		///< right brace
 public:
-	user_chan_type(node* df, node* n, node* dp, node* b, node* p, 
+	user_data_type_def(node* df, node* n, node* dp, node* b, node* p, 
 		node* l, node* s, node* g, node* r);
-virtual	~user_chan_type();
+virtual	~user_data_type_def();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
@@ -1198,31 +1240,57 @@ virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-/// abstract base class for prototypes
-class prototype : virtual public root_item {
+/// user-defined channel type signature
+class user_chan_type_signature {
+protected:
+	token_keyword*		def;		///< "defchan" keyword
+	token_identifier*	name;		///< name of new channel
+	token_string*		dop;		///< <: operator
+	chan_type*		bct;		///< the represented type
+	data_param_list*	params;		///< the implementation type
 public:
-	prototype();
-virtual	~prototype();
-
-// don't bother re-declaring virtual methods
+	user_chan_type_signature(node* df, node* n, node* dp, 
+		node* b, node* p);
+virtual	~user_chan_type_signature();
 };
 
 //-----------------------------------------------------------------------------
-// process prototype declaration
-class process_prototype : public prototype {
+/// user-defined channel type prototype
+class user_chan_type_prototype : public prototype, 
+		public user_chan_type_signature {
+protected:
+	token_char*		semi;		///< semicolon
+public:
+	user_chan_type_prototype(node* df, node* n, node* dp, node* b, 
+		node* p, node* s);
+virtual	~user_chan_type_prototype();
 
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
-// data type prototype declaration
-class data_type_prototype : public prototype {
+/// user-defined channel type definition
+class user_chan_type_def : public definition, public user_chan_type_signature {
+protected:
+//	token_keyword*		def;		// inherited
+//	token_identifier*	name;		// inherited
+//	token_string*		dop;		// inherited
+//	chan_type*		bct;		// inherited
+//	data_param_list*	params;		// inherited
+	token_char*		lb;		///< left brace
+	language_body*		sendb;		///< set body
+	language_body*		recvb;		///< get body
+	token_char*		rb;		///< right brace
+public:
+	user_chan_type_def(node* df, node* n, node* dp, node* b, node* p, 
+		node* l, node* s, node* g, node* r);
+virtual	~user_chan_type_def();
 
-};
-
-//-----------------------------------------------------------------------------
-// channel prototype declaration
-class channel_prototype : public prototype {
-
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================

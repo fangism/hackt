@@ -16,6 +16,7 @@ CC = gcc
 # to use ccache, override with: make CC="ccache gcc"
 # to use distcc, can even prefix compile command with "distcc"
 LD = $(CC)
+# using gcc, because Mach ld needs some additional directives on Mac...
 CFLAGS = -O3 -Wall -c -g
 # -fkeep-inline-functions
 # turn on -O4 later...
@@ -96,7 +97,7 @@ nodocs:
 	-$(RM) -r dox/html
 	-$(RM) -r dox/latex
 
-clobberdepend:
+clobberdepend: cleandepend
 	-$(RM) .depend
 
 clobber: clean clobberdepend

@@ -168,7 +168,7 @@ range::rightmost(void) const {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(node* n, node* o) : expr(), nonterminal(),
+unary_expr::unary_expr(node* n, node* o) : expr(), 
 	e(IS_A(expr*, n)),
 	op(IS_A(terminal*, o)) {
 		if (n && !e) delete n;  // or use assert?

@@ -45,7 +45,7 @@ namespace parser {
 
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
-node_list_base<T>::node_list_base() : nonterminal(), list_of_ptr<node>() {
+node_list_base<T>::node_list_base() : node(), list_of_ptr<node>() {
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
@@ -67,13 +67,6 @@ node_list_base<T>::~node_list_base() {
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const list_grandparent& l) : 
 		list_parent(l) {
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_BASE_TEMPLATE_SPEC
-ostream&
-node_list_base<T>::what(ostream& o) const {
-	return o << "(node_list_base)";
 }
 
 //=============================================================================

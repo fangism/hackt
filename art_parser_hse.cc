@@ -14,7 +14,7 @@ namespace HSE {
 // class statement method definitions
 
 CONSTRUCTOR_INLINE
-statement::statement() : ART::parser::statement() { }
+statement::statement() : node() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
@@ -53,7 +53,7 @@ body::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 guarded_command::guarded_command(node* g, node* a, node* c) : 
-		nonterminal(),
+		node(),
 		guard(IS_A(hse_expr*, g)),
 		// remember, may be keyword: else   
 		arrow(IS_A(terminal*, a)),

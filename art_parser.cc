@@ -3,6 +3,12 @@
 
 // template instantiations are at the end of the file
 
+// rule-of-thumb for inline directives:
+// only inline constructors if you KNOW that they will not be be needed
+// outside of this module, because we don't have a means to export
+// inline methods other than defining in the header or using
+// -fkeep-inline-functions
+
 #include <iostream>
 #include <stdio.h>		// for sprintf
 #include <string.h>		// for a few C-string functions
@@ -56,17 +62,11 @@ node::check_build(context* c) const {
 }
 
 //=============================================================================
-// class nonterminal definitions
-
-DESTRUCTOR_INLINE
-nonterminal::~nonterminal() { }
-
-//=============================================================================
 // class root_item method definitions
 
 /// Empty constructor
 CONSTRUCTOR_INLINE
-root_item::root_item() : nonterminal() { }
+root_item::root_item() : node() { }
 
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
@@ -179,46 +179,93 @@ data_type_base::check_build(context* c) const {
 }
 
 //=============================================================================
-// class data_type method definitions
+// class user_data_type_def method definitions
 
 CONSTRUCTOR_INLINE
-data_type::data_type(node* df, node* n, node* dp, node* b, node* p,
-                node* l, node* s, node* g, node* r) :
-		type_base(), 
+user_data_type_signature::user_data_type_signature(
+		node* df, node* n, node* dp, node* b, node* p) :
 		def(IS_A(token_keyword*, df)), 
 		name(IS_A(token_identifier*, n)), 
 		dop(IS_A(token_string*, dp)), 
 		bdt(IS_A(data_type_base*, b)), 
-		params(IS_A(data_param_list*, p)), 
-		lb(IS_A(token_char*, l)), 
-		setb(IS_A(language_body*, s)), 
-		getb(IS_A(language_body*, g)), 
-		rb(IS_A(token_char*, r)) {
+		params(IS_A(data_param_list*, p)) {
 	assert(def); assert(name); assert(dop);
-	assert(bdt); assert(params); assert(lb);
-	assert(setb); assert(getb); assert(rb);
+	assert(bdt); assert(params); 
 }
 
 DESTRUCTOR_INLINE
-data_type::~data_type() {
+user_data_type_signature::~user_data_type_signature() {
 	SAFEDELETE(def); SAFEDELETE(name); SAFEDELETE(dop);
-	SAFEDELETE(bdt); SAFEDELETE(params); SAFEDELETE(lb);
-	SAFEDELETE(setb); SAFEDELETE(getb); SAFEDELETE(rb);
+	SAFEDELETE(bdt); SAFEDELETE(params); 
+}
+
+//=============================================================================
+// class user_data_type_prototype method definitions
+
+CONSTRUCTOR_INLINE
+user_data_type_prototype::user_data_type_prototype(node* df, node* n, 
+		node* dp, node* b, node* p, node* s) :
+		prototype(), 
+		user_data_type_signature(df, n, dp, b, p), 
+		semi(IS_A(token_char*, s)) {
+	assert(semi);
+}
+
+DESTRUCTOR_INLINE
+user_data_type_prototype::~user_data_type_prototype() {
+	SAFEDELETE(semi);
 }
 
 ostream&
-data_type::what(ostream& o) const {
-	return o << "(user-data-type)";
+user_data_type_prototype::what(ostream& o) const {
+	return o << "(user-data-type-proto)";
 }
 
 line_position
-data_type::leftmost(void) const {
+user_data_type_prototype::leftmost(void) const {
 	if (def)	return def->leftmost();
 	else		return name->leftmost();
 }
 
 line_position
-data_type::rightmost(void) const {
+user_data_type_prototype::rightmost(void) const {
+	if (semi)	return semi->rightmost();
+	else		return params->rightmost();
+}
+
+//=============================================================================
+// class user_data_type_def method definitions
+
+CONSTRUCTOR_INLINE
+user_data_type_def::user_data_type_def(node* df, node* n, node* dp, node* b, 
+		node* p, node* l, node* s, node* g, node* r) :
+		definition(), 
+		user_data_type_signature(df, n, dp, b, p), 
+		lb(IS_A(token_char*, l)), 
+		setb(IS_A(language_body*, s)), 
+		getb(IS_A(language_body*, g)), 
+		rb(IS_A(token_char*, r)) {
+	assert(lb); assert(setb); assert(getb); assert(rb);
+}
+
+DESTRUCTOR_INLINE
+user_data_type_def::~user_data_type_def() {
+	SAFEDELETE(lb); SAFEDELETE(setb); SAFEDELETE(getb); SAFEDELETE(rb);
+}
+
+ostream&
+user_data_type_def::what(ostream& o) const {
+	return o << "(user-data-type-def)";
+}
+
+line_position
+user_data_type_def::leftmost(void) const {
+	if (def)	return def->leftmost();
+	else		return name->leftmost();
+}
+
+line_position
+user_data_type_def::rightmost(void) const {
 	if (rb)         return rb->rightmost();
 	else            return getb->rightmost();
 }
@@ -241,11 +288,6 @@ chan_type::~chan_type() {
 	SAFEDELETE(chan); SAFEDELETE(dir); SAFEDELETE(dtypes);
 }
 
-/***
-chan_type*
-chan_type::attach_data_types(node* t);
-***/
-
 ostream&
 chan_type::what(ostream& o) const {
 	return o << "(chan-type)";
@@ -262,46 +304,93 @@ chan_type::rightmost(void) const {
 }
 
 //=============================================================================
-// class user_chan_type method definitions
+// class user_chan_type_signature method definitions
 
 CONSTRUCTOR_INLINE
-user_chan_type::user_chan_type(node* df, node* n, node* dp, node* b, node* p,
-                node* l, node* s, node* g, node* r) :
-		type_base(), 
+user_chan_type_signature::user_chan_type_signature(
+		node* df, node* n, node* dp, node* b, node* p) :
 		def(IS_A(token_keyword*, df)), 
 		name(IS_A(token_identifier*, n)), 
 		dop(IS_A(token_string*, dp)), 
 		bct(IS_A(chan_type*, b)), 
-		params(IS_A(data_param_list*, p)), 
-		lb(IS_A(token_char*, l)), 
-		sendb(IS_A(language_body*, s)), 
-		recvb(IS_A(language_body*, g)), 
-		rb(IS_A(token_char*, r)) {
+		params(IS_A(data_param_list*, p)) {
 	assert(def); assert(name); assert(dop);
-	assert(bct); assert(params); assert(lb);
-	assert(sendb); assert(recvb); assert(rb);
+	assert(bct); assert(params);
 }
 
 DESTRUCTOR_INLINE
-user_chan_type::~user_chan_type() {
+user_chan_type_signature::~user_chan_type_signature() {
 	SAFEDELETE(def); SAFEDELETE(name); SAFEDELETE(dop);
-	SAFEDELETE(bct); SAFEDELETE(params); SAFEDELETE(lb);
-	SAFEDELETE(sendb); SAFEDELETE(recvb); SAFEDELETE(rb);
+	SAFEDELETE(bct); SAFEDELETE(params);
+}
+
+//=============================================================================
+// class user_chan_type_prototype method definitions
+
+CONSTRUCTOR_INLINE
+user_chan_type_prototype::user_chan_type_prototype(
+		node* df, node* n, node* dp, node* b, node* p, node* s) :
+		prototype(), 
+		user_chan_type_signature(df, n, dp, b, p), 
+		semi(IS_A(token_char*, s)) {
+	assert(semi);
+}
+
+DESTRUCTOR_INLINE
+user_chan_type_prototype::~user_chan_type_prototype() {
+	SAFEDELETE(semi);
 }
 
 ostream&
-user_chan_type::what(ostream& o) const {
-	return o << "(user-chan-type)";
+user_chan_type_prototype::what(ostream& o) const {
+	return o << "(user-chan-type-proto)";
 }
 
 line_position
-user_chan_type::leftmost(void) const {
+user_chan_type_prototype::leftmost(void) const {
 	if (def)	return def->leftmost();
 	else		return name->leftmost();
 }
 
 line_position
-user_chan_type::rightmost(void) const {
+user_chan_type_prototype::rightmost(void) const {
+	if (semi)	return semi->rightmost();
+	else		return params->rightmost();
+}
+
+//=============================================================================
+// class user_chan_type_def method definitions
+
+CONSTRUCTOR_INLINE
+user_chan_type_def::user_chan_type_def(node* df, node* n, node* dp, 
+		node* b, node* p, node* l, node* s, node* g, node* r) :
+		definition(), 
+		user_chan_type_signature(df, n, dp, b, p), 
+		lb(IS_A(token_char*, l)), 
+		sendb(IS_A(language_body*, s)), 
+		recvb(IS_A(language_body*, g)), 
+		rb(IS_A(token_char*, r)) {
+	assert(lb); assert(sendb); assert(recvb); assert(rb);
+}
+
+DESTRUCTOR_INLINE
+user_chan_type_def::~user_chan_type_def() {
+	SAFEDELETE(lb); SAFEDELETE(sendb); SAFEDELETE(recvb); SAFEDELETE(rb);
+}
+
+ostream&
+user_chan_type_def::what(ostream& o) const {
+	return o << "(user-chan-type-def)";
+}
+
+line_position
+user_chan_type_def::leftmost(void) const {
+	if (def)	return def->leftmost();
+	else		return name->leftmost();
+}
+
+line_position
+user_chan_type_def::rightmost(void) const {
 	if (rb)         return rb->rightmost();
 	else            return recvb->rightmost();
 }
@@ -310,7 +399,7 @@ user_chan_type::rightmost(void) const {
 // class statement method definitions
 
 CONSTRUCTOR_INLINE
-statement::statement() : nonterminal() { }
+statement::statement() : node() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
@@ -410,7 +499,7 @@ assign_stmt::rightmost(void) const {
 // class def_body_item method definitions
 
 CONSTRUCTOR_INLINE
-def_body_item::def_body_item() : nonterminal() { }
+def_body_item::def_body_item() : node() { }
 
 DESTRUCTOR_INLINE
 def_body_item::~def_body_item() { }
@@ -859,7 +948,7 @@ loop_instantiation::rightmost(void) const {
 // class port_formal_id method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_id::port_formal_id(node* n, node* d) : nonterminal(),
+port_formal_id::port_formal_id(node* n, node* d) : node(),
 		name(IS_A(token_identifier*, n)),
 		dim(IS_A(range_list*, d)) {
 	assert(name);
@@ -892,7 +981,7 @@ port_formal_id::rightmost(void) const {
 // class port_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_decl::port_formal_decl(node* t, node* i) : nonterminal(),
+port_formal_decl::port_formal_decl(node* t, node* i) : node(),
 		type(IS_A(type_id*, t)),
 		ids(IS_A(port_formal_id_list*, i)) {
 	assert(type); assert(ids);
@@ -922,7 +1011,7 @@ port_formal_decl::rightmost(void) const {
 // class template_formal_id method definitions
 
 CONSTRUCTOR_INLINE
-template_formal_id::template_formal_id(node* n, node* d) : nonterminal(),
+template_formal_id::template_formal_id(node* n, node* d) : node(),
 		name(IS_A(token_identifier*, n)),
 		dim(IS_A(range_list*, d)) {
 	assert(name);
@@ -956,7 +1045,7 @@ template_formal_id::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(node* t, node* i) :
-		nonterminal(),
+		node(),
 		type(IS_A(type_id*, t)),
 		ids(IS_A(template_formal_id_list*, i)) {
 	assert(type); assert(ids);
@@ -1018,37 +1107,18 @@ def_type_id::rightmost(void) const {
 // class definition method definitions
 
 CONSTRUCTOR_INLINE
-definition::definition(node* b) : root_item(),
-		body(IS_A(definition_body*, b)) {
-	assert(body);
+definition::definition() : root_item() {
 }
 
 DESTRUCTOR_INLINE
 definition::~definition() {
-	SAFEDELETE(body);
-}
-
-ostream&
-definition::what(ostream& o) const {
-	return o << "(definition)";
-}
-
-line_position
-definition::leftmost(void) const {
-	return body->leftmost();
-}
-
-line_position
-definition::rightmost(void) const {
-	return body->rightmost();
 }
 
 //=============================================================================
-// class process_def method definitions
+// class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(node* d, node* i, node* p, node* b) :
-		definition(b),
+process_signature::process_signature(node* d, node* i, node* p) :
 		def(IS_A(token_keyword*, d)),
 		idt(IS_A(def_type_id*, i)),
 		ports(IS_A(port_formal_decl_list*, p)) {
@@ -1056,8 +1126,55 @@ process_def::process_def(node* d, node* i, node* p, node* b) :
 }
 
 DESTRUCTOR_INLINE
-process_def::~process_def() {
+process_signature::~process_signature() {
 	SAFEDELETE(def); SAFEDELETE(idt); SAFEDELETE(ports);
+}
+
+//=============================================================================
+// class process_prototype method definitions
+
+CONSTRUCTOR_INLINE
+process_prototype::process_prototype(node* d, node* i, node* p, node* s) :
+		prototype(),
+		process_signature(d, i, p), 
+		semi(IS_A(token_char*, s)) {
+	assert(semi);
+}
+
+DESTRUCTOR_INLINE
+process_prototype::~process_prototype() {
+	SAFEDELETE(semi);
+}
+
+ostream&
+process_prototype::what(ostream& o) const {
+	return o << "(process-prototype)";
+}
+
+line_position
+process_prototype::leftmost(void) const {
+	return def->leftmost();
+}
+
+line_position
+process_prototype::rightmost(void) const {
+	return semi->rightmost();
+}
+
+//=============================================================================
+// class process_def method definitions
+
+CONSTRUCTOR_INLINE
+process_def::process_def(node* d, node* i, node* p, node* b) :
+		definition(),
+		process_signature(d, i, p), 
+		body(IS_A(definition_body*, b)) {
+	assert(body);
+}
+
+DESTRUCTOR_INLINE
+process_def::~process_def() {
+	SAFEDELETE(body);
 }
 
 ostream&
@@ -1069,6 +1186,12 @@ line_position
 process_def::leftmost(void) const {
 	return def->leftmost();
 }
+
+line_position
+process_def::rightmost(void) const {
+	return body->rightmost();
+}
+
 
 //=============================================================================
 // class guarded_definition_body method definitions

@@ -13,12 +13,13 @@ namespace PRS {
 // class rule method definitions
 
 CONSTRUCTOR_INLINE
-rule::rule(node* g, node* a, node* rhs, node* d) : expr(),
-		guard(IS_A(prs_expr*, g)),
+rule::rule(node* g, node* a, node* rhs, node* d) : node(),
+		guard(IS_A(expr*, g)),
 		arrow(IS_A(terminal*, a)),
-		r(IS_A(prs_expr*, rhs)),
+		r(IS_A(expr*, rhs)),
 		dir(IS_A(terminal*, dir)) {
 	assert(guard); assert(arrow); assert(r); assert(dir);
+	assert(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
 DESTRUCTOR_INLINE

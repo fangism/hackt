@@ -243,6 +243,7 @@ def_or_proc
 declare_proc_proto
 	: def_or_proc def_type_id
 	  optional_port_formal_decl_list_in_parens ';'
+		{ $$ = new process_prototype($1, $2, $3, $4); }
 	;
 
 defproc
@@ -390,13 +391,15 @@ base_data_type
 declare_type_proto
 	: DEFTYPE ID DEFINEOP base_data_type 
           data_param_list_in_parens ';'
+		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6); }
 	;
 
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
           data_param_list_in_parens
 	  '{' set_body get_body '}'
-		{ $$ = new data_type($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new user_data_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
 	;
 
 set_body
@@ -412,13 +415,15 @@ get_body
 declare_chan_proto
 	: DEFCHAN ID DEFINEOP base_chan_type 
 	  data_param_list_in_parens ';'
+		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6); }
 	;
 	
 defchan
 	: DEFCHAN ID DEFINEOP base_chan_type 
           data_param_list_in_parens
 	  '{' send_body recv_body '}'
-		{ $$ = new user_chan_type($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new user_chan_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
 	;
 
 send_body
