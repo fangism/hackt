@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.8.1 2005/02/02 17:35:06 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.8.2 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -178,7 +178,7 @@ instantiation_statement::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instantiation_statement::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, indices);
 }
 
@@ -304,26 +304,17 @@ pbool_instantiation_statement::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instantiation_statement::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst_base);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_instantiation_statement::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, inst_base);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -426,26 +417,17 @@ pint_instantiation_statement::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_instantiation_statement::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst_base);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pint_instantiation_statement::load_object(const persistent_object_manager& m, 
+		istream&f ) {
 	m.read_pointer(f, inst_base);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -565,34 +547,25 @@ process_instantiation_statement::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_instantiation_statement::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+process_instantiation_statement::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
 #if 0
-	type->load_object(m);
-	inst_base->load_object(m);
+	m.load_object(type);
+	m.load_object(inst_base);
 	if (indices)
-		indices->load_object(m);
+		m.load_object(indices);
 #endif
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -688,34 +661,25 @@ channel_instantiation_statement::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_instantiation_statement::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+channel_instantiation_statement::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
 #if 0
-	type->load_object(m);
-	inst_base->load_object(m);
+	m.load_object(type);
+	m.load_object(inst_base);
 	if (indices)
-		indices->load_object(m);
+		m.load_object(indices);
 #endif
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -846,28 +810,19 @@ data_instantiation_statement::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_instantiation_statement::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-data_instantiation_statement::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+data_instantiation_statement::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.1.4.1 2005/02/02 17:35:09 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.1.4.2 2005/02/02 19:08:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -57,7 +57,7 @@ namespace ART {
 namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
-using namespace ADS;
+USING_UTIL_COMPOSE
 using std::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE;
@@ -251,7 +251,7 @@ process_instance_collection::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_instance_collection::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, proc_type);
 }
@@ -484,29 +484,20 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PROC_ARRAY_TEMPLATE_SIGNATURE
 void
-proc_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+proc_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	cerr << "FANG: finish proc_array<D>::write_object()" << endl;
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PROC_ARRAY_TEMPLATE_SIGNATURE
 void
-proc_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+proc_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 	cerr << "FANG: finish proc_array<D>::load_object()" << endl;
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -632,32 +623,21 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-proc_array<0>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+proc_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	parent_type::write_object_base(m, f);
 
 	cerr << "FANG: finish proc_array<0>::write_object()" << endl;
 	write_value(f, the_instance);
-
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-proc_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+proc_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 
 	cerr << "FANG: finish proc_array<0>::load_object()" << endl;
 	read_value(f, the_instance);
-
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================

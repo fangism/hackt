@@ -1,36 +1,33 @@
 /**
 	\file "hash_qmap_fwd.h"
 	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
-	$Id: hash_qmap_fwd.h,v 1.6 2004/12/15 23:31:13 fang Exp $
+	$Id: hash_qmap_fwd.h,v 1.6.22.1 2005/02/02 19:08:20 fang Exp $
  */
 
-#ifndef	__HASH_QMAP_FWD_H__
-#define	__HASH_QMAP_FWD_H__
+#ifndef	__UTIL_HASH_QMAP_FWD_H__
+#define	__UTIL_HASH_QMAP_FWD_H__
 
-#ifndef	HASH_QMAP_NAMESPACE
-#define	HASH_QMAP_NAMESPACE		util
-#endif
-
-#include "hash_map.h"
+#include "STL/hash_map_fwd.h"
 // needed for reference to default hash function
 
 // these class parameters are explained below
 #define HASH_QMAP_TEMPLATE_SIGNATURE					\
 template <class K, class T, class H, class E, class A>
 
-/**
-	Namespace for queryable hash map, one with const-semantics lookup.  
- */
-namespace HASH_QMAP_NAMESPACE {
+namespace util {
 
 // apologies for the short parameter names
+HASH_QMAP_TEMPLATE_SIGNATURE
+class hash_qmap;
+
+// default arguments, only key and value type are needed
 template <class K, class T, 
           class H = HASH_MAP_NAMESPACE::hash<K>,
           class E = std::equal_to<K>,
           class A = std::allocator<T> >
 class hash_qmap;
 
-}	// end namespace
+}	// end namespace util
 
-#endif	//	__HASH_QMAP_FWD_H__
+#endif	// __UTIL_HASH_QMAP_FWD_H__
 

@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.8.1 2005/02/02 17:35:08 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.8.2 2005/02/02 19:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -14,15 +14,11 @@
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
-namespace ART {
-namespace parser {
-class token_identifier;
-}
 
+namespace ART {
 namespace entity {
 USING_LIST
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
 using MULTIKEY_NAMESPACE::multikey_base;
@@ -242,7 +238,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class enum_array
 
 //-----------------------------------------------------------------------------
@@ -287,7 +283,7 @@ public:
 
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class enum_array (specialized)
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.22.1 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -81,12 +81,9 @@ int_instance_reference::construct_empty(const int) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, int_inst_ref);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,17 +96,12 @@ int_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-int_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+int_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, int_inst_ref);
 	NEVER_NULL(int_inst_ref);
-	const_cast<instance_collection_type&>(*int_inst_ref).load_object(m);
+	m.load_object(const_cast<instance_collection_type*>(&*int_inst_ref));
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -171,12 +163,9 @@ bool_instance_reference::construct_empty(const int) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, bool_inst_ref);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -189,17 +178,12 @@ bool_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-bool_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+bool_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, bool_inst_ref);
 	NEVER_NULL(bool_inst_ref);
-	const_cast<instance_collection_type&>(*bool_inst_ref).load_object(m);
+	m.load_object(const_cast<instance_collection_type*>(&*bool_inst_ref));
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -261,12 +245,9 @@ enum_instance_reference::construct_empty(const int) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 enum_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, enum_inst_ref);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -279,17 +260,13 @@ enum_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-enum_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+enum_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, enum_inst_ref);
 	NEVER_NULL(enum_inst_ref);
-	const_cast<instance_collection_type&>(*enum_inst_ref).load_object(m);
+	m.load_object(const_cast<instance_collection_type*>(
+		&*enum_inst_ref));
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -351,12 +328,9 @@ datastruct_instance_reference::construct_empty(const int) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 datastruct_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, struct_inst_ref);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -369,17 +343,12 @@ datastruct_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-datastruct_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+datastruct_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, struct_inst_ref);
 	NEVER_NULL(struct_inst_ref);
-	const_cast<instance_collection_type&>(*struct_inst_ref).load_object(m);
+	m.load_object(const_cast<instance_collection_type*>(&*struct_inst_ref));
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================

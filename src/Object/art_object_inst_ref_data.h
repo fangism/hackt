@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.22.1 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -59,7 +59,7 @@ protected:
 	using parent_type::load_object_base;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class int_instance_reference
 
 //=============================================================================
@@ -97,7 +97,7 @@ public:
 	get_inst_base(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class bool_instance_reference
 
 //=============================================================================
@@ -136,7 +136,7 @@ public:
 	get_inst_base(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class datastruct_instance_reference
 
 //=============================================================================
@@ -175,7 +175,7 @@ public:
 	get_inst_base(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class enum_instance_reference
 
 //=============================================================================

@@ -3,13 +3,13 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.5 2004/12/01 05:16:17 fang Exp $
+	$Id: hash_specializations.h,v 1.5.22.1 2005/02/02 19:08:20 fang Exp $
  */
 
-#ifndef	__HASH_SPECIALIZATIONS_H__
-#define	__HASH_SPECIALIZATIONS_H__
+#ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
+#define	__UTIL_HASH_SPECIALIZATIONS_H__
 
-#include "hash_map.h"		// wrapper for <hash_map>
+#include "STL/hash_map.h"		// wrapper for <hash_map>
 
 #include <string>
 
@@ -43,9 +43,9 @@ struct hash<const T*> {
 	}
 };	// end hash<>
 
-};	// end namespace HASH_MAP_NAMESPACE
+}	// end namespace HASH_MAP_NAMESPACE
 
 //=============================================================================
 
-#endif	// __HASH_SPECIALIZATIONS_H__
+#endif	// __UTIL_HASH_SPECIALIZATIONS_H__
 

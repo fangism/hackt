@@ -3,7 +3,7 @@
 	Just dumps an object file to human-readable (?) output.  
 	Useful for testing object file integrity.  
 
-	$Id: artobjdump.cc,v 1.6 2005/01/28 19:58:31 fang Exp $
+	$Id: artobjdump.cc,v 1.6.8.1 2005/02/02 19:08:10 fang Exp $
  */
 
 #include <iostream>
@@ -46,7 +46,7 @@ main(int argc, char* argv[]) {
 	excl_ptr<entity::module> the_module;
 try {
 	the_module = persistent_object_manager::load_object_from_file
-			<entity::module>(fname);
+			(fname).is_a_xfer<entity::module>();
 }
 catch (...) {
 	return 1;

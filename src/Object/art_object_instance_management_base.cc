@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.8.8.1 2005/02/02 17:35:09 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.8.8.2 2005/02/02 19:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -44,7 +44,7 @@ using std::mem_fun_ref;
 using std::dereference;
 using std::istream;
 #include "using_ostream.h"
-using namespace ADS;
+USING_UTIL_COMPOSE
 USING_STACKTRACE
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.8.1 2005/02/02 17:35:08 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.8.2 2005/02/02 19:08:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -256,7 +256,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class bool_array
 
 //-----------------------------------------------------------------------------
@@ -298,7 +298,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class bool_array (specialized)

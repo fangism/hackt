@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19.2.1 2005/01/31 04:16:32 fang Exp $
+	$Id: art_object_expr.h,v 1.19.2.1.4.1 2005/02/02 19:08:13 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -105,7 +105,7 @@ private:
 	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -176,7 +176,7 @@ public:
 	must_be_equivalent_indices(const index_list& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_index_list
 
 //=============================================================================
@@ -230,7 +230,7 @@ public:
 	must_be_formal_size_equivalent(const range_expr_list& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_range_list
 
 //=============================================================================
@@ -306,7 +306,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -381,7 +381,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -482,7 +482,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -584,7 +584,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -681,7 +681,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class logical_expr
 
 //=============================================================================
@@ -755,7 +755,7 @@ public:
 	must_be_formal_size_equivalent(const range_expr& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_range
 
 //=============================================================================

@@ -1,11 +1,11 @@
 /**
 	\file "persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.5 2004/12/05 05:07:25 fang Exp $
+	$Id: persistent.cc,v 1.5.22.1 2005/02/02 19:08:20 fang Exp $
  */
 
-#include <assert.h>
-#include <stdlib.h>
+#include "macros.h"
+#include <cstdlib>
 #include <iostream>
 #include <algorithm>
 
@@ -37,9 +37,9 @@ persistent::hash_key::hash_key() {
 	\param s must not have length > MAX_LEN;
  */
 persistent::hash_key::hash_key(const char* s) {
-	assert(strlen(s) <= MAX_LEN);
+	INVARIANT(strlen(s) <= MAX_LEN);
 	strncpy(key, s, MAX_LEN);	// will pad with '\0'
-	assert(sizeof(int) == 4);
+	INVARIANT(sizeof(int) == 4);
 	const int& hi = * reinterpret_cast<int*>(&key[0]);
 	const int& lo = * reinterpret_cast<int*>(&key[4]);
 	hash = hi ^ lo;
@@ -60,7 +60,7 @@ persistent::hash_key::hash_key(const string& s) {
 	Returns the number of characters in the string, not including any
 	null-termination.
 ***/
-	assert(s.length() <= MAX_LEN);
+	INVARIANT(s.length() <= MAX_LEN);
 	const char* str = s.c_str();
 	strncpy(key, str, MAX_LEN);	// will pad with '\0'
 /***
@@ -71,7 +71,7 @@ persistent::hash_key::hash_key(const string& s) {
 	be externally observable.  
 	Only the key string is observable. 
 ***/
-	assert(sizeof(int) == 4);
+	INVARIANT(sizeof(int) == 4);
 	const int& hi = * reinterpret_cast<int*>(&key[0]);
 	const int& lo = * reinterpret_cast<int*>(&key[4]);
 	hash = hi ^ lo;

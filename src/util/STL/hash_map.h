@@ -1,25 +1,21 @@
 /**
-	\file "hash_map.h"
+	\file "STL/hash_map.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
-	$Id: hash_map.h,v 1.4 2004/11/02 07:52:14 fang Exp $
+	$Id: hash_map.h,v 1.1.4.1 2005/02/02 19:08:21 fang Exp $
  */
 
-#ifndef	__HASH_MAP_H__
-#define	__HASH_MAP_H__
+#ifndef	__STL_HASH_MAP_H__
+#define	__STL_HASH_MAP_H__
 
-#if defined(HASH_MAP_NAMESPACE)
-#error	"HASH_MAP_NAMESPACE is already defined, but I need to set it."
-#endif
+#include "STL/hash_map_fwd.h"
 
 // compiler-version dependent location of hash_map
 #ifdef  __GNUC__
 #if	(__GNUC__ >= 3)		// works on Mac OS X gcc-3.3, linux gcc-3.2
 #include <ext/hash_map>
-#define	HASH_MAP_NAMESPACE	__gnu_cxx
 
 #else	// (__GNUC__ <= 2)	// works on FreeBSD gcc-2.95.3
 #include <hash_map>
-#define	HASH_MAP_NAMESPACE	std
 #endif	// gcc version
 
 #else	// __GNUC__
@@ -29,7 +25,5 @@
 #endif	// __GNUC__
 
 
-using HASH_MAP_NAMESPACE::hash_map;
-
-#endif	// __HASH_MAP_H__
+#endif	// __STL_HASH_MAP_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.8.1 2005/02/02 19:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -13,15 +13,11 @@
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
-namespace ART {
-namespace parser {
-class token_identifier;
-}
 
+namespace ART {
 namespace entity {
 USING_LIST
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
 using MULTIKEY_NAMESPACE::multikey_base;
@@ -168,7 +164,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class chan_array
 
 //-----------------------------------------------------------------------------
@@ -212,7 +208,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class chan_array (specialized)
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "art++2obj.cc"
 	Converts ART source code to an object file (pre-unrolled).
 
-	$Id: art++2obj.cc,v 1.8 2005/01/16 02:44:15 fang Exp $
+	$Id: art++2obj.cc,v 1.8.22.1 2005/02/02 19:08:10 fang Exp $
  */
 
 #include <iostream>
@@ -78,9 +78,7 @@ if (argc >= 3) {
 	const string fname(argv[2]);	// name of file
 	persistent::warn_unimplemented = true;	// just for verbosity
 	persistent_object_manager::dump_reconstruction_table = true;
-	persistent_object_manager::save_object_to_file(
-		fname, the_module);
-//	persistent_object_manager::save_object_to_file(fname, global);
+	persistent_object_manager::save_object_to_file(fname, the_module);
 }
 	// else don't bother
 	the_module.dump(cerr);

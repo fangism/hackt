@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.2.4.1 2005/02/02 17:35:07 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.2.4.2 2005/02/02 19:08:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -116,7 +116,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class process_instance_collection
 
@@ -264,7 +264,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class channel_instance_collection
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9.8.1 2005/02/02 17:35:07 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.8.2 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -88,7 +88,7 @@ public:
 	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -140,7 +140,7 @@ public:
 	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -191,7 +191,7 @@ public:
 	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class process_instantiation_statement
 
@@ -236,7 +236,7 @@ public:
 	get_type_ref(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class channel_instantiation_statement
 
@@ -292,7 +292,7 @@ public:
 #endif
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 
 public:

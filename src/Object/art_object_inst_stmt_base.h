@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.5.8.1 2005/02/02 17:35:07 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.5.8.2 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -85,7 +85,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class instantiation_statement
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.2.4.1 2005/02/02 17:35:07 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.2.4.2 2005/02/02 19:08:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -557,7 +557,7 @@ instance_collection_base::write_object_base(
 inline
 void
 instance_collection_base::load_index_collection_pointers(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	STACKTRACE("inst_coll_base::load_index_collection_pointers()");
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
@@ -566,7 +566,7 @@ instance_collection_base::load_index_collection_pointers(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, owner);
 	read_string(i, const_cast<string&>(key));
 	load_index_collection_pointers(m, i);
@@ -653,251 +653,6 @@ never_ptr<const const_param_expr_list>
 datatype_instance_collection::get_actual_param_list(void) const {
 	return never_ptr<const const_param_expr_list>(NULL);
 }
-
-//=============================================================================
-// class process_instance_collection method definitions
-
-// relocated to "art_object_instance_proc.cc"
-#if 0
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection, 
-	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-process_instance_collection::process_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_collection::process_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_collection::~process_instance_collection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// pure virtual
-ostream&
-process_instance_collection::what(ostream& o) const {
-	return o << "process-inst";
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
-process_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a process reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-process_instance_collection::make_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-	return count_ptr<process_instance_reference>(
-		new process_instance_reference(
-			never_ptr<const process_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
-		// omitting index argument
-		// may attach in parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a process, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-process_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<process_member_instance_reference>(
-		new process_member_instance_reference(
-			b, never_ptr<const process_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE_KEY)) {
-	// don't bother visit the owner, assuming that's the caller
-	// go through index_collection
-	parent_type::collect_transient_info_base(m);
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-process_instance_collection::construct_empty(const int i) {
-	return new process_instance_collection();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
-
-//=============================================================================
-// class channel_instance_collection method definitions
-
-#if 0
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection, 
-	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.  
- */
-channel_instance_collection::channel_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_collection::channel_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) : 
-		instance_collection_base(o, n, d) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_collection::~channel_instance_collection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-channel_instance_collection::what(ostream& o) const {
-	return o << "channel-inst";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
-channel_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a channel reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-channel_instance_collection::make_instance_reference(void) const {
-	cerr << "channel_instance_collection::make_instance_reference() "
-		"INCOMPLETE, FINISH ME!" << endl;
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-	return count_ptr<channel_instance_reference>(
-		new channel_instance_reference(
-			never_ptr<const channel_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
-		// omitting index argument
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a channel, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-channel_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<channel_member_instance_reference>(
-		new channel_member_instance_reference(
-			b, never_ptr<const channel_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)) {
-	// don't bother visit the owner, assuming that's the caller
-	// go through index_collection
-	parent_type::collect_transient_info_base(m);
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-channel_instance_collection::construct_empty(const int i) {
-	return new channel_instance_collection();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

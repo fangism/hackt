@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.1.4.1 2005/02/02 17:35:10 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.1.4.2 2005/02/02 19:08:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -13,15 +13,11 @@
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
-namespace ART {
-namespace parser {
-class token_identifier;
-}
 
+namespace ART {
 namespace entity {
 USING_LIST
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
 using MULTIKEY_NAMESPACE::multikey_base;
@@ -176,7 +172,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class proc_array
 
 //-----------------------------------------------------------------------------
@@ -223,7 +219,7 @@ public:
 
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class proc_array (specialized)
 
 //=============================================================================

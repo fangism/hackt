@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.1.4.1 2005/02/02 17:35:09 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.1.4.2 2005/02/02 19:08:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -82,7 +82,7 @@ STATIC_TRACE_BEGIN("instance_pbool")
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace ADS;		// for composition functors
+USING_UTIL_COMPOSE
 using std::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
@@ -333,7 +333,7 @@ pbool_instance_collection::write_object_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::load_object_base(persistent_object_manager& m, 
+pbool_instance_collection::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
@@ -554,29 +554,20 @@ pbool_array<D>::assign(const multikey_base<pint_value_type>& k,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
-pbool_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pbool_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
-pbool_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //-----------------------------------------------------------------------------
@@ -729,28 +720,19 @@ pbool_array<0>::assign(const multikey_base<pint_value_type>& k,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_array<0>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pbool_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pbool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.8.1 2005/02/02 19:08:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -261,7 +261,7 @@ protected:		// for children only
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& i);
+	load_object_base(const persistent_object_manager& m, istream& i);
 
 private:
 	// need help with instantiation state, count?
@@ -302,7 +302,7 @@ protected:	// for children only
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class member_instance_reference_base
 
