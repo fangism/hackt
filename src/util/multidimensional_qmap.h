@@ -7,16 +7,14 @@
 #ifndef	__MULTIDIMENSIONAL_QMAP_H__
 #define	__MULTIDIMENSIONAL_QMAP_H__
 
-#include <list>
 #include <iostream>
 #include <numeric>		// for accumulate
 
-#include "sstream.h"		// used by "dump" method
-
 // forward declarations
 #include "multidimensional_qmap_fwd.h"
+	// includes <list>
 #include "multidimensional_sparse_set.h"
-#include "qmap.h"		// queryable maps
+	// includes "sstream.h" "qmap.h"
 
 /*
 	Decision: Sub-trees of the map will be kept as count_ptr's

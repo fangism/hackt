@@ -6,13 +6,12 @@
 #ifndef	__ART_OBJECT_BASE_H__
 #define	__ART_OBJECT_BASE_H__
 
-#include <iosfwd>
-#include <string>
 #include <list>
 #include <deque>
 
 #include "art_macros.h"
 #include "persistent.h"		// for persistent object interface
+	// includes <iosfwd> <string>
 
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition

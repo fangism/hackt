@@ -8,8 +8,8 @@
 #define	__MULTIKEY_MAP_H__
 
 #include <limits>		// for numeric_limits specializations
-#include <iostream>
 #include "multikey.h"
+	// includes <iostream>
 #include "multikey_map_fwd.h"
 
 namespace MULTIKEY_MAP_NAMESPACE {

@@ -6,10 +6,11 @@
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
 #define	__PERSISTENT_OBJECT_MANAGER_TCC__
 
-#include <iostream>
 #include <fstream>
 
 #include "persistent_object_manager.h"
+// alread includes <iostream>
+
 #include "art_macros.h"
 #include "art_utils.tcc"
 

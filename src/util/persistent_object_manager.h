@@ -6,8 +6,6 @@
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
 #define	__PERSISTENT_OBJECT_MANAGER_H__
 
-#include <iosfwd>
-
 #include "persistent.h"
 
 #include "hash_qmap.h"

@@ -6,11 +6,9 @@
 #ifndef __ART_PARSER_BASE_H__
 #define __ART_PARSER_BASE_H__
 
-#include <iosfwd>
-#include <string>
-
 #include "art_macros.h"
 #include "art_utils.h"		// for token_position
+	// includes <string> <iosfwd>
 #include "sublist.h"		// for efficient list slices
 #include "ptrs.h"		// experimental pointer classes
 #include "count_ptr.h"		// reference-counted pointers

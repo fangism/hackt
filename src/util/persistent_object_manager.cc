@@ -3,15 +3,15 @@
 	Method definitions for serial object manager.  
  */
 
-#include <iostream>
 #include <fstream>
 
 #include "hash_specializations.h"	// include this first
 	// for hash specialization to take effect
 #include "persistent_object_manager.h"
+	// includes "count_ptr.h"
 #include "art_macros.h"
 #include "art_utils.tcc"
-#include "count_ptr.h"
+	// includes <iostream>
 
 //=============================================================================
 // flags and switches
