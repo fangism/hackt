@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.2 2004/11/30 01:26:06 fang Exp $
+	$Id: pointer_classes.h,v 1.3 2004/11/30 02:33:48 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -29,6 +29,11 @@
 
 #ifndef	__POINTER_CLASSES_H__
 #define	__POINTER_CLASSES_H__
+
+#include "config.h"
+#if HAVE_STDDEF_H
+#include <stddef.h>			// for size_t
+#endif
 
 #include "macros.h"
 #include "memory/pointer_classes_fwd.h"
