@@ -25,9 +25,10 @@ PRS -- new context for type-checking expressions,
 	expecting bool (not pbool) and returning bool.  (datatype)
 
 
-
-
-
+code rework:
+	rewrite majority of traversals using functors
+		replace iterator code with for_each...
+		source code cleaning for sake of maintainability
 
 
 type-check and build typedefs

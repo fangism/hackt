@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-08-21	David Fang	<fangism@gmail.com>
+
+	* Release 0.1.3.
+
+	* Completed object de/serialization for core classes.  
+	  Recycle old type-check test inputs for object dump diff testing.  
+	  New tests read in file, produce object file, and text dump.  
+	  Second part takes object file and produces text dump.  
+	  Text dumps are compared for consistency.  
+
+
 2004-08-19	David Fang	<fangism@gmail.com>
 
 	* Wrote majority of (semi-tested) object serialization /
