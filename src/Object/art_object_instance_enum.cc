@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.8.1 2005/02/02 17:35:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -54,6 +54,13 @@ enum_instance_collection::enum_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance_collection::~enum_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+enum_instance_collection::type_dump(ostream& o) const {
+	return o << "enum " << get_base_def()->get_qualified_name() <<
+		'^' << dimensions;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.1 2005/01/29 21:38:09 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.1.4.1 2005/02/02 17:35:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -157,6 +157,12 @@ pbool_instance_collection::~pbool_instance_collection() {
 ostream&
 pbool_instance_collection::what(ostream& o) const {
 	return o << "pbool-inst";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pbool_instance_collection::type_dump(ostream& o) const {
+	return o << "pbool^" << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

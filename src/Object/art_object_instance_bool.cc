@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.8.1 2005/02/02 17:35:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -72,6 +72,12 @@ bool_instance_collection::bool_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_collection::~bool_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+bool_instance_collection::type_dump(ostream& o) const {
+	return o << "bool^" << dimensions;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

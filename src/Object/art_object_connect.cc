@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.22.1 2005/02/02 17:35:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -90,7 +90,7 @@ aliases_connection::prepend_instance_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::unroll(void) const {
+aliases_connection::unroll(unroll_context& c) const {
 	cerr << "aliases_connection::unroll(): "
 		"Fang, finish me!" << endl;
 }
@@ -214,7 +214,7 @@ port_connection::append_instance_reference(
 	Expands and finalizes the connection at unroll time.  
  */
 void
-port_connection::unroll(void) const {
+port_connection::unroll(unroll_context& c) const {
 	cerr << "port_connection::unroll(): "
 		"Fang, finish me!" << endl;
 }

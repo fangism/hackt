@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.8.1 2005/02/02 17:35:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -131,6 +131,9 @@ virtual	~struct_instance_collection();
 
 virtual	ostream&
 	what(ostream&) const = 0;
+
+	ostream&
+	type_dump(ostream&) const;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

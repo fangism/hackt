@@ -1,0 +1,53 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3302a04	module__	0	0	44
+	2	 0x3300170	namespc_	0	44	84
+	3	 0x3302a24	proccoll	0	84	128
+	4	 0x3302a84	procinst	0	128	148
+	5	 0x3302aa4	proctprf	0	148	164
+	6	 0x3302ab0	procdefn	0	164	212
+	7	 0x3806450	pintcoll	0	212	249
+	8	 0x3803004	pintinst	0	249	265
+	9	 0x26a4024	cnstpi__	0	265	277
+	10	 0x3302b24	dprmlst_	0	277	293
+	11	 0x3302b34	proccoll	0	293	336
+	12	 0x3302b94	procinst	0	336	356
+	13	 0x3302bb4	proctprf	0	356	372
+	14	 0x3302bc4	dprmlst_	0	372	388
+	15	 0x26a4038	cnstpi__	0	388	400
+	16	 0x3302bd4	proccoll	0	400	443
+	17	 0x3302c34	procinst	0	443	463
+	18	 0x3302c54	proctprf	0	463	479
+	19	 0x3302c64	dprmlst_	0	479	495
+	20	 0x3302c74	proccoll	0	495	538
+	21	 0x3302cd4	procinst	0	538	558
+	22	 0x3302cf4	proctprf	0	558	574
+	23	 0x3302d04	dprmlst_	0	574	590
+	24	 0x26a404c	cnstpi__	0	590	602
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> N (default = 7)
+      >
+      (
+      )
+      In definition "foo", we have: {
+        N = pint<> N (default = 7)
+      }
+
+  Instances:
+    bar = foo<7> bar (instantiated)
+    blah = foo<7> blah (instantiated)
+    ick = foo<6> ick (instantiated)
+    poo = foo<7> poo (instantiated)
+}
+

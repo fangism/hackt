@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.2 2005/01/31 04:16:33 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.2.4.1 2005/02/02 17:35:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -93,7 +93,19 @@ instance_collection_base::~instance_collection_base() {
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
-	get_type_ref()->dump(o) << " " << key;
+#if 0
+	get_type_ref()->dump(o);
+#else
+	// but we need a version for unrolled and resolved parameters.  
+	if (is_partially_unrolled()) {
+		type_dump(o);		// pure virtual
+	} else {
+		// this dump is appropriate for pre-unrolled, unresolved dumping
+		// get_type_ref just grabs the type of the first statement
+		get_type_ref()->dump(o);
+	}
+#endif
+	o << " " << key;
 
 	if (dimensions) {
 		INVARIANT(!index_collection.empty());

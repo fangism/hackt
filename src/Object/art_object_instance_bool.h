@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.8.1 2005/02/02 17:35:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -146,6 +146,9 @@ virtual	~bool_instance_collection();
 
 virtual	ostream&
 	what(ostream&) const = 0;
+
+	ostream&
+	type_dump(ostream&) const;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

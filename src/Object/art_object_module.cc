@@ -1,20 +1,38 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.14 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_module.cc,v 1.14.8.1 2005/02/02 17:35:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
 #define	__ART_OBJECT_MODULE_CC__
 
+// code debugging switches
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include "art_object_module.h"
 #include "art_object_namespace.h"
+#include "art_object_unroll_context.h"
 #include "persistent_object_manager.tcc"
 #include "art_object_type_hash.h"
 #include "stacktrace.h"
+
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
 
 namespace ART {
 namespace entity {
@@ -49,7 +67,7 @@ module::module(const string& s) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::~module() {
-	STACKTRACE("~module()");
+	STACKTRACE_DTOR("~module()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -94,8 +112,12 @@ module::dump(ostream& o) const {
  */
 void
 module::unroll_module(void) {
+	STACKTRACE("module::unroll_module()");
 	if (!unrolled) {
-		sequential_scope::unroll();
+		STACKTRACE("not already unrolled, unrolling...");
+		// start with blank context
+		unroll_context c;
+		sequential_scope::unroll(c);
 		unrolled = true;
 	}
 }
@@ -114,7 +136,7 @@ module::construct_empty(const int i) {
 void
 module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
-	STACKTRACE("module::collect_transient_info()");
+	STACKTRACE_PERSISTENT("module::collect_transient_info()");
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
@@ -125,7 +147,7 @@ if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::write_object(const persistent_object_manager& m) const {
-	STACKTRACE("module::write_object()");
+	STACKTRACE_PERSISTENT("module::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -140,7 +162,7 @@ module::write_object(const persistent_object_manager& m) const {
 void
 module::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
-	STACKTRACE("module::load_object()");
+	STACKTRACE_PERSISTENT("module::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
@@ -156,6 +178,13 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+// clean up macros used in this module
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_DESTRUCTORS
+#undef	STACKTRACE_DTOR
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_PERSISTENT
 
 #endif	// __ART_OBJECT_MODULE_CC__
 

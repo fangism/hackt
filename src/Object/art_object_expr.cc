@@ -1,15 +1,18 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.1 2005/01/31 04:16:31 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.1.4.1 2005/02/02 17:35:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
+// flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
+#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 
 #include <exception>
 #include <iostream>
@@ -47,6 +50,19 @@
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
+
+// these conditional definitions must appear after inclusion of "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
 
 //=============================================================================
 namespace util {
@@ -184,7 +200,7 @@ const_param::~const_param() { }
 // class pbool_expr method definitions
 
 pbool_expr::~pbool_expr() {
-	STACKTRACE("~pbool_expr()");
+	STACKTRACE_DTOR("~pbool_expr()");
 }
 
 bool
@@ -242,7 +258,7 @@ pbool_expr::make_param_expression_assignment_private(
 // class pint_expr method definitions
 
 pint_expr::~pint_expr() {
-	STACKTRACE("~pint_expr()");
+	STACKTRACE_DTOR("~pint_expr()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,7 +360,7 @@ const_param_expr_list::const_param_expr_list() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() {
-	STACKTRACE("~const_param_expr_list()");
+	STACKTRACE_DTOR("~const_param_expr_list()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -562,7 +578,7 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 void
 const_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
-	STACKTRACE("const_param_expr_list::load_object()");
+	STACKTRACE_PERSISTENT("const_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;
@@ -593,7 +609,7 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() {
-	STACKTRACE("~dynamic_param_expr_list()");
+	STACKTRACE_DTOR("~dynamic_param_expr_list()");
 #if 0
 	cerr << "list contains " << size() << " pointers." << endl;
 	dump(cerr) << endl;
@@ -880,7 +896,7 @@ dynamic_param_expr_list::write_object(
 void
 dynamic_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
-	STACKTRACE("dyn_param_expr_list::load_object()");
+	STACKTRACE_PERSISTENT("dyn_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;
@@ -1770,6 +1786,7 @@ pint_instance_reference::resolve_dimensions(void) const {
 count_ptr<const_param>
 pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
+	STACKTRACE("pint_inst_ref::unroll_resolve()");
 	if (pint_inst_ref->dimensions) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -2062,7 +2079,7 @@ pint_const::pint_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const::~pint_const() {
-	STACKTRACE("~pint_const()");
+	STACKTRACE_DTOR("~pint_const()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5422,6 +5439,17 @@ if (!m.flag_visit(this)) {
 }	// end namepace ART
 
 STATIC_TRACE_END("object-expr")
+
+// responsibly undefining macros used
+// IDEA: for each header, write an undef header file...
+
+#undef	DEBUG_LIST_VECTOR_POOL
+#undef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_PERSISTENT
+#undef	STACKTRACE_DESTRUCTORS
+#undef	STACKTRACE_DTOR
 
 #endif	// __ART_OBJECT_EXPR_CC__
 

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.10 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_assign.h,v 1.10.8.1 2005/02/02 17:35:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -19,6 +19,7 @@ USING_LIST
 USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
+class unroll_context;
 
 //=============================================================================
 /**
@@ -129,7 +130,7 @@ public:
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	/** helper class for printing dump of list */
@@ -195,7 +196,7 @@ public:
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	/** helper class for printing dump of list */

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.14 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.14.8.1 2005/02/02 17:35:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -238,7 +238,7 @@ pbool_expression_assignment::append_param_instance_reference(
 	Assigns src value to each dest, after unpacking instances.  
  */
 void
-pbool_expression_assignment::unroll(void) const {
+pbool_expression_assignment::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pbool_instance_reference::assigner the_assigner(*src);
@@ -424,7 +424,7 @@ pint_expression_assignment::append_param_instance_reference(
 	Assigns src value to each dest, after unpacking instances.  
  */
 void
-pint_expression_assignment::unroll(void) const {
+pint_expression_assignment::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pint_instance_reference::assigner the_assigner(*src);

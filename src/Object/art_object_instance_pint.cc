@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.1 2005/01/29 21:38:09 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.1.4.1 2005/02/02 17:35:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -146,6 +146,12 @@ pint_instance_collection::~pint_instance_collection() {
 ostream&
 pint_instance_collection::what(ostream& o) const {
 	return o << "pint-inst<" << dimensions << ">";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_instance_collection::type_dump(ostream& o) const {
+	return o << "pint^" << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15 2005/01/13 05:28:28 fang Exp $
+	$Id: art_object_connect.h,v 1.15.22.1 2005/02/02 17:35:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -18,6 +18,7 @@ namespace entity {
 USING_LIST
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
+class unroll_context;
 
 //=============================================================================
 /**
@@ -66,7 +67,7 @@ public:
 		const count_ptr<const instance_reference_base>& i);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	PERSISTENT_METHODS
@@ -104,7 +105,7 @@ public:
 		const count_ptr<const instance_reference_base>& i);
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	PERSISTENT_METHODS

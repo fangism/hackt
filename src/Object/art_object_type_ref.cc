@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23 2005/01/28 19:58:45 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.8.1 2005/02/02 17:35:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -253,7 +253,7 @@ fundamental_type_reference::must_be_equivalent(
 		const fundamental_type_reference& t) const {
 	const never_ptr<const definition_base> left(get_base_def());
 	const never_ptr<const definition_base> right(t.get_base_def());
-	// may need to resolve alias? TO DO
+	// TO DO: may need to resolve alias? unrolling context?
 	if (left != right) {
 #if 0
 		left->dump(cerr << "left: ") << endl;
@@ -413,27 +413,29 @@ data_type_reference::get_base_datatype_def(void) const {
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
+	\todo resolve data-type aliases.  
 	\return a copy of itself, but with type parameters resolved, 
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const data_type_reference>
 data_type_reference::unroll_resolve(unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
-	typedef	count_ptr<const data_type_reference>	return_type;
-	// eventually pass a context argument
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
 	if (template_params) {
 		excl_ptr<const param_expr_list>
 			actuals = template_params->unroll_resolve(c)
 				.as_a_xfer<const param_expr_list>();
 		if (actuals) {
-			return return_type(new data_type_reference(
-				base_type_def, actuals));
+			// TODO: resolve aliases!
+			return return_type(
+				new this_type(base_type_def, actuals));
 		} else {
 			cerr << "ERROR resolving template arguments." << endl;
 			return return_type(NULL);
 		}
 	} else {
-		return return_type(new data_type_reference(base_type_def));
+		return return_type(new this_type(base_type_def));
 	}
 }
 
@@ -720,6 +722,36 @@ process_type_reference::what(ostream& o) const {
 never_ptr<const definition_base>
 process_type_reference::get_base_def(void) const {
 	return base_proc_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	\todo resolve data-type aliases.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const process_type_reference>
+process_type_reference::unroll_resolve(unroll_context& c) const {
+	STACKTRACE("data_type_reference::unroll_resolve()");
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
+	if (template_params) {
+		excl_ptr<const param_expr_list>
+			actuals = template_params->unroll_resolve(c)
+				.as_a_xfer<const param_expr_list>();
+		if (actuals) {
+			// TODO: resolve aliases!
+			return return_type(
+				new this_type(base_proc_def, actuals));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		return return_type(new this_type(base_proc_def));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

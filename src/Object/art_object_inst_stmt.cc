@@ -1,16 +1,18 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12 2005/01/28 19:58:42 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.8.1 2005/02/02 17:35:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
 #define	__ART_OBJECT_INST_STMT_CC__
 
-// for debugging only, before inclusion of header file
+// for debugging only, before inclusion of any header files
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#define	ENABLE_STACKTRACE				0
+#define	ENABLE_STACKTRACE				1
+#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include <algorithm>
@@ -30,6 +32,19 @@
 #include "persistent_object_manager.tcc"
 #include "stacktrace.h"
 #include "static_trace.h"
+
+// conditional defines, after inclusion of "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
 
 //=============================================================================
 // local specializations
@@ -83,14 +98,14 @@ instantiation_statement::instantiation_statement(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 1
 instantiation_statement::~instantiation_statement() {
-	STACKTRACE("~instantiation_statement()");
+	STACKTRACE_DTOR("~instantiation_statement()");
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_statement::dump(ostream& o) const {
-	STACKTRACE("instantation_statement::dump()");
+//	STACKTRACE("instantation_statement::dump()");
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
@@ -139,7 +154,7 @@ instantiation_statement::dimensions(void) const {
 	Temporary, should be pure virtual in the end.
  */
 void
-instantiation_statement::unroll(void) const {
+instantiation_statement::unroll(unroll_context& c) const {
 	cerr << "instantiation_statement::unroll(): Fang, finish me!" << endl;
 }
 
@@ -147,7 +162,8 @@ instantiation_statement::unroll(void) const {
 void
 instantiation_statement::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE("instantiation_statement::collect_transient_info_base()");
+	STACKTRACE_PERSISTENT(
+		"instantiation_statement::collect_transient_info_base()");
 	if (indices)
 		indices->collect_transient_info(m);
 }
@@ -262,7 +278,7 @@ pbool_instantiation_statement::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instantiation_statement::unroll(void) const {
+pbool_instantiation_statement::unroll(unroll_context& c) const {
 	NEVER_NULL(inst_base);
 	inst_base->instantiate_indices(indices);
 }
@@ -345,7 +361,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instantiation_statement)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instantiation_statement::dump(ostream& o) const {
-	STACKTRACE("pint_instantation_statement::dump()");
+//	STACKTRACE("pint_instantation_statement::dump()");
 	return instantiation_statement::dump(o);
 }
 
@@ -383,7 +399,7 @@ pint_instantiation_statement::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_instantiation_statement::unroll(void) const {
+pint_instantiation_statement::unroll(unroll_context& c) const {
 	NEVER_NULL(inst_base);
 	inst_base->instantiate_indices(indices);
 }
@@ -392,7 +408,7 @@ pint_instantiation_statement::unroll(void) const {
 void
 pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
-STACKTRACE("pint_instantiation_statement::collect_transient_info()");
+STACKTRACE_PERSISTENT("pint_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
@@ -502,6 +518,29 @@ process_instantiation_statement::get_inst_base(void) const {
 count_ptr<const fundamental_type_reference>
 process_instantiation_statement::get_type_ref(void) const {
 	return type;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_instantiation_statement::unroll(unroll_context& c) const {
+	STACKTRACE("process_instantiation_statement::unroll()");
+	NEVER_NULL(inst_base);
+	// we need to type-check against template parameters!
+	// perhaps this should be made virtual...
+	const count_ptr<const process_type_reference>
+		final_type_ref(type->unroll_resolve(c));
+	if (!final_type_ref) {
+		cerr << "ERROR resolving proces type reference during unroll."
+			<< endl;
+		return;
+	}
+	const bool err = inst_base->commit_type(final_type_ref);
+	if (err) {
+		cerr << "ERROR during process_instantiation_statement::unroll()"
+			<< endl;
+		THROW_EXIT;
+	}
+	inst_base->instantiate_indices(indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -708,7 +747,7 @@ data_instantiation_statement::data_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
-	STACKTRACE("~data_instantiation_statement()");
+	STACKTRACE_DTOR("~data_instantiation_statement()");
 #if 0
 	cerr << "data-type-ref has " << type.refs() << " references." << endl;
 #endif
@@ -757,15 +796,18 @@ data_instantiation_statement::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: add context argument.
+	If this is the first instantiation statement, then
+	this will determine the parameters.  
+	Otherwise, this will check the statement's resolved
+	parameters against the previously determined parameters.  
+	\param c the context information for expression resolution.  
  */
 void
-data_instantiation_statement::unroll(void) const {
+data_instantiation_statement::unroll(unroll_context& c) const {
 	STACKTRACE("data_instantiation_statement::unroll()");
 	NEVER_NULL(inst_base);
 	// we need to type-check against template parameters!
 	// perhaps this should be made virtual...
-	unroll_context c;
 	const count_ptr<const data_type_reference>
 		final_type_ref(type->unroll_resolve(c));
 	if (!final_type_ref) {
@@ -773,27 +815,12 @@ data_instantiation_statement::unroll(void) const {
 			<< endl;
 		return;
 	}
-#if 0
-	if (inst_base->is_partially_unrolled()) {
-		// then we must check type-consistency
-		// need a method for obtaining the parameter list
-		cerr << "Someone was here first." << endl;
-		// use existing type check
-	} else {
-		// is first instance, which will determine the type
-		// set the actual parameters
-		const bool err = inst_base->commit_type(final_type_ref);
-		INVARIANT(!err);
-		// nothing can possibly go wrong with the first type
-	}
-#else
 	const bool err = inst_base->commit_type(final_type_ref);
 	if (err) {
 		cerr << "ERROR during data_instantiation_statement::unroll()"
 			<< endl;
 		THROW_EXIT;
 	}
-#endif
 	inst_base->instantiate_indices(indices);
 }
 
@@ -848,6 +875,15 @@ if (!m.flag_visit(this)) {
 }	// end namespace ART
 
 STATIC_TRACE_END("inst_stmt")
+
+// responsibly, anally, undefining macros local to this module
+#undef	DEBUG_LIST_VECTOR_POOL
+#undef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_DESTRUCTORS
+#undef	STACKTRACE_DTOR
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_PERSISTENT
 
 #endif	// __ART_OBJECT_INST_STMT_CC__
 

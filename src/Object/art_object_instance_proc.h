@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.1 2005/01/31 04:16:35 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.1.4.1 2005/02/02 17:35:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -35,6 +35,7 @@ using MULTIKEY_MAP_NAMESPACE::multikey_map;
 	An actual instantiated instance of an enum.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
+	Needs to be pool allocated for efficient unique construction. 
  */
 struct proc_instance {
 	// need back-reference(s) to owner(s) or hierarchical keys?
@@ -51,6 +52,7 @@ public:
 	Only after references are connected, are the actual enum instances
 	created.  
 	Contains attribute fields.  
+	Needs to become persistent because of alias pointers!
  */
 class proc_instance_alias {
 public:
@@ -62,6 +64,10 @@ private:
 	// validity fields?
 	bool					instantiated;
 public:
+
+	proc_instance_alias();
+
+	~proc_instance_alias();
 
 	bool
 	valid(void) const { return instantiated; }
@@ -142,8 +148,10 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
+#if 0
 	bool
 	is_partially_unrolled(void) const;
+#endif
 
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
@@ -168,7 +176,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_NO_ALLOC
 };	// end class proc_array
 
 //-----------------------------------------------------------------------------
@@ -192,8 +200,10 @@ public:
 	ostream&
 	what(ostream&) const;
 
+#if 0
 	bool
 	is_partially_unrolled(void) const;
+#endif
 
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
@@ -213,7 +223,7 @@ public:
 
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_NO_ALLOC
 };	// end class proc_array (specialized)
 
 //=============================================================================

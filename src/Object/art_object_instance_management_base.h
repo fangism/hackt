@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.6 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.6.8.1 2005/02/02 17:35:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -27,6 +27,7 @@ using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::sticky_ptr;
 using parser::context;
+class unroll_context;
 
 //=============================================================================
 /**
@@ -62,7 +63,7 @@ virtual ostream&
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
 virtual void
-	unroll(void) const = 0;
+	unroll(unroll_context& ) const = 0;
 };	// end class instance_management_base
 
 //=============================================================================
@@ -134,7 +135,8 @@ public:
 
 // need not be virtual?
 // may need context later...
-	void unroll(void) const;
+	void
+	unroll(unroll_context& ) const;
 
 };      // end class sequential_scope
 

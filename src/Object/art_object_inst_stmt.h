@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.8.1 2005/02/02 17:35:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -85,7 +85,7 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	PERSISTENT_METHODS
@@ -137,7 +137,7 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
 	PERSISTENT_METHODS
@@ -186,6 +186,9 @@ public:
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+
+	void
+	unroll(unroll_context& ) const;
 
 public:
 	PERSISTENT_METHODS
@@ -285,7 +288,7 @@ public:
 #if 1
 	// almost ready to unveil...
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 #endif
 
 public:

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.9 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.8.1 2005/02/02 17:35:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -55,6 +55,13 @@ struct_instance_collection::struct_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct_instance_collection::~struct_instance_collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+struct_instance_collection::type_dump(ostream& o) const {
+	cerr << "FANG!  write struct_inst_coll::type_dump()!" << endl;
+	return o << "struct " << "???^" << dimensions;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
