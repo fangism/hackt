@@ -143,8 +143,24 @@ extern const char* const yyrule[];
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
  */
-	ART::parser::node* n;
+	ART::parser::node*	n;
+/***
+	It is always safe to refer to the node* n member of the union
+	as long as all of the below members of the union are 
+	somehow derived from node.  
+***/
 // let the various constructors perform optional dynamic type-cast checks
+// experimenting with union
+	terminal*		_terminal;
+	token_keyword*		_token_keyword;
+	token_string*		_token_string;
+	token_char*		_token_char;
+	token_int*		_token_int;
+	token_bool*		_token_bool;
+	token_float*		_token_float;
+	token_identifier*	_token_identifier;
+	token_quoted_string*	_token_quoted_string;
+	token_type*		_token_type;
 }
 
 /*
@@ -168,14 +184,15 @@ extern const char* const yyrule[];
 		first.  Finally, to include a literal - place it last.
 
 
-%token	<n>	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
-%token	<n>	LT GT				// angle brackets
-%token	<n>	SEMICOLON COMMA COLON MEMBER 
-%token	<n>	ASSIGN
-%token	<n>	PLUS MINUS STAR DIVIDE PERCENT
-%token	<n>	BANG QUERY
-%token	<n>	TILDE AND PIPE XOR
+%token	<_token_char>	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
+%token	<_token_char>	LT GT				// angle brackets
+%token	<_token_char>	SEMICOLON COMMA COLON MEMBER 
+%token	<_token_char>	ASSIGN
+%token	<_token_char>	PLUS MINUS STAR DIVIDE PERCENT
+%token	<_token_char>	BANG QUERY
+%token	<_token_char>	TILDE AND PIPE XOR
 */
+/* change these to _token_char */
 %type	<n>	'{' '}' '[' ']' '(' ')' '<' '>'
 %type	<n>	',' '.' ';' ':'
 %type	<n>	'=' '+' '-' '*' '/' '%'
@@ -186,35 +203,42 @@ extern const char* const yyrule[];
 	2 or more characters
 */
 
+/* _token_identifier */
 %token	<n>	ID
-%token	<n>	FLOAT
-%token	<n>	INT
+/* _token_float */
+%token	<n>		FLOAT
+/* _token_int */
+%token	<n>		INT
+/* _token_quoted_string */
 %token	<n>	STRING
-/* %token	<n>	END_OF_FILE		-- don't use yet */
 
-%token	<n>	LE GE EQUAL NOTEQUAL
-%token	<n>	THICKBAR SCOPE RANGE
-%token	<n>	IMPLIES RARROW
-%token	<n>	BEGINLOOP BEGINPROB ENDPROB
-%token	<n>	DEFINEOP
-%token	<n>	LOGICAL_AND LOGICAL_OR
-%token	<n>	INSERT EXTRACT
-%token	<n>	PLUSPLUS MINUSMINUS
+/* _token_string */
+%token	<n>		LE GE EQUAL NOTEQUAL
+%token	<n>		THICKBAR SCOPE RANGE
+%token	<n>		IMPLIES RARROW
+%token	<n>		BEGINLOOP BEGINPROB ENDPROB
+%token	<n>		DEFINEOP
+%token	<n>		LOGICAL_AND LOGICAL_OR
+%token	<n>		INSERT EXTRACT
+%token	<n>		PLUSPLUS MINUSMINUS
 
-/* keywords */
+/* _token_keyword */
 %token	<n>	NAMESPACE
 %token	<n>	OPEN AS
 %token	<n>	CHP_LANG HSE_LANG PRS_LANG
 %token	<n>	SKIP ELSE LOG
 %token	<n>	DEFINE DEFPROC DEFCHAN DEFTYPE
-%token	<n>	INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
 %token	<n>	SET GET SEND RECV
 %token	<n>	CHANNEL
 %token	<n>	BOOL_TRUE BOOL_FALSE
 
+/* _token_type */
+%token	<n>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
+
 /* non-terminals */
 %type	<n>	module top_root body body_item basic_item namespace_management
-%type	<n>	definition def_or_proc defproc def_type_id
+%type	<n>	definition defproc def_type_id
+%type	<n>	def_or_proc		/* _token_keyword*/
 %type	<n>	declaration declare_proc_proto
 %type	<n>	declare_type_proto declare_chan_proto
 %type	<n>	optional_template_formal_decl_list_in_angles
@@ -252,10 +276,13 @@ extern const char* const yyrule[];
 %type	<n>	hse_matched_det_guarded_command_list
 %type	<n>	hse_unmatched_det_guarded_command_list
 %type	<n>	hse_assignment
-%type	<n>	prs_body single_prs prs_arrow dir prs_expr
+%type	<n>	prs_body single_prs prs_expr
+%type	<n>	prs_arrow	/* _token_string */
+%type	<n>	dir		/* _token_char */
 %type	<n>	paren_expr expr
 /* %type	<n>	primary_expr */
-%type	<n>	literal id_expr qualified_id absolute_id relative_id
+%type	<n>	literal	/* terminal */
+%type	<n>	id_expr qualified_id absolute_id relative_id
 %type	<n>	member_index_expr_list member_index_expr unary_expr
 %type	<n>	multiplicative_expr additive_expr shift_expr
 %type	<n>	relational_equality_expr and_expr
@@ -1006,11 +1033,11 @@ primary_expr
 
 literal
 	/* all default actions, all are expr subclasses */
-	: INT
-	| FLOAT
-	| STRING
-	| BOOL_TRUE
-	| BOOL_FALSE
+	: INT { $$ = $1; }
+	| FLOAT { $$ = $1; }
+	| STRING { $$ = $1; }
+	| BOOL_TRUE { $$ = $1; }
+	| BOOL_FALSE { $$ = $1; }
 	;
 
 id_expr
@@ -1059,7 +1086,7 @@ member_index_expr
 
 unary_expr
 	: member_index_expr
-	| literal
+	| literal { $$ = $1; }
 	| paren_expr
 	/* no prefix operations, moved to assignment */
 	| '-' unary_expr
@@ -1288,27 +1315,27 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
 	// we've kept track of the position of every token
-	cerr << "yy-state-stack:";
-	for (s=yyss; s <= yyssp; s++)
-		cerr << ' ' << *s;
-	cerr << endl;
-
-	cerr << "yy-value-stack:" << endl;
-	// or just show the top N items on stack...
-	for (v=yyvs; v <= yyvsp; v++) {
+	cerr << "yy-stacks:" << endl << "state\tvalue" << endl;
+	for (s=yyss, v=yyvs; s <= yyssp && v <= yyvsp; s++, v++) {
+		// how do we know which union member?
+		// need to look at the state stack, and the transition
+		// from the previous state
 		if (v && v->n) {
 			v->n->what(cerr << '\t') << " " 
-				<< v->n->where() << endl;
+				<< v->n->where();
 		} else {
-			cerr << "\t(null) " << endl;
+			cerr << "\t(null) ";
 		}
+		cerr << endl << *s;
 	}
+	// sanity check
+	assert(s > yyssp && v > yyvsp);
 	assert(yylval.n);	// NULL check
-	cerr << "received: ";
+//	cerr << "received: ";
 	if (at_eof()) {
-		cerr << yyname[0];	// "end-of-file"
+		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
-		(yylval.n->what(cerr) << " ") << yylval.n->where();
+		(yylval.n->what(cerr << "\t") << " ") << yylval.n->where();
 	}
 	cerr << endl;
 

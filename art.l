@@ -39,6 +39,9 @@
 		is on the 
 
 	To do: 
+		After static type are implemented in unions, 
+		use the appropriate yylval union member.  
+
 		Implement the #line directive to interpret the output
 		of flattened, preprocessed files.  
 
@@ -493,6 +496,13 @@ int yywrap(void) {
 	// or read another input file
 }
 
+/**
+	Public function that indicates whether or not the lexer is
+	in the EOF (end-of-file) state.  
+	This must be defined in this file because it makes reference
+	to a statically linked variable, (which makes it invisible 
+	to the outside world).  
+ */
 int at_eof(void) {
 	assert(yy_current_buffer);
 	return yy_current_buffer->yy_n_chars == 0;

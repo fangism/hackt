@@ -138,7 +138,7 @@ data_type_base::data_type_base(node* t, node* l, node* w, node* r) :
 
 CONSTRUCTOR_INLINE
 data_type_base::data_type_base(node* t) : type_base(),
-		type(IS_A(token_keyword*, t)),
+		type(IS_A(token_type*, t)),
 		la(NULL), width(NULL), ra(NULL) {
 	assert(type);
 }

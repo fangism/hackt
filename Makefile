@@ -7,8 +7,10 @@ SHELL = /bin/sh
 
 AWK = awk
 CAT = cat
+CPP = cpp
 ECHO = echo
 GREP = grep
+SED = sed
 RM = rm -f
 MV = mv -f
 TAR = tar -czvf
@@ -57,7 +59,7 @@ all: .depend $(TARGETS)
 
 ART_OBJ = y.tab.o art.yy.o art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \
-	art_symbol_table.o art_main.o art_utils.o art_object.o
+	art_symbol_table.o art_main.o art_utils.o art_object.o y.union.o
 ART_DEPS = $(ART_OBJ:.o=.d)
 
 artc: $(ART_OBJ)
@@ -84,9 +86,16 @@ art.yy.cc: art.l y.tab.h
 	$(LEX) $(LFLAGS) art.l > $@
 
 # y.tab.cc will depend on y.output.h
-y.tab.h y.tab.cc y.output.h: art.yy
+y.tab.h y.tab.cc y.output.h y.union.cc: art.yy
 	-$(YACC) $(YFLAGS) $?; \
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h; \
+	$(CPP) -P y.tab.h > y.union; \
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | \
+		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" > $?.types; \
+	$(AWK) -f yacc-union-type.awk -v yaccfile=$?.types \
+		-v include="art_parser.h" \
+		-v namespace=ART::parser \
+		-v type=ART::parser::node y.output > y.union.cc; \
 	$(MV) y.tab.c y.tab.cc
 
 # documentation targets
@@ -101,6 +110,8 @@ cleanparser:
 	-$(RM) y.tab.*
 	-$(RM) y.output
 	-$(RM) y.output.h
+	-$(RM) y.union
+	-$(RM) y.union.cc
 
 cleandepend:
 	-$(RM) *.d
@@ -137,7 +148,7 @@ commit: clobberdepend
 
 # header file dependencies generated with gcc -MM, saved to .depend
 
-# gmake needs to include dependencies explcitly, 
+# gmake needs to include dependencies explicitly, 
 # whereas BSD make doesn't: it's implicit
 # but BSD make dies when it can't find it :(
 # hence the self-modifying Makefile

@@ -7,6 +7,8 @@ backup
 y.tab.*
 y.output
 y.output.h
+y.union
+y.union.cc
 *.tar.gz
 artc
 
