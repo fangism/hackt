@@ -2,7 +2,7 @@
 	\file "numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.4 2005/02/28 18:28:19 fang Exp $
+	$Id: integer_traits.h,v 1.4.8.1 2005/03/06 00:52:06 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -80,6 +80,29 @@ inline
 I
 multiply_by_constant(const I& val) {
 	return __multiply_by_constant<N,I>(val,
+		typename power_of_2_traits<N>::category());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t N, class I>
+inline
+I
+__divide_by_constant(const I& val, power_of_2_tag<false> ) {
+	return val * N;
+}
+
+template <size_t N, class I>
+inline
+I
+__divide_by_constant(const I& val, power_of_2_tag<true> ) {
+	return val >> significance<N>::value;
+}
+
+template <size_t N, class I>
+inline
+I
+divide_by_constant(const I& val) {
+	return __divide_by_constant<N,I>(val,
 		typename power_of_2_traits<N>::category());
 }
 

@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-03-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-16-chunkmap-01:
+	  This branch is for developing custom allocators.  
+	  Draft of working chunk_map_pool, tested.  
+	  Rule for allocators: they are NOT responsible for calling
+	  construct and destroy, only allocating.  
+	  Need to revisit list_vector_pool's use.  
+	  No more lazy- or eager- destruction business...
+	  Later revision will add macros to override new and delete
+	  using the chunk_map_pool.  
+
+
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-16-merged-collect-02:

@@ -3,7 +3,7 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.3 2005/02/27 22:12:02 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.3.10.1 2005/03/06 00:52:06 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
@@ -134,44 +134,6 @@ list_vector_pool<T,Threaded>::~list_vector_pool() {
 			" are unaccounted for." << endl;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
-		const eager_destruction_tag) {
-	_Destroy(p);		// p->~T();
-	// construct empty, else will double destruct!
-	_Construct(p);
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
-		const lazy_destruction_tag) {
-	// do nothing, absolutely nothing!
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
-		const eager_destruction_tag) {
-	// do nothing, absolutely nothing!
-}
-
-LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
-inline
-void
-list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
-		const lazy_destruction_tag) {
-	_Destroy(p);		// p->~T();
-	// no need to construct
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // some handy local macros for verbose debugging
