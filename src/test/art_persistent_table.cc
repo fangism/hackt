@@ -12,7 +12,9 @@ using ART::entity::module;
 
 int
 main(int argc, char* argv[]) {
+	// just print out the registered persistent type map's pairs
 	persistent_object_manager::dump_registered_type_map(cerr);
+
 /***
 	Problem: compiler might be so smart that it won't
 	call static initializations of the ART classes, unless

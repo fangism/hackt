@@ -277,6 +277,7 @@ EXTRA_DIST = \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk
 
+TESTS = art_persistent_table
 
 CLEANPARSER = \
 	parser/yacc_or_bison.h \
