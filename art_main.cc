@@ -1,7 +1,7 @@
 // "art_main.cc"
 
 #include <iostream>
-#include <unistd.h>			// for getopt()
+#include "getopt_portable.h"		// for getopt()
 
 #include "art_parser.h"
 #include "art_object.h"

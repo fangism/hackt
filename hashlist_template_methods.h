@@ -14,10 +14,12 @@ using std::string;
 // template specializations
 
 namespace
-#if	defined(__GNU_C__) && (__GNU_C__ <= 2)
+#if	defined(__GNUC__) && (__GNUC__ >= 3)
+	__gnu_cxx
+#elif	defined(__GNUC__) && (__GNUC__ <= 2)
 	std
 #else
-	__gnu_cxx
+DIE DIE DIE!!!
 #endif
 {
 /**

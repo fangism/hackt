@@ -9,13 +9,19 @@
 #include "list_of_ptr.h"	// includes <list>
 using std::list;
 
-// different location with gcc-3.3 on OS X
-#if	defined(__GNU_C__) && (__GNU_C__ <= 2)
-#include <hash_map>
-using std::hash_map;
-#else
+// different locations of hash_map, ARGH!
+#if	(defined(__GNUC__) && (__GNUC__ >= 3))
+		// works on Mac OS X gcc-3.3, linux gcc-3.2
 #include <ext/hash_map>
 using __gnu_cxx::hash_map;
+
+#elif	(defined(__GNUC__) && (__GNUC__ <= 2))
+		// works on FreeBSD gcc-2.95.3
+#include <hash_map>
+using std::hash_map;
+
+#else		// default -- give up
+DIE DIE DIE!!!
 #endif
 
 
