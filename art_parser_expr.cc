@@ -67,7 +67,7 @@ paren_expr::rightmost(void) const {
 // class id_expr method definitions
 
 CONSTRUCTOR_INLINE
-id_expr::id_expr(node* n) : expr(), id_expr_base(n), absolute(NULL) { }
+id_expr::id_expr(node* n) : id_expr_base(n), expr(), absolute(NULL) { }
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE

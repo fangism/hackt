@@ -373,7 +373,7 @@ typedef	node_list<token_identifier,scope>	id_expr_base;
 	chain as the namespace path prefix.  
 	e.g. for A::B::C, search for namespace match of A::B with member C.  
  */
-class id_expr : public expr, public id_expr_base {
+class id_expr : public id_expr_base, public expr {
 public:
 	typedef	id_expr_base::iterator		iterator;
 	typedef	id_expr_base::const_iterator	const_iterator;
