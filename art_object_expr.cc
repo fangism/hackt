@@ -3,6 +3,7 @@
 #include <stdio.h>			// for sprintf
 #include <stdlib.h>			// for ltoa
 #include <assert.h>
+#include <iostream>
 // do NOT use strstream because their name is inconsistent across libraries
 
 #include "art_parser.h"
