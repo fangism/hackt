@@ -1,0 +1,16 @@
+Makefile
+core.*
+*.core
+*.aux
+*.log
+*.bbl
+*.blg
+*.idx
+*.ind
+*.ilg
+*.out
+*.toc
+*.dvi
+*.ps
+*.pdf
+

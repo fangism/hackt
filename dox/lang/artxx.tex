@@ -1,0 +1,59 @@
+% "artxx.tex"
+
+\documentclass[12pt]{book}
+
+\usepackage{verbatim}
+\usepackage{makeidx}
+
+% COMPILE OPTIONS
+\newif\ifpdf
+\ifx\pdfoutput\undefined
+  \pdffalse
+\else
+  \pdfoutput=1
+  \pdftrue
+\fi
+
+
+\ifpdf
+\usepackage[
+	draft=false,
+	pdftitle={The ART++ Language}, 
+	pdfauthor={David Fang}, 
+	hyperfigures, 
+	hyperindex, 
+	bookmarks, 
+	colorlinks
+	]{hyperref}
+\fi
+
+\bibliographystyle{plain}
+
+\makeindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% end of preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{The ART++ Language}
+\author{David Fang}
+
+\ifpdf\pdfbookmark[0]{Title Page}{title}\fi
+\maketitle
+
+\ifpdf\pdfbookmark[0]{Table of Contents}{toc}\fi
+\tableofcontents
+
+\input chapters/intro
+
+\ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
+\bibliography{artxx}
+
+\clearpage
+\ifpdf\pdfbookmark[0]{Index}{index}\fi
+\printindex
+
+\end{document}
+
+
