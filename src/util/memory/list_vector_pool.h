@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.4.1.2.4 2005/01/25 20:34:05 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.4.1.2.5 2005/01/25 21:41:00 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -177,6 +177,16 @@ struct list_vector_pool_policy<T> {					\
 	typedef	lazy_destruction_tag	destruction_policy;		\
 };	// end struct list_vector_pool_policy
 
+/**
+	Helper method for distinguishing destruction policies.
+ */
+template <class T>
+inline
+typename list_vector_pool_policy<T>::destruction_policy
+list_vector_pool_destruction_policy(void) {
+	return typename list_vector_pool_policy<T>::destruction_policy();
+}
+
 //=============================================================================
 // specialization
 template <>
@@ -309,17 +319,21 @@ public:
 private:
 	// policy-based variations
 
-	pointer
-	__allocate(const eager_destruction_tag);
-
-	pointer
-	__allocate(const lazy_destruction_tag);
-
+	static
 	void
-	__deallocate(const eager_destruction_tag);
+	eager_destroy(const pointer, const eager_destruction_tag);
 
+	static
 	void
-	__deallocate(const lazy_destruction_tag);
+	eager_destroy(const pointer, const lazy_destruction_tag);
+
+	static
+	void
+	lazy_destroy(const pointer, const eager_destruction_tag);
+
+	static
+	void
+	lazy_destroy(const pointer, const lazy_destruction_tag);
 
 };	// end class list_vector_pool
 

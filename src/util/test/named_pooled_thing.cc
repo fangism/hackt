@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.1.4.1.2.3 2005/01/25 20:34:38 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.1.4.1.2.4 2005/01/25 21:41:03 fang Exp $
  */
 
 #define ENABLE_STACKTRACE				1
@@ -20,10 +20,18 @@
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.tcc"
 
+USING_STACKTRACE;
+
+namespace util {
+namespace memory {
+	// this changes the deletion policy to be lazy
+	// which is safe for terminal (non-recursive) objects
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(named_thing)
+}
+}
+
 
 STATIC_TRACE_BEGIN("named_pooled_thing.o")
-
-USING_STACKTRACE;
 
 // needed because stacktrace may be invoked (indirectly)
 // during static initialization

@@ -3,7 +3,7 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.1.2.1 2005/01/25 20:34:07 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.1.2.2 2005/01/25 21:41:00 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
@@ -51,6 +51,8 @@
 
 namespace util {
 namespace memory {
+using std::_Construct;
+using std::_Destroy;
 #include "using_ostream.h"
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 using util::what;
@@ -133,6 +135,75 @@ list_vector_pool<T,Threaded>::~list_vector_pool() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
+inline
+void
+list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
+		const eager_destruction_tag) {
+	_Destroy(p);		// p->~T();
+	// construct empty, else will double destruct!
+	_Construct(p);
+}
+
+LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
+inline
+void
+list_vector_pool<T,Threaded>::eager_destroy(const pointer p, 
+		const lazy_destruction_tag) {
+	// do nothing, absolutely nothing!
+}
+
+LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
+inline
+void
+list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
+		const eager_destruction_tag) {
+	// do nothing, absolutely nothing!
+}
+
+LIST_VECTOR_POOL_TEMPLATE_SIGNATURE
+inline
+void
+list_vector_pool<T,Threaded>::lazy_destroy(const pointer p, 
+		const lazy_destruction_tag) {
+	_Destroy(p);		// p->~T();
+	// no need to construct
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// some handy local macros for verbose debugging
+
+#if VERBOSE_ALLOC
+#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
+	#define	ALLOCATED_FREE_LIST_MESSAGE				\
+		cerr << "Allocated " << what<T>::name() << 		\
+			" from free-list @ " << ret << endl
+	#define	ALLOCATED_FROM_POOL_MESSAGE				\
+		cerr << "Allocated " << what<T>::name() <<		\
+			" from pool @ " << ret << endl;
+	#define NEW_CHUNK_MESSAGE					\
+		cerr << "New chunk of " << chunk_size << " " <<		\
+			what<T>::name() << " allocated." << endl;
+	#define	RETURN_TO_FREE_LIST_MESSAGE				\
+		cerr << "Returned " << what<T>::name() <<		\
+			" @ " << p << " to free-list." << endl;
+#else	// USING_WHAT
+	#define	ALLOCATED_FREE_LIST_MESSAGE				\
+		cerr << "Allocated from free-list @ " << ret << endl
+	#define	ALLOCATED_FROM_POOL_MESSAGE				\
+		cerr << "Allocated from pool @ " << ret << endl;
+	#define	NEW_CHUNK_MESSAGE					\
+		cerr << "New chunk of " << chunk_size << " allocated." << endl
+	#define	RETURN_TO_FREE_LIST_MESSAGE				\
+		cerr << "Returned @ " << p << " to free-list." << endl;
+#endif	// USING_WHAT
+#else	// VERBOSE_ALLOC
+	#define	ALLOCATED_FREE_LIST_MESSAGE
+	#define	ALLOCATED_FROM_POOL_MESSAGE
+	#define	NEW_CHUNK_MESSAGE
+	#define	RETURN_TO_FREE_LIST_MESSAGE
+#endif	// VERBOSE_ALLOC
+
 /**
 	Allocate one element only, without construction.
 	Here is where lazy deletion takes place:
@@ -152,15 +223,9 @@ list_vector_pool<T,Threaded>::allocate(void) {
 	if (!free_list.empty()) {
 		pointer ret = free_list.front();
 		INVARIANT_ASSERT(ret);
-		ret->~T();		// Lazy deletion!
+		lazy_destroy(ret, list_vector_pool_destruction_policy<T>());
 		free_list.pop();
-#if VERBOSE_ALLOC
-		cerr << "Allocated " <<
-#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name() << 
-#endif
-			" from free-list @ " << ret << endl;
-#endif
+		ALLOCATED_FREE_LIST_MESSAGE;
 		return ret;
 	} else {
 		// if not, use the chunk.
@@ -169,13 +234,7 @@ list_vector_pool<T,Threaded>::allocate(void) {
 		INVARIANT_ASSERT(chunk->capacity());
 		if (chunk->size() == chunk->capacity()) {
 			// rare case: allocate chunk
-#if VERBOSE_ALLOC
-			cerr << "New chunk of " << chunk_size << " " <<
-#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-				what<T>::name() <<
-#endif
-				" allocated." << endl;
-#endif
+			NEW_CHUNK_MESSAGE;
 			pool.push_back(chunk_type());
 			chunk = &pool.back();
 			chunk->reserve(chunk_size);
@@ -186,13 +245,7 @@ list_vector_pool<T,Threaded>::allocate(void) {
 		// T must be copy-constructible
 		pointer ret = &chunk->back();
 		INVARIANT_ASSERT(ret);
-#if VERBOSE_ALLOC
-		cerr << "Allocated " <<
-#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-			what<T>::name() <<
-#endif
-			" from pool @ " << ret << endl;
-#endif
+		ALLOCATED_FROM_POOL_MESSAGE;
 		peak++;
 		return ret;
 	}
@@ -224,13 +277,8 @@ list_vector_pool<T,Threaded>::deallocate(pointer p) {
 	LIST_VECTOR_POOL_STACKTRACE("list_vector_pool::deallocate()");
 	lock_type got_the_mutex(&the_mutex);
 	assert(p);
-#if VERBOSE_ALLOC
-	cerr << "Returned " <<
-#if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-		what<T>::name() <<
-#endif
-		" @ " << p << " to free-list." << endl;
-#endif
+	RETURN_TO_FREE_LIST_MESSAGE;
+	eager_destroy(p, list_vector_pool_destruction_policy<T>());
 	free_list.push(p);
 	// lock will expire at end-of-scope
 }
@@ -245,6 +293,11 @@ void
 list_vector_pool<T,Threaded>::deallocate(pointer p, size_type n) {
 }
 #endif
+
+#undef	ALLOCATED_FREE_LIST_MESSAGE
+#undef	ALLOCATED_FROM_POOL_MESSAGE
+#undef	NEW_CHUNK_MESSAGE
+#undef	RETURN_TO_FREE_LIST_MESSAGE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
