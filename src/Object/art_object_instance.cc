@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7.2.1.4.1 2005/02/26 04:56:41 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.2.1.4.2 2005/02/26 05:32:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -640,53 +640,10 @@ datatype_instance_collection::~datatype_instance_collection() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-ostream&
-datatype_instance_collection::dump(ostream& o) const {
-	parent_type::dump(o);
-	if (is_partially_unrolled()) {
-		if (dimensions) {
-			indent indenter(o);
-			o << auto_indent << "unrolled indices: {" << endl;
-			{
-				indent indenter(o);
-				dump_unrolled_instances(o);
-			}
-			o << auto_indent << "}";        // << endl;
-		} else {
-			// else nothing to say, just one scalar instance
-			dump_unrolled_instances(o << " (instantiated)");
-		}
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Creates a member reference to a datatype, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-datatype_instance_collection::member_inst_ref_ptr_type
-datatype_instance_collection::make_member_instance_reference(
-		const inst_ref_ptr_type& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return member_inst_ref_ptr_type(
-		new datatype_member_instance_reference(b,
-			never_ptr<const datatype_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
 }
 #endif
 

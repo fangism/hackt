@@ -30,6 +30,11 @@
 	  This branch is nearly mature,  next revision will be 
 	  massive cleanup before merging to parent.  
 
+	* -instance-13:
+	  Ahhhh... code is 7000 lines lighter after the removal
+	  of blatantly replicated code in the old instance_collection
+	  implementations.  This branch is ready to merge to parent.  
+
 
 2005-02-24	David Fang	<fangism@users.sourceforge.net>
 

@@ -2,14 +2,13 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.1.4.8 2005/02/26 04:56:40 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.9 2005/02/26 05:32:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
 #define	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
 
 #include "art_object_fwd.h"
-#include "art_object_classification_tags.h"
 #include "packed_array_fwd.h"
 #include "ring_node_fwd.h"
 
@@ -118,22 +117,12 @@ struct class_traits {
 // for classes without parameter (bool)
 struct null_parameter_type { };
 
-#if 0
-class bool_instance_alias_info;
-class int_instance_alias_info;
-class enum_instance_alias_info;
-class datastruct_instance_alias_info;
-class channel_instance_alias_info;
-class process_instance_alias_info;
-#else
 typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
 typedef	instance_alias_info<int_tag>		int_instance_alias_info;
 typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
 typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;
-#endif
-
 
 typedef ring_node_derived<bool_instance_alias_info>
 						bool_instance_alias_base;
@@ -143,11 +132,6 @@ typedef ring_node_derived<enum_instance_alias_info>
 						enum_instance_alias_base;
 typedef ring_node_derived<datastruct_instance_alias_info>
 						struct_instance_alias_base;
-
-#if 0
-class chan_instance_alias;	// temporary
-class proc_instance_alias;	// temporary
-#endif
 typedef ring_node_derived<channel_instance_alias_info>
 						channel_instance_alias_base;
 typedef ring_node_derived<process_instance_alias_info>

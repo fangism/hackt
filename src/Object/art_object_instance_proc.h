@@ -1,38 +1,20 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.4.2.2.2.1 2005/02/26 04:56:45 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.4.2.2.2.2 2005/02/26 05:32:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
 #define	__ART_OBJECT_INSTANCE_PROC_H__
 
 #include "art_object_instance.h"
-#include "memory/pointer_classes.h"
 #include "art_object_classification_details.h"
-
-#if USE_INSTANCE_COLLECTION_TEMPLATE
 #include "art_object_instance_collection.h"
 #include "art_object_instance_alias.h"
-#else
-#include "multikey_fwd.h"
-#include "multikey_qmap_fwd.h"
-#endif
 
 
 namespace ART {
 namespace entity {
-#if !USE_INSTANCE_COLLECTION_TEMPLATE
-USING_LIST
-using std::string;
-using namespace util::memory;
-using util::qmap;
-using util::multikey_map;
-#endif
-
-//=============================================================================
-// class process_instance_collection declared in "art_object_instance.h"
-
 //=============================================================================
 /**
 	An actual instantiated instance of an enum.
@@ -63,202 +45,14 @@ public:
 
 };	// end class proc_instance
 
-//-----------------------------------------------------------------------------
-#if !USE_INSTANCE_COLLECTION_TEMPLATE
-/**
-	An uninitialized reference to an enum instance.  
-	Only after references are connected, are the actual enum instances
-	created.  
-	Contains attribute fields.  
-	Needs to become persistent because of alias pointers!
- */
-class proc_instance_alias : public persistent {
-public:
-	typedef	never_ptr<const proc_instance_alias>	alias_ptr_type;
-private:
-	// consider alloc_ptr
-	count_ptr<proc_instance>			instance;
-	alias_ptr_type				alias;
-	// validity fields?
-	bool					instantiated;
-public:
-
-	proc_instance_alias();
-
-	~proc_instance_alias();
-
-	ostream&
-	what(ostream&) const;
-
-	bool
-	valid(void) const { return instantiated; }
-
-	void
-	instantiate(void) { INVARIANT(!instantiated); instantiated = true; }
-
-	const proc_instance_alias&
-	canonical(void) const {
-		alias_ptr_type ptr = alias;
-		while (ptr) {
-			ptr = ptr->alias;
-		}
-		return *ptr;
-	}
-
-	/// dereference, create
-	proc_instance&
-	operator * () const;
-
-	/**
-		Whether or not they refer to the same node.
-		Check for instantiated?
-	 */
-	bool
-	operator == (const proc_instance_alias& i) const {
-		return &canonical() == &i.canonical();
-	}
-
-	friend
-	ostream&
-	operator << (ostream&, const proc_instance_alias&);
-
-	// even though this is not persistent... yet
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-
-};	// end class proc_instance_alias
-
-ostream&
-operator << (ostream&, const proc_instance_alias&);
-
-//-----------------------------------------------------------------------------
-// class process_instance_collection defined in "art_object_instance.h"
-
-//-----------------------------------------------------------------------------
-#define	PROC_ARRAY_TEMPLATE_SIGNATURE		template <size_t D>
-
-PROC_ARRAY_TEMPLATE_SIGNATURE
-class proc_array : public process_instance_collection {
-private:
-	typedef	proc_array<D>				this_type;
-	typedef	process_instance_collection		parent_type;
-friend class process_instance_collection;
-public:
-	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-	typedef	proc_instance_alias			element_type;
-	typedef	multikey_map<D, pint_value_type, element_type, qmap>
-							collection_type;
-	typedef	typename collection_type::key_type	key_type;
-private:
-	typedef	typename util::multikey<D,pint_value_type>::generator_type
-							key_generator_type;
-private:
-	collection_type					collection;
-private:
-	proc_array();
-public:
-	proc_array(const scopespace& o, const string& n);
-	~proc_array();
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump_unrolled_instances(ostream& o) const;
-
-#if 0
-	bool
-	is_partially_unrolled(void) const;
-#endif
-
-	void
-	instantiate_indices(const index_collection_item_ptr_type& i);
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-	instance_ptr_type
-	lookup_instance(const multikey_index_type& l) const;
-
-	bool
-	lookup_instance_collection(list<instance_ptr_type>& l, 
-		const const_range_list& r) const;
-
-	bool
-	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
-		alias_collection_type&) const;
-
-	struct key_dumper {
-		ostream& os;
-
-		key_dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const typename collection_type::value_type& );
-	};	// end struct key_dumper
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-};	// end class proc_array
-
-//-----------------------------------------------------------------------------
-template <>
-class proc_array<0> : public process_instance_collection {
-private:
-	typedef	process_instance_collection		parent_type;
-friend class process_instance_collection;
-public:
-	typedef	parent_type::instance_ptr_type	instance_ptr_type;
-private:
-	proc_instance_alias			the_instance;
-
-private:
-	proc_array();
-
-public:
-	proc_array(const scopespace& o, const string& n);
-	~proc_array();
-
-	ostream&
-	what(ostream&) const;
-
-#if 0
-	bool
-	is_partially_unrolled(void) const;
-#endif
-
-	ostream&
-	dump_unrolled_instances(ostream& o) const;
-
-	void
-	instantiate_indices(const index_collection_item_ptr_type& i);
-
-	instance_ptr_type
-	lookup_instance(const multikey_index_type& l) const;
-
-	bool
-	lookup_instance_collection(list<instance_ptr_type>& l, 
-		const const_range_list& r) const;
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-	bool
-	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
-		alias_collection_type&) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-};	// end class proc_array (specialized)
-#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
-
 //=============================================================================
-#if USE_INSTANCE_COLLECTION_TEMPLATE
+// convenient typedefs
+
 typedef	instance_array<process_tag, 0>	process_scalar;
 typedef	instance_array<process_tag, 1>	process_array_1D;
 typedef	instance_array<process_tag, 2>	process_array_2D;
 typedef	instance_array<process_tag, 3>	process_array_3D;
 typedef	instance_array<process_tag, 4>	process_array_4D;
-#endif
 
 //=============================================================================
 }	// end namespace entity
