@@ -1,5 +1,8 @@
-// "deque_iterator_test.cc"
-// testing if we can save away iterators of a deque
+/**
+	\file "deque_iterator_test.cc"
+	Testing if we can save away iterators of a deque.
+	$Id: deque_iterator_test.cc,v 1.2 2004/11/02 07:52:20 fang Exp $
+ */
 
 #include <iostream>
 #include <string>

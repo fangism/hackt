@@ -1,6 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
+ 	$Id: art_object_module.cc,v 1.7 2004/11/02 07:51:50 fang Exp $
  */
 
 #include <iostream>

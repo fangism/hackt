@@ -3,6 +3,7 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
+	$Id: qmap.h,v 1.6 2004/11/02 07:52:18 fang Exp $
  */
 
 #ifndef	__QMAP_H__

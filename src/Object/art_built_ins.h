@@ -1,6 +1,7 @@
 /**
 	\file "art_built_ins.h"
 	Header for built-in features of the art language.  
+	$Id: art_built_ins.h,v 1.5 2004/11/02 07:51:43 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_H__

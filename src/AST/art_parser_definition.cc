@@ -2,6 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
+	$Id: art_parser_definition.cc,v 1.4 2004/11/02 07:51:37 fang Exp $
  */
 
 // rule-of-thumb for inline directives:

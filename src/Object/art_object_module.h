@@ -1,6 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
+	$Id: art_object_module.h,v 1.5 2004/11/02 07:51:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
+	$Id: art_parser_formal.h,v 1.3 2004/11/02 07:51:39 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__

@@ -1,6 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
+ 	$Id: art_object_expr.cc,v 1.16 2004/11/02 07:51:49 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa

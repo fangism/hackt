@@ -1,5 +1,7 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
+#
+#	$Id: configure.in,v 1.9 2004/11/02 07:51:26 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  

@@ -2,6 +2,7 @@
 	\file "count_ptr_fwd.h"
 	Reference counting pointer class, forward declarations only. 
 	See full decsriptions in "count_ptr.h".  
+	$Id: count_ptr_fwd.h,v 1.3 2004/11/02 07:52:13 fang Exp $
  */
 
 #ifndef	__COUNT_PTR_FWD_H__

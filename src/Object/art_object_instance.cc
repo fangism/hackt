@@ -2,6 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
+ 	$Id: art_object_instance.cc,v 1.18 2004/11/02 07:51:49 fang Exp $
  */
 
 #include <iostream>

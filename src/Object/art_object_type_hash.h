@@ -17,6 +17,8 @@
  *	virtual table for persistent objects whose vptr's are transient
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
+ *
+ *	$Id: art_object_type_hash.h,v 1.2 2004/11/02 07:51:50 fang Exp $
  */
 
 //=============================================================================

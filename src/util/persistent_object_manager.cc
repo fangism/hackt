@@ -1,6 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
+	$Id: persistent_object_manager.cc,v 1.7 2004/11/02 07:52:16 fang Exp $
  */
 
 #include <fstream>

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_token.h"
 	Token-specific parser classes for ART.  
+	$Id: art_parser_token.h,v 1.3 2004/11/02 07:51:41 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_H__

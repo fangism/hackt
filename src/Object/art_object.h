@@ -3,6 +3,7 @@
 	Includes all "art_object_*.h" headers.  
 	Including this without thinking may unnecessarily slow down
 	compilation.  
+	$Id: art_object.h,v 1.5 2004/11/02 07:51:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_H__

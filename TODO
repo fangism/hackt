@@ -1,5 +1,7 @@
 to do list:
 
+#	$Id: TODO,v 1.16 2004/11/02 07:51:26 fang Exp $
+
 this TODO list is way outdated... clean TODO list.
 
 REVISION TARGETS:
@@ -29,6 +31,9 @@ Current series: 0.1.3 -- main trunk of development line.
 		bearing in mind, they may be underspecified.  
 
 	Upgrade testing suite to include unrolling tests.  
+
+	Add cvs Id tags to all source files (done -- 11/01/04).  
+		Maybe non-essential files as well...
 	
 	Documentation: add documentation headers to beginning of
 		every source file, so doxygen will create file

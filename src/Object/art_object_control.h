@@ -2,6 +2,7 @@
 	\file "art_object_control.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
+	$Id: art_object_control.h,v 1.4 2004/11/02 07:51:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONTROL_H__

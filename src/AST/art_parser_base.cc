@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
+	$Id: art_parser_base.cc,v 1.3 2004/11/02 07:51:34 fang Exp $
  */
 
 // rule-of-thumb for inline directives:

@@ -1,6 +1,7 @@
 /**
 	\file "multikey_qmap_fwd.h"
 	Forward declarations for queryable multidimensional map.  
+	$Id: multikey_qmap_fwd.h,v 1.3 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_FWD_H__

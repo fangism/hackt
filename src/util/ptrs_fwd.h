@@ -1,6 +1,7 @@
 /**
 	\file "ptrs_fwd.h"
 	Forward declarations for non-counted pointer classes in "ptrs.h".
+	$Id: ptrs_fwd.h,v 1.3 2004/11/02 07:52:17 fang Exp $
  */
 
 #ifndef	__PTRS_FWD_H__

@@ -1,6 +1,7 @@
 /**
 	\file "discrete_interval_set_fwd.h"
 	Forward declarations for interval set class over integer-like values.
+	$Id: discrete_interval_set_fwd.h,v 1.3 2004/11/02 07:52:13 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004

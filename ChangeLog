@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2004-11-01	David Fang	<fangism@users.sourceforge.net>
+
+	* Insiginificant change.  Added CVS Id tags to all source files.   
+
+	* Standard public class member typedefs added to 
+	  hash_qmap and qmap data structures.  
+
+
 2004-10-25	David Fang	<fangism@users.sourceforge.net>
 
 	* Added auxiliary argument type to peristent object management.

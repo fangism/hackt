@@ -2,6 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
+	$Id: art_object_connect.h,v 1.9 2004/11/02 07:51:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__

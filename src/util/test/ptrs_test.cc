@@ -1,4 +1,8 @@
-// "test.cc"
+/**
+	\file "ptrs_test.cc"
+	Test for exclusive pointer classes.  
+	$Id: ptrs_test.cc,v 1.2 2004/11/02 07:52:26 fang Exp $
+ */
 
 #include <iostream>
 #include <vector>

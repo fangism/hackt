@@ -1,6 +1,7 @@
 /**
- * "art++-lex.ll"
- * will generate .cc (C++) file
+ *	\file "art++-lex.ll"
+ *	Will generate .cc (C++) file for the token-scanner.  
+ *	$Id: art++-lex.ll,v 1.5 2004/11/02 07:51:52 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************

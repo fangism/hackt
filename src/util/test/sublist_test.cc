@@ -1,5 +1,8 @@
-// "sublist_test.cc"
-// stand-alone
+/**
+	\file "sublist_test.cc"
+	Test for sublist structure.  
+	$Id: sublist_test.cc,v 1.2 2004/11/02 07:52:26 fang Exp $
+ */
 
 #include <iostream>
 #include "sublist.h"

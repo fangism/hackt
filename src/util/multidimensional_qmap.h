@@ -1,6 +1,7 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
+	$Id: multidimensional_qmap.h,v 1.6 2004/11/02 07:52:14 fang Exp $
  */
 // David Fang, Cornell University, 2004
 

@@ -2,6 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
+	$Id: multikey.h,v 1.8 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__

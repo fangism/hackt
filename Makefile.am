@@ -1,5 +1,8 @@
 # "Makefile.am"
+#
 # Process this file with "automake" to generate "Makefile.in".
+#
+#	$Id: Makefile.am,v 1.9 2004/11/02 07:51:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed

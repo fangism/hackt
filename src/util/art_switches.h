@@ -1,6 +1,7 @@
 /**
 	\file "art_switches.h"
 	Global variables for ART front-end.  
+	$Id: art_switches.h,v 1.4 2004/11/02 07:52:09 fang Exp $
  */
 
 #ifndef	__ART_SWITCHES_H__

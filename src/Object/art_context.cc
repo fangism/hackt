@@ -2,6 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
+ 	$Id: art_context.cc,v 1.8 2004/11/02 07:51:44 fang Exp $
  */
 
 #include <assert.h>

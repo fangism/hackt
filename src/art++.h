@@ -1,4 +1,9 @@
-// "art++.h"
+/**
+	\file "art++.h"
+	The only header file needed to write top-level applications for ART.
+
+	$Id: art++.h,v 1.4 2004/11/02 07:51:31 fang Exp $
+ */
 
 #ifndef	__ARTXX_H__
 #define	__ARTXX_H__

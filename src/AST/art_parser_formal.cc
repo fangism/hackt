@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
+	$Id: art_parser_formal.cc,v 1.4 2004/11/02 07:51:39 fang Exp $
  */
 
 // rule-of-thumb for inline directives:

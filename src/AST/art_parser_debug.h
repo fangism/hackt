@@ -3,6 +3,7 @@
 	Parser-specific debug switches.
 	Only include this in compilation modules (.cc) that need debugging,
 	and not in any header files if possible.
+	$Id: art_parser_debug.h,v 1.3 2004/11/02 07:51:36 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEBUG_H__

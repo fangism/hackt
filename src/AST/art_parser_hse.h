@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
+	$Id: art_parser_hse.h,v 1.3 2004/11/02 07:51:40 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__

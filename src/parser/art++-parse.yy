@@ -1,12 +1,14 @@
-/*
-	"art++-parse.yy"
-	AsynchRonous Tools (.art)
+/**
+	\file "art++-parse.yy"
+	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
 	but is very close.  Differences are mostly syntactic and not semantic.  
 
 	note: ancient versions of yacc reject // end-of-line comments
-*/
+
+	$Id: art++-parse.yy,v 1.5 2004/11/02 07:52:05 fang Exp $
+ */
 
 %{
 #include <iostream>

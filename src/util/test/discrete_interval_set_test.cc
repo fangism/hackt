@@ -1,4 +1,8 @@
-// "discrete_interval_set_test.cc"
+/**
+	\file "discrete_interval_set_test.cc"
+	Testing discrete_interval_set data structure.  
+	$Id: discrete_interval_set_test.cc,v 1.2 2004/11/02 07:52:21 fang Exp $
+ */
 
 #include <iostream>
 #include "discrete_interval_set.h"

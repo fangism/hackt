@@ -5,6 +5,7 @@
 	Generally not intended for mixed use with pointers from
 	the non-counted pointer classes in "ptrs.h":
 		excl_ptr, some_ptr, never_ptr.  
+	$Id: count_ptr.h,v 1.4 2004/11/02 07:52:13 fang Exp $
  */
 
 #ifndef	__COUNT_PTR_H__

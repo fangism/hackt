@@ -2,6 +2,7 @@
 	\file "qmap_fwd.h"
 	Forward declarations for queryable map.  
 	Full description in "qmap.h".
+	$Id: qmap_fwd.h,v 1.5 2004/11/02 07:52:18 fang Exp $
  */
 
 #ifndef	__QMAP_FWD_H__

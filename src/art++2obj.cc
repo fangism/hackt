@@ -1,4 +1,9 @@
-// "art++2obj.cc"
+/**
+	\file "art++2obj.cc"
+	Converts ART source code to an object file (pre-unrolled).
+
+	$Id: art++2obj.cc,v 1.5 2004/11/02 07:51:31 fang Exp $
+ */
 
 #include <iostream>
 #include <fstream>

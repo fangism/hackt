@@ -1,6 +1,7 @@
 /**
-	"art_lex.cc"
+	\file "art_lex.cc"
 	Utility lexer function definitions.
+	$Id: art_lex.cc,v 1.2 2004/11/02 07:51:53 fang Exp $
  */
 
 #include <ostream>

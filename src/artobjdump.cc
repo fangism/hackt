@@ -1,5 +1,10 @@
-// "artobjdump.cc"
-// just dumps an object file
+/**
+	\file "artobjdump.cc"
+	Just dumps an object file to human-readable (?) output.  
+	Useful for testing object file integrity.  
+
+	$Id: artobjdump.cc,v 1.5 2004/11/02 07:51:31 fang Exp $
+ */
 
 #include <iostream>
 #include <fstream>

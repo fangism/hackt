@@ -1,5 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
+#	$Id: Make.test,v 1.5 2004/11/02 07:52:26 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 

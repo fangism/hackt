@@ -2,6 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
+ 	$Id: art_built_ins.cc,v 1.6 2004/11/02 07:51:43 fang Exp $
  */
 
 #include "ptrs.h"

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
+	$Id: art_parser_chp.h,v 1.3 2004/11/02 07:51:36 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__

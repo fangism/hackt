@@ -2,6 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
+	$Id: multikey_map.h,v 1.8 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__

@@ -3,6 +3,7 @@
 	Class for a set of intervals over the set of integers
 	or discrete, integer-like values.  
 	This class is used to build the "multidimensional_sparse_set" class.  
+	$Id: discrete_interval_set.h,v 1.4 2004/11/02 07:52:13 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004

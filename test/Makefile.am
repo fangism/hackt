@@ -1,4 +1,5 @@
 # "test/Makefile.am"
+#	$Id: Makefile.am,v 1.4 2004/11/02 07:52:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 

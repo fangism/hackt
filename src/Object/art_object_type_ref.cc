@@ -1,6 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
+ 	$Id: art_object_type_ref.cc,v 1.10 2004/11/02 07:51:50 fang Exp $
  */
 
 #include <iostream>

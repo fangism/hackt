@@ -2,6 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
+	$Id: art_context.h,v 1.7 2004/11/02 07:51:44 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__

@@ -1,5 +1,6 @@
 # "Make.stddef"
 # make-independent definitions
+#	$Id: Make.stddef,v 1.6 2004/11/02 07:51:26 fang Exp $
 
 # SHELL = /bin/sh
 # add -v for verbose

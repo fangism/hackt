@@ -1,4 +1,9 @@
-// "getopt_portable.h"
+/**
+	\file "getopt_portable.h"
+	Configuration-dependent locations for getopt prototypes.  
+	(Not actually used yet.)
+	$Id: getopt_portable.h,v 1.2 2004/11/02 07:52:14 fang Exp $
+ */
 
 #ifndef __GETOPT_PORTABLE_H__
 #define __GETOPT_PORTABLE_H__

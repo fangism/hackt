@@ -1,6 +1,7 @@
 /**
 	\file "hash_map.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
+	$Id: hash_map.h,v 1.4 2004/11/02 07:52:14 fang Exp $
  */
 
 #ifndef	__HASH_MAP_H__

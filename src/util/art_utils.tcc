@@ -1,6 +1,7 @@
 /**
 	\file "art_utils.tcc"
 	Template function definitions from "art_utils.h".
+	$Id: art_utils.tcc,v 1.5 2004/11/02 07:52:11 fang Exp $
  */
 
 #ifndef __ART_UTILS_TCC__

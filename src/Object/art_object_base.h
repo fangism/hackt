@@ -1,6 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
+	$Id: art_object_base.h,v 1.18 2004/11/02 07:51:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__

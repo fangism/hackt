@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
+	$Id: art_parser_hse.cc,v 1.3 2004/11/02 07:51:40 fang Exp $
  */
 
 #include "art_parser.tcc"

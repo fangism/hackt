@@ -3,8 +3,8 @@
 	Includes all parser-related header files.  
 	Using this without thinking may slow down compilations
 	unnecessarily.  
+	$Id: art_parser.h,v 1.3 2004/11/02 07:51:34 fang Exp $
  */
-// includes all "art_parser_*.h" headers
 
 #ifndef	__ART_PARSER_H__
 #define	__ART_PARSER_H__

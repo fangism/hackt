@@ -1,6 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
+ 	$Id: art_object_base.cc,v 1.18 2004/11/02 07:51:44 fang Exp $
  */
 
 #include <iostream>

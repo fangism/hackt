@@ -1,4 +1,8 @@
-// "hash_qmap_test.cc"
+/**
+	\file "hash_qmap_test.cc"
+	Test for queryable hash map.
+	$Id: hash_qmap_test.cc,v 1.2 2004/11/02 07:52:22 fang Exp $
+ */
 
 #include <iostream>
 #include <string>

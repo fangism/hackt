@@ -1,8 +1,9 @@
 /**
-	"art_lex.h"
+	\file "art_lex.h"
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
+	$Id: art_lex.h,v 1.4 2004/11/02 07:51:53 fang Exp $
  */
 
 #ifndef	__ART_LEX_H__

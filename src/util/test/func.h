@@ -1,8 +1,10 @@
-// "func.h"
-// some test functions for pointer classes
+/**
+	\file "func.h"
+	Some test functions for pointer classes, not used for ART.
+	$Id: func.h,v 1.2 2004/11/02 07:52:21 fang Exp $
+ */
 
 #include "../ptrs.h"
-// #include "var.h"
 
 using namespace PTRS_NAMESPACE;
 

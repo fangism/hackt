@@ -2,6 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
+	$Id: art_object_assign.h,v 1.2 2004/11/02 07:51:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__

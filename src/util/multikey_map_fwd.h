@@ -1,6 +1,7 @@
 /**
 	\file "multikey_map_fwd.h"
 	Forward declarations for multidimensional map.  
+	$Id: multikey_map_fwd.h,v 1.4 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_FWD_H__

@@ -1,6 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
+	$Id: art_object_inst_ref.h,v 1.7 2004/11/02 07:51:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__

@@ -1,6 +1,7 @@
 /**
 	\file "persistent.cc"
 	Method definitions for persistent class interface.  
+	$Id: persistent.cc,v 1.4 2004/11/02 07:52:16 fang Exp $
  */
 
 #include <assert.h>

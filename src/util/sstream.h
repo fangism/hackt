@@ -5,6 +5,7 @@
 	IMPORTANT NOTE:
 	The deprecated <strstream> in older versions of some compilers is 
 	known to suck, because of error-prone memory non-management.  
+	$Id: sstream.h,v 1.3 2004/11/02 07:52:19 fang Exp $
  */
 
 

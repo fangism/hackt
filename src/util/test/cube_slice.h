@@ -1,6 +1,7 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
+	$Id: cube_slice.h,v 1.2 2004/11/02 07:52:20 fang Exp $
  */
 
 #include <assert.h>

@@ -1,4 +1,12 @@
-// "art_main.cc"
+/**
+	\file "art_main.cc"
+	Just compiles ART source without writing object out.  
+	Performs syntactic and semantic checking (with limited
+	static analysis) and performs a pseudo persistent object
+	write-out and read-in.
+
+	$Id: art_main.cc,v 1.5 2004/11/02 07:51:31 fang Exp $
+ */
 
 #include <iostream>
 #include <fstream>

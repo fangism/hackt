@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
+	$Id: art_parser_base.h,v 1.7 2004/11/02 07:51:35 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__

@@ -1,5 +1,9 @@
-// "var.h"
-// dummy classes for testing pointer-classes and polymorphism
+/**
+	\file "var.h"
+	Dummy classes for testing pointer-classes and polymorphism.
+	Not actually used for ART.
+	$Id: var.h,v 1.2 2004/11/02 07:52:26 fang Exp $
+ */
 
 #ifndef	__VAR_H__
 #define	__VAR_H__

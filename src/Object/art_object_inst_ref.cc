@@ -1,6 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
+ 	$Id: art_object_inst_ref.cc,v 1.9 2004/11/02 07:51:49 fang Exp $
  */
 
 #include <iostream>

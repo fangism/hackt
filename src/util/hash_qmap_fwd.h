@@ -1,6 +1,7 @@
 /**
 	\file "hash_qmap_fwd.h"
 	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
+	$Id: hash_qmap_fwd.h,v 1.5 2004/11/02 07:52:14 fang Exp $
  */
 
 #ifndef	__HASH_QMAP_FWD_H__

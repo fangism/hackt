@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
+	$Id: art_parser_definition.h,v 1.3 2004/11/02 07:51:37 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__

@@ -1,6 +1,7 @@
 #!/bin/sh
 # "artobj-diff.sh"
 # compares textual object dumps
+#	$Id: artobj-diff.sh,v 1.4 2004/11/02 07:52:27 fang Exp $
 
 # $1 is the executable for generating the object file, (probably art++2obj)
 #	and producing a textual dump to stderr.  

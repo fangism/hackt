@@ -1,6 +1,7 @@
 /**
 	\file "art_utils.h"
 	General-purpose handy utilities.
+	$Id: art_utils.h,v 1.5 2004/11/02 07:52:10 fang Exp $
  */
 
 #ifndef __ART_UTILS_H__

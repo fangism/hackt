@@ -1,6 +1,7 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
+	$Id: art_parser.tcc,v 1.3 2004/11/02 07:51:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__

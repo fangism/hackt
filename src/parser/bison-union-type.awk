@@ -1,6 +1,7 @@
 #!/usr/bin/awk -f
 # "bison-union-type.awk"
 # David Fang, 2004
+#	$Id: bison-union-type.awk,v 1.3 2004/11/02 07:52:07 fang Exp $
 
 # DISCLAIMER:
 # Not guaranteed to work on traditional yacc output, 

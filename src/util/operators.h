@@ -1,6 +1,7 @@
 /**
 	\file "operators.h'
 	Functors but with virtual resolution.
+	$Id: operators.h,v 1.2 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__

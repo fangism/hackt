@@ -1,5 +1,9 @@
-// "artobjunroll.cc"
-// unrolls an object file, saves it to another object file
+/**
+	\file "artobjunroll.cc"
+	Unrolls an object file, saves it to another object file.  
+
+	$Id: artobjunroll.cc,v 1.7 2004/11/02 07:51:32 fang Exp $
+ */
 
 #include <iostream>
 #include <fstream>

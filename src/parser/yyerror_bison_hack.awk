@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "yyerror_bison_hack.awk"
+#	$Id: yyerror_bison_hack.awk,v 1.2 2004/11/02 07:52:08 fang Exp $
 
 # Bison is a piece of shit.  
 # It breaks the old yacc interface where symbolic and semantic stacks

@@ -1,4 +1,8 @@
-// "multidimensional_qmap_test.cc"
+/**
+	\file "multidimensional_qmap_test.cc"
+ 	Test for multidimensional, queryable map.
+	$Id: multidimensional_qmap_test.cc,v 1.2 2004/11/02 07:52:23 fang Exp $
+ */
 
 #include <iostream>
 #include <string>

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
+	$Id: art_parser_instance.cc,v 1.5 2004/11/02 07:51:41 fang Exp $
  */
 
 // rule-of-thumb for inline directives:

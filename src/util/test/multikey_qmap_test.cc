@@ -1,5 +1,9 @@
-// "multikey_qmap_test.cc"
-// copied from "multidimensional_qmap_test.cc" with a few lines changes
+/**
+	\file "multikey_qmap_test.cc"
+	Test for multidimensional, queryable map with multidimensional keys.  
+	Copied from "multidimensional_qmap_test.cc" with a few lines changes
+	$Id: multikey_qmap_test.cc,v 1.3 2004/11/02 07:52:25 fang Exp $
+ */
 
 #include <iostream>
 #include <string>

@@ -1,4 +1,8 @@
-// "multidimensional_sparse_set_test.cc"
+/**
+	\file "multidimensional_sparse_set_test.cc"
+	Test for multidimensional sparse set.
+	$Id: multidimensional_sparse_set_test.cc,v 1.2 2004/11/02 07:52:23 fang Exp $
+ */
 
 #include "multidimensional_sparse_set.h"
 

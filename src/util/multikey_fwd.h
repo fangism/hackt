@@ -1,6 +1,7 @@
 /**
 	\file "multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
+	$Id: multikey_fwd.h,v 1.5 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H_FWD__

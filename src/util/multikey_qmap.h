@@ -1,6 +1,7 @@
 /**
 	\file "multikey_qmap.h"
 	Multidimensional queryable map.  
+	$Id: multikey_qmap.h,v 1.7 2004/11/02 07:52:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_H__

@@ -1,6 +1,7 @@
 /**
 	\file "art_object_control.cc"
 	Control-flow related class method definitions.  
+ 	$Id: art_object_control.cc,v 1.4 2004/11/02 07:51:47 fang Exp $
  */
 
 #include "art_object_control.h"

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
+	$Id: art_parser_prs.cc,v 1.3 2004/11/02 07:51:41 fang Exp $
  */
 
 #include "art_parser.tcc"

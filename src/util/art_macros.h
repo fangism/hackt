@@ -1,6 +1,7 @@
 /**
 	\file "art_macros.h"
 	Macros for general use in ART.  
+	$Id: art_macros.h,v 1.3 2004/11/02 07:52:09 fang Exp $
  */
 
 #ifndef	__ART_MACROS_H__

@@ -1,6 +1,7 @@
 /**
 	\file "hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
+	$Id: hash_qmap.h,v 1.5 2004/11/02 07:52:14 fang Exp $
  */
 
 #ifndef	__HASH_QMAP_H__

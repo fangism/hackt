@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
+	$Id: art_parser_chp.cc,v 1.3 2004/11/02 07:51:35 fang Exp $
  */
 
 #include "art_parser.tcc"

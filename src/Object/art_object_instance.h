@@ -1,6 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
+	$Id: art_object_instance.h,v 1.16 2004/11/02 07:51:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__

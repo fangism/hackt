@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
+	$Id: art_parser_expr.cc,v 1.4 2004/11/02 07:51:38 fang Exp $
  */
 
 #include <iostream>

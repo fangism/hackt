@@ -1,6 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
+	$Id: persistent.h,v 1.3 2004/11/02 07:52:16 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__

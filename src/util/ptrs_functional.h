@@ -3,6 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
+ *	$Id: ptrs_functional.h,v 1.4 2004/11/02 07:52:17 fang Exp $
  */
 
 #ifndef	__PTRS_FUNCTIONAL_H__

@@ -1,4 +1,8 @@
-// "count_ptr_test.cc"
+/**
+	\file "count_ptr_test.cc"
+	Test program for checking reference-counted pointers.  
+	$Id: count_ptr_test.cc,v 1.2 2004/11/02 07:52:19 fang Exp $
+ */
 
 #include <iostream>
 #include <string>

@@ -1,6 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
+	$Id: art_parser_token.cc,v 1.4 2004/11/02 07:51:41 fang Exp $
  */
 
 #include <iostream>

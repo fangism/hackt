@@ -1,6 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
+	$Id: persistent_object_manager.tcc,v 1.5 2004/11/02 07:52:17 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__

@@ -1,6 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
+ 	$Id: art_object_assign.cc,v 1.4 2004/11/02 07:51:44 fang Exp $
  */
 
 #include <iostream>

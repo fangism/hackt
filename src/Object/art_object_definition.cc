@@ -1,6 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
+ 	$Id: art_object_definition.cc,v 1.13 2004/11/02 07:51:48 fang Exp $
  */
 
 #include <iostream>

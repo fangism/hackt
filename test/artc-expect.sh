@@ -1,5 +1,6 @@
 #!/bin/sh
 # "artc-expect.sh"
+#	$Id: artc-expect.sh,v 1.4 2004/11/02 07:52:27 fang Exp $
 
 # $1 is the executable, expecting input from stdin
 # $2 is the path to the source directory, which is not necessarily ./

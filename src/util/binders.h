@@ -2,6 +2,7 @@
  *	\file "binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
+ *	$Id: binders.h,v 1.4 2004/11/02 07:52:12 fang Exp $
  */
 
 #ifndef	__BINDERS_H__

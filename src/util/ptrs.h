@@ -3,6 +3,7 @@
 	Library of pointers for explicit memory management.  
 	The pointer classes contained herein are all non-counted.  
 	For reference-counted classes, see "count_ptr.h". 
+	$Id: ptrs.h,v 1.6 2004/11/02 07:52:17 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 

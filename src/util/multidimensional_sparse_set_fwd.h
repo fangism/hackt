@@ -1,6 +1,7 @@
 /**
 	\file "multidimensional_sparse_set_fwd.h"
 	Forward declarations for a fixed depth/dimension tree-set.
+	$Id: multidimensional_sparse_set_fwd.h,v 1.4 2004/11/02 07:52:15 fang Exp $
  */
 // David Fang, Cornell University, 2004
 

@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "yacc-prefix.h"
+#	$Id: yacc-prefix.awk,v 1.2 2004/11/02 07:52:08 fang Exp $
 
 #	To get the effect of -p prefix with yacc or bison, 
 #	When compiling the source, pass -v PREFIX=name 

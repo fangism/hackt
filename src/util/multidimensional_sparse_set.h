@@ -1,6 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
+	$Id: multidimensional_sparse_set.h,v 1.3 2004/11/02 07:52:14 fang Exp $
  */
 // David Fang, Cornell University, 2004
 

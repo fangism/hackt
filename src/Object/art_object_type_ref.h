@@ -1,6 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
+ 	$Id: art_object_type_ref.h,v 1.9 2004/11/02 07:51:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__

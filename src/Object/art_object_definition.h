@@ -1,6 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
+	$Id: art_object_definition.h,v 1.11 2004/11/02 07:51:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__

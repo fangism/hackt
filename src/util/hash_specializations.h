@@ -3,6 +3,7 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
+	$Id: hash_specializations.h,v 1.4 2004/11/02 07:52:14 fang Exp $
  */
 
 #ifndef	__HASH_SPECIALIZATIONS_H__

@@ -1,6 +1,7 @@
 /**
 	\file "conditional.h"
 	Functor compositions for conditional or predicated execution.  
+	$Id: conditional.h,v 1.6 2004/11/02 07:52:13 fang Exp $
  */
 
 #ifndef	__CONDITIONAL_H__

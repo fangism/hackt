@@ -3,6 +3,7 @@
 	Master debug flags.  
 	All other module-specific debugging flags should derive
 	from this.  
+	$Id: art_debug.h,v 1.3 2004/11/02 07:52:08 fang Exp $
  */
 
 #ifndef	__ART_DEBUG_H__

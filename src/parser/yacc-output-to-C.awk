@@ -1,6 +1,7 @@
 #! `which awk` -f
 # "yacc-output-to-C.awk"
 # by Fang
+#	$Id: yacc-output-to-C.awk,v 1.2 2004/11/02 07:52:07 fang Exp $
 
 # takes the y.output file from yacc -v and converts it into C strings
 # for use in error reporting

@@ -1,6 +1,7 @@
 /**
 	\file "art_utils.cc"
 	Utility function definitions (for non-templates only). 
+	$Id: art_utils.cc,v 1.5 2004/11/02 07:52:10 fang Exp $
  */
 
 #include <assert.h>

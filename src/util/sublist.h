@@ -1,6 +1,7 @@
 /**
 	\file "sublist.h"
 	Wrapper class interface for list slices, that behave like lists.  
+	$Id: sublist.h,v 1.4 2004/11/02 07:52:19 fang Exp $
  */
 
 #ifndef	__SUBLIST_H__
