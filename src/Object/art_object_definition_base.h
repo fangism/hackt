@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.4 2004/12/12 06:27:56 fang Exp $
+	$Id: art_object_definition_base.h,v 1.5 2004/12/15 23:31:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -36,10 +36,12 @@ using parser::token_identifier;
 namespace entity {
 //=============================================================================
 USING_LIST
+using std::string;
 using std::istream;
-using namespace util;
+using util::persistent;
+using util::persistent_object_manager;
 using namespace util::memory;
-using namespace HASH_QMAP_NAMESPACE;
+using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.4 2004/12/12 22:26:35 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.5 2004/12/15 23:31:11 fang Exp $
  */
 
 #include <iostream>
@@ -91,6 +91,7 @@ namespace entity {
 using HASH_QMAP_NAMESPACE::hash_map;
 using QMAP_NAMESPACE::qmap;
 using parser::scope;
+using std::_Select2nd;
 using namespace util::memory;
 using namespace ADS;		// for function compositions
 

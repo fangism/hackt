@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.26 2004/12/12 22:26:32 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.27 2004/12/15 23:31:09 fang Exp $
  */
 
 #include <iostream>
@@ -38,7 +38,12 @@ namespace entity {
 using namespace ADS;
 using namespace util::memory;
 USING_UTIL_OPERATIONS
-using namespace DISCRETE_INTERVAL_SET_NAMESPACE;
+using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
+using std::_Select1st;
+using std::_Select2nd;
+using std::mem_fun_ref;
+using std::dereference;
+using std::ostringstream;
 
 //=============================================================================
 // local types (not externally visible)

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.18 2004/12/11 21:26:51 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.19 2004/12/15 23:31:11 fang Exp $
  */
 
 #include <iostream>
@@ -28,6 +28,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+using std::ostringstream;
 
 //=============================================================================
 // class fundamental_type_reference method definitions

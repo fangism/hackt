@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.31 2004/12/12 22:26:32 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.32 2004/12/15 23:31:10 fang Exp $
  */
 
 #include <iostream>
@@ -27,6 +27,9 @@
 namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
+using std::dereference;
+using std::mem_fun_ref;
+using std::bind2nd_argval_void;
 
 //=============================================================================
 // class instance_collection_base method definitions

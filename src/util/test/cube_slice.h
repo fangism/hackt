@@ -1,7 +1,7 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.3 2004/12/05 05:08:28 fang Exp $
+	$Id: cube_slice.h,v 1.4 2004/12/15 23:31:18 fang Exp $
  */
 
 #include <assert.h>
@@ -22,13 +22,20 @@ using std::ostringstream;
 using std::ostream_iterator;
 using namespace MULTIKEY_NAMESPACE;
 using namespace MULTIKEY_MAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
 
-typedef multikey_qmap<1,int,string>     map_1d_type;
-typedef multikey_qmap<2,int,string>     map_2d_type;
-typedef multikey_qmap<3,int,string>     map_3d_type;
-typedef multikey_generator<1,int>       generator_1d_type;
-typedef multikey_generator<2,int>       generator_2d_type;
-typedef multikey_generator<3,int>       generator_3d_type;
+#if 0
+typedef multikey_qmap<1,int,string>	map_1d_type;
+typedef multikey_qmap<2,int,string>	map_2d_type;
+typedef multikey_qmap<3,int,string>	map_3d_type;
+#else
+typedef multikey_map<1,int,string,qmap>	map_1d_type;
+typedef multikey_map<2,int,string,qmap>	map_2d_type;
+typedef multikey_map<3,int,string,qmap>	map_3d_type;
+#endif
+typedef multikey_generator<1,int>	generator_1d_type;
+typedef multikey_generator<2,int>	generator_2d_type;
+typedef multikey_generator<3,int>	generator_3d_type;
 
 /**
 	Instantiates a truncated cube of points.

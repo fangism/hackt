@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.2 2004/11/06 06:27:14 fang Exp $
+	$Id: IO_utils.tcc,v 1.3 2004/12/15 23:31:12 fang Exp $
  */
 
 #ifndef __IO_UTILS_TCC__
@@ -17,7 +17,8 @@
 #include "IO_utils.h"
 
 namespace util {
-using namespace std;
+using std::ostream;
+using std::istream;
 //=============================================================================
 /**
 	Generic function for writing binary values of plain-old-data (POD)
@@ -95,7 +96,7 @@ read_sequence_in_place(istream& f, S<T>& l) {
 	typedef S<T>	sequence_type;
 	size_t size;
 	read_value(f, size);
-	assert(l.size() == size);	// or >= ?
+	INVARIANT(l.size() == size);	// or >= ?
 #if 0
 	for_each(l.begin(), l.end(), 
 		bind1st_argval(ptr_fun(read_value<T>), f)
@@ -108,7 +109,7 @@ read_sequence_in_place(istream& f, S<T>& l) {
 	for ( ; j < size; j++, i++)
 		read_value<T>(f, *i);
 	// if sizes were asserted equal
-	assert(i == l.end());
+	INVARIANT(i == l.end());
 #endif
 }
 
@@ -184,7 +185,7 @@ template <template <class, class> class M, class K, class T>
 void
 write_map(ostream& f, const M<K,T>& m) {
 	typedef	M<K,T>	map_type;
-	assert(f.good());
+	INVARIANT(f.good());
 	write_value(f, m.size());
 #if 0
 	for_each(m.begin(), m.end(), 
@@ -213,8 +214,8 @@ write_map(ostream& f, const M<K,T>& m) {
 template <template <class, class> class M, class K, class T>
 void
 read_map(istream& f, const M<K,T>& m) {
-	assert(f.good());
-	// assert(m.empty()); // ?
+	INVARIANT(f.good());
+	// INVARIANT(m.empty()); // ?
 	size_t size;
 	read_value(f, size);
 	size_t i = 0;

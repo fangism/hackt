@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.11 2004/12/05 05:07:24 fang Exp $
+	$Id: multikey_map.h,v 1.12 2004/12/15 23:31:13 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -14,6 +14,7 @@
 
 #include "multikey.h"
 #include "multikey_map_fwd.h"
+#include "array_traits.h"
 
 namespace MULTIKEY_MAP_NAMESPACE {
 using std::ostream;
@@ -78,7 +79,8 @@ static	this_type* make_multikey_map(const size_t d);
 	\example multikey_qmap_test.cc
  */
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map : public M<multikey<D,K>, T>, multikey_map_base<K,T> {
+class multikey_map : protected M<multikey<D,K>, T>, 
+		public multikey_map_base<K,T> {
 protected:
 	/** this is the representation-type */
 	typedef	multikey_map_base<K,T>			interface_type;
@@ -107,6 +109,10 @@ public:
 	typedef	typename interface_type::key_list_pair_type
 							key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
+
+public:
+	// for array_traits<> interface
+	static const size_t dim = D;
 
 public:
 	/**
@@ -151,6 +157,11 @@ public:
 	 */
 	void
 	clean(void);
+
+	using map_type::begin;
+	using map_type::end;
+	using map_type::rbegin;
+	using map_type::rend;
 
 	/**
 		\param k The key of the (key, value) pair to find.  
@@ -275,7 +286,7 @@ public:
 	Specialization for one-dimension: just use base map type.  
  */
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map<1,K,T,M> : public M<K,T>, public multikey_map_base<K,T> {
+class multikey_map<1,K,T,M> : protected M<K,T>, public multikey_map_base<K,T> {
 protected:
 	typedef	multikey_map_base<K,T>			interface_type;
 	typedef	M<K, T>					map_type;
@@ -304,6 +315,8 @@ public:
 							key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
+	// for array_traits<>
+	static const size_t dim = 1;
 public:
 	multikey_map();
 	~multikey_map();
@@ -324,6 +337,11 @@ public:
 
 	void
 	clean(void);
+
+	using map_type::begin;
+	using map_type::end;
+	using map_type::rbegin;
+	using map_type::rend;
 
 	T&
 	operator [] (const typename map_type::key_type& k) {
@@ -374,10 +392,21 @@ public:
 
 	// all other methods are the same as general template class
 
-};	// end class multikey_map specialization
+};	// end class multikey_map (specialization)
 
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE
+
+namespace util {
+
+MULTIKEY_MAP_TEMPLATE_SIGNATURE
+struct array_traits<MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M> > {
+	typedef	MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M>
+				array_type;
+	static const size_t	dimensions = array_type::dim;
+};	// end struct array_traits
+
+}
 
 #endif	//	__MULTIKEY_MAP_H__
 

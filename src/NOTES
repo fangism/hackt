@@ -29,5 +29,17 @@ Observations:
 Prerequisites: (what do I need to do...)
 	For typedefs, may need a parameter value context stack.
 
-//=============================================================================
+Idea:
+	An extension to passing around lists, we can implement as a
+	dense vector that's arithmetically addressed, and will be 
+	extensible to any number of dimensions.
+	Indexed with any multikey.
+	Also make a reference-array for indirection.  
 
+//=============================================================================
+regarding multikey_qmap:
+
+	Instead of deriving in diamond-inheritance, 
+	specialize multikey_qmap as a special case of multikey_map.  
+
+//=============================================================================

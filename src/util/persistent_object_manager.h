@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.10 2004/12/11 06:22:44 fang Exp $
+	$Id: persistent_object_manager.h,v 1.11 2004/12/15 23:31:14 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -24,18 +24,6 @@
 #define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
 static const util::persistent_traits<T> __persistent_traits_ ## T ## __(str);
 
-#if 0
-	const util::persistent*						\
-		util::persistent_traits<T>::null = static_cast<T*>(NULL);\
-	const reconstruct_function_ptr_type				\
-		util::persistent_traits<T>::reconstructor(		\
-			&T::construct_empty);				\
-	const util::persistent::hash_key				\
-		util::persistent_traits<T>::persistent_type_key(str);	\
-	const int util::persistent_traits<T>::persistent_type_id = 	\
-		util::persistent_object_manager::register_persistent_type<T>();
-#endif
-
 //=============================================================================
 namespace util {
 using std::vector;
@@ -47,7 +35,7 @@ using std::stringstream;
 using std::ofstream;
 using std::ifstream;
 using namespace util::memory;
-using namespace HASH_QMAP_NAMESPACE;
+using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**

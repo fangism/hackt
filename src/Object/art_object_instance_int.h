@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.5 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_instance_int.h,v 1.6 2004/12/15 23:31:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -24,8 +24,9 @@ USING_LIST
 using std::string;
 using parser::token_identifier;
 using namespace util::memory;
-using namespace MULTIKEY_NAMESPACE;
-using namespace MULTIKEY_MAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
+using MULTIKEY_NAMESPACE::multikey_base;
+using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
@@ -208,7 +209,11 @@ public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
 	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	int_instance_alias			element_type;
+#if 0
 	typedef	multikey_qmap<D, int, element_type>	collection_type;
+#else
+	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
+#endif
 
 private:
 	collection_type					collection;

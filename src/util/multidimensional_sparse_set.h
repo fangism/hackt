@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.5 2004/12/05 05:07:24 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.6 2004/12/15 23:31:13 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include "macros.h"
 
+#include "array_traits.h"
 #include "multidimensional_sparse_set_fwd.h"		// forward declarations
 #include "discrete_interval_set.h"
 // includes <map> and <iostream>
@@ -26,9 +27,9 @@ namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE {
 //=============================================================================
 using std::ostream;
 using std::string;
-using namespace DISCRETE_INTERVAL_SET_NAMESPACE;
+using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
 // using util::sublist;
-using namespace QMAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
 using namespace util::memory;
 
 //=============================================================================
@@ -159,6 +160,10 @@ protected:
 	/** need count_ptr to be copy-constructable */
 	typedef	count_ptr<child_type>			map_value_type;
 	typedef	qmap<T, map_value_type>			map_type;
+
+public:
+	// for array_traits<>
+	static const size_t dim = D;
 
 protected:
 	map_type					index_map;
@@ -327,6 +332,10 @@ protected:
 	typedef	typename parent::range_list_type	range_list_type;
 	typedef	discrete_interval_set<T>		map_type;
 
+public:
+	// for array_traits<>
+	static const size_t dim = 1;
+
 protected:
 	/**
 		Storing with this an interval map for efficiency.  
@@ -442,6 +451,19 @@ public:
 
 //=============================================================================
 }	// end namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE
+
+namespace util {
+
+MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
+struct array_traits<
+	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
+		multidimensional_sparse_set<D,T,R,L> > {
+	typedef	MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE::
+		multidimensional_sparse_set<D,T,R,L>	array_type;
+	static const size_t		dimensions = array_type::dim;
+};	// end struct array_traits
+
+}
 
 #endif	// __MULTIDIMENSIONAL_SPARSE_SET_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.5 2004/12/12 22:26:35 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.6 2004/12/15 23:31:11 fang Exp $
  */
 
 #include <iostream>
@@ -31,6 +31,8 @@
 namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
+using std::dereference;
+using std::mem_fun_ref;
 
 //=============================================================================
 // struct pint_instance method definitions

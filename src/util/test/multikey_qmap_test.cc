@@ -2,7 +2,7 @@
 	\file "multikey_qmap_test.cc"
 	Test for multidimensional, queryable map with multidimensional keys.  
 	Copied from "multidimensional_qmap_test.cc" with a few lines changes
-	$Id: multikey_qmap_test.cc,v 1.5 2004/12/05 05:08:29 fang Exp $
+	$Id: multikey_qmap_test.cc,v 1.6 2004/12/15 23:31:18 fang Exp $
  */
 
 #include <iostream>
@@ -18,9 +18,15 @@ using std::string;
 using std::ostringstream;
 using namespace MULTIKEY_MAP_NAMESPACE;
 
+#if 0
 typedef	multikey_qmap<1, int, string>	test_map1d_type;
 typedef	multikey_qmap<2, int, string>	test_map2d_type;
 typedef	multikey_qmap<3, int, string>	test_map3d_type;
+#else
+typedef	multikey_map<1, int, string, qmap>	test_map1d_type;
+typedef	multikey_map<2, int, string, qmap>	test_map2d_type;
+typedef	multikey_map<3, int, string, qmap>	test_map3d_type;
+#endif
 
 int
 main(int argc, char* argv[]) {

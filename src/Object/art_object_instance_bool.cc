@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.4 2004/12/12 22:26:33 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.5 2004/12/15 23:31:10 fang Exp $
  */
 
 #include <iostream>
@@ -24,6 +24,8 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
+using std::dereference;
+using std::mem_fun_ref;
 
 //=============================================================================
 // class bool_instance_collection method definitions

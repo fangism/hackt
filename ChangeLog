@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-12-15	David Fang	<fangism@users.sourceforge.net>
+
+	* Revised multikey_qmap to be a specialization of 
+	  multikey_map, resulting in less code bloat.  
+
+	* More massive clean up of namespace usage in header and
+	  source files.  
+
+	* Added draft of packed_array structure (untested).  
+
+
 2004-12-12	David Fang	<fangism@users.sourceforge.net>
 
 	* Removed virtual size_t dimensions() const = 0 from

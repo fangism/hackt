@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.5 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.6 2004/12/15 23:31:11 fang Exp $
  */
 
 #include <iostream>
@@ -26,6 +26,8 @@ namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
+using std::dereference;
+using std::mem_fun_ref;
 
 //=============================================================================
 // class int_instance_collection method definitions

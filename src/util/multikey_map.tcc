@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.1 2004/12/05 05:07:24 fang Exp $
+	$Id: multikey_map.tcc,v 1.2 2004/12/15 23:31:13 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_TCC__
@@ -41,7 +41,7 @@ template <template <class, class> class M>
 multikey_map_base<K,T>*
 multikey_map_base<K,T>::make_multikey_map(const size_t d) {
 	// slow switch-case, but we need constants
-	assert(d > 0 && d <= LIMIT);
+	INVARIANT(d > 0 && d <= LIMIT);
 	// there may be some clever way to make a call table to
 	// the various constructors, but this is a rare operation: who cares?
 	switch(d) {
@@ -233,12 +233,12 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	const size_t l_size = l.size();
 	{       // check for consistency
 		typedef typename list<K>::const_iterator list_iterator;
-		assert(l_size == u.size());
+		INVARIANT(l_size == u.size());
 		pair<list_iterator, list_iterator>
 			mm = mismatch(l.begin(), l.end(), u.begin(),
 				std::less_equal<K>()
 			);
-		assert(mm.first == l.end() && mm.second == u.end());
+		INVARIANT(mm.first == l.end() && mm.second == u.end());
 	}
 
 #if DEBUG_SLICE
@@ -256,7 +256,7 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	std::auto_ptr<multikey_generator_base<K> >
 		key_gen( multikey_generator_base<K>::
 			make_multikey_generator(l_size));
-	assert(key_gen.get());
+	INVARIANT(key_gen.get());
 	copy(l.begin(), l.end(), key_gen->get_lower_corner().begin());
 	copy(u.begin(), u.end(), key_gen->get_upper_corner().begin());
 	key_gen->initialize();
@@ -264,7 +264,7 @@ multikey_map<D,K,T,M>::is_compact_slice(
 
 	const return_type s = is_compact_slice(list_key);
 	if (s.first.empty()) {
-		assert(s.second.empty());
+		INVARIANT(s.second.empty());
 #if DEBUG_SLICE
 		cerr << "foo1: s is empty." << endl;
 #endif
@@ -286,7 +286,7 @@ multikey_map<D,K,T,M>::is_compact_slice(
 			for_list_key(key_gen->begin(), key_gen->end());
 		const return_type t = is_compact_slice(for_list_key);
 		if (t.first.empty()) {
-			assert(t.second.empty());
+			INVARIANT(t.second.empty());
 			return return_type();
 		} else {
 			// compare suffixes
@@ -352,8 +352,8 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 	}
 #endif
 	const size_t l_size = l.size();
-	assert(l_size);
-	assert(l_size <= D);
+	INVARIANT(l_size);
+	INVARIANT(l_size <= D);
 	// special case for ==?
 	if (l_size == D) {
 		// if value is default, consider it empty
@@ -685,8 +685,8 @@ multikey_map<1,K,T,M>::read(istream& f) {
 #if 0
 	read_map(f, static_cast<map_type&>(*this));
 #else
-	assert(f.good());
-	assert(empty());
+	INVARIANT(f.good());
+	INVARIANT(empty());
 	size_t size, i=0;
 	read_value(f, size);
 	for ( ; i<size; i++) {

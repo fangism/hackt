@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.8 2004/12/07 02:22:06 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.9 2004/12/15 23:31:09 fang Exp $
  */
 
 #include <iostream>
@@ -26,6 +26,9 @@
 namespace ART {
 namespace entity {
 using namespace ADS;		// from "compose.h"
+using std::mem_fun_ref;
+using std::dereference;
+using std::bind2nd_argval;
 
 //=============================================================================
 // class param_expression_assignment method definitions

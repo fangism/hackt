@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.10 2004/12/03 02:46:42 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.11 2004/12/15 23:31:14 fang Exp $
  */
 
 #include <fstream>
@@ -23,6 +23,10 @@
 //=============================================================================
 
 namespace util {
+#include "using_ostream.h"
+using std::stringbuf;
+using std::streamsize;
+
 //=============================================================================
 // class reconstruction_table_entry method definitions
 

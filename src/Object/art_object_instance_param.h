@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.7 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_instance_param.h,v 1.8 2004/12/15 23:31:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -18,8 +18,10 @@ namespace entity {
 
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
-using namespace MULTIKEY_NAMESPACE;
-using namespace MULTIKEY_MAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
+using MULTIKEY_NAMESPACE::multikey_base;
+using MULTIKEY_NAMESPACE::multikey_base;
+using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -288,11 +290,10 @@ friend class pbool_instance_collection;
 public:
 	typedef	pbool_instance				element_type;
 	/// Type for actual values, including validity and status.
-	typedef	multikey_qmap<D, int, element_type>	collection_type;
 #if 0
-	// NOT USED
-	/// collection of valid values passed around.
-	typedef	multikey_qmap<D, int, int>		value_type;
+	typedef	multikey_qmap<D, int, element_type>	collection_type;
+#else
+	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
 #endif
 
 protected:
@@ -603,12 +604,10 @@ public:
 	/**
 		Type for actual values, including validity and status.
 	 */
-	typedef	multikey_qmap<D, int, element_type>	collection_type;
 #if 0
-	/**
-		Collection of valid values passed around.
-	 */
-	typedef	multikey_qmap<D, int, int>		value_type;
+	typedef	multikey_qmap<D, int, element_type>	collection_type;
+#else
+	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
 #endif
 protected:
 	/** The collection of value instances */

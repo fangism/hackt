@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.7 2004/12/05 05:07:23 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.8 2004/12/15 23:31:13 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -15,9 +15,8 @@
 // forward declarations
 #include "multidimensional_qmap_fwd.h"
 	// includes <list>
+#include "array_traits.h"
 #include "qmap.h"
-// #include "multidimensional_sparse_set.h"
-	// includes "sstream.h" "qmap.h"
 
 /*
 	Decision: Sub-trees of the map will be kept as count_ptr's
@@ -39,7 +38,7 @@ namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
 //=============================================================================
 using std::pair;
 using std::string;
-using namespace QMAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
 
 #include "using_ostream.h"
 
@@ -233,6 +232,10 @@ public:
 						const_reverse_map_iterator;
 	typedef	typename map_type::value_type		value_type;
 
+public:
+	// for array_traits<>
+	static const size_t dim = D;
+
 protected:
 	map_type					index_map;
 
@@ -345,6 +348,10 @@ public:
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;
 	typedef	typename map_type::value_type		value_type;
+
+public:
+	// for array_traits<>
+	static const size_t dim = 1;
 
 protected:
 	/**
@@ -470,6 +477,21 @@ empty(const typename multidimensional_qmap<D,K,T,L>::value_type& i) {
 
 //=============================================================================
 }	// end namespace MULTIDIMENSIONAL_QMAP_NAMESPACE
+
+// specialization of array_traits
+namespace util {
+
+
+MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
+struct array_traits<
+		MULTIDIMENSIONAL_QMAP_NAMESPACE::
+			multidimensional_qmap<D,K,T,L> > {
+	typedef	MULTIDIMENSIONAL_QMAP_NAMESPACE::multidimensional_qmap<D,K,T,L>
+				array_type;
+	static const size_t	dimensions = array_type::dim;
+};	// end struct array_traits
+
+}
 
 #endif	// __MULTIDIMENSIONAL_QMAP_H__
 

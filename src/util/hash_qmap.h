@@ -1,7 +1,7 @@
 /**
 	\file "hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
-	$Id: hash_qmap.h,v 1.6 2004/12/03 02:46:42 fang Exp $
+	$Id: hash_qmap.h,v 1.7 2004/12/15 23:31:13 fang Exp $
  */
 
 #ifndef	__HASH_QMAP_H__
@@ -11,7 +11,8 @@
 #include "hash_qmap_fwd.h"		// forward declarations only
 
 namespace HASH_QMAP_NAMESPACE {
-using namespace HASH_MAP_NAMESPACE;
+using HASH_MAP_NAMESPACE::hash_map;
+using std::pair;
 
 //-----------------------------------------------------------------------------
 /**

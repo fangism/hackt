@@ -2,13 +2,14 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.11 2004/12/05 05:07:24 fang Exp $
+	$Id: multikey.h,v 1.12 2004/12/15 23:31:13 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
 #define	__MULTIKEY_H__
 
-#include <assert.h>
+#include "macros.h"
+
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
@@ -184,7 +185,7 @@ public:
 	 */
 	reference
 	operator [] (const size_t i) {
-		assert(i < D);
+		INVARIANT(i < D);
 		return indices[i];
 	}
 
@@ -193,7 +194,7 @@ public:
 	 */
 	const_reference
 	operator [] (const size_t i) const {
-		assert(i < D);
+		INVARIANT(i < D);
 		return indices[i];
 	}
 
@@ -281,7 +282,7 @@ public:
 	ostream&
 	write(ostream& o) const {
 		// wish there was ostream_iterator equivalent for write()
-		assert(o.good());
+		INVARIANT(o.good());
 		const_iterator i = begin();
 		const const_iterator e = end();
 		for ( ; i!=e; i++)
@@ -297,7 +298,7 @@ public:
 	istream&
 	read(istream& f) {
 		// wish there was ostream_iterator equivalent for write()
-		assert(f.good());
+		INVARIANT(f.good());
 		iterator i = begin();
 		size_t j = 0;
 		for ( ; j < D; j++, i++)
@@ -311,7 +312,7 @@ public:
 template <class K>
 multikey_base<K>*
 multikey_base<K>::make_multikey(const size_t d) {
-	assert(d > 0 && d <= LIMIT);
+	INVARIANT(d > 0 && d <= LIMIT);
 	// there may be some clever way to make a call table to
 	// the various constructors, but this is a rare operation: who cares?
 	switch(d) {
@@ -542,7 +543,7 @@ public:
 	multikey_generator(const L<P<K,K> >& l) : base_type(), 
 			lower_corner(), upper_corner() {
 		typedef	L<P<K,K> >	sequence_type;
-		assert(l.size() <= D);	// else error on user!
+		INVARIANT(l.size() <= D);	// else error on user!
 		iterator li = lower_corner.begin();
 		iterator ui = upper_corner.begin();
 		typename sequence_type::const_iterator i = l.begin();
@@ -561,7 +562,7 @@ public:
 	multikey_generator(const LP& l) : base_type(), 
 			lower_corner(), upper_corner() {
 		typedef	LP	sequence_type;
-		assert(l.size() <= D);	// else error on user!
+		INVARIANT(l.size() <= D);	// else error on user!
 		iterator li = lower_corner.begin();
 		iterator ui = upper_corner.begin();
 		typename sequence_type::const_iterator i = l.begin();
@@ -583,7 +584,7 @@ public:
 		const_iterator max = upper_corner.begin();
 		const const_iterator min_end = lower_corner.end();
 		for ( ; min != min_end; min++, max++) {
-			assert(*min <= *max);
+			INVARIANT(*min <= *max);
 		}
 	}
 
@@ -653,7 +654,7 @@ public:
 template <class K>
 multikey_generator_base<K>*
 multikey_generator_base<K>::make_multikey_generator(const size_t d) {
-	assert(d > 0 && d <= multikey_base<K>::LIMIT);
+	INVARIANT(d > 0 && d <= multikey_base<K>::LIMIT);
 	// there may be some clever way to make a call table to
 	// the various constructors, but this is a rare operation: who cares?
 	switch(d) {
@@ -673,7 +674,7 @@ ostream&
 operator << (ostream& o, const multikey_generator_base<K>& k) {
 	const multikey_base<K>* mk =
 		dynamic_cast<const multikey_base<K>*>(&k);
-	assert(mk);
+	INVARIANT(mk);
 	return o << *mk;
 }
 #endif
