@@ -22,69 +22,11 @@ namespace entity {
 // class param_expression_assignment method definitions
 	
 param_expression_assignment::param_expression_assignment() :
-//		object(), 
-		instance_management_base()
-//		ex_list()
-		{
+		instance_management_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expression_assignment::~param_expression_assignment() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-param_expression_assignment::what(ostream& o) const {
-	return o << "param-expr-assignment";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-param_expression_assignment::dump(ostream& o) const {
-	assert(ex_list.size() > 1);
-	ex_list_type::const_iterator iter = ex_list.begin();
-	const ex_list_type::const_iterator end = ex_list.end();
-	assert(*iter);
-	(*iter)->dump(o);
-	for (iter++ ; iter!=end; iter++) {
-		assert(*iter);
-		(*iter)->dump(o << " = ");
-	}
-	return o << ';';
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-param_expression_assignment::append_param_expression(
-		count_const_ptr<param_expr> e) {
-	ex_list.push_back(e);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-param_expression_assignment::prepend_param_expression(
-		count_const_ptr<param_expr> e) {
-	ex_list.push_front(e);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unpacks the right-most (last) expression and assigns its
-	value(s) to all other expressions in the list on the left. 
- */
-void
-param_expression_assignment::unroll(void) const {
-	cerr << "param_expression_assignment::unroll(): "
-		"Fang, finish me!" << endl;
-	assert(ex_list.size() > 1);		// sanity check
-	// Evaluate last expression
-	const ex_list_type::value_type& rhs = ex_list.back();
-	// need to verify sizes and types?
-	// should already be type verified (pint vs. pbool)
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -144,92 +86,6 @@ param_expression_assignment::validate_reference_is_uninitialized(
 		return false;
 	} else	return true;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-param_expression_assignment::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE_KEY)) {
-#if 0
-	for_each(ex_list.begin(), ex_list.end(), 
-	bind2nd(mem_fun(&ex_list_type::value_type::collect_transient_info), m)
-	);
-#else
-	ex_list_type::const_iterator iter = ex_list.begin();
-	const ex_list_type::const_iterator end = ex_list.end();
-	for ( ; iter!=end; iter++) {
-		(*iter)->collect_transient_info(m);
-	}
-#endif
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-param_expression_assignment::construct_empty(const int i) {
-	return new param_expression_assignment();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-param_expression_assignment::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
-	WRITE_POINTER_INDEX(f, m);
-	m.write_pointer_list(f, ex_list);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-param_expression_assignment::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
-	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer_list(f, ex_list);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNBORN OBSOLETE
-void
-param_expression_assignment::unroll_params(void) const {
-	// first make sure rhs is initialized
-	// what if rhs expression refers to not-yet-unroll instantiation?
-	// need to follow dependencies
-	// need a method to search for writers to 
-
-	const ex_list_type::const_iterator last = --ex_list.end();
-	const size_t dim = (*last)->dimensions();
-	// Evaluate:
-	// is the reference valid?
-	// is it initialized?
-	// what type, what dimension?
-	// may be collective, if so, must be dense.  
-
-#if 0
-	switch (dim) {
-	case 0:
-		param_const foo = (*last)->evaluate();
-
-		// Dispatch dimension-specific unrolling sub-routine?
-
-		ex_list_type::iterator iter = ex_list.begin();
-		for ( ; iter!=last; iter++) {
-			assign
-		}
-	}
-#endif
-}
-#endif
 
 //=============================================================================
 // class pbool_expression_assignment method definitions

@@ -968,11 +968,7 @@ built_in_datatype_def::~built_in_datatype_def() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::what(ostream& o) const {
-#if 0
-	return o << key;
-#else
 	return o << "built-in-datatype-def";
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1134,11 +1130,7 @@ built_in_param_def::~built_in_param_def() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_param_def::what(ostream& o) const {
-#if 0
-	return o << key;
-#else
 	return o << "built-in-param-def";
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1232,22 +1224,13 @@ enum_datatype_def::~enum_datatype_def() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::what(ostream& o) const {
-#if 0
-	return o << key;
-#else
 	return o << "enum-datatype-def";
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
-#if 0
-	return o << "fang, get off your lazy ass and "
-		"write enum_datatype_def::dump()!" << endl;
-#else
 	return what(o) << ": " << key;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1433,12 +1416,7 @@ user_def_datatype::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
-#if 0
-	return o << "fang, get off your lazy ass and "
-		"write user_def_datatype::dump()!" << endl;
-#else
 	return what(o) << ": " << key;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

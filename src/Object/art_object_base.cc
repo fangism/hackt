@@ -91,61 +91,6 @@ using namespace ADS;
 //=============================================================================
 // class object method definitions
 
-#if 0
-PURE VIRTUALIZED in class persistent
-/**
-	Enable or disable warning messages for unimplemented types, 
-	for persistent object management.  
-	Only used by the default methods in the object class.  
-	Off by default.
- */
-bool
-object::warn_unimplemented = false;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Walks object hierarchy and registers reachable pointers with 
-	the persistent object manager.  
-	This default version does nothing, it must be overridden
-	to have some useful effect.  
-	(i.e. this is just a placeholder, should really be pure virtual)
- */
-void
-object::collect_transient_info(persistent_object_manager& m) const {
-	// it really does absolutely nothing by default.  
-	// Or register a pointer with NULL_TYPE (undefined)?
-	m.register_transient_object(this, NULL_TYPE);
-	if (warn_unimplemented) {
-		what(cerr << "WARNING: collect_transient_info() of ")
-			<< " : using NULL_TYPE." << endl;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default behavior for undefined writing to stream.  
- */
-void
-object::write_object(const persistent_object_manager& m) const {
-	if (warn_unimplemented) {
-		what(cerr << "WARNING: write_object() not implemented for ")
-			<< " yet." << endl;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default behavior for undefined loading from stream.  
- */
-void
-object::load_object(persistent_object_manager& m) {
-	if (warn_unimplemented) {
-		what(cerr << "WARNING: load_object() not implemented for ")
-			<< " yet." << endl;
-	}
-}
-#endif
-
 //=============================================================================
 // class object_handle method definitions
 
@@ -619,132 +564,6 @@ object_list::make_index_list(void) const {
 excl_ptr<param_expression_assignment>
 object_list::make_param_assignment(void) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
-#if 0
-	// then expect subsequent items to be the same
-	// or already param_expr in the case of some constants.
-	// However, only the last item may be a constant.
-	excl_ptr<param_expression_assignment>
-		ret(new param_expression_assignment);
-	assert(ret);
-					
-	// Mark all but the last expression as initialized
-	// to the right-most expression.
-	// TO DO: FINISH THIS PART
-	// rvalue = ...
-	// make sure rvalue is validly initialized
-	// i.e. is a constant or a formal parameter
-
-	bool err = false;
-
-	const_iterator last_obj = end();
-	last_obj--;		// safe because list is not empty
-	count_const_ptr<param_expr> rhse(last_obj->is_a<param_expr>());
-
-	// compare with this to make sure dimensions match
-	size_t last_dim = 666;	// initially garbage
-	if (!*last_obj) {
-		cerr << "ERROR: rhs of expression assignment "
-			"is malformed (null)" << endl;
-		err = true;
-	} else if (rhse) {
-		// last term must be initialized or be
-		// dependent on formals
-		// if collective, conservative: may-be-initialized
-		if (!rhse->may_be_initialized()) {
-			rhse->dump(cerr << "ERROR: rhs of expr-"
-				"assignment is not initialized or "
-				"dependent on formals: ") << endl;
-			err = true;
-			exit(1);		// temporary
-		}
-		last_dim = rhse->dimensions();
-	} else {
-		(*last_obj)->what(
-			cerr << "ERROR: rhs is unexpected object: ") << endl;
-		err = true;
-	}
-
-	if (err)
-		return excl_ptr<param_expression_assignment>(NULL);
-	assert(last_dim != 666);		// stupid sanity check
-
-	size_t k = 0;
-	iterator iter = begin();
-		// needs to be modifiable for initialization
-	for ( ; iter!=last_obj; iter++, k++) {	// all but last one
-		// consider modularizing this loop
-		bool for_err = false;
-		count_ptr<param_expr> ir(iter->is_a<param_expr>());
-		if (!*iter) {
-			cerr << "ERROR: in creating item " << k+1 <<
-				" of assign-list." << endl;
-			for_err = true;
-		} else if (ir) {
-			// make this body into subroutine...
-			// a single parameter instance reference
-			// make sure not already initialized!
-			if (ir->dimensions() != last_dim) {
-				cerr << "ERROR: dimensions of expression " <<
-					k+1 << " (" << ir->dimensions() <<
-					") doesn't match that of the rhs (" <<
-					last_dim << ")." << endl;
-				for_err = true;
-			}
-			if (ir->must_be_initialized()) {
-				// definitely initialized or formal
-				cerr << "ERROR: expression " << k+1 <<
-					"is already initialized!"
-					<< endl;
-				// don't care if it's same value...
-				for_err = true;
-			} else if (rhse) {
-				// what to do about collective arrays?
-				count_ptr<pbool_instance_reference>
-					bir(ir.is_a<pbool_instance_reference>());
-				count_ptr<pint_instance_reference>
-					pir(ir.is_a<pint_instance_reference>());
-				// gotta be one class or the other
-				// check this after re-write
-				assert(rhse);
-				// where's type-check? folded into initialize.
-				bool init_ret;
-				if (bir)
-					init_ret = bir->initialize(rhse);
-				else {
-					assert(pir);
-					init_ret = pir->initialize(rhse);
-				}
-				if (!init_ret) {
-					cerr << "Error initializing "
-					"item " << k+1 << " of assign-"
-					"list.  " << endl;
-					for_err = true;
-				}
-			} // else already error in rhse
-			if (for_err)
-				ret->append_param_expression(
-					count_ptr<param_expr>(NULL));
-			else ret->append_param_expression(ir);
-		} else {
-			// is reference to something else
-			// or might be collective...
-			// ERROR
-			cerr << "ERROR: unhandled case for item "
-				<< k+1 << " of assign-list." << endl;
-			for_err = true;
-		}
-		if (for_err)
-			err = for_err;
-	}
-	// finally attach the right-hand-side
-	ret->append_param_expression(rhse);
-
-	// if there are any errors, discard everything?
-	// later: track errors in partially constructed objects
-	if (err)
-		return return_type(NULL);
-	else	return ret;		// is ok
-#else
 	bool err = false;
 	// right-hand-side source expression
 	const parent::value_type& last_obj = back();
@@ -779,7 +598,6 @@ object_list::make_param_assignment(void) {
 	// later: track errors in partially constructed objects
 	if (err) return return_type(NULL);
 	else	return ret;		// is ok
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

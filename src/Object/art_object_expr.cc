@@ -209,43 +209,6 @@ param_expr_list::param_expr_list() : object(), persistent() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-bool
-param_expr_list::may_be_equivalent(const param_expr_list& p) const {
-	const list<const param_expr&> this_list(get_const_ref_list());
-	const list<const param_expr&> other_list(p.get_const_ref_list());
-	if (this_list.size() != other_list.size())
-		return false;
-	const_iterator i = this_list.begin();
-	const_iterator j = other_list.begin();
-	for ( ; i!=this_list.end(); i++, j++) {
-		if (!i->may_be_equivalent(*j))
-			return false;
-		// else continue checking...
-	}
-	assert(j == other_list.end());		// sanity
-	return true;
-}
-
-bool
-param_expr_list::must_be_equivalent(const param_expr_list& p) const {
-	const list<const param_expr&> this_list(get_const_ref_list());
-	const list<const param_expr&> other_list(p.get_const_ref_list());
-	if (this_list.size() != other_list.size())
-		return false;
-	const_iterator i = this_list.begin();
-	const_iterator j = other_list.begin();
-	for ( ; i!=this_list.end(); i++, j++) {
-		if (!i->must_be_equivalent(*j))
-			return false;
-		// else continue checking...
-	}
-	assert(j == p.end());		// sanity
-	return true;
-}
-#endif
-
 //=============================================================================
 // class const_param_expr_list method definitions
 
@@ -777,7 +740,7 @@ const_index::const_index() : index_expr() { }
 const_index::~const_index() { }
 
 //=============================================================================
-// class index_expr_collective method defintions
+// class param_expr_collective method defintions
 
 #if 0
 param_expr_collective::param_expr_collective() : param_expr(), elist() {
@@ -881,24 +844,6 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	IMPORTANT: This initialization is only for static analysis and is
-	not the actual initialization that takes place during unrolling.  
-	\return true if sucessfully initialized with valid expression.  
- */
-bool
-pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	count_const_ptr<pbool_expr> b(i.is_a<pbool_expr>());
-	if (!b) {
-		i->what(cerr << "Cannot initialize a bool parameter with a ")
-			<< " expression, ERROR!  " << endl;
-		return false;
-	} else {
-		return pbool_inst_ref->initialize(b);
-	}
-}
-#else
 /**
 	IMPORTANT: This initialization is only for static analysis and is
 	not the actual initialization that takes place during unrolling.  
@@ -908,7 +853,6 @@ bool
 pbool_instance_reference::initialize(count_const_ptr<pbool_expr> i) {
 	return pbool_inst_ref->initialize(i);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1096,24 +1040,6 @@ pint_instance_reference::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	IMPORTANT: This initialization is only for static analysis and is
-	not the actual initialization that takes place during unrolling.  
-	\return true if successfully initialized with valid expression.  
- */
-bool
-pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	count_const_ptr<pint_expr> b(i.is_a<pint_expr>());
-	if (!b) {
-		i->what(cerr << "Cannot initialize an int parameter with a ")
-			<< " expression, ERROR!  " << endl;
-		return false;
-	} else {
-		return pint_inst_ref->initialize(b);
-	}
-}
-#else
 /**
 	IMPORTANT: This initialization is only for static analysis and is
 	not the actual initialization that takes place during unrolling.  
@@ -1123,7 +1049,6 @@ bool
 pint_instance_reference::initialize(count_const_ptr<pint_expr> i) {
 	return pint_inst_ref->initialize(i);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1820,9 +1745,6 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
  */
 relational_expr::relational_expr() :
 		lx(NULL), rx(NULL), op("") {
-#if 0
-	cerr << "relational_expr: empty constructor." << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
