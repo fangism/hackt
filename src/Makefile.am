@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2004/11/30 01:24:57 fang Exp $
+#	$Id: Makefile.am,v 1.23 2004/11/30 02:32:50 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -186,6 +186,7 @@ libart___la_SOURCES = \
 	Object/art_object.h \
 	Object/art_object_IO.cc \
 	Object/art_object_type_hash.h \
+	config.h \
 	art++.h
 
 # note: Object/art_object_IO.cc only contains explicit template instantiations
