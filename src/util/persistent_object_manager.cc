@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.12 2004/12/25 03:12:23 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12.6.1 2005/01/19 04:13:17 fang Exp $
  */
 
 #include <fstream>
@@ -469,7 +469,15 @@ persistent_object_manager::write_header(ofstream& f) {
 void
 persistent_object_manager::load_header(ifstream& f) {
 	size_t max;
+	INVARIANT(f.good());
 	read_value(f, max);
+	if (!f.good()) {
+		// then file is empty
+		// can't get name from ifstream?
+		cerr << "File is empty." << endl;
+		// more creative error-handling later...
+		THROW_EXIT;
+	}
 	size_t i = 0;
 	for ( ; i<max; i++) {
 		persistent::hash_key t;

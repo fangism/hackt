@@ -2,7 +2,7 @@
 	\file "indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.2 2004/12/02 01:40:35 fang Exp $
+	$Id: indent.cc,v 1.2.6.1 2005/01/19 04:13:17 fang Exp $
  */
 
 #include <iostream>
@@ -47,7 +47,7 @@ public:
 	enable(void) { status_stack.push(1); }
 
 	void
-	disable(void) { status_stack.push(1); }
+	disable(void) { status_stack.push(0); }
 
 	void
 	restore_status(void) { status_stack.pop(); }
