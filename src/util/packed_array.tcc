@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.3 2004/12/19 07:51:09 fang Exp $
+	$Id: packed_array.tcc,v 1.4 2004/12/19 19:40:20 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_TCC__
@@ -80,6 +80,27 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,T>::~packed_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the index of the first entry, which is the offset. 
+	Useful for constructing the multikey_generator.  
+ */
+PACKED_ARRAY_TEMPLATE_SIGNATURE
+typename packed_array<D,T>::key_type
+packed_array<D,T>::first_key(void) const {
+	return offset;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_ARRAY_TEMPLATE_SIGNATURE
+typename packed_array<D,T>::key_type
+packed_array<D,T>::last_key(void) const {
+	return sizes +offset -ones;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function to compute the size based on dimensions.  
+ */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 size_t
 packed_array<D,T>::sizes_product(const key_type& k) {
@@ -126,10 +147,6 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 size_t
 packed_array<D,T>::key_to_index(const key_type& k) const {
 	const key_type diff(k -offset);
-#if 0
-	std::transform(k.begin(), k.end(), offset.begin(), 
-		diff.begin(), std::minus<size_t>());
-#endif
 //	const size_t* diff_last = diff.end();
 //	--diff_last;			// this is ok
 //	const typename key_type::const_iterator
@@ -147,7 +164,7 @@ packed_array<D,T>::operator [] (const key_type& k) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_ARRAY_TEMPLATE_SIGNATURE
-T
+const T&
 packed_array<D,T>::operator [] (const key_type& k) const {
 	return values[key_to_index(k)];
 }
@@ -156,8 +173,7 @@ packed_array<D,T>::operator [] (const key_type& k) const {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 void
 packed_array<D,T>::resize(const key_type& s) {
-	values.resize(accumulate(s.begin(), s.end(), 1,
-		std::multiplies<size_t>()));
+	values.resize(sizes_product(s));
 	sizes = s;
 	reset_coeffs();
 }
@@ -170,7 +186,7 @@ packed_array<D,T>::dump(ostream& o) const {
 		", offset = " << offset << ", coeffs = " << coeffs << endl;
 	o << "{ ";
 	ostream_iterator<T> osi(o, ", ");
-	copy(&values[0], &values[values.size()], osi);
+	copy(begin(), end(), osi);
 	return o << " }" << endl;
 }
 

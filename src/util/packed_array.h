@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.3 2004/12/19 07:51:09 fang Exp $
+	$Id: packed_array.h,v 1.4 2004/12/19 19:40:20 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_H__
@@ -60,8 +60,8 @@ public:
 	typedef	const T&				const_reference;
 	typedef	pointer					iterator;
 	typedef	const_pointer				const_iterator;
-	typedef	pointer					reverse_iterator;
-	typedef	const_pointer				const_reverse_iterator;
+	typedef	std::reverse_iterator<pointer>		reverse_iterator;
+	typedef	std::reverse_iterator<const_pointer>	const_reverse_iterator;
 
 public:
 	/// convenient array of all 1's
@@ -97,6 +97,36 @@ public:
 
 	~packed_array();
 
+	iterator
+	begin(void) { return &values[0]; }
+
+	iterator
+	end(void) { return &values[values.size()]; }
+
+	const_iterator
+	begin(void) const { return &values[0]; }
+
+	const_iterator
+	end(void) const { return &values[values.size()]; }
+
+	reverse_iterator
+	rbegin(void) { return &values[values.size()]; }
+
+	reverse_iterator
+	rend(void) { return &values[0]; }
+
+	const_reverse_iterator
+	rbegin(void) const { return &values[values.size()]; }
+
+	const_reverse_iterator
+	rend(void) const { return &values[0]; }
+
+	key_type
+	first_key(void) const;
+
+	key_type
+	last_key(void) const;
+
 	static
 	size_t
 	sizes_product(const key_type& k);
@@ -119,7 +149,8 @@ public:
 	reference
 	operator [] (const key_type& k);
 
-	value_type
+//	value_type
+	const_reference
 	operator [] (const key_type& k) const;
 
 	reference
@@ -128,7 +159,8 @@ public:
 		return (*this)[k];
 	}
 
-	value_type
+//	value_type
+	const_reference
 	at(const key_type& k) const {
 		INVARIANT(range_check(k));
 		return (*this)[k];
@@ -199,6 +231,36 @@ public:
 
 	~packed_array();
 
+	iterator
+	begin(void) { return values.begin(); }
+
+	iterator
+	end(void) { return values.end(); }
+
+	const_iterator
+	begin(void) const { return values.begin(); }
+
+	const_iterator
+	end(void) const { return values.end(); }
+
+	reverse_iterator
+	rbegin(void) { return values.rbegin(); }
+
+	reverse_iterator
+	rend(void) { return values.rend(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return values.rbegin(); }
+
+	const_reverse_iterator
+	rend(void) const { return values.rend(); }
+
+	key_type
+	first_key(void) const;
+
+	key_type
+	last_key(void) const;
+
 	static
 	size_t
 	sizes_product(const key_type& k);
@@ -221,7 +283,8 @@ public:
 	reference
 	operator [] (const key_type& k);
 
-	value_type
+//	value_type
+	const_reference
 	operator [] (const key_type& k) const;
 
 	reference
@@ -230,7 +293,8 @@ public:
 		return (*this)[k];
 	}
 
-	value_type
+//	value_type
+	const_reference
 	at(const key_type& k) const {
 		INVARIANT(range_check(k));
 		return (*this)[k];
