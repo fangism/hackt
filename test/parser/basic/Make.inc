@@ -1,0 +1,18 @@
+# "test/parser/basic/Make.inc"
+
+BASIC_PARSER_TEST_DIR = test/parser/basic
+
+BASIC_PARSER_TEST_SUBJECTS = \
+	$(BASIC_PARSER_TEST_DIR)/000 \
+	$(BASIC_PARSER_TEST_DIR)/001 \
+	$(BASIC_PARSER_TEST_DIR)/002 \
+	$(BASIC_PARSER_TEST_DIR)/003 \
+	$(BASIC_PARSER_TEST_DIR)/004 \
+	$(BASIC_PARSER_TEST_DIR)/005 \
+	$(BASIC_PARSER_TEST_DIR)/006 \
+	$(BASIC_PARSER_TEST_DIR)/007 \
+	$(BASIC_PARSER_TEST_DIR)/008 \
+	$(BASIC_PARSER_TEST_DIR)/009
+
+# gmake would allow addprefix macro, but bsdmake is lame and can't
+

@@ -1,0 +1,22 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: defproc [3:1..7]
+22	(def-type-id) [3:9..18]
+82	(node_list): (port-formal-decl) ... [3:19..34]
+135	{ [3:36]
+195	(node_list): (prs-body) ... [4:1--7:1]
+230	(id-expr) [8:1..11]
+39	} [9:1]
+in state 39, possible rules are:
+	type_id : id_expr . optional_member_index_expr_list_in_angles  (42)
+	member_index_expr : id_expr .  (178)
+	optional_member_index_expr_list_in_angles : .  (221)
+acceptable tokens are: 
+	'(' (reduce)
+	'.' (reduce)
+	'<' (shift)
+	'=' (reduce)
+	'[' (reduce)
+	ID (reduce)

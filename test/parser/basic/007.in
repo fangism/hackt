@@ -1,0 +1,9 @@
+// this should be a legitimate PRS definition, should pass
+
+defproc myinverter(node a; node b) {
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+
