@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.15 2005/01/14 03:46:39 fang Exp $
+	$Id: art_parser_token.cc,v 1.16 2005/01/15 06:09:41 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -54,7 +54,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::token_paramtype, "paramtype")
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class terminal definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.10 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_formal.cc,v 1.11 2005/01/15 06:09:41 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -52,7 +52,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl, "(template-formal-decl)"
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class data_param_id method definitions

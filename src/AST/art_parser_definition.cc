@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.12 2005/01/14 06:28:43 fang Exp $
+	$Id: art_parser_definition.cc,v 1.13 2005/01/15 06:09:41 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -67,7 +67,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::typedef_alias,
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // abstract class prototype method definitions

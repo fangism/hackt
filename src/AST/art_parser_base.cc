@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_base.cc,v 1.12 2005/01/15 06:09:40 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -56,7 +56,7 @@ namespace parser {
 #include "using_ostream.h"
 using util::indent;
 using util::auto_indent;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // global constants

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.14 2005/01/14 03:46:39 fang Exp $
+	$Id: art_parser_instance.cc,v 1.15 2005/01/15 06:09:41 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -68,7 +68,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::conditional_instantiation,
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class instance_management method definitions

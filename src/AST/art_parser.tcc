@@ -1,7 +1,7 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.8 2005/01/14 00:00:51 fang Exp $
+	$Id: art_parser.tcc,v 1.9 2005/01/15 06:09:40 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -53,7 +53,7 @@
 namespace ART {
 namespace parser {
 using util::what;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // TEMPLATE METHOD DEFINITIONS
