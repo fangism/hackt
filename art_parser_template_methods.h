@@ -80,7 +80,7 @@ node_list_base<T>::~node_list_base() {
 /// copy constructor, no transfer of ownership
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const node_list_base<T>& l) : 
-		list_parent(l) {
+		node(), list_parent(l) {
 #if DEBUG_NODE_LIST_BASE
 	cerr << "node_list_base<T>::node_list_base(const node_list_base<T>&);" << endl;
 	cerr << "\targument's size() = " << l.size() << endl;
@@ -95,7 +95,10 @@ node_list_base<T>::what(ostream& o) const {
 	// print first item to get type
 	const_iterator i = begin();
 	o << "(node_list): ";
-	if (*i) { 
+	if (i == end()) {
+//		o << "<empty> ";
+	} else if (*i) { 
+		// possible for list to be empty
 		(*i)->what(o) << " ";
 	} else {
 //		o << "<nothing> ";
@@ -181,7 +184,8 @@ node_list<T,D>::node_list(const T* n) :
  */
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::node_list(const node_list<T,D>& l) : 
-		node_list_base<T>(l), open(NULL), close(NULL), delim(l.delim) {
+		node(), node_list_base<T>(l),
+		open(NULL), close(NULL), delim(l.delim) {
 	// delim list will also copy without transfer of ownership
 #if DEBUG_NODE_LIST
 	cerr << "node_list<T,D>::node_list(const node_list<T,D>&);" << endl;

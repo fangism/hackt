@@ -165,7 +165,11 @@ extern const char* const yyrule[];
 	token_identifier*	_token_identifier;
 	token_quoted_string*	_token_quoted_string;
 	token_datatype*		_token_datatype;
+	token_bool_type*	_token_bool_type;
+	token_int_type*		_token_int_type;
 	token_paramtype*	_token_paramtype;
+	token_pbool_type*	_token_pbool_type;
+	token_pint_type*	_token_pint_type;
 	token_else*		_token_else;
 
 	root_body*		_root_body;
@@ -194,6 +198,9 @@ extern const char* const yyrule[];
 	data_type_ref_list*	_data_type_ref_list;
 	user_data_type_prototype*	_user_data_type_prototype;
 	user_data_type_def*	_user_data_type_def;
+	enum_prototype*		_enum_prototype;
+	enum_member_list*	_enum_member_list;
+	enum_def*		_enum_def;
 	chan_type*		_chan_type;
 	user_chan_type_prototype*	_user_chan_type_prototype;
 	user_chan_type_def*	_user_chan_type_def;
@@ -349,14 +356,17 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_keyword>	SET GET SEND RECV
 %token	<_token_keyword>	CHANNEL
 %token	<_token_keyword>	TEMPLATE
+%token	<_token_keyword>	ENUM
 
 %token	<_token_else>		ELSE
 
 %token	<_token_bool>		BOOL_TRUE BOOL_FALSE
 
 /* _token_type */
-%token	<_token_datatype>	INT_TYPE BOOL_TYPE
-%token	<_token_paramtype>	PINT_TYPE PBOOL_TYPE
+%token	<_token_int_type>	INT_TYPE
+%token	<_token_bool_type>	BOOL_TYPE
+%token	<_token_pint_type>	PINT_TYPE
+%token	<_token_pbool_type>	PBOOL_TYPE
 
 /* non-terminals */
 %type	<_root_body>	module
@@ -390,6 +400,9 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_chan_type>	base_chan_type chan_or_port
 %type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
 %type	<_token_datatype>	base_data_type
+%type	<_enum_prototype>	declare_enum
+%type	<_enum_def>		defenum
+%type	<_enum_member_list>	enum_member_list
 %type	<_user_data_type_def>	defdatatype
 %type	<_user_chan_type_def>	defchan
 %type	<_chp_body>	set_body get_body send_body recv_body
@@ -453,6 +466,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_expr_list>	member_index_expr_list
+%type	<_expr>	optional_member_index_expr
 %type	<_expr>	member_index_expr unary_expr
 %type	<_expr>	multiplicative_expr additive_expr shift_expr
 %type	<_expr>	relational_equality_expr and_expr
@@ -532,6 +546,7 @@ definition
 	: defproc { $$ = $1; }
 	| defdatatype { $$ = $1; }
 	| defchan { $$ = $1; }
+	| defenum { $$ = $1; }
 	;
 
 /* declaration prototypes, like forward declarations */
@@ -539,6 +554,7 @@ prototype_declaration
 	: declare_proc_proto { $$ = $1; }
 	| declare_datatype_proto { $$ = $1; }
 	| declare_chan_proto { $$ = $1; }
+	| declare_enum { $$ = $1; }
 	;
 
 template_specification
@@ -582,9 +598,15 @@ optional_port_formal_decl_list_in_parens
 	: '(' port_formal_decl_list ')'
 		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
 	| '(' ')'
+		{ $$ = (new port_formal_decl_list())->wrap($1, $2); }
+		/* empty, but wrapped */
+/***
+	was this
 		{ $$ = (new port_formal_decl_list(NULL))->wrap($1, $2); }
+	invalidating comment
 		// omitting NULL element can create problems with empty
 		// uninitialized list, better add NULL
+***/
 	;
 
 /***
@@ -631,8 +653,23 @@ template_formal_id_list
 	;
 
 template_formal_id
+	/** update formal declarations: only allow dense arrays, no ranges */
 	: ID optional_range_list_in_brackets
 		{ $$ = new template_formal_id($1, $2); }
+/**
+	from http://www.computing.surrey.ac.uk/research/dsrg/fog/CxxGrammar.y:
+	The potential shift-reduce conflict on > is resolved by
+	flattening part of the expression grammar to know when the 
+	next > is template end or arithmetic >.
+**/
+	| ID optional_range_list_in_brackets '=' shift_expr
+		{ $$ = new template_formal_id($1, $2, $3, $4); }
+/**
+	We choose to force the user to disambiguate by placing parentheses
+	around relational expressions, which covers arithmetic use of '>'.
+	Notice that below, shift_expr is the highest expression
+	before relational_expr,  
+**/
 	;
 
 port_formal_decl_list
@@ -657,6 +694,7 @@ port_formal_id_list
 	;
 
 port_formal_id
+	/** update port formals: only dense arrays allowed, no sparse ranges */
 	: ID optional_range_list_in_brackets
 		{ $$ = new port_formal_id($1, $2); }
 	;
@@ -777,6 +815,28 @@ get_body
 	: GET '{' chp_body '}'
 		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	;
+
+declare_enum
+	: ENUM ID ';'
+		{ $$ = new enum_prototype($1, $2, $3); }
+	;
+
+defenum
+	: ENUM ID '{' enum_member_list '}'
+		{ $$ = new enum_def($1, $2,
+			enum_member_list_wrap($3, $4, $5)); }
+	;
+
+enum_member_list
+	: enum_member_list ',' ID
+		{ $$ = enum_member_list_append($1, $2, $3); }
+	| ID
+		{ $$ = new enum_member_list($1); }
+	;
+
+/** 
+	CHANNELS
+**/
 
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
@@ -1322,10 +1382,16 @@ qualified_id
 		{ $$ = (new qualified_id($1))->append($2, $3); }
 	;
 
+/** was mandatory, but is now optional, blank items are allowed! */
 member_index_expr_list
-	: member_index_expr_list ',' member_index_expr
+	: member_index_expr_list ',' optional_member_index_expr
 		{ $$ = expr_list_append($1, $2, $3); }
-	| member_index_expr { $$ = new expr_list($1); }
+	| optional_member_index_expr { $$ = new expr_list($1); }
+	;
+
+optional_member_index_expr
+	: member_index_expr
+	| { $$ = NULL; }
 	;
 
 /* this is what we want for expression arguments, without operators */
@@ -1593,16 +1659,6 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		// how do we know which union member?
 		// need to look at the state stack, and the transition
 		// from the previous state
-/*** before union resolution was introduced:
-		if (v && v->n) {
-			v->n->what(cerr << '\t') << " " 
-				<< v->n->where();
-		} else {
-			cerr << "\t(null) ";
-		}
-***/
-
-// after union resolution was introduced
 		if (v) {
 			resolved_node = yy_union_resolve(*v, *(s-1), *s);
 			if (resolved_node)
@@ -1618,25 +1674,15 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	}
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
-	assert(resolved_node);	// NULL check
-//	cerr << "received: ";
+//	assert(resolved_node);
+//	NULL check not necessarily valid if last token normally returned NULL
 	if (at_eof()) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
-/***
-//	before union resolution was necessary this was used, very simple
-		(yylval.n->what(cerr << "\t") << " ") << yylval.n->where();
-***/
-/***
-	PROBLEM: now, don't know how to resolve union member 
-	of the offending token, because it won't correspond to any valid state.  
-	*s is unknown, and yylval is unknown
-	The state-stack gives us no futher information.  
-	BUT we have access to yychar, from the lexer which tells us the last
-	token type returned.  
-		// CERTAIN DEATH on yy_union_resolve!
-		resolved_node = yy_union_resolve(yylval, *(s-1), *s);
-***/
+//		The last token from the lexer, yychar, tells us the last
+//		token type returned.  
+//		can't use: yy_union_resolve(yylval, *(s-1), *s);
+
 		resolved_node = yy_union_lookup(yylval, yychar);
 		assert(resolved_node);
 		(resolved_node->what(cerr << "\t") << " ")
@@ -1657,6 +1703,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// list possible expected tokens based on state table
 	// code ripped off from YYDEBUG parts of y.tab.c
 	cerr << "acceptable tokens are: " << endl;
+	int accept_count = 0;
 	{
 		int yychar;
 		int yyn;
@@ -1665,17 +1712,40 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 			if ((yyn = yysindex[*yyssp]) && 
 					(yyn += yychar) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar)
+					yycheck[yyn] == yychar) {
 				cerr << '\t' << yyname[yychar]
 					<< " (shift)" << endl;
-			else if ((yyn = yyrindex[*yyssp]) && 
+				accept_count++;
+			} else if ((yyn = yyrindex[*yyssp]) && 
 					(yyn += yychar) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar)
+					yycheck[yyn] == yychar) {
 				cerr << '\t' << yyname[yychar]
 					<< " (reduce)" << endl;
+				accept_count++;
+			}
 		}
 	}
+
+/***
+	Dr. Fancy-Pants says:
+	If there can be only one possible token, such as a terminating
+	semicolon, then automatically fill it in or push NULL onto the 
+	symbol stack, and proceed as if nothing happened.  
+	Just remember that there was an error in the first place.  
+
+	if (accept_count == 1) {
+		...
+	}
+	
+	The Oracle says:
+	Multiple possible tokens? examine context and read the 
+	programmer's mind to guess what was intended.  Duh!
+
+	else if (accept_count < too_many) {
+		...
+	}
+***/
 	
 	// or throw exception
 	exit(1);

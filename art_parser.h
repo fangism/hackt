@@ -1,4 +1,3 @@
-//-----------------------------------------------------------------------------
 // "art_parser.h"
 // parser classes for ART only!
 
@@ -22,7 +21,10 @@ namespace ART {
 
 // forward declaration of outside namespace and classes
 namespace entity {
-	class object;		// defined in "art_object.h"
+	// defined in "art_object.h"
+	class object;
+	class enum_datatype_def;
+	class process_definition;
 }
 
 using namespace std;
@@ -274,7 +276,7 @@ virtual	void release_append(node_list<T,D>& dest);
 	Abstract base class for root-level items.  
 	Root-level items include statements that can be found
 	in namespaces.  
-	Assertion: all root items are nonterimnals.  
+	Assertion: all root items are nonterminals.  
  */
 class root_item : virtual public node {
 public:
@@ -288,11 +290,10 @@ virtual	line_position rightmost(void) const = 0;
 
 typedef node_list<root_item>	root_body;
 
-#define root_body_wrap(b,l,e)					\
+#define root_body_wrap(b,l,e)						\
 	IS_A(root_body*, l->wrap(b,e))
-#define root_body_append(l,d,n)					\
+#define root_body_append(l,d,n)						\
 	IS_A(root_body*, l->append(d,n))
-
 
 //=============================================================================
 /**
@@ -335,12 +336,12 @@ typedef node_list<expr,comma>	expr_list;
 class template_argument_list : public expr_list {	// or expr_list_base?
 public:
 	template_argument_list(expr_list* e);
-virtual	~template_argument_list();
+	~template_argument_list();
 
-virtual	ostream& what(ostream& o) const;
-using expr_list::leftmost;
-using expr_list::rightmost;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	using expr_list::leftmost;
+	using expr_list::rightmost;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_argument_list
 
 #define template_argument_list_wrap(b,l,e)				\
@@ -756,15 +757,28 @@ public:
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
 	never_const_ptr<object> check_build(never_ptr<context> c) const;
-};
+};	// end class range
 
-/// all range lists are comma-separated
-typedef node_list<range,comma>	range_list;
+//-----------------------------------------------------------------------------
+/// base class for range_list
+typedef node_list<range,comma>	range_list_base;
+
+/// all range lists are comma-separated, until we discard for C-style arrays
+class range_list : public range_list_base {
+protected:
+	typedef	range_list_base				parent;
+	// no additional members
+public:
+	range_list(const range* r);
+	~range_list();
+
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class range_list
 
 #define range_list_wrap(b,l,e)						\
-	IS_A(range_list*, l)->wrap(b,e)
+	IS_A(range_list*, l->wrap(b,e))
 #define range_list_append(l,d,n)					\
-	IS_A(range_list*, l)->append(d,n)
+	IS_A(range_list*, l->append(d,n))
 
 //=============================================================================
 /// abstract base class for unary expressions
@@ -942,8 +956,34 @@ virtual	~token_datatype();
 virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class token_datatype
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "int" data type.
+ */
+class token_int_type : public token_datatype {
+public:
+	token_int_type(const char* dt);
+	~token_int_type();
+
+//	ostream& what(ostream& o) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class token_int_type
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "bool" data type.
+ */
+class token_bool_type : public token_datatype {
+public:
+	token_bool_type(const char* dt);
+	~token_bool_type();
+
+//	ostream& what(ostream& o) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class token_bool_type
 
 //-----------------------------------------------------------------------------
 /**
@@ -957,8 +997,34 @@ virtual	~token_paramtype();
 virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class token_paramtype
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "pint" parameter type.
+ */
+class token_pbool_type : public token_paramtype {
+public:
+	token_pbool_type(const char* dt);
+	~token_pbool_type();
+
+//	ostream& what(ostream& o) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class token_pbool_type
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "pint" parameter type.
+ */
+class token_pint_type : public token_paramtype {
+public:
+	token_pint_type(const char* dt);
+	~token_pint_type();
+
+//	ostream& what(ostream& o) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class token_pint_type
 
 //-----------------------------------------------------------------------------
 /**
@@ -1426,11 +1492,12 @@ protected:
 	const excl_const_ptr<range_list>	dim;	///< optional dimensions
 public:
 	port_formal_id(const token_identifier* n, const range_list* d);
-virtual	~port_formal_id();
+	~port_formal_id();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class port_formal_id
 
 /// list of port-formal identifiers (optional arrays)
@@ -1442,7 +1509,9 @@ typedef	node_list<port_formal_id,comma>	port_formal_id_list;
 	IS_A(port_formal_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
-/// port formal declaration contains a type and identifier list
+/**
+	Port formal declaration contains a type and identifier list.
+ */
 class port_formal_decl : public node {
 protected:
 	const excl_const_ptr<concrete_type_ref>		type;	///< formal base type
@@ -1457,7 +1526,10 @@ virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 };	// end class port_formal_decl
 
-/// list of port-formal declarations
+/**
+	List of port-formal declarations.  
+	Later: distinguish between empt ports and NULL (unspecified ports).  
+ */
 typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
 
 #define port_formal_decl_list_wrap(b,l,e)				\
@@ -1466,13 +1538,20 @@ typedef	node_list<port_formal_decl,semicolon>	port_formal_decl_list;
 	IS_A(port_formal_decl_list*, l)->append(d,n) 
 
 //=============================================================================
-/// single template formal identifier, with optional dimension array spec.  
+/**
+	Single template formal identifier,
+	with optional dimension array spec.  
+	Now with optional default argument expression.  
+ */
 class template_formal_id : public node {
 protected:
 	const excl_const_ptr<token_identifier>	name;	///< formal name
 	const excl_const_ptr<range_list>	dim;	///< optional dimensions
+	const excl_const_ptr<token_char>	eq;	///< '=' token
+	const excl_const_ptr<expr>		dflt;	///< default value
 public:
-	template_formal_id(const token_identifier* n, const range_list* d);
+	template_formal_id(const token_identifier* n, const range_list* d, 
+		const token_char* e = NULL, const expr* v = NULL);
 virtual	~template_formal_id();
 
 virtual	ostream& what(ostream& o) const;
@@ -1490,7 +1569,13 @@ typedef	node_list<template_formal_id,comma>	template_formal_id_list;
 	IS_A(template_formal_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
-/// template formal declaration contains a type and identifier list
+/**
+	template formal declaration contains a type and identifier list
+	Later: ADVANCED -- type can be a concrete_type_ref!
+		Mr. Fancy-pants!
+		Don't forget that its check build already
+		sets current_fundamental_type
+ */
 class template_formal_decl : public node {
 protected:
 	const excl_const_ptr<token_paramtype>	type;	///< formal base type
@@ -1507,13 +1592,29 @@ virtual	line_position rightmost(void) const;
 virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_decl
 
-/// list of template-formal declarations
+//-----------------------------------------------------------------------------
+#if 1
 typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
+#else
+typedef	node_list<template_formal_decl,semicolon>
+					template_formal_decl_list_base;
+
+/// list of template-formal declarations
+class template_formal_decl_list : public template_formal_decl_list_base {
+protected:
+	typedef	template_formal_decl_list_base		parent;
+public:
+	template_formal_decl_list(const template_formal_decl* tf);
+	~template_formal_decl_list();
+
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class template_formal_decl_list
+#endif
 
 #define template_formal_decl_list_wrap(b,l,e)				\
-	IS_A(template_formal_decl_list*, l)->wrap(b,e)
+	IS_A(template_formal_decl_list*, l->wrap(b,e))
 #define template_formal_decl_list_append(l,d,n)				\
-	IS_A(template_formal_decl_list*, l)->append(d,n) 
+	IS_A(template_formal_decl_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -1522,8 +1623,9 @@ typedef	node_list<template_formal_decl,semicolon> template_formal_decl_list;
  */
 class concrete_type_ref : public node {
 protected:
-	const excl_const_ptr<type_base>		base;	///< definition name base
-	/// optional template arguments
+	/** definition name base */
+	const excl_const_ptr<type_base>			base;
+	/** optional template arguments */
 	const excl_const_ptr<template_argument_list>	temp_spec;
 public:
 	concrete_type_ref(const type_base* n, 
@@ -1579,6 +1681,7 @@ public:
 		node(), temp_spec(tf), id(i) { }
 virtual	~signature_base();
 
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class signature_base
 
 //=============================================================================
@@ -1592,7 +1695,10 @@ class process_signature : public signature_base {
 protected:
 	const excl_const_ptr<token_keyword>	def;	///< definition keyword
 		// should never be NULL, could be const reference?
-	/** optional port formal list */
+	/**
+		Optional port formal list.  
+		Never NULL, but may be empty.  
+	 */
 	const excl_const_ptr<port_formal_decl_list>	ports;
 public:
 	process_signature(const template_formal_decl_list* tf, 
@@ -1602,6 +1708,9 @@ virtual	~process_signature();
 
 // note: non-virtual
 	const token_identifier& get_name(void) const;
+//	excl_ptr<process_definition>
+//		make_process_signature(never_ptr<context> c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------
@@ -1613,16 +1722,18 @@ public:
 	process_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const token_char* s);
-virtual	~process_prototype();
+	~process_prototype();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class process_prototype
 
 //-----------------------------------------------------------------------------
-/// process definition
+/**
+	Process definition, syntax structure.  
+ */
 class process_def : public definition, public process_signature {
 protected:
 //	const excl_const_ptr<token_keyword>		def;	//  inherited
@@ -1633,11 +1744,12 @@ public:
 	process_def(const template_formal_decl_list*, 
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b);
-virtual	~process_def();
+	~process_def();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class process_def
 
 //=============================================================================
@@ -1695,6 +1807,7 @@ public:
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
 		const data_param_list* p);
 virtual	~user_data_type_signature();
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -1708,12 +1821,12 @@ public:
 		const token_keyword* df, const token_identifier* n, 
 		const token_string* dp, const concrete_type_ref* b, 
 		const data_param_list* p, const token_char* s);
-virtual	~user_data_type_prototype();
+	~user_data_type_prototype();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -1736,12 +1849,91 @@ public:
 		const data_param_list* p, 
 		const token_char* l, const language_body* s,
 		const language_body* g, const token_char* r);
-virtual	~user_data_type_def();
+	~user_data_type_def();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class user_data_type_def
+
+//-----------------------------------------------------------------------------
+/**
+	Common field data to enumeration declaration and definitions.  
+ */
+class enum_signature : public signature_base {
+protected:
+//	const excl_const_ptr<token_identifier>	id;	// inherited
+	/** "enum" keyword */
+	const excl_const_ptr<token_keyword>	en;
+public:
+	enum_signature(const token_keyword* e, const token_identifier* i);
+virtual	~enum_signature();
+
+//	excl_ptr<enum_datatype_def>
+//		make_enum_signature(never_const_ptr<context> c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class enum_signature
+
+//-----------------------------------------------------------------------------
+/**
+	Forward declaration of an enum type.  
+	Not really a prototype, but classified as such for convenience.  
+ */
+class enum_prototype : public prototype, public enum_signature {
+protected:
+	/** semicolon token (optional) */
+	const excl_const_ptr<token_char>	semi;
+public:
+	enum_prototype(const token_keyword* e, const token_identifier* i, 
+		const token_char* s);
+	~enum_prototype();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class enum_prototype
+
+//-----------------------------------------------------------------------------
+typedef	node_list<token_identifier,comma>	enum_member_list_base;
+
+/**
+	Specialized list of identifiers for enumeration members.  
+ */
+class enum_member_list : public enum_member_list_base {
+protected:	// no new members
+	typedef	enum_member_list_base		parent;
+public:
+	enum_member_list(const token_identifier* i);
+	~enum_member_list();
+
+	/** overrides default */
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end enum_member_list
+
+#define enum_member_list_wrap(b,l,e)					\
+	IS_A(enum_member_list*, l->wrap(b,e))
+#define enum_member_list_append(l,d,n)					\
+	IS_A(enum_member_list*, l->append(d,n))
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Definition of an enumeration data type.
+ */
+class enum_def : public definition, public enum_signature {
+protected:
+	/** names of the enumerated members */
+	const excl_const_ptr<enum_member_list>	members;
+public:
+	enum_def(const token_keyword* e, const token_identifier* i,      
+		const enum_member_list*	m);
+	~enum_def();
+
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class enum_def
 
 //=============================================================================
 /// user-defined channel type signature
@@ -1757,6 +1949,7 @@ public:
 		const token_string* dp, const chan_type* b, 
 		const data_param_list* p);
 virtual	~user_chan_type_signature();
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -1797,11 +1990,11 @@ public:
 		const data_param_list* p, 
 		const token_char* l, const language_body* s, 
 		const language_body* g, const token_char* r);
-virtual	~user_chan_type_def();
+	~user_chan_type_def();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class user_chan_type_def
 
 //=============================================================================

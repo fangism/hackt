@@ -30,19 +30,14 @@ context::context(never_ptr<name_space> g) :
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
 		current_open_definition(NULL), 
-		check_against_previous_definition_signature(false), 
+		current_prototype(NULL), 
+//		check_against_previous_definition_signature(false), 
 		current_definition_reference(NULL), 
 		current_fundamental_type(NULL), 
-		current_instance_to_connect(NULL), 
 		current_template_arguments(NULL), 
 		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
-#if	UNIFIED_OBJECT_STACK
 		object_stack(), 
-#else
-		instance_reference_stack(), 
-		expression_stack(), 
-#endif
 		global_namespace(g) {
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -50,21 +45,10 @@ context::context(never_ptr<name_space> g) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
-#if	UNIFIED_OBJECT_STACK
 	{
 	count_ptr<object> bogus;
 	object_stack.push(bogus);
 	}
-#else
-	{
-	count_const_ptr<instance_reference_base> bogus;
-	instance_reference_stack.push(bogus);
-	}
-	{
-	count_const_ptr<param_expr> bogus;
-	expression_stack.push(bogus);
-	}
-#endif
 	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
@@ -83,6 +67,7 @@ context::context(never_ptr<name_space> g) :
 	// could use "some_ptr"...
 
 	// persistent pointers
+#if 0
 	never_ptr<built_in_param_def> never_pbool_pd;
 	never_ptr<built_in_param_def> never_pint_pd;
 	{
@@ -152,6 +137,7 @@ context::context(never_ptr<name_space> g) :
 	//	template arguments and template formals!!!
 	// recall that "int" is a template
 	// shall we temporarily de-template it?
+#endif
 
 }	// end of context constructor
 
@@ -261,6 +247,118 @@ context::top_namespace(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	PHASE OUT current_prototype? NO, need for adding formals!
+ */
+never_ptr<definition_base>
+context::add_declaration(excl_ptr<definition_base> d) {
+	never_ptr<definition_base> ret(current_namespace->add_definition(d));
+	if (!ret) {
+		// something went wrong
+		type_error_count++;
+		// additional error message isn't really necessary...
+		cerr << endl << "ERROR in context::add_declaration().  ";
+//		cerr << d->where() << endl;	// caller will do
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETE
+/**
+	Declares an enumeration type in the current namespace.  
+	As long as name doesn't conflict with something else, 
+	nothing else can really go wrong.  
+ */
+void
+context::declare_enum(const token_identifier& en) {
+	never_const_ptr<enum_datatype_def> e(
+		current_namespace->add_enum_declaration(en));
+	if (!e) {
+		// something went wrong
+		type_error_count++;
+		cerr << en.where() << endl;
+		exit(1);
+	}
+	// else just return
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Q: GENERIC open_definition?  in place of type-specific?
+	Looks up enum definition, and returns modifable pointer, 
+		sets current_open_definition.
+	\param es the enum signature, which contains and identifier, 
+		optional template signature, and port signature.  
+	Details: checks to see if prototype was already declared.  
+	If already declared, then this re-declaration MUST be indentical, 
+	else report error of mismatched re-declaration.  
+	If not already declared, create an entry...
+ */
+void
+context::open_enum_definition(const token_identifier& ename) {
+	never_ptr<enum_datatype_def>
+		ed(current_namespace->lookup_object_here_with_modify(ename)
+				.is_a<enum_datatype_def>());
+	if (ed) {
+		if (ed->is_defined()) {
+			cerr << ename << " is already defined!  attempted "
+				"redefinition at " << ename.where() << endl;
+			exit(1);
+		}
+		assert(!current_open_definition);	// sanity check
+		current_open_definition = ed;
+		ed->mark_defined();
+		indent++;
+	} else {
+		// no real reason why this should ever fail...
+		type_error_count++;
+		cerr << ename.where() << endl;
+		exit(1);			// temporary
+		// return NULL
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	\return true if successful, false if there was conflict.  
+ */
+bool
+context::add_enum_member(const token_identifier& em) {
+	never_ptr<enum_datatype_def>
+		ed(current_open_definition.is_a<enum_datatype_def>());
+	if (!ed) {
+		cerr << "expected current_open_definition to be "
+			"enum_datatype_def!  FATAL ERROR." << endl;
+		exit(1);
+	} else if (ed->add_member(em)) {
+		return true;
+	} else {
+		cerr << "enum " << ed->get_name() << " already has a member "
+			"named " << em << ".  ERROR! " << em.where() << endl;
+		type_error_count++;
+		exit(1);
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::close_enum_definition(void) {
+	current_open_definition = never_ptr<definition_base>(NULL);
+//	check_against_previous_definition_signature = false;
+	indent--;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	THIS NEEDS SERIOUS RE-WORK.  
+	model after enum's...
+	Q: should a declaration "open" the process?
+	A: well we need to check prototypes upon re-declaration...
 	Registers a process prototype signature.  
 	Type-checking occurs in the check_build of the template
 	and port formals.  
@@ -268,8 +366,8 @@ context::top_namespace(void) const {
  */
 void
 context::declare_process(const token_identifier& pname) {
-	check_against_previous_definition_signature = 
-		(current_namespace->probe_process_definition(pname));
+//	check_against_previous_definition_signature = 
+//		(current_namespace->probe_process_definition(pname));
 	never_ptr<process_definition> p =
 		current_namespace->add_proc_declaration(pname);
 	if (p) {
@@ -285,9 +383,11 @@ context::declare_process(const token_identifier& pname) {
 		// return NULL
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	THIS NEEDS SERIOUS RE-WORK.  
 	Registers a process definition's signature.  
 	\param ps the process signature, which contains and identifier, 
 		optional template signature, and port signature.  
@@ -297,9 +397,31 @@ context::declare_process(const token_identifier& pname) {
 	If not already declared, create an entry...
  */
 void
-context::open_process(const token_identifier& pname) {
-	check_against_previous_definition_signature = 
-		(current_namespace->probe_process_definition(pname));
+context::open_process_definition(const token_identifier& pname) {
+#if 1
+	never_ptr<process_definition>
+		pd(current_namespace->lookup_object_here_with_modify(pname)
+				.is_a<process_definition>());
+	if (pd) {
+		if (pd->is_defined()) {
+			cerr << pname << " is already defined!  attempted "
+				"redefinition at " << pname.where() << endl;
+			exit(1);
+		}
+		assert(!current_open_definition);	// sanity check
+		current_open_definition = pd;
+		pd->mark_defined();
+		indent++;
+	} else {
+		// no real reason why this should ever fail...
+		type_error_count++;
+		cerr << pname.where() << endl;
+		exit(1);			// temporary
+		// return NULL
+	}
+#else
+//	check_against_previous_definition_signature = 
+//		(current_namespace->probe_process_definition(pname));
 	never_ptr<process_definition> p =
 		current_namespace->add_proc_definition(pname);
 	if (p) {
@@ -314,6 +436,7 @@ context::open_process(const token_identifier& pname) {
 		exit(1);			// temporary
 		// return NULL
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -326,7 +449,7 @@ inline
 void
 context::close_current_definition(void) {
 	current_open_definition = never_ptr<definition_base>(NULL);
-	check_against_previous_definition_signature = false;
+//	check_against_previous_definition_signature = false;
 	indent--;
 }
 
@@ -394,8 +517,9 @@ context::get_current_process_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	Is this obsolete?
+	OBSOLETE.
 	Modifies the context's current_definition_reference, 
 	using a built-in data-type definition.  
 	(Approach: don't treat int<> as a corner case of a built-in
@@ -404,7 +528,6 @@ context::get_current_process_definition(void) const {
 	\return pointer to defined or declared type if unique found, 
 		else NULL of no match or ambiguous.  
  */
-// const datatype_definition*
 never_const_ptr<datatype_definition>
 context::set_datatype_def(const token_datatype& id) {
 	// lookup type (will be built-in int or bool)
@@ -426,6 +549,7 @@ context::set_datatype_def(const token_datatype& id) {
 	// to do elsewhere: set template width using w
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -458,8 +582,11 @@ context::reset_current_fundamental_type(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
+	OBSOLETE.
 	Sets current parameter instantiation type.
+	Re-implement built-in-types.  
 	\param pt token for built-in parameter type, pbool or pint.  
  */
 never_const_ptr<built_in_param_def>
@@ -480,6 +607,15 @@ context::set_param_def(const token_paramtype& pt) {
 	}
 	return ret;
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<definition_base>
+context::set_current_prototype(excl_ptr<definition_base> d) {
+	assert(!current_prototype);
+	current_prototype = d;
+	return current_prototype;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -498,7 +634,7 @@ context::set_current_fundamental_type(void) {
 	// current_template_arguments is optional
 	// if it exists, then it is already checked.
 
-	// check type cache, per major scope
+	// check type cache, per major scope... PUNT
 	// uses current_template_parameters
 	never_const_ptr<fundamental_type_reference> ret =
 		current_definition_reference->
@@ -539,6 +675,10 @@ context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TO FIX: when checking a prototype, current scope should be 
+	updated to that prototype's definition.  
+ */
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
 	return get_current_scope()->lookup_object(id);
@@ -585,7 +725,6 @@ context::lookup_instance(const token_identifier& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
@@ -634,41 +773,150 @@ context::get_current_scope(void) {
 /**
 	Adds an instance of the current_fundamental_type
 	to the current_scope.  
+	Note: what we really mean is the current STATIC scope, 
+	since instances are not truly added to dynamic scopes.  
+	Make overloaded version with dimensions.  
  */
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 context::add_instance(const token_identifier& id) {
+	// wrapper
+	return add_instance(id, index_collection_item_ptr_type(NULL));
+#if 0
 	assert(current_fundamental_type);
 	never_ptr<scopespace> current_scope = get_current_scope();
+		// .top_static_scope();
 	assert(current_scope);
-	// virtual
+
+#if 0
+	// REPLACE the following call to add_instance_to_scope:
 	return current_fundamental_type->add_instance_to_scope(
 		*current_scope, id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Using the current set type definition, adds a template formal 
-	parameter.  
-	If already exists, then checks against previous formal declaration.  
-	TO DO: write it, finish it -- what about arrays?
-	\param id the name of the formal instance.  
- */
-const datatype_instantiation*
-context::add_template_formal(const token_identifier& id) {
-#if 0
-	const datatype_instantiation* ret;
-	assert(inst_data_def);
-	assert(current_namespace);
-	ret = current_open_definition->add_template_formal(id);
 #else
-	return NULL;
+	never_const_ptr<instantiation_base> ret(
+		current_scope->add_instance(
+			current_fundamental_type->make_instantiation(
+				current_scope, id, 
+				index_collection_item_ptr_type(NULL))));
+	if (!ret) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+	return ret;
+#endif
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if	UNIFIED_OBJECT_STACK
+/**
+	Adds an instance of the current_fundamental_type
+	to the current_scope.  
+	Note: what we really mean is the current STATIC scope, 
+	since instances are not truly added to dynamic scopes.  
+	\param id the name of the new instance.  
+	\param dim the dimension specifier.  
+	\return pointer to newly created instantiation.  
+ */
+never_const_ptr<instantiation_base>
+context::add_instance(const token_identifier& id, 
+		index_collection_item_ptr_type dim) {
+	assert(current_fundamental_type);
+	never_ptr<scopespace> current_scope = get_current_scope();
+		// .top_static_scope();
+	assert(current_scope);
 
+	never_const_ptr<instantiation_base> ret(
+		current_scope->add_instance(
+			current_fundamental_type->make_instantiation(
+				current_scope, id, dim)));
+	if (!ret) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TO DO: write it, finish it -- what about arrays?
+	Using the current_type_reference, 
+	adds a template formal parameter.  
+	Is like add_instance, above.  
+	If already exists, then checks against previous formal declaration.  
+	For now, only allow parameters.  
+	\param id the name of the formal instance.  
+	\sa add_instance
+ */
+never_const_ptr<instantiation_base>
+context::add_template_formal(const token_identifier& id, 
+		index_collection_item_ptr_type dim) {
+	assert(current_prototype);	// valid definition_base
+	assert(current_fundamental_type);
+	assert(current_fundamental_type.is_a<param_type_reference>());
+		// valid parameter type to instantiate
+	// Don't use fundamental_type_reference::add_instance_to_scope()
+	// Use a variant of scopespace::add_instance.  
+	never_const_ptr<instantiation_base> ret(
+		current_prototype->add_template_formal(
+			current_fundamental_type->make_instantiation(
+				current_prototype, id, dim)));
+	if (!ret) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper for adding a non-arrayed template formal instantiation.  
+ */
+never_const_ptr<instantiation_base>
+context::add_template_formal(const token_identifier& id) {
+	return add_template_formal(id, index_collection_item_ptr_type(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TO DO: write it, finish it -- what about arrays?
+	Using the current_type_reference, 
+	adds a port formal parameter.  
+	Is like add_instance, above.  
+	If already exists, then checks against previous formal declaration.  
+	For now, only allow parameters.  
+	\param id the name of the formal instance.  
+	\sa add_instance
+ */
+never_const_ptr<instantiation_base>
+context::add_port_formal(const token_identifier& id, 
+		index_collection_item_ptr_type dim) {
+	assert(current_prototype);	// valid definition_base
+	assert(!current_fundamental_type.is_a<param_type_reference>());
+		// valid port type to instantiate
+	never_const_ptr<instantiation_base> ret(
+		current_prototype->add_port_formal(
+			current_fundamental_type->make_instantiation(
+				current_prototype, id, dim)));
+	if (!ret) {
+		cerr << id.where() << endl;
+		type_error_count++;
+		exit(1);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper for adding a non-arrayed port formal instantiation.  
+ */
+never_const_ptr<instantiation_base>
+context::add_port_formal(const token_identifier& id) {
+	return add_port_formal(id, index_collection_item_ptr_type(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Created objects are passed around on the context's object stack.  
 	For now we restrict the type to param_expr and instance_reference.  
@@ -678,7 +926,13 @@ void
 context::push_object_stack(count_ptr<object> o) {
 	if (o) {
 		const object* oself = &o->self();
+		// can we go back to not using maked pointer for check?
 		assert(IS_A(const param_expr*, oself) ||
+			IS_A(const index_expr*, oself) ||
+			IS_A(const object_list*, oself) ||
+				// eliminate object_list after making others
+			IS_A(const range_list*, oself) ||
+			IS_A(const index_list*, oself) ||
 			IS_A(const instance_reference_base*, oself));
 //		if (!o.is_a<param_expr>())
 //			assert(o.is_a<instance_reference_base>());
@@ -692,21 +946,6 @@ context::pop_top_object_stack(void) {
 	object_stack.pop();
 	return ret;
 }
-
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-context::push_instance_reference_stack(
-		count_const_ptr<instance_reference_base> i) {
-	instance_reference_stack.push(i);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-context::push_expression_stack(count_const_ptr<param_expr> e) {
-	expression_stack.push(e);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// automatic indentation for nicer debug printing

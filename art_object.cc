@@ -16,6 +16,7 @@
 
 #include "art_object.h"
 #include "art_object_expr.h"
+#include "art_built_ins.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -64,6 +65,8 @@ namespace entity {
 //=============================================================================
 // general non-member function definitions
 
+#if 0
+// MOVE THIS into object_list function...
 // TO DO: give useful error messages on failure
 excl_const_ptr<static_array_index_list>
 make_static_array_index_list(const array_index_list& a) {
@@ -91,6 +94,7 @@ make_static_array_index_list(const array_index_list& a) {
 	}
 	return excl_const_ptr<static_array_index_list>(ret);
 }
+#endif
 
 //=============================================================================
 // class object_handle method definitions
@@ -106,6 +110,105 @@ object_handle::dump(ostream& o) const {
 }
 
 //=============================================================================
+// class object_list method definitions
+
+object_list::object_list() : object(), parent() {
+}
+
+object_list::~object_list() {
+}
+
+ostream&
+object_list::what(ostream& o) const {
+	return o << "object-list";
+}
+
+ostream&
+object_list::dump(ostream& o) const {
+	what(o) << ":" << endl;
+	parent::const_iterator i = begin();
+	for ( ; i!=end(); i++)
+		dump(o) << endl;
+	return o;
+}
+
+/**
+	Creates an instance_collection_item.  
+	The restriction with this version is that each item must
+	be a single pint_expr, not a range.  
+	Walks list twice, once to see what the best classification is, 
+	again to copy-create.  
+	Intended for use in resolving dense array dimensions
+	of formal parameters and formal ports.  
+	Cannot possibly be loop-dependent or conditional!
+ */
+index_collection_item_ptr_type
+object_list::make_formal_dense_range_list(void) const {
+	// initialize some bools to true
+	// and set them false approriately in iterations
+	bool is_pint_expr = true;
+	bool is_static_constant = true;
+	bool is_initialized = true;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		if (!p) {
+			is_pint_expr = false;
+			cerr << "non-int expression found where single int "
+				"is expected in dense range declaration.  "
+				"ERROR!  " << endl;	// where?
+		} else {
+			if (p->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (p->is_initialized()) {
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.  
+				cerr << "int expression is not initialized.  "
+					"ERROR!  " << endl;	// where?
+			}
+			// can it be initialized, but non-const?
+			// yes, if a dimension depends on another formal param
+			assert(p->is_loop_independent());
+			assert(p->is_unconditional());
+		}
+	}
+	if (is_static_constant) {
+		const_iterator j = begin();
+		excl_ptr<const_range_list> ret(new const_range_list);
+		for ( ; j!=end(); j++) {
+			// should be safe to do this, since we checked above
+			ret->push_back(const_range(
+				j->is_a<pint_expr>()->static_constant_int()));
+		}
+		excl_const_ptr<const_range_list> const_ret(ret);
+		assert(const_ret);
+		assert(!ret);
+		return index_collection_item_ptr_type(
+			new static_collection_addition(const_ret));
+		assert(!const_ret);
+	} else if (is_initialized) {
+		const_iterator j = begin();
+		excl_ptr<dynamic_range_list> ret(new dynamic_range_list);
+		for ( ; j!=end(); j++) {
+			// should be safe to do this, since we checked above
+			ret->push_back(pint_range(j->is_a<pint_expr>()));
+		}
+		excl_const_ptr<dynamic_range_list> const_ret(ret);
+		return index_collection_item_ptr_type(
+			new dynamic_collection_addition(const_ret));
+	} else {
+		cerr << "Failed to construct a formal dense range list!  "
+			<< endl;
+		return index_collection_item_ptr_type(NULL);
+	}
+}
+
+//=============================================================================
 // class instance_collection_stack_item method definitions
 
 bool
@@ -118,8 +221,14 @@ instance_collection_stack_item::static_overlap(
 // class static_collection_addition method definitions
 
 static_collection_addition::static_collection_addition(
-		excl_const_ptr<static_array_index_list>& i) :
+//		excl_const_ptr<static_array_index_list>& i
+		excl_const_ptr<const_range_list>& i) :
 	parent(), indices(i) {
+}
+
+size_t
+static_collection_addition::dimensions(void) const {
+	return indices->size();
 }
 
 bool
@@ -128,6 +237,8 @@ static_collection_addition::static_overlap(
 	const static_collection_addition* s = 
 		IS_A(const static_collection_addition*, &c);
 	if (s) {
+		return indices->static_overlap(*s->indices);
+#if 0
 		// dimensionality should match, or else!
 		assert(indices->size() == s->indices->size());
 		static_array_index_list::const_iterator i = indices->begin();
@@ -146,6 +257,7 @@ static_collection_addition::static_overlap(
 		}
 		// else there is some overlap in all dimensions
 		return true;
+#endif
 	} else {	// argument is dynamic, not static
 		// conservatively return false
 		return false;
@@ -156,8 +268,14 @@ static_collection_addition::static_overlap(
 // class dynamic_collection_addition method definitions
 
 dynamic_collection_addition::dynamic_collection_addition(
-		excl_const_ptr<array_index_list>& i) :
+//		excl_const_ptr<array_index_list>& i
+		excl_const_ptr<dynamic_range_list>& i) :
 		parent(), indices(i) {
+}
+
+size_t
+dynamic_collection_addition::dimensions(void) const {
+	return indices->size();
 }
 
 //=============================================================================
@@ -179,6 +297,7 @@ sparse_index_collection::~sparse_index_collection() { }
 scopespace::scopespace(const string& n, never_const_ptr<scopespace> p) : 
 		object(), parent(p), key(n), 
 		used_id_map(), connect_assign_list() {
+	// note that parent may be NULL, is this ok?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -314,7 +433,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 					"previous declaration: " << endl <<
 					"\twas: ";
 				old_type->dump(cerr) << ", got: ";
-				new_type->dump(cerr) << endl;
+				new_type->dump(cerr) << " ERROR!  ";
 				return never_const_ptr<instantiation_base>(
 					NULL);
 			}	// else good to continue
@@ -326,7 +445,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 				probe->dump(cerr) << " was originally declared "
 					"as a single instance, and thus may "
 					"not be extended or re-declared, "
-					"ERROR!" << endl;
+					"ERROR!  ";
 				return never_const_ptr<instantiation_base>(
 					NULL);
 			} else if (probe_inst->dimensions()!=i->dimensions()) {
@@ -334,7 +453,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 					"as a " << probe_inst->dimensions() <<
 					"-D array, so the new declaration "
 					"cannot add a " << i->dimensions() <<
-					"-D array, ERROR!" << endl;
+					"-D array, ERROR!  ";
 				return never_const_ptr<instantiation_base>(
 					NULL);
 			}	// else dimensions match apropriately
@@ -345,7 +464,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 				// returned true if there is definite overlap
 				cerr << "detected overlap in indices in the "
 					"collection addition for " <<
-					i->get_name() << ", ERROR!" << endl;
+					i->get_name() << ", ERROR!  ";
 				return never_const_ptr<instantiation_base>(
 					NULL);
 			}
@@ -356,7 +475,7 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 			return probe_inst;
 		} else {
 			probe->what(cerr << i->get_name() <<
-				" is already declared ") << ", ERROR!";
+				" is already declared ") << ", ERROR!  ";
 			return never_const_ptr<instantiation_base>(NULL);
 		}
 	} else {
@@ -900,32 +1019,55 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	THIS IS KEY.  
 	Adds a definition to this namespace.  
+	Can be used by declaration prototypes as well.  
+	Need to check whether existing definition is_defined, 
+		as opposed to just being declared.  
 	Definition is newly created, so used_id_map is responsible
 	for deleting it.  
 	On failure, however, pointer is not added, so need to handle
 	memory in the caller.  
+	
 	\param db the definition to add, newly created.
-	\return definition added if successful, else NULL.  
+	\return modifiable pointer to definition if successful, else NULL.  
  */
 never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base> db) {
 	assert(db);
 	string k = db->get_name();
-	never_const_ptr<object> probe = lookup_object_here(k);
+	never_const_ptr<object> probe(lookup_object_here(k));
 	if (probe) {
-		probe->what(cerr << "ERROR: identifier already taken by ")
-			<< "  Failed to add definition!";
-		return never_ptr<definition_base>(NULL);
+		never_const_ptr<definition_base> probe_def(
+			probe.is_a<definition_base>());
+		if (probe_def) {
+			assert(k == probe_def->get_name());	// consistency
+			if (probe_def->require_signature_match(db)) {
+				// definition signatures match
+				// can discard new declaration
+				// db will self-delete (excl_ptr)
+				return never_ptr<definition_base>(db);
+			} else {
+				// signature mismatch!
+				// also catches class type mismatch
+				cerr << "new declaration for " << k <<
+					"doesn't match previous declaration. "
+					"ERROR! ";
+				// give details...
+				return never_ptr<definition_base>(NULL);
+			}
+		} else {
+			probe->what(cerr << "Identifier already taken by ")
+				<< endl << "ERROR: Failed to add definition! ";
+			return never_ptr<definition_base>(NULL);
+		}
 	} else {
 		// used_id_map owns this type is reponsible for deleting it
 		never_ptr<definition_base> ret = db;
-		assert(db);
 		assert(ret);
-		assert(ret == db);
-		// explicit transfer!
-		used_id_map[k] = excl_ptr<definition_base>(db);
-		assert(!db);
+//		used_id_map[k] = excl_ptr<definition_base>(db);
+		used_id_map[k] = db;
+		assert(!db);		// after explicit transfer of ownership
 		return ret;
 	}
 }
@@ -1055,6 +1197,76 @@ name_space::lookup_namespace(const qualified_id_slice& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+PHASE OUT
+/**
+	LATER, GENERALIZE DECLARATION to all definitions...
+	Looks up and adds an enumeration declaration.  
+	\param en already constructed enum prototype,
+		whose signature is just a name.  
+ */
+never_const_ptr<enum_datatype_def>
+name_space::add_enum_declaration(excl_ptr<enum_datatype_def> en) {
+	assert(en);
+	never_const_ptr<object> probe(lookup_object_here(en->get_name()));
+	if (probe) {
+		never_const_ptr<enum_datatype_def> probe_enum(
+			probe.is_a<enum_datatype_def>());
+		if (!probe_enum) {
+			probe->what(cerr << en << " is already declared as ")
+				<< ", ERROR! ";
+		}
+		// else found existing declaration/definition of enum
+		// no other signature information to check against
+		// discard en, en will delete itself (excl_ptr).
+		// virtual call to comparison method?
+		return probe_enum;
+	} else {
+		never_const_ptr<enum_datatype_def> ret(en);
+		assert(ret);
+		used_id_map[en->get_name()] = en;
+		assert(!en);		// transferred ownership
+		return ret;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+PHASE OUT
+/**
+	Looks up and adds an enumeration declaration.  
+ */
+never_const_ptr<enum_datatype_def>
+name_space::add_enum_declaration(const token_identifier& en) {
+	never_const_ptr<object> probe(lookup_object_here(en));
+	if (probe) {
+		never_const_ptr<enum_datatype_def> probe_enum(
+			probe.is_a<enum_datatype_def>());
+		if (!probe_enum) {
+			probe->what(cerr << en << " is already declared as ")
+				<< ", ERROR! ";
+		}
+		// else found existing declaration/definition of enum
+		// no other signature information to check
+		return probe_enum;
+	} else {
+		// create it, and register it
+		excl_ptr<enum_datatype_def> new_enum(new enum_datatype_def(
+			never_const_ptr<name_space>(this), en));
+		never_const_ptr<enum_datatype_def> ret(new_enum);
+		assert(new_enum);
+		used_id_map[en] = new_enum;
+		assert(!new_enum);	// transferred ownership
+		assert(ret);
+		return ret;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+PHASING OUT
 /**
 	Checks to see whether process definition or prototype already 
 	exists.  
@@ -1158,6 +1370,8 @@ name_space::add_proc_definition(const token_identifier& pname) {
 	}
 	return pd;
 }
+// end OBSOLETE
+#endif
 
 //=============================================================================
 // class definition_base method definitions
@@ -1170,7 +1384,7 @@ inline
 definition_base::definition_base(const string& n,
 		never_const_ptr<name_space> p, 
 		template_formals_set* tf) : 
-		scopespace(n, p), template_formals(tf) {
+		scopespace(n, p), template_formals(tf), defined(false) {
 	// synchronize template formals with used_id_map
 }
 
@@ -1180,7 +1394,7 @@ definition_base::~definition_base() {
 
 ostream&
 definition_base::dump(ostream& o) const {
-	return what(o);
+	return what(o) << " " << key;
 }
 
 /**
@@ -1212,6 +1426,20 @@ definition_base::check_null_template_argument(void) const {
 	}
 }
 
+/**
+	Need template_formal_set to be a queryable-hashlist...
+ */
+never_const_ptr<param_instantiation>
+definition_base::lookup_template_formal(const string& id) const {
+	if (template_formals) {
+		return never_const_ptr<param_instantiation>(
+			(static_cast<const template_formals_set&>
+			(*template_formals))[id]);
+	} else {
+		return never_const_ptr<param_instantiation>(NULL);
+	}
+}
+
 string
 definition_base::get_name(void) const {
 	return key;
@@ -1224,12 +1452,27 @@ definition_base::get_qualified_name(void) const {
 	else return key;
 }
 
+/**
+	Sub-classes only need to re-implement if behavior is different.  
+	e.g. an assertion fail for built-in types.  
+ */
+never_const_ptr<definition_base>
+definition_base::set_context_definition(context& c) const {
+	return c.set_current_definition_reference(*this);
+}
+
+/**
+	Only definition aliases will return a different pointer, 
+	the one for the original definition.  
+	Remember to use this in type-checking.  
+ */
 never_const_ptr<definition_base>
 definition_base::resolve_canonical(void) const {
 	return never_const_ptr<definition_base>(this);
 }
 
 /**
+	DO ME NOW!
 	Adds an instantiation to the current definition's scope, and 
 	also registers it in the list of template formals for 
 	template argument checking.  
@@ -1237,22 +1480,22 @@ definition_base::resolve_canonical(void) const {
 	TO DO: convert to pointer-classes...
 	\param f needs to be a param_instantiation... what about array?
 		need to be non-const? storing to hash_map_of_ptr...
+		must be modifiable for used_id_map
  */
-const instantiation_base*
-definition_base::add_template_formal(instantiation_base* f) {
-	param_instantiation* pf = 
-		IS_A(param_instantiation*, f);
+never_const_ptr<instantiation_base>
+definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
+	never_const_ptr<param_instantiation> pf(
+		f.is_a<param_instantiation>());
 	assert(pf);
 	if (!template_formals) {
 		template_formals = new template_formals_set();
 		assert(template_formals);
 	}
 	// check and make sure identifier wasn't repeated in formal list!
-//	const object* probe = used_id_map[pf->get_name()];
-	const object* probe = used_id_map[pf->get_name()].unprotected_const_ptr();
+	never_const_ptr<object> probe(lookup_object_here(pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
-		return NULL;
+		return never_const_ptr<instantiation_base>(NULL);
 	}
 
 	const never_const_ptr<param_instantiation>* ret =
@@ -1264,9 +1507,21 @@ definition_base::add_template_formal(instantiation_base* f) {
 
 	// COMPILE: pf is const, but used_id_map members are not
 	// wrap around with object_handle?
-	used_id_map[pf->hash_string()] = excl_ptr<param_instantiation>(pf);
+//	used_id_map[pf->hash_string()] = excl_ptr<param_instantiation>(pf);
+	used_id_map[pf->hash_string()] = f;
 	// later return a never_ptr<>
 	return pf;
+}
+
+/**
+	Virtually pure, not purely virtual...
+	Only temporary.
+	Override in appropriate subclasses.  
+ */
+never_const_ptr<instantiation_base>
+definition_base::add_port_formal(excl_ptr<instantiation_base> f) {
+	assert(0);
+	return never_const_ptr<instantiation_base>(NULL);
 }
 
 //=============================================================================
@@ -1357,6 +1612,8 @@ fundamental_type_reference::may_be_equivalent(
 }
 
 //=============================================================================
+#if 0
+MAY BE OBSOLETE
 // class collective_type_reference method definitions
 
 collective_type_reference::collective_type_reference(
@@ -1378,6 +1635,7 @@ ostream&
 collective_type_reference::dump(ostream& o) const {
 	return what(o);			// temporary
 }
+#endif
 
 //=============================================================================
 // class data_type_reference method definitions
@@ -1419,8 +1677,7 @@ data_type_reference::get_base_def(void) const {
 }
 
 /**
-	Creates an instance of a data type, 
-	and adds it to a scope.
+	Returns a newly constructed data instance object.  
 	TO DO: move all error checking into scopespace::add_instance
 		for unification.  
 		Handle cases for additions to sparse collections.  
@@ -1428,8 +1685,27 @@ data_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
+excl_ptr<instantiation_base>
+data_type_reference::make_instantiation(never_const_ptr<scopespace> s, 
+		const token_identifier& id, 
+		index_collection_item_ptr_type d) const {
+	return excl_ptr<instantiation_base>(
+		new datatype_instantiation(*s, *this, id, d));
+}
+
+#if 0
+/**
+	PHASE THIS OUT, and into scopespace's add_instance.
+	Make this generic to all fundamental_type_references, 
+		using abstract make_instantiation().  
+	Creates an instance of a data type, and adds it to a scope.
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
 never_const_ptr<instantiation_base>
 data_type_reference::add_instance_to_scope(scopespace& s,
+		// never_ptr<scopespace>
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
 	// what if s is a loop-scope, not a namespace?  PUNT!
@@ -1448,6 +1724,7 @@ data_type_reference::add_instance_to_scope(scopespace& s,
 	assert(di);
 	return s.add_instance(di.as_a<instantiation_base>());
 }
+#endif
 
 //=============================================================================
 // class channel_type_reference method definitions
@@ -1487,20 +1764,31 @@ channel_type_reference::dump(ostream& o) const {
 }
 #endif
 
-// const definition_base*
 never_const_ptr<definition_base>
 channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
 }
 
 /**
+	Returns a newly constructed channel instance object.  
+ */
+excl_ptr<instantiation_base>
+channel_type_reference::make_instantiation(never_const_ptr<scopespace> s, 
+		const token_identifier& id, 
+		index_collection_item_ptr_type d) const {
+	return excl_ptr<instantiation_base>(
+		new channel_instantiation(*s, *this, id, d));
+}
+
+#if 0
+/**
+	PHASE THIS OUT.
 	Creates an instance of a channel type, 
 	and adds it to a scope.
 	\param s the scope to which to add this instance.
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 channel_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
@@ -1510,6 +1798,7 @@ channel_type_reference::add_instance_to_scope(scopespace& s,
 	assert(ci);
 	return s.add_instance(ci.as_a<instantiation_base>());
 }
+#endif
 
 //=============================================================================
 // class process_type_reference method definitions
@@ -1544,20 +1833,32 @@ process_type_reference::dump(ostream& o) const {
 }
 #endif
 
-// const definition_base*
 never_const_ptr<definition_base>
 process_type_reference::get_base_def(void) const {
 	return base_proc_def;
 }
 
 /**
-	Creates an instance of a process type, 
-	and adds it to a scope.
+	Returns a newly constructed process instance object.  
 	\param s the scope to which to add this instance.
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-// const instantiation_base*
+excl_ptr<instantiation_base>
+process_type_reference::make_instantiation(
+		never_const_ptr<scopespace> s, 
+		const token_identifier& id, 
+		index_collection_item_ptr_type d) const {
+	return excl_ptr<instantiation_base>(
+		new process_instantiation(*s, *this, id, d));
+}
+
+#if 0
+/**
+	PHASE THIS OUT, into scopespace.
+	Creates an instance of a process type, 
+	and adds it to a scope.
+ */
 never_const_ptr<instantiation_base>
 process_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
@@ -1567,10 +1868,14 @@ process_type_reference::add_instance_to_scope(scopespace& s,
 	assert(ci);
 	return s.add_instance(ci.as_a<instantiation_base>());
 }
+#endif
 
 //=============================================================================
 // class param_type_reference method definitions
 
+/**
+	Only used in construction of built-in types.  
+ */
 param_type_reference::param_type_reference(
 		never_const_ptr<built_in_param_def> pd) : 
 		fundamental_type_reference(), 	// NULL
@@ -1599,13 +1904,41 @@ param_type_reference::get_base_def(void) const {
 }
 
 /**
+	Returns a newly constructed param instance object.  
+	Sort of kludged... built-in type case... YUCK, poor style.  
+	\param s the scope to which to add this instance.
+	\param id the local name of this instance.  
+	\return pointer to the created instance.  
+ */
+excl_ptr<instantiation_base>
+param_type_reference::make_instantiation(never_const_ptr<scopespace> s, 
+		const token_identifier& id, 
+		index_collection_item_ptr_type d) const {
+	// hard coded... yucky, but efficient.  
+	if (this == &pbool_type)
+		return excl_ptr<instantiation_base>(
+			new pbool_instantiation(*s, id, d));
+	else if (this == &pint_type)
+		return excl_ptr<instantiation_base>(
+			new pint_instantiation(*s, id, d));
+	else {
+		pbool_type.dump(cerr) << " at " << &pbool_type << endl;
+		pint_type.dump(cerr) << " at " << &pint_type << endl;
+		dump(cerr) << " at " << this << endl;
+		assert(0);		// WTF?
+		return excl_ptr<instantiation_base>(NULL);
+	}
+}
+
+#if 0
+/**
+	PHASE THIS OUT.  
 	Creates an instance of a parameter type, 
 	and adds it to a scope.
 	\param s the scope to which to add this instance.
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 param_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
@@ -1615,6 +1948,7 @@ param_type_reference::add_instance_to_scope(scopespace& s,
 	assert(pi);
 	return s.add_instance(pi.as_a<instantiation_base>());
 }
+#endif
 
 //=============================================================================
 // class instantiation_base method definitions
@@ -1632,18 +1966,21 @@ param_type_reference::add_instance_to_scope(scopespace& s,
  */
 // inline
 instantiation_base::instantiation_base(const scopespace& o, 
-		const string& n, const array_index_list* d) : 
+		const string& n,
+//		const array_index_list* d
+		index_collection_item_ptr_type d) : 
 		object(), owner(never_const_ptr<scopespace>(&o)),
 		key(n),
-//		array_dimensions(d)
 		index_collection(), 
-		depth(d ? d->size() : 0) {
+		depth(d ? d->dimensions() : 0) {
 if (d) {
+	index_collection.push_front(d);
+#if 0
 	instance_collection_stack_item* coll;
 	// then construct... depends on cases in the following order:
 	// 4) indices all resolve to static constants
 		// make static_collection_addition
-// FIX ME
+// FIX ME... no, SHIFT RESPONSIBILITY TO INVOKER
 	excl_const_ptr<static_array_index_list> sci;	// (
 //		make_static_array_index_list(*d));
 	if (sci) {
@@ -1666,16 +2003,19 @@ if (d) {
 		// PUNT!
 
 	// Then, push constructed instance_collection_stack_item onto stack.
+#endif
+} else {
+	// push a NULL pointer?
 }
 }
 
-inline
+// inline
 instantiation_base::~instantiation_base() {
 }
 
 ostream&
 instantiation_base::dump(ostream& o) const {
-	return what(o);
+	return what(o) << " " << key;
 }
 
 string
@@ -1688,12 +2028,24 @@ instantiation_base::get_qualified_name(void) const {
 /**
 	Grabs the current top of the deque of the index collection, 
 	so the encapsulating instance reference know what
-	instances were visibie at the time of reference.  
+	instances were visible at the time of reference.  
 	QUESTION: what if it's empty because it is not collective?
+		will begin() = end()? should be...
  */
-instantiation_base::index_collection_type::const_iterator
+instantiation_state
 instantiation_base::current_collection_state(void) const {
 	return index_collection.begin();
+}
+
+/**
+	By "end", we mean the beginning of the collection state deque, 
+	the first item added to the the collection stack.  
+	Can't actually dereference the returned iterator, 
+	it's only useful for ending looped iterations.  
+ */
+instantiation_state
+instantiation_base::collection_state_end(void) const {
+	return index_collection.end();
 }
 
 /**
@@ -1740,7 +2092,7 @@ instantiation_base::add_index_range(index_collection_item_ptr_type r) {
 			if (overlap) {
 				cerr << "ERROR: detected static constant "
 				"overlap in indices -- "
-				"reinstantiation collision." << endl;
+				"reinstantiation collision.  ";
 			}
 			return overlap;
 		} else {
@@ -1748,13 +2100,13 @@ instantiation_base::add_index_range(index_collection_item_ptr_type r) {
 				"a " << depth << "-dimension collection, thus "
 				"you cannot append with a " 
 				<< r->dimensions() <<
-				"-dimension index range!" << endl;
+				"-dimension index range!  ";
 			return true;
 		}
 	} else {
 		cerr << "ERROR: " << key << " was originally declared "
 			"as a single instance, not a collective, and hence, "
-			"may not be appended!" << endl;
+			"may not be appended!  ";
 		return true;
 	}
 }
@@ -1818,11 +2170,6 @@ inline
 datatype_definition::~datatype_definition() {
 }
 
-never_const_ptr<definition_base>
-datatype_definition::set_context_definition(context& c) const {
-	return c.set_current_definition_reference(*this);
-}
-
 never_const_ptr<fundamental_type_reference>
 datatype_definition::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -1849,11 +2196,6 @@ channel_definition::channel_definition(
 channel_definition::~channel_definition() {
 }
 
-never_const_ptr<definition_base>
-channel_definition::set_context_definition(context& c) const {
-	return c.set_current_definition_reference(*this);
-}
-
 never_const_ptr<fundamental_type_reference>
 channel_definition::set_context_fundamental_type(context& c) const {
 	channel_type_reference* dtr = new channel_type_reference(
@@ -1864,6 +2206,21 @@ channel_definition::set_context_fundamental_type(context& c) const {
 	return c.set_current_fundamental_type(*dtr);
 }
 
+//=============================================================================
+// class user_def_chan method definitions
+
+user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
+		const string& name) : channel_definition(o, name) {
+	// FINISH ME
+}
+
+user_def_chan::~user_def_chan() {
+}
+
+ostream&
+user_def_chan::what(ostream& o) const {
+	return o << "user-def-chan";
+}
 
 //=============================================================================
 // class type_alias method definitions
@@ -1910,12 +2267,27 @@ type_alias::what(ostream& o) const {
 //=============================================================================
 // class built_in_datatype_def method definitions
 
-// doesn't like inlining this, linker can't find definition on gcc-3.3
-// is used in "art_symbol_table.cc", unless you -fkeep-inline-functions
+/**
+	Built-in data type marks itself as already defined.  
+ */
 built_in_datatype_def::built_in_datatype_def(
 		never_const_ptr<name_space> o, 
 		const string& n) :
 		datatype_definition(o, n) {
+	mark_defined();
+}
+
+/**
+	Same constructor, but with one template formal parameter.  
+	This constructor is dedicated to int<pint width>.  
+ */
+built_in_datatype_def::built_in_datatype_def(
+		never_const_ptr<name_space> o, 
+		const string& n, 
+		excl_ptr<param_instantiation> p) :
+		datatype_definition(o, n) {
+	add_template_formal(p.as_a<instantiation_base>());
+	mark_defined();
 }
 
 built_in_datatype_def::~built_in_datatype_def() { }
@@ -1925,8 +2297,13 @@ built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
+/**
+	Built-in data types should never be opened for modification.  
+	Assert fails.  
+ */
 never_const_ptr<definition_base>
 built_in_datatype_def::set_context_definition(context& c) const {
+	assert(0);
 	return c.set_current_definition_reference(*this);
 }
 
@@ -1963,10 +2340,15 @@ built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
 //=============================================================================
 // class built_in_param_def method definitions
 
+/**
+	Built-in param marks itself as already defined.  
+ */
 built_in_param_def::built_in_param_def(
 		never_const_ptr<name_space> p,
-		const string& n) :
-		definition_base(n, p) {
+		const string& n, 
+		const param_type_reference& t) :
+		definition_base(n, p), type_ref(&t) {
+	mark_defined();
 }
 
 built_in_param_def::~built_in_param_def() {
@@ -1977,18 +2359,141 @@ built_in_param_def::what(ostream& o) const {
 	return o << key;
 }
 
+/**
+	Really this should never be called, as built-in definitions
+	cannot be opened for modification.  
+	Assert fails.
+ */
 never_const_ptr<definition_base>
 built_in_param_def::set_context_definition(context& c) const {
+	assert(0);
 	return c.set_current_definition_reference(*this);
 }
 
+/**
+	Consider built-in type references, is this even used?
+	Now uses hard-coded param_type_references.  
+	Kludge object comparison...
+	Consider passing default type_reference into constructor
+		as a forward pointer.  
+ */
 never_const_ptr<fundamental_type_reference>
 built_in_param_def::set_context_fundamental_type(context& c) const {
-	param_type_reference* dtr = new param_type_reference(
-		never_const_ptr<built_in_param_def>(this));
+	return c.set_current_fundamental_type(*type_ref);
+#if 0
+	if (this == &pbool_def)
+		return c.set_current_fundamental_type(pbool_type);
+	else if (this == &pint_def)
+		return c.set_current_fundamental_type(pint_type);
+	else {
+		pbool_def.dump(cerr) << " at " << &pbool_def << endl;
+		pint_def.dump(cerr) << " at " << &pint_def << endl;
+		dump(cerr) << " at " << this << endl;
+		assert(0);
+		return never_const_ptr<fundamental_type_reference>(NULL);
+	}
+#endif
+}
+
+//=============================================================================
+// class enum_member method definitions
+
+enum_member::enum_member(const string& n) : object(), id(n) { }
+
+enum_member::~enum_member() { }
+
+ostream&
+enum_member::what(ostream& o) const {
+	return o << "enum-member";
+}
+
+ostream&
+enum_member::dump(ostream& o) const {
+	return o << id;
+}
+
+//=============================================================================
+// class enum_datatype_def method definitions
+
+enum_datatype_def::enum_datatype_def(never_const_ptr<name_space> o, 
+		const string& n) : 
+		datatype_definition(o, n) {
+}
+
+enum_datatype_def::~enum_datatype_def() {
+}
+
+ostream&
+enum_datatype_def::what(ostream& o) const {
+	return o << key;
+}
+
+never_const_ptr<fundamental_type_reference>
+enum_datatype_def::set_context_fundamental_type(context& c) const {
+	data_type_reference* dtr = new data_type_reference(
+		never_const_ptr<enum_datatype_def>(this));
 	assert(dtr);
 	// type reference check checking? where?
 	return c.set_current_fundamental_type(*dtr);
+}
+
+/**
+	Type equivalence of enumerated types:
+	must point to same definition, namely this!
+ */
+bool
+enum_datatype_def::type_equivalent(const datatype_definition& t) const {
+	never_const_ptr<enum_datatype_def> b = 
+		t.resolve_canonical().is_a<enum_datatype_def>();
+	return b == this;
+}
+
+/**
+	Not the same as type-equivalence, which requires precise 
+	pointer equality.  
+	This is used for comparing prototypes and signatures of 
+	declarations and definitions.  
+	Report errors to stderr or stdout?
+	Template this?  Nah...
+	\param d the definition (signature) to compare, 
+		the name MUST match, else comparison is pointless!
+ */
+bool
+enum_datatype_def::require_signature_match(
+		never_const_ptr<definition_base> d) const {
+	assert(d);
+	assert(key == d->get_name());
+	never_const_ptr<enum_datatype_def>
+		ed(d.is_a<enum_datatype_def>());
+	if (ed) {
+		// only names need to match...
+		// no other signature information!  easy.
+		return true;
+	} else {
+		// class type doesn't even match!  report error.
+		d->what(cerr << key << " is already declared as a ")
+			<< " but is being redeclared as a ";
+		what(cerr) << "  ERROR!  ";
+		return false;
+	}
+}
+
+/**
+	\return true if successfully added, false if there was conflict.  
+ */
+bool
+enum_datatype_def::add_member(const token_identifier& em) {
+	never_const_ptr<object> probe(lookup_object_here(em));
+	if (probe) {
+		never_const_ptr<enum_member> probe_em(
+			probe.is_a<enum_member>());
+		assert(probe_em);	// can't contain enything else
+		return false;
+	} else {
+		used_id_map[em] = excl_ptr<enum_member>(
+			new enum_member(em));
+		return true;
+	}
 }
 
 //=============================================================================
@@ -2033,8 +2538,9 @@ user_def_datatype::type_equivalent(const datatype_definition& t) const {
 
 datatype_instantiation::datatype_instantiation(const scopespace& o, 
 		const data_type_reference& t, 
-		const string& n) : 
-		instantiation_base(o, n), type(&t) {
+		const string& n, 
+		index_collection_item_ptr_type d) : 
+		instantiation_base(o, n, d), type(&t) {
 	assert(type);
 }
 
@@ -2051,7 +2557,9 @@ datatype_instantiation::get_type_ref(void) const {
 	return type;
 }
 
+#if 0
 /**
+	PHASE OUT.
 	Takes a template formal, resolves its type first, looking up
 	through parents' scopes if necessary.  
 	If successful, compares for type-equivalence, 
@@ -2065,6 +2573,7 @@ datatype_instantiation::equals_template_formal(
 
 	return false;
 }
+#endif
 
 /**
 	Create a datatype reference object.
@@ -2081,13 +2590,10 @@ datatype_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<datatype_instance_reference> new_ir(
-		new datatype_instance_reference(*this));
-		// omitting index argument
-#if	UNIFIED_OBJECT_STACK
+		new datatype_instance_reference(*this, 
+			excl_ptr<index_list>(NULL)));
+		// omitting index argument, set it later...
 	c.push_object_stack(new_ir);
-#else
-	c.push_instance_reference_stack(new_ir);
-#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -2099,9 +2605,11 @@ datatype_instantiation::make_instance_reference(context& c) const {
  */
 process_definition::process_definition(
 		never_const_ptr<name_space> o, 
-		const string& s, const bool d,
+		const string& s,
+//		const bool d,
 		template_formals_set* tf) : 
-		definition_base(s, o, tf), def(d),
+		definition_base(s, o, tf),
+//		def(d),
 		port_formals() {
 	// fill me in...
 }
@@ -2115,11 +2623,6 @@ process_definition::what(ostream& o) const {
 	return o << "process-definition";
 }
 
-never_const_ptr<definition_base>
-process_definition::set_context_definition(context& c) const {
-	return c.set_current_definition_reference(*this);
-}
-
 never_const_ptr<fundamental_type_reference>
 process_definition::set_context_fundamental_type(context& c) const {
 	process_type_reference* dtr = new process_type_reference(
@@ -2130,13 +2633,44 @@ process_definition::set_context_fundamental_type(context& c) const {
 	return c.set_current_fundamental_type(*dtr);
 }
 
+/**
+	Adds a port formal instance to this process definition.  
+ */
+never_const_ptr<instantiation_base>
+process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
+	assert(f);
+	assert(!f.is_a<param_instantiation>());
+	// check and make sure identifier wasn't repeated in formal list!
+	never_const_ptr<object> probe(lookup_object_here(f->get_name()));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return never_const_ptr<instantiation_base>(NULL);
+	}
+
+	{
+	const never_const_ptr<instantiation_base>* ret =
+		port_formals.append(f->hash_string(),
+			never_const_ptr<instantiation_base>(f));
+	assert(!ret);
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the port_formals_list!
+	}
+
+	never_const_ptr<instantiation_base> ret(f);
+	assert(ret);
+	used_id_map[f->hash_string()] = f;
+	assert(!f);		// ownership transferred
+	return ret;
+}
+
 //=============================================================================
 // class process_instantiation method definitions
 
 process_instantiation::process_instantiation(const scopespace& o, 
 		const process_type_reference& pt,
-		const string& n) : 
-		instantiation_base(o, n), type(&pt) {
+		const string& n, 
+		index_collection_item_ptr_type d) : 
+		instantiation_base(o, n, d), type(&pt) {
 }
 
 process_instantiation::~process_instantiation() {
@@ -2167,13 +2701,10 @@ process_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<process_instance_reference> new_ir(
-		new process_instance_reference(*this));
+		new process_instance_reference(*this, 
+			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if	UNIFIED_OBJECT_STACK
 	c.push_object_stack(new_ir);
-#else
-	c.push_instance_reference_stack(new_ir);
-#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -2181,22 +2712,122 @@ process_instantiation::make_instance_reference(context& c) const {
 // class param_instantiation method definitions
 
 param_instantiation::param_instantiation(const scopespace& o, 
-		const param_type_reference& pt, const string& n, 
-		const param_expr* i) :
-		instantiation_base(o, n), type(&pt), ival(i) {
+		const string& n, 
+		index_collection_item_ptr_type d) : 
+		instantiation_base(o, n, d) {
 }
 
 param_instantiation::~param_instantiation() {
 }
 
+/**
+	To determine whether or not this is a formal parameter, 
+	look itself up in the owning namespace.  
+ */
+bool
+param_instantiation::is_template_formal(void) const {
+	// look itself up in owner namespace
+	never_const_ptr<definition_base> def(owner.is_a<definition_base>());
+	if (def) {
+		return def->lookup_template_formal(key);
+	} else {
+		assert(owner.is_a<name_space>());
+		// is owned by a namespace, i.e. actually instantiated
+		return false;
+	}
+}
+
+/**
+	Checks whether or not instance has been assigned.
+	Collectives -- conservatively return false.  
+	In this context, "default_value" refers to the initialized
+	value.  
+	Should check whether or not this is a template formal first!
+
+	Later distinguish between may_be_init_ and definitely_init_...
+ */
+bool
+param_instantiation::is_initialized(void) const {
+//	return default_value();		// used to be just this
+
+	if (dimensions()) {
+		// for may_be_initialized, return true, 
+		// for definitely_initialized, return false.  
+		return false;
+	} else if (is_template_formal()) {
+	// first check whether or not this is a template formal parameter
+		return false;
+	} else {
+		// then is not a formal, default_value field is 
+		// interpreted as an initial value.  
+		count_const_ptr<param_expr> ret(default_value());
+		if (ret)
+			return ret->is_initialized();
+		else return false;
+	}
+}
+
+bool
+param_instantiation::is_static_constant(void) const {
+	if (dimensions()) {
+		// conservatively return... depends on may or must...
+		return false;
+	} else if (is_template_formal()) {
+		return false;
+	} else {
+		count_const_ptr<param_expr> ret(default_value());
+		if (ret)
+			return ret->is_static_constant();
+		else return false;
+	}
+}
+
+#if 0
+/**
+	Note: only one flavor needed (hopefully).  
+	One should be able to statically determine whether or not
+	something is loop-dependent.  
+	Wait, does it even make sense for an "instantiation"?
+	This should only be applicable to instance_references...
+	put this on hold...
+ */
+bool
+param_instantiation::is_loop_independent(void) const {
+	
+}
+#endif
+
+//=============================================================================
+// class pbool_instantiation method definitions
+
+pbool_instantiation::pbool_instantiation(const scopespace& o, 
+//		const param_type_reference& pt,
+		const string& n, 
+		const pbool_expr* i) :
+		param_instantiation(o, n,
+			index_collection_item_ptr_type(NULL)),
+		ival(i) {
+//	assert(&pt == &pbool_type);		// sanity check
+}
+
+pbool_instantiation::pbool_instantiation(const scopespace& o, 
+//		const param_type_reference& pt,
+		const string& n, 
+		index_collection_item_ptr_type d, 
+		const pbool_expr* i) :
+		param_instantiation(o, n, d), ival(i) {
+//	assert(&pt == &pbool_type);		// sanity check
+}
+
 ostream&
-param_instantiation::what(ostream& o) const {
-	return o << "param-inst";
+pbool_instantiation::what(ostream& o) const {
+	return o << "pbool-inst";
 }
 
 never_const_ptr<fundamental_type_reference>
-param_instantiation::get_type_ref(void) const {
-	return type;
+pbool_instantiation::get_type_ref(void) const {
+	return never_const_ptr<fundamental_type_reference>(&pbool_type);
+		// defined in "art_built_ins.h"
 }
 
 /**
@@ -2208,14 +2839,15 @@ param_instantiation::get_type_ref(void) const {
 	\sa is_initialized
  */
 void
-param_instantiation::initialize(count_const_ptr<param_expr> e) {
+pbool_instantiation::initialize(count_const_ptr<param_expr> e) {
 	assert(!ival);
-	assert(e);
-	ival = e;
+	count_const_ptr<pbool_expr> b(e.is_a<pbool_expr>());
+	assert(b);
+	ival = b;
 }
 
 count_const_ptr<param_expr>
-param_instantiation::default_value(void) const {
+pbool_instantiation::default_value(void) const {
 	return ival;
 }
 
@@ -2232,21 +2864,113 @@ param_instantiation::default_value(void) const {
 	\return NULL.
  */
 never_const_ptr<instance_reference_base>
-param_instantiation::make_instance_reference(context& c) const {
+pbool_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
 	count_ptr<param_instance_reference> new_ir(
-		new param_instance_reference(
-			never_ptr<param_instantiation>(
-			const_cast<param_instantiation*>(this))));
+		new pbool_instance_reference(
+			never_ptr<pbool_instantiation>(
+			const_cast<pbool_instantiation*>(this)), 
+			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if	UNIFIED_OBJECT_STACK
 	c.push_object_stack(new_ir);
-#else
-	c.push_instance_reference_stack(new_ir);
+	return never_const_ptr<instance_reference_base>(NULL);
+}
+
+#if 0
+bool
+pbool_instantiation::is_initialized(void) const {
+	if (ival)
+		return ival->is_initialized();
+	else	return false;
+#if 0
+	// used to be just this...
+	return ival;
 #endif
+}
+#endif
+
+//=============================================================================
+// class pint_instantiation method definitions
+
+pint_instantiation::pint_instantiation(const scopespace& o, 
+//		const param_type_reference& pt,
+		const string& n, 
+		const pint_expr* i) :
+		param_instantiation(o, n,
+			index_collection_item_ptr_type(NULL)),
+		ival(i) {
+//	assert(&pt == &pint_type);		// sanity check
+}
+
+pint_instantiation::pint_instantiation(const scopespace& o, 
+//		const param_type_reference& pt,
+		const string& n, 
+		index_collection_item_ptr_type d, 
+		const pint_expr* i) :
+		param_instantiation(o, n, d), ival(i) {
+//	assert(&pt == &pint_type);		// sanity check
+}
+
+ostream&
+pint_instantiation::what(ostream& o) const {
+	return o << "pint-inst";
+}
+
+never_const_ptr<fundamental_type_reference>
+pint_instantiation::get_type_ref(void) const {
+	return never_const_ptr<fundamental_type_reference>(&pint_type);
+		// defined in "art_built_ins.h"
+}
+
+/**
+	Initializes a parameter instance with an expression.
+	The ival may only be initialized once, enforced by assertions.  
+	Note: a parameter is considered "usable" if it is 
+	initialized OR it is a template formal.  
+	\param e the rvalue expression.
+	\sa is_initialized
+ */
+void
+pint_instantiation::initialize(count_const_ptr<param_expr> e) {
+	assert(!ival);
+	count_const_ptr<pint_expr> b(e.is_a<pint_expr>());
+	assert(b);
+	ival = b;
+}
+
+count_const_ptr<param_expr>
+pint_instantiation::default_value(void) const {
+	return ival;
+}
+
+/**
+	Create a param reference object.
+	See if it's already registered in the current context.  
+	If so, delete the new one (inefficient), 
+	and return the one found.  
+	Else, register the new one in the context, and return it.  
+	Depends on context's method for checking references in used_id_map.  
+	Different: param type reference are always referred to in the global
+		scope because they cannot be templated!
+		Therefore, cache them in the global (or built-in) namespace.  
+	\return NULL.
+ */
+never_const_ptr<instance_reference_base>
+pint_instantiation::make_instance_reference(context& c) const {
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+
+	// problem: needs to be modifiable for later initialization
+	count_ptr<param_instance_reference> new_ir(
+		new pint_instance_reference(
+			never_ptr<pint_instantiation>(
+			const_cast<pint_instantiation*>(this)), 
+			excl_ptr<index_list>(NULL)));
+		// omitting index argument
+	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
@@ -2255,8 +2979,9 @@ param_instantiation::make_instance_reference(context& c) const {
 
 channel_instantiation::channel_instantiation(const scopespace& o, 
 		const channel_type_reference& ct,
-		const string& n) :
-		instantiation_base(o, n), type(&ct) {
+		const string& n, 
+		index_collection_item_ptr_type d) : 
+		instantiation_base(o, n, d), type(&ct) {
 }
 
 channel_instantiation::~channel_instantiation() {
@@ -2287,26 +3012,51 @@ channel_instantiation::make_instance_reference(context& c) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 	count_ptr<channel_instance_reference> new_ir(
-		new channel_instance_reference(*this));
+		new channel_instance_reference(*this, 
+			excl_ptr<index_list>(NULL)));
 		// omitting index argument
-#if	UNIFIED_OBJECT_STACK
 	c.push_object_stack(new_ir);
-#else
-	c.push_instance_reference_stack(new_ir);
-#endif
 	return never_const_ptr<instance_reference_base>(NULL);
 }
 
 //=============================================================================
 // class single_instance_reference method definitions
 
+single_instance_reference::single_instance_reference(
+//		array_index_list* i = NULL
+		excl_ptr<index_list> i, 
+		const instantiation_state& st) :
+		array_indices(i), 
+		inst_state(st) {
+	// in sub-type constructors, 
+	// assert(array_indices->size < get_inst_base->dimensions());
+}
+
 single_instance_reference::~single_instance_reference() {
+}
+
+/**
+	Dimensionality of an indexed references depends on
+	which indexed dimensions are collapsed x[i], and which
+	are not x[i..j].  
+	A fully collapsed index list is equivalent to a 0-d array
+	or a single instance.  
+	\return the dimensions of the referenced array.  
+ */
+size_t
+single_instance_reference::dimensions(void) const {
+	// THIS NEEDS FIXING
+	if (array_indices)
+		return array_indices->dimensions();
+	else return get_inst_base()->dimensions();
 }
 
 ostream&
 single_instance_reference::dump(ostream& o) const {
 	o << get_inst_base()->get_name();
 	if (array_indices) {
+		array_indices->dump(o);
+#if 0
 		o << "[";
 		array_index_list::const_iterator i;
 		i=array_indices->begin();
@@ -2314,6 +3064,7 @@ single_instance_reference::dump(ostream& o) const {
 			(*i)->dump(o) << ",";
 		}
 		o << "]";
+#endif
 	}
 	return o;
 }
@@ -2322,6 +3073,8 @@ string
 single_instance_reference::hash_string(void) const {
 	string ret(get_inst_base()->get_qualified_name());
 	if (array_indices) {
+		ret += array_indices->hash_string();
+#if 0
 		array_index_list::const_iterator i;
 		ret += "[";
 		for (i=array_indices->begin(); i!=array_indices->end(); i++) {
@@ -2330,11 +3083,14 @@ single_instance_reference::hash_string(void) const {
 			ret += ",";		// extra comma at end
 		}
 		ret += "]";
+#endif
 	}
 	return ret;
 }
 
 //=============================================================================
+#if 0
+PHASE OUT...
 // class collective_instance_reference method definitions
 
 collective_instance_reference::collective_instance_reference(
@@ -2370,6 +3126,7 @@ collective_instance_reference::hash_string(void) const {
 	ret += "]";
 	return ret;
 }
+#endif
 
 //=============================================================================
 // class param_instance_reference method definitions
@@ -2378,41 +3135,218 @@ collective_instance_reference::hash_string(void) const {
 	\param pi needs to be modifiable for later initialization.  
  */
 param_instance_reference::param_instance_reference(
-		never_ptr<param_instantiation> pi,
-		array_index_list* i) :
-		single_instance_reference(i), param_inst_ref(pi) {
-}
-
-never_const_ptr<instantiation_base>
-param_instance_reference::get_inst_base(void) const {
-	return param_inst_ref;
-}
-
-ostream&
-param_instance_reference::what(ostream& o) const {
-	return o << "param-inst-ref";
+		excl_ptr<index_list> i, 
+		const instantiation_state& st) :
+		single_instance_reference(i, st) {
 }
 
 /**
 	For single instances references, check whether it is initialized.  
 	For collective instance references, and indexed references, 
-	just conservatively say that it hasn't been initialized it; 
+	just conservatively say that it hasn't been initialized yet; 
 	so don't bother checking until unroll time.  
  */
 bool
 param_instance_reference::is_initialized(void) const {
-	if (param_inst_ref->dimensions() > 0)
+	never_const_ptr<instantiation_base> i(get_inst_base());
+	assert(i);
+	if (i->dimensions() > 0)
 		return false;
-	else return param_inst_ref->is_initialized();
+	else 
+		return i.is_a<param_instantiation>()->is_initialized();
+}
+
+/**
+	Under what conditions is a reference to a param instance
+	static and constant?
+	Resolved to a compile-time constant value.  
+	May refer to parameters that are unconditionally initialized
+	exactly once.  
+	For collective variables, we just conservatively return false.  
+	Oh yeah, how do we keep track whether or not a variable
+	has been conditionally initialized?
+	We may need some assignment stack.... PUNT!
+ */
+bool
+param_instance_reference::is_static_constant(void) const {
+	// "collective": if either reference is indexed, 
+	// 	(mind, this is conservative and not precise because
+	//	we don't track values of arrays at compile-time)
+	//	More thoughts later on how to be more precise...
+	if (array_indices)
+		return false;
+	// or the instantiation_base is collective (not 0-dimensional)
+	else if (get_inst_base()->dimensions())
+		return false;
+	// else if singular, whether or not it is initialized once
+	// to another static constant (parameter variable or value).  
+	else 
+		return get_param_inst_base()->is_static_constant();
+}
+
+/**
+	A reference is loop independent if it's indices
+	contain no references to index loop variables.  
+	Or if it's simply not in a loop, since references are type-checked.  
+	BEWARE: referring to a collective instance without indexing
+	can also be loop-variant if instances are added to the collection
+	within some loop.  
+	See if the iterator into instance_collection_stack points
+	to a loop-scope.  
+	(Of course, we need to actually use the instance_collection stack...)
+ */
+bool
+param_instance_reference::is_loop_independent(void) const {
+	if (array_indices)
+		return array_indices->is_loop_independent();
+	else 
+		// no array indices, see if instantiation_base is collective
+	if (get_inst_base()->dimensions()) {
+		// if collective, check if the instance_reference itself 
+		// is found within a loop that adds to the collection...
+		// ... but I'm too lazy to do this entirely now
+		return false;
+		// FIX ME later
+	} else {
+		// is 0-dimension, look up and see if it happens to be
+		// a loop index variable.  
+		// Who owns the param_inst_base?
+		never_const_ptr<scopespace>
+			owner(get_inst_base()->get_owner());
+		return !owner.is_a<loop_scope>();
+	}
+}
+
+/**
+	Whether or not this instance reference is found inside a 
+	conditional body.  
+	Check the iterator into the instantiation base's
+	collection stack.  
+	Is point of reference in some conditional body
+		(may be nested in loop, don't forget!)
+	What about the indices themselves?  (shouldn't need to check?)
+ */
+bool
+param_instance_reference::is_unconditional(void) const {
+	if (array_indices)
+		return array_indices->is_unconditional();
+	// else see if point of reference is within some conditional scope
+	else if (get_inst_base()->dimensions()) {
+		// if collective, see if the instance_reference itself
+		// is found within a conditional body, by walking the 
+		// collection_state_iterator forward.
+		// ... but I'm too lazy to do this now, FIX ME later
+		// what about checking history of assignments???
+		//	implies assignment stack...
+		return false;		// extremely conservative
+	} else {
+		// also need to check assignment stack...
+		return true;
+	}
+}
+
+//=============================================================================
+// class pbool_instance_reference method definitions
+
+pbool_instance_reference::pbool_instance_reference(
+		never_ptr<pbool_instantiation> pi,
+		excl_ptr<index_list> i) :
+		param_instance_reference(i, pi->current_collection_state()),
+		pbool_inst_ref(pi) {
+}
+
+never_const_ptr<instantiation_base>
+pbool_instance_reference::get_inst_base(void) const {
+	return pbool_inst_ref;
+}
+
+never_const_ptr<param_instantiation>
+pbool_instance_reference::get_param_inst_base(void) const {
+	return pbool_inst_ref;
+}
+
+ostream&
+pbool_instance_reference::what(ostream& o) const {
+	return o << "pbool-inst-ref";
 }
 
 void
-param_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	param_inst_ref->initialize(i);
+pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
+	pbool_inst_ref->initialize(i.is_a<pbool_expr>());
+}
+
+/**
+	\return newly constructed pbool literal if successful, 
+		returns NULL if type mismatches.  
+ */
+count_ptr<param_expr>
+pbool_instance_reference::make_param_literal(
+		count_ptr<param_instance_reference> pr) {
+	// make sure passed pointer is a self-ref count
+	assert(pr == this);
+	count_ptr<pbool_instance_reference> br(
+		pr.is_a<pbool_instance_reference>());
+	if (br)	return count_ptr<param_expr>(new pbool_literal(br));
+	else	return count_ptr<param_expr>(NULL);
+}
+
+//=============================================================================
+// class pint_instance_reference method definitions
+
+pint_instance_reference::pint_instance_reference(
+		never_ptr<pint_instantiation> pi,
+		excl_ptr<index_list> i) :
+		param_instance_reference(i, pi->current_collection_state()),
+		pint_inst_ref(pi) {
+}
+
+never_const_ptr<instantiation_base>
+pint_instance_reference::get_inst_base(void) const {
+	return pint_inst_ref;
+}
+
+never_const_ptr<param_instantiation>
+pint_instance_reference::get_param_inst_base(void) const {
+	return pint_inst_ref;
+}
+
+ostream&
+pint_instance_reference::what(ostream& o) const {
+	return o << "pint-inst-ref";
+}
+
+void
+pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
+	pint_inst_ref->initialize(i.is_a<pint_expr>());
+}
+
+/**
+	\return newly constructed pint literal if successful, 
+		returns NULL if type mismatches.  
+ */
+count_ptr<param_expr>
+pint_instance_reference::make_param_literal(
+		count_ptr<param_instance_reference> pr) {
+	// make sure passed pointer is a self-ref count
+	assert(pr == this);
+	count_ptr<pint_instance_reference> ir(
+		pr.is_a<pint_instance_reference>());
+	if (ir)	return count_ptr<param_expr>(new pint_literal(ir));
+	else	return count_ptr<param_expr>(NULL);
 }
 
 //=============================================================================
 // class process_instance_reference method definitions
+
+process_instance_reference::process_instance_reference(
+		const process_instantiation& pi,
+		excl_ptr<index_list> i) :
+		single_instance_reference(i, pi.current_collection_state()),
+		process_inst_ref(&pi) {
+}
+
+process_instance_reference::~process_instance_reference() {
+}
 
 never_const_ptr<instantiation_base>
 process_instance_reference::get_inst_base(void) const {
@@ -2426,6 +3360,16 @@ process_instance_reference::what(ostream& o) const {
 
 //=============================================================================
 // class datatype_instance_reference method definitions
+
+datatype_instance_reference::datatype_instance_reference(
+		const datatype_instantiation& di,
+		excl_ptr<index_list> i) :
+		single_instance_reference(i, di.current_collection_state()),
+		data_inst_ref(&di) {
+}
+
+datatype_instance_reference::~datatype_instance_reference() {
+}
 
 never_const_ptr<instantiation_base>
 datatype_instance_reference::get_inst_base(void) const {
@@ -2444,6 +3388,16 @@ datatype_instance_reference::dump(ostream& o) const {
 
 //=============================================================================
 // class channel_instance_reference method definitions
+
+channel_instance_reference::channel_instance_reference(
+		const channel_instantiation& ci,
+		excl_ptr<index_list> i) :
+		single_instance_reference(i, ci.current_collection_state()),
+		channel_inst_ref(&ci) {
+}
+
+channel_instance_reference::~channel_instance_reference() {
+}
 
 never_const_ptr<instantiation_base>
 channel_instance_reference::get_inst_base(void) const {

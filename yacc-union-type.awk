@@ -1,3 +1,10 @@
+#!/usr/bin/awk -f
+# "yacc-union-type-.awk"
+# David Fang, 2004
+
+# DISCLAIMER:
+# Not guaranteed to work on 'bison -y' output, 
+# only tested for traditional yacc.
 
 # the goal of this script is to produce:
 # a C function that takes as arguments:
@@ -30,7 +37,7 @@
 #	the yacc file alone doesn't know anything about classes
 # yaccfile = the yacc input file, preferably preprocessed with the command:
 #	suggetsed creation of intermediate file:
-#	grep -v "#include" <yacc-file> | cpp -P |
+#	grep -v "#include" <yacc-file.y> | cpp -P |
 #		sed -e "/^%start/,$$$$d" -e "/%{/,/%}/d"
 # enumfile = "y.tab.h" for symbol enumerations
 # include (optional) = space-delimited list of headers to include

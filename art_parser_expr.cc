@@ -84,7 +84,7 @@ qualified_id::qualified_id(token_identifier* n) :
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const qualified_id& i) :
-		qualified_id_base(i), absolute(NULL) {
+		node(), qualified_id_base(i), absolute(NULL) {
 #if DEBUG_ID_EXPR
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
@@ -225,7 +225,8 @@ id_expr::id_expr(qualified_id* i) : expr(), qid(i) {
 	assert(qid);
 }
 
-id_expr::id_expr(const id_expr& i) : expr(), qid(new qualified_id(*i.qid)) {
+id_expr::id_expr(const id_expr& i) :
+		node(), expr(), qid(new qualified_id(*i.qid)) {
 	assert(qid);
 }
 
@@ -268,6 +269,8 @@ id_expr::check_build(never_ptr<context> c) const {
 			inst->make_instance_reference(*c);
 			// pushes the created reference onto
 			// context's instance_reference_stack.
+			// if indexed, check in the caller, and modify
+			//	in index_expr...
 
 			// doesn't have to be a parameter, does it?
 		} else {
@@ -294,15 +297,17 @@ ostream& operator << (ostream& o, const id_expr& id) {
 CONSTRUCTOR_INLINE
 range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
-	assert(!lower.is_a<range>());
+	// ranges are not derived from expr anymore
+//	assert(!lower.is_a<range>());
 }
 
 CONSTRUCTOR_INLINE
 range::range(const expr* l, const terminal* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
 	assert(lower); assert(op); assert(u);
-	assert(!lower.is_a<range>());
-	assert(!upper.is_a<range>());
+	// ranges are not derived from expr anymore
+//	assert(!lower.is_a<range>());
+//	assert(!upper.is_a<range>());
 }
 
 DESTRUCTOR_INLINE
@@ -328,23 +333,107 @@ range::rightmost(void) const {
 
 /**
 	Both expressions of the range should be of type pint.  
+	No collective expressions, only single pints.  
 	TO DO: finish me
+	How do we interpret x[i]?
 	\param c the context where to start resolving identifiers.  
 	\return I don't know.
  */
 never_const_ptr<object>
 range::check_build(never_ptr<context> c) const {
-	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
+//	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
 	never_const_ptr<object> o;
-	never_const_ptr<param_type_reference> pint_type = c->global_namespace->
-		lookup_object("pint").is_a<param_type_reference>();
-	assert(pint_type);
-	o = lower->check_build(c);
-	assert(o);
-	if (upper)
+
+//	never_const_ptr<param_type_reference> pint_type = c->global_namespace->
+//		lookup_object("pint").is_a<param_type_reference>();
+//	assert(pint_type);
+
+	o = lower->check_build(c);	// useless return value
+	// puts param_expr on stack
+	count_ptr<object> l(c->pop_top_object_stack());
+	count_ptr<pint_expr> lp(l.is_a<pint_expr>());
+	if (l) {
+		if (!lp) {
+			cerr << "Expression is not a pint-type, ERROR!  " <<
+				lower->where() << endl;
+			exit(1);
+		}
+		// check if expression is initialized
+	} else {
+		cerr << "Error resolving expression " << lower->where()
+			<< endl;
+		exit(1);
+	}
+	if (upper) {
 		o = upper->check_build(c);
+		// puts param_expr on stack
+		// grab the last two expressions, 
+		// check that they are both pints, 
+		// and make a range object
+		count_ptr<object> u(c->pop_top_object_stack());
+		count_ptr<pint_expr> up(l.is_a<pint_expr>());
+		if (u) {
+			if (!up) {
+				cerr << "Expression is not a pint-type, "
+					"ERROR!  " << upper->where() << endl;
+				exit(1);
+			}
+			// check if expression is initialized
+		} else {
+			cerr << "Error resolving expression " << upper->where()
+				<< endl;
+			exit(1);
+		}
+		// at this point, is ok
+		// later: resolve constant if possible...
+		c->push_object_stack(count_ptr<pint_range>(
+			new pint_range(lp, up)));
+	} else {
+		// but check that it is of type pint
+		// and push it back onto stack
+		// the caller will interpret it
+		c->push_object_stack(l);
+		// passing lp: ART::entity::object ambiguous base class
+		//	of pint_expr :S
+	}
 	// not done yet
 	return o;
+}
+
+//=============================================================================
+// class range_list method definitions
+
+range_list::range_list(const range* r) : parent(r) {
+}
+
+range_list::~range_list() { }
+
+/**
+	Parent's check_build will result in each index dimension
+	being pushed onto the context's object stack.  
+	Grab them off the stack to form an object list.  
+	Or just convert directly to a range list?
+	No range list has two different semantics
+	(depending on instantiation vs. reference),
+	so just leave as object_list.  
+	\return NULL, useless.
+ */
+never_const_ptr<object>
+range_list::check_build(never_ptr<context> c) const {
+	parent::check_build(c);
+	count_ptr<object_list> ol(new object_list);
+	size_t i = 0;
+	for ( ; i<size(); i++) {
+		count_ptr<object> o(c->pop_top_object_stack());
+		if (!o) {
+			cerr << "problem with dimension " << i+1 <<
+				" of range_list between " << where() << endl;
+			exit(1);		// terminate?
+		}
+		ol->push_front(o);
+	}
+	c->push_object_stack(ol);
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -494,19 +583,51 @@ index_expr::rightmost(void) const {
 }
 
 /**
-	TO DO: finish me
+	TO DO: FINISH ME
+	Checking identifier should place an instance_reference 
+	on the context's object stack.  
+	For an indexed instance reference, we need to take it off the 
+	stack, modify it, and replace it back onto the stack.  
  */
 never_const_ptr<object>
 index_expr::check_build(never_ptr<context> c) const {
 	cerr << "index_expr::check_build(): FINISH ME!" << endl;
-	never_const_ptr<object> o;
-	o = e->check_build(c);
+//	never_const_ptr<object> o;
+	e->check_build(c);		// useless return value
+	// should result in an instance_reference on the stack
+	// in particular a pint_instance_reference.
+	count_ptr<object> o(c->pop_top_object_stack());
+	if (o) {
+		count_ptr<single_instance_reference>
+			ir(o.is_a<single_instance_reference>());
+		assert(ir);		// sanity check
+		ranges->check_build(c);
+		count_ptr<object> i(c->pop_top_object_stack());
+		if (i) {
+			count_ptr<object_list> indices(i.is_a<object_list>());
+			assert(indices);
+			// convert object_list into index_list (attempt)
+		} else {
+			// there was some error in one of the indices
+			// try to pin point which one?
+			cerr << where() << endl;
+//			c->type_error_count++;	// protected...
+			exit(1);
+		}
+	} else {
+		// there was some error in the instance_reference lookup
+		cerr << where() << endl;
+//		c->type_error_count++;	// protected...
+		exit(1);
+	}
+
+#if 0
 	// expect: collective_type_reference
 	never_const_ptr<collective_instance_reference> cir(
 		o.is_a<collective_instance_reference>());
 	// check each of the ranges from left to right
-
 	assert(cir);			// temporary
+#endif
 	return never_const_ptr<object>(NULL);
 }
 
@@ -534,6 +655,7 @@ binary_expr::rightmost(void) const {
 	return r->rightmost();
 }
 
+/** this should be abstract, not exist */
 never_const_ptr<object>
 binary_expr::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> lo, ro;
@@ -542,6 +664,7 @@ binary_expr::check_build(never_ptr<context> c) const {
 	assert(lo);			// temporary
 	ro = r->check_build(c);		// expect some object expression
 	assert(ro);			// temporary
+	// pop them off object stack
 	// switch on operation
 	return never_const_ptr<object>(NULL);
 }

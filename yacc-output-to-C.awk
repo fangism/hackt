@@ -1,3 +1,4 @@
+#! /usr/bin/awk -f
 # "yacc-output-to-C.awk"
 # by Fang
 

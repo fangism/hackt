@@ -14,13 +14,17 @@
 #include "art_symbol_table.h"
 #include "art_object.h"
 #include "art_object_expr.h"
+#include "art_built_ins.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
 #define	DESTRUCTOR_INLINE		
 
+
 namespace ART {
+using namespace entity;
+
 namespace parser {
 
 //=============================================================================
@@ -135,12 +139,8 @@ token_int::rightmost(void) const {
  */
 never_const_ptr<object>
 token_int::check_build(never_ptr<context> c) const {
-	count_ptr<param_expr> pe(new param_const_int(val));
-#if	UNIFIED_OBJECT_STACK
+	count_ptr<param_expr> pe(new pint_const(val));
 	c->push_object_stack(pe);
-#else
-	c->push_expression_stack(pe);
-#endif
 	return never_const_ptr<object>(NULL);
 }
 
@@ -194,7 +194,9 @@ token_float::check_build(never_ptr<context> c) const {
 CONSTRUCTOR_INLINE
 token_string::token_string(const char* s) : string(s), terminal() { }
 
-token_string::token_string(const token_string& s) : string(s), terminal() { }
+token_string::token_string(const token_string& s) :
+		node(), string(s), terminal() {
+}
 
 DESTRUCTOR_INLINE
 token_string::~token_string() { }
@@ -220,7 +222,7 @@ token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
 
 /** default copy constructor */
 token_identifier::token_identifier(const token_identifier& i) :
-	token_string(i), expr() {
+		node(), token_string(i), expr() {
 }
 
 DESTRUCTOR_INLINE
@@ -270,6 +272,7 @@ token_identifier::check_build(never_ptr<context> c) const {
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
 		// we will then make an instance_reference
+		// what about indexed instance references?
 		inst->make_instance_reference(*c);
 		// already pushes onto context's object_stack
 		// useless return value, always NULL
@@ -327,15 +330,12 @@ line_position
 token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
+
 never_const_ptr<object>
 token_bool::check_build(never_ptr<context> c) const {
 	count_ptr<param_expr> pe(
-		new param_const_bool(strcmp(c_str(),"true") == 0));
-#if	UNIFIED_OBJECT_STACK
+		new pbool_const(strcmp(c_str(),"true") == 0));
 	c->push_object_stack(pe);
-#else
-	c->push_expression_stack(pe);
-#endif
 	return never_const_ptr<object>(NULL);
 }
 
@@ -446,6 +446,7 @@ token_datatype::what(ostream& o) const {
 	return o << "datatype: " << AS_A(const string&, *this);
 }
 
+#if 0
 never_const_ptr<object>
 token_datatype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
@@ -454,6 +455,7 @@ token_datatype::check_build(never_ptr<context> c) const {
 	)
 	return c->set_datatype_def(*this);
 }
+#endif
 
 //=============================================================================
 // class token_paramtype method definitions
@@ -469,6 +471,7 @@ token_paramtype::what(ostream& o) const {
 	return o << "paramtype: " << AS_A(const string&, *this);
 }
 
+#if 0
 never_const_ptr<object>
 token_paramtype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
@@ -476,6 +479,125 @@ token_paramtype::check_build(never_ptr<context> c) const {
 			<< "token_paramtype::check_build(...): ";
 	)
 	return c->set_param_def(*this);
+}
+#endif
+
+//=============================================================================
+// class token_bool_type method definitions
+
+CONSTRUCTOR_INLINE
+token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
+
+DESTRUCTOR_INLINE
+token_bool_type::~token_bool_type() { }
+
+#if 0
+ostream&
+token_bool_type::what(ostream& o) const {
+	return o << "bool_type: " << AS_A(const string&, *this);
+}
+#endif
+
+never_const_ptr<object>
+token_bool_type::check_build(never_ptr<context> c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_bool_type::check_build(...): ";
+	)
+	// bool_def declared in "art_built_ins.h"
+	return c->set_current_definition_reference(bool_def);
+}
+
+//=============================================================================
+// class token_int_type method definitions
+
+CONSTRUCTOR_INLINE
+token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
+
+DESTRUCTOR_INLINE
+token_int_type::~token_int_type() { }
+
+#if 0
+ostream&
+token_int_type::what(ostream& o) const {
+	return o << "int_type: " << AS_A(const string&, *this);
+}
+#endif
+
+never_const_ptr<object>
+token_int_type::check_build(never_ptr<context> c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_int_type::check_build(...): ";
+	)
+	// int_def declared in "art_built_ins.h"
+	return c->set_current_definition_reference(int_def);
+}
+
+//=============================================================================
+// class token_pbool_type method definitions
+
+CONSTRUCTOR_INLINE
+token_pbool_type::token_pbool_type(const char* dt) : token_paramtype(dt) { }
+
+DESTRUCTOR_INLINE
+token_pbool_type::~token_pbool_type() { }
+
+#if 0
+ostream&
+token_pbool_type::what(ostream& o) const {
+	return o << "pbool_type: " << AS_A(const string&, *this);
+}
+#endif
+
+/**
+	Return pointer to the definition, 
+	the caller (concrete_type_ref) should convert it to the appropriate
+	concrete type reference.  
+	"pbool" is always used as a type_reference, and never refers
+	to the definition.  
+ */
+never_const_ptr<object>
+token_pbool_type::check_build(never_ptr<context> c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_pbool_type::check_build(...): ";
+	)
+	// pbool_def declared in "art_built_ins.h"
+//	return c->set_current_fundamental_type(pbool_type);
+	return c->set_current_definition_reference(pbool_def);
+}
+
+//=============================================================================
+// class token_pint_type method definitions
+
+CONSTRUCTOR_INLINE
+token_pint_type::token_pint_type(const char* dt) : token_paramtype(dt) { }
+
+DESTRUCTOR_INLINE
+token_pint_type::~token_pint_type() { }
+
+#if 0
+ostream&
+token_pint_type::what(ostream& o) const {
+	return o << "pint_type: " << AS_A(const string&, *this);
+}
+#endif
+
+/**
+	Let caller resolve to concrete type reference with the definition.  
+//	"pint" is always used as a type_reference, and never refers
+//	to the definition.  
+ */
+never_const_ptr<object>
+token_pint_type::check_build(never_ptr<context> c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent())
+			<< "token_pint_type::check_build(...): ";
+	)
+	// pint_def declared in "art_built_ins.h"
+//	return c->set_current_fundamental_type(pint_type);
+	return c->set_current_definition_reference(pint_def);
 }
 
 //=============================================================================

@@ -13,8 +13,6 @@
 #include "ptrs.h"
 #include "count_ptr.h"
 
-#define		UNIFIED_OBJECT_STACK		1
-
 namespace ART {
 
 //=============================================================================
@@ -51,6 +49,10 @@ namespace entity {
 	class param_type_reference;
 	class param_instantiation;
 	class param_instance_reference;
+
+	class instance_collection_stack_item;
+	typedef count_const_ptr<instance_collection_stack_item>
+				index_collection_item_ptr_type;
 
 	class connection_assignment_base;
 	class param_expression_assignment;
@@ -116,18 +118,33 @@ protected:
 
 	/**
 		Pointer to the current definition that is open for 
-		modification.  
+		modification, intended for adding items to the body.  
 		One pointer is sufficient for all definitions because
 		only one definition can be open at a time.  
+		Never delete's because the definition has already 
+		been registered to some scopespace that owns it.  
+		Q: is this made redundant by current_scope?
 	 */
 	never_ptr<definition_base>	current_open_definition;
 
 	/**
+		This pointer is the scratch space for constructing
+		definitions' prototypes which will then be added and 
+		possibly checked against previous definitions.  
+		Intended for adding template formals and port formals.  
+		Exclusive-pointer because is freshly constructed.  
+	*/
+	excl_ptr<definition_base>	current_prototype;
+
+#if 0
+	OBSOLETE
+	/**
 		Flag that indicates whether or not we are declaring
 		a new definition, or checking against a previously
 		defined or declared definition.  
-	 */
 	bool			check_against_previous_definition_signature;
+	**/
+#endif
 
 	/**
 		Pointer to the current definition referenced, usually
@@ -144,14 +161,6 @@ protected:
 	 */
 	never_const_ptr<fundamental_type_reference>
 						current_fundamental_type;
-
-	/**
-		Instance(s) referenced to connect.  
-		Must type check.  
-		Not used yet.
-	 */
-	never_const_ptr<instance_reference_base>
-						current_instance_to_connect;
 
 	/**
 		List of parameter expressions to use as template
@@ -180,7 +189,6 @@ protected:
 	stack<never_ptr<scopespace> >	dynamic_scope_stack;
 #define	current_dynamic_scope		dynamic_scope_stack.top()
 
-#if	UNIFIED_OBJECT_STACK
 	/**
 		A unified stack intended for instance references and
 		parameter expressions.  
@@ -189,26 +197,6 @@ protected:
 			expressions on the stack.
 	 */
 	stack<count_ptr<object> >		object_stack;
-#else
-	/**
-		Stack of references to instances.  
-		These instance references are newly constructed, 
-		thus we use acquire and release exclusive ownership.  
-		We use count_const_ptr because of copy-constructibility.  
-	 */
-	stack<count_const_ptr<instance_reference_base> >
-					instance_reference_stack;
-// #define	current_instance_reference	instance_reference_stack.top();
-// will this be destructive? yes unless, explicit const reference cast...
-
-	/**
-		Expression stack.
-		These instance references are newly constructed, 
-		thus we use acquire and release exclusive ownership.  
-		We use count_const_ptr because of copy-constructibility.  
-	 */
-	stack<count_const_ptr<param_expr> >	expression_stack;
-#endif
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -235,18 +223,25 @@ void	using_namespace(const qualified_id& id);
 void	alias_namespace(const qualified_id& id, const string& a);
 never_const_ptr<name_space>	top_namespace(void) const;
 
-void	declare_process(const token_identifier& ps);
-void	open_process(const token_identifier& ps);
-// used for process and definitions
-void	close_process_definition();
+never_ptr<definition_base>
+	add_declaration(excl_ptr<definition_base> d);
+
+// void	declare_process(const token_identifier& ps);
+void	open_process_definition(const token_identifier& ps);
+void	close_process_definition(void);
 
 void	declare_datatype(const token_identifier& ds);
 void	open_datatype(const token_identifier& ds);
-void	close_datatype_definition();
+void	close_datatype_definition(void);
+
+// void	declare_enum(const token_identifier& en);
+void	open_enum_definition(const token_identifier& en);
+bool	add_enum_member(const token_identifier& em);
+void	close_enum_definition(void);
 
 void	declare_chantype(const token_identifier& ds);
 void	open_chantype(const token_identifier& ds);
-void	close_chantype_definition();
+void	close_chantype_definition(void);
 
 void	add_connection(excl_const_ptr<connection_assignment_base> c);
 void	add_assignment(excl_const_ptr<connection_assignment_base> a)
@@ -256,22 +251,24 @@ never_const_ptr<scopespace>	get_current_scope(void) const;
 never_ptr<scopespace>		get_current_scope(void);
 
 never_const_ptr<name_space>
-			get_current_namespace(void) const {
-				return current_namespace;
-			}
+		get_current_namespace(void) const {
+			return current_namespace;
+		}
 
 /**
 	Note: non-const because of destructive transfer.
+	Returning pointer by reference.  
+	This needs work.  
  */
 excl_ptr<template_param_list>&
-			get_current_template_arguments(void) {
-				return current_template_arguments;
-			}
+		get_current_template_arguments(void) {
+			return current_template_arguments;
+		}
 
 // sets context's definition for instantiation
 never_const_ptr<definition_base>	
-			get_current_definition_reference(void) const
-				{ return current_definition_reference; }
+		get_current_definition_reference(void) const
+			{ return current_definition_reference; }
 
 /**
 	To do: change prototype to use pointer class.  
@@ -283,13 +280,27 @@ never_const_ptr<definition_base>
 			return current_definition_reference;
 		}
 never_const_ptr<fundamental_type_reference>
-			get_current_fundamental_type(void) const
-				{ return current_fundamental_type; }
+		get_current_fundamental_type(void) const
+			{ return current_fundamental_type; }
 
-never_const_ptr<datatype_definition>	get_current_datatype_definition(void) const;
+
+never_ptr<definition_base>
+		set_current_prototype(excl_ptr<definition_base> d);
+
+/** destructive transfer return */
+excl_ptr<definition_base>
+	get_current_prototype(void) { return current_prototype; }
+never_const_ptr<definition_base>
+	get_current_prototype(void) const { return current_prototype; }
+
+never_const_ptr<datatype_definition>
+		get_current_datatype_definition(void) const;
 
 	// for keyword: int or bool
-never_const_ptr<datatype_definition>	set_datatype_def(const token_datatype& tid);
+#if 0
+never_const_ptr<datatype_definition>
+	set_datatype_def(const token_datatype& tid);
+#endif
 	// set template argument separately!
 	// need to assert(!inst_data_type_ref)?
 
@@ -298,15 +309,17 @@ void	reset_current_definition_reference(void);
 void	reset_current_fundamental_type(void);
 
 never_const_ptr<built_in_param_def>
-				get_current_param_definition(void) const;
+	get_current_param_definition(void) const;
+#if 0
 never_const_ptr<built_in_param_def>
-				set_param_def(const token_paramtype& pt);
+	set_param_def(const token_paramtype& pt);
+#endif
 
 never_const_ptr<channel_definition>
-				get_current_channel_definition(void) const;
+	get_current_channel_definition(void) const;
 
 never_const_ptr<process_definition>
-				get_current_process_definition(void) const;
+	get_current_process_definition(void) const;
 
 // to be called from parser's check_build
 never_const_ptr<fundamental_type_reference>
@@ -330,23 +343,24 @@ never_const_ptr<instantiation_base>
 
 never_const_ptr<instantiation_base>
 			add_instance(const token_identifier& id);
+never_const_ptr<instantiation_base>
+			add_instance(const token_identifier& id, 
+				index_collection_item_ptr_type dim);
 
-const datatype_instantiation*	add_template_formal(const token_identifier& id);
+never_const_ptr<instantiation_base>	// should be param_instantiation
+			add_template_formal(const token_identifier& id);
+never_const_ptr<instantiation_base>	// should be param_instantiation
+			add_template_formal(const token_identifier& id, 
+				index_collection_item_ptr_type dim);
 
-#if	UNIFIED_OBJECT_STACK
+never_const_ptr<instantiation_base>
+			add_port_formal(const token_identifier& id);
+never_const_ptr<instantiation_base>
+			add_port_formal(const token_identifier& id, 
+				index_collection_item_ptr_type dim);
+
 void	push_object_stack(count_ptr<object> i);
 count_ptr<object> pop_top_object_stack(void);
-
-#else
-void	push_instance_reference_stack(
-			count_const_ptr<instance_reference_base> i);
-count_const_ptr<instance_reference_base>
-		pop_top_instance_reference_stack(void);
-
-void	push_expression_stack(count_const_ptr<param_expr> i);
-count_const_ptr<param_expr>
-		pop_top_expression_stack(void);
-#endif
 
 // repeat for processes and channels...
 

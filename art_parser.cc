@@ -33,7 +33,6 @@
 namespace ART {
 namespace parser {
 using namespace std;
-// using ART::entity::param_expr;
 
 //=============================================================================
 // global constants
@@ -239,6 +238,10 @@ alias_list::check_build(never_ptr<context> c) const {
 			"alias_list::check_build(...): FINISH ME!";
 	)
 if (size() > 0) {		// non-empty
+	// can't we just re-use parent's check_build()?
+	// alias_list_base::check_build(c);
+	// no, because we need place-holder on stack. 
+
 	never_const_ptr<object> ret(NULL);
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
@@ -286,6 +289,7 @@ if (size() > 0) {		// non-empty
 		// However, only the last item may be a constant.  
 		excl_ptr<param_expression_assignment> exass(
 			new param_expression_assignment);
+		assert(exass);
 
 		// Mark all but the last expression as initialized 
 		// to the right-most expression.  
@@ -323,8 +327,9 @@ if (size() > 0) {		// non-empty
 				err = true;
 			} else {
 				// may be initialized, resolve at unroll
-				rhse = count_const_ptr<param_literal>(
-					new param_literal(rhsi));
+				rhse = count_const_ptr<param_expr>(
+					rhsi->make_param_literal(rhsi));
+//					new param_literal(rhsi);
 			}
 		// could also be a param_literal?
 		} else {
@@ -390,8 +395,7 @@ if (size() > 0) {		// non-empty
 					exass->append_param_expression(
 						count_ptr<param_expr>(NULL));
 				else exass->append_param_expression(
-					count_ptr<param_literal>(
-						new param_literal(ir)));
+						ir->make_param_literal(ir));
 			} else {
 				// is reference to something else
 				// or might be collective...
@@ -565,6 +569,7 @@ user_data_type_prototype::check_build(never_ptr<context> c) const {
 #if 0
 	never_const_ptr<object> o;
 	c->declare_datatype(*this);	// really only need name
+	// visit template formals
 	o = bdt->check_build(c);
 	assert(o);
 	o = params->check_build(c);
@@ -609,8 +614,8 @@ user_data_type_def::leftmost(void) const {
 
 line_position
 user_data_type_def::rightmost(void) const {
-	if (rb)         return rb->rightmost();
-	else            return getb->rightmost();
+	if (rb)		return rb->rightmost();
+	else		return getb->rightmost();
 }
 
 /*** unveil later...
@@ -632,6 +637,180 @@ user_data_type_def::check_build(never_ptr<context> c) const {
 	return c->top_namespace();
 }
 ***/
+
+//=============================================================================
+// class enum_signature method definitions
+
+/**
+	Basic constructor.  
+	Enums cannot be templated, so we pass NULL to the parent constructor.  
+ */
+enum_signature::enum_signature(const token_keyword* e, 
+		const token_identifier* i) :
+		signature_base(NULL, i), en(e) {
+}
+
+enum_signature::~enum_signature() {
+}
+
+/**
+	Just constructs and returns an enumeration definition with 
+	the appropriate signature.  There's really no signature, just name.  
+ */
+never_const_ptr<object>
+enum_signature::check_build(never_ptr<context> c) const {
+	excl_ptr<definition_base> ed(
+		new enum_datatype_def(c->get_current_namespace(), *id));
+	// elsewhere would need to add template and port formals
+	// no need for set_current_prototype
+	never_const_ptr<definition_base> ret(c->add_declaration(ed));
+	if (!ret) {
+		// error handling?
+		cerr << where() << endl;
+		exit(1);
+	}
+	return ret;
+//	return c->set_current_prototype(ed);
+}
+
+//=============================================================================
+// class enum_prototype method definitions
+
+enum_prototype::enum_prototype(const token_keyword* e, 
+		const token_identifier* i, const token_char* s) :
+		prototype(), enum_signature(e, i), semi(s) {
+}
+
+enum_prototype::~enum_prototype() {
+}
+
+ostream&
+enum_prototype::what(ostream& o) const {
+	return o << "(enum-declaration)";
+}
+
+line_position
+enum_prototype::leftmost(void) const {
+	if (en)		return en->leftmost();
+	else		return id->leftmost();
+}
+
+line_position
+enum_prototype::rightmost(void) const {
+	if (semi)	return semi->rightmost();
+	else		return id->rightmost();
+}
+
+/**
+	Register this identifier as a enum type.  
+	Is acceptable if already declared or defined, 
+	Signature has no additional information to match other than name.  
+	\return NULL, useless.  
+ */
+never_const_ptr<object>
+enum_prototype::check_build(never_ptr<context> c) const {
+#if 1
+	return enum_signature::check_build(c);	// using.
+#else
+	enum_signature::check_build(c);
+	excl_ptr<definition_base> ed(c->get_current_prototype());
+	if (ed) {
+		never_ptr<enum_datatype_def> ret(
+			c->add_declaration(ed).is_a<enum_datatype_def>());
+		// doesn't modify the context's current_open_definition, 
+		// just adds a placeholder to the current scope.  
+		if (!ret) {
+			// error handling?
+			cerr << where() << endl;
+			exit(1);
+		} else {
+			c->reset_current_prototype();
+		}
+	} else {
+		cerr << "ERROR: malformed enum signature." << endl;
+		exit(1);
+	}
+	return never_const_ptr<object>(NULL);
+#endif
+}
+
+//=============================================================================
+// class enum_member_list method definitions
+
+enum_member_list::enum_member_list(const token_identifier* i) : parent(i) {
+}
+
+enum_member_list::~enum_member_list() {
+}
+
+never_const_ptr<object>
+enum_member_list::check_build(never_ptr<context> c) const {
+//	cerr << "enum_member_list::check_build(): FINISH ME!" << endl;
+	// use current_open_definition
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		bool b = c->add_enum_member(**i);
+		if (!b) {
+			// should've exited by now...
+			cerr << "BAD fang!" << endl;
+		}
+	}
+	return never_const_ptr<object>(NULL);
+}
+
+//=============================================================================
+// class enum_def method definitions
+
+enum_def::enum_def(const token_keyword* e, const token_identifier* i,
+		const enum_member_list* m) :
+		definition(), enum_signature(e, i), members(m) {
+	assert(members);
+}
+
+enum_def::~enum_def() {
+}
+
+ostream&
+enum_def::what(ostream& o) const {
+	return o << "(enum-definition)";
+}
+
+line_position
+enum_def::leftmost(void) const {
+	if (en)		return en->leftmost();
+	else		return id->leftmost();
+}
+
+line_position
+enum_def::rightmost(void) const {
+	return members->rightmost();
+}
+
+/**
+	Reminder: don't forget to reset_current_prototype()
+ */
+never_const_ptr<object>
+enum_def::check_build(never_ptr<context> c) const {
+#if 0
+	return node::check_build(c);
+#else
+	never_const_ptr<object> o(enum_signature::check_build(c));
+	if (!o)	return never_const_ptr<object>(NULL);
+	// lookup and open definition
+	c->open_enum_definition(*id);	// marks as defined
+	o = members->check_build(c);	// use current_open_definition
+		// always returns NULL
+#if 0
+	if (!o) {
+		cerr << where() << endl;
+		exit(1);
+	}
+#endif
+	c->close_enum_definition();
+	return never_const_ptr<object>(NULL);
+#endif
+}
 
 //=============================================================================
 // class chan_type method definitions
@@ -703,6 +882,19 @@ user_chan_type_signature::user_chan_type_signature(
 DESTRUCTOR_INLINE
 user_chan_type_signature::~user_chan_type_signature() {
 }
+
+/**
+	Just constructs and returns an channel definition with 
+	the appropriate signature.
+ */
+never_const_ptr<object>
+user_chan_type_signature::check_build(never_ptr<context> c) const {
+	cerr << "user_chan_type_signature::check_build() FINISH ME!" << endl;
+	excl_ptr<definition_base> dd(
+		new user_def_chan(c->get_current_namespace(), *id));
+	return c->set_current_prototype(dd);
+}
+
 
 //=============================================================================
 // class user_chan_type_prototype method definitions
@@ -1262,7 +1454,17 @@ instance_array::check_build(never_ptr<context> c) const {
 		cerr << c->auto_indent() <<
 			"instance_array::check_build(...): " << endl;
 	)
-	o = instance_base::check_build(c);		// re-use
+	o = instance_base::check_build(c);		// re-use? no
+or:
+	if (ranges) {
+		ranges->check_build(c);
+		count_ptr<object> o(c->pop_top_object_stack());
+		// puts ranges expression onto object stack
+		c->add_instance(*id, ...);
+	} else {
+		instance_base::check_build(c);
+	}
+	
 	// then add array dimensions to instance
 	// complicated, need to check dense and sparse arrays
 	// adding to arrays, and collectives, etc...
@@ -1548,6 +1750,41 @@ port_formal_id::rightmost(void) const {
 	return dim->rightmost();
 }
 
+/**
+	Should be very similar to instance_base's check_build.  
+	// there should be some open definition already
+	// type should already be set in the context
+	TO DO:
+ */
+never_const_ptr<object>
+port_formal_id::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
+	never_const_ptr<instantiation_base> t;
+		// should be anything but param_instantiation
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"port_formal_id::check_build(...): ";
+	)
+
+	if (dim) {
+		dim->check_build(c);	// useless return value
+		count_ptr<object> o(c->pop_top_object_stack());
+		if (!o) {
+			cerr << "ERROR in array dimensions " <<
+				dim->where() << endl;
+			exit(1);
+		}
+		count_ptr<instance_collection_stack_item>
+			d(o.is_a<instance_collection_stack_item>());
+		assert(d);
+		// attach array dimensions to current instantiation
+		t = c->add_port_formal(*name, d);
+	} else {
+		t = c->add_port_formal(*name);
+	}
+	return t;
+}
+
 //=============================================================================
 // class port_formal_decl method definitions
 
@@ -1586,14 +1823,22 @@ port_formal_decl::rightmost(void) const {
 	dimensions in brackets.  
 	\param n the name of the template formal.  
 	\param d is the (optional) dimension size expression.
+	\param e is an '=' token.  
+	\param v is the optional default value expression.  
  */
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
-		const range_list* d) : 
-		node(), name(n), dim(d) {
+		const range_list* d, const token_char* e, 
+		const expr* v) : 
+		node(), name(n), dim(d), eq(e), dflt(v) {
 	assert(name);
 // dim may be NULL
+	if (eq) assert(dflt);
 }
+
+/**
+	
+ */
 
 DESTRUCTOR_INLINE
 template_formal_id::~template_formal_id() {
@@ -1613,26 +1858,54 @@ template_formal_id::leftmost(void) const {
 
 line_position
 template_formal_id::rightmost(void) const {
-	if (dim) return dim->rightmost();
-	else return name->rightmost();
+	if (dflt)	return dflt->rightmost();
+	else if (eq)	return eq->rightmost();
+	else if (dim)	return dim->rightmost();
+	else return	name->rightmost();
 }
 
+/**
+	Should be very similar to instance_base's check_build.  
+	TO DO: register default value in building
+ */
 never_const_ptr<object>
 template_formal_id::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> o;
-	const datatype_instantiation* t;
+	never_const_ptr<instantiation_base> t;
+		// should be param_instantiation
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"template_formal_id::check_build(...): ";
 	)
+	// there should be some open definition already
 	// type should already be set in the context
-	t = c->add_template_formal(*name);
 	if (dim) {
 		// attach array dimensions to current instantiation
-		o = dim->check_build(c);
-		assert(o);
+		dim->check_build(c);	// useless return value
+		count_ptr<object> o(c->pop_top_object_stack());
+		if (!o) {
+			cerr << "ERROR in array dimensions " <<
+				dim->where() << endl;
+			exit(1);
+		}
+		count_ptr<object_list> ol(o.is_a<object_list>());
+		assert(ol);
+		// convert plain object list into
+		//	instance_collection_stack_item...
+		// additional restriction: integer expression indices only
+		index_collection_item_ptr_type
+			d(ol->make_formal_dense_range_list());
+		if (!d) {
+			cerr << "ERROR in converting object list to "
+				"dense ranges " << dim->where() << endl;
+			exit(1);
+		}
+		t = c->add_template_formal(*name, d);
+	} else {
+		t = c->add_template_formal(*name);
 	}
-	return never_const_ptr<object>(t);
+	return t;
+//	return never_const_ptr<object>(t);
 }
 
 //=============================================================================
@@ -1667,6 +1940,7 @@ template_formal_decl::rightmost(void) const {
 
 /**
 	Type-checks a list of template formals with the same type.  
+	Adds formal parameters to the context's current_prototype.  
  */
 never_const_ptr<object>
 template_formal_decl::check_build(never_ptr<context> c) const {
@@ -1675,12 +1949,39 @@ template_formal_decl::check_build(never_ptr<context> c) const {
 		what(cerr << c->auto_indent()) <<
 			"template_formal_decl::check_build(...): ";
 	)
-	o = type->check_build(c);
+	o = type->check_build(c);	// sets_current_definition_reference
+	c->set_current_fundamental_type();
+		// built-in param types pint and pbool
+		// have no template parameters...
+		// after type is upgraded to a concrete_type_ref
+		// then it will already be set by its check_build()
 	assert(o);
 	ids->check_build(c);	// node_list::check_build: ignore return value
-	c->reset_current_definition_reference();
+	c->reset_current_fundamental_type();
 	return o;
 }
+
+//=============================================================================
+// class template_formal_decl_list method definitions
+
+#if 0
+template_formal_decl_list::template_formal_decl_list(
+		const template_formal_decl* tf) : parent(tf) {
+}
+
+template_formal_decl_list::~template_formal_decl_list() {
+}
+
+/**
+	Since latter template formals may depend on former ones, 
+	we cannot build this bottom-up with the context's object stack.  
+	We sequentially build each formal parameter.  
+ */
+never_const_ptr<object>
+template_formal_decl_list::check_build(never_ptr<context> c) const {
+	parent::check_build(c);
+}
+#endif
 
 //=============================================================================
 // class concrete_type_ref method definitions
@@ -1739,6 +2040,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 
 	// check template arguments, if given
 	if (temp_spec) {
+		// using current_definition_reference
 		o = temp_spec->check_build(c);
 		// remember to check the list of template formals
 		// which aren't yet tied to a definition!
@@ -1793,7 +2095,8 @@ process_signature::process_signature(const template_formal_decl_list* tf,
 		const token_keyword* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
 		signature_base(tf,i), def(d), ports(p) {
-	assert(def); assert(ports);
+	assert(def);
+	assert(ports);		// not any more!
 }
 
 DESTRUCTOR_INLINE
@@ -1803,6 +2106,36 @@ process_signature::~process_signature() {
 const token_identifier&
 process_signature::get_name(void) const {
 	return *id;
+}
+
+/**
+	FINISH ME.
+	Creates and returns a process definition objects with signature.
+	\param c context is modifiable in case new concrete-types update
+		the type-cache.  
+ */
+never_const_ptr<object>
+process_signature::check_build(never_ptr<context> c) const {
+//	cerr << "process_signature::check_build() FINISH ME!" << endl;
+	excl_ptr<definition_base> ret(
+		new process_definition(c->get_current_namespace(), *id));
+	c->set_current_prototype(ret);
+	if (temp_spec) {
+		never_const_ptr<object> o(temp_spec->check_build(c));
+		if (!o) {
+			cerr << temp_spec->where() << endl;
+			exit(1);
+		}
+	}
+	if (ports && !ports->empty()) {
+		never_const_ptr<object> o(ports->check_build(c));
+		if (!o) {
+			cerr << ports->where() << endl;
+			exit(1);
+		}
+	}
+	return c->add_declaration(c->get_current_prototype());
+//	return c->set_current_prototype(ret);
 }
 
 //=============================================================================
@@ -1838,20 +2171,28 @@ process_prototype::rightmost(void) const {
 	return semi->rightmost();
 }
 
+/**
+	TO DO: complete me!
+ */
 never_const_ptr<object>
 process_prototype::check_build(never_ptr<context> c) const {
+#if 1
+	return process_signature::check_build(c);
+#else
 	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		id->what(cerr << c->auto_indent() << 
 			"process_prototype::check_build(...): ");
 	)
 	c->declare_process(*id);		// will handle errors
+	// template parameters?
 
 	o = ports->check_build(c);		// ignore return value
 	c->reset_current_definition_reference();
 	c->close_process_definition();
 	// nothing better to do
 	return c->top_namespace();
+#endif
 }
 
 //=============================================================================
@@ -1886,26 +2227,31 @@ process_def::rightmost(void) const {
 	return body->rightmost();
 }
 
-/*** unveil later...
+/**
+	To do: port_formals in process_signature...
+ */
 never_const_ptr<object>
 process_def::check_build(never_ptr<context> c) const {
+	return node::check_build(c);		// temporary
+#if 0
 	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		idt->what(cerr << c->auto_indent() << 
 			"process_def::check_build(...): ");
 	)
-	c->open_process(get_name());		// will handle errors
 	o = idt->check_build(c);
 	assert(o);
 	o = ports->check_build(c);
 	assert(o);
+
+	c->open_process(get_name());		// will handle errors
 	o = body->check_build(c);
 	assert(o);
 	c->close_process_definition();
 	// nothing better to do
 	return c->top_namespace();
+#endif
 }
-***/
 
 //=============================================================================
 // class user_data_type_signature method definitions
@@ -1922,6 +2268,19 @@ user_data_type_signature::user_data_type_signature(
 
 user_data_type_signature::~user_data_type_signature() {
 }
+
+/**
+	Just constructs and returns an datatype definition with 
+	the appropriate signature.
+ */
+never_const_ptr<object>
+user_data_type_signature::check_build(never_ptr<context> c) const {
+	cerr << "user_data_type_signature::check_build() FINISH ME!" << endl;
+	excl_ptr<definition_base> dd(
+		new user_def_datatype(c->get_current_namespace(), *id));
+	return c->set_current_prototype(dd);
+}
+
 
 //=============================================================================
 // class guarded_definition_body method definitions

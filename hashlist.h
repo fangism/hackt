@@ -9,11 +9,11 @@
 #define	__HASHLIST_H__
 
 #include <list>
-// #include "list_of_ptr.h"	// includes <list>
 using std::list;
 
 #include "hash_map.h"		// NOT the system <hash_map>
 
+// make own namespace?
 //=============================================================================
 /**
 	Derived from standard list<> but maintains a hash of pointers for
@@ -21,12 +21,12 @@ using std::list;
 	Interface is limited to a few access methods.  
 */
 template <class K, class T>
-class hashlist : virtual protected list<T> {
+class hashlist : protected list<T> {
 public:
 	typedef	typename list<T>::iterator		iterator;
 	typedef	typename list<T>::const_iterator	const_iterator;
 protected:
-	typedef	hash_map<K,T*> 			map_type;
+	typedef	hash_map<K,T*> 				map_type;
 
 protected:
 	/// maps a key to an iterator in the list
@@ -43,55 +43,7 @@ T*	operator[] (const K& k);
 using	list<T>::begin;
 using	list<T>::end;
 using	list<T>::empty;
-};
-
-//=============================================================================
-#if 0
-// OBSOLETE
-
-/**
-	Class for storing a constant-time access list of owned pointers
-	to objects.  
- */
-template <class K, class T>
-class hashlist_of_ptr : private list_of_ptr<T>, public hashlist<K,T*> {
-private:
-	typedef list<T*>				grandparent;
-	typedef	list_of_ptr<T>				parent;
-public:
-	typedef	typename grandparent::iterator		iterator;
-	typedef	typename grandparent::const_iterator	const_iterator;
-public:
-	hashlist_of_ptr();		// not inlined
-virtual	~hashlist_of_ptr();		// not inlined
-
-using parent::begin;
-using parent::end;
-};	// end class hashlist_of_ptr
-
-//=============================================================================
-/**
-	Class for storing a constant-time access list of read-only pointers
-	to objects.  
- */
-template <class K, class T>
-class hashlist_of_const_ptr : 
-		private list_of_const_ptr<T>, public hashlist<K, const T*> {
-private:
-	typedef	list<const T*>				grandparent;
-	typedef	list_of_const_ptr<T>			parent;
-public:
-	typedef	typename grandparent::iterator		iterator;
-	typedef	typename grandparent::const_iterator	const_iterator;
-public:
-	hashlist_of_const_ptr();		// not inlined
-virtual	~hashlist_of_const_ptr();		// not inlined
-
-using parent::begin;
-using parent::end;
-};	// end class hashlist_of_const_ptr
-
-#endif
+};	// end class hashlist
 
 //=============================================================================
 

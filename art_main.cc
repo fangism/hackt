@@ -45,12 +45,12 @@ DEBUG(DEBUG_BASIC,
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
-	top = root->check_build(the_context);
+	top = root->check_build(the_context);	// useless return value
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 
 	if (top) {
-		assert(global == top);
+		assert(global == the_context->get_current_namespace());
 DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
 	// massive recursive deletion of syntax tree, reclaim memory

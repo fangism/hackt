@@ -53,7 +53,7 @@ NO_WARN = -Wno-unused
 # "no-unused" affects art.yy.o, from flex (yyunput unused)
 
 # extremely anal about warnings... report as errors!
-WARN_FLAGS = -Wall $(MORE_WARN) $(NO_WARN) -Werror
+WARN_FLAGS = -Wall -W $(MORE_WARN) $(NO_WARN) -Werror
 
 CFLAGS = -O2 -g -pipe
 # -static ?
@@ -110,22 +110,25 @@ all: makeinfo
 	$(RECURSIVE_MAKE) .depend
 	$(RECURSIVE_MAKE) $(TARGETS)
 
-# all objects may be built in parallel
-ART_OBJ = y.tab.o y.union.o art.yy.o \
+# objects are grouped by concurrency
+LANG_OBJ = y.tab.o y.union.o art.yy.o
+ART_OBJ = $(LANG_OBJ) \
 	art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_parser_chp.o art_parser_expr.o art_parser_token.o \
 	art_symbol_table.o art_utils.o art_object.o art_object_expr.o \
+	art_built_ins.o \
 	art_main.o
 
 ART_DEPS = $(ART_OBJ:.o=.d)
 
+# parallel make: LANG_OBJ needs to be built first... hmmm.
 $(ARTC): $(ART_OBJ)
 	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
 # gmake doesn't interpret $> correctly, otherwise the following would work:
 #	$(LD) $(LDFLAGS) $> -o $@
 
 # self-modifying makefile alert!
-# BSD make implcitly include .depend if it exists, but gmake doesn't
+# BSD make implicitly includes .depend if it exists, but gmake doesn't
 # so we must tell gmake... however BSD make dies trying to explicitly
 # include a file that doesn't exist, even though it 
 # includes it implicitly (only when it exists).  
@@ -146,6 +149,7 @@ art.yy.cc: art.l y.tab.h
 # y.tab.cc will depend on y.output.h
 y.tab.h y.tab.cc y.output y.output.h: art.yy
 	$(YACC) $(YFLAGS) $?
+	@if $(GREP) "conflict" y.output; then exit 1; fi
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
 	-$(MV) y.tab.c y.tab.cc
 
