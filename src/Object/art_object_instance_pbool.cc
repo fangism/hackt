@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.13 2005/02/27 22:54:16 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.13.2.1 2005/02/28 03:11:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -559,15 +559,14 @@ pbool_array<D>::lookup_value_collection(
 	\return true on error.
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
-bool
-pbool_array<D>::assign(const multikey_index_type& k,
-		const value_type i) {
+bad_bool
+pbool_array<D>::assign(const multikey_index_type& k, const value_type i) {
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
-//	const typename collection_type::key_type index(k);
 	const key_type index(k);
 	pbool_instance& pi = collection[index];
-	return !(pi = i);	// yes, assignment is intended
+	return (pi = i);	// yes, assignment is intended
+		// implicitly converts good_bool to bad_bool
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -724,21 +723,21 @@ pbool_array<0>::lookup_value(value_type& v,
 	Decision: should we allow multiple assignments of the same value?
 	\return true on error, false on success.
  */
-bool
+bad_bool
 pbool_array<0>::assign(const value_type i) {
-	return !(the_instance = i);
+	// implicitly convert good_bool to bad_bool
+	return (the_instance = i);
 		// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_array<0>::assign(const multikey_index_type& k,
-		const value_type i) {
+bad_bool
+pbool_array<0>::assign(const multikey_index_type& k, const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pbool_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
-	return true;
+	return bad_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.38 2005/02/27 22:54:10 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.38.2.1 2005/02/28 03:11:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1507,8 +1507,8 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 	\param p the destination instance reference.  
 	\return error (true) if anything goes wrong, or has gone wrong before.  
  */
-bool
-pbool_instance_reference::assigner::operator() (const value_type b, 
+bad_bool
+pbool_instance_reference::assigner::operator() (const bad_bool b, 
 		const pbool_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
@@ -1517,7 +1517,7 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 		const never_ptr<pbool_scalar> 
 			scalar_inst(p.pbool_inst_ref.is_a<pbool_scalar>());
 		if (scalar_inst) {
-			return scalar_inst->assign(vals.front()) || b;
+			return bad_bool(scalar_inst->assign(vals.front())) || b;
 		}
 	}
 	// else is scalar or array, but must resolve indices
@@ -1546,41 +1546,20 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 	}
 	// else good to continue
 
-#if 0
-	const excl_ptr<index_generator_type>
-		key_gen(index_generator_type::
-			make_multikey_generator(dim.size()));
-	NEVER_NULL(key_gen);
-	// automatic and temporarily allocated
-	key_gen->get_lower_corner() = *dim.lower_multikey();
-	key_gen->get_upper_corner() = *dim.upper_multikey();
-	key_gen->initialize();
-#else
 	generic_index_generator_type key_gen(dim.size());
-	// automatic and temporarily allocated
 	key_gen.get_lower_corner() = dim.lower_multikey();
 	key_gen.get_upper_corner() = dim.upper_multikey();
 	key_gen.initialize();
-#endif
 
 	list<value_type>::const_iterator list_iter = vals.begin();
-	bool assign_err = false;
-	// alias for key_gen
-//	index_generator_type& key_gen_ref = *key_gen;
+	bad_bool assign_err(false);
 	do {
-		if (p.pbool_inst_ref->assign(key_gen, *list_iter)) {
+		if (p.pbool_inst_ref->assign(key_gen, *list_iter).bad) {
 			cerr << "ERROR: assigning index " << key_gen << 
 				" of pbool collection " <<
 				p.pbool_inst_ref->get_qualified_name() <<
 				"." << endl;
-#if 0
-			cerr << "\tlower_corner = " <<
-				key_gen->get_lower_corner();
-			cerr << ", upper_corner = " <<
-				key_gen->get_upper_corner() << endl;
-			THROW_EXIT;
-#endif
-			assign_err = true;
+			assign_err.bad = true;
 		}
 		list_iter++;			// unsafe, but checked
 		key_gen++;
@@ -2116,8 +2095,8 @@ pint_instance_reference::assigner::assigner(const pint_expr& p) :
 	\param p the destination instance reference.  
 	\return error (true) if anything goes wrong, or has gone wrong before.  
  */
-bool
-pint_instance_reference::assigner::operator() (const bool b, 
+bad_bool
+pint_instance_reference::assigner::operator() (const bad_bool b, 
 		const pint_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
@@ -2126,7 +2105,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 		const never_ptr<pint_scalar> 
 			scalar_inst(p.pint_inst_ref.is_a<pint_scalar>());
 		if (scalar_inst) {
-			return scalar_inst->assign(vals.front()) || b;
+			return bad_bool(scalar_inst->assign(vals.front())) || b;
 		}
 	}
 	// else is scalar or array, but must resolve indices
@@ -2155,40 +2134,20 @@ pint_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-#if 0
-	const excl_ptr<index_generator_type>
-		key_gen(index_generator_type::
-			make_multikey_generator(dim.size()));
-	NEVER_NULL(key_gen);
-	// automatic and temporarily allocated
-	key_gen->get_lower_corner() = *dim.lower_multikey();
-	key_gen->get_upper_corner() = *dim.upper_multikey();
-	key_gen->initialize();
-#else
 	generic_index_generator_type key_gen(dim.size());
 	// automatic and temporarily allocated
 	key_gen.get_lower_corner() = dim.lower_multikey();
 	key_gen.get_upper_corner() = dim.upper_multikey();
 	key_gen.initialize();
-#endif
 	list<value_type>::const_iterator list_iter = vals.begin();
-	bool assign_err = false;
-	// alias for key_gen
-//	index_generator_type& key_gen_ref = *key_gen;
+	bad_bool assign_err(false);
 	do {
-		if (p.pint_inst_ref->assign(key_gen, *list_iter)) {
+		if (p.pint_inst_ref->assign(key_gen, *list_iter).bad) {
 			cerr << "ERROR: assigning index " << key_gen << 
 				" of pint collection " <<
 				p.pint_inst_ref->get_qualified_name() <<
 				"." << endl;
-#if 0
-			cerr << "\tlower_corner = " <<
-				key_gen->get_lower_corner();
-			cerr << ", upper_corner = " <<
-				key_gen->get_upper_corner() << endl;
-			THROW_EXIT;
-#endif
-			assign_err = true;
+			assign_err.bad = true;
 		}
 		list_iter++;			// unsafe, but checked
 		key_gen++;

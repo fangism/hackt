@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.11.2.1 2005/02/28 02:27:05 fang Exp $
+	$Id: art_object_assign.h,v 1.11.2.2 2005/02/28 03:11:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -21,6 +21,7 @@ USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
 using util::bad_bool;
+using util::good_bool;
 class unroll_context;
 
 //=============================================================================
@@ -82,11 +83,11 @@ virtual	bad_bool
 	};	// end class instance_reference_appender
 
 protected:
-	bool
+	good_bool
 	validate_dimensions_match(const dest_const_ptr_type&, 
 		const size_t ) const;
 
-	bool
+	good_bool
 	validate_reference_is_uninitialized(const dest_const_ptr_type&) const;
 
 };	// end class param_expression_assignment
@@ -95,11 +96,7 @@ protected:
 /**
 	pbool-specific version of expression assignments.  
  */
-class pbool_expression_assignment : public param_expression_assignment
-#if 0
-		, public object
-#endif
-		{
+class pbool_expression_assignment : public param_expression_assignment {
 private:
 	typedef	pbool_expression_assignment		this_type;
 public:

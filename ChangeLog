@@ -9,6 +9,8 @@
 	  return values clear and self-documenting.  
 	  Initially testing on a few classes at a time.  
 
+	* -bool-02: boolean upgrades to expression assignments.  
+
 	* ARTXX-00-01-04-main-00-08:
 	  Passes on all tested platforms and compilers:
 	  {gcc-3.3, 3.4, 4.0} x {FreeBSD, linux, darwin}

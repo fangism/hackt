@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.14 2005/02/27 22:54:16 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.14.2.1 2005/02/28 03:11:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -560,15 +560,13 @@ pint_array<D>::lookup_value_collection(
 	\return true on error.
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
-bool
-pint_array<D>::assign(const multikey_index_type& k,
-		const value_type i) {
+bad_bool
+pint_array<D>::assign(const multikey_index_type& k, const value_type i) {
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
-//	const typename collection_type::key_type index(k);
 	const key_type index(k);
 	pint_instance& pi = collection[index];
-	return !(pi = i);
+	return (pi = i);	// convert good_bool to bad_bool implicitly
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -724,21 +722,21 @@ pint_array<0>::lookup_value(value_type& v,
 	Decision: should we allow multiple assignments of the same value?
 	\return true on error, false on success.  
  */
-bool
+bad_bool
 pint_array<0>::assign(const value_type i) {
-	return !(the_instance = i);
-		// error message perhaps?
+	// convert good_bool to bad_bool implicitly
+	return (the_instance = i);
+	// error message perhaps?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_array<0>::assign(const multikey_index_type& k, 
-		const value_type i) {
+bad_bool
+pint_array<0>::assign(const multikey_index_type& k, const value_type i) {
 	// this should never be called
 	cerr << "FATAL: pint_array<0>::assign(multikey, int) "
 		"should never be called!" << endl;
 	DIE;
-	return true;
+	return bad_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
