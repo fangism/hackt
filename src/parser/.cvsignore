@@ -1,0 +1,10 @@
+.deps
+.libs
+.dirstamp
+yacc_or_bison.h
+art++.types
+*.output
+*.lo
+*.h
+*.cc
+
