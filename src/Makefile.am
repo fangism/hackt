@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.2.5 2005/02/17 00:10:10 fang Exp $
+#	$Id: Makefile.am,v 1.42.2.6 2005/02/27 04:11:16 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -108,6 +108,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
+	Object/art_object_classification_details.cc \
 	Object/art_object_expr.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
@@ -141,15 +142,23 @@ OBJECT_CC_NO_H_FILES = \
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
+	Object/art_object_classification_tags.h \
+	Object/art_object_connect.tcc \
 	Object/art_object_definition_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
+	Object/art_object_instance_alias.h \
+	Object/art_object_instance_collection.h \
+	Object/art_object_instance_collection.tcc \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_ref_base.h \
+	Object/art_object_inst_ref.tcc \
+	Object/art_object_member_inst_ref.h \
+	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h
 

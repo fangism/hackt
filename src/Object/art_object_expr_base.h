@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.5.2.2 2005/02/09 04:14:08 fang Exp $
+	$Id: art_object_expr_base.h,v 1.5.2.3 2005/02/27 04:11:22 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -199,6 +199,9 @@ virtual bool
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
 
+virtual	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const = 0;
+
 virtual	bool
 	must_be_equivalent_index(const index_expr& ) const = 0;
 
@@ -258,6 +261,9 @@ virtual	bool
 
 virtual	const_index_list
 	resolve_index_list(void) const = 0;
+
+virtual	const_index_list
+	unroll_resolve(const unroll_context&) const = 0;
 
 #if 0
 virtual	bool
@@ -456,8 +462,14 @@ virtual value_type
 	count_ptr<const_index>
 	resolve_index(void) const;
 
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
+
 virtual	bool
 	resolve_value(value_type& i) const = 0;
+
+virtual	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
@@ -533,8 +545,14 @@ virtual bool
 	count_ptr<const_index>
 	resolve_index(void) const;
 
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
+
 virtual	bool
 	resolve_range(const_range& r) const = 0;
+
+virtual	bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const = 0;
 
 virtual	bool
 	must_be_formal_size_equivalent(const range_expr& ) const = 0;

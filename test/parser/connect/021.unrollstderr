@@ -1,0 +1,73 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2c03180	module__	0	0	56
+	2	 0x2c00170	namespc_	0	56	96
+	3	 0x2c031a0	procdefn	0	96	133
+	4	 0x4006050	pintcoll	0	133	170
+	5	 0x4003600	pintinst	0	170	186
+	6	 0x2977024	cnstpi__	0	186	198
+	7	 0x400609c	pintcoll	0	198	235
+	8	 0x4003610	pintinst	0	235	251
+	9	 0x2977038	cnstpi__	0	251	263
+	10	 0x2c032e4	proccoll	2	263	415
+	11	 0x2c03330	procinst	0	415	435
+	12	 0x2c03210	proctprf	0	435	451
+	13	 0x2c03354	crnglst_	0	451	479
+	14	 0x2c03360	proctprf	0	479	495
+	15	 0x2c03374	proccoll	2	495	681
+	16	 0x2c033c0	procinst	0	681	701
+	17	 0x2c033e0	proctprf	0	701	717
+	18	 0x2c033f4	crnglst_	0	717	745
+	19	 0x2c03400	proctprf	0	745	761
+	20	 0x4005a00	piassign	0	761	781
+	21	 0x2c03430	spiref__	0	781	801
+	22	 0x4005a10	piassign	0	801	821
+	23	 0x2c03460	spiref__	0	821	841
+	24	 0x2c03470	prcalias	0	841	861
+	25	 0x2c0349c	sprocref	0	861	881
+	26	 0x2c034a4	cindlst_	0	881	901
+	27	 0x4002010	cnstrng_	0	901	917
+	28	 0x4002024	cnstrng_	0	917	933
+	29	 0x2c034cc	sprocref	0	933	953
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  2 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    M = pint^0 M (init = 3) value: 3
+    N = pint^0 N (init = 2) value: 2
+  Definitions:
+    fang = process-definition (declared) fang      (
+      )
+      In definition "fang", we have: {
+      }
+
+  Instances:
+    that = process fang<>^2 that with indices: {
+      [0..1][0..1]
+    }
+      unrolled indices: {
+        [0][0] = ::this[0][0]
+        [0][1] = ::this[0][1]
+        [1][0] = ::this[1][0]
+        [1][1] = ::this[1][1]
+      }
+    this = process fang<>^2 this with indices: {
+      [0..1][0..2]
+    }
+      unrolled indices: {
+        [0][0] = ::that[0][0]
+        [0][1] = ::that[0][1]
+        [0][2] = ::this[0][2]
+        [1][0] = ::that[1][0]
+        [1][1] = ::that[1][1]
+        [1][2] = ::this[1][2]
+      }
+}
+

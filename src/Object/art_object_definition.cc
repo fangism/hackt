@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.6 2005/02/17 04:20:33 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.7 2005/02/27 04:11:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -42,6 +42,23 @@
 //=============================================================================
 STATIC_TRACE_BEGIN("object-definition")
 
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY)
+}	// end namespace util
+
 //=============================================================================
 namespace ART {
 namespace entity {
@@ -56,6 +73,7 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // class definition_base method definitions
@@ -806,9 +824,6 @@ channel_definition_base::make_fundamental_type_reference(
 //=============================================================================
 // class user_def_chan method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_chan, 
-	USER_DEF_CHAN_DEFINITION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 user_def_chan::user_def_chan(never_ptr<const name_space> o, 
 		const string& name) :
@@ -867,7 +882,8 @@ user_def_chan::lookup_object_here(const string& id) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
 user_def_chan::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 
 	// recursively visit members...
 	sequential_scope::collect_transient_info_base(m);
@@ -933,9 +949,6 @@ user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class channel_definition_alias method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_definition_alias, 
-	CHANNEL_TYPEDEF_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::channel_definition_alias(
 		const string& n, never_ptr<const scopespace> p) :
@@ -991,7 +1004,8 @@ channel_definition_alias::assign_typedef(
 void
 channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);	// covers formals?
@@ -1205,7 +1219,9 @@ void
 built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
 	STACKTRACE("built_in_data::collect_transients()");
-	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<user_def_datatype>::type_key);
+	// NOTE: not using this_type is INTENTIONAL
 	// don't bother with parent pointer to built-in namespace
 #if 0
 	definition_base::collect_transient_info_base(m);
@@ -1353,9 +1369,6 @@ enum_member::dump(ostream& o) const {
 //=============================================================================
 // class enum_datatype_def method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_datatype_def, 
-	ENUM_DEFINITION_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::enum_datatype_def(never_ptr<const name_space> o, 
 		const string& n) : 
@@ -1501,7 +1514,8 @@ enum_datatype_def::add_member(const token_identifier& em) {
 void
 enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	definition_base::collect_transient_info_base(m);
 		// but no templates
 	scopespace::collect_transient_info_base(m);
@@ -1586,9 +1600,6 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 // class user_def_datatype method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_datatype, 
-	USER_DEF_DATA_DEFINITION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// constructor for user defined type
@@ -1676,7 +1687,8 @@ user_def_datatype::make_fundamental_type_reference(
 void
 user_def_datatype::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 
 // later: template formals
 	sequential_scope::collect_transient_info_base(m);
@@ -1742,9 +1754,6 @@ user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 // class datatype_definition_alias method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_definition_alias, 
-	DATA_TYPEDEF_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::datatype_definition_alias(
@@ -1842,7 +1851,8 @@ datatype_definition_alias::require_signature_match(
 void
 datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 //	scopespace::collect_transient_info_base(m);	// covers formals?
 	definition_base::collect_transient_info_base(m);
@@ -1931,9 +1941,6 @@ process_definition_base::make_typedef(never_ptr<const scopespace> s,
 
 //=============================================================================
 // class process_definition method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition, 
-	PROCESS_DEFINITION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2240,7 +2247,8 @@ process_definition::equivalent_port_formals(
  */
 void
 process_definition::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
@@ -2340,9 +2348,6 @@ process_definition::load_object_port_formals(
 //=============================================================================
 // class process_definition_alias method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition_alias, 
-	PROCESS_TYPEDEF_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -2434,7 +2439,8 @@ process_definition_alias::make_fundamental_type_reference(
 void
 process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);	// covers formals?

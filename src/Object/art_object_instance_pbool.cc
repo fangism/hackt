@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.5 2005/02/17 00:43:10 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.6 2005/02/27 04:11:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -37,14 +37,21 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
+// stat of static initializations
+
+STATIC_TRACE_BEGIN("instance_pbool")
+
+//=============================================================================
 // specializations in other namespace (local to this file)
 // ok to specialize here, ONLY IF nothing else references it externally
 
 namespace util {
 using ART::entity::pbool_instance;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Write out pbool_instance binary after compressing bits into char.
+	Consider replacing with value_writer functor.  
  */
 template <>
 void
@@ -58,9 +65,11 @@ write_value(ostream& o, const pbool_instance& b) {
 	write_value(o, c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reads in pbool_instance binary, decompressing char to bits.
 	Yeah, I know, this could be more efficient.  
+	Consider replacing with value_reader functor.  
  */
 template <>
 void
@@ -73,12 +82,12 @@ read_value(istream& i, pbool_instance& b) {
 	b.valid = c & 4;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_collection, 
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
+
 }	// end namespace util
-
-//=============================================================================
-// stat of static initializations
-
-STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 namespace ART {
@@ -92,6 +101,7 @@ using util::write_value;
 using util::read_value;
 using util::indent;
 using util::auto_indent;
+using util::persistent_traits;
 
 //=============================================================================
 // struct pbool_instance method definitions
@@ -116,9 +126,6 @@ operator << (ostream& o, const pbool_instance& p) {
 
 //=============================================================================
 // class pbool_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection, 
-	PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -288,7 +295,7 @@ void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);

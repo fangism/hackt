@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7 2005/02/17 19:45:18 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.8 2005/02/27 04:11:25 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -114,9 +114,6 @@ instance_collection_base::~instance_collection_base() {
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
-#if 0
-	get_type_ref()->dump(o);
-#else
 	// but we need a version for unrolled and resolved parameters.  
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
@@ -125,7 +122,6 @@ instance_collection_base::dump(ostream& o) const {
 		// get_type_ref just grabs the type of the first statement
 		get_type_ref()->dump(o);
 	}
-#endif
 	o << " " << key;
 
 	if (dimensions) {
@@ -177,6 +173,13 @@ instance_collection_base::get_qualified_name(void) const {
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+instance_collection_base::get_type_ref(void) const {
+	INVARIANT(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -414,20 +417,6 @@ instance_collection_base::formal_size_equivalent(
 		// For template, need notion of positional parameter 
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
-#if 0
-		const count_ptr<const const_range_list>
-			ic((*i)->get_indices().is_a<const const_range_list>());
-		const count_ptr<const const_range_list>
-			jc((*j)->get_indices().is_a<const const_range_list>());
-		if (ic && jc) {
-			// compare dense ranges in each dimension
-			// must be equal!
-			return (*ic == *jc);
-		} else {
-			// one of them is dynamic, thus we must conservatively
-			return true;
-		}
-#else
 		// is count_ptr<range_expr_list>
 		const index_collection_item_ptr_type ii = (*i)->get_indices();
 		const index_collection_item_ptr_type ji = (*j)->get_indices();
@@ -435,7 +424,6 @@ instance_collection_base::formal_size_equivalent(
 			return ii->must_be_formal_size_equivalent(*ji);
 		} else 	return (!ii && !ji);
 			// both NULL is ok too
-#endif
 	} else {
 		// both are scalar, single instances
 		return true;
@@ -594,32 +582,20 @@ instance_collection_base::load_object_base(
 }
 
 //=============================================================================
-// class datatype_instance_collection method definitions
+// class physical_instance_collection method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Private empty constructor.
- */
-datatype_instance_collection::datatype_instance_collection() :
-		instance_collection_base() {
-	// no assert
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_collection::datatype_instance_collection(
+physical_instance_collection::physical_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
-		instance_collection_base(o, n, d) {
+		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_collection::~datatype_instance_collection() {
+physical_instance_collection::~physical_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-datatype_instance_collection::dump(ostream& o) const {
+physical_instance_collection::dump(ostream& o) const {
 	parent_type::dump(o);
 	if (is_partially_unrolled()) {
 		if (dimensions) {
@@ -638,30 +614,38 @@ datatype_instance_collection::dump(ostream& o) const {
 	return o;
 }
 
+//=============================================================================
+// class datatype_instance_collection method definitions
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Private empty constructor.
+ */
+datatype_instance_collection::datatype_instance_collection() :
+		parent_type() {
+	// no assert
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection::datatype_instance_collection(
+		const scopespace& o, const string& n, const size_t d) :
+		parent_type(o, n, d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection::~datatype_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a member reference to a datatype, 
-	and pushes it onto the context's object_stack.  
-	\param b is the parent owner of this instantiation referenced.  
- */
-count_ptr<member_instance_reference_base>
-datatype_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	NEVER_NULL(b);
-	// maybe verify that b contains this, as sanity check
-	return count_ptr<datatype_member_instance_reference>(
-		new datatype_member_instance_reference(b,
-			never_ptr<const datatype_instance_collection>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

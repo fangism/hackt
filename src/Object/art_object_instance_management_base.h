@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.6.2.1 2005/02/03 03:34:53 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.6.2.2 2005/02/27 04:11:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -10,8 +10,7 @@
 #include <iosfwd>
 #include "STL/list.h"
 #include "persistent.h"
-#include "memory/pointer_classes.h"
-#include "persistent_object_manager.h"
+#include "memory/excl_ptr.h"
 
 namespace ART {
 namespace parser {

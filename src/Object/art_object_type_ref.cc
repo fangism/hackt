@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3 2005/02/17 04:20:35 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.4 2005/02/27 04:11:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -14,7 +14,7 @@
 #include "art_parser_base.h"	// so token_identifier : string
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
-#include "art_object_instance.h"
+// #include "art_object_instance.h"
 #include "art_object_instance_bool.h"
 #include "art_object_instance_int.h"
 #include "art_object_instance_enum.h"
@@ -25,6 +25,7 @@
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
+#include "art_object_classification_details.h"
 
 #include "sstream.h"
 #include "stacktrace.h"
@@ -33,11 +34,21 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::ostringstream;
 #include "using_ostream.h"
 USING_STACKTRACE
+using util::persistent_traits;
 
 //=============================================================================
 // class fundamental_type_reference method definitions
@@ -357,9 +368,6 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_type_reference, 
-	DATA_TYPE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -479,21 +487,21 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
-		return return_type(struct_instance_collection
-			::make_struct_array(*s, id, d));
+		return return_type(
+			struct_instance_collection::make_array(*s, id, d));
 	} else if (alias.is_a<const enum_datatype_def>()) {
-		return return_type(enum_instance_collection
-			::make_enum_array(*s, id, d));
+		return return_type(
+			enum_instance_collection::make_array(*s, id, d));
 	} else {
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
 		if (alias == &bool_def) {
-			return return_type(bool_instance_collection
-				::make_bool_array(*s, id, d));
+			return return_type(
+				bool_instance_collection::make_array(*s, id, d));
 		} else if (alias == &int_def) {
-			return return_type(int_instance_collection
-				::make_int_array(*s, id, d));
+			return return_type(
+				int_instance_collection::make_array(*s, id, d));
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);
@@ -505,7 +513,8 @@ data_type_reference::make_instance_collection(
 void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -554,9 +563,6 @@ data_type_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class channel_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_type_reference, 
-	CHANNEL_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -628,14 +634,15 @@ channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_chan_array(*s, id, d));
+		channel_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_chan_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -665,9 +672,6 @@ channel_type_reference::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 // class process_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference, 
-	PROCESS_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -768,14 +772,15 @@ process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		process_instance_collection::make_proc_array(*s, id, d));
+		process_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_proc_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }

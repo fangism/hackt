@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.2.2 2005/02/17 00:10:19 fang Exp $
+	$Id: multikey.h,v 1.19.2.3 2005/02/27 04:11:33 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -317,6 +317,8 @@ public:
 		Requires key type K to be assignable and copiable.  
 		\param i the default value with which to fill indices.  
 			Plain-old-data types will default to 0.
+		Note: making this explicit prevents implicit
+			conversion of K to key type, which may be a pain...
 	 */
 	explicit
 	multikey(const K i = K());
@@ -612,6 +614,14 @@ public:
 	multikey_generator(const base_type& l, const base_type& u) :
 		base_type(), lower_corner(l), upper_corner(u) { }
 
+	// construct from a pair of indices, for one-dimensional only
+	// want concept-check code for this... rather than assert...
+	// should be available in the specialization...
+	multikey_generator(const K& l, const K& u) :
+		base_type(), lower_corner(l), upper_corner(u) {
+		assert(D == 1);
+	}
+
 	/// copy from a sequence of pairs
 	template <template <class> class L, template <class, class> class P>
 	explicit
@@ -805,6 +815,7 @@ public:
  */
 template <class K>
 class multikey_generator_generic : public multikey_generic<K> {
+	typedef	multikey_generator_generic<K>		this_type;
 public:
 	typedef	K					value_type;
 	typedef	multikey_generic<K>			base_type;
@@ -827,6 +838,10 @@ public:
 
 	multikey_generator_generic(const size_t d) :
 		base_type(d), lower_corner(d), upper_corner(d) { }
+
+	// only for one-dimensional construction. 
+	multikey_generator_generic(const K& l, const K& u) :
+		base_type(1), lower_corner(l), upper_corner(u) { }
 
 	// construct from a pair of keys
 	multikey_generator_generic(const base_type& l, const base_type& u) :

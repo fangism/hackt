@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.8.2.1 2005/02/03 03:34:56 fang Exp $
+	$Id: persistent.h,v 1.8.2.2 2005/02/27 04:11:35 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_H__
@@ -31,8 +31,23 @@
 	void								\
 	load_object(const persistent_object_manager&, istream&);
 
+/**
+	Same thing, but virtual functions.  
+ */
+#define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS	\
+virtual	void								\
+	write_object(const persistent_object_manager&, ostream&) const;	\
+virtual	void								\
+	load_object(const persistent_object_manager&, istream&);
+
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
+	static								\
+	persistent*							\
+	construct_empty(const int);
+
+#define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS		\
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS	\
 	static								\
 	persistent*							\
 	construct_empty(const int);
@@ -42,9 +57,19 @@
 	void								\
 	collect_transient_info(persistent_object_manager&) const;
 
+#define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC		\
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS	\
+virtual	void								\
+	collect_transient_info(persistent_object_manager&) const;
+
 #define	PERSISTENT_METHODS_DECLARATIONS					\
 	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
 	void								\
+	collect_transient_info(persistent_object_manager&) const;
+
+#define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS				\
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS		\
+virtual	void								\
 	collect_transient_info(persistent_object_manager&) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -210,6 +235,54 @@ public:
 	};	// end class hash_key
 };	// end class persistent
 
+//-----------------------------------------------------------------------------
+/**
+	Traits-class for persistent objects.  
+	The default definition is empty, intentionally --
+	the user must provide a specialized definition per persistent class.
+	We provide convenient macros for doing this.  
+
+	Typically, these are referenced by both the specialized class
+	and the persistent object manager template methods.
+	To make the traits visible to outside users, the declaration
+	of the specialization must be globally visible, in a header, 
+	as opposed to in a source module.  
+ */
+template <class T>
+struct persistent_traits {
+};	// end struct persistent_traits
+
+/**
+	This macro is only effective in the util namespace!
+ */
+#define	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
+template <>								\
+struct persistent_traits<T> {						\
+	typedef	T				type;			\
+	static const persistent::hash_key	type_key;		\
+	static const int			type_id;		\
+	static const reconstruct_function_ptr_type			\
+						reconstructor;		\
+};
+
+/**
+	This macro is only effective in the util namespace!
+ */
+#define	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key)		\
+const persistent::hash_key						\
+persistent_traits<T>::type_key(key);					\
+const int								\
+persistent_traits<T>::type_id =						\
+	persistent_object_manager::register_persistent_type<T>();	\
+const reconstruct_function_ptr_type					\
+persistent_traits<T>::reconstructor = &T::construct_empty;
+
+
+#define	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(T, key)		\
+	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
+	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key)
+
+//-----------------------------------------------------------------------------
 }	// end namespace util
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.4 2005/02/17 00:10:12 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.5 2005/02/27 04:11:22 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -101,6 +101,7 @@ virtual	count_ptr<const_param>
 class const_param_expr_list : public param_expr_list, 
 		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
+	typedef	const_param_expr_list			this_type;
 protected:
 	typedef	list<count_ptr<const const_param> >	parent_type;
 public:
@@ -185,6 +186,9 @@ virtual	~const_index();
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
 
+virtual	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const = 0;
+
 virtual	pint_value_type
 	lower_bound(void) const = 0;
 
@@ -208,6 +212,7 @@ virtual	bool
  */
 class const_index_list : public index_list, 
 		private list<count_ptr<const_index> > {
+	typedef	const_index_list		this_type;
 public:
 	typedef	count_ptr<const_index>		const_index_ptr_type;
 	typedef	const_index_ptr_type		value_type;
@@ -274,6 +279,9 @@ public:
 	const_index_list
 	resolve_index_list(void) const;
 
+	const_index_list
+	unroll_resolve(const unroll_context&) const;
+
 #if 0
 	bool
 	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
@@ -301,6 +309,7 @@ public:
 	Would a vector be more appropriate?   consider changing later...
  */
 class const_range_list : public range_expr_list, public list<const_range> {
+	typedef	const_range_list			this_type;
 protected:
 	// no need for pointers here
 	typedef	list<const_range>			list_type;
@@ -358,7 +367,7 @@ public:
 		multikey_generator<D, pint_value_type>& k) const;
 
 	// is a pint_const_collection::array_type::key_type
-	multikey_generic<size_t>
+	multikey_index_type
 	resolve_sizes(void) const;
 
 	bool
@@ -459,6 +468,9 @@ public:
 	bool
 	resolve_value(value_type& i) const;
 
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
+
 	count_ptr<const_index>
 	resolve_index(void) const;
 
@@ -470,6 +482,9 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -490,9 +505,11 @@ public:
 	a more advanced structure (dynamic_pint_collection?).  
  */
 class pint_const_collection : public pint_expr, public const_param {
+	typedef	pint_const_collection			this_type;
 public:
 	typedef	pint_value_type				value_type;
-	typedef	util::packed_array_generic<value_type>	array_type;
+	typedef	util::packed_array_generic<pint_value_type, value_type>
+							array_type;
 	typedef	array_type::iterator			iterator;
 	typedef	array_type::const_iterator		const_iterator;
 protected:
@@ -570,6 +587,9 @@ public:
 	// only makes sense for scalars
 	bool
 	resolve_value(value_type& ) const;
+
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
@@ -662,6 +682,9 @@ public:
 	bool
 	resolve_value(value_type& i) const;
 
+	bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
+
 	const_index_list
 	resolve_dimensions(void) const;
 
@@ -691,6 +714,7 @@ class const_range : public range_expr, public const_index,
 		public pair<pint_value_type, pint_value_type> {
 friend class const_range_list;
 private:
+	typedef	const_range				this_type;
 	typedef	pair<pint_value_type,pint_value_type>	parent_type;
 	// typedef for interval_type (needs discrete_interval_set)
 	// relocated to source file
@@ -788,14 +812,24 @@ public:
 	bool
 	resolve_range(const_range& r) const;
 
+	bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const;
+
 	count_ptr<const_index>
 	resolve_index(void) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 	bool
 	must_be_formal_size_equivalent(const range_expr& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	// don't need robust declarations, unless dynamically allocating
+	// during global static initialization.
 };	// end class const_range
 
 //=============================================================================

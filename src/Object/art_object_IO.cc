@@ -2,7 +2,7 @@
 	\file "art_object_IO.cc"
 	Template method instantiations for 
 	persistent object management, specific to ART.  
- 	$Id: art_object_IO.cc,v 1.14.2.1 2005/02/03 03:34:46 fang Exp $
+ 	$Id: art_object_IO.cc,v 1.14.2.2 2005/02/27 04:11:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_IO_CC__
@@ -17,8 +17,7 @@ namespace util {
 using namespace util::memory;
 using ART::entity::module;
 
-// this macro is now obsolete, thus obsoleting this entire file...
-EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(module)
+// this space available for rent
 
 }	// end namespace util
 

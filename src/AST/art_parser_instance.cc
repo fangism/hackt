@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.17 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_instance.cc,v 1.17.2.1 2005/02/27 04:11:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -197,8 +197,8 @@ if (size() > 0) {		// non-empty
 			INVARIANT(!exass.owned());
 		}
 	} else if (first_obj->is_a<const instance_reference_base>()) {
-		excl_ptr<const aliases_connection> connection =
-			connect.make_alias_connection();
+		excl_ptr<const aliases_connection_base>
+			connection = connect.make_alias_connection();
 		// also type-checks connections
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "

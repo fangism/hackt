@@ -2,12 +2,12 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300654	module__	0	0	32
+	1	 0x3300650	module__	0	0	32
 	2	 0x3300170	namespc_	0	32	60
 	3	 0x3300670	enumdefn	0	60	88
-	4	 0x33006c4	enumcoll	0	88	131
-	5	 0x3804604	datainst	0	131	151
-	6	 0x3300714	datatprf	0	151	167
+	4	 0x33006c4	enumcoll	0	88	128
+	5	 0x3804800	datainst	0	128	148
+	6	 0x3300720	datatprf	0	148	164
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -19,6 +19,6 @@ In namespace "", we have: {
   Definitions:
     foo = enum-datatype-def: foo (undefined)
   Instances:
-    bar = enum ::foo^0 bar (instantiated)
+    bar = enum ::foo^0 bar (instantiated) = ::bar
 }
 

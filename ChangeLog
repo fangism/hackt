@@ -1,6 +1,266 @@
 "ChangeLog"
 
+2005-02-26	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-15-merged-alias-12:
+	  Merged in tons of revisions from the alias child branch.  
+	  Hallelujah!  *Basic* alias connections work.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-10-merged-instance-13:
+	  Merged all revisions from -09-instance child branch (rev -13)
+	  in this branch, very critical for progress.  
+
+	* -alias-11: "breakthrough"
+	  The moment we've been waiting for...
+	  First successful unrolling of connections, with persistence!
+	  Tested one case with scalars, and one complicated case 
+	  with multidimensional slices, and they pass!
+	  Currently, connection-equivalence type-checking is not yet
+	  implemented, that will have to wait until the -object-02 phase.  
+
+		Other minor changes:
+		+ cleaned up packed_array*, removing packed_array_base.
+
+	* -alias-12:
+	  Added more tests for alias connections in connect directory.  
+	  Many unroll tests disabled because required features aren't
+	  implemented yet, such as port connections and member instance
+	  references.  (Member instance references will require
+	  type/definition layout first.)  
+	  This branch is now ready to merge to parent.  
+
+
+2005-02-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-10:
+	  Ported all int-related instance classes (aliases, info, collection, 
+	  arrays) using the instance_collection template family.  
+	  This added ring-connection data to the binary, which resulted
+	  in updating tests because of increased object binary sizes.  
+	  New member of class_traits: tag_name (const char[]).
+	  90% of art_object_instance_{int,bool}.{h,cc} are commented out now.
+	  Will perform massive cleanup after applying instance collection
+	  template to remaining types: enum, struct, channel, process.
+
+	* -instance-11:
+	  Ported and upgraded enum to instance_collection template, 
+	  same story as before.  They now have alias connections.  
+	  Sweet, that was easy... structs, you're next.
+
+	* -instance-12:
+	  Ported datastruct, channel and process collections using 
+	  instance_collection template in one fell swoop.  
+	  Added a physical_instance_collection type between
+	  instance_collection_base and datatype/channel/process collections.  
+	  Wrote appropriate functor specializations for them.  
+	  Updated interface of collection_persistence to use 
+	  static function calls: collect, write, load. 
+	  Process and channels (aliases) are now initially connected
+	  to themselves.  
+	  This branch is nearly mature,  next revision will be 
+	  massive cleanup before merging to parent.  
+
+	* -instance-13:
+	  Ahhhh... code is 7000 lines lighter after the removal
+	  of blatantly replicated code in the old instance_collection
+	  implementations.  This branch is ready to merge to parent.  
+
+
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-05:
+	  Chose bool_instance_alias_info as the first guinea pig class
+	  to use instance_alias_info class template, 
+	  based on class_traits<Tag>.  
+	  Nothing blew up, all tests still intact.
+
+	* -instance-06:
+	  Major name clean-up and substitution to reduce ambiguity
+	  and provide template-typedef-like naming interface
+	  with class_traits for dimension-specific classes.  
+
+	* -instance-07:
+	  Ported bool_instance_alias_info, bool_instance_alias_base, 
+	  and bool_instance_alias<D> to class_traits template version.  
+	  All test still intact!  Next: porting instance_collections.
+
+	* -instance-08:
+	  Converted bool_instance_collection and arrays over using
+	  template instance_collection.  Nothing died, but code is 
+	  messy with conditionals...
+	  To do: define functors for type-specific variations
+	  in methods... may have to make them 'friendly'.  
+
+	* -instance-09:
+	  Added instance_collection functor prototypes for 
+	  collection parameter persistence, type-committing.  
+	  So far, only specialized for bool_tag, others will follow in time.  
+
+
+2005-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-01:
+	  New branch for the purpose of making the instance_collection
+	  class framework consistent.  
+	  This revision introduces classification tag which control the 
+	  infrastructure of template class patterns with a set of
+	  traits-class specializations.  
+	  So far, we applied this to member_instance_references as a 
+	  test case, and everything is hunky-dory.  
+
+	* -instance-02:
+	  Converted instance_reference to use class_traits<Tag>.
+	  Next: alias_connections, then ... instance collections, 
+	  the final frontier!
+
+	* -instance-03:
+	  alias_connections converted to class_traits, muahahaha...
+	  Code needs some serious clean-up before proceeding.  
+
+	* -instance-04:
+	  Cleaned-up, no more conditionals on SUBTYPE_ALIAS_CONNECTION
+	  and USE_CLASSIFICATION_TAGS.  
+
+
+2005-02-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09:
+	  Fixed multikey_assoc::is_compact(), adding necessary, 
+	  implicit conversion to key type in {int,bool}_instance_alias.  
+	  Really sick and tired of maintaining copies of code for each
+	  physical instance collection type... it's time to employ
+	  templates with policy functors... (sub-branch).
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-08:
+	  Initial testing of instance unrolling, without connections, 
+	  just for int_instance_collection, our guinea pig.  
+	  Placeholder code pasted into other instance collections, 
+	  but marked as empty for now.  
+
+		+ Updated packed_array[_generic] template signature to 
+		  include type for index, so it's not hard-coded to size_t.  
+
+		+ Fixed bug in multikey_assoc::is_compact()'s return value
+		  for the case where D == 1.
+		  There may be another bug for D != 1, related to 
+		  index_extremities, look for "WRONG" in "multikey_assoc.tcc".
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-07:
+	  Added draft of code for alias_connection unrolling, untested.  
+	  Added draft code for reference unrolling, packing aliases
+	  into packed_array_generics.  
+	  Added tons of methods for unroll-time expression resolution, 
+	  many of which seem redundantly redundant -- clean later.  
+
+		+ unroll_aliases method only appears in int_instance_collection
+		  for now.
+
+		+ Some minor interface improvements to packed_array_generic, 
+		  and multikey_generator_generic.  
+
+
+2005-02-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-06-merged-instref-02:
+	  Merged -instref-02 revisions.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-instref-01:
+	  Replaced copy-pasted *_instance_reference with template
+	  class definition instance_reference<Collection,Parent>, 
+	  which makes this code so much more maintainable!
+	  Next revision: clean-up.
+
+	+ -instref-02: cleaned up, ready to merge to parent branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-merged-persistent-04:
+	  Merged -persistent-04 branch revisions into this branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-04:
+	  Substituted direct use of TYPE_KEY macros with
+	  persistent_traits<...>::type_key for less copying, 
+	  better maintainability.  
+	  This revision is clean and ready to merge with parent branch.
+
+
+2005-02-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-02-member-01:
+	  Child branch created for the sake of revising the 
+	  member_instance_reference system.  
+	  Testing to see if member_instance_reference_base
+	  really requires simple_instance_reference as the base type, 
+	  should really be generic.
+	  (a few connect tests will still die until announced otherwise)
+
+	+ -member-02:
+	  Changed base type of member_instance_reference_base to generic
+	  instance_reference_base.  Later, the base type shouldn't be allowed
+	  to be complex-aggregate, so perhaps deriving from nothing 
+	  (instead of instance_reference_base) is the correct thing to do.  
+
+	+ -member-03:
+	  Replaced all member_instance_references with template
+	  versions, extended datatypes members into subtype-specific
+	  versions.  ALL tests pass in this revision!
+	  This revision is littered with commented out code, next revision
+	  must clean up.  
+
+	+ -member-04: cleaned-up, ready to merge to parent branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-03-merged-member-04:
+	  Merged -member-04 child branch.
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-01:
+	  Subtype template classes for alias_connection s are enabled, 
+	  everything compiles, but there is some difficulty with 
+	  persistent type registration: the hash_key's are not retrieved
+	  properly by calls to static persistent_traits<T>::get_hash_key.
+	  Solution: we need proper specialization of persistent_traits, 
+	  which currently isn't done because type-keys are only registered
+	  dynamically by static objects, hence specialized definitions
+	  do not exist.  This branch will remedy this by using specialization
+	  and dynamic registration (for unique ID).  
+	  This initial revision compiles, but some tests will die while
+	  modifications are in transient state.  
+
+	+ -persistent-02:
+	  Overhauled persistent type registration as promised.  
+	  Compiles, runs most tests, some unexpected deaths in 
+	  tests/parser/connect.  Must sleep first...
+	  Deaths related to datatype_member_instance_references.
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04:
+	  Draft of template code for alias_connection.  
+	  Need to write instance_reference_base::make_alias_connection
+	  before enabling new class heirarchy (conditional now).
+	  Happened to do some header clean-up in this revision too.  
+
+
 2005-02-17	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-01:
+	  New branch created for working on alias_connections.  
+	  May require some serious reworking and sub-typing.  
+	  Issue is what the interface for unrolled instance connection
+	  should be.  
+
+	+ -alias-02:
+	  Cleaned up some of object class heirarchy, having object as
+	  super-uber-parent is totally unnecessary in most cases.  
+	  Preparing to perform some major surgery on instance_reference
+	  and alias_connection class sub-heirarchy for connections.  
+
+	+ -alias-03:
+	  Renamed some classes, conditional code in-place for
+	  extending aliases_connection_base class heirarchy.  
+	  Some NOTES on proposed parse-context improvement in the future.  
+	  Everything still stable, the calm before the storm...
 
 	* ARTXX-00-01-04-main-00-04-object-01-13:
 	  Prelimiary testing of saving and restoring bool instance aliases, 

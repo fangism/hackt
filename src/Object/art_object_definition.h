@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.24.2.1 2005/02/03 03:34:48 fang Exp $
+	$Id: art_object_definition.h,v 1.24.2.2 2005/02/27 04:11:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -140,6 +140,8 @@ protected:
  */
 class process_definition : public process_definition_base, public scopespace, 
 	public sequential_scope {
+private:
+	typedef	process_definition		this_type;
 public:
 	typedef	never_ptr<const instance_collection_base>
 						port_formals_value_type;
@@ -239,6 +241,8 @@ protected:
  */
 class process_definition_alias : public process_definition_base, 
 		public typedef_base {
+private:
+	typedef	process_definition_alias		this_type;
 protected:
 	const string					key;
 	/** parent can be namespace or definition */
@@ -331,6 +335,8 @@ protected:
  */
 class built_in_datatype_def : public datatype_definition_base, 
 		public scopespace {
+private:
+	typedef	built_in_datatype_def			this_type;
 protected:
 	const string					key;
 	const never_ptr<const name_space>		parent;
@@ -394,6 +400,8 @@ private:
 	Member of an enumeration, just an identifier.  
  */
 class enum_member : public object {
+private:
+	typedef	enum_member		this_type;
 protected:
 	const string			id;
 public:
@@ -415,6 +423,8 @@ public:
 	There are no built in enumerations, all are user-defined.  
  */
 class enum_datatype_def : public datatype_definition_base, public scopespace {
+private:
+	typedef	enum_datatype_def			this_type;
 protected:
 	const string					key;
 	const never_ptr<const name_space>		parent;
@@ -475,6 +485,7 @@ private:
 class built_in_param_def : public definition_base {
 private:
 	typedef	definition_base			parent_type;
+	typedef	built_in_param_def		this_type;
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
@@ -512,6 +523,8 @@ private:
  */
 class user_def_datatype : public datatype_definition_base, public scopespace, 
 		public sequential_scope {
+private:
+	typedef	user_def_datatype		this_type;
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
@@ -563,6 +576,8 @@ private:
  */
 class datatype_definition_alias : public datatype_definition_base, 
 		public typedef_base {
+private:
+	typedef	datatype_definition_alias	this_type;
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
@@ -641,6 +656,7 @@ protected:
 class user_def_chan : public channel_definition_base, public scopespace,
 		public sequential_scope {
 private:
+	typedef	user_def_chan			this_type;
 	typedef channel_definition_base		definition_parent_type;
 	typedef	scopespace			scope_parent_type;
 	typedef	sequential_scope		sequential_parent_type;
@@ -691,6 +707,8 @@ private:
  */
 class channel_definition_alias : public channel_definition_base, 
 		public typedef_base {
+private:
+	typedef	channel_definition_alias	this_type;
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.4 2005/02/17 04:20:35 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.5 2005/02/27 04:11:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -112,6 +112,11 @@
 // #define	USE_UNDEFINED_OBJECTS		1
 
 //=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::name_space, NAMESPACE_TYPE_KEY)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 
@@ -130,6 +135,7 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // general non-member function definitions
@@ -689,8 +695,6 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 
 //=============================================================================
 // class name_space method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
 
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
 
@@ -1474,7 +1478,8 @@ name_space::lookup_open_alias(const string& id) const {
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;

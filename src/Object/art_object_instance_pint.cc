@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.5 2005/02/17 00:43:10 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.6 2005/02/27 04:11:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -51,6 +51,10 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
 
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_collection, 
+		PINT_INSTANCE_COLLECTION_TYPE_KEY)
+
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
 }	// end namespace memory
@@ -72,6 +76,7 @@ using util::auto_indent;
 USING_STACKTRACE
 using util::write_value;
 using util::read_value;
+using util::persistent_traits;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -100,9 +105,6 @@ operator << (ostream& o, const pint_instance& p) {
 
 //=============================================================================
 // class pint_instance_collection method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection, 
-	PINT_INSTANCE_COLLECTION_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -295,7 +297,7 @@ void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
-		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
+		persistent_traits<this_type>::type_key, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);

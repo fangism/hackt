@@ -1,5 +1,5 @@
 # Doxyfile 1.3.6
-# $Id: art++.doxygen.config.in,v 1.6 2005/01/16 23:39:12 fang Exp $
+# $Id: art++.doxygen.config.in,v 1.6.16.1 2005/02/27 04:11:13 fang Exp $
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -426,7 +426,7 @@ EXCLUDE_SYMLINKS       = YES
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude 
 # certain files from those directories.
 
-EXCLUDE_PATTERNS       = "test/*"
+EXCLUDE_PATTERNS       = "test/*" "*/ignore/*"
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
