@@ -1,31 +1,30 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.3 2005/01/12 03:19:40 fang Exp $
+	$Id: stacktrace.cc,v 1.4 2005/01/15 06:03:04 fang Exp $
  */
+
+// ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
+#define	ENABLE_STACKTRACE	1
 
 #include <pthread.h>
 #include <iostream>
 #include <iterator>
 #include <string>
-
-// ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
-#ifdef	ENABLE_STACKTRACE
-#undef	ENABLE_STACKTRACE
-#define	ENABLE_STACKTRACE	1
-#endif
+#include <stack>
 
 #include "stacktrace.h"
 #include "STL/list.tcc"
 #include "qmap.tcc"
+#include "memory/pointer_classes.h"
 
 namespace util {
 USING_LIST
 using QMAP_NAMESPACE::qmap;
 using std::stack;
-using std::string;
 using std::ostream_iterator;
 #include "using_ostream.h"
+using memory::excl_ptr;
 
 //=============================================================================
 // eventually for threaded applications, use a map of stacks...
@@ -33,34 +32,61 @@ using std::ostream_iterator;
 /**
 	Private implementation class, not visible to other modules.  
 	Only written as a class for convenient static initialization.  
+	To be able to trace function calls that occur during static 
+	initialization, we must guarantee that the manager's static 
+	objects are initialized first!  Global initialization ordering is
+	generally non-trivial, so resort to the techinique of 
+	interfacing through reference functions which will guarantee 
+	a one-time initialization upon first invocation.  
+	(This technique is also used in util::persistent_object_manager.)
  */
 class stacktrace::manager {
+#if 0
 friend class stacktrace;
 friend class stacktrace::echo;
 friend class stacktrace::redirect;
+#endif
 public:
+	/// the type of stack used to hold feedback text
 	typedef	list<string>	stack_text_type;
+	/// the type of stack used to track on/off mode
+	typedef	stack<int>	stack_echo_type;
+	/// the type of stack used to track stream redirections
+	typedef	stack<ostream*>	stack_streams_type;
 private:
+	static stack_text_type*			stack_text;
+	static excl_ptr<stack_text_type>	stack_text_ptr;
+public:
+	static stack_text_type&			get_stack_text(void);
 
-	static
-	stack_text_type		stack_text;
-
+private:
 	// stream-independent indentation
-	static
-	stack_text_type		stack_indent;
+	static stack_text_type*			stack_indent;
+	static excl_ptr<stack_text_type>	stack_indent_ptr;
+public:
+	static stack_text_type&			get_stack_indent(void);
 
-	static
-	stack<int>		stack_echo;
+private:
+	static stack_echo_type*			stack_echo;
+	static excl_ptr<stack_echo_type>	stack_echo_ptr;
+public:
+	static stack_echo_type&			get_stack_echo(void);
 
-	static
-	stack<ostream*>		stack_streams;
+private:
+	static stack_streams_type*		stack_streams;
+	static excl_ptr<stack_streams_type>	stack_streams_ptr;
+public:
+	static stack_streams_type&		get_stack_streams(void);
 
 private:
 	manager() {
+#if 0
 		// must guarantee that they aren't empty
-		stack_echo.push(1);
+		get_stack_echo().push(1);
 		// or if you push(1) instead, echo will default ON
-		stack_streams.push(&cerr);
+		get_stack_streams().push(&cerr);
+#endif
+		// initialization moved to static initialization below.
 	}
 
 	~manager() { }
@@ -69,8 +95,9 @@ public:
 	static
 	ostream&
 	print_auto_indent(ostream& o) {
+		const stack_text_type& si(get_stack_indent());
 		ostream_iterator<string> osi(o);
-		copy(stack_indent.begin(), stack_indent.end(), osi);
+		copy(si.begin(), si.end(), osi);
 		return o;
 	}
 
@@ -78,24 +105,105 @@ public:
 
 //-----------------------------------------------------------------------------
 // static construction
-stacktrace::manager::stack_text_type
-stacktrace::manager::stack_text;
 
-stacktrace::manager::stack_text_type
-stacktrace::manager::stack_indent;
+stacktrace::manager::stack_text_type*
+stacktrace::manager::stack_text = NULL;
 
-stack<int>
-stacktrace::manager::stack_echo;
+excl_ptr<stacktrace::manager::stack_text_type>
+stacktrace::manager::stack_text_ptr(NULL);
 
-stack<ostream*>
-stacktrace::manager::stack_streams;
+stacktrace::manager::stack_text_type&
+stacktrace::manager::get_stack_text(void) {
+	if (!stack_text) {
+		stack_text = new stack_text_type;
+		stack_text_ptr = excl_ptr<stack_text_type>(stack_text);
+	}
+	NEVER_NULL(stack_text);
+	return *stack_text;
+}
 
-stacktrace::manager
-stacktrace::the_manager;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-static
-const string
-default_stack_indent_string("| ");
+stacktrace::manager::stack_text_type*
+stacktrace::manager::stack_indent = NULL;
+
+excl_ptr<stacktrace::manager::stack_text_type>
+stacktrace::manager::stack_indent_ptr(NULL);
+
+stacktrace::manager::stack_text_type&
+stacktrace::manager::get_stack_indent(void) {
+	if (!stack_indent) {
+		stack_indent = new stack_text_type;
+		stack_indent_ptr = excl_ptr<stack_text_type>(stack_indent);
+	}
+	NEVER_NULL(stack_indent);
+	return *stack_indent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+stacktrace::manager::stack_echo_type*
+stacktrace::manager::stack_echo = NULL;
+
+excl_ptr<stacktrace::manager::stack_echo_type>
+stacktrace::manager::stack_echo_ptr(NULL);
+
+/**
+	Push 1 to initialize enabled, 0 to disable initially.  
+ */
+stacktrace::manager::stack_echo_type&
+stacktrace::manager::get_stack_echo(void) {
+	if (!stack_echo) {
+		stack_echo = new stack_echo_type;
+		stack_echo_ptr = excl_ptr<stack_echo_type>(stack_echo);
+		stack_echo->push(1);
+	}
+	NEVER_NULL(stack_echo);
+	return *stack_echo;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+stacktrace::manager::stack_streams_type*
+stacktrace::manager::stack_streams = NULL;
+
+excl_ptr<stacktrace::manager::stack_streams_type>
+stacktrace::manager::stack_streams_ptr(NULL);
+
+/**
+	Defaults to stderr.  
+ */
+stacktrace::manager::stack_streams_type&
+stacktrace::manager::get_stack_streams(void) {
+	if (!stack_streams) {
+		stack_streams = new stack_streams_type;
+		stack_streams_ptr = excl_ptr<stack_streams_type>(stack_streams);
+		stack_streams->push(&cerr);
+	}
+	NEVER_NULL(stack_streams);
+	return *stack_streams;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#if 0
+stacktrace::manager*
+stacktrace::the_manager = NULL;
+
+excl_ptr<stacktrace::manager>
+stacktrace::the_manager_manager;		// initially NULL
+
+stacktrace::manager&
+stacktrace::get_the_manager(void) {
+	if (!the_manager) {
+		the_manager = new manager;
+		the_manager_manager = excl_ptr<manager>(the_manager);
+		// the_manager_manager will release during static termination
+	}
+	NEVER_NULL(the_manager);
+	return *the_manager;
+}
+#endif
 
 //=============================================================================
 // class stacktrace method definitions
@@ -104,36 +212,44 @@ default_stack_indent_string("| ");
 // removed because it introduces ambiguity with next definition
 // because implicit conversion exists from const char* to std::string.
 stacktrace::stacktrace(const char* s) {
-	stacktrace::manager::stack_text.push_back(s);
-	if (stacktrace::manager::stack_echo.top())
+	// if this appears outside in global static scope, 
+	// it may not be initialized in time!
+	static const string default_stack_indent_string("| ");
+	stacktrace::manager::get_stack_text().push_back(s);
+	if (stacktrace::manager::get_stack_echo().top())
 		stacktrace::manager::print_auto_indent(
-			*stacktrace::manager::stack_streams.top())
-			<< "enter: " << stacktrace::manager::stack_text.back()
-			<< endl;
-	stacktrace::manager::stack_indent.push_back(default_stack_indent_string);
+			*stacktrace::manager::get_stack_streams().top()) <<
+			"enter: " <<
+			stacktrace::manager::get_stack_text().back() << endl;
+	stacktrace::manager::get_stack_indent().push_back(
+		default_stack_indent_string);
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::stacktrace(const string& s) {
-	stacktrace::manager::stack_text.push_back(s);
-	if (stacktrace::manager::stack_echo.top())
+	// if this appears outside in global static scope, 
+	// it may not be initialized in time!
+	static const string default_stack_indent_string("| ");
+	stacktrace::manager::get_stack_text().push_back(s);
+	if (stacktrace::manager::get_stack_echo().top())
 		stacktrace::manager::print_auto_indent(
-			*stacktrace::manager::stack_streams.top())
-			<< "enter: " << stacktrace::manager::stack_text.back()
-			<< endl;
-	stacktrace::manager::stack_indent.push_back(default_stack_indent_string);
+			*stacktrace::manager::get_stack_streams().top()) <<
+			"enter: " <<
+			stacktrace::manager::get_stack_text().back() << endl;
+	stacktrace::manager::get_stack_indent().push_back(
+		default_stack_indent_string);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::~stacktrace() {
-	stacktrace::manager::stack_indent.pop_back();
-	if (stacktrace::manager::stack_echo.top())
+	stacktrace::manager::get_stack_indent().pop_back();
+	if (stacktrace::manager::get_stack_echo().top())
 		stacktrace::manager::print_auto_indent(
-			*stacktrace::manager::stack_streams.top())
-			<< "leave: " << stacktrace::manager::stack_text.back()
-			<< endl;
-	stacktrace::manager::stack_text.pop_back();
+			*stacktrace::manager::get_stack_streams().top()) <<
+			"leave: " <<
+			stacktrace::manager::get_stack_text().back() << endl;
+	stacktrace::manager::get_stack_text().pop_back();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,39 +258,39 @@ stacktrace::~stacktrace() {
  */
 ostream&
 stacktrace::stream(void) {
-	return *stacktrace::manager::stack_streams.top();
+	return *stacktrace::manager::get_stack_streams().top();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 stacktrace::full_dump(void) {
 	ostream_iterator<string>
-		osi(*stacktrace::manager::stack_streams.top(), "\n");
-	copy(stacktrace::manager::stack_text.begin(),
-		stacktrace::manager::stack_text.end(), osi);
-	(*stacktrace::manager::stack_streams.top()) << endl;
+		osi(*stacktrace::manager::get_stack_streams().top(), "\n");
+	copy(stacktrace::manager::get_stack_text().begin(),
+		stacktrace::manager::get_stack_text().end(), osi);
+	(*stacktrace::manager::get_stack_streams().top()) << endl;
 }
 
 //=============================================================================
 // struct stacktrace::echo method definitions
 
 stacktrace::echo::echo(const int i) {
-	stacktrace::manager::stack_echo.push(i);
+	stacktrace::manager::get_stack_echo().push(i);
 }
 
 stacktrace::echo::~echo() {
-	stacktrace::manager::stack_echo.pop();
+	stacktrace::manager::get_stack_echo().pop();
 }
 
 //=============================================================================
 // struct redirect_stacktrace method definitions
 
 stacktrace::redirect::redirect(ostream& o) {
-	stacktrace::manager::stack_streams.push(&o);
+	stacktrace::manager::get_stack_streams().push(&o);
 }
 
 stacktrace::redirect::~redirect() {
-	stacktrace::manager::stack_streams.pop();
+	stacktrace::manager::get_stack_streams().pop();
 }
 
 //=============================================================================

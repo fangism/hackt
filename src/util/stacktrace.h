@@ -1,32 +1,26 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.3 2005/01/12 03:19:41 fang Exp $
+	$Id: stacktrace.h,v 1.4 2005/01/15 06:03:03 fang Exp $
  */
 
 #ifndef	__STACK_TRACE_H__
 #define	__STACK_TRACE_H__
 
-#include <iosfwd>
-#include <stack>
-#include "macros.h"
-#include "STL/list_fwd.h"
-#include "string_fwd.h"
-
 // macros for enabling/disabling stacktrace code
-
 /**
 	Strongly recommend using these macros to be able to 
 	turn everything off at compile time.  
 	Predefine this to 0 at compile time to turn-off.  
  */
 #ifndef	ENABLE_STACKTRACE
-#define	ENABLE_STACKTRACE	0	// on or off by default
+#define	ENABLE_STACKTRACE	0	// on (1) or off (0) by default
 #endif
 
 
-// You put the semicolon at the end!
+// This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
+	#define	USING_STACKTRACE	using util::stacktrace;
 	#define	STACKTRACE(str)	stacktrace __stacktrace__(str)
 	/**
 		This enables echoing each time trace stack is updated, i.e., 
@@ -44,6 +38,7 @@
 	#define	ASSERT_STACKTRACE(expr)					\
 			if (!(expr)) { stacktrace::full_dump(); assert(expr); }
 #else
+	#define	USING_STACKTRACE
 	#define	STACKTRACE(str)
 	#define STACKTRACE_ECHO_ON
 	#define STACKTRACE_ECHO_OFF
@@ -55,12 +50,24 @@
 
 //=============================================================================
 
-// #if ENABLE_STACKTRACE
+#if ENABLE_STACKTRACE
+
+#include <iosfwd>
+// #include <stack>
+#include "macros.h"
+#include "STL/list_fwd.h"
+#include "string_fwd.h"
+// #include "memory/pointer_classes_fwd.h"
+
+
+
 namespace util {
 USING_LIST
 using std::ostream;
 using std::string;
-using std::stack;
+// using std::stack;
+// using memory::excl_ptr;
+
 //=============================================================================
 /**
 	Nothing is inlined because when you're debugging you shouldn't be
@@ -77,7 +84,19 @@ public:
 	struct redirect;
 	// static objects?
 private:
-	static manager			the_manager;
+#if 0
+// not really used
+	/// bare-naked pointer, guaranteed to be 0 before static initialization
+	static manager*			the_manager;
+
+	/// pointer class to manage static deallocation upon termination
+	static excl_ptr<manager>	the_manager_manager;
+
+	/// interface accessor to the stack manager
+	static
+	manager&
+	get_the_manager(void);
+#endif
 public:
 //	stacktrace(const char*);
 	stacktrace(const string&);
@@ -121,9 +140,9 @@ struct stacktrace::redirect {
 
 }	// end namespace util
 
-// #else
+#else
 	// don't even bother processing class declaration!
-// #endif	// ENABLE_STACKTRACE
+#endif	// ENABLE_STACKTRACE
 
 #endif	// __STACK_TRACE_H__
 
