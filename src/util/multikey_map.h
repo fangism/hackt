@@ -2,11 +2,13 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.6 2005/02/07 20:16:55 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.7 2005/02/07 22:53:15 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
 #define	__UTIL_MULTIKEY_MAP_H__
+
+#define	USE_MULTIKEY_ASSOC			1
 
 #include "macros.h"
 #include "STL/list_fwd.h"
@@ -15,6 +17,10 @@
 #include "multikey_fwd.h"
 #include "multikey_map_fwd.h"
 #include "array_traits.h"
+
+#if USE_MULTIKEY_ASSOC
+#include "multikey_assoc.h"
+#endif
 
 namespace MULTIKEY_MAP_NAMESPACE {
 using std::ostream;
@@ -36,10 +42,20 @@ using MULTIKEY_NAMESPACE::multikey;
 	\example multikey_qmap_test.cc
  */
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map : protected M<multikey<D,K>, T> {
+class multikey_map :
+#if USE_MULTIKEY_ASSOC
+	public multikey_assoc<D, M< multikey<D,K>, T> >
+#else
+	protected M<multikey<D,K>, T>
+#endif
+{
 protected:
 	/** this is the representation-type */
+#if USE_MULTIKEY_ASSOC
+	typedef	multikey_assoc<D, M<multikey<D,K>, T> >	map_type;
+#else
 	typedef	M<multikey<D,K>, T>			map_type;
+#endif
 	typedef	map_type				mt;
 public:
 	typedef	typename mt::key_type			key_type;
@@ -79,6 +95,10 @@ public:
 	 */
 	~multikey_map();
 
+	using map_type::empty;
+	using map_type::size;
+	using map_type::clear;
+#if 0
 	/**
 		Whether or not this map contains any elements.
 		Need final overrider here to resolve ambiguity.  
@@ -87,6 +107,7 @@ public:
 	empty(void) const {
 		return map_type::empty();
 	}
+#endif
 
 	/**
 		Number of dimensions.
@@ -94,8 +115,10 @@ public:
 	size_t
 	dimensions(void) const { return D; }
 
+#if 0
 	size_t
 	size(void) const { return this->population(); }
+#endif
 
 	/**
 		\return The number of elements (leaves) in map.  
@@ -103,23 +126,28 @@ public:
 	size_t
 	population(void) const { return mt::size(); }
 
+#if 0
 	/**
 		Removes all elements.
 	 */
 	void
 	clear(void);
+#endif
 
+#if 0
 	/**
 		General method for removing default values.  
 	 */
 	void
 	clean(void);
+#endif
 
 	using map_type::begin;
 	using map_type::end;
 	using map_type::rbegin;
 	using map_type::rend;
 
+#if !USE_MULTIKEY_ASSOC
 	/**
 		\param k The key of the (key, value) pair to find.  
 		\return First element >= key k, or end().  
@@ -161,6 +189,7 @@ public:
 	/** specialization of erase() for only 1 dimension specified */
 	size_type
 	erase(const K i);
+#endif
 
 	T&
 	operator [] (const key_type& k) {
@@ -184,6 +213,7 @@ public:
 	T
 	operator [] (const list<K>& k) const;
 
+#if !USE_MULTIKEY_ASSOC
 	/**
 		Recursive routine to determine implicit desnsely 
 		packed subslice.  
@@ -211,17 +241,18 @@ public:
 	key_list_pair_type
 	is_compact(void) const;
 
-	ostream&
-	dump(ostream& o) const;
-
 	/**
 		Returns the extremities of the indicies in each dimension.
 		If empty, returns empty lists.  
 	 */
 	key_list_pair_type
 	index_extremities(void) const;
+#endif
 
 public:
+	ostream&
+	dump(ostream& o) const;
+
 	// IO methods
 	ostream&
 	write(ostream& f) const;
@@ -236,9 +267,19 @@ public:
 	Specialization for one-dimension: just use base map type.  
  */
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map<1,K,T,M> : protected M<K,T> {
+class multikey_map<1,K,T,M> : 
+#if USE_MULTIKEY_ASSOC
+		public multikey_assoc<1, M<K,T> >
+#else
+		protected M<K,T>
+#endif
+{
 protected:
+#if USE_MULTIKEY_ASSOC
+	typedef	multikey_assoc<1, M<K,T> >		map_type;
+#else
 	typedef	M<K, T>					map_type;
+#endif
 	typedef	map_type				mt;
 public:
 	typedef	typename mt::key_type			key_type;
@@ -269,6 +310,7 @@ public:
 	multikey_map();
 	~multikey_map();
 
+#if 0
 	bool
 	empty(void) const {
 		return map_type::empty();
@@ -278,16 +320,23 @@ public:
 	clear(void);
 
 	size_t
-	dimensions(void) const { return 1; }
+	size(void) const { return this->population(); }
+#else
+	using map_type::empty;
+	using map_type::clear;
+	using map_type::size;
+#endif
 
 	size_t
-	size(void) const { return this->population(); }
+	dimensions(void) const { return 1; }
 
 	size_t
 	population(void) const { return mt::size(); }
 
+#if 0
 	void
 	clean(void);
+#endif
 
 	using map_type::begin;
 	using map_type::end;
@@ -320,6 +369,7 @@ public:
 		return map_type::operator[](k[0]);
 	}
 
+#if !USE_MULTIKEY_ASSOC
 	key_list_pair_type
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
 
@@ -334,7 +384,7 @@ public:
 
 	key_list_pair_type
 	is_compact(void) const;
-
+#endif
 
 	ostream&
 	dump(ostream& o) const;

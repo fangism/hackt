@@ -1,65 +1,52 @@
 /**
-	\file "multikey_map.tcc"
-	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.24.4 2005/02/07 22:53:15 fang Exp $
+	\file "multikey_assoc.tcc"
+	Template method definitions for multikey_assoc class adapter.  
+	$Id: multikey_assoc.tcc,v 1.1.2.1 2005/02/07 22:53:15 fang Exp $
  */
 
-#ifndef	__UTIL_MULTIKEY_MAP_TCC__
-#define	__UTIL_MULTIKEY_MAP_TCC__
+#ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
+#define	__UTIL_MULTIKEY_ASSOC_TCC__
 
-#include "multikey_map.h"
-#include "multikey.tcc"
+#include "multikey_assoc.h"
+// #include "multikey.tcc"
 
 #include <limits>
 #include <functional>
 #include <algorithm>
-
 #include <iterator>
 
-#if USE_MULTIKEY_ASSOC
-#include "multikey_assoc.tcc"
-#endif
-
-#include "IO_utils.tcc"
+// #include "IO_utils.tcc"
 
 #define	DEBUG_SLICE		0
 
-namespace MULTIKEY_MAP_NAMESPACE {
+namespace util {
 #include "using_ostream.h"
-using std::istream;
 using std::pair;
 using std::numeric_limits;
 USING_LIST
+#if 0
 using util::write_value;
 using util::read_value;
 using util::write_map;
 using util::read_map;
-using MULTIKEY_NAMESPACE::multikey_generator;
+#endif
+// using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
-// class multikey_map method definitions
+// class multikey_assoc method definitions
 
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<D,K,T,M>::multikey_map() : map_type() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<D,K,T,M>::~multikey_map() { }
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+multikey_assoc<D,C>::multikey_assoc() : assoc_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-void
-multikey_map<D,K,T,M>::clear(void) {
-	map_type::clear();
-}
-#endif
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+multikey_assoc<D,C>::~multikey_assoc() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 void
-multikey_map<D,K,T,M>::clean(void) {
+multikey_assoc<D,C>::clean(void) {
 	const T def;
 	iterator i = this->begin();
 	const const_iterator e = this->end();
@@ -67,7 +54,7 @@ multikey_map<D,K,T,M>::clean(void) {
 		if (i->second == def) {
 			iterator j = i;
 			j++;
-			map_type::erase(i);
+			assoc_type::erase(i);
 			i = j;
 		} else {
 			i++;
@@ -77,142 +64,172 @@ multikey_map<D,K,T,M>::clean(void) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_MULTIKEY_ASSOC
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::iterator
-multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K>& k) {
-	key_type x(k, numeric_limits<K>::min());
-	return map_type::lower_bound(x);
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::iterator
+multikey_assoc<D,C>::lower_bound(const K& k) {
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::const_iterator
-multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K>& k) const {
-	key_type x(k, numeric_limits<K>::min());
-	return map_type::lower_bound(x);
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::const_iterator
+multikey_assoc<D,C>::lower_bound(const K& k) const {
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::iterator
-multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K>& k) {
-	key_type x(k, numeric_limits<K>::min());
-	return map_type::upper_bound(x);
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::iterator
+multikey_assoc<D,C>::upper_bound(const K& k) {
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::const_iterator
-multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K>& k) const {
-	key_type x(k, numeric_limits<K>::min());
-	return map_type::upper_bound(x);
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::const_iterator
+multikey_assoc<D,C>::upper_bound(const K& k) const {
+	const key_type x(k, numeric_limits<typename K::value_type>::min());
+	return assoc_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::count(const multikey<D2,K>& k) const {
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::iterator
+multikey_assoc<D,C>::lower_bound(const index_type& k) {
+	key_type x(numeric_limits<index_type>::min());
+	x[0] = k;
+	return assoc_type::lower_bound(x);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::const_iterator
+multikey_assoc<D,C>::lower_bound(const index_type& k) const {
+	key_type x(numeric_limits<index_type>::min());
+	x[0] = k;
+	return assoc_type::lower_bound(x);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::iterator
+multikey_assoc<D,C>::upper_bound(const index_type& k) {
+	key_type x(numeric_limits<index_type>::min());
+	x[0] = k;
+	return assoc_type::upper_bound(x);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::const_iterator
+multikey_assoc<D,C>::upper_bound(const index_type& k) const {
+	key_type x(numeric_limits<index_type>::min());
+	x[0] = k;
+	return assoc_type::upper_bound(x);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::size_type
+multikey_assoc<D,C>::count(const K& k) const {
+	static const size_t dim2 = K::dim;
 	key_type l(k);
-	l[D2-1]++;
+	l[dim2-1]++;
 	return distance(lower_bound(k), lower_bound(l));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::count(const K i) const {
+#if 1
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::size_type
+multikey_assoc<D,C>::count(const index_type i) const {
+#if 0
 	multikey<1,K> l;
 	l[0] = i;
 	key_type m(l);
 	m[0]++;
 	return distance(lower_bound(l), lower_bound(m));
+#else
+	return distance(lower_bound(i), lower_bound(i+1));
+#endif
 }
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2>
-typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::erase(const multikey<D2,K>& k) {
-	if (D2 < D) {
-		multikey<D2,K> m(k);
-		m[D2-1]++;
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+template <class K>
+typename multikey_assoc<D,C>::size_type
+multikey_assoc<D,C>::erase(const K& k) {
+	static const size_t dim2 = K::dim;
+	if (dim2 < D) {
+		K m(k);
+		m[dim2-1]++;
 		const iterator l(lower_bound(k));
 		const iterator u(lower_bound(m));
 		size_type ret = distance(l,u);
-		if (ret) map_type::erase(l,u);
+		if (ret) assoc_type::erase(l,u);
 		return ret;
 	} else {        // D2 >= D
 		const key_type l(k);
-		const iterator f(map_type::find(l));
+		const iterator f(assoc_type::find(l));
 		if (f != this->end()) {
-			map_type::erase(f);
+			assoc_type::erase(f);
 			return 1;
 		} else  return 0;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::erase(const K i) {
+#if 1
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::size_type
+multikey_assoc<D,C>::erase(const index_type i) {
+#if 0
 	multikey<1,K> m, k;
 	k[0] = i;
 	m[0] = i+1;
 	const iterator l(lower_bound(k));
 	const iterator u(lower_bound(m));
+#else
+	const iterator l(lower_bound(i));
+	const iterator u(lower_bound(i+1));
+#endif
 	size_type ret = distance(l,u);
-	if (ret) map_type::erase(l,u);
+	if (ret) assoc_type::erase(l,u);
 	return ret;
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T&
-multikey_map<D,K,T,M>::operator [] (const list<K>& k) {
-	INVARIANT(k.size() == D);
-	multikey<D,K> dk(k);
-	return map_type::operator[](dk);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T
-multikey_map<D,K,T,M>::operator [] (const list<K>& k) const {
-	INVARIANT(k.size() == D);
-	key_type dk(k);
-	return map_type::operator[](dk);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_MULTIKEY_ASSOC
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::key_list_pair_type
-multikey_map<D,K,T,M>::is_compact_slice(
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::key_list_pair_type
+multikey_assoc<D,C>::is_compact_slice(
 		const key_list_type& l, const key_list_type& u) const {
 	typedef key_list_pair_type	return_type;
+	typedef typename key_type::generic_generator_type	generator_type;
 	const size_t l_size = l.size();
 	{       // check for consistency
-		typedef typename list<K>::const_iterator list_iterator;
+		typedef typename key_list_type::const_iterator	list_iterator;
 		INVARIANT(l_size == u.size());
 		pair<list_iterator, list_iterator>
 			mm = mismatch(l.begin(), l.end(), u.begin(),
-				std::less_equal<K>()
+				std::less_equal<index_type>()
 			);
 		INVARIANT(mm.first == l.end() && mm.second == u.end());
 	}
 
 #if DEBUG_SLICE
 	{
-	cerr << "In multikey_map::is_compact_slice(l,u): ";
-	ostream_iterator<K> osi(cerr, ",");
+	cerr << "In multikey_assoc::is_compact_slice(l,u): ";
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "l = {";
 	copy(l.begin(), l.end(), osi);
 	cerr << "}, u = {";
@@ -221,7 +238,7 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	}
 #endif
 
-	multikey_generator_generic<K> key_gen(l_size);
+	generator_type key_gen(l_size);
 	copy(l.begin(), l.end(), key_gen.get_lower_corner().begin());
 	copy(u.begin(), u.end(), key_gen.get_upper_corner().begin());
 	key_gen.initialize();
@@ -287,8 +304,8 @@ multikey_map<D,K,T,M>::is_compact_slice(
 
 #if DEBUG_SLICE
 	{
-	cerr << "End of multikey_map::is_compact_slice(l,u): ";
-	ostream_iterator<K> osi(cerr, ",");
+	cerr << "End of multikey_assoc::is_compact_slice(l,u): ";
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "l = {";
 	copy(l.begin(), l.end(), osi);
 	cerr << "}, u = {";
@@ -305,14 +322,14 @@ multikey_map<D,K,T,M>::is_compact_slice(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::key_list_pair_type
-multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::key_list_pair_type
+multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
 	typedef key_list_pair_type	return_type;
 #if DEBUG_SLICE
 	{
-	cerr << "In multikey_map::is_compact_slice(l): ";
-	ostream_iterator<K> osi(cerr, ",");
+	cerr << "In multikey_assoc::is_compact_slice(l): ";
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "l = {";
 	copy(l.begin(), l.end(), osi);
 	cerr << "}" << endl;
@@ -324,9 +341,16 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 	// special case for ==?
 	if (l_size == D) {
 		// if value is default, consider it empty
-		return ((*this)[key_type(l)] == T()) ?
+		// should use find() instead of [] operator
+#if 0
+		return ((*this)[key_type(l)] == mapped_type()) ?
 			return_type() :
 			return_type(l,l);
+#else
+		const_iterator i = find(key_type(l));
+		return (i != this->end() && *i != value_type()) ?
+			return_type(l,l) : return_type();
+#endif
 	}
 
 	// else is under-specified
@@ -335,7 +359,7 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 	last.back()++;
 #if DEBUG_SLICE && 0
 	{
-	ostream_iterator<K> osi(cerr, ",");
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "lower = ";
 	copy(lower.begin(), lower.end(), osi);
 	cerr << " last = ";
@@ -360,7 +384,7 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 	}
 #if DEBUG_SLICE && 0
 	{
-	ostream_iterator<K> osi(cerr, ",");
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "lower_iter->first = ";
 	copy(lower_iter->first.begin(), lower_iter->first.end(), osi);
 	cerr << " last_iter->first = ";
@@ -370,14 +394,14 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 #endif
 
 	// get range of next dimension to check
-	K start_index = lower_iter->first[l_size];
-	K end_index = last_iter->first[l_size];
+	const index_type start_index = lower_iter->first[l_size];
+	const index_type end_index = last_iter->first[l_size];
 	key_list_type upper(lower);
 	lower.push_back(start_index);
 	upper.push_back(end_index);
 #if DEBUG_SLICE && 0
 	{
-	ostream_iterator<K> osi(cerr, ",");
+	ostream_iterator<index_type> osi(cerr, ",");
 	cerr << "lower = ";
 	copy(lower.begin(), lower.end(), osi);
 	cerr << " upper = ";
@@ -389,9 +413,9 @@ multikey_map<D,K,T,M>::is_compact_slice(const key_list_type& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::key_list_pair_type
-multikey_map<D,K,T,M>::is_compact(void) const {
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::key_list_pair_type
+multikey_assoc<D,C>::is_compact(void) const {
 	typedef key_list_pair_type	return_type;
 	if (empty()) 
 		return return_type();
@@ -403,10 +427,24 @@ multikey_map<D,K,T,M>::is_compact(void) const {
 	return is_compact_slice(start, end);
 }
 
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<D,K,T,M>::key_list_pair_type
-multikey_map<D,K,T,M>::index_extremities(void) const {
+#if 0
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+ostream&
+multikey_assoc<D,C>::dump(ostream& o) const {
+	const_iterator i = this->begin();
+	const const_iterator e = this->end();
+	for ( ; i!=e; i++)
+		o << i->first << " = " << i->second << endl;
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::key_list_pair_type
+multikey_assoc<D,C>::index_extremities(void) const {
 	typedef key_list_pair_type	return_type;
 	if (this->empty())
 		return return_type();
@@ -427,23 +465,13 @@ multikey_map<D,K,T,M>::index_extremities(void) const {
 		back_inserter(ret.second));
 	return ret;
 }
-#endif	// USE_MULTIKEY_ASSOC
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
+#if 0
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 ostream&
-multikey_map<D,K,T,M>::dump(ostream& o) const {
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
-	for ( ; i!=e; i++)
-		o << i->first << " = " << i->second << endl;
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-ostream&
-multikey_map<D,K,T,M>::write(ostream& f) const {
+multikey_assoc<D,C>::write(ostream& f) const {
 	INVARIANT(f.good());
 	write_value(f, population());
 	const_iterator i = this->begin();
@@ -457,9 +485,9 @@ multikey_map<D,K,T,M>::write(ostream& f) const {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 istream&
-multikey_map<D,K,T,M>::read(istream& f) {
+multikey_assoc<D,C>::read(istream& f) {
 	INVARIANT(f.good());
 	INVARIANT(empty());
 	size_t size, i=0;
@@ -473,32 +501,23 @@ multikey_map<D,K,T,M>::read(istream& f) {
 	}
 	return f;
 }
-
-
-//=============================================================================
-// class multikey_map method definitions (specialized)
-
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<1,K,T,M>::multikey_map() : map_type() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<1,K,T,M>::~multikey_map() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-void
-multikey_map<1,K,T,M>::clear(void) {
-	map_type::clear();
-}
 #endif
 
+//=============================================================================
+// class multikey_assoc method definitions (specialized)
+
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+multikey_assoc<1,C>::multikey_assoc() : assoc_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+multikey_assoc<1,C>::~multikey_assoc() { }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 void
-multikey_map<1,K,T,M>::clean(void) {
+multikey_assoc<1,C>::clean(void) {
 	const T def;
 	iterator i = this->begin();
 	const const_iterator e = this->end();
@@ -516,34 +535,35 @@ multikey_map<1,K,T,M>::clean(void) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+#if 0
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 T&
-multikey_map<1,K,T,M>::operator [] (const key_list_type& k) {
+multikey_assoc<1,C>::operator [] (const key_list_type& k) {
 	INVARIANT(k.size() == 1);
-	return map_type::operator[](k.front());
+	return assoc_type::operator[](k.front());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 T
-multikey_map<1,K,T,M>::operator [] (const key_list_type& k) const {
+multikey_assoc<1,C>::operator [] (const key_list_type& k) const {
 	INVARIANT(k.size() == 1);
-	return map_type::operator[](k.front());
+	return assoc_type::operator[](k.front());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_MULTIKEY_ASSOC
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<1,K,T,M>::key_list_pair_type
-multikey_map<1,K,T,M>::is_compact_slice(
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<1,C>::key_list_pair_type
+multikey_assoc<1,C>::is_compact_slice(
 		const key_list_type& l, const key_list_type& u) const {
 	typedef key_list_pair_type      return_type;
 	INVARIANT(l.size() == 1);
 	INVARIANT(u.size() == 1);
-	K k = l.front();
+	index_type k = l.front();
 	INVARIANT(k <= u.front());
 	for ( ; k <= u.front(); k++) {
-		if ((*this)[k] == T()) {        // static_cast const?
+		if ((*this)[k] == mapped_type()) {        // static_cast const?
 			return return_type();
 		}
 	}
@@ -553,9 +573,9 @@ multikey_map<1,K,T,M>::is_compact_slice(
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-typename multikey_map<1,K,T,M>::key_list_pair_type
-multikey_map<1,K,T,M>::is_compact(void) const {
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<1,C>::key_list_pair_type
+multikey_assoc<1,C>::is_compact(void) const {
 	typedef key_list_pair_type      return_type;
 	if (this->empty()) {
 		return return_type();
@@ -574,9 +594,9 @@ multikey_map<1,K,T,M>::is_compact(void) const {
 		)
 	);
 #else
-	K k = first->first;
+	index_type k = first->first;
 	for ( ; k <= last->first; k++) {
-		if ((*this)[k] == T()) {        // static_cast const?
+		if ((*this)[k] == mapped_type()) {        // static_cast const?
 			return return_type();
 		}
 	}
@@ -586,12 +606,13 @@ multikey_map<1,K,T,M>::is_compact(void) const {
 	return ret;
 #endif
 }
-#endif
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+#if 0
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 ostream&
-multikey_map<1,K,T,M>::dump(ostream& o) const {
+multikey_assoc<1,C>::dump(ostream& o) const {
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
@@ -601,11 +622,11 @@ multikey_map<1,K,T,M>::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 ostream&
-multikey_map<1,K,T,M>::write(ostream& f) const {
+multikey_assoc<1,C>::write(ostream& f) const {
 #if 0
-	write_map(f, static_cast<const map_type&>(*this));
+	write_assoc(f, static_cast<const assoc_type&>(*this));
 #else
 	INVARIANT(f.good());
 	write_value(f, population());
@@ -624,14 +645,14 @@ multikey_map<1,K,T,M>::write(ostream& f) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
+SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 istream&
-multikey_map<1,K,T,M>::read(istream& f) {
+multikey_assoc<1,C>::read(istream& f) {
 // strange Apple gcc-3.3 (build 1640) bug reporting
 // undefined reference to blah with char_traints (TYPO in name-mangled libs)!
 // when this is fixed, set following to #if 1, same above with write().
 #if 0
-	read_map(f, static_cast<map_type&>(*this));
+	read_assoc(f, static_cast<assoc_type&>(*this));
 #else
 	INVARIANT(f.good());
 	INVARIANT(empty());
@@ -653,11 +674,12 @@ multikey_map<1,K,T,M>::read(istream& f) {
 #endif
 	return f;
 }
+#endif
 
 //=============================================================================
-}	// end namespace MULTIKEY_MAP_NAMESPACE
+}	// end namespace util
 
 #undef	DEBUG_SLICE
 
-#endif	// __UTIL_MULTIKEY_MAP_TCC__
+#endif	// __UTIL_MULTIKEY_ASSOC_TCC__
 

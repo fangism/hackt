@@ -1,14 +1,14 @@
 /**
 	"const_assoc_query.tcc"
 	Definition for map-like class adapter with const-semantics lookup.
-	$Id: const_assoc_query.tcc,v 1.1.2.1 2005/02/06 02:22:10 fang Exp $
+	$Id: const_assoc_query.tcc,v 1.1.2.2 2005/02/07 22:53:14 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__
 #define	__UTIL_CONST_ASSOC_QUERY_TCC__
 
 #include "const_assoc_query.h"
-#include "assoc_select.h"		// contains STL specializations
+#include "assoc_traits.h"		// contains STL specializations
 #include "null_construct.h"
 #include <functional>
 
@@ -25,7 +25,7 @@ const_assoc_query<M>::operator [] (const key_type& k) {
 template <class M>
 typename const_assoc_query<M>::mapped_type
 const_assoc_query<M>::operator [] (const key_type& k) const {
-	typedef typename select_value<M>::selector	value_selector;
+	typedef typename assoc_traits<M>::value_selector	value_selector;
 	const const_iterator i = find(k);
 	return (i != this->end()) ?
 		value_selector()(*i) :

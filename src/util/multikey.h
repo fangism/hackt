@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.10.5 2005/02/07 01:11:16 fang Exp $
+	$Id: multikey.h,v 1.19.10.6 2005/02/07 22:53:14 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -174,6 +174,9 @@ protected:
 public:
 	multikey_implementation_base() : index(0) { }
 
+	// allow implicit conversion
+	multikey_implementation_base(const K& k) : index(k) { }
+
 	multikey_implementation_base(const this_type& k) : index(k.index) { }
 
 	size_t
@@ -280,7 +283,8 @@ public:
 	typedef	typename impl_type::reverse_iterator	reverse_iterator;
 	typedef	typename impl_type::const_reverse_iterator
 							const_reverse_iterator;
-
+	typedef	multikey_generator<D,K>			generator_type;
+	typedef	multikey_generator_generic<K>		generic_generator_type;
 #if 0
 public:
 	static const this_type				ones;
@@ -424,6 +428,7 @@ public:
 							const_reverse_iterator;
 	typedef	K&					reference;
 	typedef	const K&				const_reference;
+	typedef	multikey_generator_generic<K>		generator_type;
 public:
 	multikey_generic() : impl_type() { }
 

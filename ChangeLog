@@ -8,7 +8,9 @@
 	  the second pointer member, which is never dereferenced anyways.  
 
 	+ -set-13: "multikey_assoc*": multidimensional associative 
-	  container adapter.  
+	  container adapter.  Factored out multidimensional facilities
+	  of multikey_map into multikey_assoc template wrapper.  
+	  Much removed code in commends in this snapshot.  
 
 
 2005-02-06	David Fang	<fangism@users.sourceforge.net>
