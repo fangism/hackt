@@ -573,7 +573,8 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 // TO DO: type equivalence relationship
 
 virtual string hash_string(void) const;
-	never_const_ptr<fundamental_type_reference> set_context_type_reference(context& c) const;
+	never_const_ptr<fundamental_type_reference>
+		set_context_type_reference(context& c) const;
 virtual const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const = 0;
 };	// end class fundamental_type_reference
@@ -610,16 +611,16 @@ protected:
 	never_const_ptr<datatype_definition>	base_type_def;
 public:
 	data_type_reference(
+		never_const_ptr<datatype_definition> td);
+	data_type_reference(
 		never_const_ptr<datatype_definition> td, 
-		excl_ptr<template_param_list> pl = NULL);
-		// not gcc-2.95.3 friendly default argument
+		excl_ptr<template_param_list> pl);
+		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	never_const_ptr<fundamental_type_reference>
-//			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class data_type_reference
@@ -638,14 +639,12 @@ public:
 		never_const_ptr<channel_definition> td);
 	channel_type_reference(
 		never_const_ptr<channel_definition> td, 
-		excl_ptr<template_param_list> pl = NULL);
+		excl_ptr<template_param_list> pl);
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	never_const_ptr<fundamental_type_reference>
-//			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class channel_type_reference
@@ -661,16 +660,16 @@ protected:
 	never_const_ptr<process_definition>	base_proc_def;
 public:
 	process_type_reference(
+		never_const_ptr<process_definition> td);
+	process_type_reference(
 		never_const_ptr<process_definition> td, 
-		excl_ptr<template_param_list> pl = NULL);
-		// not gcc-2.95.3 friendly default argument
+		excl_ptr<template_param_list> pl);
+		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	never_const_ptr<fundamental_type_reference>
-//			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class process_type_reference
@@ -695,8 +694,6 @@ virtual	~param_type_reference();
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	never_const_ptr<fundamental_type_reference>
-//			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class param_type_reference

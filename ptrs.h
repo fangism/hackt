@@ -662,7 +662,9 @@ explicit never_ptr(void) throw() : base_ptr<T>(NULL) { }
 	It will never modify the argument.  
 	This covers all pointer types.  
  */
-	never_ptr(const base_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
+	never_ptr(const excl_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
+	never_ptr(const some_ptr<T>& p) throw();
+	never_ptr(const never_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
 
 /*** cross-template member not friendly accessible (p is protected)
 template <class S>
@@ -1111,6 +1113,9 @@ excl_ptr<T>::excl_ptr(some_ptr<T>& s) throw() : base_ptr<T>(s.ptr) {
 	assert(s.own);		// else it didn't own it before!
 	s.own = false;
 }
+
+template <class T>
+never_ptr<T>::never_ptr(const some_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
 
 template <class T>
 never_const_ptr<T>::never_const_ptr(const some_ptr<T>& p) throw() :

@@ -1161,6 +1161,13 @@ collective_type_reference::dump(ostream& o) const {
 // class data_type_reference method definitions
 
 data_type_reference::data_type_reference(
+		never_const_ptr<datatype_definition> td) :
+		fundamental_type_reference(), 
+		base_type_def(td) {
+	assert(base_type_def);
+}
+
+data_type_reference::data_type_reference(
 		never_const_ptr<datatype_definition> td, 
 		excl_ptr<template_param_list> pl) :
 		fundamental_type_reference(pl), 
@@ -1273,6 +1280,13 @@ channel_type_reference::add_instance_to_scope(scopespace& s,
 
 //=============================================================================
 // class process_type_reference method definitions
+
+process_type_reference::process_type_reference(
+		never_const_ptr<process_definition> pd) :
+		fundamental_type_reference(), 
+		base_proc_def(pd) {
+	assert(base_proc_def);
+}
 
 process_type_reference::process_type_reference(
 		never_const_ptr<process_definition> pd, 
