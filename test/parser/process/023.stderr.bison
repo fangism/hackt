@@ -8,7 +8,7 @@ state	value
 235	paramtype: pbool [3:27..31]
 166	identifier: water [3:33..37]
 236	[ [3:38]
-268	(namespace-id): H [3:39]
+268	(id-expr): H [3:39]
 340	, [3:40]
 in state 340, possible rules are:
 	bracketed_dense_range: '[' expr . ']'  (280)
