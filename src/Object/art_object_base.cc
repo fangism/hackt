@@ -11,11 +11,11 @@
 // include this as early as possible
 #include "hash_specializations.h"		// substitute for the following
 
-#include "art_utils.tcc"
 #include "art_parser_debug.h"
 #include "art_parser_base.h"
 
 #include "art_object_base.h"
+#include "art_object_definition.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
 #include "art_object_IO.tcc"
@@ -715,6 +715,8 @@ object_list::make_param_assignment(void) {
 		if (for_err)
 			err = for_err;
 	}
+	// finally attach the right-hand-side
+	ret->append_param_expression(rhse);
 
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
@@ -1118,6 +1120,33 @@ scopespace::add_connection_to_scope(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Overrideable hook to exclude objects from dumping and persisting.  
+	By default, nothing is excluded, so this returns false.  
+ */
+bool
+scopespace::exclude_object(const used_id_map_type::const_iterator i) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Count how many objects in the used_id_map will be excluded by
+	exclude_object().  
+ */
+size_t
+scopespace::exclude_population(void) const {
+	size_t ret = 0;
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	for ( ; m_iter!=m_end; m_iter++) {
+		if (exclude_object(m_iter))
+			ret++;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Register all pointers in the used_id_map with the 
 	serial object manager.  
  */
@@ -1126,35 +1155,58 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
-		never_const_ptr<object> m_obj(m_iter->second);
-//		assert(!m_obj.owned());		// local copy is not owned
+		const never_const_ptr<object> m_obj(m_iter->second);
 		assert(m_obj);			// no NULLs in hash_map
-		m_obj->collect_transient_info(m);
+		// checks for excluded objects, virtual call
+		if (!exclude_object(m_iter))
+			m_obj->collect_transient_info(m);
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serializes the used_id_map hash_map's pointers to an 
+	output stream, translating pointers to indices.  
+ */
 void
 scopespace::write_object_used_id_map(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 
-	// filter any objects out?
-#if 0
-	write_value(f, used_id_map.size());
+	// filter any objects out? yes
+#if 1
+	// how many objects to exclude? need to subtract
+	size_t s = used_id_map.size();
+	size_t ex = exclude_population();
+	assert(ex <= s);		// sanity check b/c unsigned
+	write_value(f, s -ex);
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	for ( ; m_iter!=m_end; m_iter++) {
-		const some_ptr<object> m_obj(m_iter->second);
 		// any distinction between aliases and non-owners?
-		m.write_pointer(f, m_obj);
+		if (!exclude_object(m_iter)) {
+			const never_const_ptr<object> m_obj(m_iter->second);
+			m.write_pointer(f, m_obj);
+		}
 	}
 #else
+	// otherwise, without filtering, we could use this method
 	m.write_pointer_map(f, used_id_map);
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Deserializes a set of pointers and restores them into the
+	used_id_map.  
+	The key is that each object pointed to should have some associated
+	key used for hashing, thus the objects must be at least partially
+	reconstructed before adding them back to the hash map.  
+	This means that "alias" entries of the hash_map, those that
+	are mapped with a name that's not their own, cannot be restored
+	as aliases since keys are not kept.  
+	That is intentional since we don't intend to keep around aliases.  
+ */
 void
 scopespace::load_object_used_id_map(persistent_object_manager& m) {
 	istream& f = m.lookup_read_buffer(this);
@@ -1165,7 +1217,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 		long index;
 		read_value(f, index);
 		excl_ptr<object> m_obj(m.lookup_obj_ptr(index));
-//		m.read_pointer(f, m_obj);
+//		m.read_pointer(f, m_obj);	// replaced, b/c need index
 		// need to add it back through hash_map.  
 		if (!m_obj) {
 			if (warn_unimplemented) {
@@ -1179,6 +1231,38 @@ scopespace::load_object_used_id_map(persistent_object_manager& m) {
 			load_used_id_map_object(m_obj);	// pure virtual
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::collect_connect_assign_list_pointers(
+		persistent_object_manager& m) const {
+	connect_assign_list_type::const_iterator
+		l_iter = connect_assign_list.begin();
+	const connect_assign_list_type::const_iterator
+		l_end = connect_assign_list.end();
+	for ( ; l_iter!=l_end; l_iter++) {
+		assert(*l_iter);
+		(*l_iter)->collect_transient_info(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::write_object_connect_assign_list(
+		persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	m.write_pointer_list(f, connect_assign_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::load_object_connect_assign_list(
+		persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	m.read_pointer_list(f, connect_assign_list);
 }
 
 //=============================================================================
@@ -1296,13 +1380,109 @@ name_space::what(ostream& o) const {
  */
 ostream&
 name_space::dump(ostream& o) const {
-	used_id_map_type::const_iterator i;
-//	list<never_const_ptr<...> > bin;		// later sort
+	// to canonicalize the dump, we bin and sort into maps
+	typedef	map<string, never_const_ptr<name_space> >	ns_bin_type;
+	typedef	map<string, never_const_ptr<definition_base> >	def_bin_type;
+	typedef	map<string, never_const_ptr<typedef_base> >	alias_bin_type;
+	typedef	map<string, never_const_ptr<instantiation_base> > inst_bin_type;
+
+	ns_bin_type	ns_bin;
+	def_bin_type	def_bin;
+	alias_bin_type	alias_bin;
+	inst_bin_type	inst_bin;
+
+	used_id_map_type::const_iterator i = used_id_map.begin();
+	const used_id_map_type::const_iterator end;
+	for ( ; i!=end; i++) {
+		if (!exclude_object(i)) {
+			const never_const_ptr<object> o_p(i->second);
+			assert(o_p);
+			const never_const_ptr<name_space>
+				n_b(o_p.is_a<name_space>());
+			const never_const_ptr<definition_base>
+				d_b(o_p.is_a<definition_base>());
+			const never_const_ptr<instantiation_base>
+				i_b(o_p.is_a<instantiation_base>());
+			if (n_b) {
+				ns_bin[i->first] = n_b;
+			} else if (d_b) {
+				const never_const_ptr<typedef_base>
+					t_b(d_b.is_a<typedef_base>());
+				if (t_b)
+					alias_bin[i->first] = t_b;
+				else	def_bin[i->first] = d_b;
+			} else if (i_b) {
+				inst_bin[i->first] = i_b;
+			} else {
+				o_p->dump(cerr << "object ") << 
+					"not binned for dumping." << endl;
+			}
+//			o << "  " << i->first << " = ";
+//			i->second->dump(o) << endl;
+		}
+	}
+
 	o << "In namespace \"" << key << "\", we have: {" << endl;
-	for (i=used_id_map.begin(); i!=used_id_map.end(); i++) {
-		o << "  " << i->first << " = ";
-//		i->second->what(o) << endl;		// 1 level for now
-		i->second->dump(o) << endl;
+
+	if (!ns_bin.empty()) {
+		// maps are already sorted
+		// use for_each()?  later...
+		o << "Definitions:" << endl;
+		ns_bin_type::const_iterator iter = ns_bin.begin();
+		const ns_bin_type::const_iterator end = ns_bin.end();
+		for ( ; iter!=end; iter++) {
+			o << "  " << iter->first << " = ";
+			iter->second->dump(o) << endl;
+		}
+	}
+	
+	if (!def_bin.empty()) {
+		// maps are already sorted
+		// use for_each()?  later...
+		o << "Definitions:" << endl;
+		def_bin_type::const_iterator iter = def_bin.begin();
+		const def_bin_type::const_iterator end = def_bin.end();
+		for ( ; iter!=end; iter++) {
+			o << "  " << iter->first << " = ";
+			iter->second->dump(o) << endl;
+		}
+	}
+	
+	if (!alias_bin.empty()) {
+		// maps are already sorted
+		// use for_each()?  later...
+		o << "Typedefs:" << endl;
+		alias_bin_type::const_iterator iter = alias_bin.begin();
+		const alias_bin_type::const_iterator end = alias_bin.end();
+		for ( ; iter!=end; iter++) {
+			o << "  " << iter->first << " = ";
+			iter->second->dump(o) << endl;
+		}
+	}
+	
+	if (!inst_bin.empty()) {
+		// maps are already sorted
+		// use for_each()?  later...
+		o << "Instances:" << endl;
+		inst_bin_type::const_iterator iter = inst_bin.begin();
+		const inst_bin_type::const_iterator end = inst_bin.end();
+		for ( ; iter!=end; iter++) {
+			o << "  " << iter->first << " = ";
+			iter->second->dump(o) << endl;
+		}
+	}
+
+	if (!connect_assign_list.empty()) {
+		cerr << "Assignments and connections: " << endl;
+		connect_assign_list_type::const_iterator
+			a_iter = connect_assign_list.begin();
+		const connect_assign_list_type::const_iterator
+			a_end = connect_assign_list.end();
+		for ( ; a_iter!=a_end; a_iter++) {
+			never_const_ptr<connection_assignment_base> ap(*a_iter);
+			assert(ap);
+			ap->dump(o << '\t') << endl;
+		}
 	}
 	return o << "}" << endl;
 }
@@ -1921,20 +2101,8 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
 #endif
-#if 0
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
-	for ( ; m_iter!=m_end; m_iter++) {
-		some_const_ptr<object> m_obj(m_iter->second);
-		assert(!m_obj.owned());		// local copy is not owned
-		assert(m_obj);			// no NULLs in hash_map
-
-		m_obj->collect_transient_info(m);
-	}
-#else
 	collect_used_id_map_pointers(m);
-	// that's it.
-#endif
+	collect_connect_assign_list_pointers(m);
 }
 // else already visited
 }
@@ -1978,6 +2146,7 @@ name_space::write_object(persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	write_object_used_id_map(m);
+	write_object_connect_assign_list(m);
 
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -2003,36 +2172,21 @@ if (!m.flag_visit(this)) {
 	// Next, read in the parent namespace pointer.  
 	m.read_pointer(f, parent);
 
-#if 1
 	load_object_used_id_map(m);
-#else
-	{
-	size_t s;
-	// how many pointers to expect?
-	read_value(f, s);
-	size_t i = 0;
-	for ( ; i<s; i++) {
-		// can't just read_pointer,
-		// need to add it back through hash_map.  
-		long index;
-		read_value(f, index);
-		excl_ptr<object> o(m.lookup_obj_ptr(index));
-		if (!o) {
-			if (warn_unimplemented) {
-				cerr << "Skipping a NULL object at index "
-					<< index << endl;
-			}
-			continue;
-		}
-		o->load_object(m);	// recursion!!!
-		// add this object to the used_id_map
-		load_used_id_map_object(o);
-	}
-	}
-#endif
+	load_object_connect_assign_list(m);
+
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited, don't reload
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+name_space::exclude_object(const used_id_map_type::const_iterator i) const {
+	never_const_ptr<object> o(i->second);
+	if (o.is_a<object_handle>())
+		return true;
+	else return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,13 +3,11 @@
 
 #include <iostream>
 
-// #include "multidimensional_sparse_set.h"
-
 #include "art_parser_debug.h"		// need this?
 #include "art_parser_base.h"
 #include "art_object_connect.h"
 #include "art_object_expr.h"
-// #include "art_built_ins.h"
+#include "art_object_IO.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -25,18 +23,85 @@ param_expression_assignment::param_expression_assignment() :
 		connection_assignment_base(), ex_list() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expression_assignment::~param_expression_assignment() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+param_expression_assignment::what(ostream& o) const {
+	return o << "param-expr-assignment";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+param_expression_assignment::dump(ostream& o) const {
+	assert(ex_list.size() > 1);
+	ex_list_type::const_iterator iter = ex_list.begin();
+	const ex_list_type::const_iterator end = ex_list.end();
+	assert(*iter);
+	(*iter)->dump(o);
+	for (iter++ ; iter!=end; iter++) {
+		assert(*iter);
+		(*iter)->dump(o << " = ");
+	}
+	return o << ';';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 param_expression_assignment::append_param_expression(
 		count_const_ptr<param_expr> e) {
 	ex_list.push_back(e);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 param_expression_assignment::prepend_param_expression(
 		count_const_ptr<param_expr> e) {
 	ex_list.push_front(e);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_expression_assignment::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PARAM_EXPR_ASSIGNMENT_TYPE)) {
+	ex_list_type::const_iterator iter = ex_list.begin();
+	const ex_list_type::const_iterator end = ex_list.end();
+	for ( ; iter!=end; iter++) {
+		(*iter)->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+param_expression_assignment::construct_empty(void) {
+	return new param_expression_assignment();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_expression_assignment::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer_list(f, ex_list);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+param_expression_assignment::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer_list(f, ex_list);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
 }
 
 //=============================================================================
@@ -46,6 +111,7 @@ instance_reference_connection::instance_reference_connection() :
 		connection_assignment_base(), inst_list() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param i instance reference to connect, may not be NULL.
  */
@@ -61,6 +127,28 @@ instance_reference_connection::append_instance_reference(
 
 aliases_connection::aliases_connection() : instance_reference_connection() { };
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+aliases_connection::what(ostream& o) const {
+	return o << "alias-connection";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+aliases_connection::dump(ostream& o) const {
+	assert(inst_list.size() > 1);
+	inst_list_type::const_iterator iter = inst_list.begin();
+	const inst_list_type::const_iterator end = inst_list.end();
+	assert(*iter);
+	(*iter)->dump(o);
+	for (iter++ ; iter!=end; iter++) {
+		assert(*iter);
+		(*iter)->dump(o << " = ");
+	}
+	return o << ';';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 aliases_connection::prepend_instance_reference(
 		count_const_ptr<instance_reference_base> i) {
@@ -68,9 +156,61 @@ aliases_connection::prepend_instance_reference(
 	inst_list.push_front(i);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+aliases_connection::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE)) {
+	inst_list_type::const_iterator iter = inst_list.begin();
+	const inst_list_type::const_iterator end = inst_list.end();
+	for ( ; iter!=end; iter++) {
+		(*iter)->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+aliases_connection::construct_empty(void) {
+	return new aliases_connection();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+aliases_connection::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer_list(f, inst_list);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+aliases_connection::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer_list(f, inst_list);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class port_connection method definitions
 
+/**
+	Private empty constructor.
+ */
+port_connection::port_connection() :
+		instance_reference_connection(), inst(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Initial constructor for a port-connection.  
 	\param i an instance of the definition that is to be connected.
@@ -78,8 +218,37 @@ aliases_connection::prepend_instance_reference(
 port_connection::port_connection(
 		count_const_ptr<simple_instance_reference> i) :
 		instance_reference_connection(), inst(i) {
+	assert(inst);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+port_connection::what(ostream& o) const {
+	return o << "port-connection";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+port_connection::dump(ostream& o) const {
+	assert(inst);
+	inst->dump(o) << " (";
+
+	if (!inst_list.empty()) {
+		inst_list_type::const_iterator iter = inst_list.begin();
+		const inst_list_type::const_iterator end = inst_list.end();
+		if (*iter)
+			(*iter)->dump(o);
+		else o << " ";
+		for (iter++ ; iter!=end; iter++) {
+			o << ", ";
+			if (*iter)
+				(*iter)->dump(o);
+		}
+	}
+	return o << ");";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param i instance reference to connect, may be NULL.
  */
@@ -90,6 +259,55 @@ port_connection::append_instance_reference(
 	inst_list.push_back(i);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_connection::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PORT_CONNECTION_TYPE)) {
+	assert(inst);
+	inst->collect_transient_info(m);
+	inst_list_type::const_iterator iter = inst_list.begin();
+	const inst_list_type::const_iterator end = inst_list.end();
+	for ( ; iter!=end; iter++) {
+		// port connection arguments may be NULL
+		if (*iter)
+			(*iter)->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+port_connection::construct_empty(void) {
+	return new port_connection();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_connection::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, inst);
+	m.write_pointer_list(f, inst_list);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_connection::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, inst);
+	m.read_pointer_list(f, inst_list);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class dynamic_connection_assignment method definitions
 
@@ -98,6 +316,8 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 		connection_assignment_base(), dscope(s) {
 	// check that dscope is actually a loop or conditional
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //=============================================================================
 }	// end namespace entity

@@ -225,7 +225,11 @@ typedef	list<param_expr_ptr_type>			template_param_list;
 // general non-member functions
 
 //=============================================================================
-/// the root object type
+/**
+	The mother-root object type.
+	Any class that will persist in the form of an object file
+	should ultimately derive from this class.  
+ */
 class object {
 public:
 virtual ~object() { }
@@ -461,11 +465,24 @@ virtual	never_const_ptr<instantiation_base>
 	void add_connection_to_scope(
 		excl_const_ptr<connection_assignment_base> c);
 
+	size_t exclude_population(void) const;
+virtual	bool exclude_object(const used_id_map_type::const_iterator i) const;
+
 // helper functions for object IO
 protected:
+	// for used_id_map
 	void collect_used_id_map_pointers(persistent_object_manager& m) const;
 	void write_object_used_id_map(persistent_object_manager& m) const;
 	void load_object_used_id_map(persistent_object_manager& m);
+
+	// for connect_assign_list
+	void collect_connect_assign_list_pointers(
+			persistent_object_manager& m) const;
+	void write_object_connect_assign_list(
+			persistent_object_manager& m) const;
+	void load_object_connect_assign_list(
+			persistent_object_manager& m);
+
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
 virtual	void load_used_id_map_object(excl_ptr<object> o) = 0;
@@ -596,6 +613,8 @@ void	find_namespace_starting_with(namespace_list& m,
 // will we need generalized versions of queries that return object*
 // if we don't know a priori what an identifier's class is?
 // single symbol table or separate?
+
+bool	exclude_object(const used_id_map_type::const_iterator i) const;
 
 // methods for object file I/O
 public:
@@ -793,6 +812,10 @@ virtual	never_const_ptr<instantiation_base>
  */
 virtual	never_const_ptr<instantiation_base>
 		add_port_formal(excl_ptr<instantiation_base> f);
+
+#if 0
+virtual	bool exclude_object(const used_id_map_type::const_iterator i) const;
+#endif
 
 #if 0
 // but built-in types shouldn't have to implement this.  

@@ -5,6 +5,7 @@
 #define	__ART_OBJECT_IO_TCC__
 
 #include "art_object_IO.h"
+#include "art_utils.tcc"
 
 namespace ART {
 namespace entity {

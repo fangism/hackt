@@ -1076,8 +1076,7 @@ pint_instance_reference::static_constant_int(void) const {
 void
 pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE))
-{  
+if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE)) {  
 	if (array_indices)
 		array_indices->collect_transient_info(m);
 	pint_inst_ref->collect_transient_info(m);
@@ -2954,6 +2953,7 @@ if (!m.flag_visit(this)) {
 	for ( ; i<s; i++) {
 		count_ptr<index_expr> ip;
 		m.read_pointer(f, ip);
+		ip->load_object(m);	// need to load to know dimensions
 		push_back(ip);
 	}
 	STRIP_OBJECT_FOOTER(f);

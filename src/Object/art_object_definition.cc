@@ -812,9 +812,9 @@ void
 channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE)) {
-
-// later: template formals
-
+	base->collect_transient_info(m);
+//	collect_used_id_map_pointers(m);	// covers formals?
+	collect_template_formal_pointers(m);
 }
 }
 
@@ -835,19 +835,13 @@ channel_definition_alias::construct_empty(void) {
 void
 channel_definition_alias::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.write_pointer(f, base);
+	write_object_template_formals(m);
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -855,21 +849,13 @@ void
 channel_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.read_pointer(f, base);
+	load_object_template_formals(m);
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
 }
@@ -1534,9 +1520,9 @@ void
 datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE)) {
-
-// later: template formals
-
+	base->collect_transient_info(m);
+//	collect_used_id_map_pointers(m);	// covers formals?
+	collect_template_formal_pointers(m);
 }
 }
 
@@ -1557,19 +1543,13 @@ datatype_definition_alias::construct_empty(void) {
 void
 datatype_definition_alias::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.write_pointer(f, base);
+	write_object_template_formals(m);
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1577,21 +1557,13 @@ void
 datatype_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.read_pointer(f, base);
+	load_object_template_formals(m);
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
 }
@@ -2019,6 +1991,18 @@ process_definition::load_object_port_formals(
 //=============================================================================
 // class process_definition_alias method definitions
 
+/**
+	Private empty constructor.
+ */
+process_definition_alias::process_definition_alias() :
+		definition_base(), 
+		process_definition_base(), 
+		typedef_base(), 
+		key(), 
+		parent(NULL), base(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_definition_alias::process_definition_alias(const string& n, 
 		never_const_ptr<scopespace> p) :
 		definition_base(), 
@@ -2096,9 +2080,9 @@ void
 process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE)) {
-
-// later: template formals
-
+	base->collect_transient_info(m);
+//	collect_used_id_map_pointers(m);	// covers formals?
+	collect_template_formal_pointers(m);
 }
 }
 
@@ -2108,8 +2092,7 @@ if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE)) {
  */
 object*
 process_definition_alias::construct_empty(void) {
-	return new process_definition_alias("",
-		never_const_ptr<scopespace>(NULL));
+	return new process_definition_alias();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2119,19 +2102,13 @@ process_definition_alias::construct_empty(void) {
 void
 process_definition_alias::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.write_pointer(f, base);
+	write_object_template_formals(m);
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2139,21 +2116,13 @@ void
 process_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	m.read_pointer(f, base);
+	load_object_template_formals(m);
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
 }

@@ -97,9 +97,9 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&logical_expr::construct_empty, 
 
 	// assignments and connections
-	NULL, 
-	NULL, 
-	NULL, 
+	&param_expression_assignment::construct_empty, 
+	&aliases_connection::construct_empty, 
+	&port_connection::construct_empty, 
 
 	// more reconstructors here...
 };

@@ -55,7 +55,7 @@ namespace entity {
 	Need to consider how re-packed, constructed arrays, 
 	will fit into picture.  
  */
-class connection_assignment_base {
+class connection_assignment_base : public object {
 protected:
 	// don't need parent back-reference
 public:
@@ -75,16 +75,22 @@ virtual	~connection_assignment_base() { }
  */
 class param_expression_assignment : public connection_assignment_base {
 protected:
+	typedef	list<count_const_ptr<param_expr> >	ex_list_type;
 	// really should be exclusive pointers
-	list<count_const_ptr<param_expr> >		ex_list;
 	// param_expr may contain references to parameter instances, ok
+protected:
+	ex_list_type					ex_list;
 public:
 	param_expression_assignment();
 	~param_expression_assignment();
 
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+
 	void	append_param_expression(count_const_ptr<param_expr> e);
 	void	prepend_param_expression(count_const_ptr<param_expr> e);
-
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class param_expression_assignment
 
 //-----------------------------------------------------------------------------
@@ -94,8 +100,10 @@ public:
  */
 class instance_reference_connection : public connection_assignment_base {
 protected:
+	typedef	list<count_const_ptr<instance_reference_base> >	inst_list_type;
+protected:
 	// items may be singular or collective instances references.  
-	list<count_const_ptr<instance_reference_base> >		inst_list;
+	inst_list_type						inst_list;
 public:
 	instance_reference_connection();
 virtual	~instance_reference_connection() { }
@@ -119,9 +127,13 @@ public:
 	aliases_connection();
 	~aliases_connection() { }
 
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 	void	prepend_instance_reference(
 			count_const_ptr<instance_reference_base> i);
 
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class aliases_connection
 
 //-----------------------------------------------------------------------------
@@ -136,14 +148,20 @@ class port_connection : public instance_reference_connection {
 protected:
 	/** should be reference to a simple instance, may be indexed.  */
 	count_const_ptr<simple_instance_reference>	inst;
+private:
+	port_connection();
 public:
 	/** later, accept complex_aggregate_instance_references? */
 	port_connection(count_const_ptr<simple_instance_reference> i);
 	~port_connection() { }
 
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 	void	append_instance_reference(
 			count_const_ptr<instance_reference_base> i);
 
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class port_connection
 
 //-----------------------------------------------------------------------------
@@ -160,6 +178,10 @@ public:
 	dynamic_connection_assignment(never_const_ptr<scopespace> s);
 	~dynamic_connection_assignment() { }
 
+#if 0
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+#endif
 };	// end class dynamic_connection_assignment
 
 //=============================================================================

@@ -202,6 +202,8 @@ protected:
 	/** parent can be namespace or definition */
 	never_const_ptr<scopespace>			parent;
 	excl_const_ptr<process_type_reference>		base;
+private:
+	process_definition_alias();
 public:
 	process_definition_alias(const string& n, 
 		never_const_ptr<scopespace> p);
