@@ -2,37 +2,37 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3303484	module__	0	0	35
-	2	 0x3300170	namespc_	0	35	63
-	3	 0x33001a4	namespc_	0	63	102
-	4	 0x33001d8	namespc_	0	102	129
-	5	 0x330020c	namespc_	0	129	168
-	6	 0x3300240	namespc_	0	168	213
-	7	 0x3300274	namespc_	0	213	245
-	8	 0x33002a8	namespc_	0	245	288
-	9	 0x33002dc	namespc_	0	288	315
-	10	 0x33034d0	namespc_	0	315	341
-	11	 0x3303504	namespc_	0	341	366
-	12	 0x3303538	namespc_	0	366	394
-	13	 0x330356c	namespc_	0	394	420
-	14	 0x33035a0	namespc_	0	420	444
-	15	 0x33035d4	namespc_	0	444	470
-	16	 0x3303608	namespc_	0	470	494
-	17	 0x330363c	namespc_	0	494	523
-	18	 0x3303670	namespc_	0	523	549
-	19	 0x33036a4	namespc_	0	549	575
-	20	 0x33036d8	namespc_	0	575	600
-	21	 0x33037e4	dintcoll	0	600	647
-	22	 0x3804604	datainst	0	647	667
-	23	 0x3303834	datatprf	0	667	683
-	24	 0x3303840	datadefn	0	683	714
-	25	 0x3303894	dprmlst_	0	714	730
-	26	 0x2641024	cnstpi__	0	730	742
-	27	 0x330370c	namespc_	0	742	777
-	28	 0x3303740	namespc_	0	777	804
-	29	 0x3303774	namespc_	0	804	830
-	30	 0x33037a8	namespc_	0	830	855
-	31	 0x33037dc	namespc_	0	855	878
+	1	 0x3303484	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	60
+	3	 0x33001a4	namespc_	0	60	99
+	4	 0x33001d8	namespc_	0	99	126
+	5	 0x330020c	namespc_	0	126	165
+	6	 0x3300240	namespc_	0	165	210
+	7	 0x3300274	namespc_	0	210	242
+	8	 0x33002a8	namespc_	0	242	285
+	9	 0x33002dc	namespc_	0	285	312
+	10	 0x33034d0	namespc_	0	312	338
+	11	 0x3303504	namespc_	0	338	363
+	12	 0x3303538	namespc_	0	363	391
+	13	 0x330356c	namespc_	0	391	417
+	14	 0x33035a0	namespc_	0	417	441
+	15	 0x33035d4	namespc_	0	441	467
+	16	 0x3303608	namespc_	0	467	491
+	17	 0x330363c	namespc_	0	491	520
+	18	 0x3303670	namespc_	0	520	546
+	19	 0x33036a4	namespc_	0	546	572
+	20	 0x33036d8	namespc_	0	572	597
+	21	 0x33037e4	dintcoll	0	597	644
+	22	 0x3804604	datainst	0	644	664
+	23	 0x3303834	datatprf	0	664	680
+	24	 0x3303840	datadefn	0	680	711
+	25	 0x3303894	dprmlst_	0	711	727
+	26	 0x263f024	cnstpi__	0	727	739
+	27	 0x330370c	namespc_	0	739	774
+	28	 0x3303740	namespc_	0	774	801
+	29	 0x3303774	namespc_	0	801	827
+	30	 0x33037a8	namespc_	0	827	852
+	31	 0x33037dc	namespc_	0	852	875
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

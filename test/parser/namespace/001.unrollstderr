@@ -2,9 +2,9 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x2500404	module__	0	0	31
-	2	 0x2500250	namespc_	0	31	55
-	3	 0x2500450	namespc_	0	55	79
+	1	 0x3300624	module__	0	0	28
+	2	 0x3300170	namespc_	0	28	52
+	3	 0x33001a4	namespc_	0	52	76
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -20,6 +20,6 @@ In namespace "", we have: {
       0 sub-namespaces
       0 definitions
       0 typedefs
-}
+    }
 }
 

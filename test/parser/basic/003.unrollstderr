@@ -2,15 +2,15 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300684	module__	0	0	35
-	2	 0x3300170	namespc_	0	35	59
-	3	 0x33001a4	namespc_	0	59	88
-	4	 0x33006a4	dintcoll	0	88	138
-	5	 0x3804604	datainst	0	138	158
-	6	 0x33006f4	datatprf	0	158	174
-	7	 0x3301430	datadefn	0	174	205
-	8	 0x3300704	dprmlst_	0	205	221
-	9	 0x2641024	cnstpi__	0	221	233
+	1	 0x3300684	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	56
+	3	 0x33001a4	namespc_	0	56	85
+	4	 0x33006a4	dintcoll	0	85	135
+	5	 0x3804604	datainst	0	135	155
+	6	 0x33006f4	datatprf	0	155	171
+	7	 0x3301430	datadefn	0	171	202
+	8	 0x3300704	dprmlst_	0	202	218
+	9	 0x263f024	cnstpi__	0	218	230
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

@@ -2,12 +2,12 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x2500434	module__	0	0	39
-	2	 0x2500250	namespc_	0	39	67
-	3	 0x2500454	pintcoll	0	67	104
-	4	 0x3803a04	pintinst	0	104	120
-	5	 0x25004a4	pboolcol	0	120	153
-	6	 0x3802e04	pboolins	0	153	169
+	1	 0x3300654	module__	0	0	36
+	2	 0x3300170	namespc_	0	36	64
+	3	 0x3806450	pintcoll	0	64	101
+	4	 0x3803004	pintinst	0	101	117
+	5	 0x3300674	pboolcol	0	117	150
+	6	 0x3802404	pboolins	0	150	166
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -16,8 +16,8 @@ In namespace "", we have: {
   0 sub-namespaces
   0 definitions
   0 typedefs
-Parameters:
-  N = pint<> N value: ?
-  b = pbool<> b value: ?
+  Parameters:
+    N = pint<> N value: ?
+    b = pbool<> b value: ?
 }
 

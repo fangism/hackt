@@ -2,28 +2,28 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x25024e4	module__	0	0	63
-	2	 0x2500250	namespc_	0	63	99
-	3	 0x2502504	pintcoll	0	99	136
-	4	 0x3803a04	pintinst	0	136	152
-	5	 0x2502560	cnstpi__	0	152	164
-	6	 0x2502574	pintcoll	0	164	201
-	7	 0x3803a18	pintinst	0	201	217
-	8	 0x25025d0	cnstpi__	0	217	229
-	9	 0x25025e4	pboolcol	0	229	262
-	10	 0x3802e04	pboolins	0	262	278
-	11	 0x250263c	cnstpb__	0	278	290
-	12	 0x2502644	pboolcol	0	290	323
-	13	 0x3802e18	pboolins	0	323	339
-	14	 0x250269c	cnstpb__	0	339	351
-	15	 0x3806000	piassign	0	351	371
-	16	 0x25026c0	spiref__	0	371	391
-	17	 0x3806014	piassign	0	391	411
-	18	 0x25026f0	spiref__	0	411	431
-	19	 0x3805a00	pbassign	0	431	451
-	20	 0x2502720	spbref__	0	451	471
-	21	 0x3805a14	pbassign	0	471	491
-	22	 0x2502750	spbref__	0	491	511
+	1	 0x3302704	module__	0	0	60
+	2	 0x3300170	namespc_	0	60	96
+	3	 0x3806450	pintcoll	0	96	133
+	4	 0x3803004	pintinst	0	133	149
+	5	 0x263f024	cnstpi__	0	149	161
+	6	 0x380649c	pintcoll	0	161	198
+	7	 0x3803018	pintinst	0	198	214
+	8	 0x263f038	cnstpi__	0	214	226
+	9	 0x3302724	pboolcol	0	226	259
+	10	 0x3802404	pboolins	0	259	275
+	11	 0x264400c	cnstpb__	0	275	284
+	12	 0x3302774	pboolcol	0	284	317
+	13	 0x3802418	pboolins	0	317	333
+	14	 0x264401c	cnstpb__	0	333	342
+	15	 0x3805600	piassign	0	342	362
+	16	 0x33027e0	spiref__	0	362	382
+	17	 0x3805614	piassign	0	382	402
+	18	 0x3302810	spiref__	0	402	422
+	19	 0x3805000	pbassign	0	422	442
+	20	 0x3302840	spbref__	0	442	462
+	21	 0x3805014	pbassign	0	462	482
+	22	 0x3302870	spbref__	0	482	502
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -32,10 +32,10 @@ In namespace "", we have: {
   0 sub-namespaces
   0 definitions
   0 typedefs
-Parameters:
-  M = pint<> M (init = 5) value: 5
-  N = pint<> N (init = 3) value: 3
-  a = pbool<> a (init = true) value: 1
-  b = pbool<> b (init = false) value: 0
+  Parameters:
+    M = pint<> M (init = 5) value: 5
+    N = pint<> N (init = 3) value: 3
+    a = pbool<> a (init = true) value: 1
+    b = pbool<> b (init = false) value: 0
 }
 

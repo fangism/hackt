@@ -2,6 +2,14 @@
 
 2005-01-27	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-object-00-12:
+	  In util/IO_utils.{h,cc}, specialized write_value and read_value
+	  with <bool> to use write/read_value <char> to ensure that
+	  booleans are written out as one byte.  
+	  (On darwin-gcc-3.3, passing bool defaulted to using a 4-byte int, 
+	  on i686-linux-gcc-3.4, passing bool defaulted to using char.)
+	  Gotta ensure platform independence!  
+
 	* ARTXX-00-01-04-object-00-11-merged-fixutil-12:
 	  Merged changes from the -fixutil sub-branch (up to -12)
 	  into the main object branch.  

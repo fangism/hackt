@@ -1,7 +1,7 @@
 /**
 	\file "IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.3 2004/12/25 03:12:22 fang Exp $
+	$Id: IO_utils.h,v 1.3.4.1 2005/01/28 01:15:44 fang Exp $
  */
 
 #ifndef __IO_UTILS_H__
@@ -41,6 +41,13 @@ void	write_value(ostream& f, const T& v);
 
 template <class T>
 void	read_value(istream& f, T& v);
+
+
+template <>
+void	write_value<bool>(ostream& f, const bool& v);
+
+template <>
+void	read_value<bool>(istream& f, bool& v);
 
 
 template <>
