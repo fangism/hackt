@@ -2,7 +2,7 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.1 2004/11/28 23:46:12 fang Exp $
+	$Id: pointer_traits.h,v 1.2 2004/11/30 01:26:06 fang Exp $
  */
 
 #ifndef	__POINTER_TRAITS_H__
@@ -50,7 +50,21 @@ struct raw_pointer_traits<void*> {
 
 //=============================================================================
 // tags used to distinguish different classes of pointer-classes
+
+struct raw_pointer_tag { };
+
+/// most generat base tag for all pointer classes
 struct pointer_class_base_tag { };
+
+/// pointer classes with this tag have one owner per object
+struct single_owner_pointer_tag : public pointer_class_base_tag { };
+
+/// pointer classes with this tag have shared ownership, e.g. reference-count
+struct shared_owner_pointer_tag : public pointer_class_base_tag { };
+
+// single and shared must be mutuall exclusive...
+
+// may need a lattice of orthogonal clasification tags
 
 //=============================================================================
 /**
@@ -60,11 +74,13 @@ struct pointer_class_base_tag { };
  */
 template <class T>
 struct pointer_traits {
-	typedef	typename T::value_type		value_type;
+	typedef	typename T::element_type		element_type;
 	typedef	typename T::reference		reference;
 	typedef	typename T::pointer		pointer;
 
 	static const bool is_raw_pointer = false;
+
+	typedef	typename T::pointer_category	pointer_category;
 
 	/**
 		Whether or not the pointer is responsible for an
@@ -121,15 +137,26 @@ struct pointer_traits {
  */
 template <class T>
 struct pointer_traits<T*> {
-	typedef	T				value_type;
+	typedef	T				element_type;
 	typedef	T&				reference;
 	typedef	T*				pointer;
+
+	typedef	raw_pointer_tag			pointer_category;
 
 	static const bool is_raw_pointer = true;
 	static const bool is_intrusive = false;
 	static const bool is_counted = false;
 
 };	// end struct pointer_traits
+
+
+// for convenience
+template <class P>
+inline
+typename pointer_traits<P>::pointer_category
+__pointer_category(const P&) {
+	return typename pointer_traits<P>::pointer_category();
+}
 
 //=============================================================================
 }	// end namespace memory

@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.1 2004/11/28 23:46:12 fang Exp $
+	$Id: pointer_classes.h,v 1.2 2004/11/30 01:26:06 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -46,6 +46,64 @@ namespace util {
 	pointer management with static type-checking.  
  */
 namespace memory {
+//=============================================================================
+
+/**
+	Not a class for objects, but rather, a private namespace
+	for functions to be trusted with pointer manipulations.  
+ */
+class pointer_manipulator {
+private:
+	/**
+		\param T is a raw pointer type.
+	 */
+	template <class T>
+	inline
+	static
+	const T&
+	__get_pointer(const T& p, raw_pointer_tag) {
+		return p;
+	}
+
+	/**
+		\param T is any pointer class type.  
+	 */
+	template <class T>
+	inline
+	static
+	const typename T::pointer&
+	__get_pointer(const T& p, pointer_class_base_tag) {
+		return p.base_pointer();
+	}
+
+public:
+	/**
+		\return true if pointers are equal.
+	 */
+	template <class P1, class P2>
+	inline
+	static
+	bool
+	compare_pointers_equal(const P1& p1, const P2& p2) {
+		return (__get_pointer(p1, __pointer_category(p1)) ==
+			__get_pointer(p2, __pointer_category(p2)));
+	}
+
+public:
+	/**
+		\return true if pointers are unequal.
+	 */
+	template <class P1, class P2>
+	inline
+	static
+	bool
+	compare_pointers_unequal(const P1& p1, const P2& p2) {
+		return (__get_pointer(p1, __pointer_category(p1)) !=
+			__get_pointer(p2, __pointer_category(p2)));
+	}
+
+};	// end class pointer_manipulator
+
 //=============================================================================
 #if 0
 /**
@@ -107,7 +165,7 @@ template <class> friend class some_ptr;
 template <class> friend class some_const_ptr;
 
 public:
-	typedef	T			value_type;
+	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
 	typedef	const T&		const_reference;
@@ -169,14 +227,14 @@ virtual	bool owned(void) const = 0;
 	Is private to the outside world, only usable by template friends.  
  */
 template <class S>
-class base_ptr_ref {
+class excl_ptr_ref {
 template <class> friend class excl_ptr;
 template <class> friend class some_ptr;
 template <class> friend class never_ptr;
 private:
 	S*	ptr;
-	explicit	base_ptr_ref(S* p) throw() : ptr(p) { }
-};	// end struct base_ptr_ref
+	explicit	excl_ptr_ref(S* p) throw() : ptr(p) { }
+};	// end struct excl_ptr_ref
 
 //=============================================================================
 #if 0
@@ -208,13 +266,17 @@ struct base_some_ptr_ref {
  */
 template <class T>
 class excl_ptr {
+friend class pointer_manipulator;
 template <class> friend class excl_ptr;
+template <class> friend class sticky_ptr;
 template <class> friend class never_ptr;
 template <class> friend class some_ptr;
+
 public:
-	typedef	T			value_type;
+	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
+	typedef	single_owner_pointer_tag	pointer_category;
 	static const bool		is_array = false;
 	static const bool		is_intrusive = false;
 	static const bool		is_counted = false;
@@ -222,6 +284,7 @@ public:
 	static const bool		always_owns = true;
 	static const bool		sometimes_owns = true;
 	static const bool		never_owns = false;
+	// really wish for template typedefs!!!
 	typedef	never_ptr<T>		nontransfer_cast_type;
 	typedef	excl_ptr<T>		transfer_cast_type;
 
@@ -229,6 +292,13 @@ private:
 	pointer				ptr;
 
 private:
+	/**
+		Accessor provided as a method for consistency
+		with standard pointer operations.  
+	 */
+	const pointer&
+	base_pointer(void) const { return ptr; }
+
 /**
 	Relinquishes resposibility for deleting pointer, by returning a
 	copy of it, and nullifying its own pointer.  
@@ -251,7 +321,7 @@ private:
 	void
 	reset(T* p = NULL) throw() {
 		if (this->ptr) {
-			assert (this->ptr != p);
+			INVARIANT(this->ptr != p);
 			// violation of exclusion!
 			delete this->ptr;
 		}
@@ -297,6 +367,7 @@ public:
 	explicit
 	excl_ptr(some_ptr<T>& s) throw();
 
+#if 1
 /**
 	Bogus copy constructor, const source.  
 	Doesn't actually copy source.  
@@ -308,10 +379,11 @@ public:
  */
 	explicit
 	excl_ptr(const excl_ptr<T>& e) throw() : ptr(NULL) {
-		INVARIANT(!e);
+		// what if e was already NULL?
+		// INVARIANT(!e);
 		// issue a warning?
 	}
-
+#endif
 
 /**
 	De-allocates memory.  
@@ -328,14 +400,14 @@ public:
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { INVARIANT(ptr); return *ptr; }
+	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { INVARIANT(ptr); return ptr; }
+	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 
@@ -357,16 +429,16 @@ excl_ptr<T>& operator = (T* p) throw() {
 
 
 	// copied from auto_ptr_ref
-	excl_ptr(base_ptr_ref<T> r) throw() : ptr(r.ptr) { }
+	excl_ptr(excl_ptr_ref<T> r) throw() : ptr(r.ptr) { }
 
-#if 0
+#if 1
 	// not in book...
 	template <class S>
-	excl_ptr(base_ptr_ref<S> r) throw() : base_ptr<T>(r.ptr) { }
+	excl_ptr(excl_ptr_ref<S> r) throw() : ptr(r.ptr) { }
 #endif
 
 	excl_ptr<T>&
-	operator = (base_ptr_ref<T> r) throw() {
+	operator = (excl_ptr_ref<T> r) throw() {
 		reset(r.ptr);
 		r.ptr = NULL;
 		return *this;
@@ -407,8 +479,8 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 
 	// safe type-casting
 	template <class S>
-	operator base_ptr_ref<S>() throw() {
-		return base_ptr_ref<S>(this->release());
+	operator excl_ptr_ref<S>() throw() {
+		return excl_ptr_ref<S>(this->release());
 	}
 
 #if 0
@@ -423,24 +495,24 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 	 */
 	// TODO: use pointer_traits cast-type.  
 	template <class S>
-	never_ptr<S>
+	never_ptr<S>		// nontransfer_cast_type
 	is_a(void) const;
 
 	/**
 		Ownership transferring dynamic cast.  
 	 */
 	template <class S>
-	excl_ptr<S>
+	excl_ptr<S>		// transfer_cast_type
 	is_a_xfer(void);
 
 	/** static cast */
 	template <class S>
-	never_ptr<S>
+	never_ptr<S>		// nontransfer_cast_type
 	as_a(void) const;
 
 	/** static cast with xfer */
 	template <class S>
-	excl_ptr<S>
+	excl_ptr<S>		// transfer_cast_type
 	as_a_xfer(void);
 
 	/**
@@ -450,14 +522,26 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 	template <class S>
 	void
 	must_be_a(void) const {
-		INVARIANT(dynamic_cast<S*>(this->ptr));
+		assert(dynamic_cast<S*>(this->ptr));
 	}
 
+	template <class P>
+	bool
+	operator == (const P& p) const {
+		return pointer_manipulator::compare_pointers_equal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator != (const P& p) const {
+		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+#if 0
 	/**
 		Destructive transfer, safe up-cast.  
 		constructor probably not available yet...
 	 */
-#if 0
 	template <class S>
 	excl_ptr<S>&	as_a(void) {
 		static_cast<S*>(this->ptr);	// safety check
@@ -480,22 +564,170 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 
 //=============================================================================
 /**
+	Sticky pointers can acquire ownership, but will never relinquish it.  
+	Only explicit call to release() will relinquish ownership. 
+	This is useful for containers that are never copy-constructed.  
+	Upon copy-construction, the new copies will be NULL.  
+	(Pseudo-copy-constructible)
+ */
+template <class T>
+class sticky_ptr {
+template <class> friend class excl_ptr;
+template <class> friend class some_ptr;
+template <class> friend class never_ptr;
+
+public:
+	typedef	T			element_type;
+	typedef	T&			reference;
+	typedef	T*			pointer;
+	typedef	single_owner_pointer_tag	pointer_category;
+	static const bool		is_array = false;
+	static const bool		is_intrusive = false;
+	static const bool		is_counted = false;
+	static const bool		is_shared = true;
+	static const bool		always_owns = true;
+	static const bool		sometimes_owns = false;
+	static const bool		never_owns = true;
+	// really wish for template typedefs!!!
+	typedef	never_ptr<T>		nontransfer_cast_type;
+	typedef	never_ptr<T>		transfer_cast_type;
+	// never has ownership to transfer!
+
+private:
+	pointer				ptr;
+
+	const pointer&
+	base_pointer(void) const { return ptr; }
+
+	pointer
+	release(void) throw() {
+		T* ret = this->ptr;
+		this->ptr = NULL;
+		return ret;
+	}
+
+	void
+	reset(T* p = NULL) throw() {
+		if (this->ptr) {
+			INVARIANT(this->ptr != p);
+			// violation of exclusion!
+			delete this->ptr;
+		}
+		this->ptr = p;
+	}
+
+public:
+// constructors
+	sticky_ptr() : ptr(NULL) { }
+
+	explicit
+	sticky_ptr(T* p) : ptr(p) { }
+
+	template <class S>
+	explicit
+	sticky_ptr(S* p) : ptr(p) { }
+
+	/**
+		Copy constructor never transfers ownership.  
+	 */
+	template <class S>
+	sticky_ptr(const sticky_ptr<S>& p) : ptr(NULL) { }
+
+	/**
+		Will acquire ownership from non-const excl_ptr.  
+	 */
+#if 0
+	template <class S>
+	sticky_ptr(excl_ptr<S>& p) : ptr(p.release()) { }
+#endif
+
+	template <class S>
+	sticky_ptr(excl_ptr<S> p) : ptr(p.release()) { }
+
+	~sticky_ptr() { release(); }
+
+	reference
+	operator * () const { NEVER_NULL(ptr); return *ptr; }
+
+	pointer
+	operator -> () const { NEVER_NULL(ptr); return ptr; }
+
+	/**
+		Sticky pointers cannot steal ownership from each other.  
+	 */
+	template <class S>
+	sticky_ptr&
+	operator = (const sticky_ptr<S>& p) {
+		return *this;
+	}
+
+	operator bool () const { return ptr != NULL; }
+
+	template <class P>
+	bool
+	operator == (const P& p) const {
+		return pointer_manipulator::compare_pointers_equal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator != (const P& p) const {
+		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+	// TODO: finish me...
+
+};	// end class sticky_ptr
+
+//=============================================================================
+/**
+	No copy of this pointer shall exist anywhere.  
+ */
+template <class T>
+class unique_ptr {
+	// TODO: finish me!!!
+};	// end class unique_ptr
+
+//=============================================================================
+/**
 	Pointer that is NEVER to be deleted, even if delete is called on it.  
 	For safety (and inconvenience), forbid direct interaction with
 	naked pointers.  
  */
 template <class T>
 class never_ptr {
+friend class pointer_manipulator;
 template <class> friend class excl_ptr;
+template <class> friend class some_ptr;
 template <class> friend class never_ptr;
 
 public:
-	typedef	T			value_type;
+	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
+	typedef	single_owner_pointer_tag	pointer_category;
+	static const bool		is_array = false;
+	static const bool		is_intrusive = false;
+	static const bool		is_counted = false;
+	static const bool		is_shared = true;
+	static const bool		always_owns = false;
+	static const bool		sometimes_owns = false;
+	static const bool		never_owns = true;
+	// really wish for template typedefs!!!
+	typedef	never_ptr<T>		nontransfer_cast_type;
+	typedef	never_ptr<T>		transfer_cast_type;
+	// never has ownership to transfer!
 
 private:
 	pointer				ptr;
+
+	/**
+		Accessor provided as a method for consistency
+		with standard pointer operations.  
+	 */
+	const pointer&
+	base_pointer(void) const { return ptr; }
+
 public:
 // private:
 /**
@@ -539,9 +771,20 @@ public:
 	that refers to expired memory!  
  */
 	never_ptr(const excl_ptr<T>& p) throw() : ptr(p.ptr) { }
+
+	template <class S>
+	never_ptr(const excl_ptr<S>& p) throw() : ptr(p.ptr) { }
+
 	// defined below
 	never_ptr(const some_ptr<T>& p) throw();
+
+	template <class S>
+	never_ptr(const some_ptr<S>& p) throw();
+
 	never_ptr(const never_ptr<T>& p) throw() : ptr(p.ptr) { }
+
+	template <class S>
+	never_ptr(const never_ptr<S>& p) throw() : ptr(p.ptr) { }
 
 /*** cross-template member not friendly accessible (p is private)
 template <class S>
@@ -585,11 +828,22 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
 	}
 #endif
 
-	never_ptr(base_ptr_ref<T> r) throw() : ptr(r.ptr) { }
+	never_ptr(excl_ptr_ref<T> r) throw() : ptr(r.ptr) { }
 
+	// is this obsolete?
 	never_ptr<T>&
-	operator = (base_ptr_ref<T> r) throw() {
+	operator = (excl_ptr_ref<T> r) throw() {
 		this->ptr = r.ptr;
+		return *this;
+	}
+
+	// this needs to be generalized... to avoid
+	// replicating for every pointer class
+	// somehow leverage traits
+	template <class S>
+	never_ptr<T>&
+	operator = (const never_ptr<S>& p) {
+		ptr = p.ptr;
 		return *this;
 	}
 
@@ -597,8 +851,8 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
 
 	// safe type-casting
 	template <class S>
-	operator base_ptr_ref<S>() throw() {
-		return base_ptr_ref<S>(this->ptr);
+	operator excl_ptr_ref<S>() throw() {
+		return excl_ptr_ref<S>(this->ptr);
 	}
 
 	// type casting
@@ -628,6 +882,19 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
 			// but this make it clear what it's intended for
 	}
 
+	template <class P>
+	bool
+	operator == (const P& p) const {
+		return pointer_manipulator::compare_pointers_equal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator != (const P& p) const {
+		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+
 // non-member functions
 };	// end class never_ptr
 
@@ -641,19 +908,39 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
  */
 template <class T>
 class some_ptr {
+friend class pointer_manipulator;
 template <class> friend class excl_ptr;
+template <class> friend class some_ptr;
 template <class> friend class never_ptr;
 
 public:
-	typedef	T			value_type;
+	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
+	typedef	single_owner_pointer_tag	pointer_category;
+	static const bool		is_array = false;
+	static const bool		is_intrusive = false;
+	static const bool		is_counted = false;
+	static const bool		is_shared = true;
+	static const bool		always_owns = false;
+	static const bool		sometimes_owns = true;
+	static const bool		never_owns = false;
+	// really wish for template typedefs!!!
+	typedef	never_ptr<T>		nontransfer_cast_type;
+	typedef	excl_ptr<T>		transfer_cast_type;
 
 private:
 	pointer				ptr;
-	bool	own;
+	bool				own;
 
 private:
+	/**
+		Accessor provided as a method for consistency
+		with standard pointer operations.  
+	 */
+	const pointer&
+	base_pointer(void) const { return ptr; }
+
 	/**
 		Returns pointer even when not owned.  
 		Leaves pointer intact when relinquishing ownership.  
@@ -699,6 +986,9 @@ public:
 	 */
 	some_ptr(const never_ptr<T>& p) : ptr(p.ptr), own(false) { }
 	some_ptr(const some_ptr<T>& p) : ptr(p.ptr), own(false) { }
+
+	template <class S>
+	some_ptr(const some_ptr<S>& p) : ptr(p.ptr), own(false) { }
 	// need some constructor where this owns the pointer...
 
 	/**
@@ -707,6 +997,12 @@ public:
 	 */
 	explicit
 	some_ptr(excl_ptr<T>& p) : ptr(p.release()), own(this->ptr != NULL) {
+		INVARIANT(!p);		// just to make sure
+	}
+
+	template <class S>
+	explicit
+	some_ptr(excl_ptr<S>& p) : ptr(p.release()), own(this->ptr != NULL) {
 		INVARIANT(!p);		// just to make sure
 	}
 
@@ -747,35 +1043,54 @@ public:
 		return *this;
 	}
 
+	template <class S>
+	some_ptr<T>&
+	operator = (const never_ptr<S>& p) throw() {
+		this->reset(false, p.ptr);
+		return *this;
+	}
+
 	some_ptr<T>&
 	operator = (const some_ptr<T>& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
 
-/**
-	Transfers ownership.  
- */
+	/**
+		Transfers ownership.  
+	 */
 	some_ptr<T>&
 	operator = (some_ptr<T>& p) throw() {
 		this->reset(p.own, p.release());
 		return *this;
 	}
 
-/**
-	Doesn't transfer ownership.
- */
+#if 0
+	/**
+		Doesn't transfer ownership.
+	 */
 	some_ptr<T>&
 	operator = (const excl_ptr<T>& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
+#endif
 
-/**
-	Transfers ownership.
- */
+	/**
+		Transfers ownership.
+	 */
 	some_ptr<T>&
 	operator = (excl_ptr<T>& p) throw() {
+		this->reset(p.ptr != NULL, p.release());
+		return *this;
+	}
+
+	/**
+		Transfers ownership.
+	 */
+	template <class S>
+	some_ptr<T>&
+	operator = (excl_ptr<S>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
 		return *this;
 	}
@@ -823,6 +1138,18 @@ public:
 		INVARIANT(dynamic_cast<S*>(this->ptr));
 	}
 
+	template <class P>
+	bool
+	operator == (const P& p) const {
+		return pointer_manipulator::compare_pointers_equal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator != (const P& p) const {
+		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
 };	// end class some_ptr
 
 //=============================================================================
@@ -834,6 +1161,10 @@ excl_ptr<T>::excl_ptr(some_ptr<T>& s) throw() : ptr(s.ptr) {
 
 template <class T>
 never_ptr<T>::never_ptr(const some_ptr<T>& p) throw() : ptr(p.ptr) { }
+
+template <class T>
+template <class S>
+never_ptr<T>::never_ptr(const some_ptr<S>& p) throw() : ptr(p.ptr) { }
 
 //-----------------------------------------------------------------------------
 #if 0
@@ -913,11 +1244,356 @@ operator == (const P1<T1>& p1, const P2<T2>& p2) {
 }
 #endif
 
+/***
+	Reference-counting pointer class templates.
+
+	Generally not intended for mixed use with pointers from
+	the non-counted pointer classes in "ptrs.h":
+		excl_ptr, some_ptr, never_ptr.  
+***/
+//=============================================================================
+#if 0
+/**
+	Base class for all reference-count pointers.  
+ */
+class abstract_base_count_ptr {
+	// parent could be abstract_ptr
+template <class> friend class count_ptr;
+
+protected:
+	/**
+		The reference count.  Need not be mutable.  
+	 */
+	size_t*	ref_count;
+
+protected:
+	abstract_base_count_ptr(size_t* s = NULL) : ref_count(s) { }
+
+	/**
+		This destructor does absolutely nothing.  
+		It is subclasses' responsibility to take care of 
+		deleting ref_count when appropriate.  
+	 */
+virtual	~abstract_base_count_ptr() { }
+
+	/**
+		Raw pointer.  
+	 */
+virtual	void* void_ptr(void) const = 0;
+
+	/**
+		Raw pointer, const.  
+	 */
+virtual	const void* const_void_ptr(void) const = 0;
+
+public:
+	/**
+		Reference count.  
+	 */
+	size_t refs(void) const {
+		if (ref_count) return *ref_count;
+		else return 0;
+	}
+
+	/**
+		A shared reference is not really owned by any one
+		copy of the pointer.  
+		The last reference to an object is the owner.  
+	 */
+	bool owned(void) const {
+		return (ref_count && *ref_count == 1);
+	}
+
+	/**
+		Ditches pointer without returning it, 
+		maintaining reference count, deleting when appropriate.  
+	 */
+virtual	void abandon(void) = 0;
+	/**
+		Alias for abandon.
+	 */
+	void nullify(void) { abandon(); }
+	void ditch(void) { abandon(); }
+	void scrap(void) { abandon(); }
+
+	/**
+		Test for nullity.  
+		Will overriding in sub-classes be faster, 
+		without virtual call?
+	 */
+	operator bool () const { return const_void_ptr() != NULL; }
+
+	bool operator == (const void* p) const
+		{ return const_void_ptr() == p; }
+	bool operator != (const void* p) const
+		{ return const_void_ptr() != p; }
+	bool operator == (const abstract_base_count_ptr& p) const
+		{ return const_void_ptr() == p.const_void_ptr(); }
+	bool operator != (const abstract_base_count_ptr& p) const
+		{ return const_void_ptr() != p.const_void_ptr(); }
+
+};	// end class abstract_base_count_ptr
+#endif
+
+//=============================================================================
+/**
+	Reference counted pointer, non-const flavor.  
+	How to use...
+ */
+template <class T>
+class count_ptr {
+friend class pointer_manipulator;
+template <class> friend class count_ptr;
+
+public:
+	typedef T			element_type;
+	typedef T&			reference;
+	typedef T*			pointer;
+	typedef	shared_owner_pointer_tag	pointer_category;
+	static const bool		is_array = false;
+	static const bool		is_intrusive = false;
+	static const bool		is_counted = true;
+	static const bool		is_shared = true;
+	static const bool		always_owns = false;
+	static const bool		sometimes_owns = true;
+	static const bool		never_owns = false;
+	typedef	count_ptr<T>		nontransfer_cast_type;
+	typedef	count_ptr<T>		transfer_cast_type;
+
+protected:
+	/**
+		The pointer to the referenced object.  
+	 */
+	T*			ptr;
+	/// the reference count
+	size_t*			ref_count;
+
+#if 0
+	void* void_ptr(void) const { return ptr; }
+	const void* const_void_ptr(void) const { return ptr; }
+#endif
+
+public:
+	/**
+		Constructor of reference-counter pointer.  
+		Stupid things to avoid: 
+		1) tampering with (leaking out) newly allocated
+			pointer before passing to this constructor.  
+		\param p should be a newly allocated pointer, ONLY.  
+	 */
+	explicit
+	count_ptr(T* p = NULL) :
+	ptr(p), ref_count((p) ? new size_t(1) : NULL) { }
+
+	/**
+		Copy constructor.  
+		No argument pointer should ever be NULL?
+	 */
+	count_ptr(const count_ptr<T>& c) :
+			ptr(c.ptr), ref_count(c.ref_count) {
+		if (this->ref_count)
+			(*this->ref_count)++;
+	}
+
+	/**
+		Safe, up-cast copy constructor.  
+		Still maintains reference count.  
+	 */
+	template <class S>
+	count_ptr(const count_ptr<S>& c) :
+			ptr(c.ptr), ref_count(c.ref_count) {
+		if (this->ref_count)
+			(*this->ref_count)++;
+	}
+
+	/**
+		UNSAFE: constructor that corecively sets the 
+		reference pointer and the count pointer 
+		and increments the pointer.  
+		The manager should initially allocate a counter set to zero.  
+		The manager should not own the pointer or the counter.  
+		Needed for transient pointer to object reconstruction.  
+		Use this only if you know what you're doing.
+	 */
+	count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
+		if (p) {
+			NEVER_NULL(c);		// counter must be valid
+			(*c)++;			// increment here
+		} else
+			INVARIANT(!c);		// counter must also be NULL
+	}
+
+protected:
+	/**
+		Accessor provided as a method for consistency
+		with standard pointer operations.  
+	 */
+	const pointer&
+	base_pointer(void) const { return ptr; }
+
+	/**
+		Overkill safety checks.  
+	 */
+	pointer
+	release(void) {
+		T* ret = ptr;
+		if(this->ref_count) {
+			(*this->ref_count)--;
+			if (!*this->ref_count) {
+				NEVER_NULL(ptr);
+				delete ptr;
+				delete this->ref_count;
+			}
+			ptr = NULL;
+			this->ref_count = NULL;
+		} else {
+			INVARIANT(!ptr);
+		}
+		return ret;
+	}
+
+	/**
+		\param p the new pointer, from some other count_ptr.
+		\param c the corresponding reference count if p is valid, 
+			else is ignored.  
+	 */
+	void
+	reset(T* p, size_t* c) {
+		if(this->ref_count) {
+			(*this->ref_count)--;
+			if (!*this->ref_count) {
+				NEVER_NULL(ptr);
+				delete ptr;
+				delete this->ref_count;
+			}
+		} else {
+			INVARIANT(!ptr);
+		}
+		ptr = p;
+		this->ref_count = (ptr) ? c : NULL;
+		if (ptr && this->ref_count)
+			(*this->ref_count)++;
+	}
+
+public:
+	/**
+		Destructor, which conditionally deletes pointer if is
+		last reference.  
+	 */
+	~count_ptr() { release(); }
+
+	/**
+		Reference count.  
+	 */
+	size_t
+	refs(void) const {
+		if (ref_count) return *ref_count;
+		else return 0;
+	}
+
+	/**
+		A shared reference is not really owned by any one
+		copy of the pointer.  
+		The last reference to an object is the owner.  
+	 */
+	bool owned(void) const {
+		return (ref_count && *ref_count == 1);
+	}
+
+	/// synonym for release()
+	void abandon(void) { release(); }
+
+	/**
+		Dereference.  
+	 */
+	reference
+	operator * (void) const throw() { NEVER_NULL(ptr); return *ptr; }
+
+	/**
+		Dereference to member or method.  
+	 */
+	pointer
+	operator -> (void) const throw() { NEVER_NULL(ptr); return ptr; }
+
+	operator bool() const { return ptr != NULL; }
+
+	/**
+		Assignment operator.  
+	 */
+	count_ptr<T>&
+	operator = (const count_ptr<T>& c) {
+		reset(c.ptr, c.ref_count);
+		return *this;
+	}
+
+	/**
+		Returns a naked pointer only if this is the final reference
+		to the object, otherwise returns NULL.  
+	 */
+	pointer
+	exclusive_release(void) {
+		if (this->owned()) {
+			T* ret = ptr;
+			ptr = NULL;
+			delete this->ref_count;
+			this->ref_count = NULL;
+			return ret;
+		} else
+			return NULL;
+	}
+
+	/**
+		Static cast.  
+	 */
+	template <class S>
+	count_ptr<S>
+	as_a(void) const {
+		count_ptr<S> ret;
+		ret.reset(static_cast<S*>(this->ptr), this->ref_count);
+		return ret;
+	}
+
+	/**
+		Dynamic cast.  
+	 */
+	template <class S>
+	count_ptr<S>
+	is_a(void) const {
+		count_ptr<S> ret;
+		ret.reset(dynamic_cast<S*>(this->ptr), this->ref_count);
+		return ret;
+	}
+
+	/**
+		Dynamic cast assertion.  
+	 */
+	template <class S>
+	void
+	must_be_a(void) const {
+		assert(dynamic_cast<S*>(this->ptr));
+	}
+
+	template <class P>
+	bool
+	operator == (const P& p) const {
+		return pointer_manipulator::compare_pointers_equal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator != (const P& p) const {
+		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+};	// end class count_ptr
+
 //=============================================================================
 }	// end namespace memory
 
 //=============================================================================
 }	// end namespace util
 
+
 #endif	//	__POINTER_CLASSES_H__
+
 
