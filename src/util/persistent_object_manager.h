@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12.2.1 2005/02/03 03:34:56 fang Exp $
+	$Id: persistent_object_manager.h,v 1.12.2.2 2005/02/17 04:21:01 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -379,15 +379,15 @@ public:
 
 	template <class P>
 	void
-	load_object(const P& p) const;
+	load_object_once(const P& p) const;
 
 private:
 	void
-	__load_object(persistent* p, raw_pointer_tag) const;
+	__load_object_once(persistent* p, raw_pointer_tag) const;
 
 	template <class P>
 	void
-	__load_object(const P& p, pointer_class_base_tag) const;
+	__load_object_once(const P& p, pointer_class_base_tag) const;
 
 public:
 

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14.2.2 2005/02/09 04:14:18 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.2.3 2005/02/17 04:21:00 fang Exp $
  */
 
 // flags and switches
@@ -732,7 +732,8 @@ persistent_object_manager::finish_load(ifstream& f) {
 	\param p pointer to object to load, never null.  
  */
 void
-persistent_object_manager::__load_object(persistent* p, raw_pointer_tag) const {
+persistent_object_manager::__load_object_once(
+		persistent* p, raw_pointer_tag) const {
 	NEVER_NULL(p);
 	// ugh, const_cast...
 	if (!const_cast<persistent_object_manager*>(this)->flag_visit(p)) {
@@ -785,7 +786,7 @@ persistent_object_manager::load_objects(void) {
 			member function, because load_object is allowed
 			to call load_object recursively.
 		***/
-			__load_object(o, raw_pointer_tag());
+			__load_object_once(o, raw_pointer_tag());
 #if 0
 			o->what(cerr << "@ " << o << ", ") << endl;
 #endif

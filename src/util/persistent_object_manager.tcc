@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.2 2005/02/03 03:34:57 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.3 2005/02/17 04:21:01 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -344,8 +344,8 @@ persistent_object_manager::get_root(void) {
  */
 template <class P>
 void
-persistent_object_manager::load_object(const P& p) const {
-	__load_object(p, __pointer_category(p));
+persistent_object_manager::load_object_once(const P& p) const {
+	__load_object_once(p, __pointer_category(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,9 +354,10 @@ persistent_object_manager::load_object(const P& p) const {
  */
 template <class P>
 void
-persistent_object_manager::__load_object(const P& p, 
+persistent_object_manager::__load_object_once(const P& p, 
 		pointer_class_base_tag) const {
-	__load_object(&*p, __pointer_category(&*p));
+	NEVER_NULL(p);
+	__load_object_once(&*p, __pointer_category(&*p));
 }
 
 //=============================================================================
