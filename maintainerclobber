@@ -44,7 +44,7 @@ rm -f Makefile Makefile.in
 		(cd param && rm -f Makefile Makefile.in .cvsignore ) && \
 		(cd process && rm -f Makefile Makefile.in .cvsignore ) && \
 		(cd template && rm -f Makefile Makefile.in .cvsignore ) && \
-		(cd typedef && rm -f Makefile Makefile.in .cvsignore ) && \
+		(cd typedef && rm -f Makefile Makefile.in .cvsignore ) \
 	) \
 )
 rm -f stamp-h1
