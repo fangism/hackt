@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-10-10	David Fang	<fangism@users.sourceforge.net>
+
+	* Re-typed ::write_object() with *const* persistent_object_manager&.
+
+	* Considering re-working persistent object type-enumeration.  
+	  Instead of giving each persistent type a number, 
+	  give a unique key (string/hash), to avoid collisions in
+	  cuncurrent development.  
+	  See TODO list for more on rationale.  
+
+
 2004-10-09	David Fang	<fangism@users.sourceforge.net>
 
 	* Sub-typed param_expression_assignment (now abstract) class into 

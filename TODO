@@ -64,13 +64,31 @@ Object serialization rework:
 	modify construct_empty() to take another argument (index)
 		for subtype, 2nd level table of constructors
 	factor out serial_object interface out of object
-		into own IO interface class.
+		into own IO interface class "persistent".
+	NOTE: for sake of compatible extensibility in adding types
+		to art_object_type_enum.h, we cannot use dense enumerations.  
+		Conflicts will arise between independently developed
+		types added.  
+		Solution: run-time registration of types, using
+		unique strings (or hash) instead of compile-time constants.  
+
+
 
 param_expression_assignment: sub-type into pint vs. pbool
 	maybe even subtype by dimension.
 	will need to update object_list::make_param_assignment...
 param_expression_assignment: split apart rhs from rest
 	lhs must be references.
+
+language front-end:
+	modular parsers for extensible sub-languages.  
+	Will they share the same lexer?  or have their own?
+	@LANG extensions to "escape" into another language, 
+		useful for new languages, before reserving new keywords.  
+	Re-use AST classes?
+	Copy pieces of grammar into others for reuse.
+	Grammar may become piecewise.
+	Could become ugly.  
 
 Type-scope for unrolling.  
 
