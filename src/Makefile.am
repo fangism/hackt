@@ -133,6 +133,7 @@ UTIL_HEADER_FILES = \
 	util/multikey.h \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
+	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
 	util/ptrs.h \
 	util/ptrs_fwd.h \
