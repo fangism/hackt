@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.1 2005/01/29 21:38:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -59,8 +59,8 @@ virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
 
 virtual	count_ptr<const fundamental_type_reference>
-		get_type_ref(void) const = 0;
-	// why is this never?
+	get_type_ref(void) const = 0;
+
 virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 

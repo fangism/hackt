@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.1 2005/01/29 21:38:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -30,6 +30,7 @@
 #include "ptrs_functional.h"
 #include "indent.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -72,6 +73,11 @@ read_value(istream& i, pbool_instance& b) {
 }
 
 }	// end namespace util
+
+//=============================================================================
+// stat of static initializations
+
+STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 namespace ART {
@@ -394,8 +400,8 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (!i->resolve_ranges(ranges)) {
 		// ranges is passed and returned by reference
 		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
+		cerr << "ERROR: unable to resolve indices of " <<
+			get_qualified_name() << " for instantiation: ";
 		i->dump(cerr) << endl;
 		THROW_EXIT;
 	}
@@ -415,8 +421,8 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 #endif
 		pbool_instance& pi = collection[key_gen];
 		if (pi.instantiated) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen << 
+			cerr << "ERROR: Index " << key_gen << " of " <<
+				get_qualified_name() <<
 				"already instantiated!" << endl;
 			THROW_EXIT;
 		}
@@ -511,10 +517,12 @@ pbool_array<D>::lookup_value_collection(
 		const pbool_instance& pi(collection[key_gen]);
 		// INVARIANT(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pbool index "
+			cerr << "FATAL: reference to uninstantiated pbool "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
 		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pbool index "
+			cerr << "ERROR: reference to uninitialized pbool "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
 		ret &= (pi.valid && pi.instantiated);
 		l.push_back(pi.value);
@@ -651,7 +659,8 @@ pbool_array<0>::resolve_indices(const const_index_list& l) const {
 bool
 pbool_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) { 
-		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
+		cerr << "ERROR: Reference to uninstantiated pbool " <<
+			get_qualified_name() << "!" << endl;
 		return false;
 	}
 	if (the_instance.valid) {
@@ -752,6 +761,8 @@ template class pbool_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("instance_pbool")
 
 #endif	// __ART_OBJECT_INSTANCE_PBOOL_CC__
 

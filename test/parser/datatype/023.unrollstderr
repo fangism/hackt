@@ -19,6 +19,6 @@ In namespace "", we have: {
   Definitions:
     foo = enum-datatype-def: foo (undefined)
   Instances:
-    bar = foo<> bar
+    bar = foo<> bar (instantiated)
 }
 

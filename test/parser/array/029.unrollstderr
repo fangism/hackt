@@ -1,0 +1,95 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3304b54	module__	0	0	68
+	2	 0x3300170	namespc_	0	68	96
+	3	 0x3304b04	dintcoll	3	96	369
+	4	 0x3804604	datainst	0	369	389
+	5	 0x3304b74	datatprf	0	389	405
+	6	 0x3304b80	datadefn	0	405	437
+	7	 0x3304bd4	dprmlst_	0	437	453
+	8	 0x268c024	cnstpi__	0	453	465
+	9	 0x3304be4	crnglst_	0	465	501
+	10	 0x3804620	datainst	0	501	521
+	11	 0x3304bf4	datatprf	0	521	537
+	12	 0x3304c04	dprmlst_	0	537	553
+	13	 0x3304c14	crnglst_	0	553	589
+	14	 0x380463c	datainst	0	589	609
+	15	 0x3304c24	datatprf	0	609	625
+	16	 0x3304c34	dprmlst_	0	625	641
+	17	 0x3304c44	crnglst_	0	641	677
+	18	 0x3804658	datainst	0	677	697
+	19	 0x3304c54	datatprf	0	697	713
+	20	 0x3304c64	dprmlst_	0	713	729
+	21	 0x3304c74	crnglst_	0	729	765
+	22	 0x3804674	datainst	0	765	785
+	23	 0x3304c84	datatprf	0	785	801
+	24	 0x3304c94	dprmlst_	0	801	817
+	25	 0x3304ca4	crnglst_	0	817	853
+	26	 0x3304cb4	dintcoll	3	853	1126
+	27	 0x3804690	datainst	0	1126	1146
+	28	 0x3304d04	datatprf	0	1146	1162
+	29	 0x3304d14	dprmlst_	0	1162	1178
+	30	 0x3304d24	crnglst_	0	1178	1214
+	31	 0x38046ac	datainst	0	1214	1234
+	32	 0x3304d34	datatprf	0	1234	1250
+	33	 0x3304d44	dprmlst_	0	1250	1266
+	34	 0x3304d54	crnglst_	0	1266	1302
+	35	 0x38046c8	datainst	0	1302	1322
+	36	 0x3304d64	datatprf	0	1322	1338
+	37	 0x3304d74	dprmlst_	0	1338	1354
+	38	 0x3304d84	crnglst_	0	1354	1390
+	39	 0x38046e4	datainst	0	1390	1410
+	40	 0x3304d94	datatprf	0	1410	1426
+	41	 0x3304da4	dprmlst_	0	1426	1442
+	42	 0x3304db4	crnglst_	0	1442	1478
+	43	 0x3804700	datainst	0	1478	1498
+	44	 0x3304dc4	datatprf	0	1498	1514
+	45	 0x3304dd4	dprmlst_	0	1514	1530
+	46	 0x3304de4	crnglst_	0	1530	1566
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    y = int<32> y with indices: {
+      [1..1][1..1][1..1]
+      [0..0][0..0][0..0]
+      [0..1][0..0][1..1]
+      [1..1][0..1][0..0]
+      [0..0][1..1][0..1]
+    }
+      unrolled indices: {
+        [0][0][0]
+        [0][0][1]
+        [0][1][0]
+        [0][1][1]
+        [1][0][0]
+        [1][0][1]
+        [1][1][0]
+        [1][1][1]
+      }
+    z = int<32> z with indices: {
+      [0..0][1..1][0..1]
+      [1..1][0..1][0..0]
+      [0..1][0..0][1..1]
+      [0..0][0..0][0..0]
+      [1..1][1..1][1..1]
+    }
+      unrolled indices: {
+        [0][0][0]
+        [0][0][1]
+        [0][1][0]
+        [0][1][1]
+        [1][0][0]
+        [1][0][1]
+        [1][1][0]
+        [1][1][1]
+      }
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.1 2005/01/29 21:38:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -116,6 +116,8 @@ protected:
 protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
+
+// protect constructor?
 public:
 	datatype_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -124,6 +126,9 @@ virtual	~datatype_instance_collection();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+	ostream&
+	dump(ostream& o) const;
 
 	/** returns the type of the first instantiation statement */
 	count_ptr<const fundamental_type_reference>

@@ -1,6 +1,16 @@
 "ChangeLog"
 
-2005-01-27	David Fang	<fangism@users.sourceforge.net>
+2005-01-29	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-01:
+	  Implemented (enabled) unrolling for datatypes, added 
+	  datatype_instance_collection::dump().
+	  Refined error messages during unroll-time errors,
+	  in pint/pbool_instance_collection, and updated tests.  
+	  New tests in test/parser/array to test unroll-time error catching.  
+
+
+2005-01-28	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04:
 	  These revisions merged and converged the revisions on the

@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:03 fang Exp $
+#	$Id: Makefile.am,v 1.5.2.1 2005/01/29 21:38:14 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -15,7 +15,8 @@ ARTC_TEST_PASSES = \
 	001 002 007 \
 	010 013 015 016 \
 	029 \
-	037
+	037 038 039 \
+	040 041
 
 # unfortunately is out of order... to bad $(sort ...) is non-posix
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_PASSES) $(ARTC_TEST_FAILURES)
@@ -23,7 +24,8 @@ ARTC_TEST_SUBJECTS = $(ARTC_TEST_PASSES) $(ARTC_TEST_FAILURES)
 ARTOBJ_TEST_SUBJECTS = \
 	$(ARTC_TEST_PASSES)
 
-ARTOBJUNROLL_TEST_SUBJECTS =
+ARTOBJUNROLL_TEST_SUBJECTS = \
+	$(ARTOBJ_TEST_SUBJECTS)
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \

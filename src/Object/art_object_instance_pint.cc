@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.1 2005/01/29 21:38:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -407,8 +407,8 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (!i->resolve_ranges(ranges)) {
 		// ranges is passed and returned by reference
 		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
+		cerr << "ERROR: unable to resolve indices of " <<
+			get_qualified_name() << " for instantiation: ";
 		i->dump(cerr) << endl;
 		THROW_EXIT;
 	} 
@@ -429,9 +429,9 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 #endif
 		pint_instance& pi = collection[key_gen];
 		if (pi.instantiated) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen << 
-				"already instantiated!" << endl;
+			cerr << "ERROR: Index " << key_gen << " of " <<
+				get_qualified_name() <<
+				" already instantiated!" << endl;
 			THROW_EXIT;
 		}
 		pi.instantiated = true;
@@ -523,12 +523,16 @@ pint_array<D>::lookup_value_collection(
 	do {
 		const pint_instance& pi = collection[key_gen];
 		// INVARIANT(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated)
-			cerr << "FATAL: reference to uninstantiated pint index "
+		if (!pi.instantiated) {
+			// this should NOT happen
+			cerr << "FATAL: reference to uninstantiated pint "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
-		else if (!pi.valid)
-			cerr << "ERROR: reference to uninitialized pint index "
+		} else if (!pi.valid) {
+			cerr << "ERROR: reference to uninitialized pint "
+				<< get_qualified_name() << " at index "
 				<< key_gen << endl;
+		}
 		ret &= (pi.valid && pi.instantiated);
 		l.push_back(pi.value);
 		key_gen++;
@@ -662,7 +666,8 @@ pint_array<0>::resolve_indices(const const_index_list& l) const {
 bool
 pint_array<0>::lookup_value(value_type& v) const {
 	if (!the_instance.instantiated) {
-		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
+		cerr << "ERROR: Reference to uninstantiated pint " <<
+			get_qualified_name() << "!" << endl;
 		return false;
 	}
 	if (the_instance.valid) {

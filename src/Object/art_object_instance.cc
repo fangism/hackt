@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39 2005/01/28 19:58:42 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.1 2005/01/29 21:38:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -557,6 +557,27 @@ datatype_instance_collection::datatype_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::~datatype_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+datatype_instance_collection::dump(ostream& o) const {
+	parent_type::dump(o);
+	if (is_partially_unrolled()) {
+		if (dimensions) {
+			indent indenter(o);
+			o << auto_indent << "unrolled indices: {" << endl;
+			{
+				indent indenter(o);
+				dump_unrolled_instances(o);
+			}
+			o << auto_indent << "}";        // << endl;
+		} else {
+			// else nothing to say, just one scalar instance
+			o << " (instantiated)";
+		}
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	 0x33006f4	datatprf	0	156	172
 	7	 0x3301bb0	datadefn	0	172	204
 	8	 0x3300704	dprmlst_	0	204	220
-	9	 0x2682024	cnstpi__	0	220	232
+	9	 0x268c024	cnstpi__	0	220	232
 	10	 0x33001d8	namespc_	0	232	257
 	11	 0x3301c04	dintcoll	0	257	304
 	12	 0x3804620	datainst	0	304	324
@@ -32,7 +32,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> foo
+        foo = int<32> foo (instantiated)
     }
     B =     In namespace "B", we have: {
       0 parameter-collections
@@ -41,7 +41,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> foo
+        foo = int<32> foo (instantiated)
     }
 }
 

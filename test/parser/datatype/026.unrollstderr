@@ -20,6 +20,6 @@ In namespace "", we have: {
     foo = enum-datatype-def: foo
       { two, one, bar,  }
   Instances:
-    bar = foo<> bar
+    bar = foo<> bar (instantiated)
 }
 
