@@ -1,0 +1,15 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: defproc [3:1..7]
+22	identifier: barbar [3:9..14]
+81	< [3:15]
+132	(data-type-base) [3:16..19]
+189	(node_list): (template-formal-id): identifier: milk ... [3:21..24]
+222	, [3:25]
+286	end-of-file
+in state 286, possible rules are:
+	template_formal_id_list : template_formal_id_list ',' . template_formal_id  (33)
+acceptable tokens are: 
+	ID (shift)

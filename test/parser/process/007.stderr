@@ -1,0 +1,19 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: defproc [3:1..7]
+22	identifier: barbar [3:9..14]
+81	< [3:15]
+132	(node_list): (template-formal-decl) ... [3:16..29]
+187	; [3:30]
+220	(data-type-base) [3:32..36]
+189	(node_list): (template-formal-id): identifier: water with (node_list): (range) ... ... [3:38..49]
+222	end-of-file
+in state 222, possible rules are:
+	template_formal_decl : base_template_type template_formal_id_list .  (32)
+	template_formal_id_list : template_formal_id_list . ',' template_formal_id  (33)
+acceptable tokens are: 
+	',' (shift)
+	';' (reduce)
+	'>' (reduce)

@@ -1,0 +1,13 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: defproc [3:1..7]
+22	(def-type-id) [3:9..46]
+82	end-of-file
+in state 82, possible rules are:
+	declare_proc_proto : def_or_proc def_type_id . optional_port_formal_decl_list_in_parens ';'  (22)
+	defproc : def_or_proc def_type_id . optional_port_formal_decl_list_in_parens '{' definition_body '}'  (23)
+	defproc : def_or_proc def_type_id . optional_port_formal_decl_list_in_parens '{' '}'  (24)
+acceptable tokens are: 
+	'(' (shift)

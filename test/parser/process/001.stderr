@@ -1,0 +1,13 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: defproc [3:1..7]
+22	identifier: fang [3:9..12]
+81	end-of-file
+in state 81, possible rules are:
+	def_type_id : ID . optional_template_formal_decl_list_in_angles  (27)
+	optional_template_formal_decl_list_in_angles : .  (29)
+acceptable tokens are: 
+	'(' (reduce)
+	'<' (shift)
