@@ -1,0 +1,12 @@
+.deps
+.libs
+Makefile
+*.lo
+core.*
+*.core
+*.test
+*.out
+*.diff
+multidimensional_qmap_test
+multikey_qmap_test
+
