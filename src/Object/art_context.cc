@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.9 2004/11/30 01:25:08 fang Exp $
+ 	$Id: art_context.cc,v 1.10 2004/11/30 02:33:13 fang Exp $
  */
 
 #include <assert.h>
@@ -668,7 +668,7 @@ context::add_instance(const token_identifier& id,
 	}
 
 	excl_ptr<const instance_management_base>
-		imb(inst_stmt.as_a_xfer<const instance_management_base>());
+		imb = inst_stmt.as_a_xfer<const instance_management_base>();
 	assert(current_sequential_scope);
 	current_sequential_scope->append_instance_management(imb);
 	return inst_base;
@@ -730,7 +730,7 @@ context::add_template_formal(const token_identifier& id,
 	}
 
 	excl_ptr<const instance_management_base>
-		imb(inst_stmt.as_a_xfer<const instance_management_base>());
+		imb = inst_stmt.as_a_xfer<const instance_management_base>();
 	never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 		// same as current_sequential_scope? perhaps assert check?
@@ -784,7 +784,7 @@ context::add_port_formal(const token_identifier& id,
 	}
 
 	excl_ptr<const instance_management_base>
-		imb(inst_stmt.as_a_xfer<const instance_management_base>());
+		imb = inst_stmt.as_a_xfer<const instance_management_base>();
 	never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 		// same as current_sequential_scope? perhaps assert check?

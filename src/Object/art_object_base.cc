@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.19 2004/11/30 01:25:08 fang Exp $
+ 	$Id: art_object_base.cc,v 1.20 2004/11/30 02:33:13 fang Exp $
  */
 
 #include <iostream>
@@ -972,7 +972,14 @@ scopespace::add_definition_alias(never_ptr<const definition_base> d,
 		return false;
 	} else {
 //		used_id_map[a] = d;
+#if 0
+		// gcc-3.4.0 rejects, thinking that excl_ptr is const!
 		used_id_map[a] = excl_ptr<object_handle>(new object_handle(d));
+#else
+		excl_ptr<object_handle> handle_ptr(new object_handle(d));
+		used_id_map[a] = handle_ptr;
+		assert(!handle_ptr);
+#endif
 		return true;
 	}
 }
@@ -1658,8 +1665,16 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 			// or even open_aliases.  
 			// however, used_id_map is non-const, 
 			// so we need to wrap it in a const object_handle.  
+#if 0
+			// gcc-3.4.0 doesn't like, assumes excl_ptr is const
 			used_id_map[a] = excl_ptr<object_handle>(
 				new object_handle(ret));
+#else
+			excl_ptr<object_handle>
+				handle_ptr(new object_handle(ret));
+			used_id_map[a] = handle_ptr;
+			assert(!handle_ptr);
+#endif
 			break;
 			}
 		case 0:	{

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.14 2004/11/30 01:25:09 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.15 2004/11/30 02:33:13 fang Exp $
  */
 
 #include <iostream>
@@ -1298,8 +1298,15 @@ enum_datatype_def::add_member(const token_identifier& em) {
 		assert(probe_em);	// can't contain enything else
 		return false;
 	} else {
+#if 0
+		// gcc-3.4.0 rejects, thinking that excl_ptr is const
 		used_id_map[em] = excl_ptr<enum_member>(
 			new enum_member(em));
+#else
+		excl_ptr<enum_member> member_ptr(new enum_member(em));
+		used_id_map[em] = member_ptr;
+		assert(!member_ptr);
+#endif
 		return true;
 	}
 }
