@@ -1,0 +1,17 @@
+// two separate namespaces, and a repeated namespace
+
+namespace cat {
+};
+
+namespace dog {
+int woof;
+};
+
+namespace cat {
+int meow;
+};
+
+namespace dog {
+int moo;
+};
+

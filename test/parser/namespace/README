@@ -1,0 +1,6 @@
+Use this directrory for testing namespace-related features in the parser.  
+Try to keep use of other features of the language to a minimum, 
+until namespaces are stable and finalized.  
+
+notes:
+

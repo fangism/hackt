@@ -1,0 +1,9 @@
+// two separate namespaces
+
+namespace cat {
+};
+
+namespace dog {
+};
+
+

@@ -1,0 +1,66 @@
+// nested namespaces, should pass
+
+namespace cornell {
+
+int foo;
+namespace ECE {
+
+namespace CSL {
+
+namespace jose {
+
+};
+
+namespace sally {
+	namespace stella { };
+};
+
+namespace rajit {
+	namespace fang {
+		namespace hacked_parser_generator { };
+		namespace ART {
+			namespace parser { };
+		};
+	};
+	namespace teifel {
+
+	};
+	namespace clint {
+	};
+	namespace dave {
+	};
+	namespace virantha {
+
+	};
+	namespace fang {		// again
+	};
+};
+
+
+namespace martin {
+
+};
+
+};
+
+};
+namespace CS {
+	namespace alain { };
+
+};
+};
+
+namespace caltech {
+namespace PMA {
+
+};
+namespace EAS {
+
+namespace CS {
+	namespace alain { };		// duplicate
+};
+
+};
+};
+
+
