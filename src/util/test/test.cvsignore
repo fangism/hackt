@@ -1,0 +1,15 @@
+.cvsignore
+.deps
+.libs
+.gdb_history
+Makefile
+Makefile.in
+*.lo
+core.*
+*.core
+*.swp
+*.test
+*.out
+*.filter
+*.diff
+ignore

@@ -72,7 +72,8 @@ MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CFLAGS)
 
-EXTRA_DIST = test-expect.sh $(noinst_PROGRAMS:=.stderr)
+EXTRA_DIST = test-expect.sh test.cvsignore \
+	$(noinst_PROGRAMS:=.stderr)
 
 CLEANFILES = \
 	$(noinst_PROGRAMS:=.test) \
@@ -80,7 +81,20 @@ CLEANFILES = \
 	$(noinst_PROGRAMS:=.filter) \
 	$(noinst_PROGRAMS:=.out)
 
+DISTCLEANFILES = .cvsignore
+
 TESTS = $(noinst_PROGRAMS:=.test)
+
+SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
+
+# resorting to intermediate file because distcheck sets file permissions
+# to forbid writing/appending to existing files... (read-only)
+.cvsignore: test.cvsignore
+	$(ECHO) $(noinst_PROGRAMS) | $(SPACES_TO_NEWLINE) > $@.temp
+	$(CAT) $< $@.temp > $@
+	-$(RM) $@.temp
+
+all-local: .cvsignore
 
 clean-local:
 	-$(RM) *.core core.*
