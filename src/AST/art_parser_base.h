@@ -29,7 +29,9 @@ namespace entity {
 
 using namespace std;
 using namespace entity;
-using namespace fang;		// for experimental pointer classes
+using namespace PTRS_NAMESPACE;		// for experimental pointer classes
+using namespace COUNT_PTR_NAMESPACE;
+using namespace SUBLIST_NAMESPACE;
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  

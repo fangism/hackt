@@ -7,7 +7,7 @@
 #include <list>
 
 #ifndef	SUBLIST_NAMESPACE
-#define	SUBLIST_NAMESPACE		fang
+#define	SUBLIST_NAMESPACE		sublist_ns
 #endif
 
 //=============================================================================
@@ -35,9 +35,19 @@ protected:
 	const_iterator		tail;
 	const_reverse_iterator	rhead;
 	const_reverse_iterator	rtail;
+
+#if 0
+static const list<T>		bogus_empty_list;
 public:
 	// default empty constructor?
+	sublist() : the_list(bogus_empty_list),
+		head(bogus_empty_list.begin()),
+		tail(bogus_empty_list.end()), 
+		rhead(bogus_empty_list.rbegin()),
+		rtail(bogus_empty_list.rend()) { }
+#endif
 
+public:
 	/** Standard copy constructor */
 	sublist(const sublist<T>& l) :
 		the_list(l.the_list), head(l.head), tail(l.tail), 

@@ -412,6 +412,23 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		return *this;
 	}
 
+	/**
+		Acquiring ownership from a some_ptr, destructive transfer.
+		Transfer is conditional on the ownership of the source.  
+	 */
+excl_ptr<T>& operator = (some_ptr<T>& r) throw() {
+		if (r.owned())
+			this->ptr = r.release();
+		return *this;
+	}
+
+#if 0
+	/**
+		Does nothing!  can't acquire ownership from a const source.  
+	 */
+excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
+#endif
+
 #if 0
 // might be problem
 	template <class S>
@@ -1019,11 +1036,17 @@ some_ptr<T>& operator = (some_ptr<T>& p) throw() {
 		return *this;
 	}
 
+/**
+	Doesn't transfer ownership.
+ */
 some_ptr<T>& operator = (const excl_ptr<T>& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
 
+/**
+	Transfers ownership.
+ */
 some_ptr<T>& operator = (excl_ptr<T>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
 		return *this;
