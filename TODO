@@ -109,6 +109,13 @@ language front-end: parser:
 
 Type-scope for unrolling.  
 
+Code maintainability:
+	make static class families for compile-time known related types
+		(e.g. bool, int parameters...)
+	recycle code using templates with these families
+	beats copy-paste maintenance.
+	Go back to param instance collection, statement, reference, assignment.
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 REDO: instantiation creation: (done! 2004-09-14)

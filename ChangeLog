@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2004-10-23	David Fang	<fangism@users.sourceforge.net>
+
+	* Added abstract operator wrappers around most STL
+	  binary operators to enable use in virtual function table.  
+	  Implemented in util/operators.h, used in Object/art_object_expr.*.
+
+	* Copy-paste-modified pint_instance_collection to pbool counterpart, 
+	  same with pbool_expression_assignment.  
+
+	* Added to class module a boolean flag to indicate whether
+	  entire module has already been (successfully) unrolled.  
+
+
 2004-10-21	David Fang	<fangism@users.sourceforge.net>
 
 	* Tag: ARTXX-00-01-03-l
