@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11 2005/01/16 04:47:22 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.1 2005/01/18 04:22:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -80,9 +80,6 @@ instantiation_statement::~instantiation_statement() {
 ostream&
 instantiation_statement::dump(ostream& o) const {
 	STACKTRACE("instantation_statement::dump()");
-#if 1
-	cerr << "&o = " << &o << endl;
-#endif
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
@@ -212,14 +209,7 @@ pbool_instantiation_statement::~pbool_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pbool_instantiation_statement::what(ostream& o) const {
-	return o << "pbool-instantiation_statement";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instantiation_statement)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -339,22 +329,12 @@ pint_instantiation_statement::~pint_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_instantiation_statement::what(ostream& o) const {
-	return o << "pint-instantiation_statement";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instantiation_statement)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instantiation_statement::dump(ostream& o) const {
 	STACKTRACE("pint_instantation_statement::dump()");
-#if 1
-	cerr << "&o = " << &o << endl;
-#endif
 	return instantiation_statement::dump(o);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.8 2005/01/15 06:17:00 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.8.4.1 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -29,6 +29,7 @@ namespace entity {
 #include "using_ostream.h"
 using util::indent;
 using util::auto_indent;
+using util::disable_indent;
 USING_STACKTRACE
 
 //=============================================================================
@@ -57,6 +58,7 @@ param_instance_collection::dump(ostream& o) const {
 #if 1
 	STACKTRACE("param_instance_collection::dump()");
 #endif
+#if 0
 	get_type_ref()->dump(o) << " " << key;
 	// collection of indices to instantiate sequentially during unroll
 	index_collection_type::const_iterator i = index_collection.begin();
@@ -68,6 +70,9 @@ param_instance_collection::dump(ostream& o) const {
 		if (ind)
 			ind->dump(o) << endl;
 	}
+#else
+	parent_type::dump(o);
+#endif
 	const count_ptr<const param_expr>
 		init_def(default_value());
 	if (init_def) {
@@ -77,13 +82,21 @@ param_instance_collection::dump(ostream& o) const {
 	}
 	// print out the values of instances that have been unrolled
 	if (is_partially_unrolled()) {
-		o << endl;
-		o << auto_indent << "unrolled values: {" << endl;
-		{
+		if (dimensions) {
 			indent indenter(o);
-			dump_unrolled_values(o);
+			o << auto_indent <<
+				"unrolled index-value pairs: {" << endl;
+			{
+				indent indenter(o);
+				dump_unrolled_values(o);
+			}
+			o << auto_indent << "}";	// << endl;
+		} else {
+			disable_indent no_indent(o);
+			o << " value: ";
+			// suppress indent
+			dump_unrolled_values(o);	// already endl
 		}
-		o << auto_indent << "}" << endl;
 	}
 	return o;
 }

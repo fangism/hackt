@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38 2005/01/16 04:47:23 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.38.4.1 2005/01/18 04:22:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -25,7 +25,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
-// #include "indent.h"
+#include "indent.h"
 #include "stacktrace.h"
 
 //=============================================================================
@@ -36,6 +36,8 @@ using std::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -89,13 +91,29 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
-	index_collection_type::const_iterator i = index_collection.begin();
-	for ( ; i!=index_collection.end(); i++) {
-		NEVER_NULL(*i);
-		const index_collection_item_ptr_type
-			ind((*i)->get_indices());
-		if (ind)
-			ind->dump(o) << endl;
+
+	if (dimensions) {
+		INVARIANT(!index_collection.empty());
+		o << " with indices: {" << endl;
+	{	// indentation scope
+		indent indenter(o);
+		index_collection_type::const_iterator
+			i = index_collection.begin();
+		const index_collection_type::const_iterator
+			e = index_collection.end();
+		for ( ; i!=e; i++) {
+			NEVER_NULL(*i);
+			const index_collection_item_ptr_type
+				ind((*i)->get_indices());
+			// ind can be NULL?
+			NEVER_NULL(ind);
+			ind->dump(o << auto_indent) << endl;
+		}
+	}	// end indentation scope
+		o << auto_indent << "}" << endl;
+	} else {
+		INVARIANT(index_collection.size() == 1);
+		// the list contains exactly one instantiation statement
 	}
 	return o;
 }
@@ -103,7 +121,7 @@ instance_collection_base::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance_collection_base::pair_dump(ostream& o) const {
-	o << "  " << get_name() << " = ";
+	o << auto_indent << get_name() << " = ";
 	return dump(o) << endl;
 }
 

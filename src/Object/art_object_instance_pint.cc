@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.1 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -566,7 +566,7 @@ pint_array<0>::is_partially_unrolled(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_array<0>::dump_unrolled_values(ostream& o) const {
-	return o << auto_indent << the_instance << endl;
+	return o << auto_indent << the_instance;	// << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

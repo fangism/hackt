@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.1 2005/01/17 22:08:30 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.2 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -103,6 +103,7 @@ using namespace util::memory;
 using namespace ADS;		// for function compositions
 using util::indent;
 using util::auto_indent;
+using util::disable_indent;
 USING_STACKTRACE
 
 //=============================================================================
@@ -764,14 +765,17 @@ name_space::dump(ostream& o) const {
 		bins_ref	// explicitly pass by REFERENCE not VALUE
 	);
 
-	o << "In namespace \"" << key << "\", we have: {" << endl;
+	o << auto_indent <<
+		"In namespace \"" << key << "\", we have: {" << endl;
 {
+	// indentation scope
 	indent ns_ind(o);
 	bins.stats(o);
 
 	// maps are already sorted by key
 	if (!bins.param_bin.empty()) {
-		o << "Parameters:" << endl;
+		o << auto_indent << "Parameters:" << endl;
+		indent indenter(o);
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -784,7 +788,8 @@ name_space::dump(ostream& o) const {
 	}
 
 	if (!bins.ns_bin.empty()) {
-		o << "Namespaces:" << endl;
+		o << auto_indent << "Namespaces:" << endl;
+		indent indenter(o);
 		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -800,7 +805,8 @@ name_space::dump(ostream& o) const {
 	}
 	
 	if (!bins.def_bin.empty()) {
-		o << "Definitions:" << endl;
+		o << auto_indent << "Definitions:" << endl;
+		indent indenter(o);
 		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -813,7 +819,8 @@ name_space::dump(ostream& o) const {
 	}
 	
 	if (!bins.alias_bin.empty()) {
-		o << "Typedefs:" << endl;
+		o << auto_indent << "Typedefs:" << endl;
+		indent indenter(o);
 		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -826,7 +833,8 @@ name_space::dump(ostream& o) const {
 	}
 	
 	if (!bins.inst_bin.empty()) {
-		o << "Instances:" << endl;
+		o << auto_indent << "Instances:" << endl;
+		indent indenter(o);
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -837,15 +845,14 @@ name_space::dump(ostream& o) const {
 		)
 		);
 	}
-}
-
+}	// end of indentation scope
 	return o << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 name_space::pair_dump(ostream& o) const {
-        o << "  " << get_key() << " = ";
+        o << auto_indent << get_key() << " = ";
         return dump(o);
 }
 

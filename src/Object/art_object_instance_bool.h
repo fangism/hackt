@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.8 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.8.4.1 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -136,6 +136,8 @@ private:
 public:
 	typedef	never_ptr<bool_instance_alias>		instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
+	/// boolean data (node) has no parameters
+	typedef	void					param_type;
 protected:
 	/// private empty constructor
 	explicit

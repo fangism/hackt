@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.11 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.11.4.1 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -56,8 +56,8 @@ ostream&
 operator << (ostream& o, const pbool_instance& p) {
 	INVARIANT(p.instantiated);
 	if (p.valid) {
-		return o << "?";
-	} else	return o << p.value;
+		return o << p.value;
+	} else	return o << "?";
 }
 
 //=============================================================================
@@ -560,7 +560,7 @@ pbool_array<0>::is_partially_unrolled(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_array<0>::dump_unrolled_values(ostream& o) const {
-	return o << auto_indent << the_instance << endl;
+	return o << auto_indent << the_instance;	// << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.11 2005/01/13 05:28:32 fang Exp $
+	$Id: art_object_instance_param.h,v 1.11.4.1 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -148,7 +148,9 @@ public:
 	bool		valid : 1;
 public:
 	pbool_instance() : value(false), instantiated(false), valid(false) { }
-explicit pbool_instance(const value_type b) :
+
+	explicit
+	pbool_instance(const value_type b) :
 		value(b), instantiated(true), valid(false) { }
 	// default copy constructor
 	// default destructor
@@ -429,9 +431,13 @@ public:
 	bool		valid : 1;
 public:
 	pint_instance() : value(-1), instantiated(false), valid(false) { }
-explicit pint_instance(const bool b) :
+
+	explicit
+	pint_instance(const bool b) :
 		value(-1), instantiated(b), valid(false) { }
-explicit pint_instance(const value_type v) :
+
+	explicit
+	pint_instance(const value_type v) :
 		value(v), instantiated(true), valid(true) { }
 	// default copy constructor
 	// default destructor

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.1 2005/01/17 22:08:28 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2 2005/01/18 04:22:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -84,7 +84,7 @@ definition_base::dump(ostream& o) const {
  */
 ostream&
 definition_base::pair_dump(ostream& o) const {
-	o << "  " << get_key() << " = ";
+	o << auto_indent << get_key() << " = ";
 	return dump(o);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.13.4.1 2005/01/17 22:08:30 fang Exp $
+ 	$Id: art_object_module.cc,v 1.13.4.2 2005/01/18 04:22:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -76,8 +76,10 @@ module::dump(ostream& o) const {
 
 	global_namespace->dump(o) << endl;
 
-	o << "Sequential instance management: " << endl;
-	return sequential_scope::dump(o);
+	if (!unrolled) {
+		o << "Sequential instance management (to unroll): " << endl;
+		return sequential_scope::dump(o);
+	} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.10 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_base.h,v 1.10.4.1 2005/01/18 04:22:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -81,6 +81,7 @@ protected:
 		that, when unrolled, will instantiate instances
 		at specified indices in the multidimensional collection, 
 		implemented in the leaf children classes.  
+		Can elements be NULL?
 	 */
 	index_collection_type			index_collection;
 
