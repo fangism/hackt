@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.11.6.2 2005/03/10 00:23:30 fang Exp $
+	$Id: art_object_expr_const.h,v 1.11.6.3 2005/03/10 23:03:48 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -14,8 +14,6 @@
 #include "packed_array.h"
 #include "persistent.h"
 #include "memory/list_vector_pool_fwd.h"
-
-#define	USE_CONST_COLLECTION_TEMPLATE		1
 
 //=============================================================================
 namespace ART {
@@ -503,119 +501,6 @@ public:
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_const
-
-//-----------------------------------------------------------------------------
-#if !USE_CONST_COLLECTION_TEMPLATE
-/**
-	Packed collection of constant integer values, arbitrary dimension.  
-	Note: this is only usable for aggregates of constants.  
-	Complex aggregates of non-const expressions will require
-	a more advanced structure (dynamic_pint_collection?).  
- */
-class pint_const_collection : public pint_expr, public const_param {
-	typedef	pint_const_collection			this_type;
-public:
-	typedef	pint_value_type				value_type;
-	typedef	util::packed_array_generic<pint_value_type, value_type>
-							array_type;
-	typedef	array_type::iterator			iterator;
-	typedef	array_type::const_iterator		const_iterator;
-protected:
-	array_type					values;
-public:
-	explicit
-	pint_const_collection(const size_t d);
-
-	explicit
-	pint_const_collection(const array_type::key_type&);
-
-	~pint_const_collection();
-
-	iterator
-	begin(void) { return values.begin(); }
-
-	const_iterator
-	begin(void) const { return values.begin(); }
-
-	iterator
-	end(void) { return values.end(); }
-
-	const_iterator
-	end(void) const { return values.end(); }
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
-
-	size_t
-	dimensions(void) const;
-
-	bool
-	is_static_constant(void) const { return true; }
-
-	count_ptr<const const_param>
-	static_constant_param(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	bool
-	may_be_initialized(void) const { return true; }
-
-	bool
-	must_be_initialized(void) const { return true; }
-
-#if 0
-	bool
-	may_be_equivalent(const param_expr& ) const;
-
-	bool
-	must_be_equivalent(const param_expr& ) const;
-#endif
-
-	bool
-	must_be_equivalent(const pint_expr& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
-
-	// only makes sense for scalars
-	value_type
-	static_constant_value(void) const;
-
-	// only makes sense for scalars
-	good_bool
-	resolve_value(value_type& ) const;
-
-	good_bool
-	unroll_resolve_value(const unroll_context&, value_type& i) const;
-
-	const_index_list
-	resolve_dimensions(void) const;
-
-	// flat-list needs to be replaced
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& ) const;
-
-	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class pint_const_collection
-#endif	// USE_CONST_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.17.2.1.2.1.2.2 2005/03/10 07:18:54 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.17.2.1.2.1.2.3 2005/03/10 23:03:49 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -22,9 +22,7 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-#if USE_VALUE_REFERENCE_TEMPLATE
 #include "art_object_value_reference.h"
-#endif
 #if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_classification_details.h"
 #include "art_object_value_collection.tcc"
