@@ -2,6 +2,14 @@
 
 2005-01-14	David Fang	<fangism@users.sourceforge.net>
 
+	* Solved global static initialization ordering problem w.r.t. 
+	  stacktrace.  Previously, stacktrace was only usable for tracing 
+	  functions AFTER global initializations were complete.
+	  We were able to trace some static initialization calls because 
+	  we got lucky, and stacktrace's static objects happened to be 
+	  initialized early enough.  Now it is reliably usable to debug 
+	  static initialization-time function calls.  
+
 	* memory/pointer_classes.h: intentionally declared an explicit, 
 	  private, undefined const-reference copy constructor, because
 	  the default action (which was actually implicitly used!)
