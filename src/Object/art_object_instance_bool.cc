@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.2 2005/02/13 02:38:59 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.3 2005/02/13 20:30:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -9,8 +9,8 @@
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#define	ENABLE_STACKTRACE				1
-#define	STACKTRACE_DESTRUCTORS		1 && ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE				0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <exception>
@@ -562,14 +562,18 @@ void
 bool_array<0>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	write_value(f, the_instance);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	read_value(f, the_instance);
+#endif
 }
 
 //=============================================================================

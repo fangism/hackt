@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-02-13	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-01:
+	  In this child branch, I'm play-testing the development of 
+	  using multikey_set for instance aliases, and ways of 
+	  reconstructing connections through object persistence.  
+	  This snapshot compiles and runs, but many tests will not pass
+	  because instance collection persistence has been disabled.  
+	  Working on the persistence of aliases...
+
+
 2005-02-08	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-08-merged-set-16:
