@@ -21,6 +21,13 @@ Current series: 0.1.3 -- main trunk of development line.
 		Make live instances and multidimensional sets persistent.
 		Mark modules as unrolled or not.  
 
+	Make instance_collection final classes dimension-specific
+		with template <size_t D>, re-using as much code 
+		as humanly possible.  
+	Same with expression assignments?  not for now...
+	What about expression: instance_references?  not for now...
+		bearing in mind, they may be underspecified.  
+
 	Upgrade testing suite to include unrolling tests.  
 	
 	Documentation: add documentation headers to beginning of
@@ -44,7 +51,7 @@ At any point, preferably ASAP:
 	compiler generated the object file.  
 	Will be critical in future version systems.
 
-*	CHANGE the check_build framework in AST parser classes.
+*	AST: CHANGE the check_build framework in AST parser classes.
 	Namely, make specific signatures for type-checking, 
 		so that return values may be of some use in most cases.  
 		Presently, most return values are useless.  

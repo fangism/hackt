@@ -24,7 +24,11 @@ DISTCLEANFILES = config.in.h~
 
 DISTCLEANDIRS = autom4te.cache
 
-EXTRA_DIST = Make.stddef readable_gcc_errors.sed $(DOXYGEN_CONFIG).in
+EXTRA_DIST = Make.stddef \
+	bootstrap maintainerclobber \
+	$(DOXYGEN_CONFIG).in \
+	readable_gcc_errors.sed \
+	balance_indent.awk
 
 if HAVE_DOT
 $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in

@@ -1,5 +1,28 @@
 "ChangeLog"
 
+2004-10-25	David Fang	<fangism@users.sourceforge.net>
+
+	* Added auxiliary argument type to peristent object management.
+	  This allows one to `escape' into a second-level of constructor 
+	  tables, or pass at most one argument to initial allocation, 
+	  in (class)::construct_empty().  
+
+	* Auxiliary construction argument allows us to sub-type
+	  (e.g. size_t templates) within a single registered type.  
+
+	* art_util.{h,cc,tcc}:
+	  Added more utility methods for binary I/O, for generic
+	  value-sequence (list-like) persistence, and value-map (map-like)
+	  persistence.  
+	  Reminder that containers of pointers must still go through
+	  the persistent object manager.  
+
+	* Going to sub-type instance collections by dimensions (size_t), 
+	  leaving a common abstract interface.  
+	  Need this to be strongly and statically typed
+	  to be able to manipulate persistent multidimensional maps.  
+
+
 2004-10-23	David Fang	<fangism@users.sourceforge.net>
 
 	* Added abstract operator wrappers around most STL
@@ -19,7 +42,7 @@
 
 	* Fixed parameter index unrolling, correctly detecting
 	  unroll time errors, in multidimensional arrays, 
-	  such as uninitialized or unintantiated parameters.  
+	  such as uninitialized or uninstantiated parameters.  
 
 	* Hand-checked behaviour of artobjunroll on test/parser/param dir.
 
