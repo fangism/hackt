@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5 2005/02/22 03:00:56 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5.2.1 2005/02/24 01:03:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -21,11 +21,20 @@ using namespace util::memory;
 using util::packed_array_generic;
 
 //=============================================================================
+#if USE_CLASSIFICATION_TAGS
+#define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
+template <class Tag>
+
+#define	INSTANCE_REFERENCE_CLASS					\
+instance_reference<Tag>
+
+#else
 #define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
 template <class Collection, class Parent>
 
 #define	INSTANCE_REFERENCE_CLASS					\
 instance_reference<Collection,Parent>
+#endif
 
 /**
 	Class template for physical instance references.
@@ -36,11 +45,36 @@ instance_reference<Collection,Parent>
 		probably simple_instance_reference or descendant.  
  */
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class instance_reference : public Parent {
-	typedef	instance_reference<Collection,Parent>	this_type;
+class instance_reference :
+#if USE_CLASSIFICATION_TAGS
+	public class_traits<Tag>::instance_reference_parent_type
+#else
+	public Parent
+#endif
+{
+	typedef	INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	Parent					parent_type;
+#if USE_CLASSIFICATION_TAGS
+	typedef	typename class_traits<Tag>::instance_reference_parent_type
+						parent_type;
+#else
+	typedef	Parent				parent_type;
+#endif
 public:
+#if USE_CLASSIFICATION_TAGS
+	/// the instance collection base type
+	typedef	typename class_traits<Tag>::instance_collection_type
+						instance_collection_type;
+	/// the type of alias element contained by instance collections
+	typedef	typename class_traits<Tag>::instance_alias_type
+						instance_alias_type;
+	/// the type of connections formed by the alias type
+	typedef	typename class_traits<Tag>::alias_connection_type
+						alias_connection_type;
+	/// type used to unroll collections of instance aliases
+	typedef	typename class_traits<Tag>::alias_collection_type
+						alias_collection_type;
+#else
 	/// the instance collection base type
 	typedef	Collection			instance_collection_type;
 	/// the type of alias element contained by instance collections
@@ -49,12 +83,14 @@ public:
 	/// the type of connections formed by the alias type
 	typedef	typename instance_collection_type::alias_connection_type
 						alias_connection_type;
-	/// pointer type for instance collections
-	typedef	never_ptr<const instance_collection_type>
-						instance_collection_ptr_type;
+
 	/// type used to unroll collections of instance aliases
 	typedef	packed_array_generic<pint_value_type, never_ptr<instance_alias_type> >
 						alias_collection_type;
+#endif
+	/// pointer type for instance collections
+	typedef	never_ptr<const instance_collection_type>
+						instance_collection_ptr_type;
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:

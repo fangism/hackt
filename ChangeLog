@@ -11,6 +11,11 @@
 	  So far, we applied this to member_instance_references as a 
 	  test case, and everything is hunky-dory.  
 
+	* -instance-02:
+	  Converted instance_reference to use class_traits<Tag>.
+	  Next: alias_connections, then ... instance collections, 
+	  the final frontier!
+
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 

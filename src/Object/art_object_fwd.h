@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6.2.1.2.4.2.1 2005/02/23 21:21:26 fang Exp $
+	$Id: art_object_fwd.h,v 1.6.2.1.2.4.2.2 2005/02/24 01:03:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -64,6 +64,7 @@ namespace entity {
 	class int_instance_reference;
 	class enum_instance_reference;
 #else
+#if 0
 	template <class, class>
 	class instance_reference;
 
@@ -85,6 +86,23 @@ namespace entity {
 	typedef	instance_reference<struct_instance_collection, 
 			datatype_instance_reference>
 		datastruct_instance_reference;
+#else
+	template <class>
+	class instance_reference;
+
+	typedef	instance_reference<channel_tag>
+		channel_instance_reference;
+	typedef	instance_reference<process_tag>
+		process_instance_reference;
+	typedef	instance_reference<bool_tag>
+		bool_instance_reference;
+	typedef	instance_reference<int_tag>
+		int_instance_reference;
+	typedef	instance_reference<enum_tag>
+		enum_instance_reference;
+	typedef	instance_reference<datastruct_tag>
+		datastruct_instance_reference;
+#endif
 #endif
 
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.3.2.1 2005/02/23 21:21:26 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.3.2.2 2005/02/24 01:03:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -1177,10 +1177,8 @@ datatype_instance_reference::dump(ostream& o) const {
 // explicit template instantiations
 
 #if USE_CLASSIFICATION_TAGS
-template class
-instance_reference<channel_instance_collection, simple_instance_reference>;
-template class
-instance_reference<process_instance_collection, simple_instance_reference>;
+template class instance_reference<channel_tag>;
+template class instance_reference<process_tag>;
 template class member_instance_reference<channel_tag>;
 template class member_instance_reference<process_tag>;
 #else

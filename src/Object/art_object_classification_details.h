@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.1 2005/02/23 21:21:26 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.2 2005/02/24 01:03:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -123,6 +123,9 @@ typedef ring_node_derived<enum_instance_alias_info>
 						enum_instance_alias_base;
 typedef ring_node_derived<datastruct_instance_alias_info>
 						struct_instance_alias_base;
+
+class chan_instance_alias;	// temporary
+class proc_instance_alias;	// temporary
 typedef ring_node_derived<channel_instance_alias_info>
 						channel_instance_alias_base;
 typedef ring_node_derived<process_instance_alias_info>
@@ -133,18 +136,20 @@ template <>
 struct class_traits<int_tag> {
 	typedef	int_instance			instance_type;
 	typedef	int_instance_alias_base		instance_alias_type;
+	typedef	never_ptr<instance_alias_type>
+						instance_alias_ptr_type;
 	typedef	int_instance_collection		instance_collection_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	typedef	int_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	int_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	typedef	pint_value_type			instance_parameter_type;
 	typedef	data_type_reference		type_ref_type;
-	typedef	fundamental_type_reference		type_ref_parent_type;
+	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<int_tag>
 
@@ -153,12 +158,13 @@ template <>
 struct class_traits<bool_tag> {
 	typedef	bool_instance			instance_type;
 	typedef	bool_instance_alias_base	instance_alias_type;
+	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
 	typedef	bool_instance_collection	instance_collection_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	typedef	bool_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	bool_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -172,13 +178,18 @@ struct class_traits<bool_tag> {
 template <>
 struct class_traits<enum_tag> {
 	typedef	enum_instance			instance_type;
-	typedef	enum_instance_alias_base	instance_alias_type;
+
+	// temporary
+	typedef	enum_instance_alias		instance_alias_type;
+//	typedef	enum_instance_alias_base	instance_alias_type;
+
+	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
 	typedef	enum_instance_collection	instance_collection_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	typedef	enum_instance_reference		instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	enum_member_instance_reference	member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -192,14 +203,19 @@ struct class_traits<enum_tag> {
 template <>
 struct class_traits<datastruct_tag> {
 	typedef	struct_instance			instance_type;
-	typedef	struct_instance_alias_base	instance_alias_type;
+
+	// temporary
+	typedef	struct_instance_alias		instance_alias_type;
+//	typedef	struct_instance_alias_base	instance_alias_type;
+
+	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
 	typedef	struct_instance_collection	instance_collection_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	typedef	datastruct_instance_reference	instance_reference_type;
 	typedef	datatype_instance_reference	instance_reference_parent_type;
 	typedef	datastruct_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
@@ -214,14 +230,19 @@ struct class_traits<datastruct_tag> {
 template <>
 struct class_traits<process_tag> {
 	typedef	process_instance		instance_type;
-	typedef	process_instance_alias_base	instance_alias_type;
+
+	// temporary
+//	typedef	process_instance_alias_base	instance_alias_type;
+	typedef	proc_instance_alias		instance_alias_type;
+
+	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
 	typedef	process_instance_collection	instance_collection_type;
 	typedef	instance_collection_base	instance_collection_parent_type;
 	typedef	process_instance_reference	instance_reference_type;
 	typedef	simple_instance_reference	instance_reference_parent_type;
 	typedef	process_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	process_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
@@ -236,14 +257,19 @@ struct class_traits<process_tag> {
 template <>
 struct class_traits<channel_tag> {
 	typedef	channel_instance		instance_type;
-	typedef	channel_instance_alias_base	instance_alias_type;
+
+	// temporary
+//	typedef	channel_instance_alias_base	instance_alias_type;
+	typedef	chan_instance_alias		instance_alias_type;
+
+	typedef	never_ptr<instance_alias_type>	instance_alias_ptr_type;
 	typedef	channel_instance_collection	instance_collection_type;
 	typedef	instance_collection_base	instance_collection_parent_type;
 	typedef	channel_instance_reference	instance_reference_type;
 	typedef	simple_instance_reference	instance_reference_parent_type;
 	typedef	channel_member_instance_reference
 						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_type>
+	typedef	packed_array_generic<pint_value_type, instance_alias_ptr_type>
 						alias_collection_type;
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;

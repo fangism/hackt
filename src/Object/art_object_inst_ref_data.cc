@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.2.2.1 2005/02/23 21:21:27 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.2.2.2.2 2005/02/24 01:03:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -83,6 +83,18 @@ namespace entity {
 //=============================================================================
 // explicit template instantiations
 
+
+#if USE_CLASSIFICATION_TAGS
+template class instance_reference<bool_tag>;
+template class instance_reference<int_tag>;
+template class instance_reference<enum_tag>;
+template class instance_reference<datastruct_tag>;
+
+template class member_instance_reference<bool_tag>;
+template class member_instance_reference<int_tag>;
+template class member_instance_reference<enum_tag>;
+template class member_instance_reference<datastruct_tag>;
+#else
 template class
 instance_reference<bool_instance_collection, datatype_instance_reference>;
 template class
@@ -92,12 +104,6 @@ instance_reference<enum_instance_collection, datatype_instance_reference>;
 template class
 instance_reference<struct_instance_collection, datatype_instance_reference>;
 
-#if USE_CLASSIFICATION_TAGS
-template class member_instance_reference<bool_tag>;
-template class member_instance_reference<int_tag>;
-template class member_instance_reference<enum_tag>;
-template class member_instance_reference<datastruct_tag>;
-#else
 template class member_instance_reference<bool_instance_reference>;
 template class member_instance_reference<int_instance_reference>;
 template class member_instance_reference<enum_instance_reference>;
