@@ -72,6 +72,7 @@ AM_CONDITIONAL(HAVE_DOT, test "$DOT" = dot)
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
+	src/util/test/Makefile
 	test/Makefile
 	test/parser/Makefile
 	test/parser/basic/Makefile

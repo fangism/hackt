@@ -3,6 +3,18 @@ to do list:
 this TODO list is way outdated... clean TODO list.
 
 UNROLL that sh--
+	keep definitions around
+	unpack instantiation_bases into live instances
+		using multidimensional_qmap
+	target for release 0.1.4 -- basic instance unrolling
+		MAJOR ISSUES with parameter unrolling and assignment ordering
+	for 0.1.5 unrolling with collections
+	0.1.6 unrolling production rules
+	0.1.8 cflatprsim backwards compatibility mode
+
+type-specific and dimension-specific param_expression_assignment?
+	also apply to instantiations, instance_references?
+	don't want to go overboard...
 
 Write objects!!!
 	resolved issues: converting pointers to indices (done)

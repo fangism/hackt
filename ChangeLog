@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2004-09-01	David Fang	<fangism@users.sourceforge.net>
+
+	* Reworked connection and assignment management in class scopespace.
+	  Now kept in separate lists.  (No more connection_assignment_base.)
+
+	* Some initial groundwork for unrolling parameters and instances.  
+	  Some major languauge issues need to be resolved first.  
+
+	* Wrote and tested some data structures for multidimensional maps, 
+	  both true multidimensional, and pseudo-multidimensional 
+	  (with multidimensional key in a flat map).  
+	  Also renamed some namespaces along the way.  
+
+	* Note the change in email address.  :)
+
+
 2004-08-21	David Fang	<fangism@gmail.com>
 
 	* Release 0.1.3.
