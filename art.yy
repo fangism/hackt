@@ -354,10 +354,14 @@ declare_proc_proto
 defproc
 	/* using <> to follow C+ template parameters in def_type_id */
 	: def_or_proc def_type_id
-	  optional_port_formal_decl_list_in_parens
-	  '{' definition_body '}'
+	  optional_port_formal_decl_list_in_parens '{' definition_body '}'
 	{ $$ = new process_def($1, $2, $3, 
 		definition_body_wrap($4, $5, $6));
+	}
+	| def_or_proc def_type_id
+	  optional_port_formal_decl_list_in_parens '{' '}'
+	{ $$ = new process_def($1, $2, $3, 
+		definition_body_wrap($4, new definition_body(), $5));
 	}
 	;
 
@@ -448,7 +452,9 @@ type_id
 
 base_template_type
 	: PINT_TYPE 		/* integer parameter */
+		{ $$ = new data_type_base($1); }
 	| PBOOL_TYPE		/* boolean parameter */
+		{ $$ = new data_type_base($1); }
 	;
 
 /* channel type: channel, inport, outport, and data types */

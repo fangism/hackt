@@ -142,3 +142,4 @@ commit: clobberdepend
 # but BSD make dies when it can't find it :(
 # hence the self-modifying Makefile
 # the following line will magically appear and disappear...
+include .depend

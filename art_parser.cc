@@ -1010,12 +1010,20 @@ port_formal_decl::rightmost(void) const {
 //=============================================================================
 // class template_formal_id method definitions
 
+/**
+	Constructor for a template formal identifier, the formal name for a 
+	template parameter, which may be an array, declared with
+	dimensions in brackets.  
+	\param n the name of the template formal.  
+	\param d is the (optional) dimension size expression.
+ */
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(node* n, node* d) : node(),
 		name(IS_A(token_identifier*, n)),
 		dim(IS_A(range_list*, d)) {
 	assert(name);
 // dim may be NULL
+	if (d) assert(dim);
 }
 
 DESTRUCTOR_INLINE
@@ -1026,7 +1034,7 @@ template_formal_id::~template_formal_id() {
 ostream&
 template_formal_id::what(ostream& o) const {
 	name->what(o << "(template-formal-id): ");
-	if (dim) dim->what(o);
+	if (dim) dim->what(o << " with ");
 	return o;
 }
 
@@ -1037,7 +1045,8 @@ template_formal_id::leftmost(void) const {
 
 line_position
 template_formal_id::rightmost(void) const {
-	return dim->rightmost();
+	if (dim) return dim->rightmost();
+	else return name->rightmost();
 }
 
 //=============================================================================
@@ -1046,7 +1055,7 @@ template_formal_id::rightmost(void) const {
 CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(node* t, node* i) :
 		node(),
-		type(IS_A(type_id*, t)),
+		type(IS_A(type_base*, t)),
 		ids(IS_A(template_formal_id_list*, i)) {
 	assert(type); assert(ids);
 }
@@ -1169,7 +1178,7 @@ process_def::process_def(node* d, node* i, node* p, node* b) :
 		definition(),
 		process_signature(d, i, p), 
 		body(IS_A(definition_body*, b)) {
-	assert(body);
+	assert(body);		// body may be empty, is is not NULL
 }
 
 DESTRUCTOR_INLINE

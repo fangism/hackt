@@ -1051,7 +1051,7 @@ typedef	node_list<template_formal_id,comma>	template_formal_id_list;
 /// template formal declaration contains a type and identifier list
 class template_formal_decl : public node {
 protected:
-	type_id*			type;	///< formal base type
+	type_base*			type;	///< formal base type
 	template_formal_id_list*	ids;	///< identifier list
 public:
 	template_formal_decl(node* t, node* i);
