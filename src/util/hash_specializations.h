@@ -3,7 +3,7 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.4 2004/11/02 07:52:14 fang Exp $
+	$Id: hash_specializations.h,v 1.5 2004/12/01 05:16:17 fang Exp $
  */
 
 #ifndef	__HASH_SPECIALIZATIONS_H__
@@ -35,10 +35,10 @@ struct hash<string> {
 	rendering the lower bits useless.  
 	Caution: don't want to make this machine-dependent.
  */
-template <>
-struct hash<const void*> {
-	size_t operator() (const void* x) const {
-		register const long y = (long) x;	// C-style cast!
+template <class T>
+struct hash<const T*> {
+	size_t operator() (const T* x) const {
+		register const long y = long(x);	// C-style cast!
 		return hash<long>()(y ^ (y >> 7));
 	}
 };	// end hash<>
