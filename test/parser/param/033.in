@@ -1,0 +1,6 @@
+// should pass: proper use of scalar index
+
+pint n[4][4];
+
+pint m[n[0][0]];
+
