@@ -104,11 +104,10 @@ OBJECT_CC_FILES = \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
-	Object/art_built_ins.cc \
-	Object/art_object_IO.cc
+	Object/art_built_ins.cc
 
+# for all Object files with corresponding header
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h)
-#	Object/art_object_IO_fwd.h
 
 UTIL_HEADER_FILES = \
 	util/art_debug.h \
@@ -165,10 +164,12 @@ libart___la_SOURCES = \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
-	Object/art_object_IO.tcc \
 	Object/art_object.h \
+	Object/art_object_IO.cc \
 	Object/art_object_type_hash.h \
 	art++.h
+
+# note: Object/art_object_IO.cc only contains explicit template instantiations
 
 # don't actually need -l[f]l
 # libart___la_LDADD = @LEXLIB@
