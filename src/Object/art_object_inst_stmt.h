@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9.2.2 2005/02/17 00:10:13 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.2.2.2.1 2005/02/18 01:25:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -45,7 +45,10 @@ protected:
 /**
 	Boolean parameter instantiation statement.
  */
-class pbool_instantiation_statement : public object, 
+class pbool_instantiation_statement : 
+#if 0
+		public object, 
+#endif
 		public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
@@ -97,7 +100,10 @@ public:
 /**
 	Integer parameter instantiation statement.
  */
-class pint_instantiation_statement : public object, 
+class pint_instantiation_statement : 
+#if 0
+		public object, 
+#endif
 		public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
@@ -149,7 +155,10 @@ public:
 /**
 	Process instantiation statement.
  */
-class process_instantiation_statement : public object, 
+class process_instantiation_statement : 
+#if 0
+		public object, 
+#endif
 		public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
@@ -197,7 +206,10 @@ public:
 /**
 	Channel instantiation statement.
  */
-class channel_instantiation_statement : public object, 
+class channel_instantiation_statement : 
+#if 0
+		public object, 
+#endif
 		public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
@@ -242,7 +254,10 @@ public:
 /**
 	Data-type instantiation statement.
  */
-class data_instantiation_statement : public object, 
+class data_instantiation_statement : 
+#if 0
+		public object, 
+#endif
 		public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.10.2.1 2005/02/03 03:34:47 fang Exp $
+	$Id: art_object_assign.h,v 1.10.2.1.10.1 2005/02/18 01:25:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -92,8 +92,11 @@ protected:
 /**
 	pbool-specific version of expression assignments.  
  */
-class pbool_expression_assignment : public param_expression_assignment, 
-		public object {
+class pbool_expression_assignment : public param_expression_assignment
+#if 0
+		, public object
+#endif
+		{
 private:
 	typedef	pbool_expression_assignment		this_type;
 public:
@@ -158,8 +161,11 @@ public:
 /**
 	pint-specific version of expression assignments.  
  */
-class pint_expression_assignment : public param_expression_assignment, 
-		public object {
+class pint_expression_assignment : public param_expression_assignment
+#if 0
+		, public object
+#endif
+{
 private:
 	typedef	pint_expression_assignment		this_type;
 public:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.2.1 2005/02/03 03:34:50 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.1 2005/02/18 01:25:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -220,14 +220,20 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_instantiation_statement, 128)
 	Private empty constructor.
  */
 pbool_instantiation_statement::pbool_instantiation_statement() :
-		object(), param_instantiation_statement(), 
+#if 0
+		object(), 
+#endif
+		param_instantiation_statement(), 
 		inst_base(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation_statement::pbool_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
-		object(), param_instantiation_statement(i), 
+#if 0
+		object(), 
+#endif
+		param_instantiation_statement(i), 
 		inst_base(NULL) {
 }
 
@@ -331,14 +337,20 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_instantiation_statement, 256)
 	Private empty constructor.
  */
 pint_instantiation_statement::pint_instantiation_statement() :
-		object(), param_instantiation_statement(), 
+#if 0
+		object(), 
+#endif
+		param_instantiation_statement(), 
 		inst_base(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation_statement::pint_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
-		object(), param_instantiation_statement(i), 
+#if 0
+		object(), 
+#endif
+		param_instantiation_statement(i), 
 		inst_base(NULL) {
 }
 
@@ -441,7 +453,10 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instantiation_statement,
 	Private empty constructor.
  */
 process_instantiation_statement::process_instantiation_statement() :
-		object(), instantiation_statement(), 
+#if 0
+		object(), 
+#endif
+		instantiation_statement(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -449,7 +464,10 @@ process_instantiation_statement::process_instantiation_statement() :
 process_instantiation_statement::process_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		object(), instantiation_statement(i),
+#if 0
+		object(), 
+#endif
+		instantiation_statement(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }
@@ -579,7 +597,10 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instantiation_statement,
 	Private empty constructor.
  */
 channel_instantiation_statement::channel_instantiation_statement() :
-		object(), instantiation_statement(), 
+#if 0
+		object(), 
+#endif
+		instantiation_statement(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -587,7 +608,10 @@ channel_instantiation_statement::channel_instantiation_statement() :
 channel_instantiation_statement::channel_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		object(), instantiation_statement(i),
+#if 0
+		object(), 
+#endif
+		instantiation_statement(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }
@@ -696,7 +720,10 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(data_instantiation_statement, 64)
 	Private empty constructor.
  */
 data_instantiation_statement::data_instantiation_statement() :
-		object(), instantiation_statement(), 
+#if 0
+		object(), 
+#endif
+		instantiation_statement(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -704,7 +731,10 @@ data_instantiation_statement::data_instantiation_statement() :
 data_instantiation_statement::data_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		object(), instantiation_statement(i),
+#if 0
+		object(), 
+#endif
+		instantiation_statement(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.14.2.1 2005/02/03 03:34:54 fang Exp $
+ 	$Id: art_object_module.cc,v 1.14.2.1.10.1 2005/02/18 01:25:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -54,13 +54,19 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(module, MODULE_TYPE_KEY)
 	Private empty constructor.
  */
 module::module() :
-		object(), persistent(), sequential_scope(),
+#if 0
+		object(), 
+#endif
+		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL), unrolled(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
-		object(), persistent(), sequential_scope(),
+#if 0
+		object(), 
+#endif
+		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")), unrolled(false) {
 	NEVER_NULL(global_namespace);
 }
