@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.9 2005/02/16 18:44:18 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.10 2005/02/16 23:44:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -28,7 +28,6 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-// #include "multikey_qmap.tcc"
 #include "multikey_set.tcc"
 #include "ring_node.tcc"
 
@@ -69,6 +68,7 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<3>, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<4>, "bool_array_4D")
 namespace memory {
+	// can we still lazy destroy with instance aliases?
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
 }	// end namespace memory
 }	// end namespace util
@@ -100,6 +100,7 @@ using util::dereference;
 using std::for_each;
 using std::mem_fun_ref;
 USING_STACKTRACE
+using util::multikey;
 using util::value_writer;
 using util::value_reader;
 using util::read_value;
@@ -576,7 +577,7 @@ bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 			get_qualified_name() << " at index: " << i << endl;
 		return instance_ptr_type(NULL);
 	}
-	const bool_instance_alias<D>& b(*it);
+	const element_type& b(*it);
 	// can b be invalid anymore? not if this is an array...
 	// arrays can only contain validly instantiated aliases.  
 	// unlike scalars
@@ -617,12 +618,12 @@ bool_array<D>::lookup_instance_collection(
 			l.push_back(instance_ptr_type(NULL));
 			ret = false;
 		} else {
-		const bool_instance_alias<D>& pi(*it);
+		const element_type& pi(*it);
 		// again pi MUST be valid b/c arrays now only contain
 		// valid instances. 
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
-				const_cast<bool_instance_alias<D>*>(&pi)));
+				const_cast<element_type*>(&pi)));
 		} else {
 			cerr << "FATAL: reference to uninstantiated bool index "
 				<< key_gen << endl;

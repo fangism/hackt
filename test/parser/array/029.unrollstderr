@@ -2,52 +2,52 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3304b54	module__	0	0	68
-	2	 0x3300170	namespc_	0	68	96
-	3	 0x3304b04	dintcoll	3	96	369
-	4	 0x3804604	datainst	0	369	389
-	5	 0x3304b74	datatprf	0	389	405
-	6	 0x3304b80	datadefn	0	405	437
-	7	 0x3304be4	dprmlst_	0	437	453
-	8	 0x2672024	cnstpi__	0	453	465
-	9	 0x3304bf4	crnglst_	0	465	501
-	10	 0x3804620	datainst	0	501	521
-	11	 0x3304c04	datatprf	0	521	537
-	12	 0x3304c14	dprmlst_	0	537	553
-	13	 0x3304c24	crnglst_	0	553	589
-	14	 0x380463c	datainst	0	589	609
-	15	 0x3304c34	datatprf	0	609	625
-	16	 0x3304c44	dprmlst_	0	625	641
-	17	 0x3304c54	crnglst_	0	641	677
-	18	 0x3804658	datainst	0	677	697
-	19	 0x3304c64	datatprf	0	697	713
-	20	 0x3304c74	dprmlst_	0	713	729
-	21	 0x3304c84	crnglst_	0	729	765
-	22	 0x3804674	datainst	0	765	785
-	23	 0x3304c94	datatprf	0	785	801
-	24	 0x3304ca4	dprmlst_	0	801	817
-	25	 0x3304cb4	crnglst_	0	817	853
-	26	 0x3304cc4	dintcoll	3	853	1126
-	27	 0x3804690	datainst	0	1126	1146
-	28	 0x3304d14	datatprf	0	1146	1162
-	29	 0x3304d24	dprmlst_	0	1162	1178
-	30	 0x3304d34	crnglst_	0	1178	1214
-	31	 0x38046ac	datainst	0	1214	1234
-	32	 0x3304d44	datatprf	0	1234	1250
-	33	 0x3304d54	dprmlst_	0	1250	1266
-	34	 0x3304d64	crnglst_	0	1266	1302
-	35	 0x38046c8	datainst	0	1302	1322
-	36	 0x3304d74	datatprf	0	1322	1338
-	37	 0x3304d84	dprmlst_	0	1338	1354
-	38	 0x3304d94	crnglst_	0	1354	1390
-	39	 0x38046e4	datainst	0	1390	1410
-	40	 0x3304da4	datatprf	0	1410	1426
-	41	 0x3304db4	dprmlst_	0	1426	1442
-	42	 0x3304dc4	crnglst_	0	1442	1478
-	43	 0x3804700	datainst	0	1478	1498
-	44	 0x3304dd4	datatprf	0	1498	1514
-	45	 0x3304de4	dprmlst_	0	1514	1530
-	46	 0x3304df4	crnglst_	0	1530	1566
+	1	 0x3104b04	module__	0	0	68
+	2	 0x3100170	namespc_	0	68	96
+	3	 0x3104c34	dintcoll	3	96	305
+	4	 0x3804604	datainst	0	305	325
+	5	 0x3104b24	datatprf	0	325	341
+	6	 0x3104c80	datadefn	0	341	373
+	7	 0x3104b34	dprmlst_	0	373	389
+	8	 0x25f6024	cnstpi__	0	389	401
+	9	 0x3104b44	crnglst_	0	401	437
+	10	 0x3804620	datainst	0	437	457
+	11	 0x3104ce4	datatprf	0	457	473
+	12	 0x3104cf4	dprmlst_	0	473	489
+	13	 0x3104d04	crnglst_	0	489	525
+	14	 0x380463c	datainst	0	525	545
+	15	 0x3104d14	datatprf	0	545	561
+	16	 0x3104d24	dprmlst_	0	561	577
+	17	 0x3104d34	crnglst_	0	577	613
+	18	 0x3804658	datainst	0	613	633
+	19	 0x3104d44	datatprf	0	633	649
+	20	 0x3104d54	dprmlst_	0	649	665
+	21	 0x3104d64	crnglst_	0	665	701
+	22	 0x3804674	datainst	0	701	721
+	23	 0x3104d74	datatprf	0	721	737
+	24	 0x3104d84	dprmlst_	0	737	753
+	25	 0x3104d94	crnglst_	0	753	789
+	26	 0x3104da4	dintcoll	3	789	998
+	27	 0x3804690	datainst	0	998	1018
+	28	 0x3104df4	datatprf	0	1018	1034
+	29	 0x3104e04	dprmlst_	0	1034	1050
+	30	 0x3104e14	crnglst_	0	1050	1086
+	31	 0x38046ac	datainst	0	1086	1106
+	32	 0x3104e24	datatprf	0	1106	1122
+	33	 0x3104e34	dprmlst_	0	1122	1138
+	34	 0x3104e44	crnglst_	0	1138	1174
+	35	 0x38046c8	datainst	0	1174	1194
+	36	 0x3104e54	datatprf	0	1194	1210
+	37	 0x3104e64	dprmlst_	0	1210	1226
+	38	 0x3104e74	crnglst_	0	1226	1262
+	39	 0x38046e4	datainst	0	1262	1282
+	40	 0x3104e84	datatprf	0	1282	1298
+	41	 0x3104e94	dprmlst_	0	1298	1314
+	42	 0x3104ea4	crnglst_	0	1314	1350
+	43	 0x3804700	datainst	0	1350	1370
+	44	 0x3104eb4	datatprf	0	1370	1386
+	45	 0x3104ec4	dprmlst_	0	1386	1402
+	46	 0x3104ed4	crnglst_	0	1402	1438
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -65,14 +65,14 @@ In namespace "", we have: {
       [0..0][1..1][0..1]
     }
       unrolled indices: {
-        [0][0][0]
-        [0][0][1]
-        [0][1][0]
-        [0][1][1]
-        [1][0][0]
-        [1][0][1]
-        [1][1][0]
-        [1][1][1]
+        [0][0][0] = ::y[0][0][0]
+        [0][0][1] = ::y[0][0][1]
+        [0][1][0] = ::y[0][1][0]
+        [0][1][1] = ::y[0][1][1]
+        [1][0][0] = ::y[1][0][0]
+        [1][0][1] = ::y[1][0][1]
+        [1][1][0] = ::y[1][1][0]
+        [1][1][1] = ::y[1][1][1]
       }
     z = int<32>^3 z with indices: {
       [0..0][1..1][0..1]
@@ -82,14 +82,14 @@ In namespace "", we have: {
       [1..1][1..1][1..1]
     }
       unrolled indices: {
-        [0][0][0]
-        [0][0][1]
-        [0][1][0]
-        [0][1][1]
-        [1][0][0]
-        [1][0][1]
-        [1][1][0]
-        [1][1][1]
+        [0][0][0] = ::z[0][0][0]
+        [0][0][1] = ::z[0][0][1]
+        [0][1][0] = ::z[0][1][0]
+        [0][1][1] = ::z[0][1][1]
+        [1][0][0] = ::z[1][0][0]
+        [1][0][1] = ::z[1][0][1]
+        [1][1][0] = ::z[1][1][0]
+        [1][1][1] = ::z[1][1][1]
       }
 }
 

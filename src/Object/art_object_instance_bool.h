@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.8 2005/02/16 18:44:18 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.9 2005/02/16 23:44:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -12,12 +12,10 @@
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool_fwd.h"
 
+#include <set>
 #include "multikey_set.h"
 #include "ring_node.h"
-#include "multikey.h"
-#include <set>
 
-// #include "multikey_qmap_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -26,12 +24,11 @@ USING_CONSTRUCT
 using std::set;
 using std::ostream;
 using std::string;
-using util::ring_node;
+// using util::ring_node;
 using util::ring_node_derived;
 using namespace util::memory;
-using util::multikey;
 using util::multikey_set;
-using util::multikey_set_element;
+// using util::multikey_set_element;
 using util::multikey_set_element_derived;
 
 //=============================================================================
@@ -103,7 +100,7 @@ virtual	~bool_instance_alias_info();
 		Instantiates officially by linking to parent collection.  
 	 */
 	void
-	instantiate(const never_ptr<const bool_instance_collection> p) {
+	instantiate(const never_ptr<const container_type> p) {
 		NEVER_NULL(p);
 		INVARIANT(!container);
 		container = p;
@@ -117,8 +114,7 @@ virtual	~bool_instance_alias_info();
 	 */
 	bool
 	operator == (const this_type& i) const {
-		return instance == i.instance &&
-			container == i.container;
+		return instance == i.instance && container == i.container;
 	}
 
 
@@ -150,7 +146,7 @@ public:
 
 		void
 		operator () (const bool_instance_alias_info&);
-	};
+	};	// end class transient_info_collector
 
 };	// end class bool_instance_alias_info
 
@@ -179,9 +175,7 @@ operator << (ostream&, const bool_instance_alias_base&);
  */
 class bool_instance : public persistent {
 	// need one back-reference to one alias (connected in a ring)
-	never_ptr<const bool_instance_alias_base>
-			back_ref;
-
+	never_ptr<const bool_instance_alias_base>	back_ref;
 public:
 	bool_instance();
 
@@ -202,9 +196,7 @@ public:
 template <size_t D>
 class bool_instance_alias :
 		public multikey_set_element_derived<
-			D, pint_value_type, bool_instance_alias_base>
-{
-private:
+			D, pint_value_type, bool_instance_alias_base> {
 	typedef	bool_instance_alias<D>			this_type;
 public:
 	typedef	multikey_set_element_derived<
@@ -232,7 +224,7 @@ public:
 	bool_instance_alias(const key_type& k) : parent_type(k) { }
 
 	bool_instance_alias(const key_type& k, 
-		never_ptr<const bool_instance_collection> p) :
+		const never_ptr<const bool_instance_collection> p) :
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
 
@@ -295,7 +287,6 @@ public:
 	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
-
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
@@ -389,7 +380,6 @@ protected:
 
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 class bool_array : public bool_instance_collection {
-private:
 // to grant access to this private constructor
 friend class bool_instance_collection;
 	typedef	bool_array<D>				this_type;

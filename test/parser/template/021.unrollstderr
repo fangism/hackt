@@ -2,31 +2,31 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3302b84	module__	0	0	28
-	2	 0x3300170	namespc_	0	28	56
-	3	 0x3302ba0	procdefn	0	56	116
-	4	 0x3302c14	dintcoll	1	116	151
+	1	 0x3102b84	module__	0	0	28
+	2	 0x3100170	namespc_	0	28	56
+	3	 0x3102ba0	procdefn	0	56	116
+	4	 0x3102c14	dintcoll	1	116	151
 	5	 0x3804604	datainst	0	151	171
-	6	 0x3302c64	datatprf	0	171	187
-	7	 0x3302c70	datadefn	0	187	219
-	8	 0x3302cd4	dprmlst_	0	219	235
-	9	 0x269a024	cnstpi__	0	235	247
-	10	 0x3302ce4	drnglst_	0	247	263
-	11	 0x3302d04	dynrng__	0	263	279
-	12	 0x269a038	cnstpi__	0	279	291
-	13	 0x3302d28	arithexp	0	291	308
-	14	 0x3302d50	spiref__	0	308	328
-	15	 0x3806450	pintcoll	0	328	365
+	6	 0x3102c64	datatprf	0	171	187
+	7	 0x3102c70	datadefn	0	187	219
+	8	 0x3102cd4	dprmlst_	0	219	235
+	9	 0x25f6024	cnstpi__	0	235	247
+	10	 0x3102ce4	drnglst_	0	247	263
+	11	 0x3102d04	dynrng__	0	263	279
+	12	 0x25f6038	cnstpi__	0	279	291
+	13	 0x3102d28	arithexp	0	291	308
+	14	 0x3102d50	spiref__	0	308	328
+	15	 0x3805e50	pintcoll	0	328	365
 	16	 0x3803004	pintinst	0	365	381
-	17	 0x269a04c	cnstpi__	0	381	393
-	18	 0x3302d60	procdefn	0	393	453
-	19	 0x380649c	pintcoll	0	453	490
+	17	 0x25f604c	cnstpi__	0	381	393
+	18	 0x3102d60	procdefn	0	393	453
+	19	 0x3805e9c	pintcoll	0	453	490
 	20	 0x3803018	pintinst	0	490	506
-	21	 0x3302dd4	dintcoll	0	506	553
-	22	 0x3804620	datainst	0	553	573
-	23	 0x3302e24	datatprf	0	573	589
-	24	 0x3302e34	dprmlst_	0	589	605
-	25	 0x3302e60	spiref__	0	605	625
+	21	 0x3102dd4	dintcoll	0	506	545
+	22	 0x3804620	datainst	0	545	565
+	23	 0x3102e34	datatprf	0	565	581
+	24	 0x3102e44	dprmlst_	0	581	597
+	25	 0x3102e70	spiref__	0	597	617
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

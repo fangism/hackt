@@ -14,6 +14,13 @@
 	  Massively cleaned up, as promised.
 	  Affected: multikey_map-related files, art_object_instance_bool.*
 
+	+ -multikey-09:
+	  int_instance_collections are reconstructible once again.  
+	  No aliases reconstructed yet.  
+	  Many test output updated because binary objects have changed size.
+	  All tests pass, this snapshot is good enough to merge back to
+	  the parent branch.  
+
 
 2005-02-15	David Fang	<fangism@users.sourceforge.net>
 
