@@ -1,0 +1,85 @@
+# "configure.in"
+# Process this file with "autoconf" to generate the "configure" script.
+
+# Hint: Try running "autoscan" for suggestions on what should go in here.  
+# Results of autoscan appear in "configure.scan".  
+
+AC_PREREQ(2.59)
+# using art++ results in art-- :(
+AC_INIT(artxx, 0.1.1, fangism@gmail.com)
+AC_CONFIG_AUX_DIR(config)
+AM_CONFIG_HEADER(config.h)
+AC_CONFIG_SRCDIR([src/art_main.cc])
+
+AC_CANONICAL_HOST
+
+# don't need this yet
+# AC_CONFIG_SUBDIRS
+
+# Propagate the make warning flags recursively
+AM_INIT_AUTOMAKE([1.9 -W -Wall -Werror])
+
+# Enable or disable automatic reconfiguring.  
+# AM_MAINTAINER_MODE
+
+# Disabling shared library linking may speed up beta-testing and building.  
+# AC_DISABLE_SHARED
+
+AC_PROG_LIBTOOL
+# This takes care of many standard C[++] compiler configuration checks.  
+
+# Automatically update if libtool script is outdated.  
+# Adds corresponding dependencies to "Makefile.in".  
+AC_SUBST(LIBTOOL_DEPS)
+
+AM_PROG_CC_C_O
+AC_ISC_POSIX
+
+# additional header checks
+AC_CHECK_HEADERS([stddef.h])
+
+# compiler characteristic checks
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_C_INLINE
+AC_C_RESTRICT
+AC_TYPE_SIZE_T
+
+# library functions
+AC_FUNC_ERROR_AT_LINE
+
+# Lex/Yacc support
+AM_PROG_LEX
+AC_PROG_YACC
+
+# Miscellaneous
+AC_PROG_LN_S
+
+AC_CHECK_PROG([BISON], bison, bison)
+AM_CONDITIONAL(HAVE_BISON, test "$BISON" = bison)
+
+# documentation support
+AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
+AM_CONDITIONAL(HAVE_DOXYGEN, test "$DOXYGEN" = doxygen)
+
+AC_CHECK_PROG([DOT], dot, dot)
+AM_CONDITIONAL(HAVE_DOT, test "$DOT" = dot)
+
+AC_CONFIG_FILES([
+	Makefile
+	src/Makefile
+	test/Makefile
+	test/parser/Makefile
+	test/parser/basic/Makefile
+	test/parser/namespace/Makefile
+	test/parser/param/Makefile
+	test/parser/array/Makefile
+	test/parser/process/Makefile
+	test/parser/datatype/Makefile
+	test/parser/template/Makefile
+	test/parser/typedef/Makefile
+	test/parser/connect/Makefile
+	])
+
+AC_OUTPUT
+

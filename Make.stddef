@@ -1,12 +1,11 @@
 # "Make.stddef"
 # make-independent definitions
 
-SHELL = /bin/sh
-AR = ar
-ARFLAGS = -ru
+# SHELL = /bin/sh
 # add -v for verbose
-AWK = awk
+
 CAT = cat
+CHMOD = chmod
 CPP = cpp
 CVS = cvs
 DIFF = diff -B
@@ -14,13 +13,18 @@ DIFF = diff -B
 ECHO = echo
 GREP = grep
 SED = sed
-LN = ln -fs
-RANLIB = ranlib
 RM = rm -f
 MV = mv -f
 SYNC = sync
 TOUCH = touch
-TAR = tar -czvf
+# TAR = tar -czvf
+
+# The following are detected by autoconf
+# AR = ar
+# ARFLAGS = -ru
+# AWK = awk
+# LN = ln -fs
+# RANLIB = ranlib
 
 # defined with intention of self-modification...
 THISMAKEFILE = Makefile

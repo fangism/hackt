@@ -1,0 +1,255 @@
+to do list:
+
+What happened to CFLAGS? didn't accumulate in automake?
+
+Write objects!!!
+	issues: converting pointers to indices
+	dump binary to file
+	load back in from file
+	linkability: 
+	translation tables:
+	compare object dumps
+
+PRS -- new context for type-checking expressions, 
+	expecting bool (not pbool) and returning bool.  (datatype)
+
+
+
+
+
+
+
+type-check and build typedefs
+	need to resolve semantic ambiguity first!
+	partially done, 
+	still too conservative with resective to template argument matching
+	Need to be able to pass parameter context down recursively first...
+
+CHANGE the check_build framework.
+make specific signatures for type-checking, so that return values
+may be of some use.  
+Limit the use of the context object.  
+
+count_ptr (pointer-classes)
+	make .deep_copy method?
+
+collapse parse-tree tokens, subclass keywords...
+	(low-priority)
+
+complex-aggregate arrays-building and concatenation, using { } and #
+
+Rename ART::entity::index_expr to something else to prevent ambiguity with
+	ART::parser::index_expr
+
+type ref cache? distinguish parameter dependent/independent
+	until unroll time
+
+source-to-source translation from art++ to cyc-art [SIK art] or LLkart
+
+DOCUMENTATION
+
+stack (reverse):
+1) implement type-reference cache: one per scope? name/def-space? not global?
+	re-using used_id_map
+2) need expression cache for parameters (work out hashing)
+3) would need to check template formals or param insts
+4) expression type-checking, return types, etc...
+	expr::check_build() for subclasses
+5) built-in type and reference mechanism in progress
+6) template argument type checking: int<pint>
+
+minor: de-virtualize final classes
+
+future: loop and conditional scopespaces
+
+major: do away with redundant hash_maps, and sets in namespace/scopespace
+	stick to used_id_map.
+perhaps eliminate redundant object hash_maps/sets
+	only use used_id_map, but then add dynamic casts on top of lookup
+	in the lookup_blah() methods
+	keep definitions separate from identifiers, or mash them together?
+	placing everything in used_id_map => less maintenance, 
+		but more run-time type resolution
+	(ok, since we forbid name clashes anyways)
+	what about owned sub-namespaces?
+	open using/aliases are kept separate for searching, 
+		but registered in used_id_map (as is)
+
+-------------------------------------------------------------------------------
+MASSIVE CODE CLEAN UP after major deletions... after all the above
+
+array_instantiations:
+add array construction to grammar, with semantics
+	1) { array array } ... === array (concatenation)
+	2) { array, array, ... } === 2d-array (building) new 1st index 0,1,...
+	strict: types and sizes must match!
+
+un-related idea:
+	pointer-library for typing... better error checking
+		dynamic const-ness, run-time const checking?
+		"dynconst_ptr"
+		exclusive ownership, non-ownership, shared ownership...
+		exclusive pointers compatible assign with non-owned...
+
+semantic error handling: build tree/list of errors and print all at end
+
+multiple parsers?, single lexer: (nah.)
+	art, chp, prs, hse, expr (first)...
+	how does one report syntax errors then?  :)
+	awk, awk, awk, awk...
+
+major: if bison is installed under fink, yacc will execute bison
+	which breaks some compatibilty because of differing assumed
+	internal identifiers.  :(
+	Pehaps configure...
+
+GENERAL NOTES:
+	Inline constructors and destructors when it is certain that they
+	will not be referenced directly outside of their compilation module.
+
+
+-------------------------------------------------------------------------------
+DONE
+
+(30.07.04)
+member type-checking for x.y.z
+
+define connection-objects:
+	list of instance_references for aliasing
+	list of instance_references for port connection
+	expression assignments?
+		1) resolved to constants -- keep around? for now, why not?
+			but propagate all constants when type-checking
+		2) resolved to parameters
+
+WRITE MORE REGRESSION TESTS, esp. for arrays, and parameters
+	then commit
+
+minor: pointers that are absolutely NEVER null (and never deleted)
+	should be converted to references (CANCELLED)
+
+sparse/dense arrays:
+	how is the following pseudo-redeclaration to be handled?
+	int a[0];
+	int a[1];
+	or sparse instantiations within loop? aiiiieeee!
+	as we discussed in 5/30/04 meeting...
+
+major: update grammar to deal with arrays
+	empty template arguments, default template arguments
+
+Grammer updates:
+	typedefs (type-aliases) (templated)
+	array construction {...} into complex_aggregates
+	enums (done)
+	blank/default arguments in grammar, such as ports
+		(not type-checked)
+
+(11.07.04)
+segment large .cc files into pieces (art_parser.cc, art_object.cc)
+	also with .h files?
+	Then go through each .h, .cc file and reduce header to 
+		only what is needed, for efficiency.  
+
+index type-checking of static indices:
+	dimensionality and ranges -- work on object_expr's
+	must check for static coverage.  
+	basically report overlaps between index_colection_stack items
+	and indices.  
+
+(10.07.04)
+More Makefile madness: differing recursive invocations
+	Makefile.BSD -- canned
+	Makefile.GNU -- canned
+	use sed on Make.inc to dynamically include one of them.  
+	a phony whichmake target before everything...
+	SOLUTION: bsdmake will use Makefile, gmake will use GNUmakefile.  done
+
+(07.07.04)
+Switch range_array_list and related classes over to expr_objs.  (done)
+
+template formal arguments in definitions and declarations
+	hashlist implementation and such
+	scrapped hashlist for separate list and hash_qmap
+
+instance-collection-stack:
+	define functional interface
+
+
+(24.06.04)
+alias_list::check_build() -- self-contain checking
+	if more than one item in list, 
+
+token_identifier sub-type?
+	wrap as expression, new ID, namespace id...
+	don't need, let list-wrapper classes handle cases
+
+(12.06.04)
+something wrong with open J as K (add_using_alias)
+must fix this first! done... was using deleted memory because 
+	ownership was not properly transferred (fixed)
+
+TEMPLATES: only for processes, extend language to generalize for data types
+	and channels.
+	Currently, type-check doesn't support template specialization, 
+	must fix this!!!
+	Even built in int<> needs to be checked as template.
+
+minor: id.copy_namespace_portion()...
+	encapsulate into method called starting_search_namespace();
+	made obsolete by sublist (virtual list-slice) class
+
+MAJOR: re-hash set_of_ptr class definitions!
+	const-ness doesn't imply not owned memory!
+	also needs boolean ownership flag.  
+	list_of_owned_const_ptr... etc...
+	list<auto_ptr<T> > ?
+	solution: list<count_const_ptr<T> >
+
+
+(30.05.04)
+namespace_id class (like id_expr, but for namespaces)
+
+object_handle:
+	remember to always self() on what's returned by used_id_map[]!!!
+	overload [] operator for scopespace to use used_id_map?
+
+grammar, templates: change grammar to use C++ style templates
+	e.g. template <pint N, pint A[N]> ... definition ...
+
+phase-out type-specific query and lookup methods in name_space class.
+
+(13.05.04)
+phase out: inherit_built_in_types
+	just always look them up in global space
+
+(07.05.04)
+migrate non-terminal types to their specific sub-classes instead of 
+	generic nodes, and update the class constructors accordingly. 
+	Much better for static type-checking.  
+	Need to change node_list!  
+
+(05.05.04)
+function: qualified identifiers:
+	subroutine that returns list of namespaces that match
+	all but last identifier in list (scopes)
+
+qualified identifiers: in various namespace lookup functions, 
+	honor the ::-prefixed absolute qualified identifiers
+
+minor: make symbol-table and object parent pointers const, read-only
+(26.04.04)
+
+parser:
+depending on state stack, get correct union member of value stack, 
+	cast to node*
+
+work out const (read-only) semantics for object* in type-checking
+
+-------------------------------------------------------------------------------
+CANCELLED
+
+more qualified identifier to do: trim linked list such that delimiters 
+	are deleted, and can pass iterators recursively to lookup functions
+	at least for the scope delimiter...
+

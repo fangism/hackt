@@ -1,0 +1,13 @@
+#! /bin/sh
+# this regenerates some critical files
+# run this after "make maintainer-clean" or "make distclean"
+# beware: this file is NOT included in the distribution!
+
+aclocal -I config && \
+autoheader && \
+libtoolize -c && \
+automake --add-missing -c --verbose && \
+autoconf
+
+# may not want verbose for autoconf, aclocal, and autoheader
+

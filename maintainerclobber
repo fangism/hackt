@@ -1,0 +1,53 @@
+#! /bin/sh
+
+# should run "make distclean" first
+
+rm -f *~
+rm -f aclocal.m4
+rm -rf autom4te.cache
+rm -rf .deps
+rm -f .in
+rm -f autoscan.log
+rm -f configure.scan
+rm -f config.status
+rm -f config.cache
+rm -f config.lineno
+rm -f config.log
+rm -f config.h
+rm -f configure
+rm -f src/lexer/funk-lex.c
+(cd src/parser && \
+	rm -f art++.h art++.cc art++.output )
+(cd config && \
+	rm -f install-sh && \
+	rm -f missing && \
+	rm -f mkinstalldirs && \
+	rm -f config.guess && \
+	rm -f config.sub && \
+	rm -f compile && \
+	rm -f depcomp && \
+	rm -f ltmain.sh )
+rm -f config.h.in
+rm -f Makefile Makefile.in
+(cd src && rm -f Makefile Makefile.in )
+(cd test && rm -f Makefile Makefile.in && \
+	(cd parser && rm -f Makefile Makefile.in && \
+		(cd basic && rm -f Makefile Makefile.in) && \
+		(cd array && rm -f Makefile Makefile.in) && \
+		(cd connect && rm -f Makefile Makefile.in) && \
+		(cd datatype && rm -f Makefile Makefile.in) && \
+		(cd namespace && rm -f Makefile Makefile.in) && \
+		(cd param && rm -f Makefile Makefile.in) && \
+		(cd process && rm -f Makefile Makefile.in) && \
+		(cd template && rm -f Makefile Makefile.in) && \
+		(cd typedef && rm -f Makefile Makefile.in) && \
+	) \
+)
+rm -f stamp-h1
+rm -f libtool
+
+# to see what's left:
+ls -R
+
+# run bootstrap to regenerate
+
