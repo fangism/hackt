@@ -594,10 +594,97 @@ prefix_expr::rightmost(void) const {
 	return e->rightmost();
 }
 
+/**
+	Does basic checking on expression.  
+	Grabs last expression off top of stack and replaces it.  
+	Always returns NULL, rather useless.  
+ */
 never_const_ptr<object>
 prefix_expr::check_build(never_ptr<context> c) const {
-	cerr << "prefix_expr::check_build(): I'm not done yet!" << endl;
-	e->check_build(c);
+	e->check_build(c);	// useless return value
+	count_ptr<object> o(c->pop_top_object_stack());
+	if (!o) {
+		// error propagates up the stack
+		cerr << "ERROR building expression at " << e->where() << endl;
+		c->push_object_stack(count_ptr<object>(NULL));
+		return never_const_ptr<object>(NULL);
+	}
+	count_ptr<param_expr> pe(o.is_a<param_expr>());
+	assert(pe);	// must be a param expression!
+	count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
+	count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
+
+	const int ch = op.is_a<token_char>()->get_char();
+	switch(ch) {
+		case '-':
+			// integer negation
+			if (!ie) {
+				cerr << "Unary \'-\' operator requires a "
+					"pint argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< e->where() << endl;
+				c->push_object_stack(count_ptr<object>(NULL));
+				break;
+			}
+			if (ie->is_static_constant()) {
+				// constant simplification
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(
+						- ie->static_constant_int())));
+			} else {
+				c->push_object_stack(count_ptr<pint_unary_expr>(
+					new pint_unary_expr(ch, ie)));
+			}
+			break;
+		case '!':
+			// integer logical negation
+			if (!ie) {
+				cerr << "Unary \'!\' operator requires a "
+					"pint argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< e->where() << endl;
+				c->push_object_stack(count_ptr<object>(NULL));
+				break;
+			}
+			if (ie->is_static_constant()) {
+				// constant simplification
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(
+						! ie->static_constant_int())));
+			} else {
+				c->push_object_stack(count_ptr<pint_unary_expr>(
+					new pint_unary_expr(ch, ie)));
+			}
+			break;
+		case '~':
+			// context-dependent? in PRS or not?
+			// is bit-wise negation for ints, 
+			// logical negation for bools?
+			// for now, restrict to bools only...
+			if (!be) {
+				cerr << "Unary \'~\' operator requires a "
+					"pint argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< e->where() << endl;
+				c->push_object_stack(count_ptr<object>(NULL));
+				break;
+			}
+			if (be->is_static_constant()) {
+				// constant simplification
+				c->push_object_stack(count_ptr<pbool_const>(
+					new pbool_const(
+						!be->static_constant_bool())));
+			} else {
+				c->push_object_stack(
+					count_ptr<pbool_unary_expr>(
+						new pbool_unary_expr(be, ch)));
+			}
+			break;
+		default:
+			cerr << "Bad operator char \'" << ch << "\' in "
+				"prefix_expr::check_build()!" << endl;
+			assert(0);
+	}
 	return never_const_ptr<object>(NULL);
 }
 
@@ -776,6 +863,7 @@ binary_expr::rightmost(void) const {
 	return r->rightmost();
 }
 
+#if 0
 /** this should be abstract, not exist */
 never_const_ptr<object>
 binary_expr::check_build(never_ptr<context> c) const {
@@ -789,6 +877,7 @@ binary_expr::check_build(never_ptr<context> c) const {
 	// switch on operation
 	return never_const_ptr<object>(NULL);
 }
+#endif
 
 //=============================================================================
 // class arith_expr method definitions
@@ -805,6 +894,74 @@ arith_expr::~arith_expr() { }
 ostream&
 arith_expr::what(ostream& o) const {
 	return o << "(arith-expr)";
+}
+
+never_const_ptr<object>
+arith_expr::check_build(never_ptr<context> c) const {
+	l->check_build(c);	// useless return value
+	r->check_build(c);	// useless return value
+	count_ptr<object> ro(c->pop_top_object_stack());
+	count_ptr<object> lo(c->pop_top_object_stack());
+	if (!ro || !lo) {
+		if (!lo)
+			cerr << "ERROR building expression at " << 
+				l->where() << endl;
+		if (!ro)
+			cerr << "ERROR building expression at " << 
+				r->where() << endl;
+		c->push_object_stack(count_ptr<object>(NULL));
+		return never_const_ptr<object>(NULL);
+	}
+	count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
+	if (!li || !ri) {
+		if (!li) {
+			cerr << "ERROR arith_expr expected a pint, but got a ";
+			lo->what(cerr) << " at " << l->where() << endl;;
+		}
+		if (!ri) {
+			cerr << "ERROR arith_expr expected a pint, but got a ";
+			ro->what(cerr) << " at " << r->where() << endl;;
+		}
+		c->push_object_stack(count_ptr<object>(NULL));
+		return never_const_ptr<object>(NULL);
+	}
+	// else is safe to make arith_expr object
+	const char ch = op.is_a<token_char>()->get_char();
+	if (li->is_static_constant() && ri->is_static_constant()) {
+		const int lc = li->static_constant_int();
+		const int rc = ri->static_constant_int();
+		switch(ch) {
+			case '+':
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(lc +rc)));
+				break;
+			case '-':
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(lc -rc)));
+				break;
+			case '*':
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(lc *rc)));
+				break;
+			case '/':
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(lc /rc)));
+				break;
+			case '%':
+				c->push_object_stack(count_ptr<pint_const>(
+					new pint_const(lc %rc)));
+				break;
+			default:
+				cerr << "Bad operator char \'" << ch << "\' in "
+					"arith_expr::check_build()!" << endl;
+				assert(0);
+		}
+	} else {
+		c->push_object_stack(count_ptr<entity::arith_expr>(
+			new entity::arith_expr(li, ch, ri)));
+	}
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -824,6 +981,12 @@ relational_expr::what(ostream& o) const {
 	return o << "(relational-expr)";
 }
 
+never_const_ptr<object>
+relational_expr::check_build(never_ptr<context> c) const {
+	// temporary
+	return node::check_build(c);
+}
+
 //=============================================================================
 // class logical_expr method definitions
 
@@ -839,6 +1002,12 @@ logical_expr::~logical_expr() { }
 ostream&
 logical_expr::what(ostream& o) const {
 	return o << "(logical-expr)";
+}
+
+never_const_ptr<object>
+logical_expr::check_build(never_ptr<context> c) const {
+	// temporary
+	return node::check_build(c);
 }
 
 //=============================================================================

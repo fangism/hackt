@@ -131,10 +131,18 @@ int at_eof(void);
 DIGIT		[0-9]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
-INT		[+-]?{DIGIT}+
-EXP		[eE]{INT}
-FRACTIONAL	"."{DIGIT}+
+INT		{DIGIT}+
+SIGN_INT	[+-]?{INT}
+EXP		[eE]{SIGN_INT}
+FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
+
+/* note: '-' signed ints are lexed as two tokens and combined in the parser
+	as a unary expr, thus, no numerical tokens in the language 
+	*start* with a sign.  
+	A sign in the exponent of a floating-point number is acceptable.  
+*/
+
 ID		{IDHEAD}{IDBODY}*
 BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+

@@ -610,6 +610,15 @@ virtual	bool check_null_template_argument(void) const;
 	never_const_ptr<param_instantiation>
 		lookup_template_formal(const string& id) const;
 
+protected:
+	// Q: what if expressions are involved, can't statically resolve?
+	// e.g. with arrays of parameters... and referenced indices.
+	// well, they must be at least initialized (usable).  
+	// need notion of formal equivalence
+	bool equivalent_template_formals(
+		never_const_ptr<definition_base> d) const;
+
+public:
 /** sub-classes shouldn't have to re-implement this */
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
@@ -772,8 +781,19 @@ virtual	never_const_ptr<fundamental_type_reference>
 	instantiation_state current_collection_state(void) const;
 	const_range_list detect_static_overlap(
 		index_collection_item_ptr_type r) const;
-	const_range_list add_index_range(index_collection_item_ptr_type r);
-	const_range_list merge_index_ranges(never_const_ptr<instantiation_base> i);
+	const_range_list add_index_range(
+		index_collection_item_ptr_type r);
+	const_range_list merge_index_ranges(
+		never_const_ptr<instantiation_base> i);
+
+private:
+	bool formal_size_equivalent(
+		never_const_ptr<instantiation_base> b) const;
+public:
+	bool template_formal_equivalent(
+		never_const_ptr<instantiation_base> b) const;
+	bool port_formal_equivalent(
+		never_const_ptr<instantiation_base> b) const;
 
 /** currently always returns NULL, useless */
 virtual	never_const_ptr<instance_reference_base>

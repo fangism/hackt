@@ -356,8 +356,15 @@ pint_unary_expr::what(ostream& o) const {
 	return o << "pint-unary-expr";
 }
 
+ostream&
+pint_unary_expr::dump(ostream& o) const {
+	// parentheses? check operator precedence
+	return ex->dump(o << op);
+}
+
 string
 pint_unary_expr::hash_string(void) const {
+//	return op +ex->hash_string();
 	return ex->hash_string() +op;
 }
 
@@ -422,6 +429,12 @@ pbool_unary_expr::pbool_unary_expr(
 ostream&
 pbool_unary_expr::what(ostream& o) const {
 	return o << "pbool-unary-expr";
+}
+
+ostream&
+pbool_unary_expr::dump(ostream& o) const {
+	// parentheses?
+	return ex->dump(o << op);
 }
 
 string
@@ -820,6 +833,11 @@ const_range::static_overlap(const const_range& r) const {
 	return const_range(temp);		// private constructor
 }
 
+bool
+const_range::operator == (const const_range& c) const {
+	return (first == c.first) && (second == c.second);
+}
+
 #if 0
 bool
 const_range::is_initialized(void) const {
@@ -946,6 +964,24 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 		// overlap is possible but not definite, can't reject now.  
 		return const_range_list();		// empty list
 	}
+}
+
+/**
+	Whether two multidimensional range lists are identical.  
+	Not just whether or not the size of the spanned ranges are equal.  
+ */
+bool
+const_range_list::operator == (const const_range_list& c) const {
+	if (size() != c.size())
+		return false;
+	// else check
+	const_iterator i = begin();
+	const_iterator j = c.begin();
+	for ( ; i!=end(); i++, j++) {
+		if (*i != *j)
+			return false;
+	}
+	return true;
 }
 
 //=============================================================================

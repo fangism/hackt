@@ -163,7 +163,9 @@ context::top_namespace(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	PHASE OUT current_prototype? NO, need for adding formals!
+	Adds a declaration and checks against any previous 
+	prototype with the same name.  
+	Caller should check the return value if there is an error to report.  
  */
 never_ptr<definition_base>
 context::add_declaration(excl_ptr<definition_base> d) {
@@ -172,7 +174,7 @@ context::add_declaration(excl_ptr<definition_base> d) {
 		// something went wrong
 		type_error_count++;
 		// additional error message isn't really necessary...
-		cerr << endl << "ERROR in context::add_declaration().  ";
+//		cerr << endl << "ERROR in context::add_declaration().  ";
 //		cerr << d->where() << endl;	// caller will do
 	}
 	return ret;

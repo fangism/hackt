@@ -113,6 +113,10 @@ never_const_ptr<instantiation_base>
 // just a thought... need to do this soon
 // void	add_port_formal(const instantiation_base* d, const port_formal_id& p);
 
+	bool equivalent_port_formals(
+		never_const_ptr<process_definition> p) const;
+	bool require_signature_match(never_const_ptr<definition_base> d) const;
+
 };	// end class process_definition
 
 //=============================================================================

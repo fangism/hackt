@@ -1468,9 +1468,9 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 			} else {
 				// signature mismatch!
 				// also catches class type mismatch
-				cerr << "new declaration for " << k <<
-					"doesn't match previous declaration. "
-					"ERROR! ";
+				cerr << "new declaration for \"" << k <<
+					"\" doesn't match previous "
+					"declaration.  ERROR! ";
 				// give details...
 				return never_ptr<definition_base>(NULL);
 			}

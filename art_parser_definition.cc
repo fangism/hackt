@@ -460,6 +460,9 @@ process_signature::get_name(void) const {
 	previous signature if found.  
 	\param c context is modifiable in case new concrete-types update
 		the type-cache.  
+	\return pointer to definition if either newly created, 
+		or previous declaration if it is exact match, 
+		else returns NULL upon failure.  
  */
 never_const_ptr<object>
 process_signature::check_build(never_ptr<context> c) const {
@@ -476,13 +479,20 @@ process_signature::check_build(never_ptr<context> c) const {
 	}
 	if (ports && !ports->empty()) {
 		never_const_ptr<object> o(ports->check_build(c));
+		// return value is the type used to instantiate, or NULL
 		if (!o) {
 			cerr << ports->where() << endl;
 			exit(1);
 		}
 	}
 	// this checks for conflicts in definitions.  
-	return c->add_declaration(c->get_current_prototype());
+	never_const_ptr<object>
+		o(c->add_declaration(c->get_current_prototype()));
+	if (!o) {
+		cerr << where() << endl;
+		exit(1);
+	}
+	return o;
 //	return c->set_current_prototype(ret);
 }
 
@@ -565,21 +575,29 @@ process_def::rightmost(void) const {
  */
 never_const_ptr<object>
 process_def::check_build(never_ptr<context> c) const {
-	return node::check_build(c);		// temporary
 #if 0
+	return node::check_build(c);		// temporary
+#else
 	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		idt->what(cerr << c->auto_indent() << 
 			"process_def::check_build(...): ");
 	)
-	o = idt->check_build(c);
-	assert(o);
-	o = ports->check_build(c);
-	assert(o);
+	o = process_signature::check_build(c);
+	if (!o) {
+		cerr << "ERROR checking signature for process "
+			<< get_name() << " doesn\'t match that of "
+			"previous declaration!  " << where() << endl;
+		exit(1);
+	}
 
-	c->open_process(get_name());		// will handle errors
+	// only problem from here is if process was already defined.  
+	// in which case, open_process_definition will exit(1);
+	c->open_process_definition(get_name());		// will handle errors
 	o = body->check_build(c);
-	assert(o);
+	// useless return value
+//	assert(o);
+
 	c->close_process_definition();
 	// nothing better to do
 	return c->top_namespace();

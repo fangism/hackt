@@ -132,6 +132,7 @@ instantiation_base::detect_static_overlap(
 }
 
 /**
+	TO DO: this can only be done with non-formals.  Check this.  
 	If this instance is a collection, add the new range of indices
 	which may be sparse or dense.  
 	This is only applicable if this instantiation was initialized
@@ -184,6 +185,114 @@ instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
 		// else keep checking...
 	}
 	return const_range_list();
+}
+
+/**
+	For two template formals to be equivalent, their
+	type and size must match, names need not.  
+	Currently allows comparison of parameter and non-parameter
+	formal types.  
+	Is conservative because parameters (in sizes) may be dynamic, 
+	or collective.  
+ */
+bool
+instantiation_base::template_formal_equivalent(
+		never_const_ptr<instantiation_base> b) const {
+	assert(b);
+	// first make sure base types are equivalent.  
+	never_const_ptr<fundamental_type_reference>
+		this_type(get_type_ref());
+	never_const_ptr<fundamental_type_reference>
+		b_type(b->get_type_ref());
+	if (!this_type->may_be_equivalent(b_type)) {
+		// then their instantiation types differ
+		return false;
+	}
+	// then compare sizes and dimensionality
+	return formal_size_equivalent(b);
+}
+
+/**
+	Much like equivalence for template formals, except that
+	names also need to match for port formals.  
+	Rationale: need to be able to refer to the public ports
+	of a prototype, which must correspond to those of the definition, 
+	and vice versa.  
+ */
+bool
+instantiation_base::port_formal_equivalent(
+		never_const_ptr<instantiation_base> b) const {
+	assert(b);
+	// first make sure base types are equivalent.  
+	never_const_ptr<fundamental_type_reference>
+		this_type(get_type_ref());
+	never_const_ptr<fundamental_type_reference>
+		b_type(b->get_type_ref());
+	if (!this_type->may_be_equivalent(b_type)) {
+		// then their instantiation types differ
+		return false;
+	}
+	// then compare sizes and dimensionality
+	if (formal_size_equivalent(b))
+		return false;
+	// last, but not least, name must match
+	return key == b->get_name();
+}
+
+/**
+	Just compares dimensionality and sizes of an instantiation
+	in a template formal context.  
+	This applies to both template formals and port formals.  
+	Is conservative, not precise, in the case where one of the
+	parameter sizes (dimension) is dynamic.  
+	\param b the other template formal instantiation to compare against.  
+	\return true if dimensionality and sizes are equal.  
+ */
+bool
+instantiation_base::formal_size_equivalent(
+		never_const_ptr<instantiation_base> b) const {
+	assert(b);
+	if (depth != b->depth) {
+		// useful error message here: dimensions don't match
+		return false;
+	}
+	// formal instances can only be declared once, i.e. 
+	// can't add instances to their collection.
+	// and they must be dense arrays.  
+	const size_t this_coll = index_collection.size();
+	const size_t b_coll = b->index_collection.size();
+	assert(this_coll <= 1);
+	assert(b_coll <= 1);
+	if (this_coll != b_coll) {
+		// one is scalar, the other is array
+		return false;
+	}
+	if (this_coll == 1) {
+		// compare their collections
+		const index_collection_type::const_iterator i =
+			index_collection.begin();
+		const index_collection_type::const_iterator j =
+			b->index_collection.begin();
+		// difficult: what if some dimensions are not static?
+		// depends on some other former parameter?
+		// This is when it would help to walk the 
+		// former template formals list when visited with the second.  
+		count_const_ptr<const_range_list>
+			ic(i->is_a<const_range_list>());
+		count_const_ptr<const_range_list>
+			jc(j->is_a<const_range_list>());
+		if (ic && jc) {
+			// compare dense ranges in each dimension
+			// must be equal!
+			return (*ic == *jc);
+		} else {
+			// one of them is dynamic, thus we must conservatively
+			return true;
+		}
+	} else {
+		// both are scalar, single instances
+		return true;
+	}
 }
 
 //=============================================================================

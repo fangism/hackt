@@ -148,6 +148,7 @@ port_formal_id::rightmost(void) const {
 	// there should be some open definition already
 	// type should already be set in the context
 	TO DO:
+	\return pointer to newly added formal instance.  
  */
 never_const_ptr<object>
 port_formal_id::check_build(never_ptr<context> c) const {
@@ -212,6 +213,29 @@ port_formal_decl::leftmost(void) const {
 line_position
 port_formal_decl::rightmost(void) const {
 	return ids->rightmost();
+}
+
+/**
+	Very similar to instance_declaration::check_build.  
+	\return pointer to the conrete-type used for instantiation
+		if there were no problems, else return NULL.  
+ */
+never_const_ptr<object>
+port_formal_decl::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> t;
+	t = type->check_build(c);
+		// should set the current_fundamental_type in context
+	c->reset_current_definition_reference();
+		// no longer need the base definition
+	if (t) {
+		ids->check_build(c);
+	} else {
+		cerr << "ERROR with concrete-type in port formal decl. at "
+			<< type->where() << endl;
+		return never_const_ptr<object>(NULL);
+	}
+	c->reset_current_fundamental_type();
+	return t;
 }
 
 //=============================================================================

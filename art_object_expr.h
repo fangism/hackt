@@ -362,7 +362,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	Only possibilites, unary negation, bit-wise negation.  
+	Only possibilities, unary negation, bit-wise negation.  
  */
 class pint_unary_expr : public pint_expr {
 protected:
@@ -374,6 +374,7 @@ public:
 	pint_unary_expr(count_const_ptr<pint_expr> e, const char o);
 
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
 #if 0
@@ -393,6 +394,7 @@ public:
 //-----------------------------------------------------------------------------
 /**
 	Only possibility, NOT-expr.  
+	Character may be '~' or '!'.  
  */
 class pbool_unary_expr : public pbool_expr {
 protected:
@@ -402,7 +404,9 @@ protected:
 public:
 	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
 	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
+
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 	size_t dimensions(void) const { return 0; }
 #if 0
@@ -661,6 +665,8 @@ public:
 	string hash_string(void) const;
 
 	const_range static_overlap(const const_range& r) const;
+
+	bool operator == (const const_range& c) const;
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -712,6 +718,8 @@ explicit const_range_list(const const_index_list& i);
 	ostream& dump(ostream& o) const;
 	size_t size(void) const;
 	const_range_list static_overlap(const range_expr_list& r) const;
+
+	bool operator == (const const_range_list& c) const;
 };	// end class const_range_list
 
 //-----------------------------------------------------------------------------

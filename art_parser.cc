@@ -755,6 +755,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << base->where() << endl;
+		exit(1);		// temporary
 		return never_const_ptr<object>(NULL);
 	}
 
@@ -772,6 +773,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 		if (!o)	{
 			cerr << "concrete_type_ref: "
 				"bad template args!  ERROR" << endl;
+			exit(1);		// temporary
 			return never_const_ptr<object>(NULL);
 		}
 	} else {
@@ -781,12 +783,15 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 		if(!d->check_null_template_argument()) {
 			cerr << "definition expecting template arguments "
 				"where none were given!" << endl;
+			exit(1);		// temporary
 			return never_const_ptr<object>(NULL);
 		}
 	}
 
 	// we've made it!  set the fundamental_type_reference for instantiation
 	return c->set_current_fundamental_type();
+	// who should reset_current_fundamental_type?
+	// the decl_lists? or their containers?
 }
 
 //=============================================================================

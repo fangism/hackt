@@ -62,6 +62,7 @@ definition_base::dump(ostream& o) const {
 
 /**
 	Used for checking when a type should have null template arguments.  
+	Really just a special case of general template argument checking.  
 	\return true if this definition is not templated, 
 		or the template formals signature is empty.  
  */
@@ -100,6 +101,42 @@ definition_base::lookup_template_formal(const string& id) const {
 	} else {
 		return never_const_ptr<param_instantiation>(NULL);
 	}
+}
+
+/**
+	Compares the sequence of template formals for a generic definition.  
+	\return true if they are equivalent.  
+ */
+bool
+definition_base::equivalent_template_formals(
+		never_const_ptr<definition_base> d) const {
+	assert(d);
+	const template_formals_list_type& dtemp = d->template_formals_list;
+	if (template_formals_list.size() != dtemp.size()) {
+		// useful error message here
+		cerr << "ERROR: number of template formal parameters "
+			"doesn\'t match!" << endl;
+		return false;
+	}
+	template_formals_list_type::const_iterator i =
+		template_formals_list.begin();
+	template_formals_list_type::const_iterator j = dtemp.begin();
+	for ( ; i!=template_formals_list.end() && j!=dtemp.end(); i++, j++) {
+		never_const_ptr<param_instantiation> itf(*i);
+		never_const_ptr<param_instantiation> jtf(*j);
+		assert(itf);		// template formals not optional
+		assert(jtf);		// template formals not optional
+		// only type and size need to be equal, not name
+		if (!itf->template_formal_equivalent(jtf)) {
+			// useful error message goes here
+			cerr << "ERROR: template formals do not match!" << endl;
+			return false;
+		}
+		// else continue checking
+	}
+	// sanity check, we made sure sizes match.
+	assert(i==template_formals_list.end() && j==dtemp.end());
+	return true;
 }
 
 string
@@ -654,6 +691,82 @@ process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
 	used_id_map[f->hash_string()] = f;
 	assert(!f);		// ownership transferred
 	return pf;
+}
+
+/**
+	Checks that template formals set and port formals set 
+	are equivalent.  
+	Equivalence should be commutative?
+	Question: what do we do about template parameters with defaults?
+	Need to update grammar: only allow defaults in the definition.  
+	\param d the definition to check against.  
+	\return true if equivalent, else false.  
+ */
+bool
+process_definition::require_signature_match(
+		never_const_ptr<definition_base> d) const {
+	assert(d);
+	never_const_ptr<process_definition> pd(d.is_a<process_definition>());
+	if (!pd) {
+		cerr << "ERROR: definition " << d->get_name() <<
+			" is not even a process!" << endl;
+		return false;
+	}
+	// check for name match
+	if (key != pd->get_name()) {
+		cerr << "ERROR: names " << key << " and " << d->get_name() <<
+			" don\'t even match!" << endl;
+		return false;
+	}
+	// check for owner-namespace match
+	if (parent != pd->parent) {
+		cerr << "ERROR: definition owner namespaces don\'t match: "
+			<< endl << "\tgot: " << parent->get_qualified_name()
+			<< " and " << pd->parent->get_qualified_name() << endl;
+		return false;
+	}
+	// check for template formal list match (in order)
+	if (!equivalent_template_formals(pd)) {
+		cerr << "ERROR: template formals do not match!  " << endl;
+		return false;
+	}
+	// check for port formal list match (in order)
+	if (!equivalent_port_formals(pd)) {
+		return false;
+	}
+	return true;
+}
+
+/**
+	Port formals are equivalent if their order of instantiations
+	matches exactly, type, size, and even name.  
+ */
+bool
+process_definition::equivalent_port_formals(
+		never_const_ptr<process_definition> p) const {
+	assert(p);
+	const port_formals_list_type& pports = p->port_formals_list;
+	if (port_formals_list.size() != pports.size()) {
+		cerr << "ERROR: number of port formal parameters "
+			"doesn\'t match!" << endl;
+		return false;
+	}
+	port_formals_list_type::const_iterator i = 
+		port_formals_list.begin();
+	port_formals_list_type::const_iterator j = pports.begin();
+	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
+		never_const_ptr<instantiation_base> ipf(*i);
+		never_const_ptr<instantiation_base> jpf(*j);
+		assert(ipf);
+		assert(jpf);
+		if (!ipf->port_formal_equivalent(jpf)) {
+			// descriptive error message, please
+			cerr << "ERROR: port formals do not match!" << endl;
+			return false;
+		}
+	}
+	assert(i==port_formals_list.end() && j==pports.end());
+	return true;
 }
 
 //=============================================================================

@@ -296,40 +296,49 @@ virtual	~binary_expr();
 virtual	ostream& what(ostream& o) const = 0;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;	// = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class binary_expr
 
 //-----------------------------------------------------------------------------
-/// class of arithmetic expressions
+/**
+	Class of arithmetic expressions.  
+	Takes ints as arguments and returns an int.  
+ */
 class arith_expr : public binary_expr {
 public:
 	arith_expr(const expr* left, const terminal* o, const expr* right);
 	~arith_expr();
 
 	ostream& what(ostream& o) const;
-//	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
-/// class of relational expressions
+/**
+	Class of relational expressions.  
+	Takes ints as arguments and returns a bool.  
+ */
 class relational_expr : public binary_expr {
 public:
 	relational_expr(const expr* left, const terminal* o, const expr* right);
 	~relational_expr();
 
 	ostream& what(ostream& o) const;
-//	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
-/// class of logical expressions
+/**
+	Class of logical expressions
+	Takes bools as arguments and returns a bool.  
+ */
 class logical_expr : public binary_expr {
 public:
 	logical_expr(const expr* left, const terminal* o, const expr* right);
 	~logical_expr();
 
 	ostream& what(ostream& o) const;
-//	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class logical_expr
 
 //=============================================================================

@@ -510,8 +510,8 @@ instance_declaration::check_build(never_ptr<context> c) const {
 	t = type->check_build(c);
 		// should set the current_fundamental_type
 	c->reset_current_definition_reference();
+		// no longer need the base definition
 	if (t) {
-		assert(ids);
 		ids->check_build(c);		// return value?
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "

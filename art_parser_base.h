@@ -175,6 +175,7 @@ public:
 explicit token_char(const int i);
 virtual ~token_char();
 
+	int get_char(void) const { return c; }
 virtual int string_compare(const char* d) const;
 virtual ostream& what(ostream& o) const;
 };      // end class token_char

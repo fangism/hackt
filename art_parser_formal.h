@@ -170,11 +170,12 @@ protected:
 public:
 	port_formal_decl(const concrete_type_ref* t, 
 		const port_formal_id_list* i);
-virtual	~port_formal_decl();
+	~port_formal_decl();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class port_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -214,12 +215,12 @@ public:
 	template_formal_id(const token_identifier* n,
 		const dense_range_list* d, 
 		const token_char* e = NULL, const expr* v = NULL);
-virtual	~template_formal_id();
+	~template_formal_id();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -255,12 +256,12 @@ protected:
 public:
 	template_formal_decl(const token_paramtype* t, 
 		const template_formal_id_list* i);
-virtual	~template_formal_decl();
+	~template_formal_decl();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
