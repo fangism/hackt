@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.7 2005/01/16 04:47:23 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.7.12.1 2005/01/25 20:34:02 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -37,7 +37,9 @@ sequential_scope::sequential_scope() : instance_management_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sequential_scope::~sequential_scope() { }
+sequential_scope::~sequential_scope() {
+	STACKTRACE("~sequential_scope()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

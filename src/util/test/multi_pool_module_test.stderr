@@ -1,125 +1,125 @@
 START-initialization: stacktrace
 END---initialization: stacktrace
 START-initialization: twiddle_dee module
-\- list_vector_pool::list_vector_pool()
-Reserved twiddle_dum chunk of size 8*1 starting at 0x805b298
-/- list_vector_pool::list_vector_pool()
-\- list_vector_pool::list_vector_pool()
-Reserved twiddle_dee chunk of size 8*1 starting at 0x805b598
-/- list_vector_pool::list_vector_pool()
+\- list_vector_pool()
+Reserved twiddle_dum chunk of size 8*1 starting at 0x805b260
+/- list_vector_pool()
+\- list_vector_pool()
+Reserved twiddle_dee chunk of size 8*1 starting at 0x805b560
+/- list_vector_pool()
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dum
 | | \- destroy twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dum
-Allocated twiddle_dum from pool @ 0x805b298
+Allocated twiddle_dum from pool @ 0x805b260
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dum
-at 0x805b298
+at 0x805b260
 /- construct twiddle_dum
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dum
 | | \- destroy twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dum
-Allocated twiddle_dum from pool @ 0x805b299
+Allocated twiddle_dum from pool @ 0x805b261
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dum
-at 0x805b299
+at 0x805b261
 /- construct twiddle_dum
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dee
 | | \- destroy twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dee
-Allocated twiddle_dee from pool @ 0x805b598
+Allocated twiddle_dee from pool @ 0x805b560
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dee
-at 0x805b598
+at 0x805b560
 /- construct twiddle_dee
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dee
 | | \- destroy twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dee
-Allocated twiddle_dee from pool @ 0x805b599
+Allocated twiddle_dee from pool @ 0x805b561
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dee
-at 0x805b599
+at 0x805b561
 /- construct twiddle_dee
 END---initialization: twiddle_dee module
 START-initialization: twiddle_dum module
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dee
 | | \- destroy twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dee
-Allocated twiddle_dee from pool @ 0x805b59a
+Allocated twiddle_dee from pool @ 0x805b562
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dee
-at 0x805b59a
+at 0x805b562
 /- construct twiddle_dee
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dee
 | | \- destroy twiddle_dee
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dee
-Allocated twiddle_dee from pool @ 0x805b59b
+Allocated twiddle_dee from pool @ 0x805b563
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dee
-at 0x805b59b
+at 0x805b563
 /- construct twiddle_dee
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dum
 | | \- destroy twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dum
-Allocated twiddle_dum from pool @ 0x805b29a
+Allocated twiddle_dum from pool @ 0x805b262
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dum
-at 0x805b29a
+at 0x805b262
 /- construct twiddle_dum
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- construct twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- construct twiddle_dum
 | | \- destroy twiddle_dum
-at 0xbfffe710
+at 0xbffff010
 | | /- destroy twiddle_dum
-Allocated twiddle_dum from pool @ 0x805b29b
+Allocated twiddle_dum from pool @ 0x805b263
 | /- list_vector_pool::allocate()
 /- operator new
 \- construct twiddle_dum
-at 0x805b29b
+at 0x805b263
 /- construct twiddle_dum
 END---initialization: twiddle_dum module
 START-initialization: test-main
@@ -130,30 +130,30 @@ done with static initialization, start of main()
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- construct twiddle_dum
-at 0xbfffe6d0
+at 0xbfffefd0
 | | | | /- construct twiddle_dum
 | | | | \- destroy twiddle_dum
-at 0xbfffe6d0
+at 0xbfffefd0
 | | | | /- destroy twiddle_dum
-Allocated twiddle_dum from pool @ 0x805b29c
+Allocated twiddle_dum from pool @ 0x805b264
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- construct twiddle_dum
-at 0x805b29c
+at 0x805b264
 | | /- construct twiddle_dum
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- construct twiddle_dee
-at 0xbfffe6d0
+at 0xbfffefd0
 | | | | /- construct twiddle_dee
 | | | | \- destroy twiddle_dee
-at 0xbfffe6d0
+at 0xbfffefd0
 | | | | /- destroy twiddle_dee
-Allocated twiddle_dee from pool @ 0x805b59c
+Allocated twiddle_dee from pool @ 0x805b564
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- construct twiddle_dee
-at 0x805b59c
+at 0x805b564
 | | /- construct twiddle_dee
 | /- never_let_go()
 | \- never_let_go()
@@ -163,133 +163,133 @@ at 0x805b59c
 done with main(), begin static destruction.
 /- MAIN
 \- destroy twiddle_dee
-at 0x805b59c
+at 0x805b564
 /- destroy twiddle_dee
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dee @ 0x805b59c to free-list.
+Returned twiddle_dee @ 0x805b564 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dum
-at 0x805b29c
+at 0x805b264
 /- destroy twiddle_dum
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dum @ 0x805b29c to free-list.
+Returned twiddle_dum @ 0x805b264 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 START-destruction: test-main
 END---destruction: test-main
 START-destruction: twiddle_dum module
 \- destroy twiddle_dum
-at 0x805b29b
+at 0x805b263
 /- destroy twiddle_dum
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dum @ 0x805b29b to free-list.
+Returned twiddle_dum @ 0x805b263 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dum
-at 0x805b29a
+at 0x805b262
 /- destroy twiddle_dum
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dum @ 0x805b29a to free-list.
+Returned twiddle_dum @ 0x805b262 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dee
-at 0x805b59b
+at 0x805b563
 /- destroy twiddle_dee
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dee @ 0x805b59b to free-list.
+Returned twiddle_dee @ 0x805b563 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dee
-at 0x805b59a
+at 0x805b562
 /- destroy twiddle_dee
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dee @ 0x805b59a to free-list.
+Returned twiddle_dee @ 0x805b562 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 END---destruction: twiddle_dum module
 START-destruction: twiddle_dee module
 \- destroy twiddle_dee
-at 0x805b599
+at 0x805b561
 /- destroy twiddle_dee
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dee @ 0x805b599 to free-list.
+Returned twiddle_dee @ 0x805b561 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dee
-at 0x805b598
+at 0x805b560
 /- destroy twiddle_dee
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dee @ 0x805b598 to free-list.
+Returned twiddle_dee @ 0x805b560 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dum
-at 0x805b299
+at 0x805b261
 /- destroy twiddle_dum
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dum @ 0x805b299 to free-list.
+Returned twiddle_dum @ 0x805b261 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- destroy twiddle_dum
-at 0x805b298
+at 0x805b260
 /- destroy twiddle_dum
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned twiddle_dum @ 0x805b298 to free-list.
+Returned twiddle_dum @ 0x805b260 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
-\- list_vector_pool::~list_vector_pool()
-~list_vector_pool<twiddle_dee>() at 0x805b520
+\- ~list_vector_pool()
+~list_vector_pool<twiddle_dee>() at 0x805b270
 | \- list_vector_pool::status()
 	1 chunks of 8*1 twiddle_dee allocated.
 	Peak usage: 5 elements, free-list has 5 remaining.
 | /- list_vector_pool::status()
-/- list_vector_pool::~list_vector_pool()
+/- ~list_vector_pool()
 \- destroy twiddle_dee
-at 0x805b598
+at 0x805b560
 /- destroy twiddle_dee
 \- destroy twiddle_dee
-at 0x805b599
+at 0x805b561
 /- destroy twiddle_dee
 \- destroy twiddle_dee
-at 0x805b59a
+at 0x805b562
 /- destroy twiddle_dee
 \- destroy twiddle_dee
-at 0x805b59b
+at 0x805b563
 /- destroy twiddle_dee
 \- destroy twiddle_dee
-at 0x805b59c
+at 0x805b564
 /- destroy twiddle_dee
-\- list_vector_pool::~list_vector_pool()
+\- ~list_vector_pool()
 ~list_vector_pool<twiddle_dum>() at 0x805b150
 | \- list_vector_pool::status()
 	1 chunks of 8*1 twiddle_dum allocated.
 	Peak usage: 5 elements, free-list has 5 remaining.
 | /- list_vector_pool::status()
-/- list_vector_pool::~list_vector_pool()
+/- ~list_vector_pool()
 \- destroy twiddle_dum
-at 0x805b298
+at 0x805b260
 /- destroy twiddle_dum
 \- destroy twiddle_dum
-at 0x805b299
+at 0x805b261
 /- destroy twiddle_dum
 \- destroy twiddle_dum
-at 0x805b29a
+at 0x805b262
 /- destroy twiddle_dum
 \- destroy twiddle_dum
-at 0x805b29b
+at 0x805b263
 /- destroy twiddle_dum
 \- destroy twiddle_dum
-at 0x805b29c
+at 0x805b264
 /- destroy twiddle_dum
 END---destruction: twiddle_dee module
 START-destruction: stacktrace

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.5.4.3 2005/01/25 05:22:43 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.5.4.4 2005/01/25 20:33:54 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -192,6 +192,7 @@ UTIL_HEADER_FILES = \
 	util/list_vector.tcc \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
+	util/memory/list_vector_pool.tcc \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
@@ -255,7 +256,6 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
-	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
 	util/indent.cc \
@@ -263,6 +263,8 @@ libart___la_SOURCES = \
 	util/persistent_object_manager.cc \
 	util/stacktrace.cc \
 	util/static_trace.cc \
+	util/memory/thread_lock.cc \
+	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \

@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.6 2005/01/16 02:44:27 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.6.12.1 2005/01/25 20:34:37 fang Exp $
  */
 
 #include <assert.h>
@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <string>
 #include "qmap.tcc"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 
 #include "what.h"
 

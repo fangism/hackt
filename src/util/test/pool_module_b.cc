@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_b.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_b.cc,v 1.1.4.1.2.3 2005/01/25 05:25:08 fang Exp $
+	$Id: pool_module_b.cc,v 1.1.4.1.2.4 2005/01/25 20:34:38 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -15,7 +15,7 @@
 #include "pool_module_a.h"
 #include "stacktrace.h"
 #include "memory/pointer_classes.h"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "static_trace.h"
 
 USING_STACKTRACE

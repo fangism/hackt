@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.1.4.1.2.2 2005/01/25 05:25:07 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.1.4.1.2.3 2005/01/25 20:34:38 fang Exp $
  */
 
 #define ENABLE_STACKTRACE				1
@@ -17,8 +17,8 @@
 #include "stacktrace.h"
 #include "static_trace.h"
 
-#include "memory/list_vector_pool.h"
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool.tcc"
 
 
 STATIC_TRACE_BEGIN("named_pooled_thing.o")
