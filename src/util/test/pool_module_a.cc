@@ -1,20 +1,20 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.1.2.1 2005/01/22 06:38:30 fang Exp $
+	$Id: pool_module_a.cc,v 1.1.2.2 2005/01/22 20:53:28 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL		1
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include "using_ostream.h"
 
 #include "pool_module_a.h"
 #include "pool_module_b.h"
+#include "stacktrace.h"
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.h"
-#include "stacktrace.h"
 
 USING_STACKTRACE
 using util::memory::count_ptr;
@@ -54,9 +54,15 @@ static const count_ptr<twiddle_dum>
 another_twiddle_dum(new twiddle_dum);
 #endif
 
-twiddle_dum::twiddle_dum() { STACKTRACE("construct twiddle_dum"); }
+twiddle_dum::twiddle_dum() {
+	STACKTRACE("construct twiddle_dum");
+	cerr << "at " << this << endl;
+}
 
-twiddle_dum::~twiddle_dum() { STACKTRACE("destroy twiddle_dum"); }
+twiddle_dum::~twiddle_dum() {
+	STACKTRACE("destroy twiddle_dum");
+	cerr << "at " << this << endl;
+}
 
 #if ENABLE_STACKTRACE
 static const stacktrace __end_st__("end static init of module A.");

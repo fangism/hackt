@@ -57,7 +57,8 @@ throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
 stacktrace_test_SOURCES = stacktrace_test.cc stacktrace.cc
 what_test_SOURCES = what_test.cc
 pretty_function_test_SOURCES = pretty_function_test.cc
-local_static_store_test_SOURCES = local_static_store_test.cc stacktrace.cc
+local_static_store_test_SOURCES = local_static_store_test.cc stacktrace.cc \
+	named_pooled_thing.cc named_pooled_thing.h
 multi_pool_module_test_SOURCES = multi_pool_module_test.cc stacktrace.cc \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
 
