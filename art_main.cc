@@ -51,7 +51,10 @@ DEBUG(DEBUG_BASIC,
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 
-	if (top) assert(global == top);
+	if (top) {
+		assert(global == top);
+DEBUG(DEBUG_BASIC, top->dump(cerr))
+	}
 	// massive recursive deletion of syntax tree, reclaim memory
 	// root will delete itself (also recursively)
 	// global will delete itself (also recursively)

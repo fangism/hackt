@@ -994,6 +994,9 @@ some_ptr<T>& operator = (base_some_ptr_ref<T> r) throw() {
 };	// end class some_ptr
 
 //=============================================================================
+/**
+	Pointer that is sometimes owned, but always read-only.  
+ */
 template <class T>
 class some_const_ptr : public virtual base_const_ptr<T> {
 friend class excl_ptr<T>;

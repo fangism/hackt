@@ -5,10 +5,16 @@
 #define	__SUBLIST_H__
 
 #include <list>
+
+#ifndef	SUBLIST_NAMESPACE
+#define	SUBLIST_NAMESPACE		fang
+#endif
+
+//=============================================================================
+namespace SUBLIST_NAMESPACE {
 using std::list;
 
-// namespace std?
-
+//=============================================================================
 /**
 	Sub-list with only const semantics.  
 	Behaves like a const list.  
@@ -30,12 +36,19 @@ protected:
 	const_reverse_iterator	rhead;
 	const_reverse_iterator	rtail;
 public:
+	/** Standard copy constructor */
 	sublist(const sublist<T>& l) :
 		the_list(l.the_list), head(l.head), tail(l.tail), 
 		rhead(l.rhead), rtail(l.rtail) { }
+
+	/**
+		Implicit constructor to covert from a list to a list slice.  
+	 */
 	sublist(const list<T>& l) :
 		the_list(l), head(l.begin()), tail(l.end()), 
 		rhead(l.rbegin()), rtail(l.rend()) { }
+
+	/** Standard destructor */
 virtual	~sublist() { }
 
 	bool empty() const { return (head == tail); }
@@ -48,6 +61,7 @@ virtual	~sublist() { }
 	const_reverse_iterator rbegin(void) const { return rhead; }
 	const_reverse_iterator rend(void) const { return rtail; }
 
+	/** Removes the first element from the slice. */
 	sublist<T>& behead(void) {
 		if (head != tail) {
 			head++; rtail--;
@@ -55,6 +69,7 @@ virtual	~sublist() { }
 		return *this;
 	}
 
+	/** Removes the last element from the slice. */
 	sublist<T>& betail(void) {
 		if (rhead != rtail) {
 			tail--; rhead++;
@@ -62,7 +77,11 @@ virtual	~sublist() { }
 		return *this;
 	}
 
-};
+};	// end class sublist
+//=============================================================================
+
+}	// end namespace SUBLIST_NAMESPACE
+//=============================================================================
 
 #endif	//	__SUBLIST_H__
 

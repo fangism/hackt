@@ -1262,7 +1262,6 @@ instance_alias::check_build(context* c) const {
 	// should return reference to the new INSTANCE, not its type
 
 	// should actually check instance-REFERENCES
-//	const fundamental_type_reference* tr =
 	never_const_ptr<fundamental_type_reference> tr(
 		IS_A(const fundamental_type_reference*, o));
 	assert(tr);

@@ -75,8 +75,19 @@ object_handle::dump(ostream& o) const {
 }
 
 //=============================================================================
+// class sparse_index_collection method definitions
+
+sparse_index_collection::sparse_index_collection(const int dim) :
+		static_instances(
+			static_instance_set_type::
+			make_multidimensional_sparse_set(dim)),
+		dynamic_instances() {
+}
+
+sparse_index_collection::~sparse_index_collection() { }
+
+//=============================================================================
 // class scopespace method definitions
-// scopespace::scopespace(const string& n, const scopespace* p) : 
 scopespace::scopespace(const string& n, never_const_ptr<scopespace> p) : 
 		object(), parent(p), key(n), 
 		used_id_map() {
@@ -98,7 +109,6 @@ scopespace::~scopespace() {
 	\param id the unqualified name of the object sought.  
 	\return an object with the same name, if found.  
  */
-// const object*
 never_const_ptr<object>
 scopespace::lookup_object_here(const string& id) const {
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
@@ -1103,30 +1113,38 @@ fundamental_type_reference::~fundamental_type_reference() {
 	We unconditionally add the <> to the key even if there is no template
 	specifier to guarantee that hash_string for a type-reference 
 	cannot collide with the hash string for the non-templated definition.  
+	Should we use fully qualified names for hashing?
 	\return string to be used for hashing.  
  */
 string
 fundamental_type_reference::hash_string(void) const {
-	// TO DO: should be fully qualified name!
-	never_const_ptr<definition_base> def = get_base_def();
-	assert(def);
-	string ret(def->get_qualified_name());
-	ret += "<";
+	// use fully qualified?  for hashing, no.
+	// possible collision case?
+	return get_base_def()->get_name() +template_param_string();
+}
+
+string
+fundamental_type_reference::template_param_string(void) const {
+	string ret("<");
 	if (template_params) {
 		template_param_list::const_iterator i =
 			template_params->begin();
-		// add commas?
-		for ( ; i!=template_params->end(); i++) {
-			never_const_ptr<param_expr> e(*i);
-			if (e)
-				ret += e->hash_string();
-			// can e ever be NULL?
-			ret += ",";
-			// extra comma at the end, who cares?
+		never_const_ptr<param_expr> e(*i);
+		if (e)	ret += e->hash_string();
+		for (i++ ; i!=template_params->end(); i++) {
+			ret += ",";		// add commas?
+			e = *i;
+			if (e)	ret += e->hash_string();
+			// can e ever be NULL? yes...
 		}
 	}
 	ret += ">";
 	return ret;
+}
+
+string
+fundamental_type_reference::get_qualified_name(void) const {
+	return get_base_def()->get_qualified_name() +template_param_string();
 }
 
 never_const_ptr<fundamental_type_reference>
@@ -1384,7 +1402,13 @@ inline
 instantiation_base::instantiation_base(const scopespace& o, 
 		const string& n, array_dim_list* d) : 
 		object(), owner(never_const_ptr<scopespace>(&o)),
-		key(n), array_dimensions(d) {
+		key(n),
+//		array_dimensions(d)
+		index_collection(NULL)
+		{
+	if (d) {
+//		index_collection = ...
+	}
 }
 
 inline
@@ -1416,11 +1440,14 @@ instantiation_base::hash_string(void) const {
 }
 ***/
 
+/**
+NEEDS TO BE REDONE
 void
 instantiation_base::set_array_dimensions(excl_ptr<array_dim_list> d) {
 	// just in case, delete what was previously there
 	array_dimensions = d;
 }
+**/
 
 /**
 	Determines whether or not the dimensions of two instantiation_base
@@ -1846,6 +1873,9 @@ param_instantiation::initialize(excl_const_ptr<param_expr> e) {
 	and return the one found.  
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
+	Different: param type reference are always referred to in the global
+		scope because they cannot be templated!
+		Therefore, cache them in the global (or built-in) namespace.  
  */
 instance_reference_base*
 param_instantiation::make_instance_reference(context& c) const {

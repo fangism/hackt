@@ -5,6 +5,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <stack>
 
 #include "art_macros.h"
 
@@ -12,6 +13,7 @@
 #include "hash_qmap.h"
 #include "hashlist.h"
 #include "ptrs.h"
+#include "multidimensional_sparse_set.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -163,6 +165,133 @@ public:
 };	// end class object_handle
 
 // after note: if we need object_handle (non-const) implement later...
+
+//=============================================================================
+/**
+	We keep track of the precise state of collections
+	(associater with an identifier in a definition scope) 
+	by maintaining a stack of collection-additions each time
+	more sparse instantiations are added.  
+	Uses and references to an identifier-collection will 
+	refer to a *position* in the instance's collection stack
+	which precisely represents what is visible at the
+	referencing program point.  
+	This class is the abstract interface class for items
+	on the instance-collection-stack.  
+ */
+class instance_collection_stack_item {
+protected:
+public:
+virtual	~instance_collection_stack_item() { }
+
+/**
+	Query whether or not there is definite overlap with
+	this item.  
+	\return Conservatively returns false for dynamic instances.  
+ */
+virtual	bool definite_overlap(void) const = 0;
+
+/**
+	Resolve at unroll time, all parameters must be bound to 
+	known constants.  
+ */
+virtual	bool final_resolve(void) const = 0;
+
+};	// end class instance_collection_stack_item
+
+//=============================================================================
+/**
+	A collection addition whose indices are statically resolved
+	to constants.  
+ */
+class static_collection_addition : public instance_collection_stack_item {
+protected:
+	typedef	instance_collection_stack_item		parent;
+protected:
+	list<pair<int, int> >				indices;
+public:
+	static_collection_addition() : parent() { }
+	~static_collection_addition() { }
+
+};	// end class static_collection_addition
+
+//=============================================================================
+/**
+	A collection addition whose indices contain references to 
+	template formal parameters, that cannot be determined at
+	compile-time.  
+ */
+class dynamic_collection_addition : public instance_collection_stack_item {
+protected:
+public:
+
+};	// end class dynamic_collection_addition
+
+//=============================================================================
+/**
+	Reference to a loop-body that contains instances of
+	a collection.  
+	May be static or dynamic.  
+ */
+class loop_collection_addition : public instance_collection_stack_item {
+protected:
+//	never_const_ptr<loop_scope>		body;
+
+};	// end class loop_collection_addition
+
+//=============================================================================
+/**
+	Reference to a conditional body that contains instances of a 
+	collection.  
+	May be static or dynamic.
+ */
+class conditional_collection_addition : public instance_collection_stack_item {
+protected:
+//	never_const_ptr<conditional_scope>	body;
+
+};	// end class conditional_collection_addition
+
+//=============================================================================
+/**
+	THIS IS PREMATURE.
+	Need to establish the idea of a collection stack that
+	represents the state of a stack at various program points.  
+	Instance reference will refer to positions in the collection stack.  
+
+	Collection of indices for a sparse multidimensional array.
+	Indices however may depend on parameters and other unroll-time 
+	values, thus we need to keep around: 
+	1) statically bound instance indices, such as constants and 
+	resolved expressions, 2) dynamically determined indices
+	such as those dependent on formal template parameters, 
+	and loop and conditional indices dependent thereupon.  
+	Do we need to keep around precise conditions, or can we just 
+	FLAG it as dynamic for the purposes of static type-checking.  
+	And don't bother tracking here.  
+	This is not an object... yet.
+ */
+class sparse_index_collection {
+public:
+	typedef	base_multidimensional_sparse_set<int>
+						static_instance_set_type;
+#if 1
+	typedef never_const_ptr<param_expr>	value_ptr_type;
+	typedef	pair<value_ptr_type, value_ptr_type>	range_type;
+	typedef	list<range_type>		range_list_type;
+	typedef	list<range_list_type>		range_list_set_type;
+#endif
+
+protected:
+	count_ptr<static_instance_set_type>	static_instances;
+		// of excl_ptr?
+	range_list_set_type			dynamic_instances;
+
+public:
+	sparse_index_collection(const int dim);
+	~sparse_index_collection();
+
+
+};	// end class sparse_index_collection
 
 //=============================================================================
 /**
@@ -501,10 +630,22 @@ protected:
 	 */
 
 	string				key;
+
 	/**
 		Optional array dimension sizes, which can be ranges.  
+
+		REPLACE this with a hierarchical dimension tree!
+		of expressions, mostly constants, some unresolved.  
+		Multidimensional and sparse arrays.  
 	 */
-	excl_ptr<array_dim_list>	array_dimensions;
+	excl_ptr<sparse_index_collection>	index_collection;
+//	excl_ptr<array_dim_list>	array_dimensions;
+
+	/**
+		Dimensions.  
+		Once set, is fixed.  
+	 */
+	size_t	depth;
 
 public:
 	// o should be reference, not pointer
@@ -522,7 +663,8 @@ virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
 virtual	instance_reference_base* make_instance_reference(context& c) const = 0;
 
-	void set_array_dimensions(excl_ptr<array_dim_list> d);
+// new concept
+//	void set_array_dimensions(excl_ptr<array_dim_list> d);
 
 	bool array_dimension_match(const instantiation_base& i) const;
 
@@ -569,14 +711,21 @@ virtual	~fundamental_type_reference();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
+	string template_param_string(void) const;
+	string get_qualified_name(void) const;
+	string hash_string(void) const;
+	never_const_ptr<fundamental_type_reference>
+		set_context_type_reference(context& c) const;
+
+	// limits the extend to which it can be statically type-checked
+	// i.e. whether parameter is resolved to a scope's formal
+	bool is_dynamically_parameter_dependent(void) const;
+
+virtual const instantiation_base* add_instance_to_scope(scopespace& s, 
+			const token_identifier& id) const = 0;
 
 // TO DO: type equivalence relationship
 
-virtual string hash_string(void) const;
-	never_const_ptr<fundamental_type_reference>
-		set_context_type_reference(context& c) const;
-virtual const instantiation_base* add_instance_to_scope(scopespace& s, 
-			const token_identifier& id) const = 0;
 };	// end class fundamental_type_reference
 
 //-----------------------------------------------------------------------------

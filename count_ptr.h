@@ -24,6 +24,9 @@
 #define COUNT_PTR_NAMESPACE		fang
 #endif
 
+/**
+	Namespace for reference-count pointer-classes.  
+ */
 namespace COUNT_PTR_NAMESPACE {
 //=============================================================================
 // forward declarations

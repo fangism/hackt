@@ -265,6 +265,8 @@ id_expr::check_build(context* c) const {
 	if (o) {
 		inst = IS_A(const instantiation_base*, o);
 		if (inst) {
+			// we found an instance which may be single
+			// or collective...
 			// c->?
 			return inst->make_instance_reference(*c);
 			// doesn't have to be a parameter, does it?

@@ -4,7 +4,6 @@
 #define __ART_OBJECT_EXPR_H__
 
 #include <string>
-using std::string;
 #include "art_object.h"
 
 //=============================================================================
@@ -14,6 +13,9 @@ using std::string;
 //=============================================================================
 namespace ART {
 namespace entity {
+
+using std::string;
+
 //=============================================================================
 // class forward declarations
 class param_instantiation;
