@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_definition.cc,v 1.12 2005/01/14 06:28:43 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -15,6 +15,8 @@
 // -fkeep-inline-functions
 
 #include <iostream>
+
+#define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
 
 #include "art_parser_debug.h"
 #include "art_switches.h"
@@ -29,7 +31,7 @@
 #include "art_object_definition.h"
 #include "art_object_expr_base.h"
 
-#include "what.h"
+#include "what.h"		// already included in "art_parser.tcc"
 #include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
