@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.1 2004/12/06 07:13:02 fang Exp $
+	$Id: stacktrace.cc,v 1.2 2005/01/08 08:30:53 fang Exp $
  */
 
 #include <pthread.h>
@@ -28,10 +28,10 @@ using std::ostream_iterator;
 	Private implementation class, not visible to other modules.  
 	Only written as a class for convenient static initialization.  
  */
-class stacktrace_manager {
+class stacktrace::manager {
 friend class stacktrace;
-friend class enable_stacktrace;
-friend class redirect_stacktrace;
+friend class stacktrace::echo;
+friend class stacktrace::redirect;
 public:
 	typedef	list<string>	stack_text_type;
 private:
@@ -44,20 +44,21 @@ private:
 	stack_text_type		stack_indent;
 
 	static
-	stack<int>		stack_enable;
+	stack<int>		stack_echo;
 
 	static
 	stack<ostream*>		stack_streams;
 
-public:
-	stacktrace_manager() {
+private:
+	manager() {
 		// must guarantee that they aren't empty
-		stack_enable.push(0);
+		stack_echo.push(0);
 		stack_streams.push(&cerr);
 	}
 
-	~stacktrace_manager() { }
+	~manager() { }
 
+public:
 	static
 	ostream&
 	print_auto_indent(ostream& o) {
@@ -66,24 +67,24 @@ public:
 		return o;
 	}
 
-};	// end class stacktrace_manager
+};	// end class stacktrace::manager
 
 //-----------------------------------------------------------------------------
 // static construction
-stacktrace_manager::stack_text_type
-stacktrace_manager::stack_text;
+stacktrace::manager::stack_text_type
+stacktrace::manager::stack_text;
 
-stacktrace_manager::stack_text_type
-stacktrace_manager::stack_indent;
+stacktrace::manager::stack_text_type
+stacktrace::manager::stack_indent;
 
 stack<int>
-stacktrace_manager::stack_enable;
+stacktrace::manager::stack_echo;
 
 stack<ostream*>
-stacktrace_manager::stack_streams;
+stacktrace::manager::stack_streams;
 
-static
-stacktrace_manager		the_stacktrace_manager;
+stacktrace::manager
+stacktrace::the_manager;
 
 static
 const string
@@ -93,64 +94,67 @@ default_stack_indent_string("| ");
 // class stacktrace method definitions
 
 stacktrace::stacktrace(const char* s) {
-	stacktrace_manager::stack_text.push_back(s);
-	if (stacktrace_manager::stack_enable.top())
-		stacktrace_manager::print_auto_indent(
-			*stacktrace_manager::stack_streams.top())
-			<< "enter: " << stacktrace_manager::stack_text.back()
+	stacktrace::manager::stack_text.push_back(s);
+	if (stacktrace::manager::stack_echo.top())
+		stacktrace::manager::print_auto_indent(
+			*stacktrace::manager::stack_streams.top())
+			<< "enter: " << stacktrace::manager::stack_text.back()
 			<< endl;
-	stacktrace_manager::stack_indent.push_back(default_stack_indent_string);
+	stacktrace::manager::stack_indent.push_back(default_stack_indent_string);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::stacktrace(const string& s) {
-	stacktrace_manager::stack_text.push_back(s);
-	if (stacktrace_manager::stack_enable.top())
-		stacktrace_manager::print_auto_indent(
-			*stacktrace_manager::stack_streams.top())
-			<< "enter: " << stacktrace_manager::stack_text.back()
+	stacktrace::manager::stack_text.push_back(s);
+	if (stacktrace::manager::stack_echo.top())
+		stacktrace::manager::print_auto_indent(
+			*stacktrace::manager::stack_streams.top())
+			<< "enter: " << stacktrace::manager::stack_text.back()
 			<< endl;
-	stacktrace_manager::stack_indent.push_back(default_stack_indent_string);
+	stacktrace::manager::stack_indent.push_back(default_stack_indent_string);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::~stacktrace() {
-	stacktrace_manager::stack_indent.pop_back();
-	if (stacktrace_manager::stack_enable.top())
-		stacktrace_manager::print_auto_indent(
-			*stacktrace_manager::stack_streams.top())
-			<< "leave: " << stacktrace_manager::stack_text.back()
+	stacktrace::manager::stack_indent.pop_back();
+	if (stacktrace::manager::stack_echo.top())
+		stacktrace::manager::print_auto_indent(
+			*stacktrace::manager::stack_streams.top())
+			<< "leave: " << stacktrace::manager::stack_text.back()
 			<< endl;
-	stacktrace_manager::stack_text.pop_back();
+	stacktrace::manager::stack_text.pop_back();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 stacktrace::full_dump(void) {
 	ostream_iterator<string>
-		osi(*stacktrace_manager::stack_streams.top(), "\n");
-	copy(stacktrace_manager::stack_text.begin(),
-		stacktrace_manager::stack_text.end(), osi);
-	(*stacktrace_manager::stack_streams.top()) << endl;
+		osi(*stacktrace::manager::stack_streams.top(), "\n");
+	copy(stacktrace::manager::stack_text.begin(),
+		stacktrace::manager::stack_text.end(), osi);
+	(*stacktrace::manager::stack_streams.top()) << endl;
 }
 
 //=============================================================================
-// struct enable_stacktrace method definitions
+// struct stacktrace::echo method definitions
 
-enable_stacktrace::enable_stacktrace(const int i) {
-	stacktrace_manager::stack_enable.push(i);
+stacktrace::echo::echo(const int i) {
+	stacktrace::manager::stack_echo.push(i);
 }
 
-enable_stacktrace::~enable_stacktrace() {
-	stacktrace_manager::stack_enable.pop();
+stacktrace::echo::~echo() {
+	stacktrace::manager::stack_echo.pop();
 }
 
 //=============================================================================
 // struct redirect_stacktrace method definitions
 
-redirect_stacktrace::redirect_stacktrace(ostream& o) {
-	stacktrace_manager::stack_streams.push(&o);
+stacktrace::redirect::redirect(ostream& o) {
+	stacktrace::manager::stack_streams.push(&o);
 }
 
-redirect_stacktrace::~redirect_stacktrace() {
-	stacktrace_manager::stack_streams.pop();
+stacktrace::redirect::~redirect() {
+	stacktrace::manager::stack_streams.pop();
 }
 
 //=============================================================================

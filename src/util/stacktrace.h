@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.1 2004/12/06 07:13:02 fang Exp $
+	$Id: stacktrace.h,v 1.2 2005/01/08 08:30:53 fang Exp $
  */
 
 #ifndef	__STACK_TRACE_H__
@@ -28,16 +28,24 @@
 // You put the semicolon at the end!
 #if ENABLE_STACKTRACE
 	#define	STACKTRACE(str)	stacktrace __stacktrace__(str)
-	#define ENABLE_TRACE	enable_stacktrace __enable_stacktrace__(1)
-	#define DISABLE_TRACE	enable_stacktrace __enable_stacktrace__(0)
-	#define REDIRECT_TRACE	redirect_stacktrace __redir_stacktrace__
-	#define	ASSERT_STACKTRACE(expr)				\
-		if (!(expr)) { stacktrace::full_dump(); assert(expr); }
+	/**
+		This enables echoing each time trace stack is updated, i.e., 
+		upon entering and leaving function call stack 
+		or lexical scopes.  
+	 */
+	#define STACKTRACE_ECHO_ON					\
+			stacktrace::echo __echo_stacktrace__(1)
+	#define STACKTRACE_ECHO_OFF					\
+			stacktrace::echo __echo_stacktrace__(0)
+	#define REDIRECT_STACKTRACE(os)					\
+			stacktrace::redirect __redir_stacktrace__(os)
+	#define	ASSERT_STACKTRACE(expr)					\
+			if (!(expr)) { stacktrace::full_dump(); assert(expr); }
 #else
 	#define	STACKTRACE(str)
-	#define ENABLE_TRACE
-	#define DISABLE_TRACE
-	#define REDIRECT_TRACE
+	#define STACKTRACE_ECHO_ON
+	#define STACKTRACE_ECHO_OFF
+	#define REDIRECT_STACKTRACE(os)
 	#define	ASSERT_STACKTRACE(expr)		assert(expr)
 #endif
 
@@ -56,8 +64,13 @@ using std::stack;
 	TODO: make one entry per thread, mapped by thread ID.
  */
 class stacktrace {
-private:
+public:
+	class manager;
+	struct echo;
+	struct redirect;
 	// static objects?
+private:
+	static manager			the_manager;
 public:
 	stacktrace(const char*);
 	stacktrace(const string&);
@@ -78,9 +91,9 @@ public:
 	Pass in 0 to disable.  
 	Enabling/disable lasts for the duration of the scope.  
  */
-struct enable_stacktrace {
-	enable_stacktrace(const int i = 1);
-	~enable_stacktrace();
+struct stacktrace::echo {
+	echo(const int i = 1);
+	~echo();
 };
 
 //-----------------------------------------------------------------------------
@@ -88,9 +101,9 @@ struct enable_stacktrace {
 	Redirect all stack dumps to this ostream until changed otherwise.
 	Lasts for the duration of the scope where this is called.  
  */
-struct redirect_stacktrace {
-	redirect_stacktrace(ostream&);
-	~redirect_stacktrace();
+struct stacktrace::redirect {
+	redirect(ostream&);
+	~redirect();
 };
 
 //=============================================================================

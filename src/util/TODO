@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.5 2004/12/02 06:33:57 fang Exp $
+	$Id: TODO,v 1.6 2005/01/08 08:30:53 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -60,6 +60,9 @@ Regarding pointer-classes:
 	(Migrating from old-style to new will be painful...
 		better get it over with AQAP.)
 		(DONE)
+
+	allocate size_t reference counts with fast allocator, 
+		like list_vector_pool.
 
 	what about allocator_traits?
 
