@@ -3,9 +3,86 @@
 \chapter{Typedefs}
 \label{sec:typedefs}
 
+When and where are typedefs useful?  
+Where may typedefs appear?
+Can be in namespace, or local to a definition.  
+
 Two kinds of typedefs, with three syntaces.  
 
+\begin{enumerate}
+\item \ttt{typedef} \tit{existing-definition} \tit{identifier}\ttt{;}
+\item \ttt{typedef} \tit{existing-definition} 
+	\ttt{<} \tit{template argument list} \ttt{>} \tit{identifier}\ttt{;}
+\item \ttt{template} \ttt{<} \tit{template-signature} \ttt{>}\\
+	\ttt{typedef} \tit{existing-definition} 
+	\ttt{<} \tit{template-argument-list} \ttt{>} \tit{identifier}\ttt{;}
+\end{enumerate}
 
-One is a pseudo-typedef, a pure name alias.  
+In all three forms the \tit{identifier} is the name of the new
+typedef.  
 
+The first form is a pseudo-typedef, a pure \emph{definition} name alias, 
+as if one had written 
+\ttt{\#define} \tit{identifier} \tit{existing-definition} in C-preprocessing, 
+with the existing defininition being a simple identifier.  
+The potential confusion with the first typedef is that 
+\tit{existing-definition} identifier may be mistaken for a templated type
+with all parameter arguments with defaults 
+(the only condition in which template arguments 
+may be omitted from a templated definition).  
+
+The second form of typedef substitutes a fully-specified template type
+(one with all template parameters supplied) with an identifier.  
+This is convenient for reusing a templated type repeatedly without
+having to copy the arguments.  
+
+The third form of typedef is a template typedef (not yet supported in C++)
+which wraps a partially-specified template type with a new definition, 
+usually (not always) with fewer arguments.  
+This is particularly useful for binding template arguments
+to make simple template types.  
+If a definition doesn't already have default arguments, 
+this is one way of supplying additional default values 
+for an existing templated definition.  
+
+Typedefs can be defined in terms of other typedefs.  
+There is currently no restriction on the number of indirections
+of typedef-ing.  
+
+By construction, the graph of typedef definitions must form a tree,
+and thus, cannot have cycles.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Type-equivalence}
+\label{sec:typedefs:equivalence}
+
+We extend the notion of type-equivalence to include typedefs as follows:
+
+Two instances of typedefs are type-equivalent if and only if...
+
+Some implementation hints.
+Given two typedef instances or references.  
+Find greatest common ancestor.  
+Common ancestor may simplify equivalence deduction.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Questions}
+\label{sec:typedefs:questions}
+
+\textbf{Forward declarations.}
+Can typedefs have forward declarations?
+``I'm declaring this typedef's name, but it's definition will be bound
+later...''
+
+Can typedefs have external linkage?
+e.g. \ttt{extern typedef foo;}
+
+\ttt{extern template <...> typedef foo;}
+
+\ttt{extern typedef old new;}
+
+\medskip
+\textbf{Linkage.}  See Chapter~\ref{sec:linkage}.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

@@ -15,6 +15,46 @@
 \section{Forward declarations}
 \label{sec:templates:forward}
 
+Not yet supported.  
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Default values}
+\label{sec:templates:default}
 
+In C++, default values can only appear as a suffix formal parameter list.  
+In \artxx\ we allow default values in any position of the formal 
+parameter list.  
+However, each defaulting argument position in a type reference
+must be given a placeholder, even if it is at the end of the argument list.  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Type-equivalence}
+\label{sec:templates:equivalence}
+
+Two templated types are equivalence if and only if:
+\begin{itemize}
+\item They are of the same type class (channel, process,... ), obviously
+\item They refer to the same base definition.  
+\item Their template arguments are equal.  
+\end{itemize}
+
+Implementation issues:
+It is not always possible to deduce at compile-time whether
+two expressions are equal, thus a compiler may be conservative
+and allow non-equivalent types to pass.  
+However, at unroll-time, all parameters must be resolved
+and type-equivalence can be precisely determined.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Future}
+\label{sec:templates:future}
+
+Template template arguments?  (*shudder*)
+
+Template specialization?
+
+Compile-time checking of templates, directives.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
