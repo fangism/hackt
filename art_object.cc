@@ -196,7 +196,8 @@ name_space::add_open_namespace(const string& n) {
 			return NULL;
 		} else {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
-			cerr << " ... already exists as subspace, re-opening";
+			DEBUG(TRACE_NAMESPACE_NEW, 
+				cerr << " ... already exists as subspace, re-opening")
 			assert(probe_ns == subns[n]);
 			ret = subns[n];		// return modifiable pointer
 			// we can return this
