@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.11 2005/03/06 04:36:48 fang Exp $
+	$Id: art_object_expr_const.h,v 1.11.6.1 2005/03/09 22:46:38 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -14,6 +14,8 @@
 #include "packed_array.h"
 #include "persistent.h"
 #include "memory/list_vector_pool_fwd.h"
+
+#define	USE_CONST_COLLECTION_TEMPLATE		1
 
 //=============================================================================
 namespace ART {
@@ -442,7 +444,7 @@ public:
 
 	// may chop '_int' off for templating
 	value_type
-	static_constant_int(void) const { return val; }
+	static_constant_value(void) const { return val; }
 
 	bool
 	must_be_equivalent_pint(const pint_expr& ) const;
@@ -499,6 +501,7 @@ public:
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------
+#if !USE_CONST_COLLECTION_TEMPLATE
 /**
 	Packed collection of constant integer values, arbitrary dimension.  
 	Note: this is only usable for aggregates of constants.  
@@ -583,7 +586,7 @@ public:
 
 	// only makes sense for scalars
 	value_type
-	static_constant_int(void) const;
+	static_constant_value(void) const;
 
 	// only makes sense for scalars
 	good_bool
@@ -606,6 +609,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class pint_const_collection
+#endif	// USE_CONST_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
 /**
@@ -669,7 +673,7 @@ public:
 	static_constant_param(void) const;
 
 	bool
-	static_constant_bool(void) const { return val; }
+	static_constant_value(void) const { return val; }
 
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;

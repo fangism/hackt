@@ -1,15 +1,14 @@
 /**
 	\file "art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.1.2.1 2005/03/09 19:24:56 fang Exp $
+	$Id: art_object_value_collection.h,v 1.1.2.1.2.1 2005/03/09 22:46:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_H__
 #define	__ART_OBJECT_VALUE_COLLECTION_H__
 
 #include "boolean_types.h"
-// #include "art_object_instance_base.h"
-// #include "art_object_expr_param_ref.h"	// for typedef init_arg_type
+#include "art_object_fwd.h"
 #include "memory/count_ptr.h"
 
 #include "multikey_fwd.h"

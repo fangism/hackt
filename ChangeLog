@@ -2,6 +2,10 @@
 
 2005-03-08	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-01:
+	  We need to port many expressions classes to follow consistent
+	  templates, this has been punted for way too long. 
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
 	  Porting parameter instance collections to use new value_collection
 	  template, similar to instance_collection class template.  

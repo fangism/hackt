@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.2.12.2.2.1 2005/03/09 19:24:52 fang Exp $
+	$Id: art_object_classification_details.h,v 1.2.12.2.2.1.2.1 2005/03/09 22:46:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -465,6 +465,7 @@ struct class_traits<pint_tag> {
 	typedef	pint_instance_reference		instance_reference_type;
 	typedef	param_instance_reference	instance_reference_parent_type;
 	typedef	pint_expr			expr_base_type;
+	typedef const_param			const_collection_parent_type;
 #if 0
 	typedef	pint_member_instance_reference
 						member_instance_reference_type;
@@ -525,6 +526,7 @@ struct class_traits<pbool_tag> {
 	typedef	pbool_instance_reference		instance_reference_type;
 	typedef	param_instance_reference	instance_reference_parent_type;
 	typedef	pbool_expr			expr_base_type;
+	typedef const_param			const_collection_parent_type;
 #if 0
 	typedef	pbool_member_instance_reference
 						member_instance_reference_type;

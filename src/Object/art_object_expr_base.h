@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.7 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_expr_base.h,v 1.7.14.1 2005/03/09 22:46:38 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -368,7 +368,7 @@ virtual bool
 	is_loop_independent(void) const = 0;
 
 virtual value_type
-	static_constant_bool(void) const = 0;
+	static_constant_value(void) const = 0;
 
 virtual	good_bool
 	resolve_value(value_type& i) const = 0;
@@ -453,7 +453,7 @@ virtual bool
 	is_loop_independent(void) const = 0;
 
 virtual value_type
-	static_constant_int(void) const = 0;
+	static_constant_value(void) const = 0;
 
 	count_ptr<const_index>
 	resolve_index(void) const;

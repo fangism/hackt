@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7.12.3.2.1 2005/03/09 19:24:53 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.3.2.1.2.1 2005/03/09 22:46:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -215,8 +215,19 @@ namespace entity {
 	class const_index_list;
 	class dynamic_index_list;
 
+#if 1
+	template <class>
+	class const_collection;
+	typedef	const_collection<pint_tag>
+		pint_const_collection;
+	typedef	const_collection<pbool_tag>
+		pbool_const_collection;
+#endif
+
 	/**
 		The global integer-type for parameter integers.  
+		This may have to be changed to int32 in the future, 
+		for 64b portability...
 	 */
 	typedef	long		pint_value_type;
 

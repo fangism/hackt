@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41.8.1 2005/03/09 19:24:52 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.8.1.2.1 2005/03/09 22:46:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -29,7 +29,10 @@
 #if USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_classification_details.h"
 #include "art_object_value_collection.h"
+#if USE_CONST_COLLECTION_TEMPLATE
+#include "art_object_const_collection.tcc"
 #endif
+#endif	// USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_assign.h"
 #include "art_object_connect.h"		// for ~aliases_connection_base
 #include "art_object_type_hash.h"
@@ -302,8 +305,8 @@ pbool_expr::may_be_equivalent(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
 		if (is_static_constant() && b->is_static_constant())
-			return static_constant_bool() ==
-				b->static_constant_bool();
+			return static_constant_value() ==
+				b->static_constant_value();
 		else	return true;
 	}
 	else	return false;
@@ -316,8 +319,8 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 	if (b) {
 #if 0
 		if (is_static_constant() && b->is_static_constant())
-			return static_constant_bool() ==
-				b->static_constant_bool();
+			return static_constant_value() ==
+				b->static_constant_value();
 		// else check template formals?  more cases needed
 		else	return false;
 #else
@@ -335,7 +338,7 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 count_ptr<const const_param>
 pbool_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
-		new pbool_const(static_constant_bool()));
+		new pbool_const(static_constant_value()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -361,8 +364,8 @@ pint_expr::may_be_equivalent(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
 		if (is_static_constant() && i->is_static_constant())
-			return static_constant_int() ==
-				i->static_constant_int();
+			return static_constant_value() ==
+				i->static_constant_value();
 		else	return true;
 	}
 	else	return false;
@@ -375,8 +378,8 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 	if (i) {
 #if 0
 		if (is_static_constant() && i->is_static_constant())
-			return static_constant_int() ==
-				i->static_constant_int();
+			return static_constant_value() ==
+				i->static_constant_value();
 		else	return false;
 #else
 		return must_be_equivalent_pint(*i);
@@ -393,7 +396,7 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 count_ptr<const const_param>
 pint_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
-		new pint_const(static_constant_int()));
+		new pint_const(static_constant_value()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1163,9 +1166,9 @@ pbool_instance_reference::is_unconditional(void) const {
 	else will assert-fail.
  */
 bool
-pbool_instance_reference::static_constant_bool(void) const {
+pbool_instance_reference::static_constant_value(void) const {
 	INVARIANT(is_static_constant());
-	return pbool_inst_ref->initial_value()->static_constant_bool();
+	return pbool_inst_ref->initial_value()->static_constant_value();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1715,9 +1718,9 @@ pint_instance_reference::is_unconditional(void) const {
 	else will assert-fail.
  */
 pint_instance_reference::value_type
-pint_instance_reference::static_constant_int(void) const {
+pint_instance_reference::static_constant_value(void) const {
 	INVARIANT(is_static_constant());
-	return pint_inst_ref->initial_value()->static_constant_int();
+	return pint_inst_ref->initial_value()->static_constant_value();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2226,7 +2229,7 @@ pint_const::operator == (const const_range& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_const::must_be_equivalent_pint(const pint_expr& p) const {
-	return p.is_static_constant() && (val == p.static_constant_int());
+	return p.is_static_constant() && (val == p.static_constant_value());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2334,6 +2337,7 @@ pint_const::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class pint_const_collection method definitions
 
+#if !USE_CONST_COLLECTION_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const_collection::pint_const_collection(const size_t d) :
 		pint_expr(), const_param(), values(d) {
@@ -2490,8 +2494,8 @@ pint_const_collection::resolve_value(value_type& ) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const_collection::value_type
-pint_const_collection::static_constant_int(void) const {
-	cerr << "Never supposed to call pint_const_collection::static_constant_int()." << endl;
+pint_const_collection::static_constant_value(void) const {
+	cerr << "Never supposed to call pint_const_collection::static_constant_value()." << endl;
 	THROW_EXIT;
 	return -1;
 }
@@ -2568,6 +2572,7 @@ pint_const_collection::load_object(const persistent_object_manager& m,
 		istream& f) {
 	values.read(f);
 }
+#endif	// USE_CONST_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class pbool_const method definitions
@@ -2645,7 +2650,7 @@ pbool_const::unroll_resolve(const unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_const::must_be_equivalent_pbool(const pbool_expr& b) const {
-	return b.is_static_constant() && (val == b.static_constant_bool());
+	return b.is_static_constant() && (val == b.static_constant_value());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2732,9 +2737,9 @@ pint_unary_expr::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::value_type
-pint_unary_expr::static_constant_int(void) const {
+pint_unary_expr::static_constant_value(void) const {
 	// depends on op
-	return - ex->static_constant_int();
+	return - ex->static_constant_value();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2814,7 +2819,7 @@ pint_unary_expr::unroll_resolve(const unroll_context& c) const {
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(
-			new pint_const(- pc->static_constant_int()));
+			new pint_const(- pc->static_constant_value()));
 	} else {
 		// there is an error
 		// discard intermediate result
@@ -2911,8 +2916,8 @@ pbool_unary_expr::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_unary_expr::static_constant_bool(void) const {
-	return !ex->static_constant_bool();
+pbool_unary_expr::static_constant_value(void) const {
+	return !ex->static_constant_value();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2967,7 +2972,7 @@ pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(
-			new pbool_const(!pc->static_constant_bool()));
+			new pbool_const(!pc->static_constant_value()));
 	} else {
 		// there is an error
 		// discard intermediate result
@@ -3114,9 +3119,9 @@ arith_expr::is_unconditional(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 arith_expr::value_type
-arith_expr::static_constant_int(void) const {
-	const arg_type a = lx->static_constant_int();
-	const arg_type b = rx->static_constant_int();
+arith_expr::static_constant_value(void) const {
+	const arg_type a = lx->static_constant_value();
+	const arg_type b = rx->static_constant_value();
 	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
 }
@@ -3218,8 +3223,8 @@ arith_expr::unroll_resolve(const unroll_context& c) const {
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(new pint_const(
-			(*op)(lpc->static_constant_int(), 
-				rpc->static_constant_int())));
+			(*op)(lpc->static_constant_value(), 
+				rpc->static_constant_value())));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result
@@ -3387,9 +3392,9 @@ relational_expr::is_unconditional(void) const {
 	\return result of resolved comparison.  
  */
 relational_expr::value_type
-relational_expr::static_constant_bool(void) const {
-	const arg_type a = lx->static_constant_int();
-	const arg_type b = rx->static_constant_int();
+relational_expr::static_constant_value(void) const {
+	const arg_type a = lx->static_constant_value();
+	const arg_type b = rx->static_constant_value();
 	return (*op)(a,b);
 }
 
@@ -3462,8 +3467,8 @@ relational_expr::unroll_resolve(const unroll_context& c) const {
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(new pbool_const(
-			(*op)(lpc->static_constant_int(), 
-				rpc->static_constant_int())));
+			(*op)(lpc->static_constant_value(), 
+				rpc->static_constant_value())));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result
@@ -3620,9 +3625,9 @@ logical_expr::is_unconditional(void) const {
 	Must be truly compile-time constant.
  */
 logical_expr::value_type
-logical_expr::static_constant_bool(void) const {
-	const arg_type a = lx->static_constant_bool();
-	const arg_type b = rx->static_constant_bool();
+logical_expr::static_constant_value(void) const {
+	const arg_type a = lx->static_constant_value();
+	const arg_type b = rx->static_constant_value();
 	return (*op)(a,b);
 }
 
@@ -3689,8 +3694,8 @@ logical_expr::unroll_resolve(const unroll_context& c) const {
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(new pbool_const(
-			(*op)(lpc->static_constant_bool(), 
-				rpc->static_constant_bool())));
+			(*op)(lpc->static_constant_value(), 
+				rpc->static_constant_value())));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result
@@ -3801,8 +3806,8 @@ pint_range::hash_string(void) const {
 bool
 pint_range::is_sane(void) const {
 	if (is_static_constant()) {
-		return lower->static_constant_int() <=
-			upper->static_constant_int();
+		return lower->static_constant_value() <=
+			upper->static_constant_value();
 	}
 	else return true;
 }
@@ -3819,8 +3824,8 @@ pint_range::is_static_constant(void) const {
  */
 const_range
 pint_range::static_constant_range(void) const {
-	return const_range(lower->static_constant_int(), 
-		upper->static_constant_int());
+	return const_range(lower->static_constant_value(), 
+		upper->static_constant_value());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3854,8 +3859,8 @@ pint_range::must_be_formal_size_equivalent(const range_expr& re) const {
 	if (cr) {
 		if (!is_static_constant())
 			return false;
-		else return lower->static_constant_int() == cr->first &&
-			upper->static_constant_int() == cr->second;
+		else return lower->static_constant_value() == cr->first &&
+			upper->static_constant_value() == cr->second;
 	} else  {
 		const pint_range* const pr = IS_A(const pint_range*, &re);
 		INVARIANT(pr);
@@ -3933,7 +3938,7 @@ const_range::const_range(const pint_value_type n) :
  */
 const_range::const_range(const pint_const& n) :
 		range_expr(), const_index(), 
-		parent_type(0, n.static_constant_int() -1) {
+		parent_type(0, n.static_constant_value() -1) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
@@ -4231,7 +4236,7 @@ const_range_list::const_range_list(const const_index_list& i) :
 		const count_ptr<pint_const> p(k.is_a<pint_const>());
 		const count_ptr<const_range> r(k.is_a<const_range>());
 		if (p) {
-			const int min_max = p->static_constant_int();
+			const int min_max = p->static_constant_value();
 			push_back(const_range(min_max, min_max));	// copy
 		} else {
 			NEVER_NULL(r);
@@ -4341,7 +4346,7 @@ const_range_list::collapsed_dimension_ranges(
 			pi(j->is_a<pint_const>());
 		if (pi) {
 			INVARIANT(i != end());
-			INVARIANT(i->first == pi->static_constant_int());
+			INVARIANT(i->first == pi->static_constant_value());
 			INVARIANT(i->first == i->second);
 		} else {
 			const count_ptr<const const_range>
@@ -5009,7 +5014,7 @@ const_index_list::resolve_multikey(
 		const count_ptr<const const_index> ip(*i);
 		const count_ptr<const pint_const> pc(ip.is_a<pint_const>());
 		if (pc)
-			(*k)[j] = pc->static_constant_int();
+			(*k)[j] = pc->static_constant_value();
 		else 	return false;
 	}
 	return true;
@@ -5487,6 +5492,13 @@ dynamic_index_list::load_object(const persistent_object_manager& m,
 	}
 }
 
+//=============================================================================
+// explicit template instantiations
+
+#if USE_CONST_COLLECTION_TEMPLATE
+template class const_collection<pint_tag>;
+// template class const_collection<pbool_tag>;
+#endif
 //=============================================================================
 }	// end namepace entity
 }	// end namepace ART
