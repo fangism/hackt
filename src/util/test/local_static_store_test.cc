@@ -2,7 +2,13 @@
 	\file "local_static_store_test.cc"
 	Testing for expected lifetime and behavior of 
 	function-local static objects.  
-	$Id: local_static_store_test.cc,v 1.1.2.2 2005/01/22 20:53:27 fang Exp $
+
+	One thing to note:
+	The function-local static pool for the class named_thing
+	doesn't seem to be destroyed.  
+	Don't know what the standard says about this behoavior...
+
+	$Id: local_static_store_test.cc,v 1.1.2.3 2005/01/22 22:36:18 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
@@ -38,7 +44,7 @@ void
 actually_called_one(void) {
 	STACKTRACE("actually_called_one()");
 	static const named_thing anon1("Joe");
-//	static named_thing anon2("Carol");
+	static named_thing anon2("Carol");
 }
 
 static
@@ -47,11 +53,12 @@ actually_called_two(void) {
 	STACKTRACE("actually_called_two()");
 //	static const never_ptr<named_thing> anon0(new named_thing("Bob"));
 		// will cause a leak of course!
-	static const excl_ptr<named_thing> anon1(new named_thing("Bob"));
-//	static const count_ptr<named_thing> anon2(new named_thing("Anna"));
+	static const excl_ptr<const named_thing>
+		anon1(new named_thing("Bob"));
+	static const count_ptr<const named_thing>
+		anon2(new named_thing("Anna"));
 }
 
-// causes death upon ostream!
 #if 1
 static const named_thing anon_static("Dot");
 #endif
@@ -65,7 +72,7 @@ main(int argc, char* argv[]) {
 	STACKTRACE("main()");
 	cerr << "anon_static sitting at " << &anon_static << endl;
 	cerr << "anon_dynamic sitting at " << &*anon_dynamic << endl;
-#if 0
+#if 1
 	actually_called_one();
 	actually_called_one();
 #endif

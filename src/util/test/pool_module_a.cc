@@ -1,11 +1,12 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.1.2.2 2005/01/22 20:53:28 fang Exp $
+	$Id: pool_module_a.cc,v 1.1.2.3 2005/01/22 22:36:20 fang Exp $
  */
 
-#define	DEBUG_LIST_VECTOR_POOL		1
-#define	ENABLE_STACKTRACE		1
+#define	DEBUG_LIST_VECTOR_POOL				1
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
+#define	ENABLE_STACKTRACE				1
 
 #include <iostream>
 #include "using_ostream.h"
@@ -38,7 +39,7 @@ REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum);
 // REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dee);
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(twiddle_dum, 8)
 
-#if 0
+#if 1
 static const excl_ptr<twiddle_dee>
 my_twiddle_dee(new twiddle_dee);
 

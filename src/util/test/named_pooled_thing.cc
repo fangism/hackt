@@ -1,11 +1,12 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.1.2.1 2005/01/22 20:53:27 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.1.2.2 2005/01/22 22:36:19 fang Exp $
  */
 
-#define ENABLE_STACKTRACE		1
-#define	DEBUG_LIST_VECTOR_POOL		1
+#define ENABLE_STACKTRACE				1
+#define	DEBUG_LIST_VECTOR_POOL				1
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 
 #include "named_pooled_thing.h"
 
