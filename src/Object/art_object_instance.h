@@ -1,14 +1,14 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
-	$Id: art_object_instance.h,v 1.17 2004/11/05 02:38:26 fang Exp $
+	$Id: art_object_instance.h,v 1.18 2004/11/30 01:25:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
 
 #include "art_object_base.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
 
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
@@ -37,7 +37,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace util::memory;	// for experimental pointer classes
 	using namespace MULTIKEY_NAMESPACE;
 	using namespace MULTIKEY_MAP_NAMESPACE;
 
@@ -65,13 +65,13 @@ public:
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 	// why is this a never_ptr?
 	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
 	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b) const;
+			count_ptr<const simple_instance_reference> b) const;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
@@ -91,7 +91,7 @@ public:
 	~datatype_instance_collection();
 
 	ostream& what(ostream& o) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
@@ -100,7 +100,7 @@ public:
 		make_instance_reference(void) const;
 	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b) const;
+			count_ptr<const simple_instance_reference> b) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -121,12 +121,12 @@ public:
 	~channel_instance_collection();
 
 	ostream& what(ostream& o) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
 	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b) const;
+			count_ptr<const simple_instance_reference> b) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -145,7 +145,7 @@ protected:
 		OBSOLETE after sub-typing, and hard-wiring.  
 		Type refers directly to a definition in this case, 
 		because parameters are never templatable.  
-	never_const_ptr<param_type_reference>	type;
+	never_ptr<const param_type_reference>	type;
 	**/
 
 protected:
@@ -158,7 +158,7 @@ virtual	~param_instance_collection();
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
 
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
 	// why is this never?
 virtual	count_ptr<instance_reference_base>
@@ -166,10 +166,10 @@ virtual	count_ptr<instance_reference_base>
 	/** should just assert fail, forbid reference to param members */
 	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b) const;
+			count_ptr<const simple_instance_reference> b) const;
 
 	/** appropriate for the context of a template parameter formal */
-virtual	count_const_ptr<param_expr> default_value(void) const = 0;
+virtual	count_ptr<const param_expr> default_value(void) const = 0;
 
 	bool is_template_formal(void) const;
 
@@ -189,7 +189,7 @@ virtual	count_const_ptr<param_expr> default_value(void) const = 0;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
 
-virtual	bool assign_default_value(count_const_ptr<param_expr> p) = 0;
+virtual	bool assign_default_value(count_ptr<const param_expr> p) = 0;
 
 // used by definition_base::certify_template_arguments
 virtual	bool type_check_actual_param_expr(const param_expr& pe) const = 0;
@@ -290,7 +290,7 @@ protected:
 		Only applicable for simple instances.  
 		Collectives won't be checked until unroll time.  
 	 */
-	count_const_ptr<pbool_expr>		ival;
+	count_ptr<const pbool_expr>		ival;
 	/**
 		The unrolled collection of pbool instances.  
 	 */
@@ -306,16 +306,16 @@ public:
 	ostream& what(ostream& o) const;
 
 	// PROBLEM: built-in? needs to be consistent
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const;
 	// why never?
 	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
 
-	bool initialize(count_const_ptr<pbool_expr> e);
-	bool assign_default_value(count_const_ptr<param_expr> p);
-	count_const_ptr<param_expr> default_value(void) const;
-	count_const_ptr<pbool_expr> initial_value(void) const;
+	bool initialize(count_ptr<const pbool_expr> e);
+	bool assign_default_value(count_ptr<const param_expr> p);
+	count_ptr<const param_expr> default_value(void) const;
+	count_ptr<const pbool_expr> initial_value(void) const;
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 
@@ -444,7 +444,7 @@ protected:
 		Q: Should we actaully store ival persistently or just 
 		reconstruct it during unrolling?
 	 */
-	count_const_ptr<pint_expr>		ival;
+	count_ptr<const pint_expr>		ival;
 #if !SUBCLASS_PINT_ARRAY
 	/**
 		The unrolled collection of pint instances.  
@@ -460,9 +460,9 @@ public:
 		const size_t d);
 	// keep these for built-in int datatype initialization
 	pint_instance_collection(const scopespace& o, const string& n, 
-		count_const_ptr<pint_expr> i);
+		count_ptr<const pint_expr> i);
 	pint_instance_collection(const scopespace& o, const string& n, 
-		const size_t d, count_const_ptr<pint_expr> i);
+		const size_t d, count_ptr<const pint_expr> i);
 #if SUBCLASS_PINT_ARRAY
 virtual	~pint_instance_collection();
 virtual	size_t dimensions(void) const = 0;
@@ -470,16 +470,16 @@ virtual	size_t dimensions(void) const = 0;
 
 	ostream& what(ostream& o) const;
 
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const;
 	// why never?
 	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
 
-	bool initialize(count_const_ptr<pint_expr> e);
-	bool assign_default_value(count_const_ptr<param_expr> p);
-	count_const_ptr<param_expr> default_value(void) const;
-	count_const_ptr<pint_expr> initial_value(void) const;
+	bool initialize(count_ptr<const pint_expr> e);
+	bool assign_default_value(count_ptr<const param_expr> p);
+	count_ptr<const param_expr> default_value(void) const;
+	count_ptr<const pint_expr> initial_value(void) const;
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 
@@ -588,7 +588,7 @@ public:
 	pint_array();
 	pint_array(const scopespace& o, const string& n);
 	pint_array(const scopespace& o, const string& n, 
-		count_const_ptr<pint_expr> i);
+		count_ptr<const pint_expr> i);
 	~pint_array() { }
 
 	size_t dimensions(void) const { return 0; }
@@ -644,14 +644,14 @@ virtual	~instantiation_statement();
 virtual	void attach_collection(never_ptr<instance_collection_base> i) = 0;
 virtual	never_ptr<instance_collection_base>
 		get_inst_base(void) = 0;
-virtual	never_const_ptr<instance_collection_base>
+virtual	never_ptr<const instance_collection_base>
 		get_inst_base(void) const = 0;
 
 	string get_name(void) const;
 	size_t dimensions(void) const;
 	index_collection_item_ptr_type get_indices(void) const;
 
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
 
 // should be pure virtual eventually
@@ -682,7 +682,7 @@ class pbool_instantiation_statement : public object,
 		public param_instantiation_statement {
 public:
 	typedef	pbool_instance_collection	collection_type;
-	typedef	count_const_ptr<param_type_reference>	type_ptr_type;
+	typedef	count_ptr<const param_type_reference>	type_ptr_type;
 protected:
 	// doesn't have a type_ref, hard-coded to built-ins
 	never_ptr<collection_type>		inst_base;
@@ -696,8 +696,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void attach_collection(never_ptr<instance_collection_base> i);
 	never_ptr<instance_collection_base> get_inst_base(void);
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 	void unroll(void) const;
 
@@ -712,7 +712,7 @@ class pint_instantiation_statement : public object,
 		public param_instantiation_statement {
 public:
 	typedef	pint_instance_collection	collection_type;
-	typedef	count_const_ptr<param_type_reference>	type_ptr_type;
+	typedef	count_ptr<const param_type_reference>	type_ptr_type;
 protected:
 	// doesn't have a type_ref, hard-coded to built-ins
 	never_ptr<collection_type>		inst_base;
@@ -726,8 +726,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void attach_collection(never_ptr<instance_collection_base> i);
 	never_ptr<instance_collection_base> get_inst_base(void);
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 	void unroll(void) const;
 
@@ -742,7 +742,7 @@ class process_instantiation_statement : public object,
 		public instantiation_statement {
 public:
 	typedef	process_instance_collection	collection_type;
-	typedef	count_const_ptr<process_type_reference>	type_ptr_type;
+	typedef	count_ptr<const process_type_reference>	type_ptr_type;
 protected:
 	const type_ptr_type			type;
 	never_ptr<collection_type>		inst_base;
@@ -757,8 +757,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void attach_collection(never_ptr<instance_collection_base> i);
 	never_ptr<instance_collection_base> get_inst_base(void);
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
@@ -771,7 +771,7 @@ class channel_instantiation_statement : public object,
 		public instantiation_statement {
 public:
 	typedef	channel_instance_collection	collection_type;
-	typedef	count_const_ptr<channel_type_reference>	type_ptr_type;
+	typedef	count_ptr<const channel_type_reference>	type_ptr_type;
 protected:
 	const type_ptr_type			type;
 	never_ptr<collection_type>		inst_base;
@@ -786,8 +786,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void attach_collection(never_ptr<instance_collection_base> i);
 	never_ptr<instance_collection_base> get_inst_base(void);
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
@@ -800,7 +800,7 @@ class data_instantiation_statement : public object,
 		public instantiation_statement {
 public:
 	typedef	datatype_instance_collection	collection_type;
-	typedef	count_const_ptr<data_type_reference>	type_ptr_type;
+	typedef	count_ptr<const data_type_reference>	type_ptr_type;
 protected:
 	const type_ptr_type			type;
 	never_ptr<collection_type>		inst_base;
@@ -815,8 +815,8 @@ public:
 	ostream& dump(ostream& o) const;
 	void attach_collection(never_ptr<instance_collection_base> i);
 	never_ptr<instance_collection_base> get_inst_base(void);
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL

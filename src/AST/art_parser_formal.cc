@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.4 2004/11/02 07:51:39 fang Exp $
+	$Id: art_parser_formal.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -149,10 +149,10 @@ port_formal_id::rightmost(void) const {
 	TO DO:
 	\return pointer to newly added formal instance.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 port_formal_id::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
-	never_const_ptr<instance_collection_base> t;
+	never_ptr<const object> o;
+	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -167,7 +167,8 @@ port_formal_id::check_build(never_ptr<context> c) const {
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
+		count_ptr<const range_expr_list>
+			d(o.is_a<const range_expr_list>());
 		assert(d);
 		// attach array dimensions to current instantiation
 		t = c->add_port_formal(*name, d);
@@ -220,13 +221,13 @@ port_formal_decl::rightmost(void) const {
 	used to return pointer to the conrete-type used for instantiation
 		if there were no problems, else return NULL.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 port_formal_decl::check_build(never_ptr<context> c) const {
-//	never_const_ptr<object> t;
+//	never_ptr<const object> t;
 	type->check_build(c);
 	// useless return value
 		// should set the current_fundamental_type in context
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		ftr(c->get_current_fundamental_type());
 #if 0
 	c->reset_current_definition_reference();
@@ -242,10 +243,10 @@ port_formal_decl::check_build(never_ptr<context> c) const {
 		cerr << "ERROR with concrete-type in port formal decl. at "
 			<< type->where() << endl;
 		exit(1);
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	c->reset_current_fundamental_type();
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 //	return t;
 }
 
@@ -314,10 +315,10 @@ template_formal_id::rightmost(void) const {
 	TO DO: register default value in building
 	See also make_dense_range_list.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 template_formal_id::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
-	never_const_ptr<instance_collection_base> t;
+	never_ptr<const object> o;
+	never_ptr<const instance_collection_base> t;
 		// should be param_instantiation
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -325,7 +326,7 @@ template_formal_id::check_build(never_ptr<context> c) const {
 	)
 	// there should be some open definition already
 	// type should already be set in the context
-	count_ptr<param_expr> default_val;
+	count_ptr<const param_expr> default_val;
 	if (dflt) {
 		dflt->check_build(c);
 		count_ptr<object> o(c->pop_top_object_stack());
@@ -334,7 +335,7 @@ template_formal_id::check_build(never_ptr<context> c) const {
 				dflt->where() << endl;
 			exit(1);
 		}
-		count_ptr<param_expr> p(o.is_a<param_expr>());
+		count_ptr<const param_expr> p(o.is_a<const param_expr>());
 		assert(p);
 		default_val = p;
 	}
@@ -348,14 +349,15 @@ template_formal_id::check_build(never_ptr<context> c) const {
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
+		count_ptr<const range_expr_list>
+			d(o.is_a<const range_expr_list>());
 		assert(d);
 		t = c->add_template_formal(*name, d, default_val);
 	} else {
 		t = c->add_template_formal(*name, default_val);
 	}
 	return t;
-//	return never_const_ptr<object>(t);
+//	return never_ptr<const object>(t);
 }
 
 //=============================================================================
@@ -401,9 +403,9 @@ template_formal_decl::rightmost(void) const {
 	Adds formal parameters to the context's current_prototype.  
 	\return the definition found, not particularly useful.
  */
-never_const_ptr<object>
+never_ptr<const object>
 template_formal_decl::check_build(never_ptr<context> c) const {
-//	never_const_ptr<object> o;
+//	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"template_formal_decl::check_build(...): ";
@@ -411,7 +413,7 @@ template_formal_decl::check_build(never_ptr<context> c) const {
 //	o = 
 	type->check_build(c);	// sets_current_definition_reference
 	// useless return value, always NULL
-	never_const_ptr<definition_base>
+	never_ptr<const definition_base>
 		def(c->get_current_definition_reference());
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.5 2004/11/02 07:51:41 fang Exp $
+	$Id: art_parser_instance.cc,v 1.6 2004/11/30 01:25:02 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -94,14 +94,14 @@ alias_list::rightmost(void) const {
 		final element in the assignment / alias list
 		(if all is consistent, else returns NULL)
  */
-never_const_ptr<object>
+never_ptr<const object>
 alias_list::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"alias_list::check_build(...): FINISH ME!";
 	)
 if (size() > 0) {		// non-empty
-	never_const_ptr<object> ret(NULL);
+	never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
 	alias_list_base::check_build(c);
@@ -134,7 +134,7 @@ if (size() > 0) {		// non-empty
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
 		exit(1);
-	} else if (first_obj->is_a<param_instance_reference>()) {
+	} else if (first_obj->is_a<const param_instance_reference>()) {
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
@@ -155,19 +155,19 @@ if (size() > 0) {		// non-empty
 			exit(1);
 		} else {
 			c->add_assignment(
-				excl_const_ptr<param_expression_assignment>(
+				excl_ptr<const param_expression_assignment>(
 					exass));
 			// and transfer ownership
 			assert(!exass.owned());
 		}
-	} else if (first_obj->is_a<instance_reference_base>()) {
+	} else if (first_obj->is_a<const instance_reference_base>()) {
 #if 0
 		cerr << "alias_list::check_build(): not done yet "
 			"for non-param/expr instance connections yet.  "
 			"Aborting." << endl;
 		exit(1);
 #else
-		excl_const_ptr<aliases_connection> connection =
+		excl_ptr<const aliases_connection> connection =
 			connect.make_alias_connection();
 		// also type-checks connections
 		if (!connection) {
@@ -176,7 +176,7 @@ if (size() > 0) {		// non-empty
 			exit(1);
 		} else {
 			c->add_connection(
-				excl_const_ptr<instance_reference_connection>(
+				excl_ptr<const instance_reference_connection>(
 					connection));
 			assert(!connection.owned());
 		}
@@ -193,7 +193,7 @@ if (size() > 0) {		// non-empty
 } else {
 	// will this ever be empty?  will be caught as error for now.
 	assert(0);
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 }
 
@@ -220,9 +220,9 @@ connection_argument_list::what(ostream& o) const {
 	\param c the context object.      
 	\return
  */
-never_const_ptr<object>
+never_ptr<const object>
 connection_argument_list::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"connection_argument_list::check_build(...): " << endl;
@@ -259,7 +259,7 @@ actuals_base::rightmost(void) const {
 /**
 	Just a wrapped call to expr_list::check_build.
  */
-never_const_ptr<object>
+never_ptr<const object>
 actuals_base::check_build(never_ptr<context> c) const {
 	return actuals->check_build(c);
 }
@@ -297,9 +297,9 @@ instance_base::rightmost(void) const {
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 instance_base::check_build(never_ptr<context> c) const {
-	never_const_ptr<instance_collection_base> inst;
+	never_ptr<const instance_collection_base> inst;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "instance_base::check_build(...): ";
@@ -309,7 +309,7 @@ instance_base::check_build(never_ptr<context> c) const {
 	inst = c->add_instance(*id);		// check return value?
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << id->where() << endl;
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	// need current_instance?  no, not using as reference.
 	// return inst;
@@ -345,14 +345,14 @@ instance_array::rightmost(void) const {
 	See also template_formal_id::check_build, 
 		port_formal_id::check_build.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 instance_array::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"instance_array::check_build(...): " << endl;
 	)
 	if (ranges) {
-		never_const_ptr<instance_collection_base> t;
+		never_ptr<const instance_collection_base> t;
 		ranges->check_build(c);
 		// expecting ranges and singe integer expressions
 		count_ptr<object> o(c->pop_top_object_stack());
@@ -429,16 +429,16 @@ instance_declaration::rightmost(void) const {
 	return semi->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 instance_declaration::check_build(never_ptr<context> c) const {
-//	never_const_ptr<object> t;
+//	never_ptr<const object> t;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_declaration::check_build(...): ";
 	)
 	type->check_build(c);
 	// useless return value
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		ftr(c->get_current_fundamental_type());
 		// should set the current_fundamental_type
 #if 0
@@ -452,7 +452,7 @@ instance_declaration::check_build(never_ptr<context> c) const {
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "
 			<< type->where() << endl;
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
 	c->reset_current_fundamental_type();	// the type to instantiate
@@ -490,27 +490,27 @@ instance_connection::rightmost(void) const {
 	else return actuals->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 instance_connection::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_connection::check_build(...): ";
 	)
-	never_const_ptr<object> o = instance_base::check_build(c);
+	never_ptr<const object> o = instance_base::check_build(c);
 	if (!o) {
 		// instance_base already prints error message...
 //		cerr << "ERROR with " << *id << " at " << id->where() << endl;
 		exit(1);
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 
 	// lookup the instantiation we just created
 	id->check_build(c);
 	// expect instance_reference on object_stack
-	count_const_ptr<object> obj(c->pop_top_object_stack());
+	count_ptr<const object> obj(c->pop_top_object_stack());
 	assert(obj);		// we just created it!
-	count_const_ptr<simple_instance_reference>
-		inst_ref(obj.is_a<simple_instance_reference>());
+	count_ptr<const simple_instance_reference>
+		inst_ref(obj.is_a<const simple_instance_reference>());
 	assert(inst_ref);
 
 	actuals_base::check_build(c);
@@ -520,11 +520,11 @@ instance_connection::check_build(never_ptr<context> c) const {
 			<< actuals_base::where() << endl;
 		exit(1);
 	}
-	count_const_ptr<object_list>
-		obj_list(obj.is_a<object_list>());
+	count_ptr<const object_list>
+		obj_list(obj.is_a<const object_list>());
 	assert(obj_list);
 
-	excl_const_ptr<port_connection> port_con = 
+	excl_ptr<const port_connection> port_con = 
 		obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
@@ -532,11 +532,11 @@ instance_connection::check_build(never_ptr<context> c) const {
 		exit(1);
 	} else {
 		c->add_connection(
-			excl_const_ptr<instance_reference_connection>(
+			excl_ptr<const instance_reference_connection>(
 				port_con));
 		assert(!port_con.owned());	// explicit transfer
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -571,7 +571,7 @@ connection_statement::rightmost(void) const {
 /**
 	\return NULL always, rather useless.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 connection_statement::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -579,14 +579,14 @@ connection_statement::check_build(never_ptr<context> c) const {
 	)
 	lvalue->check_build(c);
 	// useless return value, expect instance_reference_base on object_stack
-	count_const_ptr<object> o(c->pop_top_object_stack());
+	count_ptr<const object> o(c->pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
 			"connection_statement at " << lvalue->where() << endl;
 		exit(1);
 	}
-	count_const_ptr<simple_instance_reference>
-		inst_ref(o.is_a<simple_instance_reference>());
+	count_ptr<const simple_instance_reference>
+		inst_ref(o.is_a<const simple_instance_reference>());
 	assert(inst_ref);
 
 	actuals_base::check_build(c);
@@ -597,11 +597,11 @@ connection_statement::check_build(never_ptr<context> c) const {
 			<< actuals_base::where() << endl;
 		exit(1);
 	}
-	count_const_ptr<object_list>
-		obj_list(o.is_a<object_list>());
+	count_ptr<const object_list>
+		obj_list(o.is_a<const object_list>());
 	assert(obj_list);
 
-	excl_const_ptr<port_connection> port_con = 
+	excl_ptr<const port_connection> port_con = 
 		obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
@@ -609,11 +609,11 @@ connection_statement::check_build(never_ptr<context> c) const {
 		exit(1);
 	} else {
 		c->add_connection(
-			excl_const_ptr<instance_reference_connection>(
+			excl_ptr<const instance_reference_connection>(
 				port_con));
 		assert(!port_con.owned());	// explicit transfer
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -636,8 +636,8 @@ instance_alias::instance_alias(const token_identifier* i, alias_list* a,
 			(assert(a),
 			// need deep copy of i as an expression, 
 			// because already managed by parent, 
-			// and list uses count_const_ptr<expr>
-			a->push_front(count_const_ptr<token_identifier>(
+			// and list uses count_ptr<const expr>
+			a->push_front(count_ptr<const token_identifier>(
 				new token_identifier(*i))),
 			// caution, unless we add an '=' token to delim_list
 			// assertion will be broken, but who cares?
@@ -675,9 +675,9 @@ instance_alias::rightmost(void) const {
 	First register the declared indentifier as an instance.  
 	Then type-check the list.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 instance_alias::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_alias::check_build(...)";

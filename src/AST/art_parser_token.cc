@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.4 2004/11/02 07:51:41 fang Exp $
+	$Id: art_parser_token.cc,v 1.5 2004/11/30 01:25:04 fang Exp $
  */
 
 #include <iostream>
@@ -140,12 +140,12 @@ token_int::rightmost(void) const {
 	context's expression stack.  
 	\return NULL, useless.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_int::check_build(never_ptr<context> c) const {
 	count_ptr<pint_const> pe(new pint_const(val));
 	assert(pe);
 	c->push_object_stack(pe);
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -186,10 +186,10 @@ token_float::rightmost(void) const {
 /**
 	Need built-in float type first.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_float::check_build(never_ptr<context> c) const {
 	cerr << "token_float::check_build(): not quite done yet!" << endl;
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -264,7 +264,7 @@ token_identifier::rightmost(void) const {
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_identifier::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -272,7 +272,7 @@ token_identifier::check_build(never_ptr<context> c) const {
 	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		inst(c->lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
@@ -334,12 +334,12 @@ token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 token_bool::check_build(never_ptr<context> c) const {
 	count_ptr<param_expr> pe(
 		new pbool_const(strcmp(c_str(),"true") == 0));
 	c->push_object_stack(pe);
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 
@@ -374,10 +374,10 @@ token_else::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 token_else::check_build(never_ptr<context> c) const {
 	cerr << "token_else::check_build(): Don't call me!";
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -410,10 +410,10 @@ token_quoted_string::rightmost(void) const {
 /**
 	Can't do this until we have a built-in type for strings.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_quoted_string::check_build(never_ptr<context> c) const {
 	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -450,7 +450,7 @@ token_datatype::what(ostream& o) const {
 }
 
 #if 0
-never_const_ptr<object>
+never_ptr<const object>
 token_datatype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -475,7 +475,7 @@ token_paramtype::what(ostream& o) const {
 }
 
 #if 0
-never_const_ptr<object>
+never_ptr<const object>
 token_paramtype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -501,7 +501,7 @@ token_bool_type::what(ostream& o) const {
 }
 #endif
 
-never_const_ptr<object>
+never_ptr<const object>
 token_bool_type::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -531,7 +531,7 @@ token_int_type::what(ostream& o) const {
 }
 #endif
 
-never_const_ptr<object>
+never_ptr<const object>
 token_int_type::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -568,7 +568,7 @@ token_pbool_type::what(ostream& o) const {
 	"pbool" is always used as a type_reference, and never refers
 	to the definition.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_pbool_type::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -603,7 +603,7 @@ token_pint_type::what(ostream& o) const {
 //	"pint" is always used as a type_reference, and never refers
 //	to the definition.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 token_pint_type::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())

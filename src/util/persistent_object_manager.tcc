@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.6 2004/11/05 02:38:54 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.7 2004/11/30 01:25:22 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
@@ -38,8 +38,7 @@ persistent_object_manager::get_root<T>(void);
 namespace util {
 //=============================================================================
 using namespace std;
-using namespace PTRS_NAMESPACE;
-using namespace COUNT_PTR_NAMESPACE;
+using namespace util::memory;
 
 //=============================================================================
 // class persistent_object_manager template method definitions
@@ -151,6 +150,7 @@ persistent_object_manager::read_pointer(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Partial specialization of read_pointer for 
 	reference-counted pointers.
@@ -158,7 +158,7 @@ persistent_object_manager::read_pointer(
 template <class T>
 void
 persistent_object_manager::read_pointer(
-		istream& f, const count_const_ptr<T>& ptr) const {
+		istream& f, const count_ptr<const T>& ptr) const {
 	long i;
 	read_value(f, i);
 	persistent* o(lookup_obj_ptr(i));
@@ -176,13 +176,14 @@ persistent_object_manager::read_pointer(
 		assert(t);
 		assert(c);
 		// uses the unsafe constructor
-		const_cast<count_const_ptr<T>& >(ptr) =
-			count_const_ptr<T>(t, c);
+		const_cast<count_ptr<const T>& >(ptr) =
+			count_ptr<const T>(t, c);
 	} else {
-		const_cast<count_const_ptr<T>& >(ptr) =
-			count_const_ptr<T>(NULL);
+		const_cast<count_ptr<const T>& >(ptr) =
+			count_ptr<const T>(NULL);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2004-11-29	David Fang	<fangism@users.sourceforge.net>
+
+	* Miraculously swapped out old pointer-class system with 
+	  the new one, without breaking anything.  
+
+	* Obsolete code is retained in util/obsolete for historical
+	  purposes.  
+
+
+2004-11-23	David Fang	<fangism@users.sourceforge.net>
+
+	* Added some useful data structures to the util library.  
+
+	* Planning restructuring of util/.  
+	  Memory management (including pointer classes) relocated to
+	  util/memory subdirectory.  
+
+
 2004-11-06	David Fang	<fangism@users.sourceforge.net>
 	
 	* Debugged and finished testing the list_vector_pool allocator.  

@@ -4,8 +4,9 @@
 
 	Some predefinable macros can be used to control compilations:
 	DISABLE_INVARIANT turns off invariant checking.  
+	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.2 2004/11/26 23:24:16 fang Exp $
+	$Id: macros.h,v 1.3 2004/11/30 01:25:21 fang Exp $
  */
 
 #ifndef	__MACROS_H__
@@ -41,16 +42,25 @@
  */
 #define	IS_A(type, id)		dynamic_cast<type>(id)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#ifdef	DISABLE_INVARIANT
+#define	MUST_BE_A(type, id)
+#else
 /**
 	Abbreviation for dynamic_cast assertion.  
+	Can be disabled with DISABLE_INVARIANT.
  */
 #define	MUST_BE_A(type, id)	assert(IS_A(type,id))
+#endif
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Abbreviation for static_cast.  
  */
 #define	AS_A(type, id)		static_cast<type>(id)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Abbreviation for reinterpret_cast.
 	Please don't use reinterpret_cast, they are distasteful and dangerous. 
@@ -72,6 +82,15 @@
 
 // of course invariant-checks may also come as expensive operations, 
 // those we leave to specific instances.  
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#ifdef	DISABLE_NULL_CHECK
+#define	NEVER_NULL(x)
+#define	MUST_BE_NULL(x)
+#else
+#define	NEVER_NULL(x)		assert(x)
+#define	MUST_BE_NULL(x)		assert(!(x))
+#endif
 
 //=============================================================================
 // exception throwing...

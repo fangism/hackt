@@ -1,7 +1,7 @@
 /**
 	\file "art_built_ins.h"
 	Header for built-in features of the art language.  
-	$Id: art_built_ins.h,v 1.5 2004/11/02 07:51:43 fang Exp $
+	$Id: art_built_ins.h,v 1.6 2004/11/30 01:25:08 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_H__
@@ -33,8 +33,8 @@ extern	name_space built_in_namespace;
 extern	const built_in_param_def	pbool_def;
 extern	const built_in_param_def	pint_def;
 
-extern	const count_const_ptr<param_type_reference>	pbool_type_ptr;
-extern	const count_const_ptr<param_type_reference>	pint_type_ptr;
+extern	const count_ptr<const param_type_reference>	pbool_type_ptr;
+extern	const count_ptr<const param_type_reference>	pint_type_ptr;
 
 /**
 	Built-in data types.  

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.6 2004/11/05 02:38:54 fang Exp $
+	$Id: persistent_object_manager.h,v 1.7 2004/11/30 01:25:22 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -11,8 +11,7 @@
 
 #include "hash_qmap.h"
 #include "sstream.h"			// reduce to forward decl?
-#include "ptrs.h"			// need complete definition
-#include "count_ptr.h"			// need complete definition
+#include "memory/pointer_classes.h"
 #include "IO_utils.h"			// for read and write to streams
 
 //=============================================================================
@@ -29,9 +28,8 @@
 //=============================================================================
 namespace util {
 using namespace std;
+using namespace util::memory;
 using namespace HASH_QMAP_NAMESPACE;
-using namespace COUNT_PTR_NAMESPACE;
-using namespace PTRS_NAMESPACE;
 
 //=============================================================================
 /**
@@ -255,9 +253,6 @@ public:
 	 */
 	template <class T>
 	void read_pointer(istream& f, const count_ptr<T>& ptr) const;
-
-	template <class T>
-	void read_pointer(istream& f, const count_const_ptr<T>& ptr) const;
 
 	/**
 		Writes a sequence of pointers, mapped to indices.

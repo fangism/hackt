@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.11 2004/11/05 02:38:25 fang Exp $
+	$Id: art_object_expr.h,v 1.12 2004/11/30 01:25:10 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -116,7 +116,7 @@ virtual bool must_be_equivalent(const param_expr& p) const = 0;
 /** can be resolved to static constant value */
 virtual bool is_static_constant(void) const = 0;
 
-virtual	count_const_ptr<const_param>
+virtual	count_ptr<const const_param>
 		static_constant_param(void) const = 0;
 
 /** doesn't depend on loop variables */
@@ -127,7 +127,7 @@ virtual bool is_unconditional(void) const = 0;
 
 static	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment(
-		const count_const_ptr<param_expr>& p);
+		const count_ptr<const param_expr>& p);
 #if 0
 	// can't make template virtual functions...
 	virtual multikey_qmap<D,size_t,pbool_instance>
@@ -136,7 +136,7 @@ static	excl_ptr<param_expression_assignment>
 private:
 virtual	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const = 0;
+		const count_ptr<const param_expr>& p) const = 0;
 };	// end class param_expr
 
 //-----------------------------------------------------------------------------
@@ -170,7 +170,7 @@ virtual bool may_be_equivalent(const param_expr& p) const = 0;
 virtual bool must_be_equivalent(const param_expr& p) const = 0;
 
 	bool is_static_constant(void) const { return true; }
-virtual	count_const_ptr<const_param>
+virtual	count_ptr<const const_param>
 		static_constant_param(void) const = 0;
 
 	bool is_loop_independent(void) const { return true; }
@@ -216,10 +216,10 @@ virtual	bool is_loop_independent(void) const = 0;
 	Only scalar expressions allowed, no array indirections or collections.  
  */
 class const_param_expr_list : public param_expr_list, 
-		public list<count_const_ptr<const_param> > {
+		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 protected:
-	typedef	list<count_const_ptr<const_param> >	parent;
+	typedef	list<count_ptr<const const_param> >	parent;
 public:
 	typedef parent::iterator		iterator;
 	typedef parent::const_iterator		const_iterator;
@@ -268,10 +268,10 @@ public:
 	Generalized list of parameter expressions, can be dynamic.  
  */
 class dynamic_param_expr_list : public param_expr_list, 
-		public list<count_const_ptr<param_expr> > {
+		public list<count_ptr<const param_expr> > {
 friend class const_param_expr_list;
 protected:
-	typedef	list<count_const_ptr<param_expr> >	parent;
+	typedef	list<count_ptr<const param_expr> >	parent;
 public:
 	typedef parent::iterator		iterator;
 	typedef parent::const_iterator		const_iterator;
@@ -521,7 +521,7 @@ public:
  */
 class range_expr_list : public object, public persistent {
 protected:
-//	never_const_ptr<instance_collection_base>	owner;
+//	never_ptr<const instance_collection_base>	owner;
 public:
 	range_expr_list();
 virtual	~range_expr_list() { }
@@ -651,7 +651,7 @@ virtual bool must_be_initialized(void) const = 0;
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
 virtual bool is_static_constant(void) const = 0;
-virtual	count_const_ptr<const_param>
+virtual	count_ptr<const const_param>
 		static_constant_param(void) const;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
@@ -662,7 +662,7 @@ virtual	bool resolve_values_into_flat_list(list<bool>& l) const = 0;
 protected:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const;
+		const count_ptr<const param_expr>& p) const;
 };	// end class pbool_expr
 
 //-----------------------------------------------------------------------------
@@ -686,7 +686,7 @@ virtual bool must_be_initialized(void) const = 0;
 	bool may_be_equivalent(const param_expr& p) const;
 	bool must_be_equivalent(const param_expr& p) const;
 virtual bool is_static_constant(void) const = 0;
-virtual	count_const_ptr<const_param>
+virtual	count_ptr<const const_param>
 		static_constant_param(void) const;
 virtual bool is_unconditional(void) const = 0;
 virtual bool is_loop_independent(void) const = 0;
@@ -700,7 +700,7 @@ virtual	bool resolve_values_into_flat_list(list<int>& l) const = 0;
 protected:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const;
+		const count_ptr<const param_expr>& p) const;
 };	// end class pint_expr
 
 //-----------------------------------------------------------------------------
@@ -747,15 +747,15 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	using param_instance_reference::dump;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	never_const_ptr<param_instance_collection>
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	never_ptr<const param_instance_collection>
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-	bool initialize(count_const_ptr<pbool_expr> i);
+	bool initialize(count_ptr<const pbool_expr> i);
 	string hash_string(void) const;
 	// try these
 	// using param_instance_reference::may_be_initialized;
@@ -793,7 +793,7 @@ public:
 		template <template <class> class P>
 		bool
 		operator () (const bool b,
-			const P<pbool_instance_reference>& p) const {
+			const P<const pbool_instance_reference>& p) const {
 			assert(p);
 			return this->operator()(b, *p);
 		}
@@ -827,15 +827,15 @@ public:
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
-	never_const_ptr<param_instance_collection>
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	never_ptr<const param_instance_collection>
 		get_param_inst_base(void) const;
 
 	size_t dimensions(void) const;
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
-	bool initialize(count_const_ptr<pint_expr> i);
+	bool initialize(count_ptr<const pint_expr> i);
 	string hash_string(void) const;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -874,7 +874,7 @@ public:
 		template <template <class> class P>
 		bool
 		operator () (const bool b,
-			const P<pint_instance_reference>& p) const {
+			const P<const pint_instance_reference>& p) const {
 			assert(p);
 			return this->operator()(b, *p);
 		}
@@ -914,7 +914,7 @@ public:
 	bool must_be_equivalent(const param_expr& e) const
 		{ return pint_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
-	count_const_ptr<const_param>
+	count_ptr<const const_param>
 		static_constant_param(void) const;
 	int static_constant_int(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -932,7 +932,7 @@ public:
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const;
+		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -966,7 +966,7 @@ public:
 	bool must_be_equivalent(const param_expr& e) const
 		{ return pbool_expr::must_be_equivalent(e); }
 	bool is_static_constant(void) const { return true; }
-	count_const_ptr<const_param>
+	count_ptr<const const_param>
 		static_constant_param(void) const;
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
@@ -979,7 +979,7 @@ public:
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const;
+		const count_ptr<const param_expr>& p) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -995,12 +995,12 @@ public:
 protected:
 	const op_type			op;
 	/** expression argument must be 0-dimensional */
-	count_const_ptr<pint_expr>	ex;
+	count_ptr<const pint_expr>	ex;
 private:
 	pint_unary_expr();
 public:
-	pint_unary_expr(const op_type o, count_const_ptr<pint_expr> e);
-	pint_unary_expr(count_const_ptr<pint_expr> e, const op_type o);
+	pint_unary_expr(const op_type o, count_ptr<const pint_expr> e);
+	pint_unary_expr(count_ptr<const pint_expr> e, const op_type o);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1037,12 +1037,12 @@ public:
 protected:
 	const op_type			op;
 	/** argument expression must be 0-dimensional */
-	count_const_ptr<pbool_expr>	ex;
+	count_ptr<const pbool_expr>	ex;
 private:
 	pbool_unary_expr();
 public:
-	pbool_unary_expr(const op_type o, count_const_ptr<pbool_expr> e);
-	pbool_unary_expr(count_const_ptr<pbool_expr> e, const op_type o);
+	pbool_unary_expr(const op_type o, count_ptr<const pbool_expr> e);
+	pbool_unary_expr(count_ptr<const pbool_expr> e, const op_type o);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1091,8 +1091,8 @@ private:
 	static void op_map_register(const char, const op_type* );
 	static size_t op_map_init(void);
 protected:
-	count_const_ptr<pint_expr>	lx;
-	count_const_ptr<pint_expr>	rx;
+	count_ptr<const pint_expr>	lx;
+	count_ptr<const pint_expr>	rx;
 #if 0
 	const char			op;
 #else
@@ -1105,8 +1105,8 @@ private:
 	arith_expr();
 public:
 	// change: const ptr& arguments
-	arith_expr(count_const_ptr<pint_expr> l, const char o, 
-		count_const_ptr<pint_expr> r);
+	arith_expr(count_ptr<const pint_expr> l, const char o, 
+		count_ptr<const pint_expr> r);
 	~arith_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -1158,8 +1158,8 @@ private:
 	static size_t op_map_init(void);
 
 protected:
-	count_const_ptr<pint_expr>	lx;
-	count_const_ptr<pint_expr>	rx;
+	count_ptr<const pint_expr>	lx;
+	count_ptr<const pint_expr>	rx;
 #if 0
 	const string			op;
 #else
@@ -1169,8 +1169,8 @@ protected:
 private:
 	relational_expr();
 public:
-	relational_expr(count_const_ptr<pint_expr> l, const string& o, 
-		count_const_ptr<pint_expr> r);
+	relational_expr(count_ptr<const pint_expr> l, const string& o, 
+		count_ptr<const pint_expr> r);
 	~relational_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -1220,8 +1220,8 @@ private:
 	static size_t op_map_init(void);
 
 protected:
-	count_const_ptr<pbool_expr>	lx;
-	count_const_ptr<pbool_expr>	rx;
+	count_ptr<const pbool_expr>	lx;
+	count_ptr<const pbool_expr>	rx;
 #if 0
 	const string			op;
 #else
@@ -1231,8 +1231,8 @@ protected:
 private:
 	logical_expr();
 public:
-	logical_expr(count_const_ptr<pbool_expr> l, const string& o, 
-		count_const_ptr<pbool_expr> r);
+	logical_expr(count_ptr<const pbool_expr> l, const string& o, 
+		count_ptr<const pbool_expr> r);
 	~logical_expr() { }
 
 	ostream& what(ostream& o) const;
@@ -1318,15 +1318,15 @@ virtual	bool resolve_range(const_range& r) const = 0;
 class pint_range : public range_expr {
 protected:
 	// need to be const, or modifiable?
-	count_const_ptr<pint_expr>	lower;
-	count_const_ptr<pint_expr>	upper;
+	count_ptr<const pint_expr>	lower;
+	count_ptr<const pint_expr>	upper;
 private:
 	pint_range();
 public:
 	/** implicit conversion from x[N] to x[0..N-1] */
-explicit pint_range(count_const_ptr<pint_expr> n);
-	pint_range(count_const_ptr<pint_expr> l,
-		count_const_ptr<pint_expr> u);
+explicit pint_range(count_ptr<const pint_expr> n);
+	pint_range(count_ptr<const pint_expr> l,
+		count_ptr<const pint_expr> u);
 	pint_range(const pint_range& pr);
 	~pint_range() { }
 

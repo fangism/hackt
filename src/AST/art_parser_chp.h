@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.3 2004/11/02 07:51:36 fang Exp $
+	$Id: art_parser_chp.h,v 1.4 2004/11/30 01:25:02 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -49,7 +49,7 @@ virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 };
 
-typedef	node_list<statement,semicolon>	stmt_list;
+typedef	node_list<const statement,semicolon>	stmt_list;
 
 #define chp_stmt_list_wrap(b,l,e)					\
 	IS_A(CHP::stmt_list*, l->wrap(b,e))
@@ -179,9 +179,10 @@ virtual	line_position leftmost(void) const;
 };
 
 //-----------------------------------------------------------------------------
-class comm_list : public statement, public node_list<communication,comma> {
+class comm_list : public statement,
+		public node_list<const communication,comma> {
 private:
-	typedef	node_list<communication,comma>		comm_list_base;
+	typedef	node_list<const communication,comma>		comm_list_base;
 public:
 	comm_list(communication* c);
 virtual	~comm_list();
@@ -236,9 +237,9 @@ virtual	ostream& what(ostream& o) const;
 //=============================================================================
 /// container for deterministic selection statement
 class det_selection : public selection, 
-		public node_list<guarded_command,thickbar> {
+		public node_list<const guarded_command,thickbar> {
 private:
-	typedef	node_list<guarded_command,thickbar>	det_sel_base;
+	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
 public:
 	det_selection(guarded_command* n);
 virtual	~det_selection();
@@ -257,9 +258,9 @@ using	det_sel_base::where;
 //=============================================================================
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, 
-		public node_list<guarded_command,colon> {
+		public node_list<const guarded_command,colon> {
 private:
-	typedef	node_list<guarded_command,colon>	nondet_sel_base;
+	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
 public:
 	nondet_selection(guarded_command* n);
 virtual	~nondet_selection();
@@ -278,9 +279,9 @@ using	nondet_sel_base::where;
 //=============================================================================
 /// container for probablistic selection statement
 class prob_selection : public selection, 
-		public node_list<guarded_command,thickbar> {
+		public node_list<const guarded_command,thickbar> {
 private:
-	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
+	typedef	node_list<const guarded_command,thickbar>	prob_sel_base;
 public:
 	prob_selection(guarded_command* n);
 virtual	~prob_selection();

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.3 2004/11/02 07:51:35 fang Exp $
+	$Id: art_parser_chp.cc,v 1.4 2004/11/30 01:25:01 fang Exp $
  */
 
 #include "art_parser.tcc"
@@ -332,8 +332,8 @@ selection::what(ostream& o) const {
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
-det_selection::det_selection(guarded_command* n) : selection(),
-		node_list<guarded_command,thickbar>(n) {
+det_selection::det_selection(guarded_command* n) :
+		selection(), det_sel_base(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -358,8 +358,8 @@ det_selection::rightmost(void) const {
 // class nondet_selection method definitions
 
 CONSTRUCTOR_INLINE
-nondet_selection::nondet_selection(guarded_command* n) : selection(),
-		node_list<guarded_command,colon>(n) {
+nondet_selection::nondet_selection(guarded_command* n) :
+		selection(), nondet_sel_base(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -385,7 +385,7 @@ nondet_selection::rightmost(void) const {
 
 CONSTRUCTOR_INLINE
 prob_selection::prob_selection(guarded_command* n) : selection(),
-		node_list<guarded_command,thickbar>(n) {
+		prob_sel_base(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -495,11 +495,11 @@ log::rightmost(void) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-template class node_list<statement,semicolon>;		// CHP::stmt_list
-template class node_list<guarded_command,thickbar>;	// CHP::det_sel_base
+template class node_list<const statement,semicolon>;	// CHP::stmt_list
+template class node_list<const guarded_command,thickbar>;	// CHP::det_sel_base
 							// CHP::prob_sel_base
-template class node_list<guarded_command,colon>;	// CHP::nondet_sel_base
-template class node_list<communication,comma>;		// CHP::comm_list_base
+template class node_list<const guarded_command,colon>;	// CHP::nondet_sel_base
+template class node_list<const communication,comma>;	// CHP::comm_list_base
 
 //=============================================================================
 };	// end namespace CHP

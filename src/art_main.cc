@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.5 2004/11/02 07:51:31 fang Exp $
+	$Id: art_main.cc,v 1.6 2004/11/30 01:24:57 fang Exp $
  */
 
 #include <iostream>
@@ -15,7 +15,7 @@
 int
 main(int argc, char* argv[]) {
 	excl_ptr<parser::node> root;		///< root of the syntax tree
-	never_const_ptr<entity::object> top;	///< root type-checked object
+	never_ptr<const entity::object> top;	///< root type-checked object
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
 

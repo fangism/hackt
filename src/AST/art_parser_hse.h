@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.3 2004/11/02 07:51:40 fang Exp $
+	$Id: art_parser_hse.h,v 1.4 2004/11/30 01:25:02 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -44,7 +44,7 @@ virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
 };	// end class statement
 
-typedef	node_list<statement,semicolon>	stmt_list;
+typedef	node_list<const statement,semicolon>	stmt_list;
 
 #define hse_stmt_list_wrap(b,l,e)					\
 	IS_A(HSE::stmt_list*, l->wrap(b,e))
@@ -157,9 +157,9 @@ virtual	ostream& what(ostream& o) const;
 //=============================================================================
 /// container for deterministic selection statement
 class det_selection : public selection, 
-		public node_list<guarded_command,thickbar> {
+		public node_list<const guarded_command,thickbar> {
 private:
-	typedef	node_list<guarded_command,thickbar>	det_sel_base;
+	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
 public:
 	det_selection(guarded_command* n);
 virtual	~det_selection();
@@ -178,9 +178,9 @@ using	det_sel_base::where;
 //=============================================================================
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, 
-		public node_list<guarded_command,colon> {
+		public node_list<const guarded_command,colon> {
 private:
-	typedef	node_list<guarded_command,colon>	nondet_sel_base;
+	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
 public:
 	nondet_selection(guarded_command* n);
 virtual	~nondet_selection();

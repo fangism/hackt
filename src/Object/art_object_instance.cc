@@ -2,7 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
- 	$Id: art_object_instance.cc,v 1.19 2004/11/05 02:38:25 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.20 2004/11/30 01:25:10 fang Exp $
  */
 
 #include <iostream>
@@ -30,7 +30,7 @@ using namespace ADS;		// for composition functors
 //=============================================================================
 // class instance_collection_base method definitions
 
-const never_const_ptr<instance_collection_base>
+const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -59,7 +59,7 @@ instance_collection_base::instance_collection_base() :
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n,
 		const size_t d) : 
-		object(), owner(never_const_ptr<scopespace>(&o)),
+		object(), owner(never_ptr<const scopespace>(&o)),
 		key(n),
 		index_collection(), 
 		depth(d) {
@@ -106,7 +106,7 @@ instance_collection_base::get_qualified_name(void) const {
 /**
 	Return's the type's base definition.
  */
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
 }
@@ -157,7 +157,7 @@ instance_collection_base::detect_static_overlap(
 		<< this << endl;
 	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
 #endif
-	if (r.is_a<const_range_list>()) {
+	if (r.is_a<const const_range_list>()) {
 	index_collection_type::const_iterator i = index_collection.begin();
 	for ( ; i!=index_collection.end(); i++) {
 		// return upon first overlap error
@@ -216,8 +216,8 @@ instance_collection_base::add_instantiation_statement(
  */
 bool
 instance_collection_base::is_template_formal(void) const {
-	never_const_ptr<definition_base>
-		def(owner.is_a<definition_base>());
+	never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
 	if (def)
 		return def->lookup_template_formal(key);
 	else return false;		// owner is not a definition
@@ -230,8 +230,8 @@ instance_collection_base::is_template_formal(void) const {
  */
 bool
 instance_collection_base::is_port_formal(void) const {
-	never_const_ptr<definition_base>
-		def(owner.is_a<definition_base>());
+	never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
 	if (def)
 		return def->lookup_port_formal(key);
 	else return false;		// owner is not a definition
@@ -248,12 +248,12 @@ instance_collection_base::is_port_formal(void) const {
  */
 bool
 instance_collection_base::template_formal_equivalent(
-		never_const_ptr<instance_collection_base> b) const {
+		never_ptr<const instance_collection_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
@@ -273,12 +273,12 @@ instance_collection_base::template_formal_equivalent(
  */
 bool
 instance_collection_base::port_formal_equivalent(
-		never_const_ptr<instance_collection_base> b) const {
+		never_ptr<const instance_collection_base> b) const {
 	assert(b);
 	// first make sure base types are equivalent.  
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
@@ -303,7 +303,7 @@ instance_collection_base::port_formal_equivalent(
  */
 bool
 instance_collection_base::formal_size_equivalent(
-		never_const_ptr<instance_collection_base> b) const {
+		never_ptr<const instance_collection_base> b) const {
 	assert(b);
 	if (depth != b->depth) {
 		// useful error message here: dimensions don't match
@@ -330,10 +330,10 @@ instance_collection_base::formal_size_equivalent(
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
 		// former template formals list when visited with the second.  
-		count_const_ptr<const_range_list>
-			ic((*i)->get_indices().is_a<const_range_list>());
-		count_const_ptr<const_range_list>
-			jc((*j)->get_indices().is_a<const_range_list>());
+		count_ptr<const const_range_list>
+			ic((*i)->get_indices().is_a<const const_range_list>());
+		count_ptr<const const_range_list>
+			jc((*j)->get_indices().is_a<const const_range_list>());
 		if (ic && jc) {
 			// compare dense ranges in each dimension
 			// must be equal!
@@ -373,8 +373,8 @@ instance_collection_base::check_expression_dimensions(const param_expr& pe) cons
 		// make sure sizes in each dimension
 		index_collection_type::const_iterator i =
 			index_collection.begin();
-		count_const_ptr<const_range_list>
-			crl((*i)->get_indices().is_a<const_range_list>());
+		count_ptr<const const_range_list>
+			crl((*i)->get_indices().is_a<const const_range_list>());
 		if (crl) {
 			if (pe.has_static_constant_dimensions()) {
 				const_range_list
@@ -419,7 +419,7 @@ instance_collection_base::collect_index_collection_pointers(
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
-		const_dereference<never_const_ptr, instance_management_base>()
+		dereference<never_ptr, const instance_management_base>()
 	)
 	);
 #endif
@@ -489,7 +489,7 @@ datatype_instance_collection::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
 	assert(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
@@ -510,7 +510,7 @@ datatype_instance_collection::make_instance_reference(void) const {
 	//	check array dimensions -- when attach_indices() invoked
 	return count_ptr<datatype_instance_reference>(
 		new datatype_instance_reference(
-			never_const_ptr<datatype_instance_collection>(this), 
+			never_ptr<const datatype_instance_collection>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
@@ -524,12 +524,12 @@ datatype_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 datatype_instance_collection::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b) const {
+		count_ptr<const simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<datatype_member_instance_reference>(
 		new datatype_member_instance_reference(
-			b, never_const_ptr<datatype_instance_collection>(this)));
+			b, never_ptr<const datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -617,7 +617,7 @@ process_instance_collection::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 process_instance_collection::get_type_ref(void) const {
 	assert(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
@@ -638,7 +638,7 @@ process_instance_collection::make_instance_reference(void) const {
 	//	check array dimensions.  
 	return count_ptr<process_instance_reference>(
 		new process_instance_reference(
-			never_const_ptr<process_instance_collection>(this), 
+			never_ptr<const process_instance_collection>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
 		// may attach in parser::instance_array::check_build()
@@ -652,12 +652,12 @@ process_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 process_instance_collection::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b) const {
+		count_ptr<const simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<process_member_instance_reference>(
 		new process_member_instance_reference(
-			b, never_const_ptr<process_instance_collection>(this)));
+			b, never_ptr<const process_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -739,7 +739,7 @@ param_instance_collection::dump(ostream& o) const {
 		if (ind)
 			ind->dump(o) << endl;
 	}
-	count_const_ptr<param_expr> init_def(default_value());
+	count_ptr<const param_expr> init_def(default_value());
 	if (init_def) {
 		if (is_template_formal())
 			init_def->dump(o << " (default = ") << ")";
@@ -756,11 +756,11 @@ param_instance_collection::dump(ostream& o) const {
 bool
 param_instance_collection::is_template_formal(void) const {
 	// look itself up in owner namespace
-	never_const_ptr<definition_base> def(owner.is_a<definition_base>());
+	never_ptr<const definition_base> def(owner.is_a<const definition_base>());
 	if (def) {
 		return def->lookup_template_formal(key);
 	} else {
-		assert(owner.is_a<name_space>());
+		assert(owner.is_a<const name_space>());
 		// is owned by a namespace, i.e. actually instantiated
 		return false;
 	}
@@ -786,7 +786,7 @@ param_instance_collection::may_be_initialized(void) const {
 		// is not a template formal, thus we interpret
 		// the "default_value" field as a one-time initialization
 		// value.  
-		count_const_ptr<param_expr> ret(default_value());
+		count_ptr<const param_expr> ret(default_value());
 		if (ret)
 			return ret->may_be_initialized();
 		// if there's no initial value, then it is definitely
@@ -812,7 +812,7 @@ param_instance_collection::must_be_initialized(void) const {
 		// is not a template formal, thus we interpret
 		// the "default_value" field as a one-time initialization
 		// value.  
-		count_const_ptr<param_expr> ret(default_value());
+		count_ptr<const param_expr> ret(default_value());
 		if (ret)
 			return ret->must_be_initialized();
 		// if there's no initial value, then it is definitely
@@ -830,7 +830,7 @@ param_instance_collection::is_static_constant(void) const {
 	} else if (is_template_formal()) {
 		return false;
 	} else {
-		count_const_ptr<param_expr> ret(default_value());
+		count_ptr<const param_expr> ret(default_value());
 		if (ret)
 			return ret->is_static_constant();
 		else return false;
@@ -861,7 +861,7 @@ param_instance_collection::is_loop_independent(void) const {
  */
 count_ptr<member_instance_reference_base>
 param_instance_collection::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b) const {
+		count_ptr<const simple_instance_reference> b) const {
 	typedef	count_ptr<member_instance_reference_base>	return_type;
 	assert(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
@@ -923,7 +923,7 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 #if 0
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
-		count_const_ptr<pbool_expr> i) :
+		count_ptr<const pbool_expr> i) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
 		ival(i) {
@@ -934,7 +934,7 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d, 
-		count_const_ptr<pbool_expr> i) :
+		count_ptr<const pbool_expr> i) :
 		param_instance_collection(o, n, d), ival(i) {
 	assert(type_check_actual_param_expr(*i));
 }
@@ -947,7 +947,7 @@ pbool_instance_collection::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 pbool_instance_collection::get_type_ref(void) const {
 	return pbool_type_ptr;
 		// defined in "art_built_ins.h"
@@ -973,7 +973,7 @@ pbool_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pbool_instance_collection::initialize(count_const_ptr<pbool_expr> e) {
+pbool_instance_collection::initialize(count_ptr<const pbool_expr> e) {
 	assert(e);
 	assert(!ival);		// must not already be initialized or assigned
 	if (dimensions() == 0) {
@@ -989,8 +989,8 @@ pbool_instance_collection::initialize(count_const_ptr<pbool_expr> e) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_instance_collection::assign_default_value(count_const_ptr<param_expr> p) {
-	count_const_ptr<pbool_expr> b(p.is_a<pbool_expr>());
+pbool_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
+	count_ptr<const pbool_expr> b(p.is_a<const pbool_expr>());
 	if (b && type_check_actual_param_expr(*b)) {
 		ival = b;
 		return true;
@@ -999,13 +999,13 @@ pbool_instance_collection::assign_default_value(count_const_ptr<param_expr> p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<param_expr>
+count_ptr<const param_expr>
 pbool_instance_collection::default_value(void) const {
 	return ival;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<pbool_expr>
+count_ptr<const pbool_expr>
 pbool_instance_collection::initial_value(void) const {
 	return ival;
 }
@@ -1108,10 +1108,10 @@ pbool_instance_collection::instantiate_indices(
 			multikey_base<int>::make_multikey(ranges.size()));
 		assert(key_end);
 		copy(key_gen->begin(), key_gen->end(), key_end->begin());
-		never_const_ptr<multikey_base<int> >
+		never_ptr<const multikey_base<int> >
 			key_gen_base(key_gen.is_a<multikey_base<int> >());
 		assert(key_gen_base);
-		never_const_ptr<multikey_base<int> >
+		never_ptr<const multikey_base<int> >
 			key_end_base(key_end.is_a<multikey_base<int> >());
 		assert(key_end_base);
 #endif
@@ -1168,7 +1168,7 @@ pbool_instance_collection::lookup_value(bool& v) const {
 		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
 		return false;
 	}
-	const never_const_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	const never_ptr<const scalar_type> the(collection.is_a<const scalar_type>());
 	assert(the);
 	const pbool_instance& pi = *the;
 	if (pi.valid) {
@@ -1217,11 +1217,11 @@ pbool_instance_collection::lookup_value_collection(
 	assert(collection);
 	const collection_type& collection_ref = *collection;
 	assert(!r.empty());
-	const excl_const_ptr<multikey_base<int> > lower(r.lower_multikey());
-	const excl_const_ptr<multikey_base<int> > upper(r.upper_multikey());
+	const sticky_ptr<const multikey_base<int> > lower(r.lower_multikey());
+	const sticky_ptr<const multikey_base<int> > upper(r.upper_multikey());
 	assert(lower);
 	assert(upper);
-	const excl_ptr<multikey_generator_base<int> >
+	const sticky_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			lower->dimensions()));
 	assert(key_gen);
@@ -1272,13 +1272,13 @@ pbool_instance_collection::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	return const_index_list(l, 
@@ -1427,7 +1427,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
-		count_const_ptr<pint_expr> i) :
+		count_ptr<const pint_expr> i) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
 		ival(i)
@@ -1442,7 +1442,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d, 
-		count_const_ptr<pint_expr> i) :
+		count_ptr<const pint_expr> i) :
 		param_instance_collection(o, n, d), ival(i)
 #if !SUBCLASS_PINT_ARRAY
 		, collection(NULL)
@@ -1463,7 +1463,7 @@ pint_instance_collection::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 pint_instance_collection::get_type_ref(void) const {
 	return pint_type_ptr;
 		// defined in "art_built_ins.h"
@@ -1492,7 +1492,7 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pint_instance_collection::initialize(count_const_ptr<pint_expr> e) {
+pint_instance_collection::initialize(count_ptr<const pint_expr> e) {
 	assert(e);
 	assert(!ival);
 	if (dimensions() == 0) {
@@ -1512,8 +1512,8 @@ pint_instance_collection::initialize(count_const_ptr<pint_expr> e) {
 	in the context of template-formal parameters.  
  */
 bool
-pint_instance_collection::assign_default_value(count_const_ptr<param_expr> p) {
-	count_const_ptr<pint_expr> i(p.is_a<pint_expr>());
+pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
+	count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
 	if (i && type_check_actual_param_expr(*i)) {
 		ival = i;
 		return true;
@@ -1527,7 +1527,7 @@ pint_instance_collection::assign_default_value(count_const_ptr<param_expr> p) {
 	formal parameters.
 	\return pointer to default value expression.
  */
-count_const_ptr<param_expr>
+count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
 	return ival;
 }
@@ -1538,7 +1538,7 @@ pint_instance_collection::default_value(void) const {
 	of template formals.  
 	\return pointer to initial value expression.  
  */
-count_const_ptr<pint_expr>
+count_ptr<const pint_expr>
 pint_instance_collection::initial_value(void) const {
 	return ival;
 }
@@ -1687,7 +1687,8 @@ pint_instance_collection::lookup_value(int& v) const {
 		cerr << "ERROR: Reference to uninstantiated pint!" << endl;
 		return false;
 	}
-	const never_const_ptr<scalar_type> the(collection.is_a<scalar_type>());
+	const never_ptr<const scalar_type>
+		the(collection.is_a<const scalar_type>());
 	assert(the);
 	const pint_instance& pi = *the;
 	if (pi.valid) {
@@ -1738,8 +1739,8 @@ pint_instance_collection::lookup_value_collection(
 	assert(collection);
 	const collection_type& collection_ref = *collection;
 	assert(!r.empty());
-	const excl_const_ptr<multikey_base<int> > lower(r.lower_multikey());
-	const excl_const_ptr<multikey_base<int> > upper(r.upper_multikey());
+	const excl_ptr<const multikey_base<int> > lower(r.lower_multikey());
+	const excl_ptr<const multikey_base<int> > upper(r.upper_multikey());
 	assert(lower);
 	assert(upper);
 	const excl_ptr<multikey_generator_base<int> >
@@ -1795,13 +1796,13 @@ pint_instance_collection::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	return const_index_list(l, 
@@ -2058,13 +2059,13 @@ pint_array<D>::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	return const_index_list(l, 
@@ -2192,7 +2193,7 @@ pint_array<0>::pint_array(const scopespace& o, const string& n) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n, 
-		count_const_ptr<pint_expr> i) :
+		count_ptr<const pint_expr> i) :
 		pint_instance_collection(o, n, 0, i), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
@@ -2357,7 +2358,7 @@ channel_instance_collection::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 channel_instance_collection::get_type_ref(void) const {
 	assert(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
@@ -2380,7 +2381,7 @@ channel_instance_collection::make_instance_reference(void) const {
 	//	check array dimensions.  
 	return count_ptr<channel_instance_reference>(
 		new channel_instance_reference(
-			never_const_ptr<channel_instance_collection>(this), 
+			never_ptr<const channel_instance_collection>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
 }
@@ -2393,12 +2394,12 @@ channel_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 channel_instance_collection::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b) const {
+		count_ptr<const simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<channel_member_instance_reference>(
 		new channel_member_instance_reference(
-			b, never_const_ptr<channel_instance_collection>(this)));
+			b, never_ptr<const channel_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -2460,7 +2461,7 @@ instantiation_statement::instantiation_statement(void) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation_statement::instantiation_statement(
 //		never_ptr<instance_collection_base> b, 
-//		count_const_ptr<fundamental_type_reference> t, 
+//		count_ptr<const fundamental_type_reference> t, 
 		const index_collection_item_ptr_type& i) :
 //		inst_base(NULL), type_base(t), 
 		indices(i) {
@@ -2474,11 +2475,11 @@ instantiation_statement::~instantiation_statement() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_statement::dump(ostream& o) const {
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	assert(type_base);
 	type_base->dump(o) << " ";
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
 	if(inst_base) {
 		o << inst_base->get_name();
@@ -2493,7 +2494,7 @@ instantiation_statement::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instantiation_statement::get_name(void) const {
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
 	assert(inst_base);
 	return inst_base->get_name();
@@ -2604,14 +2605,14 @@ pbool_instantiation_statement::get_inst_base(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 pbool_instantiation_statement::get_inst_base(void) const {
 	assert(inst_base);
 	return inst_base;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 pbool_instantiation_statement::get_type_ref(void) const {
 	return pbool_type_ptr;		// built-in type pointer
 }
@@ -2724,14 +2725,14 @@ pint_instantiation_statement::get_inst_base(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 pint_instantiation_statement::get_inst_base(void) const {
 	assert(inst_base);
 	return inst_base;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 pint_instantiation_statement::get_type_ref(void) const {
 	return pint_type_ptr;		// built-in type pointer
 }
@@ -2846,14 +2847,14 @@ process_instantiation_statement::get_inst_base(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 process_instantiation_statement::get_inst_base(void) const {
 	assert(inst_base);
 	return inst_base;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 process_instantiation_statement::get_type_ref(void) const {
 	return type;
 }
@@ -2970,14 +2971,14 @@ channel_instantiation_statement::get_inst_base(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 channel_instantiation_statement::get_inst_base(void) const {
 	assert(inst_base);
 	return inst_base;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 channel_instantiation_statement::get_type_ref(void) const {
 	return type;
 }
@@ -3094,14 +3095,14 @@ data_instantiation_statement::get_inst_base(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 data_instantiation_statement::get_inst_base(void) const {
 	assert(inst_base);
 	return inst_base;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 data_instantiation_statement::get_type_ref(void) const {
 	return type;
 }

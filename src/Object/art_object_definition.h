@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.11 2004/11/02 07:51:49 fang Exp $
+	$Id: art_object_definition.h,v 1.12 2004/11/30 01:25:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -46,7 +46,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 // forward declarations
@@ -97,12 +97,12 @@ virtual	const string& get_key(void) const = 0;
 	string get_qualified_name(void) const;
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
-virtual never_const_ptr<fundamental_type_reference>
+virtual never_ptr<const fundamental_type_reference>
 		get_base_type_ref(void) const = 0;
-virtual	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f) = 0;
+virtual	bool assign_typedef(excl_ptr<const fundamental_type_reference> f) = 0;
 
-	excl_const_ptr<fundamental_type_reference>
-		resolve_complete_type(never_const_ptr<param_expr_list> p) const;
+	excl_ptr<const fundamental_type_reference>
+		resolve_complete_type(never_ptr<const param_expr_list> p) const;
 
 protected:
 virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
@@ -122,7 +122,7 @@ public:
 virtual	~process_definition_base();
 
 	excl_ptr<definition_base>
-		make_typedef(never_const_ptr<scopespace> s, 
+		make_typedef(never_ptr<const scopespace> s, 
 			const token_identifier& id) const;
 
 // inherited pure virtuals are still pure virtuals
@@ -141,7 +141,7 @@ virtual	~process_definition_base();
 class process_definition : public process_definition_base, public scopespace, 
 	public sequential_scope {
 public:
-	typedef	never_const_ptr<instance_collection_base>
+	typedef	never_ptr<const instance_collection_base>
 						port_formals_value_type;
 	/**
 		Table of port formals.
@@ -161,13 +161,13 @@ public:
 protected:
 	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
-	const never_const_ptr<name_space>	parent;
+	const never_ptr<const name_space>	parent;
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
 	// list language bodies
 	
 public:
-	process_definition(never_const_ptr<name_space> o, const string& s); 
+	process_definition(never_ptr<const name_space> o, const string& s); 
 	~process_definition();
 
 	ostream& what(ostream& o) const;
@@ -175,26 +175,26 @@ public:
 
 	const string& get_key(void) const;
 	string get_qualified_name(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
 	/** overrides definition_base's */
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		lookup_port_formal(const string& id) const;
-	never_const_ptr<object> lookup_object_here(const string& id) const;
+	never_ptr<const object> lookup_object_here(const string& id) const;
 
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		add_port_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
 
 	bool certify_port_actuals(const object_list& ol) const;
 
 	bool equivalent_port_formals(
-		never_const_ptr<process_definition> p) const;
-	bool require_signature_match(never_const_ptr<definition_base> d) const;
+		never_ptr<const process_definition> p) const;
+	bool require_signature_match(never_ptr<const definition_base> d) const;
 
 // methods for object file I/O
 public:
@@ -221,23 +221,23 @@ class process_definition_alias : public process_definition_base,
 protected:
 	const string					key;
 	/** parent can be namespace or definition */
-	never_const_ptr<scopespace>			parent;
-	excl_const_ptr<process_type_reference>		base;
+	never_ptr<const scopespace>			parent;
+	excl_ptr<const process_type_reference>		base;
 private:
 	process_definition_alias();
 public:
 	process_definition_alias(const string& n, 
-		never_const_ptr<scopespace> p);
+		never_ptr<const scopespace> p);
 	~process_definition_alias();
 
 	ostream& what(ostream& o) const;
 	const string& get_key(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
-	never_const_ptr<fundamental_type_reference>
+	never_ptr<const scopespace> get_parent(void) const;
+	never_ptr<const fundamental_type_reference>
 		get_base_type_ref(void) const;
 
-	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
-	count_const_ptr<fundamental_type_reference>
+	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 public:
@@ -259,15 +259,15 @@ public:
 virtual	~datatype_definition_base();
 
 	excl_ptr<definition_base>
-		make_typedef(never_const_ptr<scopespace> s, 
+		make_typedef(never_ptr<const scopespace> s, 
 			const token_identifier& id) const;
 
 virtual	ostream& what(ostream& o) const = 0;
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 virtual	bool require_signature_match(
-		never_const_ptr<definition_base> d) const = 0;
+		never_ptr<const definition_base> d) const = 0;
 };	// end class datatype_definition_base
 
 //=============================================================================
@@ -282,10 +282,10 @@ class built_in_datatype_def : public datatype_definition_base,
 		public scopespace {
 protected:
 	const string					key;
-	const never_const_ptr<name_space>		parent;
+	const never_ptr<const name_space>		parent;
 public:
-	built_in_datatype_def(never_const_ptr<name_space> o, const string& n);
-	built_in_datatype_def(never_const_ptr<name_space> o, const string& n, 
+	built_in_datatype_def(never_ptr<const name_space> o, const string& n);
+	built_in_datatype_def(never_ptr<const name_space> o, const string& n, 
 		excl_ptr<param_instance_collection> p);
 	~built_in_datatype_def();
 
@@ -293,20 +293,20 @@ public:
 	ostream& dump(ostream& o) const;
 	const string& get_key(void) const;
 	string get_qualified_name(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
 
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		add_template_formal(excl_ptr<instance_collection_base> f);
 
 	bool require_signature_match(
-		never_const_ptr<definition_base> d) const
+		never_ptr<const definition_base> d) const
 		{ assert(d); return key == d->get_name(); }
 		// really, this should never be called...
 public:
@@ -342,10 +342,10 @@ public:
 class enum_datatype_def : public datatype_definition_base, public scopespace {
 protected:
 	const string					key;
-	const never_const_ptr<name_space>		parent;
+	const never_ptr<const name_space>		parent;
 	// don't we need to track ordering of identifiers added?  later...
 public:
-	enum_datatype_def(never_const_ptr<name_space> o, const string& n);
+	enum_datatype_def(never_ptr<const name_space> o, const string& n);
 	~enum_datatype_def();
 
 	ostream& what(ostream& o) const;
@@ -353,16 +353,16 @@ public:
 
 	const string& get_key(void) const;
 	string get_qualified_name(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
 #if 0
 	// don't need yet
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 
-	bool require_signature_match(never_const_ptr<definition_base> d) const;
+	bool require_signature_match(never_ptr<const definition_base> d) const;
 
 	bool add_member(const token_identifier& em);
 public:
@@ -385,23 +385,23 @@ public:
 class built_in_param_def : public definition_base {
 protected:
 	const string				key;
-	const never_const_ptr<name_space>	parent;
+	const never_ptr<const name_space>	parent;
 public:
-	built_in_param_def(never_const_ptr<name_space> p, const string& n);
+	built_in_param_def(never_ptr<const name_space> p, const string& n);
 	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 
 	const string& get_key(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
 	/** can't alias built-in param types, would be confusing */
 	excl_ptr<definition_base>
-		make_typedef(never_const_ptr<scopespace> s, 
+		make_typedef(never_ptr<const scopespace> s, 
 			const token_identifier& id) const;
 
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 private:
@@ -417,22 +417,22 @@ class user_def_datatype : public datatype_definition_base, public scopespace,
 		public sequential_scope {
 protected:
 	const string				key;
-	const never_const_ptr<name_space>	parent;
+	const never_ptr<const name_space>	parent;
 public:
-	user_def_datatype(never_const_ptr<name_space> o, const string& name);
+	user_def_datatype(never_ptr<const name_space> o, const string& name);
 	~user_def_datatype();
 
 	const string& get_key(void) const;
 	string get_qualified_name(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
-	never_const_ptr<object> lookup_object_here(const string& id) const;
+	never_ptr<const object> lookup_object_here(const string& id) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
 	bool require_signature_match(
-		never_const_ptr<definition_base> d) const { return false; }
+		never_ptr<const definition_base> d) const { return false; }
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
@@ -450,26 +450,26 @@ class datatype_definition_alias : public datatype_definition_base,
 		public typedef_base {
 protected:
 	const string				key;
-	const never_const_ptr<scopespace>	parent;
+	const never_ptr<const scopespace>	parent;
 	// inherited template formals
-	excl_const_ptr<data_type_reference>	base;
+	excl_ptr<const data_type_reference>	base;
 public:
 	datatype_definition_alias(const string& n, 
-		never_const_ptr<scopespace> p);
+		never_ptr<const scopespace> p);
 	~datatype_definition_alias();
 
 	ostream& what(ostream& o) const;
 	const string& get_key(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
-	never_const_ptr<fundamental_type_reference>
+	never_ptr<const scopespace> get_parent(void) const;
+	never_ptr<const fundamental_type_reference>
 		get_base_type_ref(void) const;
 
-	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
-	count_const_ptr<fundamental_type_reference>
+	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 	bool require_signature_match(
-		never_const_ptr<definition_base> d) const;
+		never_ptr<const definition_base> d) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -489,10 +489,10 @@ virtual	~channel_definition_base();
 // virtual	ostream& what(ostream& o) const = 0;
 
 	excl_ptr<definition_base>
-		make_typedef(never_const_ptr<scopespace> s, 
+		make_typedef(never_ptr<const scopespace> s, 
 			const token_identifier& id) const;
 
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 };	// end class channel_definition_base
@@ -507,22 +507,22 @@ class user_def_chan : public channel_definition_base, public scopespace,
 protected:
 	// list of other type definitions
 	const string				key;
-	const never_const_ptr<name_space>	parent;
+	const never_ptr<const name_space>	parent;
 public:
-	user_def_chan(never_const_ptr<name_space> o, const string& name);
+	user_def_chan(never_ptr<const name_space> o, const string& name);
 	~user_def_chan();
 
 	const string& get_key(void) const;
 	string get_qualified_name(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
-	never_const_ptr<object> lookup_object_here(const string& id) const;
+	never_ptr<const object> lookup_object_here(const string& id) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
 #if 0
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
@@ -542,22 +542,22 @@ class channel_definition_alias : public channel_definition_base,
 		public typedef_base {
 protected:
 	const string				key;
-	const never_const_ptr<scopespace>	parent;
-	excl_const_ptr<channel_type_reference>	base;
+	const never_ptr<const scopespace>	parent;
+	excl_ptr<const channel_type_reference>	base;
 public:
 	channel_definition_alias(const string& n, 
-		never_const_ptr<scopespace> p);
+		never_ptr<const scopespace> p);
 	~channel_definition_alias();
 
 	ostream& what(ostream& o) const;
 	const string& get_key(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
-	never_const_ptr<fundamental_type_reference>
+	never_ptr<const scopespace> get_parent(void) const;
+	never_ptr<const fundamental_type_reference>
 		get_base_type_ref(void) const;
 
-	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
+	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
 #if 0
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif

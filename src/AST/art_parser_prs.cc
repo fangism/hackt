@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.3 2004/11/02 07:51:41 fang Exp $
+	$Id: art_parser_prs.cc,v 1.4 2004/11/30 01:25:03 fang Exp $
  */
 
 #include "art_parser.tcc"
@@ -36,7 +36,7 @@ rule::rule(const expr* g, const terminal* a,
 		r(rhs),
 		dir(d) {
 	assert(guard); assert(arrow); assert(r); assert(dir);
-	assert(r.is_a<id_expr>() || r.is_a<postfix_expr>());
+	assert(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
 //	assert(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
@@ -154,7 +154,7 @@ op_loop::rightmost(void) const {
 }
 
 /** temporary: FINISH ME */
-never_const_ptr<object>
+never_ptr<const object>
 op_loop::check_build(never_ptr<context> c) const {
 	return node::check_build(c);
 }
@@ -162,7 +162,7 @@ op_loop::check_build(never_ptr<context> c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-template class node_list<body_item>;			// PRS::rule_list
+template class node_list<const body_item>;		// PRS::rule_list
 
 //=============================================================================
 };	// end namespace PRS

@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.7 2004/11/02 07:51:44 fang Exp $
+	$Id: art_context.h,v 1.8 2004/11/30 01:25:08 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -13,8 +13,7 @@
 #include <stack>
 #include <list>
 
-#include "ptrs.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
 
 namespace ART {
 
@@ -23,7 +22,7 @@ namespace ART {
 // avoids having to include "art_object.h"
 namespace entity {
 	using std::list;			
-	using namespace COUNT_PTR_NAMESPACE;	// for pointer classes
+	using namespace util::memory;	// for pointer classes
 
 	// ... and more as they are needed
 	class module;
@@ -61,7 +60,7 @@ namespace entity {
 
 	class instance_collection_stack_item;
 	// try to convert this to excl_ptr...
-	typedef count_const_ptr<range_expr_list>
+	typedef count_ptr<const range_expr_list>
 				index_collection_item_ptr_type;
 
 	class instance_management_base;
@@ -75,7 +74,7 @@ using namespace entity;
 namespace parser {
 //=============================================================================
 using namespace std;
-using namespace PTRS_NAMESPACE;		// for pointer classes
+using namespace util::memory;		// for pointer classes
 
 //=============================================================================
 // forward declarations
@@ -151,14 +150,14 @@ protected:
 		The definition will be combined with optional 
 		template parameters to form a type reference (below).  
 	 */
-	stack<never_const_ptr<definition_base> >	definition_stack;
+	stack<never_ptr<const definition_base> >	definition_stack;
 #define	current_definition_reference		definition_stack.top()
 
 	/**
 		Pointer to the concrete type to instantiate.  
 		Use shared count_ptr until type-cache is implemented.  
 	 */
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 						current_fundamental_type;
 
 
@@ -200,7 +199,7 @@ public:
 		Need to be modifiable to access ordered lists...
 	 */
 	const never_ptr<name_space>		global_namespace;
-//	const never_const_ptr<name_space>	global_namespace;
+//	const never_ptr<const name_space>	global_namespace;
 
 protected:
 	/**
@@ -217,7 +216,8 @@ protected:
 		globally ordered instance management list.  
 		This is where all globally ordered actions go.  
 	 */
-	list<excl_const_ptr<instance_management_base> >&
+	// sequential_scope::instance_management_list_type&
+	list<sticky_ptr<const instance_management_base> >&
 						master_instance_list;
 
 public:
@@ -231,7 +231,7 @@ void	open_namespace(const token_identifier& id);
 void	close_namespace(void);
 void	using_namespace(const qualified_id& id);
 void	alias_namespace(const qualified_id& id, const string& a);
-never_const_ptr<name_space>	top_namespace(void) const;
+never_ptr<const name_space>	top_namespace(void) const;
 
 never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base> d);
@@ -253,40 +253,40 @@ void	declare_chantype(const token_identifier& ds);
 void	open_chantype(const token_identifier& ds);
 void	close_chantype_definition(void);
 
-bool	alias_definition(never_const_ptr<definition_base> d, 
+bool	alias_definition(never_ptr<const definition_base> d, 
 		const token_identifier& id);
 
-void	add_connection(excl_const_ptr<instance_reference_connection> c);
-void	add_assignment(excl_const_ptr<param_expression_assignment> a);
+void	add_connection(excl_ptr<const instance_reference_connection> c);
+void	add_assignment(excl_ptr<const param_expression_assignment> a);
 
 /**
 	Need to make distinctions:
 	call this get_current_named_scope.
 	Make another get_current_sequential_scope.
  */
-never_const_ptr<scopespace>	get_current_named_scope(void) const;
+never_ptr<const scopespace>	get_current_named_scope(void) const;
 never_ptr<scopespace>		get_current_named_scope(void);
 
-never_const_ptr<name_space>
+never_ptr<const name_space>
 		get_current_namespace(void) const {
 			return current_namespace;
 		}
 
 // sets context's definition for instantiation, or for member lookup
-never_const_ptr<definition_base>	
+never_ptr<const definition_base>	
 		get_current_definition_reference(void) const
 			{ return current_definition_reference; }
 
 // pointer instead of reference?
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 		push_current_definition_reference(const definition_base& d) {
 			definition_stack.push(
-				never_const_ptr<definition_base>(&d));
+				never_ptr<const definition_base>(&d));
 			return current_definition_reference;
 		}
 
-// never_const_ptr<fundamental_type_reference>
-count_const_ptr<fundamental_type_reference>
+// never_ptr<const fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 		get_current_fundamental_type(void) const;
 
 never_ptr<definition_base>
@@ -296,55 +296,55 @@ never_ptr<definition_base>
 /** destructive transfer return */
 excl_ptr<definition_base>
 	get_current_prototype(void) { return current_prototype; }
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 	get_current_prototype(void) const { return current_prototype; }
 
-never_const_ptr<datatype_definition_base>
+never_ptr<const datatype_definition_base>
 		get_current_datatype_definition(void) const;
 
 // should be called by parser after done using definitions
 void	pop_current_definition_reference(void);
 void	reset_current_fundamental_type(void);
 
-never_const_ptr<built_in_param_def>
+never_ptr<const built_in_param_def>
 	get_current_param_definition(void) const;
 
-never_const_ptr<channel_definition_base>
+never_ptr<const channel_definition_base>
 	get_current_channel_definition(void) const;
 
-never_const_ptr<process_definition_base>
+never_ptr<const process_definition_base>
 	get_current_process_definition(void) const;
 
 void	set_current_fundamental_type(
-		count_const_ptr<fundamental_type_reference> tr);
+		count_ptr<const fundamental_type_reference> tr);
 
-never_const_ptr<object>	lookup_object(const qualified_id& id) const;
-never_const_ptr<definition_base>
+never_ptr<const object>	lookup_object(const qualified_id& id) const;
+never_ptr<const definition_base>
 			lookup_definition(const token_identifier& id) const;
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 			lookup_definition(const qualified_id& id) const;
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			lookup_instance(const token_identifier& id) const;
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			lookup_instance(const qualified_id& id) const;
 
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			add_instance(const token_identifier& id);
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			add_instance(const token_identifier& id, 
 				index_collection_item_ptr_type dim);
 
-never_const_ptr<instance_collection_base>	// should be param_instance_collection
+never_ptr<const instance_collection_base>	// should be param_instance_collection
 			add_template_formal(const token_identifier& id, 
-				count_const_ptr<param_expr> d);
-never_const_ptr<instance_collection_base>	// should be param_instance_collection
+				count_ptr<const param_expr> d);
+never_ptr<const instance_collection_base>	// should be param_instance_collection
 			add_template_formal(const token_identifier& id, 
 				index_collection_item_ptr_type dim, 
-				count_const_ptr<param_expr> d);
+				count_ptr<const param_expr> d);
 
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			add_port_formal(const token_identifier& id);
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 			add_port_formal(const token_identifier& id, 
 				index_collection_item_ptr_type dim);
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.4 2004/11/02 07:51:38 fang Exp $
+	$Id: art_parser_expr.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
  */
 
 #include <iostream>
@@ -62,7 +62,7 @@ expr_list::what(ostream& o) const {
 	Caller just has to grab the object_list off the stack
 	and go from there.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 expr_list::check_build(never_ptr<context> c) const {
 	count_ptr<object_list> o(new object_list);
 	const_iterator i = begin();
@@ -78,7 +78,7 @@ expr_list::check_build(never_ptr<context> c) const {
 		}
 	}
 	c->push_object_stack(o);
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -112,7 +112,7 @@ paren_expr::rightmost(void) const {
 	else	return e->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 paren_expr::check_build(never_ptr<context> c) const {
 	return e->check_build(c);
 }
@@ -133,7 +133,7 @@ qualified_id::qualified_id(const qualified_id& i) :
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
 	if (i.absolute) {
-		absolute = excl_const_ptr<token_string>(
+		absolute = excl_ptr<const token_string>(
 			new token_string(*i.absolute));
 		// actually *copy* the token
 		assert(absolute);
@@ -153,7 +153,7 @@ qualified_id::~qualified_id() {
  */
 qualified_id*
 qualified_id::force_absolute(const token_string* s) {
-	absolute = excl_const_ptr<token_string>(s);
+	absolute = excl_ptr<const token_string>(s);
 	assert(absolute);
 	return this;
 }
@@ -213,7 +213,7 @@ qualified_id::copy_beheaded(void) const {
 		Consumer should wrap in instance_reference?
 			might be collective, in the case of an array
  */
-never_const_ptr<object>
+never_ptr<const object>
 qualified_id::check_build(never_ptr<context> c) const {
 	return c->lookup_object(*this);
 }
@@ -230,7 +230,7 @@ ostream& operator << (ostream& o, const qualified_id& id) {
 		qualified_id::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		count_const_ptr<token_identifier> tid(*i);
+		count_ptr<const token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
@@ -250,7 +250,7 @@ ostream& operator << (ostream& o, const qualified_id_slice& id) {
 		qualified_id_slice::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		count_const_ptr<token_identifier> tid(*i);
+		count_ptr<const token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
@@ -312,13 +312,13 @@ id_expr::is_absolute(void) const {
 	FIX ME: should return instance_reference!, not instance!
 	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
-never_const_ptr<object>
+never_ptr<const object>
 id_expr::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
-	never_const_ptr<instance_collection_base> inst;
+	never_ptr<const object> o;
+	never_ptr<const instance_collection_base> inst;
 	o = qid->check_build(c);		// will lookup_object
 	if (o) {
-		inst = o.is_a<instance_collection_base>();
+		inst = o.is_a<const instance_collection_base>();
 		if (inst) {
 			// we found an instance which may be single
 			// or collective... info is in inst.
@@ -342,7 +342,7 @@ id_expr::check_build(never_ptr<context> c) const {
 			<< qid->where() << endl;
 		exit(1);
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 //	return c->lookup_instance(*qid);
 // also accomplishes same thing?
 }
@@ -397,12 +397,12 @@ range::rightmost(void) const {
 	\param c the context where to start resolving identifiers.  
 	\return I don't know.
  */
-never_const_ptr<object>
+never_ptr<const object>
 range::check_build(never_ptr<context> c) const {
 //	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 
-//	never_const_ptr<param_type_reference> pint_type = c->global_namespace->
+//	never_ptr<const param_type_reference> pint_type = c->global_namespace->
 //		lookup_object("pint").is_a<param_type_reference>();
 //	assert(pint_type);
 
@@ -516,7 +516,7 @@ range_list::~range_list() { }
 
 	\return NULL, useless.
  */
-never_const_ptr<object>
+never_ptr<const object>
 range_list::check_build(never_ptr<context> c) const {
 	parent::check_build(c);
 	count_ptr<object_list> ol(new object_list);
@@ -551,7 +551,7 @@ range_list::check_build(never_ptr<context> c) const {
 		// may want it as an index!
 		c->push_object_stack(ol);
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -568,7 +568,7 @@ dense_range_list::~dense_range_list() {
 	which must be dense arrays, cannot be sparse.  
 	Limited to 4 dimensions.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 dense_range_list::check_build(never_ptr<context> c) const {
 	parent::check_build(c);
 	count_ptr<object_list> ol(new object_list);
@@ -596,7 +596,7 @@ dense_range_list::check_build(never_ptr<context> c) const {
 	} else {
 		c->push_object_stack(ol->make_formal_dense_range_list());
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -647,7 +647,7 @@ prefix_expr::rightmost(void) const {
 	Grabs last expression off top of stack and replaces it.  
 	Always returns NULL, rather useless.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 prefix_expr::check_build(never_ptr<context> c) const {
 	e->check_build(c);	// useless return value
 	count_ptr<object> o(c->pop_top_object_stack());
@@ -655,14 +655,14 @@ prefix_expr::check_build(never_ptr<context> c) const {
 		// error propagates up the stack
 		cerr << "ERROR building expression at " << e->where() << endl;
 		c->push_object_stack(count_ptr<object>(NULL));
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	count_ptr<param_expr> pe(o.is_a<param_expr>());
 	assert(pe);	// must be a param expression!
 	count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
 	count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
 
-	const int ch = op.is_a<token_char>()->get_char();
+	const int ch = op.is_a<const token_char>()->get_char();
 	switch(ch) {
 		case '-':
 			// integer negation
@@ -733,7 +733,7 @@ prefix_expr::check_build(never_ptr<context> c) const {
 				"prefix_expr::check_build()!" << endl;
 			assert(0);
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -786,19 +786,19 @@ member_expr::rightmost(void) const {
 	\return NULL, but places an instance_reference object on the
 		context's object stack.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 member_expr::check_build(never_ptr<context> c) const {
 	e->check_build(c);
 	// useless return value
 	// expect: simple_instance_reference on object stack
-	count_const_ptr<object> o(c->pop_top_object_stack());
+	count_ptr<const object> o(c->pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< e->where() << endl;
 		exit(1);
 	}
-	count_const_ptr<simple_instance_reference>
-		inst_ref(o.is_a<simple_instance_reference>());
+	count_ptr<const simple_instance_reference>
+		inst_ref(o.is_a<const simple_instance_reference>());
 	assert(inst_ref);
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
@@ -808,7 +808,7 @@ member_expr::check_build(never_ptr<context> c) const {
 		exit(1);
 	}
 
-	never_const_ptr<definition_base>
+	never_ptr<const definition_base>
 		base_def(inst_ref->get_base_def());
 	assert(base_def);
 	c->push_current_definition_reference(*base_def);
@@ -822,7 +822,7 @@ member_expr::check_build(never_ptr<context> c) const {
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		member_inst(base_def->lookup_port_formal(*member));
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
@@ -849,7 +849,7 @@ member_expr::check_build(never_ptr<context> c) const {
 	// rather the *type* returned.  
 	// after all this is type-checking, not range checking.  
 
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -883,10 +883,10 @@ index_expr::rightmost(void) const {
 	For an indexed instance reference, we need to take it off the 
 	stack, modify it, and replace it back onto the stack.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 index_expr::check_build(never_ptr<context> c) const {
 //	cerr << "index_expr::check_build(): FINISH ME!" << endl;
-//	never_const_ptr<object> o;
+//	never_ptr<const object> o;
 
 	ranges->check_build(c);		// useless return value
 	// should result in a ART::entity::index_list on the stack
@@ -930,7 +930,7 @@ index_expr::check_build(never_ptr<context> c) const {
 	}
 	// push indexed instance reference back onto stack
 	c->push_object_stack(base_inst);
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -959,9 +959,9 @@ binary_expr::rightmost(void) const {
 
 #if 0
 /** this should be abstract, not exist */
-never_const_ptr<object>
+never_ptr<const object>
 binary_expr::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> lo, ro;
+	never_ptr<const object> lo, ro;
 	cerr << "binary_expr::check_build(): FINISH ME!";
 	lo = l->check_build(c);		// expect some object expression
 	assert(lo);			// temporary
@@ -969,7 +969,7 @@ binary_expr::check_build(never_ptr<context> c) const {
 	assert(ro);			// temporary
 	// pop them off object stack
 	// switch on operation
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 #endif
 
@@ -990,7 +990,7 @@ arith_expr::what(ostream& o) const {
 	return o << "(arith-expr)";
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 arith_expr::check_build(never_ptr<context> c) const {
 	l->check_build(c);	// useless return value
 	r->check_build(c);	// useless return value
@@ -1004,7 +1004,7 @@ arith_expr::check_build(never_ptr<context> c) const {
 			cerr << "ERROR building expression at " << 
 				r->where() << endl;
 		c->push_object_stack(count_ptr<object>(NULL));
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
@@ -1018,10 +1018,10 @@ arith_expr::check_build(never_ptr<context> c) const {
 			ro->what(cerr) << " at " << r->where() << endl;;
 		}
 		c->push_object_stack(count_ptr<object>(NULL));
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	// else is safe to make arith_expr object
-	const char ch = op.is_a<token_char>()->get_char();
+	const char ch = op.is_a<const token_char>()->get_char();
 	if (li->is_static_constant() && ri->is_static_constant()) {
 		const int lc = li->static_constant_int();
 		const int rc = ri->static_constant_int();
@@ -1055,7 +1055,7 @@ arith_expr::check_build(never_ptr<context> c) const {
 		c->push_object_stack(count_ptr<entity::arith_expr>(
 			new entity::arith_expr(li, ch, ri)));
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -1075,7 +1075,7 @@ relational_expr::what(ostream& o) const {
 	return o << "(relational-expr)";
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 relational_expr::check_build(never_ptr<context> c) const {
 	// temporary
 	return node::check_build(c);
@@ -1098,7 +1098,7 @@ logical_expr::what(ostream& o) const {
 	return o << "(logical-expr)";
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 logical_expr::check_build(never_ptr<context> c) const {
 	// temporary
 	return node::check_build(c);
@@ -1134,7 +1134,7 @@ array_concatenation::rightmost(void) const {
 	constructing an aggregate object on the stack, 
 	just do the check_build of the lone object.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 array_concatenation::check_build(never_ptr<context> c) const {
 	if (size() == 1) {
 		const const_iterator only = begin();
@@ -1180,7 +1180,7 @@ loop_concatenation::rightmost(void) const {
 	else 		return ex->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 loop_concatenation::check_build(never_ptr<context> c) const {
 	return node::check_build(c);
 }
@@ -1214,7 +1214,7 @@ array_construction::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 array_construction::check_build(never_ptr<context> c) const {
 	return node::check_build(c);
 }
@@ -1222,9 +1222,9 @@ array_construction::check_build(never_ptr<context> c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
-template class node_list<expr,comma>;			// expr_list
-template class node_list<token_identifier,scope>;	// qualified_id_base
-template class node_list<range,comma>;			// range_list
+template class node_list<const expr,comma>;			// expr_list
+template class node_list<const token_identifier,scope>;	// qualified_id_base
+template class node_list<const range,comma>;			// range_list
 
 
 //=============================================================================

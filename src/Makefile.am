@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2004/11/28 23:41:01 fang Exp $
+#	$Id: Makefile.am,v 1.22 2004/11/30 01:24:57 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -122,8 +122,6 @@ UTIL_HEADER_FILES = \
 	util/macros.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
-	util/count_ptr.h \
-	util/count_ptr_fwd.h \
 	util/discrete_interval_set.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
@@ -154,8 +152,6 @@ UTIL_HEADER_FILES = \
 	util/persistent.h \
 	util/persistent_object_manager.h \
 	util/persistent_object_manager.tcc \
-	util/ptrs.h \
-	util/ptrs_fwd.h \
 	util/qmap.h \
 	util/qmap_fwd.h \
 	util/sstream.h \
@@ -164,7 +160,11 @@ UTIL_HEADER_FILES = \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
-	util/ptrs_functional.h
+	util/ptrs_functional.h \
+	util/obsolete/ptrs.h \
+	util/obsolete/ptrs_fwd.h \
+	util/obsolete/count_ptr.h \
+	util/obsolete/count_ptr_fwd.h
 
 libart___la_SOURCES = \
 	parser/yacc_or_bison.h \
@@ -290,6 +290,7 @@ EXTRA_DIST = \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
 	util/TODO \
+	util/obsolete/README \
 	wc-l
 
 TESTS = art_persistent_table

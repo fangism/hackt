@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.11 2004/11/05 02:38:26 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.12 2004/11/30 01:25:10 fang Exp $
  */
 
 #include <iostream>
@@ -26,7 +26,7 @@ namespace entity {
 // class fundamental_type_reference method definitions
 
 fundamental_type_reference::fundamental_type_reference(
-		excl_const_ptr<param_expr_list> pl)
+		excl_ptr<const param_expr_list> pl)
 		: type_reference_base(), 
 		template_params(pl) {
 }
@@ -104,10 +104,10 @@ UNVEIL LATER
 		through typedefs.  If base definition is not a typedef, 
 		simply returns a deep copy of itself.  
  */
-excl_const_ptr<fundamental_type_reference>
+excl_ptr<const fundamental_type_reference>
 fundamental_type_reference::resolve_canonical_type(void) const {
-	typedef	excl_const_ptr<fundamental_type_reference>	return_type;
-	never_const_ptr<definition_base>
+	typedef	excl_ptr<const fundamental_type_reference>	return_type;
+	never_ptr<const definition_base>
 		base_def(get_base_def());
 	assert(base_def);
 if (base_def.is_a<typedef_base>()) {
@@ -142,7 +142,7 @@ if (base_def.is_a<typedef_base>()) {
 // is static
 excl_ptr<instantiation_statement>
 fundamental_type_reference::make_instantiation_statement(
-		count_const_ptr<fundamental_type_reference> t, 
+		count_ptr<const fundamental_type_reference> t, 
 		index_collection_item_ptr_type d) {
 	return t->make_instantiation_statement_private(t, d);
 }
@@ -159,25 +159,25 @@ fundamental_type_reference::make_instantiation_statement(
 bool
 fundamental_type_reference::may_be_equivalent(
 		const fundamental_type_reference& t) const {
-	never_const_ptr<definition_base> left(get_base_def());
-	never_const_ptr<definition_base> right(t.get_base_def());
+	never_ptr<const definition_base> left(get_base_def());
+	never_ptr<const definition_base> right(t.get_base_def());
 
 	bool have_typedef = false;
 
 	// TO resolve typedefs and aliases
 	// self-recursive call to expand parameters...
 	// or PUNT unrolling actual parameters until later...
-	never_const_ptr<typedef_base> ltdb(left.is_a<typedef_base>());
-	never_const_ptr<typedef_base> rtdb(right.is_a<typedef_base>());
+	never_ptr<const typedef_base> ltdb(left.is_a<const typedef_base>());
+	never_ptr<const typedef_base> rtdb(right.is_a<const typedef_base>());
 	while (ltdb) {
 		have_typedef = true;
 		left = ltdb->get_base_type_ref()->get_base_def();
-		ltdb = left.is_a<typedef_base>();
+		ltdb = left.is_a<const typedef_base>();
 	}
 	while (rtdb) {
 		have_typedef = true;
 		right = rtdb->get_base_type_ref()->get_base_def();
-		rtdb = right.is_a<typedef_base>();
+		rtdb = right.is_a<const typedef_base>();
 	}
 #if 0
 	if (ltdb) {
@@ -231,8 +231,8 @@ fundamental_type_reference::may_be_equivalent(
 bool
 fundamental_type_reference::must_be_equivalent(
 		const fundamental_type_reference& t) const {
-	never_const_ptr<definition_base> left(get_base_def());
-	never_const_ptr<definition_base> right(t.get_base_def());
+	never_ptr<const definition_base> left(get_base_def());
+	never_ptr<const definition_base> right(t.get_base_def());
 	// may need to resolve alias? TO DO
 	if (left != right) {
 #if 0
@@ -273,7 +273,7 @@ UNVEIL LATER
 	What should this method do if this is already canonical?
 	Preconditions: parameters must be initialized?
  */
-excl_const_ptr<fundamental_type_reference>
+excl_ptr<const fundamental_type_reference>
 	make_canonical_type_reference(void) const {
 
 }
@@ -287,7 +287,7 @@ MAY BE OBSOLETE
 
 collective_type_reference::collective_type_reference(
 		const type_reference_base& b, 
-		never_const_ptr<array_index_list> d) :
+		never_ptr<const array_index_list> d) :
 		type_reference_base(), base(&b), dim(d) {
 }
 
@@ -324,7 +324,7 @@ data_type_reference::data_type_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
-		never_const_ptr<datatype_definition_base> td) :
+		never_ptr<const datatype_definition_base> td) :
 		fundamental_type_reference(), 
 		base_type_def(td) {
 	assert(base_type_def);
@@ -332,8 +332,8 @@ data_type_reference::data_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
-		never_const_ptr<datatype_definition_base> td, 
-		excl_const_ptr<param_expr_list> pl) :
+		never_ptr<const datatype_definition_base> td, 
+		excl_ptr<const param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	assert(base_type_def);
@@ -350,7 +350,7 @@ data_type_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 data_type_reference::get_base_def(void) const {
 	return base_type_def;
 }
@@ -361,11 +361,11 @@ data_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 data_type_reference::make_instantiation_statement_private(
-		count_const_ptr<fundamental_type_reference> t, 
+		count_ptr<const fundamental_type_reference> t, 
 		index_collection_item_ptr_type d) const {
 	return excl_ptr<instantiation_statement>(
 		new data_instantiation_statement(
-			t.is_a<data_type_reference>(), d));
+			t.is_a<const data_type_reference>(), d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -380,7 +380,7 @@ data_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 data_type_reference::make_instance_collection(
-		never_const_ptr<scopespace> s, 
+		never_ptr<const scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
@@ -433,10 +433,10 @@ if (!m.flag_visit(this)) {
 		const_cast<param_expr_list&>(*template_params).load_object(m);
 	if (base_type_def->get_key() == "bool")
 		base_type_def =
-			never_const_ptr<datatype_definition_base>(&bool_def);
+			never_ptr<const datatype_definition_base>(&bool_def);
 	else if (base_type_def->get_key() == "int")
 		base_type_def =
-			never_const_ptr<datatype_definition_base>(&int_def);
+			never_ptr<const datatype_definition_base>(&int_def);
 	// else leave the base definition as is
 	// reference count will take care of discarded memory :)
 }
@@ -466,8 +466,8 @@ channel_type_reference::channel_type_reference() :
 	\param pl (optional) parameter list for templates.  
  */
 channel_type_reference::channel_type_reference(
-		never_const_ptr<channel_definition_base> cd, 
-		excl_const_ptr<param_expr_list> pl) :
+		never_ptr<const channel_definition_base> cd, 
+		excl_ptr<const param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -475,7 +475,7 @@ channel_type_reference::channel_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::channel_type_reference(
-		never_const_ptr<channel_definition_base> cd) :
+		never_ptr<const channel_definition_base> cd) :
 		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -492,7 +492,7 @@ channel_type_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
 }
@@ -503,11 +503,11 @@ channel_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 channel_type_reference::make_instantiation_statement_private(
-		count_const_ptr<fundamental_type_reference> t, 
+		count_ptr<const fundamental_type_reference> t, 
 		index_collection_item_ptr_type d) const {
 	return excl_ptr<instantiation_statement>(
 		new channel_instantiation_statement(
-			t.is_a<channel_type_reference>(), d));
+			t.is_a<const channel_type_reference>(), d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -516,7 +516,7 @@ channel_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 channel_type_reference::make_instance_collection(
-		never_const_ptr<scopespace> s, 
+		never_ptr<const scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
@@ -576,13 +576,13 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference,
  */
 process_type_reference::process_type_reference() :
 		fundamental_type_reference(), 
-		base_proc_def(never_const_ptr<process_definition_base>(NULL)) {
+		base_proc_def(never_ptr<const process_definition_base>(NULL)) {
 	// do not assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
-		never_const_ptr<process_definition_base> pd) :
+		never_ptr<const process_definition_base> pd) :
 		fundamental_type_reference(), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
@@ -590,8 +590,8 @@ process_type_reference::process_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
-		never_const_ptr<process_definition_base> pd, 
-		excl_const_ptr<param_expr_list> pl) :
+		never_ptr<const process_definition_base> pd, 
+		excl_ptr<const param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
@@ -608,7 +608,7 @@ process_type_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 process_type_reference::get_base_def(void) const {
 	return base_proc_def;
 }
@@ -619,11 +619,11 @@ process_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 process_type_reference::make_instantiation_statement_private(
-		count_const_ptr<fundamental_type_reference> t, 
+		count_ptr<const fundamental_type_reference> t, 
 		index_collection_item_ptr_type d) const {
 	return excl_ptr<instantiation_statement>(
 		new process_instantiation_statement(
-			t.is_a<process_type_reference>(), d));
+			t.is_a<const process_type_reference>(), d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -635,7 +635,7 @@ process_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 process_type_reference::make_instance_collection(
-		never_const_ptr<scopespace> s, 
+		never_ptr<const scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
@@ -689,7 +689,7 @@ if (!m.flag_visit(this)) {
 	Only used in construction of built-in types.  
  */
 param_type_reference::param_type_reference(
-		never_const_ptr<built_in_param_def> pd) : 
+		never_ptr<const built_in_param_def> pd) : 
 		fundamental_type_reference(), 	// NULL
 		base_param_def(pd) {
 	assert(base_param_def);
@@ -706,7 +706,7 @@ param_type_reference::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 param_type_reference::get_base_def(void) const {
 	return base_param_def;
 }
@@ -717,7 +717,7 @@ param_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 param_type_reference::make_instantiation_statement_private(
-		count_const_ptr<fundamental_type_reference> t, 
+		count_ptr<const fundamental_type_reference> t, 
 		index_collection_item_ptr_type d) const {
 	typedef	excl_ptr<instantiation_statement>	return_type;
 	assert(t == this);
@@ -744,7 +744,7 @@ param_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 param_type_reference::make_instance_collection(
-		never_const_ptr<scopespace> s, 
+		never_ptr<const scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	// hard coded... yucky, but efficient.  

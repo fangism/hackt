@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.4 2004/11/02 07:51:44 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.5 2004/11/30 01:25:08 fang Exp $
  */
 
 #include <iostream>
@@ -393,7 +393,7 @@ if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
 			&pint_instance_reference::collect_transient_info), m), 
-		const_dereference<count_const_ptr, pint_instance_reference>()
+		dereference<count_ptr, const pint_instance_reference>()
 	)
 	);
 #else

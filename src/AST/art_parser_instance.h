@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.3 2004/11/02 07:51:41 fang Exp $
+	$Id: art_parser_instance.h,v 1.4 2004/11/30 01:25:02 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -28,7 +28,7 @@ namespace entity {
 
 using namespace std;
 using namespace entity;
-using namespace PTRS_NAMESPACE;		// for experimental pointer classes
+using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -66,7 +66,7 @@ virtual ~connection_argument_list();
 virtual ostream& what(ostream& o) const;
 using expr_list::leftmost;
 using expr_list::rightmost;
-virtual never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class connection_argument_list
 
 #define connection_argument_list_wrap(b,l,e)				\
@@ -117,9 +117,9 @@ virtual	line_position rightmost(void) const = 0;
 /**
 	A list of lvalue expressions aliased/connected together.  
  */
-class alias_list : public instance_management, public node_list<expr,alias> {
+class alias_list : public instance_management, public node_list<const expr,alias> {
 private:
-	typedef node_list<expr,alias>		alias_list_base;
+	typedef node_list<const expr,alias>		alias_list_base;
 public:
 	alias_list(expr* e);
 virtual	~alias_list();
@@ -127,7 +127,7 @@ virtual	~alias_list();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class alias_list
 
 #define alias_list_wrap(b,l,e)						\
@@ -142,7 +142,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
  */
 class actuals_base : virtual public instance_management {
 protected:
-	const excl_const_ptr<expr_list>		actuals;
+	const excl_ptr<const expr_list>		actuals;
 public:
 	actuals_base(const expr_list* l);
 virtual	~actuals_base();
@@ -151,7 +151,7 @@ virtual	~actuals_base();
 // virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -163,7 +163,7 @@ protected:
 /**
 	In instantiation context, id should only be a token_identifier, 
  */
-	const excl_const_ptr<token_identifier>		id;
+	const excl_ptr<const token_identifier>		id;
 public:
 	instance_base(const token_identifier* i);
 virtual	~instance_base();
@@ -171,11 +171,11 @@ virtual	~instance_base();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<instance_base,comma>	instance_id_list_base;
+typedef	node_list<const instance_base,comma>	instance_id_list_base;
 
 class instance_id_list : public instance_id_list_base {
 protected:
@@ -195,14 +195,14 @@ public:
 /// instance identifier with ranges
 class instance_array : public instance_base {
 protected:
-	const excl_const_ptr<range_list>	ranges;	///< optional ranges
+	const excl_ptr<const range_list>	ranges;	///< optional ranges
 public:
 	instance_array(const token_identifier* i, const range_list* rl);
 	~instance_array();
 
 	ostream& what(ostream& o) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class instance_array
 
 //=============================================================================
@@ -215,12 +215,12 @@ protected:
 	/**
 		The base type of the instantiations in this collection.  
 	 */
-	const excl_const_ptr<concrete_type_ref>		type;
+	const excl_ptr<const concrete_type_ref>		type;
 	/**
 		List of instance_base.  
 	 */
-	const excl_const_ptr<instance_id_list>		ids;
-	const excl_const_ptr<terminal>			semi;
+	const excl_ptr<const instance_id_list>		ids;
+	const excl_ptr<const terminal>			semi;
 public:
 	instance_declaration(const concrete_type_ref* t, 
 		const instance_id_list* i, const terminal* s = NULL);
@@ -229,7 +229,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class instance_declaration
 
 //=============================================================================
@@ -239,9 +239,9 @@ public:
  */
 class instance_connection : public instance_base, public actuals_base {
 protected:
-//	const excl_const_ptr<token_identifier>	id;		// inherited
-//	const excl_const_ptr<expr_list>		actuals;	// inherited
-	const excl_const_ptr<terminal>		semi;	///< semicolon (optional)
+//	const excl_ptr<const token_identifier>	id;		// inherited
+//	const excl_ptr<const expr_list>		actuals;	// inherited
+	const excl_ptr<const terminal>		semi;	///< semicolon (optional)
 public:
 	instance_connection(const token_identifier* i, const expr_list* a, 
 		const terminal* s = NULL);
@@ -251,7 +251,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class instance_connection
 
 //-----------------------------------------------------------------------------
@@ -263,13 +263,13 @@ public:
  */
 class connection_statement : public actuals_base {
 protected:
-//	const excl_const_ptr<expr_list>		actuals;	// inherited
+//	const excl_ptr<const expr_list>		actuals;	// inherited
 	/**
 		Instance reference to connect, may be indexed,
 		but must be scalar.  
 	 */
-	const excl_const_ptr<expr>		lvalue;
-	const excl_const_ptr<terminal>		semi;
+	const excl_ptr<const expr>		lvalue;
+	const excl_ptr<const terminal>		semi;
 public:
 	connection_statement(const expr* l, const expr_list* a, 
 		const terminal* s = NULL);
@@ -277,7 +277,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------
@@ -290,9 +290,9 @@ public:
  */
 class instance_alias : public instance_base {
 protected:
-//	const excl_const_ptr<token_identifier>	id;	// inherited
-	const excl_const_ptr<alias_list>	aliases;
-	const excl_const_ptr<terminal>		semi;	///< semicolon
+//	const excl_ptr<const token_identifier>	id;	// inherited
+	const excl_ptr<const alias_list>	aliases;
+	const excl_ptr<const terminal>		semi;	///< semicolon
 public:
 	instance_alias(const token_identifier* i, alias_list* al, 
 		const terminal* s = NULL);
@@ -301,21 +301,21 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class instance_alias
 
 //=============================================================================
 /// class for loop instantiations, to be unrolled in the build phase
 class loop_instantiation : public instance_management {
 protected:
-	const excl_const_ptr<terminal>		lp;
-	const excl_const_ptr<terminal>		delim;
-	const excl_const_ptr<token_identifier>	index;
-	const excl_const_ptr<terminal>		colon1;
-	const excl_const_ptr<range>		rng;
-	const excl_const_ptr<terminal>		colon2;
-	const excl_const_ptr<definition_body>	body;
-	const excl_const_ptr<terminal>		rp;
+	const excl_ptr<const terminal>		lp;
+	const excl_ptr<const terminal>		delim;
+	const excl_ptr<const token_identifier>	index;
+	const excl_ptr<const terminal>		colon1;
+	const excl_ptr<const range>		rng;
+	const excl_ptr<const terminal>		colon2;
+	const excl_ptr<const definition_body>	body;
+	const excl_ptr<const terminal>		rp;
 public:
 	loop_instantiation(const terminal* l, const terminal* d, 
 		const token_identifier* i, const terminal* c1, 
@@ -332,9 +332,9 @@ public:
 /// conditional instantiations in definition body
 class guarded_definition_body : public instance_management {
 protected:
-	const excl_const_ptr<expr>	guard;	///< condition expression
-	const excl_const_ptr<terminal>		arrow;	///< right arrow
-	const excl_const_ptr<definition_body>	body;
+	const excl_ptr<const expr>	guard;	///< condition expression
+	const excl_ptr<const terminal>		arrow;	///< right arrow
+	const excl_ptr<const definition_body>	body;
 public:
 	guarded_definition_body(const expr* e, const terminal* a, 
 		const definition_body* b);
@@ -346,7 +346,7 @@ public:
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<guarded_definition_body,thickbar>
+typedef	node_list<const guarded_definition_body,thickbar>
 		guarded_definition_body_list_base;
 class guarded_definition_body_list : public guarded_definition_body_list_base {
 protected:
@@ -365,7 +365,7 @@ public:
 /// wrapper class for conditional instantiations
 class conditional_instantiation : public instance_management {
 protected:
-	const excl_const_ptr<guarded_definition_body_list>	gd;
+	const excl_ptr<const guarded_definition_body_list>	gd;
 public:
 	conditional_instantiation(const guarded_definition_body_list* n);
 	~conditional_instantiation();

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.3 2004/11/02 07:51:37 fang Exp $
+	$Id: art_parser_definition.h,v 1.4 2004/11/30 01:25:02 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -23,7 +23,7 @@ namespace entity {
 
 using namespace std;
 using namespace entity;
-using namespace PTRS_NAMESPACE;		// for experimental pointer classes
+using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  
@@ -80,15 +80,15 @@ virtual	~prototype();
  */
 class signature_base : virtual public node {
 protected:
-	const excl_const_ptr<template_formal_decl_list>	temp_spec;
-	const excl_const_ptr<token_identifier>		id;
+	const excl_ptr<const template_formal_decl_list>	temp_spec;
+	const excl_ptr<const token_identifier>		id;
 public:
 	signature_base(const template_formal_decl_list* tf, 
 		const token_identifier* i) :
 		node(), temp_spec(tf), id(i) { }
 virtual	~signature_base();
 
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const = 0;
 };	// end class signature_base
 
 //=============================================================================
@@ -100,13 +100,13 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
  */
 class process_signature : public signature_base {
 protected:
-	const excl_const_ptr<token_keyword>	def;	///< definition keyword
+	const excl_ptr<const token_keyword>	def;	///< definition keyword
 		// should never be NULL, could be const reference?
 	/**
 		Optional port formal list.  
 		Never NULL, but may be empty.  
 	 */
-	const excl_const_ptr<port_formal_decl_list>	ports;
+	const excl_ptr<const port_formal_decl_list>	ports;
 public:
 	process_signature(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
@@ -115,14 +115,14 @@ virtual	~process_signature();
 
 // note: non-virtual
 	const token_identifier& get_name(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------
 /// process prototype declaration
 class process_prototype : public prototype, public process_signature {
 protected:
-	const excl_const_ptr<token_char>	semi;	///< semicolon token
+	const excl_ptr<const token_char>	semi;	///< semicolon token
 public:
 	process_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
@@ -132,7 +132,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class process_prototype
 
 //-----------------------------------------------------------------------------
@@ -141,10 +141,10 @@ public:
  */
 class process_def : public definition, public process_signature {
 protected:
-//	const excl_const_ptr<token_keyword>		def;	//  inherited
-//	const excl_const_ptr<concrete_type_ref>		idt;	//  inherited
-//	const excl_const_ptr<port_formal_decl_list>	ports;	//  inherited
-	const excl_const_ptr<definition_body>		body;	///< definition body
+//	const excl_ptr<const token_keyword>		def;	//  inherited
+//	const excl_ptr<const concrete_type_ref>		idt;	//  inherited
+//	const excl_ptr<const port_formal_decl_list>	ports;	//  inherited
+	const excl_ptr<const definition_body>		body;	///< definition body
 public:
 	process_def(const template_formal_decl_list*, 
 		const token_keyword* d, const token_identifier* i, 
@@ -154,17 +154,17 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class process_def
 
 //=============================================================================
 /// user-defined data type
 class user_data_type_signature : public signature_base {
 protected:
-	const excl_const_ptr<token_keyword>	def;	///< "deftype" keyword
-	const excl_const_ptr<token_string>	dop;	///< <: operator
-	const excl_const_ptr<concrete_type_ref>	bdt;	///< the represented type
-	const excl_const_ptr<data_param_decl_list>
+	const excl_ptr<const token_keyword>	def;	///< "deftype" keyword
+	const excl_ptr<const token_string>	dop;	///< <: operator
+	const excl_ptr<const concrete_type_ref>	bdt;	///< the represented type
+	const excl_ptr<const data_param_decl_list>
 						params;	///< implementation type
 public:
 	user_data_type_signature(const template_formal_decl_list* tf, 
@@ -173,7 +173,7 @@ public:
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
 		const data_param_decl_list* p);
 virtual	~user_data_type_signature();
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -181,7 +181,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 class user_data_type_prototype : public prototype, 
 		public user_data_type_signature {
 protected:
-	const excl_const_ptr<token_char>	semi;	///< semicolon
+	const excl_ptr<const token_char>	semi;	///< semicolon
 public:
 	user_data_type_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
@@ -192,22 +192,22 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_prototype
 
 //-----------------------------------------------------------------------------
 /// user-defined data type (is not a type_base)
 class user_data_type_def : public definition, public user_data_type_signature {
 protected:
-//	const excl_const_ptr<token_keyword>	def;	// inherited
-//	const excl_const_ptr<token_identifier>	name;	// inherited
-//	const excl_const_ptr<token_string>	dop;	// inherited
-//	const excl_const_ptr<concrete_type_ref>	bdt;	// inherited
-//	const excl_const_ptr<data_param_decl_list>	params;	// inherited
-	const excl_const_ptr<token_char>	lb;	///< left brace
-	const excl_const_ptr<language_body>	setb;	///< set body
-	const excl_const_ptr<language_body>	getb;	///< get body
-	const excl_const_ptr<token_char>	rb;	///< right brace
+//	const excl_ptr<const token_keyword>	def;	// inherited
+//	const excl_ptr<const token_identifier>	name;	// inherited
+//	const excl_ptr<const token_string>	dop;	// inherited
+//	const excl_ptr<const concrete_type_ref>	bdt;	// inherited
+//	const excl_ptr<const data_param_decl_list>	params;	// inherited
+	const excl_ptr<const token_char>	lb;	///< left brace
+	const excl_ptr<const language_body>	setb;	///< set body
+	const excl_ptr<const language_body>	getb;	///< get body
+	const excl_ptr<const token_char>	rb;	///< right brace
 public:
 	user_data_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
@@ -228,14 +228,14 @@ public:
  */
 class enum_signature : public signature_base {
 protected:
-//	const excl_const_ptr<token_identifier>	id;	// inherited
+//	const excl_ptr<const token_identifier>	id;	// inherited
 	/** "enum" keyword */
-	const excl_const_ptr<token_keyword>	en;
+	const excl_ptr<const token_keyword>	en;
 public:
 	enum_signature(const token_keyword* e, const token_identifier* i);
 virtual	~enum_signature();
 
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class enum_signature
 
 //-----------------------------------------------------------------------------
@@ -246,7 +246,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 class enum_prototype : public prototype, public enum_signature {
 protected:
 	/** semicolon token (optional) */
-	const excl_const_ptr<token_char>	semi;
+	const excl_ptr<const token_char>	semi;
 public:
 	enum_prototype(const token_keyword* e, const token_identifier* i, 
 		const token_char* s);
@@ -255,11 +255,11 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class enum_prototype
 
 //-----------------------------------------------------------------------------
-typedef	node_list<token_identifier,comma>	enum_member_list_base;
+typedef	node_list<const token_identifier,comma>	enum_member_list_base;
 
 /**
 	Specialized list of identifiers for enumeration members.  
@@ -272,7 +272,7 @@ public:
 	~enum_member_list();
 
 	/** overrides default */
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end enum_member_list
 
 #define enum_member_list_wrap(b,l,e)					\
@@ -287,7 +287,7 @@ public:
 class enum_def : public definition, public enum_signature {
 protected:
 	/** names of the enumerated members */
-	const excl_const_ptr<enum_member_list>	members;
+	const excl_ptr<const enum_member_list>	members;
 public:
 	enum_def(const token_keyword* e, const token_identifier* i,      
 		const enum_member_list*	m);
@@ -296,17 +296,17 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class enum_def
 
 //=============================================================================
 /// user-defined channel type signature
 class user_chan_type_signature : public signature_base {
 protected:
-	const excl_const_ptr<token_keyword>	def;	///< "defchan" keyword
-	const excl_const_ptr<token_string>	dop;	///< <: operator
-	const excl_const_ptr<chan_type>		bct;	///< the represented type
-	const excl_const_ptr<data_param_decl_list>
+	const excl_ptr<const token_keyword>	def;	///< "defchan" keyword
+	const excl_ptr<const token_string>	dop;	///< <: operator
+	const excl_ptr<const chan_type>		bct;	///< the represented type
+	const excl_ptr<const data_param_decl_list>
 						params;	///< the implementation type
 public:
 	user_chan_type_signature(const template_formal_decl_list* tf, 
@@ -314,7 +314,7 @@ public:
 		const token_string* dp, const chan_type* b, 
 		const data_param_decl_list* p);
 virtual	~user_chan_type_signature();
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -322,7 +322,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 class user_chan_type_prototype : public prototype, 
 		public user_chan_type_signature {
 protected:
-	const excl_const_ptr<token_char>	semi;	///< semicolon
+	const excl_ptr<const token_char>	semi;	///< semicolon
 public:
 	user_chan_type_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
@@ -339,15 +339,15 @@ public:
 /// user-defined channel type definition
 class user_chan_type_def : public definition, public user_chan_type_signature {
 protected:
-//	const excl_const_ptr<token_keyword>	def;	// inherited
-//	const excl_const_ptr<token_identifier>	name;	// inherited
-//	const excl_const_ptr<token_string>	dop;	// inherited
-//	const excl_const_ptr<chan_type>		bct;	// inherited
-//	const excl_const_ptr<data_param_decl_list>	params;	// inherited
-	const excl_const_ptr<token_char>	lb;	///< left brace
-	const excl_const_ptr<language_body>	sendb;	///< set body
-	const excl_const_ptr<language_body>	recvb;	///< get body
-	const excl_const_ptr<token_char>	rb;	///< right brace
+//	const excl_ptr<const token_keyword>	def;	// inherited
+//	const excl_ptr<const token_identifier>	name;	// inherited
+//	const excl_ptr<const token_string>	dop;	// inherited
+//	const excl_ptr<const chan_type>		bct;	// inherited
+//	const excl_ptr<const data_param_decl_list>	params;	// inherited
+	const excl_ptr<const token_char>	lb;	///< left brace
+	const excl_ptr<const language_body>	sendb;	///< set body
+	const excl_ptr<const language_body>	recvb;	///< get body
+	const excl_ptr<const token_char>	rb;	///< right brace
 public:
 	user_chan_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
@@ -366,11 +366,11 @@ public:
 
 class typedef_alias : public def_body_item, public root_item {
 protected:
-	const excl_const_ptr<template_formal_decl_list>	temp_spec;
-	const excl_const_ptr<token_keyword>		td;
-	const excl_const_ptr<concrete_type_ref>		base;
-	const excl_const_ptr<token_identifier>		id;
-	const excl_const_ptr<token_char>		semi;
+	const excl_ptr<const template_formal_decl_list>	temp_spec;
+	const excl_ptr<const token_keyword>		td;
+	const excl_ptr<const concrete_type_ref>		base;
+	const excl_ptr<const token_identifier>		id;
+	const excl_ptr<const token_char>		semi;
 public:
 	typedef_alias(const template_formal_decl_list* t, 
 		const token_keyword* k, const concrete_type_ref* b, 
@@ -380,7 +380,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class typedef_alias
 
 //=============================================================================

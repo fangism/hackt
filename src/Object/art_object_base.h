@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.19 2004/11/05 02:38:24 fang Exp $
+	$Id: art_object_base.h,v 1.20 2004/11/30 01:25:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -16,8 +16,8 @@
 
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition
-#include "ptrs.h"		// need complete definition (never_ptr members)
-#include "count_ptr_fwd.h"
+#include "memory/pointer_classes.h"
+				// need complete definition (never_ptr members)
 
 // for convenience
 #include "art_object_type_hash.h"
@@ -56,8 +56,7 @@ namespace entity {
 //=============================================================================
 	using namespace std;
 	using namespace util;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
-	using namespace COUNT_PTR_NAMESPACE;
+	using namespace util::memory;
 	using namespace QMAP_NAMESPACE;
 	using namespace HASH_QMAP_NAMESPACE;
 
@@ -133,7 +132,7 @@ namespace entity {
 		Value type of this needs to be more general
 		to accommodate loop and conditional scopes?
 	 */
-	typedef	count_const_ptr<range_expr_list>
+	typedef	count_ptr<const range_expr_list>
 					index_collection_item_ptr_type;
 	/**
 		UPDATE: now contains reference to instantiation_statements, 
@@ -142,7 +141,7 @@ namespace entity {
 		We keep track of the state of instance collections at
 		various program points with this container.
 	 */
-	typedef	deque<never_const_ptr<instantiation_statement> >
+	typedef	deque<never_ptr<const instantiation_statement> >
 					index_collection_type;
 
 	/** the state of an instance collection, kept track by each 
@@ -229,7 +228,7 @@ public:
 		\param o may not be a handle.  
 			Someone else should have responsibility for deleting.  
 	 */
-	object_handle(never_const_ptr<object> o);
+	object_handle(never_ptr<const object> o);
 
 	/**
 		No intention to de-allocate reference object.  
@@ -277,11 +276,11 @@ public:
 	// not const because may modify self
 	excl_ptr<param_expression_assignment>
 		make_param_assignment(void);
-	excl_const_ptr<aliases_connection>
+	excl_ptr<const aliases_connection>
 		make_alias_connection(void) const;
-	excl_const_ptr<port_connection>
+	excl_ptr<const port_connection>
 		make_port_connection(
-			count_const_ptr<simple_instance_reference> ir) const;
+			count_ptr<const simple_instance_reference> ir) const;
 };	// end class object_list
 
 //=============================================================================
@@ -301,7 +300,7 @@ protected:	// typedefs -- keep these here for re-use
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	qmap<string, never_const_ptr<name_space> >	alias_map_type;
+	typedef	qmap<string, never_ptr<const name_space> >	alias_map_type;
 
 	/**
 		Container for open namespaces with optional aliases.  
@@ -311,7 +310,7 @@ protected:	// typedefs -- keep these here for re-use
 		These pointers are read-only, and thus not
 		owned by this namespace.  
 	 */
-	typedef list<never_const_ptr<name_space> >	namespace_list;
+	typedef list<never_ptr<const name_space> >	namespace_list;
 
 	/**
 		This set contains the list of identifiers for this namespace
@@ -375,15 +374,15 @@ protected:	// typedefs -- keep these here for re-use
 	class const_bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef qmap<string, never_const_ptr<name_space> >
+		typedef qmap<string, never_ptr<const name_space> >
 							ns_bin_type;
-		typedef qmap<string, never_const_ptr<definition_base> >
+		typedef qmap<string, never_ptr<const definition_base> >
 							def_bin_type;
-		typedef qmap<string, never_const_ptr<typedef_base> >
+		typedef qmap<string, never_ptr<const typedef_base> >
 							alias_bin_type;
-		typedef qmap<string, never_const_ptr<instance_collection_base> >
+		typedef qmap<string, never_ptr<const instance_collection_base> >
 							inst_bin_type;
-		typedef qmap<string, never_const_ptr<param_instance_collection> >
+		typedef qmap<string, never_ptr<const param_instance_collection> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -425,25 +424,25 @@ virtual	ostream& dump(ostream& o) const = 0;
 
 virtual	const string& get_key(void) const = 0;
 virtual	string get_qualified_name(void) const = 0;
-virtual never_const_ptr<scopespace> get_parent(void) const = 0;
+virtual never_ptr<const scopespace> get_parent(void) const = 0;
 
-virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
+virtual	never_ptr<const object>	lookup_object_here(const string& id) const;
 virtual	never_ptr<object>	lookup_object_here_with_modify(const string& id) const;
-virtual	never_const_ptr<object>	lookup_object(const string& id) const;
-virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) const;
+virtual	never_ptr<const object>	lookup_object(const string& id) const;
+virtual	never_ptr<const object>	lookup_object(const qualified_id_slice& id) const;
 
-virtual	never_const_ptr<scopespace>
+virtual	never_ptr<const scopespace>
 		lookup_namespace(const qualified_id_slice& id) const;
 
 protected:
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		add_instance(excl_ptr<instance_collection_base> i);
 public:
 	// need id because instantiation statement won't be named yet!
-	never_const_ptr<instance_collection_base>
+	never_ptr<const instance_collection_base>
 		add_instance(never_ptr<instantiation_statement> i, 
 			const token_identifier& id);
-	bool add_definition_alias(never_const_ptr<definition_base> d, 
+	bool add_definition_alias(never_ptr<const definition_base> d, 
 		const string& a);
 
 	size_t exclude_population(void) const;
@@ -484,7 +483,7 @@ class name_space : public scopespace {
 protected:
 	const string				key;
 	// ummm... should this have been removed? scopespace already has one
-	const never_const_ptr<name_space>	parent;	// override parent
+	const never_ptr<const name_space>	parent;	// override parent
 
 	/**
 		The set of namespaces which are open to search within
@@ -520,24 +519,24 @@ explicit name_space();
 
 public:
 explicit name_space(const string& n);
-	name_space(const string& n, never_const_ptr<name_space>);
+	name_space(const string& n, never_ptr<const name_space>);
 	~name_space();
 
 	const string& get_key(void) const;
-	never_const_ptr<scopespace> get_parent(void) const;
+	never_ptr<const scopespace> get_parent(void) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	ostream& pair_dump(ostream& o) const;
 
 string	get_qualified_name(void) const;
-never_const_ptr<name_space>	get_global_namespace(void) const;
+never_ptr<const name_space>	get_global_namespace(void) const;
 
 // update these return types later
 never_ptr<name_space>	add_open_namespace(const string& n);
-never_const_ptr<name_space>	leave_namespace(void);	// or close_namespace
-never_const_ptr<name_space>	add_using_directive(const qualified_id& n);
-never_const_ptr<name_space>	add_using_alias(const qualified_id& n, const string& a);
+never_ptr<const name_space>	leave_namespace(void);	// or close_namespace
+never_ptr<const name_space>	add_using_directive(const qualified_id& n);
+never_ptr<const name_space>	add_using_alias(const qualified_id& n, const string& a);
 
 private:
 never_ptr<name_space>	add_namespace(excl_ptr<name_space> ns);
@@ -551,17 +550,17 @@ never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
 // convert me to pointer-class:
 
 // returns type if unique match found, else NULL
-never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
-never_const_ptr<name_space>	lookup_open_alias(const string& id) const;
+never_ptr<const scopespace>	lookup_namespace(const qualified_id_slice& id) const;
+never_ptr<const name_space>	lookup_open_alias(const string& id) const;
 
 // type-specific counterparts, obsolete
 
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
 private:
-never_const_ptr<name_space>
+never_ptr<const name_space>
 		query_namespace_match(const qualified_id_slice& id) const;
-never_const_ptr<name_space>
+never_ptr<const name_space>
 		query_subnamespace_match(const qualified_id_slice& id) const;
 
 void	query_import_namespace_match(namespace_list& m, const qualified_id& id) const;
@@ -596,7 +595,7 @@ public:
 /** helper method for adding a variety of objects */
 void	load_used_id_map_object(excl_ptr<persistent>& o);
 public:
-	static const never_const_ptr<name_space>	null;
+	static const never_ptr<const name_space>	null;
 };	// end class name_space
 
 //=============================================================================
@@ -626,7 +625,7 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-	typedef	never_const_ptr<param_instance_collection>
+	typedef	never_ptr<const param_instance_collection>
 					template_formals_value_type;
 	// double-maintenance...
 	typedef	hash_qmap<string, template_formals_value_type>
@@ -634,12 +633,12 @@ public:
 	typedef	list<template_formals_value_type>
 					template_formals_list_type;
 	/** map from param_instance_collection to actual value passed */
-	typedef	hash_qmap<string, count_const_ptr<param_expr> >
+	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
 
 protected:
 //	const string			key;
-//	const never_const_ptr<name_space>	parent;
+//	const never_ptr<const name_space>	parent;
 
 protected:
 	/** subset of used_id_map, must be coherent with list */
@@ -664,7 +663,7 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 //	bool dump_cerr(void) const;		// historical artifact
 
 virtual	const string& get_key(void) const = 0;
-virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
+virtual	never_ptr<const scopespace> get_parent(void) const = 0;
 
 	bool is_defined(void) const { return defined; }
 	void mark_defined(void) { assert(!defined); defined = true; }
@@ -672,12 +671,12 @@ virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
 	void fill_template_actuals_map(template_actuals_map_type& am, 
 		const param_expr_list& al) const;
 
-	never_const_ptr<param_instance_collection>
+	never_ptr<const param_instance_collection>
 		lookup_template_formal(const string& id) const;
 /** should be pure virtual, but let's default to NULL */
-virtual	never_const_ptr<instance_collection_base>
+virtual	never_ptr<const instance_collection_base>
 		lookup_port_formal(const string& id) const;
-virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
+virtual	never_ptr<const object>	lookup_object_here(const string& id) const;
 
 virtual	bool check_null_template_argument(void) const;
 
@@ -689,7 +688,7 @@ protected:
 	// need notion of formal equivalence
 	// MAY be equivalent
 	bool equivalent_template_formals(
-		never_const_ptr<definition_base> d) const;
+		never_ptr<const definition_base> d) const;
 
 protected:
 	bool certify_template_arguments(
@@ -702,12 +701,12 @@ virtual	bool certify_port_actuals(const object_list& ol) const;
 
 public:
 // proposing to replace set_context_fundamental_type with the following:
-virtual count_const_ptr<fundamental_type_reference>
+virtual count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const = 0;
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(void) const;
 // why virtual? special cases for built-in types?
 
@@ -716,7 +715,7 @@ virtual count_const_ptr<fundamental_type_reference>
 	invoker's type.  
  */
 virtual	excl_ptr<definition_base>
-		make_typedef(never_const_ptr<scopespace> s, 
+		make_typedef(never_ptr<const scopespace> s, 
 			const token_identifier& id) const = 0;
 
 // need not be virtual?
@@ -726,7 +725,7 @@ virtual	string get_qualified_name(void) const;
 
 /** definition signature comparison, true if equal */
 virtual	bool require_signature_match(
-		never_const_ptr<definition_base> d) const
+		never_ptr<const definition_base> d) const
 		{ return false; }	// temporary, should be pure
 
 /**
@@ -735,14 +734,14 @@ virtual	bool require_signature_match(
 	TO DO: This function should be pure virtual and belong 
 		to a different interface!
  */
-virtual	never_const_ptr<instance_collection_base>
+virtual	never_ptr<const instance_collection_base>
 		add_template_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
 
 /**
 	Really, only some definitions should have ports...
  */
-virtual	never_const_ptr<instance_collection_base>
+virtual	never_ptr<const instance_collection_base>
 		add_port_formal(never_ptr<instantiation_statement> f, 
 			const token_identifier& id);
 
@@ -755,7 +754,7 @@ void	collect_template_formal_pointers(persistent_object_manager& m) const;
 void	write_object_template_formals(const persistent_object_manager& m) const;
 void	load_object_template_formals(persistent_object_manager& m);
 public:
-	static const never_const_ptr<definition_base>	null;
+	static const never_ptr<const definition_base>	null;
 };	// end class definition_base
 
 //=============================================================================
@@ -792,16 +791,16 @@ protected:
 		This is owned, and thus must be deleted.  
 		Const?
 	 */
-	excl_const_ptr<param_expr_list>		template_params;
+	excl_ptr<const param_expr_list>		template_params;
 
 public:
 	fundamental_type_reference();
-explicit fundamental_type_reference(excl_const_ptr<param_expr_list> pl);
+explicit fundamental_type_reference(excl_ptr<const param_expr_list> pl);
 virtual	~fundamental_type_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;
-virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
+virtual never_ptr<const definition_base> get_base_def(void) const = 0;
 	string template_param_string(void) const;
 	string get_qualified_name(void) const;
 	string hash_string(void) const;
@@ -815,22 +814,22 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 
 	// later add dimensions and indices?
 
-excl_const_ptr<fundamental_type_reference>
+excl_ptr<const fundamental_type_reference>
 	resolve_canonical_type(void) const;
 
 static	excl_ptr<instantiation_statement>
 		make_instantiation_statement(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d);
 
 virtual	excl_ptr<instantiation_statement>
 		make_instantiation_statement_private(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const = 0;
 
 virtual	excl_ptr<instance_collection_base>
 		make_instance_collection(
-			never_const_ptr<scopespace> s, 
+			never_ptr<const scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const = 0;
 
@@ -841,7 +840,7 @@ public:
 	// something for resolving typedefs
 	// or return by value? statically would require copy constructor
 	// wth, just allocate one...
-	excl_const_ptr<fundamental_type_reference>
+	excl_ptr<const fundamental_type_reference>
 		make_canonical_type_reference(void) const;
 };	// end class fundamental_type_reference
 
@@ -872,7 +871,7 @@ protected:
 		Is NEVER null, should be reference?
 		Should never be a loop or conditional namespace.  
 	 */
-	const never_const_ptr<scopespace>	owner;
+	const never_ptr<const scopespace>	owner;
 
 	/**
 		Name of instance.
@@ -929,12 +928,12 @@ virtual	string hash_string(void) const { return key; }
 	Unfortunately this forces us to do the same with static 
 	built-in types.  
  */
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
-	never_const_ptr<definition_base>
+	never_ptr<const definition_base>
 		get_base_def(void) const;
 
-	never_const_ptr<scopespace> get_owner(void) const { return owner; }
+	never_ptr<const scopespace> get_owner(void) const { return owner; }
 	size_t dimensions(void) const { return depth; }
 	instantiation_state collection_state_end(void) const;
 	instantiation_state current_collection_state(void) const;
@@ -947,14 +946,14 @@ virtual	count_const_ptr<fundamental_type_reference>
 
 private:
 	bool formal_size_equivalent(
-		never_const_ptr<instance_collection_base> b) const;
+		never_ptr<const instance_collection_base> b) const;
 public:
 	bool is_template_formal(void) const;
 	bool is_port_formal(void) const;
 	bool template_formal_equivalent(
-		never_const_ptr<instance_collection_base> b) const;
+		never_ptr<const instance_collection_base> b) const;
 	bool port_formal_equivalent(
-		never_const_ptr<instance_collection_base> b) const;
+		never_ptr<const instance_collection_base> b) const;
 
 protected:
 	bool check_expression_dimensions(const param_expr& pr) const;
@@ -968,7 +967,7 @@ virtual	count_ptr<instance_reference_base>
 		make_instance_reference(void) const = 0;
 virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b) const = 0;
+			count_ptr<const simple_instance_reference> b) const = 0;
 protected:
 	// utility functions for handling index collection
 	void collect_index_collection_pointers(
@@ -979,7 +978,7 @@ protected:
 			persistent_object_manager& m);
 public:
 	/** just for convenience */
-	static const never_const_ptr<instance_collection_base>	null;
+	static const never_ptr<const instance_collection_base>	null;
 };	// end class instance_collection_base
 
 //=============================================================================
@@ -989,7 +988,7 @@ public:
  */
 class sequential_scope {
 public:
-	typedef list<excl_const_ptr<instance_management_base> >
+	typedef list<sticky_ptr<const instance_management_base> >
 					instance_management_list_type;
 protected:
 	/**
@@ -998,15 +997,14 @@ protected:
 		and connections.  
 		Used for maintaining actions in source order.  
 	 */
-	list<excl_const_ptr<instance_management_base> >
-					instance_management_list;
+	instance_management_list_type	instance_management_list;
 public:
 	sequential_scope();
 virtual	~sequential_scope();
 
 	ostream& dump(ostream& o) const;
 	void append_instance_management(
-		excl_const_ptr<instance_management_base> i);
+		excl_ptr<const instance_management_base> i);
 
 	void collect_object_pointer_list(persistent_object_manager& m) const;
 	void write_object_pointer_list(const persistent_object_manager& m) const;
@@ -1041,7 +1039,7 @@ public:
 
 			template <template <class> class P>
 			ostream&
-			operator () (const P<instance_management_base>& i) const;
+			operator () (const P<const instance_management_base>& i) const;
 	};	// end class dumper
 
 public:

@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.4 2004/11/02 07:51:37 fang Exp $
+	$Id: art_parser_definition.cc,v 1.5 2004/11/30 01:25:02 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -102,14 +102,14 @@ user_data_type_prototype::rightmost(void) const {
 	else		return params->rightmost();
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 user_data_type_prototype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"user_data_type_prototype::check_build(...): " << endl;
 	)
 #if 0
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	c->declare_datatype(*this);	// really only need name
 	// visit template formals
 	o = bdt->check_build(c);
@@ -161,9 +161,9 @@ user_data_type_def::rightmost(void) const {
 }
 
 /*** unveil later...
-never_const_ptr<object>
+never_ptr<const object>
 user_data_type_def::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"user_data_type_def::check_build(...): " << endl;
@@ -199,13 +199,13 @@ enum_signature::~enum_signature() {
 	Just constructs and returns an enumeration definition with 
 	the appropriate signature.  There's really no signature, just name.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 enum_signature::check_build(never_ptr<context> c) const {
 	excl_ptr<definition_base> ed(
 		new enum_datatype_def(c->get_current_namespace(), *id));
 	// elsewhere would need to add template and port formals
 	// no need for set_current_prototype
-	never_const_ptr<definition_base> ret(c->add_declaration(ed));
+	never_ptr<const definition_base> ret(c->add_declaration(ed));
 	if (!ret) {
 		// error handling?
 		cerr << where() << endl;
@@ -249,7 +249,7 @@ enum_prototype::rightmost(void) const {
 	Signature has no additional information to match other than name.  
 	\return NULL, useless.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 enum_prototype::check_build(never_ptr<context> c) const {
 	return enum_signature::check_build(c);	// using.
 }
@@ -263,7 +263,7 @@ enum_member_list::enum_member_list(const token_identifier* i) : parent(i) {
 enum_member_list::~enum_member_list() {
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 enum_member_list::check_build(never_ptr<context> c) const {
 	// use current_open_definition
 	const_iterator i = begin();
@@ -275,7 +275,7 @@ enum_member_list::check_build(never_ptr<context> c) const {
 			cerr << "BAD fang!" << endl;
 		}
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -309,10 +309,10 @@ enum_def::rightmost(void) const {
 /**
 	Reminder: don't forget to reset_current_prototype()
  */
-never_const_ptr<object>
+never_ptr<const object>
 enum_def::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o(enum_signature::check_build(c));
-	if (!o)	return never_const_ptr<object>(NULL);
+	never_ptr<const object> o(enum_signature::check_build(c));
+	if (!o)	return never_ptr<const object>(NULL);
 	// lookup and open definition
 	c->open_enum_definition(*id);	// marks as defined
 	o = members->check_build(c);	// use current_open_definition
@@ -324,7 +324,7 @@ enum_def::check_build(never_ptr<context> c) const {
 	}
 #endif
 	c->close_enum_definition();
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -350,7 +350,7 @@ user_chan_type_signature::~user_chan_type_signature() {
 	Just constructs and returns an channel definition with 
 	the appropriate signature.
  */
-never_const_ptr<object>
+never_ptr<const object>
 user_chan_type_signature::check_build(never_ptr<context> c) const {
 	cerr << "user_chan_type_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> dd(
@@ -464,21 +464,21 @@ process_signature::get_name(void) const {
 		or previous declaration if it is exact match, 
 		else returns NULL upon failure.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 process_signature::check_build(never_ptr<context> c) const {
 //	cerr << "process_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> ret(
 		new process_definition(c->get_current_namespace(), *id));
 	c->set_current_prototype(ret);
 	if (temp_spec) {
-		never_const_ptr<object> o(temp_spec->check_build(c));
+		never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
 			cerr << temp_spec->where() << endl;
 			exit(1);
 		}
 	}
 	if (ports && !ports->empty()) {
-		never_const_ptr<object> o(ports->check_build(c));
+		never_ptr<const object> o(ports->check_build(c));
 		// return value NULL, useless
 		// would've exited already if there was error
 #if 0
@@ -489,7 +489,7 @@ process_signature::check_build(never_ptr<context> c) const {
 #endif
 	}
 	// this checks for conflicts in definitions.  
-	never_const_ptr<object>
+	never_ptr<const object>
 		o(c->add_declaration(c->get_current_prototype()));
 	if (!o) {
 		cerr << where() << endl;
@@ -535,7 +535,7 @@ process_prototype::rightmost(void) const {
 /**
 	TO DO: complete me!
  */
-never_const_ptr<object>
+never_ptr<const object>
 process_prototype::check_build(never_ptr<context> c) const {
 	return process_signature::check_build(c);
 }
@@ -576,12 +576,12 @@ process_def::rightmost(void) const {
 	To do: port_formals in process_signature...
 	FINISH ME!!! or START ME!!!
  */
-never_const_ptr<object>
+never_ptr<const object>
 process_def::check_build(never_ptr<context> c) const {
 #if 0
 	return node::check_build(c);		// temporary
 #else
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		get_name().what(cerr << c->auto_indent() << 
 			"process_def::check_build(...): ");
@@ -627,7 +627,7 @@ user_data_type_signature::~user_data_type_signature() {
 	Just constructs and returns an datatype definition with 
 	the appropriate signature.
  */
-never_const_ptr<object>
+never_ptr<const object>
 user_data_type_signature::check_build(never_ptr<context> c) const {
 	cerr << "user_data_type_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> dd(
@@ -684,16 +684,16 @@ typedef_alias::rightmost(void) const {
 	Use keyword to check class?
 	Chicken-before-egg between referenced type and template params.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 typedef_alias::check_build(never_ptr<context> c) const {
 	// first we read the user's mind by peeking down base.  
 	// does base have any template params, even an empty list?
-	never_const_ptr<type_base>
+	never_ptr<const type_base>
 		basedef(base->get_base_def());
-	never_const_ptr<object>
+	never_ptr<const object>
 		o(basedef->check_build(c));
-	never_const_ptr<definition_base>
-		d(o.is_a<definition_base>());
+	never_ptr<const definition_base>
+		d(o.is_a<const definition_base>());
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
 			"ERROR!  " << basedef->where() << endl;
@@ -716,7 +716,7 @@ if (base->get_temp_spec()) {
 	assert(tdb);
 	c->set_current_prototype(td_ex);
 	if (temp_spec) {
-		never_const_ptr<object> o(temp_spec->check_build(c));
+		never_ptr<const object> o(temp_spec->check_build(c));
 		// will add template_formals to the alias
 		if (!o) {
 			cerr << "ERROR in template formals of typedef!  "
@@ -725,11 +725,11 @@ if (base->get_temp_spec()) {
 		}
 	}
 	base->check_build(c);	// make sure is complete type
-	never_const_ptr<object>
+	never_ptr<const object>
 		obj(c->add_declaration(c->get_current_prototype()));
 		// also resets current_prototype, *after* checking type ref
 	// useless return value NULL, check current_fundamental_type
-	count_const_ptr<fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
 		ftr(c->get_current_fundamental_type());
 	if (!ftr) {
 		cerr << "ERROR resolving concrete type reference in typedef!  "
@@ -739,7 +739,7 @@ if (base->get_temp_spec()) {
 	// must reset because not making instances
 	c->reset_current_fundamental_type();
 	assert(ftr.refs() == 1);
-	excl_const_ptr<fundamental_type_reference>
+	excl_ptr<const fundamental_type_reference>
 		ftr_ex(ftr.exclusive_release());
 	assert(!ftr);
 	assert(ftr_ex);
@@ -766,7 +766,7 @@ if (base->get_temp_spec()) {
 	if (!b) {
 		cerr << id->where() << endl;
 		exit(1);
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	// else was successful
 	return d;

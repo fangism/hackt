@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.17 2004/11/05 02:38:24 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.18 2004/11/30 01:25:09 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa
@@ -9,8 +9,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "ptrs.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.h"
 
@@ -34,8 +33,7 @@ namespace entity {
 //=============================================================================
 using namespace std;
 using namespace ADS;
-using namespace PTRS_NAMESPACE;
-using namespace COUNT_PTR_NAMESPACE;
+using namespace util::memory;
 USING_UTIL_OPERATIONS
 
 //=============================================================================
@@ -58,7 +56,7 @@ param_expr::~param_expr() { }
  */
 excl_ptr<param_expression_assignment>
 param_expr::make_param_expression_assignment(
-		const count_const_ptr<param_expr>& p) {
+		const count_ptr<const param_expr>& p) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	if (!p->may_be_initialized()) {
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
@@ -111,20 +109,20 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
  */
-count_const_ptr<const_param>
+count_ptr<const const_param>
 pbool_expr::static_constant_param(void) const {
-	return count_const_ptr<const_param>(
+	return count_ptr<const const_param>(
 		new pbool_const(static_constant_bool()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pbool_expr::make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const {
+		const count_ptr<const param_expr>& p) const {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	assert(p == this);
 	return return_type(
-		new pbool_expression_assignment(p.is_a<pbool_expr>()));
+		new pbool_expression_assignment(p.is_a<const pbool_expr>()));
 }
 
 //-----------------------------------------------------------------------------
@@ -160,20 +158,20 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
  */
-count_const_ptr<const_param>
+count_ptr<const const_param>
 pint_expr::static_constant_param(void) const {
-	return count_const_ptr<const_param>(
+	return count_ptr<const const_param>(
 		new pint_const(static_constant_int()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pint_expr::make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const {
+		const count_ptr<const param_expr>& p) const {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	assert(p == this);
 	return return_type(
-		new pint_expression_assignment(p.is_a<pint_expr>()));
+		new pint_expression_assignment(p.is_a<const pint_expr>()));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -287,8 +285,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_iterator j = cpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<const_param> ip(*i);
-		const count_const_ptr<const_param> jp(*j);
+		const count_ptr<const const_param> ip(*i);
+		const count_ptr<const const_param> jp(*j);
 		assert(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
@@ -305,8 +303,8 @@ if (cpl) {
 	const_iterator i = begin();
 	dynamic_param_expr_list::const_iterator j = dpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<const_param> ip(*i);
-		const count_const_ptr<param_expr> jp(*j);
+		const count_ptr<const const_param> ip(*i);
+		const count_ptr<const param_expr> jp(*j);
 		assert(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
@@ -328,8 +326,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_iterator j = cpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<const_param> ip(*i);
-		const count_const_ptr<const_param> jp(*j);
+		const count_ptr<const const_param> ip(*i);
+		const count_ptr<const const_param> jp(*j);
 		assert(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
@@ -346,8 +344,8 @@ if (cpl) {
 	const_iterator i = begin();
 	dynamic_param_expr_list::const_iterator j = dpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<const_param> ip(*i);
-		const count_const_ptr<param_expr> jp(*j);
+		const count_ptr<const const_param> ip(*i);
+		const count_ptr<const param_expr> jp(*j);
 		assert(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
@@ -370,7 +368,7 @@ if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<const_param> ip(*i);
+		const count_ptr<const const_param> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -400,7 +398,7 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<const_param> ip(*i);
+		const count_ptr<const const_param> ip(*i);
 		m.write_pointer(f, ip);
 	}
 	WRITE_OBJECT_FOOTER(f);
@@ -486,7 +484,7 @@ bool
 dynamic_param_expr_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_const_ptr<param_expr> ip(*i);
+		count_ptr<const param_expr> ip(*i);
 		assert(ip);	// nothing may be NULL at this point!
 		if (!ip->is_static_constant())
 			return false;
@@ -500,7 +498,7 @@ bool
 dynamic_param_expr_list::is_loop_independent(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_const_ptr<param_expr> ip(*i);
+		count_ptr<const param_expr> ip(*i);
 		assert(ip);	// nothing may be NULL at this point!
 		if (!ip->is_loop_independent())
 			return false;
@@ -514,7 +512,7 @@ bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_const_ptr<param_expr> ip(*i);
+		count_ptr<const param_expr> ip(*i);
 		assert(ip);	// nothing may be NULL at this point!
 		if (!ip->may_be_initialized())
 			return false;
@@ -528,7 +526,7 @@ bool
 dynamic_param_expr_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_const_ptr<param_expr> ip(*i);
+		count_ptr<const param_expr> ip(*i);
 		assert(ip);	// nothing may be NULL at this point!
 		if (!ip->must_be_initialized())
 			return false;
@@ -547,7 +545,7 @@ dynamic_param_expr_list::get_const_ref_list(void) const {
 	list<const param_expr&> ret;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++, j++) {
-		count_const_ptr<param_expr> ip(*i);
+		count_ptr<const param_expr> ip(*i);
 		assert(ip);
 		ret.push_back(*ip);
 	}
@@ -566,8 +564,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_param_expr_list::const_iterator j = cpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<param_expr> ip(*i);
-		const count_const_ptr<const_param> jp(*j);
+		const count_ptr<const param_expr> ip(*i);
+		const count_ptr<const const_param> jp(*j);
 		assert(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
@@ -584,8 +582,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_iterator j = dpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<param_expr> ip(*i);
-		const count_const_ptr<param_expr> jp(*j);
+		const count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> jp(*j);
 		assert(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
@@ -607,8 +605,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_param_expr_list::const_iterator j = cpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<param_expr> ip(*i);
-		const count_const_ptr<const_param> jp(*j);
+		const count_ptr<const param_expr> ip(*i);
+		const count_ptr<const const_param> jp(*j);
 		assert(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
@@ -625,8 +623,8 @@ if (cpl) {
 	const_iterator i = begin();
 	const_iterator j = dpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		const count_const_ptr<param_expr> ip(*i);
-		const count_const_ptr<param_expr> jp(*j);
+		const count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> jp(*j);
 		assert(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
@@ -649,7 +647,7 @@ if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -680,7 +678,7 @@ dynamic_param_expr_list::write_object(
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		m.write_pointer(f, ip);
 	}
 	WRITE_OBJECT_FOOTER(f);
@@ -751,7 +749,7 @@ param_expr_collective::hash_string(void) const {
 	string ret("{");
 	list<excl_ptr<param_expr> >::const_iterator i = elist.begin();
 	for ( ; i!=elist.end(); i++) {
-		const never_const_ptr<param_expr> p(*i);
+		const never_ptr<const param_expr> p(*i);
 		assert(p);
 		ret += p->hash_string();
 		ret += ",";
@@ -785,13 +783,13 @@ pbool_instance_reference::pbool_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 pbool_instance_reference::get_inst_base(void) const {
 	return pbool_inst_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<param_instance_collection>
+never_ptr<const param_instance_collection>
 pbool_instance_reference::get_param_inst_base(void) const {
 	return pbool_inst_ref;
 }
@@ -839,7 +837,7 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 	\return true if sucessfully initialized with valid expression.  
  */
 bool
-pbool_instance_reference::initialize(count_const_ptr<pbool_expr> i) {
+pbool_instance_reference::initialize(count_ptr<const pbool_expr> i) {
 	return pbool_inst_ref->initialize(i);
 }
 
@@ -1122,11 +1120,11 @@ pbool_instance_reference::assigner::operator() (const bool b,
 		// return true;
 	}
 	// else good to continue
-	const excl_const_ptr<multikey_base<int> > lower(dim.lower_multikey());
-	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
+	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
+	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
 	assert(lower);
 	assert(upper);
-	const excl_ptr<multikey_generator_base<int> >
+	const sticky_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	assert(key_gen);
@@ -1183,13 +1181,13 @@ pint_instance_reference::pint_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 pint_instance_reference::get_inst_base(void) const {
 	return pint_inst_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<param_instance_collection>
+never_ptr<const param_instance_collection>
 pint_instance_reference::get_param_inst_base(void) const {
 	return pint_inst_ref;
 }
@@ -1237,7 +1235,7 @@ pint_instance_reference::static_constant_dimensions(void) const {
 	\return true if successfully initialized with valid expression.  
  */
 bool
-pint_instance_reference::initialize(count_const_ptr<pint_expr> i) {
+pint_instance_reference::initialize(count_ptr<const pint_expr> i) {
 	return pint_inst_ref->initialize(i);
 }
 
@@ -1556,11 +1554,11 @@ pint_instance_reference::assigner::operator() (const bool b,
 		// return true;
 	}
 	// else good to continue
-	const excl_const_ptr<multikey_base<int> > lower(dim.lower_multikey());
-	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
+	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
+	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
 	assert(lower);
 	assert(upper);
-	const excl_ptr<multikey_generator_base<int> >
+	const sticky_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	assert(key_gen);
@@ -1624,9 +1622,9 @@ pint_const::hash_string(void) const {
 	For use with const_param_expr_list.  
 	Just copy-constructs.  
  */
-count_const_ptr<const_param>
+count_ptr<const const_param>
 pint_const::static_constant_param(void) const {
-	return count_const_ptr<const_param>(
+	return count_ptr<const const_param>(
 		new pint_const(val));
 }
 
@@ -1693,7 +1691,7 @@ pint_const::range_size_equivalent(const const_index& i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pint_const::make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const {
+		const count_ptr<const param_expr>& p) const {
 	return pint_expr::make_param_expression_assignment_private(p);
 }
 
@@ -1759,16 +1757,16 @@ pbool_const::hash_string(void) const {
 	For use with const_param_expr_list.  
 	Just copy-constructs.  
  */
-count_const_ptr<const_param>
+count_ptr<const const_param>
 pbool_const::static_constant_param(void) const {
-	return count_const_ptr<const_param>(
+	return count_ptr<const const_param>(
 		new pbool_const(val));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pbool_const::make_param_expression_assignment_private(
-		const count_const_ptr<param_expr>& p) const {
+		const count_ptr<const param_expr>& p) const {
 	return pbool_expr::make_param_expression_assignment_private(p);
 }
 
@@ -1840,7 +1838,7 @@ pint_unary_expr::pint_unary_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		const op_type o, count_const_ptr<pint_expr> e) :
+		const op_type o, count_ptr<const pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1848,7 +1846,7 @@ pint_unary_expr::pint_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		count_const_ptr<pint_expr> e, const op_type o) :
+		count_ptr<const pint_expr> e, const op_type o) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1987,7 +1985,7 @@ pbool_unary_expr::pbool_unary_expr() :
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		const op_type o, count_const_ptr<pbool_expr> e) :
+		const op_type o, count_ptr<const pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1995,7 +1993,7 @@ pbool_unary_expr::pbool_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		count_const_ptr<pbool_expr> e, const op_type o) :
+		count_ptr<const pbool_expr> e, const op_type o) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -2170,8 +2168,8 @@ arith_expr::arith_expr() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
-		count_const_ptr<pint_expr> r) :
+arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
+		count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
 	assert(op);
 	assert(lx);
@@ -2406,8 +2404,8 @@ relational_expr::relational_expr() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(count_const_ptr<pint_expr> l,
-		const string& o, count_const_ptr<pint_expr> r) :
+relational_expr::relational_expr(count_ptr<const pint_expr> l,
+		const string& o, count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
 	assert(op);
 	assert(lx);
@@ -2599,8 +2597,8 @@ logical_expr::logical_expr() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
-		const string& o, count_const_ptr<pbool_expr> r) :
+logical_expr::logical_expr(count_ptr<const pbool_expr> l,
+		const string& o, count_ptr<const pbool_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
 	assert(op);
 	assert(lx);
@@ -2747,19 +2745,19 @@ pint_range::pint_range() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_range::pint_range(count_const_ptr<pint_expr> n) :
+pint_range::pint_range(count_ptr<const pint_expr> n) :
 		range_expr(),
 		lower(new pint_const(0)),
 		upper(new arith_expr(n, '-', 
-			count_const_ptr<pint_expr>(new pint_const(1)))) {
+			count_ptr<const pint_expr>(new pint_const(1)))) {
 	assert(n);
 	assert(lower);
 	assert(upper);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_range::pint_range(count_const_ptr<pint_expr> l, 
-		count_const_ptr<pint_expr> u) :
+pint_range::pint_range(count_ptr<const pint_expr> l, 
+		count_ptr<const pint_expr> u) :
 		range_expr(), lower(l), upper(u) {
 	assert(lower);
 	assert(upper);
@@ -3255,14 +3253,14 @@ const_range_list::collapsed_dimension_ranges(
 	const_iterator i = begin();
 	const_index_list::const_iterator j = il.begin();
 	for ( ; j!=il.end(); i++, j++) {
-		const count_const_ptr<pint_const>	// or pint_const
+		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
 			assert(i != end());
 			assert(i->first == pi->static_constant_int());
 			assert(i->first == i->second);
 		} else {
-			const count_const_ptr<const_range>
+			const count_ptr<const const_range>
 				pr(j->is_a<const_range>());
 			assert(pr);
 			assert(pr->first == i->first);
@@ -3294,7 +3292,7 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 	iterator i = begin();
 	const_index_list::const_iterator j = il.begin();
 	for ( ; j!=il.end(); i++, j++) {
-		const count_const_ptr<pint_const>	// or pint_const
+		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
 			assert(i != end());
@@ -3318,7 +3316,7 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 			erase(iw);	// be-tail
 #endif
 		} else {
-			const count_const_ptr<const_range>
+			const count_ptr<const const_range>
 				pr(j->is_a<const_range>());
 			assert(pr);
 			assert(pr->first == i->first);
@@ -3545,7 +3543,7 @@ bool
 dynamic_range_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		const count_const_ptr<pint_range> pr(*i);
+		const count_ptr<const pint_range> pr(*i);
 		assert(pr);
 		if (!pr->is_static_constant())
 			return false;
@@ -3577,7 +3575,7 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		const_range c;
-		const count_const_ptr<pint_range> ip(*i);
+		const count_ptr<const pint_range> ip(*i);
 		if (ip->resolve_range(c)) {
 			r.push_back(c);
 		} else {
@@ -3599,7 +3597,7 @@ if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<pint_range> ip(*i);
+		const count_ptr<const pint_range> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -3629,7 +3627,7 @@ dynamic_range_list::write_object(const persistent_object_manager& m) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<pint_range> ip(*i);
+		const count_ptr<const pint_range> ip(*i);
 		m.write_pointer(f, ip);
 	}
 	WRITE_OBJECT_FOOTER(f);
@@ -3743,7 +3741,7 @@ const_index_list::hash_string(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		assert(*i);
-		const bool b = (i->is_a<pint_expr>());
+		const bool b = (i->is_a<const pint_expr>());
 		if (b) ret += '[';
 		ret += (*i)->hash_string();
 		if (b) ret += ']';
@@ -3770,9 +3768,9 @@ const_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		if (i->is_a<pint_const>())
+		if (i->is_a<const pint_const>())
 			ret++;
-		else assert(i->is_a<const_range>());
+		else assert(i->is_a<const const_range>());
 			// sanity check
 	}
 	return ret;
@@ -3784,11 +3782,11 @@ const_index_list::collapsed_dimension_ranges(void) const {
 	const_range_list ret;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		const count_const_ptr<const_range>
-			cr(i->is_a<const_range>());
+		const count_ptr<const const_range>
+			cr(i->is_a<const const_range>());
 		if (cr)
 			ret.push_back(*cr);	// will copy
-		else assert(i->is_a<pint_const>());
+		else assert(i->is_a<const pint_const>());
 		// continue
 	}
 	return ret;
@@ -3860,8 +3858,8 @@ const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	const const_iterator e = end();
 	size_t j=0;
 	for ( ; i!=e; i++, j++) {
-		const count_const_ptr<const_index> ip(*i);
-		const count_const_ptr<pint_const> pc(ip.is_a<pint_const>());
+		const count_ptr<const const_index> ip(*i);
+		const count_ptr<const pint_const> pc(ip.is_a<pint_const>());
 		if (pc)
 			(*k)[j] = pc->static_constant_int();
 		else 	return false;
@@ -3879,7 +3877,7 @@ const_index_list::lower_multikey(void) const {
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	return ret;
@@ -3894,7 +3892,7 @@ const_index_list::upper_multikey(void) const {
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>()
 		)
 	);
 	return ret;
@@ -3910,12 +3908,12 @@ bool
 const_index_list::equal_dimensions(const const_index_list& l) const {
 	// compare_if defined in "util/conditional.h"
 	return compare_if(begin(), end(), l.begin(), l.end(), 
-		mem_fun_ref(&count_ptr<const_index>::is_a<const_range>), 
-		mem_fun_ref(&count_ptr<const_index>::is_a<const_range>), 
+		mem_fun_ref(&count_ptr<const_index>::is_a<const const_range>), 
+		mem_fun_ref(&count_ptr<const_index>::is_a<const const_range>), 
 		binary_compose(
 			mem_fun_ref(&const_index::range_size_equivalent), 
-			const_dereference<count_ptr, const_index>(), 
-			const_dereference<count_ptr, const_index>()
+			dereference<count_ptr, const const_index>(), 
+			dereference<count_ptr, const const_index>()
 		)
 	);
 }
@@ -3932,7 +3930,7 @@ if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<const_index> ip(*i);
+		const count_ptr<const const_index> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -3962,7 +3960,7 @@ const_index_list::write_object(const persistent_object_manager& m) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<const_index> ip(*i);
+		const count_ptr<const const_index> ip(*i);
 		m.write_pointer(f, ip);
 	}
 	WRITE_OBJECT_FOOTER(f);
@@ -4025,7 +4023,7 @@ dynamic_index_list::hash_string(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		assert(*i);
-		const bool b = (i->is_a<pint_expr>());
+		const bool b = (i->is_a<const pint_expr>());
 		if (b) ret += '[';
 		ret += (*i)->hash_string();
 		if (b) ret += ']';
@@ -4060,9 +4058,9 @@ dynamic_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		if (i->is_a<pint_expr>())
+		if (i->is_a<const pint_expr>())
 			ret++;
-		else assert(i->is_a<range_expr>());
+		else assert(i->is_a<const range_expr>());
 			// sanity check
 	}
 	return ret;
@@ -4173,8 +4171,8 @@ dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	const const_iterator e = end();
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		const count_const_ptr<index_expr> ip(*i);
-		const count_const_ptr<pint_expr> pi(ip.is_a<pint_expr>());
+		const count_ptr<const index_expr> ip(*i);
+		const count_ptr<const pint_expr> pi(ip.is_a<pint_expr>());
 		// assert(pi); ?
 		if (pi) {
 			if (!pi->resolve_value((*k)[j])) {
@@ -4205,7 +4203,7 @@ if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE_KEY)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<index_expr> ip(*i);
+		const count_ptr<const index_expr> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -4235,7 +4233,7 @@ dynamic_index_list::write_object(const persistent_object_manager& m) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_const_ptr<index_expr> ip(*i);
+		const count_ptr<const index_expr> ip(*i);
 		m.write_pointer(f, ip);
 	}
 	WRITE_OBJECT_FOOTER(f);

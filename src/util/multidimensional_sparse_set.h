@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.3 2004/11/02 07:52:14 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.4 2004/11/30 01:25:22 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -16,8 +16,7 @@
 // includes <map> and <iostream>
 
 #include "qmap.h"		// queryable maps
-#include "ptrs.h"		// for excl_ptr, not copy-constructable
-#include "count_ptr.h"		// copy-constructable reference count pointers
+#include "memory/pointer_classes.h"
 #include "sublist.h"		// list slices
 
 /**
@@ -29,8 +28,7 @@ using namespace std;
 using namespace DISCRETE_INTERVAL_SET_NAMESPACE;
 using namespace SUBLIST_NAMESPACE;
 using namespace QMAP_NAMESPACE;
-using namespace COUNT_PTR_NAMESPACE;
-using namespace PTRS_NAMESPACE;
+using namespace util::memory;
 
 //=============================================================================
 // forward declarations in "multidimensional_sparse_set_fwd.h"

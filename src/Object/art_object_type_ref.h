@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.9 2004/11/02 07:51:50 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.10 2004/11/30 01:25:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -33,7 +33,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 // class type_reference_base declared in "art_object_base.h"
@@ -51,11 +51,11 @@ MAY BE OBSOLETE
 class collective_type_reference : public type_reference_base {
 protected:
 	// don't own these members
-	never_const_ptr<type_reference_base>	base;
-	never_const_ptr<array_index_list>		dim;
+	never_ptr<const type_reference_base>	base;
+	never_ptr<const array_index_list>		dim;
 public:
 	collective_type_reference(const type_reference_base& b, 
-		never_const_ptr<array_index_list> d);
+		never_ptr<const array_index_list> d);
 	~collective_type_reference();
 
 	ostream& what(ostream& o) const;
@@ -70,31 +70,31 @@ public:
  */
 class data_type_reference : public fundamental_type_reference {
 protected:
-//	excl_const_ptr<param_expr_list>	template_params;	// inherited
-	never_const_ptr<datatype_definition_base>	base_type_def;
+//	excl_ptr<const param_expr_list>	template_params;	// inherited
+	never_ptr<const datatype_definition_base>	base_type_def;
 private:
 	data_type_reference();
 public:
 	data_type_reference(
-		never_const_ptr<datatype_definition_base> td);
+		never_ptr<const datatype_definition_base> td);
 	data_type_reference(
-		never_const_ptr<datatype_definition_base> td, 
-		excl_const_ptr<param_expr_list> pl);
+		never_ptr<const datatype_definition_base> td, 
+		excl_ptr<const param_expr_list> pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
-	never_const_ptr<definition_base> get_base_def(void) const;
+	never_ptr<const definition_base> get_base_def(void) const;
 
 private:
 	excl_ptr<instantiation_statement>
 		make_instantiation_statement_private(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
 		make_instance_collection(
-			never_const_ptr<scopespace> s, 
+			never_ptr<const scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
 public:
@@ -109,29 +109,29 @@ public:
  */
 class channel_type_reference : public fundamental_type_reference {
 protected:
-//	excl_const_ptr<param_expr_list>	template_params;	// inherited
-	never_const_ptr<channel_definition_base>	base_chan_def;
+//	excl_ptr<const param_expr_list>	template_params;	// inherited
+	never_ptr<const channel_definition_base>	base_chan_def;
 private:
 	channel_type_reference();
 public:
 	channel_type_reference(
-		never_const_ptr<channel_definition_base> td);
+		never_ptr<const channel_definition_base> td);
 	channel_type_reference(
-		never_const_ptr<channel_definition_base> td, 
-		excl_const_ptr<param_expr_list> pl);
+		never_ptr<const channel_definition_base> td, 
+		excl_ptr<const param_expr_list> pl);
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
-	never_const_ptr<definition_base> get_base_def(void) const;
+	never_ptr<const definition_base> get_base_def(void) const;
 private:
 	excl_ptr<instantiation_statement>
 		make_instantiation_statement_private(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
 		make_instance_collection(
-			never_const_ptr<scopespace> s, 
+			never_ptr<const scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
 public:
@@ -146,31 +146,31 @@ public:
  */
 class process_type_reference : public fundamental_type_reference {
 protected:
-//	excl_const_ptr<param_expr_list>	template_params;	// inherited
+//	excl_ptr<const param_expr_list>	template_params;	// inherited
 // should be const?  reference to base definition shouldn't change...
-	never_const_ptr<process_definition_base>	base_proc_def;
+	never_ptr<const process_definition_base>	base_proc_def;
 private:
 explicit process_type_reference();
 public:
 	process_type_reference(
-		never_const_ptr<process_definition_base> td);
+		never_ptr<const process_definition_base> td);
 	process_type_reference(
-		never_const_ptr<process_definition_base> td, 
-		excl_const_ptr<param_expr_list> pl);
+		never_ptr<const process_definition_base> td, 
+		excl_ptr<const param_expr_list> pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
-	never_const_ptr<definition_base> get_base_def(void) const;
+	never_ptr<const definition_base> get_base_def(void) const;
 private:
 	excl_ptr<instantiation_statement>
 		make_instantiation_statement_private(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
 		make_instance_collection(
-			never_const_ptr<scopespace> s, 
+			never_ptr<const scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
 public:
@@ -191,23 +191,23 @@ public:
  */
 class param_type_reference : public fundamental_type_reference {
 protected:
-//	excl_const_ptr<param_expr_list>	template_params;	// inherited, unused
-	never_const_ptr<built_in_param_def>	base_param_def;
+//	excl_ptr<const param_expr_list>	template_params;	// inherited, unused
+	never_ptr<const built_in_param_def>	base_param_def;
 public:
-	param_type_reference(never_const_ptr<built_in_param_def> td);
+	param_type_reference(never_ptr<const built_in_param_def> td);
 virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
-	never_const_ptr<definition_base> get_base_def(void) const;
+	never_ptr<const definition_base> get_base_def(void) const;
 private:
 	excl_ptr<instantiation_statement>
 		make_instantiation_statement_private(
-			count_const_ptr<fundamental_type_reference> t, 
+			count_ptr<const fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
 		make_instance_collection(
-			never_const_ptr<scopespace> s, 
+			never_ptr<const scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
 

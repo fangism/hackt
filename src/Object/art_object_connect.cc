@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.11 2004/11/02 07:51:45 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.12 2004/11/30 01:25:08 fang Exp $
  */
 
 #include <iostream>
@@ -32,7 +32,7 @@ instance_reference_connection::instance_reference_connection() :
  */
 void
 instance_reference_connection::append_instance_reference(
-		count_const_ptr<instance_reference_base> i) {
+		count_ptr<const instance_reference_base> i) {
 	assert(i);
 	inst_list.push_back(i);
 }
@@ -70,7 +70,7 @@ aliases_connection::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 aliases_connection::prepend_instance_reference(
-		count_const_ptr<instance_reference_base> i) {
+		count_ptr<const instance_reference_base> i) {
 	assert(i);
 	inst_list.push_front(i);
 }
@@ -145,7 +145,7 @@ port_connection::port_connection() :
 	\param i an instance of the definition that is to be connected.
  */
 port_connection::port_connection(
-		count_const_ptr<simple_instance_reference> i) :
+		count_ptr<const simple_instance_reference> i) :
 		instance_reference_connection(), inst(i) {
 	assert(inst);
 }
@@ -183,7 +183,7 @@ port_connection::dump(ostream& o) const {
  */
 void
 port_connection::append_instance_reference(
-		count_const_ptr<instance_reference_base> i) {
+		count_ptr<const instance_reference_base> i) {
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
 }
@@ -250,7 +250,7 @@ NOT READY TO UNVEIL
 // class dynamic_connection_assignment method definitions
 
 dynamic_connection_assignment::dynamic_connection_assignment(
-		never_const_ptr<scopespace> s) :
+		never_ptr<const scopespace> s) :
 		connection_assignment_base(), dscope(s) {
 	// check that dscope is actually a loop or conditional
 }

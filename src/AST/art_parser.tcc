@@ -1,7 +1,7 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.3 2004/11/02 07:51:34 fang Exp $
+	$Id: art_parser.tcc,v 1.4 2004/11/30 01:25:01 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -65,10 +65,10 @@ node_list_base<T>::node_list_base() : node(), list_parent() {
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
-	push_back(count_const_ptr<T>(n));	// implicit
+	push_back(count_ptr<T>(n));	// implicit
 #if 0
-	excl_const_ptr<T> xn(n);
-	some_const_ptr<T> sn(xn);
+	excl_ptr<T> xn(n);
+	some_ptr<T> sn(xn);
 	assert(sn.owned() && !xn);
 	push_back(sn);
 	assert(!sn.owned());
@@ -119,9 +119,9 @@ node_list_base<T>::what(ostream& o) const {
 		The context object collects the necessary error information.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
-never_const_ptr<object>
+never_ptr<const object>
 node_list_base<T>::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> ret(NULL);
+	never_ptr<const object> ret(NULL);
 	const_iterator i = begin();
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent() <<
@@ -147,7 +147,7 @@ node_list_base<T>::check_build(never_ptr<context> c) const {
 	Releases memory owned by the list and copies over to the destination
 	list.  
 	Ownership of element pointers must be transferrable, hence
-	excl_const_ptr<T> as opposed to const excl_const_ptr<T>.  
+	excl_ptr<const T> as opposed to const excl_ptr<const T>.  
 	Releasing memory also nullifies pointers, so the list will be
 	unusable after this operation.  
 	\param dest the destination list.  
@@ -159,8 +159,8 @@ node_list_base<T>::release_append(node_list_base<T>& dest) {
 	for ( ; i!=this->end(); i++) {
 		// will release each element
 		push_back(*i);		// will this actually release?
-//		push_back(excl_const_ptr<T>(*i));	// implicit
-//		push_back(some_const_ptr<T>(excl_const_ptr<T>(*i)));
+//		push_back(excl_ptr<const T>(*i));	// implicit
+//		push_back(some_ptr<const T>(excl_ptr<const T>(*i)));
 	}
 }
 
@@ -176,7 +176,7 @@ node_list<T,D>::node_list() : parent(), open(NULL), close(NULL), delim() {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>::node_list(const T* n) :
 		node_list_base<T>(n), open(NULL), close(NULL), delim() {
-//	push_back(excl_const_ptr<T>(n));
+//	push_back(excl_ptr<const T>(n));
 }
 
 //-----------------------------------------------------------------------------
@@ -208,9 +208,9 @@ NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
 node_list<T,D>::wrap(const terminal* b, const terminal* e) {
 // don't care what they are
-	open = excl_const_ptr<terminal>(b);
+	open = excl_ptr<const terminal>(b);
 //	if (b) assert(open.is_a<token_char>() || open.is_a<token_string>());
-	close = excl_const_ptr<terminal>(e);
+	close = excl_ptr<const terminal>(e);
 //	if (e) assert(close.is_a<token_char>() || close.is_a<token_string>());
 	return this;
 }
@@ -225,32 +225,32 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 		assert(!(d->string_compare(D)));
 		// now use separate list for delimiters
 #if 0
-		excl_const_ptr<terminal> xd(d);
-		some_const_ptr<terminal> sd(xd);
+		excl_ptr<const terminal> xd(d);
+		some_ptr<const terminal> sd(xd);
 		assert(!xd && sd.owned());	// guarantee transfer
 		delim.push_back(sd);
 		assert(!sd.owned());
 		// explicit conversion
 #endif
-		delim.push_back(count_const_ptr<terminal>(d));
+		delim.push_back(count_ptr<const terminal>(d));
 	} else {
 		// consider using template specialization for this
 		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-	// push_back(const T&), but excl_const_ptr<T> is destructive :/
+	// push_back(const T&), but excl_ptr<const T> is destructive :/
 	// either use different pointer class or introduce 
 	// list sub-class, with new push_back operation.  
 	// n may be null, is ok
 #if 0
-	excl_const_ptr<T> xn(n);
-	some_const_ptr<T> sn(xn);
+	excl_ptr<const T> xn(n);
+	some_ptr<const T> sn(xn);
 	assert(!xn  && sn.owned());		// guarantee transfer
 	push_back(sn);
 	assert(!sn.owned());
-//	push_back(excl_const_ptr<T>(n));	// if implicit constructor allowed
+//	push_back(excl_ptr<const T>(n));	// if implicit constructor allowed
 #endif
-	push_back(count_const_ptr<T>(n));
+	push_back(count_ptr<const T>(n));
 
 	return this;
 }

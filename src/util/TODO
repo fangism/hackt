@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.2 2004/11/28 23:44:27 fang Exp $
+	$Id: TODO,v 1.3 2004/11/30 01:25:21 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -34,24 +34,30 @@ In "list_vector.*":
 
 Regarding pointer-classes:
 	Files: excl_ptr.h, count_ptr.h
-	Migrate into the memory/ subdirectory.
-	Overhaul to eliminate inheritance from abstract_ptr.
+	Migrate into the memory/ subdirectory. (DONE)
+		-- renamed "pointer_classes.h"
+	Overhaul to eliminate inheritance from abstract_ptr. (DONE)
 		(That was just an experiment.)
 	Implement pointer_traits concept, just like iterator_traits.
+		(partially done)
 	Combine pointer classes with const- counterparts to unify, 
-		eliminate replication.
+		eliminate replication.  (DONE)
 	sticky_pointer: can acquire ownership, but never transfer it, 
 		useful for containers, replacement for some_ptr.  
+		(partially done)
 	unique_pointer: transferrable ownership, but not replicable, 
 		not even by never_ptr.  
+		(barely started)
 	(Migrating from old-style to new will be painful...
 		better get it over with AQAP.)
+		(DONE)
 
 	what about allocator_traits?
 
 -------------------------------------------------------------------------------
 
 vectorization:
+	See what valarray does already...
 	File: aligned_vector.h
 	Create it!
 	Guarantees that memory access are aligned to specified boundary, 

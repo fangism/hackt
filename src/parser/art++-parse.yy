@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.5 2004/11/02 07:52:05 fang Exp $
+	$Id: art++-parse.yy,v 1.6 2004/11/30 01:25:14 fang Exp $
  */
 
 %{
@@ -25,7 +25,7 @@ using namespace std;
 using namespace ART::parser;
 
 #if YYBISON
-#include "ptrs.h"
+#include "memory/pointer_classes.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to
@@ -34,7 +34,7 @@ using namespace ART::parser;
 	Defined as an excl_ptr, which means exclusive but transferrable
 	ownership.  
  */
-PTRS_NAMESPACE::excl_ptr<root_body> AST_root;
+util::memory::excl_ptr<root_body> AST_root;
 #endif
 
 /*
@@ -568,7 +568,7 @@ module
 	: top_root
 		{
 #if YYBISON
-			AST_root = PTRS_NAMESPACE::excl_ptr<root_body>($1);
+			AST_root = util::memory::excl_ptr<root_body>($1);
 #else	// YACC
 			$$ = $1;
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.7 2004/11/02 07:51:49 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.8 2004/11/30 01:25:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -9,7 +9,7 @@
 
 #include "art_object_base.h"
 #include "multidimensional_sparse_set_fwd.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
 
 namespace ART {
 //=============================================================================
@@ -35,8 +35,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
-	using namespace COUNT_PTR_NAMESPACE;
+	using namespace util::memory;
 	using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
@@ -55,13 +54,13 @@ virtual	~instance_reference_base() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	ostream& dump_type_size(ostream& o) const = 0;
-virtual never_const_ptr<instance_collection_base>
+virtual never_ptr<const instance_collection_base>
 		get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
-virtual	never_const_ptr<definition_base>
+virtual	never_ptr<const definition_base>
 		get_base_def(void) const = 0;
-virtual	count_const_ptr<fundamental_type_reference>
+virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
 virtual	bool may_be_densely_packed(void) const = 0;
 virtual	bool must_be_densely_packed(void) const = 0;
@@ -89,12 +88,12 @@ class collective_instance_reference : public instance_reference_base {
 protected:
 	// owned? no belongs to cache, even if multidimensional
 	// may also be collective
-	never_const_ptr<instance_reference_base>	base_array;
-	never_const_ptr<param_expr>			lower_index;
-	never_const_ptr<param_expr>			upper_index;
+	never_ptr<const instance_reference_base>	base_array;
+	never_ptr<const param_expr>			lower_index;
+	never_ptr<const param_expr>			upper_index;
 public:
 	collective_instance_reference(
-		never_const_ptr<instance_reference_base> b, 
+		never_ptr<const instance_reference_base> b, 
 		const param_expr* l = NULL, const param_expr* r = NULL);
 virtual	~collective_instance_reference();
 
@@ -115,7 +114,7 @@ class indexable_instance_reference : virtual public instance_reference_base {
 //=============================================================================
 class process_instance_reference_base : virtual public instance_reference_base {
 protected:
-	never_const_ptr<process_instance_collection>	proc_inst;
+	never_ptr<const process_instance_collection>	proc_inst;
 public:
 
 };	// end class process_instance_reference_base
@@ -166,7 +165,7 @@ protected:
 	const instantiation_state		inst_state;
 
 // for subclasses:
-//	never_const_ptr<instance_collection_base>	inst_ref;
+//	never_ptr<const instance_collection_base>	inst_ref;
 
 protected:
 	simple_instance_reference();
@@ -188,9 +187,9 @@ virtual	~simple_instance_reference();
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
 	ostream& dump_type_size(ostream& o) const;
-virtual never_const_ptr<instance_collection_base> get_inst_base(void) const = 0;
-	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-	never_const_ptr<definition_base> get_base_def(void) const;
+virtual never_ptr<const instance_collection_base> get_inst_base(void) const = 0;
+	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	never_ptr<const definition_base> get_base_def(void) const;
 virtual	string hash_string(void) const;
 	// need not be virtual
 	bool may_be_type_equivalent(const instance_reference_base& i) const;
@@ -219,12 +218,12 @@ protected:
 	/** The owning base instance, 
 		must have dimension-0, scalar... for now
 	 */
-	const count_const_ptr<simple_instance_reference>	base;
+	const count_ptr<const simple_instance_reference>	base;
 protected:
 	member_instance_reference_base();
 public:
 	member_instance_reference_base(
-		count_const_ptr<simple_instance_reference> b);
+		count_ptr<const simple_instance_reference> b);
 virtual	~member_instance_reference_base();
 
 #if 0
@@ -240,7 +239,7 @@ virtual	~member_instance_reference_base();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
 //	string hash_string(void) const;
 	bool may_be_type_equivalent(const instance_reference_base& i) const;
 	bool must_be_type_equivalent(const instance_reference_base& i) const;
@@ -255,18 +254,18 @@ virtual	~member_instance_reference_base();
 class datatype_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_const_ptr<datatype_instance_collection>	data_inst_ref;
+	const never_ptr<const datatype_instance_collection>	data_inst_ref;
 
 protected:
 	datatype_instance_reference();
 public:
-	datatype_instance_reference(never_const_ptr<datatype_instance_collection> di, 
+	datatype_instance_reference(never_ptr<const datatype_instance_collection> di, 
 		excl_ptr<index_list> i);
 virtual	~datatype_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
@@ -281,18 +280,18 @@ public:
 class channel_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_const_ptr<channel_instance_collection>	channel_inst_ref;
+	const never_ptr<const channel_instance_collection>	channel_inst_ref;
 
 protected:
 	channel_instance_reference();
 public:
-	channel_instance_reference(never_const_ptr<channel_instance_collection> ci, 
+	channel_instance_reference(never_ptr<const channel_instance_collection> ci, 
 		excl_ptr<index_list> i);
 virtual	~channel_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
@@ -307,17 +306,17 @@ public:
 class process_instance_reference : public simple_instance_reference {
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_const_ptr<process_instance_collection>	process_inst_ref;
+	const never_ptr<const process_instance_collection>	process_inst_ref;
 
 protected:
 	process_instance_reference();
 public:
-	process_instance_reference(never_const_ptr<process_instance_collection> pi, 
+	process_instance_reference(never_ptr<const process_instance_collection> pi, 
 		excl_ptr<index_list> i);
 virtual	~process_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
-	never_const_ptr<instance_collection_base> get_inst_base(void) const;
+	never_ptr<const instance_collection_base> get_inst_base(void) const;
 
 public:
 	// need to be virtual? for member_instance_reference?
@@ -336,14 +335,14 @@ class process_member_instance_reference :
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
-//	const never_const_ptr<process_instance_collection>	process_inst_ref;
-//	const count_const_ptr<simple_instance_reference>	base;
+//	const never_ptr<const process_instance_collection>	process_inst_ref;
+//	const count_ptr<const simple_instance_reference>	base;
 private:
 	process_member_instance_reference();
 public:
 	process_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<process_instance_collection> m);
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const process_instance_collection> m);
 	~process_member_instance_reference();
 
 	ostream& what(ostream& o) const;
@@ -364,14 +363,14 @@ class datatype_member_instance_reference :
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
-//	const never_const_ptr<datatype_instance_collection>	data_inst_ref;
-//	const count_const_ptr<simple_instance_reference>	base;
+//	const never_ptr<const datatype_instance_collection>	data_inst_ref;
+//	const count_ptr<const simple_instance_reference>	base;
 private:
 	datatype_member_instance_reference();
 public:
 	datatype_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<datatype_instance_collection> m);
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const datatype_instance_collection> m);
 	~datatype_member_instance_reference();
 
 	ostream& what(ostream& o) const;
@@ -393,14 +392,14 @@ class channel_member_instance_reference :
 protected:
 // inherited:
 //	excl_ptr<index_list>			array_indices;
-//	const never_const_ptr<channel_instance_collection>	channel_inst_ref;
-//	const count_const_ptr<simple_instance_reference>	base;
+//	const never_ptr<const channel_instance_collection>	channel_inst_ref;
+//	const count_ptr<const simple_instance_reference>	base;
 private:
 	channel_member_instance_reference();
 public:
 	channel_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<channel_instance_collection> m);
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const channel_instance_collection> m);
 	~channel_member_instance_reference();
 
 	ostream& what(ostream& o) const;
@@ -431,9 +430,9 @@ public:
 virtual	~param_instance_reference() { }
 
 virtual	ostream& what(ostream& o) const = 0;
-virtual	never_const_ptr<instance_collection_base>
+virtual	never_ptr<const instance_collection_base>
 		get_inst_base(void) const = 0;
-virtual	never_const_ptr<param_instance_collection>
+virtual	never_ptr<const param_instance_collection>
 		get_param_inst_base(void) const = 0;
 
 	// consider moving these functions into instance_reference_base
@@ -446,7 +445,7 @@ virtual	never_const_ptr<param_instance_collection>
 
 #if 0
 // PHASED OUT: is type-specific
-virtual	bool initialize(count_const_ptr<param_expr> i) = 0;
+virtual	bool initialize(count_ptr<const param_expr> i) = 0;
 #endif
 
 };	// end class param_instance_reference

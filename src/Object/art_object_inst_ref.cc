@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.9 2004/11/02 07:51:49 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.10 2004/11/30 01:25:10 fang Exp $
  */
 
 #include <iostream>
@@ -71,13 +71,13 @@ simple_instance_reference::dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_const_ptr<fundamental_type_reference>
+count_ptr<const fundamental_type_reference>
 simple_instance_reference::get_type_ref(void) const {
 	return get_inst_base()->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<definition_base>
+never_ptr<const definition_base>
 simple_instance_reference::get_base_def(void) const {
 	return get_inst_base()->get_base_def();
 }
@@ -97,14 +97,14 @@ simple_instance_reference::is_static_constant_collection(void) const {
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
-		const count_const_ptr<dynamic_range_list>
-			drl((*iter)->get_indices().is_a<dynamic_range_list>());
+		const count_ptr<const dynamic_range_list>
+			drl((*iter)->get_indices().is_a<const dynamic_range_list>());
 		if (drl) {
 			if (!drl->is_static_constant())
 				return false;
 			// unconditional false is too conservative
 		}
-		else	assert((*iter)->get_indices().is_a<const_range_list>());
+		else	assert((*iter)->get_indices().is_a<const const_range_list>());
 	}
 	return true;
 }
@@ -168,9 +168,9 @@ simple_instance_reference::may_be_densely_packed(void) const {
 		return true;
 	// else is collective
 	if (array_indices) {
-		never_const_ptr<index_list> il(array_indices);
-		never_const_ptr<const_index_list>
-			cil(il.is_a<const_index_list>());
+		never_ptr<const index_list> il(array_indices);
+		never_ptr<const const_index_list>
+			cil(il.is_a<const const_index_list>());
 		if (!cil)
 			return true;
 		if (array_indices->size() < base_dim) {
@@ -214,9 +214,9 @@ simple_instance_reference::must_be_densely_packed(void) const {
 		return true;
 	// else is collective
 	if (array_indices) {
-		never_const_ptr<index_list> il(array_indices);
-		never_const_ptr<const_index_list>
-			cil(il.is_a<const_index_list>());
+		never_ptr<const index_list> il(array_indices);
+		never_ptr<const const_index_list>
+			cil(il.is_a<const const_index_list>());
 		if (!cil)
 			return false;		// only difference from above
 		if (array_indices->size() < base_dim) {
@@ -267,9 +267,9 @@ simple_instance_reference::static_constant_dimensions(void) const {
 	const size_t base_dim = get_inst_base()->dimensions();
 	assert(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
-		const never_const_ptr<index_list> il(array_indices);
-		const never_const_ptr<const_index_list>
-			cil(il.is_a<const_index_list>());
+		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const const_index_list>
+			cil(il.is_a<const const_index_list>());
 		if (!cil)	// is dynamic
 			return const_range_list();
 		// array indices are underspecified or fully specified
@@ -312,9 +312,9 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 	assert(base_dim);		// non-zero dimension only!
 	// else is collective
 	if (array_indices) {
-		never_const_ptr<index_list> il(array_indices);
-		never_const_ptr<const_index_list>
-			cil(il.is_a<const_index_list>());
+		never_ptr<const index_list> il(array_indices);
+		never_ptr<const const_index_list>
+			cil(il.is_a<const const_index_list>());
 		assert(cil);
 		const size_t a_size = array_indices->size();
 		// or compute equivalent from a const dynamic_index_list?
@@ -396,9 +396,9 @@ simple_instance_reference::dump_type_size(ostream& o) const {
 		// consider making this into a method:
 		const_index_list::const_iterator i = cil.begin();
 		for ( ; i!=cil.end(); i++) {
-			const count_const_ptr<const_index> ind(*i);
-			const count_const_ptr<const_range>
-				cr(ind.is_a<const_range>());
+			const count_ptr<const const_index> ind(*i);
+			const count_ptr<const const_range>
+				cr(ind.is_a<const const_range>());
 			if (cr) {
 				const int diff = cr->second -cr->first +1;
 				o << "[" << diff << "]";
@@ -444,7 +444,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	assert(!array_indices);
 	assert(i);
 	// dimension-check:
-	const never_const_ptr<instance_collection_base> inst_base(get_inst_base());
+	const never_ptr<const instance_collection_base> inst_base(get_inst_base());
 	// number of indices must be <= dimension of instance collection.  
 	const size_t max_dim = dimensions();	// depends on indices
 	if (i->size() > max_dim) {
@@ -464,12 +464,12 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// mset_base typedef'd privately
 	// overriding default implementation with pair<int, int>
 	assert(max_dim <= mset_base::LIMIT);
-	never_const_ptr<index_list> il(i);
-	never_const_ptr<const_index_list>
-		cil(il.is_a<const_index_list>());
+	never_ptr<const index_list> il(i);
+	never_ptr<const const_index_list>
+		cil(il.is_a<const const_index_list>());
 	if (!cil) {	// is dynamic, conservatively covers anything
-		never_const_ptr<dynamic_index_list>
-			dil(il.is_a<dynamic_index_list>());
+		never_ptr<const dynamic_index_list>
+			dil(il.is_a<const dynamic_index_list>());
 		assert(dil);
 		array_indices = i;
 		return true;
@@ -524,13 +524,13 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 bool
 simple_instance_reference::may_be_type_equivalent(
 		const instance_reference_base& i) const {
-	const never_const_ptr<instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		lib(get_inst_base());
-	const never_const_ptr<instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		rib(i.get_inst_base());
-	const count_const_ptr<fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		ltr(lib->get_type_ref());
-	const count_const_ptr<fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		rtr(rib->get_type_ref());
 	const bool type_eq = ltr->may_be_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
@@ -640,13 +640,13 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	assert(cov);
 	for ( ; iter!=end; iter++) {
-		if ((*iter)->get_indices().is_a<dynamic_range_list>())
+		if ((*iter)->get_indices().is_a<const dynamic_range_list>())
 		{
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
 		} else {
-			count_const_ptr<const_range_list>
-				crlp((*iter)->get_indices().is_a<const_range_list>());
+			count_ptr<const const_range_list>
+				crlp((*iter)->get_indices().is_a<const const_range_list>());
 			assert(crlp);
 			const_range_list crl(*crlp);	// make deep copy
 			// dimension-trimming
@@ -704,7 +704,7 @@ member_instance_reference_base::member_instance_reference_base() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 member_instance_reference_base::member_instance_reference_base(
-		count_const_ptr<simple_instance_reference> b) :
+		count_ptr<const simple_instance_reference> b) :
 		base(b) {
 	assert(base);
 	assert(!base->dimensions());	// must be scalar! (for now)
@@ -720,11 +720,11 @@ PHASE IN later...
 // class collective_instance_reference method definitions
 
 collective_instance_reference::collective_instance_reference(
-		never_const_ptr<instance_reference_base> b, 
+		never_ptr<const instance_reference_base> b, 
 		const param_expr* l, const param_expr* r) :
 		instance_reference_base(), 
-		lower_index(never_const_ptr<param_expr>(l)),
-		upper_index(never_const_ptr<param_expr>(r)) {
+		lower_index(never_ptr<const param_expr>(l)),
+		upper_index(never_ptr<const param_expr>(r)) {
 }
 
 collective_instance_reference::~collective_instance_reference() {
@@ -777,17 +777,17 @@ param_instance_reference::param_instance_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instance_reference::may_be_initialized(void) const {
-	never_const_ptr<instance_collection_base> i(get_inst_base());
+	never_ptr<const instance_collection_base> i(get_inst_base());
 	assert(i);
-	return i.is_a<param_instance_collection>()->may_be_initialized();
+	return i.is_a<const param_instance_collection>()->may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instance_reference::must_be_initialized(void) const {
-	never_const_ptr<instance_collection_base> i(get_inst_base());
+	never_ptr<const instance_collection_base> i(get_inst_base());
 	assert(i);
-	return i.is_a<param_instance_collection>()->must_be_initialized();
+	return i.is_a<const param_instance_collection>()->must_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -847,9 +847,9 @@ param_instance_reference::is_loop_independent(void) const {
 		// is 0-dimension, look up and see if it happens to be
 		// a loop index variable.  
 		// Who owns the param_inst_base?
-		never_const_ptr<scopespace>
+		never_ptr<const scopespace>
 			owner(get_inst_base()->get_owner());
-		return !owner.is_a<loop_scope>();
+		return !owner.is_a<const loop_scope>();
 	}
 }
 
@@ -899,7 +899,7 @@ process_instance_reference::process_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_reference::process_instance_reference(
-		never_const_ptr<process_instance_collection> pi,
+		never_ptr<const process_instance_collection> pi,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, pi->current_collection_state()),
 		process_inst_ref(pi) {
@@ -911,7 +911,7 @@ process_instance_reference::~process_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 process_instance_reference::get_inst_base(void) const {
 	return process_inst_ref;
 }
@@ -1011,7 +1011,7 @@ datatype_instance_reference::datatype_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_reference::datatype_instance_reference(
-		never_const_ptr<datatype_instance_collection> di,
+		never_ptr<const datatype_instance_collection> di,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, di->current_collection_state()),
 		data_inst_ref(di) {
@@ -1023,7 +1023,7 @@ datatype_instance_reference::~datatype_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 datatype_instance_reference::get_inst_base(void) const {
 	return data_inst_ref;
 }
@@ -1136,7 +1136,7 @@ channel_instance_reference::channel_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance_reference::channel_instance_reference(
-		never_const_ptr<channel_instance_collection> ci,
+		never_ptr<const channel_instance_collection> ci,
 		excl_ptr<index_list> i) :
 		simple_instance_reference(i, ci->current_collection_state()),
 		channel_inst_ref(ci) {
@@ -1148,7 +1148,7 @@ channel_instance_reference::~channel_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_const_ptr<instance_collection_base>
+never_ptr<const instance_collection_base>
 channel_instance_reference::get_inst_base(void) const {
 	return channel_inst_ref;
 }
@@ -1256,8 +1256,8 @@ process_member_instance_reference::process_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_member_instance_reference::process_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<process_instance_collection> m) :
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const process_instance_collection> m) :
 		member_instance_reference_base(b), 
 		process_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
@@ -1364,8 +1364,8 @@ datatype_member_instance_reference::datatype_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_member_instance_reference::datatype_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<datatype_instance_collection> m) :
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const datatype_instance_collection> m) :
 		member_instance_reference_base(b), 
 		datatype_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
@@ -1472,8 +1472,8 @@ channel_member_instance_reference::channel_member_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_member_instance_reference::channel_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		never_const_ptr<channel_instance_collection> m) :
+		count_ptr<const simple_instance_reference> b, 
+		never_ptr<const channel_instance_collection> m) :
 		member_instance_reference_base(b), 
 		channel_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.3 2004/11/02 07:51:34 fang Exp $
+	$Id: art_parser_base.cc,v 1.4 2004/11/30 01:25:01 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -72,7 +72,7 @@ node::where(void) const {
 	Eventually make this pure virtual.  
 	Should really take a context&...
  */
-never_const_ptr<object>
+never_ptr<const object>
 node::check_build(never_ptr<context> c) const {
 	// We DO want to print this message, even in regression testing. 
 	what(cerr << c->auto_indent() << 
@@ -131,7 +131,7 @@ template_argument_list::what(ostream& o) const {
 		uses that definition to type-check.  
 	\return NULL always?  How does caller know something went wrong?
  */
-never_const_ptr<object>
+never_ptr<const object>
 template_argument_list::check_build(never_ptr<context> c) const {
 #if 1
 	return node::check_build(c);
@@ -146,12 +146,12 @@ template_argument_list::check_build(never_ptr<context> c) const {
 	// o = expr_list::check_build(c);	// DON'T USE, override
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_const_ptr<expr> e(*i);
+		count_ptr<const expr> e(*i);
 		assert(e);			// ever blank expression?
 		// this should cache parameter expressions
-		never_const_ptr<object> eret(e->check_build(c));
+		never_ptr<const object> eret(e->check_build(c));
 		if (eret) {
-			never_const_ptr<param_expr>
+			never_ptr<const param_expr>
 				exref(eret.is_a<param_expr>());
 			assert(exref);
 			targs->push_back(exref);
@@ -165,7 +165,7 @@ template_argument_list::check_build(never_ptr<context> c) const {
 	// set context's template arguments
 	c->set_current_template_arguments(targs);
 	// leave the template argument context
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 	// set the current_fundamental_type upon returning from this
 #endif
 }
@@ -218,9 +218,9 @@ type_id::rightmost(void) const {
 	Use context object to lookup the actual type.  
 	\return pointer to type reference, else NULL if failure.  
  */
-never_const_ptr<object>
+never_ptr<const object>
 type_id::check_build(never_ptr<context> c) const {
-	never_const_ptr<definition_base> d;
+	never_ptr<const definition_base> d;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"type_id::check_build(...): " << endl;
@@ -228,7 +228,7 @@ type_id::check_build(never_ptr<context> c) const {
 	d = c->lookup_definition(*base);
 	if (!d) {
 //		cerr << "type_id::check_build(never_ptr<context>) : ERROR!" << endl;
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 	// set type definition reference
 #if 0
@@ -286,15 +286,15 @@ chan_type::rightmost(void) const {
 chan_type*
 chan_type::attach_data_types(const data_type_ref_list* t) {
 	assert(t); assert(!dtypes);     // sanity check    
-	dtypes = excl_const_ptr<data_type_ref_list>(t);
+	dtypes = excl_ptr<const data_type_ref_list>(t);
 	assert(dtypes);
 	return this;
 }
 
-never_const_ptr<object>
+never_ptr<const object>
 chan_type::check_build(never_ptr<context> c) const {
 	cerr << "chan_type::check_build(): FINISH ME!";
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -317,7 +317,7 @@ incdec_stmt::incdec_stmt(const expr* n, const terminal* o) : statement(),
 
 #if 0
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(excl_const_ptr<expr> n, excl_const_ptr<terminal> o) :
+incdec_stmt::incdec_stmt(excl_ptr<const expr> n, excl_const_ptr<terminal> o) :
 		statement(), e(n), op(o) {
 	assert(e); assert(op);
 }
@@ -334,12 +334,12 @@ incdec_stmt::~incdec_stmt() {
 	memory at their location. 
  */
 #if 0
-excl_const_ptr<expr>
+excl_ptr<const expr>
 incdec_stmt::release_expr(void) {
 	return e;
 }
 
-excl_const_ptr<terminal>
+excl_ptr<const terminal>
 incdec_stmt::release_op(void) {
 	return op;
 }
@@ -388,8 +388,8 @@ assign_stmt::assign_stmt(const expr* left, const terminal* o,
 
 #if 0
 CONSTRUCTOR_INLINE
-assign_stmt::assign_stmt(excl_const_ptr<expr> left, excl_const_ptr<terminal> o, 
-		excl_const_ptr<expr> right) : statement(),
+assign_stmt::assign_stmt(excl_ptr<const expr> left, excl_const_ptr<terminal> o, 
+		excl_ptr<const expr> right) : statement(),
 		lhs(left), op(o), rhs(right) {
 	assert(lhs); assert(op); assert(rhs);
 }
@@ -401,17 +401,17 @@ assign_stmt::~assign_stmt() {
 }
 
 #if 0
-excl_const_ptr<expr>
+excl_ptr<const expr>
 assign_stmt::release_lhs(void) {
 	return lhs;
 }
 
-excl_const_ptr<terminal>
+excl_ptr<const terminal>
 assign_stmt::release_op(void) {
 	return op;
 }
 
-excl_const_ptr<expr>
+excl_ptr<const expr>
 assign_stmt::release_rhs(void) {
 	return rhs;
 }
@@ -485,7 +485,7 @@ language_body::~language_body() { }
 language_body*
 language_body::attach_tag(token_keyword* t) {
 	// need to safe-delete first?  nah...
-	tag = excl_const_ptr<token_keyword>(t);
+	tag = excl_ptr<const token_keyword>(t);
 	assert(tag);
 	return this;
 }
@@ -551,7 +551,7 @@ namespace_body::rightmost(void) const {
 }
 
 // recursive type-checker
-never_const_ptr<object>
+never_ptr<const object>
 namespace_body::
 check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
@@ -625,7 +625,7 @@ namespace_id::is_absolute(void) const {
 }
 
 /*** NOT USED... yet
-never_const_ptr<object>
+never_ptr<const object>
 namespace_id::check_build(never_ptr<context> c) const {
 }
 ***/
@@ -696,7 +696,7 @@ using_namespace::rightmost(void) const {
 }
 
 /// returns a pointer to a valid namespace that's now mapped in this scope
-never_const_ptr<object>
+never_ptr<const object>
 using_namespace::
 check_build(never_ptr<context> c) const {
 if (alias) {
@@ -747,12 +747,12 @@ concrete_type_ref::rightmost(void) const {
 	else return base->rightmost();
 }
 
-never_const_ptr<type_base>
+never_ptr<const type_base>
 concrete_type_ref::get_base_def(void) const {
 	return base;
 }
 
-never_const_ptr<expr_list>
+never_ptr<const expr_list>
 concrete_type_ref::get_temp_spec(void) const {
 	return temp_spec;
 }
@@ -766,9 +766,9 @@ concrete_type_ref::get_temp_spec(void) const {
 	used to return the current fundamental type reference if successful,
 		else NULL.
  */
-never_const_ptr<object>
+never_ptr<const object>
 concrete_type_ref::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
+	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"concrete_type_ref::check_build(...): ";
@@ -776,13 +776,13 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 
 	// sets context's current definition
 	o = base->check_build(c);
-	never_const_ptr<definition_base> d(o.is_a<definition_base>());
+	never_ptr<const definition_base> d(o.is_a<const definition_base>());
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << base->where() << endl;
 		exit(1);		// temporary
-		return never_const_ptr<object>(NULL);
+		return never_ptr<const object>(NULL);
 	}
 
 	// check template arguments, if given
@@ -805,7 +805,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 				"bad template args!  ERROR " 
 				<< temp_spec->where() << endl;
 			exit(1);		// temporary
-			return never_const_ptr<object>(NULL);
+			return never_ptr<const object>(NULL);
 		} 
 		count_ptr<object_list> ol(o.is_a<object_list>());
 		assert(ol);
@@ -817,7 +817,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 				<< endl;
 			exit(1);		// temporary
 		}
-		count_const_ptr<fundamental_type_reference>
+		count_ptr<const fundamental_type_reference>
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {
 			cerr << "ERROR making complete type reference.  "
@@ -833,9 +833,9 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 			cerr << "definition expecting template arguments "
 				"where none were given!  " << where() << endl;
 			exit(1);		// temporary
-			return never_const_ptr<object>(NULL);
+			return never_ptr<const object>(NULL);
 		} else {
-			count_const_ptr<fundamental_type_reference>
+			count_ptr<const fundamental_type_reference>
 				type_ref(d->make_fundamental_type_reference());
 			if (!type_ref) {
 				cerr << "ERROR making complete type reference.  "
@@ -845,7 +845,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 			c->set_current_fundamental_type(type_ref);
 		}
 	}
-	return never_const_ptr<object>(NULL);
+	return never_ptr<const object>(NULL);
 
 // we've made it!  set the fundamental_type_reference for instantiation
 //	return c->set_current_fundamental_type();

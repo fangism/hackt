@@ -2,7 +2,7 @@
 	\file "art++.h"
 	The only header file needed to write top-level applications for ART.
 
-	$Id: art++.h,v 1.4 2004/11/02 07:51:31 fang Exp $
+	$Id: art++.h,v 1.5 2004/11/30 01:24:57 fang Exp $
  */
 
 #ifndef	__ARTXX_H__
@@ -10,7 +10,7 @@
 
 #include "getopt_portable.h"		// for getopt()
 
-#include "ptrs.h"
+#include "memory/pointer_classes.h"
 #include "art_debug.h"
 #include "art_parser.h"			// everything needed for "y.tab.h"
 #include "art_object_base.h"
@@ -21,7 +21,7 @@
 using namespace ART;
 using namespace ART::entity;
 using namespace ART::parser;
-using namespace util;
+using namespace util::memory;
 
 #include "art_switches.h"
 #include "yacc_or_bison.h"

@@ -2,14 +2,14 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.2 2004/11/02 07:51:44 fang Exp $
+	$Id: art_object_assign.h,v 1.3 2004/11/30 01:25:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
 #define	__ART_OBJECT_ASSIGN_H__
 
 #include "art_object_base.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
 
 namespace ART {
 //=============================================================================
@@ -29,7 +29,7 @@ using namespace parser;
 //=============================================================================
 namespace entity {
 	using namespace std;
-	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
+	using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 /**
@@ -44,9 +44,9 @@ namespace entity {
 class param_expression_assignment : public instance_management_base {
 public:
 	typedef	count_ptr<param_expr>				src_ptr_type;
-	typedef	count_const_ptr<param_expr>			src_const_ptr_type;
+	typedef	count_ptr<const param_expr>			src_const_ptr_type;
 	typedef	count_ptr<param_instance_reference>		dest_ptr_type;
-	typedef	count_const_ptr<param_instance_reference>	dest_const_ptr_type;
+	typedef	count_ptr<const param_instance_reference>	dest_const_ptr_type;
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -97,11 +97,11 @@ class pbool_expression_assignment : public param_expression_assignment,
 public:
 	typedef	param_expression_assignment		parent_type;
 	typedef	count_ptr<pbool_instance_reference>	dest_ptr_type;
-	typedef	count_const_ptr<pbool_instance_reference>
+	typedef	count_ptr<const pbool_instance_reference>
 							dest_const_ptr_type;
 	typedef	list<dest_const_ptr_type>		dest_list_type;
 	typedef	count_ptr<pbool_expr>			src_ptr_type;
-	typedef	count_const_ptr<pbool_expr>		src_const_ptr_type;
+	typedef	count_ptr<const pbool_expr>		src_const_ptr_type;
 protected:
 	/** right-hand-side expression */
 	src_const_ptr_type				src;
@@ -148,11 +148,11 @@ class pint_expression_assignment : public param_expression_assignment,
 public:
 	typedef	param_expression_assignment		parent_type;
 	typedef	count_ptr<pint_instance_reference>	dest_ptr_type;
-	typedef	count_const_ptr<pint_instance_reference>
+	typedef	count_ptr<const pint_instance_reference>
 							dest_const_ptr_type;
 	typedef	list<dest_const_ptr_type>		dest_list_type;
 	typedef	count_ptr<pint_expr>			src_ptr_type;
-	typedef	count_const_ptr<pint_expr>		src_const_ptr_type;
+	typedef	count_ptr<const pint_expr>		src_const_ptr_type;
 protected:
 	/** right-hand-side expression */
 	src_const_ptr_type				src;
