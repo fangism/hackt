@@ -2,6 +2,7 @@ Makefile.in
 Makefile
 core.*
 *.core
+*.depend
 *.aux
 *.log
 *.bbl

@@ -8,8 +8,10 @@ LATEX = latex
 PDFLATEX = pdflatex
 BIBTEX = bibtex
 MAKEINDEX = makeindex
+MAKETEXDEPEND = $(AWK) -f maketexdepend.awk \
+	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
 
-SUFFIXES = .ps .dvi .tex .pdf
+SUFFIXES = .ps .dvi .tex .pdf .depend
 
 PDFS = artxx.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -20,7 +22,26 @@ pdf-local: $(PDFS)
 
 ps-local: $(PSS)
 
-EXTRA_DIST = artxx.bib artxx.tex chapters/intro.tex
+# have to add these by hand? :S
+EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
+	artxx.bib artxx.tex \
+	chapters/intro.tex \
+	chapters/types.tex
+
+# automatically generated dependencies
+-include $(srcdir)/artxx.depend
+
+.tex.depend:
+	@$(ECHO) "Generating auto-dependencies $@..."
+	@if [ -f $@ ] ; then \
+		$(MAKETEXDEPEND) $< > $@.new ; \
+		if ! $(DIFF) -q $@ $@.new ; then \
+			mv -f $@.new $@ ; \
+		else 	$(RM) $@.new ; \
+		fi > /dev/null ; \
+	else	$(MAKETEXDEPEND) $< > $@ ; \
+	fi
+
 
 .tex.dvi:
 	@$(ECHO) "Generating $@..."
@@ -30,8 +51,7 @@ EXTRA_DIST = artxx.bib artxx.tex chapters/intro.tex
 	fi
 	@$(BIBTEX) $*
 	@$(MAKEINDEX) $*.idx
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); \
-	then \
+	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(LATEX) $< > /dev/null < /dev/null; \
 		$(MAKEINDEX) $*.idx; \
@@ -53,8 +73,7 @@ EXTRA_DIST = artxx.bib artxx.tex chapters/intro.tex
 	fi
 	@$(BIBTEX) $*
 	@$(MAKEINDEX) $*.idx
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); \
-	then \
+	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(PDFLATEX) $< > /dev/null < /dev/null; \
 		$(MAKEINDEX) $*.idx; \
@@ -71,7 +90,13 @@ EXTRA_DIST = artxx.bib artxx.tex chapters/intro.tex
 .dvi.ps:
 	$(DVIPS) $< -o $@
 
-clean-local:
-	-$(RM) *.aux *.log *.bbl *.blg *.idx *.ind *.ilg *.out *.toc
+clean-bib:
+	-$(RM) *.bbl *.blg
+
+clean-index:
+	-$(RM) *.idx *.ind *.ilg *.out
+
+clean-local: clean-bib clean-index
+	-$(RM) *.aux *.log *.toc *.depend
 	-$(RM) *.ps *.dvi *.pdf
 

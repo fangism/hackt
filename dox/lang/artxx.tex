@@ -2,6 +2,9 @@
 
 \documentclass[12pt]{book}
 
+% for dependency-tracking macros
+\input maketexdepend
+
 \usepackage{verbatim}
 \usepackage{makeidx}
 
@@ -30,6 +33,9 @@
 \bibliographystyle{plain}
 
 \makeindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand\pint{\texttt{pint}}
+\newcommand\pbool{\texttt{pbool}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of preamble
@@ -45,9 +51,25 @@
 \ifpdf\pdfbookmark[0]{Table of Contents}{toc}\fi
 \tableofcontents
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \input chapters/intro
+\input chapters/types
+% \input chapters/arrays
+% \input chapters/processes
+% \input chapters/channels
+% \input chapters/datatypes
+% \input chapters/templates
+% \input chapters/expressions
+% \input chapters/instances
+% \input chapters/connections
+% \input chapters/typedefs
+% \input chapters/control	% loops and conditionals
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
+\maketexdependadd{artxx.bib}
 \bibliography{artxx}
 
 \clearpage

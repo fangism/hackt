@@ -1,0 +1,14 @@
+% "maketexdepend.tex"
+% pseudo-commands that have no effect on LaTeX
+% but are directives for the make dependency generator,
+% "maketexdepend.awk"
+
+% -- David Fang, 2003
+
+\newcommand{\maketexdependstop}[1]{\relax}	% don't enter #1
+\newcommand{\maketexdependignore}[1]{\relax}	% don't list #1 as dep
+\newcommand{\maketexdependadd}[1]{\relax}   	% force add #1
+\newcommand{\maketexdependabort}[1]{\relax}	% abort this file!
+	% strangely enough, last line is enough to abort processing
+	% this file, which is the desired effect
+
