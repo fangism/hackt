@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.1 2004/12/06 07:11:20 fang Exp $
+	$Id: art_object_instance_base.h,v 1.2 2004/12/07 02:22:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -15,24 +15,8 @@
 #include "persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
-#if 0
-#include "qmap.h"		// need complete definition
-#include "hash_qmap.h"		// need complete definition
-#endif
 #include "memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
-
-// for convenience
-// #include "art_object_type_hash.h"
-
-//=============================================================================
-// macros
-
-//=============================================================================
-// temporary switches
-
-//=============================================================================
-// forward declarations
+	// need complete definition (never_ptr members)
 
 namespace ART {
 //=============================================================================
@@ -47,10 +31,6 @@ USING_LIST
 USING_DEQUE
 using namespace util;
 using namespace util::memory;
-#if 0
-using namespace QMAP_NAMESPACE;
-using namespace HASH_QMAP_NAMESPACE;
-#endif
 
 //=============================================================================
 /**

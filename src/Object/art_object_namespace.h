@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.1 2004/12/06 07:11:21 fang Exp $
+	$Id: art_object_namespace.h,v 1.2 2004/12/07 02:22:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -18,34 +18,17 @@
 #include "memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
-// for convenience
-// #include "art_object_type_hash.h"
-
-//=============================================================================
-// macros
-
-//=============================================================================
-// temporary switches
-
-//=============================================================================
-// forward declarations
-
 namespace ART {
 //=============================================================================
 // forward declarations from outside namespaces
-#if 0
 namespace parser {
 	// note: methods may specify string as formal types, 
 	// but you can still pass token_identifiers and token_strings
 	// because they are derived from string.
-	class token_string;
 	class token_identifier;
 	class qualified_id_slice;
 	class qualified_id;
-	class context;
 }
-using namespace parser;
-#endif
 
 //=============================================================================
 /**
@@ -56,11 +39,15 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 USING_LIST
-// USING_DEQUE
-using namespace util;
+using std::string;
+using util::persistent;
+using util::persistent_object_manager;
+using parser::token_identifier;
+using parser::qualified_id_slice;
+using parser::qualified_id;
 using namespace util::memory;
-using namespace QMAP_NAMESPACE;
-using namespace HASH_QMAP_NAMESPACE;
+using QMAP_NAMESPACE::qmap;
+using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**

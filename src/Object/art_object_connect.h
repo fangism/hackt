@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.12 2004/12/06 07:11:18 fang Exp $
+	$Id: art_object_connect.h,v 1.13 2004/12/07 02:22:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -13,25 +13,11 @@
 #include "memory/pointer_classes.h"
 
 namespace ART {
-//=============================================================================
-// forward declarations from outside namespaces
-namespace parser {
-	// note: methods may specify string as formal types, 
-	// but you can still pass token_identifiers and token_strings
-	// because they are derived from string.
-	class token_string;
-	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
-}
-using namespace parser;
-
-//=============================================================================
 namespace entity {
-	USING_LIST
-	using std::ostream;
-	using namespace util::memory;	// for experimental pointer classes
+
+USING_LIST
+using std::ostream;
+using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 /**

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2004-12-06	David Fang	<fangism@users.sourceforge.net>
+
+	* More code clean-up, header file organization continued...
+
+	* Wrapped some lexer variables and functions in ART::lexer namespace.
+
+
 2004-12-05	David Fang	<fangism@users.sourceforge.net>
 
 	* Major source tree re-organization, partitioning large header

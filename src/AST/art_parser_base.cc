@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.6 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_base.cc,v 1.7 2004/12/07 02:22:03 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -23,7 +23,7 @@
 #include "art_context.h"
 #include "art_object_definition_base.h"
 #include "art_object_type_ref_base.h"
-#include "art_object_expr.h"
+#include "art_object_expr.h"		// for dynamic_param_expr_list
 #include "art_object_namespace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -56,11 +56,17 @@ const char pound[] = "#";	///< delimiter for node_list template argument
 //=============================================================================
 // class node method definitions
 
+#if 0
 /** 
 	Destructor kept here because vtable is not generated on 
 	darwin-gcc-3.3 if it is inlined in the header.  
  */
 node::~node() { }
+#endif
+
+void
+node::bogus(void) const {
+}
 
 /// reports location spanned by a node in the source file
 inline
@@ -86,6 +92,7 @@ node::check_build(never_ptr<context> c) const {
 //=============================================================================
 // class root_item method definitions
 
+#if 0
 /// Empty constructor
 CONSTRUCTOR_INLINE
 root_item::root_item() : node() { }
@@ -93,6 +100,7 @@ root_item::root_item() : node() { }
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
 root_item::~root_item() { }
+#endif
 
 //-----------------------------------------------------------------------------
 // class root_body method definitions
@@ -104,11 +112,13 @@ root_body::~root_body() { }
 //=============================================================================
 // class type_base method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 type_base::type_base() : node() { }
 
 DESTRUCTOR_INLINE
 type_base::~type_base() { }
+#endif
 
 //=============================================================================
 // class type_id method definitions
@@ -230,11 +240,13 @@ chan_type::check_build(never_ptr<context> c) const {
 //=============================================================================
 // class statement method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 statement::statement() : node() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
+#endif
 
 //=============================================================================
 // class incdec_stmt method definitions
@@ -386,11 +398,13 @@ assign_stmt::rightmost(void) const {
 //=============================================================================
 // class def_body_item method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 def_body_item::def_body_item() : node() { }
 
 DESTRUCTOR_INLINE
 def_body_item::~def_body_item() { }
+#endif
 
 //=============================================================================
 // class definition_body method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.1 2004/12/06 07:11:20 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.2 2004/12/07 02:22:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -14,6 +14,10 @@
 #include "persistent_object_manager.h"
 
 namespace ART {
+namespace parser {
+class context;
+}
+
 namespace entity {
 USING_LIST
 using std::ostream;
@@ -21,6 +25,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::sticky_ptr;
+using parser::context;
 
 //=============================================================================
 /**
@@ -68,6 +73,8 @@ virtual void unroll(void) const = 0;
 	instance management actions.
  */
 class sequential_scope {
+// allow context to reference instance_management_list directly
+friend class context;
 public:
 	typedef list<sticky_ptr<const instance_management_base> >
 					instance_management_list_type;

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2004/12/06 07:10:55 fang Exp $
+#	$Id: Makefile.am,v 1.29 2004/12/07 02:22:00 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -104,6 +104,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser.tcc \
 	AST/art_parser_debug.h
 
+# all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
@@ -111,8 +112,10 @@ OBJECT_CC_FILES = \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
+	Object/art_object_instance_param.cc \
 	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
+	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
@@ -120,15 +123,22 @@ OBJECT_CC_FILES = \
 	Object/art_object_namespace.cc \
 	Object/art_built_ins.cc
 
-# for all Object files with corresponding header
+# these source files have no .h file (use other name)
+OBJECT_CC_NO_H_FILES = \
+	Object/art_object_instance_pint.cc \
+	Object/art_object_instance_pbool.cc
+
+# these header files have source (.cc) files with different names
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
 	Object/art_object_definition_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
+	Object/art_object_expr_param_ref.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_management_base.h \
+	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_ref_base.h \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h
@@ -224,6 +234,7 @@ libart___la_SOURCES = \
 	util/persistent_object_manager.cc \
 	util/stacktrace.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
+	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \
 	config.h \
 	art++.h

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.14 2004/12/06 07:11:18 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.15 2004/12/07 02:22:06 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,7 @@
 
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
+#include "art_object_type_hash.h"
 
 //=============================================================================
 namespace ART {

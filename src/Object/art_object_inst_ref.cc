@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.13 2004/12/06 07:11:19 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.14 2004/12/07 02:22:08 fang Exp $
  */
 
 #include <iostream>
@@ -9,13 +9,16 @@
 #include "STL/list.tcc"
 #include "multidimensional_sparse_set.tcc"
 
+#include "art_object_type_ref_base.h"
 #include "art_object_instance.h"
+#include "art_object_instance_param.h"
 #include "art_object_inst_ref.h"
-// #include "art_object_expr_const.h"
-#include "art_object_expr.h"
+#include "art_object_inst_stmt_base.h"
+#include "art_object_expr.h"		// for dynamic_range_list
 #include "art_object_control.h"
 #include "persistent_object_manager.tcc"
 #include "art_built_ins.h"
+#include "art_object_type_hash.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"

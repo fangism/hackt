@@ -1,34 +1,24 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.1 2004/12/06 07:11:21 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.2 2004/12/07 02:22:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
 #define	__ART_OBJECT_TYPE_REF_BASE_H__
 
 #include "macros.h"
-#include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
-#include "art_object_definition_base.h"
-
 #include "memory/pointer_classes.h"
+#include "persistent.h"		// for persistent object interface
 
-// for convenience
-#include "art_object_type_hash.h"
-
-//=============================================================================
-// forward declarations
+#include "art_object_definition_base.h"
 
 namespace ART {
 namespace entity {
-//=============================================================================
-using namespace util;
-using namespace util::memory;
 
-//=============================================================================
-// general non-member functions
+using util::persistent;
+using util::persistent_object_manager;
+using namespace util::memory;
 
 //=============================================================================
 class type_reference_base : public object, public persistent {
@@ -62,8 +52,9 @@ protected:
 	 */
 	excl_ptr<const param_expr_list>		template_params;
 
-public:
+protected:
 	fundamental_type_reference();
+public:
 explicit fundamental_type_reference(excl_ptr<const param_expr_list> pl);
 virtual	~fundamental_type_reference();
 

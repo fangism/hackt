@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.10 2004/12/06 07:11:20 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.11 2004/12/07 02:22:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -13,6 +13,7 @@
 
 namespace ART {
 //=============================================================================
+#if 0
 // forward declarations from outside namespaces
 namespace parser {
 	// note: methods may specify string as formal types, 
@@ -25,6 +26,7 @@ namespace parser {
 	class context;
 }
 using namespace parser;
+#endif
 
 //=============================================================================
 /**
@@ -204,49 +206,8 @@ public:
 };	// end class channel_member_instance_reference
 
 //=============================================================================
-#if 0
-/**
-	A reference to a simple instance of parameter.  
- */
-class param_instance_reference : public simple_instance_reference {
-protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-
-// virtualized
-//	never_ptr<param_instance_collection>		param_inst_ref;
-
-protected:
-	param_instance_reference();
-public:
-	param_instance_reference(excl_ptr<index_list> i, 
-		const instantiation_state& st);
-virtual	~param_instance_reference() { }
-
-virtual	ostream& what(ostream& o) const = 0;
-virtual	never_ptr<const instance_collection_base>
-		get_inst_base(void) const = 0;
-virtual	never_ptr<const param_instance_collection>
-		get_param_inst_base(void) const = 0;
-
-	// consider moving these functions into instance_reference_base
-	//	where array_indices are inherited from.  
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
-
-#if 0
-// PHASED OUT: is type-specific
-virtual	bool initialize(count_ptr<const param_expr> i) = 0;
-#endif
-
-};	// end class param_instance_reference
-#endif
-
-//=============================================================================
 // classes pint_instance_reference and pbool_instance_reference
-//	are in "art_object_expr.*"
+//	are in "art_object_expr_param_ref.*"
 
 //=============================================================================
 }	// end namespace entity

@@ -2,13 +2,14 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.9 2004/12/02 02:08:52 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.10 2004/12/07 02:22:05 fang Exp $
  */
 
 #include "memory/pointer_classes.h"
 #include "art_built_ins.h"
-#include "art_object_instance.h"
-#include "art_object_expr.h"
+#include "art_object_type_ref.h"
+#include "art_object_instance_param.h"
+#include "art_object_expr_const.h"
 
 // global static initializations...
 namespace ART {

@@ -1,16 +1,19 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.7 2004/12/06 07:11:18 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.8 2004/12/07 02:22:06 fang Exp $
  */
 
 #include <iostream>
 #include <numeric>
 
 #include "art_object_assign.h"
-#include "art_object_expr.h"
+#include "art_object_expr_param_ref.h"
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
+
+
+#include "art_object_type_hash.h"
 
 #include "binders.h"
 #include "compose.h"

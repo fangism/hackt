@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.7 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_expr.cc,v 1.8 2004/12/07 02:22:03 fang Exp $
  */
 
 #include <iostream>
@@ -36,6 +36,7 @@ namespace parser {
 //=============================================================================
 // class expr method definitions
 
+#if 0
 /// Empty constructor
 CONSTRUCTOR_INLINE
 expr::expr() : node() { }
@@ -43,6 +44,7 @@ expr::expr() : node() { }
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
 expr::~expr() { }
+#endif
 
 //=============================================================================
 // class expr_list method definitions

@@ -1,52 +1,23 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.22 2004/12/06 07:11:18 fang Exp $
+	$Id: art_object_base.h,v 1.23 2004/12/07 02:22:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
 #define	__ART_OBJECT_BASE_H__
 
+#include <iosfwd>
 #include "STL/list.h"
 
 #include "art_object_fwd.h"
 #include "macros.h"
-#include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
 
-#include "qmap.h"		// need complete definition
-#include "hash_qmap.h"		// need complete definition
 #include "memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
-
-// for convenience
-#include "art_object_type_hash.h"
+	// need complete definition (never_ptr members)
 
 //=============================================================================
-// macros
-
-//=============================================================================
-// temporary switches
-
-//=============================================================================
-// forward declarations
-
 namespace ART {
-//=============================================================================
-// forward declarations from outside namespaces
-namespace parser {
-	// note: methods may specify string as formal types, 
-	// but you can still pass token_identifiers and token_strings
-	// because they are derived from string.
-	class token_string;
-	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
-}
-using namespace parser;
-
-//=============================================================================
 /**
 	The namespace of objects that will be returned by the type-checker, 
 	and includes the various hierarchical symbol tables in their 
@@ -55,11 +26,8 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 USING_LIST
-USING_DEQUE
-using namespace util;
+using std::ostream;
 using namespace util::memory;
-using namespace QMAP_NAMESPACE;
-using namespace HASH_QMAP_NAMESPACE;
 
 //=============================================================================
 // general non-member functions

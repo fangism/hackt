@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.18 2004/12/06 07:11:18 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.19 2004/12/07 02:22:07 fang Exp $
  */
 
 #include <iostream>
@@ -15,12 +15,12 @@
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
-#if 0
+#include "art_object_instance_param.h"
 #include "art_object_inst_ref_base.h"
-#include "art_object_expr_const.h"
-#else
+#include "art_object_inst_stmt.h"
 #include "art_object_expr.h"			// for dynamic_param_expr_list
-#endif
+#include "art_object_expr_param_ref.h"
+#include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -29,6 +29,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+using parser::scope;
 
 //=============================================================================
 // class definition_base method definitions
@@ -499,6 +500,7 @@ definition_base::load_object_template_formals(
 //=============================================================================
 // class typedef_base method definitions
 
+#if 0
 typedef_base::typedef_base() : 
 		definition_base(), scopespace(), sequential_scope() {
 }
@@ -506,6 +508,7 @@ typedef_base::typedef_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef_base::~typedef_base() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
@@ -598,6 +601,7 @@ definition_base::make_fundamental_type_reference(void) const {
 // class datatype_definition_base method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 inline
 datatype_definition_base::datatype_definition_base() :
 		definition_base() {
@@ -607,6 +611,7 @@ datatype_definition_base::datatype_definition_base() :
 inline
 datatype_definition_base::~datatype_definition_base() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
@@ -635,6 +640,7 @@ datatype_definition_base::make_fundamental_type_reference(
 //=============================================================================
 // class channel_definition_base method definitions
 
+#if 0
 // make sure that this constructor is never invoked outside this file
 inline
 channel_definition_base::channel_definition_base() :
@@ -644,6 +650,7 @@ channel_definition_base::channel_definition_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_base::~channel_definition_base() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
@@ -1192,10 +1199,12 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(built_in_param_def)
 //=============================================================================
 // class enum_member method definitions
 
+#if 0
 enum_member::enum_member(const string& n) : object(), id(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_member::~enum_member() { }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1695,11 +1704,13 @@ datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class process_definition_base method definitions
 
+#if 0
 process_definition_base::process_definition_base() :
 		definition_base() {
 }
 
 process_definition_base::~process_definition_base() { }
+#endif
 
 excl_ptr<definition_base>
 process_definition_base::make_typedef(never_ptr<const scopespace> s, 

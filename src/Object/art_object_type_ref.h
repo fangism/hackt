@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.12 2004/12/06 07:11:21 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.13 2004/12/07 02:22:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -10,31 +10,16 @@
 #include "art_object_type_ref_base.h"
 
 namespace ART {
-//=============================================================================
-// forward declarations from outside namespaces
 namespace parser {
-	// note: methods may specify string as formal types, 
-	// but you can still pass token_identifiers and token_strings
-	// because they are derived from string.
-	class token_string;
 	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
 }
-using namespace parser;
 
-//=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
-//=============================================================================
-	USING_LIST
-	using std::ostream;
-	using namespace util::memory;	// for experimental pointer classes
+
+USING_LIST
+using std::ostream;
+using parser::token_identifier;
+using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 // class type_reference_base declared in "art_object_base.h"

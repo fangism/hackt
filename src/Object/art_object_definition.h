@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.14 2004/12/06 07:11:19 fang Exp $
+	$Id: art_object_definition.h,v 1.15 2004/12/07 02:22:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -33,43 +33,16 @@ namespace parser {
 	// because they are derived from string.
 	class token_string;
 	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
 }
-using namespace parser;
+using parser::token_identifier;
 
 //=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
-//=============================================================================
-	using std::ostream;
-	USING_LIST
-	using namespace util::memory;	// for experimental pointer classes
 
-//=============================================================================
-// forward declarations
+using std::ostream;
+USING_LIST
+using namespace util::memory;	// for experimental pointer classes
 
-#if 0
-	class definition_base;
-	class process_definition_base;
-	class process_definition;
-	class process_definition_alias;
-	class channel_definition_base;
-	class channel_definition_alias;
-	class datatype_definition_base;
-	class datatype_definition_alias;
-	// user_defs?
-	class enum_datatype_def;
-	class built_in_datatype_def;
-	class built_in_param_def;
-#endif
-
-//=============================================================================
 // class definition_base declared in "art_object_base.h"
 
 //=============================================================================
@@ -95,8 +68,8 @@ class typedef_base : virtual public definition_base, public scopespace,
 protected:
 	// no new members
 public:
-	typedef_base();
-virtual	~typedef_base();
+	typedef_base() { }
+virtual	~typedef_base() { }
 
 virtual	const string& get_key(void) const = 0;
 	string get_qualified_name(void) const;
@@ -123,8 +96,8 @@ protected:
 	// no new members?
 public:
 //	process_definition_base(const string& n);
-	process_definition_base();
-virtual	~process_definition_base();
+	process_definition_base() { }
+virtual	~process_definition_base() { }
 
 	excl_ptr<definition_base>
 		make_typedef(never_ptr<const scopespace> s, 
@@ -259,9 +232,9 @@ public:
 class datatype_definition_base : virtual public definition_base {
 protected:
 public:
-	datatype_definition_base();
+	datatype_definition_base() { }
 //	datatype_definition_base(const string& n);
-virtual	~datatype_definition_base();
+virtual	~datatype_definition_base() { }
 
 	excl_ptr<definition_base>
 		make_typedef(never_ptr<const scopespace> s, 
@@ -332,8 +305,8 @@ class enum_member : public object {
 protected:
 	const string			id;
 public:
-	enum_member(const string& n);
-	~enum_member();
+	enum_member(const string& n) : object(), id(n) { }
+	~enum_member() { }
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -487,9 +460,9 @@ public:
 class channel_definition_base : virtual public definition_base {
 protected:
 public:
-	channel_definition_base();
+	channel_definition_base() { }
 //	channel_definition_base(const string& n);
-virtual	~channel_definition_base();
+virtual	~channel_definition_base() { }
 
 // virtual	ostream& what(ostream& o) const = 0;
 

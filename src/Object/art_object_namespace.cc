@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.1 2004/12/06 07:11:20 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.2 2004/12/07 02:22:09 fang Exp $
  */
 
 #include <iostream>
@@ -31,8 +31,11 @@
 #include "art_object_namespace.h"
 #include "art_object_definition.h"		// for typedef
 #include "art_object_instance.h"
+#include "art_object_instance_param.h"
+#include "art_object_inst_stmt_base.h"
 #include "art_object_expr_const.h"
 #include "art_object_type_ref_base.h"
+#include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -87,10 +90,9 @@ namespace entity {
 #include "using_ostream.h"
 using HASH_QMAP_NAMESPACE::hash_map;
 using QMAP_NAMESPACE::qmap;
+using parser::scope;
 using namespace util::memory;
-
-// for function compositions
-using namespace ADS;
+using namespace ADS;		// for function compositions
 
 //=============================================================================
 // general non-member function definitions

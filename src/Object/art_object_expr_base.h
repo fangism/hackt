@@ -1,20 +1,22 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.1 2004/12/06 07:11:19 fang Exp $
+	$Id: art_object_expr_base.h,v 1.2 2004/12/07 02:22:07 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
 #define __ART_OBJECT_EXPR_BASE_H__
 
 #include "art_object_base.h"
+#include "persistent.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-	USING_LIST
-	using std::string;
-	using std::ostream;
+USING_LIST
+using std::string;
+using std::ostream;
+using util::persistent;
 
 //=============================================================================
 /**
@@ -27,8 +29,8 @@ namespace entity {
  */
 class param_expr : virtual public object, virtual public persistent {
 public:
-	param_expr();
-virtual	~param_expr();
+	param_expr() : object(), persistent() { }
+virtual	~param_expr() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
@@ -79,8 +81,8 @@ virtual	excl_ptr<param_expression_assignment>
  */
 class param_expr_list : public object, public persistent {
 public:
-	param_expr_list();
-virtual	~param_expr_list();
+	param_expr_list() : object(), persistent() { }
+virtual	~param_expr_list() { }
 
 virtual	size_t size(void) const = 0;
 
@@ -118,8 +120,8 @@ virtual	bool is_loop_independent(void) const = 0;
 class index_expr : virtual public object, virtual public persistent {
 protected:
 public:
-	index_expr();
-virtual	~index_expr();
+	index_expr() : object(), persistent() { }
+virtual	~index_expr() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
@@ -151,8 +153,8 @@ virtual	count_ptr<const_index> resolve_index(void) const = 0;
  */
 class index_list : public object, public persistent {
 public:
-	index_list();
-virtual	~index_list();
+	index_list() : object(), persistent() { }
+virtual	~index_list() { }
 
 // copy over most param_expr interface functions...
 virtual	ostream& what(ostream& o) const = 0;
@@ -188,7 +190,7 @@ class range_expr_list : public object, public persistent {
 protected:
 //	never_ptr<const instance_collection_base>	owner;
 public:
-	range_expr_list();
+	range_expr_list() : object(), persistent() { }
 virtual	~range_expr_list() { }
 
 virtual	size_t size(void) const = 0;
@@ -284,8 +286,8 @@ protected:
 class range_expr : virtual public index_expr {
 protected:
 public:
-	range_expr();
-virtual	~range_expr();
+	range_expr() : index_expr() { }
+virtual	~range_expr() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;		// temporary

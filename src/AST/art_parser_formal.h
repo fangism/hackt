@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.5 2004/12/05 05:06:50 fang Exp $
+	$Id: art_parser_formal.h,v 1.6 2004/12/07 02:22:03 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -12,12 +12,7 @@
 
 #include "art_parser_base.h"
 
-/**
-	This is the general namespace for all ART-related classes.  
- */
 namespace ART {
-//=============================================================================
-
 // forward declaration of outside namespace and classes
 namespace entity {
 	// defined in "art_object.h"
@@ -29,25 +24,16 @@ using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
-/// This namespace is reserved for ART's parser-related classes.  
-/**
-	This contains all of the classes for the abstract syntax tree (AST).  
-	Each class should implement recursive methods of traversal.  
-	The created AST will only reflect a legal instance of the grammar, 
-	therefore, one should use the type-check and build phase to 
-	return a more useful manipulate ART object.  
- */
 namespace parser {
-//=============================================================================
 // forward declarations in this namespace
-	class expr;		// family defined in "art_parser_expr.h"
-	class id_expr;
-	class token_char;	// defined here
-	class token_string;	// defined here
-	class qualified_id;	// defined here
-	class concrete_type_ref;	// defined here
-	class context;		// defined in "art_symbol_table.h"
-	class dense_range_list;	// defined in "art_parser_expr.*"
+class expr;			// family defined in "art_parser_expr.h"
+class id_expr;
+class token_char;		// defined here
+class token_string;		// defined here
+class qualified_id;		// defined here
+class concrete_type_ref;	// defined here
+class context;			// defined in "art_symbol_table.h"
+class dense_range_list;		// defined in "art_parser_expr.*"
 
 //=============================================================================
 /**

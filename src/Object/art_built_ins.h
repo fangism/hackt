@@ -1,14 +1,13 @@
 /**
 	\file "art_built_ins.h"
 	Header for built-in features of the art language.  
-	$Id: art_built_ins.h,v 1.6 2004/11/30 01:25:08 fang Exp $
+	$Id: art_built_ins.h,v 1.7 2004/12/07 02:22:06 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_H__
 #define	__ART_BUILT_INS_H__
 
 #include "art_object_definition.h"
-#include "art_object_type_ref.h"
 	// needed for static constructor of complete types
 
 /*

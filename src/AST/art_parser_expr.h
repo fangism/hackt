@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.5 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_expr.h,v 1.6 2004/12/07 02:22:03 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -12,9 +12,6 @@
 
 #include "art_parser_base.h"
 
-/**
-	This is the general namespace for all ART-related classes.  
- */
 namespace ART {
 //=============================================================================
 
@@ -31,16 +28,7 @@ using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
-/// This namespace is reserved for ART's parser-related classes.  
-/**
-	This contains all of the classes for the abstract syntax tree (AST).  
-	Each class should implement recursive methods of traversal.  
-	The created AST will only reflect a legal instance of the grammar, 
-	therefore, one should use the type-check and build phase to 
-	return a more useful manipulate ART object.  
- */
 namespace parser {
-//=============================================================================
 // forward declarations in this namespace
 	class node;		// from "art_parser.h"
 	class token_char;	// defined here

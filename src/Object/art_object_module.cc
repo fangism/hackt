@@ -1,17 +1,23 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.9 2004/12/06 07:11:20 fang Exp $
+ 	$Id: art_object_module.cc,v 1.10 2004/12/07 02:22:09 fang Exp $
  */
 
 #include <iostream>
 #include "art_object_module.h"
 #include "art_object_namespace.h"
 #include "persistent_object_manager.tcc"
+#include "art_object_type_hash.h"
 
 namespace ART {
 namespace entity {
 #include "using_ostream.h"
+using std::istream;
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
 
 //=============================================================================
 // class module method definitions

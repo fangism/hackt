@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.5 2004/12/05 05:06:50 fang Exp $
+	$Id: art_parser_instance.h,v 1.6 2004/12/07 02:22:03 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -12,9 +12,6 @@
 
 #include "art_parser_base.h"
 
-/**
-	This is the general namespace for all ART-related classes.  
- */
 namespace ART {
 //=============================================================================
 
@@ -31,28 +28,19 @@ using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 
 //=============================================================================
-/// This namespace is reserved for ART's parser-related classes.  
-/**
-	This contains all of the classes for the abstract syntax tree (AST).  
-	Each class should implement recursive methods of traversal.  
-	The created AST will only reflect a legal instance of the grammar, 
-	therefore, one should use the type-check and build phase to 
-	return a more useful manipulate ART object.  
- */
 namespace parser {
-//=============================================================================
 // forward declarations in this namespace
-	class expr;		// family defined in "art_parser_expr.h"
-	class id_expr;
-	class token_char;	// defined here
-	class token_string;	// defined here
-	class qualified_id;	// defined here
-	class concrete_type_ref;	// defined here
-	class context;		// defined in "art_symbol_table.h"
+class expr;			// family defined in "art_parser_expr.h"
+class id_expr;
+class token_char;		// defined here
+class token_string;		// defined here
+class qualified_id;		// defined here
+class concrete_type_ref;	// defined here
+class context;			// defined in "art_symbol_table.h"
 
-	// defined in "art_parser_expr.*"
-	class range;		
-	class range_list;
+// defined in "art_parser_expr.*"
+class range;		
+class range_list;
 
 //=============================================================================
 /**
@@ -75,29 +63,6 @@ virtual never_ptr<const object> check_build(never_ptr<context> c) const;
 	IS_A(connection_argument_list*, l->append(d,n))
 
 //=============================================================================
-#if 0
-typedef node_list<concrete_type_ref,comma>	data_type_ref_list_base;
-	// consider making concrete_datatype_ref sub-class
-	// or overriding class's check_build
-
-/// list of base data types
-class data_type_ref_list : public data_type_ref_list_base {
-protected:
-	typedef	data_type_ref_list_base			parent;
-public:
-	data_type_ref_list(const concrete_type_ref* c);
-	~data_type_ref_list();
-};
-
-// construction macros
-#define data_type_ref_list_wrap(b,l,e)					\
-	IS_A(data_type_ref_list*, l->wrap(b,e))
-#define data_type_ref_list_append(l,d,n)				\
-	IS_A(data_type_ref_list*, l->append(d,n))
-
-#endif
-
-//=============================================================================
 /**
 	Base class for instance-related items, including declarations, 
 	arrays, connections and aliases, conditionals, loops.  
@@ -117,7 +82,8 @@ virtual	line_position rightmost(void) const = 0;
 /**
 	A list of lvalue expressions aliased/connected together.  
  */
-class alias_list : public instance_management, public node_list<const expr,alias> {
+class alias_list : public instance_management, 
+		public node_list<const expr,alias> {
 private:
 	typedef node_list<const expr,alias>		alias_list_base;
 public:

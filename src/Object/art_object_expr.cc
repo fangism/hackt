@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.23 2004/12/06 07:11:19 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.24 2004/12/07 02:22:07 fang Exp $
  */
 
 #include <iostream>
@@ -18,11 +18,14 @@
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
-#include "art_object_expr.h"
-#include "art_object_instance.h"
+#include "art_object_expr.h"		// includes "art_object_expr_const.h"
+#include "art_object_expr_param_ref.h"
+#include "art_object_instance_param.h"
 #include "art_object_assign.h"
 #include "multikey.h"
 #include "persistent_object_manager.tcc"
+
+#include "art_object_type_hash.h"
 
 #include "compose.h"
 #include "conditional.h"		// for compare_if
@@ -35,16 +38,29 @@ namespace entity {
 using namespace ADS;
 using namespace util::memory;
 USING_UTIL_OPERATIONS
+using namespace DISCRETE_INTERVAL_SET_NAMESPACE;
+
+//=============================================================================
+// local types (not externally visible)
+
+/**
+	Implementation type for range-checking, 
+	used by const_range.
+ */
+typedef discrete_interval_set<int>	interval_type;
+
 
 //=============================================================================
 // class param_expr method_definitions
 
+#if 0
 // inline
 param_expr::param_expr() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 param_expr::~param_expr() { }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -69,12 +85,14 @@ param_expr::make_param_expression_assignment(
 //-----------------------------------------------------------------------------
 // class const_param method definitions
 
+#if 0
 // inline
 const_param::const_param() : param_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 const_param::~const_param() { }
+#endif
 
 //-----------------------------------------------------------------------------
 // class pbool_expr method definitions
@@ -191,10 +209,12 @@ pint_expr::resolve_index(void) const {
 //=============================================================================
 // class param_expr_list method definitions
 
+#if 0
 param_expr_list::param_expr_list() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
+#endif
 
 //=============================================================================
 // class const_param_expr_list method definitions
@@ -713,18 +733,22 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class index_expr method definitions
 
+#if 0
 index_expr::index_expr() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_expr::~index_expr() { }
+#endif
 
 //-----------------------------------------------------------------------------
 // class const_index method definitions
 
+#if 0
 const_index::const_index() : index_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index::~const_index() { }
+#endif
 
 //=============================================================================
 // class param_expr_collective method defintions
@@ -2904,6 +2928,7 @@ const_range::const_range() : range_expr(), const_index(), parent(0,-1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /** Protected internal constructor. */
 const_range::const_range(const interval_type& i) :
 		range_expr(), const_index(), 
@@ -2912,6 +2937,7 @@ const_range::const_range(const interval_type& i) :
 	if (!i.empty())
 		assert(upper() >= lower());		// else what!?!?
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2948,6 +2974,20 @@ const_range::const_range(const int l, const int u) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private unsafe constructor, for internal use only.  
+	Should both l and u be non-negative too?
+	\param l is lower bound, inclusive.  
+	\param u is upper bound, inclusive, and must be >= l.  
+	\param b is unused bogus parameter to distinguish from safe version.  
+ */
+const_range::const_range(const int l, const int u, const bool b) :
+		range_expr(), const_index(), 
+		parent(l, u) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
 		object(), 
@@ -2960,7 +3000,7 @@ const_range::const_range(const const_range& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range::const_range(const parent r) :
+const_range::const_range(const parent& r) :
 		object(), 
 		persistent(), 
 		index_expr(),
@@ -2996,7 +3036,7 @@ const_range::hash_string(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns whether or not two intervals overlap.  
-	\return 
+	\return overlap range.
  */
 const_range
 const_range::static_overlap(const const_range& r) const {
@@ -3010,7 +3050,13 @@ const_range::static_overlap(const const_range& r) const {
 	interval_type temp(first, second);
 	interval_type temp2(r.first, r.second);
 	temp.intersect(temp2);
-	return const_range(temp);		// private constructor
+
+//	return const_range(temp);	// private constructor (obsolete)
+	const_range ret(temp.empty() ? 0 : temp.begin()->first,
+		temp.empty() ? -1 : temp.begin()->second, true);
+	if (!temp.empty())
+		INVARIANT(ret.upper() >= ret.lower());		// else what!?!?
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3106,12 +3152,14 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class range_expr method definitions
 
+#if 0
 range_expr::range_expr() : index_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range_expr::~range_expr() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3135,8 +3183,10 @@ range_expr::resolve_index(void) const {
 //=============================================================================
 // class range_expr_list method definitions
 
+#if 0
 range_expr_list::range_expr_list() : object(), persistent() {
 }
+#endif
 
 //=============================================================================
 // class const_range_list method definitions
@@ -3691,10 +3741,12 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 // class index_list method definitions
 
+#if 0
 index_list::index_list() : object(), persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_list::~index_list() { }
+#endif
 
 //=============================================================================
 // class const_index_list method definitions

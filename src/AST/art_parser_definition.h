@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.5 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser_definition.h,v 1.6 2004/12/07 02:22:03 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -25,25 +25,16 @@ using std::ostream;
 using namespace entity;
 using namespace util::memory;		// for experimental pointer classes
 
-//=============================================================================
-/// This namespace is reserved for ART's parser-related classes.  
-/**
-	This contains all of the classes for the abstract syntax tree (AST).  
-	Each class should implement recursive methods of traversal.  
-	The created AST will only reflect a legal instance of the grammar, 
-	therefore, one should use the type-check and build phase to 
-	return a more useful manipulate ART object.  
- */
 namespace parser {
 //=============================================================================
 // forward declarations in this namespace
-	class concrete_type_ref;	// defined here
-	class context;		// defined in "art_symbol_table.h"
+class concrete_type_ref;	// defined here
+class context;		// defined in "art_symbol_table.h"
 
-	// defined in "art_parser_formal.h"
-	class data_param_decl_list;
-	class template_formal_decl_list;
-	class port_formal_decl_list;
+// defined in "art_parser_formal.h"
+class data_param_decl_list;
+class template_formal_decl_list;
+class port_formal_decl_list;
 
 //=============================================================================
 /**

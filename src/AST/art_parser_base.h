@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.11 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_base.h,v 1.12 2004/12/07 02:22:03 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -20,6 +20,10 @@
  */
 namespace ART {
 //=============================================================================
+// global variable
+namespace lexer {
+extern	token_position current;
+}
 
 // forward declaration of outside namespace and classes
 namespace entity {
@@ -29,6 +33,7 @@ namespace entity {
 	class process_definition;
 }
 
+using lexer::current;			// current token position
 using std::string;
 using std::ostream;
 USING_LIST
@@ -71,9 +76,19 @@ extern	const char	pound[];	// calling it "hash" would be confusing
 	All immediate subclasses of node must be virtually inherited.  
  */
 class node {
+private:
+/**
+	Rule regarding g++ emission of vtables:
+	"If the class declares any non-inline, non-pure virtual functions, 
+	the first one is chosen as the "key method" for the class, 
+	and the vtable is only emitted in the translation unit where 
+	the key method is defined."
+ */
+virtual	void bogus(void) const;
 public:
+
 /** Standard virtual destructor, mother-of-all virtual destructors */
-virtual	~node();
+virtual	~node() { }
 
 /**
 	Shows representation without recursive descent.  
@@ -122,8 +137,8 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
  */
 class expr : virtual public node {
 public:
-	expr();
-virtual ~expr();
+	expr() { }
+virtual ~expr() { }
 
 virtual ostream& what(ostream& o) const = 0;
 virtual line_position leftmost(void) const = 0;
@@ -146,11 +161,11 @@ protected:
 // file name will be kept separate?
 protected:
 ///	base constructor always records the current position of the token
-	terminal();
+	terminal() : node(), pos(current) { }
 
 public:
 ///	standard virtual destructor
-virtual	~terminal();
+virtual	~terminal() { }
 
 public:
 virtual	int string_compare(const char* d) const = 0;
@@ -169,12 +184,12 @@ protected:
 /// the character
 	int c;
 public:
-explicit token_char(const int i);
-virtual ~token_char();
+explicit token_char(const int i) : terminal(), c(i) { }
+	~token_char() { }
 
 	int get_char(void) const { return c; }
-virtual int string_compare(const char* d) const;
-virtual ostream& what(ostream& o) const;
+	int string_compare(const char* d) const;
+	ostream& what(ostream& o) const;
 };      // end class token_char
 
 //-----------------------------------------------------------------------------
@@ -191,9 +206,9 @@ virtual ostream& what(ostream& o) const;
 class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
-explicit token_string(const char* s);
-	token_string(const token_string& s);
-virtual ~token_string();
+explicit token_string(const char* s) : node(), string(s), terminal() { }
+	token_string(const token_string& s) : node(), string(s), terminal() { }
+virtual ~token_string() { }
 
 virtual int string_compare(const char* d) const;
 virtual ostream& what(ostream& o) const;
@@ -211,9 +226,10 @@ virtual line_position rightmost(void) const;
 class token_identifier : public token_string, public expr {
 					// consider postfix_expr?
 public:
-explicit token_identifier(const char* s);
-	token_identifier(const token_identifier& i);
-	~token_identifier();
+explicit token_identifier(const char* s) : node(), token_string(s), expr() { }
+	token_identifier(const token_identifier& i) :
+		node(), token_string(i), expr() { }
+	~token_identifier() { }
 
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
@@ -225,8 +241,8 @@ explicit token_identifier(const char* s);
 /// keyword version of token_string class, not necessarily an expr
 class token_keyword : public token_string {
 public:
-	token_keyword(const char* s);
-virtual ~token_keyword();
+	token_keyword(const char* s) : token_string(s) { }
+virtual ~token_keyword() { }
 
 virtual ostream& what(ostream& o) const;
 };	// end class token_keyword
@@ -407,8 +423,8 @@ public:
  */
 class root_item : virtual public node {
 public:
-	root_item();
-virtual	~root_item();
+	root_item() : node() { }
+virtual	~root_item() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
@@ -663,8 +679,8 @@ friend	ostream& operator << (ostream& o, const id_expr& id);
  */
 class type_base : virtual public node {
 public:
-	type_base();
-virtual	~type_base();
+	type_base() : node() { }
+virtual	~type_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
@@ -752,8 +768,8 @@ virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
  */
 class statement : virtual public node {
 public:
-	statement();
-virtual	~statement();
+	statement() : node() { }
+virtual	~statement() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
@@ -836,8 +852,8 @@ virtual	line_position rightmost(void) const;
  */
 class def_body_item : virtual public node {
 public:
-	def_body_item();
-virtual	~def_body_item();
+	def_body_item() : node() { }
+virtual	~def_body_item() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
@@ -932,51 +948,6 @@ virtual	line_position rightmost(void) const;
 
 virtual	never_ptr<const object> check_build(never_ptr<context> c) const;
 };	// end class using_namespace
-
-//=============================================================================
-#if 0
-/**
-	Base class for instance-related items, including declarations, 
-	arrays, connections and aliases, conditionals, loops.  
- */
-class instance_management : virtual public def_body_item, 
-		virtual public root_item {
-public:
-	instance_management();
-virtual	~instance_management();
-
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
-};	// end class instance_management
-#endif
-
-//=============================================================================
-#if 0
-OBSOLETE
-/**
-	An expression list specialized for template arguments.
-	Derive from expr_list and re-cast list?  or just contain the list?
-	Make sure that whatever contains this, to check for the
-	case where the template arguments are NULL
-	when they are supposed to be.
- */
-class template_argument_list : public expr_list {	// or expr_list_base?
-public:
-	template_argument_list(expr_list* e);
-	~template_argument_list();
-
-	ostream& what(ostream& o) const;
-	using expr_list::leftmost;
-	using expr_list::rightmost;
-	never_ptr<const object> check_build(never_ptr<context> c) const;
-};      // end class template_argument_list
-
-#define template_argument_list_wrap(b,l,e)				\
-	IS_A(template_argument_list*, l->wrap(b,e))
-#define template_argument_list_append(l,d,n)				\
-	IS_A(template_argument_list*, l->append(d,n))
-#endif
 
 //=============================================================================
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.24 2004/12/06 07:11:18 fang Exp $
+ 	$Id: art_object_base.cc,v 1.25 2004/12/07 02:22:06 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,7 @@
 
 #include "art_object_base.h"
 #include "art_object_expr.h"		// for dynamic_param_expr_list
+#include "art_object_inst_ref_base.h"
 #include "art_object_assign.h"
 #include "art_object_connect.h"
 #include "art_object_definition_base.h"

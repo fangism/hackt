@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.1 2004/12/06 07:11:19 fang Exp $
+	$Id: art_object_definition_base.h,v 1.2 2004/12/07 02:22:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -11,40 +11,21 @@
 
 #include "macros.h"
 #include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
 
-// #include "qmap.h"		// need complete definition
+#include "persistent.h"		// for persistent object interface
 #include "hash_qmap.h"		// need complete definition
 #include "memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
-// for convenience
-#include "art_object_type_hash.h"
-
-//=============================================================================
-// macros
-
-//=============================================================================
-// temporary switches
-
-//=============================================================================
-// forward declarations
-
 namespace ART {
-//=============================================================================
 // forward declarations from outside namespaces
 namespace parser {
 	// note: methods may specify string as formal types, 
 	// but you can still pass token_identifiers and token_strings
 	// because they are derived from string.
-	class token_string;
 	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
 }
-using namespace parser;
+using parser::token_identifier;
 
 //=============================================================================
 /**
@@ -55,14 +36,9 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 USING_LIST
-// USING_DEQUE
 using namespace util;
 using namespace util::memory;
-// using namespace QMAP_NAMESPACE;
 using namespace HASH_QMAP_NAMESPACE;
-
-//=============================================================================
-// general non-member functions
 
 //=============================================================================
 /**

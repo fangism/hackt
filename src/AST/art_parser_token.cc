@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.7 2004/12/06 07:11:10 fang Exp $
+	$Id: art_parser_token.cc,v 1.8 2004/12/07 02:22:03 fang Exp $
  */
 
 #include <iostream>
@@ -34,6 +34,7 @@ namespace parser {
 //=============================================================================
 // class terminal definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 terminal::terminal() : node(), pos(current) {
 	// "current" is defined in "art_switches.h"
@@ -41,6 +42,7 @@ terminal::terminal() : node(), pos(current) {
 
 DESTRUCTOR_INLINE
 terminal::~terminal() { }
+#endif
 
 /// returns the position in file where this node starts
 inline
@@ -81,11 +83,13 @@ token_EOF::string_compare(const char* d) const {
 //=============================================================================
 // class token_char method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_char::token_char(const int i) : terminal(), c(i) { }
 
 DESTRUCTOR_INLINE
 token_char::~token_char() { }
+#endif
 
 /**
 	Performs string comparison for a character token.
@@ -105,11 +109,13 @@ token_char::what(ostream& o) const {
 //=============================================================================
 // class token_int method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_int::token_int(const long v) : terminal(), expr(), val(v) { }
 
 DESTRUCTOR_INLINE
 token_int::~token_int() { }
+#endif
 
 /**
 	Performs string comparison for an integer token.
@@ -154,12 +160,13 @@ token_int::check_build(never_ptr<context> c) const {
 //=============================================================================
 // class token_float method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_float::token_float(const double v) : terminal(), expr(), val(v) { }
 
 DESTRUCTOR_INLINE
 token_float::~token_float() { }
-
+#endif
 
 /**
 	Performs string comparison for a floating-point token.
@@ -198,6 +205,7 @@ token_float::check_build(never_ptr<context> c) const {
 //=============================================================================
 // class token_string method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_string::token_string(const char* s) : string(s), terminal() { }
 
@@ -207,6 +215,7 @@ token_string::token_string(const token_string& s) :
 
 DESTRUCTOR_INLINE
 token_string::~token_string() { }
+#endif
 
 int
 token_string::string_compare(const char* d) const { return compare(d); }
@@ -224,6 +233,7 @@ token_string::rightmost(void) const {
 //=============================================================================
 // class token_identifier method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
 
@@ -234,6 +244,7 @@ token_identifier::token_identifier(const token_identifier& i) :
 
 DESTRUCTOR_INLINE
 token_identifier::~token_identifier() { }
+#endif
 
 ostream&
 token_identifier::what(ostream& o) const {
@@ -295,11 +306,13 @@ token_identifier::check_build(never_ptr<context> c) const {
 //=============================================================================
 // class token_keyword method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 token_keyword::token_keyword(const char* s) : token_string(s) { }
 
 DESTRUCTOR_INLINE
 token_keyword::~token_keyword() { }
+#endif
 
 ostream& 
 token_keyword::what(ostream& o) const {
