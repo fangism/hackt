@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.1 2005/02/03 03:34:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -15,7 +15,6 @@
 #include "multikey_qmap_fwd.h"
 
 namespace ART {
-
 namespace entity {
 USING_LIST
 using std::string;
@@ -132,6 +131,9 @@ virtual	~struct_instance_collection();
 virtual	ostream&
 	what(ostream&) const = 0;
 
+	ostream&
+	type_dump(ostream&) const;
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
@@ -236,7 +238,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class struct_array
 
 //-----------------------------------------------------------------------------
@@ -281,7 +283,7 @@ public:
 
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class struct_array (specialized)
 
 //=============================================================================

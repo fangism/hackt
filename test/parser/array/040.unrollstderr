@@ -35,7 +35,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    y = pint<> y with indices: {
+    y = pint^3 y with indices: {
       [1..1][1..1][1..1]
       [0..0][0..0][0..0]
       [0..1][0..0][1..1]
@@ -52,7 +52,7 @@ In namespace "", we have: {
         [1][1][0] = ?
         [1][1][1] = ?
       }
-    z = pint<> z with indices: {
+    z = pint^3 z with indices: {
       [0..0][1..1][0..1]
       [1..1][0..1][0..0]
       [0..1][0..0][1..1]

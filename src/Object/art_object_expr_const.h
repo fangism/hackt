@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.1 2005/01/31 04:16:33 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.2 2005/02/03 03:34:49 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -163,7 +163,7 @@ private:
 	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -287,7 +287,7 @@ public:
 	must_be_equivalent_indices(const index_list& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_index_list
 
 //=============================================================================
@@ -360,7 +360,7 @@ public:
 	must_be_formal_size_equivalent(const range_expr_list& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_range_list
 
 //=============================================================================
@@ -471,7 +471,7 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
@@ -577,7 +577,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class pint_const_collection
 
@@ -671,7 +671,7 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
@@ -790,7 +790,7 @@ public:
 	must_be_formal_size_equivalent(const range_expr& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_range
 
 //=============================================================================

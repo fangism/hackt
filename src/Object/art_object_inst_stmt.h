@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.9 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.9.2.1 2005/02/03 03:34:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -85,10 +85,10 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -137,10 +137,10 @@ public:
 	get_type_ref(void) const;
 
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -187,8 +187,11 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
+	void
+	unroll(unroll_context& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class process_instantiation_statement
 
@@ -233,7 +236,7 @@ public:
 	get_type_ref(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class channel_instantiation_statement
 
@@ -285,11 +288,11 @@ public:
 #if 1
 	// almost ready to unveil...
 	void
-	unroll(void) const;
+	unroll(unroll_context& ) const;
 #endif
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 
 public:

@@ -2,15 +2,15 @@
 	\file "hash_qmap.tcc"
 	Template method definitions for queryable hash map class.  
 
-	$Id: hash_qmap.tcc,v 1.1 2004/12/03 02:46:42 fang Exp $
+	$Id: hash_qmap.tcc,v 1.1.16.1 2005/02/03 03:34:55 fang Exp $
  */
 
-#ifndef	__HASH_QMAP_TCC__
-#define	__HASH_QMAP_TCC__
+#ifndef	__UTIL_HASH_QMAP_TCC__
+#define	__UTIL_HASH_QMAP_TCC__
 
 #include "hash_qmap.h"
 
-namespace HASH_QMAP_NAMESPACE {
+namespace util {
 //=============================================================================
 // class hash_qmap method definitions
 
@@ -434,4 +434,4 @@ operator != (const hash_qmap<K,T*,H,E,A>& __h1,
 //=============================================================================
 }	// end namespace HASH_QMAP_NAMESPACE
 
-#endif	// __HASH_QMAP_TCC__
+#endif	// __UTIL_HASH_QMAP_TCC__

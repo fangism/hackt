@@ -1,0 +1,63 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x33028d4	module__	0	0	28
+	2	 0x3300170	namespc_	0	28	52
+	3	 0x33028f0	procdefn	0	52	129
+	4	 0x3302964	pintcoll	1	129	162
+	5	 0x3803004	pintinst	0	162	178
+	6	 0x33029c4	drnglst_	0	178	194
+	7	 0x33029e4	dynrng__	0	194	210
+	8	 0x269a024	cnstpi__	0	210	222
+	9	 0x3302a08	arithexp	0	222	239
+	10	 0x3302a30	spiref__	0	239	259
+	11	 0x3806450	pintcoll	0	259	296
+	12	 0x3803018	pintinst	0	296	312
+	13	 0x269a038	cnstpi__	0	312	324
+	14	 0x3302a44	pintcoll	1	324	357
+	15	 0x380302c	pintinst	0	357	373
+	16	 0x3302aa4	drnglst_	0	373	389
+	17	 0x3302ac4	dynrng__	0	389	405
+	18	 0x269a04c	cnstpi__	0	405	417
+	19	 0x3302ae8	arithexp	0	417	434
+	20	 0x3302b10	spiref__	0	434	454
+	21	 0x3302b24	cindlst_	0	454	470
+	22	 0x269a060	cnstpi__	0	470	482
+	23	 0x269a074	cnstpi__	0	482	494
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    array_me = process-definition (declared) array_me<
+      pint<> N
+      pint<> A with indices: {
+        [0..::array_me::N-1]
+      }
+
+      pint<> B with indices: {
+        [0..::array_me::A[0]-1]
+      }
+
+      >
+      (
+      )
+      In definition "array_me", we have: {
+        A = pint<> A with indices: {
+          [0..::array_me::N-1]
+        }
+
+        B = pint<> B with indices: {
+          [0..::array_me::A[0]-1]
+        }
+
+        N = pint<> N
+      }
+
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.2 2005/01/31 04:16:34 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.3 2005/02/03 03:34:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -223,6 +223,9 @@ virtual	~pbool_instance_collection();
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	type_dump(ostream& o) const;
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
@@ -293,7 +296,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& i);
+	load_object_base(const persistent_object_manager& m, istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.
@@ -359,7 +362,7 @@ public:
 	};      // end struct key_value_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 
 };	// end class pbool_array
 
@@ -423,7 +426,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 
 };	// end class pbool_array specialization
 
@@ -552,6 +555,9 @@ virtual	~pint_instance_collection();
 	ostream&
 	what(ostream& o) const;
 
+	ostream&
+	type_dump(ostream& o) const;
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
@@ -620,7 +626,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& i);
+	load_object_base(const persistent_object_manager& m, istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.
@@ -687,7 +693,7 @@ public:
 	};	// end struct key_value_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 };	// end class pint_array
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -752,7 +758,7 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_array specialization

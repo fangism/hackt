@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.1 2005/01/29 21:38:09 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.2 2005/02/03 03:34:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -62,7 +62,7 @@ STATIC_TRACE_BEGIN("instance_pint")
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace ADS;		// for composition functors
+USING_UTIL_COMPOSE
 using std::dereference;
 using std::mem_fun_ref;
 using util::indent;
@@ -146,6 +146,12 @@ pint_instance_collection::~pint_instance_collection() {
 ostream&
 pint_instance_collection::what(ostream& o) const {
 	return o << "pint-inst<" << dimensions << ">";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_instance_collection::type_dump(ostream& o) const {
+	return o << "pint^" << dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -342,7 +348,7 @@ pint_instance_collection::write_object_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_instance_collection::load_object_base(persistent_object_manager& m, 
+pint_instance_collection::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("pint_inst_coll::load_object_base()");
 	parent_type::load_object_base(m, f);
@@ -557,29 +563,20 @@ pint_array<D>::assign(const multikey_base<pint_value_type>& k,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+pint_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_object_base(m, f);
 	// write out the instance map
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 void
-pint_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+pint_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	load_object_base(m, f);
 	// load the instance map
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //-----------------------------------------------------------------------------
@@ -731,30 +728,21 @@ pint_array<0>::assign(const multikey_base<pint_value_type>& k,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_array<0>::write_object(const persistent_object_manager& m) const {
+pint_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	STACKTRACE("pint_scalar::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+pint_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE("pint_scalar::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================

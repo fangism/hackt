@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.7 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_namespace.h,v 1.7.2.1 2005/02/03 03:34:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -42,6 +42,7 @@ USING_LIST
 USING_CONSTRUCT
 using std::string;
 using std::istream;
+using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using parser::token_identifier;
@@ -49,7 +50,6 @@ using parser::qualified_id_slice;
 using parser::qualified_id;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
-using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**
@@ -251,7 +251,7 @@ private:
 		ostream&) const;
 
 	void
-	load_object_used_id_map(persistent_object_manager& m, 
+	load_object_used_id_map(const persistent_object_manager& m, 
 		istream&);
 
 protected:
@@ -266,7 +266,7 @@ protected:
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 private:
 // no concrete method for loading -- that remains derived-class specific
@@ -449,7 +449,7 @@ public:
 
 // methods for object file I/O
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 /** helper method for adding a variety of objects */
 	void

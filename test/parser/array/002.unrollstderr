@@ -16,7 +16,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    y = pint<> y with indices: {
+    y = pint^2 y with indices: {
       [0..1][0..1]
     }
       unrolled index-value pairs: {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1 2005/02/03 03:34:50 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -100,11 +100,11 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -145,11 +145,11 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
 	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class process_instance_reference
 
 //=============================================================================
@@ -182,7 +182,7 @@ public:
 // can also attach indices!
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class process_member_instance_reference
 
 //=============================================================================
@@ -219,7 +219,7 @@ public:
 	get_inst_base(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class datatype_member_instance_reference
 
@@ -252,7 +252,7 @@ public:
 // can also attach indices!
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class channel_member_instance_reference
 

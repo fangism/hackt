@@ -1,9 +1,11 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.2.1 2005/02/03 03:34:56 fang Exp $
  */
 
+// flags and switches
+#define	DEBUG_ME			0
 #define	ENABLE_STACKTRACE		0
 
 #include <fstream>
@@ -20,9 +22,90 @@
 #include "stacktrace.h"
 
 //=============================================================================
-// flags and switches
+// macros for use in write_object and load_object
+// just sanity-check extraneous information, later enable or disable
+// with another switch.
 
-#define	DEBUG_ME		0
+
+// sanity check switch is overrideable by the includer
+#ifndef NO_OBJECT_SANITY
+#define NO_OBJECT_SANITY	0	// default 0, keep sanity checks
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the numeric index of the object, which really isn't
+	necessary, but adds a consistency check.  
+	This macro can be added inside a write_object method implementation.  
+	If used, it should be complemented with STRIP_POINTER_INDEX
+	in the load_object counterpart.  
+	Consider using a char, instead of unsigned long.
+	updated: (2005-02-01)
+	This macro only useful in a persistent_object_manager method!  
+	Move this definition to persistent_object_manager.cc file.  
+	\param f the output stream.
+	\param p pointer to the object being written.
+ */
+#if NO_OBJECT_SANITY
+#define WRITE_POINTER_INDEX(f, p)
+#else
+#define WRITE_POINTER_INDEX(f, p)					\
+	write_value(f, lookup_ptr_index(p))
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reads the object enumerated index for a consistency check.  
+	Consider using a char, instead of unsigned long.
+	updated: (2005-02-01)
+	This macro only useful in a persistent_object_manager method!  
+	Move this definition to persistent_object_manager.cc file.  
+	\param f the input stream.
+	\param p pointer to the object read.  
+ */
+#if NO_OBJECT_SANITY
+#define STRIP_POINTER_INDEX(f, p)
+#else
+#define STRIP_POINTER_INDEX(f, p)                                       \
+	{								\
+        long index;							\
+        read_value(f, index);						\
+        if (index != lookup_ptr_index(p)) {				\
+                const long hohum = lookup_ptr_index(p);			\
+                cerr << "<persistent>::load_object(): " << endl		\
+                        << "\tthis = " << p << ", index = " << index	\
+                        << ", expected: " << hohum << endl;		\
+                assert(index == lookup_ptr_index(p));			\
+        }								\
+        }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        Sanity check value for end-of-object.
+        To be complemented by STRIP_OBJECT_FOOTER.  
+ */
+#if NO_OBJECT_SANITY
+#define WRITE_OBJECT_FOOTER(f)
+#else
+#define WRITE_OBJECT_FOOTER(f)			write_value(f, -1L)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        Sanity check for object alignment.  
+ */
+#if NO_OBJECT_SANITY
+#define STRIP_OBJECT_FOOTER(f)
+#else
+#define STRIP_OBJECT_FOOTER(f)						\
+	{								\
+	long neg_one;							\
+	read_value(f, neg_one);						\
+	assert(neg_one == -1L);						\
+	}
+#endif
+
 
 //=============================================================================
 
@@ -566,10 +649,15 @@ persistent_object_manager::collect_objects(void) {
 //	dump_text(cerr);		// DEBUG
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
-//		persistent* o = const_cast<persistent*>(e.addr());
 		const persistent* o = e.addr();
-		assert(o);
-		o->write_object(*this);	// virtual
+		NEVER_NULL(o);
+		{
+			ostream& f = lookup_write_buffer(o);
+			INVARIANT(f.good());
+			WRITE_POINTER_INDEX(f, o);	// sanity check
+			o->write_object(*this, f);	// pure virtual
+			WRITE_OBJECT_FOOTER(f);		// alignment
+		}
 		e.initialize_offsets();
 	}
 	// next pass: translate offsets into absolute positions.  
@@ -638,6 +726,26 @@ persistent_object_manager::finish_load(ifstream& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Explicit external request to load an object from the persistent 
+	object manager.  
+	Useful during recursive loads, which should be infrequent.  
+	\param p pointer to object to load, never null.  
+ */
+void
+persistent_object_manager::__load_object(persistent* p, raw_pointer_tag) const {
+	NEVER_NULL(p);
+	// ugh, const_cast...
+	if (!const_cast<persistent_object_manager*>(this)->flag_visit(p)) {
+		istream& i = lookup_read_buffer(p);
+		INVARIANT(i.good());
+		STRIP_POINTER_INDEX(i, p);
+		p->load_object(*this, i);
+		STRIP_OBJECT_FOOTER(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This should reverse the process of collect_objects.
 	After this process, all registered objects should be coherent!
 	Calls virtual function for initializing objects.  
@@ -677,8 +785,7 @@ persistent_object_manager::load_objects(void) {
 			member function, because load_object is allowed
 			to call load_object recursively.
 		***/
-			o->load_object(*this);
-			// virtual call, unavoidable const cast
+			__load_object(o, raw_pointer_tag());
 #if 0
 			o->what(cerr << "@ " << o << ", ") << endl;
 #endif
@@ -691,6 +798,27 @@ persistent_object_manager::load_objects(void) {
 	// Entry at position 1 is ALWAYS the root module.  
 	persistent* r = lookup_obj_ptr(1);
 	root = excl_ptr<persistent>(r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads hierarchical object collection from file.
+	\returns a dynamically cast owned pointer to the root object.
+ */
+excl_ptr<persistent>
+persistent_object_manager::load_object_from_file(const string& s) {
+	ifstream f(s.c_str(), ios_base::binary);
+	persistent_object_manager pom;
+	// don't initialize_null, will be loaded in from table
+	pom.load_header(f);
+	pom.finish_load(f);
+	f.close();                              // done with file
+	pom.reconstruct();                      // allocate-only pass
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;    // debugging only
+	// Oh no, partially initialized objects!
+	pom.load_objects();
+	return pom.get_root();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -729,6 +857,66 @@ persistent_object_manager::reset_for_loading(void) {
 		// shouldn't need to manipulate stream positions
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write the reconstruction table, and loads it back, without
+	going through an intermediate file.
+	Should essentially make a deep copy of the hierarchical object
+	rooted at the global namespace.
+ */
+excl_ptr<persistent>
+persistent_object_manager::self_test_no_file(const persistent& m) {
+	STACKTRACE("pom::self_test_no_file()");
+	persistent_object_manager pom;
+	pom.initialize_null();			// reserved 0th entry
+	m.collect_transient_info(pom);		// recursive visitor
+	pom.collect_objects();			// buffers output in segments
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// for debugging
+
+	// need to set start of objects? no
+	// pretend we wrote it out and read it back in...
+	pom.reset_for_loading();
+	pom.reconstruct();			// allocate-only pass
+
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// debugging only
+
+	pom.load_objects();
+	// must acquire root object in some owned pointer!
+	return pom.get_root();	// only this is templated
+	// will get de-allocated after return statement is evaluated
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out and reads back in, through an intermediate file.
+ */
+excl_ptr<persistent>
+persistent_object_manager::self_test(const string& s, const persistent& m) {
+	save_object_to_file(s, m);
+	return load_object_from_file(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The first non-NULL object is special: it is the root module.
+	Returning an excl_ptr guarantees that memory will
+	be managed properly.
+	When the excl_ptr hits the end of a scope, unless ownership
+	has been transferred, the memory should be recursively reclaimed.
+	Thus, this is not a const method.
+ */
+excl_ptr<persistent>
+persistent_object_manager::get_root(void) {
+	assert(root);           // necessary?
+	// the template keyword is required for gcc-3.3.x, but not for 3.4.x
+	return root.template is_a_xfer<persistent>();
+	// this relinquishes ownership and responsibility for deleting
+	// to whomever consumes the returned excl_ptr
+}
+
 
 //=============================================================================
 }	// end namespace util

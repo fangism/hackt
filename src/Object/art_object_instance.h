@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.2 2005/01/31 04:16:34 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.3 2005/02/03 03:34:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -32,16 +32,23 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<proc_instance_alias>	instance_ptr_type;
-
+	typedef	count_ptr<const process_type_reference>
+						final_ptr_type;
 protected:
 	// reserve these for connections between instance_references
-	// list of template actuals
+
+	/**
+		This is the final type established during unrolling.  
+		Q: can cycles form in instance-type heirarchy?
+	 */
+	final_ptr_type				proc_type;
+
 	// list of port actuals
 
 protected:
 	/// Private empty constructor.  
 	explicit
-	process_instance_collection(const size_t d) : parent_type(d) { }
+	process_instance_collection(const size_t d);
 public:
 	process_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -54,11 +61,14 @@ virtual	ostream&
 	ostream&
 	dump(ostream& o) const;
 
+	ostream&
+	type_dump(ostream& o) const;
+
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
-virtual	bool
-	is_partially_unrolled(void) const = 0;
+	bool
+	is_partially_unrolled(void) const { return proc_type; }
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
@@ -69,6 +79,9 @@ virtual	bool
 	count_ptr<member_instance_reference_base>
 	make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const;
+
+	bool
+	commit_type(const final_ptr_type& );
 
 virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
@@ -95,15 +108,15 @@ public:
 	persistent*
 	construct_empty(const int);
 
-	void
-	collect_transient_info(persistent_object_manager& m) const;
-
 protected:
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
 	void
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class process_instance_collection
 
@@ -200,6 +213,9 @@ virtual	~channel_instance_collection();
 virtual	ostream&
 	what(ostream& o) const = 0;
 
+	ostream&
+	type_dump(ostream& o) const;
+
 //	ostream& dump(ostream& o) const;
 
 virtual	bool
@@ -248,7 +264,7 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
 };	// end class channel_instance_collection
 

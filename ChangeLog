@@ -1,5 +1,46 @@
 "ChangeLog"
 
+2005-02-02	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-05:
+	  Duplicate tag of -01-04-merged-unroll-00-03.
+
+	* ARTXX-00-01-04-main-00-04-object-01-04-merged-unroll-00-03:
+	  Merged in revisions from -unroll-00 sub-branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-unroll-00-03:
+	  Basic single process instance (alias) works.  
+	  Made proc_instance_alias pseudo-persistent, 
+	  never actually dynmically allocating through the object
+	  manager, but still contains aliases to unique instances, 
+	  which requires pointer management.  
+	  Many tests updated.  
+	  To do: be able to write / read collections of aliases.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-02:
+	  Factored out "safety" code for persistent object management
+	  out of all implementations of write_object, load_object.  
+	  Gave write/load object references to iostream arguments.  
+	  Gave persistent::load_object const persistent_object_manager& 
+	  argument.
+	  Cleaned out hash_map headers, moved to STL subdir, with forward
+	  declaration file.  
+	  Next, clean up the commented out code mess.  
+
+
+2005-02-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-01:
+	  Un-templated some non-essential method functions in
+	  persistent_object_manager.tcc, relocated to .cc.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00:
+	  This branch created to introduce complete redo of 
+	  persistent object management.  
+	  Need to distinguish between heap/non-heap objects.  
+	  Need to factor out object alignment and visit-once code. 
+
+
 2005-01-30	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-02:

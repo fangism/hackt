@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1 2005/02/03 03:34:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -90,7 +90,7 @@ aliases_connection::prepend_instance_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::unroll(void) const {
+aliases_connection::unroll(unroll_context& c) const {
 	cerr << "aliases_connection::unroll(): "
 		"Fang, finish me!" << endl;
 }
@@ -117,25 +117,16 @@ aliases_connection::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+aliases_connection::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer_list(f, inst_list);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+aliases_connection::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, inst_list);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -214,7 +205,7 @@ port_connection::append_instance_reference(
 	Expands and finalizes the connection at unroll time.  
  */
 void
-port_connection::unroll(void) const {
+port_connection::unroll(unroll_context& c) const {
 	cerr << "port_connection::unroll(): "
 		"Fang, finish me!" << endl;
 }
@@ -245,27 +236,17 @@ port_connection::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+port_connection::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, inst);
 	m.write_pointer_list(f, inst_list);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+port_connection::load_object(const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, inst);
 	m.read_pointer_list(f, inst_list);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================

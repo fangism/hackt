@@ -1,13 +1,14 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.h,v 1.12.2.1 2005/02/03 03:34:56 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>
+#include <vector>
 #include "persistent.h"
 
 #include "hash_qmap.h"
@@ -35,7 +36,7 @@ using std::stringstream;
 using std::ofstream;
 using std::ifstream;
 using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
+using util::hash_qmap;
 
 //=============================================================================
 /**
@@ -74,7 +75,10 @@ private:
 
 		/** reference count for counter pointers */
 	mutable	size_t*			ref_count;
-		/** scratch flag, general purpose flag */
+		/**
+			scratch flag, general purpose flag,
+			consider making mutable
+		 */
 		bool			scratch;
 		/** start of stream position */
 		streampos		buf_head;
@@ -241,6 +245,7 @@ public:
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a = 0);
 
+private:
 	bool
 	flag_visit(const persistent* ptr);
 
@@ -253,9 +258,11 @@ public:
 	long
 	lookup_ptr_index(const persistent* ptr) const;
 
+public:
 	persistent*
 	lookup_obj_ptr(const long i) const;
 
+private:
 	size_t*
 	lookup_ref_count(const long i) const;
 
@@ -370,27 +377,38 @@ public:
 	write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
 #endif
 
+	template <class P>
+	void
+	load_object(const P& p) const;
+
+private:
+	void
+	__load_object(persistent* p, raw_pointer_tag) const;
+
+	template <class P>
+	void
+	__load_object(const P& p, pointer_class_base_tag) const;
+
+public:
 
 // two interface functions suffice for file interaction:
 	static
 	void
 	save_object_to_file(const string& s, const persistent& m);
 
-	template <class T>
+//	template <class T>
 	static
-	excl_ptr<T>
+	excl_ptr<persistent>
 	load_object_from_file(const string& s);
 
 // self-test functions
-	template <class T>
 	static
-	excl_ptr<T>
-	self_test(const string& s, const T& m);
+	excl_ptr<persistent>
+	self_test(const string& s, const persistent& m);
 
-	template <class T>
 	static
-	excl_ptr<T>
-	self_test_no_file(const T& m);
+	excl_ptr<persistent>
+	self_test_no_file(const persistent& m);
 
 private:
 	void
@@ -420,8 +438,7 @@ private:
 	void
 	reconstruct(void);
 
-	template <class T>
-	excl_ptr<T>
+	excl_ptr<persistent>
 	get_root(void);
 
 	void

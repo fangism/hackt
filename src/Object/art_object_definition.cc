@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.2 2005/01/31 04:16:30 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.3 2005/02/03 03:34:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -587,7 +587,7 @@ definition_base::write_object_base(
 inline
 void
 definition_base::load_object_template_formals(
-		persistent_object_manager& m, istream& f) {
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("definition_base::load_object_template_formals()");
 	m.read_pointer_list(f, template_formals_list);
 	// then copy list into hash_map to synchronize
@@ -600,7 +600,8 @@ definition_base::load_object_template_formals(
 		const template_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
-		const_cast<param_instance_collection&>(*inst_ptr).load_object(m);
+		m.load_object(const_cast<param_instance_collection*>(
+			&*inst_ptr));
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
@@ -609,7 +610,7 @@ definition_base::load_object_template_formals(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 definition_base::load_object_base(
-		persistent_object_manager& m, istream& f) {
+		const persistent_object_manager& m, istream& f) {
 	read_value(f, defined);
 	load_object_template_formals(m, f);
 }
@@ -882,10 +883,8 @@ user_def_chan::construct_empty(const int i) {
 	Not recursive, manager will call this once.  
  */
 void
-user_def_chan::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+user_def_chan::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -894,7 +893,6 @@ user_def_chan::write_object(const persistent_object_manager& m) const {
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 	// body
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -902,11 +900,7 @@ user_def_chan::write_object(const persistent_object_manager& m) const {
 	Reads in fields from input stream.  
  */
 void
-user_def_chan::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -915,9 +909,6 @@ if (!m.flag_visit(this)) {
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 	// body
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1019,35 +1010,25 @@ channel_definition_alias::construct_empty(const int i) {
  */
 void
 channel_definition_alias::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+channel_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1237,11 +1218,9 @@ built_in_datatype_def::collect_transient_info(
 	name as the built-in types because they are reserved keywords.  
  */
 void
-built_in_datatype_def::write_object(const persistent_object_manager& m) const {
+built_in_datatype_def::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("built_in_data::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
@@ -1250,12 +1229,12 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	scopespace::write_object_base_fake(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base_fake(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-built_in_datatype_def::load_object(persistent_object_manager& m) {
+built_in_datatype_def::load_object(
+		const persistent_object_manager& m, istream& f) {
 	cerr << "ERROR: built_in_datatype_def::load_object() "
 		"should never be called!" << endl;
 	DIE;
@@ -1540,10 +1519,8 @@ enum_datatype_def::construct_empty(const int i) {
 	strings.  
  */
 void
-enum_datatype_def::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+enum_datatype_def::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -1559,7 +1536,6 @@ enum_datatype_def::write_object(const persistent_object_manager& m) const {
 			write_value(f, i->first);
 		}
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1569,11 +1545,7 @@ enum_datatype_def::write_object(const persistent_object_manager& m) const {
 	strings.  
  */
 void
-enum_datatype_def::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+enum_datatype_def::load_object(const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -1593,9 +1565,6 @@ if (!m.flag_visit(this)) {
 			INVARIANT(!member_ptr);
 		}
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1725,10 +1694,8 @@ user_def_datatype::construct_empty(const int i) {
 	built_in_datatype_def::write_object.  
  */
 void
-user_def_datatype::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+user_def_datatype::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -1737,17 +1704,13 @@ user_def_datatype::write_object(const persistent_object_manager& m) const {
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 	// body
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-user_def_datatype::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+user_def_datatype::load_object(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("user_def_datatype::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -1756,9 +1719,6 @@ if (!m.flag_visit(this)) {
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 	// body
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1902,37 +1862,27 @@ datatype_definition_alias::construct_empty(const int i) {
  */
 void
 datatype_definition_alias::write_object(
-		const persistent_object_manager& m) const {
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("data_def_alias::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-datatype_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+datatype_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("data_def_alias::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2307,37 +2257,28 @@ process_definition::construct_empty(const int i) {
 	Not recursive, manager will call this once.  
  */
 void
-process_definition::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+process_definition::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
-	write_object_port_formals(m);
+	write_object_port_formals(m, f);
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+process_definition::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
-	load_object_port_formals(m);
+	load_object_port_formals(m, f);
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2361,8 +2302,7 @@ process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
  */
 void
 process_definition::write_object_port_formals(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer_list(f, port_formals_list);
 }
 
@@ -2375,8 +2315,8 @@ process_definition::write_object_port_formals(
  */
 void
 process_definition::load_object_port_formals(
-		persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
+		const persistent_object_manager& m, istream& f) {
+//	istream& f = m.lookup_read_buffer(this);
 	m.read_pointer_list(f, port_formals_list);
 	// then copy list into hash_map to synchronize
 	port_formals_list_type::const_iterator
@@ -2386,7 +2326,8 @@ process_definition::load_object_port_formals(
 	for ( ; iter!=end; iter++) {
 		const port_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
-		const_cast<instance_collection_base*>(&*inst_ptr)->load_object(m);
+		m.load_object(const_cast<instance_collection_base*>(
+			&*inst_ptr));
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 }
@@ -2511,35 +2452,25 @@ process_definition_alias::construct_empty(const int i) {
  */
 void
 process_definition_alias::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+process_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

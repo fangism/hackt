@@ -1,0 +1,60 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3302ed4	module__	0	0	28
+	2	 0x3300170	namespc_	0	28	52
+	3	 0x3302ef0	procdefn	0	52	127
+	4	 0x3302f64	pintcoll	2	127	160
+	5	 0x3803004	pintinst	0	160	176
+	6	 0x3302fc4	drnglst_	0	176	196
+	7	 0x3302fe4	dynrng__	0	196	212
+	8	 0x269a024	cnstpi__	0	212	224
+	9	 0x3303008	arithexp	0	224	241
+	10	 0x3303030	spiref__	0	241	261
+	11	 0x3806450	pintcoll	0	261	298
+	12	 0x3803018	pintinst	0	298	314
+	13	 0x269a038	cnstpi__	0	314	326
+	14	 0x3303054	dynrng__	0	326	342
+	15	 0x269a04c	cnstpi__	0	342	354
+	16	 0x3303078	arithexp	0	354	371
+	17	 0x33030a0	spiref__	0	371	391
+	18	 0x269a060	cnstpi__	0	391	403
+	19	 0x3302e84	dintcoll	0	403	452
+	20	 0x3804604	datainst	0	452	472
+	21	 0x33030b4	datatprf	0	472	488
+	22	 0x33030c0	datadefn	0	488	520
+	23	 0x3303124	dprmlst_	0	520	536
+	24	 0x3303150	spiref__	0	536	556
+	25	 0x3303164	cindlst_	0	556	576
+	26	 0x269a074	cnstpi__	0	576	588
+	27	 0x269a088	cnstpi__	0	588	600
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    the_matrix = process-definition (defined) the_matrix<
+      pint<> N
+      pint<> M with indices: {
+        [0..::the_matrix::N-1][0..::the_matrix::N-1]
+      }
+
+      >
+      (
+      )
+      In definition "the_matrix", we have: {
+        M = pint<> M with indices: {
+          [0..::the_matrix::N-1][0..::the_matrix::N-1]
+        }
+
+        N = pint<> N
+        first = int<pint-inst-ref M[0][0]> first
+      }
+
+}
+

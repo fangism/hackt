@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.1 2005/01/31 04:16:35 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.2 2005/02/03 03:34:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -13,15 +13,11 @@
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
-namespace ART {
-namespace parser {
-class token_identifier;
-}
 
+namespace ART {
 namespace entity {
 USING_LIST
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
 using MULTIKEY_NAMESPACE::multikey_base;
@@ -35,13 +31,26 @@ using MULTIKEY_MAP_NAMESPACE::multikey_map;
 	An actual instantiated instance of an enum.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
+	Needs to be pool allocated for efficient unique construction. 
+	Derive from unique_instance_base.  
  */
-struct proc_instance {
+class proc_instance : public persistent {
 	// need back-reference(s) to owner(s) or hierarchical keys?
 	int		state;
 
+	// TODO: contain a vector of pointers to sub-structures
+	// concrete definition map will map member names to index/offsets
+	//	per-class structure layout...
+	// empty for now
+
 public:
 	proc_instance();
+	~proc_instance();
+
+	ostream&
+	what(ostream&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class proc_instance
 
@@ -51,8 +60,9 @@ public:
 	Only after references are connected, are the actual enum instances
 	created.  
 	Contains attribute fields.  
+	Needs to become persistent because of alias pointers!
  */
-class proc_instance_alias {
+class proc_instance_alias : public persistent {
 public:
 	typedef	never_ptr<const proc_instance_alias>	alias_ptr_type;
 private:
@@ -62,6 +72,13 @@ private:
 	// validity fields?
 	bool					instantiated;
 public:
+
+	proc_instance_alias();
+
+	~proc_instance_alias();
+
+	ostream&
+	what(ostream&) const;
 
 	bool
 	valid(void) const { return instantiated; }
@@ -106,6 +123,9 @@ public:
 	ostream&
 	operator << (ostream&, const proc_instance_alias&);
 
+	// even though this is not persistent... yet
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
 };	// end class proc_instance_alias
 
 ostream&
@@ -142,8 +162,10 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
+#if 0
 	bool
 	is_partially_unrolled(void) const;
+#endif
 
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
@@ -168,7 +190,7 @@ public:
 	};	// end struct key_dumper
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class proc_array
 
 //-----------------------------------------------------------------------------
@@ -192,8 +214,10 @@ public:
 	ostream&
 	what(ostream&) const;
 
+#if 0
 	bool
 	is_partially_unrolled(void) const;
+#endif
 
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
@@ -213,7 +237,7 @@ public:
 
 
 public:
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class proc_array (specialized)
 
 //=============================================================================

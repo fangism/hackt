@@ -1,0 +1,65 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3303c04	module__	0	0	44
+	2	 0x3300170	namespc_	0	44	84
+	3	 0x3303c24	proccoll	0	84	125
+	4	 0x3303c84	procinst	0	125	145
+	5	 0x3303ca4	proctprf	0	145	161
+	6	 0x3303cb0	procdefn	0	161	209
+	7	 0x3806450	pintcoll	0	209	246
+	8	 0x3803004	pintinst	0	246	262
+	9	 0x2672024	cnstpi__	0	262	274
+	10	 0x3303d24	dprmlst_	0	274	290
+	11	 0x3303d34	proctprf	0	290	306
+	12	 0x3303d44	cprmlst_	0	306	322
+	13	 0x2672038	cnstpi__	0	322	334
+	14	 0x3303d54	proccoll	0	334	374
+	15	 0x3303db4	procinst	0	374	394
+	16	 0x3303dd4	proctprf	0	394	410
+	17	 0x3303de4	dprmlst_	0	410	426
+	18	 0x267204c	cnstpi__	0	426	438
+	19	 0x3303df4	proctprf	0	438	454
+	20	 0x3303e04	cprmlst_	0	454	470
+	21	 0x2672060	cnstpi__	0	470	482
+	22	 0x3303e14	proccoll	0	482	522
+	23	 0x3303e74	procinst	0	522	542
+	24	 0x3303e94	proctprf	0	542	558
+	25	 0x3303ea4	dprmlst_	0	558	574
+	26	 0x3303eb4	proctprf	0	574	590
+	27	 0x3303ec4	cprmlst_	0	590	606
+	28	 0x2672074	cnstpi__	0	606	618
+	29	 0x3303ed4	proccoll	0	618	658
+	30	 0x3303f34	procinst	0	658	678
+	31	 0x3303f54	proctprf	0	678	694
+	32	 0x3303f64	dprmlst_	0	694	710
+	33	 0x2672088	cnstpi__	0	710	722
+	34	 0x3303f74	proctprf	0	722	738
+	35	 0x3303f84	cprmlst_	0	738	754
+	36	 0x267209c	cnstpi__	0	754	766
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> N (default = 7)
+      >
+      (
+      )
+      In definition "foo", we have: {
+        N = pint<> N (default = 7)
+      }
+
+  Instances:
+    bar = foo<7>^0 bar (instantiated)
+    blah = foo<7>^0 blah (instantiated)
+    ick = foo<6>^0 ick (instantiated)
+    poo = foo<7>^0 poo (instantiated)
+}
+

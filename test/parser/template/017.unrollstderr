@@ -1,0 +1,41 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3301b64	module__	0	0	32
+	2	 0x3300170	namespc_	0	32	60
+	3	 0x3301b80	procdefn	0	60	127
+	4	 0x3806450	pintcoll	0	127	164
+	5	 0x3803004	pintinst	0	164	180
+	6	 0x3301c10	spiref__	0	180	200
+	7	 0x380649c	pintcoll	0	200	249
+	8	 0x3803018	pintinst	0	249	265
+	9	 0x33006d4	dintcoll	0	265	317
+	10	 0x3804604	datainst	0	317	337
+	11	 0x3300724	datatprf	0	337	353
+	12	 0x3301c20	datadefn	0	353	385
+	13	 0x3301c84	dprmlst_	0	385	401
+	14	 0x3301cb0	spiref__	0	401	421
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    default_width = pint^0 default_width value: ?
+  Definitions:
+    something_wide = process-definition (defined) something_wide<
+      pint<> W (default = pint-inst-ref default_width)
+      >
+      (
+      )
+      In definition "something_wide", we have: {
+        W = pint<> W (default = pint-inst-ref default_width)
+        wide_int = int<pint-inst-ref W> wide_int
+      }
+
+}
+

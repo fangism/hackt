@@ -1,0 +1,8 @@
+// should fail: forward declarations are not equivalent
+
+template <pint N; pint A[N]>
+defproc foo();
+
+template <pint N; pint A[N+N]>
+defproc foo();
+

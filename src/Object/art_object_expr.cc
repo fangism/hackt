@@ -1,15 +1,18 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.1 2005/01/31 04:16:31 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.2 2005/02/03 03:34:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
+// flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
+#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 
 #include <exception>
 #include <iostream>
@@ -47,6 +50,19 @@
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
+
+// these conditional definitions must appear after inclusion of "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
 
 //=============================================================================
 namespace util {
@@ -110,8 +126,8 @@ namespace ART {
 namespace entity {
 //=============================================================================
 #include "using_ostream.h"
-using namespace ADS;
 using namespace util::memory;
+USING_UTIL_COMPOSE
 USING_UTIL_OPERATIONS
 using DISCRETE_INTERVAL_SET_NAMESPACE::discrete_interval_set;
 using std::_Select1st;
@@ -184,7 +200,7 @@ const_param::~const_param() { }
 // class pbool_expr method definitions
 
 pbool_expr::~pbool_expr() {
-	STACKTRACE("~pbool_expr()");
+	STACKTRACE_DTOR("~pbool_expr()");
 }
 
 bool
@@ -242,7 +258,7 @@ pbool_expr::make_param_expression_assignment_private(
 // class pint_expr method definitions
 
 pint_expr::~pint_expr() {
-	STACKTRACE("~pint_expr()");
+	STACKTRACE_DTOR("~pint_expr()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,7 +360,7 @@ const_param_expr_list::const_param_expr_list() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() {
-	STACKTRACE("~const_param_expr_list()");
+	STACKTRACE_DTOR("~const_param_expr_list()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -541,9 +557,8 @@ const_param_expr_list::construct_empty(const int i) {
 	pointers to indices as they are encountered.  
  */
 void
-const_param_expr_list::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+const_param_expr_list::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -551,7 +566,6 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 		const count_ptr<const const_param> ip(*i);
 		m.write_pointer(f, ip);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -560,11 +574,9 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 	indices to pointers in the reconstruction.  
  */
 void
-const_param_expr_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	STACKTRACE("const_param_expr_list::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+const_param_expr_list::load_object(const persistent_object_manager& m, 
+		istream& f) {
+	STACKTRACE_PERSISTENT("const_param_expr_list::load_object()");
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -572,13 +584,10 @@ if (!m.flag_visit(this)) {
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			ip->load_object(m);
+			m.load_object(ip);
 #endif
 		push_back(ip);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -593,7 +602,7 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() {
-	STACKTRACE("~dynamic_param_expr_list()");
+	STACKTRACE_DTOR("~dynamic_param_expr_list()");
 #if 0
 	cerr << "list contains " << size() << " pointers." << endl;
 	dump(cerr) << endl;
@@ -859,9 +868,7 @@ dynamic_param_expr_list::construct_empty(const int) {
  */
 void
 dynamic_param_expr_list::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -869,7 +876,6 @@ dynamic_param_expr_list::write_object(
 		const count_ptr<const param_expr> ip(*i);
 		m.write_pointer(f, ip);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -878,11 +884,9 @@ dynamic_param_expr_list::write_object(
 	indices to pointers in the reconstruction.  
  */
 void
-dynamic_param_expr_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	STACKTRACE("dyn_param_expr_list::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+dynamic_param_expr_list::load_object(const persistent_object_manager& m, 
+		istream& f) {
+	STACKTRACE_PERSISTENT("dyn_param_expr_list::load_object()");
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -890,13 +894,10 @@ if (!m.flag_visit(this)) {
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			ip->load_object(m);
+			m.load_object(ip);
 #endif
 		push_back(ip);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -1335,12 +1336,9 @@ pbool_instance_reference::construct_empty(const int i) {
  */
 void    
 pbool_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, pbool_inst_ref);
 	write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 	
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1353,17 +1351,12 @@ pbool_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-pbool_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+pbool_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, pbool_inst_ref);
 	NEVER_NULL(pbool_inst_ref);
-	const_cast<pbool_instance_collection&>(*pbool_inst_ref).load_object(m);
+	m.load_object(const_cast<pbool_instance_collection*>(&*pbool_inst_ref));
 	load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //-----------------------------------------------------------------------------
@@ -1770,6 +1763,7 @@ pint_instance_reference::resolve_dimensions(void) const {
 count_ptr<const_param>
 pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
+	STACKTRACE("pint_inst_ref::unroll_resolve()");
 	if (pint_inst_ref->dimensions) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -1886,12 +1880,9 @@ pint_instance_reference::construct_empty(const int i) {
  */
 void    
 pint_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, pint_inst_ref);
 	write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 	
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1904,17 +1895,12 @@ pint_instance_reference::write_object(
 	\param m the persistent object manager.
  */
 void
-pint_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+pint_instance_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, pint_inst_ref);
 	NEVER_NULL(pint_inst_ref);
-	const_cast<pint_instance_collection&>(*pint_inst_ref).load_object(m);
+	m.load_object(const_cast<pint_instance_collection*>(&*pint_inst_ref));
 	load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //-----------------------------------------------------------------------------
@@ -2062,7 +2048,7 @@ pint_const::pint_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_const::~pint_const() {
-	STACKTRACE("~pint_const()");
+	STACKTRACE_DTOR("~pint_const()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2187,23 +2173,14 @@ pint_const::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_const::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// wasteful
+pint_const::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, val);
-	WRITE_OBJECT_FOOTER(f);			// wasteful
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_const::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// wasteful
+pint_const::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, val);
-	STRIP_OBJECT_FOOTER(f);			// wasteful
-}
-// else already visited
 }
 
 //=============================================================================
@@ -2422,23 +2399,16 @@ pint_const_collection::construct_empty(const int d) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_const_collection::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// wasteful
+pint_const_collection::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	values.write(f);
-	WRITE_OBJECT_FOOTER(f);			// wasteful
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_const_collection::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// wasteful
+pint_const_collection::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	values.read(f);
-	STRIP_OBJECT_FOOTER(f);			// wasteful
-}
-// else already loaded
 }
 
 //=============================================================================
@@ -2536,23 +2506,15 @@ pbool_const::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_const::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// wasteful
+pbool_const::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, val);
-	WRITE_OBJECT_FOOTER(f);			// wasteful
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_const::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// wasteful
+pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, val);
-	STRIP_OBJECT_FOOTER(f);			// wasteful
-}
-// else already visited
 }
 
 //=============================================================================
@@ -2714,24 +2676,18 @@ pint_unary_expr::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_unary_expr::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+pint_unary_expr::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, op);
 	m.write_pointer(f, ex);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_unary_expr::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+pint_unary_expr::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	read_value(f, const_cast<op_type&>(op));
 	m.read_pointer(f, ex);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -2881,24 +2837,18 @@ pbool_unary_expr::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_unary_expr::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+pbool_unary_expr::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, op);
 	m.write_pointer(f, ex);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_unary_expr::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+pbool_unary_expr::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	read_value(f, const_cast<op_type&>(op));
 	m.read_pointer(f, ex);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -3156,22 +3106,15 @@ arith_expr::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-//	write_value(f, op);
+arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, reverse_op_map[op]);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	char o;
 	read_value(f, o);
@@ -3179,8 +3122,6 @@ if (!m.flag_visit(this)) {
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -3416,23 +3357,16 @@ relational_expr::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-//	write_value(f, op);
+relational_expr::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-//	read_value(f, op);
+relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
 	read_value(f, s);
@@ -3441,8 +3375,6 @@ if (!m.flag_visit(this)) {
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -3659,35 +3591,24 @@ logical_expr::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-//	write_value(f, op);
-//	write_string(f, reverse_op_map[op]);
+logical_expr::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-//	read_value(f, op);
+logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
-//	read_string(f, s);
 	read_value(f, s);
 	op = op_map[s];
 	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -3827,24 +3748,16 @@ pint_range::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_range::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+pint_range::write_object(const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, lower);
 	m.write_pointer(f, upper);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_range::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+pint_range::load_object(const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, lower);
 	m.read_pointer(f, upper);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -4072,24 +3985,17 @@ const_range::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-const_range::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+const_range::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, first);
 	write_value(f, second);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-const_range::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+const_range::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, first);
 	read_value(f, second);
-	STRIP_OBJECT_FOOTER(f);
-}
 }
 
 //=============================================================================
@@ -4529,9 +4435,8 @@ const_range_list::construct_empty(const int i) {
 	pointers to indices as they are encountered.  
  */
 void
-const_range_list::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+const_range_list::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -4540,7 +4445,6 @@ const_range_list::write_object(const persistent_object_manager& m) const {
 		write_value(f, cr.first);
 		write_value(f, cr.second);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4549,10 +4453,7 @@ const_range_list::write_object(const persistent_object_manager& m) const {
 	indices to pointers in the reconstruction.  
  */
 void
-const_range_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+const_range_list::load_object(const persistent_object_manager& m, istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -4561,9 +4462,6 @@ if (!m.flag_visit(this)) {
 		read_value(f, cr.second);
 		push_back(cr);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -4717,9 +4615,8 @@ dynamic_range_list::construct_empty(const int i) {
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_range_list::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+dynamic_range_list::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -4727,7 +4624,6 @@ dynamic_range_list::write_object(const persistent_object_manager& m) const {
 		const count_ptr<const pint_range> ip(*i);
 		m.write_pointer(f, ip);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4736,10 +4632,8 @@ dynamic_range_list::write_object(const persistent_object_manager& m) const {
 	indices to pointers in the reconstruction.  
  */
 void
-dynamic_range_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+dynamic_range_list::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -4747,13 +4641,10 @@ if (!m.flag_visit(this)) {
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			ip->load_object(m);
+			m.load_object(ip);
 #endif
 		push_back(ip);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 
@@ -5080,9 +4971,8 @@ const_index_list::construct_empty(const int i) {
 	pointers to indices as they are encountered.  
  */
 void
-const_index_list::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+const_index_list::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -5090,7 +4980,6 @@ const_index_list::write_object(const persistent_object_manager& m) const {
 		const count_ptr<const const_index> ip(*i);
 		m.write_pointer(f, ip);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5099,10 +4988,8 @@ const_index_list::write_object(const persistent_object_manager& m) const {
 	indices to pointers in the reconstruction.  
  */
 void
-const_index_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+const_index_list::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
@@ -5110,13 +4997,10 @@ if (!m.flag_visit(this)) {
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			ip->load_object(m);
+			m.load_object(ip);
 #endif
 		push_back(ip);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -5379,9 +5263,8 @@ dynamic_index_list::construct_empty(const int i) {
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_index_list::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
+dynamic_index_list::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -5389,7 +5272,6 @@ dynamic_index_list::write_object(const persistent_object_manager& m) const {
 		const count_ptr<const index_expr> ip(*i);
 		m.write_pointer(f, ip);
 	}
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5398,23 +5280,18 @@ dynamic_index_list::write_object(const persistent_object_manager& m) const {
 	indices to pointers in the reconstruction.  
  */
 void
-dynamic_index_list::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
+dynamic_index_list::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
 		count_ptr<index_expr> ip;
 		m.read_pointer(f, ip);
 		if (ip)
-			ip->load_object(m);
+			m.load_object(ip);
 		// need to load to know dimensions
 		push_back(ip);
 	}
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //=============================================================================
@@ -5422,6 +5299,17 @@ if (!m.flag_visit(this)) {
 }	// end namepace ART
 
 STATIC_TRACE_END("object-expr")
+
+// responsibly undefining macros used
+// IDEA: for each header, write an undef header file...
+
+#undef	DEBUG_LIST_VECTOR_POOL
+#undef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_PERSISTENT
+#undef	STACKTRACE_DESTRUCTORS
+#undef	STACKTRACE_DTOR
 
 #endif	// __ART_OBJECT_EXPR_CC__
 

@@ -22,7 +22,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint<> x with indices: {
+    x = pint^1 x with indices: {
       [0..4]
     }
       unrolled index-value pairs: {
@@ -32,7 +32,7 @@ In namespace "", we have: {
         3 = ?
         4 = ?
       }
-    y = pint<> y with indices: {
+    y = pint^1 y with indices: {
       [5..12]
     }
       unrolled index-value pairs: {
@@ -45,7 +45,7 @@ In namespace "", we have: {
         11 = ?
         12 = ?
       }
-    z = pint<> z with indices: {
+    z = pint^1 z with indices: {
       [-6..6]
     }
       unrolled index-value pairs: {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.9.2.2 2005/01/31 04:16:31 fang Exp $
+	$Id: art_object_definition_base.h,v 1.9.2.3 2005/02/03 03:34:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -39,10 +39,10 @@ namespace entity {
 // USING_LIST
 using std::string;
 using std::istream;
+using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
 
 //=============================================================================
 /**
@@ -243,7 +243,7 @@ private:
 		ostream&) const;
 
 	void
-	load_object_template_formals(persistent_object_manager& m, 
+	load_object_template_formals(const persistent_object_manager& m, 
 		istream&);
 
 protected:
@@ -258,7 +258,7 @@ protected:
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
 	static const never_ptr<const definition_base>	null;

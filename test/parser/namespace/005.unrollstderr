@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	 0x3300714	datatprf	0	205	221
 	9	 0x3301710	datadefn	0	221	253
 	10	 0x3300724	dprmlst_	0	253	269
-	11	 0x268c024	cnstpi__	0	269	281
+	11	 0x2672024	cnstpi__	0	269	281
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -43,7 +43,7 @@ In namespace "", we have: {
               0 definitions
               0 typedefs
               Instances:
-                whazzup = int<32> whazzup (instantiated)
+                whazzup = int<32>^0 whazzup (instantiated)
             }
         }
     }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.1 2005/01/31 04:16:35 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.2 2005/02/03 03:34:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -98,12 +98,12 @@ namespace ART {
 namespace entity {
 
 #include "using_ostream.h"
-using HASH_QMAP_NAMESPACE::hash_map;
+using util::hash_map;
 using QMAP_NAMESPACE::qmap;
 using parser::scope;
 using std::_Select2nd;
 using namespace util::memory;
-using namespace ADS;		// for function compositions
+USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
@@ -530,7 +530,8 @@ scopespace::write_object_base_fake(const persistent_object_manager& m,
 	That is intentional since we don't intend to keep around aliases.  
  */
 void
-scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
+scopespace::load_object_used_id_map(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
@@ -546,7 +547,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 					<< index << endl;
 			}
 		} else {
-			m_obj->load_object(m);	// recursion!!!
+			m.load_object(m_obj);	// recursion!!!
 			// need to reconstruct it to get its key, 
 			// then add this object to the used_id_map
 			load_used_id_map_object(m_obj);	// pure virtual
@@ -556,7 +557,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::load_object_base(persistent_object_manager& m, istream& f) {
+scopespace::load_object_base(const persistent_object_manager& m, istream& f) {
 	load_object_used_id_map(m, f);
 }
 
@@ -1486,13 +1487,7 @@ name_space::construct_empty(const int i) {
 		only modifies the flagged state of the entries.  
  */
 void
-name_space::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-
-	// First, write out the index number associated with this address.  
-	WRITE_POINTER_INDEX(f, m);
-
+name_space::write_object(const persistent_object_manager& m, ostream& f) const {
 	// Second, write out the name of this namespace.
 	// name MUST be available for use by other visitors right away
 	write_string(f, key);
@@ -1501,8 +1496,6 @@ name_space::write_object(const persistent_object_manager& m) const {
 
 	// do we need to sort objects into bins?
 	scopespace::write_object_base(m, f);
-
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1512,15 +1505,8 @@ name_space::write_object(const persistent_object_manager& m) const {
 	was only partially initialized on allocation.  
  */
 void
-name_space::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+name_space::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE("namespace::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-
-	// First, strip away the index number associated with this address.
-	STRIP_POINTER_INDEX(f, m);
-
 	// Second, read in the name of the namespace.  
 	read_string(f, const_cast<string&>(key));	// coercive cast
 
@@ -1528,10 +1514,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	scopespace::load_object_base(m, f);
-
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited, don't reload
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
