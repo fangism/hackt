@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.9 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.10 2005/01/14 20:55:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -1517,12 +1517,12 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 	NEVER_NULL(o);
 	if (o.is_a<name_space>()) {
 		excl_ptr<name_space>
-			nsp(o.is_a_xfer<name_space>());
+			nsp = o.is_a_xfer<name_space>();
 		add_namespace(nsp);
 		INVARIANT(!nsp);
 	} else if (o.is_a<definition_base>()) {
 		excl_ptr<definition_base>
-			defp(o.is_a_xfer<definition_base>());
+			defp = o.is_a_xfer<definition_base>();
 		add_definition(defp);
 		INVARIANT(!defp);
 	// ownership restored here!

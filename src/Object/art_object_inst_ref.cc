@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.19 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.20 2005/01/14 20:55:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -200,7 +200,9 @@ simple_instance_reference::may_be_densely_packed(void) const {
 			// Unpack instance collection into
 			// multidimensional_sparse_set
 			const excl_ptr<const mset_base>
-				fui(unroll_static_instances(base_dim));
+				fui = unroll_static_instances(base_dim)
+					.as_a_xfer<const mset_base>();
+			// need explicit transfer :S
 			NEVER_NULL(fui);
 			// convert index to ranges
 			const const_range_list crl(*cil);
@@ -216,7 +218,8 @@ simple_instance_reference::may_be_densely_packed(void) const {
 		// TO DO: unpack instance collection into
 		// multidimensional_sparse_set
 		const excl_ptr<const mset_base>
-			fui(unroll_static_instances(base_dim));
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
 		NEVER_NULL(fui);
 		const mset_base::range_list_type
 			rl(fui->compact_dimensions());
@@ -246,7 +249,8 @@ simple_instance_reference::must_be_densely_packed(void) const {
 			// TO DO: unpack instance collection into
 			// multidimensional_sparse_set
 			const excl_ptr<const mset_base>
-				fui(unroll_static_instances(base_dim));
+				fui = unroll_static_instances(base_dim)
+					.as_a_xfer<const mset_base>();
 			NEVER_NULL(fui);
 			// convert index to ranges
 			const const_range_list crl(*cil);
@@ -262,7 +266,8 @@ simple_instance_reference::must_be_densely_packed(void) const {
 		// TO DO: unpack instance collection into
 		// multidimensional_sparse_set
 		const excl_ptr<const mset_base>
-			fui(unroll_static_instances(base_dim));
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
 		NEVER_NULL(fui);
 		const mset_base::range_list_type
 			rl(fui->compact_dimensions());
@@ -296,8 +301,9 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		if (!cil)	// is dynamic
 			return const_range_list();
 		// array indices are underspecified or fully specified
-		const excl_ptr<mset_base>
-			fui = unroll_static_instances(base_dim);
+		const excl_ptr<const mset_base>
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
 		NEVER_NULL(fui);
 		// convert index to ranges, but DON'T COLLAPSE dimensions yet!
 		// should collapse dimensions AFTER checking coverage
@@ -310,7 +316,8 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		// not indexed, implicitly refers to entire collection
 		// no dimensions will be collapsed
 		const excl_ptr<const mset_base>
-			fui(unroll_static_instances(base_dim));
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
 		NEVER_NULL(fui);
 		const mset_base::range_list_type
 			rl(fui->compact_dimensions());
@@ -347,7 +354,8 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 			// TO DO: unpack instance collection into
 			// multidimensional_sparse_set
 			const excl_ptr<const mset_base>
-				fui(unroll_static_instances(base_dim));
+				fui = unroll_static_instances(base_dim)
+					.as_a_xfer<const mset_base>();
 			NEVER_NULL(fui);
 			// convert index to ranges
 			const const_range_list crl(*cil);
@@ -381,7 +389,8 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 		// TO DO: unpack instance collection into
 		// multidimensional_sparse_set
 		const excl_ptr<const mset_base>
-			fui(unroll_static_instances(base_dim));
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
 		NEVER_NULL(fui);
 		const mset_base::range_list_type
 			rl(fui->compact_dimensions());

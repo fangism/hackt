@@ -2,10 +2,23 @@
 
 2005-01-14	David Fang	<fangism@users.sourceforge.net>
 
+	* memory/pointer_classes.h: intentionally declared an explicit, 
+	  private, undefined const-reference copy constructor, because
+	  the default action (which was actually implicitly used!)
+	  copies member-for-member, which violates exclusion.  
+	  This may fix other hidden problems.  
+
 	* Added partial specializations for util::what template, 
 	  pointer, reference, const-ness.  
 	  Only one module has trouble with static initializations:
 	  art_parser_definition.cc, don't know why yet...
+
+	* Some minor fixes in util template library, compile-time
+	  problems discovered with gcc-3.4.0, due to improved two-phase
+	  template definition evaluation.  
+
+	* MAJOR PROBLEM: severe crashes on FreeBSD-3.4/gcc-3.4.0, 
+	  currently investigating.  
 
 
 2005-01-13	David Fang	<fangism@users.sourceforge.net>

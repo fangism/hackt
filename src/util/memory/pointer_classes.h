@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.7 2005/01/12 04:14:21 fang Exp $
+	$Id: pointer_classes.h,v 1.8 2005/01/14 20:55:09 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -415,7 +415,14 @@ public:
 		// issue a warning?
 	}
 #endif
+#if 1
+private:
+	// intentionally inaccessible undefined copy-constructor
+	explicit
+	excl_ptr(const excl_ptr<T>& e);
+#endif
 
+public:
 /**
 	De-allocates memory.  
 	Should be safe to delete NULL?

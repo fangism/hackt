@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.28 2005/01/14 19:40:27 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.29 2005/01/14 20:55:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -643,8 +643,9 @@ if (pa) {
  */
 count_ptr<const fundamental_type_reference>
 definition_base::make_fundamental_type_reference(void) const {
+	// assign, not copy construct!
 	excl_ptr<dynamic_param_expr_list>
-		dplp(make_default_template_arguments());
+		dplp = make_default_template_arguments();
 	return make_fundamental_type_reference(dplp);
 }
 
