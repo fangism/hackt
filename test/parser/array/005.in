@@ -1,0 +1,5 @@
+// should fail: extending array with single instance
+
+pint y[2];
+pint y;
+

@@ -1,0 +1,4 @@
+// should pass: 2D parameter arrays
+
+pint y[2][2];
+

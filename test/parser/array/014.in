@@ -1,0 +1,5 @@
+// should fail: backwards range
+
+pint x[1][6..5][2..4];
+
+

@@ -1,0 +1,7 @@
+// should pass: sparse-style arrays
+
+pint x[0..4];
+pint y[5..12];
+pint z[-6..6];		// so far, allow negative indices...
+
+
