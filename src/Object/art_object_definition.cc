@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.5 2005/02/17 00:43:08 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.6 2005/02/17 04:20:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -605,7 +605,7 @@ definition_base::load_object_template_formals(
 		const template_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
-		m.load_object(const_cast<param_instance_collection*>(
+		m.load_object_once(const_cast<param_instance_collection*>(
 			&*inst_ptr));
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
@@ -2331,7 +2331,7 @@ process_definition::load_object_port_formals(
 	for ( ; iter!=end; iter++) {
 		const port_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
-		m.load_object(const_cast<instance_collection_base*>(
+		m.load_object_once(const_cast<instance_collection_base*>(
 			&*inst_ptr));
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}

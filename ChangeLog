@@ -2,6 +2,11 @@
 
 2005-02-16	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-12:
+	  Wrote draft of code to save and restore bool aliases, 
+	  untested and disabled, so all tests still pass.  
+	  Will enable and test in next revision.  
+
 	* ARTXX-00-01-04-main-00-04-object-01-11-merged-gcc4-02:
 	  Merged tiny revisions from the -09-gcc child branch, 
 	  through rev -02.

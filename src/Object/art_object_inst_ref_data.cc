@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.1 2005/02/03 03:34:50 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2 2005/02/17 04:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -100,7 +100,8 @@ int_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, int_inst_ref);
 	NEVER_NULL(int_inst_ref);
-	m.load_object(const_cast<instance_collection_type*>(&*int_inst_ref));
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*int_inst_ref));
 	parent_type::load_object_base(m, f);
 }
 
@@ -182,7 +183,8 @@ bool_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, bool_inst_ref);
 	NEVER_NULL(bool_inst_ref);
-	m.load_object(const_cast<instance_collection_type*>(&*bool_inst_ref));
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*bool_inst_ref));
 	parent_type::load_object_base(m, f);
 }
 
@@ -264,7 +266,7 @@ enum_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, enum_inst_ref);
 	NEVER_NULL(enum_inst_ref);
-	m.load_object(const_cast<instance_collection_type*>(
+	m.load_object_once(const_cast<instance_collection_type*>(
 		&*enum_inst_ref));
 	parent_type::load_object_base(m, f);
 }
@@ -347,7 +349,8 @@ datastruct_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, struct_inst_ref);
 	NEVER_NULL(struct_inst_ref);
-	m.load_object(const_cast<instance_collection_type*>(&*struct_inst_ref));
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*struct_inst_ref));
 	parent_type::load_object_base(m, f);
 }
 

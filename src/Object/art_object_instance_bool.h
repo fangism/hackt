@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.3 2005/02/17 00:10:14 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4 2005/02/17 04:20:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -127,6 +127,11 @@ virtual	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
 
+// probably need not be virtual, same for all children classes.
+virtual	void
+	load_next_connection(const persistent_object_manager& m, 
+		istream& i);
+
 public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
@@ -202,6 +207,7 @@ public:
 	typedef	multikey_set_element_derived<
 			D, pint_value_type, bool_instance_alias_base>
 							parent_type;
+	typedef	bool_array<D>				container_type;
 private:
 	/**
 		grandparent_type is maplikeset_element_derived.
@@ -233,6 +239,10 @@ public:
 	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
+
+	void
+	load_next_connection(const persistent_object_manager& m, 
+		istream& i);
 
 	void
 	dump_alias(ostream& o) const;
@@ -279,6 +289,8 @@ private:
 	typedef	bool_instance_alias<0>			this_type;
 	typedef	bool_instance_alias_base		parent_type;
 public:
+	typedef	bool_array<0>				container_type;
+public:
 	~bool_instance_alias();
 
 	void
@@ -287,6 +299,10 @@ public:
 	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
+
+	void
+	load_next_connection(const persistent_object_manager& m, 
+		istream& i);
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
@@ -353,6 +369,8 @@ virtual bool
 	connect(const multikey_index_type& k, const bool_instance_alias& b) = 0;
 #endif
 public:
+virtual	bool_instance_alias_base&
+	load_reference(istream& i) const = 0;
 
 	static
 	bool_instance_collection*
@@ -427,6 +445,9 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
+	bool_instance_alias_base&
+	load_reference(istream& i) const;
+
 	class element_writer {
 		ostream& os;
 		const persistent_object_manager& pom;
@@ -436,7 +457,20 @@ public:
 
 		void
 		operator () (const element_type& ) const;
-	};	// end struct element_writer
+	};	// end class element_writer
+
+	class element_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+		collection_type& coll;
+	public:
+		element_loader(const persistent_object_manager& m, 
+			istream& i, collection_type& c) :
+			is(i), pom(m), coll(c) { }
+
+		void
+		operator () (void);
+	};	// end class element_loader
 
 	class connection_writer {
 		ostream& os;
@@ -447,7 +481,18 @@ public:
 
 		void
 		operator () (const element_type& ) const;
-	};	// end struct connection_writer
+	};	// end class connection_writer
+
+	class connection_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+	public:
+		connection_loader(const persistent_object_manager& m, 
+			istream& i) : is(i), pom(m) { }
+
+		void
+		operator () (const element_type& );
+	};	// end class connection_loader
 
 	struct key_dumper {
 		ostream& os;
@@ -504,6 +549,9 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
+
+	bool_instance_alias_base&
+	load_reference(istream& i) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC

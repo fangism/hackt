@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.4 2005/02/17 00:43:08 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5 2005/02/17 04:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -853,7 +853,7 @@ simple_instance_reference::load_object_base(
 	m.read_pointer(i, array_indices);
 	// must load the 
 	if (array_indices)
-		m.load_object(array_indices);
+		m.load_object_once(array_indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1238,7 +1238,7 @@ process_instance_reference::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, process_inst_ref);
 	NEVER_NULL(process_inst_ref);
-	m.load_object(const_cast<process_instance_collection*>(
+	m.load_object_once(const_cast<process_instance_collection*>(
 		&*process_inst_ref));
 	parent_type::load_object_base(m, i);
 }
@@ -1427,7 +1427,7 @@ channel_instance_reference::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, channel_inst_ref);
 	NEVER_NULL(channel_inst_ref);
-	m.load_object(const_cast<channel_instance_collection*>(
+	m.load_object_once(const_cast<channel_instance_collection*>(
 		&*channel_inst_ref));
 	parent_type::load_object_base(m, i);
 }
@@ -1538,7 +1538,7 @@ process_member_instance_reference::load_object(
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, process_inst_ref);
 	NEVER_NULL(process_inst_ref);
-	m.load_object(const_cast<process_instance_collection*>(
+	m.load_object_once(const_cast<process_instance_collection*>(
 		&*process_inst_ref));
 	parent_type::load_object_base(m, f);
 }
@@ -1642,7 +1642,7 @@ datatype_member_instance_reference::load_object(
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, data_inst_ref);
 	NEVER_NULL(data_inst_ref);
-	m.load_object(const_cast<datatype_instance_collection*>(
+	m.load_object_once(const_cast<datatype_instance_collection*>(
 		&*data_inst_ref));
 	parent_type::load_object_base(m, f);
 }
@@ -1738,7 +1738,7 @@ channel_member_instance_reference::load_object(
 	interface_type::load_object_base(m, f);
 	m.read_pointer(f, channel_inst_ref);
 	NEVER_NULL(channel_inst_ref);
-	m.load_object(const_cast<channel_instance_collection*>(
+	m.load_object_once(const_cast<channel_instance_collection*>(
 		&*channel_inst_ref));
 	parent_type::load_object_base(m, f);
 }

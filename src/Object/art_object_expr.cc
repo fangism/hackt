@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.4 2005/02/17 00:10:11 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5 2005/02/17 04:20:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -589,7 +589,7 @@ const_param_expr_list::load_object(const persistent_object_manager& m,
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			m.load_object(ip);
+			m.load_object_once(ip);
 #endif
 		push_back(ip);
 	}
@@ -899,7 +899,7 @@ dynamic_param_expr_list::load_object(const persistent_object_manager& m,
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			m.load_object(ip);
+			m.load_object_once(ip);
 #endif
 		push_back(ip);
 	}
@@ -1367,7 +1367,8 @@ pbool_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, pbool_inst_ref);
 	NEVER_NULL(pbool_inst_ref);
-	m.load_object(const_cast<pbool_instance_collection*>(&*pbool_inst_ref));
+	m.load_object_once(
+		const_cast<pbool_instance_collection*>(&*pbool_inst_ref));
 	load_object_base(m, f);
 }
 
@@ -1927,7 +1928,8 @@ pint_instance_reference::load_object(const persistent_object_manager& m,
 		istream& f) {
 	m.read_pointer(f, pint_inst_ref);
 	NEVER_NULL(pint_inst_ref);
-	m.load_object(const_cast<pint_instance_collection*>(&*pint_inst_ref));
+	m.load_object_once(
+		const_cast<pint_instance_collection*>(&*pint_inst_ref));
 	load_object_base(m, f);
 }
 
@@ -4697,7 +4699,7 @@ dynamic_range_list::load_object(const persistent_object_manager& m,
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			m.load_object(ip);
+			m.load_object_once(ip);
 #endif
 		push_back(ip);
 	}
@@ -5083,7 +5085,7 @@ const_index_list::load_object(const persistent_object_manager& m,
 		m.read_pointer(f, ip);
 #if 1
 		if (ip)
-			m.load_object(ip);
+			m.load_object_once(ip);
 #endif
 		push_back(ip);
 	}
@@ -5374,7 +5376,7 @@ dynamic_index_list::load_object(const persistent_object_manager& m,
 		count_ptr<index_expr> ip;
 		m.read_pointer(f, ip);
 		if (ip)
-			m.load_object(ip);
+			m.load_object_once(ip);
 		// need to load to know dimensions
 		push_back(ip);
 	}

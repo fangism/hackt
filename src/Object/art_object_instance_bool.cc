@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.4 2005/02/17 00:43:09 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.5 2005/02/17 04:20:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -156,6 +156,13 @@ bool_instance_alias_info::write_next_connection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+bool_instance_alias_info::load_next_connection(
+		const persistent_object_manager& m, istream& i) {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 bool_instance_alias_info::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT("bool_alias_info::write_object()");
@@ -224,15 +231,42 @@ bool_instance_alias<D>::dump_alias(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called by element_writer to record the information
+	necessary to reconstruct a connection.  
+ */
 template <size_t D>
 void
 bool_instance_alias<D>::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
+	// which container did this alias come from?
 	m.write_pointer(o, container);
-#if 0
-	value_writer<key_type> kw(os);
-	kw(e.key);
-#endif
+	// what's its key in the container?
+	value_writer<key_type> write_key(o);
+	write_key(key);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+bool_instance_alias<D>::load_next_connection(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, container);
+	// reconstruction ordering problem:
+	// container must have its instances alread loaded, though 
+	// not necessarily constructed.
+	// This is why instance re-population MUST be decoupled from
+	// connection re-establishment *GRIN*.  
+	// See? there's a reason for everything.  
+	NEVER_NULL(container);
+	// this is the safe way of ensuring that object is loaded once only.
+	m.load_object_once(const_cast<bool_instance_collection*>(&*container));
+
+	// the CONTAINER should read the key, because it is dimension-specific!
+	// it should return a reference to the alias node, 
+	// which can then be linked.  
+	bool_instance_alias_base& n(container->load_reference(i));
+	merge(n);	// re-link
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -292,6 +326,23 @@ bool_instance_alias<0>::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, container);
 	// no key to write!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this is the SAME as template version, this function need not be
+	virtual!  
+ */
+void
+bool_instance_alias<0>::load_next_connection(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, container);
+	NEVER_NULL(container);
+	// no key to read!
+	// problem: container is a never_ptr<const ...>, yucky
+	m.load_object_once(const_cast<bool_instance_collection*>(&*container));
+	bool_instance_alias_base& n(container->load_reference(i));
+	merge(n);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -639,6 +690,23 @@ bool_array<D>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Reads a key from binary stream then returns a reference to the 
+	indexed instance alias.  
+ */
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+bool_instance_alias_base&
+bool_array<D>::load_reference(istream& i) const {
+	key_type k;
+	value_reader<key_type> read_key(i);
+	read_key(k);
+	const iterator it(collection.find(k));
+	INVARIANT(it != collection.end());
+	// need const cast because set only returns const references/iterators
+	return const_cast<element_type&>(*it);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Going to need some sort of element_reader counterpart.
 	\param e is a reference to a bool_instance_alias<D>.
  */
@@ -653,12 +721,63 @@ bool_array<D>::element_writer::operator () (const element_type& e) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This must perfectly complement element_writer::operator().
+	construct the element locally first, then insert it into set.
+ */
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+bool_array<D>::element_loader::operator () (void) {
+	key_type temp_key;
+	value_reader<key_type> read_key(is);
+	read_key(temp_key);
+	element_type temp_elem(temp_key);
+	temp_elem.load_object_base(pom, is);
+	coll.insert(temp_elem);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Records a reference to the next alias in the connected ring, 
+	by saving the necessary information to reconstruct the link.  
+	This is necessary because the element_types are persistent, 
+	by not dynamically reconstructed.  
+ */
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("bool_array<D>::connection_writer::operator()");
 	const bool_instance_alias_base* const next = e.get_next();
-	next->write_next_connection(pom, os);
+	NEVER_NULL(next);
+	if (next != this) {
+		write_value<char>(os, 1);
+		next->write_next_connection(pom, os);
+	} else {
+		write_value<char>(os, 0);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Must complement connection_writer::operator().
+	const_cast is an unfortunate consequence of set only
+	returning const references and const iterators, where we intend
+	the non-key part of the object to me mutable.  
+ */
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+bool_array<D>::connection_loader::operator() (const element_type& e) {
+	STACKTRACE_PERSISTENT("bool_array<D>::connection_loader::operator()");
+	char c;
+	read_value(is, c);
+	if (c) {
+		element_type& elem(const_cast<element_type&>(e));
+		// lookup the instance in the collection referenced
+		// and connect them
+		elem.load_next_connection(pom, is);
+	}
+	// else just leave it pointing to itself, 
+	// which was how it was constructed
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -711,22 +830,15 @@ bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	size_t collection_size;
 	read_value(f, collection_size);
 	size_t i = 0;
+	element_loader load_element(m, f, collection);
 	for ( ; i < collection_size; i++) {
-		// this must perfectly complement element_writer::operator()
-		// construct the element locally first, then insert it into set
-		key_type temp_key;
-		value_reader<key_type> read_key(f);
-		read_key(temp_key);
-		element_type temp_elem(temp_key);
-		temp_elem.load_object_base(m, f);
-		collection.insert(temp_elem);
+		load_element();
 	}
 #if 0
 	// punting connections...
-	i = 0;
-	for ( ; i < collection_size; i++) {
-		// this must complement connection_writer::operator()
-	}
+	for_each(collection.begin(), collection.end(), 
+		connection_loader(m, f)
+	);
 #endif
 }
 
@@ -830,6 +942,16 @@ bool_array<0>::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_instance_alias_base&
+bool_array<0>::load_reference(istream& i) const {
+	// no key to read!
+	// const_cast: have to modify next pointers to re-establish connection, 
+	// which is semantically allowed because we allow the alias pointers
+	// to be mutable.  
+	return const_cast<instance_type&>(the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

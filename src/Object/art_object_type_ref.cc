@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.2 2005/02/17 00:43:11 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3 2005/02/17 04:20:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -323,7 +323,8 @@ fundamental_type_reference::load_object_base(
 	STACKTRACE("fund_type_ref::load_object_base()");
 	m.read_pointer(i, template_params);
 	if (template_params)
-		m.load_object(const_cast<param_expr_list*>(&*template_params));
+		m.load_object_once(
+			const_cast<param_expr_list*>(&*template_params));
 }
 
 
@@ -539,7 +540,8 @@ data_type_reference::load_object(const persistent_object_manager& m,
 
 	// MINOR HACK: recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
-	m.load_object(const_cast<datatype_definition_base*>(&*base_type_def));
+	m.load_object_once(
+		const_cast<datatype_definition_base*>(&*base_type_def));
 	if (base_type_def->get_key() == "bool")
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&bool_def);

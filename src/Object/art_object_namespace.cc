@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12.2.3 2005/02/17 00:10:16 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.12.2.4 2005/02/17 04:20:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -569,7 +569,7 @@ scopespace::load_object_used_id_map(
 					<< index << endl;
 			}
 		} else {
-			m.load_object(m_obj);	// recursion!!!
+			m.load_object_once(m_obj);	// recursion!!!
 			// need to reconstruct it to get its key, 
 			// then add this object to the used_id_map
 			load_used_id_map_object(m_obj);	// pure virtual
