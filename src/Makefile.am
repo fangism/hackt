@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40 2005/01/13 18:59:40 fang Exp $
+#	$Id: Makefile.am,v 1.41 2005/01/28 19:03:56 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -168,6 +168,7 @@ UTIL_HEADER_FILES = \
 	util/STL/pair_fwd.h \
 	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
+	util/STL/vector_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
@@ -180,6 +181,7 @@ UTIL_HEADER_FILES = \
 	util/hash_qmap.h \
 	util/hash_qmap.tcc \
 	util/hash_specializations.h \
+	util/ifthenelse.h \
 	util/indent.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
@@ -206,6 +208,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_qmap.h \
 	util/multikey_qmap.tcc \
 	util/nested_iterator.h \
+	util/numeric/integer_traits.h \
 	util/operators.h \
 	util/packed_array.h \
 	util/packed_array.tcc \

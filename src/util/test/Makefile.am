@@ -7,6 +7,7 @@ TEST_EXPECT_SH = $(srcdir)/test-expect.sh
 
 include $(top_srcdir)/Make.stddef
 
+# auto-generated test scripts
 .cc.test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
@@ -21,6 +22,7 @@ noinst_PROGRAMS = \
 	deque_iterator_test \
 	hash_qmap_test \
 	discrete_interval_set_test \
+	integer_traits_test \
 	list_vector_test \
 	list_vector_pool_test \
 	multidimensional_sparse_set_test \
@@ -49,6 +51,7 @@ multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
 multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
+integer_traits_test_SOURCES = integer_traits_test.cc
 packed_array_test_SOURCES = packed_array_test.cc
 exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
 throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h

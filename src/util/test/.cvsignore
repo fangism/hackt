@@ -19,6 +19,7 @@ sublist_test
 deque_iterator_test
 discrete_interval_set_test
 hash_qmap_test
+integer_traits_test
 multidimensional_sparse_set_test
 multidimensional_qmap_test
 multikey_qmap_test

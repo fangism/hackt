@@ -1,0 +1,286 @@
+Testing traits of integer 0:
+... is a perfect square.
+nearest square-root is 0
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+0! (factorial) = 1
+Fibonacci[0] = 1
+next greater odd number is 1
+next odd after sqrt_floor is 1
+first prime before that is 2
+and the prime before that is 2
+last prime is 2
+0 is composite
+
+Testing traits of integer 1:
+... is a perfect square.
+nearest square-root is 1
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 1) = (10 << 0) = 10
+1! (factorial) = 1
+Fibonacci[1] = 1
+next greater odd number is 3
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 2
+1 is composite
+
+Testing traits of integer 2:
+... is not a perfect square.
+nearest square-root is 1
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 2) = (10 << 1) = 20
+2! (factorial) = 2
+Fibonacci[2] = 2
+next greater odd number is 3
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 2
+2 is prime
+
+Testing traits of integer 3:
+... is not a perfect square.
+nearest square-root is 1
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+3! (factorial) = 6
+Fibonacci[3] = 3
+next greater odd number is 5
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 3
+3 is prime
+
+Testing traits of integer 4:
+... is a perfect square.
+nearest square-root is 2
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 4) = (10 << 2) = 40
+4! (factorial) = 24
+Fibonacci[4] = 5
+next greater odd number is 5
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 3
+4 is composite
+
+Testing traits of integer 5:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+5! (factorial) = 120
+Fibonacci[5] = 8
+next greater odd number is 7
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 5
+5 is prime
+
+Testing traits of integer 6:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+6! (factorial) = 720
+Fibonacci[6] = 13
+next greater odd number is 7
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 5
+6 is composite
+
+Testing traits of integer 7:
+... is not a perfect square.
+nearest square-root is 2
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+7! (factorial) = 5040
+Fibonacci[7] = 21
+next greater odd number is 9
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 7
+7 is prime
+
+Testing traits of integer 8:
+... is not a perfect square.
+nearest square-root is 2
+... is a power of 2.
+power_of_2 category is power_of_2_tag<true>
+multiplication becomes shift: (10 * 8) = (10 << 3) = 80
+8! (factorial) = 40320
+Fibonacci[8] = 34
+next greater odd number is 9
+next odd after sqrt_floor is 3
+first prime before that is 2
+and the prime before that is 2
+last prime is 7
+8 is composite
+
+Testing traits of integer 9:
+... is a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+9! (factorial) = 362880
+Fibonacci[9] = 55
+next greater odd number is 11
+next odd after sqrt_floor is 5
+first prime before that is 3
+and the prime before that is 2
+last prime is 7
+9 is composite
+
+Testing traits of integer 10:
+... is not a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+10! (factorial) = 3628800
+Fibonacci[10] = 89
+next greater odd number is 11
+next odd after sqrt_floor is 5
+first prime before that is 3
+and the prime before that is 2
+last prime is 7
+10 is composite
+
+Testing traits of integer 11:
+... is not a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+11! (factorial) = 39916800
+Fibonacci[11] = 144
+next greater odd number is 13
+next odd after sqrt_floor is 5
+first prime before that is 3
+and the prime before that is 2
+last prime is 11
+11 is prime
+
+Testing traits of integer 12:
+... is not a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+12! (factorial) = 479001600
+Fibonacci[12] = 233
+next greater odd number is 13
+next odd after sqrt_floor is 5
+first prime before that is 3
+and the prime before that is 2
+last prime is 11
+12 is composite
+
+Testing traits of integer 13:
+... is not a perfect square.
+nearest square-root is 3
+... is not a power of 2.
+power_of_2 category is power_of_2_tag<false>
+13! (factorial) = 1932053504
+Fibonacci[13] = 377
+next greater odd number is 15
+next odd after sqrt_floor is 5
+first prime before that is 3
+and the prime before that is 2
+last prime is 13
+13 is prime
+
+14 is composite
+15 is composite
+16 is composite
+17 is prime
+18 is composite
+19 is prime
+20 is composite
+21 is composite
+22 is composite
+23 is prime
+24 is composite
+25 is composite
+26 is composite
+27 is prime
+28 is composite
+29 is prime
+30 is composite
+31 is prime
+32 is composite
+33 is prime
+34 is composite
+35 is composite
+36 is composite
+37 is prime
+38 is composite
+39 is prime
+40 is composite
+41 is prime
+42 is composite
+43 is prime
+44 is composite
+45 is composite
+46 is composite
+47 is prime
+48 is composite
+49 is composite
+50 is composite
+51 is composite
+52 is composite
+53 is prime
+54 is composite
+55 is prime
+56 is composite
+57 is composite
+58 is composite
+59 is prime
+60 is composite
+61 is prime
+62 is composite
+63 is composite
+64 is composite
+65 is prime
+66 is composite
+67 is prime
+68 is composite
+69 is composite
+70 is composite
+71 is prime
+72 is composite
+73 is prime
+74 is composite
+75 is composite
+76 is composite
+77 is composite
+78 is composite
+79 is prime
+80 is composite
+81 is composite
+82 is composite
+83 is prime
+84 is composite
+85 is prime
+86 is composite
+87 is composite
+88 is composite
+89 is prime
+90 is composite
+91 is composite
+92 is composite
+93 is composite
+94 is composite
+95 is prime
+96 is composite
+97 is prime
+98 is composite
+99 is composite
