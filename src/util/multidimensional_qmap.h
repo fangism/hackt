@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.8 2004/12/15 23:31:13 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.9 2004/12/16 01:08:53 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -31,9 +31,6 @@
 	Use nested_iterator concept!
  */
 
-/**
-	Namespace containing multidimensional-sparse-set classes.  
- */
 namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
 //=============================================================================
 using std::pair;

@@ -1,7 +1,8 @@
 /**
 	\file "multikey_qmap.tcc"
 	Template method definitions for queryable multikey map.
-	$Id: multikey_qmap.tcc,v 1.2 2004/12/15 23:31:13 fang Exp $
+	Almost entirely copied from multikey_map.tcc.
+	$Id: multikey_qmap.tcc,v 1.3 2004/12/16 01:08:53 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_TCC__
@@ -9,8 +10,6 @@
 
 #include "multikey_qmap.h"
 #include "qmap.tcc"
-
-#if SPECIALIZE_MULTIKEY_QMAP
 
 #define	DEBUG_SLICE		0
 
@@ -665,10 +664,6 @@ multikey_map<1,K,T,qmap>::read(istream& f) {
 }	// end namespace MULTIKEY_MAP_NAMESPACE
 
 #undef	DEBUG_SLICE
-
-#else
-#include "multikey_map.tcc"
-#endif	// SPECIALIZE_MULTIKEY_QMAP
 
 #endif	// __MULTIKEY_QMAP_TCC__
 

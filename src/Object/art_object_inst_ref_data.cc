@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.1 2004/12/10 22:02:16 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.2 2004/12/16 01:08:51 fang Exp $
  */
 
 #include "art_object_inst_ref_data.h"
@@ -15,7 +15,10 @@
 
 namespace ART {
 namespace entity {
+#include "using_ostream.h"
 using std::istream;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class int_instance_reference method definitions

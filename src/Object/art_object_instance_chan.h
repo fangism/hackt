@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.5 2004/12/15 23:31:10 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.6 2004/12/16 01:08:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -126,11 +126,7 @@ public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
 	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	chan_instance_alias			element_type;
-#if 0
-	typedef	multikey_qmap<D, int, element_type>	collection_type;
-#else
 	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
-#endif
 
 private:
 	collection_type					collection;

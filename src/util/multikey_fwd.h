@@ -1,7 +1,7 @@
 /**
 	\file "multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
-	$Id: multikey_fwd.h,v 1.6 2004/12/05 05:07:24 fang Exp $
+	$Id: multikey_fwd.h,v 1.7 2004/12/16 01:08:53 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H_FWD__
@@ -9,7 +9,7 @@
 
 // overrideable namespace
 #ifndef	MULTIKEY_NAMESPACE
-#define	MULTIKEY_NAMESPACE	multikey_namespace
+#define	MULTIKEY_NAMESPACE	util
 #endif
 
 #include <iosfwd>

@@ -1,7 +1,7 @@
 /**
 	\file "discrete_interval_set.tcc"
 	Template class method definitions for discrete_interval_set.
-	$Id: discrete_interval_set.tcc,v 1.1 2004/12/05 05:07:23 fang Exp $
+	$Id: discrete_interval_set.tcc,v 1.2 2004/12/16 01:08:53 fang Exp $
  */
 
 #ifndef	__DISCRETE_INTERVAL_SET_TCC__
@@ -46,12 +46,12 @@ discrete_interval_set<T>::check_integrity(void) const {
 		T temp;
 		const_iterator i = parent.begin();
 		const const_iterator e = parent.end();
-		assert(i->first <= i->second);
+		INVARIANT(i->first <= i->second);
 		temp = i->second;
 		i++;
 		while (i != e) {
-			assert(i->first <= i->second);
-			assert(temp < i->first);
+			INVARIANT(i->first <= i->second);
+			INVARIANT(temp < i->first);
 			temp = i->second;
 			i++;
 		}

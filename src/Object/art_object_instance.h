@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.31 2004/12/15 23:31:10 fang Exp $
+	$Id: art_object_instance.h,v 1.32 2004/12/16 01:08:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -11,9 +11,6 @@
 #include "memory/pointer_classes.h"
 
 #include "multikey_fwd.h"
-#if 0
-#include "multikey_qmap_fwd.h"
-#endif
 
 namespace ART {
 namespace entity {
@@ -21,9 +18,6 @@ namespace entity {
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
 using MULTIKEY_NAMESPACE::multikey_base;
-#if 0
-using namespace MULTIKEY_MAP_NAMESPACE;
-#endif
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"

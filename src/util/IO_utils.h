@@ -1,15 +1,28 @@
 /**
 	\file "IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.1 2004/11/05 02:38:32 fang Exp $
+	$Id: IO_utils.h,v 1.2 2004/12/16 01:08:53 fang Exp $
  */
 
 #ifndef __IO_UTILS_H__
 #define __IO_UTILS_H__
 
 #include <iosfwd>
-#include <string>
-#include <utility>		// for std::pair
+#include "string_fwd.h"
+#include "STL/pair_fwd.h"
+
+#define	USING_IO_UTILS							\
+using util::read_value;							\
+using util::write_value;						\
+using util::read_string;						\
+using util::write_string;						\
+using util::write_sequence;						\
+using util::read_sequence_in_place;					\
+using util::read_sequence_back_insert;					\
+using util::write_key_value_pair;					\
+using util::read_key_value_pair;					\
+using util::read_map;							\
+using util::write_map;
 
 //=============================================================================
 // general utility functions

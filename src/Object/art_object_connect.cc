@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.15 2004/12/07 02:22:06 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.16 2004/12/16 01:08:51 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,8 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+USING_IO_UTILS
+#include "using_ostream.h"
 
 //=============================================================================
 // class instance_reference_connection method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.7 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_instance_base.h,v 1.8 2004/12/16 01:08:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -24,7 +24,9 @@ namespace entity {
 USING_LIST
 USING_DEQUE
 using std::istream;
-using namespace util;
+using std::string;
+using util::persistent;
+using util::persistent_object_manager;
 using namespace util::memory;
 
 //=============================================================================
