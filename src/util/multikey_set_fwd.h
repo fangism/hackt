@@ -1,7 +1,7 @@
 /**
 	"multikey_set_fwd.h"
 	Forward declarations for multikey set.
-	$Id: multikey_set_fwd.h,v 1.1.4.1 2005/02/09 04:14:18 fang Exp $
+	$Id: multikey_set_fwd.h,v 1.1.4.1.2.1 2005/02/16 18:44:25 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_FWD_H__
@@ -11,9 +11,6 @@
 
 #define	MULTIKEY_SET_TEMPLATE_SIGNATURE					\
 template <size_t D, class T, template <class> class S>
-
-#define	SPECIALIZED_MULTIKEY_SET_TEMPLATE_SIGNATURE			\
-template <class T, template <class> class S>
 
 #define	MULTIKEY_SET_ELEMENT_TEMPLATE_SIGNATURE				\
 template <size_t D, class K, class T>

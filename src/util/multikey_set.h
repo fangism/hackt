@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.4.1.2.3 2005/02/15 22:31:44 fang Exp $
+	$Id: multikey_set.h,v 1.1.4.1.2.4 2005/02/16 18:44:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -78,8 +78,6 @@ public:
 
 	void
 	clean(void);
-
-	// everything else inherited
 
 	std::ostream&
 	dump(std::ostream& o) const;
@@ -215,7 +213,7 @@ struct _Select2nd<multikey_set_element_derived<D,K,T> > :
 	operator () (const pair_type& p) const {
 		return static_cast<const second_type&>(p);
 	}
-};      // end struct _Select1st
+};      // end struct _Select2nd
 
 }	// end namespace std
 

@@ -10,6 +10,10 @@
 	  overall changes with bool collections to int<W> collections.
 	  Then we'll attempt to reconstruct aliases... ooooh...
 
+	+ -multikey-08:
+	  Massively cleaned up, as promised.
+	  Affected: multikey_map-related files, art_object_instance_bool.*
+
 
 2005-02-15	David Fang	<fangism@users.sourceforge.net>
 

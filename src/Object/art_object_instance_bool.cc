@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.8 2005/02/16 17:41:32 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.9 2005/02/16 18:44:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -172,7 +172,7 @@ bool_instance_alias_info::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("bool_alias_info::load_object()");
 	m.read_pointer(i, instance);
 	m.read_pointer(i, container);
-//	NEVER_NULL(container);
+//	NEVER_NULL(container);		// may be null for scalar instance
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,51 +183,8 @@ bool_instance_alias_info::transient_info_collector::operator () (
 }
 
 //=============================================================================
-// class bool_instance_alias_base method definitions
+// typedef bool_instance_alias_base function definitions
 
-#if 0
-bool_instance_alias_base::~bool_instance_alias_base() {
-	STACKTRACE_DTOR("~bool_alias_base()");
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance_alias_base::collect_transient_info(
-		persistent_object_manager& m) const {
-	// IF NOT ALREADY VISITED!, but who's tracking, if not the manager?
-	// visit ALL aliases
-	for_each(begin(), end(), 
-		info_type::transient_info_collector(m)
-	);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance_alias_base::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	info_type::write_object_base(m, o);
-	// the 'next' pointer needs to be handled with care!
-	// we're not going to write out the translated pointer for 'next', 
-	// but the information needed to reproduce it:
-	// a pointer to the collection, and a possible unrolled index.  
-	// next points to ring_node<info_type>
-	const bool_instance_alias_base*
-		next_alias = IS_A(const bool_instance_alias_base*, next);
-	INVARIANT(next_alias);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance_alias_base::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	info_type::load_object_base(m, i);
-	// may require recursive instance collection construction!
-	// what if there is mutual recursion?  must prevent it!
-	// split into two phases!
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 operator << (ostream& o, const bool_instance_alias_base& b) {
 	return o << "bool-alias @ " << &b;
@@ -421,18 +378,6 @@ bool_instance_collection::make_instance_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-bool_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		DBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
-	parent_type::collect_transient_info_base(m);
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_collection*
 bool_instance_collection::make_bool_array(
 		const scopespace& o, const string& n, const size_t d) {
@@ -480,20 +425,12 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array() : parent_type(D), collection() {
-#if 0
-	STACKTRACE("bool_array<D>()");
-	cerr << collection.size() << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 bool_array<D>::bool_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
-#if 0
-	STACKTRACE("bool_array<D>(scope,string)");
-	cerr << collection.size() << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,20 +500,6 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	bool err = false;
 	do {
-		// will create if necessary
-//		iterator bi(collection.find(key_gen));
-//		bool_instance_alias<D>& pi(collection[key_gen]);
-#if 0
-		typename collection_type::reference ref(collection[key_gen]);
-		bool_instance_alias<D>& pi(ref.value());
-		if (pi.valid()) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen <<
-				" already instantiated!" << endl;
-			THROW_EXIT;
-		}
-		pi.instantiate(never_ptr<const this_type>(this));
-#else
 		const_iterator iter = collection.find(key_gen);
 		if (iter == collection.end()) {
 			// then we can insert a new one
@@ -591,7 +514,6 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 				" already instantiated!" << endl;
 			err = true;
 		}
-#endif
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	if (err)
@@ -648,11 +570,6 @@ bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
 	const key_type index(i);
-#if 0
-	const bool_instance_alias<D>&
-		b(collection[index]);
-//		b(AS_A(const collection_type&, collection)[i]);
-#else
 	const const_iterator it(collection.find(index));
 	if (it == collection.end()) {
 		cerr << "ERROR: reference to uninstantiated bool " <<
@@ -660,12 +577,13 @@ bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 		return instance_ptr_type(NULL);
 	}
 	const bool_instance_alias<D>& b(*it);
-#endif
+	// can b be invalid anymore? not if this is an array...
+	// arrays can only contain validly instantiated aliases.  
+	// unlike scalars
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
-		return instance_ptr_type(
-			const_cast<bool_instance_alias<D>*>(&b));
+		return instance_ptr_type(const_cast<element_type*>(&b));
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
@@ -692,9 +610,6 @@ bool_array<D>::lookup_instance_collection(
 	key_gen.initialize();
 	bool ret = true;
 	do {
-#if 0
-		const bool_instance_alias<D>& pi(collection[key_gen]);
-#else
 		const const_iterator it(collection.find(key_gen));
 		if (it == collection.end()) {
 			cerr << "FATAL: reference to uninstantiated bool index "
@@ -703,7 +618,8 @@ bool_array<D>::lookup_instance_collection(
 			ret = false;
 		} else {
 		const bool_instance_alias<D>& pi(*it);
-#endif
+		// again pi MUST be valid b/c arrays now only contain
+		// valid instances. 
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
 				const_cast<bool_instance_alias<D>*>(&pi)));
@@ -740,16 +656,7 @@ void
 bool_array<D>::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("bool_array<D>::connection_writer::operator()");
 	const bool_instance_alias_base* const next = e.get_next();
-#if 0
-	NEVER_NULL(next);
-	NEVER_NULL(next->container);
-	pom.write_pointer(os, next->container);
-	value_writer<generic_key_type> gwk(os);
-	gkw(next->get_generic_key());
-#else
-	// need persistent_object_manager?
 	next->write_next_connection(pom, os);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -769,22 +676,11 @@ bool_array<D>::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	STACKTRACE_PERSISTENT("bool_array<D>::write_object(HELLO)");
 	parent_type::write_object_base(m, f);
-#if 0
-	collection.write(f);
-	// need a method for saving and loading these sets
-	for_each(collection.begin(), collection.end(), 
-		instance_set_element_writer()
-	);
-#elif 1			// almost ready...
 	// need to know how many members to expect
 	write_value(f, collection.size());
-#endif
-
-#if 1
 	for_each(collection.begin(), collection.end(), 
 		element_writer(m, f)
 	);
-#endif
 #if 0
 	// punting connections...
 	for_each(collection.begin(), collection.end(), 
@@ -805,19 +701,13 @@ void
 bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("bool_array<D>::load_object()");
 	parent_type::load_object_base(m, f);
-#if 0
-	collection.read(f);
-#else
 	// procedure:
 	// 1) load all instantiated indices *without* their connections
 	//	let them start out pointing to themselves.  
 	// 2) each element contains information to reconstruct, 
 	//	we need temporary local storage for it.
-#if 1
 	size_t collection_size;
 	read_value(f, collection_size);
-#endif
-#if 1
 	size_t i = 0;
 	for ( ; i < collection_size; i++) {
 		// this must perfectly complement element_writer::operator()
@@ -829,14 +719,12 @@ bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 		temp_elem.load_object_base(m, f);
 		collection.insert(temp_elem);
 	}
-#endif
 #if 0
 	// punting connections...
 	i = 0;
 	for ( ; i < collection_size; i++) {
 		// this must complement connection_writer::operator()
 	}
-#endif
 #endif
 }
 
@@ -958,11 +846,7 @@ bool_array<0>::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	STACKTRACE_PERSISTENT("bool_scalar::write_object()");
 	parent_type::write_object_base(m, f);
-#if 0
-	write_value(f, the_instance);
-#else
 	the_instance.write_object(m, f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -970,11 +854,7 @@ void
 bool_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("bool_scalar::load_object()");
 	parent_type::load_object_base(m, f);
-#if 0
-	read_value(f, the_instance);
-#else
 	the_instance.load_object(m, f);
-#endif
 }
 
 //=============================================================================

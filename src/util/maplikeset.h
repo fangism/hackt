@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1.2.5 2005/02/15 22:31:43 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.6 2005/02/16 18:44:22 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -47,7 +47,6 @@ public:
 		The value_type IS the mapped_type.
 	 */
 	typedef	typename value_type::value_type		mapped_type;
-//	typedef	value_type				mapped_type;
 
 	/**
 		The key comparater IS the value comparator of sets.  
@@ -62,11 +61,7 @@ public:
 		the value_types should allow the "mapped_type"
 		component to be mutable without violating ordering.  
 	 */
-#if 0
-	typedef	value_type&				reference;
-#else
 	typedef	typename set_type::reference		reference;
-#endif
 	typedef	typename set_type::const_reference	const_reference;
 	/**
 		Set type's iterator is actually const!
@@ -82,21 +77,6 @@ public:
 	typedef	typename set_type::pointer		pointer;
 	typedef	typename set_type::const_pointer	const_pointer;
 	typedef	typename set_type::allocator_type	allocator_type;
-protected:
-//	typedef	typename value_type::value_type		impl_value_type;
-
-#if 0
-protected:
-	/**
-		Explicit conversion...
-	 */
-	static
-	inline
-	value_type
-	key_to_value(const key_type& k) {
-		return value_type(k);
-	}
-#endif
 
 public:
 	maplikeset() : set_type() { }
@@ -189,6 +169,7 @@ public:
 	}
 
 #if 0
+	// don't provide the const-semantics lookup automatically...
 	/**
 		For convenience, we provide a const-query lookup operator.  
 	 */
@@ -242,15 +223,6 @@ public:
 
 	const value_type&
 	const_value(void) const { return this->second; }
-
-#if 0
-	/**
-		WARNING: abusing implicit conversion operator!
-	 */
-	operator value_type& () { return value; }
-
-	operator const value_type& () { return value; }
-#endif
 
 	/**
 		This requires mutability of value, see its note.  
