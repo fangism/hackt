@@ -1,5 +1,7 @@
 backup
 *.core
+*.d
+.depend
 *.o
 *.yy.*
 y.tab.*

@@ -14,13 +14,15 @@ using std::string;
 // template specializations
 
 namespace
-#if	defined(__GNUC__) && (__GNUC__ >= 3)
+#ifdef	__GNUC__
+#if	(__GNUC__ >= 3)
 	__gnu_cxx
-#elif	defined(__GNUC__) && (__GNUC__ <= 2)
+#else	// (__GNUC__ <= 2)
 	std
-#else
-DIE DIE DIE!!!
 #endif
+#else	// __GNUC__
+	DEATH
+#endif	// __GNUC__
 {
 /**
 	Explicit template specialization of hash of a string class, 
