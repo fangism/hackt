@@ -41,7 +41,7 @@ DEBUG(DEBUG_BASIC,
 	cerr << "parsing successful... tree built, on to type-checking!" 
 		<< endl;
 )
-	root = yyval.n;
+	root = yyval._root_body;
 if (root) {
 DEBUG(DEBUG_BASIC, 
 	root->what(cerr << "root is a ") << endl;	// what's our top root?

@@ -34,11 +34,11 @@ macros: d = delimiter, n = node, b = begin, e = end, l = list
 */
 
 /**
-	documenting yacc's internal tables:
+	Bogus namespace for documenting yacc's internal tables:
 	The extern declarations are needed so the compiler doesn't complain
 	about uninitialized values.  
 	They are actually defined in the same generated file y.tab.cc.
-	The definitions are not actually used.  
+	The definitions contained herein are not actually used.  
  */
 namespace yacc {
 
@@ -165,6 +165,7 @@ extern const char* const yyrule[];
 	token_identifier*	_token_identifier;
 	token_quoted_string*	_token_quoted_string;
 	token_type*		_token_type;
+	token_else*		_token_else;
 
 	root_body*		_root_body;
 	root_item*		_root_item;
@@ -195,19 +196,21 @@ extern const char* const yyrule[];
 	user_chan_type_prototype*	_user_chan_type_prototype;
 	user_chan_type_def*	_user_chan_type_def;
 	data_param_list*	_data_param_list;
+	instance_management*	_instance_management;
 	instance_base*		_instance_base;
+	instance_array*		_instance_array;
 	instance_declaration*	_instance_declaration;
-	declaration_id_list*	_declaration_id_list;
-	declaration_base*	_declaration_base;
-	declaration_array*	_declaration_array;
+	instance_id_list*	_instance_id_list;
 	definition_body*	_definition_body;
 	loop_instantiation*	_loop_instantiation;
 	conditional_instantiation*	_conditional_instantiation;
 	guarded_definition_body_list*	_guarded_definition_body_list;
 	guarded_definition_body*	_guarded_definition_body;
-	actuals_connection*	_actuals_connection;
+	instance_connection*	_instance_connection;
+	connection_statement*	_connection_statement;
 	statement*		_statement;
-	alias_assign*		_alias_assign;
+	instance_alias*		_instance_alias;
+	alias_list*		_alias_list;
 
 	expr*			_expr;
 	paren_expr*		_paren_expr;
@@ -334,10 +337,12 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_keyword>	NAMESPACE
 %token	<_token_keyword>	OPEN AS
 %token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
-%token	<_token_keyword>	SKIP ELSE LOG
+%token	<_token_keyword>	SKIP LOG
 %token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<_token_keyword>	SET GET SEND RECV
 %token	<_token_keyword>	CHANNEL
+
+%token	<_token_else>		ELSE
 
 %token	<_token_bool>		BOOL_TRUE BOOL_FALSE
 
@@ -345,15 +350,16 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_type>		INT_TYPE BOOL_TYPE PINT_TYPE PBOOL_TYPE
 
 /* non-terminals */
-%type	<n>	module top_root body 
+%type	<_root_body>	module
+%type	<_root_body>	top_root body 
 %type	<_root_item>	body_item
-%type	<_root_item>	basic_item
+%type	<_root_item>	namespace_item
 %type	<_root_item>	namespace_management
 %type	<_definition>	definition
 %type	<_process_def>	defproc
 %type	<_def_type_id>	def_type_id
 %type	<_token_keyword>	def_or_proc
-%type	<_prototype>	declaration
+%type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
 %type	<_user_data_type_prototype>	declare_type_proto
 %type	<_user_chan_type_prototype>	declare_chan_proto
@@ -376,22 +382,24 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_chp_body>	set_body get_body send_body recv_body
 %type	<_data_param_list>	data_param_list data_param_list_in_parens
 %type	<_instance_declaration>	data_param
-%type	<_declaration_id_list>	data_param_id_list
-%type	<_declaration_base>	data_param_id
+%type	<_instance_id_list>	data_param_id_list
+%type	<_instance_base>	data_param_id
 %type	<_definition_body>	definition_body
-%type	<_instance_base>	instance_item
-%type	<_instance_declaration>	instance_declaration 
+%type	<_instance_management>	instance_item
+%type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
 %type	<_conditional_instantiation>	conditional_instantiation
-%type	<_declaration_id_list>	declaration_id_list
-%type	<_declaration_base>	declaration_id_item
-%type	<_actuals_connection>	instance_connection
-%type	<_alias_assign>	instance_alias
+%type	<_instance_id_list>	instance_id_list
+%type	<_instance_base>	instance_id_item
+%type	<_connection_statement>	connection_statement
+/* %type	<_instance_alias>	instance_alias	*/
+%type	<_alias_list>	alias_list
 %type	<_expr_list>	connection_actuals_list
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
 %type	<_guarded_definition_body>	guarded_definition_body
 %type	<_language_body>	language_body
-%type	<_chp_stmt_list>	chp_body full_chp_body_item_list
+%type	<_chp_stmt_list>	chp_body
+%type	<_chp_stmt_list>	full_chp_body_item_list
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
 %type	<_chp_loop>	chp_loop
 %type	<_chp_do_until>	chp_do_until
@@ -407,7 +415,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_chp_communication>	chp_comm_action
 %type	<_chp_send>	chp_send
 %type	<_chp_receive>	chp_recv
-%type	<_hse_stmt_list>	hse_body full_hse_body_item_list
+%type	<_hse_stmt_list>	hse_body
+%type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
 %type	<_hse_loop>	hse_loop
 %type	<_hse_do_until>	hse_do_until
@@ -474,12 +483,12 @@ body
 	;
 
 body_item
-	: basic_item { $$ = $1; }
+	: namespace_item { $$ = $1; }
 	| definition { $$ = $1; }
-	| declaration { $$ = $1; }
+	| prototype_declaration { $$ = $1; }
 	;
 
-basic_item
+namespace_item
 /* namespace_management already includes semicolon where needed */
 /* proposed change: forbid nested namespacs, only allow in root_item */
 	: namespace_management { $$ = $1; }
@@ -507,7 +516,7 @@ definition
 	;
 
 /* declaration prototypes, like forward declarations */
-declaration
+prototype_declaration
 	: declare_proc_proto { $$ = $1; }
 	| declare_type_proto { $$ = $1; }
 	| declare_chan_proto { $$ = $1; }
@@ -751,15 +760,15 @@ data_param
 
 data_param_id_list
 	: data_param_id_list ',' data_param_id
-		{ $$ = declaration_id_list_append($1, $2, $3); }
+		{ $$ = instance_id_list_append($1, $2, $3); }
 	| data_param_id
-		{ $$ = new declaration_id_list($1); }
+		{ $$ = new instance_id_list($1); }
 	;
 
 data_param_id
 	: ID optional_range_list_in_brackets
-		{ $$ = ($2) ? new declaration_array($1, $2)
-			: new declaration_base($1); }
+		{ $$ = ($2) ? new instance_array($1, $2)
+			: new instance_base($1); }
 	;
 
 
@@ -788,16 +797,16 @@ definition_body
 */
 
 instance_item
-	: instance_declaration { $$ = $1; }	/* single or array */
-	| instance_connection { $$ = $1; }	/* connection of ports */
-	| instance_alias { $$ = $1; }		/* aliasing connection */
+	: type_instance_declaration { $$ = $1; }	/* single or array */
+	| connection_statement { $$ = $1; }	/* connection of ports */
+	| alias_list ';' { $$ = $1; delete $2; }	/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
 	;
 
 loop_instantiation
 	: '(' ';' ID ':' range ':' definition_body ')'
-		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7, $8); }
 	;
 
 conditional_instantiation
@@ -806,48 +815,59 @@ conditional_instantiation
 			guarded_definition_body_list_wrap($1, $2, $3)); }
 	;
 
-instance_declaration
+type_instance_declaration
 	/* type template is included in type_id, and is part of the type */
-	: type_id declaration_id_list ';'
+	: type_id instance_id_list ';'
 		{ $$ = new instance_declaration($1, $2, $3); }
 	;
 
-declaration_id_list
-	: declaration_id_list ',' declaration_id_item
-		{ $$ = declaration_id_list_append($1, $2, $3); }
-	| declaration_id_item
-		{ $$ = new declaration_id_list($1); }
+instance_id_list
+	: instance_id_list ',' instance_id_item
+		{ $$ = instance_id_list_append($1, $2, $3); }
+	| instance_id_item
+		{ $$ = new instance_id_list($1); }
 	;
 
-declaration_id_item
+instance_id_item
 	/* array declaration: forbid connection, must connect later */
 	: ID range_list_in_brackets
-		{ $$ = new declaration_array($1, $2); }
+		{ $$ = new instance_array($1, $2); }
 	/* single instance declaration without connection */
 	| ID
-		{ $$ = new declaration_base($1); }
+		{ $$ = new instance_base($1); }
 	/* single instance declaration with connection */
 	| ID connection_actuals_list
-		{ $$ = new actuals_connection($1, $2); }
+		{ $$ = new instance_connection($1, $2); }
 	/* alias or assignment (not just member_id expression?) */
-	| ID '=' expr
-		{ $$ = new alias_assign($1, $2, $3); }
+/*	| ID '=' expr */
+	| ID '=' alias_list
+		{ $$ = new instance_alias($1, 
+			alias_list_wrap($2, $3, NULL)); }
 	;
 
-instance_connection
+connection_statement
 /* taking a declared array or single instance and connecting ports
 	are brackets part of the array/membership chain? */
 	: member_index_expr connection_actuals_list ';'
 		/* can this first id be scoped and/or membered? */
-		{ $$ = new actuals_connection($1, $2, $3); }
+		{ $$ = new connection_statement($1, $2, $3); }
 	;
 
+/*
 instance_alias
+	: member_index_expr '=' alias_list ';'
+		{ $$ = new instance_alias($1, 
+			alias_list_wrap($2, $3, NULL), $4); }
+	;
+*/
+
 /* aliasing syntax, or data types is value assignment (general expr?)
 	type check this, of course */
-/*	: member_index_expr '=' member_index_expr ';'	*/
-	: member_index_expr '=' expr ';'
-		{ $$ = new alias_assign($1, $2, $3, $4); }
+alias_list
+	: alias_list '=' member_index_expr
+		{ $$ = alias_list_append($1, $2, $3); }
+	| member_index_expr
+		{ $$ = new alias_list($1); }
 	;
 
 /* this rule is sort of redundant, oh well... */
@@ -933,7 +953,7 @@ chp_body_item
 chp_loop
 	/* do-forever loop */
 	: BEGINLOOP chp_body ']'
-		{ $$ = new CHP::loop(hse_stmt_list_wrap($1, $2, $3)); }
+		{ $$ = new CHP::loop(chp_stmt_list_wrap($1, $2, $3)); }
 	;
 
 chp_do_until
@@ -1234,9 +1254,9 @@ member_index_expr
 	/* array index */
 	| member_index_expr range_list_in_brackets
 		{ $$ = new index_expr($1, $2); }
-	| member_index_expr '.' id_expr
+	| member_index_expr '.' ID
 		{ $$ = new member_expr($1, $2, $3); }
-	/*			or just ID? */
+	/*			or id_expr? */
 	/* no function calls in expressions... yet */
 	;
 

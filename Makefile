@@ -213,7 +213,8 @@ tarball: clobber
 
 # if regression fails, make will abort and abandon commit
 # strongly suggest running with ccache to speedup re-build
-commit: regression clobberdepend
+commit: regression
+	$(MAKE) clobberdepend
 	cvs commit
 
 # header file dependencies generated with gcc -MM, saved to .depend

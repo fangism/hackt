@@ -10,8 +10,6 @@
 // -fkeep-inline-functions
 
 #include <iostream>
-#include <stdio.h>		// for sprintf
-#include <string.h>		// for a few C-string functions
 
 #include "art_parser_debug.h"
 #include "art_macros.h"
@@ -37,6 +35,7 @@ const char semicolon[] = ";";	///< delimiter for node_list template argument
 const char scope[] = "::";	///< delimiter for node_list template argument
 const char thickbar[] = "[]";	///< delimiter for node_list template argument
 const char colon[] = ":";	///< delimiter for node_list template argument
+const char alias[] = "=";	///< delimiter for node_list template argument
 
 //=============================================================================
 // class node method definitions
@@ -77,6 +76,47 @@ DESTRUCTOR_INLINE
 root_item::~root_item() { }
 
 //=============================================================================
+// class instance_management method definitions
+
+CONSTRUCTOR_INLINE
+instance_management::instance_management() : def_body_item(), root_item() {
+}
+
+DESTRUCTOR_INLINE
+instance_management::~instance_management() {
+}
+
+//=============================================================================
+// class alias_list method definitions
+
+/**
+	\param e should be a member/index expression, an lvalue.  
+ */
+CONSTRUCTOR_INLINE
+alias_list::alias_list(expr* e) : instance_management(), alias_list_base(e) {
+}
+
+DESTRUCTOR_INLINE
+alias_list::~alias_list() {
+}
+
+ostream&
+alias_list::what(ostream& o) const {
+	return alias_list_base::what(o);
+}
+
+line_position
+alias_list::leftmost(void) const {
+	return alias_list_base::leftmost();
+}
+
+line_position
+alias_list::rightmost(void) const {
+	return alias_list_base::rightmost();
+}
+
+
+//=============================================================================
 // template class node_list<> method definitions
 // had trouble finding reference to template functions defined here...?
 // template exporting not implemented in any gcc compiler yet...
@@ -97,9 +137,9 @@ type_base::~type_base() { }
 // class type_id method definitions
 
 CONSTRUCTOR_INLINE
-type_id::type_id(node* b, node* t) : type_base(),
-		base(IS_A(id_expr*, b)),
-		temp_spec(IS_A(expr_list*, t))  // may be NULL
+type_id::type_id(id_expr* b, expr_list* t) : type_base(),
+		base(b),
+		temp_spec(t)  // may be NULL
 		{
 	assert(base);
 	if (t) assert(temp_spec);
@@ -153,18 +193,16 @@ type_id::get_template_spec(void) const {
 // class data_type_base method definitions
 
 CONSTRUCTOR_INLINE
-data_type_base::data_type_base(node* t, node* l, node* w, node* r) :
+data_type_base::data_type_base(token_type* t, token_char* l, 
+	token_int* w, token_char* r) :
 		type_base(),
-		type(IS_A(token_type*, t)),
-		la(IS_A(token_char*, l)),
-		width(IS_A(token_int*, w)),
-		ra(IS_A(token_char*, r)) {
+		type(t), la(l), width(w), ra(r) {
 	assert(type); assert(la); assert(width); assert(ra);
 }
 
 CONSTRUCTOR_INLINE
-data_type_base::data_type_base(node* t) : type_base(),
-		type(IS_A(token_type*, t)),
+data_type_base::data_type_base(token_type* t) : type_base(),
+		type(t),
 		la(NULL), width(NULL), ra(NULL) {
 	assert(type);
 }
@@ -211,12 +249,9 @@ data_type_base::check_build(context* c) const {
 
 CONSTRUCTOR_INLINE
 user_data_type_signature::user_data_type_signature(
-		node* df, node* n, node* dp, node* b, node* p) :
-		def(IS_A(token_keyword*, df)), 
-		name(IS_A(token_identifier*, n)), 
-		dop(IS_A(token_string*, dp)), 
-		bdt(IS_A(data_type_base*, b)), 
-		params(IS_A(data_param_list*, p)) {
+		token_keyword* df, token_identifier* n, token_string* dp, 
+		data_type_base* b, data_param_list* p) :
+		def(df), name(n), dop(dp), bdt(b), params(p) {
 	assert(def); assert(name); assert(dop);
 	assert(bdt); assert(params); 
 }
@@ -231,11 +266,12 @@ user_data_type_signature::~user_data_type_signature() {
 // class user_data_type_prototype method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_prototype::user_data_type_prototype(node* df, node* n, 
-		node* dp, node* b, node* p, node* s) :
+user_data_type_prototype::user_data_type_prototype(token_keyword* df, 
+	token_identifier* n, token_string* dp, data_type_base* b, 
+	data_param_list* p, token_char* s) :
 		prototype(), 
 		user_data_type_signature(df, n, dp, b, p), 
-		semi(IS_A(token_char*, s)) {
+		semi(s) {
 	assert(semi);
 }
 
@@ -281,14 +317,12 @@ user_data_type_prototype::check_build(context* c) const {
 // class user_data_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_def::user_data_type_def(node* df, node* n, node* dp, node* b, 
-		node* p, node* l, node* s, node* g, node* r) :
+user_data_type_def::user_data_type_def(token_keyword* df, token_identifier* n, 
+	token_string* dp, data_type_base* b, data_param_list* p, 
+	token_char* l, language_body* s, language_body* g, token_char* r) :
 		definition(), 
 		user_data_type_signature(df, n, dp, b, p), 
-		lb(IS_A(token_char*, l)), 
-		setb(IS_A(language_body*, s)), 
-		getb(IS_A(language_body*, g)), 
-		rb(IS_A(token_char*, r)) {
+		lb(l), setb(s), getb(g), rb(r) {
 	assert(lb); assert(setb); assert(getb); assert(rb);
 }
 
@@ -334,10 +368,9 @@ user_data_type_def::check_build(context* c) const {
 // class chan_type method definitions
 
 CONSTRUCTOR_INLINE
-chan_type::chan_type(node* c, node* d, node* t) : type_base(),
-		chan(IS_A(token_keyword*, c)),
-		dir(IS_A(token_char*, d)),
-		dtypes(IS_A(base_data_type_list*, t)) {
+chan_type::chan_type(token_keyword* c, token_char* d, 
+		base_data_type_list* t) : type_base(),
+		chan(c), dir(d), dtypes(t) {
 	assert(c);
 	if(d) assert(dir);
 	if (t) assert(dtypes);
@@ -367,17 +400,27 @@ chan_type::rightmost(void) const {
 	else return chan->rightmost();
 }
 
+/**
+	Associates a channel or port with a data type, such as a list of 
+	ints and bools.  
+	\param t is the type list for the channel.  
+ */
+chan_type*
+chan_type::attach_data_types(base_data_type_list* t) {
+	assert(t); assert(!dtypes);     // sanity check    
+	dtypes = t;
+	assert(dtypes);
+	return this;
+}
+
 //=============================================================================
 // class user_chan_type_signature method definitions
 
 CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
-		node* df, node* n, node* dp, node* b, node* p) :
-		def(IS_A(token_keyword*, df)), 
-		name(IS_A(token_identifier*, n)), 
-		dop(IS_A(token_string*, dp)), 
-		bct(IS_A(chan_type*, b)), 
-		params(IS_A(data_param_list*, p)) {
+		token_keyword* df, token_identifier* n, token_string* dp, 
+		chan_type* b, data_param_list* p) :
+		def(df), name(n), dop(dp), bct(b), params(p) {
 	assert(def); assert(name); assert(dop);
 	assert(bct); assert(params);
 }
@@ -393,10 +436,11 @@ user_chan_type_signature::~user_chan_type_signature() {
 
 CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
-		node* df, node* n, node* dp, node* b, node* p, node* s) :
+	token_keyword* df, token_identifier* n, token_string* dp, 
+	chan_type* b, data_param_list* p, token_char* s) :
 		prototype(), 
 		user_chan_type_signature(df, n, dp, b, p), 
-		semi(IS_A(token_char*, s)) {
+		semi(s) {
 	assert(semi);
 }
 
@@ -426,14 +470,12 @@ user_chan_type_prototype::rightmost(void) const {
 // class user_chan_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_chan_type_def::user_chan_type_def(node* df, node* n, node* dp, 
-		node* b, node* p, node* l, node* s, node* g, node* r) :
+user_chan_type_def::user_chan_type_def(token_keyword* df, token_identifier* n, 
+	token_string* dp, chan_type* b, data_param_list* p, token_char* l, 
+	language_body* s, language_body* g, token_char* r) :
 		definition(), 
 		user_chan_type_signature(df, n, dp, b, p), 
-		lb(IS_A(token_char*, l)), 
-		sendb(IS_A(language_body*, s)), 
-		recvb(IS_A(language_body*, g)), 
-		rb(IS_A(token_char*, r)) {
+		lb(l), sendb(s), recvb(g), rb(r) {
 	assert(lb); assert(sendb); assert(recvb); assert(rb);
 }
 
@@ -472,9 +514,8 @@ statement::~statement() { }
 // class incdec_stmt method definitions
 
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(node* n, node* o) : statement(),
-		e(IS_A(expr*, n)),
-		op(IS_A(terminal*, o)) {
+incdec_stmt::incdec_stmt(expr* n, terminal* o) : statement(),
+		e(n), op(o) {
 	assert(e); assert(op);
 }
 
@@ -517,10 +558,8 @@ incdec_stmt::rightmost(void) const {
 // class assign_stmt method definitions
 
 CONSTRUCTOR_INLINE
-assign_stmt::assign_stmt(node* left, node* o, node* right) : statement(),
-		lhs(IS_A(expr*, left)),
-		op(IS_A(terminal*, o)),
-		rhs(IS_A(expr*, right)) {
+assign_stmt::assign_stmt(expr* left, terminal* o, expr* right) : statement(),
+		lhs(left), op(o), rhs(right) {
 	assert(lhs); assert(op); assert(rhs);
 }
 
@@ -572,8 +611,8 @@ def_body_item::~def_body_item() { }
 // class language_body methd definitions
 
 CONSTRUCTOR_INLINE
-language_body::language_body(node* t) : def_body_item(),
-		tag(IS_A(token_keyword*, t)) {
+language_body::language_body(token_keyword* t) : def_body_item(),
+		tag(t) {
 	if (t) assert(tag);
 }
 
@@ -581,8 +620,9 @@ DESTRUCTOR_INLINE
 language_body::~language_body() { SAFEDELETE(tag); }
 
 language_body*
-language_body::attach_tag(node* t) {
-	tag = IS_A(token_keyword*, t);
+language_body::attach_tag(token_keyword* t) {
+	// need to safe-delete first?  nah...
+	tag = t;
 	assert(tag);
 	return this;
 }
@@ -609,14 +649,10 @@ language_body::leftmost(void) const {
  */
 CONSTRUCTOR_INLINE
 namespace_body::
-namespace_body(node* s, node* n, node* l, node* b, node* r, node* c) :
+namespace_body(token_keyword* s, token_identifier* n, terminal* l, 
+	root_body* b, terminal* r, terminal* c) :
 		root_item(),       
-		ns(IS_A(token_keyword*, s)),
-		name(IS_A(token_identifier*, n)),
-		lb(IS_A(terminal*, l)),
-		body(IS_A(root_body*, b)),     
-		rb(IS_A(terminal*, r)),
-		semi(IS_A(terminal*, c)) {
+		ns(s), name(n), lb(l), body(b), rb(r), semi(c) {
 	assert(ns); assert(name); assert(lb);
 	if (b) assert(body);		// body may be NULL
 	assert(rb); assert(semi);
@@ -680,12 +716,9 @@ check_build(context* c) const {
  */
 CONSTRUCTOR_INLINE
 using_namespace::
-using_namespace(node* o, node* i, node* s) :
+using_namespace(token_keyword* o, id_expr* i, token_char* s) :
 		root_item(),
-		open(IS_A(token_keyword*, o)),
-		id(IS_A(id_expr*, i)),     
-		as(NULL), alias(NULL), 
-		semi(IS_A(token_char*, s)) {
+		open(o), id(i), as(NULL), alias(NULL), semi(s) {
 	assert(open); assert(id); assert(semi);
 }
 
@@ -699,13 +732,10 @@ using_namespace(node* o, node* i, node* s) :
  */
 CONSTRUCTOR_INLINE
 using_namespace::
-using_namespace(node* o, node* i, node* a, node* n, node* s) :
+using_namespace(token_keyword* o, id_expr* i, token_keyword* a, 
+	token_identifier* n, token_char* s) :
 		root_item(),
-		open(IS_A(token_keyword*, o)),
-		id(IS_A(id_expr*, i)),     
-		as(IS_A(token_keyword*, a)),		// optional
-		alias(IS_A(token_identifier*, n)),	// optional
-		semi(IS_A(token_char*, s)) {
+		open(o), id(i), as(a), alias(n), semi(s) {
 	assert(open); assert(id); assert(as); assert(alias); assert(semi);
 }
 
@@ -751,57 +781,57 @@ check_build(context* c) const {
 }
 
 //=============================================================================
-// chan_type methods
-/**
-	Associates a channel or port with a data type, such as a list of 
-	ints and bools.  
-	\param t is the type list for the channel.  
- */
-chan_type*
-chan_type::attach_data_types(node* t) {
-	assert(t); assert(!dtypes);     // sanity check    
-	dtypes = IS_A(base_data_type_list*, t);
-	assert(dtypes);
-	return this;
+// class actuals_base method definitions
+
+CONSTRUCTOR_INLINE
+actuals_base::actuals_base(expr_list* a) : 
+		instance_management(), actuals(a) {
+	assert(actuals);
+}
+
+DESTRUCTOR_INLINE
+actuals_base::~actuals_base() {
+	SAFEDELETE(actuals);
 }
 
 //=============================================================================
-// class declaration_base method definitions
+// class instance_base method definitions
 
 CONSTRUCTOR_INLINE
-declaration_base::declaration_base(node* i) :
-		def_body_item(), root_item(),
-		id(IS_A(token_identifier*, i)) {
+instance_base::instance_base(token_identifier* i) :
+		instance_management(), id(i) {
 	assert(id);
 }
 
 DESTRUCTOR_INLINE
-declaration_base::~declaration_base() {
+instance_base::~instance_base() {
 	SAFEDELETE(id);
 }
 
 ostream&
-declaration_base::what(ostream& o) const {
+instance_base::what(ostream& o) const {
 	return id->what(o << "(declaration-id): ");
 }
 
 line_position
-declaration_base::leftmost(void) const {
+instance_base::leftmost(void) const {
 	return id->leftmost();
 }
 
 line_position
-declaration_base::rightmost(void) const {
+instance_base::rightmost(void) const {
 	return id->rightmost();
 }
 
+/***
 line_range
-declaration_base::where(void) const {
+instance_base::where(void) const {
 	return node::where();
 }
+***/
 
 const object*
-declaration_base::check_build(context* c) const {
+instance_base::check_build(context* c) const {
 	DEBUG(TRACE_CHECK_BUILD, 
 		what(cerr << c->auto_indent()) << ": ")
 	c->add_type_instance(*id);		// ignored return value
@@ -809,42 +839,27 @@ declaration_base::check_build(context* c) const {
 }
 
 //=============================================================================
-// class declaration_array method definitions
+// class instance_array method definitions
 
 CONSTRUCTOR_INLINE
-declaration_array::declaration_array(node* i, node* rl) :
-		declaration_base(i),
-		ranges(IS_A(range_list*, rl)) {
+instance_array::instance_array(token_identifier* i, range_list* rl) :
+		instance_base(i), ranges(rl) {
 	// ranges may be NULL, equivalent to declaration base
 }
 
 DESTRUCTOR_INLINE
-declaration_array::~declaration_array() {
+instance_array::~instance_array() {
 	SAFEDELETE(ranges);
 }
 
 ostream&
-declaration_array::what(ostream& o) const {
+instance_array::what(ostream& o) const {
 	return ranges->what(id->what(o << "(declaration-array): "));
 }
 
 line_position
-declaration_array::rightmost(void) const {
+instance_array::rightmost(void) const {
 	return ranges->rightmost();
-}
-
-//=============================================================================
-// class instance_base method definitions
-
-CONSTRUCTOR_INLINE
-instance_base::instance_base() : def_body_item(), root_item() { }
-
-DESTRUCTOR_INLINE
-instance_base::~instance_base() { }
-
-line_range
-instance_base::where(void) const {
-	return node::where();
 }
 
 //=============================================================================
@@ -858,11 +873,10 @@ instance_base::where(void) const {
 	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
-instance_declaration::instance_declaration(node* t, node* i, node* s) :
-		instance_base(),
-		type(IS_A(type_base*, t)),
-		ids(IS_A(declaration_id_list*, i)),
-		semi(IS_A(terminal*, s)) {
+instance_declaration::instance_declaration(type_base* t, 
+	instance_id_list* i, terminal* s) :
+		instance_management(),
+		type(t), ids(i), semi(s) {
 	assert(type);
 	assert(ids);
 	if(s) assert(semi);
@@ -903,96 +917,130 @@ instance_declaration::check_build(context* c) const {
 }
 
 //=============================================================================
-// class actuals_connection method definitions
+// class instance_connection method definitions
 
 CONSTRUCTOR_INLINE
-actuals_connection::actuals_connection(node* i, node* a, node* s) :
-		instance_base(), declaration_base(i),
-		actuals(IS_A(expr_list*, a)),
-		semi(IS_A(terminal*, s)) {
-	assert(actuals);
+instance_connection::instance_connection(token_identifier* i, expr_list* a, 
+		terminal* s) :
+		instance_base(i), actuals_base(a), semi(s) {
 	if (s) assert(semi);
 }
 
 DESTRUCTOR_INLINE
-actuals_connection::~actuals_connection() {
-	SAFEDELETE(actuals); SAFEDELETE(semi);
+instance_connection::~instance_connection() {
+	SAFEDELETE(semi);
 }
 
 // remember to check for declaration context when checking id
 
 ostream&
-actuals_connection::what(ostream& o) const {
+instance_connection::what(ostream& o) const {
 	return o << "(actuals-connection)";
 }
 
 line_position
-actuals_connection::leftmost(void) const {
-	return declaration_base::leftmost();
+instance_connection::leftmost(void) const {
+	return instance_base::leftmost();
 }
 
 line_position
-actuals_connection::rightmost(void) const {
-	return semi->rightmost();
+instance_connection::rightmost(void) const {
+	if (semi) return semi->rightmost();
+	else return actuals->rightmost();
 }
 
+/***
 line_range
-actuals_connection::where(void) const {
+instance_connection::where(void) const {
 	return node::where();
+}
+***/
+
+const object*
+instance_connection::check_build(context* c) const {
+	return node::check_build(c);
 }
 
 //=============================================================================
-// class alias_assign method definitions
+// class connection_statement method definitions
 
 CONSTRUCTOR_INLINE
-alias_assign::alias_assign(node* i, node* o, node* r, node* s) :
-		instance_base(), declaration_base(i),
-		op(IS_A(terminal*, o)),
-		rhs(IS_A(expr*, r)),
-		semi(IS_A(terminal*, s)) {
-	assert(op); assert(rhs);
+connection_statement::connection_statement(expr* l, expr_list* a, 
+		terminal* s) : actuals_base(a), lvalue(l), semi(s) {
+	assert(lvalue);
 	if (s) assert(semi);
 }
 
 DESTRUCTOR_INLINE
-alias_assign::~alias_assign() {
-	SAFEDELETE(op); SAFEDELETE(rhs); SAFEDELETE(semi);
+connection_statement::~connection_statement() {
+	SAFEDELETE(lvalue);
+	SAFEDELETE(semi);
 }
 
 ostream&
-alias_assign::what(ostream& o) const {
+connection_statement::what(ostream& o) const {
+	return o << "(connection-statement)";
+}
+
+line_position
+connection_statement::leftmost(void) const {
+	return lvalue->leftmost();
+}
+
+line_position
+connection_statement::rightmost(void) const {
+	if (semi) return semi->rightmost();
+	else return actuals->rightmost();
+}
+
+//=============================================================================
+// class instance_alias method definitions
+
+CONSTRUCTOR_INLINE
+instance_alias::instance_alias(token_identifier* i, alias_list* a, 
+	terminal* s) :
+		instance_base(i), aliases(a), semi(s) {
+	assert(aliases);
+	if (s) assert(semi);
+}
+
+DESTRUCTOR_INLINE
+instance_alias::~instance_alias() {
+	SAFEDELETE(aliases); SAFEDELETE(semi);
+}
+
+ostream&
+instance_alias::what(ostream& o) const {
 	return o << "(alias-assign)";
 }
 
 line_position
-alias_assign::leftmost(void) const {
-	return declaration_base::leftmost();
+instance_alias::leftmost(void) const {
+	return instance_base::leftmost();
 }
 
 line_position
-alias_assign::rightmost(void) const {
+instance_alias::rightmost(void) const {
 	return semi->rightmost();
 }
 
+/***
 line_range
-alias_assign::where(void) const {
+instance_alias::where(void) const {
 	return node::where();
 }
+***/
 
 //=============================================================================
 // class loop_instantiation method definitions
 
 CONSTRUCTOR_INLINE
-loop_instantiation::loop_instantiation(node* l, node* d, node* i, node* c, 
-		node* g, node* b, node* r) :
-		instance_base(),
-		lp(IS_A(terminal*, l)),
-		delim(IS_A(terminal*, d)),
-		index(IS_A(token_identifier*, i)),
-		colon(IS_A(terminal*, c)),
-		rng(IS_A(range*, g)),
-		body(IS_A(definition_body*, b)),
-		rp(IS_A(terminal*, r)) {
+loop_instantiation::loop_instantiation(terminal* l, terminal* d, 
+	token_identifier* i, terminal* c1, range* g, terminal* c2, 
+	definition_body* b, terminal* r) :
+		instance_management(),
+		lp(l), delim(d), index(i), colon1(c1), 
+		rng(g), colon2(c2), body(b), rp(r) {
 	assert(lp); assert(delim); assert(index);
 	assert(colon); assert(rng); assert(body); assert(lp);
 }
@@ -1000,8 +1048,8 @@ loop_instantiation::loop_instantiation(node* l, node* d, node* i, node* c,
 DESTRUCTOR_INLINE
 loop_instantiation::~loop_instantiation() {
 	SAFEDELETE(lp); SAFEDELETE(delim); SAFEDELETE(index);
-	SAFEDELETE(colon); SAFEDELETE(rng); SAFEDELETE(body);
-	SAFEDELETE(rp);
+	SAFEDELETE(colon1); SAFEDELETE(rng); SAFEDELETE(colon2);
+	SAFEDELETE(body); SAFEDELETE(rp);
 }
 
 ostream&
@@ -1011,21 +1059,24 @@ loop_instantiation::what(ostream& o) const {
 
 line_position
 loop_instantiation::leftmost(void) const {
-	return lp->leftmost();
+	if (lp) return lp->leftmost();
+	else return delim->leftmost();
 }
 
 line_position
 loop_instantiation::rightmost(void) const {
-	return rp->rightmost();
+	if (rp) return rp->rightmost();
+	else if (body) return body->rightmost();
+	else if (colon2) return colon2->rightmost();
+	else return rng->rightmost();
 }
 
 //=============================================================================
 // class port_formal_id method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_id::port_formal_id(node* n, node* d) : node(),
-		name(IS_A(token_identifier*, n)),
-		dim(IS_A(range_list*, d)) {
+port_formal_id::port_formal_id(token_identifier* n, range_list* d) : node(),
+		name(n), dim(d) {
 	assert(name);
 	// dim may be NULL
 }
@@ -1056,9 +1107,8 @@ port_formal_id::rightmost(void) const {
 // class port_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
-port_formal_decl::port_formal_decl(node* t, node* i) : node(),
-		type(IS_A(type_id*, t)),
-		ids(IS_A(port_formal_id_list*, i)) {
+port_formal_decl::port_formal_decl(type_base* t, port_formal_id_list* i) : 
+		node(), type(t), ids(i) {
 	assert(type); assert(ids);
 }
 
@@ -1093,9 +1143,8 @@ port_formal_decl::rightmost(void) const {
 	\param d is the (optional) dimension size expression.
  */
 CONSTRUCTOR_INLINE
-template_formal_id::template_formal_id(node* n, node* d) : node(),
-		name(IS_A(token_identifier*, n)),
-		dim(IS_A(range_list*, d)) {
+template_formal_id::template_formal_id(token_identifier* n, range_list* d) : 
+		node(), name(n), dim(d) {
 	assert(name);
 // dim may be NULL
 	if (d) assert(dim);
@@ -1142,10 +1191,9 @@ template_formal_id::check_build(context* c) const {
 // class template_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
-template_formal_decl::template_formal_decl(node* t, node* i) :
-		node(),
-		type(IS_A(type_base*, t)),
-		ids(IS_A(template_formal_id_list*, i)) {
+template_formal_decl::template_formal_decl(type_base* t, 
+	template_formal_id_list* i) :
+		node(), type(t), ids(i) {
 	assert(type); assert(ids);
 }
 
@@ -1186,9 +1234,8 @@ template_formal_decl::check_build(context* c) const {
 // class def_type_id method definitions
 
 CONSTRUCTOR_INLINE
-def_type_id::def_type_id(node* n, node* t) : type_base(),
-		name(IS_A(token_identifier*, n)),
-		temp_spec(IS_A(template_formal_decl_list*, t)) {
+def_type_id::def_type_id(token_identifier* n, template_formal_decl_list* t) : 
+		type_base(), name(n), temp_spec(t) {
 	assert(name);
 	if (t) assert(temp_spec);
 }
@@ -1255,11 +1302,9 @@ definition::~definition() {
 // class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_signature::process_signature(node* d, node* i, node* p) :
-		node(), 
-		def(IS_A(token_keyword*, d)),
-		idt(IS_A(def_type_id*, i)),
-		ports(IS_A(port_formal_decl_list*, p)) {
+process_signature::process_signature(token_keyword* d, def_type_id* i, 
+	port_formal_decl_list* p) :
+		node(), def(d), idt(i), ports(p) {
 	assert(def); assert(idt); assert(ports);
 }
 
@@ -1287,10 +1332,11 @@ process_signature::get_port_formals(void) const {
 // class process_prototype method definitions
 
 CONSTRUCTOR_INLINE
-process_prototype::process_prototype(node* d, node* i, node* p, node* s) :
+process_prototype::process_prototype(token_keyword* d, def_type_id* i, 
+	port_formal_decl_list* p, token_char* s) :
 		prototype(),
 		process_signature(d, i, p), 
-		semi(IS_A(token_char*, s)) {
+		semi(s) {
 	assert(semi);
 }
 
@@ -1332,10 +1378,11 @@ process_prototype::check_build(context* c) const {
 // class process_def method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(node* d, node* i, node* p, node* b) :
+process_def::process_def(token_keyword* d, def_type_id* i, 
+	port_formal_decl_list* p, definition_body* b) :
 		definition(),
 		process_signature(d, i, p), 
-		body(IS_A(definition_body*, b)) {
+		body(b) {
 	assert(body);		// body may be empty, is is not NULL
 }
 
@@ -1383,11 +1430,9 @@ process_def::check_build(context* c) const {
 // class guarded_definition_body method definitions
 
 CONSTRUCTOR_INLINE
-guarded_definition_body::guarded_definition_body(node* e, node* a, node* b) :
-		instance_base(),
-		guard(IS_A(expr*, e)),
-		arrow(IS_A(terminal*, a)),
-		body(IS_A(definition_body*, b)) {
+guarded_definition_body::guarded_definition_body(expr* e, terminal* a, 
+	definition_body* b) :
+		instance_management(), guard(e), arrow(a), body(b) {
 	assert(guard); assert(arrow); assert(body);
 }
 
@@ -1415,15 +1460,15 @@ guarded_definition_body::rightmost(void) const {
 // class conditional_instantiation method definitions
 
 CONSTRUCTOR_INLINE
-conditional_instantiation::conditional_instantiation(node* n) :
-		instance_base(),
-		gd(IS_A(guarded_definition_body_list*, n)) {
+conditional_instantiation::conditional_instantiation(
+	guarded_definition_body_list* n) :
+		instance_management(), gd(n) {
 	assert(gd);
 }
 
 DESTRUCTOR_INLINE
 conditional_instantiation::~conditional_instantiation() {
-
+	SAFEDELETE(gd);
 }
 
 ostream&
@@ -1457,7 +1502,7 @@ prototype::~prototype() { }
 template class node_list<root_item>;			// root_body
 template class node_list<data_type_base,comma>;		// base_data_type_list
 template class node_list<def_body_item>;		// definition_body
-template class node_list<declaration_base,comma>;	// declaration_id_list
+template class node_list<instance_base,comma>;		// instance_id_list
 template 
 class node_list<instance_declaration,semicolon>;	// data_param_list
 template class node_list<port_formal_id,comma>;		// port_formal_id_list
@@ -1472,8 +1517,8 @@ class node_list<guarded_definition_body,thickbar>;
 						// guarded_definition_body_list
 
 //=============================================================================
-};
-};
+};	// end namespace parser
+};	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

@@ -40,10 +40,8 @@ expr::~expr() { }
 // class paren_expr method definitions
 
 CONSTRUCTOR_INLINE
-paren_expr::paren_expr(node* l, node* n, node* r) : expr(),
-		lp(IS_A(token_char*, l)),
-		e(IS_A(expr*, n)),
-		rp(IS_A(token_char*, r)) {
+paren_expr::paren_expr(token_char* l, expr* n, token_char* r) : expr(),
+		lp(l), e(n), rp(r) {
 	assert(lp); assert(e); assert(rp);
 }
 
@@ -167,16 +165,14 @@ ostream& operator << (ostream& o, const id_expr& id) {
 // class range method definitions
 
 CONSTRUCTOR_INLINE
-range::range(node* l) : expr(), 
-		lower(IS_A(expr*, l)), op(NULL), upper(NULL) {
+range::range(expr* l) : expr(), 
+		lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
 }
 
 CONSTRUCTOR_INLINE
-range::range(node* l, node* o, node* u) : expr(),
-		lower(IS_A(expr*, l)),
-		op(IS_A(terminal*, o)),
-		upper(IS_A(expr*, u)) {
+range::range(expr* l, terminal* o, expr* u) : expr(),
+		lower(l), op(o), upper(u) {
 	assert(lower); assert(op); assert(u);
 }
 
@@ -211,12 +207,11 @@ range::rightmost(void) const {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(node* n, node* o) : expr(), 
-	e(IS_A(expr*, n)),
-	op(IS_A(terminal*, o)) {
-		if (n && !e) delete n;  // or use assert?
-		if (o && !op) delete o;
-	}
+unary_expr::unary_expr(expr* n, terminal* o) : expr(), 
+		e(n), op(o) {
+	if (n && !e) delete n;  // or use assert?
+	if (o && !op) delete o;
+}
 
 DESTRUCTOR_INLINE
 unary_expr::~unary_expr() {
@@ -227,7 +222,7 @@ unary_expr::~unary_expr() {
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(node* op, node* n) : unary_expr(n,op) { }
+prefix_expr::prefix_expr(terminal* op, expr* n) : unary_expr(n,op) { }
 
 DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
@@ -251,7 +246,7 @@ prefix_expr::rightmost(void) const {
 // class postfix_expr method definitions
 
 CONSTRUCTOR_INLINE
-postfix_expr::postfix_expr(node* n, node* op) : unary_expr(n,op) { }
+postfix_expr::postfix_expr(expr* n, terminal* op) : unary_expr(n,op) { }
 
 DESTRUCTOR_INLINE
 postfix_expr::~postfix_expr() { }
@@ -270,8 +265,8 @@ postfix_expr::rightmost(void) const {
 // class member_expr method definitions
 
 CONSTRUCTOR_INLINE
-member_expr::member_expr(node* l, node* op, node* m) :
-		postfix_expr(l,op), member(IS_A(expr*, m)) {
+member_expr::member_expr(expr* l, terminal* op, token_identifier* m) :
+		postfix_expr(l,op), member(m) {
 	assert(member);
 }
 
@@ -292,8 +287,9 @@ member_expr::rightmost(void) const {
 // class index_expr method definitions
 
 CONSTRUCTOR_INLINE
-index_expr::index_expr(node* l, node* i) : postfix_expr(l, NULL),
-	ranges(IS_A(range_list*, i)) { }
+index_expr::index_expr(expr* l, range_list* i) : postfix_expr(l, NULL),
+		ranges(i) {
+}
 
 DESTRUCTOR_INLINE
 index_expr::~index_expr() { SAFEDELETE(ranges); }
@@ -312,10 +308,8 @@ index_expr::rightmost(void) const {
 // class binary_expr method definitions
 
 CONSTRUCTOR_INLINE
-binary_expr::binary_expr(node* left, node* o, node* right) : expr(),
-		l(IS_A(expr*, left)),
-		op(IS_A(terminal*, o)),
-		r(IS_A(expr*, right)) {
+binary_expr::binary_expr(expr* left, terminal* o, expr* right) : expr(),
+		l(left), op(o), r(right) {
 	assert(l); assert(op); assert(r);
 }
 
@@ -338,7 +332,7 @@ binary_expr::rightmost(void) const {
 // class arith_expr method definitions
 
 CONSTRUCTOR_INLINE
-arith_expr::arith_expr(node* left, node* o, node* right) :
+arith_expr::arith_expr(expr* left, terminal* o, expr* right) :
 	binary_expr(left, o, right) {
 }
 
@@ -354,7 +348,7 @@ arith_expr::what(ostream& o) const {
 // class relational_expr method definitions
 
 CONSTRUCTOR_INLINE
-relational_expr::relational_expr(node* left, node* o, node* right) :
+relational_expr::relational_expr(expr* left, terminal* o, expr* right) :
 	binary_expr(left, o, right) {
 }
 
@@ -370,7 +364,7 @@ relational_expr::what(ostream& o) const {
 // class logical_expr method definitions
 
 CONSTRUCTOR_INLINE
-logical_expr::logical_expr(node* left, node* o, node* right) :
+logical_expr::logical_expr(expr* left, terminal* o, expr* right) :
 	binary_expr(left, o, right) {
 }
 
@@ -391,9 +385,8 @@ template class node_list<range,comma>;			// range_list
 
 
 //=============================================================================
-};
-};
-
+};	// end namespace parser
+};	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

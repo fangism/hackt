@@ -13,11 +13,11 @@ namespace PRS {
 // class rule method definitions
 
 CONSTRUCTOR_INLINE
-rule::rule(node* g, node* a, node* rhs, node* d) : node(),
-		guard(IS_A(expr*, g)),
-		arrow(IS_A(terminal*, a)),
-		r(IS_A(expr*, rhs)),
-		dir(IS_A(terminal*, d)) {
+rule::rule(expr* g, terminal* a, expr* rhs, terminal* d) : node(),
+		guard(g),
+		arrow(a),
+		r(rhs),
+		dir(d) {
 	assert(guard); assert(arrow); assert(r); assert(dir);
 	assert(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
@@ -47,8 +47,7 @@ rule::rightmost(void) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(node* t, node* r) : language_body(t),
-		rules(IS_A(rule_list*, r)) {
+body::body(token_keyword* t, rule_list* r) : language_body(t), rules(r) {
 	if (r) assert(rules);
 }
 

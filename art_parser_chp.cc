@@ -27,8 +27,8 @@ statement::what(ostream& o) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(node* t, node* s) : language_body(t),
-		stmts(IS_A(stmt_list*, s)) {
+body::body(token_keyword* t, stmt_list* s) : language_body(t),
+		stmts(s) {
 	if(s) assert(stmts);
 }
 
@@ -51,12 +51,12 @@ body::rightmost(void) const {
 // class guarded_command method definitions
 
 CONSTRUCTOR_INLINE
-guarded_command::guarded_command(node* g, node* a, node* c) : 
+guarded_command::guarded_command(chp_expr* g, terminal* a, stmt_list* c) : 
 		node(),
-		guard(IS_A(chp_expr*, g)),
+		guard(g),
 		// remember, may be keyword: else   
-		arrow(IS_A(terminal*, a)),
-		command(IS_A(body*, c)) {
+		arrow(a),
+		command(c) {
 	assert(guard);
 	assert(arrow);
 	if (c) assert(command);
@@ -86,7 +86,7 @@ guarded_command::rightmost(void) const {
 // class else_clause method definitions
 
 CONSTRUCTOR_INLINE
-else_clause::else_clause(node* g, node* a, node* c) :
+else_clause::else_clause(token_else* g, terminal* a, stmt_list* c) :
 		guarded_command(g,a,c) {
 	// check for keyword else, right-arrow terminal
 }
@@ -103,7 +103,7 @@ else_clause::what(ostream& o) const {
 // class skip method definitions
 
 CONSTRUCTOR_INLINE
-skip::skip(node* s) : statement(),
+skip::skip(token_keyword* s) : statement(),
 		token_keyword(IS_A(token_keyword*, s)->c_str()) {
 	SAFEDELETE(s);
 }
@@ -132,7 +132,7 @@ skip::rightmost(void) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(node* l, node* c, node* r) :
+wait::wait(terminal* l, expr* c, terminal* r) :
 		statement(),
 		lb(IS_A(terminal*, l)),
 		cond(IS_A(expr*, c)),
@@ -228,9 +228,8 @@ incdec_stmt::rightmost(void) const {
 // class communication method definitions
 
 CONSTRUCTOR_INLINE
-communication::communication(node* c, node* d) : statement(),
-		chan(IS_A(expr*, c)),
-		dir(IS_A(token_char*, d)) {
+communication::communication(expr* c, token_char* d) : statement(),
+		chan(c), dir(d) {
 	assert(chan); assert(dir);
 }
 
@@ -275,8 +274,8 @@ comm_list::rightmost(void) const {
 // class send method definitions
 
 CONSTRUCTOR_INLINE
-send::send(node* c, node* d, node* r) : communication(c, d),
-		rvalues(IS_A(expr_list*, r)) {
+send::send(expr* c, token_char* d, expr_list* r) : communication(c, d),
+		rvalues(r) {
 	assert(rvalues);
 }
 
@@ -294,8 +293,8 @@ send::rightmost(void) const {
 // class receive method definitions
 
 CONSTRUCTOR_INLINE
-receive::receive(node* c, node* d, node* l) : communication(c, d),
-		lvalues(IS_A(expr_list*, l)) {
+receive::receive(expr* c, token_char* d, expr_list* l) : communication(c, d),
+		lvalues(l) {
 	assert(lvalues);
 }
 
@@ -406,13 +405,12 @@ prob_selection::rightmost(void) const {
 // class loop method definitions
 
 CONSTRUCTOR_INLINE
-loop::loop(node* n) :
-		statement(), command(IS_A(body*, n)) {
+loop::loop(stmt_list* n) : statement(), commands(n) {
 }
 
 DESTRUCTOR_INLINE
 loop::~loop() {
-	SAFEDELETE(command);
+	SAFEDELETE(commands);
 }
 
 ostream&
@@ -422,20 +420,20 @@ loop::what(ostream& o) const {
 
 line_position
 loop::leftmost(void) const {
-	return command->leftmost();
+	return commands->leftmost();
 }
 
 line_position
 loop::rightmost(void) const {
-	return command->rightmost();
+	return commands->rightmost();
 }
 
 //=============================================================================
 // class do_until method definitions
 
 CONSTRUCTOR_INLINE
-do_until::do_until(node* n) : statement(),
-		sel(IS_A(det_selection*, n)) { }
+do_until::do_until(det_selection* n) : statement(),
+		sel(n) { }
 
 DESTRUCTOR_INLINE
 do_until::~do_until() {
@@ -461,9 +459,8 @@ do_until::rightmost(void) const {
 // class log method definitions
 
 CONSTRUCTOR_INLINE
-log::log(node* l, node* n) : statement(),
-		lc(IS_A(token_keyword*, l)),
-		args(IS_A(expr_list*, n)) {
+log::log(token_keyword* l, expr_list* n) : statement(),
+		lc(l), args(n) {
 	assert(lc); assert(args);
 }
 

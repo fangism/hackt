@@ -79,6 +79,7 @@ static	char* string_buf_ptr = NULL;
 #define TOKEN_UPDATE	current.col += yyleng;
 #define	NEWLINE_UPDATE	{ current.line++; current.col = 1; }
 #define	KEYWORD_UPDATE	{ yylval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE; }
+#define	ELSE_UPDATE	{ yylval._token_else = new token_else(yytext); TOKEN_UPDATE; }
 #define	BOOL_UPDATE	{ yylval._token_bool = new token_bool(yytext); TOKEN_UPDATE; }
 #define	TYPE_UPDATE	{ yylval._token_type = new token_type(yytext); TOKEN_UPDATE; }
 #define	MULTICHAR_UPDATE						\
@@ -247,7 +248,7 @@ FALSE		"false"
 {HSE}		{ KEYWORD_UPDATE; return HSE_LANG; }
 {PRS}		{ KEYWORD_UPDATE; return PRS_LANG; }
 {SKIP}		{ KEYWORD_UPDATE; return SKIP; }
-{ELSE}		{ KEYWORD_UPDATE; return ELSE; }
+{ELSE}		{ ELSE_UPDATE; return ELSE; }
 {LOG}		{ KEYWORD_UPDATE; return LOG; }
 {SEND}		{ KEYWORD_UPDATE; return SEND; }
 {RECV}		{ KEYWORD_UPDATE; return RECV; }

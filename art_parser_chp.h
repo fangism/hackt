@@ -43,9 +43,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef	node_list<statement,semicolon>	stmt_list;
 
 #define chp_stmt_list_wrap(b,l,e)					\
-	IS_A(CHP::stmt_list*, l)->wrap(b,e)
+	IS_A(CHP::stmt_list*, l->wrap(b,e))
 #define chp_stmt_list_append(l,d,n)					\
-	IS_A(CHP::stmt_list*, l)->append(d,n)
+	IS_A(CHP::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -53,7 +53,7 @@ class body : public language_body {
 protected:
 	stmt_list*		stmts;		///< list of CHP statements
 public:
-	body(node* t, node* s);
+	body(token_keyword* t, stmt_list* s);
 virtual	~body();
 
 virtual	ostream& what(ostream& o) const;
@@ -67,9 +67,9 @@ class guarded_command : public node {
 protected:
 	chp_expr*		guard;		///< guard expression
 	terminal*		arrow;		///< right-arrow
-	body*			command;	///< statement body
+	stmt_list*		command;	///< statement body
 public:
-	guarded_command(node* g, node* a, node* c);
+	guarded_command(chp_expr* g, terminal* a, stmt_list* c);
 virtual	~guarded_command();
 
 virtual	ostream& what(ostream& o) const;
@@ -81,7 +81,7 @@ virtual	line_position rightmost(void) const;
 /// CHP else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(node* g, node* a, node* c);
+	else_clause(token_else* g, terminal* a, stmt_list* c);
 virtual	~else_clause();
 
 	ostream& what(ostream& o) const;
@@ -95,7 +95,7 @@ public:
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
-	skip(node* s);
+	skip(token_keyword* s);
 virtual	~skip();
 
 // check that nothing appears after skip statement
@@ -114,7 +114,7 @@ protected:
 	expr*		cond;			///< wait until condition
 	terminal*	rb;			///< right bracket
 public:
-	wait(node* l, node* c, node* r);
+	wait(terminal* l, expr* c, terminal* r);
 virtual	~wait();
 
 virtual	ostream& what(ostream& o) const;
@@ -163,7 +163,7 @@ protected:
 	expr*		chan;
 	token_char*	dir;
 public:
-	communication(node* c, node* d);
+	communication(expr* c, token_char* d);
 virtual	~communication();
 
 virtual	line_position leftmost(void) const;
@@ -195,7 +195,7 @@ class send : public communication {
 protected:
 	expr_list*	rvalues;
 public:
-	send(node* c, node* d, node* r);
+	send(expr* c, token_char* d, expr_list* r);
 virtual	~send();
 
 virtual	line_position rightmost(void) const;
@@ -207,7 +207,7 @@ class receive : public communication {
 protected:
 	expr_list*	lvalues;
 public:
-	receive(node* c, node* d, node* l);
+	receive(expr* c, token_char* d, expr_list* l);
 virtual	~receive();
 
 virtual	line_position rightmost(void) const;
@@ -291,9 +291,9 @@ using	prob_sel_base::where;
 /// CHP loop contains a list of statements
 class loop : public statement {
 protected:
-	body*			command;
+	stmt_list*			commands;
 public:
-	loop(node* n);
+	loop(stmt_list* n);
 virtual	~loop();
 
 virtual	ostream& what(ostream& o) const;
@@ -307,7 +307,7 @@ class do_until : public statement {
 protected:
 	det_selection*		sel;
 public:
-	do_until(node* n);
+	do_until(det_selection* n);
 virtual	~do_until();
 
 // type-check: cannot contain an else clause, else infinite loop!
@@ -324,7 +324,7 @@ protected:
 	token_keyword*		lc;
 	expr_list*		args;
 public:
-	log(node* l, node* n);
+	log(token_keyword* l, expr_list* n);
 virtual	~log();
 
 virtual	ostream& what(ostream& o) const;

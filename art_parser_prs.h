@@ -29,7 +29,7 @@ protected:
 	expr*		r;
 	terminal*	dir;
 public:
-	rule(node* g, node* a, node* rhs, node* d);
+	rule(expr* g, terminal* a, expr* rhs, terminal* d);
 virtual	~rule();
 
 virtual	ostream& what(ostream& o) const;
@@ -50,7 +50,7 @@ class body : public language_body {
 protected:
 	rule_list*		rules;
 public:
-	body(node* t, node* r);
+	body(token_keyword* t, rule_list* r);
 virtual	~body();
 
 virtual	ostream& what(ostream& o) const;

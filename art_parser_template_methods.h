@@ -137,14 +137,10 @@ node_list<T,D>::~node_list() {
 NODE_LIST_TEMPLATE_SPEC
 node_list<T,D>*
 node_list<T,D>::wrap(terminal* b, terminal* e) {
-//	open = IS_A(terminal*, b);	assert(open);
 	open = b;
-	assert(IS_A(token_char*, open) ||
-		IS_A(token_string*, open));
-//	close = IS_A(terminal*, e);	assert(close);
+	if (b) assert(IS_A(token_char*, open) || IS_A(token_string*, open));
 	close = e;
-	assert(IS_A(token_char*, close) ||
-		IS_A(token_string*, close));
+	if (e) assert(IS_A(token_char*, close) || IS_A(token_string*, close));
 	return this;
 }
 
@@ -163,7 +159,6 @@ node_list<T,D>::append(terminal* d, T* n) {
 		// for effective conditional compilation
 		assert(D == none);	// no delimiter was expected
 	}
-//	assert(IS_A(T*, n));		// type-check, now redundant
 	push_back(n);			// n may be null, is ok
 	return this;
 }

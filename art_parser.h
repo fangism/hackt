@@ -49,6 +49,7 @@ extern	const char	semicolon[];
 extern	const char	scope[];
 extern	const char	thickbar[];
 extern	const char	colon[];
+extern	const char	alias[];
 
 //=============================================================================
 /// the abstract base class for parser nodes, universal return type
@@ -116,7 +117,7 @@ virtual	line_position rightmost(void) const;
 	The specifier T, a derived class from node, is only used for 
 	type-checking.  
  */
-NODE_LIST_BASE_TEMPLATE_SPEC
+template <class T>
 class node_list_base : virtual public node, public list_of_ptr<T> {
 private:
 	typedef		list<T*>			list_grandparent;
@@ -154,7 +155,7 @@ virtual	line_position rightmost(void) const = 0;
 	The delimiter specifier, D, is used for checking that every other
 	token is separated by a D character (if D is not '\0').  
  */
-NODE_LIST_TEMPLATE_SPEC_DEFAULT
+template <class T, const char D[] = none>
 class node_list : public node_list_base<T> {
 private:
 	typedef		node_list_base<T>	parent;
@@ -303,7 +304,7 @@ protected:
 	expr*			e;		///< enclosed expression
 	token_char*		rp;		///< right parenthesis
 public:
-	paren_expr(node* l, node* n, node* r);
+	paren_expr(token_char* l, expr* n, token_char* r);
 virtual	~paren_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -499,13 +500,13 @@ protected:
 	expr*		upper;		///< inclusive upper bound
 public:
 /// simple constructor for when range is just one integer expression
-	range(node* l);
+	range(expr* l);
 /**
 	Failure to dynamic_cast will result in assignment to a NULL pointer, 
 	which will be detected, and properly memory managed, assuming
 	that the arguments exclusively "owned" their memory locations.  
  */
-	range(node* l, node* o, node* u);
+	range(expr* l, terminal* o, expr* u);
 virtual	~range();
 
 virtual	ostream& what(ostream& o) const;
@@ -528,7 +529,7 @@ protected:
 	expr*		e;		///< the argument expr
 	terminal*	op;		///< the operator, may be null
 public:
-	unary_expr(node* n, node* o);
+	unary_expr(expr* n, terminal* o);
 virtual	~unary_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -540,7 +541,7 @@ virtual	line_position rightmost(void) const = 0;
 /// class for prefix unary expressions
 class prefix_expr : public unary_expr {
 public:
-	prefix_expr(node* op, node* n);
+	prefix_expr(terminal* op, expr* n);
 virtual	~prefix_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -552,7 +553,7 @@ virtual	line_position rightmost(void) const;
 /// class for postfix unary expressions
 class postfix_expr : public unary_expr {
 public:
-	postfix_expr(node* n, node* op);
+	postfix_expr(expr* n, terminal* op);
 virtual	~postfix_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -564,9 +565,11 @@ virtual	line_position rightmost(void) const;
 /// class for member (of user-defined type) expressions
 class member_expr : public postfix_expr {
 protected:
-	expr*		member;		// should be an id_expr or token_string
+	// was expr*
+	token_identifier*	member;
+	// should be an id_expr or token_string
 public:
-	member_expr(node* l, node* op, node* m);
+	member_expr(expr* l, terminal* op, token_identifier* m);
 virtual	~member_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -579,7 +582,7 @@ class index_expr : public postfix_expr {
 protected:
 	range_list*		ranges;		///< index
 public:
-	index_expr(node* l, node* i);
+	index_expr(expr* l, range_list* i);
 virtual	~index_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -594,7 +597,7 @@ protected:
 	terminal*	op;			///< operator
 	expr*		r;			///< right-hand side
 public:
-	binary_expr(node* left, node* o, node* right);
+	binary_expr(expr* left, terminal* o, expr* right);
 virtual	~binary_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -606,7 +609,7 @@ virtual	line_position rightmost(void) const;
 /// class of arithmetic expressions
 class arith_expr : public binary_expr {
 public:
-	arith_expr(node* left, node* o, node* right);
+	arith_expr(expr* left, terminal* o, expr* right);
 virtual	~arith_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -616,7 +619,7 @@ virtual	ostream& what(ostream& o) const;
 /// class of relational expressions
 class relational_expr : public binary_expr {
 public:
-	relational_expr(node* left, node* o, node* right);
+	relational_expr(expr* left, terminal* o, expr* right);
 virtual	~relational_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -626,7 +629,7 @@ virtual	ostream& what(ostream& o) const;
 /// class of logical expressions
 class logical_expr : public binary_expr {
 public:
-	logical_expr(node* left, node* o, node* right);
+	logical_expr(expr* left, terminal* o, expr* right);
 virtual	~logical_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -667,7 +670,7 @@ protected:
 	id_expr*		base;		///< base type identifier
 	expr_list*		temp_spec;	///< template arguments
 public:
-	type_id(node* b, node* t);
+	type_id(id_expr* b, expr_list* t);
 virtual	~type_id();
 
 virtual	ostream& what(ostream& o) const;
@@ -693,8 +696,9 @@ protected:
 	token_int*		width;		///< integer width (optional)
 	token_char*		ra;
 public:
-	data_type_base(node* t, node* l, node* w, node* r);
-	data_type_base(node* t);
+	data_type_base(token_type* t, token_char* l, 
+		token_int* w, token_char* r);
+	data_type_base(token_type* t);
 virtual	~data_type_base();
 
 virtual	ostream& what(ostream& o) const;
@@ -720,10 +724,11 @@ protected:
 	token_char*		dir;		///< port direction: in or out
 	base_data_type_list*	dtypes;		///< data types communicated
 public:
-	chan_type(node* c, node* d = NULL, node* t = NULL);
+	chan_type(token_keyword* c, token_char* d = NULL, 
+		base_data_type_list* t = NULL);
 virtual	~chan_type();
 
-chan_type* attach_data_types(node* t);
+chan_type* attach_data_types(base_data_type_list* t);
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
@@ -755,7 +760,7 @@ protected:
 	expr*		e;
 	terminal*	op;
 public:
-	incdec_stmt(node* n, node* o);
+	incdec_stmt(expr* n, terminal* o);
 virtual	~incdec_stmt();
 
 virtual	ostream& what(ostream& o) const;
@@ -774,7 +779,7 @@ protected:
 	terminal*	op;			///< operation
 	expr*		rhs;			///< source expression
 public:
-	assign_stmt(node* left, node* o, node* right);
+	assign_stmt(expr* left, terminal* o, expr* right);
 virtual	~assign_stmt();
 
 virtual	ostream& what(ostream& o) const;
@@ -822,10 +827,10 @@ class language_body : public def_body_item {
 protected:
 	token_keyword*	tag;			///< what language
 public:
-	language_body(node* t);
+	language_body(token_keyword* t);
 virtual	~language_body();
 
-virtual language_body* attach_tag(node* t);
+virtual language_body* attach_tag(token_keyword* t);
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
@@ -839,11 +844,12 @@ protected:
 	token_keyword*		ns;		///< keyword "namespace"
 	token_identifier*	name;		///< name of namespace
 	terminal*		lb;
-	node*			body;		///< contents of namespace
+	root_body*		body;		///< contents of namespace
 	terminal*		rb;
 	terminal*		semi;		///< semicolon token
 public:
-	namespace_body(node* s, node* n, node* l, node* b, node* r, node* c);
+	namespace_body(token_keyword* s, token_identifier* n, terminal* l, 
+		root_body* b, terminal* r, terminal* c);
 virtual	~namespace_body();
 
 virtual	ostream& what(ostream& o) const;
@@ -863,9 +869,10 @@ protected:
 	token_identifier*	alias;
 	token_char*		semi;
 public:
-	using_namespace(node* o, node* i, node* s);
+	using_namespace(token_keyword* o, id_expr* i, token_char* s);
 		// a "AS" and n (alias) are optional
-	using_namespace(node* o, node* i, node* a, node* n, node* s);
+	using_namespace(token_keyword* o, id_expr* i, token_keyword* a, 
+		token_identifier* n, token_char* s);
 virtual	~using_namespace();
 
 virtual	ostream& what(ostream& o) const;
@@ -876,71 +883,124 @@ virtual	const object* check_build(context* c) const;
 };
 
 //=============================================================================
-/// basic declaration or instance identifier, no trimmings
-class declaration_base : virtual public def_body_item, 
-		virtual public root_item {
-protected:
 /**
-	In declaration context, id should only be a token_identifier, 
-	but in instantiation contect, id may be a qualified identifier
-	with postfix member/indexing.  
-	PUNT: Let's not worry about it until the grammar is updated to 
-	reflect this.  
+	Base class for instance-related items, including declarations, 
+	arrays, connections and aliases, conditionals, loops.  
  */
-	token_identifier*		id;
+class instance_management : virtual public def_body_item, 
+		virtual public root_item {
 public:
-	declaration_base(node* i);
-virtual	~declaration_base();
+	instance_management();
+virtual	~instance_management();
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	line_position leftmost(void) const = 0;
+virtual	line_position rightmost(void) const = 0;
+};
+
+//-----------------------------------------------------------------------------
+/**
+	A list of lvalue expressions aliased/connected together.  
+ */
+class alias_list : public instance_management, public node_list<expr,alias> {
+private:
+	typedef node_list<expr,alias>		alias_list_base;
+public:
+	alias_list(expr* e);
+virtual	~alias_list();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	line_range where(void) const;
+};
+
+#define alias_list_wrap(b,l,e)						\
+	IS_A(alias_list*, l->wrap(b,e))
+#define alias_list_append(l,d,n)					\
+        IS_A(alias_list*, l->append(d,n))
+
+//=============================================================================
+/**
+	Abstract base class for connection statements of instantiations.  
+	Contains actuals list of arguments.  
+ */
+class actuals_base : virtual public instance_management {
+protected:
+	expr_list*		actuals;
+public:
+	actuals_base(expr_list* l);
+virtual	~actuals_base();
+
+// same virtual methods
+// virtual	ostream& what(ostream& o) const;
+// virtual	line_position leftmost(void) const;
+// virtual	line_position rightmost(void) const;
+
+// virtual	const object* check_build(context* c) const;
+};
+
+//=============================================================================
+/**
+	Basic instance identifier, no trimmings, just contains an identifier.  
+ */
+class instance_base : virtual public instance_management {
+protected:
+/**
+	In instantiation context, id should only be a token_identifier, 
+	but in connection context, id may be a qualified identifier
+	with postfix member/indexing.  
+	Is concrete.  
+ */
+	token_identifier*		id;
+public:
+	instance_base(token_identifier* i);
+virtual	~instance_base();
+
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const;
 };
 
-typedef	node_list<declaration_base,comma>	declaration_id_list;
+typedef	node_list<instance_base,comma>	instance_id_list;
 
-#define declaration_id_list_wrap(b,l,e)					\
-	IS_A(declaration_id_list*, l)->wrap(b,e)
-#define declaration_id_list_append(l,d,n)				\
-	IS_A(declaration_id_list*, l)->append(d,n) 
+#define instance_id_list_wrap(b,l,e)					\
+	IS_A(instance_id_list*, l)->wrap(b,e)
+#define instance_id_list_append(l,d,n)					\
+	IS_A(instance_id_list*, l)->append(d,n) 
 
 //-----------------------------------------------------------------------------
-/// declaration identifier with ranges
-class declaration_array : public declaration_base {
+/// instance identifier with ranges
+class instance_array : public instance_base {
 protected:
 	range_list*		ranges;		///< optional ranges
 public:
-	declaration_array(node* i, node* rl);
-virtual	~declaration_array();
+	instance_array(token_identifier* i, range_list* rl);
+virtual	~instance_array();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-/// abstract base class of instance items
-class instance_base : virtual public def_body_item, virtual public root_item {
-public:
-	instance_base();
-virtual	~instance_base();
-
-virtual	ostream& what(ostream& o) const = 0;
-virtual	line_position leftmost(void) const = 0;
-virtual	line_position rightmost(void) const = 0;
-virtual	line_range where(void) const;
-};
-
-//-----------------------------------------------------------------------------
-/// class for an instance declaration
-class instance_declaration : public instance_base {
+/**
+	A collection of instances of the same type. 
+	Contains a list of instance identifiers.  
+ */
+class instance_declaration : public instance_management {
 protected:
+	/**
+		The base type of the instantiations in this collection.  
+	 */
 	type_base*		type;
-	declaration_id_list*	ids;
+	/**
+		List of instance_base.  
+	 */
+	instance_id_list*	ids;
 	terminal*		semi;
 public:
-	instance_declaration(node* t, node* i, node* s = NULL);
+	instance_declaration(type_base* t, instance_id_list* i, 
+		terminal* s = NULL);
 virtual	~instance_declaration();
 
 virtual	ostream& what(ostream& o) const;
@@ -960,57 +1020,80 @@ typedef	node_list<instance_declaration,semicolon>	data_param_list;
 
 //-----------------------------------------------------------------------------
 /// class for an or instance port connection or declaration connection
-class actuals_connection : public instance_base, public declaration_base {
+class instance_connection : public instance_base, public actuals_base {
 protected:
-//	expr*			id;		// inherited
-	expr_list*		actuals;	///< connection actuals
+//	token_identifier*	id;		// inherited (was expr*)
+//	expr_list*		actuals;	// inherited
 	terminal*		semi;		///< semicolon (optional)
 public:
-	actuals_connection(node* i, node* a, node* s = NULL);
-virtual	~actuals_connection();
+	instance_connection(token_identifier* i, expr_list* a, 
+		terminal* s = NULL);
+virtual	~instance_connection();
 
 // remember to check for declaration context when checking id
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	line_range where(void) const;
+// virtual	line_range where(void) const;
+virtual	const object* check_build(context* c) const;
 };
 
 //-----------------------------------------------------------------------------
-/// aliasing identifiers is establishing a connection, or assigning a value
-class alias_assign : public instance_base, public declaration_base {
+// left-hand side may be general lvalue-expression
+class connection_statement : public actuals_base {
 protected:
-//	expr*			id;		// inherited
-	terminal*		op;		///< assign operator
-	expr*			rhs;		///< right-hand side
+	expr*			lvalue;
+//	expr_list*		actuals;	// inherited
+	terminal*		semi;
+public:
+	connection_statement(expr* l, expr_list* a, terminal* s = NULL);
+virtual	~connection_statement();
+virtual	ostream& what(ostream& o) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+// virtual	line_range where(void) const;
+// virtual	const object* check_build(context* c) const;
+};
+
+//-----------------------------------------------------------------------------
+/**
+	An alias statement without type identifier, instance is
+	declared at the same time.  
+	Contains a list of alias identifier expressions.  
+ */
+class instance_alias : public instance_base {
+protected:
+//	token_identifier*	id;		// inherited
+	alias_list*		aliases;
 	terminal*		semi;		///< semicolon
 public:
-	alias_assign(node* i, node* o, node* r, node* s = NULL);
-virtual	~alias_assign();
-
-// type check here
+	instance_alias(token_identifier* i, alias_list* al, terminal* s = NULL);
+virtual	~instance_alias();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	line_range where(void) const;
+// virtual	line_range where(void) const;
+// virtual	const object* check_build(context* c) const;
 };
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 /// class for loop instantiations, to be unrolled in the build phase
-class loop_instantiation : public instance_base {
+class loop_instantiation : public instance_management {
 protected:
 	terminal*		lp;
 	terminal*		delim;
 	token_identifier*	index;
-	terminal*		colon;
+	terminal*		colon1;
 	range*			rng;
+	terminal*		colon2;
 	definition_body*	body;
 	terminal*		rp;
 public:
-	loop_instantiation(node* l, node* d, node* i, node* c, 
-			node* g, node* b, node* r);
+	loop_instantiation(terminal* l, terminal* d, token_identifier* i, 
+		terminal* c1, range* g, terminal* c2, 
+		definition_body* b, terminal* r);
 virtual	~loop_instantiation();
 
 virtual	ostream& what(ostream& o) const;
@@ -1025,7 +1108,7 @@ protected:
 	token_identifier*	name;		///< formal name
 	range_list*		dim;		///< optional dimensions
 public:
-	port_formal_id(node* n, node* d);
+	port_formal_id(token_identifier* n, range_list* d);
 virtual	~port_formal_id();
 
 virtual	ostream& what(ostream& o) const;
@@ -1045,10 +1128,10 @@ typedef	node_list<port_formal_id,comma>	port_formal_id_list;
 /// port formal declaration contains a type and identifier list
 class port_formal_decl : public node {
 protected:
-	type_id*		type;		///< formal base type
+	type_base*		type;		///< formal base type
 	port_formal_id_list*	ids;		///< identifier list
 public:
-	port_formal_decl(node* t, node* i);
+	port_formal_decl(type_base* t, port_formal_id_list* i);
 virtual	~port_formal_decl();
 
 virtual	ostream& what(ostream& o) const;
@@ -1071,7 +1154,7 @@ protected:
 	token_identifier*	name;		///< formal name
 	range_list*		dim;		///< optional dimensions
 public:
-	template_formal_id(node* n, node* d);
+	template_formal_id(token_identifier* n, range_list* d);
 virtual	~template_formal_id();
 
 virtual	ostream& what(ostream& o) const;
@@ -1095,7 +1178,7 @@ protected:
 	type_base*			type;	///< formal base type
 	template_formal_id_list*	ids;	///< identifier list
 public:
-	template_formal_decl(node* t, node* i);
+	template_formal_decl(type_base* t, template_formal_id_list* i);
 virtual	~template_formal_decl();
 
 virtual	ostream& what(ostream& o) const;
@@ -1120,7 +1203,7 @@ protected:
 	/// optional template specifier
 	template_formal_decl_list*	temp_spec;
 public:
-	def_type_id(node* n, node* t);
+	def_type_id(token_identifier* n, template_formal_decl_list* t);
 virtual	~def_type_id();
 
 virtual	ostream& what(ostream& o) const;
@@ -1171,7 +1254,8 @@ protected:
 		// should never be NULL, could be const reference?
 	port_formal_decl_list*		ports;	///< optional port formal list
 public:
-	process_signature(node* d, node* i, node* p);
+	process_signature(token_keyword* d, def_type_id* i, 
+		port_formal_decl_list* p);
 virtual	~process_signature();
 
 // note: non-virtual
@@ -1186,7 +1270,8 @@ class process_prototype : public prototype, public process_signature {
 protected:
 	token_char*		semi;		///< semicolon token
 public:
-	process_prototype(node* d, node* i, node* p, node* s);
+	process_prototype(token_keyword* d, def_type_id* i, 
+		port_formal_decl_list* p, token_char* s);
 virtual	~process_prototype();
 
 virtual	ostream& what(ostream& o) const;
@@ -1204,7 +1289,8 @@ protected:
 //	port_formal_decl_list*		ports;	//  inherited
 	definition_body*		body;	///< definition body
 public:
-	process_def(node* d, node* i, node* p, node* b);
+	process_def(token_keyword* d, def_type_id* i, 
+		port_formal_decl_list* p, definition_body* b);
 virtual	~process_def();
 
 virtual	ostream& what(ostream& o) const;
@@ -1214,13 +1300,13 @@ virtual	line_position rightmost(void) const;
 
 //=============================================================================
 /// conditional instantiations in definition body
-class guarded_definition_body : public instance_base {
+class guarded_definition_body : public instance_management {
 protected:
 	expr*				guard;	///< condition expression
 	terminal*			arrow;	///< right arrow
 	definition_body*		body;
 public:
-	guarded_definition_body(node* e, node* a, node* b);
+	guarded_definition_body(expr* e, terminal* a, definition_body* b);
 virtual	~guarded_definition_body();
 
 virtual	ostream& what(ostream& o) const;
@@ -1239,11 +1325,11 @@ typedef	node_list<guarded_definition_body,thickbar>
 
 //-----------------------------------------------------------------------------
 /// wrapper class for conditional instantiations
-class conditional_instantiation : public instance_base {
+class conditional_instantiation : public instance_management {
 protected:
 	guarded_definition_body_list*	gd;
 public:
-	conditional_instantiation(node* n);
+	conditional_instantiation(guarded_definition_body_list* n);
 virtual	~conditional_instantiation();
 
 virtual	ostream& what(ostream& o) const;
@@ -1261,7 +1347,8 @@ protected:
 	data_type_base*		bdt;		///< the represented type
 	data_param_list*	params;		///< the implementation type
 public:
-	user_data_type_signature(node* df, node* n, node* dp, node* b, node* p);
+	user_data_type_signature(token_keyword* df, token_identifier* n, 
+		token_string* dp, data_type_base* b, data_param_list* p);
 virtual	~user_data_type_signature();
 };
 
@@ -1272,8 +1359,9 @@ class user_data_type_prototype : public prototype,
 protected:
 	token_char*		semi;		///< semicolon
 public:
-	user_data_type_prototype(node* df, node* n, node* dp, node* b, 
-		node* p, node* s);
+	user_data_type_prototype(token_keyword* df, token_identifier* n, 
+		token_string* dp, data_type_base* b, 
+		data_param_list* p, token_char* s);
 virtual	~user_data_type_prototype();
 
 virtual	ostream& what(ostream& o) const;
@@ -1296,8 +1384,10 @@ protected:
 	language_body*		getb;		///< get body
 	token_char*		rb;		///< right brace
 public:
-	user_data_type_def(node* df, node* n, node* dp, node* b, node* p, 
-		node* l, node* s, node* g, node* r);
+	user_data_type_def(token_keyword* df, token_identifier* n, 
+		token_string* dp, data_type_base* b, data_param_list* p, 
+		token_char* l, language_body* s, language_body* g, 
+		token_char* r);
 virtual	~user_data_type_def();
 
 virtual	ostream& what(ostream& o) const;
@@ -1315,8 +1405,8 @@ protected:
 	chan_type*		bct;		///< the represented type
 	data_param_list*	params;		///< the implementation type
 public:
-	user_chan_type_signature(node* df, node* n, node* dp, 
-		node* b, node* p);
+	user_chan_type_signature(token_keyword* df, token_identifier* n, 
+		token_string* dp, chan_type* b, data_param_list* p);
 virtual	~user_chan_type_signature();
 };
 
@@ -1327,8 +1417,9 @@ class user_chan_type_prototype : public prototype,
 protected:
 	token_char*		semi;		///< semicolon
 public:
-	user_chan_type_prototype(node* df, node* n, node* dp, node* b, 
-		node* p, node* s);
+	user_chan_type_prototype(token_keyword* df, token_identifier* n, 
+		token_string* dp, chan_type* b, 
+		data_param_list* p, token_char* s);
 virtual	~user_chan_type_prototype();
 
 virtual	ostream& what(ostream& o) const;
@@ -1350,8 +1441,10 @@ protected:
 	language_body*		recvb;		///< get body
 	token_char*		rb;		///< right brace
 public:
-	user_chan_type_def(node* df, node* n, node* dp, node* b, node* p, 
-		node* l, node* s, node* g, node* r);
+	user_chan_type_def(token_keyword* df, token_identifier* n, 
+		token_string* dp, chan_type* b, data_param_list* p, 
+		token_char* l, language_body* s, language_body* g, 
+		token_char* r);
 virtual	~user_chan_type_def();
 
 virtual	ostream& what(ostream& o) const;

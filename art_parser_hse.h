@@ -38,9 +38,9 @@ virtual	line_position rightmost(void) const = 0;
 typedef	node_list<statement,semicolon>	stmt_list;
 
 #define hse_stmt_list_wrap(b,l,e)					\
-	IS_A(HSE::stmt_list*, l)->wrap(b,e)
+	IS_A(HSE::stmt_list*, l->wrap(b,e))
 #define hse_stmt_list_append(l,d,n)					\
-	IS_A(HSE::stmt_list*, l)->append(d,n)
+	IS_A(HSE::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -48,7 +48,7 @@ class body : public language_body {
 protected:
 	stmt_list*		stmts;		///< list of HSE statements
 public:
-	body(node* t, node* s);
+	body(token_keyword* t, stmt_list* s);
 virtual	~body();
 
 virtual	ostream& what(ostream& o) const;
@@ -62,9 +62,9 @@ class guarded_command : public node {
 protected:
 	hse_expr*		guard;		///< guard expression
 	terminal*		arrow;		///< right-arrow
-	body*			command;	///< statement body
+	stmt_list*		command;	///< statement body
 public:
-	guarded_command(node* g, node* a, node* c);
+	guarded_command(hse_expr* g, terminal* a, stmt_list* c);
 virtual	~guarded_command();
 
 virtual	ostream& what(ostream& o) const;
@@ -76,7 +76,7 @@ virtual	line_position rightmost(void) const;
 /// HSE else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(node* g, node* a, node* c);
+	else_clause(token_else* g, terminal* a, stmt_list* c);
 virtual	~else_clause();
 
 virtual	ostream& what(ostream& o) const;
@@ -90,7 +90,7 @@ public:
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
-	skip(node* s);
+	skip(token_keyword* s);
 virtual	~skip();
 
 // check that nothing appears after skip statement
@@ -109,7 +109,7 @@ protected:
 	expr*		cond;
 	terminal*	rb;
 public:
-	wait(node* l, node* c, node* r);
+	wait(terminal* l, expr* c, terminal* r);
 virtual	~wait();
 
 virtual	ostream& what(ostream& o) const;
@@ -195,7 +195,7 @@ class prob_selection : public selection,
 private:
 	typedef	node_list<guarded_command,thickbar>	prob_sel_base;
 public:
-	prob_selection(node* n);
+	prob_selection(guarded_command* n);
 virtual	~prob_selection();
 
 virtual	ostream& what(ostream& o) const;
@@ -209,9 +209,9 @@ using	prob_sel_base::where;
 /// HSE loop contains a list of statements
 class loop : public statement {
 protected:
-	body*			command;
+	stmt_list*			commands;
 public:
-	loop(node* n);
+	loop(stmt_list* n);
 virtual	~loop();
 
 virtual	ostream& what(ostream& o) const;
@@ -225,7 +225,7 @@ class do_until : public statement {
 protected:
 	det_selection*		sel;
 public:
-	do_until(node* n);
+	do_until(det_selection* n);
 virtual	~do_until();
 
 // type-check: cannot contain an else clause, else infinite loop!
