@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.1.2.1.2.1 2005/03/09 22:46:39 fang Exp $
+	$Id: art_object_value_collection.h,v 1.1.2.1.2.2 2005/03/10 07:18:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_H__
@@ -47,10 +47,9 @@ public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 	typedef	typename class_traits<Tag>::instance_reference_type
 						instance_reference_type;
-	typedef	typename instance_reference_type::init_arg_type
-						init_arg_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
+	typedef	count_ptr<const expr_type>	init_arg_type;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -75,8 +74,8 @@ public:
 
 virtual	~value_collection();
 
-	ostream&
-	what(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
 	ostream&
 	type_dump(ostream& o) const;
@@ -140,6 +139,7 @@ public:
 
 	// only intended for children class
 	// need not be virtual, no pointers in subclasses
+	// TODO: phase this out in favor of constructor...
 	static
 	persistent*
 	construct_empty(const int);
@@ -194,6 +194,9 @@ private:
 public:
 	value_array(const scopespace& o, const string& n);
 	~value_array();
+
+	ostream&
+	what(ostream& ) const;
 
 	bool
 	is_partially_unrolled(void) const;
@@ -262,6 +265,9 @@ public:
 	value_array(const scopespace& o, const string& n);
 
 	~value_array();
+
+	ostream&
+	what(ostream& ) const;
 
 	bool
 	is_partially_unrolled(void) const;

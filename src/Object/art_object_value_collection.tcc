@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.1.2.1 2005/03/09 19:24:56 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.1.2.1.2.1 2005/03/10 07:18:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -142,6 +142,7 @@ VALUE_COLLECTION_CLASS::~value_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::what(ostream& o) const {
@@ -151,6 +152,7 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -393,6 +395,13 @@ VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::~value_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+VALUE_ARRAY_CLASS::what(ostream& o) const {
+	return o << util::what<this_type>::name();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -643,6 +652,13 @@ VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::~value_array() {
 	STACKTRACE("~value_scalar()");
 //	STACKTRACE_STREAM << "@ " << this << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+ostream&
+VALUE_SCALAR_CLASS::what(ostream& o) const {
+	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.41.8.1.2.2 2005/03/10 00:23:28 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41.8.1.2.3 2005/03/10 07:18:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -31,6 +31,9 @@
 #include "art_object_value_collection.h"
 #if USE_CONST_COLLECTION_TEMPLATE
 #include "art_object_const_collection.tcc"
+#endif
+#if USE_VALUE_REFERENCE_TEMPLATE
+#include "art_object_value_reference.tcc"
 #endif
 #endif	// USE_VALUE_COLLECTION_TEMPLATE
 #include "art_object_assign.h"
@@ -1051,6 +1054,7 @@ param_expr_collective::hash_string(void) const {
 //=============================================================================
 // class pbool_instance_reference method definitions
 
+#if !USE_VALUE_REFERENCE_TEMPLATE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
@@ -1984,8 +1988,10 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Short-cut for now...
+	Already covered by pint_expr::unroll_resolve_index.
  */
 count_ptr<const_index>
 pint_instance_reference::unroll_resolve_index(const unroll_context& c) const {
@@ -1994,6 +2000,7 @@ pint_instance_reference::unroll_resolve_index(const unroll_context& c) const {
 		cp(unroll_resolve(c));
 	return cp.is_a<const_index>();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -2178,6 +2185,7 @@ pint_instance_reference::assigner::operator() (const bad_bool b,
 	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
+#endif	// USE_VALUE_REFERENCE_TEMPLATE
 
 //=============================================================================
 // class pint_const method definitions
@@ -5509,6 +5517,10 @@ dynamic_index_list::load_object(const persistent_object_manager& m,
 #if USE_CONST_COLLECTION_TEMPLATE
 template class const_collection<pint_tag>;
 template class const_collection<pbool_tag>;
+#endif
+#if USE_VALUE_REFERENCE_TEMPLATE
+template class value_reference<pint_tag>;
+template class value_reference<pbool_tag>;
 #endif
 //=============================================================================
 }	// end namepace entity

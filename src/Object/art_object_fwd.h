@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7.12.3.2.1.2.1 2005/03/09 22:46:39 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.3.2.1.2.2 2005/03/10 07:18:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -55,6 +55,8 @@ namespace entity {
 
 	template <class, size_t>
 	class instance_array;
+	template <class, size_t>
+	class value_array;
 
 	// subclasses of datatype_instance_collection
 	typedef	instance_collection<bool_tag>
@@ -181,8 +183,17 @@ namespace entity {
 
 // expressions and family
 	class param_instance_reference;
+#if 1
 	class pint_instance_reference;
 	class pbool_instance_reference;
+#else
+	template <class>
+	class value_reference;
+	typedef	value_reference<pint_tag>
+		pint_instance_reference;
+	typedef	value_reference<pbool_tag>
+		pbool_instance_reference;
+#endif
 
 	class param_expr;
 	class const_param;

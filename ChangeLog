@@ -12,6 +12,15 @@
 	  Renamed {may,must}_be_equivalent method functions of many
 	  pint and pbool class derivatives.  
 
+	* -expr-03:
+	  Added code for porting pint/pbool_instance_reference to
+	  value_reference template class, but kept it disabled for this
+	  revision with USE_VALUE_REFERENCE_TEMPLATE set to 0.  
+	  (Enabling it yielded different error messages in the param test
+	  directory, and haven't figured out why... will need stacktrace?)
+	  Removed (comment) unnecessary
+	  pint_instance_reference::unroll_resolve_index method.  
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
 	  Porting parameter instance collections to use new value_collection
 	  template, similar to instance_collection class template.  

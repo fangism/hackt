@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.8.10.2 2005/03/10 00:23:30 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.8.10.3 2005/03/10 07:18:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -10,6 +10,8 @@
 #include "boolean_types.h"
 #include "art_object_expr_const.h"	// for const_index_list
 #include "art_object_inst_ref_base.h"	// includes "art_object_base.h"
+
+#define	USE_VALUE_REFERENCE_TEMPLATE		0
 
 //=============================================================================
 namespace ART {
@@ -43,6 +45,7 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
 **/
 
 //=============================================================================
+#if !USE_VALUE_REFERENCE_TEMPLATE
 /**
 	A reference to a instance of built-in type pbool.  
 	Consider multiply deriving from pbool_expr, 
@@ -279,8 +282,11 @@ public:
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
+#if 0
+	// already covered by pint_expr::unroll_resolve_index
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
+#endif
 
 public:
 	/**
@@ -324,6 +330,7 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_instance_reference
+#endif	// USE_VALUE_REFERENCE_TEMPLATE
 
 //=============================================================================
 }	// end namespace ART

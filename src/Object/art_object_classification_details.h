@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.2.12.2.2.1.2.1 2005/03/09 22:46:35 fang Exp $
+	$Id: art_object_classification_details.h,v 1.2.12.2.2.1.2.2 2005/03/10 07:18:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -450,8 +450,10 @@ struct class_traits<pint_tag> {
 	typedef	param_instance_collection	value_collection_parent_type;
 	template <size_t D>
 	struct value_array {
-		typedef	entity::instance_array<tag_type,D>	type;
+		typedef	entity::value_array<tag_type,D>	type;
 	};
+	typedef	pint_const			const_expr_type;
+	typedef	pint_const_collection		const_collection_type;
 
 	typedef	param_instantiation_statement
 					instantiation_statement_parent_type;
@@ -511,8 +513,10 @@ struct class_traits<pbool_tag> {
 	typedef	param_instance_collection	value_collection_parent_type;
 	template <size_t D>
 	struct value_array {
-		typedef	entity::instance_array<tag_type,D>	type;
+		typedef	entity::value_array<tag_type,D>	type;
 	};
+	typedef	pbool_const			const_expr_type;
+	typedef	pbool_const_collection		const_collection_type;
 
 	typedef	param_instantiation_statement
 					instantiation_statement_parent_type;
