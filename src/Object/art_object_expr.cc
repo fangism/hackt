@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36 2005/01/16 02:44:19 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.8.1 2005/01/20 04:43:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -109,7 +109,7 @@ USING_STACKTRACE
 	Implementation type for range-checking, 
 	used by const_range.
  */
-typedef discrete_interval_set<int>	interval_type;
+typedef discrete_interval_set<pint_value_type>	interval_type;
 
 
 //=============================================================================
@@ -263,7 +263,7 @@ count_ptr<const_index>
 pint_expr::resolve_index(void) const {
 	STACKTRACE("pint_expr::resolve_index()");
 	typedef count_ptr<const_index> return_type;
-	int i;
+	value_type i;
 	return (resolve_value(i)) ? 
 		return_type(new pint_const(i)) :
 		return_type(NULL);
@@ -985,16 +985,16 @@ pbool_instance_reference::static_constant_bool(void) const {
 	\return true if resolution succeeds, else false.
  */
 bool
-pbool_instance_reference::resolve_value(bool& i) const {
+pbool_instance_reference::resolve_value(value_type& i) const {
 	// lookup pbool_instance_collection
 	if (array_indices) {
 		const const_index_list
 			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
-			const excl_ptr<multikey_base<int> > lower = 
-				indices.lower_multikey();
-			const excl_ptr<multikey_base<int> > upper = 
-				indices.upper_multikey();
+			const excl_ptr<multikey_base<pint_value_type> >
+				lower = indices.lower_multikey();
+			const excl_ptr<multikey_base<pint_value_type> >
+				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
 			if (*lower != *upper) {
@@ -1020,7 +1020,8 @@ pbool_instance_reference::resolve_value(bool& i) const {
 	\return false if there was error.  
  */
 bool
-pbool_instance_reference::resolve_values_into_flat_list(list<bool>& l) const {
+pbool_instance_reference::resolve_values_into_flat_list(
+		list<value_type>& l) const {
 	// base collection must be non-scalar
 	INVARIANT(pbool_inst_ref->dimensions);
 	const const_index_list
@@ -1163,7 +1164,7 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
-		bool i;
+		value_type i;
 		if (src.resolve_value(i)) {
 			vals.push_back(i);
 		} else {
@@ -1183,7 +1184,7 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 	\return error (true) if anything goes wrong, or has gone wrong before.  
  */
 bool
-pbool_instance_reference::assigner::operator() (const bool b, 
+pbool_instance_reference::assigner::operator() (const value_type b, 
 		const pbool_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
@@ -1221,18 +1222,18 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-	const excl_ptr<multikey_generator_base<int> >
-		key_gen(multikey_generator_base<int>::make_multikey_generator(
-			dim.size()));
+	const excl_ptr<multikey_generator_base<pint_value_type> >
+		key_gen(multikey_generator_base<pint_value_type>::
+			make_multikey_generator(dim.size()));
 	NEVER_NULL(key_gen);
 	// automatic and temporarily allocated
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
 	key_gen->initialize();
-	list<bool>::const_iterator list_iter = vals.begin();
+	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	multikey_generator_base<int>& key_gen_ref = *key_gen;
+	multikey_generator_base<pint_value_type>& key_gen_ref = *key_gen;
 	do {
 		if (p.pbool_inst_ref->assign(key_gen_ref, *list_iter)) {
 			cerr << "ERROR: assigning index " << key_gen_ref << 
@@ -1386,7 +1387,7 @@ pint_instance_reference::is_unconditional(void) const {
 	Better make sure that this is_static_constant before calling, 
 	else will assert-fail.
  */
-int
+pint_instance_reference::value_type
 pint_instance_reference::static_constant_int(void) const {
 	INVARIANT(is_static_constant());
 	return pint_inst_ref->initial_value()->static_constant_int();
@@ -1399,7 +1400,7 @@ pint_instance_reference::static_constant_int(void) const {
 	\return true if resolution succeeds, else false.
  */
 bool
-pint_instance_reference::resolve_value(int& i) const {
+pint_instance_reference::resolve_value(value_type& i) const {
 	// lookup pint_instance_collection
 	if (array_indices) {
 		const const_index_list
@@ -1407,10 +1408,10 @@ pint_instance_reference::resolve_value(int& i) const {
 		if (!indices.empty()) {
 			// really should pass indices into ->lookup_values();
 			// fix this later...
-			const excl_ptr<multikey_base<int> > lower = 
-				indices.lower_multikey();
-			const excl_ptr<multikey_base<int> > upper = 
-				indices.upper_multikey();
+			const excl_ptr<multikey_base<pint_value_type> >
+				lower = indices.lower_multikey();
+			const excl_ptr<multikey_base<pint_value_type> >
+				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
 			if (*lower != *upper) {
@@ -1440,7 +1441,8 @@ pint_instance_reference::resolve_value(int& i) const {
 	\return false if there was error.  
  */
 bool
-pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
+pint_instance_reference::resolve_values_into_flat_list(
+		list<value_type>& l) const {
 	// base collection must be non-scalar
 	INVARIANT(pint_inst_ref->dimensions);
 	const const_index_list
@@ -1497,7 +1499,7 @@ pint_instance_reference::resolve_dimensions(void) const {
 	sizes have been checked.  
  */
 bool
-pint_instance_reference::assign(const list<int>& l) const {
+pint_instance_reference::assign(const list<value_type>& l) const {
 	return pint_inst_ref->unroll_assign(l);
 }
 #endif
@@ -1598,7 +1600,7 @@ pint_instance_reference::assigner::assigner(const pint_expr& p) :
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
-		int i;
+		value_type i;
 		if (src.resolve_value(i)) {
 			vals.push_back(i);
 		} else {
@@ -1656,18 +1658,18 @@ pint_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-	const excl_ptr<multikey_generator_base<int> >
-		key_gen(multikey_generator_base<int>::make_multikey_generator(
-			dim.size()));
+	const excl_ptr<multikey_generator_base<pint_value_type> >
+		key_gen(multikey_generator_base<pint_value_type>::
+			make_multikey_generator(dim.size()));
 	NEVER_NULL(key_gen);
 	// automatic and temporarily allocated
 	key_gen->get_lower_corner() = *dim.lower_multikey();
 	key_gen->get_upper_corner() = *dim.upper_multikey();
 	key_gen->initialize();
-	list<int>::const_iterator list_iter = vals.begin();
+	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	multikey_generator_base<int>& key_gen_ref = *key_gen;
+	multikey_generator_base<pint_value_type>& key_gen_ref = *key_gen;
 	do {
 		if (p.pint_inst_ref->assign(key_gen_ref, *list_iter)) {
 			cerr << "ERROR: assigning index " << key_gen_ref << 
@@ -1731,20 +1733,20 @@ pint_const::operator == (const const_range& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_const::value_type
 pint_const::lower_bound(void) const {
 	return val;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_const::value_type
 pint_const::upper_bound(void) const {
 	return val;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_const::resolve_value(int& i) const {
+pint_const::resolve_value(value_type& i) const {
 	i = val;
 	return true;
 }
@@ -1769,7 +1771,7 @@ pint_const::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_const::resolve_values_into_flat_list(list<int>& l) const {
+pint_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
 	return true;
 }
@@ -1944,7 +1946,7 @@ pint_const_collection::must_be_equivalent(const param_expr& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_const_collection::resolve_value(int& ) const {
+pint_const_collection::resolve_value(value_type& ) const {
 	cerr << "Never supposed to call pint_const_collection::resolve_value()."
 		<< endl;
 	THROW_EXIT;
@@ -1952,7 +1954,7 @@ pint_const_collection::resolve_value(int& ) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_const_collection::value_type
 pint_const_collection::static_constant_int(void) const {
 	cerr << "Never supposed to call pint_const_collection::static_constant_int()." << endl;
 	THROW_EXIT;
@@ -1965,7 +1967,8 @@ pint_const_collection::static_constant_int(void) const {
 	May become obsolete in future.  
  */
 bool
-pint_const_collection::resolve_values_into_flat_list(list<int>& l) const {
+pint_const_collection::resolve_values_into_flat_list(
+		list<value_type>& l) const {
 	copy(values.begin(), values.end(), back_inserter(l));
 	return true;
 }
@@ -2076,14 +2079,14 @@ pbool_const::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_const::resolve_value(bool& i) const {
+pbool_const::resolve_value(value_type& i) const {
 	i = val;
 	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_const::resolve_values_into_flat_list(list<bool>& l) const {
+pbool_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
 	return true;
 }
@@ -2186,7 +2189,7 @@ pint_unary_expr::is_unconditional(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_unary_expr::value_type
 pint_unary_expr::static_constant_int(void) const {
 	// depends on op
 	return - ex->static_constant_int();
@@ -2197,8 +2200,8 @@ pint_unary_expr::static_constant_int(void) const {
 	Returns resolved value of negation expression.  
  */
 bool
-pint_unary_expr::resolve_value(int& i) const {
-	int j;
+pint_unary_expr::resolve_value(value_type& i) const {
+	value_type j;
 	NEVER_NULL(ex);
 	const bool ret = ex->resolve_value(j);
 	i = -j;		// regardless of ret
@@ -2210,8 +2213,8 @@ pint_unary_expr::resolve_value(int& i) const {
 	\return false if there is error in resolving.
  */
 bool
-pint_unary_expr::resolve_values_into_flat_list(list<int>& l) const {
-	int i = 0;
+pint_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+	value_type i = 0;
 	const bool ret = resolve_value(i);
 	l.push_back(i);		// regardless of validity
 	return ret;
@@ -2342,8 +2345,8 @@ pbool_unary_expr::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_unary_expr::resolve_value(bool& i) const {
-	bool b;
+pbool_unary_expr::resolve_value(value_type& i) const {
+	value_type b;
 	const bool ret = ex->resolve_value(b);
 	i = !b;
 	return ret;
@@ -2351,8 +2354,8 @@ pbool_unary_expr::resolve_value(bool& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pbool_unary_expr::resolve_values_into_flat_list(list<bool>& l) const {
-	bool b;
+pbool_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+	value_type b;
 	const bool ret = resolve_value(b);
 	l.push_back(b);
 	return ret;
@@ -2402,11 +2405,11 @@ if (!m.flag_visit(this)) {
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(arith_expr, ARITH_EXPR_TYPE_KEY)
 
-const plus<int,int>		arith_expr::adder;
-const minus<int,int>		arith_expr::subtractor;
-const multiplies<int,int>	arith_expr::multiplier;
-const divides<int,int>		arith_expr::divider;
-const modulus<int,int>		arith_expr::remainder;
+const plus<pint_value_type, pint_value_type>		arith_expr::adder;
+const minus<pint_value_type, pint_value_type>		arith_expr::subtractor;
+const multiplies<pint_value_type, pint_value_type>	arith_expr::multiplier;
+const divides<pint_value_type, pint_value_type>		arith_expr::divider;
+const modulus<pint_value_type, pint_value_type>		arith_expr::remainder;
 
 const arith_expr::op_map_type
 arith_expr::op_map;
@@ -2509,10 +2512,10 @@ arith_expr::is_unconditional(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+arith_expr::value_type
 arith_expr::static_constant_int(void) const {
-	const int a = lx->static_constant_int();
-	const int b = rx->static_constant_int();
+	const arg_type a = lx->static_constant_int();
+	const arg_type b = rx->static_constant_int();
 #if 0
 	switch(op) {
 		case '+':	return a + b;
@@ -2533,8 +2536,8 @@ arith_expr::static_constant_int(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::resolve_value(int& i) const {
-	int a, b;
+arith_expr::resolve_value(value_type& i) const {
+	arg_type a, b;
 	NEVER_NULL(lx);	NEVER_NULL(rx);
 	const bool lret = lx->resolve_value(a);
 	const bool rret = rx->resolve_value(b);
@@ -2571,8 +2574,8 @@ arith_expr::resolve_value(int& i) const {
 	\return false if there is error in resolving.
  */
 bool
-arith_expr::resolve_values_into_flat_list(list<int>& l) const {
-	int i = 0;
+arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+	value_type i = 0;
 	const bool ret = resolve_value(i);
 	l.push_back(i);		// regardless of validity
 	return ret;
@@ -2640,12 +2643,23 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(relational_expr, RELATIONAL_EXPR_TYPE_KEY)
 
 // static member initializations (order matters!)
 
-const equal_to<bool,int>		relational_expr::op_equal_to;
-const not_equal_to<bool,int>		relational_expr::op_not_equal_to;
-const less<bool,int>			relational_expr::op_less;
-const greater<bool,int>			relational_expr::op_greater;
-const less_equal<bool,int>		relational_expr::op_less_equal;
-const greater_equal<bool,int>		relational_expr::op_greater_equal;
+const equal_to<pbool_value_type, pint_value_type>
+relational_expr::op_equal_to;
+
+const not_equal_to<pbool_value_type, pint_value_type>
+relational_expr::op_not_equal_to;
+
+const less<pbool_value_type, pint_value_type>
+relational_expr::op_less;
+
+const greater<pbool_value_type, pint_value_type>
+relational_expr::op_greater;
+
+const less_equal<pbool_value_type, pint_value_type>
+relational_expr::op_less_equal;
+
+const greater_equal<pbool_value_type, pint_value_type>
+relational_expr::op_greater_equal;
 
 const relational_expr::op_map_type
 relational_expr::op_map;
@@ -2752,10 +2766,10 @@ relational_expr::is_unconditional(void) const {
 /**
 	\return result of resolved comparison.  
  */
-bool
+relational_expr::value_type
 relational_expr::static_constant_bool(void) const {
-	const int a = lx->static_constant_int();
-	const int b = rx->static_constant_int();
+	const arg_type a = lx->static_constant_int();
+	const arg_type b = rx->static_constant_int();
 	return (*op)(a,b);
 }
 
@@ -2770,8 +2784,8 @@ relational_expr::resolve_dimensions(void) const {
 	TO DO: switch on relational expression operator.  
  */
 bool
-relational_expr::resolve_value(bool& i) const {
-	int li, ri;
+relational_expr::resolve_value(value_type& i) const {
+	arg_type li, ri;
 	const bool l_ret = lx->resolve_value(li);
 	const bool r_ret = rx->resolve_value(ri);
 	// SWITCH
@@ -2780,9 +2794,14 @@ relational_expr::resolve_value(bool& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Appends the value to the list, even if there was an error.
+	\param l the cumulative list of values.
+	\return error status
+ */
 bool
-relational_expr::resolve_values_into_flat_list(list<bool>& l) const {
-	bool b;
+relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+	value_type b;
 	const bool ret = resolve_value(b);
 	l.push_back(b);
 	return ret;
@@ -2842,9 +2861,14 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(logical_expr, LOGICAL_EXPR_TYPE_KEY)
 
 // static member initializations (order matters!)
 
-const util::logical_and<bool,bool>	logical_expr::op_and;
-const util::logical_or<bool,bool>	logical_expr::op_or;
-const util::logical_xor<bool,bool>	logical_expr::op_xor;
+const util::logical_and<pbool_value_type, pbool_value_type>
+logical_expr::op_and;
+
+const util::logical_or<pbool_value_type, pbool_value_type>
+logical_expr::op_or;
+
+const util::logical_xor<pbool_value_type, pbool_value_type>
+logical_expr::op_xor;
 
 const logical_expr::op_map_type
 logical_expr::op_map;
@@ -2947,10 +2971,10 @@ logical_expr::is_unconditional(void) const {
 /**
 	Must be truly compile-time constant.
  */
-bool
+logical_expr::value_type
 logical_expr::static_constant_bool(void) const {
-	bool a = lx->static_constant_bool();
-	bool b = rx->static_constant_bool();
+	const arg_type a = lx->static_constant_bool();
+	const arg_type b = rx->static_constant_bool();
 	return (*op)(a,b);
 }
 
@@ -2965,8 +2989,8 @@ logical_expr::resolve_dimensions(void) const {
 	TO DO: switch on logical expression operator.  
  */
 bool
-logical_expr::resolve_value(bool& i) const {
-	bool lb, rb;
+logical_expr::resolve_value(value_type& i) const {
+	arg_type lb, rb;
 	const bool l_ret = lx->resolve_value(lb);
 	const bool r_ret = rx->resolve_value(rb);
 	i = (*op)(lb, rb);
@@ -2975,8 +2999,8 @@ logical_expr::resolve_value(bool& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::resolve_values_into_flat_list(list<bool>& l) const {
-	bool b;
+logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+	arg_type b;
 	const bool ret = resolve_value(b);
 	l.push_back(b);
 	return ret;
@@ -3178,7 +3202,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_range, CONST_RANGE_TYPE_KEY)
 	Default empty constructor. 
 	Makes an invalid range.  
  */
-const_range::const_range() : range_expr(), const_index(), parent(0,-1) {
+const_range::const_range() : range_expr(), const_index(), parent_type(0,-1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3198,9 +3222,9 @@ const_range::const_range(const interval_type& i) :
 	Explicit constructor of a dense range from 0 to N-1.  
 	\param n must be > 0, else assertion will fail.
  */
-const_range::const_range(const int n) :
+const_range::const_range(const pint_value_type n) :
 		range_expr(), const_index(), 
-		parent(0, n-1) {
+		parent_type(0, n-1) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
@@ -3211,7 +3235,7 @@ const_range::const_range(const int n) :
  */
 const_range::const_range(const pint_const& n) :
 		range_expr(), const_index(), 
-		parent(0, n.static_constant_int() -1) {
+		parent_type(0, n.static_constant_int() -1) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
@@ -3221,9 +3245,9 @@ const_range::const_range(const pint_const& n) :
 	\param l is lower bound, inclusive.  
 	\param u is upper bound, inclusive, and must be >= l.  
  */
-const_range::const_range(const int l, const int u) :
+const_range::const_range(const pint_value_type l, const pint_value_type u) :
 		range_expr(), const_index(), 
-		parent(l, u) {
+		parent_type(l, u) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
@@ -3235,9 +3259,10 @@ const_range::const_range(const int l, const int u) :
 	\param u is upper bound, inclusive, and must be >= l.  
 	\param b is unused bogus parameter to distinguish from safe version.  
  */
-const_range::const_range(const int l, const int u, const bool b) :
+const_range::const_range(const pint_value_type l, const pint_value_type u,
+		const bool b) :
 		range_expr(), const_index(), 
-		parent(l, u) {
+		parent_type(l, u) {
 	// no assert
 }
 
@@ -3249,18 +3274,18 @@ const_range::const_range(const const_range& r) :
 		index_expr(),
 		range_expr(), 
 		const_index(), 
-		parent(r) {
+		parent_type(r) {
 	// assert check range?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range::const_range(const parent& r) :
+const_range::const_range(const parent_type& r) :
 		object(), 
 		persistent(), 
 		index_expr(),
 		range_expr(), 
 		const_index(), 
-		parent(r) {
+		parent_type(r) {
 	// assert check range?
 }
 
@@ -3326,13 +3351,13 @@ const_range::is_sane(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_value_type
 const_range::lower_bound(void) const {
 	return first;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int
+pint_value_type
 const_range::upper_bound(void) const {
 	return second;
 }
@@ -3716,20 +3741,20 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<int> >
+excl_ptr<multikey_base<pint_value_type> >
 const_range_list::lower_multikey(void) const {
-	typedef	excl_ptr<multikey_base<int> >	return_type;
-	return_type ret(multikey_base<int>::make_multikey(size()));
+	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
+	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select1st<const_range>());
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<int> >
+excl_ptr<multikey_base<pint_value_type> >
 const_range_list::upper_multikey(void) const {
-	typedef	excl_ptr<multikey_base<int> >	return_type;
-	return_type ret(multikey_base<int>::make_multikey(size()));
+	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
+	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
 	return ret;
@@ -3741,8 +3766,9 @@ const_range_list::upper_multikey(void) const {
  */
 template <size_t D>
 void
-const_range_list::make_multikey_generator(multikey_generator<D, int>& k) const {
-	typedef multikey_generator<D, int>	arg_type;
+const_range_list::make_multikey_generator(
+		multikey_generator<D, pint_value_type>& k) const {
+	typedef multikey_generator<D, pint_value_type>	arg_type;
 	INVARIANT(size() <= D);  // else error on user!
 	typename arg_type::base_type::iterator li = k.lower_corner.begin();
 	typename arg_type::base_type::iterator ui = k.upper_corner.begin();
@@ -3759,7 +3785,8 @@ const_range_list::make_multikey_generator(multikey_generator<D, int>& k) const {
 // this is only temporary, bear with me.
 #define	INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(D)	\
 template void							\
-const_range_list::make_multikey_generator(multikey_generator<D, int>& ) const;
+const_range_list::make_multikey_generator(			\
+	multikey_generator<D, pint_value_type>& ) const;
 
 // INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(0)
 INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(1)
@@ -3999,7 +4026,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_index_list,
 	CONST_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_index_list::const_index_list() : index_list(), parent() { }
+const_index_list::const_index_list() : index_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4012,8 +4039,8 @@ const_index_list::const_index_list() : index_list(), parent() { }
 		or empty if the set's subslice was not densely populated.
  */
 const_index_list::const_index_list(const const_index_list& l, 
-		const pair<list<int>, list<int> >& f) :
-		index_list(), parent(l) {
+		const pair<list<pint_value_type>, list<pint_value_type> >& f) :
+		index_list(), parent_type(l) {
 	if (f.first.empty()) {
 		INVARIANT(f.second.empty());
 		clear();
@@ -4026,8 +4053,8 @@ const_index_list::const_index_list(const const_index_list& l,
 		INVARIANT(skip <= f_size);
 		size_t i = 0;
 		const_iterator this_iter = begin();
-		list<int>::const_iterator f_iter = f.first.begin();
-		list<int>::const_iterator s_iter = f.second.begin();
+		list<pint_value_type>::const_iterator f_iter = f.first.begin();
+		list<pint_value_type>::const_iterator s_iter = f.second.begin();
 		for ( ; i<skip; i++, this_iter++, f_iter++, s_iter++) {
 			// sanity check against arguments
 			NEVER_NULL(*this_iter);
@@ -4073,7 +4100,7 @@ const_index_list::hash_string(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_index_list::size(void) const {
-	return parent::size();
+	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4123,7 +4150,7 @@ const_index_list::push_back(const count_ptr<const_index>& i) {
 	// check dimensionality
 	NEVER_NULL(i);
 	INVARIANT(i->dimensions() == 0);
-	parent::push_back(i);
+	parent_type::push_back(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4190,10 +4217,10 @@ const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<int> >
+excl_ptr<multikey_base<pint_value_type> >
 const_index_list::lower_multikey(void) const {
-	typedef	excl_ptr<multikey_base<int> >	return_type;
-	return_type ret(multikey_base<int>::make_multikey(size()));
+	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
+	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
@@ -4205,10 +4232,10 @@ const_index_list::lower_multikey(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<int> >
+excl_ptr<multikey_base<pint_value_type> >
 const_index_list::upper_multikey(void) const {
-	typedef	excl_ptr<multikey_base<int> >	return_type;
-	return_type ret(multikey_base<int>::make_multikey(size()));
+	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
+	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(

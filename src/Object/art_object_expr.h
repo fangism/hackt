@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.18 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_expr.h,v 1.18.8.1 2005/01/20 04:43:52 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -228,6 +228,7 @@ public:
  */
 class pint_unary_expr : public pint_expr {
 public:
+	typedef	pint_value_type		value_type;
 	typedef	char			op_type;
 protected:
 	const op_type			op;
@@ -275,17 +276,17 @@ public:
 	bool
 	is_unconditional(void) const;
 
-	int
+	value_type
 	static_constant_int(void) const;
 
 	bool
-	resolve_value(int& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<int>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
 public:
 	PERSISTENT_METHODS
 };	// end class pint_unary_expr
@@ -297,6 +298,7 @@ public:
  */
 class pbool_unary_expr : public pbool_expr {
 public:
+	typedef	pbool_value_type	value_type;
 	typedef	char			op_type;
 protected:
 	const op_type			op;
@@ -342,17 +344,17 @@ public:
 	bool
 	is_unconditional(void) const;
 
-	bool
+	value_type
 	static_constant_bool(void) const;
 
 	bool
-	resolve_value(bool& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<bool>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
 public:
 	PERSISTENT_METHODS
 };	// end class pbool_unary_expr
@@ -363,12 +365,15 @@ public:
  */
 class arith_expr : public pint_expr {
 public:
-	typedef	binary_arithmetic_operation<int,int>	op_type;
-	static const plus<int,int>		adder;
-	static const minus<int,int>		subtractor;
-	static const multiplies<int,int>	multiplier;
-	static const divides<int,int>		divider;
-	static const modulus<int,int>		remainder;
+	typedef	pint_value_type			arg_type;
+	typedef	pint_value_type			value_type;
+	typedef	binary_arithmetic_operation<value_type, arg_type>
+						op_type;
+	static const plus<value_type, arg_type>		adder;
+	static const minus<value_type, arg_type>	subtractor;
+	static const multiplies<value_type, arg_type>	multiplier;
+	static const divides<value_type, arg_type>	divider;
+	static const modulus<value_type, arg_type>	remainder;
 
 private:
 	// safe to use naked (never-delete) pointers on static objects
@@ -433,17 +438,17 @@ public:
 	bool
 	is_unconditional(void) const;
 
-	int
+	value_type
 	static_constant_int(void) const;
 
 	bool
-	resolve_value(int& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<int>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
 
 public:
 	PERSISTENT_METHODS
@@ -455,13 +460,17 @@ public:
  */
 class relational_expr : public pbool_expr {
 public:
-	typedef	binary_relational_operation<bool,int>	op_type;
-	static const equal_to<bool,int>		op_equal_to;
-	static const not_equal_to<bool,int>	op_not_equal_to;
-	static const less<bool,int>		op_less;
-	static const greater<bool,int>		op_greater;
-	static const less_equal<bool,int>	op_less_equal;
-	static const greater_equal<bool,int>	op_greater_equal;
+	typedef	pbool_value_type		value_type;
+	typedef	pint_value_type			arg_type;
+	typedef	binary_relational_operation<value_type, arg_type>
+							op_type;
+	static const equal_to<value_type, arg_type>	op_equal_to;
+	static const not_equal_to<value_type, arg_type>	op_not_equal_to;
+	static const less<value_type, arg_type>		op_less;
+	static const greater<value_type, arg_type>	op_greater;
+	static const less_equal<value_type, arg_type>	op_less_equal;
+	static const greater_equal<value_type, arg_type>
+							op_greater_equal;
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
@@ -525,17 +534,17 @@ public:
 	bool
 	is_unconditional(void) const;
 
-	bool
+	value_type
 	static_constant_bool(void) const;
 
 	bool
-	resolve_value(bool& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<bool>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
 public:
 	PERSISTENT_METHODS
 };	// end class relational_expr
@@ -546,10 +555,12 @@ public:
  */
 class logical_expr : public pbool_expr {
 public:
-	typedef	binary_logical_operation<bool,bool>	op_type;
-	static const util::logical_and<bool,bool>	op_and;
-	static const util::logical_or<bool,bool>	op_or;
-	static const util::logical_xor<bool,bool>	op_xor;
+	typedef	pbool_value_type			value_type;
+	typedef	pbool_value_type			arg_type;
+	typedef	binary_logical_operation<value_type, arg_type>	op_type;
+	static const util::logical_and<value_type, arg_type>	op_and;
+	static const util::logical_or<value_type, arg_type>	op_or;
+	static const util::logical_xor<value_type, arg_type>	op_xor;
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
@@ -613,17 +624,17 @@ public:
 	bool
 	is_unconditional(void) const;
 
-	bool
+	value_type
 	static_constant_bool(void) const;
 
 	bool
-	resolve_value(bool& i) const;
+	resolve_value(value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
 	bool
-	resolve_values_into_flat_list(list<bool>& l) const;
+	resolve_values_into_flat_list(list<value_type>& l) const;
 public:
 	PERSISTENT_METHODS
 };	// end class logical_expr

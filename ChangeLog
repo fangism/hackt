@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-01-19	David Fang	<fangism@users.sourceforge.net>
+
+	* Sub-branch: ARTXX-00-01-04-object-00-04-cleanup
+	  Needed a makeover of typedefs, for sake of consistency
+	  (e.g. long vs. int) and future ease of migration to templates.
+
+
 2005-01-18	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object:

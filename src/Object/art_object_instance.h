@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.33 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance.h,v 1.33.8.1 2005/01/20 04:43:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -32,7 +32,7 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<proc_instance_alias>	instance_ptr_type;
-	typedef multikey_base<int>		unroll_index_type;
+	typedef multikey_base<pint_value_type>	unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references
@@ -161,7 +161,7 @@ private:
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
-	typedef multikey_base<int>		unroll_index_type;
+	typedef multikey_base<pint_value_type>	unroll_index_type;
 
 protected:
 	// reserve these for connections between instance_references
