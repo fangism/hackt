@@ -494,8 +494,18 @@ explicit const_range_list(const const_index_list& i);
 	bool is_static_constant(void) const { return true; }
 	const_range_list static_overlap(const range_expr_list& r) const;
 
+#if 0
 	const_index_list revert_to_indices(const const_index_list& il) const;
+#endif
+
+#if 0
+	const_range_list collapsed_dimension_ranges(
+		const const_index_list& il) const;
+#endif
+#if 0
+	// don't like modifying self, unreliable, prefer copy above
 	void collapse_dimensions_wrt_indices(const const_index_list& il);
+#endif
 
 	bool is_size_equivalent(const const_range_list& il) const;
 	bool operator == (const const_range_list& c) const;

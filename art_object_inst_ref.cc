@@ -107,43 +107,14 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 	// implicitly refers to the entire collection.
 	// (same case if dimensions are under-specified)
 	else if (!array_indices) {
-#if 0
-		// substituted
-		instantiation_state iter = inst_state;
-		const instantiation_state
-			end(get_inst_base()->collection_state_end());
-		for ( ; iter!=end; iter++) {
-			const count_const_ptr<dynamic_range_list>
-				drl(iter->is_a<dynamic_range_list>());
-			if (drl) {
-				if (!drl->is_static_constant())
-					return false;
-				// unconditional false is too conservative
-			}
-			else	assert(iter->is_a<const_range_list>());
-		}
-		return true;
-#else
 		// is the entire collection known statically?
 		return is_static_constant_collection();
-#endif
 	} else if (array_indices->size() < base_dim) {
 		// case 3: partially-specified indices, implicit sub-collections
 		if (!array_indices->is_static_constant())
 			return false;
 		else return is_static_constant_collection();
 		// else we know entire collection statically.
-
-#if 0
-		// to do: aggregate the state of the collection
-		// using multidimensional_sparse_set
-		// (for constant additions)
-		// if all is constant, for all partially indexed 
-		// sub-collections, compare their sub-tree shapes and sizes.
-
-		// out of laziness, finish this later...
-		return false;		// temporary
-#endif
 	} else {
 		// case 4: fully-indexed down to last dimension
 		return array_indices->is_static_constant();
@@ -177,18 +148,11 @@ simple_instance_reference::may_be_densely_packed(void) const {
 			excl_ptr<mset_base> fui =
 				unroll_static_instances(base_dim);
 			assert(fui);
-//			fui->dump(cerr << "fui: ") << endl;	// DEBUG
 			// convert index to ranges
 			const const_range_list crl(*cil);
-//			crl.dump(cerr << "crl: ") << endl;	// DEBUG
 			const mset_base::range_list_type
 				rl(fui->query_compact_dimensions(crl));
-			const bool ret = !rl.empty();
-#if 0
-			if (!ret)	// diagnostics
-				cerr << "Not densely packed." << endl;
-#endif
-			return ret;
+			return !rl.empty();
 		} else {
 			// array indices are fully specified, and constant
 			return true;
@@ -272,10 +236,8 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		const never_const_ptr<index_list> il(array_indices);
 		const never_const_ptr<const_index_list>
 			cil(il.is_a<const_index_list>());
-		if (!cil) {	// is dynamic
-//			cerr << "simple_instance_reference::static_constant_dimensions(): array_indices is dynamic." << endl;
+		if (!cil)	// is dynamic
 			return const_range_list();
-		}
 		// array indices are underspecified or fully specified
 		excl_ptr<mset_base> fui =
 			unroll_static_instances(base_dim);
@@ -561,99 +523,34 @@ simple_instance_reference::may_be_type_equivalent(
 	const const_index_list lindex(implicit_static_constant_indices());
 	const const_index_list rindex(sir->implicit_static_constant_indices());
 
+	// or just collapse these to ranges directly?
+#if 1
+	const const_range_list ldim = 
+		lindex.collapsed_dimension_ranges();
+	const const_range_list rdim = 
+		rindex.collapsed_dimension_ranges();
+
+#else
+
 	const_range_list lrange(lindex);
 	const_range_list rrange(rindex);
+#if 0
 	lrange.collapse_dimensions_wrt_indices(lindex);
 	rrange.collapse_dimensions_wrt_indices(rindex);
+#else
+	const const_range_list ldim = 
+		lrange.collapsed_dimension_ranges(lindex);
+	const const_range_list rdim = 
+		rrange.collapsed_dimension_ranges(rindex);
+#endif
+#endif
 
-	const bool ret = lrange.is_size_equivalent(rrange);
+	const bool ret = ldim.is_size_equivalent(rdim);
 	if (!ret) {
-		lrange.dump(cerr << "got: ") << " and: ";
-		rrange.dump(cerr) << endl;
+		ldim.dump(cerr << "got: ") << " and: ";
+		rdim.dump(cerr) << endl;
 	}
 	return ret;
-
-#if 0
-TONS OF OLD CODE
-	const bool lscd = has_static_constant_dimensions();
-	const bool rscd = i.has_static_constant_dimensions();
-#if 0
-	cerr << "left: " << (lscd ? "has_static..." : "!static...") << endl;
-	cerr << "right: " << (rscd ? "has_static..." : "!static...") << endl;
-#endif
-	if (lscd && rscd) {
-
-		// don't *compare* static_constant_dimensions, because
-		// those are used for checking coverage of referenced
-		// multidimensional indices, and don't preserve
-		// the dimension-collapsing information of indices.
-		// compare the array_indices directly
-		const_range_list ldim(static_constant_dimensions());
-		const_range_list rdim(i.static_constant_dimensions());
-#if 0
-		ldim.dump(cerr) << endl;
-		rdim.dump(cerr) << endl;
-#endif
-#if 0
-		// not necessarily so anymore...
-		assert(!ldim.empty());
-		assert(!rdim.empty());
-#else
-		if (ldim.empty() || rdim.empty()) {
-			// then at least one of them is not a 
-			// reference to a packed (sub-)collection.
-			// If either reference is not packed, 
-			// then they cannot be equivalent.  
-			return false;
-		}
-#endif
-		// examine array_indices:
-		// walk the index lists, skipping collapsed dimensions
-		// and comparing the sizes of statically known ranges.  
-		// if dimensions are under-specified, 
-		// compare the sizes of the remaining ranges.  
-		const simple_instance_reference*
-			sir = IS_A(const simple_instance_reference*, &i);
-		if (!sir) {
-			// then is not a simple_instance_reference, 
-			// is complex-aggregate, which is not handled yet
-			// eventually get around to this
-			return true;
-		}
-		never_const_ptr<const_index_list>
-			lil(array_indices.is_a<const_index_list>());
-		never_const_ptr<const_index_list>
-			ril(sir->array_indices.is_a<const_index_list>());
-		// sanity check for dynamic indices
-		if (array_indices && !lil) {
-			assert(array_indices.is_a<dynamic_index_list>());
-			return true;
-		}
-		if (sir->array_indices && !ril) {
-			assert(sir->array_indices.is_a<dynamic_index_list>());
-			return true;
-		}
-		// lil and ril may still be NULL, 
-		// meaning implicit references to their entire collections
-
-		if (lil)
-			ldim.collapse_dimensions_wrt_indices(*lil);
-		if (ril)
-			rdim.collapse_dimensions_wrt_indices(*ril);
-
-		// will report error if mismatch
-		const bool ret = ldim.is_size_equivalent(rdim);
-		if (!ret) {
-			ldim.dump(cerr << "got: ") << " and: ";
-			rdim.dump(cerr) << endl;
-		}
-		return ret;
-	} else {
-		// cannot deduce size/shape equivalence at this time
-		return true;
-	}
-END TONS OF OLD CODE
-#endif
 }
 
 /**

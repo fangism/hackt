@@ -1422,12 +1422,52 @@ const_range_list::revert_to_indices(const const_index_list& il) const {
 }
 #endif
 
+#if 0
+UNNECESSARY
+/**
+	\param il should be a reference index list for this range list.  
+	\return copy of this range list with fewer dimensions, 
+		collapsing the dimensions that were indexed by single ints.  
+ */
+const_range_list
+const_range_list::collapsed_dimension_ranges(
+		const const_index_list& il) const {
+	const_index_list ret;
+	assert(size() == il.size());
+	const_iterator i = begin();
+	const_index_list::const_iterator j = il.begin();
+	for ( ; j!=il.end(); i++, j++) {
+		const count_const_ptr<pint_const>	// or pint_const
+			pi(j->is_a<pint_const>());
+		if (pi) {
+			assert(i != end());
+			assert(i->first == pi->static_constant_int());
+			assert(i->first == i->second);
+		} else {
+			const count_const_ptr<const_range>
+				pr(j->is_a<const_range>());
+			assert(pr);
+			assert(pr->first == i->first);
+			assert(pr->second == i->second);
+			ret.push_back(*pr);
+		}
+	}
+	return ret;
+}
+#endif
+
+#if 0
+ABANDONING, see comments within
 /**
 	Collapses the multidimensional range list using an
 	reference index list as an argument.  
 	For each index element of the argument that is an int, 
 	not a range, shorten the range list in that dimension.  
 	Make sure that the range is unity, as a sanity check.  
+	Warning: list modifies itself by deleting elements, 
+		may break with old shitty compiler libraries, 
+		depending on the implementation.  
+	\param il is the reference index list.  
  */
 void
 const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
@@ -1438,18 +1478,46 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 		const count_const_ptr<pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
+			assert(i != end());
 			assert(i->first == i->second);
-			erase(i);
+#if 1
+			i = erase(i);	// potential libstdc++ bug? don't trust
+
+//			iterator ipp(i);
+//			ipp++;
+//			erase(i, ipp);	// doesn't work either...
+#else
+			// shit code here... virtual erasing:
+			iterator iw(i);
+			const_iterator ir(iw);
+			ir++;		// read one-ahead
+			for ( ; ir!=end(); iw++, ir++) {
+				iw->first = ir->first;
+				iw->second = ir->second;
+			}
+			iw->first = iw->second = -666;	// garbage
+			erase(iw);	// be-tail
+#endif
 		} else {
 			const count_const_ptr<const_range>
 				pr(j->is_a<const_range>());
 			assert(pr);
 			assert(pr->first == i->first);
+#if 1
+			if (pr->second != i->second) {
+				cerr << "pr->second = " << pr->second << endl;
+				cerr << "i->second = " << i->second << endl;
+			}
+			// following assertion produces different results
+			// on gcc-3.2,3.3 vs 3.4
+#endif
 			assert(pr->second == i->second);
 		}
 	}
 	// any remaining indices are kept
 }
+ABANDONING
+#endif
 
 /**
 	Size equality of two multidimensional ranges.  
