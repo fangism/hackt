@@ -1,6 +1,9 @@
 // "art_parser_chp.h"
 // CHP-specific syntax tree
 
+#ifndef	__ART_PARSER_CHP_H__
+#define	__ART_PARSER_CHP_H__
+
 #include "art_macros.h"
 
 namespace ART {
@@ -14,6 +17,9 @@ class language_body;
 class terminal;
 class assign_stmt;
 class incdec_stmt;
+
+class terminal;
+class token_else;
 
 /**
 	This is the namespace for the CHP sub-language.  
@@ -333,7 +339,8 @@ virtual	line_position rightmost(void) const;
 };
 
 //=============================================================================
-};	// end namespace CHP
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace CHP
+}	// end namespace parser
+}	// end namespace ART
 
+#endif	//	__ART_PARSER_CHP_H__

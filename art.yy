@@ -11,10 +11,10 @@
 %{
 #include <iostream>
 
+// consider changing "art_parser.h" to "art_parser_base.h"
+// and using "art_parser.h" as include "art_parser*.h"
+
 #include "art_parser.h"			// should be first
-#include "art_parser_prs.h"
-#include "art_parser_hse.h"
-#include "art_parser_chp.h"
 #include "y.output.h"			// auto-generated state strings! :)
 
 using namespace std;
@@ -616,15 +616,9 @@ optional_port_formal_decl_list_in_parens
 	: '(' port_formal_decl_list ')'
 		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
 	| '(' ')'
-		{ $$ = (new port_formal_decl_list())->wrap($1, $2); }
+		{ $$ = port_formal_decl_list_wrap($1, 
+			(new port_formal_decl_list()), $2); }
 		/* empty, but wrapped */
-/***
-	was this
-		{ $$ = (new port_formal_decl_list(NULL))->wrap($1, $2); }
-	invalidating comment
-		// omitting NULL element can create problems with empty
-		// uninitialized list, better add NULL
-***/
 	;
 
 /***

@@ -5,11 +5,8 @@
 
 #include "ptrs.h"
 #include "art_debug.h"
-#include "art_parser.h"
-#include "art_parser_chp.h"		// need forward declarations for these
-#include "art_parser_hse.h"
-#include "art_parser_prs.h"
-#include "art_object.h"
+#include "art_parser.h"			// everything needed for "y.tab.h"
+#include "art_object_base.h"
 #include "art_symbol_table.h"
 using namespace ART;
 using namespace ART::entity;

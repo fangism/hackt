@@ -17,10 +17,10 @@ RECURSIVE_MAKE = $(MAKE)
 # by default builds first target
 default: all
 
+all: makeinfo
+
 # make-independent target dependencies, where most useful information is
 include Make.deps
-
-all: makeinfo
 
 # GNUmake needs to explicity include automatically generated dependencies
 -include .depend

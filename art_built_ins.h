@@ -4,10 +4,10 @@
 #ifndef	__ART_BUILT_INS_H__
 #define	__ART_BUILT_INS_H__
 
-#include "ptrs.h"
-#include "art_object.h"
+// #include "ptrs.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 	// needed for static constructor of complete types
-
 
 namespace ART {
 namespace entity {

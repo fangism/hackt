@@ -7,7 +7,7 @@
 #include <string>
 #include <list>
 
-// #include "art_object.h"	// before including this header
+#include "art_object_inst_ref.h"
 #include "discrete_interval_set_fwd.h"
 
 //=============================================================================

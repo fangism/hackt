@@ -1,6 +1,9 @@
 // "art_parser_hse.h"
 // HSE-specific syntax tree
 
+#ifndef	__ART_PARSER_HSE_H__
+#define	__ART_PARSER_HSE_H__
+
 #include "art_macros.h"
 
 namespace ART {
@@ -13,6 +16,9 @@ class expr;
 class language_body;
 class terminal;
 class incdec_stmt;
+
+class terminal;
+class token_else;
 
 /**
 	This is the namespace for the HSE sub-language.  
@@ -33,7 +39,7 @@ virtual	~statement();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-};
+};	// end class statement
 
 typedef	node_list<statement,semicolon>	stmt_list;
 
@@ -54,7 +60,7 @@ virtual	~body();
 virtual	ostream& what(ostream& o) const;
 using	language_body::leftmost;
 virtual	line_position rightmost(void) const;
-};
+};	// end class body
 
 //=============================================================================
 /// HSE guarded command contains an expression condition and body
@@ -70,7 +76,7 @@ virtual	~guarded_command();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class guarded_command
 
 //=============================================================================
 /// HSE else-clause is just a special case of a guarded_command
@@ -80,7 +86,7 @@ public:
 virtual	~else_clause();
 
 virtual	ostream& what(ostream& o) const;
-};
+};	// end class else_clause
 
 //=============================================================================
 /// HSE skip statement
@@ -99,7 +105,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 using	token_keyword::where;
-};
+};	// end class skip
 
 //=============================================================================
 /// HSE wait contains just an expression
@@ -115,7 +121,7 @@ virtual	~wait();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class wait
 
 //=============================================================================
 /// HSE assignment statement is only boolean
@@ -132,7 +138,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 using	incdec_stmt::where;
-};
+};	// end class assignment
 
 //=============================================================================
 /// HSE selection statement abstract base class
@@ -143,7 +149,7 @@ public:
 virtual	~selection();
 
 virtual	ostream& what(ostream& o) const;
-};
+};	// end class selection
 
 //=============================================================================
 /// container for deterministic selection statement
@@ -159,7 +165,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 using	det_sel_base::where;
-};
+};	// end class det_selection
 
 #define hse_det_selection_wrap(b,l,e)					\
 	IS_A(HSE::det_selection*, l->wrap(b,e))
@@ -180,7 +186,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 using	nondet_sel_base::where;
-};
+};	// end class nondet_selection
 
 #define hse_nondet_selection_wrap(b,l,e)				\
 	IS_A(HSE::nondet_selection*, l->wrap(b,e))
@@ -202,7 +208,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 using	prob_sel_base::where;
-};
+};	// end class prob_selection
 *** not available ***/
 
 //=============================================================================
@@ -217,7 +223,7 @@ virtual	~loop();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class loop
 
 //=============================================================================
 /// HSE do-until: re-enter selection statement until all guards are false
@@ -233,10 +239,12 @@ virtual	~do_until();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-};
+};	// end class do_until
 
 //=============================================================================
-};	// end namespace HSE
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace HSE
+}	// end namespace parser
+}	// end namespace ART
+
+#endif	// __ART_PARSER_HSE_H__
 

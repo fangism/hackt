@@ -17,11 +17,7 @@
 #define	__PTRS_H__
 
 #include <assert.h>
-
-// overrideable namespace
-#ifndef	PTRS_NAMESPACE
-#define	PTRS_NAMESPACE			fang
-#endif
+#include "ptrs_fwd.h"
 
 //=============================================================================
 #ifndef	NULL
@@ -42,12 +38,16 @@ namespace PTRS_NAMESPACE {
 			class abstract_ptr;	// abstract pointer
 template <class>	class base_ptr;		// generic pointer
 template <class>	class base_const_ptr;	// generic pointer
+
+#if 0
 template <class>	class some_ptr;		// sometimes owner
 template <class>	class some_const_ptr;	// sometimes owner
 template <class>	class excl_ptr;		// exclusive owner and deleter
 template <class>	class excl_const_ptr;	// exclusive owner and deleter
 template <class>	class never_ptr;	// never owner
 template <class>	class never_const_ptr;	// never owner
+#endif
+
 template <class>	class dynconst_ptr;	// dynamic const-ness
 
 // never is a bad name...

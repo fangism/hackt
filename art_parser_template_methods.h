@@ -7,7 +7,7 @@
 
 #include "art_parser_debug.h"
 #include "art_macros.h"
-#include "art_parser.h"			// includes "ptrs.h", "count_ptr.h"
+#include "art_parser_base.h"		// includes "ptrs.h", "count_ptr.h"
 #include "art_symbol_table.h"
 	// for class context, uses auto_indent()
 

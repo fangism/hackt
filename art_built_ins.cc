@@ -5,7 +5,9 @@
 	Includes static globals.  
 **/
 
+#include "ptrs.h"
 #include "art_built_ins.h"
+#include "art_object_instance.h"
 #include "art_object_expr.h"
 
 // global static initializations...

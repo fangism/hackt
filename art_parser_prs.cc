@@ -2,6 +2,8 @@
 
 #include "art_parser_template_methods.h"
 #include "art_parser_prs.h"
+#include "art_parser_expr.h"
+#include "art_parser_token.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE

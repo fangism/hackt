@@ -6,6 +6,8 @@
 #include <iostream>
 
 #include "art_macros.h"
+#include "art_parser_token.h"
+#include "art_parser_expr.h"
 #include "art_parser_template_methods.h"
 
 // will need these come time for type-checking
@@ -79,8 +81,8 @@ paren_expr::check_build(never_ptr<context> c) const {
 // class qualified_id method definitions
 
 CONSTRUCTOR_INLINE
-qualified_id::qualified_id(token_identifier* n) : 
-	qualified_id_base(n), absolute(NULL) {
+qualified_id::qualified_id(const token_identifier* n) : 
+	parent(n), absolute(NULL) {
 }
 
 /// copy constructor, no transfer of ownership
@@ -91,7 +93,8 @@ qualified_id::qualified_id(const qualified_id& i) :
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
 	if (i.absolute) {
-		absolute = new token_string(*i.absolute);
+		absolute = excl_const_ptr<token_string>(
+			new token_string(*i.absolute));
 		// actually *copy* the token
 		assert(absolute);
 	}
@@ -99,7 +102,6 @@ qualified_id::qualified_id(const qualified_id& i) :
 
 DESTRUCTOR_INLINE
 qualified_id::~qualified_id() {
-	SAFEDELETE(absolute);
 }
 
 /**
@@ -110,8 +112,8 @@ qualified_id::~qualified_id() {
 	\return pointer to this object
  */
 qualified_id*
-qualified_id::force_absolute(token_string* s) {
-	absolute = s;
+qualified_id::force_absolute(const token_string* s) {
+	absolute = excl_const_ptr<token_string>(s);
 	assert(absolute);
 	return this;
 }
@@ -138,8 +140,8 @@ qualified_id::rightmost(void) const {
 
 /***
 	Future: instead of copying, give an iterator range.
+	These might be obsoleted by the sublist slice interface.  
 ***/
-
 qualified_id
 qualified_id::copy_namespace_portion(void) const {
 	qualified_id ret(*this);		// copy, not-owned
@@ -248,6 +250,16 @@ id_expr::leftmost(void) const {
 line_position
 id_expr::rightmost(void) const {
         return qid->rightmost();  
+}
+
+qualified_id*
+id_expr::force_absolute(token_string* s) {
+	return qid->force_absolute(s);
+}
+
+bool
+id_expr::is_absolute(void) const {
+	return qid->is_absolute();
 }
 
 /**

@@ -8,7 +8,7 @@
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.h"
 
-#include "art_parser.h"
+#include "art_parser_base.h"
 #include "art_object.h"			// before including "art_object_expr.h"
 #include "art_object_expr.h"
 

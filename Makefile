@@ -19,10 +19,10 @@ default: all
 # BSDmake-specific
 .BEGIN:	makeinfo
 
+artc: makeinfo
+
 # make-independent target dependencies, where most useful information is
 include Make.deps
-
-artc: makeinfo
 
 # bsdmake implicitly includes ".depend"
 # but should not explicitly include it because it is dynamically generated

@@ -1,6 +1,9 @@
 // "art_parser_prs.h"
 // PRS-specific syntax tree
 
+#ifndef	__ART_PARSER_PRS_H__
+#define	__ART_PARSER_PRS_H__
+
 #include "art_macros.h"
 
 namespace ART {
@@ -11,6 +14,7 @@ class node;
 class expr;
 class terminal;
 class language_body;
+class range;
 
 /**
 	This is the namespace for the PRS sub-language.  
@@ -134,7 +138,9 @@ public:
 };	// end class op_loop
 
 //=============================================================================
-};	// end namespace PRS
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace PRS
+}	// end namespace parser
+}	// end namespace ART
+
+#endif	//	__ART_PARSER_PRS_H__
 

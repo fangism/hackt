@@ -7,12 +7,14 @@
 #include <stdio.h>		// for sprintf
 #include <string.h>		// for a few C-string functions
 
-#include "art_macros.h"		// actually not needed
+// #include "art_macros.h"		// actually not needed
 #include "art_switches.h"
 #include "art_parser_debug.h"
-#include "art_parser.h"
+
+#include "art_parser_token.h"
+
 #include "art_symbol_table.h"
-#include "art_object.h"
+#include "art_object_base.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
 
@@ -53,7 +55,8 @@ terminal::rightmost(void) const {
 }
 
 //=============================================================================
-/*** not used
+#if 0
+not used
 // class token_EOF method definitions
 
 CONSTRUCTOR_INLINE
@@ -71,7 +74,8 @@ int
 token_EOF::string_compare(const char* d) const {
 	return -1;
 }
-***/
+#endif
+
 //=============================================================================
 // class token_char method definitions
 
@@ -142,10 +146,6 @@ token_int::check_build(never_ptr<context> c) const {
 	count_ptr<pint_const> pe(new pint_const(val));
 	assert(pe);
 	c->push_object_stack(pe);
-#if 0
-	what(cerr) << endl;				// debug
-	pe->dump(pe->what(cerr) << " = ") << endl;	// debug
-#endif
 	return never_const_ptr<object>(NULL);
 }
 
@@ -606,8 +606,8 @@ token_pint_type::check_build(never_ptr<context> c) const {
 }
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

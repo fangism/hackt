@@ -4,8 +4,9 @@
 #include <iostream>
 
 #include "art_symbol_table.h"
-#include "art_parser.h"
-#include "art_object.h"
+#include "art_parser_base.h"
+#include "art_object_definition.h"
+#include "art_object_type_ref.h"
 #include "art_object_expr.h"
 
 //=============================================================================
