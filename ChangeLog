@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-01-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object:
+	  Added unroll tests for namespace subdirectory.  
+	  Not exciting until example with int<>s are introduced.  
+
+
 2005-01-17	David Fang	<fangism@users.sourceforge.net>
 
 	* RELEASE 0.1.4
