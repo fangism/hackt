@@ -6,7 +6,7 @@
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(artxx, 0.1.1, fangism@gmail.com)
+AC_INIT(artxx, 0.1.2, fangism@gmail.com)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/art_main.cc])
@@ -17,7 +17,7 @@ AC_CANONICAL_HOST
 # AC_CONFIG_SUBDIRS
 
 # Propagate the make warning flags recursively
-AM_INIT_AUTOMAKE([1.9 -W -Wall -Werror])
+AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 
 # Enable or disable automatic reconfiguring.  
 # AM_MAINTAINER_MODE
@@ -27,7 +27,7 @@ AM_INIT_AUTOMAKE([1.9 -W -Wall -Werror])
 
 AC_PROG_LIBTOOL
 # This takes care of many standard C[++] compiler configuration checks.  
-AC_PROG_RANLIB
+# AC_PROG_RANLIB
 
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
@@ -57,8 +57,7 @@ AC_PROG_YACC
 # Miscellaneous
 AC_PROG_LN_S
 
-AC_CHECK_PROG([BISON], bison, bison)
-AM_CONDITIONAL(HAVE_BISON, test "$BISON" = bison)
+AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 
 # documentation support
 AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)

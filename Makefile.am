@@ -48,3 +48,9 @@ distclean-local: distcleandirs
 dist-hook:
 	rm -rf `find $(distdir) -name CVS`
 
+cvsdiffs:
+	-cvs diff > $@
+
+commit: distcheck
+	cvs commit
+

@@ -83,7 +83,6 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
-BISON = @BISON@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -647,6 +646,12 @@ distclean-local: distcleandirs
 # don't include CVS directories in distribution
 dist-hook:
 	rm -rf `find $(distdir) -name CVS`
+
+cvsdiffs:
+	-cvs diff > $@
+
+commit: distcheck
+	cvs commit
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

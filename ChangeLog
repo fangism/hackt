@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-08-13
+
+	* Release 0.1.2.
+
+	* Made parser code robust to variations in yacc/bison versions, 
+	  updated test expected outputs.  This was not trivial.  
+	  Works on FreeBSD yacc/bison-1.875, linux yacc/bison-1.35.  
+
+	* Minor tweaks in configuration and Makefile.am's.  
+
+
 2004-08-12
 
 	* Releasing 0.1.1, the completely GNU-ified version.  
