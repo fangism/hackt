@@ -5,7 +5,7 @@
 
 	\todo Specify all pre-conditions, post-conditions, and semantics.  
 
-	$Id: nested_iterator.h,v 1.1 2004/11/26 23:24:17 fang Exp $
+	$Id: nested_iterator.h,v 1.2 2004/11/27 18:53:02 fang Exp $
  */
 
 #ifndef	__NESTED_ITERATOR_H__
@@ -100,34 +100,34 @@ public:
 	// public const accessors
 	const OuterIter&
 	outer_iterator(void) const {
-		return first;
+		return this->first;
 	}
 
 	const InnerIter&
 	inner_iterator(void) const {
-		return second;
+		return this->second;
 	}
 
 	// default destructor
 
 	/// dereference operator
 	reference
-	operator * () const { return *second; }
+	operator * () const { return *this->second; }
 
 	/// indirect reference operator
 	pointer
-	operator -> () const { return &*second; }
+	operator -> () const { return &*this->second; }
 
 	/// prefix iterator advance (forward iterator concept)
 	// will this work for reverse iterator?
 	nested_iterator&
 	operator ++ () {
-		second++;
-		if (UNLIKELY(second == first->end())) {
+		this->second++;
+		if (UNLIKELY(this->second == this->first->end())) {
 			// what if first already at the last chunk?
 			// need a sentinel, unfortunately
-			first++;
-			second = first->begin();
+			this->first++;
+			this->second = this->first->begin();
 		}
 		return *this;
 	}
@@ -144,13 +144,13 @@ public:
 	// will this work for reverse iterator?
 	nested_iterator&
 	operator -- () {
-		if (UNLIKELY(second == first->begin())) {
+		if (UNLIKELY(this->second == this->first->begin())) {
 			// what if first is already at the first chunk?
 			// is ok, because it's comparable to begin()
-			first--;
-			second = --first->end();
+			this->first--;
+			this->second = --this->first->end();
 		} else {
-			second--;
+			this->second--;
 		}
 		return *this;
 	}
@@ -167,11 +167,11 @@ public:
 	operator [] (const difference_type& n) const {
 		if (n > 0) {
 			const difference_type d = 
-				distance(second, first->end());
+				distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
-				outer_iterator_type o = first +1;
+				outer_iterator_type o = this->first +1;
 				register difference_type s = o->size();
 				while (m >= s) {
 					m -= s;
@@ -187,17 +187,18 @@ public:
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = second;
+				inner_iterator_type ret = this->second;
 				advance(ret, n);
 				return *ret;
 				// return second[n];		// same
 			}
 		} else if (n < 0) {
 			const difference_type d = 
-				distance(first->begin(), second);
+				distance(this->first->begin(), this->second);
 			if (d + n > 0) {
 				register difference_type m = n -d;
-				outer_iterator_type o = first -1;
+				outer_iterator_type o = this->first;
+				o--;	// move back one first
 				register difference_type s = o->size();
 				while (m > s) {
 					m -= s;
@@ -213,7 +214,7 @@ public:
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = second;
+				inner_iterator_type ret = this->second;
 				advance(ret, n);
 				return *ret;
 				// return second[n];
@@ -226,24 +227,25 @@ public:
 	operator += (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(second, first->end());
+				distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
-				first++;
-				register difference_type s = first->size();
+				this->first++;
+				register difference_type s =
+					this->first->size();
 				while (m >= s) {
 					m -= s;
-					first++;
-					s = first->size();
+					this->first++;
+					s = this->first->size();
 				}
-				second = first->begin();
-				advance(second, m);
+				this->second = this->first->begin();
+				advance(this->second, m);
 				// second = first->begin() +m;
 			} else {
 				// if second is random_access_iterator
 				// this will be fast
-				advance(second, n);	// second += n;
+				advance(this->second, n);	// second += n;
 			}
 		} else {
 			(*this) -= -n;		// too lazy to copy
@@ -262,21 +264,22 @@ public:
 	operator -= (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(first->begin(), second);
+				distance(this->first->begin(), this->second);
 			if (n > d) {
 				register difference_type m = n -d;
-				first--;
-				register difference_type s = first->size();
+				this->first--;
+				register difference_type s =
+					this->first->size();
 				while (m > s) {
 					m -= s;
-					first--;
-					s = first->size();
+					this->first--;
+					s = this->first->size();
 				}
-				second = first->end();
-				advance(second, -m);
+				this->second = this->first->end();
+				advance(this->second, -m);
 				// second = first->end() -m;
 			} else {
-				advance(second, -m);	// second -= n;
+				advance(this->second, -n);	// second -= n;
 			}
 		} else {
 			(*this) += -n;		// too lazy to copy

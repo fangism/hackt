@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.1 2004/11/26 23:24:16 fang Exp $
+	$Id: list_vector.h,v 1.2 2004/11/27 18:53:01 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_H__
@@ -751,7 +751,7 @@ public:
 		vec_list.swap(l.vec_list);
 		vec_map.swap(l.vec_map);
 		// yeah, I know can also swap without intermediate...
-		swap(chunk_size, l.chunk_size);
+		swap(this->chunk_size, l.chunk_size);
 		swap(vec_list_front, l.vec_list_front);
 		swap(vec_list_back, l.vec_list_back);
 	}
