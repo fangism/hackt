@@ -122,6 +122,7 @@ extern "C" {
 %type	<n>	type_id base_template_type
 //%type	<n>	formal_id
 %type	<n>	base_chan_type chan_or_port
+%type	<n>	base_data_type_list_in_parens
 %type	<n>	base_data_type_list base_data_type
 %type	<n>	deftype defchan
 %type	<n>	data_param_list data_param data_param_list_in_parens
@@ -330,20 +331,23 @@ base_template_type
 
 // channel type: channel, inport, outport, and data types
 base_chan_type
-	: chan_or_port '(' base_data_type_list ')'
 	// eliminate defaulting? (to int?), use <template> style?
-		{ $$ = new chan_type($1, 
-			base_data_type_list_wrap($2, $3, $4)); }
-//	| chan_or_port
+	: chan_or_port base_data_type_list_in_parens
+		{ $$ = chan_type_attach_data_types($1, $2); }
 	;
 
 chan_or_port
 	: CHANNEL		// a channel
-		{ $$ = new chan_type_root($1); }
+		{ $$ = new chan_type($1); }
 	| CHANNEL '!'		// an output port
-		{ $$ = new chan_type_root($1, $2); }
+		{ $$ = new chan_type($1, $2); }
 	| CHANNEL '?'		// an input port
-		{ $$ = new chan_type_root($1, $2); }
+		{ $$ = new chan_type($1, $2); }
+	;
+
+base_data_type_list_in_parens
+	: '(' base_data_type_list ')'
+		{ $$ = base_data_type_list_wrap($1, $2, $3); }
 	;
 
 base_data_type_list

@@ -47,6 +47,7 @@ class token_string;
 
 //=============================================================================
 // some constant delimiter strings, defined in art_parser.cc
+// these are used as delimiter template arguments for node_list
 extern	const char	none[];
 extern	const char	comma[];
 extern	const char	semicolon[];
@@ -156,11 +157,19 @@ virtual	ostream& what(ostream& o) const { return o << "(node_list_base)"; }
 };
 
 //-----------------------------------------------------------------------------
+#define	NODE_LIST_TEMPLATE_SPEC_DEFAULT					\
+	template <class T, const char D[] = none>
+#define	NODE_LIST_TEMPLATE_SPEC						\
+	template <class T, const char D[]>
+#define	NODE_LIST_TEMPLATE_SPEC_EXPORT					\
+	export NODE_LIST_TEMPLATE_SPEC
+	// "export" is ignored by gcc, even 3.3
+
 /**
 	The delimiter specifier, D, is used for checking that every other
 	token is separated by a D character (if D is not '\0').  
  */
-template <class T, const char D[] = none>
+NODE_LIST_TEMPLATE_SPEC_DEFAULT
 class node_list : public node_list_base<T> {
 private:
 	typedef		node_list_base<T>	parent;
@@ -191,38 +200,14 @@ using	parent::end;
 	This attaches enclosing text, such as brackets, braces, parentheses, 
 	around a node_list.  The arguments are type-checked as token_strings.  
  */
-virtual	node_list<T,D>* wrap(node* b, node* e) {
-		open = dynamic_cast<terminal*>(b);
-		assert(open);
-		assert(dynamic_cast<token_char*>(open) || 
-			dynamic_cast<token_string*>(open));
-		close = dynamic_cast<terminal*>(e);
-		assert(close);
-		assert(dynamic_cast<token_char*>(close) || 
-			dynamic_cast<token_string*>(close));
-		return this;
-	}
+virtual	node_list<T,D>* wrap(node* b, node* e);		// not inlined
 
 /**
 	Adds an element to a node list, along with the delimiting
 	character token.  Also checks that delimiter matchs, and
 	that type of argument matches.
  */
-virtual	node_list<T,D>* append(node* d, node* n) {
-		if (d) {
-			// check for delimiter character match
-			terminal* t = dynamic_cast<terminal*>(d);
-			assert(t);		// throw exception
-			// will fail if incorrect type is passed
-			assert(!(t->string_compare(D)));
-			push_back(d);
-		} else {
-			assert(D == none);	// no delimiter was expected
-		}
-		assert(dynamic_cast<T*>(n));	// type-check
-		push_back(n);			// n may be null
-		return this;
-	}
+virtual	node_list<T,D>* append(node* d, node* n);
 
 /// prints out type of first element in list, if not null
 // later, use static functions (operator <<) to determine type name...
@@ -234,6 +219,39 @@ virtual	ostream& what(ostream& o) const {
 		return o << "...";
 	}
 };
+
+// non-inline methods... will these be possibly multiply-defined?
+NODE_LIST_TEMPLATE_SPEC
+node_list<T,D>*
+node_list<T,D>::wrap(node* b, node* e) {
+	open = dynamic_cast<terminal*>(b);
+	assert(open);
+	assert(dynamic_cast<token_char*>(open) || 
+		dynamic_cast<token_string*>(open));
+	close = dynamic_cast<terminal*>(e);
+	assert(close);
+	assert(dynamic_cast<token_char*>(close) || 
+		dynamic_cast<token_string*>(close));
+	return this;
+}
+
+NODE_LIST_TEMPLATE_SPEC
+node_list<T,D>*
+node_list<T,D>::append(node* d, node* n) {
+	if (d) {
+		// check for delimiter character match
+		terminal* t = dynamic_cast<terminal*>(d);
+		assert(t);		// throw exception
+		// will fail if incorrect type is passed
+		assert(!(t->string_compare(D)));
+		push_back(d);
+	} else {
+		assert(D == none);	// no delimiter was expected
+	}
+	assert(dynamic_cast<T*>(n));	// type-check
+	push_back(n);			// n may be null
+	return this;
+}
 
 //=============================================================================
 /**
@@ -618,6 +636,7 @@ virtual	ostream& what(ostream& o) const {
 };
 
 //-----------------------------------------------------------------------------
+/*** obsolete
 /// base class for channel type
 class chan_type_root : public type_base {
 protected:
@@ -632,6 +651,7 @@ virtual	~chan_type_root() { SAFEDELETE(chan); SAFEDELETE(dir); }
 
 virtual	ostream& what(ostream& o) const { return o << "(chan/port-base)"; }
 };
+***/
 
 //-----------------------------------------------------------------------------
 /// base type for data, such as int...
@@ -670,17 +690,26 @@ typedef node_list<data_type_base,comma>	base_data_type_list;
 /// full channel type, including base type list
 class chan_type : public type_base {
 protected:
-	chan_type_root*		base;		///< channel/port base type
+//	chan_type_root*		base;		///< channel/port base type
+	token_keyword*		chan;		///< keyword "channel"
+	token_char*		dir;		///< port direction: in or out
 	base_data_type_list*	dtypes;		///< data types communicated
 public:
-	chan_type(node* b, node* dt) : type_base(), 
-		base(dynamic_cast<chan_type_root*>(b)), 
-		dtypes(dynamic_cast<base_data_type_list*>(dt))
-		{ assert(base); assert(dtypes); }
-virtual	~chan_type() { SAFEDELETE(base); SAFEDELETE(dtypes); }
+	chan_type(node* c, node* d = NULL, node* t = NULL) : type_base(), 
+//		base(dynamic_cast<chan_type_root*>(b)), 
+		chan(dynamic_cast<token_keyword*>(c)), 
+		dir(dynamic_cast<token_char*>(d)), 
+		dtypes(dynamic_cast<base_data_type_list*>(t))
+		{ assert(c); if(d) assert(dir); if (t) assert(dtypes); }
+virtual	~chan_type() { SAFEDELETE(chan); SAFEDELETE(dir); SAFEDELETE(dtypes); }
+
+chan_type* attach_data_types(node* t);
 
 virtual	ostream& what(ostream& o) const { return o << "(chan-type)"; }
 };
+
+#define	chan_type_attach_data_types(ct,t)				\
+	dynamic_cast<chan_type*>(ct)->attach_data_types(t)
 
 //-----------------------------------------------------------------------------
 /// user-defined data type
@@ -1154,13 +1183,13 @@ virtual	ostream& what(ostream& o) const { return o << "(process-definition)"; }
 
 //=============================================================================
 /// conditional instantiations in definition body
-class guarded_definition_body : public nonterminal {
+class guarded_definition_body : public instance_base {
 protected:
 	expr*				guard;	///< condition expression
 	terminal*			arrow;	///< right arrow
 	definition_body*		body;
 public:
-	guarded_definition_body(node* e, node* a, node* b) : nonterminal(), 
+	guarded_definition_body(node* e, node* a, node* b) : instance_base(), 
 		guard(dynamic_cast<expr*>(e)), 
 		arrow(dynamic_cast<terminal*>(a)), 
 		body(dynamic_cast<definition_body*>(b))
@@ -1195,6 +1224,10 @@ virtual	ostream& what(ostream& o) const
 };
 
 //=============================================================================
+
+
+
+
 };	// end namespace parser
 };	// end namespace ART
 
