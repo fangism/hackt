@@ -2,17 +2,18 @@ parse error: syntax error
 parser stacks:
 state	value
 	(null) 
-0	keyword: defproc [3:1..7]
-24	(def-type-id) [3:9..18]
-85	(node_list): (port-formal-decl) ... [3:19..34]
-138	{ [3:36]
-197	(node_list): (prs-body) ... [4:1--7:1]
-235	(id-expr) [8:1..11]
-42	} [9:1]
-in state 42, possible rules are:
-	type_id : id_expr . optional_member_index_expr_list_in_angles  (42)
-	member_index_expr : id_expr .  (182)
-	optional_member_index_expr_list_in_angles : .  (223)
+0	(null) 
+26	keyword: defproc [3:1..7]
+90	identifier: myinverter [3:9..18]
+144	(node_list): (port-formal-decl) ... [3:19..34]
+200	{ [3:36]
+235	(node_list): (prs-body) ... [4:1--7:1]
+290	(id-expr) [8:1..11]
+45	} [9:1]
+in state 45, possible rules are:
+	physical_type_ref : relative_id . optional_template_arguments_in_angles  (43)
+	id_expr : relative_id .  (178)
+	optional_template_arguments_in_angles : .  (228)
 acceptable tokens are: 
 	'(' (reduce)
 	'.' (reduce)

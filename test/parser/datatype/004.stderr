@@ -1,1 +1,2 @@
-b is already declared type-inst, ERROR! [5:11]
+b is already declared datatype-inst, ERROR! [5:11]
+ERROR with b at [5:11]
