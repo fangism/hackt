@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.1 2005/02/23 21:21:29 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.2 2005/02/25 21:08:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -28,11 +28,14 @@
 #include "art_built_ins.h"
 
 #include "art_object_classification_details.h"
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.tcc"
+#endif
 
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-// #include "multikey_qmap.tcc"
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #include "multikey_set.tcc"
 #include "ring_node.tcc"
 #include "packed_array.tcc"
@@ -45,8 +48,10 @@
 #include "compose.h"
 #include "binders.h"
 #include "dereference.h"
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 // conditional defines, after including "stacktrace.h"
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #if STACKTRACE_DESTRUCTORS
 	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
 #else
@@ -58,10 +63,15 @@
 #else
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+STATIC_TRACE_BEGIN("instance-int")
 
 //=============================================================================
 // module-local specializations
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 namespace std {
 using ART::entity::int_instance_alias;
 
@@ -75,19 +85,25 @@ struct _Select2nd<int_instance_alias<D> > :
 	public _Select2nd<typename int_instance_alias<D>::parent_type> {
 };
 }	// end namespace std
-
-//=============================================================================
-STATIC_TRACE_BEGIN("instance-int")
+#endif
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::int_instance_collection, 
 		DINT_INSTANCE_COLLECTION_TYPE_KEY)
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_scalar, "int_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_1D, "int_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_2D, "int_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_3D, "int_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_4D, "int_array_4D")
+#endif
 }	// end namespace util
 
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 using std::string;
 using std::_Select1st;
 #include "using_ostream.h"
@@ -104,10 +120,103 @@ using util::read_value;
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+// functor specializations
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template <>
+struct type_dumper<int_tag> {
+	typedef class_traits<int_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	ostream& os;
+	type_dumper(ostream& o) : os(o) { }
+
+	ostream&
+	operator () (const instance_collection_generic_type& c) {
+		return os << "int<" << c.get_type_parameter() <<
+			">^" << c.get_dimensions();
+	}
+};      // end struct type_dumper<int_tag>
+
+//-----------------------------------------------------------------------------
+template <>
+struct collection_parameter_persistence<int_tag> {
+	typedef class_traits<int_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<int_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
+	const persistent_object_manager& pom;
+
+	collection_parameter_persistence(const persistent_object_manager& m) :
+		pom(m) { }
+
+	void
+	operator () (ostream& o,
+		const instance_collection_generic_type& c) const {
+		// parameter is just an int
+		write_value(o, c.type_parameter);
+	}
+
+	void
+	operator () (istream& i,
+		instance_collection_generic_type& c) const {
+		// parameter is just an int
+		read_value(i, c.type_parameter);
+	}
+};      // end struct collection_parameter_persistence
+
+//-----------------------------------------------------------------------------
+
+template <>
+struct collection_type_committer<int_tag> {
+	typedef class_traits<int_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<int_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	/**
+		During unroll phase, this commits the type of the collection.  
+		\param t the data integer type reference, containing width, 
+			must already be resolved to a const_param_expr_list.  
+		\return false on success, true on error.  
+		\post the integer width is fixed for the rest of the program.  
+	 */
+	bool
+	operator () (instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) const {
+		INVARIANT(t->get_base_def() == &int_def);
+		const never_ptr<const param_expr_list>
+			params(t->get_template_params());
+		NEVER_NULL(params);
+		// extract first and only parameter, the integer width
+		const never_ptr<const const_param_expr_list>
+			cparams(params.is_a<const const_param_expr_list>());
+		NEVER_NULL(cparams);
+		INVARIANT(cparams->size() == 1); 
+		const count_ptr<const const_param>&
+			param1(cparams->front());
+		NEVER_NULL(param1);
+		const count_ptr<const pint_const>
+			pwidth(param1.is_a<const pint_const>());
+		NEVER_NULL(pwidth);
+		const pint_value_type new_width = pwidth->static_constant_int();
+		INVARIANT(new_width);
+		if (c.is_partially_unrolled()) {
+			INVARIANT(c.type_parameter);
+			return (new_width != c.type_parameter);
+		} else { 
+			c.type_parameter = new_width;
+			return false;
+		}
+	}
+};      // end struct collection_type_committer
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class int_instance_alias_info method definitions
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // inline
 int_instance_alias_info::~int_instance_alias_info() { }
 
@@ -156,6 +265,7 @@ int_instance_alias_info::transient_info_collector::operator () (
 		const int_instance_alias_info& i) {
 	i.collect_transient_info_base(manager);
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // typedef int_instance_alias_base function definitions
@@ -166,6 +276,7 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 }
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class int_instance_alias method definitions
 
 template <size_t D>
@@ -286,8 +397,10 @@ int_instance_alias<0>::load_object(const persistent_object_manager& m,
 	int_instance_alias_info::load_object_base(m, i);
 	// no key to load!
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class int_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -435,12 +548,14 @@ int_instance_collection::load_object_base(
 //=============================================================================
 // class int_instance_alias method definitions
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 template <size_t D>
 ostream&
 operator << (ostream& o, const int_instance_alias<D>& b) {
 	INVARIANT(b.valid());
 	return o << "(int-alias-" << D << ")";
 }
+#endif
 
 //=============================================================================
 // class int_array method definitions
@@ -940,6 +1055,17 @@ int_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	the_instance.load_object(m, f);
 #endif
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template class instance_collection<int_tag>;
+template class instance_array<int_tag, 0>;
+template class instance_array<int_tag, 1>;
+template class instance_array<int_tag, 2>;
+template class instance_array<int_tag, 3>;
+template class instance_array<int_tag, 4>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

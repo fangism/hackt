@@ -1,7 +1,7 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.5 2005/02/25 01:40:19 fang Exp $
+	$Id: art_object_classification_details.h,v 1.1.4.6 2005/02/25 21:08:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -29,6 +29,7 @@ using util::ring_node_derived;
  */
 template <class Tag>
 struct class_traits {
+	typedef	Tag				tag_type;
 	/**
 		The type of uniquely created object with possible aliases
 	 */
@@ -97,7 +98,7 @@ struct class_traits {
 		This may be an empty class, which opens opportunities
 		for the Empty Base Class Optimization (EBCO).  
 	 */
-	typedef	void				instance_parameter_type;
+	typedef	void				instance_collection_parameter_type;
 
 	/**
 		The type reference class used to distinguish types
@@ -119,10 +120,15 @@ struct null_parameter_type { };
 #if 0
 class bool_instance_alias_info;
 #else
-typedef	instance_alias_info<bool_tag>	bool_instance_alias_info;
+typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
 #endif
 
+#if 0
 class int_instance_alias_info;
+#else
+typedef	instance_alias_info<int_tag>		int_instance_alias_info;
+#endif
+
 class enum_instance_alias_info;
 class datastruct_instance_alias_info;
 class channel_instance_alias_info;
@@ -148,6 +154,7 @@ typedef ring_node_derived<process_instance_alias_info>
 template <>
 struct class_traits<int_tag> {
 	typedef	int_tag				tag_type;
+	static const char			tag_name[];
 	typedef	int_instance			instance_type;
 	typedef	int_instance_alias_base		instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
@@ -171,7 +178,7 @@ struct class_traits<int_tag> {
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	typedef	pint_value_type			instance_parameter_type;
+	typedef	pint_value_type			instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -181,6 +188,7 @@ struct class_traits<int_tag> {
 template <>
 struct class_traits<bool_tag> {
 	typedef	bool_tag			tag_type;
+	static const char			tag_name[];
 	typedef	bool_instance			instance_type;
 	typedef	bool_instance_alias_base	instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
@@ -204,7 +212,7 @@ struct class_traits<bool_tag> {
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	typedef	null_parameter_type		instance_parameter_type;
+	typedef	null_parameter_type		instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -214,6 +222,7 @@ struct class_traits<bool_tag> {
 template <>
 struct class_traits<enum_tag> {
 	typedef	enum_tag			tag_type;
+	static const char			tag_name[];
 	typedef	enum_instance			instance_type;
 
 	// temporary
@@ -241,7 +250,7 @@ struct class_traits<enum_tag> {
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	typedef	void				instance_parameter_type;
+	typedef	void				instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -251,6 +260,7 @@ struct class_traits<enum_tag> {
 template <>
 struct class_traits<datastruct_tag> {
 	typedef	datastruct_tag			tag_type;
+	static const char			tag_name[];
 	typedef	struct_instance			instance_type;
 
 	// temporary
@@ -280,7 +290,7 @@ struct class_traits<datastruct_tag> {
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_parameter_type;
+	typedef	void				instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -290,6 +300,7 @@ struct class_traits<datastruct_tag> {
 template <>
 struct class_traits<process_tag> {
 	typedef	process_tag			tag_type;
+	static const char			tag_name[];
 	typedef	process_instance		instance_type;
 
 	// temporary
@@ -319,7 +330,7 @@ struct class_traits<process_tag> {
 	typedef	process_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_parameter_type;
+	typedef	void				instance_collection_parameter_type;
 	typedef	process_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -329,6 +340,7 @@ struct class_traits<process_tag> {
 template <>
 struct class_traits<channel_tag> {
 	typedef	channel_tag			tag_type;
+	static const char			tag_name[];
 	typedef	channel_instance		instance_type;
 
 	// temporary
@@ -358,13 +370,12 @@ struct class_traits<channel_tag> {
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	void				instance_parameter_type;
+	typedef	void				instance_collection_parameter_type;
 	typedef	channel_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<channel_tag>
 
-//-----------------------------------------------------------------------------
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART

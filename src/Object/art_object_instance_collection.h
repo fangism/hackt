@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.6 2005/02/25 03:15:43 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.7 2005/02/25 21:08:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -52,8 +52,8 @@ struct type_dumper {
  */
 template <class Tag>
 struct collection_parameter_persistence {
-	typedef	typename class_traits<Tag>::instance_parameter_type
-					instance_parameter_type;
+	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	const persistent_object_manager& pom;
@@ -62,10 +62,10 @@ struct collection_parameter_persistence {
 		pom(m) { }
 
 	void
-	operator () (ostream&, const instance_collection_generic_type&);
+	operator () (ostream&, const instance_collection_generic_type&) const;
 
 	void
-	operator () (istream&, instance_collection_generic_type&);
+	operator () (istream&, instance_collection_generic_type&) const;
 };	// end struct collection_parameter
 
 //-----------------------------------------------------------------------------
@@ -92,14 +92,14 @@ template <class Tag>
 instance_collection<Tag>
 
 /**
-	Interface to collection of data-int instance aliases.  
-	TODO: need to add a width parameter, or at least reference
-		the fully-specified type.
+	Interface to collection of instance aliases.  
+	This abstract base class is dimension-generic.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public class_traits<Tag>::instance_collection_parent_type {
 friend struct collection_parameter_persistence<Tag>;
+friend struct collection_type_committer<Tag>;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
@@ -115,8 +115,8 @@ public:
 	typedef	never_ptr<instance_alias_base_type>	instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
-	typedef	typename class_traits<Tag>::instance_parameter_type
-							instance_parameter_type;
+	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+							instance_collection_parameter_type;
 	typedef	typename class_traits<Tag>::instance_reference_type
 							instance_reference_type;
 	typedef	typename class_traits<Tag>::member_instance_reference_type
@@ -131,7 +131,7 @@ private:
 	/**
 		General parameter object for type checking.  
 	 */
-	instance_parameter_type				type_parameter;
+	instance_collection_parameter_type		type_parameter;
 protected:
 	explicit
 	instance_collection(const size_t d) :
@@ -142,10 +142,8 @@ public:
 
 virtual	~instance_collection();
 
-#if 0
-	size_t
-	width(void) const { return type_parameter; }
-#endif
+	const instance_collection_parameter_type&
+	get_type_parameter(void) const { return type_parameter; }
 
 virtual	ostream&
 	what(ostream&) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.5 2005/02/25 03:15:43 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.6 2005/02/25 21:08:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -159,8 +159,8 @@ template <>
 struct collection_parameter_persistence<bool_tag> {
 	typedef	class_traits<bool_tag>::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef class_traits<bool_tag>::instance_parameter_type
-					instance_parameter_type;
+	typedef class_traits<bool_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	const persistent_object_manager& pom;
 
 	collection_parameter_persistence(const persistent_object_manager& m) :

@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.6.2.1 2005/02/24 19:34:39 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.6.2.2 2005/02/25 21:08:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -10,12 +10,17 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "art_object_classification_details.h"
 
 #include <set>
 #include "multikey_set.h"
 #include "ring_node.h"
 #include "packed_array_fwd.h"
 
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+#include "art_object_instance_collection.h"
+#include "art_object_instance_alias.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -31,12 +36,15 @@ using util::packed_array_generic;
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 class int_instance;
 
 template <size_t>
 class int_array;
+#endif
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 class int_instance_alias_info {
 	typedef	int_instance_alias_info			this_type;
 public:
@@ -98,10 +106,13 @@ public:
 	};	// end class transient_info_collector
 
 };	// end class int_instance_alias_info
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
+#if 0
 typedef	ring_node_derived<int_instance_alias_info>
 						int_instance_alias_base;
+#endif
 
 ostream&
 operator << (ostream&, const int_instance_alias_base&);
@@ -117,6 +128,7 @@ public:
 };	// end class int_instance
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	An uninitialized reference to a int instance.  
 	Only after references are connected, are the actual int instances
@@ -212,8 +224,10 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class int_instance_alias<0>
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //-----------------------------------------------------------------------------
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 /**
 	Interface to collection of data-int instance aliases.  
 	TODO: need to add a width parameter, or at least reference
@@ -302,6 +316,8 @@ virtual	bool
 		alias_collection_type&) const = 0;
 
 public:
+virtual	_instance_alias_base&
+	load_reference(istream& i) const = 0;
 
 	static
 	int_instance_collection*
@@ -335,7 +351,12 @@ friend class int_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
 	typedef	parent_type::alias_collection_type	alias_collection_type;
+#if 0
 	typedef	int_instance_alias<D>			element_type;
+#else
+	typedef	typename class_traits<int_tag>::instance_alias<D>::type
+							element_type;
+#endif
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
@@ -427,7 +448,12 @@ public:
 	typedef	parent_type::instance_ptr_type	instance_ptr_type;
 	typedef	parent_type::alias_collection_type
 						alias_collection_type;
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	typedef	class_traits<int_tag>::instance_alias<0>::type
+						instance_type;
+#else
 	typedef	int_instance_alias<0>		instance_type;
+#endif
 private:
 	instance_type				the_instance;
 
@@ -468,6 +494,15 @@ public:
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class int_array (specialized)
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+typedef	instance_array<int_tag, 0>	int_scalar;
+typedef	instance_array<int_tag, 1>	int_array_1D;
+typedef	instance_array<int_tag, 2>	int_array_2D;
+typedef	instance_array<int_tag, 3>	int_array_3D;
+typedef	instance_array<int_tag, 4>	int_array_4D;
+#endif
 
 //=============================================================================
 }	// end namespace entity

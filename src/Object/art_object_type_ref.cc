@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2.4.1 2005/02/25 01:40:21 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.3.2.2.4.2 2005/02/25 21:08:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -508,7 +508,11 @@ data_type_reference::make_instance_collection(
 				);
 		} else if (alias == &int_def) {
 			return return_type(int_instance_collection
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+				::make_array(*s, id, d));
+#else
 				::make_int_array(*s, id, d));
+#endif
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);

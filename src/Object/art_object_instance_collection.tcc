@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.6 2005/02/25 03:15:44 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.7 2005/02/25 21:08:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -200,7 +200,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o,
 	const typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type& i) {
-	return o << "<?>-alias @ " << &i;
+	return o << class_traits<Tag>::tag_name << "-alias @ " << &i;
 }
 
 //=============================================================================
@@ -560,7 +560,7 @@ INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o, const instance_alias<Tag,D>& b) {
 	INVARIANT(b.valid());
-	return o << "<?>-alias-" << D << ")";
+	return o << '(' << class_traits<Tag>::tag_name << "-alias-" << D << ")";
 }
 
 //=============================================================================
@@ -1007,7 +1007,7 @@ INSTANCE_SCALAR_CLASS::is_partially_unrolled(void) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::what(ostream& o) const {
-	return o << "<?>-scalar";
+	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

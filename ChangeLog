@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-02-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-10:
+	  Ported all int-related instance classes (aliases, info, collection, 
+	  arrays) using the instance_collection template family.  
+	  This added ring-connection data to the binary, which resulted
+	  in updating tests because of increased object binary sizes.  
+	  New member of class_traits: tag_name (const char[]).
+	  90% of art_object_instance_{int,bool}.{h,cc} are commented out now.
+	  Will perform massive cleanup after applying instance collection
+	  template to remaining types: enum, struct, channel, process.
+
+
 2005-02-24	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-05:

@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.5 2005/02/25 01:40:20 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.6 2005/02/25 21:08:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -29,11 +29,9 @@ USING_CONSTRUCT
 using std::set;
 using std::ostream;
 using std::string;
-// using util::ring_node;
 using util::ring_node_derived;
 using namespace util::memory;
 using util::multikey_set;
-// using util::multikey_set_element;
 using util::multikey_set_element_derived;
 
 //=============================================================================
