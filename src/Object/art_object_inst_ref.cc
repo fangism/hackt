@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5 2005/02/17 04:20:34 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1 2005/02/17 22:41:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -591,7 +591,7 @@ simple_instance_reference::hash_string(void) const {
 	\return true if successful, else false.  
  */
 bool
-simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
+simple_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
 	//	we'd be able to append indices one-by-one.  

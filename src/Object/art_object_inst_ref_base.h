@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2 2005/02/09 04:14:09 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.1 2005/02/17 22:41:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -150,14 +150,6 @@ public:
  */
 class simple_instance_reference : virtual public instance_reference_base {
 private:
-#if 0
-	/**
-		Helper class for evaluating sparse, multidimensional
-		collections.  
-	 */
-	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
-						mset_base;
-#else
 	/**
 		Helper class for evaluating sparse, multidimensional
 		collections.  
@@ -167,7 +159,6 @@ private:
 
 	template <size_t>
 	class mset;
-#endif
 protected:
 	/**
 		The indices (optional) for this particular reference.
@@ -227,7 +218,7 @@ virtual	~simple_instance_reference();
 	implicit_static_constant_indices(void) const;
 
 	bool
-	attach_indices(excl_ptr<index_list> i);
+	attach_indices(excl_ptr<index_list>& i);
 
 virtual	ostream&
 	what(ostream& o) const = 0;

@@ -2,6 +2,12 @@
 
 2005-02-17	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-01:
+	  New branch created for working on alias_connections.  
+	  May require some serious reworking and sub-typing.  
+	  Issue is what the interface for unrolled instance connection
+	  should be.  
+
 	* ARTXX-00-01-04-main-00-04-object-01-13:
 	  Prelimiary testing of saving and restoring bool instance aliases, 
 	  where there are no actual connections.  So far so good.

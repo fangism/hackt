@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.8.2.1 2005/02/17 00:10:21 fang Exp $
+	$Id: packed_array.h,v 1.8.2.1.2.1 2005/02/17 22:41:38 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -155,7 +155,6 @@ public:
 	reference
 	operator [] (const key_type& k);
 
-//	value_type
 	const_reference
 	operator [] (const key_type& k) const;
 
@@ -165,7 +164,6 @@ public:
 		return (*this)[k];
 	}
 
-//	value_type
 	const_reference
 	at(const key_type& k) const {
 		INVARIANT(range_check(k));
@@ -295,7 +293,6 @@ public:
 	reference
 	operator [] (const key_type& k);
 
-//	value_type
 	const_reference
 	operator [] (const key_type& k) const;
 
@@ -305,7 +302,6 @@ public:
 		return (*this)[k];
 	}
 
-//	value_type
 	const_reference
 	at(const key_type& k) const {
 		INVARIANT(range_check(k));
@@ -450,7 +446,6 @@ public:
 	reference
 	operator [] (const key_type& k);
 
-//	value_type
 	const_reference
 	operator [] (const key_type& k) const;
 
@@ -460,7 +455,6 @@ public:
 		return (*this)[k];
 	}
 
-//	value_type
 	const_reference
 	at(const key_type& k) const {
 		INVARIANT(range_check(k));

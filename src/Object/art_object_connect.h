@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1 2005/02/03 03:34:47 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.1 2005/02/17 22:41:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -25,7 +25,10 @@ class unroll_context;
 	Class for saving and managing expression assignments.  
 	Includes both static and dynamic instance references.  
  */
-class instance_reference_connection : public object, 
+class instance_reference_connection : 
+#if 0
+		public object, 
+#endif
 		public instance_management_base {
 protected:
 	typedef	list<count_ptr<const instance_reference_base> >	inst_list_type;
@@ -54,7 +57,7 @@ protected:
 	// no additional fields
 public:
 	aliases_connection();
-	~aliases_connection() { }
+	~aliases_connection();
 
 	ostream&
 	what(ostream& o) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1 2005/02/03 03:34:47 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.1 2005/02/17 22:41:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -26,7 +26,10 @@ USING_IO_UTILS
 // class instance_reference_connection method definitions
 
 instance_reference_connection::instance_reference_connection() :
-		object(), instance_management_base(), inst_list() {
+#if 0
+		object(), 
+#endif
+		instance_management_base(), inst_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,6 +57,9 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 aliases_connection::aliases_connection() : instance_reference_connection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+aliases_connection::~aliases_connection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -89,10 +95,17 @@ aliases_connection::prepend_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Requires precise type-checking!
+ */
 void
 aliases_connection::unroll(unroll_context& c) const {
+#if 1
 	cerr << "aliases_connection::unroll(): "
 		"Fang, finish me!" << endl;
+#else
+	// want to collect packed_array<instance_aliases>
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
