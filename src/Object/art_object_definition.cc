@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.27 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.28 2005/01/14 19:40:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -409,7 +409,7 @@ definition_base::make_default_template_arguments(void) const {
  */
 never_ptr<const instance_collection_base>
 definition_base::add_template_formal(
-		never_ptr<instantiation_statement> i, 
+		const never_ptr<instantiation_statement> i, 
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_template_formal()");
 	typedef	never_ptr<const instance_collection_base>	return_type;
@@ -458,7 +458,7 @@ definition_base::add_template_formal(
  */
 never_ptr<const instance_collection_base>
 definition_base::add_port_formal(
-		never_ptr<instantiation_statement> f, 
+		const never_ptr<instantiation_statement> f, 
 		const token_identifier& i) {
 	DIE;
 	return never_ptr<const instance_collection_base>(NULL);
@@ -2044,7 +2044,7 @@ process_definition::make_fundamental_type_reference(
  */
 never_ptr<const instance_collection_base>
 process_definition::add_port_formal(
-		never_ptr<instantiation_statement> f, 
+		const never_ptr<instantiation_statement> f, 
 		const token_identifier& id) {
 	NEVER_NULL(f);
 	INVARIANT(!f.is_a<param_instantiation_statement>());

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.7 2005/01/13 18:59:44 fang Exp $
+	$Id: art_object_definition_base.h,v 1.8 2005/01/14 19:40:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -209,14 +209,14 @@ virtual	bool
 		to a different interface!
  */
 virtual	never_ptr<const instance_collection_base>
-	add_template_formal(never_ptr<instantiation_statement> f, 
+	add_template_formal(const never_ptr<instantiation_statement> f, 
 		const token_identifier& id);
 
 /**
 	Really, only some definitions should have ports...
  */
 virtual	never_ptr<const instance_collection_base>
-	add_port_formal(never_ptr<instantiation_statement> f, 
+	add_port_formal(const never_ptr<instantiation_statement> f, 
 		const token_identifier& id);
 
 #if 0
