@@ -795,7 +795,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 		} 
 		count_ptr<object_list> ol(o.is_a<object_list>());
 		assert(ol);
-		excl_ptr<param_expr_list> tpl =
+		excl_ptr<dynamic_param_expr_list> tpl =
 			ol->make_param_expr_list();
 		if (!tpl) {
 			cerr << "ERROR building template parameter "

@@ -647,19 +647,56 @@ object_list::make_param_assignment(void) {
 
 /**
 	Doesn't do any checking, just re-wraps the list.  
+	Now does checking for static constants.  
 	Objects may be null, but all others must be param_expr.  
+	For now always return a dynamic list.
  */
-excl_ptr<param_expr_list>
+// excl_ptr<param_expr_list>
+excl_ptr<dynamic_param_expr_list>
 object_list::make_param_expr_list(void) const {
-	excl_ptr<param_expr_list> ret(new param_expr_list);
+	// first walk to determine if it qualified as a const_param_expr_list
 	const_iterator i = begin();
+#if 0
+	bool is_all_const = true;
 	for ( ; i!=end(); i++) {
 		count_const_ptr<object> o(*i);
 		count_const_ptr<param_expr> pe(o.is_a<param_expr>());
-		if (o)	assert(pe);
-		ret->push_back(pe);	// NULL is ok.  
+		if (o) {
+			assert(pe);
+			if (!pe.is_a<const_param>())
+				is_all_const = false;
+		} else {
+			is_all_const = false;
+		}
 	}
-	return ret;
+	
+	i = begin();
+	if (is_all_const) {
+		excl_ptr<const_param_expr_list>
+			ret(new const_param_expr_list);
+		for ( ; i!=end(); i++) {
+			count_const_ptr<object> o(*i);
+			count_const_ptr<param_expr> pe(o.is_a<param_expr>());
+			assert(pe);
+			// can't be NULL, already checked above
+			ret->push_back(pe.is_a<const_param>());
+		}
+		return ret.is_a_xfer<param_expr_list>();
+	} else {
+#endif
+		excl_ptr<dynamic_param_expr_list>
+			ret(new dynamic_param_expr_list);
+		for ( ; i!=end(); i++) {
+			count_const_ptr<object> o(*i);
+			count_const_ptr<param_expr> pe(o.is_a<param_expr>());
+			if (o)	assert(pe);
+			ret->push_back(pe);	// NULL is ok.  
+		}
+		return ret;
+#if 0
+		return ret.is_a_xfer<param_expr_list>();
+	}
+#endif
 }
 
 excl_const_ptr<aliases_connection>

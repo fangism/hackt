@@ -166,7 +166,7 @@ public:
 
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 
 never_const_ptr<instantiation_base>
 	add_port_formal(excl_ptr<instantiation_base> p);
@@ -207,7 +207,7 @@ public:
 	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 };	// end class process_definition_alias
 
 //=============================================================================
@@ -228,7 +228,7 @@ virtual	~datatype_definition_base();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 virtual	bool require_signature_match(
 		never_const_ptr<definition_base> d) const = 0;
 };	// end class datatype_definition_base
@@ -255,7 +255,7 @@ public:
 
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	never_const_ptr<instantiation_base>
@@ -307,7 +307,7 @@ public:
 	// don't need yet
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 
 	bool require_signature_match(never_const_ptr<definition_base> d) const;
@@ -346,7 +346,7 @@ public:
 
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 };	// end class built_in_param_def
 
 //-----------------------------------------------------------------------------
@@ -401,7 +401,7 @@ public:
 	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const;
 };	// end class datatype_definition_alias
@@ -424,7 +424,7 @@ virtual	~channel_definition_base();
 
 virtual	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 };	// end class channel_definition_base
 
 //-----------------------------------------------------------------------------
@@ -453,7 +453,7 @@ public:
 #if 0
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 };	// end class user_def_chan
 
@@ -482,7 +482,7 @@ public:
 #if 0
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const;
+			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 };	// end class channel_definition_alias
 

@@ -210,7 +210,7 @@ definition_base::set_context_definition(context& c) const {
  */
 bool
 definition_base::certify_template_arguments(
-		never_ptr<param_expr_list> ta) const {
+		never_ptr<dynamic_param_expr_list> ta) const {
 if (ta) {
 	// first, number of arguments must match
 	const size_t a_size = ta->size();
@@ -284,12 +284,13 @@ if (ta) {
 		check_null_template_arguments.  
 	\returns a list of default parameter expressions.  
  */
-excl_ptr<param_expr_list>
+excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
 	assert(check_null_template_argument());
 	if (template_formals_list.empty())
-		return excl_ptr<param_expr_list>(NULL);
-	param_expr_list* ret = new param_expr_list;
+		return excl_ptr<dynamic_param_expr_list>(NULL);
+	// defaulting to dynamic_param_expr_list
+	dynamic_param_expr_list* ret = new dynamic_param_expr_list;
 	template_formals_list_type::const_iterator i = 
 		template_formals_list.begin();
 	for ( ; i!=template_formals_list.end(); i++) {
@@ -297,7 +298,7 @@ definition_base::make_default_template_arguments(void) const {
 		assert(d);	// everything must have default
 		ret->push_back(d);
 	}
-	return excl_ptr<param_expr_list>(ret);
+	return excl_ptr<dynamic_param_expr_list>(ret);
 }
 
 /**
@@ -424,7 +425,7 @@ datatype_definition_base::make_typedef(never_const_ptr<scopespace> s,
 
 count_const_ptr<fundamental_type_reference>
 datatype_definition_base::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new data_type_reference(
@@ -465,7 +466,7 @@ channel_definition_base::make_typedef(never_const_ptr<scopespace> s,
 
 count_const_ptr<fundamental_type_reference>
 channel_definition_base::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new channel_type_reference(
@@ -625,7 +626,7 @@ built_in_datatype_def::get_parent(void) const {
 
 count_const_ptr<fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new data_type_reference(
@@ -724,7 +725,7 @@ built_in_param_def::make_typedef(never_const_ptr<scopespace> s,
  */
 count_const_ptr<fundamental_type_reference>
 built_in_param_def::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	assert(!ta);
 	return count_const_ptr<fundamental_type_reference>(
 		new param_type_reference(
@@ -935,7 +936,7 @@ datatype_definition_alias::assign_typedef(
 
 count_const_ptr<fundamental_type_reference>
 datatype_definition_alias::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new data_type_reference(
@@ -1069,7 +1070,7 @@ process_definition::lookup_port_formal(const string& id) const {
 
 count_const_ptr<fundamental_type_reference>
 process_definition::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new process_type_reference(
@@ -1230,7 +1231,7 @@ process_definition_alias::assign_typedef(
 
 count_const_ptr<fundamental_type_reference>
 process_definition_alias::make_fundamental_type_reference(
-		excl_ptr<param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list> ta) const {
 	if (certify_template_arguments(ta)) {
 		return count_const_ptr<fundamental_type_reference>(
 			new process_type_reference(

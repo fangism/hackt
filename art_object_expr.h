@@ -153,8 +153,8 @@ virtual bool must_be_equivalent(const param_expr& p) const = 0;
 	A list of parameter expressions.  
 	Consider splitting into dynamic vs. const?
  */
-class param_expr_list : public object,
-		public list<count_const_ptr<param_expr> > {
+class param_expr_list : public object {
+//		public list<count_const_ptr<param_expr> >
 protected:
 	typedef	list<count_const_ptr<param_expr> >	parent;
 public:
@@ -164,7 +164,48 @@ public:
 	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	param_expr_list();
-	~param_expr_list();
+virtual	~param_expr_list();
+
+virtual	size_t size(void) const = 0;
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream& dump(ostream& o) const = 0;
+
+virtual	bool may_be_initialized(void) const = 0;
+virtual	bool must_be_initialized(void) const = 0;
+
+/** return a compatible list for comparison */
+#if 0
+virtual	list<const param_expr&>	get_const_ref_list(void) const = 0;
+#endif
+
+virtual	bool may_be_equivalent(const param_expr_list& p) const = 0;
+virtual	bool must_be_equivalent(const param_expr_list& p) const = 0;
+
+virtual	bool is_static_constant(void) const = 0;
+virtual	bool is_loop_independent(void) const = 0;
+};	// end class param_expr_list
+
+//-----------------------------------------------------------------------------
+/**
+	List of strictly constant param expressions.  
+	Only scalar expressions allowed, no array indirections or collections.  
+ */
+class const_param_expr_list : public param_expr_list, 
+		public list<count_const_ptr<const_param> > {
+friend class dynamic_param_expr_list;
+protected:
+	typedef	list<count_const_ptr<const_param> >	parent;
+public:
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	const_param_expr_list();
+	~const_param_expr_list();
+
+	size_t size(void) const;
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -172,12 +213,67 @@ public:
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
 
+#if 0
+	list<const param_expr&>	get_const_ref_list(void) const;
+#else
 	bool may_be_equivalent(const param_expr_list& p) const;
 	bool must_be_equivalent(const param_expr_list& p) const;
+#endif
+
+	bool is_static_constant(void) const { return true; }
+	bool is_loop_independent(void) const { return true; }
+#if 0
+private:
+	bool may_be_equivalent_const(const const_param_expr_list& p) const;
+	bool may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+	bool must_be_equivalent_const(const const_param_expr_list& p) const;
+	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+#endif
+};	// end class const_param_expr_list
+
+//-----------------------------------------------------------------------------
+/**
+	Generalized list of parameter expressions, can be dynamic.  
+ */
+class dynamic_param_expr_list : public param_expr_list, 
+		public list<count_const_ptr<param_expr> > {
+friend class const_param_expr_list;
+protected:
+	typedef	list<count_const_ptr<param_expr> >	parent;
+public:
+	typedef parent::iterator		iterator;
+	typedef parent::const_iterator		const_iterator;
+	typedef parent::reverse_iterator	reverse_iterator;
+	typedef parent::const_reverse_iterator	const_reverse_iterator;
+public:
+	dynamic_param_expr_list();
+	~dynamic_param_expr_list();
+
+	size_t size(void) const;
+
+	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+
+	bool may_be_initialized(void) const;
+	bool must_be_initialized(void) const;
+
+#if 0
+	list<const param_expr&>	get_const_ref_list(void) const;
+#else
+	bool may_be_equivalent(const param_expr_list& p) const;
+	bool must_be_equivalent(const param_expr_list& p) const;
+#endif
 
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
-};	// end class param_expr_list
+#if 0
+private:
+	bool may_be_equivalent_const(const const_param_expr_list& p) const;
+	bool may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+	bool must_be_equivalent_const(const const_param_expr_list& p) const;
+	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+#endif
+};	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
 /**

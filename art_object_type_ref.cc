@@ -9,6 +9,8 @@
 #include "art_object_expr.h"
 #include "art_built_ins.h"
 
+#include "sstream.h"
+
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
@@ -56,6 +58,7 @@ string
 fundamental_type_reference::template_param_string(void) const {
 	string ret("<");
 	if (template_params) {
+#if 0
 		param_expr_list::const_iterator i =
 			template_params->begin();
 		count_const_ptr<param_expr> e(*i);
@@ -66,6 +69,11 @@ fundamental_type_reference::template_param_string(void) const {
 			if (e)	ret += e->hash_string();
 			// can e ever be NULL? yes...
 		}
+#else
+		ostringstream o;
+		template_params->dump(o);
+		ret += o.str();
+#endif
 	}
 	ret += ">";
 	return ret;

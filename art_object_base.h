@@ -109,6 +109,8 @@ namespace entity {
 // declarations from "art_object_expr.h"
 	class param_expr;
 	class param_expr_list;
+	class const_param_expr_list;
+	class dynamic_param_expr_list;
 	class pint_expr;
 	class pbool_expr;
 	class range_expr;
@@ -247,7 +249,7 @@ public:
 		make_sparse_range_list(void) const;
 	excl_ptr<index_list>
 		make_index_list(void) const;
-	excl_ptr<param_expr_list>
+	excl_ptr<dynamic_param_expr_list>
 		make_param_expr_list(void) const;
 	excl_ptr<param_expression_assignment>
 		make_param_assignment(void);
@@ -656,16 +658,17 @@ public:
 		set_context_definition(context& c) const;
 
 protected:
-	bool certify_template_arguments(never_ptr<param_expr_list> ta) const;
+	bool certify_template_arguments(
+		never_ptr<dynamic_param_expr_list> ta) const;
 public:
-	excl_ptr<param_expr_list>
+	excl_ptr<dynamic_param_expr_list>
 		make_default_template_arguments(void) const;
 
 public:
 // proposing to replace set_context_fundamental_type with the following:
 virtual count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
-			excl_ptr<param_expr_list> ta) const = 0;
+			excl_ptr<dynamic_param_expr_list> ta) const = 0;
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
 	count_const_ptr<fundamental_type_reference>

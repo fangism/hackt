@@ -123,17 +123,200 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 //-----------------------------------------------------------------------------
 // class param_expr_list method definitions
 
-param_expr_list::param_expr_list() : object(), parent() { }
+param_expr_list::param_expr_list() : object() { }
 
 param_expr_list::~param_expr_list() { }
 
+#if 0
+bool
+param_expr_list::may_be_equivalent(const param_expr_list& p) const {
+	const list<const param_expr&> this_list(get_const_ref_list());
+	const list<const param_expr&> other_list(p.get_const_ref_list());
+	if (this_list.size() != other_list.size())
+		return false;
+	const_iterator i = this_list.begin();
+	const_iterator j = other_list.begin();
+	for ( ; i!=this_list.end(); i++, j++) {
+		if (!i->may_be_equivalent(*j))
+			return false;
+		// else continue checking...
+	}
+	assert(j == other_list.end());		// sanity
+	return true;
+}
+
+bool
+param_expr_list::must_be_equivalent(const param_expr_list& p) const {
+	const list<const param_expr&> this_list(get_const_ref_list());
+	const list<const param_expr&> other_list(p.get_const_ref_list());
+	if (this_list.size() != other_list.size())
+		return false;
+	const_iterator i = this_list.begin();
+	const_iterator j = other_list.begin();
+	for ( ; i!=this_list.end(); i++, j++) {
+		if (!i->must_be_equivalent(*j))
+			return false;
+		// else continue checking...
+	}
+	assert(j == p.end());		// sanity
+	return true;
+}
+#endif
+
+//-----------------------------------------------------------------------------
+// class const_param_expr_list method definitions
+
+const_param_expr_list::const_param_expr_list() :
+		param_expr_list(), parent() { }
+
+const_param_expr_list::~const_param_expr_list() { }
+
 ostream&
-param_expr_list::what(ostream& o) const {
+const_param_expr_list::what(ostream& o) const {
+	return o << "const-param-expr-list";
+}
+
+ostream&
+const_param_expr_list::dump(ostream& o) const {
+	if (empty()) return o;
+	// else at least 1 item in list
+	const_iterator i = begin();
+	assert(*i);
+	(*i)->dump(o);
+	for (i++; i!=end(); i++) {
+		o << ", ";
+		assert(*i);
+		(*i)->dump(o);
+	}
+	return o;
+}
+
+size_t
+const_param_expr_list::size(void) const {
+	return parent::size();
+}
+
+bool
+const_param_expr_list::may_be_initialized(void) const {
+	return true;
+}
+
+bool
+const_param_expr_list::must_be_initialized(void) const {
+	return true;
+}
+
+#if 0
+/**
+	Precondition: all expressions must be non-NULL.  
+ */
+list<const param_expr&>
+const_param_expr_list::get_const_ref_list(void) const {
+	list<const param_expr&> ret;
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		ret.push_back(**i);
+	}
+	return ret;
+}
+#endif
+
+bool
+const_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
+	const const_param_expr_list* cpl =
+		IS_A(const const_param_expr_list*, &p);
+if (cpl) {
+	if (size() != cpl->size())
+		return false;
+	const_iterator i = begin();
+	const_iterator j = cpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<const_param> ip(*i);
+		const count_const_ptr<const_param> jp(*j);
+		assert(ip && jp);
+		if (!ip->may_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == cpl->end());		// sanity
+	return true;
+} else {
+	const dynamic_param_expr_list* dpl =
+		IS_A(const dynamic_param_expr_list*, &p);
+	assert(dpl);
+	if (size() != dpl->size())
+		return false;
+	const_iterator i = begin();
+	dynamic_param_expr_list::const_iterator j = dpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<const_param> ip(*i);
+		const count_const_ptr<param_expr> jp(*j);
+		assert(ip && jp);
+		if (!ip->may_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == dpl->end());		// sanity
+	return true;
+}
+}
+
+bool
+const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
+	const const_param_expr_list* cpl =
+		IS_A(const const_param_expr_list*, &p);
+if (cpl) {
+	if (size() != cpl->size())
+		return false;
+	const_iterator i = begin();
+	const_iterator j = cpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<const_param> ip(*i);
+		const count_const_ptr<const_param> jp(*j);
+		assert(ip && jp);
+		if (!ip->must_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == cpl->end());		// sanity
+	return true;
+} else {
+	const dynamic_param_expr_list* dpl =
+		IS_A(const dynamic_param_expr_list*, &p);
+	assert(dpl);
+	if (size() != dpl->size())
+		return false;
+	const_iterator i = begin();
+	dynamic_param_expr_list::const_iterator j = dpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<const_param> ip(*i);
+		const count_const_ptr<param_expr> jp(*j);
+		assert(ip && jp);
+		if (!ip->must_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == dpl->end());		// sanity
+	return true;
+}
+}
+
+//-----------------------------------------------------------------------------
+// class dynamic_param_expr_list method definitions
+
+dynamic_param_expr_list::dynamic_param_expr_list() :
+		param_expr_list(), parent() { }
+
+dynamic_param_expr_list::~dynamic_param_expr_list() { }
+
+ostream&
+dynamic_param_expr_list::what(ostream& o) const {
 	return o << "param-expr-list";
 }
 
 ostream&
-param_expr_list::dump(ostream& o) const {
+dynamic_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
 	const_iterator i = begin();
@@ -147,8 +330,39 @@ param_expr_list::dump(ostream& o) const {
 	return o;
 }
 
+size_t
+dynamic_param_expr_list::size(void) const {
+	return parent::size();
+}
+
 bool
-param_expr_list::may_be_initialized(void) const {
+dynamic_param_expr_list::is_static_constant(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_const_ptr<param_expr> ip(*i);
+		assert(ip);	// nothing may be NULL at this point!
+		if (!ip->is_static_constant())
+			return false;
+		// else continue checking...
+	}
+	return true;
+}
+
+bool
+dynamic_param_expr_list::is_loop_independent(void) const {
+	const_iterator i = begin();
+	for ( ; i!=end(); i++) {
+		count_const_ptr<param_expr> ip(*i);
+		assert(ip);	// nothing may be NULL at this point!
+		if (!ip->is_loop_independent())
+			return false;
+		// else continue checking...
+	}
+	return true;
+}
+
+bool
+dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_const_ptr<param_expr> ip(*i);
@@ -161,7 +375,7 @@ param_expr_list::may_be_initialized(void) const {
 }
 
 bool
-param_expr_list::must_be_initialized(void) const {
+dynamic_param_expr_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_const_ptr<param_expr> ip(*i);
@@ -173,50 +387,101 @@ param_expr_list::must_be_initialized(void) const {
 	return true;
 }
 
-bool
-param_expr_list::may_be_equivalent(const param_expr_list& p) const {
-	if (size() != p.size())
-		return false;
+#if 0
+/**
+	Precondition: all expressions must be non-NULL.  
+ */
+list<const param_expr&>
+dynamic_param_expr_list::get_const_ref_list(void) const {
+	list<const param_expr&> ret;
 	const_iterator i = begin();
-	const_iterator j = p.begin();
 	for ( ; i!=end(); i++, j++) {
 		count_const_ptr<param_expr> ip(*i);
-		count_const_ptr<param_expr> jp(*j);
-		if (ip && jp) {
-			if (!ip->may_be_equivalent(*jp))
-				return false;
-			// else continue checking...
-		} else {
-			// ERROR: at least one of the exprs is NULL
-			// shouldn't be comparing expr_list with NULLs
-			assert(0);
-		}
+		assert(ip);
+		ret.push_back(*ip);
 	}
-	assert(j == p.end());		// sanity
+	return ret;
+}
+#endif
+
+bool
+dynamic_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
+	const const_param_expr_list* cpl =
+		IS_A(const const_param_expr_list*, &p);
+if (cpl) {
+	if (size() != cpl->size())
+		return false;
+	const_iterator i = begin();
+	const_param_expr_list::const_iterator j = cpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<param_expr> ip(*i);
+		const count_const_ptr<const_param> jp(*j);
+		assert(ip && jp);
+		if (!ip->may_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == cpl->end());		// sanity
 	return true;
+} else {
+	const dynamic_param_expr_list* dpl =
+		IS_A(const dynamic_param_expr_list*, &p);
+	assert(dpl);
+	if (size() != dpl->size())
+		return false;
+	const_iterator i = begin();
+	const_iterator j = dpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<param_expr> ip(*i);
+		const count_const_ptr<param_expr> jp(*j);
+		assert(ip && jp);
+		if (!ip->may_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == dpl->end());		// sanity
+	return true;
+}
 }
 
 bool
-param_expr_list::must_be_equivalent(const param_expr_list& p) const {
-	if (size() != p.size())
+dynamic_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
+	const const_param_expr_list* cpl =
+		IS_A(const const_param_expr_list*, &p);
+if (cpl) {
+	if (size() != cpl->size())
 		return false;
 	const_iterator i = begin();
-	const_iterator j = p.begin();
+	const_param_expr_list::const_iterator j = cpl->begin();
 	for ( ; i!=end(); i++, j++) {
-		count_const_ptr<param_expr> ip(*i);
-		count_const_ptr<param_expr> jp(*j);
-		if (ip && jp) {
-			if (!ip->must_be_equivalent(*jp))
-				return false;
-			// else continue checking...
-		} else {
-			// ERROR: at least one of the exprs is NULL
-			// shouldn't be comparing expr_list with NULLs
-			assert(0);
-		}
+		const count_const_ptr<param_expr> ip(*i);
+		const count_const_ptr<const_param> jp(*j);
+		assert(ip && jp);
+		if (!ip->must_be_equivalent(*jp))
+			return false;
+		// else continue checking...
 	}
-	assert(j == p.end());		// sanity
+	assert(j == cpl->end());		// sanity
 	return true;
+} else {
+	const dynamic_param_expr_list* dpl =
+		IS_A(const dynamic_param_expr_list*, &p);
+	assert(dpl);
+	if (size() != dpl->size())
+		return false;
+	const_iterator i = begin();
+	const_iterator j = dpl->begin();
+	for ( ; i!=end(); i++, j++) {
+		const count_const_ptr<param_expr> ip(*i);
+		const count_const_ptr<param_expr> jp(*j);
+		assert(ip && jp);
+		if (!ip->must_be_equivalent(*jp))
+			return false;
+		// else continue checking...
+	}
+	assert(j == dpl->end());		// sanity
+	return true;
+}
 }
 
 //=============================================================================
