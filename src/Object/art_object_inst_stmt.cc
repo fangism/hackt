@@ -1,11 +1,15 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.10 2005/01/15 19:13:40 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11 2005/01/16 04:47:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
 #define	__ART_OBJECT_INST_STMT_CC__
+
+// for debugging only, before inclusion of header file
+// #define	DEBUG_LIST_VECTOR_POOL		1
+// #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <algorithm>
@@ -18,9 +22,6 @@
 #include "art_object_expr_base.h"
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
-
-// for debugging only, before inclusion of header file
-#define	DEBUG_LIST_VECTOR_POOL		0
 
 #include "what.tcc"
 #include "memory/list_vector_pool.h"
@@ -40,6 +41,10 @@ template struct util::what<ART::entity::data_instantiation_statement>;
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
 	"data_instantiation_statement")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
+	"pint_instantiation_statement")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
+	"pbool_instantiation_statement")
 }
 #endif
 
@@ -74,6 +79,10 @@ instantiation_statement::~instantiation_statement() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_statement::dump(ostream& o) const {
+	STACKTRACE("instantation_statement::dump()");
+#if 1
+	cerr << "&o = " << &o << endl;
+#endif
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
@@ -180,6 +189,9 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instantiation_statement,
 	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_instantiation_statement, 128)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -200,10 +212,14 @@ pbool_instantiation_statement::~pbool_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pbool_instantiation_statement::what(ostream& o) const {
 	return o << "pbool-instantiation_statement";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instantiation_statement)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -300,6 +316,9 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instantiation_statement,
 	PINT_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_instantiation_statement, 256)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -320,14 +339,22 @@ pint_instantiation_statement::~pint_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_instantiation_statement::what(ostream& o) const {
 	return o << "pint-instantiation_statement";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instantiation_statement)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instantiation_statement::dump(ostream& o) const {
+	STACKTRACE("pint_instantation_statement::dump()");
+#if 1
+	cerr << "&o = " << &o << endl;
+#endif
 	return instantiation_statement::dump(o);
 }
 

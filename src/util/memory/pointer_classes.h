@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.8 2005/01/14 20:55:09 fang Exp $
+	$Id: pointer_classes.h,v 1.9 2005/01/16 04:47:30 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -32,7 +32,7 @@
 
 #include "config.h"
 #if HAVE_STDDEF_H
-#include <stddef.h>			// for size_t
+#include <cstddef>			// for size_t
 #endif
 
 #include "macros.h"
@@ -136,123 +136,6 @@ public:
 };	// end class pointer_manipulator
 
 //=============================================================================
-#if 0
-/**
-	Grand ancestral abstract pointer.
-	Trying to get friend class to work across template instances.  
-	Template members.  
- */
-class abstract_ptr {
-public:
-virtual	~abstract_ptr() { }
-
-protected:
-// but a member template cannot be virtual... *sigh*
-// template <class T>
-// virtual	T* get_temp(void) const = 0;
-
-// must settle with the following:
-virtual	void* void_ptr(void) const = 0;
-virtual	const void* const_void_ptr(void) const = 0;
-
-public:
-	operator bool() const { return const_void_ptr() != NULL; }
-
-	/**
-		Comparing against raw pointers' addresses.  
-	 */
-	bool operator == (const void* p) const
-		{ return const_void_ptr() == p; }
-	bool operator != (const void* p) const
-		{ return const_void_ptr() != p; }
-	/**
-		Pointer comparison for pointer classes.  
-		Passing by value, because by reference is slower, 
-		adds an implicit indirection.  
-		\param p must be a reference because abstract_ptr is abstract.
-		\return truth of comparison.  
-	 */
-	bool operator == (const abstract_ptr& p) const
-		{ return const_void_ptr() == p.const_void_ptr(); }
-	bool operator != (const abstract_ptr& p) const
-		{ return const_void_ptr() != p.const_void_ptr(); }
-
-
-virtual	bool owned(void) const = 0;
-};	// end class abstract_ptr
-
-//=============================================================================
-/**
-	Mother pointer.  
-	No public constructors, only public methods are inherited.  
- */
-template <class T>
-class base_ptr : public abstract_ptr {
-template <class> friend class excl_ptr;
-template <class> friend class never_ptr;
-template <class> friend class excl_const_ptr;
-template <class> friend class never_const_ptr;
-template <class> friend class some_ptr;
-template <class> friend class some_const_ptr;
-
-public:
-	typedef	T			element_type;
-	typedef	T&			reference;
-	typedef	T*			pointer;
-	typedef	const T&		const_reference;
-	typedef	const T*		const_pointer;
-
-protected:
-	T*	ptr;
-
-protected:
-	void* void_ptr(void) const { return ptr; }
-	const void* const_void_ptr(void) const { return ptr; }
-		// consume with a reinterpret_cast?
-
-explicit base_ptr(T* p) throw() : abstract_ptr(), ptr(p) { }
-
-public:
-/**
-	This destructor does nothing, it is up to derived classes to act.  
- */
-virtual	~base_ptr() { }
-
-/**
-	Dereference and return reference, just like a pointer.  
-	The assertion adds a little overhead.  
-	\return reference to the pointed element. 
- */
-T&	operator * () const throw() { INVARIANT(ptr); return *ptr; }
-
-/**
-	Pointer member/method dereference, unchecked.  
-	\returns the pointer.  
- */
-T*	operator -> () const throw() { INVARIANT(ptr); return ptr; }
-
-
-// I give up, completely protecting raw pointer from the external abuse
-// is practically impossible because friends don't work across different
-// instances of template, i.e. there are no template-general friends.  
-
-/**
-	"Unsafe" because it is public and vulnerable to abuse of the
-	returned pointer.  
-	Don't use this unless you KNOW what you're doing.  
- */
-T*	unprotected_ptr(void) const { return ptr; }
-const T*	unprotected_const_ptr(void) const { return ptr; }
-
-	/**
-		Should be pure virtual...
-	 */
-virtual	bool owned(void) const = 0;
-};	// end class base_ptr
-
-#endif
-
-//=============================================================================
 /**
 	Helper class for type-casting.  
 	Is private to the outside world, only usable by template friends.  
@@ -264,24 +147,10 @@ template <class> friend class some_ptr;
 template <class> friend class never_ptr;
 private:
 	S*	ptr;
-	explicit	excl_ptr_ref(S* p) throw() : ptr(p) { }
+
+	explicit
+	excl_ptr_ref(S* p) throw() : ptr(p) { }
 };	// end struct excl_ptr_ref
-
-//=============================================================================
-#if 0
-/**
-	Helper class for type-casting for the some_ptr class.  
- */
-// really don't want this visible to the outside...
-template <class S>
-struct base_some_ptr_ref {
-	S*	ptr;
-	bool	own;
-	explicit	base_some_ptr_ref(S* p, bool o) throw() :
-				ptr(p), own(o) { }
-};	// end struct base_some_ptr_ref
-
-#endif
 
 //=============================================================================
 /**
@@ -415,12 +284,11 @@ public:
 		// issue a warning?
 	}
 #endif
-#if 1
+
 private:
 	// intentionally inaccessible undefined copy-constructor
 	explicit
 	excl_ptr(const excl_ptr<T>& e);
-#endif
 
 public:
 /**
@@ -452,7 +320,8 @@ public:
 	Will not accept const pointer of p.  
 	Naked p MUST be an exclusive owner.  
 	Forbidding direct interaction with naked pointer.  
-excl_ptr<T>& operator = (T* p) throw() {
+	excl_ptr<T>&
+	operator = (T* p) throw() {
 		reset(p);
 		return *this;
 	}
@@ -506,7 +375,8 @@ excl_ptr<T>& operator = (T* p) throw() {
 	/**
 		Does nothing!  can't acquire ownership from a const source.  
 	 */
-excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
+	excl_ptr<T>&
+	operator = (const some_ptr<T>& r) throw() { }
 #endif
 
 #if 0
@@ -583,26 +453,6 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
 	}
-
-#if 0
-	/**
-		Destructive transfer, safe up-cast.  
-		constructor probably not available yet...
-	 */
-	template <class S>
-	excl_ptr<S>&	as_a(void) {
-		static_cast<S*>(this->ptr);	// safety check
-			// potentially dangerous
-		return reinterpret_cast<excl_ptr<S>&>(*this);
-	}
-
-	template <class S>
-	excl_ptr<S>	as_a(void) {
-		return excl_ptr<S>(static_cast<S*>(this->release()));
-			// shouldn't be necessary to static_cast
-			// but this make it clear what it's intended for
-	}
-#endif
 
 // permissible assignments
 
@@ -857,11 +707,11 @@ public:
 
 /*** cross-template member not friendly accessible (p is private)
 template <class S>
-explicit never_ptr(const excl_ptr<S>& p) throw() : 
+	explicit
+	never_ptr(const excl_ptr<S>& p) throw() : 
 		base_ptr<T>(dynamic_cast<T*>(p.ptr)) { }
 ***/
 
-	// virtual
 	~never_ptr() { }
 
 	/**
@@ -918,11 +768,14 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
 
 // should some operators have const?
 
+#if 0
+WRONG! cannot create an excl_ptr from a never_ptr!!!
 	// safe type-casting
 	template <class S>
 	operator excl_ptr_ref<S>() throw() {
 		return excl_ptr_ref<S>(this->ptr);
 	}
+#endif
 
 	// type casting
 	template <class S>
@@ -1242,14 +1095,6 @@ template <class S>
 never_ptr<T>::never_ptr(const some_ptr<S>& p) throw() : ptr(p.ptr) { }
 
 //-----------------------------------------------------------------------------
-#if 0
-template <class T>
-template <class S>
-base_ptr<S> is_a(const base_ptr<T>& p) {
-	return base_ptr<S>(dynamic_cast<S*>(p.ptr));
-}
-#endif
-
 template <class T>
 template <class S>
 never_ptr<S>
@@ -1327,90 +1172,6 @@ operator == (const P1<T1>& p1, const P2<T2>& p2) {
 		excl_ptr, some_ptr, never_ptr.  
 ***/
 //=============================================================================
-#if 0
-/**
-	Base class for all reference-count pointers.  
- */
-class abstract_base_count_ptr {
-	// parent could be abstract_ptr
-template <class> friend class count_ptr;
-
-protected:
-	/**
-		The reference count.  Need not be mutable.  
-	 */
-	size_t*	ref_count;
-
-protected:
-	abstract_base_count_ptr(size_t* s = NULL) : ref_count(s) { }
-
-	/**
-		This destructor does absolutely nothing.  
-		It is subclasses' responsibility to take care of 
-		deleting ref_count when appropriate.  
-	 */
-virtual	~abstract_base_count_ptr() { }
-
-	/**
-		Raw pointer.  
-	 */
-virtual	void* void_ptr(void) const = 0;
-
-	/**
-		Raw pointer, const.  
-	 */
-virtual	const void* const_void_ptr(void) const = 0;
-
-public:
-	/**
-		Reference count.  
-	 */
-	size_t refs(void) const {
-		if (ref_count) return *ref_count;
-		else return 0;
-	}
-
-	/**
-		A shared reference is not really owned by any one
-		copy of the pointer.  
-		The last reference to an object is the owner.  
-	 */
-	bool owned(void) const {
-		return (ref_count && *ref_count == 1);
-	}
-
-	/**
-		Ditches pointer without returning it, 
-		maintaining reference count, deleting when appropriate.  
-	 */
-virtual	void abandon(void) = 0;
-	/**
-		Alias for abandon.
-	 */
-	void nullify(void) { abandon(); }
-	void ditch(void) { abandon(); }
-	void scrap(void) { abandon(); }
-
-	/**
-		Test for nullity.  
-		Will overriding in sub-classes be faster, 
-		without virtual call?
-	 */
-	operator bool () const { return const_void_ptr() != NULL; }
-
-	bool operator == (const void* p) const
-		{ return const_void_ptr() == p; }
-	bool operator != (const void* p) const
-		{ return const_void_ptr() != p; }
-	bool operator == (const abstract_base_count_ptr& p) const
-		{ return const_void_ptr() == p.const_void_ptr(); }
-	bool operator != (const abstract_base_count_ptr& p) const
-		{ return const_void_ptr() != p.const_void_ptr(); }
-
-};	// end class abstract_base_count_ptr
-#endif
-
-//=============================================================================
 /**
 	Reference counted pointer, non-const flavor.  
 	How to use...
@@ -1442,11 +1203,6 @@ protected:
 	T*			ptr;
 	/// the reference count
 	size_t*			ref_count;
-
-#if 0
-	void* void_ptr(void) const { return ptr; }
-	const void* const_void_ptr(void) const { return ptr; }
-#endif
 
 public:
 	/**
@@ -1664,8 +1420,6 @@ public:
 
 //=============================================================================
 }	// end namespace memory
-
-//=============================================================================
 }	// end namespace util
 
 //=============================================================================
@@ -1675,9 +1429,11 @@ using util::memory::sticky_ptr;
 /**
 	Attempt to specialize/overload std::_Construct for special-case
 	behavior when placement-constructing sticky pointers.  
+	This gives standard containers destructive copy semantics.  
  */
 template <class _T1, class _T2>
-inline void
+inline
+void
 _Construct(sticky_ptr<_T1>* __p, const sticky_ptr<_T2>& __value) {
 	typedef	sticky_ptr<_T1>		ptr1_type;
 	typedef	sticky_ptr<_T2>		ptr2_type;
@@ -1686,8 +1442,7 @@ _Construct(sticky_ptr<_T1>* __p, const sticky_ptr<_T2>& __value) {
 }
 
 
-}
+}	// end namespace std
 
 #endif	//	__POINTER_CLASSES_H__
-
 

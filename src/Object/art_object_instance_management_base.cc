@@ -1,11 +1,13 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.6 2005/01/15 06:17:00 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.7 2005/01/16 04:47:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 #define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+
+// #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <algorithm>
@@ -61,7 +63,17 @@ sequential_scope::append_instance_management(
 	// we need a mechanism for explicit transfer, see excl_ptr_ref
 	// SOLUTION: we specialized std::_Construct for sticky_ptr's
 	// see "util/memory/pointer_classes.h"
+
+#if 0
 	instance_management_list.push_back(i);
+#else
+	// explicitly take ownership (needed for gcc-3.4.0?, but not 3.3?)
+	// awkward...
+	static excl_ptr<const instance_management_base> null(NULL);
+	instance_management_list.push_back(null);
+	instance_management_list.back() = i;
+#endif
+
 	// accidental deallocation of i here?  not anymore
 	NEVER_NULL(instance_management_list.back());
 	INVARIANT(!i);
@@ -88,6 +100,22 @@ inline
 void
 sequential_scope::collect_object_pointer_list(
 		persistent_object_manager& m) const {
+	STACKTRACE("sequential_scope::collect_object_pointer_list()");
+#if 0
+	// for debugging purposes...
+	instance_management_list_type::const_iterator
+		i = instance_management_list.begin();
+	const instance_management_list_type::const_iterator
+		e = instance_management_list.end();
+	for ( ; i!=e; i++) {
+#if 0
+		STACKTRACE("for all instance_management_list:");
+		NEVER_NULL(*i);
+		(*i)->what(cerr << "at " << &**i << ", ") << endl;
+#endif
+		(*i)->collect_transient_info(m);
+	}
+#else
 	for_each(instance_management_list.begin(), 
 		instance_management_list.end(), 
 	unary_compose_void(
@@ -97,12 +125,14 @@ sequential_scope::collect_object_pointer_list(
 		// const_dereference<excl_const_ptr, instance_management_base>()
 	)
 	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE("sequential_scope::collect_transient_info_base()");
 	collect_object_pointer_list(m);
 }
 

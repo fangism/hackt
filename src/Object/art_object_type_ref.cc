@@ -1,11 +1,13 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.21 2005/01/13 18:59:46 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22 2005/01/16 04:47:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
 #define	__ART_OBJECT_TYPE_REF_CC__
+
+// #define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 
@@ -25,6 +27,7 @@
 #include "art_built_ins.h"
 
 #include "sstream.h"
+#include "stacktrace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -33,6 +36,7 @@
 namespace ART {
 namespace entity {
 using std::ostringstream;
+USING_STACKTRACE
 
 //=============================================================================
 // class fundamental_type_reference method definitions
@@ -54,6 +58,7 @@ fundamental_type_reference::~fundamental_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
+	STACKTRACE("fundamental_type_reference::dump()");
 	return o << hash_string();
 }
 
@@ -68,6 +73,7 @@ fundamental_type_reference::dump(ostream& o) const {
  */
 string
 fundamental_type_reference::hash_string(void) const {
+	STACKTRACE("fundamental_type_reference::hash_string()");
 	// use fully qualified?  for hashing, no.
 	// possible collision case?
 	return get_base_def()->get_name() +template_param_string();

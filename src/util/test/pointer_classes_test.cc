@@ -1,7 +1,7 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.3 2004/12/05 05:08:29 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.4 2005/01/16 04:47:33 fang Exp $
  */
 
 #include <iostream>
@@ -282,25 +282,31 @@ void const_polymorph_test(void) {
 #endif
 #endif
 
-	excl_ptr<const var_anon> c1(a.is_a<const var_anon>());
+#if 0
+	// THIS SHOULD NOT BE ALLOWED, and is caught by compiler
+	excl_ptr<const var_anon> c0(never_ptr<const var_anon>(NULL));
+
+	// suspicious: is_a is not transferrable!
+	excl_ptr<const var_anon> c1(a.is_a<const var_anon>());	// ERROR
 	assert(!c1);
 	cout << "c1 doesn't exist." << endl;
 
-	excl_ptr<const var_named> c2(a.is_a<const var_named>());
+	excl_ptr<const var_named> c2(a.is_a<const var_named>()); // ERROR
 	assert(c2);
 	cout << c2->get_name() << " = " << c2->get_val() << endl;
 
 
-	excl_ptr<const var_anon> d1(b.is_a<const var_anon>());
+	excl_ptr<const var_anon> d1(b.is_a<const var_anon>());	// ERROR
 	assert(d1);
 	cout << d1->get_name() << " = " << d1->get_val() << endl;
 
-	excl_ptr<const var_named> d2(b.is_a<const var_named>());
+	excl_ptr<const var_named> d2(b.is_a<const var_named>()); // ERROR
 	assert(!d2);
 	cout << "d2 doesn't exist." << endl;
 
 	assert(a.is_a<const var_anon>() || b.is_a<const var_anon>());
 	assert(a.is_a<const var_named>() || b.is_a<const var_named>());
+#endif
 
 	cout << "end of scope, should be no memory errors!" << endl;
 }

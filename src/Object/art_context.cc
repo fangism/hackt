@@ -2,11 +2,13 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.20 2005/01/16 02:44:18 fang Exp $
+ 	$Id: art_context.cc,v 1.21 2005/01/16 04:47:22 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
 #define	__ART_CONTEXT_CC__
+
+// #define ENABLE_STACKTRACE		1
 
 #include <cassert>
 #include <exception>
@@ -549,7 +551,16 @@ context::add_connection(excl_ptr<const instance_reference_connection>& c) {
 		seq_scope->append_instance_management(imb);
 	} else {
 		// should transfer ownership to the list
+#if 0
+		// not guaranteed to work :(
 		master_instance_list.push_back(imb);
+#else
+		// kludge
+		static im_pointer_type null(NULL);
+		master_instance_list.push_back(null);
+		master_instance_list.back() = imb;
+#endif
+		INVARIANT(master_instance_list.back());
 	}
 	INVARIANT(!imb);
 }
@@ -575,7 +586,17 @@ context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
+		// should transfer ownership to the list
+#if 0
+		// not guaranteed to work :(
 		master_instance_list.push_back(imb);
+#else
+		// kludge
+		static im_pointer_type null(NULL);
+		master_instance_list.push_back(null);
+		master_instance_list.back() = imb;
+#endif
+		INVARIANT(master_instance_list.back());
 	}
 	INVARIANT(!imb);
 }
@@ -730,15 +751,15 @@ context::add_instance(const token_identifier& id,
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	STACKTRACE("context::add_instance(id, dim)");
 	NEVER_NULL(current_fundamental_type);
-	never_ptr<scopespace> current_named_scope(get_current_named_scope());
+	const never_ptr<scopespace>
+		current_named_scope(get_current_named_scope());
 	NEVER_NULL(current_named_scope);
 
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
-	return_type inst_base(
-		current_named_scope->add_instance(inst_stmt, id));
+	return_type inst_base(current_named_scope->add_instance(inst_stmt, id));
 	// adds non-const back-reference
 
 	if (!inst_base) {
@@ -747,12 +768,15 @@ context::add_instance(const token_identifier& id,
 		THROW_EXIT;
 	}
 
+	{
 	excl_ptr<const instance_management_base>
 		imb = inst_stmt.as_a_xfer<const instance_management_base>();
+	NEVER_NULL(imb);
 	INVARIANT(!inst_stmt);
 	NEVER_NULL(current_sequential_scope);
 	current_sequential_scope->append_instance_management(imb);
 	INVARIANT(!imb);
+	}
 	return inst_base;
 }
 

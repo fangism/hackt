@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.7 2005/01/15 19:13:41 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.8 2005/01/16 04:47:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -50,6 +50,7 @@ class pbool_instantiation_statement : public object,
 		public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
+	typedef	pbool_instantiation_statement	this_type;
 public:
 	typedef	pbool_instance_collection	collection_type;
 	typedef	count_ptr<const param_type_reference>	type_ptr_type;
@@ -88,6 +89,9 @@ public:
 public:
 	PERSISTENT_METHODS
 
+	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+// private:
 };	// end class pbool_instantiation_statement
 
 //-----------------------------------------------------------------------------
@@ -98,6 +102,7 @@ class pint_instantiation_statement : public object,
 		public param_instantiation_statement {
 private:
 	typedef	param_instantiation_statement	parent_type;
+	typedef	pint_instantiation_statement	this_type;
 public:
 	typedef	pint_instance_collection	collection_type;
 	typedef	count_ptr<const param_type_reference>	type_ptr_type;
@@ -136,6 +141,9 @@ public:
 public:
 	PERSISTENT_METHODS
 
+	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+// private:
 };	// end class pint_instantiation_statement
 
 //=============================================================================

@@ -63,8 +63,4 @@ c1 doesn't exist.
 end of scope, should be no memory errors!
 fang = 21
 <anon> = 91
-c1 doesn't exist.
-fang = 21
-<anon> = 91
-d2 doesn't exist.
 end of scope, should be no memory errors!

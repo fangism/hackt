@@ -1,11 +1,13 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.12 2005/01/16 02:44:18 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.13 2005/01/16 04:47:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
 #define	__ART_OBJECT_ASSIGN_CC__
+
+// #define	DEBUG_LIST_VECTOR_POOL		1
 
 #include <iostream>
 #include <exception>
@@ -15,13 +17,22 @@
 #include "art_object_expr_param_ref.h"
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
-
+#include "memory/list_vector_pool.h"
 
 #include "art_object_type_hash.h"
 
+#include "what.h"
 #include "binders.h"
 #include "compose.h"
 #include "ptrs_functional.h"
+
+//=============================================================================
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_expression_assignment, 
+		"pint-expression-assignment")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_expression_assignment, 
+		"pbool-expression-assignment")
+}
 
 //=============================================================================
 namespace ART {
@@ -107,6 +118,9 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_expression_assignment,
 	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_expression_assignment, 32)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -138,10 +152,14 @@ pbool_expression_assignment::size(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pbool_expression_assignment::what(ostream& o) const {
 	return o << "pbool-expr-assignment";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_expression_assignment)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -295,6 +313,9 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_expression_assignment,
 	PINT_EXPR_ASSIGNMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_expression_assignment, 64)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -327,10 +348,14 @@ pint_expression_assignment::size(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_expression_assignment::what(ostream& o) const {
 	return o << "pint-expr-assignment";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_expression_assignment)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.8 2005/01/13 05:28:28 fang Exp $
+	$Id: art_object_assign.h,v 1.9 2005/01/16 04:47:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -11,6 +11,7 @@
 #include "art_object_instance_management_base.h"
 #include "art_object_expr_base.h"
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -91,6 +92,8 @@ protected:
  */
 class pbool_expression_assignment : public param_expression_assignment, 
 		public object {
+private:
+	typedef	pbool_expression_assignment		this_type;
 public:
 	typedef	param_expression_assignment		parent_type;
 	typedef	count_ptr<pbool_instance_reference>	dest_ptr_type;
@@ -144,6 +147,9 @@ public:
 public:
 	PERSISTENT_METHODS
 
+	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+
 };	// end class pbool_expression_assignment
 
 //-----------------------------------------------------------------------------
@@ -152,6 +158,8 @@ public:
  */
 class pint_expression_assignment : public param_expression_assignment, 
 		public object {
+private:
+	typedef	pint_expression_assignment		this_type;
 public:
 	typedef	param_expression_assignment		parent_type;
 	typedef	count_ptr<pint_instance_reference>	dest_ptr_type;
@@ -205,6 +213,8 @@ public:
 public:
 	PERSISTENT_METHODS
 
+	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class pint_expression_assignment
 
 //=============================================================================
