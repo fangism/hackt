@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.3 2004/12/25 03:12:22 fang Exp $
+	$Id: multikey.tcc,v 1.4 2005/01/14 19:40:13 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -309,6 +309,18 @@ multikey_generic<K>::operator == (const this_type& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if dimensions are equal and values are equal.  
+ */
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+bool
+multikey_generic<K>::operator < (const this_type& m) const {
+	INVARIANT(size() == m.size());
+	return std::lexicographical_compare(
+		this->begin(), this->end(), m.begin(), m.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 multikey_generic<K>
 multikey_generic<K>::operator + (const this_type& m) const {
@@ -335,6 +347,7 @@ MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
 multikey_generic<K>::write(ostream& o) const {
 	write_array(o, AS_A(const impl_type&, *this));
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -342,6 +355,7 @@ MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 istream&
 multikey_generic<K>::read(istream& i) {
 	read_sequence_resize(i, AS_A(impl_type&, *this));
+	return i;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -669,7 +683,7 @@ multikey_generator_generic<K>::multikey_generator_generic(
 		const L<P<K,K> >& l) : base_type(), 
 		interface_type(), lower_corner(), upper_corner() {
 	typedef	L<P<K,K> >	sequence_type;
-	INVARIANT(l.size() <= dimensions());	// else error on user!
+	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
 	iterator ui = upper_corner.begin();
 	typename sequence_type::const_iterator i = l.begin();
@@ -686,7 +700,7 @@ template <class LP>
 multikey_generator_generic<K>::multikey_generator_generic(const LP& l) :
 		base_type(), interface_type(), lower_corner(), upper_corner() {
 	typedef	LP	sequence_type;
-	INVARIANT(l.size() <= dimensions());	// else error on user!
+	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
 	iterator ui = upper_corner.begin();
 	typename sequence_type::const_iterator i = l.begin();

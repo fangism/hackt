@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.7 2004/12/25 03:12:22 fang Exp $
+	$Id: packed_array.tcc,v 1.8 2005/01/14 19:40:13 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_TCC__
@@ -437,7 +437,7 @@ packed_array_generic<T>::packed_array_generic(
 		values(sizes_product(sizes)), offset(dim, 0), coeffs(dim-1, 1) {
 	// offset remains 0
 	reset_coeffs();
-	multikey_generator_generic<size_t> key_gen(l, u);
+	multikey_generator_generic<T> key_gen(l, u);
 	key_gen.initialize();
 	INVARIANT(values.size() == sizes_product(sizes));
 	register size_t i = 0;

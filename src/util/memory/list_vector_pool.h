@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.4 2005/01/12 03:20:02 fang Exp $
+	$Id: list_vector_pool.h,v 1.5 2005/01/14 19:40:18 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -65,8 +65,7 @@ typedef	pthread_mutex_t				mutex_type;
 using std::queue;
 using std::list;
 using std::vector;
-using std::ostream;
-using std::endl;
+#include "using_ostream.h"
 #if DEBUG_USING_WHAT
 using util::what;
 #endif
