@@ -1,16 +1,18 @@
 /**
 	\file "deque_iterator_test.cc"
 	Testing if we can save away iterators of a deque.
-	$Id: deque_iterator_test.cc,v 1.2 2004/11/02 07:52:20 fang Exp $
+	$Id: deque_iterator_test.cc,v 1.3 2004/11/30 01:26:40 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
+// #include "count_ptr.h"
 
 using namespace std;
-using namespace COUNT_PTR_NAMESPACE;
+using namespace util::memory;
+// using namespace COUNT_PTR_NAMESPACE;
 
 typedef	deque<count_ptr<string> >		string_deck;
 

@@ -1,17 +1,19 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.2 2004/11/02 07:52:19 fang Exp $
+	$Id: count_ptr_test.cc,v 1.3 2004/11/30 01:26:40 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "var.h"
-#include "count_ptr.h"
+#include "memory/pointer_classes.h"
+// #include "count_ptr.h"
 
 using namespace std;
-using namespace COUNT_PTR_NAMESPACE;
+using namespace util::memory;
+// using namespace COUNT_PTR_NAMESPACE;
 
 void test0(void);
 void test1(void);
@@ -50,13 +52,13 @@ void test1(void)  {
 	cout << "#refs = " << s0.refs() << ", " << s1.refs() 
 		<< ", " << s2.refs() << endl;
 
-	count_const_ptr<string> s3(s2);
+	count_ptr<const string> s3(s2);
 	cout << *s0 << ", " << *s1 << ", " << *s2 << ", " << *s3 << endl;
 	cout << "#refs = " << s0.refs() << ", " << s1.refs() << endl;
 
-	const count_const_ptr<string> s4(new string("this is new!"));
+	const count_ptr<const string> s4(new string("this is new!"));
 	cout << *s4 << endl;
-	count_const_ptr<string> s5(s4);
+	count_ptr<const string> s5(s4);
 	cout << "#refs = " << s4.refs() << ", " << s5.refs() << endl;
 	cout << *s4 << endl;
 	cout << *s5 << endl;

@@ -1,13 +1,13 @@
 /**
 	\file "ptrs_test.cc"
 	Test for exclusive pointer classes.  
-	$Id: ptrs_test.cc,v 1.3 2004/11/28 23:46:49 fang Exp $
+	$Id: ptrs_test.cc,v 1.4 2004/11/30 01:26:41 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 
-#include "ptrs.h"
+#include "obsolete/ptrs.h"
 #include "var.h"
 #include "func.h"
 

@@ -1,26 +1,28 @@
 /**
 	\file "hash_qmap_test.cc"
 	Test for queryable hash map.
-	$Id: hash_qmap_test.cc,v 1.2 2004/11/02 07:52:22 fang Exp $
+	$Id: hash_qmap_test.cc,v 1.3 2004/11/30 01:26:41 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "hash_qmap.h"
-#include "ptrs.h"
+// #include "ptrs.h"
+#include "memory/pointer_classes.h"
 #include "hash_specializations.h"
 
 using namespace std;
 using namespace HASH_QMAP_NAMESPACE;
-using namespace PTRS_NAMESPACE;
+// using namespace PTRS_NAMESPACE;
+using namespace util::memory;
 
 typedef	hash_qmap<string, some_ptr<string> > 	test_map_type;
 
 ostream& operator << (ostream& o, const test_map_type& map) {
 	test_map_type::const_iterator i = map.begin();
 	for ( ; i!=map.end(); i++) {
-		some_const_ptr<string> s = i->second;
+		some_ptr<const string> s = i->second;
 		o << i->first << " -> ";
 		if (s)
 			o << *s << endl;

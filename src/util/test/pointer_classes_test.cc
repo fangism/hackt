@@ -1,7 +1,7 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.1 2004/11/28 23:46:49 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.2 2004/11/30 01:26:41 fang Exp $
  */
 
 #include <iostream>
@@ -88,6 +88,7 @@ void basic_vector_test(void) {
 	cout << "*i = " << *i << endl;
 	assert(c);
 	cout << "*c = " << *c << endl;
+	assert(i == c);
 
 	never_ptr<int> d(j);
 	assert(!d);
@@ -100,6 +101,7 @@ void basic_vector_test(void) {
 	assert(e);
 	cout << "*c = " << *c << endl;
 	cout << "*e = " << *e << endl;
+	assert(c == e);
 
 	vector<never_ptr<int> > W(6);
 	for (k=0 ; k<6; k++) {
@@ -143,6 +145,7 @@ void polymorph_test(void) {
 	excl_ptr<var_anon> yy(new var_anon(4));
 	assert(yy);
 	cout << yy->get_name() << " = " << yy->get_val() << endl;
+	assert(y != yy);
 
 	excl_ptr<var_named> z(new var_named(5,"z"));
 	assert(z);
