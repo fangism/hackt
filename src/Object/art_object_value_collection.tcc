@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.1.4.2 2005/03/11 04:08:58 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.1.4.3 2005/03/11 05:16:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -429,36 +429,13 @@ VALUE_ARRAY_CLASS::key_value_dumper::operator () (
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates integer parameters at the specified indices.  
-	\param i fully-specified range of indices to instantiate.  
+	\param ranges fully-specified range of indices to instantiate.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::instantiate_indices(
-#if 0
-		const index_collection_item_ptr_type& i
-#else
-		const const_range_list& ranges
-#endif
-) {
-#if 0
-	NEVER_NULL(i);
-	// indices is a range_expr_list (base class)
-	// resolve into constants now using const_range_list
-	// if unable, (b/c uninitialized) then report error
-	const_range_list ranges;	// initially empty
-	if (!i->resolve_ranges(ranges).good) {
-		// ranges is passed and returned by reference
-		// fail
-		cerr << "ERROR: unable to resolve indices of " <<
-			get_qualified_name() << " for instantiation: ";
-		i->dump(cerr) << endl;
-		THROW_EXIT;
-	} 
-#endif
-	// else success
+VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
-	// later: factor this out into common helper class
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
@@ -693,18 +670,8 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-VALUE_SCALAR_CLASS::instantiate_indices(
-#if 0
-		const index_collection_item_ptr_type& i
-#else
-		const const_range_list& r
-#endif
-) {
-#if 0
-	INVARIANT(!i);
-#else
+VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 	INVARIANT (r.empty());
-#endif
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case

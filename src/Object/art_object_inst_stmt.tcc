@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.1.2.3 2005/03/11 04:08:58 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.1.2.4 2005/03/11 05:16:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_TCC__
@@ -160,12 +160,17 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
-#if 0
-	inst_base->instantiate_indices(this->indices);
-#else
+	// unroll_type_check is specialized for each tag type.  
+	const type_ref_ptr_type
+		final_type_ref(type_ref_parent_type::unroll_type_reference(c));
+	if (!final_type_ref) {
+		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
+			" during unroll." << endl;
+		THROW_EXIT;
+	}
 	const good_bool
-		tc(type_ref_parent_type::unroll_type_check(
-			*this->inst_base, c));
+		tc(type_ref_parent_type::commit_type_check(
+			*this->inst_base, final_type_ref));
 	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
 		cerr << "ERROR: type-mismatch during " <<
@@ -183,7 +188,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

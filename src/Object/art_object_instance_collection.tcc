@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.5.6.1 2005/03/09 05:21:41 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.5.6.2 2005/03/11 05:16:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -643,8 +643,9 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::instantiate_indices(
-		const index_collection_item_ptr_type& i) {
+		const const_range_list& ranges) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
+#if 0
 	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
@@ -659,6 +660,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(
 		THROW_EXIT;
 	}
 	// else success
+#endif
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
@@ -1048,9 +1050,9 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
  */
 void
 INSTANCE_SCALAR_CLASS::instantiate_indices(
-		const index_collection_item_ptr_type& i) {
+		const const_range_list& r) {
 	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
-	INVARIANT(!i);
+	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
 		// should never happen, but just in case...
 		this->type_dump(cerr << "ERROR: Scalar ") <<

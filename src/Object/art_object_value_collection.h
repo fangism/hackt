@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.1.4.2 2005/03/11 04:08:58 fang Exp $
+	$Id: art_object_value_collection.h,v 1.1.4.3 2005/03/11 05:16:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_COLLECTION_H__
@@ -108,14 +108,8 @@ virtual	ostream&
 	good_bool
 	type_check_actual_param_expr(const param_expr& pe) const;
 
-	// this MUST be changed to take a const_range_list
-#if 0
-virtual	void
-	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
-#else
 virtual	void
 	instantiate_indices(const const_range_list& i) = 0;
-#endif
 
 // virtual	bool lookup_value(bool& v) const = 0;
 

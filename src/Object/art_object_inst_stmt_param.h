@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.1.2.4 2005/03/11 04:08:58 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.1.2.5 2005/03/11 05:16:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_PARAM_H__
@@ -33,10 +33,16 @@ protected:
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return pint_type_ptr; }
 
-	// any need t pas in a context?
+	const type_ref_ptr_type&
+	unroll_type_reference(const unroll_context&) const {
+		// trivial unrolling, context independent
+		return pint_type_ptr;
+	}
+
+	static
 	good_bool
-	unroll_type_check(value_collection_generic_type& v,
-			const unroll_context&) const {
+	commit_type_check(value_collection_generic_type& v, 
+		const type_ref_ptr_type& t) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -62,10 +68,16 @@ protected:
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return pbool_type_ptr; }
 
-	// any need t pas in a context?
+	const type_ref_ptr_type&
+	unroll_type_reference(const unroll_context&) const {
+		// trivial unrolling, context independent
+		return pbool_type_ptr;
+	}
+
+	static
 	good_bool
-	unroll_type_check(value_collection_generic_type& v, 
-			const unroll_context&) const {
+	commit_type_check(value_collection_generic_type& v, 
+		const type_ref_ptr_type& t) {
 		// no need to type-check
 		return good_bool(true);
 	}

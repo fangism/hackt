@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16.6.5 2005/03/11 04:08:58 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.6 2005/03/11 05:16:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -178,13 +178,9 @@ if (indices) {
 	if (!ret.good) {
 		// ranges is passed and returned by reference
 		// fail
-#if 1
 		cerr << "ERROR: unable to resolve indices of " <<
 			get_inst_base()->get_qualified_name() <<
 			" for instantiation: ";
-#else
-		cerr << "ERROR: unable to resolve indices for instantiation: ";
-#endif
 		indices->dump(cerr) << endl;
 		THROW_EXIT;	// temporary non-error-handling
 	}
@@ -559,7 +555,18 @@ process_instantiation_statement::unroll(unroll_context& c) const {
 			<< endl;
 		THROW_EXIT;
 	}
+#if 0
 	inst_base->instantiate_indices(indices);
+#else
+	const_range_list crl;
+	const good_bool rr(resolve_instantiation_range(crl, c));
+	if (rr.good) {
+		inst_base->instantiate_indices(crl);
+	} else {
+		cerr << "ERROR: resolving index range of instantiation!"
+			<< endl;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -806,7 +813,18 @@ data_instantiation_statement::unroll(unroll_context& c) const {
 			<< endl;
 		THROW_EXIT;
 	}
+#if 0
 	inst_base->instantiate_indices(indices);
+#else
+	const_range_list crl;
+	const good_bool rr(resolve_instantiation_range(crl, c));
+	if (rr.good) {
+		inst_base->instantiate_indices(crl);
+	} else {
+		cerr << "ERROR: resolving index range of instantiation!"
+			<< endl;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
