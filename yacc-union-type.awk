@@ -8,7 +8,7 @@
 # and returns a pointer to the correct member
 #	as a pointer to a super-class of all members
 # to use this function, make an external decaration reference to
-# extern <base-type>* yy_union_resolve(YYSTYPE&, const short, const short);
+# extern <base-type>* yy_union_resolve(const YYSTYPE&, const short, const short);
 
 # To accomplish this, we need to know what state the parser was in
 # when a particular symbol was shifted onto the stack.  
@@ -75,6 +75,8 @@ BEGIN {
 	}
 	print "";
 	print "#include \"y.tab.h\"";	# for YYSTYPE
+	print "#include <assert.h>";
+	print "#include <stdio.h>";
 	print "";
 
 	process_union(yaccfile);
@@ -88,9 +90,9 @@ BEGIN {
 	print "/* basic linked-list node with state key and union member type enumeration */";
 	print "typedef struct _yy_state_map_link_ yy_state_map_link;";
 	print "struct _yy_state_map_link_ {";
-        print "\tint state;\t\t/* state number to match */";
-        print "\tint type_enum;\t\t/* enumerated type */";
-        print "\tyy_state_map_link* next;";
+        print "\tconst int state;\t\t/* state number to match */";
+        print "\tconst int type_enum;\t\t/* enumerated type */";
+        print "\tconst yy_state_map_link* next;";
 	print "};";
 	print "";
 
@@ -100,8 +102,8 @@ BEGIN {
 	print "\t\\param i the previous state of the transition.";
 	print "\t\\param j the current state of the transition.";
 	print "\t\\return wrapped pointer as the ultimate base type.";
-	print "*/";
-	print type "* yy_union_resolve(YYSTYPE& u, const short i, const short j);";
+	print " */";
+	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j);";
 	print "";
 }
 
@@ -174,22 +176,38 @@ if (got_union) {
 		sc = 0;
 		# do nothing, ignore production rule states
 	}
-	while (getline && NF == 3 && $2 == "shift") {
+	while (getline) {
 		# collect shift actions
-		printf("static yy_state_map_link yysml_" state_count \
+	if (NF == 3) {
+	if ($2 == "shift") {
+		printf("static const yy_state_map_link yysml_" state_count \
 			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "};";
+		print "}; /* shift */";
 		sc++;
+	}	# else ignore reduce
+	} else if (NF == 2) {
+		if ($2 != "error" && $2 != "accept") {		# sanity check
+			print "expected \"error\" or \"accept\", aborting";
+			exit 1;
+		}
+		else {
+			getline;		# munch blank line
+			break;
+		}
+	} else {
+		# probably blank line
+		break;
 	}
+	}	# end while
 	while (getline && NF == 3 && $2 == "goto") {
 		# collect goto actions
-		printf("static yy_state_map_link yysml_" state_count \
+		printf("static const yy_state_map_link yysml_" state_count \
 			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
-		print "};";
+		print "}; /* goto */";
 		sc++;
 	}
 	print "";
@@ -205,22 +223,23 @@ END {
 		gsub("[*]", "", type_str);
 		gsub("::", "_", type_str);
 		print "static " type "* yy_union_get_" type_str \
-			"(YYSTYPE& u) {";
+			"(const YYSTYPE& u) {";
+		print "\tfprintf(stderr, \"" type_str "\");";
 		print "\treturn u." mid ";";
 		print "}";
 	}
 	print "";
 
 	print "/* definition of yy_union_resolve() */";
-	print type "* yy_union_resolve(YYSTYPE& u, const short i, const short j) {";
-	print "static yy_state_map_link* yysma[" state_count "] = {";
+	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
+	print "static const yy_state_map_link* yysma[" state_count "] = {";
 	for (i=0; i<state_count; i++) {
 		if (shift_count[i])
 			print "\t&yysml_" i "_" shift_count[i] -1 ", ";
 		else print "\tNULL, ";
 	}
 	print "};";
-	print "static " type "* (*yy_union_get[" member_count "])(YYSTYPE&) = {"
+	print "static " type "* (*yy_union_get[" member_count "])(const YYSTYPE&) = {"
 	for (i=0; i<member_count; i++) {
 		type_str = type_of[member_id_array[i]];
 		gsub("[*]", "", type_str);
@@ -230,15 +249,18 @@ END {
 	print "};";	# end of array of function pointers
 	print "";
 	print "/* function body really starts here */";
-	print "yy_state_map_link* iter = yysma[i];";
+	print "const yy_state_map_link* iter = yysma[i];";
 	print "/* sequentially compare state keys */";
-	print "while (iter && iter->state != j) {";
+	print "while (iter) {";
+	print "\tif(iter->state == j) break;";
 	print "\titer = iter->next;";
 	print "} /* end while */";
-	print "if (iter) {";
+#	print "if (iter) {";
+	print "if (iter->state == j) {";
 		print "\t/* then we've found a match, return appropriately wrapped pointer */";
 		print "\treturn (*yy_union_get[iter->type_enum])(u);";
 	print "} else {";
+		print "\tfprintf(stderr, \"NOT FOUND\");";
 	print "\treturn NULL;";
 	print "}";
 	print "}";
