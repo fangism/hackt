@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.15 2005/03/04 06:19:56 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16 2005/03/04 07:00:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -60,23 +60,6 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instantiation_statement, 
-		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_instantiation_statement, 
-		PINT_INSTANTIATION_STATEMENT_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instantiation_statement, 
-		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_instantiation_statement, 
-		CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::data_instantiation_statement, 
-		DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_instantiation_statement, 
 		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
@@ -92,7 +75,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::data_instantiation_statement, 
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 //=============================================================================
@@ -322,14 +304,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pbool_instantiation_statement::construct_empty(const int i) {
-	return new pbool_instantiation_statement();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instantiation_statement::write_object(
 		const persistent_object_manager& m, ostream& f) const {
@@ -433,14 +407,6 @@ if (!m.register_transient_object(this,
 	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pint_instantiation_statement::construct_empty(const int i) {
-	return new pint_instantiation_statement();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -565,14 +531,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-process_instantiation_statement::construct_empty(const int i) {
-	return new process_instantiation_statement();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_instantiation_statement::write_object(
 		const persistent_object_manager& m, ostream& f) const {
@@ -677,14 +635,6 @@ if (!m.register_transient_object(this,
 	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-channel_instantiation_statement::construct_empty(const int i) {
-	return new channel_instantiation_statement();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -826,14 +776,6 @@ if (!m.register_transient_object(this,
 	parent_type::collect_transient_info_base(m);
 }	// else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-data_instantiation_statement::construct_empty(const int i) {
-	return new data_instantiation_statement();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

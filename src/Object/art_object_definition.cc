@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.36 2005/03/04 06:19:54 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.37 2005/03/04 07:00:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -43,22 +43,6 @@
 STATIC_TRACE_BEGIN("object-definition")
 
 namespace util {
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -73,7 +57,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY, 0)
-#endif
 }	// end namespace util
 
 //=============================================================================
@@ -919,17 +902,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Just allocate with bogus arguments.  
- */
-persistent*
-user_def_chan::construct_empty(const int i) {
-	return new user_def_chan(never_ptr<const name_space>(NULL), "");
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
  */
@@ -1051,18 +1023,6 @@ if (!m.register_transient_object(this,
 	sequential_scope::collect_transient_info_base(m);
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty allocator.  
- */
-persistent*
-channel_definition_alias::construct_empty(const int i) {
-	return new channel_definition_alias("",
-		never_ptr<const scopespace>(NULL));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1574,17 +1534,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty allocator.  
- */
-persistent*
-enum_datatype_def::construct_empty(const int i) {
-	return new enum_datatype_def(never_ptr<const name_space>(NULL), "");
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
 	Since enum-members are merely strings, we just write them out as 
@@ -1760,17 +1709,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty allocator.  
- */
-persistent*
-user_def_datatype::construct_empty(const int i) {
-	return new user_def_datatype(never_ptr<const name_space>(NULL), "");
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
 	Note: this must be kept consistent with 
@@ -1936,18 +1874,6 @@ if (!m.register_transient_object(this,
 	sequential_scope::collect_transient_info_base(m);
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty allocator.  
- */
-persistent*
-datatype_definition_alias::construct_empty(const int i) {
-	return new datatype_definition_alias("",
-		never_ptr<const scopespace>(NULL));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2351,17 +2277,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Temporary allocation.  
- */
-persistent*
-process_definition::construct_empty(const int i) {
-	return new process_definition(never_ptr<const name_space>(NULL), "");
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
  */
@@ -2543,17 +2458,6 @@ if (!m.register_transient_object(this,
 	sequential_scope::collect_transient_info_base(m);
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty allocator.  
- */
-persistent*
-process_definition_alias::construct_empty(const int i) {
-	return new process_definition_alias();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

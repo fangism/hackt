@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.15 2005/03/04 06:19:57 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.16 2005/03/04 07:00:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -47,11 +47,6 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_3D, "int_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_4D, "int_array_4D")
 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_instance_collection, 
-		DINT_INSTANCE_COLLECTION_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -62,7 +57,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::int_array_3D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::int_array_4D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.16 2005/03/04 06:19:58 fang Exp $
+ 	$Id: art_object_module.cc,v 1.17 2005/03/04 07:00:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -34,13 +34,8 @@
 #endif
 
 namespace util {
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::module, MODULE_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::module, MODULE_TYPE_KEY, 0)
-#endif
 }	// end namespace util
 
 namespace ART {
@@ -135,18 +130,6 @@ module::unroll_module(void) {
 		unrolled = true;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Default empty constructor.  
-	Not really used, because module will be stack allocated.  
- */
-persistent*
-module::construct_empty(const int i) {
-	return new module();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

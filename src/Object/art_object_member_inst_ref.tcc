@@ -1,7 +1,7 @@
 /**
 	\file "art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.4 2005/03/04 06:19:58 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.5 2005/03/04 07:00:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -83,18 +83,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-persistent*
-MEMBER_INSTANCE_REFERENCE_CLASS::construct_empty(const int) {
-	return new this_type;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

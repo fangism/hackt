@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.4 2005/03/04 06:19:54 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.5 2005/03/04 07:00:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_TCC__
@@ -251,15 +251,6 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 }
 
 #undef	ALIAS_CONNECTION_UNROLL_VERBOSE
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-ALIAS_CONNECTION_TEMPLATE_SIGNATURE
-persistent*
-ALIAS_CONNECTION_CLASS::construct_empty(const int) {
-	return new this_type;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE

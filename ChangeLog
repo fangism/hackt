@@ -2,6 +2,9 @@
 
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-15:
+	  Cleaned up commented out code in #if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+
 	* ARTXX-00-01-04-main-00-14-merged-persistent-02:
 	  Some file tags were screwed up in CVS, so merging early back to
 	  main trunk first (for coherence sake), then splitting off again.  

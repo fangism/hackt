@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.14 2005/03/04 06:19:59 fang Exp $
+	$Id: persistent_object_manager.h,v 1.15 2005/03/04 07:00:09 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -73,17 +73,15 @@ private:
 						reconstruction_table_type;
 
 	/**
-		Map from of persistent type's key to allocator function.  
+		Collection of constructor functors mapped per hash_key.
 	 */
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-	typedef hash_qmap<persistent::hash_key, reconstruct_function_ptr_type>
-					reconstruction_function_map_type;
-#else
 	typedef	vector<reconstruct_function_ptr_type>
 					reconstructor_vector_type;
+	/**
+		Map from of persistent type's key to allocator function.  
+	 */
 	typedef hash_qmap<persistent::hash_key, reconstructor_vector_type>
 					reconstruction_function_map_type;
-#endif
 
 private:
 
@@ -113,7 +111,6 @@ public:
 	int
 	register_persistent_type(void);
 
-#if !HAVE_PERSISTENT_CONSTRUCT_EMPTY
 	/**
 		Mechanism that allows one to customize the reconstructor
 		functors.  
@@ -123,7 +120,6 @@ public:
 	int
 	register_persistent_type(const aux_alloc_arg_type,
 		const reconstruct_function_ptr_type);
-#endif
 
 private:
 	/**
@@ -138,16 +134,10 @@ private:
 	registered_type_sequence_number(void);
 
 public:
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-	static
-	bool
-	verify_registered_type(const persistent::hash_key& k);
-#else
 	static
 	bool
 	verify_registered_type(const persistent::hash_key& k, 
 		const aux_alloc_arg_type);
-#endif
 
 	static
 	ostream&

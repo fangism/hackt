@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.24 2005/03/04 06:19:55 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.25 2005/03/04 07:00:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -32,20 +32,15 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 namespace util {
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instance_reference, 
-		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_instance_reference, 
-		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_member_instance_reference, 
-		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_member_instance_reference, 
-		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
-#else
+SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_reference, 
+		"process-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_reference, 
+		"channel-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::process_member_instance_reference, 
+		"process-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_instance_reference, 
+		"channel-member-inst-ref")
+
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_instance_reference, 
 		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
@@ -58,16 +53,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_member_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
-#endif
-
-SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_reference, 
-		"process-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_reference, 
-		"channel-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::process_member_instance_reference, 
-		"process-member-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_instance_reference, 
-		"channel-member-inst-ref")
 }	// end namespace util
 
 //=============================================================================

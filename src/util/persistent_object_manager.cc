@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.16 2005/03/04 06:19:59 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.17 2005/03/04 07:00:09 fang Exp $
  */
 
 // flags and switches
@@ -564,16 +564,6 @@ persistent_object_manager::registered_type_sequence_number(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-bool
-persistent_object_manager::verify_registered_type(
-		const persistent::hash_key& k) {
-	const reconstruct_function_ptr_type probe =
-		static_cast<const reconstruction_function_map_type&>(
-			reconstruction_function_map())[k];
-	return (probe != NULL);
-}
-#else
 bool
 persistent_object_manager::verify_registered_type(
 		const persistent::hash_key& k, const aux_alloc_arg_type i) {
@@ -587,7 +577,6 @@ persistent_object_manager::verify_registered_type(
 		return (probe != NULL);
 	}
 }
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -598,24 +587,15 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 	const reconstruction_function_map_type::const_iterator end = m.end();
 	o << "persistent_object_manager::reconstruction_function_map has " <<
 		reconstruction_function_map().size() << " entries." << endl;
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-	o << "\tkey\t\twhat" << endl;
-#else
 	o << "(Each entry may contain multiple constructor functors.)" << endl;
 	o << "\tkey[index]\twhat" << endl;
-#endif
 	for ( ; iter != end; iter++) {
 		// this calls the appropriate construct_empty()
 		// really should be a unique_ptr, after I finish it...
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-		excl_ptr<persistent> tmp((*iter->second)(0));
-		assert(tmp);
 		// DANGER: may not be safe to call what() on uninitialized
 		// objects, if it depends on internal field members!
 		// Thus, we should guarantee that what() is independent of
 		// field members.  
-		tmp->what(o << '\t' << iter->first << '\t') << endl;
-#else
 		const reconstructor_vector_type& ctor_vec(iter->second);
 		size_t j = 0;
 		for ( ; j < ctor_vec.size(); j++) {
@@ -627,7 +607,6 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 					j << "]\t") << endl;
 			}
 		}
-#endif
 	}
 	return o;
 }
@@ -709,27 +688,14 @@ persistent_object_manager::load_header(ifstream& f) {
 		streampos head, tail;
 		read_value(f, t);
 		read_value(f, aux);
-#if 0
-		cerr << "alloc_arg = " << (size_t) aux << endl;
-#endif
 		read_value(f, head);
 		read_value(f, tail);
 		// make sure t is a registered type
 		if (t != persistent::hash_key::null && 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-				!verify_registered_type(t)
-#else
-				!verify_registered_type(t, aux)
-#endif
-		) {
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-			cerr << "FATAL: persistent type code \"" <<
-				t << "\" has not been registered!" << endl;
-#else
+				!verify_registered_type(t, aux)) {
 			cerr << "FATAL: persistent type code \"" <<
 				t << "\", index " << aux <<
 				" has not been registered!" << endl;
-#endif
 			THROW_EXIT;
 		}
 		reconstruction_table.push_back(
@@ -758,19 +724,6 @@ persistent_object_manager::reconstruct(void) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		const persistent::hash_key& t = e.type();
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-			const reconstruct_function_ptr_type f = 
-				reconstruction_function_map()[t];
-			if (f) {
-				e.assign_addr((*f)(e.get_alloc_arg()));
-				addr_to_index_map[e.addr()] = i;
-			} else {
-				cerr << "WARNING: don\'t know how to "
-					"reconstruct/allocate type " << t <<
-					" yet, skipping..." << endl;
-				e.assign_addr(NULL);
-			}
-#else
 			const reconstructor_vector_type&
 				ctor_vec(reconstruction_function_map()[t]);
 			const size_t j = e.get_alloc_arg();
@@ -784,7 +737,6 @@ persistent_object_manager::reconstruct(void) {
 				e.assign_addr((*ctor_vec[j])());
 				addr_to_index_map[e.addr()] = i;
 			}
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 		} else {
 			e.assign_addr(NULL);
 		}

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.13 2005/03/04 06:19:59 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.14 2005/03/04 07:00:09 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -44,45 +44,13 @@ using std::ostringstream;
 // class persistent_object_manager template method definitions
 
 /**
+	The default means of registering a persistent type statically.  
 	Concept require: that T has a static persistent::hash_key
 	named persistent_type_key, and a static member function
 	called construct_empty.  
 	These requirements cannot be made explicit in the persistent class.  
 	Of course, the persistent_type_key must be properly initialized
 	before use.  
- */
-
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-template <class T>
-int
-persistent_object_manager::register_persistent_type(void) {
-	reconstruction_function_map_type& m = reconstruction_function_map();
-	const persistent::hash_key& type_key = persistent_traits<T>::type_key;
-	INVARIANT(type_key != persistent::hash_key::null);
-	const reconstruct_function_ptr_type probe = m[type_key];
-#if WELCOME_TO_TYPE_REGISTRATION
-	cerr << "Welcome to persistent type registration, "
-		<< type_key << "!  ";
-#endif
-	if (probe) {
-		cerr << "FATAL: Persistent type with key \"" <<
-			type_key << "\" already taken!" << endl;
-		THROW_EXIT;
-	} else {
-		m[type_key] = persistent_traits<T>::reconstructor;
-	}
-	// get a unique id
-	const size_t s = m.size();
-#if WELCOME_TO_TYPE_REGISTRATION
-	cerr << "You are number " << s << "." << endl;
-#endif
-	return s;
-}
-
-#else	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
-
-/**
-	The default means of registering a persistent type statically.  
  */
 template <class T>
 int
@@ -137,8 +105,6 @@ persistent_object_manager::register_persistent_type(
 #endif
 	return s;
 }
-
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

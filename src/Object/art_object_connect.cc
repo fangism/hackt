@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.20 2005/03/04 06:19:54 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.21 2005/03/04 07:00:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -63,29 +63,6 @@ SPECIALIZE_UTIL_WHAT(ART::entity::datastruct_alias_connection, "struct_connectio
 SPECIALIZE_UTIL_WHAT(ART::entity::channel_alias_connection, "channel_connection")
 SPECIALIZE_UTIL_WHAT(ART::entity::process_alias_connection, "process_connection")
 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_alias_connection, 
-		DBOOL_ALIAS_CONNECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_alias_connection, 
-		DINT_ALIAS_CONNECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_alias_connection, 
-		ENUM_ALIAS_CONNECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datastruct_alias_connection, 
-		STRUCT_ALIAS_CONNECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_alias_connection, 
-		CHANNEL_ALIAS_CONNECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_alias_connection, 
-		PROCESS_ALIAS_CONNECTION_TYPE_KEY)
-
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::port_connection, PORT_CONNECTION_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::bool_alias_connection, 
 		DBOOL_ALIAS_CONNECTION_TYPE_KEY, 0)
@@ -107,7 +84,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::port_connection, PORT_CONNECTION_TYPE_KEY, 0)
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 //=============================================================================
@@ -242,14 +218,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-port_connection::construct_empty(const int i) {
-	return new port_connection();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

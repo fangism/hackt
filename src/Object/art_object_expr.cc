@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.40 2005/03/04 06:19:54 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.41 2005/03/04 07:00:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -116,46 +116,6 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_param_expr_list, CONST_PARAM_EXPR_LIST_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_param_expr_list, DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instance_reference, 
-		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_instance_reference, 
-		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_const, CONST_PINT_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_const_collection, CONST_PINT_COLLECTION_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::arith_expr, ARITH_EXPR_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::relational_expr, RELATIONAL_EXPR_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::logical_expr, LOGICAL_EXPR_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_range, CONST_RANGE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY)
-#else
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_param_expr_list,
 		CONST_PARAM_EXPR_LIST_TYPE_KEY, 0)
@@ -171,13 +131,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 
-#if 0
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_const_collection, CONST_PINT_COLLECTION_TYPE_KEY, 0)
-#else
-
 using ART::entity::pint_const_collection;
 
+// pint_const_collection requires special treatment:
+// it has no empty constructor and requires an int argument
+// this example shows how we can register various bound constructor
+// functors with the persistent_object_manager type registry.  
 template <>
 struct persistent_traits<pint_const_collection> {
 	typedef pint_const_collection			type;
@@ -214,7 +173,6 @@ persistent_object_manager::register_persistent_type<pint_const_collection>(
 	4, &empty_constructors[4])
 };
 
-#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -239,7 +197,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
@@ -688,18 +645,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-const_param_expr_list::construct_empty(const int i) {
-	return new const_param_expr_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Serialize this object into an output stream, translating
 	pointers to indices as they are encountered.  
@@ -996,18 +941,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-dynamic_param_expr_list::construct_empty(const int) {
-	return new dynamic_param_expr_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1507,17 +1440,6 @@ if (!m.register_transient_object(this,
 // else already visited
 }
 		
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Just allocates with bogus contents, first pass of reconstruction.
- */
-persistent*
-pbool_instance_reference::construct_empty(const int i) {
-	return new pbool_instance_reference();
-}
-#endif
- 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes the instance reference to output stream, translating
@@ -2098,17 +2020,6 @@ if (!m.register_transient_object(this,
 }
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Just allocates with bogus contents, first pass of reconstruction.
- */
-persistent*
-pint_instance_reference::construct_empty(const int i) {
-	return new pint_instance_reference();
-}
-#endif
- 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes the instance reference to output stream, translating
 	pointers to indices as it goes along.
@@ -2405,14 +2316,6 @@ pint_const::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pint_const::construct_empty(const int i) {
-	return new pint_const(0);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_const::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, val);
@@ -2639,7 +2542,7 @@ pint_const_collection::collect_transient_info(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+#if 0
 persistent*
 pint_const_collection::construct_empty(const int d) {
 	INVARIANT(d >= 0);
@@ -2747,14 +2650,6 @@ pbool_const::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pbool_const::construct_empty(const int i) {
-	return new pbool_const(0);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2934,14 +2829,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pint_unary_expr::construct_empty(const int i) {
-	return new pint_unary_expr();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_unary_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
@@ -3093,14 +2980,6 @@ if (!m.register_transient_object(this,
 	ex->collect_transient_info(m);
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pbool_unary_expr::construct_empty(const int i) {
-	return new pbool_unary_expr();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3356,14 +3235,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-arith_expr::construct_empty(const int i) {
-	return new arith_expr();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, reverse_op_map[op]);	// writes a character
@@ -3608,14 +3479,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-relational_expr::construct_empty(const int i) {
-	return new relational_expr();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 relational_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
@@ -3843,14 +3706,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-logical_expr::construct_empty(const int i) {
-	return new logical_expr();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 logical_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
@@ -4015,14 +3870,6 @@ if (!m.register_transient_object(this,
 	upper->collect_transient_info(m);
 }
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-pint_range::construct_empty(const int i) {
-	return new pint_range();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -4271,14 +4118,6 @@ const_range::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-persistent*
-const_range::construct_empty(const int i) {
-	return new const_range();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -4747,18 +4586,6 @@ const_range_list::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-const_range_list::construct_empty(const int i) {
-	return new const_range_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Serialize this object into an output stream, translating
 	pointers to indices as they are encountered.  
@@ -4925,18 +4752,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-dynamic_range_list::construct_empty(const int i) {
-	return new dynamic_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -5319,18 +5134,6 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-const_index_list::construct_empty(const int i) {
-	return new const_index_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Serialize this object into an output stream, translating
 	pointers to indices as they are encountered.  
@@ -5642,18 +5445,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-/**
-	Empty constructor / allocator for the first pass of 
-	deserialization reconstruction.  
- */
-persistent*
-dynamic_index_list::construct_empty(const int i) {
-	return new dynamic_index_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

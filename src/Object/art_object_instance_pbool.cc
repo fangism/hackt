@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.15 2005/03/04 06:19:57 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.16 2005/03/04 07:00:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -83,11 +83,6 @@ read_value(istream& i, pbool_instance& b) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instance_collection, 
-		PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
-#else
 template <>
 struct persistent_traits<ART::entity::pbool_instance_collection> {
 	static const persistent::hash_key	type_key;
@@ -107,7 +102,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_array_3D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_array_4D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 }	// end namespace util
 
@@ -346,7 +340,7 @@ pbool_instance_collection::make_pbool_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+#if 0
 persistent*
 pbool_instance_collection::construct_empty(const int i) {
 	switch(i) {
