@@ -11,6 +11,7 @@ core.*
 *.diff
 ignore
 ptrs_test
+pointer_classes_test
 count_ptr_test
 sublist_test
 deque_iterator_test

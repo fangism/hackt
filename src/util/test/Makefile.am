@@ -15,6 +15,7 @@ include $(top_srcdir)/Make.stddef
 
 noinst_PROGRAMS = \
 	ptrs_test \
+	pointer_classes_test \
 	count_ptr_test \
 	sublist_test \
 	deque_iterator_test \
@@ -30,6 +31,7 @@ noinst_PROGRAMS = \
 
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
+pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc

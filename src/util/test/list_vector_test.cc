@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_test.cc"
 	Example for using the list_vector class.  
-	$Id: list_vector_test.cc,v 1.1 2004/11/26 23:24:56 fang Exp $
+	$Id: list_vector_test.cc,v 1.2 2004/11/28 23:46:49 fang Exp $
  */
 
 #include <iostream>
@@ -39,6 +39,15 @@ dump_list_vector(const vec_type& v, ostream& o) {
 //		o << v[i] << ' ';
 		o << v.at(i) << ' ';
 	}
+	o << endl;
+	o << "reversed: ";
+	reverse_copy(v.begin(), v.end(), osi);
+	o << endl;
+	o << "reversed: ";
+	copy(v.rbegin(), v.rend(), osi);
+	o << endl;
+	o << "forward : ";
+	reverse_copy(v.rbegin(), v.rend(), osi);
 	o << endl;
 }
 

@@ -1,10 +1,12 @@
 /**
 	\file "func.h"
 	Some test functions for pointer classes, not used for ART.
-	$Id: func.h,v 1.2 2004/11/02 07:52:21 fang Exp $
+	This file is now obsolete.
+
+	$Id: func.h,v 1.3 2004/11/28 23:46:48 fang Exp $
  */
 
-#include "../ptrs.h"
+#include "ptrs.h"
 
 using namespace PTRS_NAMESPACE;
 

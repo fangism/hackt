@@ -1,36 +1,90 @@
 iterated: 
 indexed : 
+reversed: 
+reversed: 
+forward : 
 iterated: 0 
 indexed : 0 
+reversed: 0 
+reversed: 0 
+forward : 0 
 iterated: 0 1 
 indexed : 0 1 
+reversed: 1 0 
+reversed: 1 0 
+forward : 0 1 
 iterated: 0 1 2 
 indexed : 0 1 2 
+reversed: 2 1 0 
+reversed: 2 1 0 
+forward : 0 1 2 
 iterated: 0 1 2 3 
 indexed : 0 1 2 3 
+reversed: 3 2 1 0 
+reversed: 3 2 1 0 
+forward : 0 1 2 3 
 iterated: 0 1 2 3 4 
 indexed : 0 1 2 3 4 
+reversed: 4 3 2 1 0 
+reversed: 4 3 2 1 0 
+forward : 0 1 2 3 4 
 iterated: 0 1 2 3 4 5 
 indexed : 0 1 2 3 4 5 
+reversed: 5 4 3 2 1 0 
+reversed: 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 
 iterated: 0 1 2 3 4 5 6 
 indexed : 0 1 2 3 4 5 6 
+reversed: 6 5 4 3 2 1 0 
+reversed: 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 
 iterated: 0 1 2 3 4 5 6 7 
 indexed : 0 1 2 3 4 5 6 7 
+reversed: 7 6 5 4 3 2 1 0 
+reversed: 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 
 iterated: 0 1 2 3 4 5 6 7 8 
 indexed : 0 1 2 3 4 5 6 7 8 
+reversed: 8 7 6 5 4 3 2 1 0 
+reversed: 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 
 iterated: 0 1 2 3 4 5 6 7 8 9 
 indexed : 0 1 2 3 4 5 6 7 8 9 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+reversed: 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
 iterated: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
 indexed : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+reversed: 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+forward : 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 

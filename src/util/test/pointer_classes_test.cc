@@ -1,19 +1,18 @@
 /**
-	\file "ptrs_test.cc"
-	Test for exclusive pointer classes.  
-	$Id: ptrs_test.cc,v 1.3 2004/11/28 23:46:49 fang Exp $
+	\file "pointer_classes_test.cc"
+	Test for pointer classes.  
+	$Id: pointer_classes_test.cc,v 1.1 2004/11/28 23:46:49 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 
-#include "ptrs.h"
+#include "memory/pointer_classes.h"
 #include "var.h"
-#include "func.h"
+// #include "func.h"
 
 using namespace std;
-using namespace PTRS_NAMESPACE;
-
+using namespace util::memory;
 
 void basic_vector_test(void);
 void polymorph_test(void);
@@ -266,10 +265,10 @@ void const_polymorph_test(void) {
 
 #if 1
 	// pointers to read-only variables
-	excl_const_ptr<var_base> a(new var_named(21, "fang"));
+	excl_ptr<const var_base> a(new var_named(21, "fang"));
 	cout << a->get_name() << " = " << a->get_val() << endl;
 
-	excl_const_ptr<var_base> b(new var_anon(91));
+	excl_ptr<const var_base> b(new var_anon(91));
 	cout << b->get_name() << " = " << b->get_val() << endl;
 
 #if 0
@@ -280,25 +279,25 @@ void const_polymorph_test(void) {
 #endif
 #endif
 
-	excl_const_ptr<var_anon> c1(a.is_a<var_anon>());
+	excl_ptr<const var_anon> c1(a.is_a<const var_anon>());
 	assert(!c1);
 	cout << "c1 doesn't exist." << endl;
 
-	excl_const_ptr<var_named> c2(a.is_a<var_named>());
+	excl_ptr<const var_named> c2(a.is_a<const var_named>());
 	assert(c2);
 	cout << c2->get_name() << " = " << c2->get_val() << endl;
 
 
-	excl_const_ptr<var_anon> d1(b.is_a<var_anon>());
+	excl_ptr<const var_anon> d1(b.is_a<const var_anon>());
 	assert(d1);
 	cout << d1->get_name() << " = " << d1->get_val() << endl;
 
-	excl_const_ptr<var_named> d2(b.is_a<var_named>());
+	excl_ptr<const var_named> d2(b.is_a<const var_named>());
 	assert(!d2);
 	cout << "d2 doesn't exist." << endl;
 
-	assert(a.is_a<var_anon>() || b.is_a<var_anon>());
-	assert(a.is_a<var_named>() || b.is_a<var_named>());
+	assert(a.is_a<const var_anon>() || b.is_a<const var_anon>());
+	assert(a.is_a<const var_named>() || b.is_a<const var_named>());
 
 	cout << "end of scope, should be no memory errors!" << endl;
 }
