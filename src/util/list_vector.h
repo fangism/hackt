@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.2 2004/11/27 18:53:01 fang Exp $
+	$Id: list_vector.h,v 1.3 2004/11/28 23:44:27 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_H__
@@ -89,10 +89,11 @@ public:
 					iterator_base;
 	typedef	nested_iterator<const_list_iterator, const_vector_iterator>
 					const_iterator_base;
-	typedef	nested_iterator<reverse_list_iterator, reverse_vector_iterator>
+	typedef	nested_reverse_iterator<reverse_list_iterator, reverse_vector_iterator>
 					reverse_iterator_base;
-	typedef	nested_iterator<const_reverse_list_iterator, const_reverse_vector_iterator>
+	typedef	nested_reverse_iterator<const_reverse_list_iterator, const_reverse_vector_iterator>
 					const_reverse_iterator_base;
+
 #if 1
 	// for now, make them the same...
 	typedef	iterator_base			iterator;
@@ -154,6 +155,7 @@ private:
 	 */
 	vec_map_type			vec_map;
 
+#if 0
 	/**
 		Always points to the last valid chunk, 
 		which is one before the end-sentinel.  
@@ -164,40 +166,85 @@ private:
 		one after the head-sentinel.  
 	 */
 	list_iterator			vec_list_front;
-
-private:
-#if 0
-	/**
-		Guarantees that vec_list is never empty.
-	 */
-	inline
-	void
-	first_chunk(void) {
-		INVARIANT(vec_list.empty());
-//		vec_list.push_back(vector_type());
-//		vec_map[0] = &vec_list.back();
-		update_sentinels();
-	}
-
-	inline
-	void
-	first_chunk(const size_type c) {
-		INVARIANT(vec_list.empty());
-//		vec_list.push_back(vector_type(c));
-//		vec_map[0] = &vec_list.back();
-		update_sentinels();
-	}
-
-	inline
-	void
-	first_chunk(const size_type c, const value_type& v) {
-		INVARIANT(vec_list.empty());
-//		vec_list.push_back(vector_type(c, v));
-//		vec_map[0] = &vec_list.back();
-		update_sentinels();
-	}
 #endif
 
+private:
+
+	/**
+		\return modifiable iterator to the end sentinel chunk, 
+		which is always empty.  
+	 */
+	inline
+	list_iterator
+	end_sentinel_iter(void) { return --vec_list.end(); }
+
+	/**
+		\return modifiable iterator to the reverse-end sentinel chunk, 
+		which is always empty.  
+		Note: should point to the head sentinel chunk.  
+	 */
+	inline
+	reverse_list_iterator
+	rend_sentinel_iter(void) { return --vec_list.rend(); }
+
+	/**
+		\return read-only iterator to the end sentinel chunk, 
+		which is always empty.  
+	 */
+	inline
+	const_list_iterator
+	end_sentinel_iter(void) const { return --vec_list.end(); }
+
+	/**
+		\return modifiable iterator to the reverse-end sentinel chunk, 
+		which is always empty.  
+		Note: should point to the head sentinel chunk.  
+	 */
+	inline
+	const_reverse_list_iterator
+	rend_sentinel_iter(void) const { return --vec_list.rend(); }
+
+	inline
+	list_iterator
+	vec_list_front(void) { return ++vec_list.begin(); }
+
+	inline
+	const_list_iterator
+	vec_list_front(void) const { return ++vec_list.begin(); }
+
+	inline
+	list_iterator
+	vec_list_back(void) { return --this->end_sentinel_iter(); }
+
+	inline
+	const_list_iterator
+	vec_list_back(void) const { return --this->end_sentinel_iter(); }
+
+	/**
+		Reverse iterator pointing to the front of te chunk list.  
+	 */
+	inline
+	reverse_list_iterator
+	vec_list_rfront(void)
+	{ return --this->rend_sentinel_iter(); }
+
+	inline
+	const_reverse_list_iterator
+	vec_list_rfront(void) const
+	{ return --this->rend_sentinel_iter(); }
+
+	inline
+	reverse_list_iterator
+	vec_list_rback(void)
+	{ return ++vec_list.rbegin(); }
+
+	inline
+	const_reverse_list_iterator
+	vec_list_rback(void) const
+	{ return ++vec_list.rbegin(); }
+
+
+#if 0
 	/**
 		Adds a dummy one-past-end chunk in the chunk list
 		so that ++ on an iterator pointing to the last element
@@ -215,6 +262,7 @@ private:
 		vec_list_back = --this->end_sentinel_iter();
 		vec_list_front = ++vec_list.begin();
 	}
+#endif
 
 public:
 	/**
@@ -228,9 +276,13 @@ public:
 		Initializes with head and tail sentinels, empty vectors.
 	 */
 	list_vector() : current_chunk_size(DEFAULT_CHUNK_SIZE), 
-			vec_list(2), vec_map(), 
+			vec_list(2), vec_map()
+#if 0
+			, 
 			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin()) {
+			vec_list_front(++vec_list.begin())
+#endif
+			{
 	}
 
 	/**
@@ -239,9 +291,13 @@ public:
 		\param c number of elements, and new chunk size.
 	 */
 	list_vector(const size_type c) : current_chunk_size(c), 
-			vec_list(2), vec_map(), 
+			vec_list(2), vec_map()
+#if 0
+			, 
 			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin()) {
+			vec_list_front(++vec_list.begin())
+#endif
+			{
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(value_type());
@@ -256,9 +312,13 @@ public:
 	 */
 	list_vector(const size_type c, const value_type& v) :
 			current_chunk_size(c),
-			vec_list(2), vec_map(), 
+			vec_list(2), vec_map()
+#if 0
+			, 
 			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin()) {
+			vec_list_front(++vec_list.begin())
+#endif
+			{
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(v);
@@ -267,15 +327,19 @@ public:
 
 	// use default copy-constructor
 
-#if 0
 	/// construct from a sequence of values
 	template <class InIter>
 	list_vector(InIter first, InIter last,
-		const size_type s = DEFAULT_CHUNK_SIZE) :
-		current_chunk_size(c), vec_list(), vec_map() {
-		...
-	}
+			const size_type s = DEFAULT_CHUNK_SIZE) :
+			current_chunk_size(c), vec_list(), vec_map()
+#if 0
+			, 
+			vec_list_back(--this->end_sentinel_iter()), 
+			vec_list_front(++vec_list.begin())
 #endif
+			{
+		copy(first, last, back_inserter(*this));
+	}
 
 	/// default destructor
 	~list_vector() { }
@@ -318,20 +382,10 @@ public:
 #if 0
 	allocator_type
 	get_allocator(void) const;
+
+	// what about the other allocator, VecAlloc vs. ValAlloc?
 #endif
 
-private:
-	inline
-	list_iterator
-	end_sentinel_iter(void) {
-		return --vec_list.end();
-	}
-
-	inline
-	const_list_iterator
-	end_sentinel_iter(void) const {
-		return --vec_list.end();
-	}
 
 public:
 
@@ -340,7 +394,8 @@ public:
 	begin(void) {
 		// const list_iterator b = vec_list.begin();
 		// return iterator(b, b->begin());
-		return iterator(vec_list_front, vec_list_front->begin());
+		const list_iterator lf = vec_list_front();
+		return iterator(lf, lf->begin());
 	}
 
 	/**
@@ -354,7 +409,8 @@ public:
 	begin(void) const {
 		// const const_list_iterator b = vec_list.begin();
 		// return const_iterator(b, b->begin());
-		return iterator(vec_list_front, vec_list_front->begin());
+		const const_list_iterator lf = vec_list_front();
+		return const_iterator(lf, lf->begin());
 	}
 
 	/**
@@ -385,12 +441,12 @@ public:
 		// should be same as begin() wbecause end sentinel is empty
 	}
 
-#if 0
+#if 1
 	/// Modifiable iterator to last element
 	reverse_iterator
 	rbegin(void) {
 		// ++ because sentinel is last chunk
-		const reverse_list_iterator b = ++vec_list.rbegin();
+		const reverse_list_iterator b = vec_list_rback();
 		return reverse_iterator(b, b->rbegin());
 	}
 
@@ -398,7 +454,7 @@ public:
 	const_reverse_iterator
 	rbegin(void) const {
 		// ++ because sentinel is last chunk
-		const const_reverse_list_iterator b = ++vec_list.rbegin();
+		const const_reverse_list_iterator b = vec_list_rback();
 		return const_reverse_iterator(b, b->rbegin());
 	}
 
@@ -409,8 +465,9 @@ public:
 	 */
 	reverse_iterator
 	rend(void) {
-		const reverse_list_iterator b = --vec_list.rend();
+		const reverse_list_iterator b = this->rend_sentinel_iter();
 		return reverse_iterator(b, b->rend());
+		// should be same as b->rbegin()
 	}
 
 	/**
@@ -420,8 +477,9 @@ public:
 	 */
 	const_reverse_iterator
 	rend(void) const {
-		const const_reverse_list_iterator b = --vec_list.rend();
+		const const_reverse_list_iterator b = this->rend_sentinel_iter();
 		return const_reverse_iterator(b, b->rend());
+		// should be same as b->rbegin()
 	}
 #endif
 
@@ -502,7 +560,7 @@ public:
 	 */
 	bool
 	empty(void) const {
-		return (vec_list.size() == 2) || (vec_list_front->empty());
+		return (vec_list.size() == 2) || (vec_list_front()->empty());
 		// only includes head- and end-sentinels
 	}
 
@@ -593,7 +651,7 @@ public:
 	reference
 	front(void) {
 		INVARIANT(!this->empty());
-		return vec_list_front->front();
+		return vec_list_front()->front();
 	}
 
 	/**
@@ -604,7 +662,7 @@ public:
 	const_reference
 	front(void) const {
 		INVARIANT(!this->empty());
-		return vec_list_front->front();
+		return vec_list_front()->front();
 	}
 
 	/**
@@ -617,7 +675,7 @@ public:
 	reference
 	back(void) {
 		INVARIANT(!this->empty());
-		return vec_list_back->back();
+		return vec_list_back()->back();
 	}
 
 	/**
@@ -630,7 +688,7 @@ public:
 	const_reference
 	back(void) const {
 		INVARIANT(!this->empty());
-		return vec_list_back->back();
+		return vec_list_back()->back();
 	}
 
 	/**
@@ -643,7 +701,7 @@ public:
 	push_back(const value_type& v) {
 		// if last chunk points to head sentinel, 
 		// it will be detected as a full chunk.
-		vector_type* last_chunk = &*vec_list_back;
+		vector_type* last_chunk = &*vec_list_back();
 		const size_type cap = last_chunk->capacity();
 		if (UNLIKELY(last_chunk->size() == cap)) {
 			// then we need to reserve next chunk
@@ -657,13 +715,13 @@ public:
 //			vec_list_front = ++vec_list.begin();
 ****/
 			// aw hell, we do it anyways, it's infrequent...
-			this->update_sentinels();
-			last_chunk = &*vec_list_back;
+//			this->update_sentinels();
+			last_chunk = &*vec_list_back();
 			vec_map[this->size()] = last_chunk;
 			last_chunk->reserve(current_chunk_size);
 		} 
 		last_chunk->push_back(v);
-		INVARIANT(!vec_list_back->empty());	// last chunk
+		INVARIANT(!vec_list_back()->empty());	// last chunk
 		INVARIANT(vec_list.back().empty());	// end-sentinel
 	}
 
@@ -676,17 +734,17 @@ public:
 	void
 	pop_back(void) {
 		INVARIANT(!this->empty());
-		vector_type* last_chunk = &*vec_list_back;
+		vector_type* last_chunk = &*vec_list_back();
 #if 1
 		// eager implementation
 		INVARIANT(!last_chunk->empty());
 		last_chunk->pop_back();
 #endif
 		if (UNLIKELY(last_chunk->empty())) {
-			vec_list.erase(vec_list_back);
-			this->update_sentinels();
+			vec_list.erase(vec_list_back());
+//			this->update_sentinels();
 			// in case it was the last valid chunk
-			last_chunk = &*vec_list_back;
+			last_chunk = &*vec_list_back();
 			vec_map.erase(--vec_map.end());
 		}
 #if 0
@@ -752,8 +810,10 @@ public:
 		vec_map.swap(l.vec_map);
 		// yeah, I know can also swap without intermediate...
 		swap(this->chunk_size, l.chunk_size);
+#if 0
 		swap(vec_list_front, l.vec_list_front);
 		swap(vec_list_back, l.vec_list_back);
+#endif
 	}
 
 	/**
@@ -762,8 +822,8 @@ public:
 	void
 	clear(void) {
 		// really, only need to clean out everything between sentinels
-		vec_list.erase(vec_list_front, this->end_sentinel_iter());
-		this->update_sentinels();
+		vec_list.erase(vec_list_front(), this->end_sentinel_iter());
+//		this->update_sentinels();
 		vec_map.clear();
 	}
 

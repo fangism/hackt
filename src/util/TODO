@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.1 2004/11/26 23:24:15 fang Exp $
+	$Id: TODO,v 1.2 2004/11/28 23:44:27 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -44,6 +44,10 @@ Regarding pointer-classes:
 		useful for containers, replacement for some_ptr.  
 	unique_pointer: transferrable ownership, but not replicable, 
 		not even by never_ptr.  
+	(Migrating from old-style to new will be painful...
+		better get it over with AQAP.)
+
+	what about allocator_traits?
 
 -------------------------------------------------------------------------------
 
