@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.11.26.2 2005/02/25 06:12:20 fang Exp $
+	$Id: art++-parse.yy,v 1.11.26.3 2005/02/25 07:23:59 fang Exp $
  */
 
 %{
@@ -847,7 +847,7 @@ base_param_type
 base_chan_type
 	/* eliminate defaulting? (to int?), use <template> style? */
 	: chan_or_port data_type_ref_list_in_parens
-		{ $$ = chan_type_attach_data_types($1, $2); }
+		{ $$ = $1; $$->attach_data_types($2); }
 	;
 
 chan_or_port

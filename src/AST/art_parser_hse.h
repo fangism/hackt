@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.6.40.2 2005/02/24 06:17:06 fang Exp $
+	$Id: art_parser_hse.h,v 1.6.40.3 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -45,11 +45,6 @@ virtual	never_ptr<const object>
 };	// end class statement
 
 typedef	node_list<const statement,semicolon>	stmt_list;
-
-#define hse_stmt_list_wrap(b,l,e)					\
-	IS_A(HSE::stmt_list*, l->wrap(b,e))
-#define hse_stmt_list_append(l,d,n)					\
-	IS_A(HSE::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -249,11 +244,6 @@ using	det_sel_base::where;
 #endif
 };	// end class det_selection
 
-#define hse_det_selection_wrap(b,l,e)					\
-	IS_A(HSE::det_selection*, l->wrap(b,e))
-#define hse_det_selection_append(l,d,n)					\
-	IS_A(HSE::det_selection*, l->append(d,n))
-
 //=============================================================================
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, 
@@ -282,11 +272,6 @@ using	nondet_sel_base::where;
 	check_build(context& ) const;
 #endif
 };	// end class nondet_selection
-
-#define hse_nondet_selection_wrap(b,l,e)				\
-	IS_A(HSE::nondet_selection*, l->wrap(b,e))
-#define hse_nondet_selection_append(l,d,n)				\
-	IS_A(HSE::nondet_selection*, l->append(d,n))
 
 //=============================================================================
 /*** not available ***

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.8.40.2 2005/02/24 06:17:06 fang Exp $
+	$Id: art_parser_instance.h,v 1.8.40.3 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -33,11 +33,6 @@ using	expr_list::rightmost;
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class connection_argument_list
-
-#define connection_argument_list_wrap(b,l,e)				\
-	IS_A(connection_argument_list*, l->wrap(b,e))
-#define connection_argument_list_append(l,d,n)				\
-	IS_A(connection_argument_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -87,11 +82,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class alias_list
-
-#define alias_list_wrap(b,l,e)						\
-	IS_A(alias_list*, l->wrap(b,e))
-#define alias_list_append(l,d,n)					\
-        IS_A(alias_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -164,11 +154,6 @@ public:
 	~instance_id_list();
 
 };	// end class instance_id_list
-
-#define instance_id_list_wrap(b,l,e)					\
-	IS_A(instance_id_list*, l->wrap(b,e))
-#define instance_id_list_append(l,d,n)					\
-	IS_A(instance_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /// instance identifier with ranges
@@ -401,11 +386,6 @@ public:
 
 	~guarded_definition_body_list();
 };	// end class guarded_definition_body_list
-
-#define guarded_definition_body_list_wrap(b,l,e)			\
-	IS_A(guarded_definition_body_list*, l->wrap(b,e))
-#define guarded_definition_body_list_append(l,d,n)			\
-	IS_A(guarded_definition_body_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /// wrapper class for conditional instantiations

@@ -6,6 +6,10 @@
 	  art++-parse.yy: deleted uses of *_append *_wrap macros, 
 	  in preparation for substituting code with new node_list.
 
+	* -parser-01-03:
+	  Some clean-up of macros, added node_position class, 
+	  wrote new node_list class.  
+
 
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 

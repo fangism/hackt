@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.8.40.1 2005/02/24 06:17:06 fang Exp $
+	$Id: art_parser_formal.h,v 1.8.40.2 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -56,11 +56,6 @@ public:
 
 };	// end class data_param_id_list
 
-#define data_param_id_list_wrap(b,l,e)					\
-	IS_A(data_param_id_list*, l->wrap(b,e))
-#define data_param_id_list_append(l,d,n)				\
-	IS_A(data_param_id_list*, l->append(d,n))
-
 //-----------------------------------------------------------------------------
 /**
 	Data parameter port declarations, grouped together by type.  
@@ -110,11 +105,6 @@ public:
 
 };	// end class data_param_decl_list
 
-#define data_param_decl_list_wrap(b,l,e)				\
-	IS_A(data_param_decl_list*, l->wrap(b,e))
-#define data_param_decl_list_append(l,d,n)				\
-	IS_A(data_param_decl_list*, l->append(d,n))
-
 //=============================================================================
 /**
 	Single port formal identifier, 
@@ -155,11 +145,6 @@ public:
 	~port_formal_id_list();
 
 };	// end class port_formal_id_list
-
-#define port_formal_id_list_wrap(b,l,e)					\
-	IS_A(port_formal_id_list*, l->wrap(b,e))
-#define port_formal_id_list_append(l,d,n)				\
-	IS_A(port_formal_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**
@@ -208,11 +193,6 @@ public:
 	~port_formal_decl_list();
 };	// end class port_formal_decl_list
 
-#define port_formal_decl_list_wrap(b,l,e)				\
-	IS_A(port_formal_decl_list*, l->wrap(b,e))
-#define port_formal_decl_list_append(l,d,n)				\
-	IS_A(port_formal_decl_list*, l->append(d,n))
-
 //=============================================================================
 /**
 	Single template formal identifier,
@@ -259,11 +239,6 @@ public:
 
 	~template_formal_id_list();
 };	// end class template_formal_id_list
-
-#define template_formal_id_list_wrap(b,l,e)				\
-	IS_A(template_formal_id_list*, l->wrap(b,e))
-#define template_formal_id_list_append(l,d,n)				\
-	IS_A(template_formal_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**
@@ -313,11 +288,6 @@ public:
 
 	~template_formal_decl_list();
 };	// end class template_formal_decl_list
-
-#define template_formal_decl_list_wrap(b,l,e)				\
-	IS_A(template_formal_decl_list*, l->wrap(b,e))
-#define template_formal_decl_list_append(l,d,n)				\
-	IS_A(template_formal_decl_list*, l->append(d,n))
 
 //=============================================================================
 

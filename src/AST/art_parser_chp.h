@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.5.40.2 2005/02/24 06:17:05 fang Exp $
+	$Id: art_parser_chp.h,v 1.5.40.3 2005/02/25 07:23:54 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -46,11 +46,6 @@ virtual	never_ptr<const object>
 };
 
 typedef	node_list<const statement,semicolon>	stmt_list;
-
-#define chp_stmt_list_wrap(b,l,e)					\
-	IS_A(CHP::stmt_list*, l->wrap(b,e))
-#define chp_stmt_list_append(l,d,n)					\
-	IS_A(CHP::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -279,11 +274,6 @@ using	comm_list_base::where;
 #endif
 };
 
-#define chp_comm_list_wrap(b,l,e)					\
-	IS_A(CHP::comm_list*, l->wrap(b,e))
-#define chp_comm_list_append(l,d,n)					\
-	IS_A(CHP::comm_list*, l->append(d,n))
-
 
 //-----------------------------------------------------------------------------
 /// CHP send action
@@ -371,11 +361,6 @@ using	det_sel_base::where;
 #endif
 };
 
-#define chp_det_selection_wrap(b,l,e)					\
-	IS_A(CHP::det_selection*, l->wrap(b,e))
-#define chp_det_selection_append(l,d,n)					\
-	IS_A(CHP::det_selection*, l->append(d,n))
-
 //=============================================================================
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, 
@@ -405,11 +390,6 @@ using	nondet_sel_base::where;
 #endif
 };
 
-#define chp_nondet_selection_wrap(b,l,e)				\
-	IS_A(CHP::nondet_selection*, l->wrap(b,e))
-#define chp_nondet_selection_append(l,d,n)				\
-	IS_A(CHP::nondet_selection*, l->append(d,n))
-
 //=============================================================================
 /// container for probablistic selection statement
 class prob_selection : public selection, 
@@ -438,11 +418,6 @@ using	prob_sel_base::where;
 	check_build(context& ) const;
 #endif
 };
-
-#define chp_prob_selection_wrap(b,l,e)					\
-	IS_A(CHP::prob_selection*, l->wrap(b,e))
-#define chp_prob_selection_append(l,d,n)				\
-	IS_A(CHP::prob_selection*, l->append(d,n))
 
 //=============================================================================
 /// CHP loop contains a list of statements

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.6.40.2 2005/02/24 06:17:07 fang Exp $
+	$Id: art_parser_prs.h,v 1.6.40.3 2005/02/25 07:23:56 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -40,10 +40,6 @@ virtual	never_ptr<const object>
 };	// end class body_item
 
 typedef node_list<const body_item>		rule_list;
-#define prs_rule_list_wrap(b,l,e)					\
-	IS_A(PRS::rule_list*, l->wrap(b,e))
-#define prs_rule_list_append(l,d,n)					\
-	IS_A(PRS::rule_list*, l->append(d,n))
 
 //=============================================================================
 /**

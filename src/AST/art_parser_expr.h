@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.8.40.1 2005/02/22 08:15:19 fang Exp $
+	$Id: art_parser_expr.h,v 1.8.40.2 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -330,11 +330,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class array_concatenation
-
-#define array_concatenation_wrap(b,l,e)					\
-	IS_A(array_concatenation*, l->wrap(b,e))
-#define array_concatenation_append(l,d,n)				\
-	IS_A(array_concatenation*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**

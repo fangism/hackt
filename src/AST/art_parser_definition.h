@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.8.40.2 2005/02/24 06:17:05 fang Exp $
+	$Id: art_parser_definition.h,v 1.8.40.3 2005/02/25 07:23:55 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -306,11 +306,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end enum_member_list
-
-#define enum_member_list_wrap(b,l,e)					\
-	IS_A(enum_member_list*, l->wrap(b,e))
-#define enum_member_list_append(l,d,n)					\
-	IS_A(enum_member_list*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42.10.1 2005/02/22 08:15:13 fang Exp $
+#	$Id: Makefile.am,v 1.42.10.2 2005/02/25 07:23:53 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -89,6 +89,7 @@ libbogus_la_SOURCES = \
 
 AST_CC_FILES = \
 	AST/art_parser_base.cc \
+	AST/art_parser_node_position.cc \
 	AST/art_parser_expr.cc \
 	AST/art_parser_token.cc \
 	AST/art_parser_definition.cc \
@@ -102,6 +103,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_fwd.h \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
+	AST/art_parser_node_list.tcc \
 	AST/art_parser_definition_item.h \
 	AST/art_parser_expr_base.h \
 	AST/art_parser_expr_list.h \
