@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.1 2005/01/29 02:52:13 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.1.2.1 2005/02/02 03:40:21 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -35,6 +35,9 @@
 	Include "persistent_object_manager.tcc" before calling this macro.
 	Make sure to instantiate these in the util namespace.  
  */
+#define EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(T)
+
+#if 0
 #define EXPLICIT_PERSISTENT_IO_METHODS_INSTANTIATION(T)			\
 template excl_ptr<T>							\
 persistent_object_manager::load_object_from_file<T>(const string&);	\
@@ -44,7 +47,7 @@ template excl_ptr<T>							\
 persistent_object_manager::self_test_no_file<T>(const T& m);		\
 template excl_ptr<T>							\
 persistent_object_manager::get_root<T>(void);
-
+#endif
 
 
 namespace util {
@@ -315,6 +318,7 @@ persistent_object_manager::write_pointer_map(ostream& f, const M& m) const {
 // specialized list methods?
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	The first non-NULL object is special: it is the root module.
 	Returning an excl_ptr guarantees that memory will
@@ -332,8 +336,10 @@ persistent_object_manager::get_root(void) {
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
         Loads hierarchical object collection from file.
 	\returns a dynamically cast owned pointer to the root object.
@@ -354,8 +360,10 @@ persistent_object_manager::load_object_from_file(const string& s) {
 	pom.load_objects();
 	return pom.get_root<T>();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Write the reconstruction table, and loads it back, without
 	going through an intermediate file.
@@ -397,6 +405,7 @@ persistent_object_manager::self_test(const string& s, const T& m) {
 	save_object_to_file(s, m);
 	return load_object_from_file<T>(s);
 }
+#endif
 
 //=============================================================================
 // class persistent_traits method definitions (default)

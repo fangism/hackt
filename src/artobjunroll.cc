@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.9 2005/01/28 19:58:31 fang Exp $
+	$Id: artobjunroll.cc,v 1.9.6.1 2005/02/02 03:40:19 fang Exp $
  */
 
 #include <iostream>
@@ -49,8 +49,8 @@ main(int argc, char* argv[]) {
 
 	excl_ptr<entity::module> the_module;
 try {
-	the_module = persistent_object_manager::load_object_from_file
-			<entity::module>(ifname);
+	the_module = persistent_object_manager::load_object_from_file(ifname)
+			.is_a_xfer<entity::module>();
 }
 catch (...) {
 	// possibly empty file error from

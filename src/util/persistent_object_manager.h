@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.h,v 1.12.6.1 2005/02/02 03:40:20 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -376,21 +376,21 @@ public:
 	void
 	save_object_to_file(const string& s, const persistent& m);
 
-	template <class T>
+//	template <class T>
 	static
-	excl_ptr<T>
+	excl_ptr<persistent>
 	load_object_from_file(const string& s);
 
 // self-test functions
-	template <class T>
+//	template <class T>
 	static
-	excl_ptr<T>
-	self_test(const string& s, const T& m);
+	excl_ptr<persistent>
+	self_test(const string& s, const persistent& m);
 
-	template <class T>
+//	template <class T>
 	static
-	excl_ptr<T>
-	self_test_no_file(const T& m);
+	excl_ptr<persistent>
+	self_test_no_file(const persistent& m);
 
 private:
 	void
@@ -420,8 +420,8 @@ private:
 	void
 	reconstruct(void);
 
-	template <class T>
-	excl_ptr<T>
+//	template <class T>
+	excl_ptr<persistent>
 	get_root(void);
 
 	void

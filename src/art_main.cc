@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.9.2.1 2005/01/29 02:52:10 fang Exp $
+	$Id: art_main.cc,v 1.9.2.1.2.1 2005/02/02 03:40:19 fang Exp $
  */
 
 #include <iostream>
@@ -74,8 +74,10 @@ try {
 	persistent_object_manager::dump_reconstruction_table = true;
 #endif
 #if 1
-	const excl_ptr<entity::module> module_copy =
-		persistent_object_manager::self_test_no_file(the_module);
+	const excl_ptr<entity::module>
+		module_copy =
+		persistent_object_manager::self_test_no_file(the_module)
+			.is_a_xfer<entity::module>();
 	NEVER_NULL(module_copy);
 #endif
 //	the_module.dump(cerr);

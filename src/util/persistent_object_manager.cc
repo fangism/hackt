@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.14 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.14.6.1 2005/02/02 03:40:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -695,6 +695,27 @@ persistent_object_manager::load_objects(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Loads hierarchical object collection from file.
+	\returns a dynamically cast owned pointer to the root object.
+ */
+excl_ptr<persistent>
+persistent_object_manager::load_object_from_file(const string& s) {
+	ifstream f(s.c_str(), ios_base::binary);
+	persistent_object_manager pom;
+	// don't initialize_null, will be loaded in from table
+	pom.load_header(f);
+	pom.finish_load(f);
+	f.close();                              // done with file
+	pom.reconstruct();                      // allocate-only pass
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;    // debugging only
+	// Oh no, partially initialized objects!
+	pom.load_objects();
+	return pom.get_root();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Saves entire hierarchical object collection to file.  
  */
 void
@@ -729,6 +750,66 @@ persistent_object_manager::reset_for_loading(void) {
 		// shouldn't need to manipulate stream positions
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write the reconstruction table, and loads it back, without
+	going through an intermediate file.
+	Should essentially make a deep copy of the hierarchical object
+	rooted at the global namespace.
+ */
+excl_ptr<persistent>
+persistent_object_manager::self_test_no_file(const persistent& m) {
+	STACKTRACE("pom::self_test_no_file()");
+	persistent_object_manager pom;
+	pom.initialize_null();			// reserved 0th entry
+	m.collect_transient_info(pom);		// recursive visitor
+	pom.collect_objects();			// buffers output in segments
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// for debugging
+
+	// need to set start of objects? no
+	// pretend we wrote it out and read it back in...
+	pom.reset_for_loading();
+	pom.reconstruct();			// allocate-only pass
+
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// debugging only
+
+	pom.load_objects();
+	// must acquire root object in some owned pointer!
+	return pom.get_root();	// only this is templated
+	// will get de-allocated after return statement is evaluated
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out and reads back in, through an intermediate file.
+ */
+excl_ptr<persistent>
+persistent_object_manager::self_test(const string& s, const persistent& m) {
+	save_object_to_file(s, m);
+	return load_object_from_file(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The first non-NULL object is special: it is the root module.
+	Returning an excl_ptr guarantees that memory will
+	be managed properly.
+	When the excl_ptr hits the end of a scope, unless ownership
+	has been transferred, the memory should be recursively reclaimed.
+	Thus, this is not a const method.
+ */
+excl_ptr<persistent>
+persistent_object_manager::get_root(void) {
+	assert(root);           // necessary?
+	// the template keyword is required for gcc-3.3.x, but not for 3.4.x
+	return root.template is_a_xfer<persistent>();
+	// this relinquishes ownership and responsibility for deleting
+	// to whomever consumes the returned excl_ptr
+}
+
 
 //=============================================================================
 }	// end namespace util

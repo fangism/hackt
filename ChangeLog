@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-02-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00:
+	  Un-templated some non-essential method functions in
+	  persistent_object_manager.tcc, relocated to .cc.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00:
+	  This branch created to introduce complete redo of 
+	  persistent object management.  
+	  Need to distinguish between heap/non-heap objects.  
+	  Need to factor out object alignment and visit-once code. 
+
+
 2005-01-30	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-02:
