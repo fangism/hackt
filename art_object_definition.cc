@@ -26,14 +26,11 @@ namespace entity {
 
 /**
 	Definition basic constructor.  
-	\param p the parent scope, a namespace.  
  */
 inline
-definition_base::definition_base(const string& n,
-		never_const_ptr<name_space> p) :
+definition_base::definition_base() :
 		object(), 
-		key(n), 
-		parent(p), 
+//		key(n), 
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {
@@ -46,10 +43,18 @@ definition_base::~definition_base() {
 
 /**
 	Only dumps the basic template information of the definition.  
+	Default behavior may be overridden by subclasses.  
  */
 ostream&
 definition_base::dump(ostream& o) const {
+	const string key = get_key();
 	what(o) << " " << key;
+	dump_template_formals(o);
+	return o;
+}
+
+ostream&
+definition_base::dump_template_formals(ostream& o) const {
 	if (!template_formals_list.empty()) {
 		o << "<" << endl;
 		template_formals_list_type::const_iterator i =
@@ -152,11 +157,13 @@ definition_base::equivalent_template_formals(
 
 string
 definition_base::get_name(void) const {
-	return key;
+	return get_key();
 }
 
 string
 definition_base::get_qualified_name(void) const {
+	const string key = get_key();
+	never_const_ptr<scopespace> parent(get_parent());
 	if (parent)
 		return parent->get_qualified_name() +scope +key;
 	else return key;
@@ -329,25 +336,55 @@ definition_base::add_port_formal(excl_ptr<instantiation_base> f) {
 }
 
 //=============================================================================
+// class typedef_base method definitions
+
+typedef_base::typedef_base() : definition_base(), scopespace() {
+}
+
+typedef_base::~typedef_base() {
+}
+
+string
+typedef_base::get_qualified_name(void) const {
+	return definition_base::get_qualified_name();
+}
+
+/**
+	Description dump works for all alias types.  
+ */
+ostream&
+typedef_base::dump(ostream& o) const {
+	what(o) << ": " << get_key();
+	dump_template_formals(o) << " = ";
+	get_base_type_ref()->dump(o);
+	return o;
+}
+
+//=============================================================================
 // class datatype_definition_base method definitions
 
 // make sure that this constructor is never invoked outside this file
+#if 0
 inline
-datatype_definition_base::datatype_definition_base(
-		const string& n, 
-		never_const_ptr<name_space> p) :
-		definition_base(n, p) {
+datatype_definition_base::datatype_definition_base(const string& n) :
+		definition_base(n) {
 }
-
+#else
 inline
-datatype_definition_base::datatype_definition_base(
-		never_const_ptr<name_space> p, 
-		const string& n) :
-		definition_base(n, p) {
+datatype_definition_base::datatype_definition_base() :
+		definition_base() {
 }
+#endif
 
 inline
 datatype_definition_base::~datatype_definition_base() {
+}
+
+excl_ptr<definition_base>
+datatype_definition_base::make_typedef(never_const_ptr<scopespace> s, 
+		const token_identifier& id) const {
+	return excl_ptr<definition_base>(
+		new datatype_definition_alias(id, s));
 }
 
 count_const_ptr<fundamental_type_reference>
@@ -369,14 +406,26 @@ datatype_definition_base::make_fundamental_type_reference(
 // class channel_definition_base method definitions
 
 // make sure that this constructor is never invoked outside this file
+#if 0
 inline
-channel_definition_base::channel_definition_base(
-		never_const_ptr<name_space> o, 
-		const string& n) :
-		definition_base(n, o) {
+channel_definition_base::channel_definition_base(const string& n) :
+		definition_base(n) {
 }
+#else
+inline
+channel_definition_base::channel_definition_base() :
+		definition_base() {
+}
+#endif
 
 channel_definition_base::~channel_definition_base() {
+}
+
+excl_ptr<definition_base>
+channel_definition_base::make_typedef(never_const_ptr<scopespace> s, 
+		const token_identifier& id) const {
+	return excl_ptr<definition_base>(
+		new channel_definition_alias(id, s));
 }
 
 count_const_ptr<fundamental_type_reference>
@@ -399,8 +448,15 @@ channel_definition_base::make_fundamental_type_reference(
 
 user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
 		const string& name) :
-		channel_definition_base(o, name), 
-		scopespace() {
+		definition_base(), 
+#if 0
+		channel_definition_base(name), 
+#else
+		channel_definition_base(), 
+#endif
+		scopespace(),
+		key(name), 
+		parent(o) {
 	// FINISH ME
 }
 
@@ -425,7 +481,9 @@ user_def_chan::get_key(void) const {
 
 string
 user_def_chan::get_qualified_name(void) const {
-	return parent->get_qualified_name() + "::" + key;
+	if (parent)
+		return parent->get_qualified_name() + scope + key;
+	else return string(scope) + key;
 }
 
 never_const_ptr<scopespace>
@@ -439,6 +497,49 @@ user_def_chan::lookup_object_here(const string& id) const {
 }
 
 //=============================================================================
+// class channel_definition_alias method definitions
+
+channel_definition_alias::channel_definition_alias(
+		const string& n, never_const_ptr<scopespace> p) :
+		definition_base(), 
+		channel_definition_base(), 
+		typedef_base(), 
+		key(n), parent(p), base(NULL) {
+}
+
+channel_definition_alias::~channel_definition_alias() {
+}
+
+ostream&
+channel_definition_alias::what(ostream& o) const {
+	return o << "channel-definition-alias";
+}
+
+const string&
+channel_definition_alias::get_key(void) const {
+	return key;
+}
+
+never_const_ptr<scopespace>
+channel_definition_alias::get_parent(void) const {
+	return parent;
+}
+
+never_const_ptr<fundamental_type_reference>
+channel_definition_alias::get_base_type_ref(void) const {
+	return base;
+}
+
+bool
+channel_definition_alias::assign_typedef(
+		excl_const_ptr<fundamental_type_reference> f) {
+	assert(f);
+	base = f.is_a_xfer<channel_type_reference>();
+	assert(base);
+	return true;
+}
+
+//=============================================================================
 // class built_in_datatype_def method definitions
 
 /**
@@ -447,7 +548,10 @@ user_def_chan::lookup_object_here(const string& id) const {
 built_in_datatype_def::built_in_datatype_def(
 		never_const_ptr<name_space> o, 
 		const string& n) :
-		datatype_definition_base(o, n) {
+		definition_base(), 
+		datatype_definition_base(),
+		key(n), 
+		parent(o) {
 	mark_defined();
 }
 
@@ -459,7 +563,10 @@ built_in_datatype_def::built_in_datatype_def(
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		excl_ptr<param_instantiation> p) :
-		datatype_definition_base(o, n) {
+		definition_base(), 
+		datatype_definition_base(), 
+		key(n), 
+		parent(o) {
 	add_template_formal(p.as_a<instantiation_base>());
 	mark_defined();
 }
@@ -469,6 +576,16 @@ built_in_datatype_def::~built_in_datatype_def() { }
 ostream&
 built_in_datatype_def::what(ostream& o) const {
 	return o << key;
+}
+
+const string&
+built_in_datatype_def::get_key(void) const {
+	return key;
+}
+
+never_const_ptr<scopespace>
+built_in_datatype_def::get_parent(void) const {
+	return parent;
 }
 
 count_const_ptr<fundamental_type_reference>
@@ -525,7 +642,9 @@ built_in_datatype_def::add_template_formal(excl_ptr<instantiation_base> f) {
 built_in_param_def::built_in_param_def(
 		never_const_ptr<name_space> p,
 		const string& n) :
-		definition_base(n, p) {
+		definition_base(),
+		key(n), 
+		parent(p) {
 	mark_defined();
 }
 
@@ -535,6 +654,27 @@ built_in_param_def::~built_in_param_def() {
 ostream&
 built_in_param_def::what(ostream& o) const {
 	return o << key;
+}
+
+const string&
+built_in_param_def::get_key(void) const {
+	return key;
+}
+
+never_const_ptr<scopespace>
+built_in_param_def::get_parent(void) const {
+	return parent;
+}
+
+/**
+	Cannot alias built-in parameter types!
+	Why? Because I said so.  
+ */
+excl_ptr<definition_base>
+built_in_param_def::make_typedef(never_const_ptr<scopespace> s, 
+		const token_identifier& id) const {
+	assert(0);
+	return excl_ptr<definition_base>(NULL);
 }
 
 /**
@@ -578,8 +718,11 @@ enum_member::dump(ostream& o) const {
 
 enum_datatype_def::enum_datatype_def(never_const_ptr<name_space> o, 
 		const string& n) : 
-		datatype_definition_base(o, n), 
-		scopespace() {
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(), 
+		key(n), 
+		parent(o) {
 }
 
 enum_datatype_def::~enum_datatype_def() {
@@ -603,7 +746,9 @@ enum_datatype_def::get_key(void) const {
 
 string
 enum_datatype_def::get_qualified_name(void) const {
-	return parent->get_qualified_name() + "::" + key;
+	if (parent)
+		return parent->get_qualified_name() + scope + key;
+	else	return string(scope) + key;
 }
 
 never_const_ptr<scopespace>
@@ -666,8 +811,11 @@ enum_datatype_def::add_member(const token_identifier& em) {
 user_def_datatype::user_def_datatype(
 		never_const_ptr<name_space> o,
 		const string& name) :
-		datatype_definition_base(o, name), 
-		scopespace() {
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(),
+		key(name), 
+		parent(o) {
 }
 
 user_def_datatype::~user_def_datatype() {
@@ -691,7 +839,9 @@ user_def_datatype::get_key(void) const {
 
 string
 user_def_datatype::get_qualified_name(void) const {
-	return parent->get_qualified_name() + "::" + key;
+	if (parent)
+		return parent->get_qualified_name() + scope + key;
+	else return string(scope) + key;
 }
 
 never_const_ptr<scopespace>
@@ -705,14 +855,92 @@ user_def_datatype::lookup_object_here(const string& id) const {
 }
 
 //=============================================================================
-// class proces_definition_base method definitions
+// class datatype_definition_alias method definitions
 
-process_definition_base::process_definition_base(const string& n, 
-		never_const_ptr<name_space> p) :
-		definition_base(n, p) {
+datatype_definition_alias::datatype_definition_alias(
+		const string& n, never_const_ptr<scopespace> p) :
+		definition_base(), 
+		datatype_definition_base(), 
+		typedef_base(), 
+		key(n), 
+		parent(p) {
 }
 
+datatype_definition_alias::~datatype_definition_alias() {
+}
+
+ostream&
+datatype_definition_alias::what(ostream& o) const {
+	return o << "datatype-definition-alias";
+}
+
+const string&
+datatype_definition_alias::get_key(void) const {
+	return key;
+}
+
+never_const_ptr<scopespace>
+datatype_definition_alias::get_parent(void) const {
+	return parent;
+}
+
+never_const_ptr<fundamental_type_reference>
+datatype_definition_alias::get_base_type_ref(void) const {
+	return base;
+}
+
+bool
+datatype_definition_alias::assign_typedef(
+		excl_const_ptr<fundamental_type_reference> f) {
+	assert(f);
+	base = f.is_a_xfer<data_type_reference>();
+	assert(base);
+	return true;
+}
+
+count_const_ptr<fundamental_type_reference>
+datatype_definition_alias::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new data_type_reference(
+				never_const_ptr<datatype_definition_alias>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make data_type_alias type reference "
+			"because template argument types do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
+}
+
+bool
+datatype_definition_alias::require_signature_match(
+		never_const_ptr<definition_base> d) const {
+	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
+	return false;
+}
+
+//=============================================================================
+// class process_definition_base method definitions
+
+#if 0
+process_definition_base::process_definition_base(const string& n) :
+		definition_base(n) {
+}
+#else
+process_definition_base::process_definition_base() :
+		definition_base() {
+}
+#endif
+
 process_definition_base::~process_definition_base() { }
+
+excl_ptr<definition_base>
+process_definition_base::make_typedef(never_const_ptr<scopespace> s, 
+		const token_identifier& id) const {
+	return excl_ptr<definition_base>(
+		new process_definition_alias(id, s));
+}
 
 //=============================================================================
 // class process_definition method definitions
@@ -723,11 +951,13 @@ process_definition_base::~process_definition_base() { }
 process_definition::process_definition(
 		never_const_ptr<name_space> o, 
 		const string& s) :
-		process_definition_base(s, o),
+		definition_base(), 
+		process_definition_base(),
 		scopespace(),
+		key(s), 
+		parent(o), 
 		port_formals_list(), 
-		port_formals_map()
-		{
+		port_formals_map() {
 	// fill me in...
 }
 
@@ -780,7 +1010,7 @@ process_definition::get_key(void) const {
 
 string
 process_definition::get_qualified_name(void) const {
-	return parent->get_qualified_name() + "::" + key;
+	return parent->get_qualified_name() + scope + key;
 }
 
 never_const_ptr<scopespace>
@@ -916,10 +1146,59 @@ process_definition::equivalent_port_formals(
 
 process_definition_alias::process_definition_alias(const string& n, 
 		never_const_ptr<name_space> p) :
-		process_definition_base(n, p) {
+		definition_base(), 
+		process_definition_base(), 
+		typedef_base(), 
+		key(n), 
+		parent(p), base(NULL) {
 }
 
 process_definition_alias::~process_definition_alias() { }
+
+ostream&
+process_definition_alias::what(ostream& o) const {
+	return o << "process-definition-alias";
+}
+
+const string&
+process_definition_alias::get_key(void) const {
+	return key;
+}
+
+never_const_ptr<scopespace>
+process_definition_alias::get_parent(void) const {
+	return parent;
+}
+
+never_const_ptr<fundamental_type_reference>
+process_definition_alias::get_base_type_ref(void) const {
+	return base;
+}
+
+bool
+process_definition_alias::assign_typedef(
+		excl_const_ptr<fundamental_type_reference> f) {
+	assert(f);
+	base = f.is_a_xfer<process_type_reference>();
+	assert(base);
+	return true;
+}
+
+count_const_ptr<fundamental_type_reference>
+process_definition_alias::make_fundamental_type_reference(
+		excl_ptr<param_expr_list> ta) const {
+	if (certify_template_arguments(ta)) {
+		return count_const_ptr<fundamental_type_reference>(
+			new process_type_reference(
+				never_const_ptr<process_definition_alias>(this), 
+				excl_const_ptr<param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make process_definition_alias "
+			"type reference because template argument types "
+			"do not match." << endl;
+		return count_const_ptr<fundamental_type_reference>(NULL);
+	}
+}
 
 //=============================================================================
 }	// end namespace entity

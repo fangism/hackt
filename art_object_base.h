@@ -592,8 +592,8 @@ public:
 					template_formals_list_type;
 
 protected:
-	const string			key;
-	const never_const_ptr<name_space>	parent;
+//	const string			key;
+//	const never_const_ptr<name_space>	parent;
 
 protected:
 	/** subset of used_id_map, must be coherent with list */
@@ -608,11 +608,17 @@ protected:
 	 */
 	bool				defined;
 public:
-	definition_base(const string& n, never_const_ptr<name_space> p);
+//	definition_base(const string& n, never_const_ptr<name_space> p);
+//	definition_base(const string& n);
+	definition_base();
 virtual	~definition_base();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;	// temporary
+	ostream& dump_template_formals(ostream& o) const;
+
+virtual	const string& get_key(void) const = 0;
+virtual	never_const_ptr<scopespace> get_parent(void) const = 0;
 
 	bool is_defined(void) const { return defined; }
 	void mark_defined(void) { assert(!defined); defined = true; }
@@ -660,6 +666,14 @@ virtual count_const_ptr<fundamental_type_reference>
 				make_default_template_arguments());
 		}
 // why virtual? special cases for built-in types?
+
+/**
+	Create an empty, unresolved typedef, based on the 
+	invoker's type.  
+ */
+virtual	excl_ptr<definition_base>
+		make_typedef(never_const_ptr<scopespace> s, 
+			const token_identifier& id) const = 0;
 
 // need not be virtual?
 virtual	string get_name(void) const;

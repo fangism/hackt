@@ -408,6 +408,15 @@ context::set_current_prototype(excl_ptr<definition_base> d) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+void
+context::reset_current_prototype(void) {
+	assert(current_prototype);
+	current_prototype = excl_ptr<definition_base>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Using the current definition, and current set of template arguments, 
 	check whether template arguments are consistent with definition.  

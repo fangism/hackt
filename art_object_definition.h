@@ -66,16 +66,45 @@ namespace entity {
 
 //=============================================================================
 /**
+	Abstract base class interface for typedef alias definitions.  
+	All typedefs are templateable, and thus have their own little
+	scope space for template parameters.  
+	Awkward?
+ */
+class typedef_base : virtual public definition_base, 
+		public scopespace {
+protected:
+	// no new members
+public:
+	typedef_base();
+virtual	~typedef_base();
+
+virtual	const string& get_key(void) const = 0;
+	string get_qualified_name(void) const;
+virtual	ostream& what(ostream& o) const = 0;
+	ostream& dump(ostream& o) const;
+virtual never_const_ptr<fundamental_type_reference>
+		get_base_type_ref(void) const = 0;
+virtual	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f) = 0;
+
+};	// end class typedef_base
+
+//=============================================================================
+/**
 	Process definition base class.  From this, there will arise: true
 	process definitions, and typedef process definitions. 
  */
-class process_definition_base : public definition_base {
+class process_definition_base : virtual public definition_base {
 protected:
 	// no new members?
 public:
-	process_definition_base(const string& n,
-		never_const_ptr<name_space> p);
+//	process_definition_base(const string& n);
+	process_definition_base();
 virtual	~process_definition_base();
+
+	excl_ptr<definition_base>
+		make_typedef(never_const_ptr<scopespace> s, 
+			const token_identifier& id) const;
 
 // inherited pure virtuals are still pure virtuals
 };	// end class process_definition_base
@@ -99,10 +128,9 @@ public:
 		either base-types or user-defined types.  
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
-	typedef hashlist<string, never_const_ptr<instantiation_base> >
-							port_formals_set;
+		Implemented as a hash_qmap and list.  
+		Implemented as a hash_qmap and list.  
 	**/
-
 	typedef list<never_const_ptr<instantiation_base> >
 						port_formals_list_type;
 	typedef hash_qmap<string, never_const_ptr<instantiation_base> >
@@ -111,8 +139,9 @@ public:
 	// List of language bodies, separate or merged?
 
 protected:
-//	const string		key;		// inherited
+	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
+	const never_const_ptr<name_space>	parent;
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
 	// list language bodies
@@ -152,27 +181,44 @@ never_const_ptr<instantiation_base>
 	process type. 
 	May be templated for partial type specifications.  
  */
-class process_definition_alias : public process_definition_base {
+class process_definition_alias : public process_definition_base, 
+		public typedef_base {
 protected:
+	const string					key;
+	/** parent can be namespace or definition */
+	never_const_ptr<scopespace>			parent;
 	excl_const_ptr<process_type_reference>		base;
 public:
 	process_definition_alias(const string& n, 
 		never_const_ptr<name_space> p);
 	~process_definition_alias();
+
+	ostream& what(ostream& o) const;
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+	never_const_ptr<fundamental_type_reference>
+		get_base_type_ref(void) const;
+
+	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
 };	// end class process_definition_alias
 
 //=============================================================================
 /**
 	Base class interface for data type definitions.  
  */
-class datatype_definition_base : public definition_base {
+class datatype_definition_base : virtual public definition_base {
 protected:
 public:
-	datatype_definition_base(const string& n, 
-		never_const_ptr<name_space> p);
-	datatype_definition_base(never_const_ptr<name_space> p, 
-		const string& n);
+	datatype_definition_base();
+//	datatype_definition_base(const string& n);
 virtual	~datatype_definition_base();
+
+	excl_ptr<definition_base>
+		make_typedef(never_const_ptr<scopespace> s, 
+			const token_identifier& id) const;
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	count_const_ptr<fundamental_type_reference>
@@ -189,6 +235,9 @@ virtual	bool require_signature_match(
 	Final class.  
  */
 class built_in_datatype_def : public datatype_definition_base {
+protected:
+	const string					key;
+	const never_const_ptr<name_space>		parent;
 public:
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n);
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n, 
@@ -196,6 +245,8 @@ public:
 	~built_in_datatype_def();
 
 	ostream& what(ostream& o) const;
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
 
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
@@ -233,7 +284,8 @@ public:
  */
 class enum_datatype_def : public datatype_definition_base, public scopespace {
 protected:
-	// no new members
+	const string					key;
+	const never_const_ptr<name_space>		parent;
 	// don't we need to track ordering of identifiers added?  later...
 public:
 	enum_datatype_def(never_const_ptr<name_space> o, const string& n);
@@ -270,13 +322,22 @@ public:
  */
 class built_in_param_def : public definition_base {
 protected:
-//	string			key;		// inherited
+	string			key;		// inherited
+	const never_const_ptr<name_space>	parent;
 public:
 	built_in_param_def(never_const_ptr<name_space> p, const string& n);
 	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
+
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+
+	/** can't alias built-in param types, would be confusing */
+	excl_ptr<definition_base>
+		make_typedef(never_const_ptr<scopespace> s, 
+			const token_identifier& id) const;
 
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
@@ -290,7 +351,8 @@ public:
  */
 class user_def_datatype : public datatype_definition_base, public scopespace {
 protected:
-	// list of other type definitions
+	const string				key;
+	const never_const_ptr<name_space>	parent;
 public:
 	user_def_datatype(never_const_ptr<name_space> o, const string& name);
 	~user_def_datatype();
@@ -313,27 +375,47 @@ public:
 /**
 	Data-type typedef.  
  */
-class datatype_definition_alias : public datatype_definition_base {
+class datatype_definition_alias : public datatype_definition_base, 
+		public typedef_base {
 protected:
+	const string				key;
+	const never_const_ptr<scopespace>	parent;
 	// inherited template formals
-	never_const_ptr<data_type_reference>	base;
+	excl_const_ptr<data_type_reference>	base;
 public:
 	datatype_definition_alias(const string& n, 
-		never_const_ptr<name_space> p);
+		never_const_ptr<scopespace> p);
 	~datatype_definition_alias();
 
+	ostream& what(ostream& o) const;
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+	never_const_ptr<fundamental_type_reference>
+		get_base_type_ref(void) const;
+
+	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+	bool require_signature_match(
+		never_const_ptr<definition_base> d) const;
 };	// end class datatype_definition_alias
 
 //=============================================================================
 /// abstract base class for channels and their representations
-class channel_definition_base : public definition_base {
+class channel_definition_base : virtual public definition_base {
 protected:
 //	string			key;		// inherited
 public:
-	channel_definition_base(never_const_ptr<name_space> o, const string& n);
+	channel_definition_base();
+//	channel_definition_base(const string& n);
 virtual	~channel_definition_base();
 
 // virtual	ostream& what(ostream& o) const = 0;
+
+	excl_ptr<definition_base>
+		make_typedef(never_const_ptr<scopespace> s, 
+			const token_identifier& id) const;
 
 virtual	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
@@ -348,6 +430,8 @@ virtual	count_const_ptr<fundamental_type_reference>
 class user_def_chan : public channel_definition_base, public scopespace {
 protected:
 	// list of other type definitions
+	const string				key;
+	const never_const_ptr<name_space>	parent;
 public:
 	user_def_chan(never_const_ptr<name_space> o, const string& name);
 	~user_def_chan();
@@ -360,7 +444,42 @@ public:
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
+
+#if 0
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+#endif
 };	// end class user_def_chan
+
+//-----------------------------------------------------------------------------
+/**
+	Alias to a channel-type.  
+ */
+class channel_definition_alias : public channel_definition_base, 
+		public typedef_base {
+protected:
+	const string				key;
+	const never_const_ptr<scopespace>	parent;
+	excl_const_ptr<channel_type_reference>	base;
+public:
+	channel_definition_alias(const string& n, 
+		never_const_ptr<scopespace> p);
+	~channel_definition_alias();
+
+	ostream& what(ostream& o) const;
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+	never_const_ptr<fundamental_type_reference>
+		get_base_type_ref(void) const;
+
+	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f);
+#if 0
+	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+#endif
+};	// end class channel_definition_alias
 
 //-----------------------------------------------------------------------------
 /// Type aliases are analogous to typedefs in C (not yet implemented)

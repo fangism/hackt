@@ -263,6 +263,7 @@ count_const_ptr<fundamental_type_reference>
 
 never_ptr<definition_base>
 		set_current_prototype(excl_ptr<definition_base> d);
+// void	reset_current_prototype(void);
 
 /** destructive transfer return */
 excl_ptr<definition_base>
