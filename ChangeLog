@@ -2,6 +2,15 @@
 
 2005-03-08	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-04:
+	  Fixed problem with error message, mis-carried return statement
+	  turned into bug during copying.  Doh.  
+	  Use of value_reference template is now enabled.  
+	  After cleanup, we can retire this baby branch...
+
+
+2005-03-08	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-01:
 	  We need to port many expressions classes to follow consistent
 	  templates, this has been punted for way too long. 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7.12.3.2.1.2.2 2005/03/10 07:18:53 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.3.2.1.2.3 2005/03/10 19:51:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -183,7 +183,7 @@ namespace entity {
 
 // expressions and family
 	class param_instance_reference;
-#if 1
+#if 0
 	class pint_instance_reference;
 	class pbool_instance_reference;
 #else

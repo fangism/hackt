@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.1.2.1 2005/03/10 07:18:55 fang Exp $
+	$Id: art_object_value_reference.h,v 1.1.2.2 2005/03/10 19:51:16 fang Exp $
  */
 
 #ifndef __ART_OBJECT_VALUE_REFERENCE_H__
@@ -41,6 +41,7 @@ private:
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_base_type;
+	typedef	typename parent_type::parent_type	grandparent_type;
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
