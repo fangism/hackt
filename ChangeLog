@@ -14,6 +14,12 @@
 	  Preparing to perform some major surgery on instance_reference
 	  and alias_connection class sub-heirarchy for connections.  
 
+	+ -alias-03:
+	  Renamed some classes, conditional code in-place for
+	  extending aliases_connection_base class heirarchy.  
+	  Some NOTES on proposed parse-context improvement in the future.  
+	  Everything still stable, the calm before the storm...
+
 	* ARTXX-00-01-04-main-00-04-object-01-13:
 	  Prelimiary testing of saving and restoring bool instance aliases, 
 	  where there are no actual connections.  So far so good.

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.1 2005/02/17 22:41:23 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.2 2005/02/18 03:25:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -26,10 +26,11 @@ USING_IO_UTILS
 // class instance_reference_connection method definitions
 
 instance_reference_connection::instance_reference_connection() :
-#if 0
-		object(), 
+		instance_management_base()
+#if !SUBTYPE_ALIASES_CONNECTION
+		, inst_list()
 #endif
-		instance_management_base(), inst_list() {
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -37,6 +38,7 @@ instance_reference_connection::~instance_reference_connection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBTYPE_ALIASES_CONNECTION
 /**
 	Initializes an instance reference connection with the
 	first instance reference.  
@@ -44,32 +46,37 @@ instance_reference_connection::~instance_reference_connection() {
  */
 void
 instance_reference_connection::append_instance_reference(
-		const count_ptr<const instance_reference_base>& i) {
+		const generic_inst_ptr_type& i) {
 	NEVER_NULL(i);
 	inst_list.push_back(i);
 }
+#endif
 
 //=============================================================================
-// class aliases_connection method definitions
+// class aliases_connection_base method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection,
+#if !SUBTYPE_ALIASES_CONNECTION
+DEFAULT_PERSISTENT_TYPE_REGISTRATION(aliases_connection_base,
 	ALIAS_CONNECTION_TYPE_KEY)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-aliases_connection::aliases_connection() : instance_reference_connection() { }
+aliases_connection_base::aliases_connection_base() : 
+		instance_reference_connection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-aliases_connection::~aliases_connection() { }
+aliases_connection_base::~aliases_connection_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-aliases_connection::what(ostream& o) const {
+aliases_connection_base::what(ostream& o) const {
 	return o << "alias-connection";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBTYPE_ALIASES_CONNECTION
 ostream&
-aliases_connection::dump(ostream& o) const {
+aliases_connection_base::dump(ostream& o) const {
 	INVARIANT(inst_list.size() > 1);
 	inst_list_type::const_iterator iter = inst_list.begin();
 	const inst_list_type::const_iterator end = inst_list.end();
@@ -88,8 +95,8 @@ aliases_connection::dump(ostream& o) const {
 	\param i the instance reference to add.  
  */
 void
-aliases_connection::prepend_instance_reference(
-		const count_ptr<const instance_reference_base>& i) {
+aliases_connection_base::prepend_instance_reference(
+		const generic_inst_ptr_type& i) {
 	NEVER_NULL(i);
 	inst_list.push_front(i);
 }
@@ -99,9 +106,9 @@ aliases_connection::prepend_instance_reference(
 	Requires precise type-checking!
  */
 void
-aliases_connection::unroll(unroll_context& c) const {
+aliases_connection_base::unroll(unroll_context& c) const {
 #if 1
-	cerr << "aliases_connection::unroll(): "
+	cerr << "aliases_connection_base::unroll(): "
 		"Fang, finish me!" << endl;
 #else
 	// want to collect packed_array<instance_aliases>
@@ -110,7 +117,7 @@ aliases_connection::unroll(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::collect_transient_info(
+aliases_connection_base::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE_KEY)) {
 	inst_list_type::const_iterator iter = inst_list.begin();
@@ -124,23 +131,25 @@ if (!m.register_transient_object(this, ALIAS_CONNECTION_TYPE_KEY)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent*
-aliases_connection::construct_empty(const int i) {
-	return new aliases_connection();
+aliases_connection_base::construct_empty(const int i) {
+	return new aliases_connection_base();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::write_object(
+aliases_connection_base::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer_list(f, inst_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::load_object(
+aliases_connection_base::load_object(
 		const persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, inst_list);
 }
+
+#endif	// SUBTYPE_ALIASES_CONNECTION
 
 //=============================================================================
 // class port_connection method definitions
@@ -151,28 +160,31 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(port_connection, PORT_CONNECTION_TYPE_KEY)
 /**
 	Private empty constructor.
  */
-port_connection::port_connection() :
-		instance_reference_connection(), inst(NULL) {
-	// no assert
-}
+port_connection::port_connection() : parent_type(), ported_inst(NULL)
+#if SUBTYPE_ALIASES_CONNECTION
+		, inst_list()
+#endif
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Initial constructor for a port-connection.  
 	\param i an instance of the definition that is to be connected.
  */
-port_connection::port_connection(
-		const count_ptr<const simple_instance_reference>& i) :
-		instance_reference_connection(), inst(i) {
-	NEVER_NULL(inst);
+port_connection::port_connection(const ported_inst_ptr_type& i) :
+		parent_type(), ported_inst(i)
+#if SUBTYPE_ALIASES_CONNECTION
+		, inst_list()
+#endif
+		{
+	NEVER_NULL(ported_inst);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default destructor.
  */
-port_connection::~port_connection() {
-}
+port_connection::~port_connection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -183,8 +195,8 @@ port_connection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 port_connection::dump(ostream& o) const {
-	NEVER_NULL(inst);
-	inst->dump(o) << " (";
+	NEVER_NULL(ported_inst);
+	ported_inst->dump(o) << " (";
 
 	if (!inst_list.empty()) {
 		inst_list_type::const_iterator iter = inst_list.begin();
@@ -207,8 +219,7 @@ port_connection::dump(ostream& o) const {
 	\param i instance reference to connect, may be NULL.
  */
 void
-port_connection::append_instance_reference(
-		const count_ptr<const instance_reference_base>& i) {
+port_connection::append_instance_reference(const generic_inst_ptr_type& i) {
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
 }
@@ -225,11 +236,10 @@ port_connection::unroll(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::collect_transient_info(
-		persistent_object_manager& m) const {
+port_connection::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PORT_CONNECTION_TYPE_KEY)) {
-	NEVER_NULL(inst);
-	inst->collect_transient_info(m);
+	NEVER_NULL(ported_inst);
+	ported_inst->collect_transient_info(m);
 	inst_list_type::const_iterator iter = inst_list.begin();
 	const inst_list_type::const_iterator end = inst_list.end();
 	for ( ; iter!=end; iter++) {
@@ -249,16 +259,16 @@ port_connection::construct_empty(const int i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::write_object(
-		const persistent_object_manager& m, ostream& f) const {
-	m.write_pointer(f, inst);
+port_connection::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	m.write_pointer(f, ported_inst);
 	m.write_pointer_list(f, inst_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 port_connection::load_object(const persistent_object_manager& m, istream& f) {
-	m.read_pointer(f, inst);
+	m.read_pointer(f, ported_inst);
 	m.read_pointer_list(f, inst_list);
 }
 

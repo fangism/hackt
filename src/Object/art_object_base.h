@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.25 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_base.h,v 1.25.18.1 2005/02/18 03:25:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -181,7 +181,7 @@ public:
 	excl_ptr<param_expression_assignment>
 	make_param_assignment(void);
 
-	excl_ptr<const aliases_connection>
+	excl_ptr<const aliases_connection_base>
 	make_alias_connection(void) const;
 
 	excl_ptr<const port_connection>

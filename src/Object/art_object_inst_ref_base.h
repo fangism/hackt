@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.1 2005/02/17 22:41:24 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2 2005/02/18 03:25:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -26,11 +26,17 @@ using namespace util::memory;
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?
+
+	Why derived from object? to be pushable onto an object stack... arg!
+	We need separate stacks...
+	See NOTES.
  */
-class instance_reference_base : virtual public object, 
+class instance_reference_base : 
+		virtual public object, 
 		virtual public persistent {
 public:
 	instance_reference_base() : object(), persistent() { }
+
 virtual	~instance_reference_base() { }
 
 virtual	ostream&
@@ -74,6 +80,15 @@ virtual	bool
 
 virtual	bool
 	must_be_type_equivalent(const instance_reference_base& i) const = 0;
+
+#if 0
+	/**
+		Start an aliases connection list based on the referenced type.  
+	 */
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection(
+		const count_ptr<const instance_reference_base>&) const = 0;
+#endif
 };	// end class instance_reference_base
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.28 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_base.cc,v 1.28.18.1 2005/02/18 03:25:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -595,12 +595,15 @@ object_list::make_param_expr_list(void) const {
 /**
 	Creates an alias connection object, given a list of instance
 	references.  Performs type-checking.  
+
+	TODO: once we separate objects and stacks into different types, 
+	then we can eliminate this generic object list altogether.  
  */
-excl_ptr<const aliases_connection>
+excl_ptr<const aliases_connection_base>
 object_list::make_alias_connection(void) const {
-	typedef	excl_ptr<const aliases_connection>	return_type;
-	excl_ptr<aliases_connection>
-		ret(new aliases_connection);
+	typedef	excl_ptr<const aliases_connection_base>	return_type;
+	excl_ptr<aliases_connection_base>
+		ret(new aliases_connection_base);
 	const_iterator i = begin();
 	INVARIANT(size() > 1);		// else what are you connecting?
 	const count_ptr<const object> fo(*i);
