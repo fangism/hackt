@@ -1,2 +1,2 @@
-x is already declared datatype-inst, ERROR! [6:5]
-ERROR with x at [6:5]
+ERROR: type of redeclaration of x does not match previous declaration: 
+	was: bool<>, got: int<> ERROR!  [6:5]

@@ -1,0 +1,11 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: enum [3:1..4]
+9	; [3:5]
+in state 9, possible rules are:
+	declare_enum : ENUM . ID ';'  (68)
+	defenum : ENUM . ID '{' enum_member_list '}'  (69)
+acceptable tokens are: 
+	ID (shift)

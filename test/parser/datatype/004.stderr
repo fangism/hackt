@@ -1,2 +1,1 @@
-b is already declared datatype-inst, ERROR! [5:11]
-ERROR with b at [5:11]
+datatype-inst b was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!  [5:11]

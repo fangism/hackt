@@ -1,0 +1,1 @@
+enum foo already has a member named bar.  ERROR! [3:23..25]

@@ -1,0 +1,4 @@
+// should fail: empty enum definition
+
+enum foo { }
+
