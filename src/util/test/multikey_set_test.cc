@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set_test.cc"
 	Test for multikey_set template class.  
-	$Id: multikey_set_test.cc,v 1.1.4.1.2.1 2005/02/11 06:14:32 fang Exp $
+	$Id: multikey_set_test.cc,v 1.1.4.1.2.2 2005/02/13 02:39:05 fang Exp $
  */
 
 #include <string>
@@ -54,7 +54,7 @@ main(int argc, char* argv[]) {
 	// cout << str_map[ind] << endl;
 	const string_set_3d_type::const_iterator i = str_map.find(ind);
 	assert(i != str_map.end());
-	cout << i->value << endl;
+	cout << i->value() << endl;
 	}
 	cout << "Set's population = " << str_map.population() << endl;
 
@@ -72,7 +72,7 @@ main(int argc, char* argv[]) {
 	// cout << str_map[ind] << endl;
 	const string_set_3d_type::const_iterator i = str_map.find(ind);
 	assert(i != str_map.end());
-	cout << i->value << endl;
+	cout << i->value() << endl;
 	}
 	cout << "Set's population = " << str_map.population() << endl;
 
@@ -82,7 +82,7 @@ main(int argc, char* argv[]) {
 	assert(i == str_map.end());		// not found
 #if 0
 	cout << "Nothing should follow this colon on this line: "
-		<< i->value << endl << endl;
+		<< i->value() << endl << endl;
 #endif
 	// create blank
 	str_map[ind];

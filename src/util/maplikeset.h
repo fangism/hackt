@@ -1,11 +1,18 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1.2.1 2005/02/11 06:14:30 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.2 2005/02/13 02:39:01 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
 #define	__UTIL_MAPLIKESET_H__
+
+// whether or not maplikeset_element is derived from std::pair
+#define	MAPLIKESET_ELEMENT_PAIR		1
+
+#if MAPLIKESET_ELEMENT_PAIR
+#include <utility>		// for std::pair
+#endif
 
 namespace util {
 //=============================================================================
@@ -45,7 +52,8 @@ public:
 	/**
 		The value_type IS the mapped_type.
 	 */
-	typedef	value_type				mapped_type;
+	typedef	typename value_type::value_type		mapped_type;
+//	typedef	value_type				mapped_type;
 
 	/**
 		The key comparater IS the value comparator of sets.  
@@ -81,7 +89,7 @@ public:
 	typedef	typename set_type::const_pointer	const_pointer;
 	typedef	typename set_type::allocator_type	allocator_type;
 protected:
-	typedef	typename value_type::value_type		impl_value_type;
+//	typedef	typename value_type::value_type		impl_value_type;
 
 #if 0
 protected:
@@ -161,8 +169,7 @@ public:
 	}
 	
 	iterator
-	insert(const key_type& k, const impl_value_type& v = 
-			impl_value_type()) {
+	insert(const key_type& k, const mapped_type& v = mapped_type()) {
 		// returns pair<iterator, bool>
 		return set_type::insert(value_type(k, v)).first;
 	}
@@ -206,14 +213,22 @@ public:
 	with maplikeset.  
  */
 template <class K, class V>
-class maplikeset_element {
+class maplikeset_element
+#if MAPLIKESET_ELEMENT_PAIR
+	: public std::pair<const K, V>
+#endif
+{
 private:
 	typedef	maplikeset_element<K,V>			this_type;
+#if MAPLIKESET_ELEMENT_PAIR
+	typedef std::pair<const K, V>			parent_type;
+#endif
 public:
 	typedef	K					key_type;
 	typedef	V					mapped_type;
 	typedef	V					value_type;
 protected:
+#if !MAPLIKESET_ELEMENT_PAIR
 	const key_type					key;
 #if 1
 public:
@@ -228,22 +243,35 @@ public:
 		hence, the value field is mutable.  
 	 */
 	mutable value_type				value;
+#endif
 public:
-	maplikeset_element() : key(), value() { }
+	maplikeset_element() :
+#if MAPLIKESET_ELEMENT_PAIR
+		parent_type() { }
+#else
+		key(), value() { }
+#endif
 
 	explicit
 	maplikeset_element(const key_type& k, 
-		const value_type& v = value_type()) : key(k), value(v) { }
+		const value_type& v = value_type()) :
+#if MAPLIKESET_ELEMENT_PAIR
+		parent_type(k, v) { }
+#else
+		key(k), value(v) { }
+#endif
 
+#if !MAPLIKESET_ELEMENT_PAIR
 	const key_type&
 	get_key(void) const { return key; }
+#endif
 
-#if 0
+#if MAPLIKESET_ELEMENT_PAIR
 	value_type&
-	get_value(void) { return value; }
+	value(void) const { return const_cast<this_type&>(*this).second; }
 
 	const value_type&
-	get_value(void) const { return value; }
+	const_value(void) const { return this->second; }
 #endif
 
 #if 0
@@ -260,13 +288,21 @@ public:
 	 */
 	const this_type&
 	operator = (const value_type& v) const {
+#if MAPLIKESET_ELEMENT_PAIR
+		const_cast<this_type&>(*this).second = v;
+#else
 		value = v;
+#endif
 		return *this;
 	}
 
 	const this_type&
 	operator = (const this_type& k) const {
+#if MAPLIKESET_ELEMENT_PAIR
+		const_cast<this_type&>(*this).second = k.second;
+#else
 		value = k.value;
+#endif
 		return *this;
 	}
 
@@ -277,7 +313,11 @@ public:
 	 */
 	bool
 	operator < (const this_type& p) const {
+#if MAPLIKESET_ELEMENT_PAIR
+		return first < p.first;
+#else
 		return key < p.key;
+#endif
 	}
 
 #if 1
@@ -291,12 +331,20 @@ public:
 	 */
 	bool
 	operator == (const this_type& p) const {
+#if MAPLIKESET_ELEMENT_PAIR
+		return second == p.second;
+#else
 		return value == p.value;
+#endif
 	}
 
 	bool
 	operator != (const this_type& p) const {
+#if MAPLIKESET_ELEMENT_PAIR
+		return !(second == p.second);
+#else
 		return !(value == p.value);
+#endif
 	}
 #endif
 

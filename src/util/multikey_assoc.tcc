@@ -1,7 +1,7 @@
 /**
 	\file "multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.1.4.1 2005/02/09 04:14:16 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.1.4.1.2.1 2005/02/13 02:39:02 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -423,7 +423,10 @@ multikey_assoc<1,C>::is_compact_slice(
 	index_type k = l.front();
 	INVARIANT(k <= u.front());
 	for ( ; k <= u.front(); k++) {
-		if ((*this)[k] == mapped_type()) {        // static_cast const?
+		const const_iterator i = find(k);
+		if (i == this->end() || i->second == mapped_type())
+//		if ((*this)[k] == mapped_type())
+		{        // static_cast const?
 			return return_type();
 		}
 	}
@@ -456,7 +459,10 @@ multikey_assoc<1,C>::is_compact(void) const {
 #else
 	index_type k = first->first;
 	for ( ; k <= last->first; k++) {
-		if ((*this)[k] == mapped_type()) {        // static_cast const?
+		const const_iterator i = find(k);
+		if (i == this->end() || i->second == mapped_type())
+//		if ((*this)[k] == mapped_type())
+		{        // static_cast const?
 			return return_type();
 		}
 	}

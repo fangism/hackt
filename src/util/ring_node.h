@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.3 2005/02/09 04:14:19 fang Exp $
+	$Id: ring_node.h,v 1.1.2.3.2.1 2005/02/13 02:39:02 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -37,16 +37,24 @@ friend class ring_node_iterator_base;
 protected:
 	ring_node_base*				next;
 
-private:
+protected:
 	/**
 		All ring_node point to themselves upon construction.  
 		No empty construction.  
 	 */
+#if FORCE_INLINE_RING_NODE
+	ring_node_base() : next(this) { }
+#else
 	ring_node_base();
+#endif
 
 protected:
 	explicit
+#if FORCE_INLINE_RING_NODE
 	ring_node_base(ring_node_base* r) : next(r) { NEVER_NULL(next); }
+#else
+	ring_node_base(ring_node_base* r);
+#endif
 
 #if FORCE_INLINE_RING_NODE
 	/**
@@ -62,6 +70,7 @@ protected:
 			walk->next = next;
 		}
 		// else this is the last node, just drops itself
+		next = NULL;
 	}
 #else
 	~ring_node_base();
@@ -73,10 +82,15 @@ protected:
 		in the same cycle, then swapping pointer will result
 		in two disjoint cycles!  Kinda cool actually.  
 	 */
+#if FORCE_INLINE_RING_NODE
 	void
 	unsafe_merge(ring_node_base& r) {
 		std::swap(next, r.next);
 	}
+#else
+	void
+	unsafe_merge(ring_node_base& r);
+#endif
 
 public:
 	/**
@@ -332,10 +346,10 @@ public:
 	/**
 		All ring_node point to themselves upon construction.  
 	 */
-	ring_node() : ring_node_base(this), value() { }
+	ring_node() : ring_node_base(), value() { }
 
 	explicit
-	ring_node(const value_type& v) : ring_node_base(this), value(v) { }
+	ring_node(const value_type& v) : ring_node_base(), value(v) { }
 
 	/**
 		NOTE the unusual copy construct semantics!
@@ -345,7 +359,7 @@ public:
 		No ring_node shall be pointed to be more than one other
 		ring_node.  
 	 */
-	ring_node(const ring_node& r) : ring_node_base(this), value(r.value) { }
+	ring_node(const ring_node& r) : ring_node_base(), value(r.value) { }
 
 	/**
 		Uses base destructor, which walks the list.  

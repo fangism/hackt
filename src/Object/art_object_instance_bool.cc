@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.1 2005/02/11 06:14:26 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.2 2005/02/13 02:38:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -9,7 +9,9 @@
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#define	ENABLE_STACKTRACE				0
+#define	ENABLE_STACKTRACE				1
+#define	STACKTRACE_DESTRUCTORS		1 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <exception>
 #include <iostream>
@@ -26,7 +28,10 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-#include "multikey_qmap.tcc"
+// #include "multikey_qmap.tcc"
+#include "multikey_set.tcc"
+#include "ring_node.tcc"
+
 #include "persistent_object_manager.tcc"
 #include "indent.h"
 #include "stacktrace.h"
@@ -36,6 +41,21 @@
 #include "compose.h"
 #include "binders.h"
 #include "dereference.h"
+
+
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
 
 STATIC_TRACE_BEGIN("instance-bool")
 
@@ -53,11 +73,39 @@ namespace memory {
 namespace ART {
 namespace entity {
 using std::string;
-using namespace MULTIKEY_NAMESPACE;
+// using namespace MULTIKEY_NAMESPACE;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 USING_STACKTRACE
+
+//=============================================================================
+// class bool_instance_alias_base method definitions
+
+bool_instance_alias_base::~bool_instance_alias_base() {
+	STACKTRACE_DTOR("~bool_alias_base()");
+}
+
+ostream&
+operator << (ostream& o, const bool_instance_alias_base& b) {
+	return o << "bool-alias @ " << &b;
+}
+
+//=============================================================================
+// class bool_instance_alias method definitions
+
+template <size_t D>
+bool_instance_alias<D>::~bool_instance_alias() {
+	STACKTRACE_DTOR("~bool_alias<D>()");
+}
+
+#if 0
+template <size_t D>
+ostream&
+operator << (ostream& o, const bool_instance_alias<D>& b) {
+	return o;
+}
+#endif
 
 //=============================================================================
 // class bool_instance_collection method definitions
@@ -183,7 +231,9 @@ bool_array<D>::bool_array(const scopespace& o, const string& n) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
-bool_array<D>::~bool_array() { }
+bool_array<D>::~bool_array() {
+	STACKTRACE_DTOR("~bool_array<D>()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
@@ -248,7 +298,7 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 //		iterator bi(collection.find(key_gen));
 //		bool_instance_alias<D>& pi(collection[key_gen]);
 		typename collection_type::reference ref(collection[key_gen]);
-		bool_instance_alias<D>& pi(ref.value);
+		bool_instance_alias<D>& pi(ref.value());
 		if (pi.valid()) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
@@ -321,7 +371,7 @@ bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 			get_qualified_name() << " at index: " << i << endl;
 		return instance_ptr_type(NULL);
 	}
-	const bool_instance_alias<D>& b(it->value);
+	const bool_instance_alias<D>& b(it->value());
 #endif
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
@@ -364,7 +414,7 @@ bool_array<D>::lookup_instance_collection(
 			l.push_back(instance_ptr_type(NULL));
 			ret = false;
 		} else {
-		const bool_instance_alias<D>& pi(it->value);
+		const bool_instance_alias<D>& pi(it->value());
 #endif
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
@@ -423,7 +473,7 @@ bool_array<0>::bool_array(const scopespace& o, const string& n) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_array<0>::~bool_array() {
-	STACKTRACE("~bool_scalar()");
+	STACKTRACE_DTOR("~bool_scalar()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

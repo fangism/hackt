@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.2.1.2.1 2005/02/11 06:14:30 fang Exp $
+	$Id: multikey.h,v 1.19.2.1.2.2 2005/02/13 02:39:01 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -677,11 +677,18 @@ public:
 	corner_type&
 	operator ++ (int);
 
+	operator K () const {
+		// really want concept_check upon instantiation for D == 1
+		INVARIANT(D == 1);
+		return base_type::front();
+	}
+
 	// all other methods inherited
 
 };	// end class multikey_generator
 
 //=============================================================================
+#if 0
 /**
 	Only works for integer-like keys.  
 	Extension of a standard multikey, with knowledge of bounds.  
@@ -789,6 +796,7 @@ public:
 	// all other methods inherited
 
 };	// end class multikey_generator
+#endif
 
 //-----------------------------------------------------------------------------
 /**

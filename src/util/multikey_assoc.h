@@ -2,7 +2,7 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.4.1.2.1 2005/02/11 06:14:30 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.4.1.2.2 2005/02/13 02:39:02 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -278,7 +278,7 @@ public:
 
 	// only works for map's type:
 	typedef	key_type				index_type;
-//	typedef	typename key_type::value_type		index_type;
+//	typedef	typename key_type::simple_type		index_type;
 	typedef	list<index_type>			key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;

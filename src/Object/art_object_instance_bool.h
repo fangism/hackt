@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.1 2005/02/11 06:14:26 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.2 2005/02/13 02:38:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -117,6 +117,7 @@ public:
 	Only after references are connected, are the actual bool instances
 	created.  
 	Contains attribute fields, later on.  
+	This is included directly by bool_array<0>.
  */
 class bool_instance_alias_base : public ring_node<bool_instance_alias_info> {
 public:
@@ -148,7 +149,7 @@ public:
 
 	// default copy constructor
 
-virtual	~bool_instance_alias_base() { }
+virtual	~bool_instance_alias_base();
 
 	bool
 	valid(void) const { return value.container; }
@@ -223,6 +224,8 @@ operator << (ostream&, const bool_instance_alias_base&);
 	Extends a bool_instance_alias_base with a multikey, to be used
 	in a set.  
 
+	Note: Don't derive from multikey_set_element.  
+
 	Alternate idea, use a multikey_generic instead of dimension-specific.
  */
 template <size_t D>
@@ -230,17 +233,31 @@ class bool_instance_alias :
 #if 1
 	public bool_instance_alias_base
 #else
-	public multikey_set_element<D, pint_value, bool_instance_alias_base>
+	public multikey_set_element<D, pint_value_type, bool_instance_alias_base>
 #endif
 {
 private:
 	typedef	bool_instance_alias<D>			this_type;
+#if 1
+	typedef	bool_instance_alias_base		parent_type;
+#else
+	typedef	multikey_set_element<D, pint_value_type, bool_instance_alias_base>
+							parent_type;
+#endif
 public:
+#if 1
 	typedef	multikey<D, pint_value_type>		key_type;
+	// or simple_type?
+#else
+	typedef	typename parent_type::key_type		key_type;
+#endif
+#if 0
 protected:
 	key_type					key;
+#endif
 public:
-	bool_instance_alias() : bool_instance_alias_base(), key() { }
+#if 0
+	bool_instance_alias() : parent_type(), key() { }
 
 	/**
 		Implicit constructor for creating an empty alias element, 
@@ -252,6 +269,22 @@ public:
 	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
 			const key_type& k) : 
 			bool_instance_alias_base(p), key(k) { }
+#else
+	bool_instance_alias() : parent_type() { }
+
+	/**
+		Implicit constructor for creating an empty alias element, 
+		used for creating keys to search sets.  
+	 */
+	bool_instance_alias(const key_type& k) : 
+			bool_instance_alias_base(k) { }
+
+#if 0
+	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
+			const key_type& k) : 
+			bool_instance_alias_base(p), key(k) { }
+#endif
+#endif
 
 	~bool_instance_alias();
 
@@ -260,6 +293,12 @@ public:
 	operator < (const this_type& b) const {
 		return key < b.key;
 	}
+
+#if 0
+	friend
+	ostream&
+	operator << <>(ostream&, const bool_instance_alias<D>&);
+#endif
 
 };	// end class bool_instance_alias
 
@@ -362,7 +401,7 @@ public:
 //	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 	typedef	multikey_set<D, element_type>
 							collection_type;
-#if 0
+#if 1
 	typedef	typename element_type::key_type		key_type;
 #else
 	typedef	typename collection_type::key_type	key_type;

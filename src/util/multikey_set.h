@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.4.1 2005/02/09 04:14:17 fang Exp $
+	$Id: multikey_set.h,v 1.1.4.1.2.1 2005/02/13 02:39:02 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -97,20 +97,34 @@ public:
 		std::pair<const key_type, value_type>.
  */
 MULTIKEY_SET_ELEMENT_TEMPLATE_SIGNATURE
-class multikey_set_element : public maplikeset_element<multikey<D,K>, T> {
+class multikey_set_element :
+#if 0
+	public maplikeset_element<multikey<D,K>, T>
+#else
+	public maplikeset_element<typename multikey<D,K>::simple_type, T>
+#endif
+{
 private:
 	typedef	multikey_set_element<D,K,T>		this_type;
+#if 0
 	typedef	maplikeset_element<multikey<D,K>, T>	parent_type;
+#else
+	typedef	maplikeset_element<typename multikey<D,K>::simple_type, T>
+							parent_type;
+#endif
 public:
 	typedef	K					index_type;
 	typedef	typename parent_type::key_type		key_type;
 	typedef	typename parent_type::value_type	value_type;
+#if 0
 	/**
 		Workaround for multikey_assoc breaking key's constness.
 	 */
 	typedef	key_type				self_key_type;
+#endif
 	enum { dim = D };
 public:
+	multikey_set_element() : parent_type() { }
 
 	explicit
 	multikey_set_element(const key_type& k, const value_type& v =
@@ -119,9 +133,10 @@ public:
 	// default copy-constructor
 
 	// default destructor
-
+#if 0
 	const key_type&
 	self_key(void) const { return key; }
+#endif
 
 	const index_type&
 	operator [] (const size_t i) const { return key[i]; }
