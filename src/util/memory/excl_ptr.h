@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.2 2005/01/28 19:58:51 fang Exp $
+	$Id: excl_ptr.h,v 1.2.10.1 2005/02/06 02:22:11 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -1058,11 +1058,13 @@ some_ptr<T>::is_a(void) const {
 // don't want to have to write this for every combination...
 // however, we only want this to apply to template classes
 
+#if 0
 template <class P1, class P2>
 bool
 pointer_equal(const P1& p1, const P2& p2) {
 	return p1.the_pointer() == p2.the_pointer();
 }
+#endif
 
 #if 0
 template <template <class> class P1, class T1, 
@@ -1072,6 +1074,14 @@ operator == (const P1<T1>& p1, const P2<T2>& p2) {
 
 }
 #endif
+
+//=============================================================================
+// pointer traits specializations
+
+SPECIALIZE_ALL_POINTER_TRAITS(excl_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS(some_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS(never_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS(sticky_ptr)
 
 //=============================================================================
 }	// end namespace memory

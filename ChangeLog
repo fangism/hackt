@@ -1,5 +1,33 @@
 "ChangeLog"
 
+2005-02-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-01:
+	  Many util library improvements.
+
+	+ "pointer_traits" completely re-done.
+	  Individualized traits, for better orthogonal design.  
+	  Instantiating pointer_traits for the purpose of using one trait
+	  would try result in instantiating for all traits, some of 
+	  which were not applicable.  
+	  Leveraged partial specializations in various pointer classes.  
+
+	+ "const_assoc_query" an implementation-independent wrapper
+	  for maps to overload the lookup [] operator.  
+	  (This would've saved hundreds of lines of useless wrapping
+	  in qmap.* and hash_qmap.*)
+
+	+ "null_construct.h" guarantees initial values for constructed
+	  objects, especially pointers, which default to junk.  
+	  Useful for const-query returning of null pointers when 
+	  something is not found.  
+
+	+ "hash_qmap.*" wiped verbose definition, and replaced with
+	  const_assoc_query wrapper.  So simple!  Legacy code 
+	  in the declaration and definitions files is block commented out.  
+	  Next revision will alter qmap, and add qset.  
+
+
 2005-02-04	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-07-set:

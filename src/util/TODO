@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.8 2005/01/28 19:58:46 fang Exp $
+	$Id: TODO,v 1.8.10.1 2005/02/06 02:22:09 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -109,6 +109,13 @@ vectorization:
 algorithms:
 	File: optimized_algorithm.h
 	Implement unrolling algorithms.
+
+-------------------------------------------------------------------------------
+numeric:
+	for fun:
+	primality...
+	compile-time taylor expansion and evaluation of constants...
+	doh, can't pass floats as template arguements... yet
 
 -------------------------------------------------------------------------------
 debug utils:
