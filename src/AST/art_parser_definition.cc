@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.15 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_definition.cc,v 1.16 2005/03/01 04:50:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -322,8 +322,8 @@ enum_member_list::check_build(context& c) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
-		const bool b = c.add_enum_member(**i);
-		if (!b) {
+		const good_bool b(c.add_enum_member(**i));
+		if (!b.good) {
 			// should've exited by now...
 			cerr << "BAD fang!" << endl;
 		}
@@ -847,8 +847,8 @@ if (base->get_temp_spec()) {
 		THROW_EXIT;
 	}
 	// issue warning about this interpretation?
-	const bool b = c.alias_definition(d, *id);
-	if (!b) {
+	const good_bool b(c.alias_definition(d, *id));
+	if (!b.good) {
 		cerr << id->where() << endl;
 		THROW_EXIT;
 		return never_ptr<const object>(NULL);

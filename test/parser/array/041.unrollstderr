@@ -2,5 +2,5 @@ ERROR: reference to uninitialized pint ::foo at index [0][0][0]
 ERROR: reference to uninitialized pint ::foo at index [0][0][1]
 ERROR: reference to uninitialized pint ::foo at index [0][0][2]
 ERROR: reference to uninitialized pint ::foo at index [0][0][3]
-ERROR: unable to resolve constant dimensions.
+ERROR: in flattening integer values.
 ERROR in unrolling.  Aborting.

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.14 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_expr.cc,v 1.15 2005/03/01 04:50:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -1002,8 +1002,8 @@ index_expr::check_build(context& c) const {
 		base_inst(base_obj.is_a<simple_instance_reference>());
 	NEVER_NULL(base_inst);
 
-	const bool ai = base_inst->attach_indices(index_list_obj);
-	if (!ai) {
+	const bad_bool ai(base_inst->attach_indices(index_list_obj));
+	if (ai.bad) {
 		cerr << ranges->where() << endl;
 		THROW_EXIT;
 	}

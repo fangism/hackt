@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.10 2005/02/27 22:54:15 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.11 2005/03/01 04:50:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -109,7 +109,7 @@ struct collection_type_committer<enum_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
-	bool
+	bad_bool
 	operator () (instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) const {
 		// make sure this is the canonical definition
@@ -121,7 +121,7 @@ struct collection_type_committer<enum_tag> {
 		else
 			c.type_parameter = t->get_base_def()
 				.is_a<const enum_datatype_def>();
-		return false;
+		return bad_bool(false);
 	}
 };
 

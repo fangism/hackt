@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.15 2005/02/27 22:54:08 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.16 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -66,20 +66,20 @@ param_expression_assignment::~param_expression_assignment() { }
 	\return TRUE if there is an error condition in this iteration
 		or earlier.
  */
-bool
+bad_bool
 param_expression_assignment::instance_reference_appender::operator () (
-		const bool b, const object_list::value_type& o) {
+		const bad_bool b, const object_list::value_type& o) {
 	index++;
 	if (!o) {
 		cerr << "ERROR: in creating item " << index <<
 			" of assign-list." << endl;
-		return true;
+		return bad_bool(true);
 	}
 	const dest_ptr_type i(o.is_a<param_instance_reference>());
 	if (!i) {
 		cerr << "ERROR: unhandled case for item " << index <<
 			" of assign-list." << endl;
-		return true;
+		return bad_bool(true);
 	}
 	return ex_ass.append_param_instance_reference(i) || b;
 }
@@ -91,7 +91,7 @@ param_expression_assignment::instance_reference_appender::operator () (
 	\param s pointer to the destination of assignment.  
 	\return true if dimensions of the source matches d.  
  */
-bool
+good_bool
 param_expression_assignment::validate_dimensions_match(
 		const dest_const_ptr_type& s, const size_t d) const {
 	const size_t s_dim = s->dimensions();
@@ -99,8 +99,8 @@ param_expression_assignment::validate_dimensions_match(
 		cerr << "ERROR: dimensions of expression " << size() +1 <<
 			" (" << s_dim << ") doesn't match that of the rhs ("
 			<< d << ")." << endl;
-		return false;
-	} else	return true;
+		return good_bool(false);
+	} else	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,7 +108,7 @@ param_expression_assignment::validate_dimensions_match(
 	Checks that the referenced instance is not already initialized.
 	Only checks for scalars and not multidimensional collections.  
  */
-bool
+good_bool
 param_expression_assignment::validate_reference_is_uninitialized(
 		const dest_const_ptr_type& s) const {
 	if (s->must_be_initialized()) {
@@ -116,8 +116,8 @@ param_expression_assignment::validate_reference_is_uninitialized(
 		cerr << "ERROR: expression " << size() +1 <<
 			"is already initialized!" << endl;
 		// don't care if it's same value... still an error
-		return false;
-	} else	return true;
+		return good_bool(false);
+	} else	return good_bool(true);
 }
 
 //=============================================================================
@@ -211,31 +211,33 @@ pbool_expression_assignment::dumper::operator() (
 	\param e new destination expression.  
 	\return true if there is an error, else false.  
  */
-bool
+bad_bool
 pbool_expression_assignment::append_param_instance_reference(
 		const parent_type::dest_ptr_type& e) {
 	// cache the value of dimensions to avoid recomputation?
 	NEVER_NULL(e);
-	bool err = false;
+	bad_bool err(false);
 	size_t dim = src->dimensions();
-	if (!validate_dimensions_match(e, dim))
-		err = true;
-	if (!validate_reference_is_uninitialized(e))
-		err = true;
+	if (!validate_dimensions_match(e, dim).good)
+		err.bad = true;
+	if (!validate_reference_is_uninitialized(e).good)
+		err.bad = true;
 	dest_ptr_type pb(e.is_a<pbool_instance_reference>());
 	if (!pb) {
 		cerr << "ERROR: Cannot initialize a bool parameter with a ";
 		e->what(cerr) << " expression!" << endl;
-		err = true;
-	} else if (!pb->initialize(src)) {	// type check
+		err.bad = true;
+	} else if (!pb->initialize(src).good) {	// type check
 		// if scalar, initialize for static analysis
-		err = true;
+		err.bad = true;
 	}
-	if (err) {
+	if (err.bad) {
 		cerr << "Error initializing item " << size()+1 <<
 			" of assign-list.  " << endl;
 		dests.push_back(dest_ptr_type(NULL));
-	} else		dests.push_back(pb);
+	} else {
+		dests.push_back(pb);
+	}
 	return err;
 }
 
@@ -249,9 +251,10 @@ pbool_expression_assignment::unroll(unroll_context& c) const {
 	// works for scalars and multidimensional arrays alike
 	pbool_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
-	bool assign_err = 
-		accumulate(dests.begin(), dests.end(), false, the_assigner);
-	if (assign_err) {
+	bad_bool assign_err = 
+		accumulate(dests.begin(), dests.end(), 
+			bad_bool(false), the_assigner);
+	if (assign_err.bad) {
 		cerr << "ERROR: something went wrong in pbool assignment."
 			<< endl;
 		THROW_EXIT;
@@ -385,31 +388,33 @@ pint_expression_assignment::dumper::operator() (
 	\param e new destination expression.  
 	\return true if there is an error, else false.  
  */
-bool
+bad_bool
 pint_expression_assignment::append_param_instance_reference(
 		const parent_type::dest_ptr_type& e) {
 	// cache the value of dimensions to avoid recomputation?
 	NEVER_NULL(e);
-	bool err = false;
+	bad_bool err(false);
 	size_t dim = src->dimensions();
-	if (!validate_dimensions_match(e, dim))
-		err = true;
-	if (!validate_reference_is_uninitialized(e))
-		err = true;
+	if (!validate_dimensions_match(e, dim).good)
+		err.bad = true;
+	if (!validate_reference_is_uninitialized(e).good)
+		err.bad = true;
 	dest_ptr_type pi(e.is_a<pint_instance_reference>());
 	if (!pi) {
 		cerr << "ERROR: Cannot initialize an int parameter with a ";
 		e->what(cerr) << " expression!" << endl;
-		err = true;
-	} else if (!pi->initialize(src)) {	// type check
+		err.bad = true;
+	} else if (!pi->initialize(src).good) {	// type check
 		// if scalar, initialize for static analysis
-		err = true;
+		err.bad = true;
 	}
-	if (err) {
+	if (err.bad) {
 		cerr << "Error initializing item " << size()+1 <<
 			" of assign-list.  " << endl;
 		dests.push_back(dest_ptr_type(NULL));
-	} else		dests.push_back(pi);
+	} else {
+		dests.push_back(pi);
+	}
 	return err;
 }
 
@@ -423,9 +428,10 @@ pint_expression_assignment::unroll(unroll_context& c) const {
 	// works for scalars and multidimensional arrays alike
 	pint_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
-	bool assign_err = 
-		accumulate(dests.begin(), dests.end(), false, the_assigner);
-	if (assign_err) {
+	bad_bool assign_err = 
+		accumulate(dests.begin(), dests.end(),
+			bad_bool(false), the_assigner);
+	if (assign_err.bad) {
 		cerr << "ERROR: something went wrong in pint assignment."
 			<< endl;
 		THROW_EXIT;

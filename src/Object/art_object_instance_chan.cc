@@ -2,7 +2,7 @@
 	\file "art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.9 2005/02/27 22:54:14 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.10 2005/03/01 04:50:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -108,7 +108,7 @@ struct collection_type_committer<channel_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
-	bool
+	bad_bool
 	operator () (instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) const {
 		// make sure this is the canonical definition
@@ -119,10 +119,12 @@ struct collection_type_committer<channel_tag> {
 		// only needs to be "collectibly" type equivalent, 
 		// not necessarily "connectible".
 		if (c.type_parameter)
-			return (!c.type_parameter->must_be_equivalent(*t));
-		else
+			return bad_bool(
+				!c.type_parameter->must_be_equivalent(*t));
+		else {
 			c.type_parameter = t;
-		return false;
+			return bad_bool(false);
+		}
 	}
 };
 

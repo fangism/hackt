@@ -2,7 +2,7 @@
 	\file "what_fwd.h"
 	Forward declaration for user-defined type-names utility.
 	This files provides mostly macros for specialization.  
-	$Id: what_fwd.h,v 1.2 2005/01/28 19:58:50 fang Exp $
+	$Id: what_fwd.h,v 1.3 2005/03/01 04:51:00 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_FWD_H__
@@ -43,6 +43,14 @@ struct what;
 		return local_name;				\
 	}
 
+/**
+	Combined declaration of a specialization.
+	Note: in gcc4, when the same specialization appears in different
+	translation units, the linker complains (warns) about
+	multiple definitions.  
+	Recommend against using this in the future, just split up
+	declaration (header) and definition (translation unit).  
+ */
 #define	SPECIALIZE_UTIL_WHAT(T, __name__)			\
 	SPECIALIZE_UTIL_WHAT_DECLARATION(T)			\
 	SPECIALIZE_UTIL_WHAT_DEFINITION(T, __name__)

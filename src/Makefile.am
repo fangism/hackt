@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.44 2005/02/27 22:54:07 fang Exp $
+#	$Id: Makefile.am,v 1.45 2005/03/01 04:50:53 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -206,6 +206,7 @@ UTIL_HEADER_FILES = \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
+	util/boolean_types.h \
 	util/const_assoc_query.h \
 	util/const_assoc_query.tcc \
 	util/const_traits.h \
@@ -407,11 +408,20 @@ AM_CPPFLAGS = -DREGRESSION_TEST_MODE \
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-WARN_CFLAGS = -W -Wall -Wno-unused -Werror
-MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
+# some of these flags are deadly...
+GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
+WARN_CXXFLAGS = 
+# -Woverloaded-virtual	# kills much of AST/ code, fix later...
+# -Wold-style-cast	# kills bison/yacc parser code... consider separate lib
+# -Wsign-promo
+DIALECT_FLAGS = -ansi
+# -pedantic		# kills some pointer class conversions, fix later...
+MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
+MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
-AM_CXXFLAGS = $(MORE_CFLAGS)
+AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 

@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.2 2005/02/27 22:54:15 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.3 2005/03/01 04:50:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -460,7 +460,7 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 	\post the integer width is fixed for the rest of the program.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-bool
+bad_bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	// functor, specialized for each class
 	return collection_type_committer<Tag>()(*this, t);
@@ -647,7 +647,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(
 	// resolve into constants now using const_range_list
 	// if unable, (b/c uninitialized) then report error
 	const_range_list ranges;        // initially empty
-	if (!i->resolve_ranges(ranges)) {
+	if (!i->resolve_ranges(ranges).good) {
 		// ranges is passed and returned by reference
 		// fail
 		cerr << "ERROR: unable to resolve indices "

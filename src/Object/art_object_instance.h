@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.35 2005/02/27 22:54:13 fang Exp $
+	$Id: art_object_instance.h,v 1.36 2005/03/01 04:50:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -104,7 +104,7 @@ virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
 	// a better return type?
-virtual	bool
+virtual	bad_bool
 	commit_type(const type_ref_ptr_type& ) = 0;
 
 // methods for connection and aliasing?

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.2 2005/02/27 22:54:17 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.3 2005/03/01 04:50:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_H__
@@ -73,7 +73,7 @@ public:
 //	using parent_type::make_aliases_connection_private;
 
 	// overrides parent's implementation.  
-	bool
+	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
 
 public:

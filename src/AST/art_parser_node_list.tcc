@@ -2,7 +2,7 @@
 	\file "art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.2 2005/02/27 22:11:58 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.3 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_LIST_TCC__
@@ -117,10 +117,14 @@ node_list<T>::wrap(const node_position* b, const node_position* e) {
 NODE_LIST_TEMPLATE_SIGNATURE
 never_ptr<const object>
 node_list<T>::check_build(context& c) const {
+	// note: these static consts become multiply defined with gcc4
+	// must do something about this...
+#if ENABLE_STACKTRACE
 	static const string trace_root(util::what<T>::name());
 	static const char trace_suffix[] = "_list::check_build()";
 	static const string trace_str(trace_root + trace_suffix);
 	STACKTRACE(trace_str);
+#endif
 
 	never_ptr<const object> ret(NULL);
 	const_iterator i = begin();

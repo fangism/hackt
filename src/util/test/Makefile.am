@@ -127,11 +127,18 @@ AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
 
-WARN_CFLAGS = -W -Wall -Wno-unused -Werror
-MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
+# some of these flags are deadly...
+GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
+WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
+# -Wsign-promo	# kills some code
+DIALECT_FLAGS = -ansi
+# -pedantic	# kills some code
+MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
+MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
-AM_CXXFLAGS = $(MORE_CFLAGS)
+AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
 EXTRA_DIST = test-expect.sh test.cvsignore \
 	$(noinst_PROGRAMS:=.stderr) \

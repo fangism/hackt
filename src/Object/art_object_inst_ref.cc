@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.22 2005/02/27 22:54:11 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.23 2005/03/01 04:50:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -634,7 +634,7 @@ simple_instance_reference::hash_string(void) const {
 	
 	\return true if successful, else false.  
  */
-bool
+good_bool
 simple_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
@@ -651,7 +651,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 			"cannot be indexed " << i->size() <<
 			"-dimensionally!  ";
 			// caller will say where
-		return false;
+		return good_bool(false);
 	} 
 	// else proceed...
 
@@ -670,7 +670,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 			dil(il.is_a<const dynamic_index_list>());
 		NEVER_NULL(dil);
 		array_indices = i;
-		return true;
+		return good_bool(true);
 	}
 	// else is constant index list, can compute coverage
 	//	using multidimensional_sparse_set
@@ -705,10 +705,10 @@ simple_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 		cov->dump(cerr << endl) << "} ";
 		// cerr << where() << endl;	// caller
 		// fancy: list indices not instantiated?
-		return false;
+		return good_bool(false);
 	}
 	array_indices = i;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

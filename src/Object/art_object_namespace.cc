@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.14 2005/02/27 22:54:18 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.15 2005/03/01 04:50:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -416,7 +416,7 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 /**
 	Adds a definition name alias to this scope.  
  */
-bool
+good_bool
 scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
 	const never_ptr<const object> probe(lookup_object_here(a));
@@ -424,7 +424,7 @@ scopespace::add_definition_alias(const never_ptr<const definition_base> d,
 		cerr << "Identifier \"" << a << "\" already taken by a ";
 		probe->what(cerr) << " in ";
 		what(cerr) << " " << get_qualified_name() << ".  ERROR!  ";
-		return false;
+		return good_bool(false);
 	} else {
 #if 0
 		// gcc-3.4.0 rejects, thinking that excl_ptr is const!
@@ -434,7 +434,7 @@ scopespace::add_definition_alias(const never_ptr<const definition_base> d,
 		used_id_map[a] = handle_ptr;
 		INVARIANT(!handle_ptr);
 #endif
-		return true;
+		return good_bool(true);
 	}
 }
 
@@ -1419,7 +1419,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
 			INVARIANT(k == probe_def->get_name());	// consistency
-			if (probe_def->require_signature_match(db)) {
+			if (probe_def->require_signature_match(db).good) {
 				// definition signatures match
 				// can discard new declaration
 				// to delete db, we steal ownership, 

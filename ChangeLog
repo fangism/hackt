@@ -2,6 +2,10 @@
 
 2005-02-28	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-10-merged-bool-06:
+	  Merged revisions from -bool branch (-06), 
+	  improving semantic clarity of boolean values in the program.  
+
 	* ARTXX-00-01-04-main-00-09:
 	  Support for gcc-3.2 (ix86-linux) dropped.  It *BOMBS* completely.
 	  Wrote some notes in the source on where and why things die.
@@ -13,8 +17,43 @@
 	  and destruction, I believe.)
 	  (It's a fact of compiler-life: code dies, life goes on.)
 
+	* ARTXX-00-01-04-main-00-08-bool-03:
+	  This revision has nothing to do with bools, 
+	  but are targeted back to the main trunk anyhow.  
+		+ Makefile notes on various CFLAGS, for future
+		  super-anal-retentiveness.  
+		+ Notes on where gcc4 gets multiple definition warning
+		  with ranlib.  
+		+ A few standard-conforming tweaks.  
+		+ Better namespace injection workaround "pointer_manipluator.h"
+
+	* -bool-04:
+	  Upgraded bool return values for methods in definition classes, 
+	  some expression classes, instantiation statements, 
+	  instance collections.  
+
+	* -bool-05:
+	  Upgraded more bool return values in expression methods and
+	  param value instance collection methods.  
+	  Actually caught an old (wrong error message) bug in the process!
+
+	* -bool-06:
+	  Final revisions upgrading bools.
+	  Upgraded some class methods in context, definitions, 
+	  param assignments, connections, instance_references, namespace.
+	  This is ready to merge to trunk.  
+
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-08-bool-01:
+	  This branch is for changing ALL diagnostic functions to 
+	  return a "good_bool" or "bad_bool" two new bool types defined
+	  in "util/boolean_types.h".  This will help keep the meaning of 
+	  return values clear and self-documenting.  
+	  Initially testing on a few classes at a time.  
+
+	* -bool-02: boolean upgrades to expression assignments.  
 
 	* ARTXX-00-01-04-main-00-08:
 	  Passes on all tested platforms and compilers:

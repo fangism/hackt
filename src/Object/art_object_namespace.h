@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.8 2005/02/27 22:54:18 fang Exp $
+	$Id: art_object_namespace.h,v 1.9 2005/03/01 04:50:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -13,6 +13,7 @@
 #include "persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
+#include "boolean_types.h"
 #include "qmap.h"		// need complete definition
 #include "hash_qmap.h"		// need complete definition
 #include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
@@ -50,6 +51,8 @@ using parser::qualified_id_slice;
 using parser::qualified_id;
 using namespace util::memory;
 using util::qmap;
+using util::good_bool;
+using util::bad_bool;
 
 //=============================================================================
 /**
@@ -227,7 +230,7 @@ public:
 	add_instance(never_ptr<instantiation_statement> i, 
 		const token_identifier& id);
 
-	bool
+	good_bool
 	add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a);
 

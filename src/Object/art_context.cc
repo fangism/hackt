@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.24 2005/02/27 22:54:07 fang Exp $
+ 	$Id: art_context.cc,v 1.25 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -270,7 +270,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	\param em name of the enumeration member.  
 	\return true if successful, false if there was conflict.  
  */
-bool
+good_bool
 context::add_enum_member(const token_identifier& em) {
 	const never_ptr<enum_datatype_def>
 		ed(current_open_definition.is_a<enum_datatype_def>());
@@ -279,13 +279,13 @@ context::add_enum_member(const token_identifier& em) {
 			"enum_datatype_def!  FATAL ERROR." << endl;
 		THROW_EXIT;
 	} else if (ed->add_member(em)) {
-		return true;
+		return good_bool(true);
 	} else {
 		cerr << "enum " << ed->get_name() << " already has a member "
 			"named " << em << ".  ERROR! " << em.where() << endl;
 		type_error_count++;
 		THROW_EXIT;
-		return false;
+		return good_bool(false);
 	}
 }
 
@@ -526,7 +526,7 @@ context::lookup_object(const qualified_id& id) const {
 	\param a the local name to alias the definition.  
 	\return true if successful (no collisions).  
  */
-bool
+good_bool
 context::alias_definition(const never_ptr<const definition_base> d,
 		const token_identifier& a) {
 	return get_current_named_scope()->add_definition_alias(d, a);
@@ -830,7 +830,7 @@ context::add_template_formal(const token_identifier& id,
 		never_ptr<param_instance_collection>
 			pic(ib.is_a<param_instance_collection>());
 		NEVER_NULL(pic);
-		if (!pic->assign_default_value(d)) {
+		if (!pic->assign_default_value(d).good) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
 				", type/size mismatch!  " << id.where() << endl;

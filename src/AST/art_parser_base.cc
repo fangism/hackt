@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.15 2005/02/27 22:11:57 fang Exp $
+	$Id: art_parser_base.cc,v 1.16 2005/03/01 04:50:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -818,7 +818,7 @@ concrete_type_ref::check_build(context& c) const {
 		// if no args are supplied, 
 		// make sure that the definition doesn't require template args!
 		// Now allows default values for unsupplied arguments.  
-		if(!d->check_null_template_argument()) {
+		if(!d->check_null_template_argument().good) {
 			cerr << "definition expecting template arguments "
 				"where none were given!  " << where() << endl;
 			THROW_EXIT;		// temporary

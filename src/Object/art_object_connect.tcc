@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.2 2005/02/27 22:54:09 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.3 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_TCC__
@@ -141,7 +141,7 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	// transform?
 	for ( ; iter != end; iter++, ref_iter++) {
 		NEVER_NULL(*iter);
-		if ((*iter)->unroll_references(c, *ref_iter))
+		if ((*iter)->unroll_references(c, *ref_iter).bad)
 			err = true;
 	}
 	if (err) {

@@ -2,12 +2,13 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.11 2005/02/27 22:54:08 fang Exp $
+	$Id: art_object_assign.h,v 1.12 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
 #define	__ART_OBJECT_ASSIGN_H__
 
+#include "boolean_types.h"
 #include "art_object_instance_management_base.h"
 #include "art_object_expr_base.h"
 #include "memory/pointer_classes.h"
@@ -19,6 +20,8 @@ USING_LIST
 USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
+using util::bad_bool;
+using util::good_bool;
 class unroll_context;
 
 //=============================================================================
@@ -56,7 +59,7 @@ virtual	ostream&
 virtual	size_t
 	size(void) const = 0;
 
-virtual	bool
+virtual	bad_bool
 	append_param_instance_reference(const dest_ptr_type& e) = 0;
 
 	/**
@@ -74,16 +77,17 @@ virtual	bool
 		instance_reference_appender(param_expression_assignment& p) :
 			index(0), ex_ass(p) { }
 
-		bool
-		operator () (const bool b, const object_list::value_type& i);
+		bad_bool
+		operator () (const bad_bool b,
+			const object_list::value_type& i);
 	};	// end class instance_reference_appender
 
 protected:
-	bool
+	good_bool
 	validate_dimensions_match(const dest_const_ptr_type&, 
 		const size_t ) const;
 
-	bool
+	good_bool
 	validate_reference_is_uninitialized(const dest_const_ptr_type&) const;
 
 };	// end class param_expression_assignment
@@ -92,11 +96,7 @@ protected:
 /**
 	pbool-specific version of expression assignments.  
  */
-class pbool_expression_assignment : public param_expression_assignment
-#if 0
-		, public object
-#endif
-		{
+class pbool_expression_assignment : public param_expression_assignment {
 private:
 	typedef	pbool_expression_assignment		this_type;
 public:
@@ -129,7 +129,7 @@ public:
 	size_t
 	size(void) const;
 
-	bool
+	bad_bool
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
@@ -198,7 +198,7 @@ public:
 	size_t
 	size(void) const;
 
-	bool
+	bad_bool
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void

@@ -1,12 +1,13 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.13 2005/02/27 22:54:16 fang Exp $
+	$Id: art_object_instance_param.h,v 1.14 2005/03/01 04:50:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
 #define	__ART_OBJECT_INSTANCE_PARAM_H__
 
+#include "boolean_types.h"
 #include "art_object_instance_base.h"
 #include "art_object_expr_param_ref.h"	// for typedef init_arg_type
 #include "memory/count_ptr.h"
@@ -21,6 +22,8 @@ USING_LIST
 using namespace util::memory;	// for experimental pointer classes
 using util::qmap;
 using util::multikey_map;
+using util::bad_bool;
+using util::good_bool;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -93,11 +96,11 @@ virtual	count_ptr<const param_expr>
 	bool
 	must_be_initialized(void) const;
 
-virtual	bool
-	assign_default_value(count_ptr<const param_expr> p) = 0;
+virtual	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p) = 0;
 
 // used by definition_base::certify_template_arguments
-virtual	bool
+virtual	good_bool
 	type_check_actual_param_expr(const param_expr& pe) const = 0;
 
 /**
@@ -157,16 +160,17 @@ public:
 	/**
 		\return false on error, true on success.  
 	 */
-	bool operator = (const value_type b) {
+	good_bool
+	operator = (const value_type b) {
 		assert(instantiated);
 		if (valid)
 			// error: already initialized
 			// or allow multiple assignments with the same value?
-			return false;
+			return good_bool(false);
 		else {
 			value = b;
 			valid = true;
-			return true;
+			return good_bool(true);
 		}
 	}
 
@@ -235,11 +239,11 @@ virtual	ostream&
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& e);
 
-	bool
-	assign_default_value(count_ptr<const param_expr> p);
+	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p);
 
 	count_ptr<const param_expr>
 	default_value(void) const;
@@ -247,7 +251,7 @@ virtual	ostream&
 	count_ptr<const pbool_expr>
 	initial_value(void) const;
 
-	bool
+	good_bool
 	type_check_actual_param_expr(const param_expr& pe) const;
 
 virtual	void
@@ -255,12 +259,12 @@ virtual	void
 
 // virtual	bool lookup_value(bool& v) const = 0;
 
-virtual	bool
+virtual	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	bool
+virtual	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
@@ -269,8 +273,8 @@ virtual	const_index_list
 
 public:
 // really should be protected, usable by pbool_instance_reference::assigner
-virtual	bool
-	assign(const multikey_index_type& k, const bool b) = 0;
+virtual	bad_bool
+	assign(const multikey_index_type& k, const value_type b) = 0;
 
 public:
 
@@ -338,15 +342,15 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l,
 		const const_range_list& r) const;
 
-	bool
+	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
 
 	/// helper functor for dumping values
@@ -391,10 +395,10 @@ public:
 	ostream&
 	dump_unrolled_values(ostream& o) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& i) const;
 
-	bool
+	bad_bool
 	assign(const value_type i);
 
 // there are implemented to do nothing but sanity check, 
@@ -402,16 +406,16 @@ public:
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
-	bool
+	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
 
 	const_index_list
@@ -462,16 +466,17 @@ public:
 	/**
 		\return false on error, true on success.  
 	 */
-	bool operator = (const value_type i) {
+	good_bool
+	operator = (const value_type i) {
 		assert(instantiated);
 		if (valid)
 			// error: already initialized
 			// or allow multiple assignments with the same value?
-			return false;
+			return good_bool(false);
 		else {
 			value = i;
 			valid = true;
-			return true;
+			return good_bool(true);
 		}
 	}
 
@@ -561,11 +566,11 @@ virtual	ostream&
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& e);
 
-	bool
-	assign_default_value(count_ptr<const param_expr> p);
+	good_bool
+	assign_default_value(const count_ptr<const param_expr>& p);
 
 	count_ptr<const param_expr>
 	default_value(void) const;
@@ -573,19 +578,19 @@ virtual	ostream&
 	count_ptr<const pint_expr>
 	initial_value(void) const;
 
-	bool
+	good_bool
 	type_check_actual_param_expr(const param_expr& pe) const;
 
 
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
-virtual	bool
+virtual	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	bool
+virtual	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const = 0;
 
@@ -594,7 +599,7 @@ virtual	const_index_list
 
 public:
 // really should be protected, usable by pint_instance_reference::assigner
-virtual	bool
+virtual	bad_bool
 	assign(const multikey_index_type& k, const value_type i) = 0;
 
 public:
@@ -665,15 +670,15 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
-	bool
+	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
 
 	/// helper functor for dumping values
@@ -724,10 +729,10 @@ public:
 	ostream&
 	dump_unrolled_values(ostream& o) const;
 
-	bool
+	good_bool
 	lookup_value(value_type& i) const;
 
-	bool
+	bad_bool
 	assign(const value_type i);
 
 // there are implemented to do nothing but sanity check, 
@@ -735,16 +740,16 @@ public:
 	void
 	instantiate_indices(const index_collection_item_ptr_type& i);
 
-	bool
+	good_bool
 	lookup_value(value_type& v,
 		const multikey_index_type& i) const;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-	bool
+	good_bool
 	lookup_value_collection(list<value_type>& l, 
 		const const_range_list& r) const;
 
-	bool
+	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
 
 	const_index_list

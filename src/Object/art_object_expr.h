@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.20 2005/02/27 22:54:11 fang Exp $
+	$Id: art_object_expr.h,v 1.21 2005/03/01 04:50:56 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -228,7 +228,7 @@ public:
 	const_range_list
 	static_overlap(const range_expr_list& r) const;
 		// false, will be empty
-	bool
+	good_bool
 	resolve_ranges(const_range_list& r) const;
 
 	bool
@@ -299,16 +299,16 @@ public:
 	bool
 	must_be_equivalent_pint(const pint_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -378,16 +378,16 @@ public:
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -483,16 +483,16 @@ public:
 	bool
 	must_be_equivalent_pint(const pint_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -589,16 +589,16 @@ public:
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -690,16 +690,16 @@ public:
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -774,10 +774,10 @@ public:
 	const_range
 	static_constant_range(void) const;
 
-	bool
+	good_bool
 	resolve_range(const_range& r) const;
 
-	bool
+	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const;
 
 	bool

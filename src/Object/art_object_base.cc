@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.29 2005/02/27 22:54:08 fang Exp $
+ 	$Id: art_object_base.cc,v 1.30 2005/03/01 04:50:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -18,6 +18,8 @@
 #include "art_object_assign.h"
 #include "art_object_connect.h"
 #include "art_object_definition_base.h"
+
+#include "boolean_types.h"
 
 //=============================================================================
 
@@ -110,7 +112,7 @@ object_list::make_formal_dense_range_list(void) const {
 	// initialize some bools to true
 	// and set them false approriately in iterations
 	typedef	count_ptr<range_expr_list>	return_type;
-	bool err = false;
+	bad_bool err(false);
 	bool is_pint_expr = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
@@ -122,14 +124,14 @@ object_list::make_formal_dense_range_list(void) const {
 			cerr << "non-int expression found where single int "
 				"is expected in dense range declaration.  "
 				"ERROR!  " << endl;	// where?
-			err = true;
+			err.bad = true;
 		} else {
 			if (p->dimensions() != 0) {
 				cerr << "int expression must be 0-dimensional, "
 					"but is actually " <<
 					p->dimensions() << "-dimensional.  "
 					"ERROR!  " << endl;
-				err = true;
+				err.bad = true;
 			}
 			if (p->is_static_constant()) {
 				continue;
@@ -143,7 +145,7 @@ object_list::make_formal_dense_range_list(void) const {
 				// not initialized! error.  
 				cerr << "int expression is not initialized.  "
 					"ERROR!  " << endl;	// where?
-				err = true;
+				err.bad = true;
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
@@ -151,7 +153,7 @@ object_list::make_formal_dense_range_list(void) const {
 			INVARIANT(p->is_unconditional());
 		}
 	}
-	if (err) {
+	if (err.bad) {
 		cerr << "Failed to construct a formal dense range list!  "
 			<< endl;
 		return return_type(NULL);
@@ -207,7 +209,7 @@ object_list::make_sparse_range_list(void) const {
 	typedef	count_ptr<range_expr_list>		return_type;
 	// initialize some bools to true
 	// and set them false approriately in iterations
-	bool err = false;
+	bad_bool err(false);
 	bool is_valid_range = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
@@ -230,7 +232,7 @@ object_list::make_sparse_range_list(void) const {
 					"but is actually " <<
 					p->dimensions() << "-dimensional.  "
 					"ERROR!  " << endl;
-				err = true;
+				err.bad = true;
 			}
 			if (p->is_static_constant()) {
 				continue;
@@ -245,7 +247,7 @@ object_list::make_sparse_range_list(void) const {
 				cerr << "int expression is definitely "
 					"not initialized.  ERROR!  "
 					<< endl;	// where?
-				err = true;
+				err.bad = true;
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
@@ -258,7 +260,7 @@ object_list::make_sparse_range_list(void) const {
 					"but is actually " <<
 					r->dimensions() << "-dimensional.  "
 					"ERROR!  " << endl;
-				err = true;
+				err.bad = true;
 			}
 			if (r->is_static_constant()) {
 				continue;
@@ -273,7 +275,7 @@ object_list::make_sparse_range_list(void) const {
 				cerr << "range expression is definitely "
 					"not initialized.  ERROR!  "
 					<< endl;	// where?
-				err = true;
+				err.bad = true;
 			}
 		} else {
 			// is neither pint_expr nor range_expr
@@ -284,10 +286,10 @@ object_list::make_sparse_range_list(void) const {
 				"expression but got a ") << 
 				" in dimension " << k << " of array ranges.  "
 				"ERROR!  " << endl;	// where?
-			err = true;
+			err.bad = true;
 		}
 	}
-	if (err || !is_valid_range) {
+	if (err.bad || !is_valid_range) {
 		cerr << "Failed to construct a sparse range list!  "
 			<< endl;
 		return return_type(NULL);
@@ -366,7 +368,7 @@ object_list::make_index_list(void) const {
 	typedef	excl_ptr<index_list>		return_type;
 	// initialize some bools to true
 	// and set them false approriately in iterations
-	bool err = false;
+	bad_bool err(false);
 	bool is_valid_index = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
@@ -389,7 +391,7 @@ object_list::make_index_list(void) const {
 					"but is actually " <<
 					p->dimensions() << "-dimensional.  "
 					"ERROR!  " << endl;
-				err = true;
+				err.bad = true;
 			}
 			if (p->is_static_constant()) {
 				continue;
@@ -404,7 +406,7 @@ object_list::make_index_list(void) const {
 				cerr << "int expression is definitely "
 					"not initialized.  ERROR!  "
 					<< endl;	// where?
-				err = true;
+				err.bad = true;
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
@@ -417,7 +419,7 @@ object_list::make_index_list(void) const {
 					"but is actually " <<
 					r->dimensions() << "-dimensional.  "
 					"ERROR!  " << endl;
-				err = true;
+				err.bad = true;
 			}
 			if (r->is_static_constant()) {
 				continue;
@@ -432,7 +434,7 @@ object_list::make_index_list(void) const {
 				cerr << "range expression is definitely "
 					"not initialized.  ERROR!  "
 					<< endl;	// where?
-				err = true;
+				err.bad = true;
 			}
 		} else {
 			// is neither pint_expr nor range_expr
@@ -443,10 +445,10 @@ object_list::make_index_list(void) const {
 				"expression but got a ") << 
 				" in dimension " << k << " of array ranges.  "
 				"ERROR!  " << endl;	// where?
-			err = true;
+			err.bad = true;
 		}
 	}
-	if (err || !is_valid_index) {
+	if (err.bad || !is_valid_index) {
 		cerr << "Failed to construct an index list!  "
 			<< endl;
 		return return_type(NULL);
@@ -530,7 +532,7 @@ object_list::make_index_list(void) const {
 excl_ptr<param_expression_assignment>
 object_list::make_param_assignment(void) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
-	bool err = false;
+	bad_bool err(false);
 	// right-hand-side source expression
 	const value_type& last_obj = back();
 	const count_ptr<const param_expr>
@@ -563,7 +565,8 @@ object_list::make_param_assignment(void) {
 
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
-	if (err) return return_type(NULL);
+	if (err.bad)
+		return return_type(NULL);
 	else	return ret;		// is ok
 }
 
@@ -608,13 +611,8 @@ object_list::make_alias_connection(void) const {
 	const count_ptr<const instance_reference_base>
 		fir(fo.is_a<const instance_reference_base>());
 	NEVER_NULL(fir);
-#if 0
-	excl_ptr<aliases_connection_base>
-		ret(new aliases_connection_base);
-#else
 	excl_ptr<aliases_connection_base>
 		ret = instance_reference_base::make_aliases_connection(fir);
-#endif
 	// keep this around for type-checking comparisons
 	ret->append_instance_reference(fir);
 	// starting with second instance reference, type-check and alias
@@ -659,7 +657,7 @@ object_list::make_port_connection(
 		cerr << "Instance reference port connection must be scalar, "
 			"but got a " << ir_dim << "-dim reference!" << endl;
 		return return_type(NULL);
-	} else if (base_def->certify_port_actuals(*this)) {
+	} else if (base_def->certify_port_actuals(*this).good) {
 		const_iterator i = begin();
 		for ( ; i!=end(); i++) {
 			count_ptr<const instance_reference_base>

@@ -1,12 +1,13 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.6 2005/02/27 22:54:11 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.7 2005/03/01 04:50:56 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
 #define __ART_OBJECT_EXPR_PARAM_REF_H__
 
+#include "boolean_types.h"
 #include "art_object_expr_const.h"	// for const_index_list
 #include "art_object_inst_ref_base.h"	// includes "art_object_base.h"
 
@@ -93,7 +94,7 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& i);
 
 	string
@@ -124,16 +125,16 @@ public:
 	bool
 	must_be_equivalent_pbool(const pbool_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -155,13 +156,13 @@ public:
 		assigner(const pbool_expr& p);
 		// default destructor
 
-		bool
-		operator () (const bool b,
+		bad_bool
+		operator () (const bad_bool b,
 			const pbool_instance_reference& p) const;
 
 		template <template <class> class P>
-		bool
-		operator () (const bool b,
+		bad_bool
+		operator () (const bad_bool b,
 			const P<const pbool_instance_reference>& p) const {
 			assert(p);
 			return this->operator()(b, *p);
@@ -235,7 +236,7 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
-	bool
+	good_bool
 	initialize(const init_arg_type& i);
 
 	string
@@ -262,16 +263,16 @@ public:
 	bool
 	must_be_equivalent_pint(const pint_expr& ) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
 
-	bool
+	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -296,13 +297,13 @@ public:
 		assigner(const pint_expr& p);
 		// default destructor
 
-		bool
-		operator () (const bool b,
+		bad_bool
+		operator () (const bad_bool b,
 			const pint_instance_reference& p) const;
 
 		template <template <class> class P>
-		bool
-		operator () (const bool b,
+		bad_bool
+		operator () (const bad_bool b,
 			const P<const pint_instance_reference>& p) const {
 			assert(p);
 			return this->operator()(b, *p);

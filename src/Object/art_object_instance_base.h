@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.12 2005/02/27 22:54:14 fang Exp $
+	$Id: art_object_instance_base.h,v 1.13 2005/03/01 04:50:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -12,6 +12,7 @@
 #include "STL/list.h"
 
 #include "macros.h"
+#include "boolean_types.h"
 #include "art_object_base.h"
 #include "persistent.h"		// for persistent object interface
 	// includes <iosfwd>
@@ -26,6 +27,8 @@ USING_LIST
 USING_DEQUE
 using std::istream;
 using std::string;
+using util::bad_bool;
+using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
 using namespace util::memory;
@@ -209,7 +212,7 @@ public:
 		const never_ptr<const instance_collection_base> b) const;
 
 protected:
-	bool
+	good_bool
 	check_expression_dimensions(const param_expr& pr) const;
 
 public:
