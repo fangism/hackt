@@ -1,5 +1,31 @@
 "ChangeLog"
 
+2004-12-10	David Fang	<fangism@users.sourceforge.net>
+
+	* Massively extended the data-type instance collection and reference
+	  classes into specialized type, via copy-paste-tweak.  
+	  (OMG, nothing broke!)
+	  Divided up data instance class files.  
+	  datatype_instance_collection is now an abstract parent of
+	  many children.  
+
+	* When a datatype reference creates an instance, it now
+	  correctly resolves typedefs to generate the correct class
+	  of instance collections.  
+
+	* Standardized parent calls to persistent object management
+	  helper methods (collect_transient, write_object, load_object), 
+	  named by default with _base.  This dramatically reduces
+	  the amount of copy-paste maintenance in children classes.  
+
+	* art_object_type_hash.h: Updated persistent object type keys
+	  to reflect extensions to class hierarchy.  
+
+	* TODO: instance reference classes that are similar should
+	  be rewritten as templates for trivial generalizability.  
+	  Same goes for generic instance collection patterns.  
+
+
 2004-12-06	David Fang	<fangism@users.sourceforge.net>
 
 	* More code clean-up, header file organization continued...

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.26 2004/12/07 02:22:08 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.27 2004/12/10 22:02:17 fang Exp $
  */
 
 #include <iostream>
@@ -405,28 +405,24 @@ instance_collection_base::check_expression_dimensions(const param_expr& pe) cons
 	Utility function for walking index collection list
 	and collecting pointers.  
  */
+inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
-	index_collection_type::const_iterator
-		c_iter = index_collection.begin();
-	const index_collection_type::const_iterator
-		c_end = index_collection.end();
-#if 0
-	for ( ; c_iter!=c_end; c_iter++) {
-		const index_collection_item_ptr_type& p = *c_iter;
-		assert(p);
-		p->collect_transient_info(m);
-	}
-#else
-	for_each(c_iter, c_end, 
+	for_each(index_collection.begin(), index_collection.end(), 
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
 		dereference<never_ptr, const instance_management_base>()
 	)
 	);
-#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instance_collection_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	collect_index_collection_pointers(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -435,13 +431,22 @@ instance_collection_base::collect_index_collection_pointers(
 	with pointers translated into indicies.  
 	Also saves the depth (dimensions).
  */
+inline
 void
 instance_collection_base::write_index_collection_pointers(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	// need a specialization for count_ptrs
-	write_value(f, depth);
-	m.write_pointer_list(f, index_collection);
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, owner);
+	write_string(o, key);
+	write_value(o, depth);
+	m.write_pointer_list(o, index_collection);
+		// is actually specialized for count_ptr's :)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instance_collection_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	write_index_collection_pointers(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -450,20 +455,31 @@ instance_collection_base::write_index_collection_pointers(
 	with indices translated into pointers.  
 	Also restores depth (dimensions).
  */
+inline
 void
 instance_collection_base::load_index_collection_pointers(
-		persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
-	// need a specialization for count_ptrs
-	read_value(f, depth);
-	m.read_pointer_list(f, index_collection);
+		persistent_object_manager& m, istream& i) {
+	read_value(i, depth);
+	m.read_pointer_list(i, index_collection);
+		// is actually specialized for count_ptr's :)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instance_collection_base::load_object_base(
+		persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, owner);
+	read_string(i, const_cast<string&>(key));
+	load_index_collection_pointers(m, i);
 }
 
 //=============================================================================
 // class datatype_instance_collection method definitions
 
+#if 0
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_instance_collection, 
 	DATA_INSTANCE_COLLECTION_TYPE_KEY)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -487,10 +503,12 @@ datatype_instance_collection::~datatype_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 datatype_instance_collection::what(ostream& o) const {
 	return o << "datatype-inst";
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
@@ -500,6 +518,8 @@ datatype_instance_collection::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// becoming pure-virtual
 /**
 	Create a datatype reference object.
 	See if it's already registered in the current context.  
@@ -519,6 +539,7 @@ datatype_instance_collection::make_instance_reference(void) const {
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -532,13 +553,14 @@ datatype_instance_collection::make_member_instance_reference(
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<datatype_member_instance_reference>(
-		new datatype_member_instance_reference(
-			b, never_ptr<const datatype_instance_collection>(this)));
+		new datatype_member_instance_reference(b,
+			never_ptr<const datatype_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 datatype_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -587,6 +609,7 @@ if (!m.flag_visit(this)) {
 }
 // else already visited
 }
+#endif
 
 //=============================================================================
 // class process_instance_collection method definitions
@@ -673,7 +696,7 @@ process_instance_collection::collect_transient_info(
 if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
-	collect_index_collection_pointers(m);
+	parent_type::collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -690,9 +713,13 @@ process_instance_collection::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
+#if 0
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -702,9 +729,13 @@ process_instance_collection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
+#if 0
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
+#else
+	parent_type::load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -796,7 +827,7 @@ channel_instance_collection::collect_transient_info(
 if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
-	collect_index_collection_pointers(m);
+	parent_type::collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -813,9 +844,13 @@ channel_instance_collection::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
+#if 0
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -825,9 +860,13 @@ channel_instance_collection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
+#if 0
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
+#else
+	parent_type::load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited

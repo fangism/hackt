@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.15 2004/12/07 02:22:07 fang Exp $
+	$Id: art_object_definition.h,v 1.16 2004/12/10 22:02:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -237,15 +237,26 @@ public:
 virtual	~datatype_definition_base() { }
 
 	excl_ptr<definition_base>
-		make_typedef(never_ptr<const scopespace> s, 
-			const token_identifier& id) const;
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const;
 
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	/**
+		Resolves the underlying type, without regard to the 
+		template arguments of any typedefs, for the sake of 
+		resolving the category: built-in, enum, or struct.
+	 */
+virtual	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const = 0;
+
 virtual	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
-virtual	bool require_signature_match(
-		never_ptr<const definition_base> d) const = 0;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list> ta) const = 0;
+
+virtual	bool
+	require_signature_match(never_ptr<const definition_base> d) const = 0;
 };	// end class datatype_definition_base
 
 //=============================================================================
@@ -273,6 +284,9 @@ public:
 	string get_qualified_name(void) const;
 	never_ptr<const scopespace> get_parent(void) const;
 
+	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const;
+
 	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
@@ -295,7 +309,7 @@ public:
 //	void collect_transient_info(persistent_object_manager& m) const;
 //	void write_object(const persistent_object_manager& m) const;
 	void load_used_id_map_object(excl_ptr<persistent>& o);
-};	// end class_built_in_datatype_def
+};	// end class built_in_datatype_def
 
 //-----------------------------------------------------------------------------
 /**
@@ -321,6 +335,7 @@ class enum_datatype_def : public datatype_definition_base, public scopespace {
 protected:
 	const string					key;
 	const never_ptr<const name_space>		parent;
+	// realy this has no template arguments...
 	// don't we need to track ordering of identifiers added?  later...
 public:
 	enum_datatype_def(never_ptr<const name_space> o, const string& n);
@@ -333,12 +348,12 @@ public:
 	string get_qualified_name(void) const;
 	never_ptr<const scopespace> get_parent(void) const;
 
-#if 0
-	// don't need yet
+	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const;
+
 	count_ptr<const fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
-#endif
 
 	bool require_signature_match(never_ptr<const definition_base> d) const;
 
@@ -352,6 +367,8 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	Consider templating this to make it extensible to other types.
+
 	Reserved for special built-in parameter types, pint and pbool.  
 	Nothing can really be derived from them... yet.  
 	Note that there is no intermediate param_definition class, 
@@ -404,6 +421,9 @@ public:
 	string get_qualified_name(void) const;
 	never_ptr<const scopespace> get_parent(void) const;
 
+	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const;
+
 	never_ptr<const object> lookup_object_here(const string& id) const;
 
 	ostream& what(ostream& o) const;
@@ -411,6 +431,10 @@ public:
 
 	bool require_signature_match(
 		never_ptr<const definition_base> d) const { return false; }
+
+	count_ptr<const fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<dynamic_param_expr_list> ta) const;
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
@@ -441,6 +465,9 @@ public:
 	never_ptr<const scopespace> get_parent(void) const;
 	never_ptr<const fundamental_type_reference>
 		get_base_type_ref(void) const;
+
+	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const;
 
 	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
 	count_ptr<const fundamental_type_reference>

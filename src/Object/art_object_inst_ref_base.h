@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.2 2004/12/07 02:22:08 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.3 2004/12/10 22:02:16 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -14,35 +14,13 @@
 #include "multidimensional_sparse_set.h"
 
 namespace ART {
-//=============================================================================
-#if 0
-// forward declarations from outside namespaces
-namespace parser {
-	// note: methods may specify string as formal types, 
-	// but you can still pass token_identifiers and token_strings
-	// because they are derived from string.
-	class token_string;
-	class token_identifier;
-	class qualified_id_slice;
-	class qualified_id;
-	class context;
-}
-using namespace parser;
-#endif
-
-//=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
-//=============================================================================
-	using std::ostream;
-	using std::istream;
-	USING_LIST
-	using namespace util::memory;
-	using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+
+using std::ostream;
+using std::istream;
+USING_LIST
+using namespace util::memory;
+using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 //=============================================================================
 /**
@@ -204,8 +182,19 @@ virtual	string hash_string(void) const;
 private:
 	// compute static index coverage
 	excl_ptr<mset_base> unroll_static_instances(const size_t dim) const;
-public:
+
+protected:		// for children only
 	// persistent object IO helper methods
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager& m, ostream& o) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& i);
+
+private:
 	// need help with instantiation state, count?
 	void write_instance_collection_state(ostream& f) const;
 	void load_instance_collection_state(istream& f);
@@ -221,8 +210,10 @@ public:
  */
 class member_instance_reference_base : virtual public instance_reference_base {
 protected:
-	/** The owning base instance, 
+	/**
+		The owning base instance reference, 
 		must have dimension-0, scalar... for now
+		Is type limiter to simple? or can it be nested member?
 	 */
 	const count_ptr<const simple_instance_reference>	base;
 protected:
@@ -232,33 +223,26 @@ public:
 		count_ptr<const simple_instance_reference> b);
 virtual	~member_instance_reference_base();
 
-#if 0
-	size_t dimensions(void) const;
-	bool may_be_densely_packed(void) const;
-	bool must_be_densely_packed(void) const;
-	bool is_static_constant_collection(void) const;
-	bool has_static_constant_dimensions(void) const;
-	const_range_list static_constant_dimensions(void) const;
-	const_index_list implicit_static_constant_indices(void) const;
+protected:	// for children only
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
 
-	bool attach_indices(excl_ptr<index_list> i);
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-//	string hash_string(void) const;
-	bool may_be_type_equivalent(const instance_reference_base& i) const;
-	bool must_be_type_equivalent(const instance_reference_base& i) const;
-#endif
+	void
+	load_object_base(persistent_object_manager&, istream&);
 
-};	// end class member_instance_reference
+};	// end class member_instance_reference_base
 
 //=============================================================================
 /**
 	A reference to a simple instance of parameter.  
+	Abstract base class.  
  */
 class param_instance_reference : public simple_instance_reference {
 protected:
+	typedef	simple_instance_reference	parent_type;
 //	excl_ptr<index_list>			array_indices;	// inherited
 
 // virtualized
@@ -271,11 +255,14 @@ public:
 		const instantiation_state& st);
 virtual	~param_instance_reference() { }
 
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
 virtual	never_ptr<const instance_collection_base>
-		get_inst_base(void) const = 0;
+	get_inst_base(void) const = 0;
+
 virtual	never_ptr<const param_instance_collection>
-		get_param_inst_base(void) const = 0;
+	get_param_inst_base(void) const = 0;
 
 	// consider moving these functions into instance_reference_base
 	//	where array_indices are inherited from.  
@@ -285,10 +272,10 @@ virtual	never_ptr<const param_instance_collection>
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 
-#if 0
-// PHASED OUT: is type-specific
-virtual	bool initialize(count_ptr<const param_expr> i) = 0;
-#endif
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 
 };	// end class param_instance_reference
 

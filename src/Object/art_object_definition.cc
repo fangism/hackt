@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.19 2004/12/07 02:22:07 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.20 2004/12/10 22:02:15 fang Exp $
  */
 
 #include <iostream>
@@ -622,20 +622,24 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// now pure virtual
 count_ptr<const fundamental_type_reference>
 datatype_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
+	typedef count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_ptr<const fundamental_type_reference>(
+		return return_type(
 			new data_type_reference(
 				never_ptr<const datatype_definition_base>(this), 
 				excl_ptr<const param_expr_list>(ta)));
 	} else {
 		cerr << "ERROR: failed to make data_type_reference "
 			"because template argument types do not match." << endl;
-		return count_ptr<const fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
+#endif
 
 //=============================================================================
 // class channel_definition_base method definitions
@@ -664,15 +668,16 @@ channel_definition_base::make_typedef(never_ptr<const scopespace> s,
 count_ptr<const fundamental_type_reference>
 channel_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
+	typedef count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_ptr<const fundamental_type_reference>(
+		return return_type(
 			new channel_type_reference(
 				never_ptr<const channel_definition_base>(this), 
 				excl_ptr<const param_expr_list>(ta)));
 	} else {
 		cerr << "ERROR: failed to make channel_type_reference "
 			"because template argument types do not match." << endl;
-		return count_ptr<const fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -1011,6 +1016,12 @@ built_in_datatype_def::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const datatype_definition_base>
+built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
+	return never_ptr<const datatype_definition_base>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -1271,6 +1282,23 @@ enum_datatype_def::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const datatype_definition_base>
+enum_datatype_def::resolve_canonical_datatype_definition(void) const {
+	return never_ptr<const datatype_definition_base>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+enum_datatype_def::make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list> ta) const {
+	typedef count_ptr<const fundamental_type_reference>	return_type;
+	return return_type(
+		new data_type_reference(
+			never_ptr<const datatype_definition_base>(this), 
+			excl_ptr<const param_expr_list>(NULL)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not the same as type-equivalence, which requires precise 
 	pointer equality.  
@@ -1464,9 +1492,32 @@ user_def_datatype::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const datatype_definition_base>
+user_def_datatype::resolve_canonical_datatype_definition(void) const {
+	return never_ptr<const datatype_definition_base>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_def_datatype::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+user_def_datatype::make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list> ta) const {
+	typedef count_ptr<const fundamental_type_reference>	return_type;
+	if (certify_template_arguments(ta)) {
+		return return_type(
+			new data_type_reference(
+				never_ptr<const datatype_definition_base>(this), 
+				excl_ptr<const param_expr_list>(ta)));
+	} else {
+		cerr << "ERROR: failed to make data_type_reference "
+			"because template argument types do not match." << endl;
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1582,6 +1633,18 @@ datatype_definition_alias::get_key(void) const {
 never_ptr<const scopespace>
 datatype_definition_alias::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation: recursively resolves canonical definition, 
+	without any template arguments.  
+	No fear of circular typedefs!!!
+ */
+never_ptr<const datatype_definition_base>
+datatype_definition_alias::resolve_canonical_datatype_definition(void) const {
+	return base->get_base_datatype_def()
+		->resolve_canonical_datatype_definition();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
-	\file "art_object_instance.h"
-	Instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.1 2004/12/07 02:22:09 fang Exp $
+	\file "art_object_instance_param.h"
+	Parameter instance collection classes for ART.  
+	$Id: art_object_instance_param.h,v 1.2 2004/12/10 22:02:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -32,6 +32,8 @@ using namespace MULTIKEY_MAP_NAMESPACE;
 	TO DO: derive from a interface for template_argument.  
  */
 class param_instance_collection : public instance_collection_base {
+private:
+	typedef	instance_collection_base	parent_type;
 protected:
 	/**
 		OBSOLETE after sub-typing, and hard-wiring.  
@@ -60,16 +62,19 @@ virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
 	// why is this never?
 virtual	count_ptr<instance_reference_base>
-		make_instance_reference(void) const = 0;
+	make_instance_reference(void) const = 0;
+
 	/** should just assert fail, forbid reference to param members */
 	count_ptr<member_instance_reference_base>
-		make_member_instance_reference(
-			count_ptr<const simple_instance_reference> b) const;
+	make_member_instance_reference(
+		count_ptr<const simple_instance_reference> b) const;
 
 	/** appropriate for the context of a template parameter formal */
-virtual	count_ptr<const param_expr> default_value(void) const = 0;
+virtual	count_ptr<const param_expr>
+	default_value(void) const = 0;
 
-	bool is_template_formal(void) const;
+	bool
+	is_template_formal(void) const;
 
 /**
 	A parameter is considered "usable" if it is either initialized
@@ -84,19 +89,25 @@ virtual	count_ptr<const param_expr> default_value(void) const = 0;
 	\return true if initialized to an expression.  
 	\sa initialize
  */
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
+	bool
+	may_be_initialized(void) const;
 
-virtual	bool assign_default_value(count_ptr<const param_expr> p) = 0;
+	bool
+	must_be_initialized(void) const;
+
+virtual	bool
+	assign_default_value(count_ptr<const param_expr> p) = 0;
 
 // used by definition_base::certify_template_arguments
-virtual	bool type_check_actual_param_expr(const param_expr& pe) const = 0;
+virtual	bool
+	type_check_actual_param_expr(const param_expr& pe) const = 0;
 
 /**
 	whether or not this can be resolved to some static constant value.
 	Will also need two flavors.  
  */
-	bool is_static_constant(void) const;
+	bool
+	is_static_constant(void) const;
 
 #if 0
 NOTE: these functions should only be applicable to param_instance_references.  
@@ -109,6 +120,10 @@ NOTE: these functions should only be applicable to param_instance_references.
 
 	bool is_unconditional(void) const;
 #endif
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 };	// end class param_instance_collection
 
 //-----------------------------------------------------------------------------
@@ -168,6 +183,8 @@ operator << (ostream& o, const pbool_instance& p);
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
 class pbool_instance_collection : public param_instance_collection {
+private:
+	typedef	param_instance_collection	parent_type;
 // friend class pbool_instantiation_statement;
 friend class pbool_instance_reference;
 protected:
@@ -205,31 +222,44 @@ virtual	ostream&
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
-		get_type_ref(void) const;
-	// why never?
+	get_type_ref(void) const;
+
 	count_ptr<instance_reference_base>
-		make_instance_reference(void) const;
+	make_instance_reference(void) const;
 
-	bool initialize(count_ptr<const pbool_expr> e);
-	bool assign_default_value(count_ptr<const param_expr> p);
-	count_ptr<const param_expr> default_value(void) const;
-	count_ptr<const pbool_expr> initial_value(void) const;
+	bool
+	initialize(count_ptr<const pbool_expr> e);
 
-	bool type_check_actual_param_expr(const param_expr& pe) const;
+	bool
+	assign_default_value(count_ptr<const param_expr> p);
 
-virtual	void instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+	count_ptr<const param_expr>
+	default_value(void) const;
+
+	count_ptr<const pbool_expr>
+	initial_value(void) const;
+
+	bool
+	type_check_actual_param_expr(const param_expr& pe) const;
+
+virtual	void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 // virtual	bool lookup_value(bool& v) const = 0;
-virtual	bool lookup_value(bool& v, const multikey_base<int>& i) const = 0;
+virtual	bool
+	lookup_value(bool& v, const multikey_base<int>& i) const = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	bool lookup_value_collection(list<bool>& l, 
+virtual	bool
+	lookup_value_collection(list<bool>& l, 
 		const const_range_list& r) const = 0;
 
-virtual	const_index_list resolve_indices(const const_index_list& l) const = 0;
+virtual	const_index_list
+	resolve_indices(const const_index_list& l) const = 0;
 
 public:
 // really should be protected, usable by pbool_instance_reference::assigner
-virtual	bool assign(const multikey_base<int>& k, const bool b) = 0;
+virtual	bool
+	assign(const multikey_base<int>& k, const bool b) = 0;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
@@ -243,8 +273,10 @@ public:
 
 protected:
 	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object_base(const persistent_object_manager& m) const;
-	void load_object_base(persistent_object_manager& m);
+	void write_object_base(const persistent_object_manager& m, 
+		ostream& o) const;
+	void load_object_base(persistent_object_manager& m, 
+		istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.
@@ -258,17 +290,25 @@ protected:
  */
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 class pbool_array : public pbool_instance_collection {
+private:
+	typedef	pbool_instance_collection		parent_type;
+friend class pbool_instance_collection;
 public:
+	typedef	pbool_instance				element_type;
 	/// Type for actual values, including validity and status.
-	typedef	multikey_qmap<D, int, pbool_instance>	collection_type;
+	typedef	multikey_qmap<D, int, element_type>	collection_type;
+#if 0
+	// NOT USED
 	/// collection of valid values passed around.
 	typedef	multikey_qmap<D, int, int>		value_type;
+#endif
 
 protected:
 	/// the collection of boolean instances
 	collection_type					collection;
-public:
 	pbool_array();
+
+public:
 	pbool_array(const scopespace& o, const string& n);
 	~pbool_array();
 
@@ -297,9 +337,12 @@ public:
 	};      // end struct key_value_dumper
 
 public:
-//	PERSISTENT_METHODS
+#if 1
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+#else
 	void write_object(const persistent_object_manager& m) const;
 	void load_object(persistent_object_manager& m);
+#endif
 
 };	// end class pbool_array
 
@@ -309,9 +352,12 @@ public:
  */
 template <>
 class pbool_array<0> : public pbool_instance_collection {
+private:
+	typedef	pbool_instance_collection		parent_type;
 public:
 	typedef	pbool_instance				instance_type;
-	typedef	int					value_type;
+	typedef	pbool_instance				element_type;
+	typedef	pbool_instance::value_type		value_type;
 protected:
 	instance_type					the_instance;
 public:
@@ -345,9 +391,12 @@ public:
 	const_index_list resolve_indices(const const_index_list& l) const;
 
 public:
-//	PERSISTENT_METHODS
+#if 1
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+#else
 	void write_object(const persistent_object_manager& m) const;
 	void load_object(persistent_object_manager& m);
+#endif
 };	// end class pbool_array specialization
 
 typedef	pbool_array<0>			pbool_scalar;
@@ -428,6 +477,8 @@ operator << (ostream& o, const pint_instance& p);
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
+private:
+	typedef	param_instance_collection	parent_type;
 // friend class pint_instantiation_statement;
 friend class pint_instance_reference;
 // friend class pint_instance_reference::assigner;
@@ -509,8 +560,10 @@ public:
 
 protected:
 	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object_base(const persistent_object_manager& m) const;
-	void load_object_base(persistent_object_manager& m);
+	void write_object_base(const persistent_object_manager& m, 
+		ostream& o) const;
+	void load_object_base(persistent_object_manager& m, 
+		istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.
@@ -524,15 +577,20 @@ protected:
  */
 PINT_ARRAY_TEMPLATE_SIGNATURE
 class pint_array : public pint_instance_collection {
+private:
+	typedef	pint_instance_collection		parent_type;
 public:
+	typedef	pint_instance				element_type;
 	/**
 		Type for actual values, including validity and status.
 	 */
-	typedef	multikey_qmap<D, int, pint_instance>	collection_type;
+	typedef	multikey_qmap<D, int, element_type>	collection_type;
+#if 0
 	/**
 		Collection of valid values passed around.
 	 */
 	typedef	multikey_qmap<D, int, int>		value_type;
+#endif
 protected:
 	/** The collection of value instances */
 	collection_type					collection;
@@ -566,9 +624,12 @@ public:
 	};	// end struct key_value_dumper
 
 public:
-//	PERSISTENT_METHODS
+#if 1
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+#else
 	void write_object(const persistent_object_manager& m) const;
 	void load_object(persistent_object_manager& m);
+#endif
 };	// end class pint_array
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -577,9 +638,12 @@ public:
  */
 template <>
 class pint_array<0> : public pint_instance_collection {
+private:
+	typedef	pint_instance_collection		parent_type;
 public:
 	typedef	pint_instance				instance_type;
-	typedef	int					value_type;
+	typedef	pint_instance				element_type;
+	typedef	element_type::value_type		value_type;
 protected:
 	instance_type					the_instance;
 public:
@@ -613,9 +677,12 @@ public:
 	const_index_list resolve_indices(const const_index_list& l) const;
 
 public:
-//	PERSISTENT_METHODS
+#if 1
+	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+#else
 	void write_object(const persistent_object_manager& m) const;
 	void load_object(persistent_object_manager& m);
+#endif
 };	// end class pint_array specialization
 
 typedef	pint_array<0>			pint_scalar;

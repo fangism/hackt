@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.24 2004/12/07 02:22:07 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.25 2004/12/10 22:02:16 fang Exp $
  */
 
 #include <iostream>
@@ -1008,8 +1008,12 @@ pbool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY))
 {  
+#if 0
 	if (array_indices)
 		array_indices->collect_transient_info(m);
+#else
+	collect_transient_info_base(m);
+#endif
 	pbool_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -1039,8 +1043,12 @@ pbool_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pbool_inst_ref);
+#if 0
 	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
+#else
+	write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 	
@@ -1061,10 +1069,14 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, pbool_inst_ref);
 	assert(pbool_inst_ref);
 	const_cast<pbool_instance_collection&>(*pbool_inst_ref).load_object(m);
+#if 0
 	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
 	if (array_indices)
 		array_indices->load_object(m);
+#else
+	load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1438,8 +1450,12 @@ pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
+#if 0
 	if (array_indices)
 		array_indices->collect_transient_info(m);
+#else
+	collect_transient_info_base(m);
+#endif
 	pint_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -1469,8 +1485,12 @@ pint_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pint_inst_ref);
+#if 0
 	write_instance_collection_state(f);
 	m.write_pointer(f, array_indices);
+#else
+	write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 	
@@ -1489,12 +1509,16 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, pint_inst_ref);
-	assert(pint_inst_ref);
+	NEVER_NULL(pint_inst_ref);
 	const_cast<pint_instance_collection&>(*pint_inst_ref).load_object(m);
+#if 0
 	load_instance_collection_state(f);
 	m.read_pointer(f, array_indices);
 	if (array_indices)
 		array_indices->load_object(m);
+#else
+	load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited

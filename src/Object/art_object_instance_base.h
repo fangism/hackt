@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.2 2004/12/07 02:22:09 fang Exp $
+	$Id: art_object_instance_base.h,v 1.3 2004/12/10 22:02:17 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -29,6 +29,7 @@ namespace entity {
 //=============================================================================
 USING_LIST
 USING_DEQUE
+using std::istream;
 using namespace util;
 using namespace util::memory;
 
@@ -167,14 +168,24 @@ virtual	count_ptr<instance_reference_base>
 virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
 			count_ptr<const simple_instance_reference> b) const = 0;
-protected:
-	// utility functions for handling index collection
+private:
+	// utility functions for handling index collection (inlined)
 	void collect_index_collection_pointers(
 			persistent_object_manager& m) const;
 	void write_index_collection_pointers(
-			const persistent_object_manager& m) const;
+			const persistent_object_manager& m, ostream& ) const;
 	void load_index_collection_pointers(
-			persistent_object_manager& m);
+			persistent_object_manager& m, istream&);
+protected:
+	// wrappers to provide consistent interface to children
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(persistent_object_manager&, istream&);
 public:
 	/** just for convenience */
 	static const never_ptr<const instance_collection_base>	null;

@@ -1,6 +1,6 @@
 to do list:
 
-#	$Id: TODO,v 1.18 2004/12/07 02:21:57 fang Exp $
+#	$Id: TODO,v 1.19 2004/12/10 22:01:55 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 
@@ -41,15 +41,20 @@ Current series: 0.1.3 -- main trunk of development line,
 		every source file, so doxygen will create file
 		inclusion dependence graphs! (*done* -- 10/09/04)
 
-	Redo parser to eliminate insignificant terminals, 
-	pool_allocate tokens, etc...
+	Parameters MUST be fully implemented before proceeding with
+		other physical entities.  
 
 0.1.5 Goals:
 	for 0.1.5 unrolling with physical instance collections
-	Parameters MUST be fully implemented before proceeding with
-		other physical entities.  
+
+	Redo parser to eliminate insignificant terminals, 
+	pool_allocate tokens, etc...
+
 	Decide whether to support loops and conditional scopes 
 		in this series.
+
+	Update language to support strict and relaxed template parameters, 
+		see dox/lang/artxx.ps for documentation.  
 
 0.1.6 Goals:
 	General language support for PRS needs to catch up.  

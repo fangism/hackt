@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.1 2004/12/07 02:22:09 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.2 2004/12/10 22:02:18 fang Exp $
  */
 
 #include <iostream>
@@ -231,7 +231,7 @@ if (!m.register_transient_object(this,
 		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
-	collect_index_collection_pointers(m);
+	parent_type::collect_transient_info_base(m);
 	if (ival)
 		ival->collect_transient_info(m);
 }
@@ -272,21 +272,28 @@ pbool_instance_collection::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instance_collection::write_object_base(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
+		const persistent_object_manager& m, ostream& f) const {
+#if 0
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	m.write_pointer(f, ival);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::load_object_base(persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
+pbool_instance_collection::load_object_base(persistent_object_manager& m, 
+		istream& f) {
+#if 0
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
 	load_index_collection_pointers(m);
+#else
+	parent_type::load_object_base(m, f);
+#endif
 	m.read_pointer(f, ival);
 }
 
@@ -335,7 +342,6 @@ pbool_array<D>::key_value_dumper::operator () (
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 /**
 	Instantiates integer parameters at the specified indices.
 	\param i fully-specified range of indices to instantiate.
@@ -377,8 +383,8 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		pbool_instance& pi = collection[key_gen];
 		if (pi.instantiated) {
 			// more detailed message, please!
-			cerr << "ERROR: Index already instantiated!"
-				<< endl;
+			cerr << "ERROR: Index " << key_gen << 
+				"already instantiated!" << endl;
 			exit(1);
 		}
 		pi.instantiated = true;
@@ -389,7 +395,6 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 /**
 	Expands indices which may be under-specified into explicit
 	indices for the implicit subslice, if it is densely packed.
@@ -441,8 +446,8 @@ pbool_array<D>::resolve_indices(const const_index_list& l) const {
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value(bool& v, const multikey_base<int>& i) const {
-	assert(depth == i.dimensions());
-	const pbool_instance& pi = collection[i];
+	INVARIANT(depth == i.dimensions());
+	const pbool_instance& pi(collection[i]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -463,21 +468,13 @@ PBOOL_ARRAY_TEMPLATE_SIGNATURE
 bool
 pbool_array<D>::lookup_value_collection(
 		list<bool>& l, const const_range_list& r) const {
-	assert(!r.empty());
-#if 1
+	INVARIANT(!r.empty());
 	multikey_generator<D, int> key_gen;
 	r.make_multikey_generator(key_gen);
-#else
-	const multikey<D, int> lower(r.lower_multikey());
-	const multikey<D, int> upper(r.upper_multikey());
-	multikey_generator<D, int> key_gen;
-	copy(lower.begin(), lower.end(), key_gen.get_lower_corner().begin());
-	copy(upper.begin(), upper.end(), key_gen.get_upper_corner().begin());
-#endif
 	key_gen.initialize();
 	bool ret = true;
 	do {
-		const pbool_instance& pi = collection[key_gen];
+		const pbool_instance& pi(collection[key_gen]);
 		// assert(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated)
 			cerr << "FATAL: reference to uninstantiated pbool index "
@@ -512,7 +509,7 @@ pbool_array<D>::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
-	write_object_base(m);
+	write_object_base(m, f);
 	// write out the instance map
 	collection.write(f);
 	WRITE_OBJECT_FOOTER(f);
@@ -526,7 +523,7 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	load_object_base(m);
+	load_object_base(m, f);
 	// load the instance map
 	collection.read(f);
 	STRIP_OBJECT_FOOTER(f);
@@ -571,7 +568,7 @@ pbool_array<0>::dump_unrolled_values(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Instantiates the_instance of parameter integer.
+	Instantiates the_instance of parameter boolean.
 	Ideally, the error should never trigger because
 	re-instantiation / redeclaration of a scalar instance
 	is easily detected (and actually detected) during the compile phase.
@@ -579,7 +576,7 @@ pbool_array<0>::dump_unrolled_values(ostream& o) const {
  */
 void
 pbool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
-	assert(!i);
+	INVARIANT(!i);
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
@@ -587,7 +584,7 @@ pbool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		exit(1);
 	}
 	the_instance.instantiated = true;
-	assert(!the_instance.valid);
+	INVARIANT(!the_instance.valid);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,7 +627,7 @@ pbool_array<0>::lookup_value_collection(
 		list<bool>& l, const const_range_list& r) const {
 	cerr << "WARNING: pbool_array<0>::lookup_value_collection(...) "
 		"should never be called." << endl;
-	assert(r.empty());
+	INVARIANT(r.empty());
 	bool i;
 	const bool ret = lookup_value(i);
 	l.push_back(i);
@@ -678,7 +675,7 @@ pbool_array<0>::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
-	write_object_base(m);
+	write_object_base(m, f);
 	// write out the instance
 	write_value(f, the_instance);
 	WRITE_OBJECT_FOOTER(f);
@@ -691,7 +688,7 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	load_object_base(m);
+	load_object_base(m, f);
 	// load the instance
 	read_value(f, the_instance);
 	STRIP_OBJECT_FOOTER(f);

@@ -18,10 +18,14 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.2 2004/11/02 07:51:50 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.3 2004/12/10 22:02:18 fang Exp $
  */
 
+#ifndef	__ART_OBJECT_TYPE_HASH_H__
+#define	__ART_OBJECT_TYPE_HASH_H__
 //=============================================================================
+
+// macro name							hash string
 
 // Modules:
 #define	MODULE_TYPE_KEY						"module"
@@ -45,12 +49,16 @@
 #define	PROCESS_TYPE_REFERENCE_TYPE_KEY				"proctprf"
 #define	CHANNEL_TYPE_REFERENCE_TYPE_KEY				"chantprf"
 #define	DATA_TYPE_REFERENCE_TYPE_KEY				"datatprf"
-	// no need for param type reference
+	// no need for param type reference, or built-in data type reference
 
 // Instantiations:
 #define	PROCESS_INSTANCE_COLLECTION_TYPE_KEY			"proccoll"
 #define	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY			"chancoll"
-#define	DATA_INSTANCE_COLLECTION_TYPE_KEY			"datacoll"
+// #define	DATA_INSTANCE_COLLECTION_TYPE_KEY		"datacoll"
+#define	STRUCT_INSTANCE_COLLECTION_TYPE_KEY			"dstrcoll"
+#define	ENUM_INSTANCE_COLLECTION_TYPE_KEY			"enumcoll"
+#define	DBOOL_INSTANCE_COLLECTION_TYPE_KEY			"dboolcol"
+#define	DINT_INSTANCE_COLLECTION_TYPE_KEY			"dintcoll"
 #define	PBOOL_INSTANCE_COLLECTION_TYPE_KEY			"pboolcol"
 #define	PINT_INSTANCE_COLLECTION_TYPE_KEY			"pintcoll"
 
@@ -58,14 +66,20 @@
 	// simple instance reference may contain multidimensional indices
 #define	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"sprocref"
 #define	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"schanref"
-#define	SIMPLE_DATA_INSTANCE_REFERENCE_TYPE_KEY			"sdataref"
+// #define	SIMPLE_DATA_INSTANCE_REFERENCE_TYPE_KEY		"sdataref"
+#define	SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"sdbref"
+#define	SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY			"sdiref"
+#define	SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"sderef"
+#define	SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"sdsref"
 #define	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"spbref"
 #define	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY			"spiref"
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
 #define	AGGREGATE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"achanref"
-#define	AGGREGATE_DATA_INSTANCE_REFERENCE_TYPE_KEY		"adataref"
+// #define	AGGREGATE_DATA_INSTANCE_REFERENCE_TYPE_KEY	"adataref"
+#define	AGGREGATE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"adbref"
+#define	AGGREGATE_DINT_INSTANCE_REFERENCE_TYPE_KEY		"adiref"
 #define	AGGREGATE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"apbref"
 #define	AGGREGATE_PINT_INSTANCE_REFERENCE_TYPE_KEY		"apiref"
 
@@ -111,6 +125,8 @@
 #define	PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY		"procinst"
 #define	CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY		"chaninst"
 #define	DATA_INSTANTIATION_STATEMENT_TYPE_KEY			"datainst"
+#define	DBOOL_INSTANTIATION_STATEMENT_TYPE_KEY			"dboolins"
+#define	DINT_INSTANTIATION_STATEMENT_TYPE_KEY			"dintinst"
 #define	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY			"pboolins"
 #define	PINT_INSTANTIATION_STATEMENT_TYPE_KEY			"pintinst"
 
@@ -124,4 +140,7 @@
 // Language-specifics: (PRS, CHP, ...)
 
 	// more class constants here...
+
+//=============================================================================
+#endif	// __ART_OBJECT_TYPE_HASH_H__
 

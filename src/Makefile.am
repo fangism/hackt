@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2004/12/07 02:22:00 fang Exp $
+#	$Id: Makefile.am,v 1.30 2004/12/10 22:01:57 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -113,8 +113,13 @@ OBJECT_CC_FILES = \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
 	Object/art_object_instance_param.cc \
+	Object/art_object_instance_bool.cc \
+	Object/art_object_instance_int.cc \
+	Object/art_object_instance_enum.cc \
+	Object/art_object_instance_struct.cc \
 	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
+	Object/art_object_inst_ref_data.cc \
 	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \

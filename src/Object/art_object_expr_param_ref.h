@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.1 2004/12/07 02:22:08 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.2 2004/12/10 22:02:16 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -49,6 +49,9 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
  */
 class pbool_instance_reference : public param_instance_reference, 
 		public pbool_expr {
+private:
+	typedef param_instance_reference		parent_type;
+	typedef	pbool_expr				interface_type;
 protected:
 	never_ptr<pbool_instance_collection>		pbool_inst_ref;
 private:
@@ -113,6 +116,11 @@ public:
 		}
 	};	// end class assigner
 
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -126,6 +134,9 @@ public:
  */
 class pint_instance_reference : public param_instance_reference, 
 		public pint_expr {
+private:
+	typedef	param_instance_reference		parent_type;
+	typedef	pint_expr				interface_type;
 protected:
 	/**
 		Back-reference to integer collection.  
@@ -193,6 +204,11 @@ public:
 			return this->operator()(b, *p);
 		}
 	};	// end class assigner
+
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL

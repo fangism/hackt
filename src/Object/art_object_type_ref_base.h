@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.2 2004/12/07 02:22:10 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.3 2004/12/10 22:02:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -16,6 +16,7 @@
 namespace ART {
 namespace entity {
 
+using std::istream;
 using util::persistent;
 using util::persistent_object_manager;
 using namespace util::memory;
@@ -102,6 +103,17 @@ public:
 	// wth, just allocate one...
 	excl_ptr<const fundamental_type_reference>
 		make_canonical_type_reference(void) const;
+
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(persistent_object_manager&, istream&);
+
 };	// end class fundamental_type_reference
 
 //=============================================================================

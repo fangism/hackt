@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.16 2004/12/07 02:22:09 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.17 2004/12/10 22:02:18 fang Exp $
  */
 
 #include <iostream>
@@ -9,6 +9,10 @@
 #include "art_parser_base.h"	// so token_identifier : string
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
+#include "art_object_instance_bool.h"
+#include "art_object_instance_int.h"
+#include "art_object_instance_enum.h"
+#include "art_object_instance_struct.h"
 #include "art_object_instance_param.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_base.h"
@@ -282,6 +286,30 @@ excl_ptr<const fundamental_type_reference>
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+fundamental_type_reference::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (template_params)
+		template_params->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+fundamental_type_reference::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, template_params);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+fundamental_type_reference::load_object_base(
+		persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, template_params);
+	if (template_params)
+		const_cast<param_expr_list&>(*template_params).load_object(m);
+}
+
 
 //=============================================================================
 #if 0
@@ -359,6 +387,12 @@ data_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const datatype_definition_base>
+data_type_reference::get_base_datatype_def(void) const {
+	return base_type_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns a newly constructed data instantiation statement object.
  */
@@ -386,8 +420,41 @@ data_type_reference::make_instance_collection(
 		never_ptr<const scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
-	return excl_ptr<instance_collection_base>(
-		new datatype_instance_collection(*s, id, d));
+	typedef excl_ptr<instance_collection_base>	return_type;
+/***
+	datatype_instance_collection is now pure virtual, 
+	we use a temporary shortcut to effectively sub-class...
+	save us the trouble of expanding more classes until later...
+***/
+#if 0
+	return return_type(new datatype_instance_collection(*s, id, d));
+#else
+	NEVER_NULL(base_type_def);
+	never_ptr<const datatype_definition_base>
+		alias(base_type_def->resolve_canonical_datatype_definition());
+	// hideous switch-case... only temporary
+	if (alias.is_a<const user_def_datatype>()) {
+		return return_type(struct_instance_collection
+			::make_struct_array(*s, id, d));
+	} else if (alias.is_a<const enum_datatype_def>()) {
+		return return_type(enum_instance_collection
+			::make_enum_array(*s, id, d));
+	} else {
+		// what about typedefs/aliases of built-in types? Ahhhh....
+		INVARIANT(alias.is_a<const built_in_datatype_def>());
+		// just compare pointers
+		if (alias == &bool_def) {
+			return return_type(bool_instance_collection
+				::make_bool_array(*s, id, d));
+		} else if (alias == &int_def) {
+			return return_type(int_instance_collection
+				::make_int_array(*s, id, d));
+		} else {
+			assert(0);	// WTF!?
+			return return_type(NULL);
+		}
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -396,8 +463,12 @@ data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
 	base_type_def->collect_transient_info(m);
+#if 0
 	if (template_params)
 		template_params->collect_transient_info(m);
+#else
+	parent_type::collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -413,7 +484,11 @@ data_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
+#if 0
 	m.write_pointer(f, template_params);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
@@ -427,13 +502,17 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_type_def);
+#if 0
 	m.read_pointer(f, template_params);
-	STRIP_OBJECT_FOOTER(f);			// sanity check
-
-	// recursion and intercept built-in types
-	const_cast<datatype_definition_base&>(*base_type_def).load_object(m);
 	if (template_params)
 		const_cast<param_expr_list&>(*template_params).load_object(m);
+#else
+	parent_type::load_object_base(m, f);
+#endif
+	STRIP_OBJECT_FOOTER(f);			// sanity check
+
+	// MINOR HACK: recursion and intercept built-in types
+	const_cast<datatype_definition_base&>(*base_type_def).load_object(m);
 	if (base_type_def->get_key() == "bool")
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&bool_def);
@@ -532,8 +611,12 @@ channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
 	base_chan_def->collect_transient_info(m);
+#if 0
 	if (template_params)
 		template_params->collect_transient_info(m);
+#else
+	parent_type::collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -549,7 +632,11 @@ channel_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_chan_def);
+#if 0
 	m.write_pointer(f, template_params);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
@@ -560,7 +647,11 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_chan_def);
+#if 0
 	m.read_pointer(f, template_params);
+#else
+	parent_type::load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);			// sanity check
 }
 // else already visited
@@ -651,8 +742,12 @@ process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
 	base_proc_def->collect_transient_info(m);
+#if 0
 	if (template_params)
 		template_params->collect_transient_info(m);
+#else
+	parent_type::collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -668,7 +763,11 @@ process_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_proc_def);
+#if 0
 	m.write_pointer(f, template_params);
+#else
+	parent_type::write_object_base(m, f);
+#endif
 	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
@@ -679,7 +778,11 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_proc_def);
+#if 0
 	m.read_pointer(f, template_params);
+#else
+	parent_type::load_object_base(m, f);
+#endif
 	STRIP_OBJECT_FOOTER(f);			// sanity check
 }
 // else already visited
