@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
-	$Id: art_object_instance.h,v 1.16 2004/11/02 07:51:49 fang Exp $
+	$Id: art_object_instance.h,v 1.17 2004/11/05 02:38:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -410,7 +410,11 @@ ostream&
 operator << (ostream& o, const pint_instance& p);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// temporary switch
+#define SUBCLASS_PINT_ARRAY	1
 /**
+	Collection of parameter integers, 
+	generalized to any number of dimensions.  
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
@@ -418,10 +422,12 @@ class pint_instance_collection : public param_instance_collection {
 friend class pint_instance_reference;
 // friend class pint_instance_reference::assigner;
 public:
+#if !SUBCLASS_PINT_ARRAY
 	// int or size_t (unsigned)?
 	typedef	multikey_qmap_base<int, pint_instance>		collection_type;
 	typedef	multikey_qmap<0, int, pint_instance>		scalar_type;
 	typedef	multikey_qmap_base<int, int>			value_type;
+#endif	// !SUBCLASS_PINT_ARRAY
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -434,14 +440,19 @@ protected:
 		Screw the cache.  
 		Only applicable for simple instances.  
 		Collectives won't be checked until unroll time.  
+
+		Q: Should we actaully store ival persistently or just 
+		reconstruct it during unrolling?
 	 */
 	count_const_ptr<pint_expr>		ival;
+#if !SUBCLASS_PINT_ARRAY
 	/**
 		The unrolled collection of pint instances.  
 	 */
 	excl_ptr<collection_type>		collection;
+#endif
 
-private:
+protected:
 	pint_instance_collection();
 public:
 	pint_instance_collection(const scopespace& o, const string& n);
@@ -452,7 +463,10 @@ public:
 		count_const_ptr<pint_expr> i);
 	pint_instance_collection(const scopespace& o, const string& n, 
 		const size_t d, count_const_ptr<pint_expr> i);
-	// default destructor suffices
+#if SUBCLASS_PINT_ARRAY
+virtual	~pint_instance_collection();
+virtual	size_t dimensions(void) const = 0;
+#endif
 
 	ostream& what(ostream& o) const;
 
@@ -469,8 +483,18 @@ public:
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 
-	void instantiate_indices(const index_collection_item_ptr_type& i);
 
+#if SUBCLASS_PINT_ARRAY
+virtual	void instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+virtual	bool lookup_value(int& v, const multikey_base<int>& i) const = 0;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
+virtual	bool lookup_value_collection(list<int>& l, 
+		const const_range_list& r) const = 0;
+
+virtual	const_index_list resolve_indices(const const_index_list& l) const = 0;
+#else
+	void instantiate_indices(const index_collection_item_ptr_type& i);
 	bool lookup_value(int& v) const;
 	bool lookup_value(int& v, const multikey_base<int>& i) const;
 	// need methods for looking up dense sub-collections of values?
@@ -479,15 +503,117 @@ public:
 		const const_range_list& r) const;
 
 	const_index_list resolve_indices(const const_index_list& l) const;
+#endif
 
 public:
 // really should be protected, usable by pint_instance_reference::assigner
+#if SUBCLASS_PINT_ARRAY
+	// why have these at all?
+virtual	bool assign(const multikey_base<int>& k, const int i) = 0;
+#else
 	bool assign(const int i);
 	bool assign(const multikey_base<int>& k, const int i);
+#endif
 public:
+	// subclasses will share this persistent type entry
 	PERSISTENT_STATIC_MEMBERS_DECL
+#if !SUBCLASS_PINT_ARRAY
 	PERSISTENT_METHODS
+#else
+	static pint_instance_collection* make_pint_array(
+		const scopespace& o, const string& n, const size_t d);
+	// need not be virtual, no pointers in subclasses
+	static persistent* construct_empty(const int);
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object_base(const persistent_object_manager& m) const;
+	void load_object_base(persistent_object_manager& m);
+
+	// subclasses are responsible for implementing:
+	// write_object and load_object.
+#endif
 };	// end class pint_instance_collection
+
+//-----------------------------------------------------------------------------
+#if SUBCLASS_PINT_ARRAY
+#define	PINT_ARRAY_TEMPLATE_SIGNATURE	template <size_t D>
+
+/**
+	Dimension-specific array of integer parameters.  
+ */
+PINT_ARRAY_TEMPLATE_SIGNATURE
+class pint_array : public pint_instance_collection {
+public:
+	/**
+		Type for actual values, including validity and status.
+	 */
+	typedef	multikey_qmap<D, int, pint_instance>	collection_type;
+	/**
+		Collection of valid values passed around.
+	 */
+	typedef	multikey_qmap<D, int, int>		value_type;
+protected:
+	/** The collection of value instances */
+	collection_type					collection;
+public:
+	pint_array();
+	pint_array(const scopespace& o, const string& n);
+	~pint_array();
+
+	size_t dimensions(void) const { return D; }
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+	const_index_list resolve_indices(const const_index_list& l) const;
+	bool lookup_value(int& v, const multikey_base<int>& i) const;
+	bool lookup_value_collection(list<int>& l, 
+		const const_range_list& r) const;
+	bool assign(const multikey_base<int>& k, const int i);
+
+public:
+//	PERSISTENT_METHODS
+	void write_object(const persistent_object_manager& m) const;
+	void load_object(persistent_object_manager& m);
+};	// end class pint_array
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization of scalar integer parameter.
+ */
+template <>
+class pint_array<0> : public pint_instance_collection {
+public:
+	typedef	pint_instance				instance_type;
+	typedef	int					value_type;
+protected:
+	instance_type					the_instance;
+public:
+	pint_array();
+	pint_array(const scopespace& o, const string& n);
+	pint_array(const scopespace& o, const string& n, 
+		count_const_ptr<pint_expr> i);
+	~pint_array() { }
+
+	size_t dimensions(void) const { return 0; }
+	bool lookup_value(int& i) const;
+	bool assign(const int i);
+
+// there are implemented to do nothing but sanity check, 
+// since it doesn't even make sense to call these.  
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+	bool lookup_value(int& v, const multikey_base<int>& i) const;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
+	bool lookup_value_collection(list<int>& l, 
+		const const_range_list& r) const;
+	bool assign(const multikey_base<int>& k, const int i);
+
+	const_index_list resolve_indices(const const_index_list& l) const;
+
+public:
+//	PERSISTENT_METHODS
+	void write_object(const persistent_object_manager& m) const;
+	void load_object(persistent_object_manager& m);
+};	// end class pint_array specialization
+
+#endif	// SUBCLASS_PINT_ARRAY
 
 //=============================================================================
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.18 2004/11/02 07:51:45 fang Exp $
+	$Id: art_object_base.h,v 1.19 2004/11/05 02:38:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -10,7 +10,7 @@
 #include <list>
 #include <deque>
 
-#include "art_macros.h"
+#include "macros.h"
 #include "persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
@@ -898,6 +898,10 @@ protected:
 	/**
 		Dimensions, >= 0, limit is 4.  
 		Once set, is fixed.  
+
+		This will be PHASED OUT as we subtype collections
+		by dimensionality.  
+		Keep maintaining until we can eliminate it completely.  
 	 */
 	size_t	depth;
 

@@ -1,39 +1,18 @@
 /**
-	\file "art_utils.cc"
+	\file "IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: art_utils.cc,v 1.5 2004/11/02 07:52:10 fang Exp $
+	$Id: IO_utils.cc,v 1.1 2004/11/05 02:38:30 fang Exp $
  */
 
 #include <assert.h>
 #include <iostream>
-#include "art_utils.h"
+#include "IO_utils.h"
 
 using namespace std;
 
 //=============================================================================
 // arbitrary sanity check
 #define STRING_LIMIT		256
-
-//=============================================================================
-#if 0
-namespace ART {
-
-// inline
-ostream& operator << (ostream& o, const line_range& l) {
-	if (l.start.line == l.end.line) {
-		o << "[" << l.start.line << ":" << l.start.col;
-		if (l.start.col != l.end.col)
-			o << ".." << l.end.col;
-		o << "]";
-	} else {
-		o << "[" << l.start.line << ":" << l.start.col << "--"
-			<< l.end.line << ":" << l.end.col << "]";
-	}
-	return o;
-}
-
-};	// end namespace ART
-#endif
 
 //=============================================================================
 namespace util {

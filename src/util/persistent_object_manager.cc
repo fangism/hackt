@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.7 2004/11/02 07:52:16 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.8 2004/11/05 02:38:53 fang Exp $
  */
 
 #include <fstream>
@@ -10,8 +10,8 @@
 	// for hash specialization to take effect
 #include "persistent_object_manager.h"
 	// includes "count_ptr.h"
-#include "art_macros.h"
-#include "art_utils.tcc"
+#include "macros.h"
+#include "IO_utils.tcc"
 	// includes <iostream>
 
 //=============================================================================
@@ -354,23 +354,12 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
  */
 persistent_object_manager::reconstruction_function_map_type&
 persistent_object_manager::get_reconstruction_function_map(void) {
-#if 0
-	static reconstruction_function_map_type
-		reconstruction_function_map;
-	return reconstruction_function_map;
-#else
 	if (!the_reconstruction_function_map_ptr) {
 		the_reconstruction_function_map_ptr = 
-#if 0
-			excl_ptr<reconstruction_function_map_type>(
-				new reconstruction_function_map_type);
-#else
 			new reconstruction_function_map_type;
-#endif
 		assert(the_reconstruction_function_map_ptr);
 	}
 	return *the_reconstruction_function_map_ptr;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -398,6 +387,8 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 		assert(tmp);
 		// DANGER: may not be safe to call what() on uninitialized
 		// objects, if it depends on internal field members!
+		// Thus, we should guarantee that what() is independent of
+		// field members.  
 		tmp->what(o << '\t' << iter->first << "    \t") << endl;
 	}
 	return o;
@@ -409,7 +400,7 @@ persistent_object_manager::dump_text(ostream& o) const {
 	o << "Persistent Object Manager text dump: " << endl;
 	long i = 0;
 	const long max = reconstruction_table.size();
-	o << "\ti\taddr\t\ttype\t\thead\ttail" << endl;
+	o << "\ti\taddr\t\ttype\t\targ\thead\ttail" << endl;
 	for ( ; i < max; i++) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
 		o << '\t' << i << '\t';
@@ -418,6 +409,7 @@ persistent_object_manager::dump_text(ostream& o) const {
 		o << e.addr();
 		o.width(w);
 		o << '\t' << e.type() 
+			<< '\t' << (size_t) e.get_alloc_arg()
 			<< '\t' << e.head_pos()
 			<< '\t' << e.tail_pos() << endl;
 	}
@@ -442,6 +434,9 @@ persistent_object_manager::write_header(ofstream& f) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
 		write_value(f, e.type());
 		write_value(f, e.get_alloc_arg());
+#if 0
+		cerr << "alloc_arg = " << (size_t) e.get_alloc_arg() << endl;
+#endif
 		write_value(f, e.head_pos());
 		write_value(f, e.tail_pos());
 	}
@@ -466,6 +461,9 @@ persistent_object_manager::load_header(ifstream& f) {
 		streampos head, tail;
 		read_value(f, t);
 		read_value(f, aux);
+#if 0
+		cerr << "alloc_arg = " << (size_t) aux << endl;
+#endif
 		read_value(f, head);
 		read_value(f, tail);
 		// make sure t is a registered type
@@ -596,12 +594,30 @@ persistent_object_manager::finish_load(ifstream& f) {
 		f.seekg(e.head_pos() +start_of_objects);
 		ostream& o = e.get_buffer();
 		assert(o.good());
-		char* cbuf = new char [size];
-		assert(cbuf);
-		// is there a better way to do this, eliminating intermediate?
-		f.read(cbuf, size);
-		o.write(cbuf, size);
-		delete [] cbuf;
+#if 1
+		// is there a better way to do this, 
+		// eliminating intermediate? and need to allocate/free?
+		if (size <= 64) {
+			char sbuf[64];	// fixed size buffer on the stack
+			f.read(sbuf, size);
+			o.write(sbuf, size);
+		} else {
+			// larger streams will require more temporary space
+			char* cbuf = new char [size];
+			assert(cbuf);
+			f.read(cbuf, size);
+			o.write(cbuf, size);
+			delete [] cbuf;
+		}
+#else
+		// or block-copy in chunks...
+		int i = 0;
+		for ( ; i<size; i++) {
+			char c[1];
+			f.read(c, 1);
+			o.write(c, 1);
+		}
+#endif
 	}
 }
 

@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.8 2004/11/02 07:52:15 fang Exp $
+	$Id: multikey.h,v 1.9 2004/11/05 02:38:50 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -12,7 +12,8 @@
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
-// #include <numeric>
+
+#include "IO_utils.tcc"
 
 #ifndef	USE_STL_ALGORITHM
 #define	USE_STL_ALGORITHM		1
@@ -25,6 +26,8 @@
 ***/
 
 namespace MULTIKEY_NAMESPACE {
+using util::write_value;
+using util::read_value;
 using namespace std;
 
 //=============================================================================
@@ -260,6 +263,41 @@ public:
 		}
 
 	};	// end struct accumulate_extremities
+
+public:
+	// IO methods
+	/**
+		Do not implement from a virtual base.
+		We must statically know the dimension of the key
+		at-compile time.
+	 */
+	ostream&
+	write(ostream& o) const {
+		// wish there was ostream_iterator equivalent for write()
+		assert(o.good());
+		const_iterator i = begin();
+		const const_iterator e = end();
+		for ( ; i!=e; i++)
+			write_value(o, *i);
+		return o;
+	}
+
+	/**
+		Do not implement from a virtual base.
+		We must statically know the dimension of the key
+		at-compile time.
+	 */
+	istream&
+	read(istream& f) {
+		// wish there was ostream_iterator equivalent for write()
+		assert(f.good());
+		iterator i = begin();
+		size_t j = 0;
+		for ( ; j < D; j++, i++)
+			read_value(f, *i);
+		return f;
+	}
+
 };	// end class multikey
 
 //-----------------------------------------------------------------------------
@@ -482,9 +520,49 @@ public:		// for sake of laziness and convenience
 	/** vector of upper bounds */
 	base_type		upper_corner;
 public:
+	/// default constructor
 	multikey_generator() : base_type(), lower_corner(), upper_corner() { }
+
+	// construct from a pair of keys
 	multikey_generator(const multikey<D,K>& l, const multikey<D,K>& u) :
 		base_type(), lower_corner(l), upper_corner(u) { }
+
+	/// copy from a sequence of pairs
+	template <template <class> class L, template <class, class> class P>
+	explicit
+	multikey_generator(const L<P<K,K> >& l) : base_type(), 
+			lower_corner(), upper_corner() {
+		typedef	L<P<K,K> >	sequence_type;
+		assert(l.size() <= D);	// else error on user!
+		iterator li = lower_corner.begin();
+		iterator ui = upper_corner.begin();
+		typename sequence_type::const_iterator i = l.begin();
+		const typename sequence_type::const_iterator e = l.end();
+		for ( ; l != e; i++, li++, ui++) {
+			*li = i->first;
+			*ui = i->second;
+		}
+	}
+
+	/**
+		\param LP is a list-of-pairs-like class.  
+	 */
+	template <class LP>
+	explicit
+	multikey_generator(const LP& l) : base_type(), 
+			lower_corner(), upper_corner() {
+		typedef	LP	sequence_type;
+		assert(l.size() <= D);	// else error on user!
+		iterator li = lower_corner.begin();
+		iterator ui = upper_corner.begin();
+		typename sequence_type::const_iterator i = l.begin();
+		const typename sequence_type::const_iterator e = l.end();
+		for ( ; l != e; i++, li++, ui++) {
+			*li = i->first;
+			*ui = i->second;
+		}
+	}
+
 	// use default destructor
 
 	/**

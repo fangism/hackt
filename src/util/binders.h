@@ -2,7 +2,7 @@
  *	\file "binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
- *	$Id: binders.h,v 1.4 2004/11/02 07:52:12 fang Exp $
+ *	$Id: binders.h,v 1.5 2004/11/05 02:38:46 fang Exp $
  */
 
 #ifndef	__BINDERS_H__
@@ -54,7 +54,7 @@ public:
 	operator() (const argument_type& x) const {
 		return op(arg1, x);
 	}
-};	// end class binder1st_val
+};	// end class binder1st_argval
 
 //-----------------------------------------------------------------------------
 /**

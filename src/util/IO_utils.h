@@ -1,11 +1,11 @@
 /**
-	\file "art_utils.h"
+	\file "IO_utils.h"
 	General-purpose handy utilities.
-	$Id: art_utils.h,v 1.5 2004/11/02 07:52:10 fang Exp $
+	$Id: IO_utils.h,v 1.1 2004/11/05 02:38:32 fang Exp $
  */
 
-#ifndef __ART_UTILS_H__
-#define __ART_UTILS_H__
+#ifndef __IO_UTILS_H__
+#define __IO_UTILS_H__
 
 #include <iosfwd>
 #include <string>
@@ -55,17 +55,17 @@ template <class K, class T>
 void	write_key_value_pair(ostream& f, const pair<const K, T>& p);
 
 template <class K, class T>
-void	read_key_value_pair(ostream& f, pair<K, T>& p);
+void	read_key_value_pair(istream& f, pair<K, T>& p);
 
 template <template <class, class> class M, class K, class T>
 void	write_map(ostream& f, const M<K,T>& m);
 
 template <template <class, class> class M, class K, class T>
-void	read_map(ostream& f, M<K,T>& m);
+void	read_map(istream& f, M<K,T>& m);
 
 }	// end namespace util
 
 //=============================================================================
 
-#endif	// __ART_UTILS_H__
+#endif	// __IO_UTILS_H__
 

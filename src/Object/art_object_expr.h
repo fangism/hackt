@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.10 2004/11/02 07:51:49 fang Exp $
+	$Id: art_object_expr.h,v 1.11 2004/11/05 02:38:25 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -583,6 +583,9 @@ explicit const_range_list(const const_index_list& i);
 	bool resolve_ranges(const_range_list& r) const;
 	excl_ptr<multikey_base<int> > upper_multikey(void) const;
 	excl_ptr<multikey_base<int> > lower_multikey(void) const;
+
+	template <size_t D>
+	void make_multikey_generator(multikey_generator<D, int>& k) const;
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
 	PERSISTENT_METHODS
@@ -888,8 +891,10 @@ public:
 	Currently limited in width by the machine's long size.  
  */
 class pint_const : public pint_expr, public const_index, public const_param {
+public:
+	typedef long			value_type;
 protected:
-	const long			val;
+	const value_type		val;
 public:
 	pint_const(const long v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
@@ -938,8 +943,10 @@ public:
 	Constant boolean parameters, true or false.  
  */
 class pbool_const : public pbool_expr, public const_param {
+public:
+	typedef	bool			value_type;
 protected:
-	const bool			val;
+	const value_type		val;
 public:
 	pbool_const(const bool v) :
 		pbool_expr(), const_param(), val(v) { }
@@ -983,15 +990,17 @@ public:
 	Only possibilities, unary negation, bit-wise negation.  
  */
 class pint_unary_expr : public pint_expr {
+public:
+	typedef	char			op_type;
 protected:
-	const char			op;
+	const op_type			op;
 	/** expression argument must be 0-dimensional */
 	count_const_ptr<pint_expr>	ex;
 private:
 	pint_unary_expr();
 public:
-	pint_unary_expr(const char o, count_const_ptr<pint_expr> e);
-	pint_unary_expr(count_const_ptr<pint_expr> e, const char o);
+	pint_unary_expr(const op_type o, count_const_ptr<pint_expr> e);
+	pint_unary_expr(count_const_ptr<pint_expr> e, const op_type o);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1023,15 +1032,17 @@ public:
 	Character may be '~' or '!'.  
  */
 class pbool_unary_expr : public pbool_expr {
+public:
+	typedef	char			op_type;
 protected:
-	const char			op;
+	const op_type			op;
 	/** argument expression must be 0-dimensional */
 	count_const_ptr<pbool_expr>	ex;
 private:
 	pbool_unary_expr();
 public:
-	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
-	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
+	pbool_unary_expr(const op_type o, count_const_ptr<pbool_expr> e);
+	pbool_unary_expr(count_const_ptr<pbool_expr> e, const op_type o);
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.5 2004/11/02 07:52:17 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.6 2004/11/05 02:38:54 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_TCC__
@@ -12,8 +12,8 @@
 #include "persistent_object_manager.h"
 // already includes <iostream>
 
-#include "art_macros.h"
-#include "art_utils.tcc"
+#include "macros.h"
+#include "IO_utils.tcc"
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
 

@@ -1,13 +1,14 @@
 /**
-	\file "art_macros.h"
-	Macros for general use in ART.  
-	$Id: art_macros.h,v 1.3 2004/11/02 07:52:09 fang Exp $
+	\file "macros.h"
+	Macros for general use.  
+	$Id: macros.h,v 1.1 2004/11/05 02:38:49 fang Exp $
  */
 
-#ifndef	__ART_MACROS_H__
-#define	__ART_MACROS_H__
+#ifndef	__MACROS_H__
+#define	__MACROS_H__
 
 #include <stdlib.h>
+	// defines NULL
 #include <assert.h>
 
 /**
@@ -46,5 +47,5 @@
 
 // error reporting...
 
-#endif	// __ART_MACROS_H__
+#endif	// __MACROS_H__
 

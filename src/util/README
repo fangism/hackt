@@ -1,0 +1,5 @@
+This directory contains useful extensions, headers and libraries 
+of data structures, independent of the project that contains it.  
+
+The only files that are specific to ART are prefixed with "art_".
+

@@ -1,16 +1,20 @@
 /**
-	\file "art_utils.tcc"
-	Template function definitions from "art_utils.h".
-	$Id: art_utils.tcc,v 1.5 2004/11/02 07:52:11 fang Exp $
+	\file "IO_utils.tcc"
+	Template function definitions from "IO_utils.h".
+	$Id: IO_utils.tcc,v 1.1 2004/11/05 02:38:34 fang Exp $
  */
 
-#ifndef __ART_UTILS_TCC__
-#define __ART_UTILS_TCC__
+#ifndef __IO_UTILS_TCC__
+#define __IO_UTILS_TCC__
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 
-#include "art_utils.h"
+// only needed for functional for_each where call_traits are needed.  
+// #include "binders.h"
+
+#include "IO_utils.h"
 
 namespace util {
 using namespace std;
@@ -26,7 +30,7 @@ using namespace std;
 template <class T>
 inline
 void    write_value(ostream& f, const T& v) {
-	f.write((const char*) &v, sizeof(T));
+	f.write(reinterpret_cast<const char*>(&v), sizeof(T));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -41,7 +45,7 @@ void    write_value(ostream& f, const T& v) {
 template <class T>
 inline
 void    read_value(istream& f, T& v) {
-	f.read((char*) &v, sizeof(T));
+	f.read(reinterpret_cast<char*>(&v), sizeof(T));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,12 +62,20 @@ void    read_value(istream& f, T& v) {
 template <template <class> class S, class T>
 void
 write_sequence(ostream& f, const S<T>& l) {
+	typedef S<T>	sequence_type;
 	f.write_value(f, l.size());
+#if 0
 	for_each(l.begin(), l.end(), 
-		bind1st(ptr_fun(write_value<T>), f)
+		bind1st_argval(ptr_fun(write_value<T>), f)
 		// will need to pass first argument by value-reference
 	);
-	// alternative, explicit for-loop
+#else
+	// explicit for-loop
+	typename sequence_type::const_iterator i = l.begin();
+	const typename sequence_type::const_iterator e = l.end();
+	for ( ; i!=e; i++)
+		write_value<T>(f, *i);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,13 +92,24 @@ write_sequence(ostream& f, const S<T>& l) {
 template <template <class> class S, class T>
 void
 read_sequence_in_place(istream& f, S<T>& l) {
+	typedef S<T>	sequence_type;
 	size_t size;
 	read_value(f, size);
+	assert(l.size() == size);	// or >= ?
+#if 0
 	for_each(l.begin(), l.end(), 
-		bind1st(ptr_fun(read_value<T>), f)
+		bind1st_argval(ptr_fun(read_value<T>), f)
 		// will need to pass first argument by value-reference
 	);
+#else
 	// alternative, explicit for-loop
+	size_t j = 0;
+	typename sequence_type::iterator i = l.begin();
+	for ( ; j < size; j++, i++)
+		read_value<T>(f, *i);
+	// if sizes were asserted equal
+	assert(i == l.end());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,7 +163,7 @@ write_key_value_pair(ostream& f, const pair<const K, T>& p) {
  */
 template <class K, class T>
 void
-read_key_value_pair(ostream& f, pair<K, T>& p) {
+read_key_value_pair(istream& f, pair<K, T>& p) {
 	read_value(f, p.first);
 	read_value(f, p.second);
 }
@@ -160,11 +183,19 @@ read_key_value_pair(ostream& f, pair<K, T>& p) {
 template <template <class, class> class M, class K, class T>
 void
 write_map(ostream& f, const M<K,T>& m) {
+	typedef	M<K,T>	map_type;
 	assert(f.good());
 	write_value(f, m.size());
+#if 0
 	for_each(m.begin(), m.end(), 
-		bind1st(ptr_fun(write_key_value_pair), f)
+		bind1st_argval(ptr_fun(write_key_value_pair<K,T>), f)
 	);
+#else
+	typename map_type::const_iterator i = m.begin();
+	const typename map_type::const_iterator e = m.end();
+	for ( ; i!=e; i++)
+		write_key_value_pair<K,T>(f, *i);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,20 +214,20 @@ template <template <class, class> class M, class K, class T>
 void
 read_map(istream& f, const M<K,T>& m) {
 	assert(f.good());
+	// assert(m.empty()); // ?
 	size_t size;
 	read_value(f, size);
 	size_t i = 0;
 	for( ; i < size; i++) {
 		pair<K, T> p;
-		read_key_value_pair(f, p);
+		read_key_value_pair<K,T>(f, p);
 		m[p.first] = p.second;
 	}
 }
-
 
 //=============================================================================
 
 }	// end namespace util
 
-#endif	// __ART_UTILS_TCC__
+#endif	// __IO_UTILS_TCC__
 

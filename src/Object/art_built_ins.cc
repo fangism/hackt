@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.6 2004/11/02 07:51:43 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.7 2004/11/05 02:38:23 fang Exp $
  */
 
 #include "ptrs.h"
@@ -56,7 +56,12 @@ int_def = built_in_datatype_def(
 	never_const_ptr<name_space>(&built_in_namespace),
 	"int", 
 	excl_ptr<param_instance_collection>(
-		new pint_instance_collection(
+#if SUBCLASS_PINT_ARRAY
+		new pint_array<0>
+#else
+		new pint_instance_collection
+#endif
+			(
 /***
 			// Really the formal should "belong" to the definition, 
 			// (&int_def) however, the built-in definitions are not

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.16 2004/11/02 07:51:49 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.17 2004/11/05 02:38:24 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa
@@ -1294,6 +1294,8 @@ pint_instance_reference::resolve_value(int& i) const {
 	if (array_indices) {
 		const_index_list indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
+			// really should pass indices into ->lookup_values();
+			// fix this later...
 			const excl_ptr<multikey_base<int> > lower = 
 				indices.lower_multikey();
 			const excl_ptr<multikey_base<int> > upper = 
@@ -1310,17 +1312,30 @@ pint_instance_reference::resolve_value(int& i) const {
 			return false;
 		}
 	} else {
+#if SUBCLASS_PINT_ARRAY
+		never_ptr<pint_array<0> >
+			scalar_inst(pint_inst_ref.is_a<pint_array<0> >());
+		assert(scalar_inst);
+		return scalar_inst->lookup_value(i);
+#else
 		return pint_inst_ref->lookup_value(i);
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\pre This is called only if is an indexed (implicit or explicit)
+		instance reference, and under no circumstances
+		should this be invoked for scalars for which 
+		resolve_dimensions() always returns an empty list.  
 	\param l the list in which to accumulate values.
 	\return false if there was error.  
  */
 bool
 pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
+	// base collection must be non-scalar
+	assert(pint_inst_ref->dimensions());
 	const_index_list ranges(resolve_dimensions());
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
@@ -1503,10 +1518,18 @@ pint_instance_reference::assigner::operator() (const bool b,
 	if (ranges.empty()) {
 		assert(vals.size() == 1);
 		// is scalar assignment, but may be indexed
+#if SUBCLASS_PINT_ARRAY
+		never_ptr<pint_array<0> > 
+			scalar_inst(p.pint_inst_ref.is_a<pint_array<0> >());
+		if (scalar_inst) {
+			return scalar_inst->assign(vals.front()) || b;
+		}
+#else
 		if (!p.pint_inst_ref->dimensions()) {
 			// p.pint_inst_ref is scalar
 			return p.pint_inst_ref->assign(vals.front()) || b;
 		}
+#endif
 	}
 	// else is scalar or array, but must resolve indices
 	const const_index_list dim(p.resolve_dimensions());
@@ -1701,7 +1724,7 @@ pint_const::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// wasteful
-	read_value(f, val);
+	read_value(f, const_cast<value_type&>(val));
 	STRIP_OBJECT_FOOTER(f);			// wasteful
 }
 // else already visited
@@ -1796,7 +1819,7 @@ pbool_const::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// wasteful
-	read_value(f, val);
+	read_value(f, const_cast<value_type&>(val));
 	STRIP_OBJECT_FOOTER(f);			// wasteful
 }
 // else already visited
@@ -1817,7 +1840,7 @@ pint_unary_expr::pint_unary_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		const char o, count_const_ptr<pint_expr> e) :
+		const op_type o, count_const_ptr<pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1825,7 +1848,7 @@ pint_unary_expr::pint_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		count_const_ptr<pint_expr> e, const char o) :
+		count_const_ptr<pint_expr> e, const op_type o) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1942,7 +1965,7 @@ pint_unary_expr::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-	read_value(f, op);
+	read_value(f, const_cast<op_type&>(op));
 	m.read_pointer(f, ex);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1964,7 +1987,7 @@ pbool_unary_expr::pbool_unary_expr() :
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		const char o, count_const_ptr<pbool_expr> e) :
+		const op_type o, count_const_ptr<pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -1972,7 +1995,7 @@ pbool_unary_expr::pbool_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		count_const_ptr<pbool_expr> e, const char o) :
+		count_const_ptr<pbool_expr> e, const op_type o) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
 	assert(ex->dimensions() == 0);
@@ -2076,7 +2099,7 @@ pbool_unary_expr::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
-	read_value(f, op);
+	read_value(f, const_cast<op_type&>(op));
 	m.read_pointer(f, ex);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -3388,6 +3411,38 @@ const_range_list::upper_multikey(void) const {
 	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param k the multikey generator to assign and fill.  
+ */
+template <size_t D>
+void
+const_range_list::make_multikey_generator(multikey_generator<D, int>& k) const {
+	typedef multikey_generator<D, int>	arg_type;
+	assert(size() <= D);  // else error on user!
+	typename arg_type::base_type::iterator li = k.lower_corner.begin();
+	typename arg_type::base_type::iterator ui = k.upper_corner.begin();
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i != e; i++, li++, ui++) {
+		*li = i->first;
+		*ui = i->second;
+	}
+}
+
+// explicit instantiation thereof
+// I know, this could be a pain to maintain, 
+// this is only temporary, bear with me.
+#define	INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(D)	\
+template void							\
+const_range_list::make_multikey_generator(multikey_generator<D, int>& ) const;
+
+// INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(0)
+INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(1)
+INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(2)
+INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(3)
+INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

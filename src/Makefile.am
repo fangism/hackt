@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2004/11/02 07:51:30 fang Exp $
+#	$Id: Makefile.am,v 1.19 2004/11/05 02:38:16 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -118,10 +118,10 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h)
 
 UTIL_HEADER_FILES = \
 	util/art_debug.h \
-	util/art_macros.h \
 	util/art_switches.h \
-	util/art_utils.h \
-	util/art_utils.tcc \
+	util/macros.h \
+	util/IO_utils.h \
+	util/IO_utils.tcc \
 	util/count_ptr.h \
 	util/count_ptr_fwd.h \
 	util/discrete_interval_set.h \
@@ -131,6 +131,7 @@ UTIL_HEADER_FILES = \
 	util/hash_qmap.h \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
+	util/list_vector_pool.h \
 	util/multidimensional_qmap.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_sparse_set.h \
@@ -169,7 +170,7 @@ libart___la_SOURCES = \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
 	$(UTIL_HEADER_FILES) \
-	util/art_utils.cc \
+	util/IO_utils.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \

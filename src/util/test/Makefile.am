@@ -26,11 +26,15 @@ noinst_PROGRAMS = \
 	multikey_generator_test \
 	multikey_qmap_slice_test
 
+# not yet
+#	list_vector_pool_test
+
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
+# list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc

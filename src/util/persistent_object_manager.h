@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.5 2004/11/02 07:52:17 fang Exp $
+	$Id: persistent_object_manager.h,v 1.6 2004/11/05 02:38:54 fang Exp $
  */
 
 #ifndef	__PERSISTENT_OBJECT_MANAGER_H__
@@ -13,7 +13,7 @@
 #include "sstream.h"			// reduce to forward decl?
 #include "ptrs.h"			// need complete definition
 #include "count_ptr.h"			// need complete definition
-#include "art_utils.h"			// for read and write to streams
+#include "IO_utils.h"			// for read and write to streams
 
 //=============================================================================
 // macros

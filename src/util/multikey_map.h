@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.8 2004/11/02 07:52:15 fang Exp $
+	$Id: multikey_map.h,v 1.9 2004/11/05 02:38:51 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
@@ -21,9 +21,14 @@
 #include "multikey.h"
 	// includes <iostream>
 #include "multikey_map_fwd.h"
+#include "IO_utils.tcc"
 
 namespace MULTIKEY_MAP_NAMESPACE {
 using namespace std;
+using util::write_value;
+using util::read_value;
+using util::write_map;
+using util::read_map;
 using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_NAMESPACE::multikey;
 using MULTIKEY_NAMESPACE::multikey_generator_base;
@@ -570,6 +575,37 @@ public:
 		return ret;
 	};
 
+public:
+	// IO methods
+	ostream&
+	write(ostream& f) const {
+		assert(f.good());
+		write_value(f, population());
+		const_iterator i = begin();
+		const const_iterator e = end();
+		for ( ; i!=e; i++) {
+			i->first.write(f);
+			write_value(f, i->second);
+		}
+		return f;
+	}
+
+	istream&
+	read(istream& f) {
+		assert(f.good());
+		assert(empty());
+		size_t size, i=0;
+		read_value(f, size);
+		for ( ; i<size; i++) {
+			key_type key;
+			mapped_type val;
+			key.read(f);
+			read_value(f, val);
+			(*this)[key] = val;
+		}
+		return f;
+	}
+
 };	// end class multikey_map
 
 //-----------------------------------------------------------------------------
@@ -744,6 +780,56 @@ public:
 			o << '[' << i->first << ']' << " = "
 				<< i->second << endl;
 		return o;
+	}
+
+	ostream&
+	write(ostream& f) const {
+#if 0
+		write_map(f, static_cast<const map_type&>(*this));
+#else
+		assert(f.good());
+		write_value(f, population());
+		const_iterator i = begin();
+		const const_iterator e = end();
+		for ( ; i!=e; i++) {
+#if 0
+			i->first.write(f);	// invalid for D=1
+			write_value(f, i->second);
+#else
+			util::write_key_value_pair(f, *i);
+#endif
+		}
+#endif
+		return f;
+	}
+
+	istream&
+	read(istream& f) {
+// strange Apple gcc-3.3 (build 1640) bug reporting
+// undefined reference to blah with char_traints (TYPO in name-mangled libs)!
+// when this is fixed, set following to #if 1, same above with write().
+#if 0
+		read_map(f, static_cast<map_type&>(*this));
+#else
+		assert(f.good());
+		assert(empty());
+		size_t size, i=0;
+		read_value(f, size);
+		for ( ; i<size; i++) {
+#if 0
+			key_type key;
+			mapped_type val;
+			key.read(f);		// invalid for D=1
+			read_value(f, val);
+			(*this)[key] = val;
+#else
+			pair<K, T> p;
+			util::read_key_value_pair(f, p);
+			(*this)[p.first] = p.second;
+#endif
+		}
+#endif
+		return f;
 	}
 
 	// all other methods are the same as general template class

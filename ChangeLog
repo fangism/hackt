@@ -1,5 +1,26 @@
 "ChangeLog"
 
+2004-11-04	David Fang	<fangism@users.sourceforge.net>
+
+	* art_object_instance.{h,cc}: Subclassed pint_instance_collection
+	  into dimension-specific variants.  This is prototype code, 
+	  switchable to old method (non-persistent) with SUBCLASS_PINT_ARRAY
+	  flag defined in the header file.  
+	  (Includes specialization for 0-dimensions.)
+	  Will remove this switch after it is deemed stable.  
+
+	* multikey*.h: Completed methods for read/writing multidimensional 
+	  map collections to binary streams.  
+
+	* list_vector_pool.h: simple template-based chunk allocator. 
+	  Not fully debugged yet, so no warranty.  
+
+	* Renamed some src/util files without the art_ prefix
+	  because they are independent w.r.t. this project.  
+
+	* Some general clean-up of obsolete #if 0 code-blocks.  
+
+
 2004-11-01	David Fang	<fangism@users.sourceforge.net>
 
 	* Insiginificant change.  Added CVS Id tags to all source files.   

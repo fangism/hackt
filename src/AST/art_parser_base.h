@@ -1,16 +1,16 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.7 2004/11/02 07:51:35 fang Exp $
+	$Id: art_parser_base.h,v 1.8 2004/11/05 02:38:21 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
 #define __ART_PARSER_BASE_H__
 
-#include "art_macros.h"
-#include "art_lex.h"
-#include "art_utils.h"		// for token_position
-	// includes <string> <iosfwd>
+#include <string>
+#include <iosfwd>
+#include "macros.h"
+#include "art_lex.h"		// for token_position
 #include "sublist.h"		// for efficient list slices
 #include "ptrs.h"		// experimental pointer classes
 #include "count_ptr.h"		// reference-counted pointers

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_qmap.h"
 	Multidimensional queryable map.  
-	$Id: multikey_qmap.h,v 1.7 2004/11/02 07:52:15 fang Exp $
+	$Id: multikey_qmap.h,v 1.8 2004/11/05 02:38:52 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_H__
@@ -141,6 +141,16 @@ public:
 
 	ostream&
 	dump(ostream& o) const { return map_type::dump(o); }
+
+	ostream&
+	write(ostream& o) const {
+		return map_type::write(o);
+	}
+
+	istream&
+	read(istream& i) {
+		return map_type::read(i);
+	}
 
 	// everything else plain inherited
 
