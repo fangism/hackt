@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2004/11/30 02:32:50 fang Exp $
+#	$Id: Makefile.am,v 1.24 2004/11/30 03:50:20 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -14,6 +14,8 @@ include $(top_srcdir)/Make.stddef
 
 # use autoconf-defined HAVE_BISON
 GREP_FOR_BISON = $(GREP) "^YACC =" Makefile | $(GREP) -q bison
+
+LEXYACC_PREFIX_SCRIPT = $(srcdir)/parser/lexyacc-prefix.awk
 
 if HAVE_BISON
 YACC_UNION_SCRIPT = $(srcdir)/parser/bison-union-type.awk
@@ -202,20 +204,20 @@ ARTXX_YACC_PREFIX = artxx_
 if HAVE_BISON
 parser/art++-parse-prefix.cc: parser/art++-parse.cc
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk $? | \
-	$(AWK) -f $(srcdir)/parser/yacc-prefix.awk \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 else
 parser/art++-parse-prefix.cc: parser/art++-parse.cc
-	$(AWK) -f $(srcdir)/parser/yacc-prefix.awk \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
 endif
 
 parser/art++-parse-prefix.h: parser/art++-parse.h
-	$(AWK) -f $(srcdir)/parser/yacc-prefix.awk \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
 
 lexer/art++-lex-prefix.cc: lexer/art++-lex.cc
-	$(AWK) -f $(srcdir)/parser/yacc-prefix.awk \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
 
 # can't depend on the .output alone, not a known dependence with .y[y]
@@ -225,7 +227,7 @@ $(ARTXX_PARSE_OUTPUT): parser/art++-parse.h
 $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
 	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) $? | \
-	$(AWK) -f $(srcdir)/parser/yacc-prefix.awk \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
 
@@ -284,7 +286,7 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 # artobjdump_CPPFLAGS = $(AM_CPPFLAGS)
 
 EXTRA_DIST = \
-	parser/yacc-prefix.awk \
+	parser/lexyacc-prefix.awk \
 	parser/yacc-output-to-C.awk \
 	parser/bison-output-to-C.awk \
 	parser/yacc-union-type.awk \

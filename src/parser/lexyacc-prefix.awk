@@ -1,6 +1,6 @@
-#!/usr/bin/awk -f
-# "yacc-prefix.h"
-#	$Id: yacc-prefix.awk,v 1.2 2004/11/02 07:52:08 fang Exp $
+#!`which awk` -f
+# "lexyacc-prefix.h"
+#	$Id: lexyacc-prefix.awk,v 1.1 2004/11/30 03:50:22 fang Exp $
 
 #	To get the effect of -p prefix with yacc or bison, 
 #	When compiling the source, pass -v PREFIX=name 
@@ -11,6 +11,12 @@
 #	Note that static variables and functions and macros are not
 #	part of the external interface of a module and need not be
 #	transformed, although there is no harm in doing so.  
+
+#	ChangeLog
+#
+#	2004-11-14	David Fang	<fangism@users.sourceforge.net>
+#		Enabled prefix renaming for [f]lex symbols
+#		This file was renamed to "lexyacc-prefix.h"
 
 BEGIN {
 	if (!length(PREFIX)) {
@@ -87,19 +93,22 @@ BEGIN {
 	roots["restart"] = 1;		# void yyrestart(FILE*)
 	roots["in"] = 1;		# FILE*
 	roots["out"] = 1;		# FILE*
+	roots["lineno"] = 1;		# int
 #	roots["yyconst"] = 1;		# macro
 #	roots["yyless"] = 1;		# macro
 	roots["text"] = 1;		# char*
 #	roots["_size_t"] = 1;		# fixed
 #	roots["_buffer_state"] = 1;	# struct, fixed
 #	roots["_current_buffer"] = 1;	# static
-#	roots["_switch_to_buffer"] = 1;	# fixed
-#	roots["_create_buffer"] = 1;	# fixed
-#	roots["_init_buffer"] = 1;	# fixed
-#	roots["_flush_buffer"] = 1;	# fixed
-#	roots["_scan_buffer"] = 1;	# fixed
-#	roots["_scan_string"] = 1;	# fixed
-#	roots["_scan_bytes"] = 1;	# fixed
+	roots["_switch_to_buffer"] = 1;	# public
+	roots["_create_buffer"] = 1;	# public
+	roots["_delete_buffer"] = 1;	# public
+	roots["_init_buffer"] = 1;	# public
+	roots["_flush_buffer"] = 1;	# public
+	roots["_load_buffer_state"] = 1;	# public
+	roots["_scan_buffer"] = 1;	# public
+	roots["_scan_string"] = 1;	# public
+	roots["_scan_bytes"] = 1;	# public
 #	roots["_flex_alloc"] = 1;	# static
 #	roots["_flex_realloc"] = 1;	# static
 #	roots["_flex_free"] = 1;	# static
@@ -113,11 +122,19 @@ BEGIN {
 #	roots["unput"] = 1;		# static
 #	roots["terminate"] = 1;		# macro
 
+	max_len = 1;
+	for (r in roots) {
+		if (length(r) > max_len)
+			max_len = length(r);
+	}
+
 }
+
+# what about YY?
 
 /yy/ && op {
 	str = $0;
-	l = 9;		# length of longest root token
+	l = max_len;		# length of longest root token
 	# go from longest to shortest
 	for ( ; l > 0; l--) {
 		for (r in roots) {
