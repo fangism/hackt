@@ -59,6 +59,8 @@ virtual	const_iterator end(void) const = 0;
 		return *(--e);
 	}
 
+virtual	multikey_base<K>& operator = (const multikey_base<K>& k) = 0;
+
 virtual	reference operator [] (const size_t i) = 0;
 virtual	const_reference operator [] (const size_t i) const = 0;
 
@@ -132,7 +134,6 @@ public:
 	 */
 	template <template <class> class S>
 	explicit
-//	multikey(const S<K>& s)
 	multikey(const S<K>& s, const K i = init)
 	{
 		const size_t sz = s.size();
@@ -169,7 +170,8 @@ public:
 		Safe indexing with array-bound check.  
 		indices is public, so one can always access it directly...
 	 */
-	reference operator [] (const size_t i) {
+	reference
+	operator [] (const size_t i) {
 		assert(i < D);
 		return indices[i];
 	}
@@ -177,9 +179,34 @@ public:
 	/**
 		Const version of array indexing.  
 	 */
-	const_reference operator [] (const size_t i) const {
+	const_reference
+	operator [] (const size_t i) const {
 		assert(i < D);
 		return indices[i];
+	}
+
+	/**
+		Generic assignment operation.
+	 */
+	multikey_base<K>&
+	operator = (const multikey_base<K>& s) {
+		const size_t sz = s.dimensions();
+		if (D < sz) {
+			size_t i = 0;
+			const_iterator iter = s.begin();
+			for ( ; i<sz; i++)
+				indices[i] = *iter;
+		} else {
+			copy(s.begin(), s.end(), indices);
+			fill(&indices[sz], &indices[D], init);
+		}
+		return *this;
+	}
+
+	this_type&
+	operator = (const this_type& s) {
+		copy(s.begin(), s.end(), this->begin());
+		return *this;
 	}
 
 	/**

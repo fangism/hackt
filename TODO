@@ -7,24 +7,28 @@ REVISION TARGETS:
 Current series: 0.1.3 -- main trunk of development line.
 
 0.1.4 Goals:
+	unrolling parameter expression assignments (promoted from 0.1.5)
 	BASIC parameter unrolling only (scalars)
+		done for integers, including arrays.
 	MAJOR ISSUES with parameter unrolling and assignment ordering
 		(resolved: ordered items are decoupled from scopes)
 	Hold off on parameter assignments until after restructuring
 		parameter_assignment classes.  
-		(Yeah, I know, useless without assignments!)
 		(*done* -- 10/09/04)
 	keep definitions around as back-references in unpacked objects.
 	unpack instantiation_bases into live instances
 		using multidimensional_qmap, or now, multikey_qmap.  
+		Make live instances and multidimensional sets persistent.
+		Mark modules as unrolled or not.  
+
+	Upgrade testing suite to include unrolling tests.  
 	
 	Documentation: add documentation headers to beginning of
 		every source file, so doxygen will create file
 		inclusion dependence graphs! (*done* -- 10/09/04)
 
 0.1.5 Goals:
-	unrolling parameter expression assignments
-	for 0.1.5 unrolling with collections
+	for 0.1.5 unrolling with physical instance collections
 	Parameters MUST be fully implemented before proceeding with
 		other physical entities.  
 	Decide whether to support loops and conditional scopes 
@@ -57,9 +61,15 @@ and beyond...
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation statement needs to check template arguments of type!
 
+post-compile time currently doesn't preserve line number information, 
+	and is thus difficult to report source of errors.  
+	Eventually need a rework of debugging system in objects
+	to preserve source information.  
+
 multikey_map type -- extend to accept generic sequences of key_types
 	as multidimensional index arguments.
 	(much like multidimensional_qmap and _sparse_set)
+	*done* -- 10/18/04
 
 Object serialization rework: (*DONE* -- 10/12/04)
 	sub-type instance collections by dimension, using size_t template

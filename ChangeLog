@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-10-21	David Fang	<fangism@users.sourceforge.net>
+
+	* Tag: ARTXX-00-01-03-l
+
+	* Fixed parameter index unrolling, correctly detecting
+	  unroll time errors, in multidimensional arrays, 
+	  such as uninitialized or unintantiated parameters.  
+
+	* Hand-checked behaviour of artobjunroll on test/parser/param dir.
+
+
 2004-10-19	David Fang	<fangism@users.sourceforge.net>
 
 	* Finished first draft code for unrolling collections of
@@ -51,6 +62,7 @@
 	  which ended up as 1/10 of the size it should have been.  
 	  The workaround to force proper linkage was to create
 	  an artificial local object of type entity::module. 
+	  See art_persistent_table.cc.
 
 
 2004-10-12	David Fang	<fangism@users.sourceforge.net>

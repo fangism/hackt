@@ -1114,25 +1114,14 @@ pint_instance_reference::static_constant_int(void) const {
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
+	\return true if resolution succeeds, else false.
  */
 bool
 pint_instance_reference::resolve_value(int& i) const {
 	// lookup pint_instance_collection
 	if (array_indices) {
-		// convert to multikey_base
-#if 0
-		excl_ptr<multikey_base<int> > key;
-		// pass and return by reference
-		if (array_indices->resolve_multikey(key)) {
-			assert(key);
-			return pint_inst_ref->lookup_value(i, *key);
-		} else {
-			cerr << "Unable to resolve array_indices!" << endl;
-			return false;
-		}
-#else
 		const_index_list indices(array_indices->resolve_index_list());
-		if (indices.empty()) {
+		if (!indices.empty()) {
 			const excl_ptr<multikey_base<int> > lower = 
 				indices.lower_multikey();
 			const excl_ptr<multikey_base<int> > upper = 
@@ -1148,7 +1137,6 @@ pint_instance_reference::resolve_value(int& i) const {
 			cerr << "Unable to resolve array_indices!" << endl;
 			return false;
 		}
-#endif
 	} else {
 		return pint_inst_ref->lookup_value(i);
 	}
@@ -1377,10 +1365,6 @@ pint_instance_reference::assigner::operator() (const bool b,
 	const excl_const_ptr<multikey_base<int> > upper(dim.upper_multikey());
 	assert(lower);
 	assert(upper);
-#if 1
-	cerr << "lower = " << *lower;
-	cerr << ", upper = " << *upper << endl;
-#endif
 	excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
@@ -1394,13 +1378,13 @@ pint_instance_reference::assigner::operator() (const bool b,
 	const never_const_ptr<multikey_base<int> >
 		kp(key_gen.is_a<multikey_base<int> >());
 	assert(kp);
-#if 1
-	cerr << "initial kp = " << *kp << endl;
-#endif
 	do {
 		if (p.pint_inst_ref->assign(*kp, *list_iter)) {
-			cerr << "ERROR: assigning index " << *kp << endl;
-#if 1
+			cerr << "ERROR: assigning index " << *kp << 
+				" of pint collection " <<
+				p.pint_inst_ref->get_qualified_name() <<
+				"." << endl;
+#if 0
 			cerr << "\tlower_corner = " <<
 				key_gen->get_lower_corner();
 			cerr << ", upper_corner = " <<
