@@ -6,56 +6,18 @@
 #ifndef __ART_UTILS_H__
 #define __ART_UTILS_H__
 
-#include <assert.h>
 #include <iosfwd>
 #include <string>
-
-#include "art_lex.h"
-
-//=============================================================================
-using std::string;
-using std::ostream;
-using std::istream;
-
-namespace ART {
-
-//=============================================================================
-/// just a line number and column position
-class line_position {
-public:
-	long		line;
-	long		col;
-public:
-	line_position() : line(0), col(0) { }
-	line_position(const long l, const long c) : line(l), col(c)
-		{ assert(line>0); assert(col>0); }
-	line_position(const line_position& lp) : 
-		line(lp.line), col(lp.col) { }		// no assertion yet
-	line_position(const token_position& tp) : 
-		line(tp.line), col(tp.col)
-		{ assert(line>0); assert(col>0); }
-// default destructor
-
-};	// end class line_position
-
-//=============================================================================
-class line_range {
-public:
-	line_position	start;
-	line_position	end;
-public:
-	line_range() : start(), end() { }
-	line_range(const line_position& l, const line_position& r) :
-		start(l), end(r) { }
-// default destructor
-
-friend ostream& operator << (ostream& o, const line_range& l);
-};	// end class line_range
-
-}	// end namespace ART
+#include <utility>		// for std::pair
 
 //=============================================================================
 // general utility functions
+
+namespace util {
+using std::string;
+using std::ostream;
+using std::istream;
+using std::pair;
 
 template <class T>
 void	write_value(ostream& f, const T& v);
@@ -65,10 +27,10 @@ void	read_value(istream& f, T& v);
 
 
 template <>
-void	write_value(ostream& f, const string& v);
+void	write_value<string>(ostream& f, const string& v);
 
 template <>
-void	read_value(istream& f, string& v);
+void	read_value<string>(istream& f, string& v);
 
 
 extern
@@ -76,6 +38,31 @@ void	write_string(ostream& f, const string& s);
 
 extern
 void	read_string(istream& f, string& s);
+
+
+template <template <class> class S, class T>
+void	write_sequence(ostream& f, const S<T>& s);
+
+template <template <class> class S, class T>
+void	read_sequence_in_place(istream& f, S<T>& s);
+
+template <template <class> class S, class T>
+void	read_sequence_back_insert(istream& f, S<T>& s);
+
+
+template <class K, class T>
+void	write_key_value_pair(ostream& f, const pair<const K, T>& p);
+
+template <class K, class T>
+void	read_key_value_pair(ostream& f, pair<K, T>& p);
+
+template <template <class, class> class M, class K, class T>
+void	write_map(ostream& f, const M<K,T>& m);
+
+template <template <class, class> class M, class K, class T>
+void	read_map(ostream& f, M<K,T>& m);
+
+}	// end namespace util
 
 //=============================================================================
 

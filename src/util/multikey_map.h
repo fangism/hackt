@@ -48,6 +48,7 @@ virtual	~multikey_map_base() { }
 
 virtual	size_t dimensions(void) const = 0;
 virtual	size_t population(void) const = 0;
+	size_t size(void) const { return this->population(); }
 virtual	bool empty(void) const = 0;
 virtual	void clear(void) = 0;
 virtual	void clean(void) = 0;
@@ -142,7 +143,7 @@ public:
 		\return The number of elements (leaves) in map.  
 	 */
 	size_t
-	population(void) const { return this->size(); }
+	population(void) const { return mt::size(); }
 
 	/**
 		Removes all elements.
@@ -622,7 +623,7 @@ public:
 	dimensions(void) const { return 1; }
 
 	size_t
-	population(void) const { return this->size(); }
+	population(void) const { return mt::size(); }
 
 	void
 	clean(void) {

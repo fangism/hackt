@@ -40,6 +40,12 @@ using namespace PTRS_NAMESPACE;
 	deleting the memory created.  
  */
 class persistent_object_manager {
+public:
+	/**
+		Type for auxiliary construction argument.  
+		Should be small like a char for space-efficiency.
+	 */
+	typedef	char			aux_alloc_arg_type;
 private:
 	/**
 		The class contains the information necessary for reconstructing
@@ -55,8 +61,11 @@ private:
 		/** location of reconstruction, consider object*? */
 		const persistent*	recon_addr;
 
-		// add entry for auxiliary allocator argument
-		// int			alloc_arg;
+		/**
+			Auxiliary allocator argument, useful for 2-level 
+			constructor tables.  
+		 */
+		aux_alloc_arg_type	alloc_arg;
 
 		/** reference count for counter pointers */
 	mutable	size_t*			ref_count;
@@ -73,9 +82,13 @@ private:
 	// need default constructor to create an invalid object
 		reconstruction_table_entry();
 		reconstruction_table_entry(const persistent::hash_key& t, 
+			const aux_alloc_arg_type a, 
+			const streampos h, const streampos t);
+		reconstruction_table_entry(const persistent::hash_key& t, 
 			const streampos h, const streampos t);
 		reconstruction_table_entry(const persistent* p,
-			const persistent::hash_key& t);
+			const persistent::hash_key& t, 
+			const aux_alloc_arg_type a);
 		// default copy constructor suffices
 		~reconstruction_table_entry();
 
@@ -83,6 +96,8 @@ private:
 				type(void) const { return otype; }
 		const persistent*
 				addr(void) const { return recon_addr; }
+		aux_alloc_arg_type
+				get_alloc_arg(void) const { return alloc_arg; }
 		size_t*		count(void) const;
 		void		assign_addr(persistent* ptr);
 		void		reset_addr();
@@ -128,8 +143,13 @@ private:
 	/**
 		Map from of persistent type's key to allocator function.  
 	 */
+#if 0
+	typedef hash_qmap<persistent::hash_key, reconstruction_functor>
+					reconstruction_function_map_type;
+#else
 	typedef hash_qmap<persistent::hash_key, reconstruct_function_ptr_type>
 					reconstruction_function_map_type;
+#endif
 
 private:
 
@@ -157,25 +177,14 @@ public:
 	static
 	int register_persistent_type(void);
 
-	/** Wrapping static object in accessor guarantees orderly initialization */
 private:
-#if 0
-	/**
-		Lookup map of reconstruction functions (allocators).
-		Every persistent type must statically register 
-		its type in this map.  
-	 */
-	static reconstruction_function_map_type	reconstruction_function_map;
-#endif
-
 	/**
 		Why naked pointer?  because objects of non-built-in type
 		are not guaranteed to be initialized.  
 		Built-in types, such as pointers, are guaranteed
 		to be initialized before static objects are initialized.  
-		It would take extra work for this memory to be properly	
-		released, but because there's only one global static instance
-		throughout the entire program, we say, "screw it".
+		The memory is deallocated by wrapping the naked pointer
+		with an excl_ptr, the_reconstruction_function_map_ptr_wrapped.  
 	 */
 	static
 	reconstruction_function_map_type*
@@ -210,7 +219,8 @@ public:
 // public interface functions to object class hierarchy
 	/** pointer registration interface */
 	bool register_transient_object(
-		const persistent* ptr, const persistent::hash_key& t);
+		const persistent* ptr, const persistent::hash_key& t, 
+		const aux_alloc_arg_type a = 0);
 	bool flag_visit(const persistent* ptr);
 	ostream& lookup_write_buffer(const persistent* ptr) const;
 	istream& lookup_read_buffer(const persistent* ptr) const;

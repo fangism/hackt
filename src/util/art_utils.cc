@@ -14,6 +14,7 @@ using namespace std;
 #define STRING_LIMIT		256
 
 //=============================================================================
+#if 0
 namespace ART {
 
 // inline
@@ -31,8 +32,10 @@ ostream& operator << (ostream& o, const line_range& l) {
 }
 
 };	// end namespace ART
+#endif
 
 //=============================================================================
+namespace util {
 /**
 	String specialization of binary writing.
  */
@@ -104,6 +107,8 @@ if (len) {
 	s == "";
 }
 }
+
+}	// end namespace util
 
 //=============================================================================
 

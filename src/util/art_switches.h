@@ -9,7 +9,7 @@
 #include "art_lex.h"
 
 // for lexer
-extern	token_position current;		/* read-only please */
+extern	ART::token_position current;		/* read-only please */
 
 extern	int	allow_nested_comments;
 extern	int	allow_nested_sources;

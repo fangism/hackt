@@ -9,6 +9,8 @@
 #include <iosfwd>
 #include <string>
 
+#include <functional>
+
 #include "hash_map.h"
 
 //=============================================================================
@@ -135,7 +137,6 @@ void T::load_object(persistent_object_manager& m) { }
 namespace util {
 //=============================================================================
 	using namespace std;
-//	using namespace PTRS_NAMESPACE;
 
 //=============================================================================
 // forward declarations
@@ -161,6 +162,12 @@ namespace util {
 typedef	persistent* reconstruction_function_type(const int);
 
 typedef	reconstruction_function_type*	reconstruct_function_ptr_type;
+
+#if 0
+// need way of comparing with pointers for null check
+typedef	pointer_to_unary_function<persistent*, const int>
+						reconstruction_functor;
+#endif
 
 //=============================================================================
 /**

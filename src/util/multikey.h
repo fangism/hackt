@@ -42,6 +42,7 @@ public:
 public:
 virtual	~multikey_base() { }
 virtual	size_t dimensions(void) const = 0;
+	size_t size(void) const { return this->dimensions(); }
 virtual	K default_value(void) const = 0;
 
 virtual	iterator begin(void) = 0;

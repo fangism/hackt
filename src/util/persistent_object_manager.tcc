@@ -9,7 +9,7 @@
 #include <fstream>
 
 #include "persistent_object_manager.h"
-// alread includes <iostream>
+// already includes <iostream>
 
 #include "art_macros.h"
 #include "art_utils.tcc"
@@ -66,6 +66,10 @@ persistent_object_manager::register_persistent_type(void) {
 		exit(1);
 	} else {
 		m[T::persistent_type_key] = &T::construct_empty;
+#if 0
+		m[T::persistent_type_key] =
+			reconstruction_functor(T::construct_empty);
+#endif
 	}
 	// get a unique id
 	const size_t s = m.size();

@@ -35,6 +35,7 @@ virtual ~multikey_qmap_base() { }
 
 virtual size_t dimensions(void) const = 0;
 virtual size_t population(void) const = 0;
+	size_t size(void) const { return this->population(); }
 virtual bool empty(void) const = 0;
 virtual void clear(void) = 0;
 

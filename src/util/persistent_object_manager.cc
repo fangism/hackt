@@ -55,7 +55,7 @@ persistent_object_manager::the_reconstruction_function_map_ptr_wrapped(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry() :
-		otype(), recon_addr(NULL), ref_count(NULL), 
+		otype(), recon_addr(NULL), alloc_arg(0), ref_count(NULL), 
 		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
 	assert(buffer);
@@ -66,7 +66,19 @@ persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
 		const persistent::hash_key& t, 
 		const streampos hd, const streampos tl) :
-		otype(t), recon_addr(NULL), ref_count(NULL), 
+		otype(t), recon_addr(NULL), alloc_arg(0), ref_count(NULL), 
+		scratch(false), 
+		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)) {
+	assert(buffer);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+persistent_object_manager::reconstruction_table_entry::
+	reconstruction_table_entry(
+		const persistent::hash_key& t, 
+		const aux_alloc_arg_type a, 
+		const streampos hd, const streampos tl) :
+		otype(t), recon_addr(NULL), alloc_arg(a), ref_count(NULL), 
 		scratch(false), 
 		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)) {
 	assert(buffer);
@@ -76,8 +88,9 @@ persistent_object_manager::reconstruction_table_entry::
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
 		const persistent* p, 
-		const persistent::hash_key& t) :
-		otype(t), recon_addr(p), ref_count(NULL), 
+		const persistent::hash_key& t, 
+		const aux_alloc_arg_type a) :
+		otype(t), recon_addr(p), alloc_arg(a), ref_count(NULL), 
 		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
 	assert(buffer);
@@ -187,7 +200,8 @@ persistent_object_manager::~persistent_object_manager() {
  */
 bool
 persistent_object_manager::register_transient_object(
-		const persistent* ptr, const persistent::hash_key& t) {
+		const persistent* ptr, const persistent::hash_key& t, 
+		const aux_alloc_arg_type a) {
 	const long probe = addr_to_index_map[ptr];
 	if (probe >= 0) {
 		// sanity check
@@ -195,14 +209,13 @@ persistent_object_manager::register_transient_object(
 			reconstruction_table[probe];
 		assert(e.type() == t);
 		assert(e.addr() == ptr);
+		assert(e.get_alloc_arg() == a);
 		return true;
 	} else {
 		// else add new entry
 		addr_to_index_map[ptr] = reconstruction_table.size();
-		const persistent* o_ptr = IS_A(const persistent*, ptr);
-		if (ptr) assert(o_ptr);
 		reconstruction_table.push_back(
-			reconstruction_table_entry(o_ptr, t));
+			reconstruction_table_entry(ptr, t, a));
 			// should transfer ownership of newly 
 			// constructed stringstream
 		return false;
@@ -427,6 +440,7 @@ persistent_object_manager::write_header(ofstream& f) {
 	for ( ; i<max; i++) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
 		write_value(f, e.type());
+		write_value(f, e.get_alloc_arg());
 		write_value(f, e.head_pos());
 		write_value(f, e.tail_pos());
 	}
@@ -447,8 +461,10 @@ persistent_object_manager::load_header(ifstream& f) {
 	size_t i = 0;
 	for ( ; i<max; i++) {
 		persistent::hash_key t;
+		aux_alloc_arg_type aux;
 		streampos head, tail;
 		read_value(f, t);
+		read_value(f, aux);
 		read_value(f, head);
 		read_value(f, tail);
 		// make sure t is a registered type
@@ -459,7 +475,7 @@ persistent_object_manager::load_header(ifstream& f) {
 			exit(1);
 		}
 		reconstruction_table.push_back(
-			reconstruction_table_entry(t, head, tail));
+			reconstruction_table_entry(t, aux, head, tail));
 	}
 	long neg_one;
 	read_value(f, neg_one);
@@ -486,8 +502,7 @@ persistent_object_manager::reconstruct(void) {
 			const reconstruct_function_ptr_type f = 
 				get_reconstruction_function_map()[t];
 			if (f) {
-				// later: pass in real e.alloc_arg
-				e.assign_addr((*f)(0));
+				e.assign_addr((*f)(e.get_alloc_arg()));
 				addr_to_index_map[e.addr()] = i;
 			} else {
 				cerr << "WARNING: don\'t know how to "
