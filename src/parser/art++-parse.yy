@@ -14,10 +14,6 @@
 // consider changing "art_parser.h" to "art_parser_base.h"
 // and using "art_parser.h" as include "art_parser*.h"
 
-/**
-	#include "yacc-prefix.h"	// for name changing
-	// doesn't work, use awk script "yacc-prefix.awk"
-**/
 #include "art_parser.h"			// should be first
 #include "art++-parse.output.h"		// auto-generated state strings! :)
 
@@ -330,7 +326,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 /*
 	A bogus token to catch the starting value of the token enumeration.
 	Because yacc and different versions of bison disagree on this.  
-	Usually either 257 or 258, POSIX wants 257 methinks, but this avoid
+	Usually either 257 or 258, POSIX wants 257 methinks, but this avoids
 	second guessing.  
  */
 %token	MINIMUM_BOGOSITY
@@ -401,6 +397,7 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_keyword>	CHANNEL
 %token	<_token_keyword>	TEMPLATE
 %token	<_token_keyword>	ENUM
+%token	<_token_keyword>	EXTERN STATIC EXPORT
 
 %token	<_token_else>		ELSE
 
@@ -657,6 +654,15 @@ optional_template_specification
 	: template_specification
 	| { $$ = NULL; }
 	;
+
+/*** later...
+optional_linkage_specification
+	: EXTERN
+	| STATIC
+	| EXPORT
+	|		{ $$ = NULL; }
+	;
+***/
 
 /******************************************************************************
 //	Process

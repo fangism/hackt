@@ -224,6 +224,9 @@ PBOOL_TYPE	"pbool"
 CHANNEL		"chan"
 TRUE		"true"
 FALSE		"false"
+EXTERN		"extern"
+STATIC		"static"
+EXPORT		"export"
 
 /* consider recording all tokens' (including punctuation) positions? */
 
@@ -287,6 +290,9 @@ FALSE		"false"
 {CHANNEL}	{ KEYWORD_UPDATE; return CHANNEL; }
 {TRUE}		{ BOOL_UPDATE; return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE; return BOOL_FALSE; }
+{EXTERN}	{ KEYWORD_UPDATE; return EXTERN; }
+{STATIC}	{ KEYWORD_UPDATE; return STATIC; }
+{EXPORT}	{ KEYWORD_UPDATE; return EXPORT; }
 
 {WHITESPACE}	TOKEN_UPDATE;
 {NEWLINE}	NEWLINE_UPDATE;
