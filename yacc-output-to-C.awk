@@ -43,7 +43,7 @@ BEGIN {
 function string_to_Cstring(str) {
 	gsub("\t","\\t",str);
 	gsub("\n","\\n",str);
-	gsub("\'","\\'",str);
+	gsub("'","\\'",str);
 	gsub("\"","\\\"",str);
 	gsub("\\","\\\\",str);
 	return "\"" str "\"";
