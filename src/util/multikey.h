@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.18.4.1 2005/01/20 18:43:59 fang Exp $
+	$Id: multikey.h,v 1.18.4.2 2005/01/20 22:00:15 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -11,6 +11,7 @@
 #include "macros.h"
 #include "multikey_fwd.h"
 
+#include "STL/reverse_iterator.h"
 #include <valarray>
 #include <iosfwd>
 
@@ -51,6 +52,9 @@ public:
 	typedef	K				value_type;
 	typedef	K*				iterator;
 	typedef	const K*			const_iterator;
+	typedef	std::reverse_iterator<iterator>	reverse_iterator;
+	typedef	std::reverse_iterator<const_iterator>
+						const_reverse_iterator;
 	typedef	K&				reference;
 	typedef	const K&			const_reference;
 public:
@@ -77,6 +81,18 @@ virtual	iterator
 
 virtual	const_iterator
 	end(void) const = 0;
+
+virtual	reverse_iterator
+	rbegin(void) = 0;
+
+virtual	const_reverse_iterator
+	rbegin(void) const = 0;
+
+virtual	reverse_iterator
+	rend(void) = 0;
+
+virtual	const_reverse_iterator
+	rend(void) const = 0;
 
 	reference
 	front(void) { return *begin(); }
@@ -133,6 +149,9 @@ public:
 	typedef	multikey<D,K>				this_type;
 	typedef	typename base_type::iterator		iterator;
 	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reverse_iterator	reverse_iterator;
+	typedef	typename base_type::const_reverse_iterator
+							const_reverse_iterator;
 	typedef	typename base_type::reference		reference;
 	typedef	typename base_type::const_reference	const_reference;
 
@@ -189,6 +208,18 @@ public:
 
 	const_iterator
 	end(void) const { return &indices[D]; }
+
+	reverse_iterator
+	rbegin(void) { return reverse_iterator(&indices[D]); }
+
+	const_reverse_iterator
+	rbegin(void) const { return const_reverse_iterator(&indices[D]); }
+
+	reverse_iterator
+	rend(void) { return reverse_iterator(&indices[0]); }
+
+	const_reverse_iterator
+	rend(void) const { return const_reverse_iterator(&indices[0]); }
 
 	/**
 		Safe indexing with array-bound check.  
@@ -318,13 +349,12 @@ public:
 	typedef	typename interface_type::value_type	value_type;
 	typedef	typename interface_type::iterator	iterator;
 	typedef	typename interface_type::const_iterator	const_iterator;
-#if 0
-	typedef	typename impl_type::reference		reference;
-	typedef	typename impl_type::const_reference	const_reference;
-#else
+	typedef	typename interface_type::reverse_iterator
+							reverse_iterator;
+	typedef	typename interface_type::const_reverse_iterator
+							const_reverse_iterator;
 	typedef	K&					reference;
 	typedef	const K&				const_reference;
-#endif
 public:
 	multikey_generic() : interface_type(), impl_type() { }
 
@@ -359,6 +389,23 @@ public:
 
 	const_iterator
 	end(void) const { return &impl_type::operator[](size()); }
+
+	reverse_iterator
+	rbegin(void)
+		{ return reverse_iterator(&impl_type::operator[](size())); }
+
+	const_reverse_iterator
+	rbegin(void) const {
+		return const_reverse_iterator(&impl_type::operator[](size()));
+	}
+
+	reverse_iterator
+	rend(void) { return reverse_iterator(&impl_type::operator[](0)); }
+
+	const_reverse_iterator
+	rend(void) const {
+		return const_reverse_iterator(&impl_type::operator[](0));
+	}
 
 	multikey_base<K>&
 	operator = (const multikey_base<K>& k);
@@ -426,93 +473,6 @@ ostream&
 operator << (ostream& o, const multikey<D,K>& k);
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <size_t D, class K>
-bool
-operator < (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
-}
-
-template <size_t D1, size_t D2, class K>
-bool
-operator < (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return lexicographical_compare(l.begin(), l.end(), r.begin(), r.end());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <size_t D, class K>
-bool
-operator > (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
-}
-
-template <size_t D1, size_t D2, class K>
-bool
-operator > (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return lexicographical_compare(r.begin(), r.end(), l.begin(), l.end());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <size_t D, class K>
-bool
-operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return std::equal(l.begin(), l.end(), r.begin());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dimensions must match!
- */
-template <class K>
-bool
-operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
-	if (l.dimensions() != r.dimensions())
-		return false;
-	return std::equal(l.begin(), l.end(), r.begin());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <size_t D, class K>
-bool
-operator != (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return !(l == r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class K>
-bool
-operator != (const multikey_base<K>& l, const multikey_base<K>& r) {
-	return !(l == r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <size_t D, class K>
-bool
-operator <= (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return !(l > r);
-}
-
-template <size_t D1, size_t D2, class K>
-bool
-operator <= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return !(l > r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <size_t D, class K>
-bool
-operator >= (const multikey<D,K>& l, const multikey<D,K>& r) {
-	return !(l < r);
-}
-
-template <size_t D1, size_t D2, class K>
-bool
-operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
-	return !(l < r);
-}
-#endif
-
 //=============================================================================
 /**
 	Interface for generating cyclic keys.  
@@ -520,31 +480,68 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 template <class K>
 class multikey_generator_base : virtual public multikey_base<K> {
 public:
-	typedef	K						value_type;
-	typedef	typename multikey_base<K>::iterator		iterator;
-	typedef	typename multikey_base<K>::const_iterator	const_iterator;
+	typedef	K					value_type;
+	typedef	multikey_base<K>			base_type;
+	typedef	typename base_type::iterator		iterator;
+	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reverse_iterator	reverse_iterator;
+	typedef	typename base_type::const_reverse_iterator
+							const_reverse_iterator;
 public:
 virtual	~multikey_generator_base() { }
 
-virtual	void validate(void) const = 0;
-virtual	void initialize(void) = 0;
+virtual	void
+	validate(void) const = 0;
 
-virtual	size_t size(void) const = 0;
+virtual	void
+	initialize(void) = 0;
 
-virtual	iterator begin(void) = 0;
-virtual	const_iterator begin(void) const = 0;
-virtual	iterator end(void) = 0;
-virtual	const_iterator end(void) const = 0;
+virtual	size_t
+	size(void) const = 0;
 
-virtual multikey_base<K>& get_lower_corner(void) = 0;
-virtual const multikey_base<K>& get_lower_corner(void) const = 0;
-virtual multikey_base<K>& get_upper_corner(void) = 0;
-virtual const multikey_base<K>& get_upper_corner(void) const = 0;
+virtual	iterator
+	begin(void) = 0;
 
-virtual	multikey_base<K>& operator ++ (int) = 0;
+virtual	const_iterator
+	begin(void) const = 0;
 
-static	multikey_generator_base<K>*
-		make_multikey_generator(const size_t d);
+virtual	iterator
+	end(void) = 0;
+
+virtual	const_iterator
+	end(void) const = 0;
+
+virtual	reverse_iterator
+	rbegin(void) = 0;
+
+virtual	const_reverse_iterator
+	rbegin(void) const = 0;
+
+virtual	reverse_iterator
+	rend(void) = 0;
+
+virtual	const_reverse_iterator
+	rend(void) const = 0;
+
+
+virtual multikey_base<K>&
+	get_lower_corner(void) = 0;
+
+virtual const multikey_base<K>&
+	get_lower_corner(void) const = 0;
+
+virtual multikey_base<K>&
+	get_upper_corner(void) = 0;
+
+virtual const multikey_base<K>&
+	get_upper_corner(void) const = 0;
+
+virtual	multikey_base<K>&
+	operator ++ (int) = 0;
+
+	static
+	multikey_generator_base<K>*
+	make_multikey_generator(const size_t d);
 };	// end class multikey_generator_base
 
 //-----------------------------------------------------------------------------
@@ -561,6 +558,9 @@ public:
 	typedef	multikey<D,K>				base_type;
 	typedef	typename base_type::iterator		iterator;
 	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reverse_iterator	reverse_iterator;
+	typedef	typename base_type::const_reverse_iterator
+							const_reverse_iterator;
 // protected:
 public:		// for sake of laziness and convenience
 	/** vector of lower bounds */
@@ -615,6 +615,18 @@ public:
 	const_iterator
 	end(void) const { return base_type::end(); }
 
+	reverse_iterator
+	rbegin(void) { return base_type::rbegin(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return base_type::rbegin(); }
+
+	reverse_iterator
+	rend(void) { return base_type::rend(); }
+
+	const_reverse_iterator
+	rend(void) const { return base_type::rend(); }
+
 	multikey_base<K>&
 	get_lower_corner(void) { return lower_corner; }
 
@@ -648,6 +660,9 @@ public:
 	typedef	multikey_generic<K>			base_type;
 	typedef	typename base_type::iterator		iterator;
 	typedef	typename base_type::const_iterator	const_iterator;
+	typedef	typename base_type::reverse_iterator	reverse_iterator;
+	typedef	typename base_type::const_reverse_iterator
+							const_reverse_iterator;
 // protected:
 public:		// for sake of laziness and convenience
 	/** vector of lower bounds */
@@ -713,6 +728,18 @@ public:
 
 	const_iterator
 	end(void) const { return base_type::end(); }
+
+	reverse_iterator
+	rbegin(void) { return base_type::rbegin(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return base_type::rbegin(); }
+
+	reverse_iterator
+	rend(void) { return base_type::rend(); }
+
+	const_reverse_iterator
+	rend(void) const { return base_type::rend(); }
 
 	multikey_base<K>&
 	get_lower_corner(void) { return lower_corner; }
