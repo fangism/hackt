@@ -3,11 +3,11 @@ parser stacks:
 state	value
 	(null) 
 0	keyword: defproc [3:1..7]
-22	(def-type-id) [3:9..46]
-82	(node_list): ... [3:47..48]
-135	{ [3:50]
-195	end-of-file
-in state 195, possible rules are:
+24	(def-type-id) [3:9..46]
+85	(node_list): ... [3:47..48]
+138	{ [3:50]
+197	end-of-file
+in state 197, possible rules are:
 	defproc : def_or_proc def_type_id optional_port_formal_decl_list_in_parens '{' . definition_body '}'  (23)
 	defproc : def_or_proc def_type_id optional_port_formal_decl_list_in_parens '{' . '}'  (24)
 acceptable tokens are: 
@@ -22,3 +22,5 @@ acceptable tokens are:
 	CHANNEL (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)
+	PINT_TYPE (shift)
+	PBOOL_TYPE (shift)

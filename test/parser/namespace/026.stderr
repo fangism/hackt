@@ -4,9 +4,9 @@ state	value
 	(null) 
 0	keyword: namespace [3:1..9]
 5	identifier: close_me [3:11..18]
-73	{ [3:20]
-126	end-of-file
-in state 126, possible rules are:
+76	{ [3:20]
+129	end-of-file
+in state 129, possible rules are:
 	namespace_management : NAMESPACE ID '{' . top_root '}' ';'  (11)
 	top_root : .  (3)
 acceptable tokens are: 
@@ -24,3 +24,5 @@ acceptable tokens are:
 	CHANNEL (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)
+	PINT_TYPE (shift)
+	PBOOL_TYPE (shift)

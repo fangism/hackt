@@ -3,11 +3,11 @@ parser stacks:
 state	value
 	(null) 
 0	keyword: defproc [3:1..7]
-22	identifier: bad_fang [3:9..16]
-81	< [3:18]
-132	(data-type-base) [3:19..22]
-189	end-of-file
-in state 189, possible rules are:
+24	identifier: bad_fang [3:9..16]
+84	< [3:18]
+135	paramtype: pint [3:19..22]
+191	end-of-file
+in state 191, possible rules are:
 	template_formal_decl : base_template_type . template_formal_id_list  (32)
 acceptable tokens are: 
 	ID (shift)

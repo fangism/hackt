@@ -3,14 +3,14 @@ parser stacks:
 state	value
 	(null) 
 0	keyword: defproc [3:1..7]
-22	identifier: foo [3:9..11]
-81	< [3:13]
-132	(data-type-base) [3:14..17]
-189	identifier: bar [3:19..21]
-221	end-of-file
-in state 221, possible rules are:
+24	identifier: foo [3:9..11]
+84	< [3:13]
+135	paramtype: pint [3:14..17]
+191	identifier: bar [3:19..21]
+226	end-of-file
+in state 226, possible rules are:
 	template_formal_id : ID . optional_range_list_in_brackets  (35)
-	optional_range_list_in_brackets : .  (228)
+	optional_range_list_in_brackets : .  (230)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

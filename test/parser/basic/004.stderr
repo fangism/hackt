@@ -2,11 +2,11 @@ parse error: syntax error
 parser stacks:
 state	value
 	(null) 
-0	type: int [3:1..3]
-12	type: bool [3:5..8]
+0	datatype: int [3:1..3]
+12	datatype: bool [3:5..8]
 in state 12, possible rules are:
-	base_data_type : INT_TYPE . '<' INT '>'  (54)
-	base_data_type : INT_TYPE .  (55)
+	base_data_type : INT_TYPE . '<' INT '>'  (55)
+	base_data_type : INT_TYPE .  (56)
 acceptable tokens are: 
 	'(' (reduce)
 	')' (reduce)
