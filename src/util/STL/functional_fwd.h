@@ -1,7 +1,7 @@
 /**
 	\file "functional_fwd.h"
 	Forward declarations of the <functional> header.
-	$Id: functional_fwd.h,v 1.1 2004/12/05 05:07:56 fang Exp $
+	$Id: functional_fwd.h,v 1.1.28.1 2005/02/14 21:35:36 fang Exp $
  */
 
 #ifndef	__UTIL_STL_FUNCTIONAL_FWD_H__
@@ -79,6 +79,12 @@ bind1st(const O&, const T&);
 template <class O, class T>
 binder2nd<O>
 bind2nd(const O&, const T&);
+
+template <class P>
+struct _Select1st;
+
+template <class P>
+struct _Select2nd;
 
 template <class Arg, class Result>
 class pointer_to_unary_function;

@@ -1,18 +1,14 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1.2.2 2005/02/13 02:39:01 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.3 2005/02/14 21:35:35 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
 #define	__UTIL_MAPLIKESET_H__
 
-// whether or not maplikeset_element is derived from std::pair
-#define	MAPLIKESET_ELEMENT_PAIR		1
-
-#if MAPLIKESET_ELEMENT_PAIR
 #include <utility>		// for std::pair
-#endif
+#include "STL/functional_fwd.h"
 
 namespace util {
 //=============================================================================
@@ -33,8 +29,6 @@ namespace util {
 	Constraints: the key/value type contained by the set must have
 	distinguishable key-value components.  
 	The value component must be default constructible.  
-
-	TODO: provide a maplikeset_element template.  
 
 	\param S is a set container.
  */
@@ -213,27 +207,16 @@ public:
 	with maplikeset.  
  */
 template <class K, class V>
-class maplikeset_element
-#if MAPLIKESET_ELEMENT_PAIR
-	: public std::pair<const K, V>
-#endif
-{
+class maplikeset_element : public std::pair<const K, V> {
 private:
 	typedef	maplikeset_element<K,V>			this_type;
-#if MAPLIKESET_ELEMENT_PAIR
 	typedef std::pair<const K, V>			parent_type;
-#endif
 public:
 	typedef	K					key_type;
 	typedef	V					mapped_type;
 	typedef	V					value_type;
 protected:
-#if !MAPLIKESET_ELEMENT_PAIR
-	const key_type					key;
-#if 1
-public:
-#endif
-	/**
+	/***
 		Kludge:
 		Sets only return const pointer/reference/iterators, 
 		and thus the elements may not be modified!
@@ -241,38 +224,24 @@ public:
 		const is the key which is used for sort-ordering.  
 		The value component should be free to change, 
 		hence, the value field is mutable.  
-	 */
-	mutable value_type				value;
-#endif
+		We achieve this with const-cast on references to second.  
+	***/
 public:
-	maplikeset_element() :
-#if MAPLIKESET_ELEMENT_PAIR
-		parent_type() { }
-#else
-		key(), value() { }
-#endif
+	maplikeset_element() : parent_type() { }
 
 	explicit
 	maplikeset_element(const key_type& k, 
 		const value_type& v = value_type()) :
-#if MAPLIKESET_ELEMENT_PAIR
 		parent_type(k, v) { }
-#else
-		key(k), value(v) { }
-#endif
 
-#if !MAPLIKESET_ELEMENT_PAIR
 	const key_type&
-	get_key(void) const { return key; }
-#endif
+	get_key(void) const { return first; }
 
-#if MAPLIKESET_ELEMENT_PAIR
 	value_type&
 	value(void) const { return const_cast<this_type&>(*this).second; }
 
 	const value_type&
 	const_value(void) const { return this->second; }
-#endif
 
 #if 0
 	/**
@@ -288,21 +257,13 @@ public:
 	 */
 	const this_type&
 	operator = (const value_type& v) const {
-#if MAPLIKESET_ELEMENT_PAIR
 		const_cast<this_type&>(*this).second = v;
-#else
-		value = v;
-#endif
 		return *this;
 	}
 
 	const this_type&
 	operator = (const this_type& k) const {
-#if MAPLIKESET_ELEMENT_PAIR
 		const_cast<this_type&>(*this).second = k.second;
-#else
-		value = k.value;
-#endif
 		return *this;
 	}
 
@@ -313,14 +274,10 @@ public:
 	 */
 	bool
 	operator < (const this_type& p) const {
-#if MAPLIKESET_ELEMENT_PAIR
 		return first < p.first;
-#else
-		return key < p.key;
-#endif
 	}
 
-#if 1
+#if 0
 	/**
 		ALERT! confusing operator overload combination ahead!
 		When comparing equality, compare value only!
@@ -331,27 +288,134 @@ public:
 	 */
 	bool
 	operator == (const this_type& p) const {
-#if MAPLIKESET_ELEMENT_PAIR
 		return second == p.second;
-#else
-		return value == p.value;
-#endif
 	}
 
 	bool
 	operator != (const this_type& p) const {
-#if MAPLIKESET_ELEMENT_PAIR
 		return !(second == p.second);
-#else
-		return !(value == p.value);
-#endif
 	}
 #endif
 
 };	// end class maplikeset_element
 
 //=============================================================================
+
+/**
+	A map-like set element derived from the value type.  
+ */
+template <class K, class V>
+class maplikeset_element_derived : public V {
+	typedef	maplikeset_element_derived<K,V>		this_type;
+public:
+	typedef	K					key_type;
+	typedef	V					value_type;
+	typedef	K					first_type;
+	typedef	V					second_type;
+public:
+	/**
+		Decided to make this public const for convenience.  
+	 */
+	const key_type					key;
+public:
+	/**
+		Is this default constructor needed?
+	 */
+	maplikeset_element_derived() : value_type(), key() { }
+
+	explicit
+	maplikeset_element_derived(const key_type& k, 
+		const value_type& v = value_type()) :
+		value_type(v), key(k) { }
+
+	const key_type&
+	get_key(void) const { return key; }
+
+	value_type&
+	value(void) { return *this; }
+
+	const value_type&
+	const_value(void) const {
+		return static_cast<const value_type&>(*this);
+	}
+
+	/**
+		This requires mutability of value, see its note.  
+		Here, the 'value' is the base_type.  
+	 */
+	const this_type&
+	operator = (const value_type& v) const {
+		// Egregious casting to achieve parent_type mutability...
+		const_cast<value_type&>(
+			static_cast<const value_type&>(*this)) = v;
+		return *this;
+	}
+
+	const this_type&
+	operator = (const this_type& k) const {
+		// Egregious casting to achieve parent_type mutability...
+		const_cast<value_type&>(
+			static_cast<const value_type&>(*this)) = 
+			static_cast<const value_type&>(k);
+		return *this;
+	}
+
+	/**
+		ALERT! confusing operator overload combination ahead!
+		When comparing order, compare key.  
+		This operator is used to sort the set.  
+	 */
+	bool
+	operator < (const this_type& p) const {
+		return key < p.key;
+	}
+
+};	// end class maplikeset_element_derived
+
+//=============================================================================
 }	// end namespace util
+
+
+//=============================================================================
+
+namespace std {
+using util::maplikeset_element_derived;
+
+template <class K, class V>
+struct _Select1st<maplikeset_element_derived<K,V> > :
+	public unary_function<maplikeset_element_derived<K,V>, 
+		typename maplikeset_element_derived<K,V>::first_type> {
+	typedef	maplikeset_element_derived<K,V>		pair_type;
+	typedef	typename pair_type::key_type		first_type;
+
+	first_type&
+	operator () (pair_type& p) const { return p.key; }
+
+	const first_type&
+	operator () (const pair_type& p) const { return p.key; }
+};	// end struct _Select1st
+
+template <class K, class V>
+struct _Select2nd<maplikeset_element_derived<K,V> > :
+	public unary_function<maplikeset_element_derived<K,V>, 
+		typename maplikeset_element_derived<K,V>::second_type> {
+	typedef	maplikeset_element_derived<K,V>		pair_type;
+	typedef	typename pair_type::value_type		second_type;
+
+	second_type&
+	operator () (pair_type& p) const {
+		return static_cast<second_type&>(p);
+	}
+
+	const second_type&
+	operator () (const pair_type& p) const {
+		return static_cast<const second_type&>(p);
+	}
+};	// end struct _Select1st
+
+}	// end namespace std
+
+//=============================================================================
 
 #endif	// __UTIL_MAPLIKESET_H__
 

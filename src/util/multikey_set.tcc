@@ -2,7 +2,7 @@
 	\file "multikey_set.tcc"
 	Method definitions for multidimensional set, based on
 	multikey_assoc wrapper interface. 
-	$Id: multikey_set.tcc,v 1.1.4.1.2.2 2005/02/13 02:39:02 fang Exp $
+	$Id: multikey_set.tcc,v 1.1.4.1.2.3 2005/02/14 21:35:36 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_TCC__
@@ -36,7 +36,18 @@ multikey_set<D,T,S>::clean(void) {
 	iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; ) {
-		if (i->second == def) {
+		/**
+			We leverage the specialization of 
+			_Select1st and _Select2nd in "maplikeset.h"
+			to select the key and value when
+			the implementation type is not a pair.  
+		 */
+#if 0
+		if (i->second == def)
+#else
+		if (std::_Select2nd<value_type>()(*i) == def)
+#endif
+		{
 			iterator j = i;
 			j++;
 			set_type::erase(i);
@@ -54,7 +65,12 @@ multikey_set<D,T,S>::dump(ostream& o) const {
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
+#if 0
 		o << i->first << " = " << i->second << endl;
+#else
+		o << std::_Select1st<value_type>()(*i) << " = " <<
+			std::_Select2nd<value_type>()(*i) << endl;
+#endif
 	return o;
 }
 

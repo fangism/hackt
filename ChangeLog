@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-02-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-03:
+	  Designed "derived" versions of maplikeset_element and
+	  multikey_set_element.  Functionally, they are the same as their
+	  non-derived counterparts, but their implementations facilitate
+	  composition of features such as ring_node-connectivity.  
+	  These have been tested individually in the util/test directory.  
+	  Next revision will test the composability on
+	  "art_object_instance_bool.*".  
+
+
 2005-02-13	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-02:
