@@ -43,6 +43,7 @@
 # enumfile = "y.tab.h" for symbol enumerations
 # include (optional) = space-delimited list of headers to include
 # namespace (optional) = space-delimited list of namespaces to use
+# token_enum (optional) = the start enumeration, i.e. the first token enum
 
 # criteria for the union type for yylval:
 # all members of the union must be pointers to classes with a common
@@ -56,7 +57,12 @@ BEGIN {
 	# user-defined token symbols are enumerater from 258 and higher
 	# NOTE: this is different from yacc, which starts at 257...
 	# Only God knows why.  
-	token_enum = 256 +2;
+	# To make matters worse, old enough versions of bison start at 257...
+	# We need to auto-detect...
+	# define a MINIMUM_BOGOSITY token *first* in yacc file, get its num.  
+	# e.g. %token MINIMUM_BOGOSITY	/* fake token */
+	# grep MINIMUM_BOGOSITY y.tab.h | head -n1 | cut -d\  -f 3
+	# pass it into this script as -v token_enum to override guess
 
 	shift_regex = "shift, and go";
 
@@ -75,9 +81,13 @@ BEGIN {
 		yaccfile " ");
 	if (include != "") printf("-v include=\"" include "\" ");
 	if (namespace != "") printf("-v namespace=\"" namespace "\" ");
+	if (token_enum != "") printf("-v token_enum=\"" token_enum "\" ");
 	print "<processed yacc-file>";
 	print "*/";
 	print "";
+
+	if (!length(token_enum))
+		token_enum = 256 +2;	# default
 
 	# need namespace first, before including headers
 	# but namespaces need to be opened and declared before used!
@@ -108,8 +118,10 @@ BEGIN {
 
 	process_union(yaccfile);
 
-	# need a special case for the "$end" symbol
+	# need a special case for the "$end" symbol (bison-1.875)
+	# need a special case for the "$" symbol (bison-1.35)
 	symbol_type["$end"] = "TOTALLY_BOGUS";		# bogus union member
+	symbol_type["$"] = "TOTALLY_BOGUS";		# bogus union member
 	enum_of["TOTALLY_BOGUS"] = -1;			# end condition
 	process_symbol_types(yaccfile);
 
@@ -146,7 +158,11 @@ BEGIN {
 	print "\t\\param j the current state of the transition.";
 	print "\t\\return wrapped pointer as the ultimate base type.";
 	print " */";
-	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j);";
+	print type "*";
+	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j);";
+	print "";
+	print type "*";
+	print "yy_union_lookup(const YYSTYPE& u, const int c);";
 	print "";
 }
 
@@ -185,21 +201,32 @@ if (!got_union) {
 
 function process_symbol_types(file, 
 	# local variables
-	argc, i, member_id, member_type, symbol_id ) {
+	argc, i, member_id, member_type, symbol_id, first_symbol ) {
 if (got_union) {
 	while(getline < file) {
 	argc = split($0, type_args);
 	if (match($1,"%token") || match($1,"%type")) {
-	if (argc >= 3) {
+	# fix: need to handle un-typed tokens
+	if (argc >= 2) {			# was 3
+		# check if first item is a union member reference
 		member_id = type_args[2];
-		gsub("[<>]","", member_id);
-		member_type = type_of[member_id];
-#		print "found union member " member_id " with type " member_type;
-		if (member_type == "") {
-			print "union member \"" member_id "\" not found!";
-			exit 1;
+		if (match(member_id, "<.*>")) {
+			first_symbol = 3;
+			gsub("[<>]","", member_id);	# strip angles
+			member_type = type_of[member_id];
+#			print "found union member " member_id " \
+#				with type " member_type;
+			if (member_type == "") {
+				print "union member \"" member_id \
+					"\" not found!";
+				exit 1;
+			}
+		} else {	# first item is a token
+			member_type = "";
+			first_symbol = 2;
 		}
-		for (i=3; i<= argc; i++) {
+
+		for (i=first_symbol; i<= argc; i++) {
 			symbol_id = type_args[i];
 			symbol_type[symbol_id] = member_type;
 #			print "symbol " symbol_id " returns member " \
@@ -221,14 +248,14 @@ if (got_union) {
 	# just read to end-of-file
 } # end while
 	# print out map of token_enum to type_enum
-	print "static int token_to_type_enum_map[" token_enum "] = {";
+	printf("static int token_to_type_enum_map[" token_enum "] = {");
 	for (i=0; i<token_enum; i++) {
-		if (i % 10 == 0) print "";	# for readability
+		if (i % 10 == 0) printf("\n\t");	# for readability
 		member_type = token_set[i];
 		if (member_type == "") {
-			printf("%d, ", -1);	# should die
+			printf("%3d, ", -1);	# should die
 		} else {
-			printf("%d, ", enum_of[member_type]);
+			printf("%3d, ", enum_of[member_type]);
 		}
 	}
 	print "};";
@@ -331,7 +358,8 @@ END {
 	print "};";	# end of array of function pointers
 	print "";
 	print "/* definition of yy_union_resolve() */";
-	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
+	print type "*";
+	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
 	print "/* function body really starts here */";
 	print "const yy_state_map_link* iter = yysma[i];";
 	print "/* sequentially compare state keys */";
@@ -352,7 +380,8 @@ END {
 	print "";
 
 # a union resolution lookup using yychar
-	print type "* yy_union_lookup(const YYSTYPE& u, const int c) {";
+	print type "*";
+	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
 	print "\tconst int i = token_to_type_enum_map[c];";
 	print "\tassert(i >= 0);";
 	print "\treturn (*yy_union_get[i])(u);";

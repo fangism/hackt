@@ -53,9 +53,6 @@ BEGIN {
 	member_count = 0;
 	state_count = 0;
 
-	# user-defined token symbols are enumerater from 257 and higher
-	token_enum = 256 +1;
-
 	if (yaccfile == "") {
 		print "\"yaccfile\" must be defined as an argument!";
 		exit 1;
@@ -71,9 +68,15 @@ BEGIN {
 		yaccfile " ");
 	if (include != "") printf("-v include=\"" include "\" ");
 	if (namespace != "") printf("-v namespace=\"" namespace "\" ");
+	if (token_enum != "") printf("-v token_enum=\"" token_enum "\" ");
 	print "<processed yacc-file>";
 	print "*/";
 	print "";
+
+	# user-defined token symbols are enumerater from 257 and higher
+	# allow this to be overriden by external automatic detection
+	if (!length(token_enum))
+		token_enum = 256 +1;	# default
 
 	# need namespace first, before including headers
 	# but namespaces need to be opened and declared before used!
@@ -138,7 +141,11 @@ BEGIN {
 	print "\t\\param j the current state of the transition.";
 	print "\t\\return wrapped pointer as the ultimate base type.";
 	print " */";
-	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j);";
+	print type "*";
+	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j);";
+	print "";
+	print type "*";
+	print "yy_union_lookup(const YYSTYPE& u, const int c);";
 	print "";
 }
 
@@ -177,21 +184,33 @@ if (!got_union) {
 
 function process_symbol_types(file, 
 	# local variables
-	argc, i, member_id, member_type, symbol_id ) {
+	argc, i, member_id, member_type, symbol_id, first_symbol ) {
 if (got_union) {
 	while(getline < file) {
 	argc = split($0, type_args);
 	if (match($1,"%token") || match($1,"%type")) {
-	if (argc >= 3) {
+	# fix: need to handle un-typed tokens
+	if (argc >= 2) {			# was 3
+		# check if first item is a union member reference
 		member_id = type_args[2];
-		gsub("[<>]","", member_id);
-		member_type = type_of[member_id];
-#		print "found union member " member_id " with type " member_type;
-		if (member_type == "") {
-			print "union member \"" member_id "\" not found!";
-			exit 1;
+
+		if (match(member_id, "<.*>")) {
+			first_symbol = 3;
+			gsub("[<>]","", member_id);	# strip angles
+			member_type = type_of[member_id];  
+#			print "found union member " member_id " \  
+#				with type " member_type;
+			if (member_type == "") {
+				print "union member \"" member_id \
+					"\" not found!";    
+				exit 1;
+			}
+		} else {	# first item is a token
+			member_type = "";
+			first_symbol = 2;
 		}
-		for (i=3; i<= argc; i++) {
+
+		for (i=first_symbol; i<= argc; i++) {
 			symbol_id = type_args[i];
 			symbol_type[symbol_id] = member_type;
 #			print "symbol " symbol_id " returns member " \
@@ -213,13 +232,14 @@ if (got_union) {
 	# just read to end-of-file
 } # end while
 	# print out map of token_enum to type_enum
-	print "static int token_to_type_enum_map[" token_enum "] = {";
+	printf("static int token_to_type_enum_map[" token_enum "] = {");
 	for (i=0; i<token_enum; i++) {
+		if (i % 10 == 0) printf("\n\t");	# for readability
 		member_type = token_set[i];
 		if (member_type == "") {
-			printf("%d, ", -1);	# should die
+			printf("%3d, ", -1);	# should die
 		} else {
-			printf("%d, ", enum_of[member_type]);
+			printf("%3d, ", enum_of[member_type]);
 		}
 	}
 	print "};";
@@ -325,7 +345,8 @@ END {
 	print "};";	# end of array of function pointers
 	print "";
 	print "/* definition of yy_union_resolve() */";
-	print type "* yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
+	print type "*";
+	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
 	print "/* function body really starts here */";
 	print "const yy_state_map_link* iter = yysma[i];";
 	print "/* sequentially compare state keys */";
@@ -344,7 +365,8 @@ END {
 	print "";
 
 # a union resolution lookup using yychar
-	print type "* yy_union_lookup(const YYSTYPE& u, const int c) {";
+	print type "*";
+	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
 	print "\tconst int i = token_to_type_enum_map[c];";
 	print "\tassert(i >= 0);";
 	print "\treturn (*yy_union_get[i])(u);";

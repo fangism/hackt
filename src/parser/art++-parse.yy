@@ -328,6 +328,14 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %}
 
 /*
+	A bogus token to catch the starting value of the token enumeration.
+	Because yacc and different versions of bison disagree on this.  
+	Usually either 257 or 258, POSIX wants 257 methinks, but this avoid
+	second guessing.  
+ */
+%token	MINIMUM_BOGOSITY
+
+/*
 	The lexer returns newly allocated nodes FOR ALL TOKENS, 
 	even ones that are just symbols.  
 	If you don't want to use a returned symbol, delete it!
@@ -346,7 +354,6 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 		lists.  To include a literal ] place it first in the list.
 		Similarly, to include a literal ^ place  it  anywhere  but
 		first.  Finally, to include a literal - place it last.
-
 
 %token	<_token_char>	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
 %token	<_token_char>	LT GT				// angle brackets
@@ -404,6 +411,13 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_bool_type>	BOOL_TYPE
 %token	<_token_pint_type>	PINT_TYPE
 %token	<_token_pbool_type>	PBOOL_TYPE
+
+/*
+	Special yacc/bison-independent hack to get the maximum token enum
+	because different versions of them start at either 257 or 258, 
+	and the #define number for them can change!
+ */
+%token	MAXIMUM_BOGOSITY
 
 /* non-terminals */
 %type	<_root_body>	module
@@ -1925,7 +1939,10 @@ complex_aggregate_reference_list
 #define	yyname		yytname
 #define	yysindex	yypact
 #define	yyrindex	yydefact
-#define	YYMAXTOKEN	YYMAXUTOK
+/**
+	#define	YYMAXTOKEN	YYMAXUTOK
+	use MAXIMUM_BOGOSITY instead for bounding yychar
+**/
 #define	YYTABLESIZE	YYLAST
 #endif
 
@@ -1937,15 +1954,27 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
+
+/*	Define the following (-D) to disable sophisticated error reporting, 
+ *	useful for bogus compilations.
+ */
+#if	!defined(NO_FANCY_YYERROR)
 	// we've kept track of the position of every token
 	cerr << "parser stacks:" << endl << "state\tvalue" << endl;
 
-/*	HACK FOR BOGUS COMPILATION.	*/
-#ifndef	NO_FAKE_PREFIX
-	for (s=yyss, v=yyvs; s <= yyssp && v <= yyvsp; s++, v++) {
+	/* bug fix: bad memory address with first *(s-1) if v is not
+	 * guaranteed to be NULL, which it isn't!
+	 * Thus we start with yyss+1, yyvs+1 for first valid stack entry.
+	 */
+	assert(!*yyss);		/* should be zero */
+	cerr << *yyss;
+	s=yyss+1;
+	v=yyvs+1;
+	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
 		// how do we know which union member?
 		// need to look at the state stack, and the transition
 		// from the previous state
+		/* assert(v); can have NULL on stack? yes. */
 		if (v) {
 			resolved_node = yy_union_resolve(*v, *(s-1), *s);
 			if (resolved_node)
@@ -1956,7 +1985,6 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		} else {
 			cerr << "\t(null) ";
 		}
-
 		cerr << endl << *s;
 	}
 	// sanity check
@@ -1994,7 +2022,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	{
 		int yychar;
 		int yyn;
-		for (yychar = 0; yychar <= YYMAXTOKEN; yychar++) {
+		for (yychar = 0; yychar <= MAXIMUM_BOGOSITY; yychar++) {
 			// try all terminal tokens
 			if ((yyn = yysindex[*yyssp]) && 
 					(yyn += yychar) >= 0 && 
