@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.10.1 2005/01/22 06:38:28 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.10.2 2005/01/22 22:35:26 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -42,8 +42,23 @@ private:								\
 	Similar macro to the non-robust version defined above.  
 	This version is needed when allocation from such list_vector_pools
 	is done during static initialization across modules.  
-	Use of this macro requires inclusion of the "memory/pointer_classes.h"
-	header.  
+	The call to get_pool is the replacement for the static
+	pool -- the actual pool is a function-local static object, 
+	guaranteed to be initialized exactly once upon first
+	entry into the function.  
+
+	Tried and abandoned: using reference-counted pointers to the 
+	static pool, and using a macro to "require" and initialize the
+	pool from another module.  
+	This was abandoned because the last reference was not properly
+	destroying the allocator.  But now I suspect that it may
+	be due to a different nature of function-local statics.  
+
+	QUIRK: such an allocator is sometimes destroyed upon program 
+	termination, and I don't know why -- perhaps it is being conservative
+	w.r.t the possibility of external references to it?
+	In the case where the allocator is not destroyed, 
+	one will not be able to get the leak diagnostics from the pool.  
  */
 #define	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS			\
 	static void*	operator new (size_t);				\
@@ -56,24 +71,17 @@ private:								\
 	pool_type&							\
 	get_pool(void);
 
-// public:
-//	typedef	count_ptr<pool_type>			pool_ref_type;
-// private:							
-//	static pool_type*				pool;		
-//	static size_t*					pool_ref_count;	
 
-//	static pool_ref_type				pool_ref;
-
+#if 0
 /**
 	Convenient macro for explicitly requiring that a memory pool
 	be ready during static initialization of a particular module.  
-	This is not required now...
+	This is not required now... kept in comments for historical reference.  
  */
 #define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
 static T::pool_type&							\
 __pool_ref_ ## T ## __ (T::acquire_pool_reference());
 
-#if 0
 static const T::pool_ref_type
 __pool_ref_ ## T ## __ (T::acquire_pool_reference());
 #endif
