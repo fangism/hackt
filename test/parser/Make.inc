@@ -9,6 +9,7 @@ include $(PARSER_TEST_DIR)/array/Make.inc
 include $(PARSER_TEST_DIR)/process/Make.inc
 include $(PARSER_TEST_DIR)/datatype/Make.inc
 # include $(PARSER_TEST_DIR)/channel/Make.inc
+include $(PARSER_TEST_DIR)/template/Make.inc
 
 # gmake would allow addprefix macro, but bsdmake is lame and can't
 
