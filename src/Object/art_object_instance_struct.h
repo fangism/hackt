@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9.2.4 2005/02/27 04:11:31 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.5 2005/02/27 07:33:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -26,6 +26,8 @@ struct struct_instance : public persistent {
 	never_ptr<const struct_instance_alias_base>	back_ref;
 public:
 	struct_instance();
+
+	~struct_instance();
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class struct_instance

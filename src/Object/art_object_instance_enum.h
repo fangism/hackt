@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.2.4 2005/02/27 04:11:29 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.2.5 2005/02/27 07:33:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -27,6 +27,8 @@ class enum_instance : public persistent {
 	never_ptr<const enum_instance_alias_base>	back_ref;
 public:
 	enum_instance();
+
+	~enum_instance();
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class enum_instance

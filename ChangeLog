@@ -1,10 +1,30 @@
 "ChangeLog"
 
+2005-02-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-17:
+	  Successfully worked around defects in prerelease of gcc4 (20050130).  
+	  Code compiles and passes all tests, with some archival warnings
+	  from odcctools' ld/ranlib.  (powerpc-darwin only)
+	  Workarounds included additional using declaration in
+	  util/memory/pointer_manipulator.h to prevent friend class
+	  forward declaration name-injection.  
+	  Explicit template typedef typename was added to 
+	  art_object_instance_alias.h and art_object_instance_collection.h.
+	  None of these modifications cause any regressions with gcc-3.3.
+	  Added some missing *_instance method definitions to satisfy
+	  g++-4.0's ld.  
+
+
 2005-02-26	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-15-merged-alias-12:
 	  Merged in tons of revisions from the alias child branch.  
 	  Hallelujah!  *Basic* alias connections work.  
+
+	* -object-01-16:
+	  Added DevelopmentPlan.dot, which makes a .ps.  
+	  No more relying on the white-board in my office.  
 
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-10-merged-instance-13:
 	  Merged all revisions from -09-instance child branch (rev -13)

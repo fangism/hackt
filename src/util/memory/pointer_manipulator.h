@@ -3,7 +3,7 @@
 	Library of pointers for explicit memory management.  
 	The pointer classes contained herein are all non-counted.  
 
-	$Id: pointer_manipulator.h,v 1.2 2005/01/28 19:58:52 fang Exp $
+	$Id: pointer_manipulator.h,v 1.2.2.1 2005/02/27 07:33:32 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_MANIPULATOR_H__
@@ -17,6 +17,8 @@ namespace util {
 class persistent_object_manager;
 
 namespace memory {
+// workaround for a g++-4.0 (20050130) prerelease regression
+using util::persistent_object_manager;
 //=============================================================================
 
 /**

@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.1.6.1 2005/02/27 04:11:28 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.6.2 2005/02/27 07:33:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -251,7 +251,7 @@ INSTANCE_ALIAS_CLASS::write_next_connection(
 	m.write_pointer(o, this->container);
 
 	value_writer<key_type> write_key(o);
-	write_key(key);
+	write_key(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -674,7 +674,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(
 			// found one that already exists!
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen << " of ";
-			what(cerr) << ' ' << get_qualified_name() <<
+			what(cerr) << ' ' << this->get_qualified_name() <<
 				" already instantiated!" << endl;
 			err = true;
 		}

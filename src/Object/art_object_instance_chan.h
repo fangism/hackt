@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8.2.4 2005/02/27 04:11:27 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.2.5 2005/02/27 07:33:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -26,6 +26,8 @@ struct channel_instance : public persistent {
 	never_ptr<const channel_instance_alias_base>	back_ref;
 public:
 	channel_instance();
+
+	~channel_instance();
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class chan_instance

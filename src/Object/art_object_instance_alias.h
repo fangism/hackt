@@ -2,13 +2,12 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.1.6.1 2005/02/27 04:11:26 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.1.6.2 2005/02/27 07:33:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
 #define	__ART_OBJECT_INSTANCE_ALIAS_H__
 
-// #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool_fwd.h"
 #include "multikey_set.h"
@@ -219,7 +218,12 @@ public:
 		Dimension-specific container type, 
 		should be sub-type of instance_collection_generic_type;
 	 */
+#if 0
 	typedef	typename class_traits<Tag>::instance_array<D>::type
+#else
+	// template explicitly required by g++-4.0
+	typedef	typename class_traits<Tag>::template instance_array<D>::type
+#endif
 							container_type;
 
 	typedef	typename class_traits<Tag>::instance_alias_base_type
@@ -256,7 +260,7 @@ public:
 		Implicit conversion need for some multikey_assoc
 		algorithms.  
 	 */
-	operator const key_type& () const { return key; }
+	operator const key_type& () const { return this->key; }
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -317,8 +321,12 @@ public:
 					instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
-//	typedef	instance_array<Tag,0>			container_type;
+#if 0
 	typedef	typename class_traits<Tag>::instance_array<0>::type
+#else
+	// template explicitly required by g++-4.0
+	typedef	typename class_traits<Tag>::template instance_array<0>::type
+#endif
 							container_type;
 public:
 	~instance_alias();

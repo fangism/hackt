@@ -2,7 +2,7 @@
 	\file "art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.8.2.5 2005/02/27 04:11:27 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.2.6 2005/02/27 07:33:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -125,6 +125,34 @@ struct collection_type_committer<channel_tag> {
 		return false;
 	}
 };
+
+//=============================================================================
+// class channel_instance method definitions
+
+channel_instance::channel_instance() : back_ref(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+channel_instance::~channel_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instance::collect_transient_info(persistent_object_manager& m) const {
+	// collect pointers
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// write me!
+}
 
 //=============================================================================
 // explicit template class instantiations

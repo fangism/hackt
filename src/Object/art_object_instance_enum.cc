@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.9.2.6 2005/02/27 04:11:28 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.7 2005/02/27 07:33:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -124,6 +124,34 @@ struct collection_type_committer<enum_tag> {
 		return false;
 	}
 };
+
+//=============================================================================
+// class enum_instance method definitions
+
+enum_instance::enum_instance() : back_ref(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+enum_instance::~enum_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance::collect_transient_info(persistent_object_manager& m) const {
+	// collect pointers
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// write me!
+}
 
 //=============================================================================
 // explicit class instantiations

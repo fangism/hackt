@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.9.2.5 2005/02/27 04:11:31 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.2.6 2005/02/27 07:33:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -125,6 +125,34 @@ struct collection_type_committer<datastruct_tag> {
 		return false;
 	}
 };
+
+//=============================================================================
+// class struct_instance method definitions
+
+struct_instance::struct_instance() : back_ref(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct_instance::~struct_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+struct_instance::collect_transient_info(persistent_object_manager& m) const {
+	// collect pointers
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+struct_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+struct_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// write me!
+}
 
 //=============================================================================
 // explicit template class instantiations
