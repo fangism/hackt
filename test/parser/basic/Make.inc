@@ -13,7 +13,8 @@ TEST_SUBJECTS += \
 	$(BASIC_PARSER_TEST_DIR)/007 \
 	$(BASIC_PARSER_TEST_DIR)/008 \
 	$(BASIC_PARSER_TEST_DIR)/009 \
-	$(BASIC_PARSER_TEST_DIR)/010
+	$(BASIC_PARSER_TEST_DIR)/010 \
+	$(BASIC_PARSER_TEST_DIR)/011
 
 # gmake would allow addprefix macro, but bsdmake is lame and can't
 

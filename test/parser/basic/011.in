@@ -2,8 +2,6 @@
 // an example of rejected cast-style arrays is in 010.in
 
 // eventually type checker will reject this...
-// and it does... so the original 006.in was copied to 011.in
-// we've modified the indices so that they are constant integers.  
 
 int good_array[5];
 
@@ -11,7 +9,7 @@ namespace more_arrays {
 
 int fancy_array[5][3];
 
-int fancier_array[4][0..4][1..2];
+int fancier_array[N][0..N][1..M];
 
 };
 
