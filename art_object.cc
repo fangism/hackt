@@ -80,18 +80,29 @@ scopespace::~scopespace() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic object lookup for unqualified identifier.  
+	Doesn't care what sub-type the object actually is.  
+	This variation only searches the current namespace, and 
+	never searches the parents' scopes.  
+	\param id the unqualified name of the object sought.  
+	\return an object with the same name, if found.  
  */
 const object*
-scopespace::lookup_object_here(const token_identifier& id) const {
+scopespace::lookup_object_here(const token_string& id) const {
 	return used_id_map[id];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic object lookup for unqualified identifier.  
+	Doesn't care what sub-type the object actually is.  
+	The variation also queries parents's namespace and returns
+	the first match found from an upward search.  
+	(Consider making id a string? for cache-type/expr lookups?)
+	\param id the unqualified name of the object sought.  
+	\return an object with the same name, if found.  
  */
 const object*
-scopespace::lookup_object(const token_identifier& id) const {
+scopespace::lookup_object(const token_string& id) const {
 	const object* o = used_id_map[id];
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
@@ -136,23 +147,25 @@ if (id.is_absolute()) {
 	we default to parent's lookup namespace if this is not a namespace. 
 	The name_space::lookup_namespace will override this.  
 	\param id is the entire name of the namespace.
+	\return pointer to the scope or namespace matched if found.  
  */
 
 const scopespace*
-scopespace::lookup_namespace(const qualified_id& id) const {
+scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	return parent->lookup_namespace(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Looks in used_id_map for a registered instance name.  
 	\param id name of instance to lookup, an unqualified name.  
 	\return pointer to instance with matching name.  
- */
 const instantiation_base*
 scopespace::lookup_instance(const token_identifier& id) const {
 	return IS_A(const instantiation_base*, used_id_map[id]);
 }
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** NOT READY TO BE UNLEASHED YET ... or ever
@@ -162,6 +175,7 @@ scopespace::lookup_instance(const qualified_id& id) const {
 	...
 }
 **/
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -469,6 +483,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Returns valid pointer to a namespace if a strict match is found.  
 	(at most one precise match)
@@ -476,7 +491,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	This variation includes the invoking namespace in the pattern match.  
 	Now honors the absolute flag of the qualified_id to start search
 	from global namespace.  
-	TO DO: re-use quey_subnamespace_match
+	TO DO: re-use query_subnamespace_match
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
@@ -504,11 +519,69 @@ name_space::query_namespace_match(const qualified_id& id) const {
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
 			const name_space* next;
-//			never_const_ptr<name_space> next;
 			// no need to skip scope tokens anymore
-//			tid = IS_A(token_identifier*, *i);
-//			tid = i->is_a<token_identifier>();
-			tid = (*i).is_a<token_identifier>();
+			tid = i->is_a<token_identifier>();
+			assert(tid);
+			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
+			// the [] operator of map<> doesn't have const 
+			// semantics, even if looking up an entry!
+			next = IS_A(const name_space*, ns->used_id_map[*tid]);
+			// if not found in subspaces, check aliases list
+			// or should we not search aliases?
+			ns = (next) ? next : ns->open_aliases[*tid];
+		}
+
+	// for loop terminates when ns is NULL or i is at the end
+	// if i is not at the end, then we didn't find a matched namespace
+	//	because there are still scoped id's trailing, 
+	//	therefore ns is NULL, which means no match.  
+	// if ns is not NULL, then i must be at the end, 
+	//	which means that we've matched so far.
+	// In either case, we return ns.  
+
+		return ns;
+	} 
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns valid pointer to a namespace if a strict match is found.  
+	(at most one precise match)
+	This will serach both true subnamespaces and aliased subspaces.  
+	This variation includes the invoking namespace in the pattern match.  
+	Now honors the absolute flag of the qualified_id to start search
+	from global namespace.  
+	TO DO: re-use query_subnamespace_match
+	\param id the qualified/scoped name of the namespace to match.
+	\return pointer to found namespace.
+ */
+const name_space*
+name_space::query_namespace_match(const qualified_id_slice& id) const {
+	// qualified_id_slice is a wrapper around qualified_id
+	// recall that qualified_id is a node_list<token_identifier,scope>
+	// and that token_identifier is a sub-type of string
+	DEBUG(TRACE_NAMESPACE_QUERY, 
+		cerr << "query_namespace_match: " << id 
+			<< " in " << get_qualified_name() << endl)
+
+	if (id.empty())	{	// what if it's absolute and empty?
+		return (id.is_absolute()) ? get_global_namespace() : this;
+	}
+	qualified_id_slice::const_iterator i = id.begin();	assert(*i);
+	never_const_ptr<token_identifier> tid(*i);
+	assert(tid);
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
+	const name_space* ns = (id.is_absolute()) ? this
+		: get_global_namespace();
+	if (ns->key.compare(*tid)) {
+		// if names differ, already failed, try alias spaces
+		return NULL;
+	} else {
+		for (i++; ns && i!=id.end(); i++) {
+			const name_space* next;
+			// no need to skip scope tokens anymore
+			tid = i->is_a<token_identifier>();
 			assert(tid);
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 			// the [] operator of map<> doesn't have const 
@@ -532,6 +605,7 @@ name_space::query_namespace_match(const qualified_id& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Returns valid pointer to a namespace if a strict match is found.  
 	(at most one precise match)
@@ -550,7 +624,6 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : this;
 	}
 	qualified_id::const_iterator i = id.begin();	// id may be empty!
-//	const token_identifier* tid = *i;
 	never_const_ptr<token_identifier> tid(*i);
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
@@ -564,8 +637,60 @@ name_space::query_subnamespace_match(const qualified_id& id) const {
 	// remember to skip scope tokens
 	for (i++; ns && i!=id.end(); i++) {
 		const name_space* next;
-//		tid = IS_A(token_identifier*, *i);
-		tid = (*i).is_a<token_identifier>();
+		tid = i->is_a<token_identifier>();
+		assert(tid);
+		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
+		next = IS_A(const name_space*, ns->used_id_map[*tid]);
+		// if not found in subspaces, check aliases list
+		ns = (next) ? next : ns->open_aliases[*tid];
+	}
+	// for loop terminates when ns is NULL or i is at the end
+	// if i is not at the end, then we didn't find a matched namespace
+	//	because there are still scoped id's trailing, 
+	//	therefore ns is NULL, which means no match.  
+	// if ns is not NULL, then i must be at the end, 
+	//	which means that we've matched so far.
+	// In either case, we return ns.  
+	return ns;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns valid pointer to a namespace if a strict match is found.  
+	(at most one precise match)
+	This will treat open aliased namespaces as valid subspaces for search.
+	This variation excludes the invoking namespace in the pattern match.  
+	\param id the qualified/scoped name of the namespace to match
+ */
+const name_space*
+name_space::query_subnamespace_match(const qualified_id_slice& id) const {
+	// qualified_id_slice is just a wrapper around qualified_id
+	// recall that qualified_id is a node_list<token_identifier,scope>
+	// and that token_identifier is a sub-type of string
+	DEBUG(TRACE_NAMESPACE_QUERY, 
+		cerr << endl << "query_subnamespace_match: " << id 
+			<< " in " << get_qualified_name() << endl)
+	// here, does NOT check for global-absoluteness
+	if (id.empty())	{	// what if it's absolute and empty?
+		return (id.is_absolute()) ? get_global_namespace() : this;
+	}
+	qualified_id_slice::const_iterator i = id.begin();
+	never_const_ptr<token_identifier> tid(*i);
+	assert(tid);
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
+	// no check for absoluteness
+	const name_space* ns =
+		IS_A(const name_space*, 
+			((id.is_absolute()) ? get_global_namespace() : this)
+				->used_id_map[*tid]);
+	if (!ns) {				// else lookup in aliases
+		ns = open_aliases[*tid];	// replaced for const semantics
+	}
+	// remember to skip scope tokens
+	for (i++; ns && i!=id.end(); i++) {
+		const name_space* next;
+		tid = i->is_a<token_identifier>();
 		assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = IS_A(const name_space*, ns->used_id_map[*tid]);
@@ -912,20 +1037,22 @@ name_space::add_type_reference(fundamental_type_reference* tb) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Overrides scopespace::lookup_namespace.
+	\param id is the entire name of the namespace.
+	\return pointer to the scope or namespace matched if found.  
  */
 const scopespace*
-name_space::lookup_namespace(const qualified_id& id) const {
+name_space::lookup_namespace(const qualified_id_slice& id) const {
 	return query_subnamespace_match(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Public interface to lookup a single definition_base.  
 	This version takes a single identifier string (unqualified).  
 	\param id the unqualified name of the definition to seek.  
 	\return pointer to matched definition_base, only if it unique, 
 		otherwise returns NULL.  
-	\sa lookup_unqualified_datatype
  */
 
 const definition_base*
@@ -963,7 +1090,6 @@ name_space::lookup_definition(const token_identifier& id) const {
 	\param id the qualified name of the type.  
 	\return pointer to matched definition_base, only if it unique, 
 		otherwise returns NULL.  
-	\sa lookup_qualified_datatype
  */
 const definition_base*
 name_space::lookup_definition(const qualified_id& id) const {
@@ -988,8 +1114,10 @@ name_space::lookup_definition(const qualified_id& id) const {
 		return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Public interface to lookup a single datatype_definition.  
 	This version takes a single identifier string (unqualified).  
@@ -998,7 +1126,6 @@ name_space::lookup_definition(const qualified_id& id) const {
 	\return pointer to matched datatype_definition, only if it unique, 
 		otherwise returns NULL.  
 	\sa query_datatype_def_match
-	\sa lookup_qualified_datatype
  */
 
 const datatype_definition*
@@ -1092,8 +1219,10 @@ name_space::lookup_built_in_paramtype(const token_paramtype& id) const {
 	assert(ret);		// better already be there!
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Public interface to lookup a single instantiation_base.  
 	This version takes a qualified expression.  
@@ -1125,6 +1254,7 @@ name_space::lookup_instance(const qualified_id& id) const {
 		return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

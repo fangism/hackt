@@ -188,7 +188,26 @@ ostream& operator << (ostream& o, const qualified_id& id) {
 		qualified_id::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-//		token_identifier* tid = *i;
+		never_const_ptr<token_identifier> tid(*i);
+		assert(tid);
+		o << *tid;
+		for (i++ ; i!=id.end(); i++) {
+			tid = *i;
+			assert(tid);
+			o << scope << *tid;
+		}
+		return o;
+	}
+}
+
+// friend operator
+ostream& operator << (ostream& o, const qualified_id_slice& id) {
+	if (id.empty()) {
+		return o << "<null qualified_id_slice>";
+	} else {
+		qualified_id_slice::const_iterator i = id.begin();
+		if (id.is_absolute())
+			o << scope;
 		never_const_ptr<token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;

@@ -10,7 +10,8 @@
 
 #include "art_macros.h"
 #include "art_utils.h"		// for token_position
-#include "list_of_ptr.h"	// includes <list>
+#include "list_of_ptr.h"	// includes <list>	// PHASE OUT
+#include "sublist.h"
 #include "ptrs.h"		// experimental pointer classes
 
 /**
@@ -42,6 +43,7 @@ namespace parser {
 // forward declarations in this namespace
 	class token_char;	// defined here
 	class token_string;	// defined here
+	class qualified_id;	// defined here
 	class concrete_type_ref;	// defined here
 	class context;		// defined in "art_symbol_table.h"
 
@@ -546,6 +548,38 @@ friend	ostream& operator << (ostream& o, const qualified_id& id);
 // no need for wrap, ever
 #define qualified_id_append(l,d,n)					\
 	IS_A(qualified_id*, l->append(d,n))
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+class qualified_id_slice : public sublist<excl_const_ptr<token_identifier> > {
+protected:
+	typedef	sublist<excl_const_ptr<token_identifier> >	parent;
+protected:
+	const bool	 absolute;
+public:
+	/**
+		Constructor (implicit) that take a plain qualified_id.  
+		Works because qualified_id is a subclass of
+		list<excl_const_ptr<token_identifier> >.  
+		By default, just wrap with begin and end iterators 
+		around the entire list.  
+	 */
+	qualified_id_slice(const qualified_id& qid) :
+		parent(qid), absolute(qid.is_absolute()) { }
+	~qualified_id_slice() { }
+
+bool	is_absolute(void) const { return absolute; }
+/***
+using parent::begin;
+using parent::end;
+using parent::rbegin;
+using parent::rend;
+using parent::behead;
+using parent::betail;
+using parent::empty;
+***/
+
+friend ostream& operator << (ostream& o, const qualified_id_slice& q);
+};	// end class qualified_id_slice
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -243,7 +243,7 @@ commit: regression
 	$(CVS) commit
 
 cvsdiffs: force
-	$(CVS) diff > $@
+	-$(CVS) diff > $@
 
 # header file dependencies generated with gcc -MM, saved to .depend
 

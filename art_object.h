@@ -32,8 +32,9 @@ namespace parser {
 	// note: methods may specify string as formal types, 
 	// but you can still pass token_identifiers and token_strings
 	// because they are derived from string.
-//	class token_string;
-//	class token_identifier;
+	class token_string;
+	class token_identifier;
+	class qualified_id_slice;
 	class qualified_id;
 	class context;
 };
@@ -303,13 +304,13 @@ virtual	~scopespace();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	string get_qualified_name(void) const = 0;
 
-virtual	const object*	lookup_object_here(const token_identifier& id) const;
-virtual	const object*	lookup_object(const token_identifier& id) const;
+virtual	const object*	lookup_object_here(const token_string& id) const;
+virtual	const object*	lookup_object(const token_string& id) const;
 virtual	const object*	lookup_object(const qualified_id& id) const;
-virtual	const scopespace*	lookup_namespace(const qualified_id& id) const;
+virtual	const scopespace*	lookup_namespace(const qualified_id_slice& id) const;
+/***
 virtual const instantiation_base*
 			lookup_instance(const token_identifier& id) const;
-/***
 virtual const instantiation_base*
 			lookup_instance(const qualified_id& id) const;
 ***/
@@ -396,11 +397,14 @@ datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
 const fundamental_type_reference*	add_type_reference(fundamental_type_reference* tb);
 
 // returns type if unique match found, else NULL
-const scopespace*	lookup_namespace(const qualified_id& id) const;
+const scopespace*	lookup_namespace(const qualified_id_slice& id) const;
+#if 0
 const definition_base*	lookup_definition(const token_identifier& id) const;
 const definition_base*	lookup_definition(const qualified_id& id) const;
+#endif
 
 // type-specific counterparts
+#if 0
 const datatype_definition*	lookup_unqualified_datatype(
 					const string& id) const;
 const datatype_definition*	lookup_qualified_datatype(
@@ -409,20 +413,25 @@ const datatype_definition*	lookup_built_in_datatype(
 					const token_datatype& id) const;
 const built_in_param_def*	lookup_built_in_paramtype(
 					const token_paramtype& id) const;
+#endif
 
+#if 0
 const instantiation_base*
 			lookup_instance(const token_identifier& id) const
 			{ return scopespace::lookup_instance(id); }
 const instantiation_base*
 			lookup_instance(const qualified_id& id) const;
+#endif
 
 // type-specific counterparts
+#if 0
 const param_instantiation*
 			lookup_param_instance(const token_identifier& id) const;
 const channel_instantiation*
 			lookup_channel_instance(const token_identifier& id) const;
 const process_instantiation*
 			lookup_process_instance(const token_identifier& id) const;
+#endif
 
 datatype_definition*	add_datatype_definition();
 datatype_instantiation*	add_datatype_instantiation(
@@ -439,8 +448,11 @@ process_instantiation*	add_proc_instantiation();
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
 private:
-const name_space*	query_namespace_match(const qualified_id& id) const;
-const name_space*	query_subnamespace_match(const qualified_id& id) const;
+// OBSOLETE
+// const name_space*	query_namespace_match(const qualified_id& id) const;
+// const name_space*	query_subnamespace_match(const qualified_id& id) const;
+const name_space*	query_namespace_match(const qualified_id_slice& id) const;
+const name_space*	query_subnamespace_match(const qualified_id_slice& id) const;
 void	query_import_namespace_match(namespace_list& m, const qualified_id& id) const;
 
 // these will not be recursive, but iteratively invoked by

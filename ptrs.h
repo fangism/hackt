@@ -26,6 +26,12 @@
 #define	NULL	0
 #endif
 
+/**
+	The namespace for pointer-classes, written by Fang.  
+	The classes contained herein offer efficient light-weight
+	pointer management with static type-checking.  
+	The name of the namespace can be overridden.  
+ */
 namespace PTRS_NAMESPACE {
 //=============================================================================
 // forward declarations
@@ -187,7 +193,9 @@ const T*	unprotected_const_ptr(void) const { return cptr; }
 };	// end class base_const_ptr
 
 //=============================================================================
-// helper class for type-casting
+/**
+	Helper class for type-casting.  
+ */
 // really don't want this visible to the outside...
 template <class S>
 struct base_ptr_ref {
@@ -197,6 +205,9 @@ struct base_ptr_ref {
 };	// end struct base_ptr_ref
 
 //-----------------------------------------------------------------------------
+/**
+	Helper class for type-casting of read-only pointers.  
+ */
 template <class S>
 struct base_const_ptr_ref {
 	const S*	cptr;
@@ -502,15 +513,13 @@ explicit never_ptr(void) throw() : base_ptr<T>(NULL) { }
 
 // this constructor covers the following two
 explicit never_ptr(const base_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
-	// gcc-2.95.3 can't find this constructor?
-// explicit never_ptr(const never_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
-// explicit never_ptr(const excl_ptr<T>& p) throw() : base_ptr<T>(p.ptr) { }
 
 /*** cross-template member not friendly accessible (p is protected)
 template <class S>
 explicit never_ptr(const excl_ptr<S>& p) throw() : 
 		base_ptr<T>(dynamic_cast<T*>(p.unprotected_ptr())) { }
 ***/
+
 virtual	~never_ptr() { }
 
 // also want cross-type versions?
@@ -622,13 +631,7 @@ template <class T>
 template <class S>
 never_ptr<S>
 excl_ptr<T>::is_a(void) const {
-//	return never_ptr<S>(ptr);
-		// using public constructor with bare pointer
-//	return dynamic_cast<S*>(ptr);		// bad implicit conversion
 	return never_ptr<S>(dynamic_cast<S*>(ptr));
-		// gcc-2.95.3 dies, looking for non-existent ctor... :(
-		// gcc-3.2+ works, dropping support for obsolete compilers
-//	return never_ptr<S>(*this);
 	// uses cross-type pointer constructor with dynamic cast
 }
 
