@@ -1,11 +1,14 @@
-// "art_object_IO.tcc"
-// template methods for persistent_object_manager class
+/**
+	\file "art_object_IO.tcc"
+	Template methods for persistent_object_manager class.
+ */
 
 #ifndef	__ART_OBJECT_IO_TCC__
 #define	__ART_OBJECT_IO_TCC__
 
 #include "art_object_IO.h"
 #include "art_macros.h"
+
 #include "art_utils.tcc"
 
 namespace ART {

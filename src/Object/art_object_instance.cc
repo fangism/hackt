@@ -1,4 +1,8 @@
-// "art_object_instance.cc"
+/**
+	\file "art_object_instance.cc"
+	Method definitions for instance collection and 
+	instantiation statement classes.  
+ */
 
 #include <iostream>
 #include <algorithm>

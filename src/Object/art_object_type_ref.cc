@@ -1,4 +1,7 @@
-// "art_object_type_ref.cc"
+/**
+	\file "art_object_type_ref.cc"
+	Type-reference class method definitions.  
+ */
 
 #include <iostream>
 
@@ -8,7 +11,6 @@
 #include "art_object_expr.h"
 #include "art_object_IO.tcc"
 #include "art_built_ins.h"
-#include "art_utils.tcc"
 
 #include "sstream.h"
 

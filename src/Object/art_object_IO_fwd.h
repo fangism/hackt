@@ -1,5 +1,7 @@
-// "art_object_IO_fwd.h"
-// header file for everything related to persistent object management
+/**
+	\file "art_object_IO_fwd.h"
+	Forward declarations for persistent object management classes.  
+ */
 
 #ifndef	__ART_OBJECT_IO_FWD_H__
 #define	__ART_OBJECT_IO_FWD_H__

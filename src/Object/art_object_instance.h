@@ -1,11 +1,13 @@
-// "art_object_instance.h"
+/**
+	\file "art_object_instance.h"
+	Instance collection and statement classes for ART.  
+ */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
 #define	__ART_OBJECT_INSTANCE_H__
 
 #include "art_object_base.h"
 #include "count_ptr.h"
-#include "art_macros.h"
 
 #include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
@@ -34,7 +36,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace fang;		// for experimental pointer classes
+	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
 	using namespace MULTIKEY_NAMESPACE;
 	using namespace MULTIKEY_MAP_NAMESPACE;
 

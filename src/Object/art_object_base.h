@@ -1,4 +1,7 @@
-// "art_object_base.h"
+/**
+	\file "art_object_base.h"
+	Base classes for semantic objects.  
+ */
 
 #ifndef	__ART_OBJECT_BASE_H__
 #define	__ART_OBJECT_BASE_H__
@@ -319,8 +322,10 @@ public:
 	list<instance_reference_base> for alias_connections.  
  */
 class object_list : public object, public list<count_ptr<object> > {
+public:
+	typedef	count_ptr<object>			value_type;
 protected:
-	typedef	list<count_ptr<object> >		parent;
+	typedef	list<value_type>			parent;
 public:
 	object_list();
 	~object_list();

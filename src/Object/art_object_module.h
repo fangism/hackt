@@ -1,4 +1,7 @@
-// "art_object_module.h"
+/**
+	\file "art_object_module.h"
+	Classes that represent a single compilation module, a file.  
+ */
 
 #ifndef	__ART_OBJECT_MODULE_H__
 #define	__ART_OBJECT_MODULE_H__

@@ -1,5 +1,8 @@
-// "art_context.h"
-// class declarations and definitions for symbol table classes
+/**
+	\file "art_context.h"
+	Context class for traversing syntax tree, type-checking, 
+	and constructing persistent objects.  
+ */
 
 #ifndef __ART_CONTEXT_H__
 #define __ART_CONTEXT_H__

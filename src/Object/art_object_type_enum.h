@@ -1,6 +1,7 @@
-// "art_object_type_enum.h"
-
-/*
+/**
+ *	\file "art_object_type_enum.h"
+ *	This contains enumerations for all serializable classes
+ *	in the ART language.  
  *	This file needs to be kept consistent with the Cyclone implementation
  *	for libart (not libart++).  
  *	To define this enumeration in a namespace, just #include this file
@@ -112,7 +113,8 @@ enum type_index_enum {
 	PBOOL_INSTANTIATION_STATEMENT_TYPE,
 	PINT_INSTANTIATION_STATEMENT_TYPE,
 
-	PARAM_EXPR_ASSIGNMENT_TYPE, 	// list of expressions equated
+	PBOOL_EXPR_ASSIGNMENT_TYPE, 	// = 51, list of expressions equated
+	PINT_EXPR_ASSIGNMENT_TYPE,
 	ALIAS_CONNECTION_TYPE, 
 	PORT_CONNECTION_TYPE, 
 	LOOP_SCOPE_TYPE, 

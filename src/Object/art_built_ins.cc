@@ -1,9 +1,8 @@
-// "art_built_ins.cc"
-
 /**
+	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
-**/
+ */
 
 #include "ptrs.h"
 #include "art_built_ins.h"

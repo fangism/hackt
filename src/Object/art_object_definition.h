@@ -1,9 +1,11 @@
-// "art_object_definition.h"
+/**
+	\file "art_object_definition.h"
+	Definition-related ART object classes.  
+ */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
 #define	__ART_OBJECT_DEFINITION_H__
 
-#include "art_macros.h"
 #include "art_object_base.h"
 
 /*********** note on use of data structures ***************
@@ -43,7 +45,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace fang;		// for experimental pointer classes
+	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
 
 //=============================================================================
 // forward declarations

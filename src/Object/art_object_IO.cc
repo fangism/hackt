@@ -1,4 +1,7 @@
-// "art_object_IO.cc"
+/**
+	\file "art_object_IO.cc"
+	Method definitions for serial object manager.  
+ */
 
 #include <iostream>
 #include <fstream>
@@ -107,13 +110,14 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&pint_instantiation_statement::construct_empty, 
 
 	// assignments and connections
-	&param_expression_assignment::construct_empty, 
+	&pbool_expression_assignment::construct_empty, 
+	&pint_expression_assignment::construct_empty, 
 	&aliases_connection::construct_empty, 
 	&port_connection::construct_empty, 
 	NULL, 	// &loop_scope::construct_empty, 
 	NULL, 	// &conditional_scope::construct_empty, 
 	// more reconstructors here...
-};
+};	// end recontruction_function_table
 
 //=============================================================================
 // class reconstruction_table_entry method definitions
@@ -162,8 +166,9 @@ persistent_object_manager::reconstruction_table_entry::
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	~reconstruction_table_entry() {
-	// never delete anything!
+	// never delete anything manually!
 	// not the object pointer, nor the reference count
+	// buffer is automatically managed by reference-count.
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,9 +1,14 @@
-// "art_object_expr.cc"
+/**
+	\file "art_object_expr.cc"
+	Class method definitions for semantic expression.  
+ */
 
 #include <stdlib.h>			// for ltoa
 #include <assert.h>
 #include <iostream>
 
+#include "ptrs.h"
+#include "count_ptr.h"
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.h"
 
@@ -11,15 +16,12 @@
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
-#include "ptrs.h"
-#include "count_ptr.h"
-
 #include "art_parser_base.h"
 #include "art_object_expr.h"
 #include "art_object_instance.h"
+#include "art_object_connect.h"
 #include "multikey.h"
 
-#include "art_utils.tcc"
 #include "art_object_IO.tcc"
 
 namespace ART {
@@ -71,6 +73,26 @@ param_expr::param_expr() : object() { }
 // inline
 param_expr::~param_expr() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs an expression assignment object of the appropriate
+	value type.  
+	Wrapped calls to private constructors.  
+	\param p the right-hand-side expression of the assignment object.  
+	\return newly constructed and initialized assignment object.  
+ */
+excl_ptr<param_expression_assignment>
+param_expr::make_param_expression_assignment(
+		const count_const_ptr<param_expr>& p) {
+	typedef	excl_ptr<param_expression_assignment>	return_type;
+	if (!p->may_be_initialized()) {
+		p->dump(cerr << "ERROR: rhs of expr-assignment is "
+			"not initialized or dependent on formals: ") << endl;
+		exit(1);		// temporary
+		return return_type(NULL);
+	} else	return p->make_param_expression_assignment_private(p);
+}
+
 //-----------------------------------------------------------------------------
 // class const_param method definitions
 
@@ -120,6 +142,16 @@ pbool_expr::static_constant_param(void) const {
 		new pbool_const(static_constant_bool()));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+pbool_expr::make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const {
+	typedef	excl_ptr<param_expression_assignment>	return_type;
+	assert(p == this);
+	return return_type(
+		new pbool_expression_assignment(p.is_a<pbool_expr>()));
+}
+
 //-----------------------------------------------------------------------------
 // class pint_expr method definitions
 
@@ -157,6 +189,16 @@ count_const_ptr<const_param>
 pint_expr::static_constant_param(void) const {
 	return count_const_ptr<const_param>(
 		new pint_const(static_constant_int()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+pint_expr::make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const {
+	typedef	excl_ptr<param_expression_assignment>	return_type;
+	assert(p == this);
+	return return_type(
+		new pint_expression_assignment(p.is_a<pint_expr>()));
 }
 
 //=============================================================================
@@ -826,7 +868,10 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
+	IMPORTANT: This initialization is only for static analysis and is
+	not the actual initialization that takes place during unrolling.  
 	\return true if sucessfully initialized with valid expression.  
  */
 bool
@@ -840,6 +885,17 @@ pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
 		return pbool_inst_ref->initialize(b);
 	}
 }
+#else
+/**
+	IMPORTANT: This initialization is only for static analysis and is
+	not the actual initialization that takes place during unrolling.  
+	\return true if sucessfully initialized with valid expression.  
+ */
+bool
+pbool_instance_reference::initialize(count_const_ptr<pbool_expr> i) {
+	return pbool_inst_ref->initialize(i);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1022,7 +1078,10 @@ pint_instance_reference::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
+	IMPORTANT: This initialization is only for static analysis and is
+	not the actual initialization that takes place during unrolling.  
 	\return true if successfully initialized with valid expression.  
  */
 bool
@@ -1036,6 +1095,17 @@ pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
 		return pint_inst_ref->initialize(b);
 	}
 }
+#else
+/**
+	IMPORTANT: This initialization is only for static analysis and is
+	not the actual initialization that takes place during unrolling.  
+	\return true if successfully initialized with valid expression.  
+ */
+bool
+pint_instance_reference::initialize(count_const_ptr<pint_expr> i) {
+	return pint_inst_ref->initialize(i);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1221,6 +1291,13 @@ pint_const::resolve_value(int& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+pint_const::make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const {
+	return pint_expr::make_param_expression_assignment_private(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_const::collect_transient_info(persistent_object_manager& m) const {
 	m.register_transient_object(this, CONST_PINT_TYPE);
@@ -1283,6 +1360,13 @@ count_const_ptr<const_param>
 pbool_const::static_constant_param(void) const {
 	return count_const_ptr<const_param>(
 		new pbool_const(val));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+pbool_const::make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const {
+	return pbool_expr::make_param_expression_assignment_private(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

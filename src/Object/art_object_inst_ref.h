@@ -1,9 +1,11 @@
-// "art_object_inst_ref.h"
+/**
+	\file "art_object_inst_ref.h"
+	Class family for instance references in ART.  
+ */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
 #define	__ART_OBJECT_INST_REF_H__
 
-#include "art_macros.h"
 #include "art_object_base.h"
 #include "multidimensional_sparse_set_fwd.h"
 #include "count_ptr.h"
@@ -51,10 +53,12 @@ virtual	~instance_reference_base() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	ostream& dump_type_size(ostream& o) const = 0;
-virtual never_const_ptr<instance_collection_base> get_inst_base(void) const = 0;
+virtual never_const_ptr<instance_collection_base>
+		get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
-virtual	never_const_ptr<definition_base> get_base_def(void) const = 0;
+virtual	never_const_ptr<definition_base>
+		get_base_def(void) const = 0;
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
 virtual	bool may_be_densely_packed(void) const = 0;
@@ -432,7 +436,10 @@ virtual	never_const_ptr<param_instance_collection>
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 
+#if 0
+// PHASED OUT: is type-specific
 virtual	bool initialize(count_const_ptr<param_expr> i) = 0;
+#endif
 
 };	// end class param_instance_reference
 

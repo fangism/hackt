@@ -1,5 +1,7 @@
-// "art_object_inst_ref.cc"
-// for the instance_reference family of objects
+/**
+	\file "art_object_inst_ref.cc"
+	Method definitions for the instance_reference family of objects.
+ */
 
 #include <iostream>
 

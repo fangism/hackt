@@ -1,6 +1,9 @@
-// "art_object.h"
-// includes all "art_object_*.h" headers
-// when you don't want to think about what you need...
+/**
+	\file "art_object.h"
+	Includes all "art_object_*.h" headers.  
+	Including this without thinking may unnecessarily slow down
+	compilation.  
+ */
 
 #ifndef	__ART_OBJECT_H__
 #define	__ART_OBJECT_H__

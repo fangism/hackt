@@ -1,13 +1,13 @@
-// "art_object_IO.h"
-// header file for everything related to persistent object management
-
-// include "hash_specializations.h" before this file for 
-//	hash<> specializations to take effect
+/**
+	\file "art_object_IO.h"
+	Clases related to serial, persistent object management.  
+ */
 
 #ifndef	__ART_OBJECT_IO_H__
 #define	__ART_OBJECT_IO_H__
 
 #include <iosfwd>
+
 #include "art_object_IO_fwd.h"
 #include "hash_qmap.h"
 #include "sstream.h"			// reduce to forward decl?

@@ -1,10 +1,11 @@
-// "art_object_definition.cc"
+/**
+	\file "art_object_definition.cc"
+	Method definitions for definition-related classes.  
+ */
 
 #include <iostream>
 
-// #include "art_parser_debug.h"		// need this?
 #include "art_parser_base.h"
-// #include "art_context.h"
 
 #include "hash_specializations.h"		// substitute for the following
 
@@ -13,7 +14,6 @@
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_object_IO.tcc"
-#include "art_utils.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"

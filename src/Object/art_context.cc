@@ -1,4 +1,8 @@
-// "art_context.cc"
+/**
+	\file "art_context.cc"
+	Class methods for context object passed around during 
+	type-checking, and object construction.  
+ */
 
 #include <assert.h>
 #include <iostream>

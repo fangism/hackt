@@ -1,8 +1,12 @@
-// "art_object_base.cc"
+/**
+	\file "art_object_base.cc"
+	Method definitions for base classes for semantic objects.  
+ */
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <numeric>
 
 #include "ptrs_functional.h"
 #include "compose.h"
@@ -611,6 +615,8 @@ object_list::make_index_list(void) const {
  */
 excl_ptr<param_expression_assignment>
 object_list::make_param_assignment(void) {
+	typedef	excl_ptr<param_expression_assignment>	return_type;
+#if 0
 	// then expect subsequent items to be the same
 	// or already param_expr in the case of some constants.
 	// However, only the last item may be a constant.
@@ -668,7 +674,7 @@ object_list::make_param_assignment(void) {
 		count_ptr<param_expr> ir(iter->is_a<param_expr>());
 		if (!*iter) {
 			cerr << "ERROR: in creating item " << k+1 <<
-				" of alias-list." << endl;
+				" of assign-list." << endl;
 			for_err = true;
 		} else if (ir) {
 			// make this body into subroutine...
@@ -697,6 +703,7 @@ object_list::make_param_assignment(void) {
 				// gotta be one class or the other
 				// check this after re-write
 				assert(rhse);
+				// where's type-check? folded into initialize.
 				bool init_ret;
 				if (bir)
 					init_ret = bir->initialize(rhse);
@@ -706,11 +713,10 @@ object_list::make_param_assignment(void) {
 				}
 				if (!init_ret) {
 					cerr << "Error initializing "
-					"item " << k+1 << " of alias-"
+					"item " << k+1 << " of assign-"
 					"list.  " << endl;
 					for_err = true;
 				}
-//				assert(ir->is_initialized());
 			} // else already error in rhse
 			if (for_err)
 				ret->append_param_expression(
@@ -721,7 +727,7 @@ object_list::make_param_assignment(void) {
 			// or might be collective...
 			// ERROR
 			cerr << "ERROR: unhandled case for item "
-				<< k+1 << " of alias-list." << endl;
+				<< k+1 << " of assign-list." << endl;
 			for_err = true;
 		}
 		if (for_err)
@@ -733,8 +739,44 @@ object_list::make_param_assignment(void) {
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
 	if (err)
-		return excl_ptr<param_expression_assignment>(NULL);
+		return return_type(NULL);
 	else	return ret;		// is ok
+#else
+	bool err = false;
+	// right-hand-side source expression
+	const parent::value_type& last_obj = back();
+	const count_const_ptr<param_expr> rhse = last_obj.is_a<param_expr>();
+	assert(rhse);
+
+	excl_ptr<param_expression_assignment> ret;
+
+	// later, fold these error messages into static constructor?
+	if (!last_obj) {
+		cerr << "ERROR: rhs of expression assignment "
+			"is malformed (null)" << endl;
+		return return_type(NULL);
+	} else if (rhse) {
+		// last term must be initialized or be dependent on formals
+		// if collective, conservative: may-be-initialized
+		ret = param_expr::make_param_expression_assignment(rhse);
+		assert(ret);
+	} else {
+		last_obj->what(
+			cerr << "ERROR: rhs is unexpected object: ") << endl;
+		return return_type(NULL);
+	}
+
+	param_expression_assignment::instance_reference_appender
+		append_it(*ret);
+	const iterator dest_end = --end();
+	iterator dest_iter = begin();
+	err = accumulate(dest_iter, dest_end, err, append_it);
+
+	// if there are any errors, discard everything?
+	// later: track errors in partially constructed objects
+	if (err) return return_type(NULL);
+	else	return ret;		// is ok
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

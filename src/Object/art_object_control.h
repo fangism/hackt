@@ -1,4 +1,8 @@
-// "art_object_control.h"
+/**
+	\file "art_object_control.h"
+	This file contains class definitions for control-flow scopes
+	of the ART++ language.  
+ */
 
 #ifndef	__ART_OBJECT_CONTROL_H__
 #define	__ART_OBJECT_CONTROL_H__
@@ -7,12 +11,6 @@
 
 namespace ART {
 namespace entity {
-//=============================================================================
-/***
-	This file contains class definitions for control-flow scopes
-	of the ART++ language.  
-***/
-
 //=============================================================================
 /**
 	Scope of a loop body.

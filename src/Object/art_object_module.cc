@@ -1,4 +1,7 @@
-// "art_object_module.cc"
+/**
+	\file "art_object_module.cc"
+	Method definitions for module class.  
+ */
 
 #include <iostream>
 #include "art_object_module.h"

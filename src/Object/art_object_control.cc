@@ -1,4 +1,7 @@
-// "art_object_control.cc"
+/**
+	\file "art_object_control.cc"
+	Control-flow related class method definitions.  
+ */
 
 #include "art_object_control.h"
 

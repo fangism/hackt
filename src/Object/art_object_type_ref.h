@@ -1,9 +1,11 @@
-// "art_object_type_ref.h"
+/**
+	\file "art_object_type_ref.h"
+	Type-reference classes of the ART language.  
+ */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
 #define	__ART_OBJECT_TYPE_REF_H__
 
-// #include "art_macros.h"
 #include "art_object_base.h"
 
 namespace ART {
@@ -30,7 +32,7 @@ using namespace parser;
 namespace entity {
 //=============================================================================
 	using namespace std;
-	using namespace fang;		// for experimental pointer classes
+	using namespace PTRS_NAMESPACE;	// for experimental pointer classes
 
 //=============================================================================
 // class type_reference_base declared in "art_object_base.h"

@@ -1,4 +1,7 @@
-// "art_object_expr.h"
+/**
+	\file "art_object_expr.h"
+	Classes related to program expressions, symbolic and parameters.  
+ */
 
 #ifndef __ART_OBJECT_EXPR_H__
 #define __ART_OBJECT_EXPR_H__
@@ -23,6 +26,7 @@
 namespace ART {
 namespace entity {
 	using namespace MULTIKEY_NAMESPACE;
+	using namespace	DISCRETE_INTERVAL_SET_NAMESPACE;
 	using std::string;
 	using std::ostream;
 
@@ -118,11 +122,18 @@ virtual bool is_loop_independent(void) const = 0;
 /** doesn't depend on conditional variables */
 virtual bool is_unconditional(void) const = 0;
 
+static	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment(
+		const count_const_ptr<param_expr>& p);
 #if 0
 	// can't make template virtual functions...
 	virtual multikey_qmap<D,size_t,pbool_instance>
 			evaluate(void) const;
 #endif
+private:
+virtual	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const = 0;
 };	// end class param_expr
 
 //-----------------------------------------------------------------------------
@@ -606,6 +617,11 @@ virtual	count_const_ptr<const_param>
 		static_constant_param(void) const;
 virtual bool is_loop_independent(void) const = 0;
 virtual bool static_constant_bool(void) const = 0;
+
+protected:
+	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const;
 };	// end class pbool_expr
 
 //-----------------------------------------------------------------------------
@@ -635,6 +651,11 @@ virtual bool is_loop_independent(void) const = 0;
 virtual int static_constant_int(void) const = 0;
 
 virtual	bool resolve_value(int& i) const = 0;
+
+protected:
+	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const;
 };	// end class pint_expr
 
 //-----------------------------------------------------------------------------
@@ -689,7 +710,11 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
+#if 0
 	bool initialize(count_const_ptr<param_expr> i);
+#else
+	bool initialize(count_const_ptr<pbool_expr> i);
+#endif
 	string hash_string(void) const;
 	// try these
 	// using param_instance_reference::may_be_initialized;
@@ -731,7 +756,11 @@ public:
 	bool has_static_constant_dimensions(void) const;
 	const_range_list static_constant_dimensions(void) const;
 
+#if 0
 	bool initialize(count_const_ptr<param_expr> i);
+#else
+	bool initialize(count_const_ptr<pint_expr> i);
+#endif
 	string hash_string(void) const;
 	bool may_be_initialized(void) const;
 	bool must_be_initialized(void) const;
@@ -780,6 +809,11 @@ public:
 	bool operator == (const const_range& c) const;
 
 	bool resolve_value(int& i) const;
+
+private:
+	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pint_const
@@ -815,6 +849,11 @@ public:
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
+
+private:
+	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment_private(
+		const count_const_ptr<param_expr>& p) const;
 public:
 	ART_OBJECT_IO_METHODS
 };	// end class pbool_const

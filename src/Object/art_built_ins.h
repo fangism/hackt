@@ -1,5 +1,7 @@
-// "art_built_ins.h"
-// Header for built-in features of the art language.  
+/**
+	\file "art_built_ins.h"
+	Header for built-in features of the art language.  
+ */
 
 #ifndef	__ART_BUILT_INS_H__
 #define	__ART_BUILT_INS_H__
