@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.8.2 2005/01/20 06:46:52 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.8.3 2005/01/20 18:29:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -288,7 +288,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(const_param_expr_list,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
-		param_expr_list(), parent() { }
+		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() { }
@@ -316,7 +316,7 @@ const_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_param_expr_list::size(void) const {
-	return parent::size();
+	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -520,7 +520,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_param_expr_list,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list() :
-		param_expr_list(), parent() { }
+		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() { }
@@ -547,7 +547,7 @@ dynamic_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_param_expr_list::size(void) const {
-	return parent::size();
+	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4349,7 +4349,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(dynamic_index_list,
 	DYNAMIC_INDEX_LIST_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
+dynamic_index_list::dynamic_index_list() : index_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_index_list::~dynamic_index_list() { }
@@ -4386,13 +4386,13 @@ dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 		cerr << "i->dimensions = " << i->dimensions() << endl;
 		INVARIANT(i->dimensions() == 0);
 	}
-	parent::push_back(i);
+	parent_type::push_back(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_index_list::size(void) const {
-	return parent::size();
+	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

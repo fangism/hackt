@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.5.8.1 2005/01/20 04:43:53 fang Exp $
+	$Id: art_object_fwd.h,v 1.5.8.2 2005/01/20 18:29:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -154,8 +154,8 @@ namespace entity {
 	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement>)
 			index_collection_type;
 
-}
-}
+}	// end namespace entity
+}	// end namespace ART
 
 #endif	// __ART_OBJECT_FWD_H__
 

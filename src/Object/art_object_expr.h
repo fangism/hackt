@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.18.8.1 2005/01/20 04:43:52 fang Exp $
+	$Id: art_object_expr.h,v 1.18.8.2 2005/01/20 18:29:54 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -42,12 +42,12 @@ class dynamic_param_expr_list : public param_expr_list,
 		public list<count_ptr<const param_expr> > {
 friend class const_param_expr_list;
 protected:
-	typedef	list<count_ptr<const param_expr> >	parent;
+	typedef	list<count_ptr<const param_expr> >	parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_param_expr_list();
 // lazy: use default copy constructor
@@ -113,12 +113,12 @@ public:
 class dynamic_index_list : public index_list, 
 		private list<count_ptr<index_expr> > {
 protected:
-	typedef	list<count_ptr<index_expr> >	parent;
+	typedef	list<count_ptr<index_expr> >	parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_index_list();
 	~dynamic_index_list();
@@ -132,10 +132,10 @@ public:
 	string
 	hash_string(void) const;
 
-	using parent::begin;
-	using parent::end;
-	using parent::rbegin;
-	using parent::rend;
+	using parent_type::begin;
+	using parent_type::end;
+	using parent_type::rbegin;
+	using parent_type::rend;
 
 	void
 	push_back(const count_ptr<index_expr>& i);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6.8.1 2005/01/20 04:43:53 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6.8.2 2005/01/20 18:29:54 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -94,12 +94,12 @@ class const_param_expr_list : public param_expr_list,
 		public list<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 protected:
-	typedef	list<count_ptr<const const_param> >	parent;
+	typedef	list<count_ptr<const const_param> >	parent_type;
 public:
-	typedef parent::iterator		iterator;
-	typedef parent::const_iterator		const_iterator;
-	typedef parent::reverse_iterator	reverse_iterator;
-	typedef parent::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::iterator			iterator;
+	typedef parent_type::const_iterator		const_iterator;
+	typedef parent_type::reverse_iterator		reverse_iterator;
+	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_param_expr_list();
 // lazy: use default copy constructor

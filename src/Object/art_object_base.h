@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.24 2005/01/13 05:28:28 fang Exp $
+	$Id: art_object_base.h,v 1.24.8.1 2005/01/20 18:29:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -137,12 +137,17 @@ public:
 	list<index_expr> for array indexing and dimension collapsing, 
 	list<param_expr> for param_expression_assignments, 
 	list<instance_reference_base> for alias_connections.  
+
+	Should all list methods be available?
  */
 class object_list : public object, public list<count_ptr<object> > {
 public:
 	typedef	count_ptr<object>			value_type;
 protected:
-	typedef	list<value_type>			parent;
+	typedef	list<value_type>			parent_type;
+public:
+	typedef	parent_type::iterator			iterator;
+	typedef	parent_type::const_iterator		const_iterator;
 public:
 	object_list();
 	~object_list();

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.27 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_base.cc,v 1.27.8.1 2005/01/20 18:29:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -69,7 +69,7 @@ object_handle::dump(ostream& o) const {
 //=============================================================================
 // class object_list method definitions
 
-object_list::object_list() : object(), parent() { }
+object_list::object_list() : object(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 object_list::~object_list() { }
@@ -84,7 +84,7 @@ object_list::what(ostream& o) const {
 ostream&
 object_list::dump(ostream& o) const {
 	what(o) << ":" << endl;
-	parent::const_iterator i = begin();
+	const_iterator i = begin();
 	for ( ; i!=end(); i++)
 		dump(o) << endl;
 	return o;
@@ -529,7 +529,7 @@ object_list::make_param_assignment(void) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	bool err = false;
 	// right-hand-side source expression
-	const parent::value_type& last_obj = back();
+	const value_type& last_obj = back();
 	const count_ptr<const param_expr>
 		rhse = last_obj.is_a<const param_expr>();
 	INVARIANT(rhse);
