@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.1 2005/01/25 05:22:54 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.2 2005/01/25 22:33:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -26,12 +26,10 @@
 #include "art_object_unroll_context.h"
 
 #include "what.tcc"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
 #include "stacktrace.h"
 #include "static_trace.h"
-
-STATIC_TRACE_BEGIN("inst_stmt")
 
 //=============================================================================
 // local specializations
@@ -52,6 +50,10 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
 }
 #endif
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("inst_stmt")
 
 //=============================================================================
 namespace ART {

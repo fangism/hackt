@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5.2.2 2005/01/25 05:22:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5.2.3 2005/01/25 22:33:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -39,7 +39,7 @@
 #include "qmap.tcc"
 #include "stacktrace.h"
 #include "static_trace.h"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
 #include "memory/pointer_classes.h"
 #include "sstream.h"			// for ostringstring, used by dump
@@ -47,8 +47,6 @@
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
-
-STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace util {
@@ -96,7 +94,16 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
+namespace memory {
+	// pool-allocator managed types that are safe to destroy lazily
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_const)
+}	// end namespace memory
 }	// end namespace util
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace ART {

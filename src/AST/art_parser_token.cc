@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.18 2005/01/16 02:44:17 fang Exp $
+	$Id: art_parser_token.cc,v 1.18.12.1 2005/01/25 22:33:29 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -26,7 +26,7 @@
 
 #include "what.h"
 #include "stacktrace.h"
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -51,6 +51,12 @@ SPECIALIZE_UTIL_WHAT(ART::parser::token_datatype, "datatype")
 SPECIALIZE_UTIL_WHAT(ART::parser::token_paramtype, "paramtype")
 }
 #endif
+
+namespace util {
+namespace memory {
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::parser::token_char)
+}
+}
 
 namespace ART {
 namespace parser {

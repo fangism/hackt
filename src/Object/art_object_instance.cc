@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38.4.2.4.1 2005/01/25 05:22:55 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.38.4.2.4.2 2005/01/25 22:33:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -455,7 +455,7 @@ inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
-	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
+//	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
 	index_collection_type::const_iterator i = index_collection.begin();
@@ -483,7 +483,7 @@ instance_collection_base::collect_index_collection_pointers(
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE("instance_collection_base::collect_transient_info_base()");
+//	STACKTRACE("instance_collection_base::collect_transient_info_base()");
 	collect_index_collection_pointers(m);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.8.4.1.4.1 2005/01/24 22:28:39 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.8.4.1.4.2 2005/01/25 22:33:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -16,6 +16,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 USING_LIST
+USING_CONSTRUCT
 using namespace util::memory;	// for experimental pointer classes
 using namespace MULTIKEY_NAMESPACE;
 using namespace MULTIKEY_MAP_NAMESPACE;
@@ -89,7 +90,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 };	// end class pbool_instantiation_statement
@@ -141,7 +142,7 @@ public:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 };	// end class pint_instantiation_statement
@@ -292,7 +293,7 @@ public:
 
 
 public:
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 // private:
 

@@ -2,11 +2,13 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.2 2005/01/24 22:29:57 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.3 2005/01/25 22:33:46 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
 #define	__LIST_VECTOR_POOL_FWD_H__
+
+#include "STL/construct_fwd.h"
 
 /**
 	These are the enw and delete operators required when
@@ -74,6 +76,12 @@ public:									\
 	pool_ref_ref_type						\
 	get_pool(void);
 
+/**
+	Friends needed only if default constructor is private.
+ */
+#define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
+	friend class list_vector_pool<this_type>;			\
+	friend void _Construct<this_type>(this_type*);
 
 namespace util {
 //=============================================================================

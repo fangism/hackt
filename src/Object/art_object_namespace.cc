@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3.6.1 2005/01/25 05:22:58 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3.6.2 2005/01/25 22:33:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -41,7 +41,7 @@
 #include "art_object_type_ref_base.h"
 #include "art_object_type_hash.h"
 
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "indent.h"
 #include "stacktrace.h"
 #include "persistent_object_manager.tcc"

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.6.12.1 2005/01/25 05:22:58 fang Exp $
+	$Id: art_object_namespace.h,v 1.6.12.2 2005/01/25 22:33:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -39,6 +39,7 @@ namespace parser {
 namespace entity {
 //=============================================================================
 USING_LIST
+USING_CONSTRUCT
 using std::string;
 using std::istream;
 using util::persistent;
@@ -440,7 +441,7 @@ public:
 public:
 	static const never_ptr<const name_space>	null;
 
-	friend class list_vector_pool<name_space>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 
 };	// end class name_space

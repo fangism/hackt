@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.2 2005/01/25 20:34:02 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.3 2005/01/25 22:33:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -26,7 +26,7 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 #include "what.h"
 #include "STL/list.tcc"
 #include "multikey_qmap.tcc"		// include "qmap.tcc"
@@ -42,8 +42,6 @@
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 
-STATIC_TRACE_BEGIN("instance_pint")
-
 //=============================================================================
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<0>, "pint_scalar")
@@ -51,7 +49,15 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<2>, "pint_array<2>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
-}
+
+namespace memory {
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
+}	// end namespace memory
+}	// end namespace util
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("instance_pint")
 
 //=============================================================================
 namespace ART {
