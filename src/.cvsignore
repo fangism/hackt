@@ -5,6 +5,7 @@ Makefile
 artc
 art++2obj
 artobjdump
+artobjunroll
 core.*
 *.core
 *.artobj

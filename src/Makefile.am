@@ -2,10 +2,11 @@
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
+SUBDIRS = util/test .
+
 SUFFIXES = .yy .ll
 
 include $(top_srcdir)/Make.stddef
-
 
 
 ###################### Are we using yacc or bison? ############################
@@ -36,7 +37,7 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = artc art++2obj artobjdump
+bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -50,8 +51,10 @@ art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
 art__2obj_LDADD = libart++.la
 
 artobjdump_SOURCES = artobjdump.cc
-artobjdump.$(OBJEXT) artobjdump.lo: parser/art++-parse-prefix.h
 artobjdump_LDADD = libart++.la
+
+artobjunroll_SOURCES = artobjunroll.cc
+artobjunroll_LDADD = libart++.la
 
 # convenience libraries
 noinst_LTLIBRARIES = libart++.la libbogus.la
@@ -121,8 +124,14 @@ UTIL_HEADER_FILES = \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
 	util/multidimensional_qmap.h \
+	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_sparse_set.h \
 	util/multidimensional_sparse_set_fwd.h \
+	util/multikey_fwd.h \
+	util/multikey.h \
+	util/multikey_map_fwd.h \
+	util/multikey_map.h \
+	util/multikey_qmap.h \
 	util/ptrs.h \
 	util/ptrs_fwd.h \
 	util/qmap.h \
