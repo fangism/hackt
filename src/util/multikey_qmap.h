@@ -3,7 +3,7 @@
 	Multidimensional queryable map.  
 	NOTE: this should erally be redefined as a template specialization, 
 	not as a child class.
-	$Id: multikey_qmap.h,v 1.11 2004/12/23 00:07:45 fang Exp $
+	$Id: multikey_qmap.h,v 1.11.24.1 2005/02/06 16:23:45 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_H__
@@ -23,11 +23,16 @@ using QMAP_NAMESPACE::qmap;
  */
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
 class multikey_map<D,K,T,qmap> :
-		protected qmap<multikey<D,K>, T>, 
-		public multikey_map_base<K,T> {
+		protected qmap<multikey<D,K>, T>
+#if WANT_MULTIKEY_MAP_BASE
+		, public multikey_map_base<K,T>
+#endif
+{
 private:
 	/** this is the representation-type */
+#if WANT_MULTIKEY_MAP_BASE
 	typedef	multikey_map_base<K,T>			interface_type;
+#endif
 	typedef qmap<multikey<D,K>, T>			map_type;
 	typedef map_type				mt;
 public:
@@ -49,9 +54,14 @@ public:
 	typedef typename mt::const_pointer		const_pointer;
 	typedef typename mt::allocator_type		allocator_type;
 
+#if WANT_MULTIKEY_MAP_BASE
         typedef typename interface_type::key_list_type  key_list_type;
         typedef typename interface_type::key_list_pair_type
                                                         key_list_pair_type;
+#else
+	typedef list<K>					key_list_type;
+	typedef pair<key_list_type, key_list_type >	key_list_pair_type;
+#endif
         typedef pair<key_type, key_type>		key_pair_type;
 
 public:
@@ -132,11 +142,13 @@ public:
 		return map_type::operator[](k);
 	}
 
+#if WANT_MULTIKEY_BASE
 	T&
 	operator [] (const multikey_base<K>& k);
 
 	T
 	operator [] (const multikey_base<K>& k) const;
+#endif
 
 	/**
 		Check length of list?
@@ -177,9 +189,15 @@ public:
 
 BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE
 class multikey_map<1,K,T,qmap> :
-		protected qmap<K,T>, public multikey_map_base<K,T> {
+		protected qmap<K,T>
+#if WANT_MULTIKEY_MAP_BASE
+		, public multikey_map_base<K,T>
+#endif
+{
 protected:
+#if WANT_MULTIKEY_MAP_BASE
 	typedef multikey_map_base<K,T>			interface_type;
+#endif
 	typedef qmap<K, T>				map_type;
 	typedef map_type				mt;
 public:
@@ -201,9 +219,14 @@ public:
 	typedef typename mt::const_pointer		const_pointer;
 	typedef typename mt::allocator_type		allocator_type;
 
+#if WANT_MULTIKEY_MAP_BASE
 	typedef typename interface_type::key_list_type	key_list_type;
 	typedef typename interface_type::key_list_pair_type
 							key_list_pair_type;
+#else
+	typedef list<K>					key_list_type;
+	typedef pair<key_list_type, key_list_type >	key_list_pair_type;
+#endif
 	typedef pair<key_type, key_type>		key_pair_type;
 
 	// for array_traits<>
@@ -251,11 +274,23 @@ public:
 	T
 	operator [] (const key_list_type& k) const;
 
+#if WANT_MULTIKEY_BASE
 	T&
 	operator [] (const multikey_base<K>& k);
 
 	T
 	operator [] (const multikey_base<K>& k) const;
+#endif
+
+	T&
+	operator [] (const multikey<1,K>& k) {
+		return map_type::operator[](k[0]);
+	}
+
+	T
+	operator [] (const multikey<1,K>& k) const {
+		return map_type::operator[](k[0]);
+	}
 
 	key_list_pair_type
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;

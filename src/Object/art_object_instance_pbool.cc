@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.4 2005/02/06 08:33:36 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.2.2.5 2005/02/06 16:23:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -554,7 +554,7 @@ pbool_array<D>::assign(const multikey_index_type& k,
 	// for efficiency, consider an unsafe pointer version, to save copying
 //	const typename collection_type::key_type index(k);
 	const multikey<D, pint_value_type> index(k);
-	pbool_instance& pi = collection[k];
+	pbool_instance& pi = collection[index];
 	return !(pi = i);	// yes, assignment is intended
 }
 

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-02-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-07:
+	  Obliterated multikey_base, multikey_map_base.
+	  (Actually, just #if 0'd all referenceds to them)
+	  A few regression tests were updated with more accurate
+	  error reporting in test/parser/param.  
+
+
 2005-02-05	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-07-set-01:

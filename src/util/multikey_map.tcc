@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4 2004/12/23 00:07:45 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.24.1 2005/02/06 16:23:45 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_TCC__
@@ -37,6 +37,7 @@ using MULTIKEY_NAMESPACE::multikey_generator;
 //=============================================================================
 // class multikey_map_base method definitions
 
+#if WANT_MULTIKEY_MAP_BASE
 BASE_MULTIKEY_MAP_TEMPLATE_SIGNATURE
 template <template <class, class> class M>
 multikey_map_base<K,T>*
@@ -54,13 +55,18 @@ multikey_map_base<K,T>::make_multikey_map(const size_t d) {
 		default: return NULL;
 	}
 }
+#endif
 
 //=============================================================================
 // class multikey_map method definitions
 
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
 multikey_map<D,K,T,M>::multikey_map() :
-		map_type(), interface_type() { }
+		map_type()
+#if WANT_MULTIKEY_MAP_BASE
+		, interface_type()
+#endif
+{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -206,6 +212,7 @@ multikey_map<D,K,T,M>::operator [] (const list<K>& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
 T&
 multikey_map<D,K,T,M>::operator [] (const multikey_base<K>& k) {
@@ -224,6 +231,7 @@ multikey_map<D,K,T,M>::operator [] (const multikey_base<K>& k) const {
 	NEVER_NULL(dk);
 	return map_type::operator[](*dk);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -515,7 +523,11 @@ multikey_map<D,K,T,M>::read(istream& f) {
 
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
 multikey_map<1,K,T,M>::multikey_map() :
-		map_type(), interface_type() { }
+		map_type()
+#if WANT_MULTIKEY_MAP_BASE
+		, interface_type()
+#endif
+{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -564,6 +576,7 @@ multikey_map<1,K,T,M>::operator [] (const key_list_type& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
 T&
 multikey_map<1,K,T,M>::operator [] (const multikey_base<K>& k) {
@@ -584,6 +597,7 @@ multikey_map<1,K,T,M>::operator [] (const multikey_base<K>& k) const {
 	NEVER_NULL(dk);
 	return map_type::operator[]((*dk)[0]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE

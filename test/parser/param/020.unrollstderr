@@ -1,3 +1,3 @@
-ERROR: assigning index [0] of pint collection ::foo.
+ERROR: assigning index [2] of pint collection ::foo.
 ERROR: something went wrong in pint assignment.
 ERROR in unrolling.  Aborting.

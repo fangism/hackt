@@ -1,11 +1,11 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5.10.1 2005/02/06 05:32:05 fang Exp $
+	$Id: multikey.tcc,v 1.5.10.2 2005/02/06 16:23:44 fang Exp $
  */
 
-#ifndef	__MULTIKEY_TCC__
-#define	__MULTIKEY_TCC__
+#ifndef	__UTIL_MULTIKEY_TCC__
+#define	__UTIL_MULTIKEY_TCC__
 
 #include "multikey.h"
 
@@ -29,6 +29,7 @@ using std::ptr_fun;
 //=============================================================================
 // class multikey_base method definitions
 
+#if WANT_MULTIKEY_BASE
 BASE_MULTIKEY_TEMPLATE_SIGNATURE
 multikey_base<K>*
 multikey_base<K>::make_multikey(const size_t d) {
@@ -44,20 +45,27 @@ multikey_base<K>::make_multikey(const size_t d) {
 		default: return NULL;
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // class multikey method definitions
 
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K>::multikey(const K i) :
-		base_type() {
+multikey<D,K>::multikey(const K i)
+#if WANT_MULTIKEY_BASE
+		: base_type()
+#endif
+		{
 	fill(indices, &indices[D], i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K>::multikey(const multikey_generic<K>& k) :
-		base_type() {
+multikey<D,K>::multikey(const multikey_generic<K>& k)
+#if WANT_MULTIKEY_BASE
+		: base_type()
+#endif
+		{
 	INVARIANT(k.dimensions() == D);
 	copy(k.begin(), k.end(), indices);
 }
@@ -147,6 +155,7 @@ multikey<D,K>::multikey(const S<K>& s, const K i) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 MULTIKEY_TEMPLATE_SIGNATURE
 multikey_base<K>&
 multikey<D,K>::operator = (const multikey_base<K>& s) {
@@ -162,6 +171,7 @@ multikey<D,K>::operator = (const multikey_base<K>& s) {
 	}
 	return *this;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
@@ -290,12 +300,16 @@ multikey<D,K>::ones = multikey<D,K,1>();
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 template <size_t D>
 multikey_generic<K>::multikey_generic(const multikey<D,K>& m) :
-		interface_type(), impl_type(D) {
+#if WANT_MULTIKEY_BASE
+		interface_type(), 
+#endif
+		impl_type(D) {
 	// valarray doesn't have a sequence-copy constructor like vector
 	copy(m.begin(), m.end(), begin());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 multikey_base<K>&
 multikey_generic<K>::operator = (const multikey_base<K>& k) {
@@ -305,6 +319,7 @@ multikey_generic<K>::operator = (const multikey_base<K>& k) {
 	copy(k.begin(), k.end(), this->begin());
 	return *this;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -432,6 +447,7 @@ public:
 
 //=============================================================================
 
+#if WANT_MULTIKEY_BASE
 BASE_MULTIKEY_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o, const multikey_base<K>& k) {
@@ -441,6 +457,27 @@ operator << (ostream& o, const multikey_base<K>& k) {
 		o << '[' << *i << ']';
 	return o;
 }
+#else
+MULTIKEY_TEMPLATE_SIGNATURE
+ostream&
+operator << (ostream& o, const multikey<D,K>& k) {
+	typename multikey<D,K>::const_iterator i = k.begin();
+	const typename multikey<D,K>::const_iterator e = k.end();
+	for ( ; i!=e; i++)
+		o << '[' << *i << ']';
+	return o;
+}
+
+MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
+ostream&
+operator << (ostream& o, const multikey_generic<K>& k) {
+	typename multikey_generic<K>::const_iterator i = k.begin();
+	const typename multikey_generic<K>::const_iterator e = k.end();
+	for ( ; i!=e; i++)
+		o << '[' << *i << ']';
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -488,6 +525,7 @@ operator == (const multikey<D,K>& l, const multikey<D,K>& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 /**
 	Dimensions must match!
  */
@@ -498,6 +536,7 @@ operator == (const multikey_base<K>& l, const multikey_base<K>& r) {
 		return false;
 	return std::equal(l.begin(), l.end(), r.begin());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
@@ -507,11 +546,13 @@ operator != (const multikey<D,K>& l, const multikey<D,K>& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_MULTIKEY_BASE
 template <class K>
 bool
 operator != (const multikey_base<K>& l, const multikey_base<K>& r) {
 	return !(l == r);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <size_t D, class K>
@@ -542,6 +583,7 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 //=============================================================================
 // class multikey_generator_base method definitions
 
+#if WANT_MULTIKEY_BASE
 BASE_MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 multikey_generator_base<K>*
 multikey_generator_base<K>::make_multikey_generator(const size_t d) {
@@ -557,6 +599,7 @@ multikey_generator_base<K>::make_multikey_generator(const size_t d) {
 		default: return NULL;
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // class multikey_generator method definitions
@@ -564,7 +607,10 @@ multikey_generator_base<K>::make_multikey_generator(const size_t d) {
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 template <template <class> class L, template <class, class> class P>
 multikey_generator<D,K>::multikey_generator(const L<P<K,K> >& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+#if WANT_MULTIKEY_BASE
+		interface_type(),
+#endif
+		lower_corner(), upper_corner() {
 	typedef	L<P<K,K> >	sequence_type;
 	INVARIANT(l.size() <= D);	// else error on user!
 	iterator li = lower_corner.begin();
@@ -581,7 +627,10 @@ multikey_generator<D,K>::multikey_generator(const L<P<K,K> >& l) : base_type(),
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 template <class LP>
 multikey_generator<D,K>::multikey_generator(const LP& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+#if WANT_MULTIKEY_BASE
+		interface_type(),
+#endif
+		lower_corner(), upper_corner() {
 	typedef	LP	sequence_type;
 	INVARIANT(l.size() <= D);	// else error on user!
 	iterator li = lower_corner.begin();
@@ -650,7 +699,7 @@ multikey_generator<D,K>::initialize(void) {
 	\return reference to self.  
  */
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
-multikey_base<K>&
+typename multikey_generator<D,K>::corner_type&
 multikey_generator<D,K>::operator ++ (int) {
 #if 0
 	iterator inc = &this->indices[D-1];
@@ -703,7 +752,10 @@ MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 template <template <class> class L, template <class, class> class P>
 multikey_generator_generic<K>::multikey_generator_generic(
 		const L<P<K,K> >& l) : base_type(), 
-		interface_type(), lower_corner(), upper_corner() {
+#if WANT_MULTIKEY_BASE
+		interface_type(),
+#endif
+		lower_corner(), upper_corner() {
 	typedef	L<P<K,K> >	sequence_type;
 	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
@@ -720,7 +772,11 @@ multikey_generator_generic<K>::multikey_generator_generic(
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 template <class LP>
 multikey_generator_generic<K>::multikey_generator_generic(const LP& l) :
-		base_type(), interface_type(), lower_corner(), upper_corner() {
+		base_type(), 
+#if WANT_MULTIKEY_BASE
+		interface_type(), 
+#endif
+		lower_corner(), upper_corner() {
 	typedef	LP	sequence_type;
 	INVARIANT(l.size() <= this->dimensions());	// else error on user!
 	iterator li = lower_corner.begin();
@@ -760,7 +816,7 @@ multikey_generator_generic<K>::initialize(void) {
 	\return reference to self.  
  */
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
-multikey_base<K>&
+typename multikey_generator_generic<K>::corner_type&
 multikey_generator_generic<K>::operator ++ (int) {
 	reverse_iterator inc = this->rbegin();
 	const const_reverse_iterator msp = this->rend();
@@ -782,5 +838,5 @@ multikey_generator_generic<K>::operator ++ (int) {
 }	// end namespace MULTIKEY_NAMESPACE
 
 
-#endif	//	__MULTIKEY_TCC__
+#endif	// __UTIL_MULTIKEY_TCC__
 

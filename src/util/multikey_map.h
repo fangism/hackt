@@ -2,11 +2,15 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.1 2005/02/06 05:32:06 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.2 2005/02/06 16:23:44 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_H__
 #define	__MULTIKEY_MAP_H__
+
+#ifndef	WANT_MULTIKEY_MAP_BASE
+#define	WANT_MULTIKEY_MAP_BASE		0 && WANT_MULTIKEY_BASE
+#endif
 
 #include "macros.h"
 #include "STL/list_fwd.h"
@@ -21,10 +25,13 @@ using std::ostream;
 using std::istream;
 using std::pair;
 USING_LIST
+#if WANT_MULTIKEY_BASE
 using MULTIKEY_NAMESPACE::multikey_base;
+#endif
 using MULTIKEY_NAMESPACE::multikey;
 
 //=============================================================================
+#if WANT_MULTIKEY_MAP_BASE
 /**
 	Abstract base class for pseudo-multidimensional map.
 	Implementation-independent.  
@@ -65,6 +72,7 @@ template <template <class, class> class M>
 static	this_type* make_multikey_map(const size_t d);
 
 };	// end class multikey_map_base
+#endif
 
 //=============================================================================
 /**
@@ -79,11 +87,16 @@ static	this_type* make_multikey_map(const size_t d);
 	\example multikey_qmap_test.cc
  */
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map : protected M<multikey<D,K>, T>, 
-		public multikey_map_base<K,T> {
+class multikey_map : protected M<multikey<D,K>, T>
+#if WANT_MULTIKEY_MAP_BASE
+		, public multikey_map_base<K,T>
+#endif
+{
 protected:
 	/** this is the representation-type */
+#if WANT_MULTIKEY_MAP_BASE
 	typedef	multikey_map_base<K,T>			interface_type;
+#endif
 	typedef	M<multikey<D,K>, T>			map_type;
 	typedef	map_type				mt;
 public:
@@ -105,9 +118,14 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
+#if WANT_MULTIKEY_MAP_BASE
 	typedef	typename interface_type::key_list_type	key_list_type;
 	typedef	typename interface_type::key_list_pair_type
 							key_list_pair_type;
+#else
+	typedef	list<K>					key_list_type;
+	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
+#endif
 	typedef	pair<key_type, key_type>		key_pair_type;
 
 public:
@@ -139,6 +157,11 @@ public:
 	 */
 	size_t
 	dimensions(void) const { return D; }
+
+#if !WANT_MULTIKEY_MAP_BASE
+	size_t
+	size(void) const { return this->population(); }
+#endif
 
 	/**
 		\return The number of elements (leaves) in map.  
@@ -227,11 +250,13 @@ public:
 	T
 	operator [] (const list<K>& k) const;
 
+#if WANT_MULTIKEY_BASE
 	T&
 	operator [] (const multikey_base<K>& k);
 
 	T
 	operator [] (const multikey_base<K>& k) const;
+#endif
 
 	/**
 		Recursive routine to determine implicit desnsely 
@@ -285,9 +310,15 @@ public:
 	Specialization for one-dimension: just use base map type.  
  */
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map<1,K,T,M> : protected M<K,T>, public multikey_map_base<K,T> {
+class multikey_map<1,K,T,M> : protected M<K,T>
+#if WANT_MULTIKEY_MAP_BASE
+		, public multikey_map_base<K,T>
+#endif
+{
 protected:
+#if WANT_MULTIKEY_MAP_BASE
 	typedef	multikey_map_base<K,T>			interface_type;
+#endif
 	typedef	M<K, T>					map_type;
 	typedef	map_type				mt;
 public:
@@ -309,9 +340,14 @@ public:
 	typedef	typename mt::const_pointer		const_pointer;
 	typedef	typename mt::allocator_type		allocator_type;
 
+#if WANT_MULTIKEY_BASE
 	typedef	typename interface_type::key_list_type	key_list_type;
 	typedef	typename interface_type::key_list_pair_type
 							key_list_pair_type;
+#else
+	typedef	list<K>					key_list_type;
+	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
+#endif
 	typedef	pair<key_type, key_type>		key_pair_type;
 
 	// for array_traits<>
@@ -330,6 +366,11 @@ public:
 
 	size_t
 	dimensions(void) const { return 1; }
+
+#if !WANT_MULTIKEY_MAP_BASE
+	size_t
+	size(void) const { return this->population(); }
+#endif
 
 	size_t
 	population(void) const { return mt::size(); }
@@ -358,11 +399,13 @@ public:
 	T
 	operator [] (const key_list_type& k) const;
 
+#if WANT_MULTIKEY_BASE
 	T&
 	operator [] (const multikey_base<K>& k);
 
 	T
 	operator [] (const multikey_base<K>& k) const;
+#endif
 
 	T&
 	operator [] (const multikey<1,K>& k) {
