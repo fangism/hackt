@@ -1,0 +1,73 @@
+"TODO"
+	$Id: TODO,v 1.1 2004/11/26 23:24:15 fang Exp $
+
+Nothing really *needs* to be done in here.
+This is more of a wish-list for the util/ directory.  
+
+===============================================================================
+
+Tired of gargantuan object files and executables with 
+grossly-replicated inlined template code?  
+Your compiler doesn't support *gasp* export template?
+
+Make set of headers to split STL headers into:
+	1) a forward declarations header (_fwd.h)
+	2) a class definition header (.h)
+	3) a template method definition (.tcc)
+These files should go in a subdirectory, perhaps "STL"?
+
+Issues: may have to copy-fudge standard headers
+	and hack the #define's to check for inclusion.
+
+Possible convention:
+#define inclusions to intentionally interfere with STL headers.  
+	Very hackish and not portable across compilers / versions.  
+
+-------------------------------------------------------------------------------
+
+In "list_vector.*":
+
+	Implement insertion and deletion with vector fragmentation, 
+		and map management.  
+
+-------------------------------------------------------------------------------
+
+Regarding pointer-classes:
+	Files: excl_ptr.h, count_ptr.h
+	Migrate into the memory/ subdirectory.
+	Overhaul to eliminate inheritance from abstract_ptr.
+		(That was just an experiment.)
+	Implement pointer_traits concept, just like iterator_traits.
+	Combine pointer classes with const- counterparts to unify, 
+		eliminate replication.
+	sticky_pointer: can acquire ownership, but never transfer it, 
+		useful for containers, replacement for some_ptr.  
+	unique_pointer: transferrable ownership, but not replicable, 
+		not even by never_ptr.  
+
+-------------------------------------------------------------------------------
+
+vectorization:
+	File: aligned_vector.h
+	Create it!
+	Guarantees that memory access are aligned to specified boundary, 
+		by padding the head of the vector.  
+	Useful for vector arithmetic.  
+
+
+	(not important)
+	File: reserved_vector.h
+	Constant capacity container, can be full.
+
+-------------------------------------------------------------------------------
+
+algorithms:
+	File: optimized_algorithm.h
+	Implement unrolling algorithms.
+
+-------------------------------------------------------------------------------
+debug utils:
+	File: stacktrace.h
+
+-------------------------------------------------------------------------------
+

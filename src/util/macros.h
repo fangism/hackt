@@ -1,26 +1,36 @@
 /**
 	\file "macros.h"
 	Macros for general use.  
-	$Id: macros.h,v 1.1 2004/11/05 02:38:49 fang Exp $
+
+	Some predefinable macros can be used to control compilations:
+	DISABLE_INVARIANT turns off invariant checking.  
+
+	$Id: macros.h,v 1.2 2004/11/26 23:24:16 fang Exp $
  */
 
 #ifndef	__MACROS_H__
 #define	__MACROS_H__
 
-#include <stdlib.h>
-	// defines NULL
+#ifndef	NULL
+#define	NULL			0
+#endif
+
 #include <assert.h>
 
+//=============================================================================
 /**
 	Checks for NULL before deleting. 
 	Then NULLs out pointer (optional).  
 	Improper use of such a deleter pointer will result in null dereference.
 	For less performance overhead, remove the NULL-ing statement.  
-	Argument must be a non-const pointer, 
-	compiler will complain otherwise.  
+	Argument can be any pointer.
+
+	NOTE: please consider using pointer-classes before resorting to 
+	quick-and-dirty bare-pointer manipulation, even in classes.  
  */
 #define	SAFEDELETE(x)	{ if (x) delete x; x = NULL; }
 
+//=============================================================================
 // type-cast and type checks...
 // is there a way to use typeid() to infer type (even statically)
 // to make dynamic_casts more convenient?
@@ -41,10 +51,32 @@
  */
 #define	AS_A(type, id)		static_cast<type>(id)
 
-// various assertions, debug statements...
+/**
+	Abbreviation for reinterpret_cast.
+	Please don't use reinterpret_cast, they are distasteful and dangerous. 
+ */
+#define	TO_A(type, id)		reinterpret_cast<type>(id)
 
+//=============================================================================
+// various assertions, debug statements...
+#ifdef	DISABLE_INVARIANT
+/**
+	Invariant assertions.  Really only intended for assertions.  
+	Can be disabled by predefining INVARIANT, or defining
+	DISABLE_INVARIANT.
+ */
+#define	INVARIANT(x)
+#elif	!defined(INVARIANT)
+#define	INVARIANT(x)		assert(x)
+#endif
+
+// of course invariant-checks may also come as expensive operations, 
+// those we leave to specific instances.  
+
+//=============================================================================
 // exception throwing...
 
+//=============================================================================
 // error reporting...
 
 #endif	// __MACROS_H__

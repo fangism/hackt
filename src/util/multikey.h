@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.9 2004/11/05 02:38:50 fang Exp $
+	$Id: multikey.h,v 1.10 2004/11/26 23:24:17 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -37,6 +37,7 @@ using namespace std;
 template <class K>
 class multikey_base {
 public:
+	typedef	K				value_type;
 	typedef	K*				iterator;
 	typedef	const K*			const_iterator;
 	typedef	K&				reference;
@@ -88,6 +89,7 @@ class multikey : virtual public multikey_base<K> {
 	template <size_t, class C, C>
 	friend class multikey;
 public:
+	typedef	K					value_type;
 	typedef	multikey_base<K>			base_type;
 	typedef	multikey<D,K>				this_type;
 	typedef	typename base_type::iterator		iterator;
@@ -475,6 +477,7 @@ operator >= (const multikey<D1,K>& l, const multikey<D2,K>& r) {
 template <class K>
 class multikey_generator_base : virtual public multikey_base<K> {
 public:
+	typedef	K						value_type;
 	typedef	typename multikey_base<K>::iterator		iterator;
 	typedef	typename multikey_base<K>::const_iterator	const_iterator;
 public:
@@ -510,6 +513,7 @@ template <size_t D, class K>
 class multikey_generator : public multikey<D,K>, 
 		public multikey_generator_base<K> {
 public:
+	typedef	K					value_type;
 	typedef	multikey<D,K>				base_type;
 	typedef	typename base_type::iterator		iterator;
 	typedef	typename base_type::const_iterator	const_iterator;
