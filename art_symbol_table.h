@@ -7,11 +7,8 @@
 
 #include <stdlib.h>
 #include <string>
-
-// add as they are needed
 #include <stack>
-#include "list_of_ptr.h"		// PHASE OUT
-// #include <map>
+#include <list>
 
 namespace ART {
 
@@ -45,11 +42,12 @@ namespace entity {
 	class param_type_reference;
 	class param_instantiation;
 	class param_instance_reference;
+
 	class param_expr;
 	// replicated typedefs from "art_object.h"
-	typedef list_of_ptr<param_expr>		array_dim_list;
-	typedef list_of_const_ptr<param_expr>	template_param_list;
-};
+	typedef list<never_const_ptr<param_expr> >	array_dim_list;
+	typedef list<never_const_ptr<param_expr> >	template_param_list;
+}
 using namespace entity;
 
 namespace parser {
@@ -96,8 +94,10 @@ protected:
 		semantics.  
 		Also may be useful in debugging to see state of namespace
 		stack more easily.  
-		Remember, these name_space pointers are not owned.  
+		Remember, these name_space pointers are not owned, but 
+			are modifiable.  
 	 */
+//	stack<never_ptr<name_space> >	namespace_stack;
 	stack<name_space*>	namespace_stack;
 #define current_namespace	namespace_stack.top()
 
@@ -161,6 +161,7 @@ protected:
 		These pointers are modifiable, but are not owned.  
 		Remember to push NULL initially.  
 	 */
+//	stack<never_ptr<scopespace> >	dynamic_scope_stack;
 	stack<scopespace*>		dynamic_scope_stack;
 #define	current_dynamic_scope		dynamic_scope_stack.top()
 
@@ -288,8 +289,8 @@ void close_current_definition(void);
 };	// end class context
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #endif	// __ART_SYMBOL_TABLE_H__
 

@@ -22,7 +22,7 @@ namespace ART {
 // forward declaration of outside namespace and classes
 namespace entity {
 	class object;		// defined in "art_object.h"
-};
+}
 
 using namespace std;
 using namespace entity;
@@ -1797,8 +1797,8 @@ virtual	line_position rightmost(void) const;
 
 //=============================================================================
 
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #endif	// __ART_PARSER_H__
 

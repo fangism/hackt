@@ -30,10 +30,12 @@ param_expr_collective::what(ostream& o) const {
 string
 param_expr_collective::hash_string(void) const {
 	string ret("{");
-	list_of_ptr<param_expr>::const_iterator i = 
+//	list_of_ptr<param_expr>::const_iterator i = 
+	list<excl_ptr<param_expr> >::const_iterator i = 
 		elist.begin();
 	for ( ; i!=elist.end(); i++) {
-		const param_expr* p = *i;
+//		const param_expr* p = *i;
+		const never_const_ptr<param_expr> p(*i);
 		assert(p);
 		ret += p->hash_string();
 		ret += ",";
@@ -143,6 +145,6 @@ param_binary_expr::hash_string(void) const {
 template class list_of_ptr<param_expr>;		// array_dim_list
 
 //=============================================================================
-};	// end namepace entity
-};	// end namepace ART
+}	// end namepace entity
+}	// end namepace ART
 

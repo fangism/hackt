@@ -401,10 +401,8 @@ public:
 		base_const_ptr<T>(e.release()) { }
 
 /**
-	\param p should be a newly allocated pointer, which has not
-		been tampered with or leaked out.  Vulnerability
-		here is that we don't know what else has been done
-		with p.  
+	\param p should be a pointer, where another object or scope
+		has assumed the responsibility for de-allocating it.  
 		Defaults to NULL.  
  */
 explicit excl_const_ptr(const T* p) throw() : base_const_ptr<T>(p) { }

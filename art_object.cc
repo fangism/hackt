@@ -14,7 +14,6 @@
 
 #include "hash_specializations.h"		// substitute for the following
 #include "hashlist_template_methods.h"
-	// includes "list_of_ptr_template_methods.h"
 #include "art_object.h"
 
 #include "art_object_expr.h"
@@ -165,24 +164,6 @@ scopespace::add_instance(instantiation_base& i) {
 	return &i;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Searches ONLY this namespace for a instance.  
-	then if not found locally, searches imported (unaliased) namespaces.  
-	\param m the list of accumulated matches (also returned).  
-	\param tid the name of type to search for.  
- */
-void
-scopespace::query_instance_match(instance_list& m, const string& tid) const {
-	DEBUG(TRACE_DATATYPE_QUERY, 
-		cerr << endl << "scopespace::query_instance_match: " << tid
-			<< " in " << get_qualified_name())
-
-	const instantiation_base* ret = 
-		IS_A(const instantiation_base*, used_id_map[tid]);
-	if (ret) m.push_back(ret);
-}
-
 //=============================================================================
 // class name_space method definitions
 
@@ -207,14 +188,7 @@ name_space::name_space(const string& n, const name_space* p) :
 	and will be deleted by their respective owners.  
  */
 name_space::~name_space() {
-	// no longer need to explicitly delete pointers belonging
-	// to map_of_ptr<> types because their default destructors, 
-	// that take care of them, will be invoked automatically.  
-
-	// default destructor for lists and maps of un-owned pointers
-	// will already clear those respective sets without deleting.  
-//	open_spaces.clear();		// without deleting, don't own
-//	open_aliases.clear();		// without deleting, don't own
+	// default destructors will take care of everything
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -351,7 +325,12 @@ name_space::add_using_directive(const qualified_id& n) {
 	// if list's size > 1, ambiguity
 	// else if list is empty, unresolved namespace
 	// else we've narrowed it down to one
-		case 1: ret = (*i); open_spaces.push_back(ret); break;
+		case 1: 
+//			ret = (*i);
+//			open_spaces.push_back(ret);
+			ret = i->unprotected_const_ptr();	// temp
+			open_spaces.push_back(never_const_ptr<name_space>(ret));
+			break;
 		case 0:	{
 			cerr << "namespace " << n << " not found, ERROR! ";
 			// or n is not a namespace
@@ -437,8 +416,10 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	// else if list is empty, unresolved namespace
 	// else we've narrowed it down to one
 		case 1: {
-			ret = (*i);
-			open_aliases[a] = ret;
+//			ret = (*i);
+//			open_aliases[a] = ret;
+			ret = i->unprotected_const_ptr();
+			open_aliases[a] = never_const_ptr<name_space>(ret);
 			// remember that open_aliases owns ret, 
 			// not used_id_map, thus we use a const_handle.  
 			used_id_map[a] = new object_handle(ret);
@@ -507,7 +488,8 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			next = IS_A(const name_space*, ns->used_id_map[*tid]);
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-			ns = (next) ? next : ns->open_aliases[*tid];
+			ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temporary
+//			ns = (next) ? next : ns->open_aliases[*tid];
 		}
 
 	// for loop terminates when ns is NULL or i is at the end
@@ -552,7 +534,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 			((id.is_absolute()) ? get_global_namespace() : this)
 				->used_id_map[*tid]);
 	if (!ns) {				// else lookup in aliases
-		ns = open_aliases[*tid];	// replaced for const semantics
+		ns = open_aliases[*tid].unprotected_const_ptr();	// temp
+//		ns = open_aliases[*tid];	// replaced for const semantics
 	}
 	// remember to skip scope tokens
 	for (i++; ns && i!=id.end(); i++) {
@@ -562,7 +545,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = IS_A(const name_space*, ns->used_id_map[*tid]);
 		// if not found in subspaces, check aliases list
-		ns = (next) ? next : ns->open_aliases[*tid];
+		ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temp
+//		ns = (next) ? next : ns->open_aliases[*tid];
 	}
 	// for loop terminates when ns is NULL or i is at the end
 	// if i is not at the end, then we didn't find a matched namespace
@@ -592,7 +576,8 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 			<< " in " << get_qualified_name())
 	{
 		const name_space* ret = query_subnamespace_match(id);
-		if (ret) m.push_back(ret);
+//		if (ret) m.push_back(ret);
+		if (ret) m.push_back(never_const_ptr<name_space>(ret));
 	}
 	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
@@ -600,7 +585,8 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 		for ( ; i!=open_spaces.end(); i++) {
 			const name_space* ret = 
 				(*i)->query_subnamespace_match(id);
-			if (ret) m.push_back(ret);
+//			if (ret) m.push_back(ret);
+			if (ret) m.push_back(never_const_ptr<name_space>(ret));
 		}
 	}
 	// When searching for imported namespaces matches found
@@ -615,132 +601,6 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 	if (parent)
 #endif
 		parent->query_import_namespace_match(m, id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Searches this namespace for a definition, 
-	then if not found locally, searches imported (unaliased) namespaces.  
-	If match list is still empty, then searches parents' namespace
-	until one (grand) parent finds results.  
-	Does not search down subnamespaces, 
-	or aliased imported namespaces.  Searching in those places
-	requires that the identifier be qualified with scope.  
-	The primary difference between this and other type-specific query
-	methods is that this uses only the used_id_map for searching.  
-	\param m the list of accumulated matches (also returned).  
-	\param tid the name of type to search for.  
- */
-void
-name_space::query_definition_match(definition_list& m, const string& tid) const {
-	DEBUG(TRACE_DATATYPE_QUERY, 
-		cerr << endl << "query_definition_match: " << tid
-			<< " in " << get_qualified_name())
-	{
-		const definition_base* ret = 
-			IS_A(const definition_base*, used_id_map[tid]);
-		if (ret) m.push_back(ret);
-	}
-	// always search these unconditionally? or only if not found so far?
-	if (m.empty()) {
-		// with open namespaces list
-		namespace_list::const_iterator i = open_spaces.begin();
-		for ( ; i!=open_spaces.end(); i++) {
-			assert(*i);
-			const definition_base* ret = 
-				IS_A(const definition_base*,
-					(*i)->used_id_map[tid]);
-			if (ret) m.push_back(ret);
-		}
-		// don't search aliased imports
-	}
-
-	// until list is not empty, keep querying parents
-	// thus, names in deeper spaces will overshadow names in outer spaces
-	if (m.empty() && parent)
-		parent->query_definition_match(m, tid);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Searches this namespace for a instance, 
-	then if not found locally, searches imported (unaliased) namespaces.  
-	If match list is still empty, then searches parents' namespace
-	until one (grand) parent finds results.  
-	Does not search down subnamespaces, 
-	or aliased imported namespaces.  Searching in those places
-	requires that the identifier be qualified with scope.  
-	The primary difference between this and other type-specific query
-	methods is that this uses only the used_id_map for searching.  
-	\param m the list of accumulated matches (also returned).  
-	\param tid the name of type to search for.  
- */
-void
-name_space::query_instance_match(instance_list& m, const string& tid) const {
-	DEBUG(TRACE_DATATYPE_QUERY, 
-		cerr << endl << "name_space::query_instance_match: " << tid
-			<< " in " << get_qualified_name())
-
-	scopespace::query_instance_match(m, tid);
-	// always search these unconditionally? or only if not found so far?
-	if (m.empty()) {
-		// with open namespaces list
-		namespace_list::const_iterator i = open_spaces.begin();
-		for ( ; i!=open_spaces.end(); i++) {
-			assert(*i);
-			const instantiation_base* ret = 
-				IS_A(const instantiation_base*,
-					(*i)->used_id_map[tid]);
-			if (ret) m.push_back(ret);
-		}
-		// don't search aliased imports
-	}
-
-	// until list is not empty, keep querying parents
-	// thus, names in deeper spaces will overshadow names in outer spaces
-	if (m.empty() && parent)
-		parent->query_instance_match(m, tid);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Searches this namespace for a matched type, 
-	then if not found locally, searches imported (unaliased) namespaces.  
-	If match list is still empty, then searches parents' namespace
-	until one (grand) parent finds results.  
-	Does not search down subnamespaces, 
-	or aliased imported namespaces.  Searching in those places
-	requires that the identifier be qualified with scope.  
-	\param m the list of accumulated matches (also returned).  
-	\param tid the name of type to search for.  
- */
-void
-name_space::query_datatype_def_match(data_def_list& m, const string& tid) const {
-	DEBUG(TRACE_DATATYPE_QUERY, 
-		cerr << endl << "query_datatype_def_match: " << tid
-			<< " in " << get_qualified_name())
-	{
-		const datatype_definition* ret =
-			IS_A(const datatype_definition*, used_id_map[tid]);
-		if (ret) m.push_back(ret);
-	}
-	// always search these unconditionally? or only if not found so far?
-	if (m.empty()) {
-		// with open namespaces list
-		namespace_list::const_iterator i = open_spaces.begin();
-		for ( ; i!=open_spaces.end(); i++) {
-			const datatype_definition* ret = 
-				IS_A(const datatype_definition*, 
-					(*i)->used_id_map[tid]);
-			if (ret) m.push_back(ret);
-		}
-		// don't search aliased imports
-	}
-
-	// until list is not empty, keep querying parents
-	// thus, names in deeper spaces will overshadow names in outer spaces
-	if (m.empty() && parent)
-		parent->query_datatype_def_match(m, tid);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -764,7 +624,8 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	//	including the global scope, if reached
 	// terminates (returning NULL) if not found
 	const name_space* ret = query_subnamespace_match(id);
-	if (ret)	m.push_back(ret);
+//	if (ret)	m.push_back(ret);
+	if (ret)	m.push_back(never_const_ptr<name_space>(ret));
 	query_import_namespace_match(m, id);
 	if (parent)
 		parent->find_namespace_ending_with(m, id);
@@ -797,6 +658,10 @@ name_space::add_definition(definition_base* db) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds an alias for a type, like typedef in C.  
+	Later: template typedefs, ooooh!
+ */
 datatype_definition*
 name_space::add_type_alias(const qualified_id& t, const string& a) {
 	return NULL;
@@ -1130,7 +995,8 @@ definition_base::check_null_template_argument(void) const {
 		template_formals_set::const_iterator i =
 			template_formals->begin();
 		for ( ; i!=template_formals->end(); i++) {
-			const param_instantiation* p = *i;
+//			const param_instantiation* p = *i;
+			never_const_ptr<param_instantiation> p(*i);
 			assert(p);
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
@@ -1179,9 +1045,13 @@ definition_base::add_template_formal(instantiation_base* f) {
 		return NULL;
 	}
 
+#if 0
 	const param_instantiation** ret =
 		template_formals->append(pf->hash_string(), pf);
-		// unchecked pointer dereference
+#endif
+	const never_const_ptr<param_instantiation>* ret =
+		template_formals->append(pf->hash_string(),
+			never_const_ptr<param_instantiation>(pf));
 	assert(!ret);
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the template_formals_list!
@@ -1221,7 +1091,8 @@ fundamental_type_reference::hash_string(void) const {
 			template_params->begin();
 		// add commas?
 		for ( ; i!=template_params->end(); i++) {
-			const param_expr* e = *i;
+//			const param_expr* e = *i;
+			never_const_ptr<param_expr> e(*i);
 			if (e)
 				ret += e->hash_string();
 			// can e ever be NULL?
@@ -1595,13 +1466,6 @@ ostream&
 type_alias::what(ostream& o) const {
 	return o << "aliased-type: " << key;
 }
-
-/** NOT USED, ever
-bool
-type_alias::type_equivalent(const datatype_definition& t) const {
-	return resolve_canonical()->type_equivalent(t);
-}
-**/
 
 //=============================================================================
 // class built_in_datatype_def method definitions
@@ -2066,6 +1930,6 @@ channel_instance_reference::what(ostream& o) const {
 }
 
 //=============================================================================
-};	// end namespace entity
-};	// end namespace ART
+}	// end namespace entity
+}	// end namespace ART
 

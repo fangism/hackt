@@ -5,8 +5,10 @@
 
 #include <string>
 
-#include "map_of_ptr.h"
-#include "hash_map_of_ptr.h"	// phase out
+#include "qmap.h"
+// #include "map_of_ptr.h"	// PHASE OUT
+#include "hash_map_of_ptr.h"	// PHASE OUT
+
 #include "hashlist.h"		// includes "list_of_ptr.h" and <hash_map>
 	// for now don't need hashlist...
 #include "art_macros.h"
@@ -37,7 +39,7 @@ namespace parser {
 	class qualified_id_slice;
 	class qualified_id;
 	class context;
-};
+}
 using namespace parser;
 
 //=============================================================================
@@ -85,7 +87,8 @@ class param_instance_reference;
 
 // from "art_object_expr.h"
 class param_expr;
-typedef	list_of_ptr<param_expr>		array_dim_list;
+// typedef	list_of_ptr<param_expr>		array_dim_list;
+typedef	list<never_const_ptr<param_expr> >	array_dim_list;
 
 /**
 	The container type for template parameters.  
@@ -96,7 +99,8 @@ typedef	list_of_ptr<param_expr>		array_dim_list;
 	(even fancier) other template arguments.  
 	These parameter expressions are not owned!  
  */
-typedef	list_of_const_ptr<param_expr>	template_param_list;
+typedef	list<never_const_ptr<param_expr> >	template_param_list;
+// typedef	list_of_const_ptr<param_expr>	template_param_list;
 
 
 //=============================================================================
@@ -168,61 +172,11 @@ class scopespace : public object {
 protected:	// typedefs -- keep these here for re-use
 
 	/**
-		Container owned (unordered) sub-namespaces.  
-		Mapped entries are non-const because parents are allowed
-		to modify (add to) sub-namespaces, e.g. through 
-		namespace traversal by type-check/build routines.  
-		OBSOLETE: now included in used_id_map.  
-	typedef	map_of_ptr<string, name_space>		subns_map_type;
-	**/
-
-	/**
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	map_of_const_ptr<string, name_space>	alias_map_type;
-
-	/**
-		Object list used by query methods.  
-	 */
-	typedef	list_of_const_ptr<object>		object_list;
-
-	/**
-		Definition list used by query methods.  
-	 */
-	typedef	list_of_const_ptr<definition_base>	definition_list;
-
-	/**
-		Instance list used by query methods.  
-	 */
-	typedef	list_of_const_ptr<instantiation_base>	instance_list;
-
-	/**
-		Resolves identifier to actual data type.  
-		Remember that public members of defined types, 
-		must be accessible both in sequential order
-		(for actuals type-checking) and in random order
-		by member name mapping, as in x.y.z.  
-		This structure owns the pointers to these definitions,
-		and thus, is responsible for deleteing them.  
-	 */
-	typedef	map_of_ptr<string, datatype_definition>	data_def_set;
-	/// list useful for query returns, const pointer?
-	typedef	list_of_const_ptr<datatype_definition>	data_def_list;
-
-	/// resolves identifier to actual data type, we own these pointers
-	typedef	map_of_ptr<string, datatype_instantiation>	data_inst_set;
-
-	/// resolves identifier to actual process type, we own these pointers
-	typedef	map_of_ptr<string, process_definition>	proc_def_set;
-	typedef	list_of_const_ptr<process_definition>	proc_def_list;
-
-	/// resolves identifier to actual process type, we own these pointers
-	typedef	map_of_ptr<string, process_instantiation>	proc_inst_set;
-
-	typedef	map_of_ptr<string, built_in_param_def>	param_def_set;
-	typedef	list_of_const_ptr<built_in_param_def>	param_def_list;
-	typedef	map_of_ptr<string, param_instantiation>	param_inst_set;
+	typedef	qmap<string, never_const_ptr<name_space> >	alias_map_type;
+//	typedef	map_of_const_ptr<string, name_space>	alias_map_type;
 
 	/**
 		Container for open namespaces with optional aliases.  
@@ -232,7 +186,8 @@ protected:	// typedefs -- keep these here for re-use
 		These pointers are read-only, and thus not
 		owned by this namespace.  
 	 */
-	typedef list_of_const_ptr<name_space>		namespace_list;
+	typedef list<never_const_ptr<name_space> >	namespace_list;
+//	typedef list_of_const_ptr<name_space>		namespace_list;
 
 	/**
 		This set contains the list of identifiers for this namespace
@@ -257,7 +212,6 @@ protected:	// typedefs -- keep these here for re-use
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
 	 */
-//	typedef	hash_map_of_const_ptr<string, object>	used_id_map_type;
 	typedef	hash_map_of_ptr<string, object>		used_id_map_type;
 	// later: hash_map<string, excl_ptr<object> >
 
@@ -312,9 +266,6 @@ virtual	const scopespace*	lookup_namespace(const qualified_id_slice& id) const;
 virtual	const instantiation_base*
 			add_instance(instantiation_base& i);
 
-protected:
-// virtual	void query_object_match(object_list& m, const string& id) const;
-virtual	void query_instance_match(instance_list& m, const string& id) const;
 };	// end class scopespace
 
 //=============================================================================
@@ -352,6 +303,7 @@ protected:
 			hash pointers of searched, to prevent re-visiting?
 	 */
 	namespace_list		open_spaces;
+
 	/**
 		This is the set of open namespaces that are aliased
 		locally under a different sub-namespaces, 
@@ -416,15 +368,6 @@ void	query_import_namespace_match(namespace_list& m, const qualified_id& id) con
 
 // these will not be recursive, but iteratively invoked by
 // add_blah_inst/def();
-void	query_definition_match(definition_list& m, const string& tid) const;
-void	query_instance_match(instance_list& m, const string& tid) const;
-
-void	query_datatype_def_match(data_def_list& m, const string& tid) const;
-void	query_datatype_def_match(data_def_list& m, const type_id& tid) const;
-void	query_datatype_inst_match(data_def_list& m, const string& tid) const;
-void	query_datatype_inst_match(data_def_list& m, const qualified_id& tid) const;
-void	query_proc_def_match(proc_def_list& m, const type_id& pid) const;
-void	query_proc_inst_match(proc_def_list& m, const qualified_id& pid) const;
 
 // the following are not used... yet
 void	find_namespace_ending_with(namespace_list& m, 
@@ -481,7 +424,8 @@ public:
 			It'd be nice to be able to swap instance arguments
 			that preserve specified interfaces...
 	 */
-	typedef	hashlist_of_const_ptr<string,param_instantiation>
+//	typedef	hashlist_of_const_ptr<string,param_instantiation>
+	typedef	hashlist<string, never_const_ptr<param_instantiation> >
 					template_formals_set;
 protected:
 	// inherited:
@@ -783,7 +727,8 @@ protected:
 		Should be list of parameter expressions, possibly constants.  
 		Expressions are owned by a separate expression cache.  
 	 */
-	typedef	list_of_const_ptr<param_expr>	array_index_list;
+	typedef	list<never_const_ptr<param_expr> >	array_index_list;
+//	typedef	list_of_const_ptr<param_expr>	array_index_list;
 
 protected:
 	// consider letting collective_instance_reference take care of it...
@@ -877,7 +822,8 @@ public:
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
 	 */
-	typedef hashlist_of_const_ptr<string, instantiation_base>
+//	typedef hashlist_of_const_ptr<string, instantiation_base>
+	typedef hashlist<string, never_const_ptr<instantiation_base> >
 							port_formals_set;
 
 	// List of language bodies, separate or merged?
@@ -1022,12 +968,16 @@ private:
 		Members will be kept as a hashlist
 		because their order matters, or don't they?
 	 */
-	typedef	hashlist_of_const_ptr<string, datatype_definition>	type_members;
+	typedef	hashlist<string, never_const_ptr<datatype_definition> >
+						type_members;
+//	typedef	hashlist_of_const_ptr<string, datatype_definition>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	hashlist_of_const_ptr<string, datatype_definition>	temp_param_list;
+	typedef	hashlist<string, never_const_ptr<datatype_definition> >
+						temp_param_list;
+//	typedef	hashlist_of_const_ptr<string, datatype_definition>	temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
@@ -1066,12 +1016,16 @@ private:
 	/**
 		Members will be kept as a list for ordered checking.  
 	 */
-	typedef	hashlist_of_const_ptr<string, datatype_definition>	type_members;
+//	typedef	hashlist_of_const_ptr<string, datatype_definition>
+	typedef	hashlist<string, never_const_ptr<datatype_definition> >
+						type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
 	 */
-	typedef	hashlist_of_const_ptr<string, datatype_definition>	temp_param_list;
+//	typedef	hashlist_of_const_ptr<string, datatype_definition>
+	typedef	hashlist<string, never_const_ptr<datatype_definition> >
+						temp_param_list;
 protected:
 	// list of other type definitions
 	temp_param_list		template_params;
@@ -1106,7 +1060,6 @@ virtual	~type_alias();
 const definition_base*	resolve_canonical(void) const;
 
 virtual	ostream& what(ostream& o) const;
-// virtual	bool type_equivalent(const datatype_definition& t) const;
 };	// end class type_alias
 
 //=============================================================================
@@ -1124,7 +1077,6 @@ virtual	ostream& what(ostream& o) const;
 virtual	const fundamental_type_reference* get_type_ref(void) const;
 
 	bool equals_template_formal(const template_formal_decl& tf) const;
-// virtual	bool equals_port_formal(const port_formal_decl& tf) const;
 // virtual	string hash_string(void) const;
 virtual	instance_reference_base* make_instance_reference(context& c) const;
 };	// end class instantiation_base
@@ -1211,8 +1163,8 @@ public:
 };	// end class param_instance_reference
 
 //=============================================================================
-};	// end namespace entity
-};	// end namespace ART
+}	// end namespace entity
+}	// end namespace ART
 
 #endif	// __ART_OBJECT_H__
 

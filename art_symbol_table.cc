@@ -8,7 +8,7 @@
 #include "art_object.h"
 #include "art_object_expr.h"
 
-#include "list_of_ptr_template_methods.h"	// PHASE OUT
+// #include "list_of_ptr_template_methods.h"	// PHASE OUT
 
 //=============================================================================
 namespace ART {
@@ -741,9 +741,9 @@ context::auto_indent(void) const {
 //=============================================================================
 // explicit template instantiations
 
-template class list_of_const_ptr<param_expr>;
+// template class list_of_const_ptr<param_expr>;
 
 //=============================================================================
-};	// end namespace entity
-};	// end namespace ART
+}	// end namespace entity
+}	// end namespace ART
 

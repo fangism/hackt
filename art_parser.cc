@@ -133,12 +133,14 @@ template_argument_list::check_build(context* c) const {
 	for ( ; i!=end(); i++) {
 		never_const_ptr<expr> e(*i);
 		assert(e);			// ever blank expression?
+		// this should cache parameter expressions
 		const object* eret = e->check_build(c);
 		if (eret) {
 			const param_expr* exref = 
 				IS_A(const param_expr*, eret);
 			assert(exref);
-			targs->push_back(exref);
+//			targs->push_back(exref);
+			targs->push_back(never_const_ptr<param_expr>(exref));
 		} else {
 			// failed!!!  better error handling later
 			cerr << "BAD template argument (not an expression)!";
@@ -1840,8 +1842,8 @@ class node_list<guarded_definition_body,thickbar>;
 						// guarded_definition_body_list
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

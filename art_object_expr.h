@@ -26,7 +26,8 @@ class param_instantiation;
 	Non-constants will be checked at instantiation time.
 	Elements should be param_expr (owned pointers).
  */
-typedef list_of_ptr<param_expr>			array_dim_list;
+typedef list<never_const_ptr<param_expr> >		array_dim_list;
+// typedef list_of_ptr<param_expr>			array_dim_list;
 
 //============================================================================= 
 /**
@@ -53,7 +54,8 @@ virtual	string hash_string(void) const = 0;
  */
 class param_expr_collective : public param_expr {
 protected:
-	list_of_ptr<param_expr>		elist;
+//	list_of_ptr<param_expr>		elist;
+	list<excl_ptr<param_expr> >	elist;
 public:
 	param_expr_collective();
 	~param_expr_collective();
@@ -147,8 +149,8 @@ public:
 };	// end class param_binary_expr
 
 //=============================================================================
-};	// end namespace ART
-};	// end namespace entity
+}	// end namespace ART
+}	// end namespace entity
 
 #endif	// __ART_OBJECT_EXPR_H__
 
