@@ -68,8 +68,8 @@ paren_expr::rightmost(void) const {
 	else	return e->rightmost();
 }
 
-const object*
-paren_expr::check_build(context* c) const {
+never_const_ptr<object>
+paren_expr::check_build(never_ptr<context> c) const {
 	return e->check_build(c);
 }
 
@@ -109,7 +109,6 @@ qualified_id::~qualified_id() {
  */
 qualified_id*
 qualified_id::force_absolute(token_string* s) {
-//	absolute = IS_A(token_string*, s);
 	absolute = s;
 	assert(absolute);
 	return this;
@@ -170,10 +169,9 @@ qualified_id::copy_beheaded(void) const {
 		Consumer should wrap in instance_reference?
 			might be collective, in the case of an array
  */
-const object*
-qualified_id::check_build(context* c) const {
-	return c->lookup_object(*this).unprotected_const_ptr();
-//	return c->lookup_object(*this);
+never_const_ptr<object>
+qualified_id::check_build(never_ptr<context> c) const {
+	return c->lookup_object(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,13 +255,13 @@ id_expr::rightmost(void) const {
 		instance if found, else NULL.
 	FIX ME: should return instance_reference!, not instance!
  */
-const object*
-id_expr::check_build(context* c) const {
-	const object* o;
-	const instantiation_base* inst = NULL;
+never_const_ptr<object>
+id_expr::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
+	never_const_ptr<instantiation_base> inst;
 	o = qid->check_build(c);		// will lookup_object
 	if (o) {
-		inst = IS_A(const instantiation_base*, o);
+		inst = o.is_a<instantiation_base>();
 		if (inst) {
 			// we found an instance which may be single
 			// or collective...
@@ -278,7 +276,7 @@ id_expr::check_build(context* c) const {
 	} else {
 		cerr << "object " << *qid << " not found, ERROR!";
 	}
-	return NULL;
+	return never_const_ptr<object>(NULL);
 //	return c->lookup_instance(*qid);
 // also accomplishes same thing?
 }
@@ -295,7 +293,6 @@ ostream& operator << (ostream& o, const id_expr& id) {
 CONSTRUCTOR_INLINE
 range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
-//	assert(!IS_A(range*, lower));
 	assert(!lower.is_a<range>());
 }
 
@@ -303,8 +300,6 @@ CONSTRUCTOR_INLINE
 range::range(const expr* l, const terminal* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
 	assert(lower); assert(op); assert(u);
-//	assert(!IS_A(range*, lower));
-//	assert(!IS_A(range*, upper));
 	assert(!lower.is_a<range>());
 	assert(!upper.is_a<range>());
 }
@@ -336,13 +331,10 @@ range::rightmost(void) const {
 	\param c the context where to start resolving identifiers.  
 	\return I don't know.
  */
-const object*
-range::check_build(context* c) const {
+never_const_ptr<object>
+range::check_build(never_ptr<context> c) const {
 	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
-	const object* o;
-//	const param_type_reference* pint_type = 
-//		IS_A(const param_type_reference*, 
-//			c->global_namespace->lookup_object("pint"));
+	never_const_ptr<object> o;
 	never_const_ptr<param_type_reference> pint_type = c->global_namespace->
 		lookup_object("pint").is_a<param_type_reference>();
 	assert(pint_type);
@@ -397,11 +389,11 @@ prefix_expr::rightmost(void) const {
 	return e->rightmost();
 }
 
-const object*
-prefix_expr::check_build(context* c) const {
+never_const_ptr<object>
+prefix_expr::check_build(never_ptr<context> c) const {
 	cerr << "prefix_expr::check_build(): I'm not done yet!" << endl;
 	e->check_build(c);
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -451,9 +443,9 @@ member_expr::rightmost(void) const {
 /**
 	Type-check of member reference.  
  */
-const object*
-member_expr::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+member_expr::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 
 	o = e->check_build(c);
 	// expect: fundamental_type_reference
@@ -475,7 +467,7 @@ member_expr::check_build(context* c) const {
 	// after all this is type-checking, not range checking.  
 
 	assert(0);
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -503,18 +495,18 @@ index_expr::rightmost(void) const {
 /**
 	TO DO: finish me
  */
-const object*
-index_expr::check_build(context* c) const {
+never_const_ptr<object>
+index_expr::check_build(never_ptr<context> c) const {
 	cerr << "index_expr::check_build(): FINISH ME!" << endl;
-	const object* o;
+	never_const_ptr<object> o;
 	o = e->check_build(c);
 	// expect: collective_type_reference
-	const collective_instance_reference* cir = 
-		IS_A(const collective_instance_reference*, o);
+	never_const_ptr<collective_instance_reference> cir(
+		o.is_a<collective_instance_reference>());
 	// check each of the ranges from left to right
 
 	assert(cir);			// temporary
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -541,16 +533,16 @@ binary_expr::rightmost(void) const {
 	return r->rightmost();
 }
 
-const object*
-binary_expr::check_build(context* c) const {
-	const object *lo, *ro;
+never_const_ptr<object>
+binary_expr::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> lo, ro;
 	cerr << "binary_expr::check_build(): FINISH ME!";
 	lo = l->check_build(c);		// expect some object expression
 	assert(lo);			// temporary
 	ro = r->check_build(c);		// expect some object expression
 	assert(ro);			// temporary
 	// switch on operation
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================

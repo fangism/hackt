@@ -31,8 +31,8 @@ namespace COUNT_PTR_NAMESPACE {
 //=============================================================================
 // forward declarations
 class abstract_base_count_ptr;
-template <class T>	class count_ptr;
-template <class T>	class count_const_ptr;
+template <class>	class count_ptr;
+template <class>	class count_const_ptr;
 
 //=============================================================================
 /**
@@ -40,6 +40,9 @@ template <class T>	class count_const_ptr;
  */
 class abstract_base_count_ptr {
 	// parent could be abstract_ptr
+template <class> friend class count_ptr;
+template <class> friend class count_const_ptr;
+
 protected:
 	/**
 		The reference count.  Need not be mutable.  
@@ -109,7 +112,8 @@ public:
  */
 template <class T>
 class count_ptr : public abstract_base_count_ptr {
-friend class count_const_ptr<T>;
+template <class> friend class count_ptr;
+template <class> friend class count_const_ptr;
 protected:
 	typedef	abstract_base_count_ptr		parent;
 
@@ -270,6 +274,8 @@ public:
  */
 template <class T>
 class count_const_ptr : public abstract_base_count_ptr {
+template <class> friend class count_const_ptr;
+
 protected:
 	typedef	abstract_base_count_ptr		parent;
 protected:

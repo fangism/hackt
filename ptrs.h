@@ -40,15 +40,15 @@ namespace PTRS_NAMESPACE {
 // pointers with "const" are read-only, duh!
 
 			class abstract_ptr;	// abstract pointer
-template <class T>	class base_ptr;		// generic pointer
-template <class T>	class base_const_ptr;	// generic pointer
-template <class T>	class some_ptr;		// sometimes owner
-template <class T>	class some_const_ptr;	// sometimes owner
-template <class T>	class excl_ptr;		// exclusive owner and deleter
-template <class T>	class excl_const_ptr;	// exclusive owner and deleter
-template <class T>	class never_ptr;	// never owner
-template <class T>	class never_const_ptr;	// never owner
-template <class T>	class dynconst_ptr;	// dynamic const-ness
+template <class>	class base_ptr;		// generic pointer
+template <class>	class base_const_ptr;	// generic pointer
+template <class>	class some_ptr;		// sometimes owner
+template <class>	class some_const_ptr;	// sometimes owner
+template <class>	class excl_ptr;		// exclusive owner and deleter
+template <class>	class excl_const_ptr;	// exclusive owner and deleter
+template <class>	class never_ptr;	// never owner
+template <class>	class never_const_ptr;	// never owner
+template <class>	class dynconst_ptr;	// dynamic const-ness
 
 // never is a bad name...
 // never_const is always const!
@@ -105,12 +105,12 @@ virtual	bool owned(void) const = 0;
  */
 template <class T>
 class base_ptr : public abstract_ptr {
-friend class excl_ptr<T>;
-friend class never_ptr<T>;
-friend class excl_const_ptr<T>;
-friend class never_const_ptr<T>;
-friend class some_ptr<T>;
-friend class some_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class never_ptr;
+template <class> friend class excl_const_ptr;
+template <class> friend class never_const_ptr;
+template <class> friend class some_ptr;
+template <class> friend class some_const_ptr;
 
 protected:
 	T*	ptr;
@@ -176,10 +176,10 @@ virtual	bool owned(void) const = 0;
  */
 template <class T>
 class base_const_ptr : public abstract_ptr {
-friend class never_ptr<T>;
-friend class never_const_ptr<T>;
-friend class some_ptr<T>;
-friend class some_const_ptr<T>;
+template <class> friend class never_ptr;
+template <class> friend class never_const_ptr;
+template <class> friend class some_ptr;
+template <class> friend class some_const_ptr;
 
 protected:
 	const T*	cptr;
@@ -287,11 +287,12 @@ struct base_some_const_ptr_ref {
  */
 template <class T>
 class excl_ptr : public virtual base_ptr<T> {
-friend class excl_const_ptr<T>;
-friend class never_ptr<T>;
-friend class never_const_ptr<T>;
-friend class some_ptr<T>;
-friend class some_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class excl_const_ptr;
+template <class> friend class never_ptr;
+template <class> friend class never_const_ptr;
+template <class> friend class some_ptr;
+template <class> friend class some_const_ptr;
 
 protected:
 /**
@@ -411,6 +412,15 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		return *this;
 	}
 
+#if 0
+// might be problem
+	template <class S>
+	operator excl_ptr<S>& () throw() {
+		static_cast<S*>(this->ptr);	// safety check
+		return reinterpret_cast<excl_ptr<S>&>(*this);
+	}
+#endif
+
 	// destructive transfer to up-cast
 	template <class S>
 	operator excl_ptr<S> () throw() {
@@ -449,12 +459,21 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
 		Destructive transfer, safe up-cast.  
 		constructor probably not available yet...
 	 */
+#if 0
+	template <class S>
+	excl_ptr<S>&	as_a(void) {
+		static_cast<S*>(this->ptr);	// safety check
+			// potentially dangerous
+		return reinterpret_cast<excl_ptr<S>&>(*this);
+	}
+#else	// old, can't overload
 	template <class S>
 	excl_ptr<S>	as_a(void) {
 		return excl_ptr<S>(static_cast<S*>(this->release()));
 			// shouldn't be necessary to static_cast
 			// but this make it clear what it's intended for
 	}
+#endif
 
 // permissible assignments
 
@@ -475,10 +494,8 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
  */
 template <class T>
 class excl_const_ptr : public virtual base_const_ptr<T> {
-// friend class excl_ptr<T>;
-// friend class never_ptr<T>;
-friend class never_const_ptr<T>;
-friend class some_const_ptr<T>;
+template <class> friend class never_const_ptr;
+template <class> friend class some_const_ptr;
 
 protected:
 const T*	release(void) throw() {
@@ -621,9 +638,9 @@ never_const_ptr<S>	is_a(void) const;
  */
 template <class T>
 class never_ptr : public virtual base_ptr<T> {
-friend class excl_ptr<T>;
-friend class excl_const_ptr<T>;
-friend class never_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class excl_const_ptr;
+template <class> friend class never_const_ptr;
 
 public:
 // protected:
@@ -669,7 +686,7 @@ explicit never_ptr(void) throw() : base_ptr<T>(NULL) { }
 /*** cross-template member not friendly accessible (p is protected)
 template <class S>
 explicit never_ptr(const excl_ptr<S>& p) throw() : 
-		base_ptr<T>(dynamic_cast<T*>(p.unprotected_ptr())) { }
+		base_ptr<T>(dynamic_cast<T*>(p.ptr)) { }
 ***/
 
 virtual	~never_ptr() { }
@@ -677,6 +694,13 @@ virtual	~never_ptr() { }
 // also want cross-type versions?
 never_ptr<T>& operator = (const base_ptr<T>& e) throw() {
 		this->ptr = e.ptr;
+		return *this;
+	}
+
+/** safe up-cast */
+template <class S>
+never_ptr<T>& operator = (const base_ptr<S>& e) throw() {
+		this->ptr = e.ptr;	// static up-cast
 		return *this;
 	}
 
@@ -731,9 +755,9 @@ never_ptr<T>& operator = (const base_ptr<T>& e) throw() {
  */
 template <class T>
 class never_const_ptr : public virtual base_const_ptr<T> {
-friend class excl_ptr<T>;
-friend class never_ptr<T>;
-friend class excl_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class never_ptr;
+template <class> friend class excl_const_ptr;
 
 public:
 /**
@@ -852,10 +876,10 @@ never_const_ptr<T>& operator = (const base_const_ptr_ref<T> r) throw() {
  */
 template <class T>
 class some_ptr : public virtual base_ptr<T> {
-friend class excl_ptr<T>;
-friend class excl_const_ptr<T>;
-friend class never_ptr<T>;
-friend class never_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class excl_const_ptr;
+template <class> friend class never_ptr;
+template <class> friend class never_const_ptr;
 
 protected:
 	bool	own;
@@ -999,10 +1023,10 @@ some_ptr<T>& operator = (base_some_ptr_ref<T> r) throw() {
  */
 template <class T>
 class some_const_ptr : public virtual base_const_ptr<T> {
-friend class excl_ptr<T>;
-friend class excl_const_ptr<T>;
-friend class never_ptr<T>;
-friend class never_const_ptr<T>;
+template <class> friend class excl_ptr;
+template <class> friend class excl_const_ptr;
+template <class> friend class never_ptr;
+template <class> friend class never_const_ptr;
 
 protected:
 	bool	own;

@@ -11,6 +11,7 @@
 #include <list>
 
 #include "ptrs.h"
+#include "count_ptr.h"
 
 namespace ART {
 
@@ -105,7 +106,6 @@ protected:
 			are modifiable.  
 	 */
 	stack<never_ptr<name_space> >	namespace_stack;
-//	stack<name_space*>	namespace_stack;
 #define current_namespace	namespace_stack.top()
 
 	/**
@@ -115,7 +115,6 @@ protected:
 		only one definition can be open at a time.  
 	 */
 	never_ptr<definition_base>	current_open_definition;
-//	definition_base*	current_open_definition;
 
 	/**
 		Flag that indicates whether or not we are declaring
@@ -133,14 +132,12 @@ protected:
 		template parameters to form a type reference (below).  
 	 */
 	never_const_ptr<definition_base>	current_definition_reference;
-//	const definition_base*		current_definition_reference;
 
 	/**
 		Pointer to the concrete type to instantiate.  
 	 */
 	never_const_ptr<fundamental_type_reference>
 						current_fundamental_type;
-//	const fundamental_type_reference*	current_fundamental_type;
 
 	/**
 		Instance(s) referenced to connect.  
@@ -149,7 +146,6 @@ protected:
 	 */
 	never_const_ptr<instance_reference_base>
 						current_instance_to_connect;
-//	const instance_reference_base*	current_instance_to_connect;
 
 	/**
 		List of parameter expressions to use as template
@@ -163,7 +159,6 @@ protected:
 		Remember to search this list for parameters that depend on
 		other parameters, such as in the case of array dimensions.  
 	 */
-//	template_param_list*		current_template_arguments;
 	excl_ptr<template_param_list>		current_template_arguments;
 
 	// need current_blah_inst for array/dimension/range additions
@@ -177,8 +172,26 @@ protected:
 		Remember to push NULL initially.  
 	 */
 	stack<never_ptr<scopespace> >	dynamic_scope_stack;
-//	stack<scopespace*>		dynamic_scope_stack;
 #define	current_dynamic_scope		dynamic_scope_stack.top()
+
+	/**
+		Stack of references to instances.  
+		These instance references are newly constructed, 
+		thus we use acquire and release exclusive ownership.  
+		We use count_const_ptr because of copy-constructibility.  
+	 */
+	stack<count_const_ptr<instance_reference_base> >
+					instance_reference_stack;
+// #define	current_instance_reference	instance_reference_stack.top();
+// will this be destructive? yes unless, explicit const reference cast...
+
+	/**
+		Expression stack.
+		These instance references are newly constructed, 
+		thus we use acquire and release exclusive ownership.  
+		We use count_const_ptr because of copy-constructibility.  
+	 */
+	stack<count_const_ptr<param_expr> >	expression_stack;
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -190,7 +203,6 @@ public:
 		Can this be modified inadvertently?
 	 */
 	const never_const_ptr<name_space>	global_namespace;
-//	const name_space*	global_namespace;
 
 
 public:
@@ -204,7 +216,7 @@ void	open_namespace(const token_identifier& id);
 void	close_namespace(void);
 void	using_namespace(const qualified_id& id);
 void	alias_namespace(const qualified_id& id, const string& a);
-const name_space*	top_namespace(void) const;
+never_const_ptr<name_space>	top_namespace(void) const;
 
 void	declare_process(const token_identifier& ps);
 void	open_process(const token_identifier& ps);
@@ -222,7 +234,6 @@ void	close_chantype_definition();
 never_const_ptr<scopespace>	get_current_scope(void) const;
 never_ptr<scopespace>		get_current_scope(void);
 
-// const name_space*
 never_const_ptr<name_space>
 			get_current_namespace(void) const {
 				return current_namespace;
@@ -231,14 +242,12 @@ never_const_ptr<name_space>
 /**
 	Note: non-const because of destructive transfer.
  */
-// template_param_list*	
-excl_ptr<template_param_list>	
+excl_ptr<template_param_list>&
 			get_current_template_arguments(void) {
 				return current_template_arguments;
 			}
 
 // sets context's definition for instantiation
-// const definition_base*	
 never_const_ptr<definition_base>	
 			get_current_definition_reference(void) const
 				{ return current_definition_reference; }
@@ -246,51 +255,37 @@ never_const_ptr<definition_base>
 /**
 	To do: change prototype to use pointer class.  
  */
-// const definition_base*
 never_const_ptr<definition_base>
 		set_current_definition_reference(const definition_base& d) {
 			current_definition_reference = 
 				never_const_ptr<definition_base>(&d);
 			return current_definition_reference;
 		}
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 			get_current_fundamental_type(void) const
 				{ return current_fundamental_type; }
 
-// const datatype_definition*	get_current_datatype_definition(void) const;
 never_const_ptr<datatype_definition>	get_current_datatype_definition(void) const;
 
 	// for keyword: int or bool
-// const datatype_definition*	set_datatype_def(const token_datatype& tid);
 never_const_ptr<datatype_definition>	set_datatype_def(const token_datatype& tid);
 	// set template argument separately!
-// const datatype_definition*	set_inst_data_def(const datatype_definition& );
 	// need to assert(!inst_data_type_ref)?
-// const data_type_reference*	set_inst_data_type_ref(const data_type_reference& dr);
 
 // should be called by parser after done using definitions
 void	reset_current_definition_reference(void);
 void	reset_current_fundamental_type(void);
 
-// const built_in_param_def*	get_current_param_definition(void) const;
-never_const_ptr<built_in_param_def>	get_current_param_definition(void) const;
-// const built_in_param_def*	set_inst_param_def(const built_in_param_def& );
-// const param_type_reference*	set_inst_param_type_ref(const param_type_reference& pr);
-// const built_in_param_def*	set_param_def(const token_paramtype& pt);
-never_const_ptr<built_in_param_def>	set_param_def(const token_paramtype& pt);
-// const param_type_reference*	set_param_type_ref(...);
-// void	unset_paramtype_def(void);
+never_const_ptr<built_in_param_def>
+				get_current_param_definition(void) const;
+never_const_ptr<built_in_param_def>
+				set_param_def(const token_paramtype& pt);
 
-// const channel_definition*	get_current_channel_definition(void) const;
-never_const_ptr<channel_definition>	get_current_channel_definition(void) const;
-// const channel_definition*	set_inst_chan_def(const channel_definition& );
-// const channel_type_reference*	set_inst_chan_type_ref(const channel_type_reference& cr);
+never_const_ptr<channel_definition>
+				get_current_channel_definition(void) const;
 
-// const process_definition*	get_current_process_definition(void) const;
-never_const_ptr<process_definition>	get_current_process_definition(void) const;
-// const process_definition*	set_inst_proc_def(const process_definition& );
-// const process_type_reference*	set_inst_proc_type_ref(const process_type_reference& pr);
+never_const_ptr<process_definition>
+				get_current_process_definition(void) const;
 
 // to be called from parser's check_build
 never_const_ptr<fundamental_type_reference>
@@ -299,23 +294,9 @@ never_const_ptr<fundamental_type_reference>
 never_const_ptr<fundamental_type_reference>
 	set_current_fundamental_type(const fundamental_type_reference& tr);
 
-/**
-	\param tl is newly allocated template paramater list.  
- */
-void	set_current_template_arguments(template_param_list& tl) {
-			assert(!current_template_arguments);
-			current_template_arguments =
-				excl_ptr<template_param_list>(&tl);
-		}
+void	set_current_template_arguments(excl_ptr<template_param_list>& tl);
 void	reset_current_template_arguments(void);
 
-#if 0
-const object*		lookup_object(const qualified_id& id) const;
-const definition_base*	lookup_definition(const token_identifier& id) const;
-const definition_base*	lookup_definition(const qualified_id& id) const;
-const instantiation_base* lookup_instance(const token_identifier& id) const;
-const instantiation_base* lookup_instance(const qualified_id& id) const;
-#endif
 never_const_ptr<object>	lookup_object(const qualified_id& id) const;
 never_const_ptr<definition_base>
 			lookup_definition(const token_identifier& id) const;
@@ -326,14 +307,19 @@ never_const_ptr<instantiation_base>
 never_const_ptr<instantiation_base>
 			lookup_instance(const qualified_id& id) const;
 
-const instantiation_base*	add_instance(const token_identifier& id);
-// const?
-// datatype_instantiation*	add_datatype_instance(const token_identifier& id);
-	// make another version overloaded for arrays
-// param_instantiation*	add_paramtype_instance(const token_identifier& id);
+never_const_ptr<instantiation_base>
+			add_instance(const token_identifier& id);
 
 const datatype_instantiation*	add_template_formal(const token_identifier& id);
 
+void	push_instance_reference_stack(
+			count_const_ptr<instance_reference_base> i);
+count_const_ptr<instance_reference_base>
+		pop_top_instance_reference_stack(void);
+
+void	push_expression_stack(count_const_ptr<param_expr> i);
+count_const_ptr<param_expr>
+		pop_top_expression_stack(void);
 
 // repeat for processes and channels...
 

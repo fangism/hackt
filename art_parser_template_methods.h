@@ -113,9 +113,9 @@ node_list_base<T>::what(ostream& o) const {
 		The context object collects the necessary error information.  
  */
 NODE_LIST_BASE_TEMPLATE_SPEC
-const object*
-node_list_base<T>::check_build(context* c) const {
-	const object* ret = NULL;
+never_const_ptr<object>
+node_list_base<T>::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> ret(NULL);
 	const_iterator i = begin();
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent() <<

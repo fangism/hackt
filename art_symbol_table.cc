@@ -37,6 +37,8 @@ context::context(never_ptr<name_space> g) :
 		current_template_arguments(NULL), 
 		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
+		instance_reference_stack(), 
+		expression_stack(), 
 		global_namespace(g) {
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -44,7 +46,15 @@ context::context(never_ptr<name_space> g) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	dynamic_scope_stack.push(never_ptr<scopespace>(NULL));
-		// else top() will seg-fault
+	{
+	count_const_ptr<instance_reference_base> bogus;
+	instance_reference_stack.push(bogus);
+	}
+	{
+	count_const_ptr<param_expr> bogus;
+	expression_stack.push(bogus);
+	}
+	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
 	assert(current_namespace);	// make sure allocated properly
@@ -233,10 +243,9 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 	Peeks at the top of the namespace stack.  
 	\return pointer at the top of the namespace stack.  
  */
-const name_space*
+never_const_ptr<name_space>
 context::top_namespace(void) const {
-//	return current_namespace;
-	return current_namespace.unprotected_const_ptr();	// temp
+	return current_namespace;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -505,6 +514,20 @@ context::set_current_fundamental_type(const fundamental_type_reference& tr) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the current template arguments in a list.  
+	\param tl is newly allocated template paramater list.
+ */
+void
+context::set_current_template_arguments(excl_ptr<template_param_list>& tl) {
+	assert(!current_template_arguments);
+	current_template_arguments = tl;
+	assert(current_template_arguments);
+	assert(!tl);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
 	return get_current_scope()->lookup_object(id);
@@ -590,7 +613,8 @@ context::get_current_scope(void) {
 	Adds an instance of the current_fundamental_type
 	to the current_scope.  
  */
-const instantiation_base*
+// const instantiation_base*
+never_const_ptr<instantiation_base>
 context::add_instance(const token_identifier& id) {
 	assert(current_fundamental_type);
 	never_ptr<scopespace> current_scope = get_current_scope();
@@ -618,6 +642,19 @@ context::add_template_formal(const token_identifier& id) {
 #else
 	return NULL;
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::push_instance_reference_stack(
+		count_const_ptr<instance_reference_base> i) {
+	instance_reference_stack.push(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::push_expression_stack(count_const_ptr<param_expr> e) {
+	expression_stack.push(e);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -128,10 +128,12 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
-const object*
-token_int::check_build(context* c) const {
+never_const_ptr<object>
+token_int::check_build(never_ptr<context> c) const {
 	cerr << "token_int::check_build(): not quite done yet!" << endl;
-	return new param_const_int(val);
+	count_const_ptr<param_expr> pe(new param_const_int(val));
+	c->push_expression_stack(pe);
+	return never_const_ptr<object>(NULL);
 }
 
 
@@ -173,10 +175,10 @@ token_float::rightmost(void) const {
 /**
 	Need built-in float type first.  
  */
-const object*
-token_float::check_build(context* c) const {
+never_const_ptr<object>
+token_float::check_build(never_ptr<context> c) const {
 	cerr << "token_float::check_build(): not quite done yet!" << endl;
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -240,16 +242,15 @@ token_identifier::rightmost(void) const {
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
-const object*
-token_identifier::check_build(context* c) const {
+never_const_ptr<object>
+token_identifier::check_build(never_ptr<context> c) const {
 //	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_identifier::check_build(...): FINISH ME!";
 //	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	return c->lookup_instance(*this).unprotected_const_ptr();
-//	return c->lookup_instance(*this);
+	return c->lookup_instance(*this);
 }
 
 //=============================================================================
@@ -296,10 +297,13 @@ line_position
 token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
-const object*
-token_bool::check_build(context* c) const {
+never_const_ptr<object>
+token_bool::check_build(never_ptr<context> c) const {
 	cerr << "token_bool::check_build(): not quite done yet!" << endl;
-	return new param_const_bool(strcmp(c_str(),"true") == 0);
+	count_const_ptr<param_expr> pe(
+		new param_const_bool(strcmp(c_str(),"true") == 0));
+	c->push_expression_stack(pe);
+	return never_const_ptr<object>(NULL);
 }
 
 
@@ -334,10 +338,10 @@ token_else::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-const object*
-token_else::check_build(context* c) const {
+never_const_ptr<object>
+token_else::check_build(never_ptr<context> c) const {
 	cerr << "token_else::check_build(): Don't call me!";
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -370,10 +374,10 @@ token_quoted_string::rightmost(void) const {
 /**
 	Can't do this until we have a built-in type for strings.  
  */
-const object*
-token_quoted_string::check_build(context* c) const {
+never_const_ptr<object>
+token_quoted_string::check_build(never_ptr<context> c) const {
 	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -409,14 +413,13 @@ token_datatype::what(ostream& o) const {
 	return o << "datatype: " << AS_A(const string&, *this);
 }
 
-const object*
-token_datatype::check_build(context* c) const {
+never_const_ptr<object>
+token_datatype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_datatype::check_build(...): ";
 	)
-	return c->set_datatype_def(*this).unprotected_const_ptr();
-//	return c->set_datatype_def(*this);
+	return c->set_datatype_def(*this);
 }
 
 //=============================================================================
@@ -433,14 +436,13 @@ token_paramtype::what(ostream& o) const {
 	return o << "paramtype: " << AS_A(const string&, *this);
 }
 
-const object*
-token_paramtype::check_build(context* c) const {
+never_const_ptr<object>
+token_paramtype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_paramtype::check_build(...): ";
 	)
-	return c->set_param_def(*this).unprotected_const_ptr();
-//	return c->set_param_def(*this);
+	return c->set_param_def(*this);
 }
 
 //=============================================================================

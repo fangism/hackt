@@ -5,7 +5,7 @@
 
 #include <iosfwd>
 #include <string>
-#include <stack>
+#include <deque>
 
 #include "art_macros.h"
 
@@ -59,6 +59,9 @@ using namespace fang;		// for experimental pointer classes
 
 class scopespace;
 class name_space;
+class loop_scope;
+class conditional_scope;
+
 class definition_base;
 class channel_definition;
 class datatype_definition;
@@ -88,7 +91,28 @@ class param_instance_reference;
 
 // from "art_object_expr.h"
 class param_expr;
-typedef	list<never_const_ptr<param_expr> >	array_dim_list;
+
+typedef	never_const_ptr<param_expr>			param_expr_ptr_type;
+typedef	pair<param_expr_ptr_type, param_expr_ptr_type>	param_range_type;
+
+typedef	pair<int, int>					static_range_type;
+
+/**
+	Array dimensions are specified as a list of parameter expressions.
+	Range expressions also allowed.
+	Expressions may contain other literals referring to other parameters,
+	and need not necessarily be constants.
+	Non-constants will be checked at instantiation time.
+	Elements should be param_expr (owned pointers).
+ */
+typedef	list<param_range_type>				array_index_list;
+
+/**
+	Array (range) dimensions resolved to static constants.  
+	\sa make_static_array_index_list
+ */
+typedef	list<static_range_type>				static_array_index_list;
+
 
 /**
 	The container type for template parameters.  
@@ -99,8 +123,20 @@ typedef	list<never_const_ptr<param_expr> >	array_dim_list;
 	(even fancier) other template arguments.  
 	These parameter expressions are not owned!  
  */
-typedef	list<never_const_ptr<param_expr> >	template_param_list;
+typedef	list<param_expr_ptr_type>			template_param_list;
 
+
+//=============================================================================
+// general non-member functions
+
+/**
+	Attempts to resolve a list of range expressions into constants.  
+	\param a the unresolved list of range expressions.
+	\return newly constructed list of constant index ranges, 
+		if possible, else NULL.  
+ */
+excl_const_ptr<static_array_index_list>
+	make_static_array_index_list(const array_index_list& a);
 
 //=============================================================================
 /// the root object type
@@ -181,21 +217,23 @@ public:
  */
 class instance_collection_stack_item {
 protected:
+	never_const_ptr<instantiation_base>	owner;
 public:
+	instance_collection_stack_item() { }
 virtual	~instance_collection_stack_item() { }
 
 /**
 	Query whether or not there is definite overlap with
 	this item.  
 	\return Conservatively returns false for dynamic instances.  
- */
 virtual	bool definite_overlap(void) const = 0;
+**/
 
 /**
 	Resolve at unroll time, all parameters must be bound to 
 	known constants.  
- */
 virtual	bool final_resolve(void) const = 0;
+**/
 
 };	// end class instance_collection_stack_item
 
@@ -208,9 +246,11 @@ class static_collection_addition : public instance_collection_stack_item {
 protected:
 	typedef	instance_collection_stack_item		parent;
 protected:
-	list<pair<int, int> >				indices;
+	excl_const_ptr<static_array_index_list>		indices;
 public:
-	static_collection_addition() : parent() { }
+	static_collection_addition(excl_const_ptr<static_array_index_list>& i)
+		: parent(), indices(i) { }
+	// no copy-constructor
 	~static_collection_addition() { }
 
 };	// end class static_collection_addition
@@ -220,10 +260,16 @@ public:
 	A collection addition whose indices contain references to 
 	template formal parameters, that cannot be determined at
 	compile-time.  
+	Some parameter expressions may be constants, of course.  
  */
 class dynamic_collection_addition : public instance_collection_stack_item {
 protected:
+	typedef	instance_collection_stack_item		parent;
+protected:
+	list<param_range_type>				indices;
 public:
+	dynamic_collection_addition() : parent(), indices() { }
+	~dynamic_collection_addition() { }
 
 };	// end class dynamic_collection_addition
 
@@ -234,6 +280,8 @@ public:
 	May be static or dynamic.  
  */
 class loop_collection_addition : public instance_collection_stack_item {
+protected:
+	typedef	instance_collection_stack_item		parent;
 protected:
 //	never_const_ptr<loop_scope>		body;
 
@@ -247,11 +295,14 @@ protected:
  */
 class conditional_collection_addition : public instance_collection_stack_item {
 protected:
+	typedef	instance_collection_stack_item		parent;
+protected:
 //	never_const_ptr<conditional_scope>	body;
 
 };	// end class conditional_collection_addition
 
 //=============================================================================
+#if 0
 /**
 	THIS IS PREMATURE.
 	Need to establish the idea of a collection stack that
@@ -292,6 +343,7 @@ public:
 
 
 };	// end class sparse_index_collection
+#endif
 
 //=============================================================================
 /**
@@ -398,8 +450,8 @@ virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) cons
 
 virtual	never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
 
-virtual	const instantiation_base*
-			add_instance(instantiation_base& i);
+virtual	never_const_ptr<instantiation_base>
+			add_instance(excl_ptr<instantiation_base> i);
 
 };	// end class scopespace
 
@@ -521,19 +573,42 @@ void	find_namespace_starting_with(namespace_list& m,
 };	// end class name_space
 
 //=============================================================================
-#if 0
 /**
-	Scope of a loop construct.  
+	Scope of a loop body.  
+	Notes: Instances in loop bodies will register sparse collections
+	in the parent definition scope, but track indices in this scope.  
+	Q: how should this be kept in the enclosing scope?
+		in hash_map or in some ordered list?
+	Q: should contents (instantiations) be kept ordered?
+	Q: derive from dynamic_scope?
  */
 class loop_scope : public scopespace {
+protected:
+	// should have modifiable pointer to parent scope?
+	// induction variable
+	// range expression
+public:
+	/** what about name of scope? */
+	loop_scope(const string& n, never_const_ptr<scopespace>);
+		// more args...
+	~loop_scope();
 
 };	// end class loop_scope
 
 //=============================================================================
+/**
+	Scope of a conditional body.  
+	Should this be some list?
+ */
 class conditional_scope : public scopespace {
+protected:
+	// condition expression
+public:
+	conditional_scope(const string& n, never_const_ptr<scopespace>);
+		// more args...
+	~conditional_scope();
 
 };	// end class conditional_scope
-#endif
 
 //=============================================================================
 /**
@@ -637,12 +712,18 @@ protected:
 		REPLACE this with a hierarchical dimension tree!
 		of expressions, mostly constants, some unresolved.  
 		Multidimensional and sparse arrays.  
+
+		Needs to be a grown stack of instances, because
+		of changing collection.  
+		Needs to be a deque so we can use iterators.  
 	 */
-	excl_ptr<sparse_index_collection>	index_collection;
-//	excl_ptr<array_dim_list>	array_dimensions;
+//	excl_ptr<sparse_index_collection>	index_collection;
+	deque<count_const_ptr<instance_collection_stack_item> >
+					index_collection;
+//	excl_ptr<array_index_list>	array_dimensions;
 
 	/**
-		Dimensions.  
+		Dimensions, >= 0, limit is 4.  
 		Once set, is fixed.  
 	 */
 	size_t	depth;
@@ -650,7 +731,7 @@ protected:
 public:
 	// o should be reference, not pointer
 	instantiation_base(const scopespace& o, const string& n, 
-		array_dim_list* d = NULL);
+		const array_index_list* d = NULL);
 virtual	~instantiation_base();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -661,10 +742,11 @@ virtual	string hash_string(void) const { return key; }
 
 virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
-virtual	instance_reference_base* make_instance_reference(context& c) const = 0;
+virtual	never_const_ptr<instance_reference_base>
+		make_instance_reference(context& c) const = 0;
 
 // new concept
-//	void set_array_dimensions(excl_ptr<array_dim_list> d);
+//	void set_array_dimensions(excl_ptr<array_index_list> d);
 
 	bool array_dimension_match(const instantiation_base& i) const;
 
@@ -721,7 +803,8 @@ virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 	// i.e. whether parameter is resolved to a scope's formal
 	bool is_dynamically_parameter_dependent(void) const;
 
-virtual const instantiation_base* add_instance_to_scope(scopespace& s, 
+virtual never_const_ptr<instantiation_base>
+		add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const = 0;
 
 // TO DO: type equivalence relationship
@@ -739,10 +822,10 @@ class collective_type_reference : public type_reference_base {
 protected:
 	// don't own these members
 	never_const_ptr<type_reference_base>	base;
-	never_const_ptr<array_dim_list>		dim;
+	never_const_ptr<array_index_list>		dim;
 public:
 	collective_type_reference(const type_reference_base& b, 
-		never_const_ptr<array_dim_list> d);
+		never_const_ptr<array_index_list> d);
 	~collective_type_reference();
 
 	ostream& what(ostream& o) const;
@@ -770,7 +853,8 @@ virtual	~data_type_reference();
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-	const instantiation_base* add_instance_to_scope(scopespace& s, 
+	never_const_ptr<instantiation_base>
+		add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class data_type_reference
 
@@ -794,7 +878,8 @@ virtual	~channel_type_reference();
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-	const instantiation_base* add_instance_to_scope(scopespace& s, 
+	never_const_ptr<instantiation_base>
+		add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class channel_type_reference
 
@@ -819,7 +904,8 @@ virtual	~process_type_reference();
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-	const instantiation_base* add_instance_to_scope(scopespace& s, 
+	never_const_ptr<instantiation_base>
+		add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class process_type_reference
 
@@ -843,7 +929,8 @@ virtual	~param_type_reference();
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-	const instantiation_base* add_instance_to_scope(scopespace& s, 
+	never_const_ptr<instantiation_base>
+		add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const;
 };	// end class param_type_reference
 
@@ -1066,7 +1153,8 @@ public:
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-	instance_reference_base* make_instance_reference(context& c) const;
+	never_const_ptr<instance_reference_base>
+		make_instance_reference(context& c) const;
 };	// end class process_instantiation
 
 //=============================================================================
@@ -1268,7 +1356,8 @@ virtual	ostream& what(ostream& o) const;
 virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 	bool equals_template_formal(const template_formal_decl& tf) const;
-virtual	instance_reference_base* make_instance_reference(context& c) const;
+virtual	never_const_ptr<instance_reference_base>
+		make_instance_reference(context& c) const;
 };	// end class datatype_instantiation
 
 //=============================================================================
@@ -1287,7 +1376,8 @@ virtual	~channel_instantiation();
 
 virtual	ostream& what(ostream& o) const;
 virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-virtual	instance_reference_base* make_instance_reference(context& c) const;
+virtual	never_const_ptr<instance_reference_base>
+		make_instance_reference(context& c) const;
 };	// end class channel_instantiation
 
 //=============================================================================
@@ -1323,7 +1413,8 @@ public:
 	ostream& what(ostream& o) const;
 
 	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-	instance_reference_base* make_instance_reference(context& c) const;
+	never_const_ptr<instance_reference_base>
+		make_instance_reference(context& c) const;
 
 	void initialize(excl_const_ptr<param_expr> e);
 

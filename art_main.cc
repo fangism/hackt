@@ -26,7 +26,7 @@ extern "C" {
 
 int main(int argc, char* argv[]) {
 	excl_ptr<parser::node> root;		///< root of the syntax tree
-	const entity::object* top = NULL;	///< root type-checked object
+	never_const_ptr<entity::object> top;	///< root type-checked object
 	excl_ptr<entity::name_space> global(new name_space(""));
 	excl_ptr<parser::context> the_context(new context(global));
 
@@ -45,9 +45,7 @@ DEBUG(DEBUG_BASIC,
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
-	// global = new context();
-	top = root->check_build(the_context.unprotected_ptr());	// temporary
-//	top = root->check_build(the_context);
+	top = root->check_build(the_context);
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 

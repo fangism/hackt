@@ -20,16 +20,6 @@ using std::string;
 // class forward declarations
 class param_instantiation;
 
-/**
-	Array dimensions are specified as a list of parameter expressions.  
-	Range expressions also allowed.
-	Expressions may contain other literals referring to other parameters,
-	and need not necessarily be constants.
-	Non-constants will be checked at instantiation time.
-	Elements should be param_expr (owned pointers).
- */
-typedef list<never_const_ptr<param_expr> >		array_dim_list;
-
 //============================================================================= 
 /**
 	Abstract base class for symbolic expressions to be written 
@@ -45,6 +35,12 @@ virtual	~param_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;		// temporary
 virtual	string hash_string(void) const = 0;
+
+virtual bool is_static_constant(void) const { return false; }
+virtual int static_constant_int(void) const { assert(0); return -666; }
+virtual bool static_constant_bool(void) const { assert(0); return false; }
+virtual bool is_loop_independent(void) const { return false; }
+virtual bool is_unconditional(void) const { return false; }
 };	// end class param_expr
 
 //-----------------------------------------------------------------------------
@@ -80,6 +76,8 @@ public:
 
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	// implement later.
+	bool is_static_constant(void) const { return false; }
 };	// end class param_literal
 
 //-----------------------------------------------------------------------------
@@ -95,6 +93,8 @@ public:
 	~param_const_int() { }
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	bool is_static_constant(void) const { return true; }
+	int static_constant_int(void) const { return val; }
 };	// end class param_const_int
 
 //-----------------------------------------------------------------------------
@@ -109,6 +109,8 @@ public:
 	~param_const_bool() { }
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	bool is_static_constant(void) const { return true; }
+	bool static_constant_bool(void) const { return val; }
 };	// end class param_const_bool
 
 //-----------------------------------------------------------------------------
@@ -126,6 +128,7 @@ public:
 	~param_unary_expr() { }
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	bool is_static_constant(void) const { return ex->is_static_constant(); }
 };	// end class param_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -144,6 +147,9 @@ public:
 	~param_binary_expr() { }
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	bool is_static_constant(void) const {
+		return lx->is_static_constant() && rx->is_static_constant();
+	}
 };	// end class param_binary_expr
 
 //=============================================================================

@@ -5,7 +5,7 @@
 # to use this, redirect the stderr of make into this script
 # e.g make |& <script>
 
-/^.*\.cc: In/ { i\
+/^.*\..*cc: In/ { i\
 \
 --------------------------------- new error -----------------------------------\
 
@@ -17,7 +17,19 @@
 
 }
 
-/^.*\.cc: error: prototype.*/ { i\
+/^.*\.cc: error: prototype/ { i\
+\
+--------------------------------- new error -----------------------------------\
+
+}
+
+/^.*\..*cc:[0-9]+: error: no matching function for call/ { i\
+\
+--------------------------------- new error -----------------------------------\
+
+}
+
+/^In file included from/ { i\
 \
 --------------------------------- new error -----------------------------------\
 

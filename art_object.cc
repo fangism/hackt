@@ -62,6 +62,37 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+// general non-member function definitions
+
+// TO DO: give useful error messages on failure
+excl_const_ptr<static_array_index_list>
+make_static_array_index_list(const array_index_list& a) {
+	excl_ptr<static_array_index_list>
+		ret(new static_array_index_list);
+	array_index_list::const_iterator i = a.begin();
+	for ( ; i!=a.end(); i++) {
+		assert(i->first);	// else bad arg!
+		if (!i->first->is_static_constant())	// return NULL
+			return excl_const_ptr<static_array_index_list>();
+		if (i->second) {	// N..M
+			if (!i->second->is_static_constant())	// return NULL
+				return excl_const_ptr<static_array_index_list>();
+			int min = i->first->static_constant_int();
+			int max = i->second->static_constant_int();
+			if (max >= min)
+				ret->push_back(static_range_type(min, max));
+			else return excl_const_ptr<static_array_index_list>();
+		} else {		// N equiv. 0..N-1
+			int max = i->first->static_constant_int();
+			if (max > 0)
+				ret->push_back(static_range_type(0, max -1));
+			else return excl_const_ptr<static_array_index_list>();
+		}
+	}
+	return excl_const_ptr<static_array_index_list>(ret);
+}
+
+//=============================================================================
 // class object_handle method definitions
 
 ostream&
@@ -75,6 +106,7 @@ object_handle::dump(ostream& o) const {
 }
 
 //=============================================================================
+#if 0
 // class sparse_index_collection method definitions
 
 sparse_index_collection::sparse_index_collection(const int dim) :
@@ -85,6 +117,7 @@ sparse_index_collection::sparse_index_collection(const int dim) :
 }
 
 sparse_index_collection::~sparse_index_collection() { }
+#endif
 
 //=============================================================================
 // class scopespace method definitions
@@ -191,10 +224,12 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-const instantiation_base*
-scopespace::add_instance(instantiation_base& i) {
-	used_id_map[i.get_name()] = excl_ptr<instantiation_base>(&i);
-	return &i;
+// const instantiation_base*
+never_const_ptr<instantiation_base>
+scopespace::add_instance(excl_ptr<instantiation_base> i) {
+	never_const_ptr<instantiation_base> ret(i);
+	used_id_map[i->get_name()] = i;
+	return ret;
 }
 
 //=============================================================================
@@ -1157,7 +1192,7 @@ fundamental_type_reference::set_context_type_reference(context& c) const {
 
 collective_type_reference::collective_type_reference(
 		const type_reference_base& b, 
-		never_const_ptr<array_dim_list> d) :
+		never_const_ptr<array_index_list> d) :
 		type_reference_base(), base(&b), dim(d) {
 }
 
@@ -1219,7 +1254,8 @@ data_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-const instantiation_base*
+// const instantiation_base*
+never_const_ptr<instantiation_base>
 data_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
@@ -1228,13 +1264,13 @@ data_type_reference::add_instance_to_scope(scopespace& s,
 	if (probe) {
 		probe->what(cerr << id << " is already declared ") <<
 			", ERROR! " << id.where() << endl;
-		return NULL;
+		return never_const_ptr<instantiation_base>(NULL);
 	}
 	// else proceed
-	datatype_instantiation* di = 
-		new datatype_instantiation(s, *this, id);
+	excl_ptr<datatype_instantiation> di(
+		new datatype_instantiation(s, *this, id));
 	assert(di);
-	return s.add_instance(*di);
+	return s.add_instance(di.as_a<instantiation_base>());
 }
 
 //=============================================================================
@@ -1286,14 +1322,15 @@ channel_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-const instantiation_base*
+// const instantiation_base*
+never_const_ptr<instantiation_base>
 channel_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
-	channel_instantiation* ci = 
-		new channel_instantiation(s, *this, id);
+	excl_ptr<channel_instantiation> ci(
+		new channel_instantiation(s, *this, id));
 	assert(ci);
-	return s.add_instance(*ci);
+	return s.add_instance(ci.as_a<instantiation_base>());
 }
 
 //=============================================================================
@@ -1340,14 +1377,15 @@ process_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-const instantiation_base*
+// const instantiation_base*
+never_const_ptr<instantiation_base>
 process_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
-	process_instantiation* ci = 
-		new process_instantiation(s, *this, id);
+	excl_ptr<process_instantiation> ci(
+		new process_instantiation(s, *this, id));
 	assert(ci);
-	return s.add_instance(*ci);
+	return s.add_instance(ci.as_a<instantiation_base>());
 }
 
 //=============================================================================
@@ -1385,30 +1423,68 @@ param_type_reference::get_base_def(void) const {
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-const instantiation_base*
+// const instantiation_base*
+never_const_ptr<instantiation_base>
 param_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
-	param_instantiation* ci = 
-		new param_instantiation(s, *this, id);
-	assert(ci);
-	return s.add_instance(*ci);
+	excl_ptr<param_instantiation> pi(
+		new param_instantiation(s, *this, id));
+	assert(pi);
+	return s.add_instance(pi.as_a<instantiation_base>());
 }
 
 //=============================================================================
 // class instantiation_base method definitions
 
-inline
+/**
+	Instantiation base constructor.  
+	The first time an instance is declared, its dimensions are
+	set by the array-dimension list, if provided, else 0.
+	The first set of indices given will be pushed onto the 
+	instance collection stack.  
+	\param o the owning scope.  
+	\param n the name of the instance (collection).
+	\param d initial collection of indices, already resolved 
+		as param_expr's.  
+ */
+// inline
 instantiation_base::instantiation_base(const scopespace& o, 
-		const string& n, array_dim_list* d) : 
+		const string& n, const array_index_list* d) : 
 		object(), owner(never_const_ptr<scopespace>(&o)),
 		key(n),
 //		array_dimensions(d)
-		index_collection(NULL)
-		{
-	if (d) {
-//		index_collection = ...
+		index_collection(), 
+		depth(d ? d->size() : 0) {
+if (d) {
+	instance_collection_stack_item* coll;
+	// then construct... depends on cases in the following order:
+	// 4) indices all resolve to static constants
+		// make static_collection_addition
+// FIX ME
+	excl_const_ptr<static_array_index_list> sci;	// (
+//		make_static_array_index_list(*d));
+	if (sci) {
+		count_const_ptr<instance_collection_stack_item> icsp(
+			new static_collection_addition(sci));
+		index_collection.push_back(icsp);
+		return;
 	}
+
+	// 3) indices depend on parameter formals
+		// make dynamic_collection_addition
+
+	// 2) instantiation is conditional
+		// make conditional_collection_addition, using enclosing 
+		// conditional_scope
+		// PUNT!
+
+	// 1) indices depend on induction variables
+		// make loop_collection_addition, using enclosing loop_scope
+		// PUNT!
+
+	// Then, push constructed instance_collection_stack_item onto stack.
+}
 }
 
 inline
@@ -1443,7 +1519,7 @@ instantiation_base::hash_string(void) const {
 /**
 NEEDS TO BE REDONE
 void
-instantiation_base::set_array_dimensions(excl_ptr<array_dim_list> d) {
+instantiation_base::set_array_dimensions(excl_ptr<array_index_list> d) {
 	// just in case, delete what was previously there
 	array_dimensions = d;
 }
@@ -1734,17 +1810,17 @@ datatype_instantiation::equals_template_formal(
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-instance_reference_base*
+never_const_ptr<instance_reference_base>
 datatype_instantiation::make_instance_reference(context& c) const {
 	cerr << "datatype_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	datatype_instance_reference* ret = 
-		new datatype_instance_reference(*this);
+	count_ptr<datatype_instance_reference> new_ir(
+		new datatype_instance_reference(*this));
 		// omitting index argument
-	assert(ret);
-	return ret;
+	c.push_instance_reference_stack(new_ir);
+	return never_const_ptr<instance_reference_base>(NULL);
 }
 
 //=============================================================================
@@ -1816,17 +1892,17 @@ process_instantiation::get_type_ref(void) const {
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-instance_reference_base*
+never_const_ptr<instance_reference_base>
 process_instantiation::make_instance_reference(context& c) const {
 	cerr << "process_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	process_instance_reference* ret = 
-		new process_instance_reference(*this);
+	count_ptr<process_instance_reference> new_ir(
+		new process_instance_reference(*this));
 		// omitting index argument
-	assert(ret);
-	return ret;
+	c.push_instance_reference_stack(new_ir);
+	return never_const_ptr<instance_reference_base>(NULL);
 }
 
 //=============================================================================
@@ -1877,17 +1953,17 @@ param_instantiation::initialize(excl_const_ptr<param_expr> e) {
 		scope because they cannot be templated!
 		Therefore, cache them in the global (or built-in) namespace.  
  */
-instance_reference_base*
+never_const_ptr<instance_reference_base>
 param_instantiation::make_instance_reference(context& c) const {
 	cerr << "param_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	param_instance_reference* ret = 
-		new param_instance_reference(*this);
+	count_ptr<param_instance_reference> new_ir(
+		new param_instance_reference(*this));
 		// omitting index argument
-	assert(ret);
-	return ret;
+	c.push_instance_reference_stack(new_ir);
+	return never_const_ptr<instance_reference_base>(NULL);
 }
 
 //=============================================================================
@@ -1920,17 +1996,17 @@ channel_instantiation::get_type_ref(void) const {
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-instance_reference_base*
+never_const_ptr<instance_reference_base>
 channel_instantiation::make_instance_reference(context& c) const {
 	cerr << "channel_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	channel_instance_reference* ret = 
-		new channel_instance_reference(*this);
+	count_ptr<channel_instance_reference> new_ir(
+		new channel_instance_reference(*this));
 		// omitting index argument
-	assert(ret);
-	return ret;
+	c.push_instance_reference_stack(new_ir);
+	return never_const_ptr<instance_reference_base>(NULL);
 }
 
 //=============================================================================

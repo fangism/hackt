@@ -62,8 +62,8 @@ node::where(void) const {
 	Eventually make this pure virtual.  
 	Should really take a context&...
  */
-const object*
-node::check_build(context* c) const {
+never_const_ptr<object>
+node::check_build(never_ptr<context> c) const {
 	// We DO want to print this message, even in regression testing. 
 	what(cerr << c->auto_indent() << 
 		"check_build() not implemented yet for ");
@@ -120,9 +120,9 @@ template_argument_list::what(ostream& o) const {
 		uses that definition to type-check.  
 	\return NULL always?  How does caller know something went wrong?
  */
-const object*
-template_argument_list::check_build(context* c) const {
-	template_param_list* targs = new template_param_list();
+never_const_ptr<object>
+template_argument_list::check_build(never_ptr<context> c) const {
+	excl_ptr<template_param_list> targs(new template_param_list);
 	assert(targs);
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
@@ -135,13 +135,15 @@ template_argument_list::check_build(context* c) const {
 		count_const_ptr<expr> e(*i);
 		assert(e);			// ever blank expression?
 		// this should cache parameter expressions
-		const object* eret = e->check_build(c);
+		never_const_ptr<object> eret(e->check_build(c));
 		if (eret) {
-			const param_expr* exref = 
-				IS_A(const param_expr*, eret);
+//			const param_expr* exref = 
+//				IS_A(const param_expr*, eret);
+			never_const_ptr<param_expr>
+				exref(eret.is_a<param_expr>());
 			assert(exref);
-//			targs->push_back(exref);
-			targs->push_back(never_const_ptr<param_expr>(exref));
+			targs->push_back(exref);
+//			targs->push_back(never_const_ptr<param_expr>(exref));
 		} else {
 			// failed!!!  better error handling later
 			cerr << "BAD template argument (not an expression)!";
@@ -149,9 +151,9 @@ template_argument_list::check_build(context* c) const {
 		}
 	}
 	// set context's template arguments
-	c->set_current_template_arguments(*targs);
+	c->set_current_template_arguments(targs);
 	// leave the template argument context
-	return NULL;
+	return never_const_ptr<object>(NULL);
 	// set the current_fundamental_type upon returning from this
 }
 
@@ -178,9 +180,9 @@ connection_argument_list::what(ostream& o) const {
 	\param c the context object.
 	\return 
  */
-const object*
-connection_argument_list::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+connection_argument_list::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"connection_argument_list::check_build(...): " << endl;
@@ -229,17 +231,17 @@ alias_list::rightmost(void) const {
 		final element in the assignment / alias list
 		(if all is consistent, else returns NULL)
  */
-const object*
-alias_list::check_build(context* c) const {
+never_const_ptr<object>
+alias_list::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"alias_list::check_build(...): " << endl;
 	)
 if (size()) {
-	const object* ret = NULL;
+	never_const_ptr<object> ret(NULL);
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		const object* o = NULL;
+		never_const_ptr<object> o(NULL);
 		if (*i) {
 			o = (*i)->check_build(c);
 			// check type of o for consistency
@@ -249,7 +251,7 @@ if (size()) {
 	return ret;
 } else {
 	// will this ever happen?  will be caught as error for now.
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 }
 
@@ -308,9 +310,9 @@ type_id::rightmost(void) const {
 	Use context object to lookup the actual type.  
 	\return pointer to type reference.  
  */
-const object*
-type_id::check_build(context* c) const {
-//	const object* o;
+never_const_ptr<object>
+type_id::check_build(never_ptr<context> c) const {
+//	never_const_ptr<object> o;
 //	const definition_base* d;
 	never_const_ptr<definition_base> d;
 	TRACE_CHECK_BUILD(
@@ -321,14 +323,13 @@ type_id::check_build(context* c) const {
 //	o = c->lookup_definition(*base);
 //	d = IS_A(const definition_base*, o);
 	if (!d) {
-//		cerr << "type_id::check_build(context*) : ERROR!" << endl;
-		return NULL;
+//		cerr << "type_id::check_build(never_ptr<context>) : ERROR!" << endl;
+		return never_const_ptr<object>(NULL);
 	}
 	// set type definition reference
 	d = d->set_context_definition(*c);	// pure virtual
 	// c->set_definition(d);		// don't care which kind...
-	return d.unprotected_const_ptr();
-//	return d;
+	return d;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,14 +374,14 @@ user_data_type_prototype::rightmost(void) const {
 	else		return params->rightmost();
 }
 
-const object*
-user_data_type_prototype::check_build(context* c) const {
+never_const_ptr<object>
+user_data_type_prototype::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"user_data_type_prototype::check_build(...): " << endl;
 	)
 #if 0
-	const object* o;
+	never_const_ptr<object> o;
 	c->declare_datatype(*this);	// really only need name
 	o = bdt->check_build(c);
 	assert(o);
@@ -431,9 +432,9 @@ user_data_type_def::rightmost(void) const {
 }
 
 /*** unveil later...
-const object*
-user_data_type_def::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+user_data_type_def::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"user_data_type_def::check_build(...): " << endl;
@@ -496,10 +497,10 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 	return this;
 }
 
-const object*
-chan_type::check_build(context* c) const {
+never_const_ptr<object>
+chan_type::check_build(never_ptr<context> c) const {
 	cerr << "chan_type::check_build(): FINISH ME!";
-	return NULL;
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================
@@ -839,9 +840,9 @@ namespace_body::rightmost(void) const {
 }
 
 // recursive type-checker
-const object*
+never_const_ptr<object>
 namespace_body::
-check_build(context* c) const {
+check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() << 
 			"namespace_body::check_build(...): " << *name;
@@ -888,8 +889,8 @@ namespace_id::rightmost(void) const {
 }
 
 /*** NOT USED... yet
-const object*
-namespace_id::check_build(context* c) const {
+never_const_ptr<object>
+namespace_id::check_build(never_ptr<context> c) const {
 }
 ***/
 
@@ -959,9 +960,9 @@ using_namespace::rightmost(void) const {
 }
 
 /// returns a pointer to a valid namespace that's now mapped in this scope
-const object*
+never_const_ptr<object>
 using_namespace::
-check_build(context* c) const {
+check_build(never_ptr<context> c) const {
 if (alias) {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() << 
@@ -1022,9 +1023,9 @@ instance_base::rightmost(void) const {
 	return id->rightmost();
 }
 
-const object*
-instance_base::check_build(context* c) const {
-	const instantiation_base* inst;
+never_const_ptr<object>
+instance_base::check_build(never_ptr<context> c) const {
+	never_const_ptr<instantiation_base> inst;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "instance_base::check_build(...): ";
@@ -1035,7 +1036,7 @@ instance_base::check_build(context* c) const {
 	inst = c->add_instance(*id);		// check return value?
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << id->where() << endl;
-		return NULL;
+		return never_const_ptr<object>(NULL);
 	}
 	// need current_instance?  no, not using as reference.
 	// return inst;
@@ -1067,9 +1068,9 @@ instance_array::rightmost(void) const {
 
 /**
 TO DO:
-const object*
-instance_array::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+instance_array::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"instance_array::check_build(...): " << endl;
@@ -1119,9 +1120,9 @@ instance_declaration::rightmost(void) const {
 	return semi->rightmost();
 }
 
-const object*
-instance_declaration::check_build(context* c) const {
-	const object* t;
+never_const_ptr<object>
+instance_declaration::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> t;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_declaration::check_build(...): ";
@@ -1135,7 +1136,7 @@ instance_declaration::check_build(context* c) const {
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "
 			<< type->where() << endl;
-		return NULL;
+		return never_const_ptr<object>(NULL);
 	}
 	// instance could be ANY type
 	c->reset_current_fundamental_type();	// the type to instantiate
@@ -1173,8 +1174,8 @@ instance_connection::rightmost(void) const {
 	else return actuals->rightmost();
 }
 
-const object*
-instance_connection::check_build(context* c) const {
+never_const_ptr<object>
+instance_connection::check_build(never_ptr<context> c) const {
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_connection::check_build(...): ";
@@ -1251,9 +1252,9 @@ instance_alias::rightmost(void) const {
 	or can it be collective?
 	For aliasing, can be collective.
  */
-const object*
-instance_alias::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+instance_alias::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_alias::check_build(...): finish me!";
@@ -1263,7 +1264,7 @@ instance_alias::check_build(context* c) const {
 
 	// should actually check instance-REFERENCES
 	never_const_ptr<fundamental_type_reference> tr(
-		IS_A(const fundamental_type_reference*, o));
+		o.is_a<fundamental_type_reference>());
 	assert(tr);
 	// set the instance to match or just set current instantiation
 	tr = c->set_current_fundamental_type(*tr);
@@ -1412,9 +1413,9 @@ template_formal_id::rightmost(void) const {
 	else return name->rightmost();
 }
 
-const object*
-template_formal_id::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+template_formal_id::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	const datatype_instantiation* t;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -1427,7 +1428,7 @@ template_formal_id::check_build(context* c) const {
 		o = dim->check_build(c);
 		assert(o);
 	}
-	return t;
+	return never_const_ptr<object>(t);
 }
 
 //=============================================================================
@@ -1463,9 +1464,9 @@ template_formal_decl::rightmost(void) const {
 /**
 	Type-checks a list of template formals with the same type.  
  */
-const object*
-template_formal_decl::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+template_formal_decl::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"template_formal_decl::check_build(...): ";
@@ -1514,9 +1515,9 @@ concrete_type_ref::rightmost(void) const {
 	\return the current fundamental type reference if successful,
 		else NULL.
  */
-const object*
-concrete_type_ref::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+concrete_type_ref::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"concrete_type_ref::check_build(...): ";
@@ -1524,12 +1525,12 @@ concrete_type_ref::check_build(context* c) const {
 
 	// sets context's current definition
 	o = base->check_build(c);
-	const definition_base* d = IS_A(const definition_base*, o);
+	never_const_ptr<definition_base> d(o.is_a<definition_base>());
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << base->where() << endl;
-		return NULL;
+		return never_const_ptr<object>(NULL);
 	}
 
 	// check template arguments, if given
@@ -1545,7 +1546,7 @@ concrete_type_ref::check_build(context* c) const {
 		if (!o)	{
 			cerr << "concrete_type_ref: "
 				"bad template args!  ERROR" << endl;
-			return NULL;
+			return never_const_ptr<object>(NULL);
 		}
 	} else {
 		// if no args are supplied, 
@@ -1554,13 +1555,12 @@ concrete_type_ref::check_build(context* c) const {
 		if(!d->check_null_template_argument()) {
 			cerr << "definition expecting template arguments "
 				"where none were given!" << endl;
-			return NULL;
+			return never_const_ptr<object>(NULL);
 		}
 	}
 
 	// we've made it!  set the fundamental_type_reference for instantiation
-	return c->set_current_fundamental_type().unprotected_const_ptr();
-//	return c->set_current_fundamental_type();
+	return c->set_current_fundamental_type();
 }
 
 //=============================================================================
@@ -1634,9 +1634,9 @@ process_prototype::rightmost(void) const {
 	return semi->rightmost();
 }
 
-const object*
-process_prototype::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+process_prototype::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		id->what(cerr << c->auto_indent() << 
 			"process_prototype::check_build(...): ");
@@ -1683,9 +1683,9 @@ process_def::rightmost(void) const {
 }
 
 /*** unveil later...
-const object*
-process_def::check_build(context* c) const {
-	const object* o;
+never_const_ptr<object>
+process_def::check_build(never_ptr<context> c) const {
+	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		idt->what(cerr << c->auto_indent() << 
 			"process_def::check_build(...): ");

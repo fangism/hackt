@@ -104,7 +104,7 @@ virtual	line_range where(void) const;
 	contains a hierarchical symbol table.  
 	\return pointer to resulting object.  
  */
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class node
 
 //=============================================================================
@@ -185,7 +185,7 @@ using	list_parent::end;
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 
 /// Releases memory to the destination list, transfering ownership
 virtual	void release_append(node_list_base<T>& dest);
@@ -310,7 +310,7 @@ virtual	line_position rightmost(void) const = 0;
 /**
 	In all implementations, must return a param_expr object.
  */
-virtual	const object* check_build(context* c) const = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class expr
 
 ///	all expression lists are comma-separated
@@ -339,7 +339,7 @@ virtual	~template_argument_list();
 virtual	ostream& what(ostream& o) const;
 using expr_list::leftmost;
 using expr_list::rightmost;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_argument_list
 
 #define template_argument_list_wrap(b,l,e)				\
@@ -359,7 +359,7 @@ virtual	~connection_argument_list();
 virtual	ostream& what(ostream& o) const;
 using expr_list::leftmost;
 using expr_list::rightmost;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class connection_argument_list
 
 #define connection_argument_list_wrap(b,l,e)				\
@@ -399,7 +399,7 @@ virtual	~paren_expr();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class paren_expr
 
 //=============================================================================
@@ -417,7 +417,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_int
 
 //=============================================================================
@@ -435,7 +435,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_float
 
 //=============================================================================
@@ -460,7 +460,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
 
 // never really check the type of a string yet (no built-in type yet)
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_string
 
 //-----------------------------------------------------------------------------
@@ -477,7 +477,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_identifier
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -521,7 +521,7 @@ virtual	line_position rightmost(void) const;
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 
 using qualified_id_base::begin;
 using qualified_id_base::end;
@@ -610,7 +610,7 @@ explicit namespace_id(qualified_id* i);
 	line_position rightmost(void) const;
 
 //	consider c->lookup_namespace()
-//	const object* check_build(context* c) const;
+//	never_const_ptr<object> check_build(never_ptr<context> c) const;
 
 	never_const_ptr<qualified_id> get_id(void) const
 		{ return qid; }
@@ -656,7 +656,7 @@ virtual	line_position rightmost(void) const;
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 
 never_const_ptr<qualified_id> get_id(void) const
 		{ return qid; }
@@ -696,7 +696,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_bool
 
 //-----------------------------------------------------------------------------
@@ -709,7 +709,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_else
 
 //-----------------------------------------------------------------------------
@@ -724,7 +724,7 @@ public:
 	line_position rightmost(void) const;
 
 // not until we have built-in type for string
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_quoted_string
 
 //=============================================================================
@@ -752,7 +752,7 @@ public:
 	ostream& what(ostream& o) const;
 	line_position leftmost(void) const;
 	line_position rightmost(void) const;
-	const object* check_build(context* c) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };
 
 /// all range lists are comma-separated
@@ -776,7 +776,7 @@ virtual	~unary_expr();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const = 0;
 virtual	line_position rightmost(void) const = 0;
-virtual	const object* check_build(context* c) const = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
@@ -789,7 +789,7 @@ virtual	~prefix_expr();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
@@ -802,7 +802,7 @@ virtual	~postfix_expr();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class postfix_expr
 
 //-----------------------------------------------------------------------------
@@ -820,7 +820,7 @@ virtual	~member_expr();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
@@ -835,7 +835,7 @@ virtual	~index_expr();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class index_expr
 
 //=============================================================================
@@ -852,7 +852,7 @@ virtual	~binary_expr();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;	// = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;	// = 0;
 };	// end class binary_expr
 
 //-----------------------------------------------------------------------------
@@ -863,7 +863,7 @@ public:
 virtual	~arith_expr();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -874,7 +874,7 @@ public:
 virtual	~relational_expr();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -885,7 +885,7 @@ public:
 virtual	~logical_expr();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class logical_expr
 
 //=============================================================================
@@ -907,7 +907,7 @@ virtual	line_position rightmost(void) const = 0;
 	Should return valid pointer to a fundamental type definition, 
 	parameter, data, channel, or process.  
  */
-virtual	const object* check_build(context* c) const = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class type_base
 
 //-----------------------------------------------------------------------------
@@ -924,7 +924,7 @@ virtual	~token_type();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const = 0;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const = 0;
 };	// end class token_type
 
 //-----------------------------------------------------------------------------
@@ -939,7 +939,7 @@ virtual	~token_datatype();
 virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_datatype
 
 //-----------------------------------------------------------------------------
@@ -954,7 +954,7 @@ virtual	~token_paramtype();
 virtual	ostream& what(ostream& o) const;
 using token_type::leftmost;
 using token_type::rightmost;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -974,7 +974,7 @@ virtual	~type_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 
 friend	ostream& operator << (ostream& o, const type_id& id);
 };	// end class type_id
@@ -1009,7 +1009,7 @@ chan_type* attach_data_types(const data_type_ref_list* t);
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class chan_type
 
 #define	chan_type_attach_data_types(ct,t)				\
@@ -1164,7 +1164,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class namespace_body
 
 //-----------------------------------------------------------------------------
@@ -1189,7 +1189,7 @@ virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
 
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class using_namespace
 
 //=============================================================================
@@ -1222,7 +1222,7 @@ virtual	~alias_list();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class alias_list
 
 #define alias_list_wrap(b,l,e)						\
@@ -1246,7 +1246,7 @@ virtual	~actuals_base();
 // virtual	ostream& what(ostream& o) const;
 // virtual	line_position leftmost(void) const;
 // virtual	line_position rightmost(void) const;
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -1266,7 +1266,7 @@ virtual	~instance_base();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_base
 
 typedef	node_list<instance_base,comma>	instance_id_list;
@@ -1313,7 +1313,7 @@ virtual	~instance_declaration();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance declaration
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1342,7 +1342,7 @@ virtual	~instance_connection();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_connection
 
 //-----------------------------------------------------------------------------
@@ -1364,7 +1364,7 @@ virtual	~connection_statement();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-// virtual	const object* check_build(context* c) const;
+// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------
@@ -1388,7 +1388,7 @@ virtual	~instance_alias();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_alias
 
 //=============================================================================
@@ -1475,7 +1475,7 @@ virtual	~template_formal_id();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_id
 
 /// list of template-formal identifiers (optional arrays)
@@ -1501,7 +1501,7 @@ virtual	~template_formal_decl();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class template_formal_decl
 
 /// list of template-formal declarations
@@ -1530,7 +1530,7 @@ virtual	~concrete_type_ref();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class concrete_type_ref
 
 //=============================================================================
@@ -1615,7 +1615,7 @@ virtual	~process_prototype();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class process_prototype
 
 //-----------------------------------------------------------------------------
@@ -1710,7 +1710,7 @@ virtual	~user_data_type_prototype();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
-virtual	const object* check_build(context* c) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class user_data_type_prototype
 
 //-----------------------------------------------------------------------------
