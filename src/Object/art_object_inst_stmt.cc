@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.2 2005/01/25 22:33:37 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.3 2005/01/26 20:55:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -81,8 +81,9 @@ instantiation_statement::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if 1
 instantiation_statement::~instantiation_statement() {
+	STACKTRACE("~instantiation_statement()");
 }
 #endif
 
@@ -707,7 +708,10 @@ data_instantiation_statement::data_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
-	STACKTRACE("~data_instantiation_statement");
+	STACKTRACE("~data_instantiation_statement()");
+#if 1
+	cerr << "data-type-ref has " << type.refs() << " references." << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

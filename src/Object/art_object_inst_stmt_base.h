@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.4.12.1 2005/01/26 20:55:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -40,7 +40,7 @@ public:
 	instantiation_statement(
 		const index_collection_item_ptr_type& i);
 
-virtual	~instantiation_statement() { }
+virtual	~instantiation_statement();
 
 	ostream&
 	dump(ostream& o) const;

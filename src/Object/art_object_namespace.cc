@@ -1,11 +1,13 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3.6.2 2005/01/25 22:33:39 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3.6.3 2005/01/26 20:55:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
 #define	__ART_OBJECT_NAMESPACE_CC__
+
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include <fstream>
@@ -118,6 +120,7 @@ scopespace::scopespace() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 scopespace::~scopespace() {
+	STACKTRACE("~scopespace()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -371,6 +374,8 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 	const string id(i->get_name());
 	INVARIANT(id != "");		// cannot be empty string
 	used_id_map[id] = i;
+	// IS THE NEW ENTRY OWNED? IT SHOULD BE
+	INVARIANT(used_id_map[id].owned());
 	INVARIANT(!i);
 	return ret;
 }
@@ -472,6 +477,7 @@ inline
 void
 scopespace::write_object_used_id_map(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE("scopespace::write_object_used_id_map()");
 	MUST_BE_A(const persistent*, this);
 	// filter any objects out? yes
 	// how many objects to exclude? need to subtract
@@ -511,6 +517,7 @@ scopespace::write_object_base(const persistent_object_manager& m,
  */
 void
 scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
+	STACKTRACE("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
@@ -702,6 +709,7 @@ name_space::name_space(const string& n) :
  */
 name_space::~name_space() {
 	// default destructors will take care of everything
+	STACKTRACE("~namespace()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1492,6 +1500,7 @@ name_space::write_object(const persistent_object_manager& m) const {
 void
 name_space::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("namespace::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 
@@ -1544,6 +1553,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 			icbp = o.is_a_xfer<instance_collection_base>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
+		// NEED TO GUARANTEE THAT IT IS OWNED!
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;

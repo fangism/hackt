@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.8.12.1 2005/01/25 05:22:44 fang Exp $
+	$Id: art_main.cc,v 1.8.12.2 2005/01/26 20:54:58 fang Exp $
  */
 
 #include <iostream>
@@ -69,8 +69,14 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 
 //	global->dump(cerr);
 	{
-//	persistent_object_manager::dump_reconstruction_table = true;
-	assert(persistent_object_manager::self_test_no_file(the_module));
+#if 1
+	STACKTRACE("main-quarantine");
+	persistent_object_manager::dump_reconstruction_table = true;
+#endif
+	// DEBUG ME: memory leak in here
+	const excl_ptr<entity::module> module_copy =
+		persistent_object_manager::self_test_no_file(the_module);
+	NEVER_NULL(module_copy);
 //	the_module.dump(cerr);
 	}
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5.2.3 2005/01/25 22:33:34 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5.2.4 2005/01/26 20:55:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -183,6 +183,10 @@ const_param::~const_param() { }
 //-----------------------------------------------------------------------------
 // class pbool_expr method definitions
 
+pbool_expr::~pbool_expr() {
+	STACKTRACE("~pbool_expr()");
+}
+
 bool
 pbool_expr::may_be_equivalent(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
@@ -232,6 +236,11 @@ pbool_expr::make_param_expression_assignment_private(
 //-----------------------------------------------------------------------------
 // class pint_expr method definitions
 
+pint_expr::~pint_expr() {
+	STACKTRACE("~pint_expr()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::may_be_equivalent(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
@@ -314,7 +323,9 @@ const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_param_expr_list::~const_param_expr_list() { }
+const_param_expr_list::~const_param_expr_list() {
+	STACKTRACE("~const_param_expr_list()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
@@ -531,6 +542,7 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 void
 const_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("const_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;
@@ -560,7 +572,20 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_param_expr_list::~dynamic_param_expr_list() { }
+dynamic_param_expr_list::~dynamic_param_expr_list() {
+	STACKTRACE("~dynamic_param_expr_list()");
+#if 1
+	cerr << "list contains " << size() << " pointers." << endl;
+	dump(cerr) << endl;
+	cerr << "reference counts in list:" << endl;
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		cerr << "\t" << i->refs() << " @ " << 
+			((*i) ? &**i : NULL) << endl;
+	}
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
@@ -571,9 +596,10 @@ dynamic_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
 	const_iterator i = begin();
+	const const_iterator e = end();
 	if (*i)	(*i)->dump(o);
 	else	o << "(null)";
-	for (i++; i!=end(); i++) {
+	for (i++; i!=e; i++) {
 		o << ", ";
 		if (*i)	(*i)->dump(o);
 		else	o << "(null)";
@@ -834,6 +860,7 @@ dynamic_param_expr_list::write_object(
 void
 dynamic_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("dyn_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;

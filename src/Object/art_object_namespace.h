@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.6.12.2 2005/01/25 22:33:40 fang Exp $
+	$Id: art_object_namespace.h,v 1.6.12.3 2005/01/26 20:55:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -183,8 +183,9 @@ protected:	// members
 	 */
 	used_id_map_type	used_id_map;
 
-public:
+protected:
 	scopespace();
+public:
 virtual	~scopespace();
 
 virtual	ostream&
@@ -302,7 +303,7 @@ protected:
 		The parent namespace of this namespace.  
 		Should be const.  
 	 */
-	never_ptr<const name_space>	parent;
+	never_ptr<const name_space>		parent;
 
 	/**
 		The set of namespaces which are open to search within
@@ -334,19 +335,30 @@ protected:
 	// later introduce single symbol imports?
 	// i.e. using A::my_type;
 private:
-explicit name_space();
+	name_space();
 
 public:
-explicit name_space(const string& n);
+	explicit
+	name_space(const string& n);
+
 	name_space(const string& n, never_ptr<const name_space>);
+
 	~name_space();
 
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	const string&
+	get_key(void) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	ostream& pair_dump(ostream& o) const;
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	ostream&
+	pair_dump(ostream& o) const;
 
 	string
 	get_qualified_name(void) const;

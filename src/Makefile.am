@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.5.4.4 2005/01/25 20:33:54 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.5.4.5 2005/01/26 20:54:53 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -235,6 +235,7 @@ UTIL_HEADER_FILES = \
 	util/unique_list.tcc \
 	util/using_istream.h \
 	util/using_ostream.h \
+	util/what_fwd.h \
 	util/what.h \
 	util/what.tcc \
 	util/binders.h \

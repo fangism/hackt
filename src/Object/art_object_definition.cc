@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.2.6.1 2005/01/25 05:22:52 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2.6.2 2005/01/26 20:55:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -483,6 +483,7 @@ inline
 void
 definition_base::collect_template_formal_pointers(
 		persistent_object_manager& m) const {
+	STACKTRACE("definition_base::collect_transients()");
 	template_formals_list_type::const_iterator
 		iter = template_formals_list.begin();
 	const template_formals_list_type::const_iterator
@@ -511,6 +512,7 @@ inline
 void
 definition_base::write_object_template_formals(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE("definition_base::write_object_template_formals()");
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	m.write_pointer_list(o, template_formals_list);
 }
@@ -533,6 +535,7 @@ inline
 void
 definition_base::load_object_template_formals(
 		persistent_object_manager& m, istream& f) {
+	STACKTRACE("definition_base::load_object_template_formals()");
 	m.read_pointer_list(f, template_formals_list);
 	// then copy list into hash_map to synchronize
 	template_formals_list_type::const_iterator
@@ -540,10 +543,11 @@ definition_base::load_object_template_formals(
 	const template_formals_list_type::const_iterator
 		end = template_formals_list.end();
 	for ( ; iter!=end; iter++) {
+		STACKTRACE("for-loop: load a map entry");
 		const template_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
-		const_cast<param_instance_collection*>(&*inst_ptr)->load_object(m);
+		const_cast<param_instance_collection&>(*inst_ptr).load_object(m);
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
@@ -1163,9 +1167,11 @@ built_in_datatype_def::add_template_formal(
 void
 built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE("built_in_data::collect_transients()");
 	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
 	// don't bother with parent pointer to built-in namespace
 	definition_base::collect_transient_info_base(m);
+	// STOP: definition is built in! don't recur!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1179,6 +1185,7 @@ built_in_datatype_def::collect_transient_info(
  */
 void
 built_in_datatype_def::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("built_in_data::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1186,8 +1193,10 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
+
 	definition_base::write_object_base(m, f);	// is empty
 //	write_object_port_formals(m);
+
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 
@@ -1656,6 +1665,7 @@ user_def_datatype::write_object(const persistent_object_manager& m) const {
 void
 user_def_datatype::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("user_def_datatype::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);

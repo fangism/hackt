@@ -1,17 +1,20 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.13.4.2 2005/01/18 04:22:50 fang Exp $
+ 	$Id: art_object_module.cc,v 1.13.4.2.6.1 2005/01/26 20:55:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
 #define	__ART_OBJECT_MODULE_CC__
+
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include "art_object_module.h"
 #include "art_object_namespace.h"
 #include "persistent_object_manager.tcc"
 #include "art_object_type_hash.h"
+#include "stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -21,6 +24,7 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
+USING_STACKTRACE
 
 //=============================================================================
 // class module method definitions
@@ -45,6 +49,7 @@ module::module(const string& s) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::~module() {
+	STACKTRACE("~module()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,6 +114,7 @@ module::construct_empty(const int i) {
 void
 module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
+	STACKTRACE("module::collect_transient_info()");
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
@@ -119,6 +125,7 @@ if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("module::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -133,6 +140,7 @@ module::write_object(const persistent_object_manager& m) const {
 void
 module::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("module::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);

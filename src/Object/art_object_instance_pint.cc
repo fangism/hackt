@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.3 2005/01/25 22:33:39 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.4 2005/01/26 20:55:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -335,6 +335,7 @@ pint_instance_collection::construct_empty(const int i) {
 void
 pint_instance_collection::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE("pint_inst_coll::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
 }
@@ -343,6 +344,7 @@ pint_instance_collection::write_object_base(
 void
 pint_instance_collection::load_object_base(persistent_object_manager& m, 
 		istream& f) {
+	STACKTRACE("pint_inst_coll::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
 }
@@ -725,6 +727,7 @@ pint_array<0>::assign(const multikey_base<pint_value_type>& k,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_array<0>::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("pint_scalar::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -738,6 +741,7 @@ pint_array<0>::write_object(const persistent_object_manager& m) const {
 void
 pint_array<0>::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("pint_scalar::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
