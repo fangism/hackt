@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.8 2005/01/06 17:44:50 fang Exp $
+	$Id: art_parser_base.cc,v 1.9 2005/01/12 03:19:34 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -27,6 +27,7 @@
 #include "art_object_namespace.h"
 
 #include "indent.h"
+#include "stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -42,6 +43,7 @@ namespace parser {
 #include "using_ostream.h"
 using util::indent;
 using util::auto_indent;
+using util::stacktrace;
 
 //=============================================================================
 // global constants
@@ -164,6 +166,7 @@ type_id::rightmost(void) const {
  */
 never_ptr<const object>
 type_id::check_build(never_ptr<context> c) const {
+	STACKTRACE("type_id::check_build()");
 	never_ptr<const definition_base> d;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
@@ -237,6 +240,7 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 
 never_ptr<const object>
 chan_type::check_build(never_ptr<context> c) const {
+	STACKTRACE("chan_type::check_build()");
 	cerr << "chan_type::check_build(): FINISH ME!";
 	return never_ptr<const object>(NULL);
 }
@@ -500,8 +504,8 @@ namespace_body::rightmost(void) const {
 
 // recursive type-checker
 never_ptr<const object>
-namespace_body::
-check_build(never_ptr<context> c) const {
+namespace_body::check_build(never_ptr<context> c) const {
+	STACKTRACE("namespace_body::check_build()");
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() << 
 			"namespace_body::check_build(...): " << *name;
@@ -645,8 +649,8 @@ using_namespace::rightmost(void) const {
 
 /// returns a pointer to a valid namespace that's now mapped in this scope
 never_ptr<const object>
-using_namespace::
-check_build(never_ptr<context> c) const {
+using_namespace::check_build(never_ptr<context> c) const {
+	STACKTRACE("using_namespace::check_build()");
 if (alias) {
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() << 
@@ -716,6 +720,7 @@ concrete_type_ref::get_temp_spec(void) const {
  */
 never_ptr<const object>
 concrete_type_ref::check_build(never_ptr<context> c) const {
+	STACKTRACE("concrete_type_ref::check_build()");
 #if 0
 	indent cerr_ind(cerr);
 	cerr << auto_indent << 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2005/01/11 01:55:39 fang Exp $
+#	$Id: Makefile.am,v 1.38 2005/01/12 03:19:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -155,6 +155,7 @@ UTIL_HEADER_FILES = \
 	util/art_switches.h \
 	util/macros.h \
 	util/STL/allocator_fwd.h \
+	util/STL/construct_fwd.h \
 	util/STL/deque_fwd.h \
 	util/STL/functional_fwd.h \
 	util/STL/list_fwd.h \

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.4 2004/12/13 05:45:11 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.5 2005/01/12 03:19:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -10,6 +10,7 @@
 #include "art_object_instance_management_base.h"
 #include "art_object_inst_stmt_base.h"
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -29,7 +30,9 @@ private:
 protected:
 	param_instantiation_statement() : instantiation_statement() { }
 public:
+	explicit
 	param_instantiation_statement(const index_collection_item_ptr_type& i);
+
 virtual	~param_instantiation_statement() { }
 
 protected:
@@ -40,6 +43,9 @@ protected:
 };	// end class param_instantiation_statement
 
 //-----------------------------------------------------------------------------
+/**
+	Boolean parameter instantiation statement.
+ */
 class pbool_instantiation_statement : public object, 
 		public param_instantiation_statement {
 private:
@@ -53,7 +59,9 @@ protected:
 private:
 	pbool_instantiation_statement();
 public:
+	explicit
 	pbool_instantiation_statement(const index_collection_item_ptr_type& i);
+
 	~pbool_instantiation_statement();
 
 	ostream& what(ostream& o) const;
@@ -71,6 +79,9 @@ public:
 };	// end class pbool_instantiation_statement
 
 //-----------------------------------------------------------------------------
+/**
+	Integer parameter instantiation statement.
+ */
 class pint_instantiation_statement : public object, 
 		public param_instantiation_statement {
 private:
@@ -84,7 +95,9 @@ protected:
 private:
 	pint_instantiation_statement();
 public:
+	explicit
 	pint_instantiation_statement(const index_collection_item_ptr_type& i);
+
 	~pint_instantiation_statement();
 
 	ostream& what(ostream& o) const;
@@ -102,6 +115,9 @@ public:
 };	// end class pint_instantiation_statement
 
 //=============================================================================
+/**
+	Process instantiation statement.
+ */
 class process_instantiation_statement : public object, 
 		public instantiation_statement {
 private:
@@ -132,6 +148,9 @@ public:
 };	// end class process_instantiation_statement
 
 //=============================================================================
+/**
+	Channel instantiation statement.
+ */
 class channel_instantiation_statement : public object, 
 		public instantiation_statement {
 private:
@@ -162,15 +181,23 @@ public:
 };	// end class channel_instantiation_statement
 
 //=============================================================================
+/**
+	Data-type instantiation statement.
+ */
 class data_instantiation_statement : public object, 
 		public instantiation_statement {
 private:
 	typedef	instantiation_statement		parent_type;
+	typedef	data_instantiation_statement	this_type;
 public:
 	typedef	datatype_instance_collection	collection_type;
 	typedef	count_ptr<const data_type_reference>	type_ptr_type;
 protected:
-	const type_ptr_type			type;
+	/**
+		This should really be const, 
+		but allocation requires assignability.  
+	 */
+	type_ptr_type				type;
 	never_ptr<collection_type>		inst_base;
 private:
 	data_instantiation_statement();
@@ -191,9 +218,18 @@ public:
 	void
 	unroll(void) const;
 #endif
+	static void* operator new (size_t);
+	static void* operator new (size_t, void*&);
+	static void operator delete (void*);
 
 public:
 	PERSISTENT_METHODS
+
+private:
+	// using pool allocation
+	friend class list_vector_pool<this_type>;
+	typedef	list_vector_pool<this_type>	pool_type;
+	static pool_type			pool;
 
 };	// end class data_instantiation_statement
 

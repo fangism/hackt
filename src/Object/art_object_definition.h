@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.19 2004/12/12 06:27:56 fang Exp $
+	$Id: art_object_definition.h,v 1.20 2005/01/12 03:19:36 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -255,6 +255,8 @@ virtual	~datatype_definition_base() { }
 virtual	ostream&
 	what(ostream& o) const = 0;
 
+	using parent_type::dump;
+
 	/**
 		Resolves the underlying type, without regard to the 
 		template arguments of any typedefs, for the sake of 
@@ -316,7 +318,7 @@ public:
 	// ah, but it is now!
 
 	never_ptr<const instance_collection_base>
-		add_template_formal(excl_ptr<instance_collection_base> f);
+		add_template_formal(excl_ptr<instance_collection_base>& f);
 
 	bool require_signature_match(
 		never_ptr<const definition_base> d) const

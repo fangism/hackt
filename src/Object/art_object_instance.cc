@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.32 2004/12/15 23:31:10 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.33 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -22,6 +22,7 @@
 #include "binders.h"
 #include "ptrs_functional.h"
 // #include "indent.h"
+#include "stacktrace.h"
 
 //=============================================================================
 namespace ART {
@@ -30,6 +31,7 @@ using namespace ADS;		// for composition functors
 using std::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
+using util::stacktrace;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -155,7 +157,7 @@ instance_collection_base::collection_state_end(void) const {
  */
 const_range_list
 instance_collection_base::detect_static_overlap(
-		index_collection_item_ptr_type r) const {
+		const index_collection_item_ptr_type& r) const {
 	NEVER_NULL(r);
 	INVARIANT(r->dimensions() == dimensions);
 #if 0
@@ -198,7 +200,8 @@ instance_collection_base::detect_static_overlap(
  */
 const_range_list
 instance_collection_base::add_instantiation_statement(
-		index_collection_type::value_type r) {
+		const index_collection_type::value_type& r) {
+	STACKTRACE("instance_collection_base::add_instantiation_statement()");
 	NEVER_NULL(r);
 	index_collection_item_ptr_type i(r->get_indices());
 	INVARIANT(dimensions || index_collection.empty());	// catches 0-D
@@ -425,6 +428,25 @@ inline
 void
 instance_collection_base::collect_index_collection_pointers(
 		persistent_object_manager& m) const {
+	STACKTRACE("instance_collection_base::collect_index_collection_pointers()");
+#if 0
+//	STACKTRACE_STREAM << "size = " << index_collection.size() << endl;
+	index_collection_type::const_iterator i = index_collection.begin();
+	const index_collection_type::const_iterator e = index_collection.end();
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+#if 0
+		STACKTRACE_STREAM << "oooga @" << &**i;
+//		(*i)->what(STACKTRACE_STREAM);		// DEATH
+		(*i)->dump(STACKTRACE_STREAM);
+		STACKTRACE_STREAM << "sugar ";
+#endif
+		(*i)->collect_transient_info(m);
+#if 0
+		STACKTRACE_STREAM << "booga!" << endl;
+#endif
+	}
+#else
 	for_each(index_collection.begin(), index_collection.end(), 
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
@@ -432,12 +454,14 @@ instance_collection_base::collect_index_collection_pointers(
 		dereference<never_ptr, const instance_management_base>()
 	)
 	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE("instance_collection_base::collect_transient_info_base()");
 	collect_index_collection_pointers(m);
 }
 

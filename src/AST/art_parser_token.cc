@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
+	$Id: art_parser_token.cc,v 1.10 2005/01/12 03:19:34 fang Exp $
  */
 
 #include <iostream>
@@ -19,6 +19,7 @@
 #include "art_object_expr_const.h"
 #include "art_built_ins.h"
 
+#include "stacktrace.h"
 #include "memory/list_vector_pool.h"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -32,6 +33,7 @@ using namespace entity;
 
 namespace parser {
 #include "using_ostream.h"
+using util::stacktrace;
 
 //=============================================================================
 // class terminal definitions
@@ -103,9 +105,8 @@ token_char::~token_char() { }
 	Note static linkage.  
 	Allocation chunk size is 1024 token_char's.  
  */
-static
-list_vector_pool<token_char>
-token_char_pool(1024);
+token_char::pool_type
+token_char::pool(1024);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -115,7 +116,7 @@ token_char_pool(1024);
 void*
 token_char::operator new (size_t s) {
 //	cerr << "pool-alloc token_char" << endl;
-	return token_char_pool.allocate();
+	return pool.allocate();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,7 +145,7 @@ token_char::operator delete (void* p) {
 	NEVER_NULL(t);
 	// cast needed because this particular allocator is 
 	// type-specific argument
-	token_char_pool.deallocate(t);
+	pool.deallocate(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -337,6 +338,7 @@ token_identifier::rightmost(void) const {
  */
 never_ptr<const object>
 token_identifier::check_build(never_ptr<context> c) const {
+	STACKTRACE("token_identifier::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_identifier::check_build(...)";
@@ -576,6 +578,7 @@ token_bool_type::what(ostream& o) const {
 
 never_ptr<const object>
 token_bool_type::check_build(never_ptr<context> c) const {
+	STACKTRACE("token_bool_type::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_bool_type::check_build(...): ";
@@ -606,6 +609,7 @@ token_int_type::what(ostream& o) const {
 
 never_ptr<const object>
 token_int_type::check_build(never_ptr<context> c) const {
+	STACKTRACE("token_int_type::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_int_type::check_build(...): ";
@@ -643,6 +647,7 @@ token_pbool_type::what(ostream& o) const {
  */
 never_ptr<const object>
 token_pbool_type::check_build(never_ptr<context> c) const {
+	STACKTRACE("token_pbool_type::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_pbool_type::check_build(...): ";
@@ -678,6 +683,7 @@ token_pint_type::what(ostream& o) const {
  */
 never_ptr<const object>
 token_pint_type::check_build(never_ptr<context> c) const {
+	STACKTRACE("token_pint_type::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "token_pint_type::check_build(...): ";

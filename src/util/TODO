@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.6 2005/01/08 08:30:53 fang Exp $
+	$Id: TODO,v 1.7 2005/01/12 03:19:40 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -65,6 +65,11 @@ Regarding pointer-classes:
 		like list_vector_pool.
 
 	what about allocator_traits?
+
+write a series of tests exhausting ALL combinations of copy, transfer, 
+	assignment for ALL pointer-classes!
+	Use STL containers.
+	Expect invariants everywhere.
 
 -------------------------------------------------------------------------------
 

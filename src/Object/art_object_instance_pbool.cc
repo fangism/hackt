@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.6 2004/12/15 23:31:11 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.7 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "binders.h"
 #include "ptrs_functional.h"
 #include "indent.h"
+#include "stacktrace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -33,6 +34,7 @@ namespace entity {
 using namespace ADS;		// for composition functors
 using std::dereference;
 using std::mem_fun_ref;
+using util::stacktrace;
 
 //=============================================================================
 // struct pbool_instance method definitions
@@ -161,6 +163,7 @@ pbool_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
 pbool_instance_collection::default_value(void) const {
+	STACKTRACE("pbool_instance_collection::default_value()");
 	return ival;
 }
 

@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.15 2005/01/06 17:44:52 fang Exp $
+ 	$Id: art_context.cc,v 1.16 2005/01/12 03:19:36 fang Exp $
  */
 
 #include <assert.h>
@@ -20,12 +20,15 @@
 #include "art_object_instance_param.h"	// for param_instantiation_statement
 #include "art_object_module.h"
 
+#include "stacktrace.h"
+
 //=============================================================================
 namespace ART {
 using namespace entity;
 
 namespace parser {
 #include "using_ostream.h"
+using util::stacktrace;
 
 //=============================================================================
 // class context method definition
@@ -486,11 +489,13 @@ context::alias_definition(never_ptr<const definition_base> d,
 void
 context::add_connection(excl_ptr<const instance_reference_connection> c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
+
+	STACKTRACE("context::add_connection()");
 	never_ptr<sequential_scope>
 		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);	// is not const, should be transferrable
-	assert(imb);
-	assert(!c);
+	NEVER_NULL(imb);
+	INVARIANT(!c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
@@ -503,7 +508,7 @@ context::add_connection(excl_ptr<const instance_reference_connection> c) {
 //		master_instance_list.back() = imb;
 #endif
 	}
-	assert(!imb);
+	INVARIANT(!imb);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -517,17 +522,19 @@ context::add_connection(excl_ptr<const instance_reference_connection> c) {
 void
 context::add_assignment(excl_ptr<const param_expression_assignment> c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
+
+	STACKTRACE("context::add_assignment()");
 	never_ptr<sequential_scope>
 		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);
-	assert(imb);
-	assert(!c);
+	NEVER_NULL(imb);
+	INVARIANT(!c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
 		master_instance_list.push_back(imb);
 	}
-	assert(!imb);
+	INVARIANT(!imb);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -636,6 +643,7 @@ context::get_current_named_scope(void) {
  */
 never_ptr<const instance_collection_base>
 context::add_instance(const token_identifier& id) {
+	STACKTRACE("context::add_instance(id)");
 	// wrapper
 	return add_instance(id, index_collection_item_ptr_type(NULL));
 }
@@ -667,14 +675,15 @@ never_ptr<const instance_collection_base>
 context::add_instance(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
 	typedef	never_ptr<const instance_collection_base>	return_type;
-	assert(current_fundamental_type);
+	STACKTRACE("context::add_instance(id, dim)");
+	NEVER_NULL(current_fundamental_type);
 	never_ptr<scopespace> current_named_scope(get_current_named_scope());
-	assert(current_named_scope);
+	NEVER_NULL(current_named_scope);
 
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
-	assert(inst_stmt);
+	NEVER_NULL(inst_stmt);
 	return_type inst_base(
 		current_named_scope->add_instance(inst_stmt, id));
 	// adds non-const back-reference
@@ -687,7 +696,8 @@ context::add_instance(const token_identifier& id,
 
 	excl_ptr<const instance_management_base>
 		imb = inst_stmt.as_a_xfer<const instance_management_base>();
-	assert(current_sequential_scope);
+	INVARIANT(!inst_stmt);
+	NEVER_NULL(current_sequential_scope);
 	current_sequential_scope->append_instance_management(imb);
 	INVARIANT(!imb);
 	return inst_base;
@@ -702,24 +712,27 @@ context::add_instance(const token_identifier& id,
 	If already exists, then checks against previous formal declaration.  
 	For now, only allow parameters.  
 	\param id the name of the formal instance.  
+	\param dim the dimensions of the instance. 
+	\param d optional default value of parameter.  
 	\sa add_instance
  */
 never_ptr<const instance_collection_base>
 context::add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		count_ptr<const param_expr> d) {
-	assert(current_prototype);	// valid definition_base
-	assert(current_fundamental_type);
+	STACKTRACE("context::add_template_formal()");
+	NEVER_NULL(current_prototype);	// valid definition_base
+	NEVER_NULL(current_fundamental_type);
 	count_ptr<const param_type_reference>
 		ptype(current_fundamental_type.is_a<const param_type_reference>());
-	assert(ptype);
+	NEVER_NULL(ptype);
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
-	assert(inst_stmt);
+	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
 	never_ptr<const instance_collection_base>
 		inst_base(current_prototype->add_template_formal(
@@ -738,7 +751,7 @@ context::add_template_formal(const token_identifier& id,
 			ib(inst_stmt->get_inst_base());
 		never_ptr<param_instance_collection>
 			pic(ib.is_a<param_instance_collection>());
-		assert(pic);
+		NEVER_NULL(pic);
 		if (!pic->assign_default_value(d)) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
@@ -753,7 +766,7 @@ context::add_template_formal(const token_identifier& id,
 	never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 		// same as current_sequential_scope? perhaps assert check?
-	assert(seq_scope);
+	NEVER_NULL(seq_scope);
 	seq_scope->append_instance_management(imb);
 
 	return inst_base;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.7 2005/01/06 17:44:54 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.8 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -22,6 +22,7 @@
 #include "binders.h"
 #include "ptrs_functional.h"
 #include "indent.h"
+#include "stacktrace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -34,6 +35,7 @@ using std::dereference;
 using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
+using util::stacktrace;
 
 //=============================================================================
 // struct pint_instance method definitions
@@ -175,6 +177,7 @@ pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
  */
 count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
+	STACKTRACE("pint_instance_collection::default_value()");
 #if 0
 	indent cerr_ind(cerr);
 	cerr << auto_indent <<

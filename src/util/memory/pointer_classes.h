@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.5 2005/01/06 17:44:59 fang Exp $
+	$Id: pointer_classes.h,v 1.6 2005/01/12 03:20:02 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -38,6 +38,16 @@
 #include "macros.h"
 #include "memory/pointer_classes_fwd.h"
 #include "memory/pointer_traits.h"
+#include "STL/construct_fwd.h"
+
+//=============================================================================
+// debugging stuff
+
+// for debugging strange behavior when excl_ptr destructor is "correct"
+// predefine as 1 to override
+#ifndef	FIX_RESET
+#define	FIX_RESET	1
+#endif
 
 //=============================================================================
 
@@ -394,7 +404,7 @@ public:
 	explicit
 	excl_ptr(some_ptr<T>& s) throw();
 
-#if 1
+#if 0
 /**
 	Bogus copy constructor, const source.  
 	Doesn't actually copy source.  
@@ -419,8 +429,11 @@ public:
 	to pointer-classes.
  */
 	// virtual
+#if FIX_RESET
+	~excl_ptr() { this->reset(); }
+#else
 	~excl_ptr() { this->release(); }	// release is wrong!
-//	~excl_ptr() { this->reset(); }
+#endif
 
 public:
 	/**
@@ -450,6 +463,16 @@ excl_ptr<T>& operator = (T* p) throw() {
 
 	excl_ptr<T>&
 	operator = (excl_ptr<T>& e) throw() {
+		reset(e.release());
+		return *this;
+	}
+
+	/**
+		Acceptable transfer for safe-casts.  
+	 */
+	template <class S>
+	excl_ptr<T>&
+	operator = (excl_ptr<S>& e) throw() {
 		reset(e.release());
 		return *this;
 	}
@@ -587,6 +610,7 @@ excl_ptr<T>& operator = (const some_ptr<T>& r) throw() { }
 // permissible assignments
 
 // non-member functions
+
 };	// end class excl_ptr
 
 //=============================================================================
@@ -675,9 +699,13 @@ public:
 #endif
 
 	template <class S>
-	sticky_ptr(excl_ptr<S> p) : ptr(p.release()) { }
+	sticky_ptr(excl_ptr<S>& p) : ptr(p.release()) { INVARIANT(!p); }
 
-	~sticky_ptr() { release(); }
+#if FIX_RESET
+	~sticky_ptr() { this->reset(); }
+#else
+	~sticky_ptr() { this->release(); }
+#endif
 
 	reference
 	operator * () const { NEVER_NULL(ptr); return *ptr; }
@@ -691,6 +719,14 @@ public:
 	template <class S>
 	sticky_ptr&
 	operator = (const sticky_ptr<S>& p) {
+		return *this;
+	}
+
+	template <class S>
+	sticky_ptr&
+	operator = (excl_ptr<S>& p) {
+		this->reset(p.release());
+		INVARIANT(!p);
 		return *this;
 	}
 
@@ -709,6 +745,12 @@ public:
 	}
 
 	// TODO: finish me...
+
+// friends for special cases
+template <class _T1, class _T2>
+friend
+void
+std::_Construct(sticky_ptr<_T1>*, const sticky_ptr<_T2>& );
 
 };	// end class sticky_ptr
 
@@ -1045,7 +1087,11 @@ public:
 	/**
 		Conditional destructor.  De-allocates only if it owns.  
 	 */
-	~some_ptr(void) { if (this->ptr && this->own) delete this->ptr; }
+	~some_ptr(void) {
+		// same as reset(), but shorter
+		if (this->ptr && this->own)
+			delete this->ptr;
+	}
 
 	/**
 		\return reference at the pointer.  
@@ -1116,6 +1162,7 @@ public:
 	some_ptr<T>&
 	operator = (excl_ptr<T>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
+		INVARIANT(!p);
 		return *this;
 	}
 
@@ -1126,6 +1173,7 @@ public:
 	some_ptr<T>&
 	operator = (excl_ptr<S>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
+		INVARIANT(!p);
 		return *this;
 	}
 
@@ -1627,6 +1675,25 @@ public:
 //=============================================================================
 }	// end namespace util
 
+//=============================================================================
+namespace std {
+using util::memory::sticky_ptr;
+
+/**
+	Attempt to specialize/overload std::_Construct for special-case
+	behavior when placement-constructing sticky pointers.  
+ */
+template <class _T1, class _T2>
+inline void
+_Construct(sticky_ptr<_T1>* __p, const sticky_ptr<_T2>& __value) {
+	typedef	sticky_ptr<_T1>		ptr1_type;
+	typedef	sticky_ptr<_T2>		ptr2_type;
+	new (static_cast<void*>(__p))
+		ptr1_type(const_cast<ptr2_type&>(__value).release());
+}
+
+
+}
 
 #endif	//	__POINTER_CLASSES_H__
 

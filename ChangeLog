@@ -1,5 +1,59 @@
 "ChangeLog"
 
+2005-01-11	David Fang	<fangism@users.sourceforge.net>
+
+	* MACJOR BUG FIXED: memory management by pointer classes corrected.
+	  Basically, ownership transfer failed in a few cases where they were
+	  expected to have occured. 
+
+	* memory/pointer_classes.h: 
+	  Eliminated empty copy constructor for excl_ptr.  
+	  Specialized std::_Construct for only sticky_ptr's
+	  because no copy-constructor exists, and the standard containers
+	  require copy-constructability.  
+	  Overloading _Construct works around the problem with an 
+	  explicit const-cast to guarantee that placement construction
+	  (with value to assign) is done with transfer semantics.  
+
+	* stacktrace more developed, simple and solid.
+	  Added method for accessing the current output stream, 
+	  using macro STACKTRACE_STREAM.
+	  Eliminated construction with const char* to avoid ambiguity
+	  with the constructor that accepts std::string.
+	  Default what<T>::name is const char*, not const char[].  
+
+	* list_vector_pool optionally uses util::what for producing 
+	  useful verbose messages.
+	  NOTE however, that automatic instantiation of what<T>::name
+	  does NOT guarantee that it is statically constructed before
+	  it is referenced, EVEN WITHIN THE SAME MODULE!  
+	  You must explicitly instantiate the template class what
+	  before it's first use in a module to guarantee correct ordering.  
+	  Specialization of what<T> also accomplishes this, assuming
+	  it retains a ::name member.
+
+	* Lots more debug stacktracing code added everywhere (turned off).
+
+	* Changed several (not all, yet) function prototypes that 
+	  take excl_ptr by value and now take excl_ptr arguments by reference.  
+
+	* ART::parser::token_char are allocated with its own 
+	  static memory pool.  
+
+	* ART::entity::data_instantiation_statement are allocated
+	  with its own memory pool.  
+
+	* Many single argument constructors were made explicit to
+	  prevent promiscuous conversions.  
+
+	* Fixed built-in datatype int initialization, guarantee
+	  that memory is not immediately deallocated upon construction.  
+	  (More remnants of debug code too.)
+
+	* Next commit will clean up some debug code, promise.  
+	  Will tag ARTXX-00-01-03-x.
+
+
 2005-01-06	David Fang	<fangism@users.sourceforge.net>
 
 	* MAJOR BUG: see the 2005-01-05 entry of src/NOTES.  

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
+	$Id: art_parser_instance.cc,v 1.10 2005/01/12 03:19:34 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -28,6 +28,8 @@
 #include "art_object_assign.h"
 #include "art_object_connect.h"
 
+#include "stacktrace.h"
+
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
@@ -40,6 +42,7 @@
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
+using util::stacktrace;
 
 //=============================================================================
 // class instance_management method definitions
@@ -99,6 +102,7 @@ alias_list::rightmost(void) const {
  */
 never_ptr<const object>
 alias_list::check_build(never_ptr<context> c) const {
+	STACKTRACE("alias_list::check_build()");
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"alias_list::check_build(...): FINISH ME!";
@@ -225,6 +229,7 @@ connection_argument_list::what(ostream& o) const {
  */
 never_ptr<const object>
 connection_argument_list::check_build(never_ptr<context> c) const {
+	STACKTRACE("connection_argument_list::check_build()");
 	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
@@ -264,6 +269,7 @@ actuals_base::rightmost(void) const {
  */
 never_ptr<const object>
 actuals_base::check_build(never_ptr<context> c) const {
+	STACKTRACE("actuals_base::check_build()");
 	return actuals->check_build(c);
 }
 
@@ -302,6 +308,7 @@ instance_base::rightmost(void) const {
  */
 never_ptr<const object>
 instance_base::check_build(never_ptr<context> c) const {
+	STACKTRACE("instance_base::check_build()");
 	never_ptr<const instance_collection_base> inst;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
@@ -350,6 +357,7 @@ instance_array::rightmost(void) const {
  */
 never_ptr<const object>
 instance_array::check_build(never_ptr<context> c) const {
+	STACKTRACE("instance_array::check_build()");
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"instance_array::check_build(...): " << endl;
@@ -434,6 +442,7 @@ instance_declaration::rightmost(void) const {
 
 never_ptr<const object>
 instance_declaration::check_build(never_ptr<context> c) const {
+	STACKTRACE("instance_declaration::check_build()");
 //	never_ptr<const object> t;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -495,6 +504,7 @@ instance_connection::rightmost(void) const {
 
 never_ptr<const object>
 instance_connection::check_build(never_ptr<context> c) const {
+	STACKTRACE("instance_connection::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"instance_connection::check_build(...): ";
@@ -576,6 +586,7 @@ connection_statement::rightmost(void) const {
  */
 never_ptr<const object>
 connection_statement::check_build(never_ptr<context> c) const {
+	STACKTRACE("connection_statement::check_build()");
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
 			"connection_statement::check_build(...): ";
@@ -680,6 +691,7 @@ instance_alias::rightmost(void) const {
  */
 never_ptr<const object>
 instance_alias::check_build(never_ptr<context> c) const {
+	STACKTRACE("instance_alias::check_build()");
 	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<

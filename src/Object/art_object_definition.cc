@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.23 2005/01/06 17:44:52 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.24 2005/01/12 03:19:36 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "art_object_type_hash.h"
 
 #include "indent.h"
+#include "stacktrace.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -32,7 +33,9 @@
 namespace ART {
 namespace entity {
 using parser::scope;
+using util::indent;
 using util::auto_indent;
+using util::stacktrace;
 
 //=============================================================================
 // class definition_base method definitions
@@ -82,8 +85,12 @@ definition_base::pair_dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
+#if 1
+	STACKTRACE("definition_base::dump_template_formals()");
+//	STACKTRACE_STREAM << " @" << this << endl;
+#endif
 	// sanity check
-	assert(template_formals_list.size() == template_formals_map.size());
+	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
 		o << "<" << endl;
 		template_formals_list_type::const_iterator
@@ -92,8 +99,21 @@ definition_base::dump_template_formals(ostream& o) const {
 			e = template_formals_list.end();
 		for ( ; i!=e; i++) {
 			// sanity check
-			assert((*i)->is_template_formal());
+			NEVER_NULL(*i);
+#if 0
+			cerr << "iter: @" << &*i << endl;
+#endif
+			INVARIANT((*i)->is_template_formal());
+#if 0
+			o << "oooga, ";
+			(*i)->what(o);
+			o << " sugar, ";
+#endif
+			// death here: pure virtual method called?
 			(*i)->dump(o) << endl;
+#if 0
+			o << "booga!" << endl;
+#endif
 		}
 		o << ">" << endl;
 	}
@@ -176,6 +196,7 @@ definition_base::lookup_object_here(const string& id) const {
  */
 bool
 definition_base::check_null_template_argument(void) const {
+	STACKTRACE("definition_base::check_null_template_argument()");
 #if 0
 	indent cerr_ind(cerr);
 	cerr << auto_indent <<
@@ -192,12 +213,24 @@ definition_base::check_null_template_argument(void) const {
 	for ( ; i!=template_formals_list.end(); i++) {
 		never_ptr<const param_instance_collection> p(*i);
 		NEVER_NULL(p);
+		p.must_be_a<const param_instance_collection>();
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
 #if 0
 		cerr << auto_indent << "2a" << endl;
 #endif
-		if (!p->default_value()) {
+#if 0
+		p->what(cerr) << endl;
+		p->dump(cerr) << endl;
+		cerr << auto_indent << "2a-2" << endl;
+#endif
+
+#if 0
+		// death here
+		p->default_value();
+		cerr << auto_indent << "2a-2" << endl;
+#endif
+		if (!(*p).default_value()) {
 #if 0
 			cerr << auto_indent << "2b" << endl;
 #endif
@@ -412,6 +445,7 @@ never_ptr<const instance_collection_base>
 definition_base::add_template_formal(
 		never_ptr<instantiation_statement> i, 
 		const token_identifier& id) {
+	STACKTRACE("definition_base::add_template_formal()");
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -857,7 +891,10 @@ if (!m.flag_visit(this)) {
 void
 user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to user-def channel definition." << endl;
@@ -987,7 +1024,10 @@ channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"channel_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to channel typedef." << endl;
@@ -1046,7 +1086,11 @@ built_in_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::dump(ostream& o) const {
+#if 1
 	return datatype_definition_base::dump(o);
+#else
+	return definition_base::dump(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1098,10 +1142,10 @@ built_in_datatype_def::make_fundamental_type_reference(
  */
 never_ptr<const instance_collection_base>
 built_in_datatype_def::add_template_formal(
-		excl_ptr<instance_collection_base> f
-		) {
-	never_ptr<const param_instance_collection> pf(
-		f.is_a<const param_instance_collection>());
+		excl_ptr<instance_collection_base>& f) {
+	STACKTRACE("built_in_datatype_def::add_template_formal()");
+	never_ptr<const param_instance_collection>
+		pf(f.is_a<const param_instance_collection>());
 	assert(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	never_ptr<const object> probe(
@@ -1642,7 +1686,10 @@ if (!m.flag_visit(this)) {
 void
 user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to user-def data definition." << endl;
@@ -1809,7 +1856,10 @@ datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"datatype_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to datatype typedef." << endl;
@@ -2190,7 +2240,10 @@ if (!m.flag_visit(this)) {
 void
 process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to process definition." << endl;
@@ -2390,7 +2443,10 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"process_definition_alias::load_used_id_map_object()." << endl;
 	if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to process typedef." << endl;

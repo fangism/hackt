@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.3 2004/12/13 05:45:11 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.4 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -16,11 +16,33 @@
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
+// for debugging only, before inclusion of header file
+#define	DEBUG_LIST_VECTOR_POOL		0
+
+#include "memory/list_vector_pool.h"
 #include "persistent_object_manager.tcc"
+#include "stacktrace.h"
+
+//=============================================================================
+// local specializations
+#if 0
+// need to explicitly instantiate here because list_vector_pool's
+// static initialization requires that the ::name be initialized first.
+// Without this, the name is automatically instantiated, but too late.
+template struct util::what<ART::entity::data_instantiation_statement>;
+#else
+// Alternatively, explicit specialization here guarantees that the
+// static initialization occurs in the correct order in this module.  
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
+	"data_instantiation_statement")
+}
+#endif
 
 //=============================================================================
 namespace ART {
 namespace entity {
+using util::stacktrace;
 
 //=============================================================================
 // class instantiation_statement method definitions
@@ -108,6 +130,7 @@ instantiation_statement::unroll(void) const {
 void
 instantiation_statement::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE("instantiation_statement::collect_transient_info_base()");
 	if (indices)
 		indices->collect_transient_info(m);
 }
@@ -351,6 +374,7 @@ pint_instantiation_statement::unroll(void) const {
 void
 pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
+STACKTRACE("pint_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	assert(inst_base);
 	// let the scopespace take care of it
@@ -645,6 +669,13 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_instantiation_statement,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Data instantiation memory pool, initialized with chunk size 64.  
+ */
+data_instantiation_statement::pool_type
+data_instantiation_statement::pool(64);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Private empty constructor.
  */
 data_instantiation_statement::data_instantiation_statement() :
@@ -663,6 +694,30 @@ data_instantiation_statement::data_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void*
+data_instantiation_statement::operator new (size_t s) {
+	return pool.allocate();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Placement new, no-op.
+ */
+void*
+data_instantiation_statement::operator new (size_t s, void*& p) {
+	NEVER_NULL(p);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+data_instantiation_statement::operator delete (void* p) {
+	NEVER_NULL(p);
+	this_type* t = reinterpret_cast<this_type*>(p);
+	pool.deallocate(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -730,6 +785,7 @@ data_instantiation_statement::unroll(void) const {
 void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
+STACKTRACE("data_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
 	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);

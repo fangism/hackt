@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.9 2004/12/16 01:08:51 fang Exp $
+	$Id: art_object_instance_param.h,v 1.10 2005/01/12 03:19:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -45,8 +45,11 @@ public:
 
 virtual	~param_instance_collection();
 
-virtual	ostream& what(ostream& o) const = 0;
-	ostream& dump(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	ostream&
+	dump(ostream& o) const;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
@@ -207,7 +210,8 @@ public:
 
 virtual	~pbool_instance_collection();
 
-	ostream& what(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.2 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.3 2005/01/12 03:19:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -36,8 +36,10 @@ protected:
 	instantiation_statement() : instance_management_base(), 
 		indices(NULL) { }
 public:
+	explicit
 	instantiation_statement(
 		const index_collection_item_ptr_type& i);
+
 virtual	~instantiation_statement() { }
 
 	ostream& dump(ostream& o) const;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.30 2005/01/06 17:44:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.31 2005/01/12 03:19:36 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "what.tcc"
 #include "STL/list.tcc"
 #include "qmap.tcc"
+#include "stacktrace.h"
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
@@ -95,6 +96,7 @@ using std::_Select2nd;
 using std::mem_fun_ref;
 using std::dereference;
 using std::ostringstream;
+using util::stacktrace;
 
 //=============================================================================
 // local types (not externally visible)
@@ -255,6 +257,7 @@ pint_expr::make_param_expression_assignment_private(
  */
 count_ptr<const_index>
 pint_expr::resolve_index(void) const {
+	STACKTRACE("pint_expr::resolve_index()");
 	typedef count_ptr<const_index> return_type;
 	int i;
 	return (resolve_value(i)) ? 
@@ -1238,16 +1241,25 @@ pbool_instance_reference::assigner::operator() (const bool b,
 		// return true;
 	}
 	// else good to continue
-	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
-	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
+
+	// could try to use sticky_ptr here, they are, after all, locally owned
+#if 0
+	const excl_ptr<const multikey_base<int> > lower = dim.lower_multikey();
+	const excl_ptr<const multikey_base<int> > upper = dim.upper_multikey();
 	NEVER_NULL(lower);
 	NEVER_NULL(upper);
-	const sticky_ptr<multikey_generator_base<int> >
+#endif
+	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	NEVER_NULL(key_gen);
+#if 0
 	key_gen->get_lower_corner() = *lower;
 	key_gen->get_upper_corner() = *upper;
+#else
+	key_gen->get_lower_corner() = *dim.lower_multikey();
+	key_gen->get_upper_corner() = *dim.upper_multikey();
+#endif
 	key_gen->initialize();
 	list<bool>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
@@ -1686,16 +1698,25 @@ pint_instance_reference::assigner::operator() (const bool b,
 		// return true;
 	}
 	// else good to continue
-	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
-	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
+
+	// could use sticky_ptr here for local managemen (auto_ptr works too)
+#if 0
+	const excl_ptr<const multikey_base<int> > lower = dim.lower_multikey();
+	const excl_ptr<const multikey_base<int> > upper = dim.upper_multikey();
 	NEVER_NULL(lower);
 	NEVER_NULL(upper);
-	const sticky_ptr<multikey_generator_base<int> >
+#endif
+	const excl_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
 	NEVER_NULL(key_gen);
+#if 0
 	key_gen->get_lower_corner() = *lower;
 	key_gen->get_upper_corner() = *upper;
+#else
+	key_gen->get_lower_corner() = *dim.lower_multikey();
+	key_gen->get_upper_corner() = *dim.upper_multikey();
+#endif
 	key_gen->initialize();
 	list<int>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;

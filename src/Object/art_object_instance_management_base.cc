@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.2 2004/12/12 06:27:56 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.3 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "STL/list.tcc"
 #include "art_object_instance_management_base.h"
 #include "persistent_object_manager.tcc"
+#include "stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -22,6 +23,7 @@ using std::dereference;
 using std::istream;
 #include "using_ostream.h"
 using namespace ADS;
+using util::stacktrace;
 
 //=============================================================================
 // class sequential_scope method definitions
@@ -45,8 +47,30 @@ sequential_scope::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::append_instance_management(
-		excl_ptr<const instance_management_base> i) {
+		excl_ptr<const instance_management_base>& i) {
+	STACKTRACE("sequential_scope::append_instance_management()");
+	NEVER_NULL(i);
+	// PROBLEM ownership isn't being trasnfered:
+	// push_back -> insert -> _M_create_node -> std::_Construct( , );
+	// std::_Construct takes (T1*, const T2&) arguments
+	// _M_create_node takes only const value_type& as argument, 
+	// thus preventing transfer...
+	// we need a mechanism for explicit transfer, see excl_ptr_ref
+#if 0
+	STACKTRACE_STREAM << "before push_back" << endl;
+#endif
 	instance_management_list.push_back(i);
+	// accidental deallocation of i here?
+#if 0
+	STACKTRACE_STREAM << "after push_back" << endl;
+#endif
+
+	NEVER_NULL(instance_management_list.back());
+#if 0
+	STACKTRACE_STREAM << "back = " <<
+		&*instance_management_list.back() << endl;
+#endif
+	INVARIANT(!i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

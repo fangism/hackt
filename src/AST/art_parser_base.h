@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.13 2005/01/06 17:44:51 fang Exp $
+	$Id: art_parser_base.h,v 1.14 2005/01/12 03:19:34 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -14,6 +14,7 @@
 #include "sublist.h"		// for efficient list slices
 #include "memory/pointer_classes.h"	// experimental pointer classes
 #include "art_parser_fwd.h"
+#include "memory/list_vector_pool_fwd.h"
 
 /**
 	This is the general namespace for all ART-related classes.  
@@ -208,6 +209,10 @@ explicit token_char(const int i) : terminal(), c(i) { }
 	int get_char(void) const { return c; }
 	int string_compare(const char* d) const;
 	ostream& what(ostream& o) const;
+
+private:
+	typedef	list_vector_pool<token_char>	pool_type;
+	static pool_type			pool;
 };      // end class token_char
 
 //-----------------------------------------------------------------------------

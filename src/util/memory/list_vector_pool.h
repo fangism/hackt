@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.3 2005/01/11 01:56:05 fang Exp $
+	$Id: list_vector_pool.h,v 1.4 2005/01/12 03:20:02 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -30,7 +30,13 @@
 #endif
 
 // turn invariant assertions on or off
+#ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL	0
+#endif
+
+#ifndef	DEBUG_USING_WHAT
+#define	DEBUG_USING_WHAT	1
+#endif
 
 // annoying debug messages
 #define VERBOSE_ALLOC		1 && DEBUG_LIST_VECTOR_POOL
@@ -38,9 +44,14 @@
 
 
 #if DEBUG_LIST_VECTOR_POOL
-#define INVARIANT_ASSERT(foo)	assert(foo)
+	#define INVARIANT_ASSERT(foo)	assert(foo)
 #else
-#define INVARIANT_ASSERT(foo)	{ }
+	#define INVARIANT_ASSERT(foo)	{ }
+#endif
+
+// problem: preprocessor definition value not being evaluated correctly?
+#if DEBUG_USING_WHAT
+	#include "what.tcc"
 #endif
 
 namespace util {
@@ -56,6 +67,9 @@ using std::list;
 using std::vector;
 using std::ostream;
 using std::endl;
+#if DEBUG_USING_WHAT
+using util::what;
+#endif
 
 //=============================================================================
 // specialization
@@ -105,6 +119,10 @@ public:
  */
 template <class T, bool Threaded>
 class list_vector_pool {
+#if DEBUG_USING_WHAT
+private:
+	typedef	typename util::what<T>		what_type;
+#endif
 public:
 	typedef	T				value_type;
 	typedef	size_t				size_type;
@@ -176,7 +194,12 @@ public:
 		pool.push_back(chunk_type());
 		pool.back().reserve(chunk_size);
 #if VERBOSE_ALLOC
-		cerr << "Reserved chunk of size " << chunk_size << "*" <<
+		// doesn't like what<T>::name, program terminates normally!?
+		cerr << "Reserved " << 
+#if DEBUG_USING_WHAT
+			what<T>::name << 
+#endif
+			" chunk of size " << chunk_size << "*" <<
 			sizeof(T) << " starting at " <<
 			&pool.back().front() << endl;
 #endif
@@ -190,7 +213,11 @@ public:
 	// default destructor suffices
 	~list_vector_pool() {
 #if VERBOSE_ALLOC
-		status(cerr << "~list_vector_pool()" << endl);
+		status(cerr << "~list_vector_pool<" <<
+#if DEBUG_USING_WHAT
+			what<T>::name <<
+#endif
+			">()" << endl);
 #if VERBOSE_ALLOC && 0
 		// for debugging deallocation path only
 		typename impl_type::iterator i = pool.begin();
@@ -232,7 +259,11 @@ public:
 			ret->~T();		// Lazy deletion!
 			free_list.pop();
 #if VERBOSE_ALLOC
-			cerr << "Allocated from free-list @ " << ret << endl;
+			cerr << "Allocated " <<
+#if DEBUG_USING_WHAT
+				what<T>::name << 
+#endif
+				" from free-list @ " << ret << endl;
 #endif
 			return ret;
 		} else {
@@ -243,8 +274,11 @@ public:
 			if (chunk->size() == chunk->capacity()) {
 				// rare case: allocate chunk
 #if VERBOSE_ALLOC
-				cerr << "New chunk of " << chunk_size
-					<< " allocated." << endl;
+				cerr << "New chunk of " << chunk_size << " " <<
+#if DEBUG_USING_WHAT
+					what<T>::name <<
+#endif
+					" allocated." << endl;
 #endif
 				pool.push_back(chunk_type());
 				chunk = &pool.back();
@@ -257,7 +291,11 @@ public:
 			pointer ret = &chunk->back();
 			INVARIANT_ASSERT(ret);
 #if VERBOSE_ALLOC
-			cerr << "Allocated from pool @ " << ret << endl;
+			cerr << "Allocated " <<
+#if DEBUG_USING_WHAT
+				what<T>::name <<
+#endif
+				" from pool @ " << ret << endl;
 #endif
 			return ret;
 		}
@@ -278,7 +316,11 @@ public:
 #endif
 		assert(p);
 #if VERBOSE_ALLOC
-		cerr << "Returned " << p << " to free-list." << endl;
+		cerr << "Returned " <<
+#if DEBUG_USING_WHAT
+			what<T>::name <<
+#endif
+			" @ " << p << " to free-list." << endl;
 #endif
 		free_list.push(p);
 		// lock will expire at end-of-scope
@@ -298,7 +340,11 @@ public:
 	construct(pointer p, const T& val) {
 		assert(p);
 #if VERBOSE_ALLOC
-		cerr << "Constructing " << p;
+		cerr << "Constructing " <<
+#if DEBUG_USING_WHAT
+			what<T>::name <<
+#endif
+			" @ " << p;
 		new(p) T(val);
 		cerr << " ... constructed." << endl;
 #else
@@ -330,8 +376,12 @@ public:
 	// feedback IO
 	ostream&
 	status(ostream& o) const {
-		o << pool.size() << " chunks of " << chunk_size  << "*" << 
-			sizeof(T) << " have been allocated." << endl;
+		o << pool.size() << " chunks of " << chunk_size << "*" <<
+			sizeof(T) << " " <<
+#if DEBUG_USING_WHAT
+			what<T>::name <<
+#endif
+			" have been allocated." << endl;
 		o << "Free-list has " << free_list.size() << 
 			" entries available." << endl;
 		return o;

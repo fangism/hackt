@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.7 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_definition.cc,v 1.8 2005/01/12 03:19:34 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -27,6 +27,8 @@
 #include "art_object_definition.h"
 #include "art_object_expr_base.h"
 
+#include "stacktrace.h"
+
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
@@ -39,6 +41,7 @@
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
+using util::stacktrace;
 
 //=============================================================================
 // abstract class prototype method definitions
@@ -105,6 +108,7 @@ user_data_type_prototype::rightmost(void) const {
 
 never_ptr<const object>
 user_data_type_prototype::check_build(never_ptr<context> c) const {
+	STACKTRACE("user_data_type_prototype::check_build()");
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"user_data_type_prototype::check_build(...): " << endl;
@@ -202,6 +206,7 @@ enum_signature::~enum_signature() {
  */
 never_ptr<const object>
 enum_signature::check_build(never_ptr<context> c) const {
+	STACKTRACE("enum_signature::check_build()");
 	excl_ptr<definition_base> ed(
 		new enum_datatype_def(c->get_current_namespace(), *id));
 	// elsewhere would need to add template and port formals
@@ -252,6 +257,7 @@ enum_prototype::rightmost(void) const {
  */
 never_ptr<const object>
 enum_prototype::check_build(never_ptr<context> c) const {
+	STACKTRACE("enum_prototype::check_build()");
 	return enum_signature::check_build(c);	// using.
 }
 
@@ -266,6 +272,7 @@ enum_member_list::~enum_member_list() {
 
 never_ptr<const object>
 enum_member_list::check_build(never_ptr<context> c) const {
+	STACKTRACE("enum_member_list::check_build()");
 	// use current_open_definition
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
@@ -312,6 +319,7 @@ enum_def::rightmost(void) const {
  */
 never_ptr<const object>
 enum_def::check_build(never_ptr<context> c) const {
+	STACKTRACE("enum_def::check_build()");
 	never_ptr<const object> o(enum_signature::check_build(c));
 	if (!o)	return never_ptr<const object>(NULL);
 	// lookup and open definition
@@ -353,6 +361,7 @@ user_chan_type_signature::~user_chan_type_signature() {
  */
 never_ptr<const object>
 user_chan_type_signature::check_build(never_ptr<context> c) const {
+	STACKTRACE("user_chan_type_signature::check_build()");
 	cerr << "user_chan_type_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> dd(
 		new user_def_chan(c->get_current_namespace(), *id));
@@ -467,6 +476,7 @@ process_signature::get_name(void) const {
  */
 never_ptr<const object>
 process_signature::check_build(never_ptr<context> c) const {
+	STACKTRACE("process_signature::check_build()");
 //	cerr << "process_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> ret(
 		new process_definition(c->get_current_namespace(), *id));
@@ -538,6 +548,7 @@ process_prototype::rightmost(void) const {
  */
 never_ptr<const object>
 process_prototype::check_build(never_ptr<context> c) const {
+	STACKTRACE("process_prototype::check_build()");
 	return process_signature::check_build(c);
 }
 
@@ -579,6 +590,7 @@ process_def::rightmost(void) const {
  */
 never_ptr<const object>
 process_def::check_build(never_ptr<context> c) const {
+	STACKTRACE("process_def::check_build()");
 #if 0
 	return node::check_build(c);		// temporary
 #else
@@ -630,6 +642,7 @@ user_data_type_signature::~user_data_type_signature() {
  */
 never_ptr<const object>
 user_data_type_signature::check_build(never_ptr<context> c) const {
+	STACKTRACE("user_data_type_signature::check_build()");
 	cerr << "user_data_type_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base> dd(
 		new user_def_datatype(c->get_current_namespace(), *id));
@@ -687,6 +700,7 @@ typedef_alias::rightmost(void) const {
  */
 never_ptr<const object>
 typedef_alias::check_build(never_ptr<context> c) const {
+	STACKTRACE("typedef_alias::check_build()");
 	// first we read the user's mind by peeking down base.  
 	// does base have any template params, even an empty list?
 	never_ptr<const type_base>

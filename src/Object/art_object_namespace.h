@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.4 2004/12/12 06:27:56 fang Exp $
+	$Id: art_object_namespace.h,v 1.5 2005/01/12 03:19:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -203,7 +203,7 @@ virtual	never_ptr<const scopespace>
 
 protected:
 	never_ptr<const instance_collection_base>
-		add_instance(excl_ptr<instance_collection_base> i);
+		add_instance(excl_ptr<instance_collection_base>& i);
 public:
 	// need id because instantiation statement won't be named yet!
 	never_ptr<const instance_collection_base>

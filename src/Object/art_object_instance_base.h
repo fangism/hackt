@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.8 2004/12/16 01:08:51 fang Exp $
+	$Id: art_object_instance_base.h,v 1.9 2005/01/12 03:19:37 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -154,10 +154,10 @@ virtual	count_ptr<const fundamental_type_reference>
 	current_collection_state(void) const;
 
 	const_range_list
-	detect_static_overlap(index_collection_item_ptr_type r) const;
+	detect_static_overlap(const index_collection_item_ptr_type& r) const;
 
 	const_range_list
-	add_instantiation_statement(index_collection_type::value_type r);
+	add_instantiation_statement(const index_collection_type::value_type& r);
 
 private:
 	bool

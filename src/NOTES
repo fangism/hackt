@@ -12,6 +12,25 @@ Currently, leave it incorrect as release(), because in the middle of
 	other modifications (need isolation).  
 	Meanwhile, littered with debug code...
 
+Added FIX_DEBUG predefine-style switch to pointer_classes.h, 
+	need to isolate the problem.  
+	gdb stacktrace shows functions called with an impossible call stack!
+	lookup_namespace inside check_null_template_arguments !?!?
+	memory corruption?
+	Worst case, may need to trace EVERY pointer_class object...
+	FIXED: is safe to remove this conditional macro (2005-01-11)
+	Even if ONLY sticky_ptr is fixed, there is still problem!
+	Problem was failed ownership transfer leading to 
+		premature deallocation, and implicit defaul copy-constructor, 
+		which gives wrong behavior.  
+	Produce (emulate) test cases?
+
+Time to use stacktrace!
+
+Auto-configure debug mode vs. develop mode vs. release mode
+
+test suit intended for develop mode or release mode
+
 //=============================================================================
 2004-12-12: Regarding unroll-time parameter resolution.
 

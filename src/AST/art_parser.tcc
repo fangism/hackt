@@ -1,7 +1,7 @@
 /**
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: art_parser.tcc,v 1.5 2004/12/05 05:06:49 fang Exp $
+	$Id: art_parser.tcc,v 1.6 2005/01/12 03:19:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -15,6 +15,9 @@
 #include "art_parser_base.h"		// includes "ptrs.h", "count_ptr.h"
 #include "art_context.h"
 	// for class context, uses auto_indent()
+
+#include "what.tcc"
+#include "stacktrace.h"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -53,6 +56,9 @@ namespace parser {
 class terminal;
 class token_char;
 class token_string;
+
+using util::what;
+using util::stacktrace;
 
 //=============================================================================
 // TEMPLATE METHOD DEFINITIONS
@@ -123,6 +129,11 @@ node_list_base<T>::what(ostream& o) const {
 NODE_LIST_BASE_TEMPLATE_SPEC
 never_ptr<const object>
 node_list_base<T>::check_build(never_ptr<context> c) const {
+	static const string trace_root(util::what<T>::name);
+	static const char trace_suffix[] = "_list::check_build()";
+	static const string trace_str(trace_root + trace_suffix);
+	STACKTRACE(trace_str);
+
 	never_ptr<const object> ret(NULL);
 	const_iterator i = begin();
 	TRACE_CHECK_BUILD(

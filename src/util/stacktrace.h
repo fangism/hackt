@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.2 2005/01/08 08:30:53 fang Exp $
+	$Id: stacktrace.h,v 1.3 2005/01/12 03:19:41 fang Exp $
  */
 
 #ifndef	__STACK_TRACE_H__
@@ -21,7 +21,7 @@
 	Predefine this to 0 at compile time to turn-off.  
  */
 #ifndef	ENABLE_STACKTRACE
-#define	ENABLE_STACKTRACE	1	// on or off by default
+#define	ENABLE_STACKTRACE	0	// on or off by default
 #endif
 
 
@@ -37,6 +37,8 @@
 			stacktrace::echo __echo_stacktrace__(1)
 	#define STACKTRACE_ECHO_OFF					\
 			stacktrace::echo __echo_stacktrace__(0)
+	#define	STACKTRACE_STREAM					\
+			stacktrace::stream()
 	#define REDIRECT_STACKTRACE(os)					\
 			stacktrace::redirect __redir_stacktrace__(os)
 	#define	ASSERT_STACKTRACE(expr)					\
@@ -45,10 +47,15 @@
 	#define	STACKTRACE(str)
 	#define STACKTRACE_ECHO_ON
 	#define STACKTRACE_ECHO_OFF
+	#define	STACKTRACE_STREAM		std::cerr
 	#define REDIRECT_STACKTRACE(os)
 	#define	ASSERT_STACKTRACE(expr)		assert(expr)
 #endif
 
+
+//=============================================================================
+
+// #if ENABLE_STACKTRACE
 namespace util {
 USING_LIST
 using std::ostream;
@@ -72,10 +79,14 @@ public:
 private:
 	static manager			the_manager;
 public:
-	stacktrace(const char*);
+//	stacktrace(const char*);
 	stacktrace(const string&);
 	~stacktrace();
 public:
+	static
+	ostream&
+	stream(void);
+
 	/**
 		Explicit request by user to dump the stack trace.
 		Useful in assertion failures.  
@@ -109,6 +120,10 @@ struct stacktrace::redirect {
 //=============================================================================
 
 }	// end namespace util
+
+// #else
+	// don't even bother processing class declaration!
+// #endif	// ENABLE_STACKTRACE
 
 #endif	// __STACK_TRACE_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.7 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_formal.cc,v 1.8 2005/01/12 03:19:34 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -26,6 +26,8 @@
 #include "art_object_definition.h"
 #include "art_object_expr_base.h"
 
+#include "stacktrace.h"
+
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
@@ -38,6 +40,7 @@
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
+using util::stacktrace;
 
 //=============================================================================
 // class data_param_id method definitions
@@ -152,6 +155,7 @@ port_formal_id::rightmost(void) const {
  */
 never_ptr<const object>
 port_formal_id::check_build(never_ptr<context> c) const {
+	STACKTRACE("port_formal_id::check_build()");
 	never_ptr<const object> o;
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
@@ -224,6 +228,7 @@ port_formal_decl::rightmost(void) const {
  */
 never_ptr<const object>
 port_formal_decl::check_build(never_ptr<context> c) const {
+	STACKTRACE("port_formal_decl::check_build()");
 //	never_ptr<const object> t;
 	type->check_build(c);
 	// useless return value
@@ -318,6 +323,7 @@ template_formal_id::rightmost(void) const {
  */
 never_ptr<const object>
 template_formal_id::check_build(never_ptr<context> c) const {
+	STACKTRACE("template_formal_id::check_build()");
 	never_ptr<const object> o;
 	never_ptr<const instance_collection_base> t;
 		// should be param_instantiation
@@ -406,6 +412,7 @@ template_formal_decl::rightmost(void) const {
  */
 never_ptr<const object>
 template_formal_decl::check_build(never_ptr<context> c) const {
+	STACKTRACE("template_formal_decl::check_build()");
 //	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<

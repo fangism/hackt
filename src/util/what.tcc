@@ -1,7 +1,7 @@
 /**
 	\file "what.tcc"
 	Default implementation for user-defined type-names.
-	$Id: what.tcc,v 1.1 2005/01/06 17:44:58 fang Exp $
+	$Id: what.tcc,v 1.2 2005/01/12 03:19:41 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_TCC__
@@ -19,7 +19,7 @@ namespace util {
  */
 UTIL_WHAT_TEMPLATE_SIGNATURE
 const typename what<T>::name_type
-what<T>::name(typeid(T).name());
+what<T>::name = typeid(T).name();
 
 
 }	// end namespace util

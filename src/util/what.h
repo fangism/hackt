@@ -1,7 +1,7 @@
 /**
 	\file "what.h"
 	Utility for user-defined type-names.
-	$Id: what.h,v 1.1 2005/01/06 17:44:58 fang Exp $
+	$Id: what.h,v 1.2 2005/01/12 03:19:41 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_H__
@@ -63,7 +63,7 @@ namespace util {
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what {
 	/// the type of the name (must be printable)
-	typedef	const char		name_type[];
+	typedef	const char*		name_type;
 	/// the full name of the type
 	static const name_type		name;
 };	// end struct what

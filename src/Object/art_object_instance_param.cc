@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.4 2004/12/16 01:08:51 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.5 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -15,6 +15,7 @@
 #include "art_object_expr_base.h"
 
 #include "indent.h"
+#include "stacktrace.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -25,6 +26,7 @@ namespace entity {
 #include "using_ostream.h"
 using util::indent;
 using util::auto_indent;
+using util::stacktrace;
 
 //=============================================================================
 // class param_instance_collection method definitions
@@ -49,6 +51,9 @@ param_instance_collection::~param_instance_collection() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_instance_collection::dump(ostream& o) const {
+#if 1
+	STACKTRACE("param_instance_collection::dump()");
+#endif
 	get_type_ref()->dump(o) << " " << key;
 	// collection of indices to instantiate sequentially during unroll
 	index_collection_type::const_iterator i = index_collection.begin();
@@ -85,6 +90,7 @@ param_instance_collection::dump(ostream& o) const {
  */
 bool
 param_instance_collection::is_template_formal(void) const {
+	STACKTRACE("param_instance_collection::is_template_formal()");
 	// look itself up in owner namespace
 	never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());

@@ -1,13 +1,19 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.2 2005/01/08 08:30:53 fang Exp $
+	$Id: stacktrace.cc,v 1.3 2005/01/12 03:19:40 fang Exp $
  */
 
 #include <pthread.h>
 #include <iostream>
 #include <iterator>
 #include <string>
+
+// ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
+#ifdef	ENABLE_STACKTRACE
+#undef	ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE	1
+#endif
 
 #include "stacktrace.h"
 #include "STL/list.tcc"
@@ -52,7 +58,8 @@ private:
 private:
 	manager() {
 		// must guarantee that they aren't empty
-		stack_echo.push(0);
+		stack_echo.push(1);
+		// or if you push(1) instead, echo will default ON
 		stack_streams.push(&cerr);
 	}
 
@@ -93,6 +100,9 @@ default_stack_indent_string("| ");
 //=============================================================================
 // class stacktrace method definitions
 
+#if 0
+// removed because it introduces ambiguity with next definition
+// because implicit conversion exists from const char* to std::string.
 stacktrace::stacktrace(const char* s) {
 	stacktrace::manager::stack_text.push_back(s);
 	if (stacktrace::manager::stack_echo.top())
@@ -102,6 +112,7 @@ stacktrace::stacktrace(const char* s) {
 			<< endl;
 	stacktrace::manager::stack_indent.push_back(default_stack_indent_string);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::stacktrace(const string& s) {
@@ -123,6 +134,15 @@ stacktrace::~stacktrace() {
 			<< "leave: " << stacktrace::manager::stack_text.back()
 			<< endl;
 	stacktrace::manager::stack_text.pop_back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns reference to the current stacktrace output stream.
+ */
+ostream&
+stacktrace::stream(void) {
+	return *stacktrace::manager::stack_streams.top();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.6 2005/01/06 17:44:54 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.7 2005/01/12 03:19:38 fang Exp $
  */
 
 #include <iostream>
@@ -39,6 +39,7 @@
 #include "art_object_type_hash.h"
 
 #include "indent.h"
+#include "stacktrace.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -99,6 +100,7 @@ using namespace util::memory;
 using namespace ADS;		// for function compositions
 using util::indent;
 using util::auto_indent;
+using util::stacktrace;
 
 //=============================================================================
 // general non-member function definitions
@@ -175,6 +177,7 @@ scopespace::lookup_object(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
+	STACKTRACE("scopespace::lookup_object()");
 #if 0
 	indent cerr_ind(cerr);
 	cerr << auto_indent << "scopespace::lookup_object()" << endl;
@@ -228,9 +231,11 @@ if (id.is_absolute()) {
  */
 never_ptr<const scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
+	STACKTRACE("scopespace::lookup_namespace()");
 #if 1
 	indent cerr_ind(cerr);
-	cerr << auto_indent << "scopespace::lookup_namespace()" << endl;
+	cerr << auto_indent << "scopespace::lookup_namespace(): id @ " 
+		<< &id << " = " << id << endl;
 #endif
 	never_ptr<const scopespace> parent(get_parent());
 	NEVER_NULL(parent);
@@ -258,9 +263,10 @@ never_ptr<const instance_collection_base>
 scopespace::add_instance(
 		never_ptr<instantiation_statement> inst_stmt, 
 		const token_identifier& id) {
+	STACKTRACE("scopespace::add_instance(never_ptr<inst_stmt>, id)");
 	typedef never_ptr<const instance_collection_base>	return_type;
-	assert(id != "");
-	assert(inst_stmt);
+	INVARIANT(id != "");
+	NEVER_NULL(inst_stmt);
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
@@ -362,12 +368,12 @@ scopespace::add_instance(
 		// attach non-const back-reference
 		inst_stmt->attach_collection(new_inst);
 		new_inst->add_instantiation_statement(inst_stmt);
-		assert(inst_stmt->get_name() == id);
-		assert(new_inst);
+		INVARIANT(inst_stmt->get_name() == id);
+		NEVER_NULL(new_inst);
 		never_ptr<const instance_collection_base>
 		ret(add_instance(new_inst));
-		assert(!new_inst.owned());
-		assert(ret);
+		INVARIANT(!new_inst.owned());
+		NEVER_NULL(ret);
 #if 0
 		ret->dump(cerr << "just added: ") << endl;
 		never_ptr<const object> probe(
@@ -385,13 +391,15 @@ scopespace::add_instance(
 	named scope space.  
  */
 never_ptr<const instance_collection_base>
-scopespace::add_instance(excl_ptr<instance_collection_base> i) {
+scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
+	STACKTRACE("scopespace::add_instance(excl_ptr<instance_collection_base>&)");
 	typedef never_ptr<const instance_collection_base>	return_type;
 	return_type ret(i);
-	assert(i);
+	NEVER_NULL(i);
 	const string id(i->get_name());
-	assert(id != "");		// cannot be empty string
+	INVARIANT(id != "");		// cannot be empty string
 	used_id_map[id] = i;
+	INVARIANT(!i);
 	return ret;
 }
 
@@ -1407,6 +1415,7 @@ name_space::add_definition(excl_ptr<definition_base> db) {
  */
 never_ptr<const scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
+	STACKTRACE("namespace::lookup_namespace()");
 #if 1
 	indent cerr_ind(cerr);
 	cerr << auto_indent <<
@@ -1528,16 +1537,19 @@ name_space::exclude_object(const used_id_map_type::value_type& i) const {
  */
 void
 name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
-	assert(o);
-	if (o.is_a<name_space>())
+	STACKTRACE("name_space::load_used_id_map_object()");
+	NEVER_NULL(o);
+	if (o.is_a<name_space>()) {
 		add_namespace(o.is_a_xfer<name_space>());
-	else if (o.is_a<definition_base>())
+	} else if (o.is_a<definition_base>()) {
 		add_definition(o.is_a_xfer<definition_base>());
 	// ownership restored here!
-	else if (o.is_a<instance_collection_base>()) {
-		add_instance(o.is_a_xfer<instance_collection_base>());
-	}
-	else {
+	} else if (o.is_a<instance_collection_base>()) {
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
+		add_instance(icbp);
+		INVARIANT(!icbp);
+	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;
 	}

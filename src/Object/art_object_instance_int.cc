@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.7 2005/01/06 17:44:54 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.8 2005/01/12 03:19:37 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
+#include "stacktrace.h"
 
 #include "ptrs_functional.h"
 #include "compose.h"
@@ -28,6 +29,7 @@ using namespace MULTIKEY_NAMESPACE;
 using namespace ADS;
 using std::dereference;
 using std::mem_fun_ref;
+using util::stacktrace;
 
 //=============================================================================
 // class int_instance_collection method definitions
@@ -71,6 +73,7 @@ int_instance_collection::make_instance_reference(void) const {
 void
 int_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
+STACKTRACE("int_instance_collection::collect_transient_info()");
 if (!m.register_transient_object(this, 
 		DINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	parent_type::collect_transient_info_base(m);
