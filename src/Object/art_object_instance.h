@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.4.1.2.2 2005/02/20 06:36:29 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.4.1.2.3 2005/02/20 07:20:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -101,8 +101,6 @@ virtual const_index_list
 
 
 public:
-//	PERSISTENT_METHODS
-
 	static
 	process_instance_collection*
 	make_proc_array(const scopespace& o, const string& n, const size_t d);
@@ -140,10 +138,10 @@ protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
 
-// protect constructor?
-public:
 	datatype_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
+
+public:
 
 virtual	~datatype_instance_collection();
 
@@ -173,11 +171,6 @@ virtual	bool
 //	bool equals_template_formal(const template_formal_decl& tf) const;
 virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
-
-#if 0
-	member_inst_ref_ptr_type
-	make_member_instance_reference(const inst_ref_ptr_type& b) const;
-#endif
 
 virtual void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
@@ -255,8 +248,6 @@ virtual const_index_list
 
 
 public:
-//	PERSISTENT_METHODS
-
 	static
 	channel_instance_collection*
 	make_chan_array(const scopespace& o, const string& n, const size_t d);
@@ -265,6 +256,7 @@ public:
 	persistent*
 	construct_empty(const int);
 
+	// later array will contain aliases, which contains pointers...
 	void
 	collect_transient_info(persistent_object_manager& m) const;
 

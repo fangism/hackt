@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1.2.2 2005/02/20 06:36:28 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.1.2.1.2.3 2005/02/20 07:20:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -35,12 +35,6 @@ protected:
 
 	explicit
 	datatype_instance_reference(const instantiation_state& s);
-
-#if 0
-	// may be obsolete...
-	datatype_instance_reference(excl_ptr<index_list>& i, 
-		const instantiation_state& s);
-#endif
 
 public:
 virtual	~datatype_instance_reference();
@@ -84,12 +78,6 @@ public:
 	explicit
 	channel_instance_reference(
 		const never_ptr<const channel_instance_collection> ci);
-
-#if 0
-	channel_instance_reference(
-		const never_ptr<const channel_instance_collection> ci, 
-		excl_ptr<index_list>& i);
-#endif
 
 virtual	~channel_instance_reference();
 
@@ -141,12 +129,6 @@ public:
 	process_instance_reference(
 		const never_ptr<const process_instance_collection> pi);
 
-#if 0
-	process_instance_reference(
-		const never_ptr<const process_instance_collection> pi, 
-		excl_ptr<index_list>& i);
-#endif
-
 virtual	~process_instance_reference();
 
 virtual	ostream&
@@ -173,142 +155,6 @@ public:
 	// need to be virtual? for member_instance_reference?
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 };	// end class process_instance_reference
-
-//=============================================================================
-#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
-/**
-	Reference to a process instance member of something else.
-	Derive from some generic member_instance_reference?
- */
-class process_member_instance_reference :
-		public member_instance_reference_base, 
-		public process_instance_reference {
-private:
-	typedef	process_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-public:
-	typedef	parent_type::alias_connection_type	alias_connection_type;
-	typedef	parent_type::instance_collection_type	instance_collection_type;
-	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const never_ptr<const process_instance_collection>	process_inst_ref;
-//	const count_ptr<const simple_instance_reference>	base;
-private:
-	process_member_instance_reference();
-public:
-	process_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const instance_collection_type> m);
-
-	~process_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-
-private:
-#if 0
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-#else
-	using parent_type::make_aliases_connection_private;
-#endif
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-};	// end class process_member_instance_reference
-
-//=============================================================================
-/**
-	Reference to a datatype instance member of another struct.  
-	Potential problem to address: nested structs (easy, just fix)
-		Containership vs. inheritance.  
-	This will become sub-typed via template...
- */
-class datatype_member_instance_reference : 
-		public member_instance_reference_base, 
-		public datatype_instance_reference {
-private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const count_ptr<const simple_instance_reference>	base;
-	const never_ptr<const datatype_instance_collection>	data_inst_ref;
-private:
-	datatype_member_instance_reference();
-public:
-	datatype_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const datatype_instance_collection> m);
-
-	~datatype_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-private:
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class datatype_member_instance_reference
-
-//=============================================================================
-/**
-	Reference to a channel instance member of another struct.  
- */
-class channel_member_instance_reference : 
-		public member_instance_reference_base, 
-		public channel_instance_reference {
-private:
-	typedef	channel_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-public:
-	typedef	parent_type::alias_connection_type	alias_connection_type;
-	typedef	parent_type::instance_collection_type	instance_collection_type;
-	typedef	interface_type::base_inst_ptr_type	base_inst_ptr_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const never_ptr<const channel_instance_collection>	channel_inst_ref;
-//	const count_ptr<const simple_instance_reference>	base;
-private:
-	channel_member_instance_reference();
-public:
-	channel_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const channel_instance_collection> m);
-
-	~channel_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-private:
-#if 0
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-#else
-	using parent_type::make_aliases_connection_private;
-#endif
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class channel_member_instance_reference
-
-#endif	// SUBTYPE_MEMBER_INSTANCE_REFERENCE
 
 //=============================================================================
 // classes pint_instance_reference and pbool_instance_reference

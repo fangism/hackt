@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.1.2.1 2005/02/20 06:36:28 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4.16.1.12.1.2.2 2005/02/20 07:20:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -60,11 +60,6 @@ private:
 	make_aliases_connection_private(void) const;
 
 protected:
-#if 0
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-#else
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;
 
@@ -73,7 +68,6 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
-#endif
 
 public:
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS

@@ -1,46 +1,16 @@
 /**
 	\file "art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.1.2.1 2005/02/20 06:36:32 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.1.2.2 2005/02/20 07:20:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__
 #define	__ART_OBJECT_MEMBER_INST_REF_TCC__
 
 #include <iostream>
-
+#include "what.h"
+#include "persistent_object_manager.h"
 #include "art_object_inst_ref_base.h"
-
-#if 0
-#include "STL/list.tcc"
-#include "multidimensional_sparse_set.tcc"
-
-#include "art_object_type_ref_base.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_namespace.h"
-#include "art_object_inst_ref.h"
-
-#if 1
-// this really needs to be moved to a separate file...
-#include "art_object_inst_ref_data.h"
-	// for datatype_member_instance_reference::make_aliases_connection_private
-
-	// to complete types, ugh...
-#include "art_object_instance_bool.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#endif
-
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr.h"		// for dynamic_range_list
-#include "art_object_control.h"
-#include "art_object_connect.h"		// for aliases_connection_base
-#include "persistent_object_manager.tcc"
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
-#endif
 
 //=============================================================================
 namespace ART {
@@ -79,7 +49,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::~member_instance_reference() {
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
-	return o << "member-instance-ref";
+	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

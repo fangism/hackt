@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.2.2.1 2005/02/19 08:40:58 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.12.2.1.10.2.2.1.2.1 2005/02/20 07:20:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -105,11 +105,9 @@ instantiation_statement::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 instantiation_statement::~instantiation_statement() {
 	STACKTRACE_DTOR("~instantiation_statement()");
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

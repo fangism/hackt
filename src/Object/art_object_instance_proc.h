@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.4 2005/02/17 00:10:16 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.4.6.1 2005/02/20 07:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -97,17 +97,6 @@ public:
 	/// dereference, create
 	proc_instance&
 	operator * () const;
-
-#if 0
-	/**
-		Alias connection.  
-	 */
-	proc_instance_alias&
-	operator = (const proc_instance_alias& b) {
-		alias = alias_ptr_type(&b);
-		return *this;
-	}
-#endif
 
 	/**
 		Whether or not they refer to the same node.
@@ -233,7 +222,6 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
-
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC

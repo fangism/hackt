@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.7.6.2 2005/02/20 06:36:28 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.7.6.3 2005/02/20 07:20:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -114,9 +114,6 @@ instance_collection_base::~instance_collection_base() {
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
-#if 0
-	get_type_ref()->dump(o);
-#else
 	// but we need a version for unrolled and resolved parameters.  
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
@@ -125,7 +122,6 @@ instance_collection_base::dump(ostream& o) const {
 		// get_type_ref just grabs the type of the first statement
 		get_type_ref()->dump(o);
 	}
-#endif
 	o << " " << key;
 
 	if (dimensions) {
@@ -414,20 +410,6 @@ instance_collection_base::formal_size_equivalent(
 		// For template, need notion of positional parameter 
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
-#if 0
-		const count_ptr<const const_range_list>
-			ic((*i)->get_indices().is_a<const const_range_list>());
-		const count_ptr<const const_range_list>
-			jc((*j)->get_indices().is_a<const const_range_list>());
-		if (ic && jc) {
-			// compare dense ranges in each dimension
-			// must be equal!
-			return (*ic == *jc);
-		} else {
-			// one of them is dynamic, thus we must conservatively
-			return true;
-		}
-#else
 		// is count_ptr<range_expr_list>
 		const index_collection_item_ptr_type ii = (*i)->get_indices();
 		const index_collection_item_ptr_type ji = (*j)->get_indices();
@@ -435,7 +417,6 @@ instance_collection_base::formal_size_equivalent(
 			return ii->must_be_formal_size_equivalent(*ji);
 		} else 	return (!ii && !ji);
 			// both NULL is ok too
-#endif
 	} else {
 		// both are scalar, single instances
 		return true;

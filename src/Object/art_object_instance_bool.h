@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.1.4.1 2005/02/20 06:36:30 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.1.4.2 2005/02/20 07:20:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -386,13 +386,6 @@ virtual	bool_instance_alias_base&
 	static
 	persistent*
 	construct_empty(const int);
-
-#if 0
-	// left to children classes to implement, now that there are pointers to visit...
-
-	void
-	collect_transient_info(persistent_object_manager& m) const;
-#endif
 
 protected:
 	using parent_type::collect_transient_info_base;

@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.9.2.3.2.1.4.1 2005/02/20 06:36:32 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.9.2.3.2.1.4.2 2005/02/20 07:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -76,17 +76,6 @@ public:
 	/// dereference, create
 	struct_instance&
 	operator * () const;
-
-#if 0
-	/**
-		Alias connection.  
-	 */
-	struct_instance_alias&
-	operator = (const struct_instance_alias& b) {
-		alias = alias_ptr_type(&b);
-		return *this;
-	}
-#endif
 
 	/**
 		Whether or not they refer to the same node.

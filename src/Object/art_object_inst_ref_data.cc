@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.2.2.1 2005/02/20 06:36:28 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.2.2.2 2005/02/20 07:20:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -44,6 +44,17 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::datastruct_member_instance_reference, 
 		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
+
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::int_member_instance_reference, "int-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::bool_member_instance_reference, "bool-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::enum_member_instance_reference, "enum-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::datastruct_member_instance_reference,
+		"struct-member-inst-ref")
+
 }	// end namespace util
 
 namespace ART {
@@ -484,13 +495,13 @@ datastruct_instance_reference::load_object(const persistent_object_manager& m,
 	this->load_object_base(m, f);
 }
 
-#if SUBTYPE_MEMBER_INSTANCE_REFERENCE
-// explicit template instantiation
+//=============================================================================
+// explicit template instantiations
+
 template class member_instance_reference<bool_instance_reference>;
 template class member_instance_reference<int_instance_reference>;
 template class member_instance_reference<enum_instance_reference>;
 template class member_instance_reference<datastruct_instance_reference>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

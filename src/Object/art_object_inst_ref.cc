@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2.2.2 2005/02/20 06:36:27 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.5.2.1.2.2.2.3 2005/02/20 07:20:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -18,19 +18,6 @@
 #include "art_object_namespace.h"
 #include "art_object_inst_ref.h"
 #include "art_object_member_inst_ref.tcc"
-
-#if 1
-// this really needs to be moved to a separate file...
-#include "art_object_inst_ref_data.h"
-	// for datatype_member_instance_reference::make_aliases_connection_private
-
-	// to complete types, ugh...
-#include "art_object_instance_bool.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#endif
-
 #include "art_object_inst_stmt_base.h"
 #include "art_object_expr.h"		// for dynamic_range_list
 #include "art_object_control.h"
@@ -52,14 +39,14 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_member_instance_reference, 
 		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datatype_member_instance_reference, 
-		MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
-#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_member_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
+
+SPECIALIZE_UTIL_WHAT(ART::entity::process_member_instance_reference, 
+		"process-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_instance_reference, 
+		"channel-member-inst-ref")
 }	// end namespace util
 
 //=============================================================================
@@ -939,64 +926,6 @@ simple_instance_reference::load_instance_collection_state(istream& f) {
 }
 
 //=============================================================================
-// class member_instance_reference_base method definitions
-
-#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
-/**
-	Private empty constructor.  
- */
-member_instance_reference_base::member_instance_reference_base() :
-		base_inst_ref(NULL) {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-member_instance_reference_base::member_instance_reference_base(
-		const base_inst_ptr_type& b) :
-		base_inst_ref(b) {
-	NEVER_NULL(base_inst_ref);
-	INVARIANT(!base_inst_ref->dimensions());
-		// must be scalar! (for now)
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-member_instance_reference_base::~member_instance_reference_base() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-member_instance_reference_base::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	base_inst_ref->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param m the persistent object manager for pointer translation.
-	\param o the output stream to write binary.
-	\pre o must be the output stream corresponding to this object.
- */
-void
-member_instance_reference_base::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, base_inst_ref);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param m the persistent object manager for pointer translation.
-	\param i the input stream to read binary.
-	\pre i must be the input stream corresponding to this object.
- */
-void
-member_instance_reference_base::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, base_inst_ref);
-	NEVER_NULL(base_inst_ref);
-}
-#endif
-
-//=============================================================================
 #if 0
 PHASE IN later...
 // class collective_instance_reference method definitions
@@ -1502,7 +1431,7 @@ channel_instance_reference::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, channel_inst_ref);
 	NEVER_NULL(channel_inst_ref);
-	m.load_object_once(const_cast<channel_instance_collection*>(
+	m.load_object_once(const_cast<instance_collection_type*>(
 		&*channel_inst_ref));
 	parent_type::load_object_base(m, i);
 }
@@ -1523,323 +1452,9 @@ channel_instance_reference::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-#if !SUBTYPE_MEMBER_INSTANCE_REFERENCE
-// class process_member_instance_reference method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-process_member_instance_reference::process_member_instance_reference() :
-		member_instance_reference_base(), 
-		process_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_member_instance_reference::process_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const process_instance_collection> m) :
-		member_instance_reference_base(b), 
-		process_instance_reference(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_member_instance_reference::~process_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-process_member_instance_reference::what(ostream& o) const {
-	return o << "process-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-process_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	process_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-process_member_instance_reference::construct_empty(const int i) {
-	return new process_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-process_member_instance_reference::write_object(
-		const persistent_object_manager& m, ostream& f) const {
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, process_inst_ref);
-	parent_type::write_object_base(m, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-process_member_instance_reference::load_object(
-		const persistent_object_manager& m, istream& f) {
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, process_inst_ref);
-	NEVER_NULL(process_inst_ref);
-	m.load_object_once(const_cast<process_instance_collection*>(
-		&*process_inst_ref));
-	parent_type::load_object_base(m, f);
-}
-
-//=============================================================================
-// class datatype_member_instance_reference method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-datatype_member_instance_reference::datatype_member_instance_reference() :
-		member_instance_reference_base(), 
-		datatype_instance_reference(), 
-		data_inst_ref(NULL) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_member_instance_reference::datatype_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const datatype_instance_collection> m) :
-		member_instance_reference_base(b), 
-		datatype_instance_reference(m->current_collection_state()), 
-		data_inst_ref(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_member_instance_reference::~datatype_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-datatype_member_instance_reference::what(ostream& o) const {
-	return o << "datatype-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const instance_collection_base>
-datatype_member_instance_reference::get_inst_base(void) const {
-	return data_inst_ref;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<aliases_connection_base>
-datatype_member_instance_reference::make_aliases_connection_private(void) const {
-	typedef	excl_ptr<aliases_connection_base>	return_type;
-	// no argument?
-	NEVER_NULL(data_inst_ref);
-	// temporary kludge because we don't have sub-type (datatype)-specific
-	// member_instance_references, 
-	// data_inst_ref is a generic datatype_instance_collection.  
-#if 0
-	return data_inst_ref->make_aliases_connection_private();
-#else
-	if (data_inst_ref.is_a<const bool_instance_collection>()) {
-		return return_type(new bool_alias_connection);
-	} else if (data_inst_ref.is_a<const int_instance_collection>()) {
-		return return_type(new int_alias_connection);
-	} else if (data_inst_ref.is_a<const enum_instance_collection>()) {
-		return return_type(new enum_alias_connection);
-	} else {
-		INVARIANT(data_inst_ref.is_a<const struct_instance_collection>());
-		return return_type(new datastruct_alias_connection);
-	}
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-datatype_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	data_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-datatype_member_instance_reference::construct_empty(const int i) {
-	return new datatype_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-datatype_member_instance_reference::write_object(
-		const persistent_object_manager& m, ostream& f) const {
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, data_inst_ref);
-	parent_type::write_object_base(m, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-datatype_member_instance_reference::load_object(
-		const persistent_object_manager& m, istream& f) {
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, data_inst_ref);
-	NEVER_NULL(data_inst_ref);
-	m.load_object_once(const_cast<datatype_instance_collection*>(
-		&*data_inst_ref));
-	parent_type::load_object_base(m, f);
-}
-
-//=============================================================================
-// class channel_member_instance_reference method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.  
- */
-channel_member_instance_reference::channel_member_instance_reference() :
-		member_instance_reference_base(), 
-		channel_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_member_instance_reference::channel_member_instance_reference(
-		const base_inst_ptr_type& b, 
-		const never_ptr<const channel_instance_collection> m) :
-		member_instance_reference_base(b), 
-		channel_instance_reference(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_member_instance_reference::~channel_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-channel_member_instance_reference::what(ostream& o) const {
-	return o << "channel-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-channel_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	channel_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-channel_member_instance_reference::construct_empty(const int i) {
-	return new channel_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-channel_member_instance_reference::write_object(
-		const persistent_object_manager& m, ostream& f) const {
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, channel_inst_ref);
-	parent_type::write_object_base(m, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-channel_member_instance_reference::load_object(
-		const persistent_object_manager& m, istream& f) {
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, channel_inst_ref);
-	NEVER_NULL(channel_inst_ref);
-	m.load_object_once(const_cast<channel_instance_collection*>(
-		&*channel_inst_ref));
-	parent_type::load_object_base(m, f);
-}
-
-#else
-// explicit template instantiation
+// explicit template instantiations
 template class member_instance_reference<channel_instance_reference>;
 template class member_instance_reference<process_instance_reference>;
-#endif	// SUBTYPE_MEMBER_INSTANCE_REFERENCE
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.5.6.2 2005/02/20 06:36:31 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.5.6.3 2005/02/20 07:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -73,12 +73,6 @@ virtual	count_ptr<instance_reference_base>
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
-
-#if 0
-	OBSOLETE
-	bool
-	is_template_formal(void) const;
-#endif
 
 /**
 	A parameter is considered "usable" if it is either initialized
@@ -387,11 +381,6 @@ public:
 
 	pbool_array(const scopespace& o, const string& n);
 
-#if 0
-	pbool_array(const scopespace& o, const string& n, 
-		const count_ptr<const pbool_expr>& i);
-#endif
-
 	~pbool_array() { }
 
 	bool
@@ -513,15 +502,13 @@ operator << (ostream& o, const pint_instance& p);
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
+friend class pint_instance_reference;
 public:
 	typedef	pint_value_type			value_type;
 	typedef	pint_instance_reference		reference_type;
 	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
-// friend class pint_instantiation_statement;
-friend class pint_instance_reference;
-// friend class pint_instance_reference::assigner;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 

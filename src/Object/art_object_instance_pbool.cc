@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.5.4.1 2005/02/19 08:40:59 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.5.4.1.2.1 2005/02/20 07:20:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -48,8 +48,10 @@ STATIC_TRACE_BEGIN("instance_pbool")
 namespace util {
 using ART::entity::pbool_instance;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Write out pbool_instance binary after compressing bits into char.
+	Consider replacing with value_writer functor.  
  */
 template <>
 void
@@ -63,9 +65,11 @@ write_value(ostream& o, const pbool_instance& b) {
 	write_value(o, c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reads in pbool_instance binary, decompressing char to bits.
 	Yeah, I know, this could be more efficient.  
+	Consider replacing with value_reader functor.  
  */
 template <>
 void
@@ -78,6 +82,7 @@ read_value(istream& i, pbool_instance& b) {
 	b.valid = c & 4;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_instance_collection, 
 		PBOOL_INSTANCE_COLLECTION_TYPE_KEY)
