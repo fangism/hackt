@@ -1,0 +1,26 @@
+"README"
+
+	$Id: README,v 1.1 2004/12/05 05:07:56 fang Exp $
+
+Why the hell is there an STL directory?
+
+The STL files contain both declarations and definitions of the
+standard containers.  Consequentially, code that uses these containers
+will contain multiple (mostly inlined) copies of same template code, 
+for equivalent instantiations (private to each module).  
+As a result, large projects tend to be bloated with replicated code.  
+
+To control template instantiation without depending on the
+compilers/'linkers' characteristics, we provide wrappers that explicitly
+split STL container definitions apart from their declarations.  
+All wrapper files will provide the *EXACT* same public interface
+the the STL containers.  
+
+As a convention, we keep the exact same container name in the wrapper, 
+but we include them in the util::STL namespace.  Thus, one can select 
+between wrapped and non-wrapped versions of the classes.  
+
+What's the overhead in using the wrapped containers?  
+The tradeoff of course is less inlining, perhaps more function call overhead.  
+Since switching is convenient, one can play around with the tradeoff.  
+
