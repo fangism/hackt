@@ -18,7 +18,7 @@
 #include "art_object_base.h"
 #include "art_object_expr.h"
 #include "art_object_connect.h"
-#include "art_object_IO.h"
+#include "art_object_IO.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -63,7 +63,7 @@
 //=============================================================================
 
 // whether or not unimplemented objects should be written/loaded to/from file. 
-#define	USE_UNDEFINED_OBJECTS		1
+// #define	USE_UNDEFINED_OBJECTS		1
 
 //=============================================================================
 namespace ART {
@@ -84,6 +84,7 @@ namespace entity {
 bool
 object::warn_unimplemented = false;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Walks object hierarchy and registers reachable pointers with 
 	the persistent object manager.  
@@ -102,6 +103,7 @@ object::collect_transient_info(persistent_object_manager& m) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default behavior for undefined writing to stream.  
  */
@@ -113,6 +115,7 @@ object::write_object(persistent_object_manager& m) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default behavior for undefined loading from stream.  
  */
@@ -132,11 +135,13 @@ object_handle::object_handle(never_const_ptr<object> o) :
 	assert(!o.is_a<object_handle>());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 object_handle::what(ostream& o) const {
 	return obj.what(o);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 object_handle::dump(ostream& o) const {
 	return obj.dump(o << "(handle)");
@@ -148,14 +153,17 @@ object_handle::dump(ostream& o) const {
 object_list::object_list() : object(), parent() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 object_list::~object_list() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 object_list::what(ostream& o) const {
 	return o << "object-list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 object_list::dump(ostream& o) const {
 	what(o) << ":" << endl;
@@ -165,6 +173,7 @@ object_list::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates an instance_collection_item.  
 	The restriction with this version is that each item must
@@ -257,6 +266,7 @@ object_list::make_formal_dense_range_list(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates an instance_collection_item.  
 	No restriction on this, may be single integer or pint_range.  
@@ -417,6 +427,7 @@ object_list::make_sparse_range_list(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	First half should be similar to make_sparse_range_list.  
 	At the end build an index_list instead.  
@@ -576,6 +587,7 @@ object_list::make_index_list(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Converts a list into a param_expression_assignment object.  
 	This is non-const because assignment requires that we 
@@ -711,6 +723,7 @@ object_list::make_param_assignment(void) {
 	else	return ret;		// is ok
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Doesn't do any checking, just re-wraps the list.  
 	Now does checking for static constants.  
@@ -765,6 +778,7 @@ object_list::make_param_expr_list(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates an alias connection object, given a list of instance
 	references.  Performs type-checking.  
@@ -801,6 +815,7 @@ object_list::make_alias_connection(void) const {
 	return excl_const_ptr<aliases_connection>(ret);	// const-ify
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a port connection object, given an invoking instance
 	reference and a list of port actuals (instance references).
@@ -1101,14 +1116,87 @@ scopespace::add_connection_to_scope(
 	connect_assign_list.push_back(c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Register all pointers in the used_id_map with the 
+	serial object manager.  
+ */
+void
+scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	for ( ; m_iter!=m_end; m_iter++) {
+		never_const_ptr<object> m_obj(m_iter->second);
+//		assert(!m_obj.owned());		// local copy is not owned
+		assert(m_obj);			// no NULLs in hash_map
+		m_obj->collect_transient_info(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::write_object_used_id_map(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+
+	// filter any objects out?
+#if 0
+	write_value(f, used_id_map.size());
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	for ( ; m_iter!=m_end; m_iter++) {
+		const some_ptr<object> m_obj(m_iter->second);
+		// any distinction between aliases and non-owners?
+		m.write_pointer(f, m_obj);
+	}
+#else
+	m.write_pointer_map(f, used_id_map);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scopespace::load_object_used_id_map(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	size_t s, i=0;
+	read_value(f, s);
+	for ( ; i<s; i++) {
+		long index;
+		read_value(f, index);
+		excl_ptr<object> m_obj(m.lookup_obj_ptr(index));
+//		m.read_pointer(f, m_obj);
+		// need to add it back through hash_map.  
+		if (!m_obj) {
+			if (warn_unimplemented) {
+				cerr << "Skipping a NULL object at index "
+					<< index << endl;
+			}
+		} else {
+			m_obj->load_object(m);	// recursion!!!
+			// need to reconstruct it to get its key, 
+			// then add this object to the used_id_map
+			load_used_id_map_object(m_obj);	// pure virtual
+		}
+	}
+}
+
 //=============================================================================
 // class name_space method definitions
 
 /**
+	Private empty constructor, just allocate with bogus fields.
+ */
+name_space::name_space() :
+		scopespace(), key(), parent(),
+		open_spaces(), open_aliases() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Constructor for a new namespace.  
 	Inherits from its parents: type aliases to built-in types, 
 	such as bool and int.  
-	TO DO: is parent REDUNDANT?
 	\param n the name.  
 	\param p pointer to the parent namespace.  
  */
@@ -1119,6 +1207,7 @@ name_space::name_space(const string& n, never_const_ptr<name_space> p) :
 		open_spaces(), open_aliases() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructor for the global namespace, which is the only
 	namespace without a parent.  
@@ -1832,6 +1921,7 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
 #endif
+#if 0
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
@@ -1839,22 +1929,12 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 		assert(!m_obj.owned());		// local copy is not owned
 		assert(m_obj);			// no NULLs in hash_map
 
-#if USE_UNDEFINED_OBJECTS
 		m_obj->collect_transient_info(m);
-#else
-		// eventually everything should implement collect_transient_info
-		// for now, just walk namespaces only
-		never_const_ptr<name_space>
-			m_ns(m_obj.is_a<name_space>());
-		never_const_ptr<definition_base>
-			m_def(m_obj.is_a<definition_base>());
-		if (m_ns) {
-			m_ns->collect_transient_info(m);
-		} else if (m_def) {
-			m_def->collect_transient_info(m);
-		}
-#endif
 	}
+#else
+	collect_used_id_map_pointers(m);
+	// that's it.
+#endif
 }
 // else already visited
 }
@@ -1868,7 +1948,7 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
  */
 object*
 name_space::construct_empty(void) {
-	return new name_space("");
+	return new name_space();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1886,8 +1966,9 @@ void
 name_space::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
+
 	// First, write out the index number associated with this address.  
-	write_value(f, m.lookup_ptr_index(this));
+	WRITE_POINTER_INDEX(f, m);
 
 	// Second, write out the name of this namespace.
 	// name MUST be available for use by other visitors right away
@@ -1896,54 +1977,9 @@ name_space::write_object(persistent_object_manager& m) const {
 	m.write_pointer(f, parent);
 
 	// do we need to sort objects into bins?
-#if USE_UNDEFINED_OBJECTS
-	write_value(f, used_id_map.size());
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
-	for ( ; m_iter!=m_end; m_iter++) {
-		some_ptr<object> m_obj(m_iter->second);
-		m.write_pointer(f, m_obj);
-	}
-#else
-{
-	// only write out namespaces
-	// how many namespaces in the used_id_map?
-	// eventually won't have to count?
-	// ah, but aliases (also in used_id_map) won't be saved...
-	typedef	list<never_const_ptr<name_space> >	ns_list_type;
-	ns_list_type ns_list;
+	write_object_used_id_map(m);
 
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
-	for ( ; m_iter!=m_end; m_iter++) {
-		some_ptr<object> m_obj(m_iter->second);
-		never_const_ptr<name_space>
-			m_ns(m_obj.is_a<name_space>());
-		if (m_ns) {
-			ns_list.push_back(m_ns);
-		}
-		// sort into bins by base type
-		// else if ... definitions, instances, etc...
-	}
-
-	// how many pointers to expect?
-	write_value(f, ns_list.size());
-	// write individual pointers
-	ns_list_type::const_iterator l_iter = ns_list.begin();
-	const ns_list_type::const_iterator l_end = ns_list.end();
-	for ( ; l_iter!=l_end; l_iter++) {
-		never_const_ptr<name_space> l_obj(*l_iter);
-		m.write_pointer(f, l_obj);
-	}
-}
-{
-	// next bunch: only definitions
-	typedef	list<never_const_ptr<definition_base> >	def_list_type;
-}
-#endif
-
-	// write a tail or delimiter for checking alignment?
-	write_value(f, -1L);		// must be long
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1957,12 +1993,9 @@ name_space::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
+
 	// First, strip away the index number associated with this address.
-	{
-	long index;
-	read_value(f, index);
-	assert(index == m.lookup_ptr_index(this));
-	}
+	STRIP_POINTER_INDEX(f, m);
 
 	// Second, read in the name of the namespace.  
 	read_string(f, const_cast<string&>(key));	// coercive cast
@@ -1970,7 +2003,9 @@ if (!m.flag_visit(this)) {
 	// Next, read in the parent namespace pointer.  
 	m.read_pointer(f, parent);
 
-#if USE_UNDEFINED_OBJECTS
+#if 1
+	load_object_used_id_map(m);
+#else
 	{
 	size_t s;
 	// how many pointers to expect?
@@ -1981,7 +2016,7 @@ if (!m.flag_visit(this)) {
 		// need to add it back through hash_map.  
 		long index;
 		read_value(f, index);
-		object* o = m.lookup_obj_ptr(index);
+		excl_ptr<object> o(m.lookup_obj_ptr(index));
 		if (!o) {
 			if (warn_unimplemented) {
 				cerr << "Skipping a NULL object at index "
@@ -1990,49 +2025,33 @@ if (!m.flag_visit(this)) {
 			continue;
 		}
 		o->load_object(m);	// recursion!!!
-		name_space* ns = IS_A(name_space*, o);
-		definition_base* db = IS_A(definition_base*, o);
-		if (ns)
-			add_namespace(excl_ptr<name_space>(ns));
-		else if (db)
-			add_definition(excl_ptr<definition_base>(db));
-		// ownership restored here!
-		else {
-			o->what(cerr << "TO DO: define method for adding ")
-				<< " back to namespace." << endl;
-		}
+		// add this object to the used_id_map
+		load_used_id_map_object(o);
 	}
 	}
-#else
-	{
-	size_t s;
-	// how many pointers to expect?
-	read_value(f, s);
-	size_t i = 0;
-	for ( ; i<s; i++) {
-		long index;
-		read_value(f, index);
-		object* o = m.lookup_obj_ptr(index);
-		assert(o);
-		o->load_object(m);	// recursion!!!
-		name_space* ns = IS_A(name_space*, o);
-		assert(ns);
-		add_namespace(excl_ptr<name_space>(ns));
-		// ownership restored here!
-	}
-	}
-
-	// next bunch: definitions
 #endif
-
-	{
-	// write a tail or delimiter for checking alignment?
-	long neg_one;
-	read_value(f, neg_one);		// must be long
-	assert(neg_one == -1L);
-	}
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited, don't reload
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specific way of adding objects for a namespace.  
+ */
+void
+name_space::load_used_id_map_object(excl_ptr<object> o) {
+	if (o.is_a<name_space>())
+		add_namespace(o.is_a_xfer<name_space>());
+	else if (o.is_a<definition_base>())
+		add_definition(o.is_a_xfer<definition_base>());
+	// ownership restored here!
+	else if (o.is_a<instantiation_base>())
+		add_instance(o.is_a_xfer<instantiation_base>());
+	else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to namespace." << endl;
+	}
 }
 
 //=============================================================================

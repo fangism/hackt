@@ -22,7 +22,7 @@ namespace entity {
 
 /**
 	The entries in this table should correspond to the enumerations in
-	type_index_enum, defined in "art_object_IO.h".  
+	type_index_enum, defined in "art_object_type_enum.h".  
 	Each function pointer is just a reference to a static function
 	that allocates (without initializing) an object of the corresponding
 	type, which also establishes its vptr, so that it can be used 
@@ -43,6 +43,64 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	&user_def_datatype::construct_empty, 
 	&enum_datatype_def::construct_empty, 
 	&datatype_definition_alias::construct_empty, 
+
+	&process_type_reference::construct_empty, 
+	&channel_type_reference::construct_empty, 
+	&data_type_reference::construct_empty, 
+
+	&process_instantiation::construct_empty, 
+	&channel_instantiation::construct_empty, 
+	&datatype_instantiation::construct_empty, 
+	&pbool_instantiation::construct_empty, 
+	&pint_instantiation::construct_empty, 
+
+	// simple instance references
+	&process_instance_reference::construct_empty, 
+	&channel_instance_reference::construct_empty, 
+	&datatype_instance_reference::construct_empty, 
+	&pbool_instance_reference::construct_empty, 
+	&pint_instance_reference::construct_empty, 
+
+	// aggregate instance references
+	NULL, 
+	NULL, 
+	NULL, 
+	NULL, 
+	NULL, 
+
+	// member instance references
+	&process_member_instance_reference::construct_empty, 
+	&channel_member_instance_reference::construct_empty, 
+	&datatype_member_instance_reference::construct_empty, 
+
+	// expressions
+	&pbool_const::construct_empty, 
+	&pint_const::construct_empty, 
+
+	&const_range::construct_empty, 
+	&pint_range::construct_empty, 
+
+	&const_param_expr_list::construct_empty, 
+	&dynamic_param_expr_list::construct_empty, 
+
+	// index and range list
+	&const_index_list::construct_empty, 
+	&dynamic_index_list::construct_empty, 
+	&const_range_list::construct_empty, 
+	&dynamic_range_list::construct_empty, 
+
+	// symbolic expressions
+	&pint_unary_expr::construct_empty, 
+	&pbool_unary_expr::construct_empty, 
+	&arith_expr::construct_empty, 
+	&relational_expr::construct_empty, 
+	&logical_expr::construct_empty, 
+
+	// assignments and connections
+	NULL, 
+	NULL, 
+	NULL, 
+
 	// more reconstructors here...
 };
 
@@ -62,7 +120,8 @@ persistent_object_manager::dump_reconstruction_table = false;
 
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry() :
-		otype(NULL_TYPE), recon_addr(NULL), scratch(false), 
+		otype(NULL_TYPE), recon_addr(NULL), ref_count(NULL), 
+		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
 	assert(buffer);
 }
@@ -72,7 +131,8 @@ persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
 		const type_index_enum t, 
 		const streampos hd, const streampos tl) :
-		otype(t), recon_addr(NULL), scratch(false), 
+		otype(t), recon_addr(NULL), ref_count(NULL), 
+		scratch(false), 
 		buf_head(hd), buf_tail(tl), buffer(new stringstream(mode)) {
 	assert(buffer);
 }
@@ -82,7 +142,8 @@ persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry(
 		const object* p, 
 		const type_index_enum t) :
-		otype(t), recon_addr(p), scratch(false), 
+		otype(t), recon_addr(p), ref_count(NULL), 
+		scratch(false), 
 		buf_head(0), buf_tail(0), buffer(new stringstream(mode)) {
 	assert(buffer);
 }
@@ -90,6 +151,26 @@ persistent_object_manager::reconstruction_table_entry::
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	~reconstruction_table_entry() {
+	// never delete anything!
+	// not the object pointer, nor the reference count
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a reference count to be loaded into count_ptr or 
+	other counted pointer classes.  
+	This doesn't modify the count, that's the responsibility of the
+	pointer class.  
+	If a counter has not been allocated yet, this will allocate it
+	but will never delete it, thus, it is the responsibility of the 
+	pointer class to manage the memory for the counter.  
+ */
+size_t*
+persistent_object_manager::reconstruction_table_entry::count(void) const {
+	if (!ref_count) {
+		ref_count = new size_t(0);
+	}
+	return ref_count;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,7 +181,8 @@ persistent_object_manager::reconstruction_table_entry::
  */
 void
 persistent_object_manager::reconstruction_table_entry::reset_addr() {
-	recon_addr = NULL;
+	recon_addr = NULL;		// never delete
+	ref_count = NULL;		// never delete
 	unflag();
 }
 
@@ -280,6 +362,17 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Returns the reference count of the corresponding entry.
+	If it is NULL, then will allocate and initialize to zero.  
+ */
+size_t*
+persistent_object_manager::lookup_ref_count(const long i) const {
+	const reconstruction_table_entry& e = reconstruction_table[i];
+	return e.count();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param address of the object, which maps to some reconstruction
 		table entry.  
 	\return writeable reference to a stream buffer.  
@@ -427,8 +520,17 @@ persistent_object_manager::reconstruct(void) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		type_index_enum t = e.type();
 		if (t) {		// not NULL_TYPE
-			e.assign_addr((*reconstruction_function_table[t])());
-			addr_to_index_map[e.addr()] = i;
+			const reconstruct_function_ptr_type f = 
+				reconstruction_function_table[t];
+			if (f) {
+				e.assign_addr((*f)());
+				addr_to_index_map[e.addr()] = i;
+			} else {
+				cerr << "WARNING: don\'t know how to "
+					"reconstruct/allocate type " << t <<
+					" yet, skipping..." << endl;
+				e.assign_addr(NULL);
+			}
 		} else {
 			e.assign_addr(NULL);
 		}

@@ -236,6 +236,8 @@ private:
 	bool must_be_equivalent_const(const const_param_expr_list& p) const;
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class const_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -285,6 +287,8 @@ private:
 	bool must_be_equivalent_const(const const_param_expr_list& p) const;
 	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -406,6 +410,8 @@ public:
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class const_index_list
 
 //-----------------------------------------------------------------------------
@@ -444,6 +450,8 @@ public:
 	bool is_static_constant(void) const;
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class dynamic_index_list
 
 //=============================================================================
@@ -509,6 +517,8 @@ explicit const_range_list(const const_index_list& i);
 
 	bool is_size_equivalent(const const_range_list& il) const;
 	bool operator == (const const_range_list& c) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class const_range_list
 
 //-----------------------------------------------------------------------------
@@ -545,6 +555,8 @@ virtual	~dynamic_range_list();
 	bool is_static_constant(void) const;
 	const_range_list static_overlap(const range_expr_list& r) const;
 		// false, will be empty
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class dynamic_range_list
 
 //=============================================================================
@@ -634,6 +646,8 @@ class pbool_instance_reference : public param_instance_reference,
 		public pbool_expr {
 protected:
 	never_ptr<pbool_instantiation>		pbool_inst_ref;
+private:
+	pbool_instance_reference();
 public:
 	pbool_instance_reference(never_ptr<pbool_instantiation> pi, 
 		excl_ptr<index_list> i);
@@ -661,6 +675,8 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	bool static_constant_bool(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pbool_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -673,6 +689,8 @@ class pint_instance_reference : public param_instance_reference,
 		public pint_expr {
 protected:
 	never_ptr<pint_instantiation>		pint_inst_ref;
+private:
+	pint_instance_reference();
 public:
 	pint_instance_reference(never_ptr<pint_instantiation> pi, 
 		excl_ptr<index_list> i);
@@ -696,6 +714,8 @@ public:
 	bool is_unconditional(void) const;
 	bool is_loop_independent(void) const;
 	int static_constant_int(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pint_instance_reference
 
 //=============================================================================
@@ -731,6 +751,8 @@ public:
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
 	bool operator == (const const_range& c) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pint_const
 
 //-----------------------------------------------------------------------------
@@ -764,6 +786,8 @@ public:
 	bool static_constant_bool(void) const { return val; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return true; }
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pbool_const
 
 //-----------------------------------------------------------------------------
@@ -775,6 +799,8 @@ protected:
 	const char			op;
 	/** expression argument must be 0-dimensional */
 	count_const_ptr<pint_expr>	ex;
+private:
+	pint_unary_expr();
 public:
 	pint_unary_expr(const char o, count_const_ptr<pint_expr> e);
 	pint_unary_expr(count_const_ptr<pint_expr> e, const char o);
@@ -794,6 +820,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	int static_constant_int(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pint_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -806,6 +834,8 @@ protected:
 	const char			op;
 	/** argument expression must be 0-dimensional */
 	count_const_ptr<pbool_expr>	ex;
+private:
+	pbool_unary_expr();
 public:
 	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
 	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
@@ -825,6 +855,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pbool_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -836,6 +868,8 @@ protected:
 	count_const_ptr<pint_expr>	lx;
 	count_const_ptr<pint_expr>	rx;
 	const char			op;
+private:
+	arith_expr();
 public:
 	arith_expr(count_const_ptr<pint_expr> l, const char o, 
 		count_const_ptr<pint_expr> r);
@@ -858,6 +892,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	int static_constant_int(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -870,6 +906,8 @@ protected:
 	count_const_ptr<pint_expr>	rx;
 	const string			op;
 
+private:
+	relational_expr();
 public:
 	relational_expr(count_const_ptr<pint_expr> l, const string& o, 
 		count_const_ptr<pint_expr> r);
@@ -892,6 +930,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -904,6 +944,8 @@ protected:
 	count_const_ptr<pbool_expr>	rx;
 	const string			op;
 
+private:
+	logical_expr();
 public:
 	logical_expr(count_const_ptr<pbool_expr> l, const string& o, 
 		count_const_ptr<pbool_expr> r);
@@ -926,6 +968,8 @@ public:
 	bool is_loop_independent(void) const;
 	bool is_unconditional(void) const;
 	bool static_constant_bool(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class logical_expr
 
 //=============================================================================
@@ -984,6 +1028,8 @@ protected:
 	// need to be const, or modifiable?
 	count_const_ptr<pint_expr>	lower;
 	count_const_ptr<pint_expr>	upper;
+private:
+	pint_range();
 public:
 	/** implicit conversion from x[N] to x[0..N-1] */
 explicit pint_range(count_const_ptr<pint_expr> n);
@@ -1012,6 +1058,8 @@ explicit pint_range(count_const_ptr<pint_expr> n);
 	bool is_loop_independent(void) const { return false; }
 	bool is_unconditional(void) const { return false; }
 	const_range static_constant_range(void) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pint_range
 
 //-----------------------------------------------------------------------------
@@ -1021,6 +1069,7 @@ explicit pint_range(count_const_ptr<pint_expr> n);
  */
 class const_range : public range_expr, public const_index,
 		public pair<int,int> {
+friend class const_range_list;
 protected:
 	typedef	pair<int,int>			parent;
 	/** implementation type for range-checking */
@@ -1066,6 +1115,8 @@ public:
 	bool is_static_constant(void) const { return !empty(); }
 	bool is_loop_independent(void) const { return !empty(); }
 	bool is_unconditional(void) const { return !empty(); }
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class const_range
 
 //=============================================================================

@@ -5,12 +5,12 @@
 
 #include "multidimensional_sparse_set.h"
 
-// #include "art_parser_debug.h"		// need this?
 #include "art_parser_base.h"
-// #include "art_context.h"
 #include "art_object_instance.h"
 #include "art_object_inst_ref.h"
 #include "art_object_expr.h"
+#include "art_object_IO.tcc"
+#include "art_utils.tcc"
 #include "art_built_ins.h"
 
 //=============================================================================
@@ -23,6 +23,15 @@ namespace entity {
 //=============================================================================
 // class simple_instance_reference method definitions
 
+/**
+	Private empty constructor.
+ */
+simple_instance_reference::simple_instance_reference() :
+		array_indices(NULL), inst_state() {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_instance_reference::simple_instance_reference(
 		excl_ptr<index_list> i, 
 		const instantiation_state& st) :
@@ -32,9 +41,11 @@ simple_instance_reference::simple_instance_reference(
 	// assert(array_indices->size < get_inst_base->dimensions());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_instance_reference::~simple_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Dimensionality of an indexed references depends on
 	which indexed dimensions are collapsed x[i], and which
@@ -53,16 +64,19 @@ simple_instance_reference::dimensions(void) const {
 	else return dim;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 simple_instance_reference::get_type_ref(void) const {
 	return get_inst_base()->get_type_ref();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<definition_base>
 simple_instance_reference::get_base_def(void) const {
 	return get_inst_base()->get_base_def();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Queries whether or not there were any dynamic instances added
 	to the collection from the initial instantiation up to the
@@ -89,6 +103,7 @@ simple_instance_reference::is_static_constant_collection(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	May need to perform dimension-collapsing in some cases.  
 	Precondition: array indices already bound-checked if static constant.  
@@ -131,6 +146,7 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Preconditions: 
 	If any instance additions are dynamic, 
@@ -180,6 +196,7 @@ simple_instance_reference::may_be_densely_packed(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Much like may_be_densely_packed, but conservatively returns false.  
  */
@@ -224,6 +241,7 @@ simple_instance_reference::must_be_densely_packed(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Repacks the instance collection form the point of reference 
 	into a dense array, if possible.  
@@ -270,6 +288,7 @@ simple_instance_reference::static_constant_dimensions(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prerequisites: must_be_densely_packed, is_static_constant_collection, 
 		have non-zero dimension.  
@@ -346,6 +365,7 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 simple_instance_reference::dump(ostream& o) const {
 	what(o) << " " << get_inst_base()->get_name();
@@ -355,6 +375,7 @@ simple_instance_reference::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints out the type and size (if known).  
  */
@@ -385,6 +406,7 @@ simple_instance_reference::dump_type_size(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 simple_instance_reference::hash_string(void) const {
 	string ret(get_inst_base()->get_qualified_name());
@@ -394,6 +416,7 @@ simple_instance_reference::hash_string(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds indices to instance reference.  
 	Must check with number of number of dimensions.  
@@ -484,6 +507,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks "may" type-equivalence of two instance references.  
 	Is conservative.  
@@ -578,6 +602,7 @@ simple_instance_reference::may_be_type_equivalent(
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	"must" type-equivalence.  
  */
@@ -588,6 +613,7 @@ simple_instance_reference::must_be_type_equivalent(
 	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For collection with only static constant additions, 
 	this returns the unrolled multidimensional set of instantiated
@@ -626,9 +652,50 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 	return cov;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The instantiation state can be store as an index into
+	an instantiation's index collection.  
+	To do this we just use the distance from inst_state to the "end".
+ */
+void
+simple_instance_reference::write_instantiation_state(ostream& f) const {
+	const instantiation_state end =
+		get_inst_base()->collection_state_end();
+	// assuming this is safe, of course...
+	size_t dist = distance(inst_state, end);
+	write_value(f, dist);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores the reference to an instantiation's state, 
+	based on an index from the end, counting backwards.  
+ */
+void
+simple_instance_reference::load_instantiation_state(istream& f) {
+	instantiation_state iter =
+		get_inst_base()->collection_state_end();
+	size_t i = 0;
+	size_t max;
+	read_value(f, max);
+	for ( ; i<max; i++)
+		iter--;
+	const_cast<instantiation_state&>(inst_state) = iter;
+}
+
 //=============================================================================
 // class member_instance_reference_base method definitions
 
+/**
+	Private empty constructor.  
+ */
+member_instance_reference_base::member_instance_reference_base() :
+		base(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 member_instance_reference_base::member_instance_reference_base(
 		count_const_ptr<simple_instance_reference> b) :
 		base(b) {
@@ -636,6 +703,7 @@ member_instance_reference_base::member_instance_reference_base(
 	assert(!base->dimensions());	// must be scalar! (for now)
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 member_instance_reference_base::~member_instance_reference_base() {
 }
 
@@ -683,6 +751,14 @@ collective_instance_reference::hash_string(void) const {
 // class param_instance_reference method definitions
 
 /**
+	Private empty constructor.
+ */
+param_instance_reference::param_instance_reference() :
+		simple_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param pi needs to be modifiable for later initialization.  
  */
 param_instance_reference::param_instance_reference(
@@ -691,6 +767,7 @@ param_instance_reference::param_instance_reference(
 		simple_instance_reference(i, st) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	For single instances references, check whether it is initialized.  
@@ -715,6 +792,7 @@ param_instance_reference::may_be_initialized(void) const {
 	return i.is_a<param_instantiation>()->may_be_initialized();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instance_reference::must_be_initialized(void) const {
 	never_const_ptr<instantiation_base> i(get_inst_base());
@@ -723,6 +801,7 @@ param_instance_reference::must_be_initialized(void) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Under what conditions is a reference to a param instance
 	static and constant?
@@ -751,6 +830,7 @@ param_instance_reference::is_static_constant(void) const {
 		return get_param_inst_base()->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A reference is loop independent if it's indices
 	contain no references to index loop variables.  
@@ -784,6 +864,7 @@ param_instance_reference::is_loop_independent(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Whether or not this instance reference is found inside a 
 	conditional body.  
@@ -813,101 +894,17 @@ param_instance_reference::is_unconditional(void) const {
 }
 
 //=============================================================================
-#if 0
-// moved to "art_object_expr.cc"
-// class pbool_instance_reference method definitions
-
-pbool_instance_reference::pbool_instance_reference(
-		never_ptr<pbool_instantiation> pi,
-		excl_ptr<index_list> i) :
-		param_instance_reference(i, pi->current_collection_state()),
-		pbool_inst_ref(pi) {
-}
-
-never_const_ptr<instantiation_base>
-pbool_instance_reference::get_inst_base(void) const {
-	return pbool_inst_ref;
-}
-
-never_const_ptr<param_instantiation>
-pbool_instance_reference::get_param_inst_base(void) const {
-	return pbool_inst_ref;
-}
-
-ostream&
-pbool_instance_reference::what(ostream& o) const {
-	return o << "pbool-inst-ref";
-}
-
-bool
-pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	return pbool_inst_ref->initialize(i.is_a<pbool_expr>());
-}
-
-/**
-	\return newly constructed pbool literal if successful, 
-		returns NULL if type mismatches.  
- */
-count_ptr<param_expr>
-pbool_instance_reference::make_param_literal(
-		count_ptr<param_instance_reference> pr) {
-	// make sure passed pointer is a self-ref count
-	assert(pr == this);
-	count_ptr<pbool_instance_reference> br(
-		pr.is_a<pbool_instance_reference>());
-	if (br)	return count_ptr<param_expr>(new pbool_literal(br));
-	else	return count_ptr<param_expr>(NULL);
-}
-
-//=============================================================================
-// class pint_instance_reference method definitions
-
-pint_instance_reference::pint_instance_reference(
-		never_ptr<pint_instantiation> pi,
-		excl_ptr<index_list> i) :
-		param_instance_reference(i, pi->current_collection_state()),
-		pint_inst_ref(pi) {
-}
-
-never_const_ptr<instantiation_base>
-pint_instance_reference::get_inst_base(void) const {
-	return pint_inst_ref;
-}
-
-never_const_ptr<param_instantiation>
-pint_instance_reference::get_param_inst_base(void) const {
-	return pint_inst_ref;
-}
-
-ostream&
-pint_instance_reference::what(ostream& o) const {
-	return o << "pint-inst-ref";
-}
-
-bool
-pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
-	return pint_inst_ref->initialize(i.is_a<pint_expr>());
-}
-
-/**
-	\return newly constructed pint literal if successful, 
-		returns NULL if type mismatches.  
- */
-count_ptr<param_expr>
-pint_instance_reference::make_param_literal(
-		count_ptr<param_instance_reference> pr) {
-	// make sure passed pointer is a self-ref count
-	assert(pr == this);
-	count_ptr<pint_instance_reference> ir(
-		pr.is_a<pint_instance_reference>());
-	if (ir)	return count_ptr<param_expr>(new pint_literal(ir));
-	else	return count_ptr<param_expr>(NULL);
-}
-#endif
-
-//=============================================================================
 // class process_instance_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+process_instance_reference::process_instance_reference() :
+		simple_instance_reference(), process_inst_ref() {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_reference::process_instance_reference(
 		never_const_ptr<process_instantiation> pi,
 		excl_ptr<index_list> i) :
@@ -916,22 +913,103 @@ process_instance_reference::process_instance_reference(
 	assert(process_inst_ref);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_reference::~process_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 process_instance_reference::get_inst_base(void) const {
 	return process_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_instance_reference::what(ostream& o) const {
 	return o << "process-inst-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+process_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	process_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+process_instance_reference::construct_empty(void) {
+	return new process_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+process_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, process_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+process_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, process_inst_ref);
+	assert(process_inst_ref);
+	const_cast<process_instantiation&>(*process_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class datatype_instance_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+datatype_instance_reference::datatype_instance_reference() :
+		simple_instance_reference(), data_inst_ref() {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_reference::datatype_instance_reference(
 		never_const_ptr<datatype_instantiation> di,
 		excl_ptr<index_list> i) :
@@ -940,19 +1018,23 @@ datatype_instance_reference::datatype_instance_reference(
 	assert(data_inst_ref);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_reference::~datatype_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 datatype_instance_reference::get_inst_base(void) const {
 	return data_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 datatype_instance_reference::what(ostream& o) const {
 	return o << "datatype-inst-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 USE simple_instance_reference::dump
 ostream&
@@ -965,9 +1047,87 @@ datatype_instance_reference::dump(ostream& o) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+datatype_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, SIMPLE_DATA_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	data_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+datatype_instance_reference::construct_empty(void) {
+	return new datatype_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+datatype_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, data_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+datatype_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, data_inst_ref);
+	assert(data_inst_ref);
+	const_cast<datatype_instantiation&>(*data_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class channel_instance_reference method definitions
 
+/**
+	Private empty constructor.
+ */
+channel_instance_reference::channel_instance_reference() :
+		simple_instance_reference(), channel_inst_ref() {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance_reference::channel_instance_reference(
 		never_const_ptr<channel_instantiation> ci,
 		excl_ptr<index_list> i) :
@@ -976,19 +1136,23 @@ channel_instance_reference::channel_instance_reference(
 	assert(channel_inst_ref);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance_reference::~channel_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 channel_instance_reference::get_inst_base(void) const {
 	return channel_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_instance_reference::what(ostream& o) const {
 	return o << "channel-inst-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 ostream&
 channel_instance_reference::dump(ostream& o) const {
@@ -996,9 +1160,87 @@ channel_instance_reference::dump(ostream& o) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+channel_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	channel_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+channel_instance_reference::construct_empty(void) {
+	return new channel_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+channel_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, channel_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+channel_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, channel_inst_ref);
+	assert(channel_inst_ref);
+	const_cast<channel_instantiation&>(*channel_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class process_member_instance_reference method definitions
 
+/**
+	Private empty constructor.
+ */
+process_member_instance_reference::process_member_instance_reference() :
+		member_instance_reference_base(), 
+		process_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_member_instance_reference::process_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
 		never_const_ptr<process_instantiation> m) :
@@ -1006,17 +1248,100 @@ process_member_instance_reference::process_member_instance_reference(
 		process_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_member_instance_reference::~process_member_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_member_instance_reference::what(ostream& o) const {
 	return o << "process-member-instance-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+process_member_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	base->collect_transient_info(m);
+	process_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+process_member_instance_reference::construct_empty(void) {
+	return new process_member_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+process_member_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, base);
+	m.write_pointer(f, process_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+process_member_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, base);
+	m.read_pointer(f, process_inst_ref);
+	assert(process_inst_ref);
+	const_cast<process_instantiation&>(*process_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class datatype_member_instance_reference method definitions
 
+/**
+	Private empty constructor.
+ */
+datatype_member_instance_reference::datatype_member_instance_reference() :
+		member_instance_reference_base(), 
+		datatype_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_member_instance_reference::datatype_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
 		never_const_ptr<datatype_instantiation> m) :
@@ -1024,17 +1349,100 @@ datatype_member_instance_reference::datatype_member_instance_reference(
 		datatype_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_member_instance_reference::~datatype_member_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 datatype_member_instance_reference::what(ostream& o) const {
 	return o << "datatype-member-instance-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+datatype_member_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	base->collect_transient_info(m);
+	data_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+datatype_member_instance_reference::construct_empty(void) {
+	return new datatype_member_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+datatype_member_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, base);
+	m.write_pointer(f, data_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+datatype_member_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, base);
+	m.read_pointer(f, data_inst_ref);
+	assert(data_inst_ref);
+	const_cast<datatype_instantiation&>(*data_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class channel_member_instance_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+channel_member_instance_reference::channel_member_instance_reference() :
+		member_instance_reference_base(), 
+		channel_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_member_instance_reference::channel_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
 		never_const_ptr<channel_instantiation> m) :
@@ -1042,12 +1450,86 @@ channel_member_instance_reference::channel_member_instance_reference(
 		channel_instance_reference(m, excl_ptr<index_list>(NULL)) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_member_instance_reference::~channel_member_instance_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_member_instance_reference::what(ostream& o) const {
 	return o << "channel-member-instance-ref";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.  
+	\param m the persistent object manager.
+ */
+void
+channel_member_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE)) {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	base->collect_transient_info(m);
+	channel_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.  
+ */
+object*
+channel_member_instance_reference::construct_empty(void) {
+	return new channel_member_instance_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.  
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.  
+	\param m the persistent object manager.  
+ */
+void
+channel_member_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, base);
+	m.write_pointer(f, channel_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads the instance reference from an input stream, translating
+	indices to pointers.  
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.  
+	\param m the persistent object manager.  
+ */
+void
+channel_member_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, base);
+	m.read_pointer(f, channel_inst_ref);
+	assert(channel_inst_ref);
+	const_cast<channel_instantiation&>(*channel_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
 }
 
 //=============================================================================

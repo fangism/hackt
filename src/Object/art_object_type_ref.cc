@@ -3,11 +3,12 @@
 #include <iostream>
 
 #include "art_parser_base.h"	// so token_identifier : string
-// #include "art_context.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
+#include "art_object_IO.tcc"
 #include "art_built_ins.h"
+#include "art_utils.tcc"
 
 #include "sstream.h"
 
@@ -27,18 +28,22 @@ fundamental_type_reference::fundamental_type_reference(
 		template_params(pl) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fundamental_type_reference::fundamental_type_reference(void) :
 		type_reference_base(), template_params() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fundamental_type_reference::~fundamental_type_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates type reference as a flat string, for caching purposes.  
 	We unconditionally add the <> to the key even if there is no template
@@ -54,6 +59,7 @@ fundamental_type_reference::hash_string(void) const {
 	return get_base_def()->get_name() +template_param_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 fundamental_type_reference::template_param_string(void) const {
 	string ret("<");
@@ -79,11 +85,13 @@ fundamental_type_reference::template_param_string(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 fundamental_type_reference::get_qualified_name(void) const {
 	return get_base_def()->get_qualified_name() +template_param_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expr_list>
 fundamental_type_reference::get_copy_template_params(void) const {
 	if (template_params)
@@ -139,7 +147,7 @@ if (base_def.is_a<typedef_base>()) {
 }
 #endif
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Please explain.  
 	Can't just use t->make_instantiation() because t is a counted
@@ -156,7 +164,7 @@ fundamental_type_reference::make_instantiation(
 	return t->make_instantiation_private(t, s, id, d);
 }
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns true if the types *may* be equivalent.  
 	Easy for non-template types, but for template types, 
@@ -232,6 +240,7 @@ fundamental_type_reference::may_be_equivalent(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Must be equivalent.  
 	Conservatively returns false.  
@@ -269,6 +278,7 @@ fundamental_type_reference::must_be_equivalent(
 	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 declared now, 
 UNVEIL LATER
@@ -316,6 +326,16 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
+/**
+	Private empty constructor.
+ */
+data_type_reference::data_type_reference() :
+		fundamental_type_reference(), 
+		base_type_def(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
 		never_const_ptr<datatype_definition_base> td) :
 		fundamental_type_reference(), 
@@ -323,6 +343,7 @@ data_type_reference::data_type_reference(
 	assert(base_type_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
 		never_const_ptr<datatype_definition_base> td, 
 		excl_const_ptr<param_expr_list> pl) :
@@ -331,19 +352,23 @@ data_type_reference::data_type_reference(
 	assert(base_type_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 data_type_reference::what(ostream& o) const {
 	return o << "data-type-reference";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<definition_base>
 data_type_reference::get_base_def(void) const {
 	return base_type_def;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns a newly constructed data instance object.  
 	TO DO: move all error checking into scopespace::add_instance
@@ -364,9 +389,75 @@ data_type_reference::make_instantiation_private(
 			t.is_a<data_type_reference>(), id, d));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+data_type_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE)) {
+	base_type_def->collect_transient_info(m);
+	if (template_params)
+		template_params->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+data_type_reference::construct_empty(void) {
+	return new data_type_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+data_type_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// sanity check
+	m.write_pointer(f, base_type_def);
+	m.write_pointer(f, template_params);
+	WRITE_OBJECT_FOOTER(f);			// sanity check
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	May need special case handling for built-in definitions!
+ */
+void
+data_type_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// sanity check
+	m.read_pointer(f, base_type_def);
+	m.read_pointer(f, template_params);
+	STRIP_OBJECT_FOOTER(f);			// sanity check
+
+	// recursion and intercept built-in types
+	const_cast<datatype_definition_base&>(*base_type_def).load_object(m);
+	if (template_params)
+		const_cast<param_expr_list&>(*template_params).load_object(m);
+	if (base_type_def->get_key() == "bool")
+		base_type_def =
+			never_const_ptr<datatype_definition_base>(&bool_def);
+	else if (base_type_def->get_key() == "int")
+		base_type_def =
+			never_const_ptr<datatype_definition_base>(&int_def);
+	// else leave the base definition as is
+	// reference count will take care of discarded memory :)
+}
+// else already visited
+}
+
 //=============================================================================
 // class channel_type_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+channel_type_reference::channel_type_reference() :
+		fundamental_type_reference(), 
+		base_chan_def(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Concrete channel type reference.  
 	\param cd reference to a channel definition.
@@ -380,6 +471,7 @@ channel_type_reference::channel_type_reference(
 	assert(base_chan_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::channel_type_reference(
 		never_const_ptr<channel_definition_base> cd) :
 		fundamental_type_reference(), 	// NULL
@@ -387,19 +479,23 @@ channel_type_reference::channel_type_reference(
 	assert(base_chan_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::~channel_type_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_type_reference::what(ostream& o) const {
 	return o << "channel-type-reference";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<definition_base>
 channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns a newly constructed channel instance object.  
  */
@@ -414,9 +510,60 @@ channel_type_reference::make_instantiation_private(
 			t.is_a<channel_type_reference>(), id, d));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE)) {
+	base_chan_def->collect_transient_info(m);
+	if (template_params)
+		template_params->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+channel_type_reference::construct_empty(void) {
+	return new channel_type_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// sanity check
+	m.write_pointer(f, base_chan_def);
+	m.write_pointer(f, template_params);
+	WRITE_OBJECT_FOOTER(f);			// sanity check
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// sanity check
+	m.read_pointer(f, base_chan_def);
+	m.read_pointer(f, template_params);
+	STRIP_OBJECT_FOOTER(f);			// sanity check
+}
+// else already visited
+}
+
 //=============================================================================
 // class process_type_reference method definitions
 
+/**
+	Private empty constructor only accessible to the construct_empty
+	method called during object allocation and de-serialization.  
+ */
+process_type_reference::process_type_reference() :
+		fundamental_type_reference(), 
+		base_proc_def(never_const_ptr<process_definition_base>(NULL)) {
+	// do not assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
 		never_const_ptr<process_definition_base> pd) :
 		fundamental_type_reference(), 
@@ -424,6 +571,7 @@ process_type_reference::process_type_reference(
 	assert(base_proc_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
 		never_const_ptr<process_definition_base> pd, 
 		excl_const_ptr<param_expr_list> pl) :
@@ -432,19 +580,23 @@ process_type_reference::process_type_reference(
 	assert(base_proc_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::~process_type_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_type_reference::what(ostream& o) const {
 	return o << "process-type-reference";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<definition_base>
 process_type_reference::get_base_def(void) const {
 	return base_proc_def;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns a newly constructed process instance object.  
 	\param s the scope to which to add this instance.
@@ -462,6 +614,46 @@ process_type_reference::make_instantiation_private(
 			t.is_a<process_type_reference>(), id, d));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_type_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE)) {
+	base_proc_def->collect_transient_info(m);
+	if (template_params)
+		template_params->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+process_type_reference::construct_empty(void) {
+	return new process_type_reference();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_type_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// sanity check
+	m.write_pointer(f, base_proc_def);
+	m.write_pointer(f, template_params);
+	WRITE_OBJECT_FOOTER(f);			// sanity check
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_type_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// sanity check
+	m.read_pointer(f, base_proc_def);
+	m.read_pointer(f, template_params);
+	STRIP_OBJECT_FOOTER(f);			// sanity check
+}
+// else already visited
+}
+
 //=============================================================================
 // class param_type_reference method definitions
 
@@ -475,19 +667,23 @@ param_type_reference::param_type_reference(
 	assert(base_param_def);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_type_reference::~param_type_reference() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_type_reference::what(ostream& o) const {
 	return o << "param-type-reference";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<definition_base>
 param_type_reference::get_base_def(void) const {
 	return base_param_def;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns a newly constructed param instance object.  
 	Sort of kludged... built-in type case... YUCK, poor style.  
@@ -518,6 +714,7 @@ param_type_reference::make_instantiation_private(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Special case of make_instantiation, designated for making
 	template formals.  

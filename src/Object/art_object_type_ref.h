@@ -69,6 +69,8 @@ class data_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
 	never_const_ptr<datatype_definition_base>	base_type_def;
+private:
+	data_type_reference();
 public:
 	data_type_reference(
 		never_const_ptr<datatype_definition_base> td);
@@ -88,6 +90,8 @@ private:
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class data_type_reference
 
 //-----------------------------------------------------------------------------
@@ -99,6 +103,8 @@ class channel_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
 	never_const_ptr<channel_definition_base>	base_chan_def;
+private:
+	channel_type_reference();
 public:
 	channel_type_reference(
 		never_const_ptr<channel_definition_base> td);
@@ -109,12 +115,15 @@ virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+private:
 	excl_ptr<instantiation_base>
 		make_instantiation_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class channel_type_reference
 
 //-----------------------------------------------------------------------------
@@ -125,7 +134,10 @@ virtual	~channel_type_reference();
 class process_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
+// should be const?  reference to base definition shouldn't change...
 	never_const_ptr<process_definition_base>	base_proc_def;
+private:
+explicit process_type_reference();
 public:
 	process_type_reference(
 		never_const_ptr<process_definition_base> td);
@@ -137,12 +149,16 @@ virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+private:
 	excl_ptr<instantiation_base>
 		make_instantiation_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
+public:
+	// macro expand to method prototypes
+	ART_OBJECT_IO_METHODS
 };	// end class process_type_reference
 
 //-----------------------------------------------------------------------------
@@ -165,13 +181,14 @@ virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
+private:
 	excl_ptr<instantiation_base>
 		make_instantiation_private(
 			count_const_ptr<fundamental_type_reference> t, 
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			index_collection_item_ptr_type d) const;
-
+public:
 static	excl_ptr<instantiation_base>
 		make_template_formal(
 			count_const_ptr<param_type_reference> t, 
@@ -179,6 +196,7 @@ static	excl_ptr<instantiation_base>
 			const token_identifier& id, 
 			index_collection_item_ptr_type d, 
 			count_const_ptr<param_expr> def);
+
 };	// end class param_type_reference
 
 //=============================================================================

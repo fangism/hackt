@@ -69,14 +69,26 @@ int_def = built_in_datatype_def(
 	"int", 
 	excl_ptr<param_instantiation>(
 		new pint_instantiation(
-			built_in_namespace, // pint_type,
+/***
+			// Really the formal should "belong" to the definition, 
+			// (&int_def) however, the built-in definitions are not
+			// scopespaces, so we will make the parent
+			// back-reference just NULL.  
+			// This is safe, assuming that the parent
+			// back-reference for such a built-in type is never 
+			// used.  
+			never_const_ptr<scopespace>(&int_def),
+***/
+			int_def, 		// need valid reference.
 			"width",
 			count_const_ptr<pint_expr>(new pint_const(32)))));
 
+#if 0
 /** built-in data int type reference */
 const data_type_reference
-int_type = data_type_reference(
-	never_const_ptr<built_in_datatype_def>(&int_def));
+bool_type = data_type_reference(
+	never_const_ptr<built_in_datatype_def>(&bool_def));
+#endif
 
 //=============================================================================
 }	// end namespace entity

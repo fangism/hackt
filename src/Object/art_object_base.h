@@ -16,18 +16,84 @@
 #include "ptrs.h"		// need complete definition (never_ptr members)
 #include "count_ptr_fwd.h"
 
-/*********** note on use of data structures ***************
-Lists are needed for sets that need to maintain sequence, such as
-formal declarations in definitions.  Type-checking is done in order
-of elements, comparing actuals against formals one-by-one.  
-For some lists, however, we'd like constant time access to 
-elements in the sequence by hashing indices.  Hashlist provides
-this added functionality by associating a key to each element in the 
-list.  
+//=============================================================================
+// macros
 
-Maps...
+/***
+	Standard set of prototypes for persistent object IO-related
+	methods.  
+	I got sick of typing and pasting them over and over...
+	Should be in classes' public sections.  
+	Note: this macro should be used only in final concrete classes, 
+	because they are all non-virtual.  
+	Don't stick a semicolon after this.  
+***/
+#define	ART_OBJECT_IO_METHODS_NO_POINTERS				\
+	void write_object(persistent_object_manager& m) const;		\
+static	object* construct_empty(void);					\
+	void load_object(persistent_object_manager& m);
 
-********************** end note **************************/
+#define	ART_OBJECT_IO_METHODS						\
+	ART_OBJECT_IO_METHODS_NO_POINTERS				\
+	void collect_transient_info(persistent_object_manager& m) const;
+
+//-----------------------------------------------------------------------------
+// macros for use in write_object and load_object
+// just sanity-check extraneous information, later enable or disable
+// with another switch.
+
+// sanity check switch is overrideable by the includer
+#ifndef	NO_OBJECT_SANITY
+#define	NO_OBJECT_SANITY	0	// default 0, keep sanity checks
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NO_OBJECT_SANITY
+#define	WRITE_POINTER_INDEX(f, m)
+#else
+#define	WRITE_POINTER_INDEX(f, m)					\
+	write_value(f, m.lookup_ptr_index(this))
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NO_OBJECT_SANITY
+#define	STRIP_POINTER_INDEX(f, m)
+#else
+#define	STRIP_POINTER_INDEX(f, m) 					\
+	{								\
+	long index;							\
+	read_value(f, index);						\
+	if (index != m.lookup_ptr_index(this)) {			\
+		long hohum = m.lookup_ptr_index(this);			\
+		cerr << "process_definition::load_object(): " << endl	\
+			<< "\tthis = " << this << ", index = " << index	\
+			<< ", expected: " << hohum << endl;		\
+		assert(index == m.lookup_ptr_index(this));		\
+	}								\
+	}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// more sanity-check code, make this switchable
+#if NO_OBJECT_SANITY
+#define	WRITE_OBJECT_FOOTER(f)
+#else
+#define	WRITE_OBJECT_FOOTER(f)						\
+	write_value(f, -1L)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NO_OBJECT_SANITY
+#define	STRIP_OBJECT_FOOTER(f)
+#else
+#define	STRIP_OBJECT_FOOTER(f)						\
+	{								\
+	long neg_one;							\
+	read_value(f, neg_one);						\
+	assert(neg_one == -1L);						\
+	}
+#endif
+
 //=============================================================================
 // temporary switches
 
@@ -346,28 +412,6 @@ protected:	// typedefs -- keep these here for re-use
 protected:	// members
 	// should really only contain instantiations? no definitions?
 	// what should a generic scopespace contain?
-#if 0
-	// these members need to be implemented in children classes
-	/**
-		Reference to the parent namespace, if applicable.  
-		The only symbol table that can be a parent is another 
-		namespace.  Only the GLOBAL symbol table should have a 
-		NULL parent.  
-		The parent is a const pointer because no child namespace
-		should be able to modify its parent namespaces.  
-		However children (and their members) are allowed to 
-		make other const references to outside members through the
-		parent chain.  
-	 */
-	never_const_ptr<scopespace>		parent;
-
-	/**
-		The name of this namespace, also used as the map key for 
-		the table that contains this namespace.  
-	 */
-	string			key;
-#endif
-
 	/**
 		Before mapping a new symbol to a symbolic object, 
 		it must not already be mapped to an existing object.  
@@ -391,7 +435,6 @@ protected:	// members
 
 public:
 	scopespace();
-//	scopespace(const string& n, never_const_ptr<scopespace> p);
 virtual	~scopespace();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -409,6 +452,7 @@ virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) cons
 virtual	never_const_ptr<scopespace>
 			lookup_namespace(const qualified_id_slice& id) const;
 
+/** where overriden? **/
 virtual	never_const_ptr<instantiation_base>
 			add_instance(excl_ptr<instantiation_base> i);
 	bool add_definition_alias(never_const_ptr<definition_base> d, 
@@ -417,6 +461,14 @@ virtual	never_const_ptr<instantiation_base>
 	void add_connection_to_scope(
 		excl_const_ptr<connection_assignment_base> c);
 
+// helper functions for object IO
+protected:
+	void collect_used_id_map_pointers(persistent_object_manager& m) const;
+	void write_object_used_id_map(persistent_object_manager& m) const;
+	void load_object_used_id_map(persistent_object_manager& m);
+// no concrete method for loading -- that remains derived-class specific
+// so each sub-class may impose its own restrictions
+virtual	void load_used_id_map_object(excl_ptr<object> o) = 0;
 };	// end class scopespace
 
 //=============================================================================
@@ -470,6 +522,8 @@ protected:
 
 	// later introduce single symbol imports?
 	// i.e. using A::my_type;
+private:
+explicit name_space();
 
 public:
 explicit name_space(const string& n);
@@ -545,13 +599,9 @@ void	find_namespace_starting_with(namespace_list& m,
 
 // methods for object file I/O
 public:
-// type_index_enum	get_type_index(void) const;
-/** gathers pointer information about immediate pointer members */
-void	collect_transient_info(persistent_object_manager& m) const;
-void	write_object(persistent_object_manager& m) const;
-static	object*	construct_empty(void);
-void	load_object(persistent_object_manager& m);
-
+	ART_OBJECT_IO_METHODS
+/** helper method for adding a variety of objects */
+void	load_used_id_map_object(excl_ptr<object> o);
 };	// end class name_space
 
 //=============================================================================
@@ -752,6 +802,11 @@ virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
 virtual	void write_object(persistent_object_manager& m) const = 0;
 virtual	void load_object(persistent_object_manager& m) = 0;
 #endif
+
+protected:
+void	collect_template_formal_pointers(persistent_object_manager& m) const;
+void	write_object_template_formals(persistent_object_manager& m) const;
+void	load_object_template_formals(persistent_object_manager& m);
 };	// end class definition_base
 
 //=============================================================================
@@ -894,6 +949,9 @@ protected:
 	 */
 	size_t	depth;
 
+protected:
+explicit instantiation_base();
+
 public:
 	// o should be reference, not pointer
 	instantiation_base(const scopespace& o, const string& n, 
@@ -952,6 +1010,14 @@ virtual	count_ptr<instance_reference_base>
 virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const = 0;
+protected:
+	// utility functions for handling index collection
+	void collect_index_collection_pointers(
+			persistent_object_manager& m) const;
+	void write_index_collection_pointers(
+			persistent_object_manager& m) const;
+	void load_index_collection_pointers(
+			persistent_object_manager& m);
 };	// end class instantiation_base
 
 //=============================================================================

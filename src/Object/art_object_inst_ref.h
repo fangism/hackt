@@ -160,6 +160,8 @@ protected:
 // for subclasses:
 //	never_const_ptr<instantiation_base>	inst_ref;
 
+protected:
+	simple_instance_reference();
 public:
 	simple_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& st);
@@ -189,6 +191,11 @@ virtual	string hash_string(void) const;
 private:
 	// compute static index coverage
 	excl_ptr<mset_base> unroll_static_instances(const size_t dim) const;
+public:
+	// persistent object IO helper methods
+	// need help with instantiation state, count?
+	void write_instantiation_state(ostream& f) const;
+	void load_instantiation_state(istream& f);
 };	// end class simple_instance_reference
 
 //=============================================================================
@@ -205,6 +212,8 @@ protected:
 		must have dimension-0, scalar... for now
 	 */
 	const count_const_ptr<simple_instance_reference>	base;
+protected:
+	member_instance_reference_base();
 public:
 	member_instance_reference_base(
 		count_const_ptr<simple_instance_reference> b);
@@ -240,6 +249,8 @@ protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	const never_const_ptr<datatype_instantiation>	data_inst_ref;
 
+protected:
+	datatype_instance_reference();
 public:
 	datatype_instance_reference(never_const_ptr<datatype_instantiation> di, 
 		excl_ptr<index_list> i);
@@ -248,6 +259,10 @@ virtual	~datatype_instance_reference();
 virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
+
+public:
+	// need to be virtual? for member_instance_reference?
+	ART_OBJECT_IO_METHODS
 };	// end class datatype_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -259,14 +274,20 @@ protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	const never_const_ptr<channel_instantiation>	channel_inst_ref;
 
+protected:
+	channel_instance_reference();
 public:
 	channel_instance_reference(never_const_ptr<channel_instantiation> ci, 
 		excl_ptr<index_list> i);
-	~channel_instance_reference();
+virtual	~channel_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
+
+public:
+	// need to be virtual? for member_instance_reference?
+	ART_OBJECT_IO_METHODS
 };	// end class channel_instance_reference
 
 //-----------------------------------------------------------------------------
@@ -278,6 +299,8 @@ protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
 	const never_const_ptr<process_instantiation>	process_inst_ref;
 
+protected:
+	process_instance_reference();
 public:
 	process_instance_reference(never_const_ptr<process_instantiation> pi, 
 		excl_ptr<index_list> i);
@@ -285,6 +308,10 @@ virtual	~process_instance_reference();
 
 virtual	ostream& what(ostream& o) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
+
+public:
+	// need to be virtual? for member_instance_reference?
+	ART_OBJECT_IO_METHODS
 };	// end class process_instance_reference
 
 //=============================================================================
@@ -300,6 +327,8 @@ protected:
 //	excl_ptr<index_list>			array_indices;
 //	const never_const_ptr<process_instantiation>	process_inst_ref;
 //	const count_const_ptr<simple_instance_reference>	base;
+private:
+	process_member_instance_reference();
 public:
 	process_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
@@ -308,6 +337,9 @@ public:
 
 	ostream& what(ostream& o) const;
 // can also attach indices!
+
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class process_member_instance_reference
 
 //=============================================================================
@@ -322,6 +354,8 @@ protected:
 //	excl_ptr<index_list>			array_indices;
 //	const never_const_ptr<datatype_instantiation>	data_inst_ref;
 //	const count_const_ptr<simple_instance_reference>	base;
+private:
+	datatype_member_instance_reference();
 public:
 	datatype_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
@@ -330,6 +364,9 @@ public:
 
 	ostream& what(ostream& o) const;
 // can also attach indices!
+
+public:
+	ART_OBJECT_IO_METHODS
 
 };	// end class datatype_member_instance_reference
 
@@ -345,6 +382,8 @@ protected:
 //	excl_ptr<index_list>			array_indices;
 //	const never_const_ptr<channel_instantiation>	channel_inst_ref;
 //	const count_const_ptr<simple_instance_reference>	base;
+private:
+	channel_member_instance_reference();
 public:
 	channel_member_instance_reference(
 		count_const_ptr<simple_instance_reference> b, 
@@ -353,6 +392,9 @@ public:
 
 	ostream& what(ostream& o) const;
 // can also attach indices!
+
+public:
+	ART_OBJECT_IO_METHODS
 
 };	// end class channel_member_instance_reference
 
@@ -367,6 +409,8 @@ protected:
 // virtualized
 //	never_ptr<param_instantiation>		param_inst_ref;
 
+protected:
+	param_instance_reference();
 public:
 	param_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& st);

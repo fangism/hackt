@@ -54,6 +54,8 @@ protected:
 	// list of template actuals
 	// list of port actuals
 
+private:
+	process_instantiation();
 public:
 	process_instantiation(const scopespace& o, 
 		count_const_ptr<process_type_reference> pt,
@@ -70,6 +72,10 @@ public:
 	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const;
+
+public:
+	ART_OBJECT_IO_METHODS
+
 };	// end class process_instantiation
 
 //=============================================================================
@@ -77,24 +83,28 @@ public:
 class datatype_instantiation : public instantiation_base {
 protected:
 	count_const_ptr<data_type_reference>	type;	///< the actual type
+private:
+	datatype_instantiation();
 public:
 	datatype_instantiation(const scopespace& o, 
 		count_const_ptr<data_type_reference> t,
 		const string& n, 
 		index_collection_item_ptr_type d);
-virtual	~datatype_instantiation();
+	~datatype_instantiation();
 
-virtual	ostream& what(ostream& o) const;
-virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	ostream& what(ostream& o) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
 	// why is this never?
-virtual	count_ptr<instance_reference_base>
+	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
-virtual	count_ptr<member_instance_reference_base>
+	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class datatype_instantiation
 
 //=============================================================================
@@ -105,20 +115,24 @@ virtual	count_ptr<member_instance_reference_base>
 class channel_instantiation : public instantiation_base {
 protected:
 	count_const_ptr<channel_type_reference>	type;
+private:
+	channel_instantiation();
 public:
 	channel_instantiation(const scopespace& o, 
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
 		index_collection_item_ptr_type d);
-virtual	~channel_instantiation();
+	~channel_instantiation();
 
-virtual	ostream& what(ostream& o) const;
-virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-virtual	count_ptr<instance_reference_base>
+	ostream& what(ostream& o) const;
+	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
+	count_ptr<instance_reference_base>
 		make_instance_reference(void) const;
-virtual	count_ptr<member_instance_reference_base>
+	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
 			count_const_ptr<simple_instance_reference> b) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class channel_instantiation
 
 //=============================================================================
@@ -136,6 +150,8 @@ protected:
 	never_const_ptr<param_type_reference>	type;
 	**/
 
+protected:
+	param_instantiation();
 public:
 	param_instantiation(const scopespace& o, const string& n, 
 		index_collection_item_ptr_type d);
@@ -218,6 +234,8 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pbool_expr>		ival;
+private:
+	pbool_instantiation();
 public:
 	pbool_instantiation(const scopespace& o, const string& n);
 	pbool_instantiation(const scopespace& o, const string& n, 
@@ -243,6 +261,8 @@ public:
 	count_const_ptr<pbool_expr> initial_value(void) const;
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pbool_instantiation
 
 //-----------------------------------------------------------------------------
@@ -264,6 +284,8 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_const_ptr<pint_expr>		ival;
+private:
+	pint_instantiation();
 public:
 	pint_instantiation(const scopespace& o, const string& n);
 	pint_instantiation(const scopespace& o, const string& n, 
@@ -287,8 +309,9 @@ public:
 	count_const_ptr<param_expr> default_value(void) const;
 	count_const_ptr<pint_expr> initial_value(void) const;
 
-
 	bool type_check_actual_param_expr(const param_expr& pe) const;
+public:
+	ART_OBJECT_IO_METHODS
 };	// end class pint_instantiation
 
 //=============================================================================

@@ -8,6 +8,12 @@
 #include "art_object_type_ref.h"
 	// needed for static constructor of complete types
 
+/*
+	Consider exposing only never_ptrs to the built-in definitions, 
+	and keeping the static objects private instead, to avoid
+	confusion and the inconvenience of "taking the address of" &.  
+*/
+
 namespace ART {
 namespace entity {
 //=============================================================================
@@ -38,8 +44,11 @@ extern	const count_const_ptr<param_type_reference>	pint_type_ptr;
 extern	const built_in_datatype_def	bool_def;
 extern	const built_in_datatype_def	int_def;
 
+#if 0
+// not actually used
 extern	const data_type_reference	bool_type;
 // no int_type because is templated
+#endif
 
 //=============================================================================
 }	// end namespace entity

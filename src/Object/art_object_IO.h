@@ -4,8 +4,8 @@
 // include "hash_specializations.h" before this file for 
 //	hash<> specializations to take effect
 
-#ifndef	__ART_OBJECT_IO__
-#define	__ART_OBJECT_IO__
+#ifndef	__ART_OBJECT_IO_H__
+#define	__ART_OBJECT_IO_H__
 
 #include <iosfwd>
 #include "art_object_IO_fwd.h"
@@ -17,6 +17,12 @@
 
 namespace ART {
 namespace entity {
+#include "art_object_type_enum.h"	// in this namespace
+}
+}
+
+namespace ART {
+namespace entity {
 //=============================================================================
 using namespace std;
 using namespace HASH_QMAP_NAMESPACE;
@@ -24,34 +30,6 @@ using namespace HASH_QMAP_NAMESPACE;
 // forward declaration
 class object;
 class name_space;
-
-//=============================================================================
-/**
-	Use these enumerations to lookup which function to call
-	to reconstruct an object from a binary file stream.
-	Only concrete classes need to register with this.
-	This enumeration imitates indexing into a virtual table
-	for persistent objects whose vptr's are transient.  
- */
-enum type_index_enum {
-	NULL_TYPE,			// reserved = 0
-	// can also be used to denote end of object stream
-
-	NAMESPACE_TYPE,
-
-	PROCESS_DEFINITION_TYPE,
-	PROCESS_TYPEDEF_TYPE,
-
-	USER_DEF_CHAN_DEFINITION_TYPE, 
-	CHANNEL_TYPEDEF_TYPE, 
-
-	USER_DEF_DATA_DEFINITION_TYPE, 
-	ENUM_DEFINITION_TYPE, 
-	DATA_TYPEDEF_TYPE, 
-	// more class constants here...
-
-	MAX_TYPE_INDEX_ENUM		// reserved
-};
 
 //=============================================================================
 /**
@@ -88,6 +66,8 @@ private:
 		type_index_enum		otype;
 		/** location of reconstruction, consider object*? */
 		const object*		recon_addr;
+		/** reference count for counter pointers */
+	mutable	size_t*			ref_count;
 		/** scratch flag, general purpose flag */
 		bool			scratch;
 		/** start of stream position */
@@ -109,6 +89,7 @@ private:
 
 		type_index_enum	type(void) const { return otype; }
 		const object*	addr(void) const { return recon_addr; }
+		size_t*		count(void) const;
 		void		assign_addr(object* ptr);
 		void		reset_addr();
 		void		flag(void) { scratch = true; }
@@ -181,7 +162,9 @@ public:
 
 	long lookup_ptr_index(const object* ptr) const;
 	object*	lookup_obj_ptr(const long i) const;
+	size_t*	lookup_ref_count(const long i) const;
 
+	// the following template methods are defined in "art_object_IO.tcc"
 	/**
 		Doesn't actually write out the pointer, but the index 
 		representing the object represented by the pointer.
@@ -191,21 +174,45 @@ public:
 			write out.
 	 */
 	template <template <class> class P, class T>
-	void write_pointer(ostream& f, const P<T>& ptr) const {
-		if (ptr)	write_value(f, lookup_ptr_index(&*ptr));
-		else		write_value(f, lookup_ptr_index(NULL));
-	}
+	void write_pointer(ostream& f, const P<T>& ptr) const;
 
 	/**
 		ALERT: this intentially and coercively discards const-ness!
+		Need to specialize for reference counter pointers!
 	 */
 	template <template <class> class P, class T>
-	void read_pointer(istream& f, const P<T>& ptr) const {
-		long i;
-		read_value(f, i);
-		// shouldn't there be a dynamic cast needed?
-		const_cast<P<T>& >(ptr) = P<T>(lookup_obj_ptr(i));
-	}
+	void read_pointer(istream& f, const P<T>& ptr) const;
+
+	/**
+		Partial specialization of read_pointer for 
+		reference-counted pointers.
+	 */
+	template <class T>
+	void read_pointer(istream& f, const count_ptr<T>& ptr) const;
+	template <class T>
+	void read_pointer(istream& f, const count_const_ptr<T>& ptr) const;
+
+	/**
+		Writes a sequence of pointers, mapped to indices.
+		Container only needs a simple forward iterator interface.  
+	 */
+	template <template <class> class L, template <class> class P, class T >
+	void write_pointer_list(ostream& f, const L<P<T> >& l) const;
+
+	/**
+		Reconstructs a sequence of pointers, mapped to indices.  
+		Container only needs a simple forward iterator interface.  
+	 */
+	template <template <class> class L, template <class> class P, class T >
+	void read_pointer_list(istream& f, L<P<T> >& l) const;
+
+	/**
+		Writes a map of pointers in some order, ignoring the keys.
+	 */
+	template <template <class, class> class M, class K, 
+		template <class> class P, class T >
+	void write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
+
 
 // two interface functions suffice for file interaction:
 	static void	save_object_to_file(const string& s,
@@ -241,5 +248,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	//	__ART_OBJECT_IO__
+#endif	//	__ART_OBJECT_IO_H__
 

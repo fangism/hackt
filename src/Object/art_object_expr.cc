@@ -7,14 +7,26 @@
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.h"
 
+// consider: (for reducing expression storage overhead)
+// #define NO_OBJECT_SANITY	1
+// this will override the definition in "art_object_base.h"
+
+#include "ptrs.h"
+#include "count_ptr.h"
+
 #include "art_parser_base.h"
-#include "art_object.h"			// before including "art_object_expr.h"
 #include "art_object_expr.h"
+#include "art_object_instance.h"
+
+#include "art_utils.tcc"
+#include "art_object_IO.tcc"
 
 namespace ART {
 namespace entity {
 //=============================================================================
 using namespace std;
+using namespace PTRS_NAMESPACE;
+using namespace COUNT_PTR_NAMESPACE;
 
 // forward declarations (table of contents)
 class param_expr;
@@ -54,6 +66,7 @@ class dynamic_index_list;
 // inline
 param_expr::param_expr() : object() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 param_expr::~param_expr() { }
 
@@ -63,6 +76,7 @@ param_expr::~param_expr() { }
 // inline
 const_param::const_param() : param_expr() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 const_param::~const_param() { }
 
@@ -81,6 +95,7 @@ pbool_expr::may_be_equivalent(const param_expr& p) const {
 	else	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_expr::must_be_equivalent(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
@@ -93,6 +108,7 @@ pbool_expr::must_be_equivalent(const param_expr& p) const {
 	else	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
@@ -118,6 +134,7 @@ pint_expr::may_be_equivalent(const param_expr& p) const {
 	else	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::must_be_equivalent(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
@@ -130,6 +147,7 @@ pint_expr::must_be_equivalent(const param_expr& p) const {
 	else	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
@@ -140,13 +158,15 @@ pint_expr::static_constant_param(void) const {
 		new pint_const(static_constant_int()));
 }
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // class param_expr_list method definitions
 
 param_expr_list::param_expr_list() : object() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 bool
 param_expr_list::may_be_equivalent(const param_expr_list& p) const {
@@ -183,19 +203,22 @@ param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 }
 #endif
 
-//-----------------------------------------------------------------------------
+//=============================================================================
 // class const_param_expr_list method definitions
 
 const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_param_expr_list::what(ostream& o) const {
 	return o << "const-param-expr-list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
@@ -211,11 +234,13 @@ const_param_expr_list::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_param_expr_list::size(void) const {
 	return parent::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expr_list>
 const_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
@@ -223,16 +248,19 @@ const_param_expr_list::make_copy(void) const {
 	// use default copy constructor
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_param_expr_list::may_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_param_expr_list::must_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Precondition: all expressions must be non-NULL.  
@@ -249,6 +277,7 @@ const_param_expr_list::get_const_ref_list(void) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -289,6 +318,7 @@ if (cpl) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -329,19 +359,92 @@ if (cpl) {
 }
 }
 
-//-----------------------------------------------------------------------------
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+const_param_expr_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, CONST_PARAM_EXPR_LIST_TYPE)) {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<const_param> ip(*i);
+		ip->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+const_param_expr_list::construct_empty(void) {
+	return new const_param_expr_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+const_param_expr_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<const_param> ip(*i);
+		m.write_pointer(f, ip);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+const_param_expr_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		count_const_ptr<const_param> ip;
+		m.read_pointer(f, ip);
+		push_back(ip);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
+//=============================================================================
 // class dynamic_param_expr_list method definitions
 
 dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_param_expr_list::what(ostream& o) const {
 	return o << "param-expr-list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
@@ -357,11 +460,13 @@ dynamic_param_expr_list::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_param_expr_list::size(void) const {
 	return parent::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expr_list>
 dynamic_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
@@ -369,6 +474,7 @@ dynamic_param_expr_list::make_copy(void) const {
 	// use default copy constructor
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::is_static_constant(void) const {
 	const_iterator i = begin();
@@ -382,6 +488,7 @@ dynamic_param_expr_list::is_static_constant(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::is_loop_independent(void) const {
 	const_iterator i = begin();
@@ -395,6 +502,7 @@ dynamic_param_expr_list::is_loop_independent(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i = begin();
@@ -408,6 +516,7 @@ dynamic_param_expr_list::may_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::must_be_initialized(void) const {
 	const_iterator i = begin();
@@ -421,6 +530,7 @@ dynamic_param_expr_list::must_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Precondition: all expressions must be non-NULL.  
@@ -438,6 +548,7 @@ dynamic_param_expr_list::get_const_ref_list(void) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -478,6 +589,7 @@ if (cpl) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -518,11 +630,82 @@ if (cpl) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+dynamic_param_expr_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DYNAMIC_PARAM_EXPR_LIST_TYPE)) {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<param_expr> ip(*i);
+		ip->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+dynamic_param_expr_list::construct_empty(void) {
+	return new dynamic_param_expr_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+dynamic_param_expr_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<param_expr> ip(*i);
+		m.write_pointer(f, ip);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+dynamic_param_expr_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		count_const_ptr<param_expr> ip;
+		m.read_pointer(f, ip);
+		push_back(ip);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class index_expr method definitions
 
 index_expr::index_expr() : object() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_expr::~index_expr() { }
 
 //-----------------------------------------------------------------------------
@@ -530,6 +713,7 @@ index_expr::~index_expr() { }
 
 const_index::const_index() : index_expr() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index::~const_index() { }
 
 //=============================================================================
@@ -539,14 +723,17 @@ const_index::~const_index() { }
 param_expr_collective::param_expr_collective() : param_expr(), elist() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_collective::~param_expr_collective() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_expr_collective::what(ostream& o) const {
 	return o << "param-expr-collective";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 param_expr_collective::hash_string(void) const {
 	string ret("{");
@@ -565,6 +752,14 @@ param_expr_collective::hash_string(void) const {
 //=============================================================================
 // class pbool_instance_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+pbool_instance_reference::pbool_instance_reference() :
+		param_instance_reference(), pbool_expr(), pbool_inst_ref(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_reference::pbool_instance_reference(
 		never_ptr<pbool_instantiation> pi,
 		excl_ptr<index_list> i) :
@@ -573,46 +768,55 @@ pbool_instance_reference::pbool_instance_reference(
 		pbool_inst_ref(pi) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 pbool_instance_reference::get_inst_base(void) const {
 	return pbool_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<param_instantiation>
 pbool_instance_reference::get_param_inst_base(void) const {
 	return pbool_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_instance_reference::what(ostream& o) const {
 	return o << "pbool-inst-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_instance_reference::dump(ostream& o) const {
 	return simple_instance_reference::dump(o);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pbool_instance_reference::hash_string(void) const {
 	return simple_instance_reference::hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 pbool_instance_reference::dimensions(void) const {
 	return simple_instance_reference::dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::has_static_constant_dimensions(void) const {
 	return simple_instance_reference::has_static_constant_dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
 pbool_instance_reference::static_constant_dimensions(void) const {
 	return simple_instance_reference::static_constant_dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if sucessfully initialized with valid expression.  
  */
@@ -628,31 +832,37 @@ pbool_instance_reference::initialize(count_const_ptr<param_expr> i) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::may_be_initialized(void) const {
 	return param_instance_reference::may_be_initialized();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::must_be_initialized(void) const {
 	return param_instance_reference::must_be_initialized();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::is_static_constant(void) const {
 	return param_instance_reference::is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::is_loop_independent(void) const {
 	return param_instance_reference::is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instance_reference::is_unconditional(void) const {
 	return param_instance_reference::is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Better make sure that this is_static_constant before calling, 
 	else will assert-fail.
@@ -663,9 +873,87 @@ pbool_instance_reference::static_constant_bool(void) const {
 	return pbool_inst_ref->initial_value()->static_constant_bool();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.
+	\param m the persistent object manager.
+ */
+void
+pbool_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE))
+{  
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	pbool_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+		
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.
+ */
+object*
+pbool_instance_reference::construct_empty(void) {
+	return new pbool_instance_reference();
+}
+ 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.
+	\param m the persistent object manager.
+ */
+void    
+pbool_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, pbool_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+	
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** 
+	Loads the instance reference from an input stream, translating
+	indices to pointers.
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.
+	\param m the persistent object manager.
+ */
+void
+pbool_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, pbool_inst_ref);
+	assert(pbool_inst_ref);
+	const_cast<pbool_instantiation&>(*pbool_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class pint_instance_reference method definitions
 
+/**
+	Private empty constructor.  
+ */
+pint_instance_reference::pint_instance_reference() :
+		param_instance_reference(), pint_expr(), pint_inst_ref(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_reference::pint_instance_reference(
 		never_ptr<pint_instantiation> pi,
 		excl_ptr<index_list> i) :
@@ -674,46 +962,55 @@ pint_instance_reference::pint_instance_reference(
 		pint_inst_ref(pi) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<instantiation_base>
 pint_instance_reference::get_inst_base(void) const {
 	return pint_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<param_instantiation>
 pint_instance_reference::get_param_inst_base(void) const {
 	return pint_inst_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instance_reference::what(ostream& o) const {
 	return o << "pint-inst-ref";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instance_reference::dump(ostream& o) const {
 	return simple_instance_reference::dump(o);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pint_instance_reference::hash_string(void) const {
 	return simple_instance_reference::hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 pint_instance_reference::dimensions(void) const {
 	return simple_instance_reference::dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::has_static_constant_dimensions(void) const {
 	return simple_instance_reference::has_static_constant_dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
 pint_instance_reference::static_constant_dimensions(void) const {
 	return simple_instance_reference::static_constant_dimensions();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if successfully initialized with valid expression.  
  */
@@ -729,31 +1026,37 @@ pint_instance_reference::initialize(count_const_ptr<param_expr> i) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::may_be_initialized(void) const {
 	return param_instance_reference::may_be_initialized();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::must_be_initialized(void) const {
 	return param_instance_reference::must_be_initialized();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::is_static_constant(void) const {
 	return param_instance_reference::is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::is_loop_independent(void) const {
 	return param_instance_reference::is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instance_reference::is_unconditional(void) const {
 	return param_instance_reference::is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Better make sure that this is_static_constant before calling, 
 	else will assert-fail.
@@ -764,6 +1067,76 @@ pint_instance_reference::static_constant_int(void) const {
 	return pint_inst_ref->initial_value()->static_constant_int();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits children nodes and register pointers to object manager
+	for serialization.
+	\param m the persistent object manager.
+ */
+void
+pint_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, SIMPLE_PINT_INSTANCE_REFERENCE_TYPE))
+{  
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+	pint_inst_ref->collect_transient_info(m);
+	// instantiation_state has no pointers
+}
+// else already visited
+}
+		
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just allocates with bogus contents, first pass of reconstruction.
+ */
+object*
+pint_instance_reference::construct_empty(void) {
+	return new pint_instance_reference();
+}
+ 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes the instance reference to output stream, translating
+	pointers to indices as it goes along.
+	Note: the instantiation base must be written before the
+		state information, for reconstruction purposes.
+	\param m the persistent object manager.
+ */
+void    
+pint_instance_reference::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, pint_inst_ref);
+	write_instantiation_state(f);
+	m.write_pointer(f, array_indices);
+	WRITE_OBJECT_FOOTER(f);
+}
+	
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** 
+	Loads the instance reference from an input stream, translating
+	indices to pointers.
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.
+	\param m the persistent object manager.
+ */
+void
+pint_instance_reference::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, pint_inst_ref);
+	assert(pint_inst_ref);
+	const_cast<pint_instantiation&>(*pint_inst_ref).load_object(m);
+	load_instantiation_state(f);
+	m.read_pointer(f, array_indices);
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class pint_const method definitions
 
@@ -772,11 +1145,13 @@ pint_const::what(ostream& o) const {
 	return o << "pint-const";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_const::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pint_const::hash_string(void) const {
 	ostringstream o;
@@ -784,6 +1159,7 @@ pint_const::hash_string(void) const {
 	return o.str();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
@@ -795,9 +1171,43 @@ pint_const::static_constant_param(void) const {
 		new pint_const(val));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_const::operator == (const const_range& c) const {
 	return (val == c.first) && (val == c.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const::collect_transient_info(persistent_object_manager& m) const {
+	m.register_transient_object(this, CONST_PINT_TYPE);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pint_const::construct_empty(void) {
+	return new pint_const(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// wasteful
+	write_value(f, val);
+	WRITE_OBJECT_FOOTER(f);			// wasteful
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// wasteful
+	read_value(f, val);
+	STRIP_OBJECT_FOOTER(f);			// wasteful
+}
+// else already visited
 }
 
 //=============================================================================
@@ -808,16 +1218,19 @@ pbool_const::what(ostream& o) const {
 	return o << "pbool-const";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_const::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pbool_const::hash_string(void) const {
 	return (val) ? "true" : "false";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
@@ -829,9 +1242,50 @@ pbool_const::static_constant_param(void) const {
 		new pbool_const(val));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_const::collect_transient_info(persistent_object_manager& m) const {
+	m.register_transient_object(this, CONST_PBOOL_TYPE);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pbool_const::construct_empty(void) {
+	return new pbool_const(0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_const::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);		// wasteful
+	write_value(f, val);
+	WRITE_OBJECT_FOOTER(f);			// wasteful
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_const::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);		// wasteful
+	read_value(f, val);
+	STRIP_OBJECT_FOOTER(f);			// wasteful
+}
+// else already visited
+}
+
 //=============================================================================
 // class pint_unary_expr method definitions
 
+/**
+	Private empty constructor.  
+ */
+pint_unary_expr::pint_unary_expr() :
+		pint_expr(), op('\0'), ex(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
 		const char o, count_const_ptr<pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
@@ -839,6 +1293,7 @@ pint_unary_expr::pint_unary_expr(
 	assert(ex->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
 		count_const_ptr<pint_expr> e, const char o) :
 		pint_expr(), op(o), ex(e) {
@@ -846,47 +1301,97 @@ pint_unary_expr::pint_unary_expr(
 	assert(ex->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_unary_expr::what(ostream& o) const {
 	return o << "pint-unary-expr";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_unary_expr::dump(ostream& o) const {
 	// parentheses? check operator precedence
 	return ex->dump(o << op);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pint_unary_expr::hash_string(void) const {
 //	return op +ex->hash_string();
 	return ex->hash_string() +op;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_unary_expr::is_loop_independent(void) const {
 	return ex->is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_unary_expr::is_unconditional(void) const {
 	return ex->is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 pint_unary_expr::static_constant_int(void) const {
 	// depends on op
 	return -ex->static_constant_int();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_unary_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PINT_UNARY_EXPR_TYPE)) {
+	ex->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pint_unary_expr::construct_empty(void) {
+	return new pint_unary_expr();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_unary_expr::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, op);
+	m.write_pointer(f, ex);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_unary_expr::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, op);
+	m.read_pointer(f, ex);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class pbool_unary_expr method definitions
 
+/**
+	Private empty constructor.  
+ */
+pbool_unary_expr::pbool_unary_expr() :
+		pbool_expr(), op('\0'), ex(NULL) {
+}
+		
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
 		const char o, count_const_ptr<pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
@@ -894,6 +1399,7 @@ pbool_unary_expr::pbool_unary_expr(
 	assert(ex->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
 		count_const_ptr<pbool_expr> e, const char o) :
 		pbool_expr(), op(o), ex(e) {
@@ -901,45 +1407,95 @@ pbool_unary_expr::pbool_unary_expr(
 	assert(ex->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_unary_expr::what(ostream& o) const {
 	return o << "pbool-unary-expr";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_unary_expr::dump(ostream& o) const {
 	// parentheses?
 	return ex->dump(o << op);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pbool_unary_expr::hash_string(void) const {
 	return ex->hash_string() +op;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::is_loop_independent(void) const {
 	return ex->is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::is_unconditional(void) const {
 	return ex->is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::static_constant_bool(void) const {
 	return !ex->static_constant_bool();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_unary_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PBOOL_UNARY_EXPR_TYPE)) {
+	ex->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pbool_unary_expr::construct_empty(void) {
+	return new pbool_unary_expr();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_unary_expr::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, op);
+	m.write_pointer(f, ex);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_unary_expr::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, op);
+	m.read_pointer(f, ex);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class arith_expr method definitions
 
+/**
+	Private empty constructor.  
+ */
+arith_expr::arith_expr() :
+		lx(NULL), rx(NULL), op('\0') {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 		count_const_ptr<pint_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -949,36 +1505,43 @@ arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 	assert(rx->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 arith_expr::what(ostream& o) const {
 	return o << "arith-expr";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 arith_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << op);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 arith_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 arith_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 arith_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 arith_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 arith_expr::static_constant_int(void) const {
 	int a = lx->static_constant_int();
@@ -993,9 +1556,55 @@ arith_expr::static_constant_int(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+arith_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, ARITH_EXPR_TYPE)) {
+	lx->collect_transient_info(m);
+	rx->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+arith_expr::construct_empty(void) {
+	return new arith_expr();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+arith_expr::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, op);
+	m.write_pointer(f, lx);
+	m.write_pointer(f, rx);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+arith_expr::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, op);
+	m.read_pointer(f, lx);
+	m.read_pointer(f, rx);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class relational_expr method definitions
 
+/**
+	Private empty constructor.  
+ */
+relational_expr::relational_expr() :
+		lx(NULL), rx(NULL), op('\0') {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 		const string& o, count_const_ptr<pint_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -1005,36 +1614,43 @@ relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 	assert(rx->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 relational_expr::what(ostream& o) const {
 	return o << "relational-expr";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 relational_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << op);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 relational_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 relational_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 relational_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: what do you think?
  */
@@ -1046,9 +1662,55 @@ relational_expr::static_constant_bool(void) const {
 	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+relational_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, RELATIONAL_EXPR_TYPE)) {
+	lx->collect_transient_info(m);
+	rx->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+relational_expr::construct_empty(void) {
+	return new relational_expr();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+relational_expr::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, op);
+	m.write_pointer(f, lx);
+	m.write_pointer(f, rx);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+relational_expr::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, op);
+	m.read_pointer(f, lx);
+	m.read_pointer(f, rx);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class logical_expr method definitions
 
+/**
+	Private empty constructor.
+ */
+logical_expr::logical_expr() :
+		lx(NULL), rx(NULL), op('\0') {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 		const string& o, count_const_ptr<pbool_expr> r) :
 		lx(l), rx(r), op(o) {
@@ -1058,36 +1720,43 @@ logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 	assert(rx->dimensions() == 0);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 logical_expr::what(ostream& o) const {
 	return o << "logical-expr";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 logical_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << op);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 logical_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 logical_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 logical_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 logical_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: what do you think?
  */
@@ -1099,9 +1768,55 @@ logical_expr::static_constant_bool(void) const {
 	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+logical_expr::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, LOGICAL_EXPR_TYPE)) {
+	lx->collect_transient_info(m);
+	rx->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+logical_expr::construct_empty(void) {
+	return new logical_expr();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+logical_expr::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, op);
+	m.write_pointer(f, lx);
+	m.write_pointer(f, rx);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+logical_expr::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, op);
+	m.read_pointer(f, lx);
+	m.read_pointer(f, rx);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class pint_range method definitions
 
+/**
+	Private empty constructor.  
+ */
+pint_range::pint_range() :
+		range_expr(), lower(NULL), upper(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(count_const_ptr<pint_expr> n) :
 		range_expr(),
 		lower(new pint_const(0)),
@@ -1112,6 +1827,7 @@ pint_range::pint_range(count_const_ptr<pint_expr> n) :
 	assert(upper);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(count_const_ptr<pint_expr> l, 
 		count_const_ptr<pint_expr> u) :
 		range_expr(), lower(l), upper(u) {
@@ -1119,6 +1835,7 @@ pint_range::pint_range(count_const_ptr<pint_expr> l,
 	assert(upper);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(const pint_range& pr) :
 		object(), index_expr(), range_expr(), 
 		// virtual base object() needs to be explicitly invoked
@@ -1126,21 +1843,25 @@ pint_range::pint_range(const pint_range& pr) :
 		lower(pr.lower), upper(pr.upper) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_range::what(ostream& o) const {
 	return o << "pint-range";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_range::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 pint_range::hash_string(void) const {
 	return lower->hash_string() + ".." +upper->hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Range is sane if lower <= upper.
 	If expressions are not constant, then conservatively return true.  
@@ -1154,15 +1875,53 @@ pint_range::is_sane(void) const {
 	else return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_range::is_static_constant(void) const {
 	return lower->is_static_constant() && upper->is_static_constant();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range
 pint_range::static_constant_range(void) const {
 	return const_range(lower->static_constant_int(), 
 		upper->static_constant_int());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_range::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DYNAMIC_RANGE_TYPE)) {
+	lower->collect_transient_info(m);
+	upper->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pint_range::construct_empty(void) {
+	return new pint_range();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_range::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, lower);
+	m.write_pointer(f, upper);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_range::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, lower);
+	m.read_pointer(f, upper);
+	STRIP_OBJECT_FOOTER(f);
 }
 
 //=============================================================================
@@ -1175,6 +1934,7 @@ pint_range::static_constant_range(void) const {
 const_range::const_range() : range_expr(), const_index(), parent(0,-1) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** Protected internal constructor. */
 const_range::const_range(const interval_type& i) :
 		range_expr(), const_index(), 
@@ -1184,6 +1944,7 @@ const_range::const_range(const interval_type& i) :
 		assert(upper() >= lower());		// else what!?!?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Explicit constructor of a dense range from 0 to N-1.  
 	\param n must be > 0, else assertion will fail.
@@ -1194,6 +1955,7 @@ const_range::const_range(const int n) :
 	assert(upper() >= lower());		// else what!?!?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Explicit constructor of a dense range from 0 to N-1.  
 	\param n must be > 0, else assertion will fail.
@@ -1204,6 +1966,7 @@ const_range::const_range(const pint_const& n) :
 	assert(upper() >= lower());		// else what!?!?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should both l and u be non-negative too?
 	\param l is lower bound, inclusive.  
@@ -1215,6 +1978,7 @@ const_range::const_range(const int l, const int u) :
 	assert(upper() >= lower());		// else what!?!?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
 		object(), 
@@ -1225,6 +1989,7 @@ const_range::const_range(const const_range& r) :
 	// assert check range?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range::const_range(const parent r) :
 		object(), 
 		index_expr(),
@@ -1234,11 +1999,13 @@ const_range::const_range(const parent r) :
 	// assert check range?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range::what(ostream& o) const {
 	return o << "const-range";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range::dump(ostream& o) const {
 	if (empty())
@@ -1247,6 +2014,7 @@ const_range::dump(ostream& o) const {
 		return o << "[" << lower() << ".." << upper() << "]";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 const_range::hash_string(void) const {
 	ostringstream o;
@@ -1254,6 +2022,7 @@ const_range::hash_string(void) const {
 	return o.str();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns whether or not two intervals overlap.  
 	\return 
@@ -1273,11 +2042,13 @@ const_range::static_overlap(const const_range& r) const {
 	return const_range(temp);		// private constructor
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_range::operator == (const const_range& c) const {
 	return (first == c.first) && (second == c.second);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Presumably if this was successfully constructed, then it
 	passed the assertion.  No need to recheck.  
@@ -1287,15 +2058,49 @@ const_range::is_sane(void) const {
 	return !empty();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range::collect_transient_info(persistent_object_manager& m) const {
+	m.register_transient_object(this, CONST_RANGE_TYPE);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+const_range::construct_empty(void) {
+	return new const_range();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, first);
+	write_value(f, second);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range::load_object(persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	read_value(f, first);
+	read_value(f, second);
+	STRIP_OBJECT_FOOTER(f);
+}
+
 //=============================================================================
 // class range_expr method definitions
 
 range_expr::range_expr() : index_expr() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range_expr::~range_expr() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 range_expr::dump(ostream& o) const {
 	return o << hash_string();
@@ -1313,6 +2118,7 @@ range_expr_list::range_expr_list() : object() {
 const_range_list::const_range_list() : range_expr_list(), list_type() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implicit conversion.  
  */
@@ -1320,6 +2126,7 @@ const_range_list::const_range_list(const list_type& l) :
 		range_expr_list(), list_type(l) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Explicit conversion from an index list to a range list.  
 	Only available for constants, of course.
@@ -1344,14 +2151,17 @@ const_range_list::const_range_list(const const_index_list& i) :
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list::~const_range_list() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range_list::what(ostream& o) const {
 	return o << "const_range_list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range_list::dump(ostream& o) const {
 	const_iterator i = begin();
@@ -1360,11 +2170,13 @@ const_range_list::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_range_list::size(void) const {
 	return list_type::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks for overlap between two static multidimensional index ranges.  
 	If argument is actually dynamic, can only conservatively return false.  
@@ -1406,6 +2218,7 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Takes a list of ranges and converts back to indices, using a 
@@ -1422,6 +2235,7 @@ const_range_list::revert_to_indices(const const_index_list& il) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 UNNECESSARY
 /**
@@ -1456,6 +2270,7 @@ const_range_list::collapsed_dimension_ranges(
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 ABANDONING, see comments within
 /**
@@ -1519,6 +2334,7 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 ABANDONING
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Size equality of two multidimensional ranges.  
 	Also reports error in size mismatch to stderr.  
@@ -1545,6 +2361,7 @@ const_range_list::is_size_equivalent(const const_range_list& c) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Whether two multidimensional range lists are identical.  
 	Not just whether or not the size of the spanned ranges are equal.  
@@ -1564,20 +2381,82 @@ const_range_list::operator == (const const_range_list& c) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range_list::collect_transient_info(persistent_object_manager& m) const {
+	m.register_transient_object(this, CONST_RANGE_LIST_TYPE);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+const_range_list::construct_empty(void) {
+	return new const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+const_range_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const const_range& cr(*i);
+		write_value(f, cr.first);
+		write_value(f, cr.second);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+const_range_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		const_range cr;
+		read_value(f, cr.first);
+		read_value(f, cr.second);
+		push_back(cr);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
 //=============================================================================
 // class dynamic_range_list method definitions
 
 dynamic_range_list::dynamic_range_list() : range_expr_list(), list_type() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_range_list::~dynamic_range_list() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_range_list::what(ostream& o) const {
 	return o << "dynamic_range_list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_range_list::dump(ostream& o) const {
 	const_iterator i = begin();
@@ -1588,11 +2467,13 @@ dynamic_range_list::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_range_list::size(void) const {
 	return list_type::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_range_list::is_static_constant(void) const {
 	const_iterator i = begin();
@@ -1606,6 +2487,7 @@ dynamic_range_list::is_static_constant(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Overlap is indefinite with dynamic ranges, conservatively.  
  */
@@ -1614,11 +2496,83 @@ dynamic_range_list::static_overlap(const range_expr_list& r) const {
 	return const_range_list();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+dynamic_range_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DYNAMIC_RANGE_LIST_TYPE)) {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<pint_range> ip(*i);
+		ip->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+dynamic_range_list::construct_empty(void) {
+	return new dynamic_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+dynamic_range_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<pint_range> ip(*i);
+		m.write_pointer(f, ip);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+dynamic_range_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		count_ptr<pint_range> ip;
+		m.read_pointer(f, ip);
+		push_back(ip);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
+}
+
+
 //=============================================================================
 // class index_list method definitions
 
 index_list::index_list() : object() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_list::~index_list() { }
 
 //=============================================================================
@@ -1626,18 +2580,22 @@ index_list::~index_list() { }
 
 const_index_list::const_index_list() : index_list(), parent() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::~const_index_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_index_list::what(ostream& o) const {
 	return o << "const-index-list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_index_list::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 const_index_list::hash_string(void) const {
 	string ret;
@@ -1651,11 +2609,13 @@ const_index_list::hash_string(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_index_list::size(void) const {
 	return parent::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A dimension is collapsed if the index is a single integer, 
 	and otherwise not collapsed if it's a range.  
@@ -1676,6 +2636,7 @@ const_index_list::dimensions_collapsed(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
 const_index_list::collapsed_dimension_ranges(void) const {
 	const_range_list ret;
@@ -1691,6 +2652,7 @@ const_index_list::collapsed_dimension_ranges(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper to list paren'ts push_back that checks that
 	expression is a 0-dimensional pint_inst reference.  
@@ -1703,29 +2665,104 @@ const_index_list::push_back(const count_ptr<const_index>& i) {
 	parent::push_back(i);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::may_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::must_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::is_static_constant(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::is_loop_independent(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::is_unconditional(void) const {
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+const_index_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, CONST_INDEX_LIST_TYPE)) {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<const_index> ip(*i);
+		ip->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+const_index_list::construct_empty(void) {
+	return new const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+const_index_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<const_index> ip(*i);
+		m.write_pointer(f, ip);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+const_index_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		count_ptr<const_index> ip;
+		m.read_pointer(f, ip);
+		push_back(ip);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
 }
 
 //=============================================================================
@@ -1733,18 +2770,22 @@ const_index_list::is_unconditional(void) const {
 
 dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_index_list::~dynamic_index_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_index_list::what(ostream& o) const {
 	return o << "dynamic-index-list";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_index_list::dump(ostream& o) const {
 	return o << hash_string();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 dynamic_index_list::hash_string(void) const {
 	string ret;
@@ -1758,6 +2799,7 @@ dynamic_index_list::hash_string(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 	assert(i);
@@ -1765,11 +2807,13 @@ dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 	parent::push_back(i);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_index_list::size(void) const {
 	return parent::size();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Counts which dimensions are collapsed.  
 	See description in const_index_list::dimensions_collapsed().  
@@ -1787,6 +2831,7 @@ dynamic_index_list::dimensions_collapsed(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_index_list::may_be_initialized(void) const {
 	const_iterator i = begin();
@@ -1798,6 +2843,7 @@ dynamic_index_list::may_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_index_list::must_be_initialized(void) const {
 	const_iterator i = begin();
@@ -1809,6 +2855,7 @@ dynamic_index_list::must_be_initialized(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_index_list::is_static_constant(void) const {
 	const_iterator i = begin();
@@ -1820,6 +2867,7 @@ dynamic_index_list::is_static_constant(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_index_list::is_loop_independent(void) const {
 	const_iterator i = begin();
@@ -1831,6 +2879,7 @@ dynamic_index_list::is_loop_independent(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_index_list::is_unconditional(void) const {
 	const_iterator i = begin();
@@ -1840,6 +2889,76 @@ dynamic_index_list::is_unconditional(void) const {
 			return false;
 	}
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+dynamic_index_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DYNAMIC_INDEX_LIST_TYPE)) {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<index_expr> ip(*i);
+		ip->collect_transient_info(m);
+	}
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty constructor / allocator for the first pass of 
+	deserialization reconstruction.  
+ */
+object*
+dynamic_index_list::construct_empty(void) {
+	return new dynamic_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+dynamic_index_list::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	write_value(f, size());		// how many exprs to expect?
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		const count_const_ptr<index_expr> ip(*i);
+		m.write_pointer(f, ip);
+	}
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+dynamic_index_list::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	size_t s, i=0;
+	read_value(f, s);		// how many exprs to expect?
+	for ( ; i<s; i++) {
+		count_ptr<index_expr> ip;
+		m.read_pointer(f, ip);
+		push_back(ip);
+	}
+	STRIP_OBJECT_FOOTER(f);
+}
+// else already visited
 }
 
 //=============================================================================

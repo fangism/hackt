@@ -2,13 +2,12 @@
 
 #include <iostream>
 
-// #include "art_parser_debug.h"		// need this?
-// #include "art_parser_base.h"
-// #include "art_context.h"
-
+#include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
+#include "art_utils.tcc"
+#include "art_object_IO.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -27,6 +26,14 @@ namespace entity {
 //=============================================================================
 // class instantiation_base method definitions
 
+/**
+	Private empty constructor.
+ */
+instantiation_base::instantiation_base() : object(), 
+		owner(NULL), key(), index_collection(), depth(0) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiation base constructor.  
 	The first time an instance is declared, its dimensions are
@@ -53,9 +60,11 @@ if (d) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation_base::~instantiation_base() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_base::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
@@ -67,6 +76,7 @@ instantiation_base::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instantiation_base::get_qualified_name(void) const {
 	if (owner)
@@ -75,6 +85,7 @@ instantiation_base::get_qualified_name(void) const {
 	else return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Return's the type's base definition.
  */
@@ -83,6 +94,7 @@ instantiation_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Grabs the current top of the deque of the index collection, 
 	so the encapsulating instance reference know what
@@ -95,6 +107,7 @@ instantiation_base::current_collection_state(void) const {
 	return index_collection.begin();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	By "end", we mean the beginning of the collection state deque, 
 	the first item added to the the collection stack.  
@@ -106,6 +119,7 @@ instantiation_base::collection_state_end(void) const {
 	return index_collection.end();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Will need two flavors: may and must?
 	
@@ -142,6 +156,7 @@ instantiation_base::detect_static_overlap(
 	return const_range_list();	// empty constructed list
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: this can only be done with non-formals.  Check this.  
 	If this instance is a collection, add the new range of indices
@@ -169,6 +184,7 @@ instantiation_base::add_index_range(index_collection_item_ptr_type r) {
 	return overlap;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Merges index ranges from another instantiation base, 
 	such as a redeclaration with more indices of the same collection.  
@@ -198,6 +214,7 @@ instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
 	return const_range_list();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  
@@ -211,6 +228,7 @@ instantiation_base::is_template_formal(void) const {
 	else return false;		// owner is not a definition
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Queries whether or not this is a port formal, by 
 	checking its membership in the owner.  
@@ -224,6 +242,7 @@ instantiation_base::is_port_formal(void) const {
 	else return false;		// owner is not a definition
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For two template formals to be equivalent, their
 	type and size must match, names need not.  
@@ -249,6 +268,7 @@ instantiation_base::template_formal_equivalent(
 	return formal_size_equivalent(b);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Much like equivalence for template formals, except that
 	names also need to match for port formals.  
@@ -276,6 +296,7 @@ instantiation_base::port_formal_equivalent(
 	return key == b->get_name();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just compares dimensionality and sizes of an instantiation
 	in a template formal context.  
@@ -332,6 +353,7 @@ instantiation_base::formal_size_equivalent(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks for dimension and size equality between expression and 
 	instantiation.  
@@ -378,9 +400,63 @@ instantiation_base::check_expression_dimensions(const param_expr& pe) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Utility function for walking index collection list
+	and collecting pointers.  
+ */
+void
+instantiation_base::collect_index_collection_pointers(
+		persistent_object_manager& m) const {
+	index_collection_type::const_iterator
+		c_iter = index_collection.begin();
+	const index_collection_type::const_iterator
+		c_end = index_collection.end();
+	for ( ; c_iter!=c_end; c_iter++) {
+		const index_collection_item_ptr_type& p = *c_iter;
+		assert(p);
+		p->collect_transient_info(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write out serial list of pointers to index collection items, 
+	with pointers translated into indicies.  
+ */
+void
+instantiation_base::write_index_collection_pointers(
+		persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	// need a specialization for count_ptrs
+	m.write_pointer_list(f, index_collection);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads serial list of pointers into index collection items, 
+	with indices translated into pointers.  
+ */
+void
+instantiation_base::load_index_collection_pointers(
+		persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	// need a specialization for count_ptrs
+	m.read_pointer_list(f, index_collection);
+}
+
 //=============================================================================
 // class datatype_instantiation method definitions
 
+/**
+	Private empty constructor.
+ */
+datatype_instantiation::datatype_instantiation() :
+		instantiation_base(), type(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instantiation::datatype_instantiation(const scopespace& o, 
 		count_const_ptr<data_type_reference> t, 
 		const string& n, 
@@ -389,19 +465,23 @@ datatype_instantiation::datatype_instantiation(const scopespace& o,
 	assert(type);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instantiation::~datatype_instantiation() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 datatype_instantiation::what(ostream& o) const {
 	return o << "datatype-inst";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 datatype_instantiation::get_type_ref(void) const {
 	return type;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create a datatype reference object.
 	See if it's already registered in the current context.  
@@ -426,6 +506,7 @@ datatype_instantiation::make_instance_reference(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a member reference to a datatype, 
 	and pushes it onto the context's object_stack.  
@@ -447,29 +528,99 @@ datatype_instantiation::make_member_instance_reference(
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datatype_instantiation::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DATA_INSTANTIATION_TYPE)) {
+	// don't bother visit the owner, assuming that's the caller
+	type->collect_transient_info(m);
+	// go through index_collection
+	collect_index_collection_pointers(m);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+datatype_instantiation::construct_empty(void) {
+	return new datatype_instantiation();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need special case handling for built-in types? int and bool?
+ */
+void
+datatype_instantiation::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, owner);
+	write_string(f, key);
+	m.write_pointer(f, type);
+	write_index_collection_pointers(m);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need special case handling for built-in types? int and bool?
+ */
+void
+datatype_instantiation::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	m.read_pointer(f, type);
+	load_index_collection_pointers(m);
+	STRIP_OBJECT_FOOTER(f);
+	if (index_collection.empty())
+		depth = 0;
+	else
+		depth = (*index_collection.begin())->dimensions();
+}
+// else already visited
+}
+
 //=============================================================================
 // class process_instantiation method definitions
 
+/**
+	Private empty constructor.
+ */
+process_instantiation::process_instantiation() :
+		instantiation_base(), type(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instantiation::process_instantiation(const scopespace& o, 
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
 		index_collection_item_ptr_type d) : 
 		instantiation_base(o, n, d), type(pt) {
+	assert(type);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instantiation::~process_instantiation() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 process_instantiation::get_type_ref(void) const {
 	return type;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create a process reference object.
 	See if it's already registered in the current context.  
@@ -494,6 +645,7 @@ process_instantiation::make_instance_reference(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a member reference to a process, 
 	and pushes it onto the context's object_stack.  
@@ -515,18 +667,78 @@ process_instantiation::make_member_instance_reference(
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_instantiation::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PROCESS_INSTANTIATION_TYPE)) {
+	// don't bother visit the owner, assuming that's the caller
+	type->collect_transient_info(m);
+	// go through index_collection
+	collect_index_collection_pointers(m);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+process_instantiation::construct_empty(void) {
+	return new process_instantiation();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_instantiation::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, owner);
+	write_string(f, key);
+	m.write_pointer(f, type);
+	write_index_collection_pointers(m);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_instantiation::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	m.read_pointer(f, type);
+	load_index_collection_pointers(m);
+	STRIP_OBJECT_FOOTER(f);
+	if (index_collection.empty())
+		depth = 0;
+	else
+		depth = (*index_collection.begin())->dimensions();
+}
+// else already visited
+}
+
 //=============================================================================
 // class param_instantiation method definitions
 
+/**
+	Private empty constructor.  
+ */
+param_instantiation::param_instantiation() :
+		instantiation_base() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instantiation::param_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d) : 
 		instantiation_base(o, n, d) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instantiation::~param_instantiation() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Override instantiation_base's what() to suppress output of <>.
 ostream&
@@ -535,6 +747,7 @@ param_instantiation::what(ostream& o) const {
 }
 **/
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	To determine whether or not this is a formal parameter, 
 	look itself up in the owning namespace.  
@@ -552,6 +765,7 @@ param_instantiation::is_template_formal(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For multidimensional instances, we don't keep track of initialization
 	of individual elements at compile-time, just conservatively 
@@ -580,6 +794,7 @@ param_instantiation::may_be_initialized(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	At compile time, we don't keep track of arrays, thus
 	one cannot conclude that a member of an array is definitely 
@@ -605,6 +820,7 @@ param_instantiation::must_be_initialized(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instantiation::is_static_constant(void) const {
 	if (dimensions()) {
@@ -620,6 +836,7 @@ param_instantiation::is_static_constant(void) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Note: only one flavor needed (hopefully).  
@@ -635,6 +852,7 @@ param_instantiation::is_loop_independent(void) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	1) Parameters cannot be in public ports.  
 	2) Thus they cannot even be referenced.  
@@ -653,6 +871,14 @@ param_instantiation::make_member_instance_reference(
 //=============================================================================
 // class pbool_instantiation method definitions
 
+/**
+	Private empty constructor.  
+ */
+pbool_instantiation::pbool_instantiation() :
+		param_instantiation(), ival(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n) :
 		param_instantiation(o, n,
@@ -660,12 +886,14 @@ pbool_instantiation::pbool_instantiation(const scopespace& o,
 		ival(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d) :
 		param_instantiation(o, n, d), ival(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n, 
 		count_const_ptr<pbool_expr> i) :
@@ -675,6 +903,7 @@ pbool_instantiation::pbool_instantiation(const scopespace& o,
 	assert(type_check_actual_param_expr(*i));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation::pbool_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d, 
@@ -683,17 +912,20 @@ pbool_instantiation::pbool_instantiation(const scopespace& o,
 	assert(type_check_actual_param_expr(*i));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_instantiation::what(ostream& o) const {
 	return o << "pbool-inst";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 pbool_instantiation::get_type_ref(void) const {
 	return pbool_type_ptr;
 		// defined in "art_built_ins.h"
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Initializes a parameter instance with an expression.
 	Parameter instance collections cannot be initialized statically
@@ -727,6 +959,7 @@ pbool_instantiation::initialize(count_const_ptr<pbool_expr> e) {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
 	count_const_ptr<pbool_expr> b(p.is_a<pbool_expr>());
@@ -737,16 +970,19 @@ pbool_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
 	else return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<param_expr>
 pbool_instantiation::default_value(void) const {
 	return ival;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<pbool_expr>
 pbool_instantiation::initial_value(void) const {
 	return ival;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
 	Create a param reference object.
@@ -778,6 +1014,7 @@ pbool_instantiation::make_instance_reference(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks whether or not a pbool was passed to a formal 
 	pbool parameter in a template.  
@@ -796,9 +1033,64 @@ pbool_instantiation::type_check_actual_param_expr(const param_expr& pe) const {
 	return check_expression_dimensions(*pb);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_instantiation::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PBOOL_INSTANTIATION_TYPE)) {
+	// don't bother visit the owner, assuming that's the caller
+	// go through index_collection
+	collect_index_collection_pointers(m);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pbool_instantiation::construct_empty(void) {
+	return new pbool_instantiation();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_instantiation::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, owner);
+	write_string(f, key);
+	write_index_collection_pointers(m);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_instantiation::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	load_index_collection_pointers(m);
+	STRIP_OBJECT_FOOTER(f);
+	if (index_collection.empty())
+		depth = 0;
+	else
+		depth = (*index_collection.begin())->dimensions();
+}
+// else already visited
+}
+
 //=============================================================================
 // class pint_instantiation method definitions
 
+/**
+	Private empty constructor.
+ */
+pint_instantiation::pint_instantiation() :
+		param_instantiation(), ival(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n) :
 		param_instantiation(o, n,
@@ -806,12 +1098,14 @@ pint_instantiation::pint_instantiation(const scopespace& o,
 		ival(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d) :
 		param_instantiation(o, n, d), ival(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n, 
 		count_const_ptr<pint_expr> i) :
@@ -821,6 +1115,7 @@ pint_instantiation::pint_instantiation(const scopespace& o,
 	assert(type_check_actual_param_expr(*i));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation::pint_instantiation(const scopespace& o, 
 		const string& n, 
 		index_collection_item_ptr_type d, 
@@ -829,17 +1124,20 @@ pint_instantiation::pint_instantiation(const scopespace& o,
 	assert(type_check_actual_param_expr(*i));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instantiation::what(ostream& o) const {
 	return o << "pint-inst";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 pint_instantiation::get_type_ref(void) const {
 	return pint_type_ptr;
 		// defined in "art_built_ins.h"
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Initializes a parameter instance with an expression.
 	The ival may only be initialized once, enforced by assertions.  
@@ -870,6 +1168,7 @@ pint_instantiation::initialize(count_const_ptr<pint_expr> e) {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
 	count_const_ptr<pint_expr> i(p.is_a<pint_expr>());
@@ -880,16 +1179,19 @@ pint_instantiation::assign_default_value(count_const_ptr<param_expr> p) {
 	else return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<param_expr>
 pint_instantiation::default_value(void) const {
 	return ival;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<pint_expr>
 pint_instantiation::initial_value(void) const {
 	return ival;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create a param reference object.
 	See if it's already registered in the current context.  
@@ -920,6 +1222,7 @@ pint_instantiation::make_instance_reference(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks whether or not a pint was passed to a formal 
 	pint parameter in a template.  
@@ -938,9 +1241,65 @@ pint_instantiation::type_check_actual_param_expr(const param_expr& pe) const {
 	return check_expression_dimensions(*pi);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_instantiation::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PINT_INSTANTIATION_TYPE)) {
+	// don't bother visit the owner, assuming that's the caller
+	// go through index_collection
+	collect_index_collection_pointers(m);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+pint_instantiation::construct_empty(void) {
+	return new pint_instantiation();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_instantiation::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, owner);
+	write_string(f, key);
+	write_index_collection_pointers(m);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_instantiation::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	load_index_collection_pointers(m);
+	STRIP_OBJECT_FOOTER(f);
+	if (index_collection.empty())
+		depth = 0;
+	else
+		depth = (*index_collection.begin())->dimensions();
+}
+// else already visited
+}
+
 //=============================================================================
 // class channel_instantiation method definitions
 
+/**
+	Private empty constructor.  
+ */
+channel_instantiation::channel_instantiation() :
+		instantiation_base(), type(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instantiation::channel_instantiation(const scopespace& o, 
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
@@ -948,19 +1307,23 @@ channel_instantiation::channel_instantiation(const scopespace& o,
 		instantiation_base(o, n, d), type(ct) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instantiation::~channel_instantiation() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_instantiation::what(ostream& o) const {
 	return o << "channel-inst";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 channel_instantiation::get_type_ref(void) const {
 	return type;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create a channel reference object.
 	See if it's already registered in the current context.  
@@ -986,6 +1349,7 @@ channel_instantiation::make_instance_reference(void) const {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a member reference to a channel, 
 	and pushes it onto the context's object_stack.  
@@ -1005,6 +1369,56 @@ channel_instantiation::make_member_instance_reference(
 	c.push_object_stack(new_mir);
 	return return_type(NULL);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instantiation::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_TYPE)) {
+	// don't bother visit the owner, assuming that's the caller
+	type->collect_transient_info(m);
+	// go through index_collection
+	collect_index_collection_pointers(m);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+object*
+channel_instantiation::construct_empty(void) {
+	return new channel_instantiation();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instantiation::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	WRITE_POINTER_INDEX(f, m);
+	m.write_pointer(f, owner);
+	write_string(f, key);
+	m.write_pointer(f, type);
+	write_index_collection_pointers(m);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_instantiation::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	STRIP_POINTER_INDEX(f, m);
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	m.read_pointer(f, type);
+	load_index_collection_pointers(m);
+	STRIP_OBJECT_FOOTER(f);
+	if (index_collection.empty())
+		depth = 0;
+	else
+		depth = (*index_collection.begin())->dimensions();
+}
+// else already visited
 }
 
 //=============================================================================

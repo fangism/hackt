@@ -1,8 +1,8 @@
 // "art_object_IO_fwd.h"
 // header file for everything related to persistent object management
 
-#ifndef	__ART_OBJECT_IO_FWD__
-#define	__ART_OBJECT_IO_FWD__
+#ifndef	__ART_OBJECT_IO_FWD_H__
+#define	__ART_OBJECT_IO_FWD_H__
 
 namespace ART {
 namespace entity {
@@ -14,5 +14,5 @@ class persistent_object_manager;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	//	__ART_OBJECT_IO_FWD__
+#endif	//	__ART_OBJECT_IO_FWD_H__
 

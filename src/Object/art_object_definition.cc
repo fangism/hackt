@@ -12,8 +12,7 @@
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_expr.h"
-// #include "art_built_ins.h"
-#include "art_object_IO.h"
+#include "art_object_IO.tcc"
 #include "art_utils.tcc"
 
 //=============================================================================
@@ -32,17 +31,18 @@ namespace entity {
 inline
 definition_base::definition_base() :
 		object(), 
-//		key(n), 
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {
 	// synchronize template formals with used_id_map
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 definition_base::~definition_base() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Only dumps the basic template information of the definition.  
 	Default behavior may be overridden by subclasses.  
@@ -55,6 +55,7 @@ definition_base::dump(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
 	if (!template_formals_list.empty()) {
@@ -69,6 +70,7 @@ definition_base::dump_template_formals(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a map from template formals to actual values.  
 	Precondition: list passed by reference must be initially empty.
@@ -114,6 +116,7 @@ if (cpl) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Only looks up the identifier in the set of template formals.  
  */
@@ -123,6 +126,7 @@ definition_base::lookup_template_formal(const string& id) const {
 		(template_formals_map)[id];
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Searches template formals set *ONLY* for a matching object.  
 	Subclasses should override this to search their respective scopes.  
@@ -132,6 +136,7 @@ definition_base::lookup_object_here(const string& id) const {
 	return lookup_template_formal(id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Used for checking when a type should have null template arguments.  
 	Really just a special case of general template argument checking.  
@@ -159,6 +164,7 @@ definition_base::check_null_template_argument(void) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	A default lookup that always returns NULL.  
 	Overridden in process_definition.  
@@ -168,6 +174,7 @@ definition_base::lookup_port_formal(const string& id) const {
 	return never_const_ptr<instantiation_base>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Compares the sequence of template formals for a generic definition.  
 	\return true if they are equivalent.  
@@ -204,11 +211,13 @@ definition_base::equivalent_template_formals(
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 definition_base::get_name(void) const {
 	return get_key();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 definition_base::get_qualified_name(void) const {
 	const string key = get_key();
@@ -218,6 +227,7 @@ definition_base::get_qualified_name(void) const {
 	else return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Certifies the template arguments against this definition's
 	template signature.  
@@ -300,6 +310,7 @@ if (ta) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default: return false (if unimplemented)
 	Temporarily prints an error message.  
@@ -311,6 +322,7 @@ definition_base::certify_port_actuals(const object_list& ol) const {
 	return false;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prerequisiste for calling this: must satisfy
 		check_null_template_arguments.  
@@ -333,6 +345,7 @@ definition_base::make_default_template_arguments(void) const {
 	return excl_ptr<dynamic_param_expr_list>(ret);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	DO ME NOW!
 	Adds an instantiation to the current definition's scope, and 
@@ -376,6 +389,7 @@ definition_base::add_template_formal(excl_ptr<instantiation_base> f) {
 	return pf;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Virtually pure, not purely virtual...
 	Only temporary.
@@ -385,6 +399,60 @@ never_const_ptr<instantiation_base>
 definition_base::add_port_formal(excl_ptr<instantiation_base> f) {
 	assert(0);
 	return never_const_ptr<instantiation_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: calling this is unnecessary if one guarantees that
+	the template formals are a strict subset of the used_id_map.  
+	However, it can't hurt to revisit pointers.
+ */
+void
+definition_base::collect_template_formal_pointers(
+		persistent_object_manager& m) const {
+	template_formals_list_type::const_iterator
+		iter = template_formals_list.begin();
+	const template_formals_list_type::const_iterator
+		end = template_formals_list.end();
+	for ( ; iter!=end; iter++) {
+		(*iter)->collect_transient_info(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Template formals will need to be in list order.
+	Just write out the list, the hash_qmap is redundant.  
+ */
+void
+definition_base::write_object_template_formals(
+		persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	m.write_pointer_list(f, template_formals_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Template formals are loaded in list order.
+	Remember that the redundant hash_map also needs to be reconstructed.  
+	Another method will add the entries to the corresponding
+	used_id_map where appropriate.  
+ */
+void
+definition_base::load_object_template_formals(
+		persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	m.read_pointer_list(f, template_formals_list);
+	// then copy list into hash_map to synchronize
+	template_formals_list_type::const_iterator
+		iter = template_formals_list.begin();
+	const template_formals_list_type::const_iterator
+		end = template_formals_list.end();
+	for ( ; iter!=end; iter++) {
+		template_formals_value_type inst_ptr = *iter;
+		assert(inst_ptr);
+		template_formals_map[inst_ptr->get_name()] = inst_ptr;
+	}
 }
 
 //=============================================================================
@@ -531,9 +599,11 @@ channel_definition_base::channel_definition_base() :
 		definition_base() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_base::~channel_definition_base() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<definition_base>
 channel_definition_base::make_typedef(never_const_ptr<scopespace> s, 
 		const token_identifier& id) const {
@@ -541,6 +611,7 @@ channel_definition_base::make_typedef(never_const_ptr<scopespace> s,
 		new channel_definition_alias(id, s));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 channel_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -569,25 +640,30 @@ user_def_chan::user_def_chan(never_const_ptr<name_space> o,
 	// FINISH ME
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 user_def_chan::~user_def_chan() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::what(ostream& o) const {
 	return o << "user-def-chan";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump(ostream& o) const {
 	return o << "fang, get off your lazy ass and "
 		"write user_def_chan::dump()!" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 user_def_chan::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_chan::get_qualified_name(void) const {
 	if (parent)
@@ -595,11 +671,13 @@ user_def_chan::get_qualified_name(void) const {
 	else return string(scope) + key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 user_def_chan::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<object>
 user_def_chan::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
@@ -631,19 +709,16 @@ user_def_chan::construct_empty(void) {
 void
 user_def_chan::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
+	write_object_template_formals(m);
+//	write_object_port_formals(m);
+	write_object_used_id_map(m);
+	// connections and assignments
 	// body
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -654,23 +729,29 @@ void
 user_def_chan::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
+	load_object_template_formals(m);
+//	load_object_port_formals(m);
+	load_object_used_id_map(m);
+	// connections and assignments
 	// body
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_chan::load_used_id_map_object(excl_ptr<object> o) {
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to user-def channel definition." << endl;
+	}
 }
 
 //=============================================================================
@@ -793,6 +874,22 @@ if (!m.flag_visit(this)) {
 // else already visited
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really, typedefs shouldn't have any non-formal members...
+ */
+void
+channel_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+	cerr << "WARNING: didn't expect to call "
+		"channel_definition_alias::load_used_id_map_object()." << endl;
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to channel typedef." << endl;
+	}
+}
+
 //=============================================================================
 // class built_in_datatype_def method definitions
 
@@ -804,11 +901,13 @@ built_in_datatype_def::built_in_datatype_def(
 		const string& n) :
 		definition_base(), 
 		datatype_definition_base(),
+		scopespace(), 
 		key(n), 
 		parent(o) {
 	mark_defined();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Same constructor, but with one template formal parameter.  
 	This constructor is dedicated to int<pint width>.  
@@ -819,29 +918,47 @@ built_in_datatype_def::built_in_datatype_def(
 		excl_ptr<param_instantiation> p) :
 		definition_base(), 
 		datatype_definition_base(), 
+		scopespace(), 
 		key(n), 
 		parent(o) {
 	add_template_formal(p.as_a<instantiation_base>());
 	mark_defined();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 built_in_datatype_def::~built_in_datatype_def() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+built_in_datatype_def::dump(ostream& o) const {
+	return datatype_definition_base::dump(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 built_in_datatype_def::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+built_in_datatype_def::get_qualified_name(void) const {
+	return datatype_definition_base::get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 built_in_datatype_def::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -857,6 +974,7 @@ built_in_datatype_def::make_fundamental_type_reference(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Since built-in types do not correspond to scopespaces, 
 	we have to override definition_base::add_template_formal.  
@@ -867,7 +985,8 @@ built_in_datatype_def::add_template_formal(excl_ptr<instantiation_base> f) {
 		f.is_a<param_instantiation>());
 	assert(pf);
 	// check and make sure identifier wasn't repeated in formal list!
-	never_const_ptr<object> probe(lookup_object_here(pf->get_name()));
+	never_const_ptr<object> probe(
+		datatype_definition_base::lookup_object_here(pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return never_const_ptr<instantiation_base>(NULL);
@@ -887,6 +1006,52 @@ built_in_datatype_def::add_template_formal(excl_ptr<instantiation_base> f) {
 	return pf;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Leeching off of datatype definition.  
+	Will be handled specially (replaced) by data_type_reference.  
+ */
+void
+built_in_datatype_def::collect_transient_info(
+		persistent_object_manager& m) const {
+	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE);
+	// don't bother with parent pointer to built-in namespace
+	collect_template_formal_pointers(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since we're mimicking a user-defined datatype, this should
+	match the format for user_def_datatype.  
+	This object will not live long.  
+	We assume that no user-defined datatype can have the same
+	name as the built-in types because they are reserved keywords.  
+ */
+void
+built_in_datatype_def::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	write_string(f, key);
+	// use bogus parent pointer
+	m.write_pointer(f, never_const_ptr<name_space>(NULL));
+	// bogus template and port formals
+	write_object_template_formals(m);	// is empty
+//	write_object_port_formals(m);
+	write_object_used_id_map(m);
+	// connections and assignments
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+built_in_datatype_def::load_used_id_map_object(excl_ptr<object> o) {
+	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
+		"should never be called!" << endl;
+	assert(0);
+	exit(1);
+}
+
 //=============================================================================
 // class built_in_param_def method definitions
 
@@ -902,24 +1067,29 @@ built_in_param_def::built_in_param_def(
 	mark_defined();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 built_in_param_def::~built_in_param_def() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_param_def::what(ostream& o) const {
 	return o << key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 built_in_param_def::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 built_in_param_def::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Cannot alias built-in parameter types!
 	Why? Because I said so.  
@@ -931,6 +1101,7 @@ built_in_param_def::make_typedef(never_const_ptr<scopespace> s,
 	return excl_ptr<definition_base>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	PROBLEM: built_in types cannot be owned with excl_ptr!!!
 	There's one shared static built-in reference for each type.  
@@ -955,13 +1126,16 @@ built_in_param_def::make_fundamental_type_reference(
 
 enum_member::enum_member(const string& n) : object(), id(n) { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_member::~enum_member() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_member::what(ostream& o) const {
 	return o << "enum-member";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_member::dump(ostream& o) const {
 	return o << id;
@@ -979,25 +1153,30 @@ enum_datatype_def::enum_datatype_def(never_const_ptr<name_space> o,
 		parent(o) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::~enum_datatype_def() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
 	return o << "fang, get off your lazy ass and "
 		"write enum_datatype_def::dump()!" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 enum_datatype_def::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 enum_datatype_def::get_qualified_name(void) const {
 	if (parent)
@@ -1005,11 +1184,13 @@ enum_datatype_def::get_qualified_name(void) const {
 	else	return string(scope) + key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 enum_datatype_def::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not the same as type-equivalence, which requires precise 
 	pointer equality.  
@@ -1040,6 +1221,7 @@ enum_datatype_def::require_signature_match(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if successfully added, false if there was conflict.  
  */
@@ -1128,6 +1310,18 @@ if (!m.flag_visit(this)) {
 // else already visited
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Enums have no members other than strings.  
+	This should never be called.  
+ */
+void
+enum_datatype_def::load_used_id_map_object(excl_ptr<object> o) {
+	cerr << "ERROR: not supposed to call "
+		"enum_datatype_def::load_used_id_map_object()!" << endl;
+	assert(0);
+}
+
 //=============================================================================
 // class user_def_datatype method definitions
 
@@ -1142,6 +1336,7 @@ user_def_datatype::user_def_datatype(
 		parent(o) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 user_def_datatype::~user_def_datatype() {
 }
 
@@ -1150,17 +1345,20 @@ user_def_datatype::what(ostream& o) const {
 	return o << "used-defined-datatype: " << key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
 	return o << "fang, get off your lazy ass and "
 		"write user_def_datatype::dump()!" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 user_def_datatype::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_datatype::get_qualified_name(void) const {
 	if (parent)
@@ -1168,11 +1366,13 @@ user_def_datatype::get_qualified_name(void) const {
 	else return string(scope) + key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 user_def_datatype::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<object>
 user_def_datatype::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
@@ -1205,23 +1405,21 @@ user_def_datatype::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
+	Note: this must be kept consistent with 
+	built_in_datatype_def::write_object.  
  */
 void
 user_def_datatype::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	write_object_template_formals(m);
+//	write_object_port_formals(m);
+	write_object_used_id_map(m);
+	// connections and assignments
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1229,23 +1427,28 @@ void
 user_def_datatype::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	load_object_template_formals(m);
+//	load_object_port_formals(m);
+	load_object_used_id_map(m);
+	// connections and assignments
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::load_used_id_map_object(excl_ptr<object> o) {
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to user-def data definition." << endl;
+	}
 }
 
 //=============================================================================
@@ -1393,6 +1596,22 @@ if (!m.flag_visit(this)) {
 // else already visited
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really, typedefs shouldn't have any non-formal members...
+ */
+void
+datatype_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+	cerr << "WARNING: didn't expect to call "
+		"datatype_definition_alias::load_used_id_map_object()." << endl;
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to datatype typedef." << endl;
+	}
+}
+
 //=============================================================================
 // class process_definition_base method definitions
 
@@ -1435,15 +1654,18 @@ process_definition::process_definition(
 	// assert(o);		// no: because of partial reconstruction
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_definition::~process_definition() {
 	// fill me in...
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_definition::what(ostream& o) const {
 	return o << "process-definition";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Spill contents of the used_id_map.
 	\param o the output stream.
@@ -1468,7 +1690,7 @@ process_definition::dump(ostream& o) const {
 	o << "{" << endl;
 	used_id_map_type::const_iterator i;
 //	list<never_const_ptr<...> > bin;		// later sort
-	o << "In definition \"" << key << "\", we have: {" << endl;
+	o << "In definition \"" << key << "\", we have: " << endl;
 	for (i=used_id_map.begin(); i!=used_id_map.end(); i++) {
 		o << "  " << i->first << " = ";
 //		i->second->what(o) << endl;		// 1 level for now
@@ -1477,26 +1699,31 @@ process_definition::dump(ostream& o) const {
 	return o << "}" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 process_definition::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 process_definition::get_qualified_name(void) const {
 	return parent->get_qualified_name() + scope + key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 process_definition::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<object>
 process_definition::lookup_object_here(const string& s) const {
 	return scopespace::lookup_object_here(s);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Override's definition_base's port formal lookup.  
 	\return pointer to port's instantiation if found, else NULL.  
@@ -1691,10 +1918,9 @@ process_definition::equivalent_port_formals(
 void
 process_definition::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE)) {
-
-// later: template formals, port formals, etc...
-// what's a good way to re-use code?
-
+	// no need to visit template formals, port formals, separately, 
+	// b/c they're all registered in the used_id_map.  
+	collect_used_id_map_pointers(m);
 }
 }
 
@@ -1715,22 +1941,14 @@ void
 process_definition::write_object(persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
-
-	// tail
-	write_value(f, -1L);
+	write_object_template_formals(m);
+	write_object_port_formals(m);
+	write_object_used_id_map(m);
+	// connections and assignments
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1739,36 +1957,63 @@ process_definition::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	assert(f.good());
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	if (index != m.lookup_ptr_index(this)) {
-		long hohum = m.lookup_ptr_index(this);
-		cerr << "process_definition::load_object(): " << endl
-			<< "\tthis = "
-			<< this << ", index = " << index 
-			<< ", expected: " << hohum << endl;
-		assert(index == m.lookup_ptr_index(this));
-	}
-	}
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
-
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
-	{
-	long neg_one;
-	read_value(f, neg_one);
-	assert(neg_one == -1L);
-	}
+	load_object_template_formals(m);
+	load_object_port_formals(m);
+	load_object_used_id_map(m);
+	// connections and assignments
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::load_used_id_map_object(excl_ptr<object> o) {
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to process definition." << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Port formals will need to be in list order.
+	Just write out the list, the hash_qmap is redundant.  
+ */
+void
+process_definition::write_object_port_formals(
+		persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	m.write_pointer_list(f, port_formals_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Template formals are loaded in list order.
+	Remember that the redundant hash_map also needs to be reconstructed.  
+	Another method will add the entries to the corresponding
+	used_id_map where appropriate.  
+ */
+void
+process_definition::load_object_port_formals(
+		persistent_object_manager& m) {
+	istream& f = m.lookup_read_buffer(this);
+	m.read_pointer_list(f, port_formals_list);
+	// then copy list into hash_map to synchronize
+	port_formals_list_type::const_iterator
+		iter = port_formals_list.begin();
+	const port_formals_list_type::const_iterator
+		end = port_formals_list.end();
+	for ( ; iter!=end; iter++) {
+		port_formals_value_type inst_ptr = *iter;
+		assert(inst_ptr);
+		port_formals_map[inst_ptr->get_name()] = inst_ptr;
+	}
 }
 
 //=============================================================================
@@ -1911,6 +2156,22 @@ if (!m.flag_visit(this)) {
 	// body
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really, typedefs shouldn't have any non-formal members...
+ */
+void
+process_definition_alias::load_used_id_map_object(excl_ptr<object> o) {
+	cerr << "WARNING: didn't expect to call "
+		"process_definition_alias::load_used_id_map_object()." << endl;
+	if (o.is_a<instantiation_base>()) {
+		add_instance(o.is_a_xfer<instantiation_base>());
+	} else {
+		o->what(cerr << "TO DO: define method for adding ")
+			<< " back to process typedef." << endl;
+	}
 }
 
 //=============================================================================

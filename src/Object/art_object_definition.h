@@ -88,6 +88,9 @@ virtual	bool assign_typedef(excl_const_ptr<fundamental_type_reference> f) = 0;
 
 	excl_const_ptr<fundamental_type_reference>
 		resolve_complete_type(never_const_ptr<param_expr_list> p) const;
+
+protected:
+virtual	void load_used_id_map_object(excl_ptr<object> o) = 0;
 };	// end class typedef_base
 
 //=============================================================================
@@ -122,7 +125,8 @@ virtual	~process_definition_base();
  */
 class process_definition : public process_definition_base, public scopespace {
 public:
-
+	typedef	never_const_ptr<instantiation_base>
+						port_formals_value_type;
 	/**
 		Table of port formals.
 		The types can be data-types or channel-types, 
@@ -131,9 +135,9 @@ public:
 		and have fast lookup, thus hashlist.  
 		Implemented as a hash_qmap and list.  
 	**/
-	typedef list<never_const_ptr<instantiation_base> >
+	typedef list<port_formals_value_type>
 						port_formals_list_type;
-	typedef hash_qmap<string, never_const_ptr<instantiation_base> >
+	typedef hash_qmap<string, port_formals_value_type>
 						port_formals_map_type;
 
 	// List of language bodies, separate or merged?
@@ -176,10 +180,10 @@ never_const_ptr<instantiation_base>
 
 // methods for object file I/O
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
+	void write_object_port_formals(persistent_object_manager& m) const;
+	void load_object_port_formals(persistent_object_manager& m);
 };	// end class process_definition
 
 //=============================================================================
@@ -214,10 +218,8 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class process_definition_alias
 
 //=============================================================================
@@ -248,8 +250,11 @@ virtual	bool require_signature_match(
 	Reserved for special built-in fundamental data types.  
 	All user-defined data types will boil down to these types.  
 	Final class.  
+	Need to derive from scopespace because, built-in data type
+	int's template parameter, pint, needs a valid owner scopespace.  
  */
-class built_in_datatype_def : public datatype_definition_base {
+class built_in_datatype_def : public datatype_definition_base, 
+		public scopespace {
 protected:
 	const string					key;
 	const never_const_ptr<name_space>		parent;
@@ -260,7 +265,9 @@ public:
 	~built_in_datatype_def();
 
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 	const string& get_key(void) const;
+	string get_qualified_name(void) const;
 	never_const_ptr<scopespace> get_parent(void) const;
 
 	count_const_ptr<fundamental_type_reference>
@@ -268,6 +275,7 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
+	// ah, but it is now!
 	never_const_ptr<instantiation_base>
 		add_template_formal(excl_ptr<instantiation_base> f);
 
@@ -275,6 +283,14 @@ public:
 		never_const_ptr<definition_base> d) const
 		{ assert(d); return key == d->get_name(); }
 		// really, this should never be called...
+public:
+	// actually going to de/serialize built-in type, only to be
+	// intercepted and replaced by data_type_reference::load_object
+//	ART_OBJECT_IO_METHODS
+	// thus we need only collect and write...
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class_built_in_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -324,10 +340,8 @@ public:
 
 	bool add_member(const token_identifier& em);
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class enum_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -391,10 +405,8 @@ public:
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
@@ -426,10 +438,8 @@ public:
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const;
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class datatype_definition_alias
 
 //=============================================================================
@@ -482,10 +492,8 @@ public:
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------
@@ -516,10 +524,8 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 public:
-	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
-static	object* construct_empty(void);
-	void load_object(persistent_object_manager& m);
+	ART_OBJECT_IO_METHODS
+	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class channel_definition_alias
 
 //-----------------------------------------------------------------------------
