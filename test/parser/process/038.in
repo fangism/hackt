@@ -1,0 +1,8 @@
+// should fail: size mismatch
+
+template <pint bar[5]>
+defproc foo();
+
+template <pint bar[4]>		// was 5
+defproc foo();
+

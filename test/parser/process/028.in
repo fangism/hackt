@@ -1,0 +1,10 @@
+// should pass: redeclaration matches in template formals
+// formal parameter name need match!
+// honestly, name should be optional unless latter parameter depends on it
+
+template <pint bar>
+defproc foo();
+
+template <pint something_else>
+defproc foo();
+

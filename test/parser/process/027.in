@@ -1,0 +1,8 @@
+// should pass: redeclaration matches in template formals
+
+template <pint bar>
+defproc foo();
+
+template <pint bar>
+defproc foo();
+

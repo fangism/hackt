@@ -1,0 +1,8 @@
+// should pass: dynamic size is different, but won't catch until unroll time
+
+template <pint bar; pbool jinx[bar]>
+defproc foo();
+
+template <pint bar; pbool jinx[bar+1]>
+defproc foo();
+
