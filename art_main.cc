@@ -36,12 +36,19 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
 
 //	global->dump(cerr);
+	{
+#if 0
 	const string fname("fang.artobj");	// name of file
-	persistent_object_manager::save_object_to_file(fname, global);
 	excl_ptr<entity::name_space> global2 =
-		persistent_object_manager::load_object_from_file(fname);
+		persistent_object_manager::self_test(fname, global);
+#else
+//	persistent_object_manager::dump_reconstruction_table = true;
+	excl_ptr<entity::name_space> global2 =
+		persistent_object_manager::self_test_no_file(global);
+#endif
 	assert(global2);
 //	global2->dump(cerr);			// should match
+	}
 
 	// massive recursive deletion of syntax tree, reclaim memory
 	// root will delete itself (also recursively)

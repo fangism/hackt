@@ -190,11 +190,15 @@ virtual const object& self(void) const { return *this; }
 	Mmmm... fancy.
 **/
 
-// virtual type_index_enum	get_type_index(void) const = 0;
+/** walks object hierarchy and registers reachable pointers with manager */
+virtual	void collect_transient_info(persistent_object_manager& m) const;
 /** Writes the object out to a managed buffer */
 virtual	void write_object(persistent_object_manager& m) const;
 /** Loads the object from a managed buffer */
 virtual	void load_object(persistent_object_manager& m);
+
+public:
+	static bool			warn_unimplemented;
 };	// end class object
 
 //=============================================================================
@@ -402,7 +406,8 @@ virtual	never_ptr<object>	lookup_object_here_with_modify(const string& id) const
 virtual	never_const_ptr<object>	lookup_object(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) const;
 
-virtual	never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
+virtual	never_const_ptr<scopespace>
+			lookup_namespace(const qualified_id_slice& id) const;
 
 virtual	never_const_ptr<instantiation_base>
 			add_instance(excl_ptr<instantiation_base> i);
@@ -500,9 +505,12 @@ never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
 datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
 #endif
 
+#if 0
+OBSOLETE???
 // for generic concrete types, built-in and user-defined
 never_const_ptr<fundamental_type_reference>
 		add_type_reference(excl_ptr<fundamental_type_reference> tb);
+#endif
 
 // returns type if unique match found, else NULL
 never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
@@ -537,7 +545,7 @@ void	find_namespace_starting_with(namespace_list& m,
 
 // methods for object file I/O
 public:
-type_index_enum	get_type_index(void) const;
+// type_index_enum	get_type_index(void) const;
 /** gathers pointer information about immediate pointer members */
 void	collect_transient_info(persistent_object_manager& m) const;
 void	write_object(persistent_object_manager& m) const;
@@ -685,17 +693,6 @@ protected:
 	bool equivalent_template_formals(
 		never_const_ptr<definition_base> d) const;
 
-#if 0
-OBSOLETE
-public:
-	/**
-		sub-classes shouldn't have to re-implement this,
-		no longer virtual
-	 */
-	never_const_ptr<definition_base>
-		set_context_definition(context& c) const;
-#endif
-
 protected:
 	bool certify_template_arguments(
 		never_ptr<dynamic_param_expr_list> ta) const;
@@ -746,6 +743,15 @@ virtual	never_const_ptr<instantiation_base>
  */
 virtual	never_const_ptr<instantiation_base>
 		add_port_formal(excl_ptr<instantiation_base> f);
+
+#if 0
+// but built-in types shouldn't have to implement this.  
+public:
+// persistent object I/O interface
+virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
+virtual	void write_object(persistent_object_manager& m) const = 0;
+virtual	void load_object(persistent_object_manager& m) = 0;
+#endif
 };	// end class definition_base
 
 //=============================================================================

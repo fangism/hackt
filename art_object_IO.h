@@ -13,7 +13,7 @@
 #include "sstream.h"			// reduce to forward decl?
 #include "ptrs.h"			// need complete definition
 #include "count_ptr.h"			// need complete definition
-#include "art_utils.h"
+#include "art_utils.h"			// for read and write to streams
 
 namespace ART {
 namespace entity {
@@ -27,6 +27,34 @@ class name_space;
 
 //=============================================================================
 /**
+	Use these enumerations to lookup which function to call
+	to reconstruct an object from a binary file stream.
+	Only concrete classes need to register with this.
+	This enumeration imitates indexing into a virtual table
+	for persistent objects whose vptr's are transient.  
+ */
+enum type_index_enum {
+	NULL_TYPE,			// reserved = 0
+	// can also be used to denote end of object stream
+
+	NAMESPACE_TYPE,
+
+	PROCESS_DEFINITION_TYPE,
+	PROCESS_TYPEDEF_TYPE,
+
+	USER_DEF_CHAN_DEFINITION_TYPE, 
+	CHANNEL_TYPEDEF_TYPE, 
+
+	USER_DEF_DATA_DEFINITION_TYPE, 
+	ENUM_DEFINITION_TYPE, 
+	DATA_TYPEDEF_TYPE, 
+	// more class constants here...
+
+	MAX_TYPE_INDEX_ENUM		// reserved
+};
+
+//=============================================================================
+/**
 	This is the signature for a function that reconstructs
 	a persistent object from a binary input stream.  
 	Each class for which objects persist, should implement such
@@ -35,16 +63,6 @@ class name_space;
  */
 typedef	object*	reconstruct_function_type(void);
 
-#if 0
-/**
-	The signature for the function that loads values to an 
-	object from an input stream.  
-	May be replaced with a simple virtual function call.  
- */
-typedef	void	reload_function_type(ifstream& );
-#endif
-
-// array of pointers to functions that take ifstream arg and return object*
 typedef	reconstruct_function_type*
 		reconstruct_function_ptr_type;
 
@@ -86,11 +104,13 @@ private:
 			const streampos h, const streampos t);
 		reconstruction_table_entry(const object* p,
 			const type_index_enum t);
+		// default copy constructor suffices
 		~reconstruction_table_entry();
 
 		type_index_enum	type(void) const { return otype; }
 		const object*	addr(void) const { return recon_addr; }
 		void		assign_addr(object* ptr);
+		void		reset_addr();
 		void		flag(void) { scratch = true; }
 		void		unflag(void) { scratch = false; }
 		bool		flagged(void) const { return scratch; }
@@ -142,6 +162,9 @@ private:
 	excl_ptr<name_space>			root;
 
 public:
+	static bool				dump_reconstruction_table;
+
+public:
 	persistent_object_manager();
 	~persistent_object_manager();
 
@@ -180,6 +203,7 @@ public:
 	void read_pointer(istream& f, const P<T>& ptr) const {
 		long i;
 		read_value(f, i);
+		// shouldn't there be a dynamic cast needed?
 		const_cast<P<T>& >(ptr) = P<T>(lookup_obj_ptr(i));
 	}
 
@@ -188,6 +212,13 @@ public:
 				never_const_ptr<name_space> g);
 	static excl_ptr<name_space>
 			load_object_from_file(const string& s);
+
+	static excl_ptr<name_space>
+			self_test(const string& s, 
+				never_const_ptr<name_space> g);
+
+	static excl_ptr<name_space>
+			self_test_no_file(never_const_ptr<name_space> g);
 
 private:
 	void initialize_null(void);
@@ -202,6 +233,7 @@ private:
 	/** just allocate objects without initializing */
 	void reconstruct(void);
 	excl_ptr<name_space>	get_root_namespace(void);
+	void reset_for_loading(void);
 
 };	// end class persistent_object_manager
 

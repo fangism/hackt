@@ -18,6 +18,7 @@ using namespace ART::parser;
 #include "y.tab.h"
 
 extern  YYSTYPE yyval;			// root token
+extern	FILE* yyin;
 extern "C" {
 	int yyparse(void);              // in "y.tab.cc"
 }

@@ -2,8 +2,13 @@
 
 #include <assert.h>
 #include <iostream>
-// #include <fstream>
 #include "art_utils.h"
+
+using namespace std;
+
+//=============================================================================
+// arbitrary sanity check
+#define STRING_LIMIT		256
 
 //=============================================================================
 namespace ART {
@@ -33,8 +38,11 @@ void
 write_string(ostream& f, const string& s) {
 	const string::size_type len = s.length();
 		// excludes null-termination
+	assert(len < STRING_LIMIT);	// sanity check, not a real limit
 	f.write((const char*) &len, sizeof(len));
-	f.write(s.c_str(), len);
+//	assert(len >= 0);		// unsigned, always true
+	if (len)
+		f.write(s.c_str(), len);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -45,10 +53,15 @@ write_string(ostream& f, const string& s) {
 void
 read_string(istream& f, string& s) {
 	static const size_t def_size = 64;
-	char def_buf[def_size];
 	string::size_type len;
 	f.read((char*) &len, sizeof(len));
-
+//	assert(len >= 0);		// unsigned, always true
+	if (len >= STRING_LIMIT) {
+		cerr << "read_string(): got len = " << len << ", WTF?" << endl;
+		assert(len < STRING_LIMIT);
+		// sanity check, not a real limit
+	}
+if (len) {
 	if (len -1 > def_size) {
 		// too big for default
 		char* big_buf = new char [len+1];	// extra space for \0
@@ -58,11 +71,15 @@ read_string(istream& f, string& s) {
 		s = big_buf;		// copy operation needs NULL-term string
 		delete [] big_buf;		// free buffer
 	} else {
+		char def_buf[def_size];
 		f.read(def_buf, len);		// load into buffer
 		def_buf[len] = '\0';
 		s = def_buf;		// copy operation needs NULL-term string
 	}
 	assert(s.length() == len);	// sanity check
+} else {
+	s == "";
+}
 }
 
 //=============================================================================

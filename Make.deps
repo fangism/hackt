@@ -44,8 +44,12 @@ $(LIBARTXX): $(LIBARTXX_OBJ)
 # parallel make: LANG_OBJ needs to be built first... hmmm.
 $(ARTC): y.tab.h $(ARTC_OBJ) $(LIBARTXX)
 	$(LD) $(LDFLAGS) $(ARTC_OBJ) $(LIBARTXX) -o $@
-# gmake doesn't interpret $> correctly, otherwise the following would work:
-#	$(LD) $(LDFLAGS) $> -o $@
+
+$(ARTXX2OBJ): $(ARTXX2OBJ_OBJ) $(LIBARTXX)
+	$(LD) $(LDFLAGS) $(ARTXX2OBJ_OBJ) $(LIBARTXX) -o $@
+
+$(ARTOBJDUMP): $(ARTOBJDUMP_OBJ) $(LIBARTXX)
+	$(LD) $(LDFLAGS) $(ARTOBJDUMP_OBJ) $(LIBARTXX) -o $@
 
 # with separate makefiles, no longer need to make self-modifying
 .depend: y.tab.cc $(ART_DEPS)
@@ -165,7 +169,11 @@ cleanjunk:
 	-$(RM) *.core
 	-$(RM) core.*
 
-clean: cleanlexer cleanparser cleandepend cleantests cleanobjects cleanjunk
+cleanart:
+	-$(RM) *.artobj
+
+clean: cleanlexer cleanparser cleandepend cleantests cleanobjects \
+	cleanjunk cleanart
 
 # for now don't always clobber this, until everyone else can generate docs...
 nodocs:

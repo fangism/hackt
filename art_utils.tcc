@@ -3,7 +3,6 @@
 // include this to use them
 
 #include <iostream>
-// #include <fstream>
 
 #include "art_utils.h"
 
@@ -19,5 +18,4 @@ inline
 void    read_value(istream& f, T& v) {
 	f.read((char*) &v, sizeof(T));
 }
-
 

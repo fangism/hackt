@@ -9,19 +9,42 @@
 #include "art_utils.tcc"
 #include "count_ptr.h"
 
+//=============================================================================
+// flags and switches
+
+#define	DEBUG_ME		0
+
+//=============================================================================
+
 namespace ART {
 namespace entity {
 //=============================================================================
 
+/**
+	The entries in this table should correspond to the enumerations in
+	type_index_enum, defined in "art_object_IO.h".  
+	Each function pointer is just a reference to a static function
+	that allocates (without initializing) an object of the corresponding
+	type, which also establishes its vptr, so that it can be used 
+	directly to invoke member functions.  
+ */
 const reconstruct_function_ptr_type
 persistent_object_manager::
 reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 	NULL, 			// first slot is reserved
 	&name_space::construct_empty, 
+
+	&process_definition::construct_empty, 
+	&process_definition_alias::construct_empty, 
+
+	&user_def_chan::construct_empty, 
+	&channel_definition_alias::construct_empty, 
+
+	&user_def_datatype::construct_empty, 
+	&enum_datatype_def::construct_empty, 
+	&datatype_definition_alias::construct_empty, 
 	// more reconstructors here...
 };
-
-// do we need a reloead function table?
 
 //=============================================================================
 // class reconstruction_table_entry method definitions
@@ -29,6 +52,11 @@ reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
 const ios_base::openmode
 persistent_object_manager::reconstruction_table_entry::mode = 
 	ios_base::in | ios_base::out | ios_base::binary;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+bool
+persistent_object_manager::dump_reconstruction_table = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -65,6 +93,18 @@ persistent_object_manager::reconstruction_table_entry::
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the reconstruction address, and flags as unvisited.  
+	The type_index_enum is preserved.  
+	The state of the buffer is left as is.  
+ */
+void
+persistent_object_manager::reconstruction_table_entry::reset_addr() {
+	recon_addr = NULL;
+	unflag();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 persistent_object_manager::reconstruction_table_entry::assign_addr(
 		object* ptr) {
@@ -82,8 +122,14 @@ persistent_object_manager::reconstruction_table_entry::assign_addr(
 void
 persistent_object_manager::reconstruction_table_entry::initialize_offsets(
 		void) {
+	// Need to catch case where buffers were not used, 
+	// in which case the head and tail positions are -1
 	buf_head = buffer->tellg();
 	buf_tail = buffer->tellp();
+	if (buf_head < 0) {
+		assert(buf_tail < 0);		// consistency
+		buf_head = buf_tail = 0;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,9 +151,15 @@ persistent_object_manager::persistent_object_manager() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If the auto-managed excl_ptr for the global root is not 
+	transfered away, then the manager will take care of 
+	deleting it.  
+	By construction of typed and managed pointers, 
+	we assume that freeing the root pointer will recursively 
+	reclaim all the memory linked thereto.  
+ */
 persistent_object_manager::~persistent_object_manager() {
-	// recall: this class is NOT responsible for releasing
-	// the memory referenced by these pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -234,7 +286,13 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
  */
 ostream&
 persistent_object_manager::lookup_write_buffer(const object* ptr) const {
-	return reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+	stringstream& ret =
+		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+#if DEBUG_ME
+	cerr << "lookup_write_buffer(): tellg = " << ret.tellg()
+		<< ", tellp = " << ret.tellp() << endl;
+#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -245,7 +303,13 @@ persistent_object_manager::lookup_write_buffer(const object* ptr) const {
  */
 istream&
 persistent_object_manager::lookup_read_buffer(const object* ptr) const {
-	return reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+	stringstream& ret =
+		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+#if DEBUG_ME
+	cerr << "lookup_read_buffer(): tellg = " << ret.tellg()
+		<< ", tellp = " << ret.tellp() << endl;
+#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -284,7 +348,12 @@ persistent_object_manager::dump_text(ostream& o) const {
 	o << "\ti\taddr\t\ttype\thead\ttail" << endl;
 	for ( ; i < max; i++) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
-		o << '\t' << i << '\t' << e.addr() << '\t' << e.type() 
+		o << '\t' << i << '\t';
+		streamsize w = o.width();
+		o.width(10);
+		o << e.addr();
+		o.width(w);
+		o << '\t' << e.type() 
 			<< '\t' << e.head_pos()
 			<< '\t' << e.tail_pos() << endl;
 	}
@@ -357,9 +426,12 @@ persistent_object_manager::reconstruct(void) {
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		type_index_enum t = e.type();
-		assert(t);
-		e.assign_addr((*reconstruction_function_table[t])());
-		addr_to_index_map[e.addr()] = i;
+		if (t) {		// not NULL_TYPE
+			e.assign_addr((*reconstruction_function_table[t])());
+			addr_to_index_map[e.addr()] = i;
+		} else {
+			e.assign_addr(NULL);
+		}
 	}
 }
 
@@ -457,6 +529,16 @@ persistent_object_manager::finish_load(ifstream& f) {
 	Calls virtual function for initializing objects.  
 	At the end, assumes responsibility for deleting everything
 	by wrapping the root namespace pointer.  
+	Each call to load_object may, however, freely and recursively
+	invoke load_object for its dependencies.  
+	The first visit or entry into each object will flag it as
+	visited so each object will be initialized once and only once.  
+	The only guideline for the recursive invocations is that
+	static data such as names for hash keys should be initialized
+	before any recursion, so that the depender is sufficiently 
+	initialized to be used.  
+	An example of this is namespaces whose entries in their
+	parents' tables use a hash on the string name.  
  */
 void
 persistent_object_manager::load_objects(void) {
@@ -465,9 +547,10 @@ persistent_object_manager::load_objects(void) {
 	for ( ; i<max; i++) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		object* o = const_cast<object*>(e.addr());
-		assert(o);
-		o->load_object(*this);
-		// virtual call, unavoidable const cast
+		if (o)
+			o->load_object(*this);
+			// virtual call, unavoidable const cast
+		// else can't load a NULL object
 	}
 	// Finally, after this is called, immediately assume responsibility
 	// for deleting all memory, by wrapping the root pointer
@@ -492,7 +575,8 @@ persistent_object_manager::save_object_to_file(const string& s,
 	pom.initialize_null();			// reserved 0th entry
 	g->collect_transient_info(pom);		// recursive visitor
 	pom.collect_objects();			// buffers output in segments
-//	pom.dump_text(cerr << endl) << endl;	// for debugging
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// for debugging
 	pom.write_header(f);
 	pom.finish_write(f);			// serialize
 	f.close();
@@ -511,12 +595,70 @@ persistent_object_manager::load_object_from_file(const string& s) {
 	pom.finish_load(f);
 	f.close();                              // done with file
 	pom.reconstruct();                      // allocate-only pass
-//	pom.dump_text(cerr << endl) << endl;	// debugging only
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// debugging only
 	// Oh no, partially initialized objects!
 	// Set their values before anyone observes them!
 	pom.load_objects();
 	// must acquire root object in some owned pointer!
 	return pom.get_root_namespace();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the reconstruction table as if it had just been loaded in, 
+	which allows testing without actually writing out to a file.  
+ */
+void
+persistent_object_manager::reset_for_loading(void) {
+	const size_t max = reconstruction_table.size();
+	size_t i = 1;		// 0th object is reserved NULL, skip it
+	for ( ; i<max; i++) {
+		reconstruction_table_entry& e = reconstruction_table[i];
+		e.reset_addr();
+		// shouldn't need to manipulate stream positions
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Write the reconstruction table, and loads it back, without
+	going through an intermediate file.  
+	Should essentially make a deep copy of the hierarchical object
+	rooted at the global namespace.  
+ */
+excl_ptr<name_space>
+persistent_object_manager::self_test_no_file(never_const_ptr<name_space> g) {
+	assert(g);
+	persistent_object_manager pom;
+	pom.initialize_null();			// reserved 0th entry
+	g->collect_transient_info(pom);		// recursive visitor
+	pom.collect_objects();			// buffers output in segments
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// for debugging
+
+	// need to set start of objects? no
+
+	// pretend we wrote it out and read it back in...
+	pom.reset_for_loading();
+
+	pom.reconstruct();                      // allocate-only pass
+	if (dump_reconstruction_table)
+		pom.dump_text(cerr << endl) << endl;	// debugging only
+	pom.load_objects();
+	// must acquire root object in some owned pointer!
+	return pom.get_root_namespace();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out and reads back in, through an intermediate file.  
+ */
+excl_ptr<name_space>
+persistent_object_manager::self_test(const string& s, 
+		never_const_ptr<name_space> g) {
+	save_object_to_file(s, g);
+	return load_object_from_file(s);
 }
 
 //=============================================================================

@@ -174,6 +174,12 @@ never_const_ptr<instantiation_base>
 		never_const_ptr<process_definition> p) const;
 	bool require_signature_match(never_const_ptr<definition_base> d) const;
 
+// methods for object file I/O
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class process_definition
 
 //=============================================================================
@@ -194,7 +200,7 @@ protected:
 	excl_const_ptr<process_type_reference>		base;
 public:
 	process_definition_alias(const string& n, 
-		never_const_ptr<name_space> p);
+		never_const_ptr<scopespace> p);
 	~process_definition_alias();
 
 	ostream& what(ostream& o) const;
@@ -207,6 +213,11 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class process_definition_alias
 
 //=============================================================================
@@ -312,6 +323,11 @@ public:
 	bool require_signature_match(never_const_ptr<definition_base> d) const;
 
 	bool add_member(const token_identifier& em);
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class enum_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -326,7 +342,7 @@ public:
  */
 class built_in_param_def : public definition_base {
 protected:
-	string			key;		// inherited
+	const string				key;
 	const never_const_ptr<name_space>	parent;
 public:
 	built_in_param_def(never_const_ptr<name_space> p, const string& n);
@@ -374,6 +390,11 @@ public:
 		never_const_ptr<definition_base> d) const { return false; }
 
 //	bool certify_port_actuals(const object_list& ol) const;
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
@@ -404,13 +425,17 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const;
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class datatype_definition_alias
 
 //=============================================================================
 /// abstract base class for channels and their representations
 class channel_definition_base : virtual public definition_base {
 protected:
-//	string			key;		// inherited
 public:
 	channel_definition_base();
 //	channel_definition_base(const string& n);
@@ -456,6 +481,11 @@ public:
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------
@@ -485,6 +515,11 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
+public:
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object(persistent_object_manager& m) const;
+static	object* construct_empty(void);
+	void load_object(persistent_object_manager& m);
 };	// end class channel_definition_alias
 
 //-----------------------------------------------------------------------------

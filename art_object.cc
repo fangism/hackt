@@ -61,6 +61,11 @@
 
 
 //=============================================================================
+
+// whether or not unimplemented objects should be written/loaded to/from file. 
+#define	USE_UNDEFINED_OBJECTS		1
+
+//=============================================================================
 namespace ART {
 namespace entity {
 
@@ -71,12 +76,41 @@ namespace entity {
 // class object method definitions
 
 /**
+	Enable or disable warning messages for unimplemented types, 
+	for persistent object management.  
+	Only used by the default methods in the object class.  
+	Off by default.
+ */
+bool
+object::warn_unimplemented = false;
+
+/**
+	Walks object hierarchy and registers reachable pointers with 
+	the persistent object manager.  
+	This default version does nothing, it must be overridden
+	to have some useful effect.  
+	(i.e. this is just a placeholder, should really be pure virtual)
+ */
+void
+object::collect_transient_info(persistent_object_manager& m) const {
+	// it really does absolutely nothing by default.  
+	// Or register a pointer with NULL_TYPE (undefined)?
+	m.register_transient_object(this, NULL_TYPE);
+	if (warn_unimplemented) {
+		what(cerr << "WARNING: collect_transient_info() of ")
+			<< " : using NULL_TYPE." << endl;
+	}
+}
+
+/**
 	Default behavior for undefined writing to stream.  
  */
 void
 object::write_object(persistent_object_manager& m) const {
-	what(cerr << "WARNING: write_object() not implemented for ")
-		<< " yet." << endl;
+	if (warn_unimplemented) {
+		what(cerr << "WARNING: write_object() not implemented for ")
+			<< " yet." << endl;
+	}
 }
 
 /**
@@ -84,8 +118,10 @@ object::write_object(persistent_object_manager& m) const {
  */
 void
 object::load_object(persistent_object_manager& m) {
-	what(cerr << "WARNING: load_object() not implemented for ")
-		<< " yet." << endl;
+	if (warn_unimplemented) {
+		what(cerr << "WARNING: load_object() not implemented for ")
+			<< " yet." << endl;
+	}
 }
 
 //=============================================================================
@@ -1700,6 +1736,8 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETE???
 /**
 	Adds a fundamental_type_reference to the used_id_map, using
 	the hash_string as the key.  
@@ -1751,6 +1789,7 @@ name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
 		return ret;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1774,10 +1813,13 @@ name_space::lookup_open_alias(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// not used
 type_index_enum
 name_space::get_type_index(void) const {
 	return NAMESPACE_TYPE;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1793,19 +1835,40 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
-		some_ptr<object> m_obj(m_iter->second);
+		some_const_ptr<object> m_obj(m_iter->second);
 		assert(!m_obj.owned());		// local copy is not owned
+		assert(m_obj);			// no NULLs in hash_map
 
+#if USE_UNDEFINED_OBJECTS
+		m_obj->collect_transient_info(m);
+#else
+		// eventually everything should implement collect_transient_info
 		// for now, just walk namespaces only
 		never_const_ptr<name_space>
 			m_ns(m_obj.is_a<name_space>());
+		never_const_ptr<definition_base>
+			m_def(m_obj.is_a<definition_base>());
 		if (m_ns) {
-			// but write it to table...
 			m_ns->collect_transient_info(m);
+		} else if (m_def) {
+			m_def->collect_transient_info(m);
 		}
+#endif
 	}
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only allocates and initializes non-transient members
+	(non-members) of the namespace object.  
+	Constructs with bogus arguments temporarily, if necessary.  
+	After this, namespace won't be usable until load_object is called.  
+ */
+object*
+name_space::construct_empty(void) {
+	return new name_space("");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1821,8 +1884,8 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE)) {
  */
 void
 name_space::write_object(persistent_object_manager& m) const {
-// if (!m.flag_visit(this)) {
 	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
 	// First, write out the index number associated with this address.  
 	write_value(f, m.lookup_ptr_index(this));
 
@@ -1830,9 +1893,19 @@ name_space::write_object(persistent_object_manager& m) const {
 	// name MUST be available for use by other visitors right away
 	write_string(f, key);
 
-	// WHAT ABOUT NULL?
 	m.write_pointer(f, parent);
 
+	// do we need to sort objects into bins?
+#if USE_UNDEFINED_OBJECTS
+	write_value(f, used_id_map.size());
+	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	for ( ; m_iter!=m_end; m_iter++) {
+		some_ptr<object> m_obj(m_iter->second);
+		m.write_pointer(f, m_obj);
+	}
+#else
+{
 	// only write out namespaces
 	// how many namespaces in the used_id_map?
 	// eventually won't have to count?
@@ -1862,22 +1935,15 @@ name_space::write_object(persistent_object_manager& m) const {
 		never_const_ptr<name_space> l_obj(*l_iter);
 		m.write_pointer(f, l_obj);
 	}
+}
+{
+	// next bunch: only definitions
+	typedef	list<never_const_ptr<definition_base> >	def_list_type;
+}
+#endif
 
 	// write a tail or delimiter for checking alignment?
 	write_value(f, -1L);		// must be long
-// }	// else we already visited this object, don't write it out.
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Only allocates and initializes non-transient members
-	(non-members) of the namespace object.  
-	Constructs with bogus arguments temporarily, if necessary.  
-	After this, namespace won't be usable until load_object is called.  
- */
-object*
-name_space::construct_empty(void) {
-	return new name_space("");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1890,23 +1956,54 @@ void
 name_space::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
 	// First, strip away the index number associated with this address.
 	{
 	long index;
 	read_value(f, index);
+	assert(index == m.lookup_ptr_index(this));
 	}
 
 	// Second, read in the name of the namespace.  
-	{
-	string tmp_str;
-	read_string(f, tmp_str);
-	// coercive cast
-	const_cast<string&>(key) = tmp_str;
-	}
+	read_string(f, const_cast<string&>(key));	// coercive cast
 
 	// Next, read in the parent namespace pointer.  
 	m.read_pointer(f, parent);
 
+#if USE_UNDEFINED_OBJECTS
+	{
+	size_t s;
+	// how many pointers to expect?
+	read_value(f, s);
+	size_t i = 0;
+	for ( ; i<s; i++) {
+		// can't just read_pointer,
+		// need to add it back through hash_map.  
+		long index;
+		read_value(f, index);
+		object* o = m.lookup_obj_ptr(index);
+		if (!o) {
+			if (warn_unimplemented) {
+				cerr << "Skipping a NULL object at index "
+					<< index << endl;
+			}
+			continue;
+		}
+		o->load_object(m);	// recursion!!!
+		name_space* ns = IS_A(name_space*, o);
+		definition_base* db = IS_A(definition_base*, o);
+		if (ns)
+			add_namespace(excl_ptr<name_space>(ns));
+		else if (db)
+			add_definition(excl_ptr<definition_base>(db));
+		// ownership restored here!
+		else {
+			o->what(cerr << "TO DO: define method for adding ")
+				<< " back to namespace." << endl;
+		}
+	}
+	}
+#else
 	{
 	size_t s;
 	// how many pointers to expect?
@@ -1924,6 +2021,9 @@ if (!m.flag_visit(this)) {
 		// ownership restored here!
 	}
 	}
+
+	// next bunch: definitions
+#endif
 
 	{
 	// write a tail or delimiter for checking alignment?

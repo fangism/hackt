@@ -13,6 +13,9 @@ y.output.h
 y.union.cc
 *.tar.gz
 artc
+art++2obj
+artobjdump
+*.artobj
 test-report.txt
 cvsdiffs
 

@@ -13,6 +13,8 @@
 #include "art_object_instance.h"
 #include "art_object_expr.h"
 // #include "art_built_ins.h"
+#include "art_object_IO.h"
+#include "art_utils.tcc"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -524,17 +526,10 @@ datatype_definition_base::make_fundamental_type_reference(
 // class channel_definition_base method definitions
 
 // make sure that this constructor is never invoked outside this file
-#if 0
-inline
-channel_definition_base::channel_definition_base(const string& n) :
-		definition_base(n) {
-}
-#else
 inline
 channel_definition_base::channel_definition_base() :
 		definition_base() {
 }
-#endif
 
 channel_definition_base::~channel_definition_base() {
 }
@@ -567,11 +562,7 @@ channel_definition_base::make_fundamental_type_reference(
 user_def_chan::user_def_chan(never_const_ptr<name_space> o, 
 		const string& name) :
 		definition_base(), 
-#if 0
-		channel_definition_base(name), 
-#else
 		channel_definition_base(), 
-#endif
 		scopespace(),
 		key(name), 
 		parent(o) {
@@ -614,6 +605,74 @@ user_def_chan::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+void
+user_def_chan::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE)) {
+
+	// recursively visit members...
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Just allocate with bogus arguments.  
+ */
+object*
+user_def_chan::construct_empty(void) {
+	return new user_def_chan(never_const_ptr<object>(NULL), "");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+user_def_chan::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reads in fields from input stream.  
+ */
+void
+user_def_chan::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
+}
+
 //=============================================================================
 // class channel_definition_alias method definitions
 
@@ -625,29 +684,35 @@ channel_definition_alias::channel_definition_alias(
 		key(n), parent(p), base(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::~channel_definition_alias() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_definition_alias::what(ostream& o) const {
 	return o << "channel-definition-alias";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 channel_definition_alias::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 channel_definition_alias::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<fundamental_type_reference>
 channel_definition_alias::get_base_type_ref(void) const {
 	return base;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_definition_alias::assign_typedef(
 		excl_const_ptr<fundamental_type_reference> f) {
@@ -655,6 +720,77 @@ channel_definition_alias::assign_typedef(
 	base = f.is_a_xfer<channel_type_reference>();
 	assert(base);
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+channel_definition_alias::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE)) {
+
+// later: template formals
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty allocator.  
+ */
+object*
+channel_definition_alias::construct_empty(void) {
+	return new channel_definition_alias("",
+		never_const_ptr<scopespace>(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+channel_definition_alias::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_definition_alias::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
 }
 
 //=============================================================================
@@ -922,6 +1058,76 @@ enum_datatype_def::add_member(const token_identifier& em) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+enum_datatype_def::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE)) {
+
+// later: template formals
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty allocator.  
+ */
+object*
+enum_datatype_def::construct_empty(void) {
+	return new enum_datatype_def(never_const_ptr<name_space>(NULL), "");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+enum_datatype_def::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_datatype_def::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
+}
+
 //=============================================================================
 // class user_def_datatype method definitions
 
@@ -972,6 +1178,76 @@ user_def_datatype::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+user_def_datatype::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE)) {
+
+// later: template formals
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty allocator.  
+ */
+object*
+user_def_datatype::construct_empty(void) {
+	return new user_def_datatype(never_const_ptr<name_space>(NULL), "");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+user_def_datatype::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
+}
+
 //=============================================================================
 // class datatype_definition_alias method definitions
 
@@ -984,29 +1260,35 @@ datatype_definition_alias::datatype_definition_alias(
 		parent(p) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::~datatype_definition_alias() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 datatype_definition_alias::what(ostream& o) const {
 	return o << "datatype-definition-alias";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 datatype_definition_alias::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 datatype_definition_alias::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<fundamental_type_reference>
 datatype_definition_alias::get_base_type_ref(void) const {
 	return base;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 datatype_definition_alias::assign_typedef(
 		excl_const_ptr<fundamental_type_reference> f) {
@@ -1016,6 +1298,7 @@ datatype_definition_alias::assign_typedef(
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 datatype_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -1031,11 +1314,83 @@ datatype_definition_alias::make_fundamental_type_reference(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 datatype_definition_alias::require_signature_match(
 		never_const_ptr<definition_base> d) const {
 	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+datatype_definition_alias::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE)) {
+
+// later: template formals
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty allocator.  
+ */
+object*
+datatype_definition_alias::construct_empty(void) {
+	return new datatype_definition_alias("",
+		never_const_ptr<scopespace>(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+datatype_definition_alias::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datatype_definition_alias::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
 }
 
 //=============================================================================
@@ -1077,6 +1432,7 @@ process_definition::process_definition(
 		port_formals_list(), 
 		port_formals_map() {
 	// fill me in...
+	// assert(o);		// no: because of partial reconstruction
 }
 
 process_definition::~process_definition() {
@@ -1150,6 +1506,7 @@ process_definition::lookup_port_formal(const string& id) const {
 	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Validates a list of objects (instance references) against
 	the port formal specification.  
@@ -1204,6 +1561,7 @@ process_definition::certify_port_actuals(const object_list& ol) const {
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 process_definition::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -1219,6 +1577,7 @@ process_definition::make_fundamental_type_reference(
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a port formal instance to this process definition.  
  */
@@ -1246,6 +1605,7 @@ process_definition::add_port_formal(excl_ptr<instantiation_base> f) {
 	return pf;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks that template formals set and port formals set 
 	are equivalent.  
@@ -1290,6 +1650,7 @@ process_definition::require_signature_match(
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Port formals are equivalent if their order of instantiations
 	matches exactly, type, size, and even name.  
@@ -1322,11 +1683,99 @@ process_definition::equivalent_port_formals(
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+process_definition::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE)) {
+
+// later: template formals, port formals, etc...
+// what's a good way to re-use code?
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary allocation.  
+ */
+object*
+process_definition::construct_empty(void) {
+	return new process_definition(never_const_ptr<name_space>(NULL), "");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+process_definition::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+
+	// tail
+	write_value(f, -1L);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	if (index != m.lookup_ptr_index(this)) {
+		long hohum = m.lookup_ptr_index(this);
+		cerr << "process_definition::load_object(): " << endl
+			<< "\tthis = "
+			<< this << ", index = " << index 
+			<< ", expected: " << hohum << endl;
+		assert(index == m.lookup_ptr_index(this));
+	}
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+	{
+	long neg_one;
+	read_value(f, neg_one);
+	assert(neg_one == -1L);
+	}
+}
+// else already visited
+}
+
 //=============================================================================
 // class process_definition_alias method definitions
 
 process_definition_alias::process_definition_alias(const string& n, 
-		never_const_ptr<name_space> p) :
+		never_const_ptr<scopespace> p) :
 		definition_base(), 
 		process_definition_base(), 
 		typedef_base(), 
@@ -1334,28 +1783,39 @@ process_definition_alias::process_definition_alias(const string& n,
 		parent(p), base(NULL) {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_definition_alias::~process_definition_alias() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_definition_alias::what(ostream& o) const {
 	return o << "process-definition-alias";
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string&
 process_definition_alias::get_key(void) const {
 	return key;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<scopespace>
 process_definition_alias::get_parent(void) const {
 	return parent;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_const_ptr<fundamental_type_reference>
 process_definition_alias::get_base_type_ref(void) const {
 	return base;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a complete type reference (possibly using formal parameters)
+	to this typedef.  
+	Can only be done once, for obvious reasons.  
+ */
 bool
 process_definition_alias::assign_typedef(
 		excl_const_ptr<fundamental_type_reference> f) {
@@ -1365,6 +1825,7 @@ process_definition_alias::assign_typedef(
 	return true;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 process_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
@@ -1379,6 +1840,77 @@ process_definition_alias::make_fundamental_type_reference(
 			"do not match." << endl;
 		return count_const_ptr<fundamental_type_reference>(NULL);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively collects reachable pointers and register them
+	with the persistent object manager.  
+ */
+void
+process_definition_alias::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE)) {
+
+// later: template formals
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Empty allocator.  
+ */
+object*
+process_definition_alias::construct_empty(void) {
+	return new process_definition_alias("",
+		never_const_ptr<scopespace>(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+ */
+void
+process_definition_alias::write_object(persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+
+	// Index number: not necessary, but can't hurt
+	write_value(f, m.lookup_ptr_index(this));
+
+	write_string(f, key);
+
+	m.write_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition_alias::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+
+	// Strip away index number.
+	{
+	long index;
+	read_value(f, index);
+	}
+	read_string(f, const_cast<string&>(key));
+
+	m.read_pointer(f, parent);
+
+	// template formals (list)
+
+	// port formals (list)
+
+	// body
+}
+// else already visited
 }
 
 //=============================================================================
