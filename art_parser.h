@@ -613,7 +613,8 @@ explicit namespace_id(qualified_id* i);
 //	const object* check_build(context* c) const;
 
 	never_const_ptr<qualified_id> get_id(void) const
-		{ return never_const_ptr<qualified_id>(qid); }
+		{ return qid; }
+//		{ return never_const_ptr<qualified_id>(qid); }
 		// gcc-2.95.3 dies on this.
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
@@ -658,7 +659,9 @@ virtual	line_position rightmost(void) const;
 virtual	const object* check_build(context* c) const;
 
 never_const_ptr<qualified_id> get_id(void) const
-		{ return never_const_ptr<qualified_id>(qid); }
+		{ return qid; }
+//		{ return never_const_ptr<qualified_id>(qid); }
+		// gcc-2.95.3 dies on this.
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 qualified_id*	force_absolute(token_string* s)
