@@ -1,11 +1,16 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.1 2005/02/04 05:40:24 fang Exp $
+	$Id: ring_node.h,v 1.1.2.2 2005/02/05 02:24:04 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
 #define	__UTIL_RING_NODE_H__
+
+// whether or not to include subset of definitions separately, but still inline
+#ifndef	FORCE_INLINE_RING_NODE
+#define	FORCE_INLINE_RING_NODE		0
+#endif
 
 // #include <iostream>
 #include <iterator>
@@ -43,6 +48,7 @@ protected:
 	explicit
 	ring_node_base(ring_node_base* r) : next(r) { NEVER_NULL(next); }
 
+#if FORCE_INLINE_RING_NODE
 	/**
 		Potentially expensive destructor.
 		Must maintain circular reference invariant!
@@ -57,6 +63,9 @@ protected:
 		}
 		// else this is the last node, just drops itself
 	}
+#else
+	~ring_node_base();
+#endif
 
 	/**
 		Fusing two ring_nodes into one, extremely efficient.  
@@ -82,16 +91,30 @@ public:
 
 	/**
 		Run-time check for intersection.  
+		Stops as soon as one element is found reachable from the other, 
+		or as soon as one list is done searching.
+		\pre A containing B <=> B containing A.
+		\post A containing B <=> B containing A.
 	 */
+#if FORCE_INLINE_RING_NODE
 	bool
 	contains(const ring_node_base& r) const {
-		const ring_node_base* walk = this;
+		const ring_node_base* walk1 = this;
+		const ring_node_base* walk2 = &r;
 		do {
-			if (walk == &r)	return true;
-			else		walk = walk->next;
-		} while (walk != this);
+			if (walk1 == &r || walk2 == this)
+				return true;
+			else {
+				walk1 = walk1->next;
+				walk2 = walk2->next;
+			}
+		} while (walk1 != this && walk2 != &r);
 		return false;
 	}
+#else
+	bool
+	contains(const ring_node_base& r) const;
+#endif
 
 	bool
 	points_to(ring_node_base* b) const {
@@ -274,6 +297,15 @@ public:
 	linked list.  
 	A ring_node by itself forms a ring with itself.  
 	Any two ring_node merged together will connect into a bigger ring.  
+
+	Nodes of this type have several invariant properties:
+	1) Nodes are self assembled into rings.  
+		Any node object is a member of EXACTLY ONE ring.  
+		A new node is always connected to itself in a self-ring.  
+	2) As rings grow and nodes die, this property is maintained INVARIANT.  
+	3) If A is reachable from B <=> B is reachable from A.  
+	4) While shape and structure are maintained, nodes never manage
+		each other's memory -- strictly mind-your-own-memory.  
  */
 template <class T>
 class ring_node : public ring_node_base {
@@ -317,6 +349,8 @@ public:
 
 	/**
 		Uses base destructor, which walks the list.  
+		Will not be virtual, never deleting through base-type 
+		pointers.  
 	 */
 	~ring_node() { }
 
@@ -341,6 +375,14 @@ public:
 	iterator
 	begin(void) { return iterator(next); }
 
+	const_iterator
+	begin(void) const {
+		return const_iterator(next);
+	}
+
+	iterator
+	end(void) { return iterator(this->next, this); }
+
 	/**
 		const_cast is required because all nodes store
 		a non-const pointer.  
@@ -352,17 +394,7 @@ public:
 		tightly coupled.  
 	 */
 	const_iterator
-	begin(void) const {
-//		return const_iterator(const_cast<this_type*>(next));
-		return const_iterator(next);
-	}
-
-	iterator
-	end(void) { return iterator(this->next, this); }
-
-	const_iterator
 	end(void) const {
-//		return const_iterator(const_cast<this_type*>(this), this->next);
 		return const_iterator(this->next, const_cast<this_type*>(this));
 	}
 
