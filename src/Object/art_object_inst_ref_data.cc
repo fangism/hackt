@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.2 2004/12/16 01:08:51 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.3 2005/01/06 17:44:53 fang Exp $
  */
 
 #include "art_object_inst_ref_data.h"
@@ -35,14 +35,26 @@ int_instance_reference::int_instance_reference() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_instance_reference::int_instance_reference(
+		const never_ptr<const instance_collection_type> iic) :
+		parent_type(iic->current_collection_state()), 
+		int_inst_ref(iic) {
+	NEVER_NULL(int_inst_ref);
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Obsolete constructor...
+ */
 int_instance_reference::int_instance_reference(
 		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list> i) :
+		excl_ptr<index_list>& i) :
 		parent_type(i, iic->current_collection_state()), 
 		int_inst_ref(iic) {
 	NEVER_NULL(int_inst_ref);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_reference::~int_instance_reference() {
@@ -140,12 +152,22 @@ bool_instance_reference::bool_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool_instance_reference::bool_instance_reference(
+		const never_ptr<const instance_collection_type> iic) :
+		parent_type(iic->current_collection_state()), 
+		bool_inst_ref(iic) {
+	NEVER_NULL(bool_inst_ref);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+bool_instance_reference::bool_instance_reference(
 		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list> i) :
+		excl_ptr<index_list>& i) :
 		parent_type(i, iic->current_collection_state()), 
 		bool_inst_ref(iic) {
 	NEVER_NULL(bool_inst_ref);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_reference::~bool_instance_reference() {
@@ -243,12 +265,22 @@ enum_instance_reference::enum_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 enum_instance_reference::enum_instance_reference(
+		const never_ptr<const instance_collection_type> iic) :
+		parent_type(iic->current_collection_state()), 
+		enum_inst_ref(iic) {
+	NEVER_NULL(enum_inst_ref);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+enum_instance_reference::enum_instance_reference(
 		const never_ptr<const instance_collection_type> iic, 
 		excl_ptr<index_list> i) :
 		parent_type(i, iic->current_collection_state()), 
 		enum_inst_ref(iic) {
 	NEVER_NULL(enum_inst_ref);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance_reference::~enum_instance_reference() {
@@ -346,12 +378,22 @@ datastruct_instance_reference::datastruct_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 datastruct_instance_reference::datastruct_instance_reference(
+		const never_ptr<const instance_collection_type> iic) :
+		parent_type(iic->current_collection_state()), 
+		struct_inst_ref(iic) {
+	NEVER_NULL(struct_inst_ref);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+datastruct_instance_reference::datastruct_instance_reference(
 		const never_ptr<const instance_collection_type> iic, 
 		excl_ptr<index_list> i) :
 		parent_type(i, iic->current_collection_state()), 
 		struct_inst_ref(iic) {
 	NEVER_NULL(struct_inst_ref);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datastruct_instance_reference::~datastruct_instance_reference() {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.6 2004/12/15 23:31:11 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.7 2005/01/06 17:44:54 fang Exp $
  */
 
 #include <iostream>
@@ -12,7 +12,6 @@
 #include "art_object_inst_ref.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
-// #include "art_object_expr.h"		// for range_expr_list
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
@@ -33,6 +32,8 @@ namespace entity {
 using namespace ADS;		// for composition functors
 using std::dereference;
 using std::mem_fun_ref;
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // struct pint_instance method definitions
@@ -174,6 +175,11 @@ pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
  */
 count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
+#if 0
+	indent cerr_ind(cerr);
+	cerr << auto_indent <<
+		"pint_instance_collection::default_value()" << endl;
+#endif
 	return ival;
 }
 

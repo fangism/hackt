@@ -1,13 +1,14 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.5 2004/12/15 23:31:11 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.6 2005/01/06 17:44:54 fang Exp $
  */
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <numeric>
+#include <string>
 
 #include "ptrs_functional.h"
 #include "compose.h"
@@ -36,6 +37,8 @@
 #include "art_object_expr_const.h"
 #include "art_object_type_ref_base.h"
 #include "art_object_type_hash.h"
+
+#include "indent.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -94,6 +97,8 @@ using parser::scope;
 using std::_Select2nd;
 using namespace util::memory;
 using namespace ADS;		// for function compositions
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // general non-member function definitions
@@ -122,7 +127,15 @@ scopespace::~scopespace() {
  */
 never_ptr<const object>
 scopespace::lookup_object_here(const string& id) const {
+#if 0
+cerr << "AH HA! id @ " << &id << " = " << id << endl;
+	some_ptr<object>
+		ret(static_cast<const used_id_map_type&>(used_id_map)[id]);
+cerr << "AH huh?" << endl;
+	return ret;
+#else
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -162,14 +175,24 @@ scopespace::lookup_object(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
+#if 0
+	indent cerr_ind(cerr);
+	cerr << auto_indent << "scopespace::lookup_object()" << endl;
+#endif
 if (id.is_absolute()) {
 	never_ptr<const scopespace> parent(get_parent());
 	if (parent)
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
 		qualified_id_slice idc(id);
+#if 0
+		cerr << auto_indent << "before lookup_namespace" << endl;
+#endif
 		never_ptr<const name_space> ns = 
 			lookup_namespace(idc.betail()).is_a<const name_space>();
+#if 0
+		cerr << auto_indent << "after lookup_namespace" << endl;
+#endif
 		if (ns)
 			return ns->lookup_object(**(--id.end()));
 		else return never_ptr<const object>(NULL);
@@ -179,8 +202,14 @@ if (id.is_absolute()) {
 } else {
 	// else need to resolve namespace portion first
 	qualified_id_slice idc(id);
+#if 0
+		cerr << auto_indent << "before lookup_namespace" << endl;
+#endif
 	never_ptr<const name_space> ns = 
 		lookup_namespace(idc.betail()).is_a<const name_space>();
+#if 0
+		cerr << auto_indent << "after lookup_namespace" << endl;
+#endif
 	if (ns)
 		return ns->lookup_object(**(--id.end()));
 	else return never_ptr<const object>(NULL);
@@ -199,8 +228,12 @@ if (id.is_absolute()) {
  */
 never_ptr<const scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
+#if 1
+	indent cerr_ind(cerr);
+	cerr << auto_indent << "scopespace::lookup_namespace()" << endl;
+#endif
 	never_ptr<const scopespace> parent(get_parent());
-	assert(parent);
+	NEVER_NULL(parent);
 	return parent->lookup_namespace(id);
 }
 
@@ -1194,6 +1227,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << endl << "query_subnamespace_match: " << id 
 			<< " in " << get_qualified_name() << endl)
+//	cerr << endl << "query_subnamespace_match: " << id 
+//		<< " in " << get_qualified_name() << endl;
 
 	// here, does NOT check for global-absoluteness
 	if (id.empty())	{	// what if it's absolute and empty?
@@ -1201,31 +1236,33 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 			never_ptr<const name_space>(this);
 	}
 	qualified_id_slice::const_iterator i = id.begin();
-	count_ptr<const token_identifier> tid(*i);
-	assert(tid);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
+	NEVER_NULL(*i);		// *i is a count_ptr<const token_identifier>
+	const token_identifier& tid(**i);
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
+//	cerr << "\ttesting: " << tid << endl;
 	// no check for absoluteness
 	never_ptr<const name_space> ns;
 	if (id.is_absolute()) {
 		ns = get_global_namespace()->
-			lookup_object_here(*tid).is_a<const name_space>();
+			lookup_object_here(tid).is_a<const name_space>();
 	} else {
 		// force use of const probe
-		never_ptr<const object> probe(lookup_object_here(*tid));
+		never_ptr<const object> probe(lookup_object_here(tid));
 		ns = probe.is_a<const name_space>();
 	}
 
 	if (!ns) {				// else lookup in aliases
-		ns = lookup_open_alias(*tid);	// replaced for const semantics
+		ns = lookup_open_alias(tid);	// replaced for const semantics
 	}
 	for (i++; ns && i!=id.end(); i++) {
 		never_ptr<const name_space> next;
-		tid = i->is_a<const token_identifier>();
-		assert(tid);
-		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
-		next = ns->lookup_object_here(*tid).is_a<const name_space>();
+		NEVER_NULL(*i);
+		const token_identifier& tid2(**i);
+		// tid = i->is_a<const token_identifier>();
+		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
+		next = ns->lookup_object_here(tid2).is_a<const name_space>();
 		// if not found in subspaces, check aliases list
-		ns = (next) ? next : ns->lookup_open_alias(*tid);
+		ns = (next) ? next : ns->lookup_open_alias(tid2);
 	}
 	// for loop terminates when ns is NULL or i is at the end
 	// if i is not at the end, then we didn't find a matched namespace
@@ -1370,6 +1407,11 @@ name_space::add_definition(excl_ptr<definition_base> db) {
  */
 never_ptr<const scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
+#if 1
+	indent cerr_ind(cerr);
+	cerr << auto_indent <<
+		"name_space::lookup_namespace: id @ " << &id << " = " << id;
+#endif
 	return query_subnamespace_match(id);
 }
 

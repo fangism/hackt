@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.8 2004/12/06 07:11:09 fang Exp $
+	$Id: art_parser_instance.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -25,6 +25,7 @@
 #include "art_object_type_ref_base.h"
 #include "art_object_inst_ref.h"
 #include "art_object_expr_base.h"
+#include "art_object_assign.h"
 #include "art_object_connect.h"
 
 // enable or disable constructor inlining, undefined at the end of file

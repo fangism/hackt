@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.12 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_base.h,v 1.13 2005/01/06 17:44:51 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -184,8 +184,26 @@ protected:
 /// the character
 	int c;
 public:
+	/// inlined, intended only for allocator use
+	token_char();
 explicit token_char(const int i) : terminal(), c(i) { }
 	~token_char() { }
+
+	// overloaded to use pool allocation
+	static
+	void*
+	operator new (size_t t);
+
+	// placement new, needed by vector allocation, 
+	// just wraps to std::allocator
+	static
+	void*
+	operator new (size_t, void*&);
+
+	// overloaded to use pool allocation
+	static
+	void
+	operator delete (void* t);
 
 	int get_char(void) const { return c; }
 	int string_compare(const char* d) const;

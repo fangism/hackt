@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.5 2004/12/15 23:31:11 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.6 2005/01/06 17:44:54 fang Exp $
  */
 
 #include <iostream>
@@ -59,8 +59,9 @@ struct_instance_collection::make_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	return count_ptr<datatype_instance_reference>(
 		new datastruct_instance_reference(
-			never_ptr<const struct_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
+			never_ptr<const struct_instance_collection>(this)
+//			, excl_ptr<index_list>(NULL)
+	));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }

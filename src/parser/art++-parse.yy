@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.9 2005/01/03 21:13:44 fang Exp $
+	$Id: art++-parse.yy,v 1.10 2005/01/06 17:44:55 fang Exp $
  */
 
 %{
@@ -2072,6 +2072,11 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 			if (resolved_node)
 				delete resolved_node;
 		}
+	}
+	if (!at_eof()) {
+		// free the last token (if not EOF)
+		resolved_node = yy_union_lookup(yylval, yychar);
+		delete resolved_node;
 	}
 
 #endif	// NO_FAKE_PREFIX

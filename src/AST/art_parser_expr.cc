@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.8 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_expr.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
  */
 
 #include <iostream>
@@ -258,13 +258,13 @@ operator << (ostream& o, const qualified_id_slice& id) {
 		qualified_id_slice::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		count_ptr<const token_identifier> tid(*i);
-		assert(tid);
-		o << *tid;
+//		count_ptr<const token_identifier> tid(*i);
+		NEVER_NULL(*i);
+		o << **i;
 		for (i++ ; i!=id.end(); i++) {
-			tid = *i;
-			assert(tid);
-			o << scope << *tid;
+//			tid = *i;
+			NEVER_NULL(*i);
+			o << scope << **i;
 		}
 		return o;
 	}

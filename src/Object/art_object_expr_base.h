@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.2 2004/12/07 02:22:07 fang Exp $
+	$Id: art_object_expr_base.h,v 1.3 2005/01/06 17:44:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -240,6 +240,9 @@ protected:
 	Abstract expression checked to be a single integer.  
  */
 class pint_expr : virtual public param_expr, virtual public index_expr {
+public:
+	/// the internal storage type
+	typedef	long			value_type;
 public:
 	pint_expr() : param_expr(), index_expr() { }
 virtual	~pint_expr() { }

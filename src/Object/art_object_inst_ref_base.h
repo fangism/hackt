@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.3 2004/12/10 22:02:16 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.4 2005/01/06 17:44:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -154,8 +154,12 @@ protected:
 protected:
 	simple_instance_reference();
 public:
+	explicit
+	simple_instance_reference(const instantiation_state& st);
+
 	simple_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& st);
+
 virtual	~simple_instance_reference();
 
 	size_t dimensions(void) const;

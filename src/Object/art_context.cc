@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.14 2004/12/07 02:22:06 fang Exp $
+ 	$Id: art_context.cc,v 1.15 2005/01/06 17:44:52 fang Exp $
  */
 
 #include <assert.h>
@@ -351,6 +351,22 @@ context::close_chantype_definition(void) {
 	current_open_definition.must_be_a<channel_definition_base>();
 	close_current_definition();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return destructive transfer of active definition (modifiable).  
+ */
+excl_ptr<definition_base>
+context::get_current_prototype(void) {
+	return current_prototype;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return reference to current active definition.  
+ */
+never_ptr<const definition_base>
+context::get_current_prototype(void) const { return current_prototype; }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

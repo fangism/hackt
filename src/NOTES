@@ -3,6 +3,16 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-01-05:
+CRITICAL BUG: util/memory/pointer_classes:
+	some destructors (excl_ptr) use release instead of reset, 
+	should be reset, HOWEVER, changing to reset() causes type-check
+	phase (perhaps others) to die horrible deaths.  
+Currently, leave it incorrect as release(), because in the middle of 
+	other modifications (need isolation).  
+	Meanwhile, littered with debug code...
+
+//=============================================================================
 2004-12-12: Regarding unroll-time parameter resolution.
 
 Dependencies: unroll-time type-resolution, with templates, 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.29 2004/12/25 03:12:20 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.30 2005/01/06 17:44:53 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,7 @@
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.tcc"
 
+#include "what.tcc"
 #include "STL/list.tcc"
 #include "qmap.tcc"
 
@@ -32,6 +33,55 @@
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
 
+//=============================================================================
+namespace util {
+// specializations of the class what, needed to override the default
+// mangled names returned by type_info::name().
+
+// These specializations need not be externally visible, unless
+// the class template "what" is used directly.  
+// Most of the time, the "what" member function interface is used.  
+
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_const_collection,
+		"pint-const-collection")
+SPECIALIZE_UTIL_WHAT(ART::entity::const_param_expr_list,
+		"const-param-expr-list")
+SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_param_expr_list,
+		"param-expr-list")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instance_reference,
+		"pbool-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_instance_reference,
+		"pint-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_const,
+		"pint-const")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const,
+		"pbool-const")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_unary_expr,
+		"pint-unary-expr")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_unary_expr,
+		"pbool-unary-expr")
+SPECIALIZE_UTIL_WHAT(ART::entity::arith_expr, 
+		"arith-expr")
+SPECIALIZE_UTIL_WHAT(ART::entity::relational_expr, 
+		"relational-expr")
+SPECIALIZE_UTIL_WHAT(ART::entity::logical_expr, 
+		"logical-expr")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_range, 
+		"pint-range")
+SPECIALIZE_UTIL_WHAT(ART::entity::const_range, 
+		"const-range")
+SPECIALIZE_UTIL_WHAT(ART::entity::const_range_list, 
+		"const-range-list")
+SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_range_list, 
+		"dynamic_range_list")
+SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list, 
+		"const-index-list")
+SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
+		"dynamic-index-list")
+
+}	// end namespace util
+
+//=============================================================================
 namespace ART {
 namespace entity {
 //=============================================================================
@@ -236,10 +286,14 @@ const_param_expr_list::const_param_expr_list() :
 const_param_expr_list::~const_param_expr_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 const_param_expr_list::what(ostream& o) const {
 	return o << "const-param-expr-list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -471,10 +525,14 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 dynamic_param_expr_list::~dynamic_param_expr_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 dynamic_param_expr_list::what(ostream& o) const {
 	return o << "param-expr-list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -833,10 +891,14 @@ pbool_instance_reference::get_param_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pbool_instance_reference::what(ostream& o) const {
 	return o << "pbool-inst-ref";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instance_reference)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1256,10 +1318,14 @@ pint_instance_reference::get_param_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_instance_reference::what(ostream& o) const {
 	return o << "pint-inst-ref";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instance_reference)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1663,10 +1729,14 @@ pint_instance_reference::assigner::operator() (const bool b,
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_const::what(ostream& o) const {
 	return o << "pint-const";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1813,10 +1883,15 @@ pint_const_collection::pint_const_collection(const size_t d) :
 pint_const_collection::~pint_const_collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_const_collection::what(ostream& o) const {
-	return o << "pint-const-collection";
+	return o << util::what<pint_const_collection>::name;
+	// comes out mangled if not specialized
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const_collection)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2006,10 +2081,14 @@ if (!m.flag_visit(this)) {
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pbool_const::what(ostream& o) const {
 	return o << "pbool-const";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_const)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2125,10 +2204,14 @@ pint_unary_expr::pint_unary_expr(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_unary_expr::what(ostream& o) const {
 	return o << "pint-unary-expr";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2272,10 +2355,14 @@ pbool_unary_expr::pbool_unary_expr(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pbool_unary_expr::what(ostream& o) const {
 	return o << "pbool-unary-expr";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2455,10 +2542,14 @@ arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 arith_expr::what(ostream& o) const {
 	return o << "arith-expr";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2696,10 +2787,14 @@ relational_expr::relational_expr(count_ptr<const pint_expr> l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 relational_expr::what(ostream& o) const {
 	return o << "relational-expr";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2893,10 +2988,14 @@ logical_expr::logical_expr(count_ptr<const pbool_expr> l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 logical_expr::what(ostream& o) const {
 	return o << "logical-expr";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3066,10 +3165,14 @@ pint_range::pint_range(const pint_range& pr) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 pint_range::what(ostream& o) const {
 	return o << "pint-range";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_range)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3253,10 +3356,14 @@ const_range::const_range(const parent& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 const_range::what(ostream& o) const {
 	return o << "const-range";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3478,10 +3585,14 @@ const_range_list::~const_range_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 const_range_list::what(ostream& o) const {
 	return o << "const_range_list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3836,10 +3947,14 @@ dynamic_range_list::~dynamic_range_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 dynamic_range_list::what(ostream& o) const {
 	return o << "dynamic_range_list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_range_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4045,10 +4160,14 @@ const_index_list::const_index_list(const const_index_list& l,
 const_index_list::~const_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 const_index_list::what(ostream& o) const {
 	return o << "const-index-list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4327,10 +4446,14 @@ dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
 dynamic_index_list::~dynamic_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 dynamic_index_list::what(ostream& o) const {
 	return o << "dynamic-index-list";
 }
+#else
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_index_list)
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

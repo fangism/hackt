@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.5 2004/12/15 23:31:10 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.6 2005/01/06 17:44:53 fang Exp $
  */
 
 #include <iostream>
@@ -57,8 +57,9 @@ bool_instance_collection::make_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	return count_ptr<datatype_instance_reference>(
 		new bool_instance_reference(
-			never_ptr<const bool_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
+			never_ptr<const bool_instance_collection>(this)
+//			, excl_ptr<index_list>(NULL)
+		));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }

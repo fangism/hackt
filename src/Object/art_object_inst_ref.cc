@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.16 2004/12/12 22:26:32 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.17 2005/01/06 17:44:53 fang Exp $
  */
 
 #include <iostream>
@@ -40,6 +40,16 @@ simple_instance_reference::simple_instance_reference() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_instance_reference::simple_instance_reference(
+		const instantiation_state& st) :
+		array_indices(NULL), 
+		inst_state(st) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	May be obsolete...
+ */
 simple_instance_reference::simple_instance_reference(
 		excl_ptr<index_list> i, 
 		const instantiation_state& st) :
@@ -1145,6 +1155,12 @@ datatype_instance_reference::datatype_instance_reference() :
 #endif
 {
 	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_reference::datatype_instance_reference(
+		const instantiation_state& s) :
+		simple_instance_reference(s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.6 2004/12/11 06:22:44 fang Exp $
+	$Id: persistent.h,v 1.7 2005/01/06 17:44:57 fang Exp $
  */
 
 #ifndef	__PERSISTENT_H__
@@ -56,6 +56,17 @@ persistent* T::construct_empty(const int i) { return NULL; }		\
 void T::collect_transient_info(persistent_object_manager& m) const { }	\
 void T::write_object(const persistent_object_manager& m) const { }	\
 void T::load_object(persistent_object_manager& m) { }
+
+/**
+	Default implementation of ostream& what(ostream&) const 
+	member function, which need not be derived from persistent.  
+	Requires inclusion of "util/what.h".
+ */
+#define	PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(T)			\
+std::ostream&								\
+T::what(std::ostream& o) const {					\
+	return o << util::what<T >::name;				\
+}
 
 //-----------------------------------------------------------------------------
 // macros for use in write_object and load_object

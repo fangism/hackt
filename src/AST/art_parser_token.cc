@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.8 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_token.cc,v 1.9 2005/01/06 17:44:51 fang Exp $
  */
 
 #include <iostream>
@@ -18,6 +18,8 @@
 #include "art_object_inst_ref_base.h"
 #include "art_object_expr_const.h"
 #include "art_built_ins.h"
+
+#include "memory/list_vector_pool.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -83,6 +85,10 @@ token_EOF::string_compare(const char* d) const {
 //=============================================================================
 // class token_char method definitions
 
+inline
+token_char::token_char() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 CONSTRUCTOR_INLINE
 token_char::token_char(const int i) : terminal(), c(i) { }
@@ -91,6 +97,57 @@ DESTRUCTOR_INLINE
 token_char::~token_char() { }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-member static allocation pool for ALL token_char's.
+	Note static linkage.  
+	Allocation chunk size is 1024 token_char's.  
+ */
+static
+list_vector_pool<token_char>
+token_char_pool(1024);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pool allocation for all token_char's.
+	\param s size is unused, only allocate one char at a time.  
+ */
+void*
+token_char::operator new (size_t s) {
+//	cerr << "pool-alloc token_char" << endl;
+	return token_char_pool.allocate();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Placement construct, needed by vector allocation.  
+	Just No-op.  Does nothing.  
+ */
+inline
+void*
+token_char::operator new (size_t s, void*& p) {
+//	cerr << "place token_char" << endl;
+	NEVER_NULL(p);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pool deallocation for all token_char's.
+ */
+void
+token_char::operator delete (void* p) {
+//	cerr << "pool-free token_char" << endl;
+	// safety check for type?
+	NEVER_NULL(p);
+	token_char* t = reinterpret_cast<token_char*>(p);
+	NEVER_NULL(t);
+	// cast needed because this particular allocator is 
+	// type-specific argument
+	token_char_pool.deallocate(t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Performs string comparison for a character token.
 	\param d string to match against

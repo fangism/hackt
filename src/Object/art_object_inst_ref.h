@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.13 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.14 2005/01/06 17:44:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -33,6 +33,10 @@ protected:
 protected:
 	datatype_instance_reference();
 
+	explicit
+	datatype_instance_reference(const instantiation_state& s);
+
+	// may be obsolete...
 	datatype_instance_reference(excl_ptr<index_list> i, 
 		const instantiation_state& s);
 

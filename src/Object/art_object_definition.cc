@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.22 2004/12/12 06:27:55 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.23 2005/01/06 17:44:52 fang Exp $
  */
 
 #include <iostream>
@@ -21,6 +21,8 @@
 #include "art_object_expr.h"			// for dynamic_param_expr_list
 #include "art_object_expr_param_ref.h"
 #include "art_object_type_hash.h"
+
+#include "indent.h"
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -30,6 +32,7 @@
 namespace ART {
 namespace entity {
 using parser::scope;
+using util::auto_indent;
 
 //=============================================================================
 // class definition_base method definitions
@@ -173,20 +176,41 @@ definition_base::lookup_object_here(const string& id) const {
  */
 bool
 definition_base::check_null_template_argument(void) const {
+#if 0
+	indent cerr_ind(cerr);
+	cerr << auto_indent <<
+		"In definition_base::check_null_template_argument()" << endl;
+#endif
 	if (template_formals_list.empty())
 		return true;
+#if 0
+	cerr << auto_indent << "1" << endl;
+#endif
 	// else make sure each formal has a default parameter value
 	template_formals_list_type::const_iterator i =
 		template_formals_list.begin();
 	for ( ; i!=template_formals_list.end(); i++) {
 		never_ptr<const param_instance_collection> p(*i);
-		assert(p);
+		NEVER_NULL(p);
 		// if any formal is missing a default value, then this 
 		// definition cannot have null template arguments
-		if (!p->default_value())
+#if 0
+		cerr << auto_indent << "2a" << endl;
+#endif
+		if (!p->default_value()) {
+#if 0
+			cerr << auto_indent << "2b" << endl;
+#endif
 			return false;
+		}
 		// else continue;	// keep checking
+#if 0
+		cerr << auto_indent << "2c" << endl;
+#endif
 	}
+#if 0
+	cerr << auto_indent << "3" << endl;
+#endif
 	// if we've reached end of list, we're good!
 	return true;
 }

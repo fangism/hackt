@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.4 2004/12/25 03:12:21 fang Exp $
+	$Id: art_object_expr_const.h,v 1.5 2005/01/06 17:44:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -313,7 +313,7 @@ public:
  */
 class pint_const_collection : public pint_expr, public const_param {
 public:
-	typedef	long					value_type;
+	typedef	pint_expr::value_type			value_type;
 	typedef	util::packed_array_generic<value_type>	array_type;
 protected:
 	array_type					values;

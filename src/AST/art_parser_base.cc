@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.7 2004/12/07 02:22:03 fang Exp $
+	$Id: art_parser_base.cc,v 1.8 2005/01/06 17:44:50 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -26,6 +26,8 @@
 #include "art_object_expr.h"		// for dynamic_param_expr_list
 #include "art_object_namespace.h"
 
+#include "indent.h"
+
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
 #define	CONSTRUCTOR_INLINE		
@@ -38,6 +40,8 @@
 namespace ART {
 namespace parser {
 #include "using_ostream.h"
+using util::indent;
+using util::auto_indent;
 
 //=============================================================================
 // global constants
@@ -712,6 +716,12 @@ concrete_type_ref::get_temp_spec(void) const {
  */
 never_ptr<const object>
 concrete_type_ref::check_build(never_ptr<context> c) const {
+#if 0
+	indent cerr_ind(cerr);
+	cerr << auto_indent << 
+		"concrete_type_ref::check_build(...): " << endl;
+#endif
+
 	never_ptr<const object> o;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -779,6 +789,7 @@ concrete_type_ref::check_build(never_ptr<context> c) const {
 			exit(1);		// temporary
 			return never_ptr<const object>(NULL);
 		} else {
+//			cerr << auto_indent << "Whoopie!" << endl;
 			count_ptr<const fundamental_type_reference>
 				type_ref(d->make_fundamental_type_reference());
 			if (!type_ref) {

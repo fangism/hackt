@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.10 2004/12/06 07:11:18 fang Exp $
+	$Id: art_context.h,v 1.11 2005/01/06 17:44:52 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -281,10 +281,10 @@ public:
 
 /** destructive transfer return */
 	excl_ptr<definition_base>
-	get_current_prototype(void) { return current_prototype; }
+	get_current_prototype(void);
 
 	never_ptr<const definition_base>
-	get_current_prototype(void) const { return current_prototype; }
+	get_current_prototype(void) const;
 
 	never_ptr<const datatype_definition_base>
 	get_current_datatype_definition(void) const;

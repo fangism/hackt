@@ -14,7 +14,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: pointer_classes.h,v 1.4 2004/12/02 06:34:21 fang Exp $
+	$Id: pointer_classes.h,v 1.5 2005/01/06 17:44:59 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -419,8 +419,8 @@ public:
 	to pointer-classes.
  */
 	// virtual
-	~excl_ptr() { release(); }
-
+	~excl_ptr() { this->release(); }	// release is wrong!
+//	~excl_ptr() { this->reset(); }
 
 public:
 	/**
@@ -833,14 +833,14 @@ explicit never_ptr(const excl_ptr<S>& p) throw() :
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { INVARIANT(ptr); return *ptr; }
+	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { INVARIANT(ptr); return ptr; }
+	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 
@@ -1051,14 +1051,14 @@ public:
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { INVARIANT(ptr); return *ptr; }
+	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { INVARIANT(ptr); return ptr; }
+	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 
