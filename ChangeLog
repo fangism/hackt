@@ -25,6 +25,11 @@
 	  To do: define functors for type-specific variations
 	  in methods... may have to make them 'friendly'.  
 
+	* -instance-09:
+	  Added instance_collection functor prototypes for 
+	  collection parameter persistence, type-committing.  
+	  So far, only specialized for bool_tag, others will follow in time.  
+
 
 2005-02-23	David Fang	<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.4 2005/02/25 01:40:20 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.2.3.2.5 2005/02/25 03:15:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -35,6 +35,7 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #include "multikey_set.tcc"
 #include "ring_node.tcc"
 #include "packed_array.tcc"
@@ -43,11 +44,13 @@
 #include "indent.h"
 #include "stacktrace.h"
 #include "static_trace.h"
-#include "memory/list_vector_pool.tcc"
 #include "ptrs_functional.h"
 #include "compose.h"
 #include "binders.h"
 #include "dereference.h"
+#endif	// USE_INSTANCE_COLLECION_TEMPLATE
+
+#include "memory/list_vector_pool.tcc"
 
 #if !USE_INSTANCE_COLLECTION_TEMPLATE
 // conditional defines, after including "stacktrace.h"
@@ -115,6 +118,7 @@ struct _Select2nd<bool_instance_alias<D> > :
 //=============================================================================
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 using std::string;
 using std::_Select1st;
 #include "using_ostream.h"
@@ -131,6 +135,7 @@ using util::value_reader;
 using util::read_value;
 using util::write_value;
 using util::persistent_traits;
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // struct type_dumper specialization
@@ -148,6 +153,49 @@ struct type_dumper<bool_tag> {
 		return os << "bool^" << c.get_dimensions();
 	}
 };	// end struct type_dumper<bool_tag>
+
+//-----------------------------------------------------------------------------
+template <>
+struct collection_parameter_persistence<bool_tag> {
+	typedef	class_traits<bool_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<bool_tag>::instance_parameter_type
+					instance_parameter_type;
+	const persistent_object_manager& pom;
+
+	collection_parameter_persistence(const persistent_object_manager& m) :
+		pom(m) { }
+
+	void
+	operator () (ostream&, const instance_collection_generic_type&) const {
+		// do nothing! bool has no parameters!
+	}
+
+	void
+	operator () (istream&, instance_collection_generic_type&) const {
+		// do nothing! bool has no parameters!
+	}
+};	// end struct collection_parameter_persistence
+//-----------------------------------------------------------------------------
+
+template <>
+struct collection_type_committer<bool_tag> {
+	typedef class_traits<bool_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<bool_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	// return true on error, false on success
+	bool
+	operator () (instance_collection_generic_type& c, 
+		const type_ref_ptr_type& t) const {
+		// INVARIANT(!is_partially_unrolled());
+		INVARIANT(t->get_base_def() == &bool_def);
+		// shouldn't have any parameters, NULL or empty list
+		return false;
+	}
+};	// end struct collection_type_committer
+
 #endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================

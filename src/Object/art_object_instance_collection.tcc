@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.5 2005/02/25 01:40:21 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.6 2005/02/25 03:15:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -40,7 +40,6 @@
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
-// #include "multikey_qmap.tcc"
 #include "multikey_set.tcc"
 #include "ring_node.tcc"
 #include "packed_array.tcc"
@@ -435,12 +434,8 @@ INSTANCE_COLLECTION_CLASS::~instance_collection() {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
-#if 0
-	return o << "int<" << this->type_parameter << ">^" << this->dimensions;
-#else
 	type_dumper<Tag> dump_it(o);
 	return dump_it(*this);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -454,35 +449,8 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
-#if 0
-	// this action is specialized!
-	STACKTRACE("int_instance_collection::commit_type()");
-	INVARIANT(t->get_base_def() == &int_def);
-	const never_ptr<const param_expr_list>
-		params(t->get_template_params());
-	NEVER_NULL(params);
-	// extract first and only parameter, the integer width
-	const never_ptr<const const_param_expr_list>
-		cparams(params.is_a<const const_param_expr_list>());
-	NEVER_NULL(cparams);
-	INVARIANT(cparams->size() == 1);
-	const count_ptr<const const_param>&
-		param1(cparams->front());
-	NEVER_NULL(param1);
-	const count_ptr<const pint_const>
-		pwidth(param1.is_a<const pint_const>());
-	NEVER_NULL(pwidth);
-	const pint_value_type new_width = pwidth->static_constant_int();
-	INVARIANT(new_width);
-	if (is_partially_unrolled()) {
-		INVARIANT(int_width);
-		return (new_width != int_width);
-	} else {
-		int_width = new_width;
-		return false;
-	}
-#endif
-	return false;
+	// functor, specialized for each class
+	return collection_type_committer<Tag>()(*this, t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -569,9 +537,8 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 	parent_type::write_object_base(m, o);
 	// USE value_writer...
 	// specialization functor parameter_writer
-#if 0
-	write_value(o, int_width);
-#endif
+	const collection_parameter_persistence<Tag> write_param(m);
+	write_param(o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -582,9 +549,8 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 	parent_type::load_object_base(m, i);
 	// USE value_reader
 	// specialization functor parameter_writer
-#if 0
-	read_value(i, int_width);
-#endif
+	const collection_parameter_persistence<Tag> load_param(m);
+	load_param(i, *this);
 }
 
 //=============================================================================
@@ -627,18 +593,15 @@ INSTANCE_ARRAY_CLASS::is_partially_unrolled(void) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::what(ostream& o) const {
-#if 0
-	return o << "<?>-array<" << D << ">";
-#else
 	return o << util::what<this_type>::name();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o) const {
-	for_each(collection.begin(), collection.end(), key_dumper(o));
+	for_each(this->collection.begin(), this->collection.end(),
+		key_dumper(o));
 	return o;
 }
 
@@ -756,8 +719,9 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	const key_type index(i);
 	const const_iterator it(this->collection.find(index));
 	if (it == this->collection.end()) {
-		cerr << "ERROR: reference to uninstantiated int " <<
-			this->get_qualified_name() << " at index: " <<
+		this->type_dump(
+			cerr << "ERROR: reference to uninstantiated ") <<
+			" " << this->get_qualified_name() << " at index: " <<
 			i << endl;
 		return return_type(NULL);
 	}
@@ -769,8 +733,9 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
-		cerr << "ERROR: reference to uninstantiated int " <<
-			this->get_qualified_name() << " at index: " <<
+		this->type_dump(
+			cerr << "ERROR: reference to uninstantiated ") <<
+			" " << this->get_qualified_name() << " at index: " <<
 			i << endl;
 		return return_type(NULL);
 	}
@@ -797,8 +762,9 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 	do {
 		const const_iterator it(this->collection.find(key_gen));
 		if (it == collection.end()) {
-			cerr << "FATAL: reference to uninstantiated int index "
-				<< key_gen << endl;
+			this->type_dump(
+				cerr << "FATAL: reference to uninstantiated ")
+					<< " index " << key_gen << endl;
 			l.push_back(instance_alias_base_ptr_type(NULL));
 			ret = false;
 		} else {
@@ -808,8 +774,9 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 			l.push_back(instance_alias_base_ptr_type(
 				const_cast<element_type*>(&pi)));
 		} else {
-			cerr << "FATAL: reference to uninstantiated int index "
-				<< key_gen << endl;
+			this->type_dump(
+				cerr << "FATAL: reference to uninstantiated ")
+					<< " index " << key_gen << endl;
 			l.push_back(instance_alias_base_ptr_type(NULL));
 			ret = false;
 		}
@@ -846,8 +813,9 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 		// don't need log(N) lookup each time, fix later...
 		const const_iterator it(this->collection.find(key_gen));
 		if (it == collection_end) {
-			cerr << "FATAL: reference to uninstantiated int index "
-				<< key_gen << endl;
+			this->type_dump(
+			cerr << "FATAL: reference to uninstantiated ") <<
+				" index " << key_gen << endl;
 			*a_iter = never_ptr<element_type>(NULL);
 			ret = true;
 		} else {
@@ -966,15 +934,11 @@ void
 INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
-#if 0
-	collection.write(f);
-#else
 	// need to know how many members to expect
 	write_value(f, this->collection.size());
 	for_each(this->collection.begin(), this->collection.end(),
 		element_writer(m, f)
 	);
-#endif
 #if 1
 	for_each(this->collection.begin(), this->collection.end(), 
 		connection_writer(m, f)
@@ -1053,6 +1017,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 #if 0
 	return o << auto_indent << the_instance << endl;
 #else
+	// no auto-indent
 	this->the_instance.get_next()->dump_alias(o << " = ");
 	return o;
 #endif
@@ -1070,11 +1035,12 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const index_collection_item_ptr_type& i) {
-	STACKTRACE("INSTANCE_SCALAR_CLASS::instantiate_indices()");
+	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
 	INVARIANT(!i);
 	if (this->the_instance.valid()) {
 		// should never happen, but just in case...
-		cerr << "ERROR: Scalar int already instantiated!" << endl;
+		this->type_dump(cerr << "ERROR: Scalar ") <<
+			" already instantiated!" << endl;
 		THROW_EXIT;
 	}
 //	the_instance.instantiate();
@@ -1091,7 +1057,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 const_index_list
 INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
-	cerr << "WARNING: instance_array<0>::resolve_indices(const_index_list) "
+	cerr << "WARNING: instance_array<Tag,0>::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	return const_index_list();
 }
@@ -1107,7 +1073,8 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
 						return_type;
 	if (!this->the_instance.valid()) {
-		cerr << "ERROR: Reference to uninstantiated int!" << endl;
+		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
+			<< "!" << endl;
 		return return_type(NULL);
 	} else	return return_type(
 		const_cast<instance_alias_base_type*>(
@@ -1148,7 +1115,8 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 					this->the_instance)));
 		return false;
 	} else {
-		cerr << "ERROR: Reference to uninstantiated int!" << endl;
+		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
+			<< "!" << endl;
 		return true;
 	}
 }
@@ -1171,7 +1139,7 @@ INSTANCE_SCALAR_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<parent_type>::type_key, 0)) {
-	STACKTRACE_PERSISTENT("scalar::collect_transients()");
+	STACKTRACE_PERSISTENT("instance_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	this->the_instance.collect_transient_info(m);
 }
@@ -1198,10 +1166,6 @@ INSTANCE_SCALAR_CLASS::load_object(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
-
-#if 0
-STATIC_TRACE_END("instance-int")
-#endif
 
 #endif	// __ART_OBJECT_INSTANCE_COLLECTION_TCC__
 

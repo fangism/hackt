@@ -1,36 +1,36 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.1.4.5 2005/02/25 01:40:20 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.1.4.6 2005/02/25 03:15:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
 #define	__ART_OBJECT_INSTANCE_COLLECTION_H__
 
-// #include "art_object_instance.h"
-#include "memory/pointer_classes.h"
-
+#include <iosfwd>
 #include <set>
+
+#include "memory/pointer_classes.h"
 #include "multikey_set.h"
-#include "packed_array_fwd.h"
 
 
 namespace ART {
 namespace entity {
 USING_LIST
+using std::istream;
+using std::ostream;
 using std::set;
 using std::string;
 using namespace util::memory;
-using util::ring_node_derived;
 using util::multikey_set;
 using util::multikey_set_element_derived;
-using util::packed_array_generic;
 
 //=============================================================================
 /**
 	This is a functor for specializing the formatting of printed types.  
 	We provide a default implementation.  
 	Specializations should follow the same pattern.  
+	(Why not use plain static functions?)
  */
 template <class Tag>
 struct type_dumper {
@@ -39,9 +39,50 @@ struct type_dumper {
 	ostream& os;
 	type_dumper(ostream& o) : os(o) { }
 
+	// intentionally undefined
 	ostream&
 	operator () (const instance_collection_generic_type&);
 };	// end struct type_dumper
+
+//-----------------------------------------------------------------------------
+/**
+	This pair of functors is used to save and restore
+	instance_collections' parameters.  
+	This definition just shows the interface pattern.  
+ */
+template <class Tag>
+struct collection_parameter_persistence {
+	typedef	typename class_traits<Tag>::instance_parameter_type
+					instance_parameter_type;
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	const persistent_object_manager& pom;
+
+	collection_parameter_persistence(const persistent_object_manager& m) :
+		pom(m) { }
+
+	void
+	operator () (ostream&, const instance_collection_generic_type&);
+
+	void
+	operator () (istream&, instance_collection_generic_type&);
+};	// end struct collection_parameter
+
+//-----------------------------------------------------------------------------
+template <class Tag>
+struct collection_type_committer {
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef	typename class_traits<Tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	// return true on error, false on success
+	bool
+	operator () (instance_collection_generic_type&, 
+		const type_ref_ptr_type&) const;
+};	// end struct collection_type_committer
+
+//-----------------------------------------------------------------------------
 
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -58,6 +99,7 @@ instance_collection<Tag>
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public class_traits<Tag>::instance_collection_parent_type {
+friend struct collection_parameter_persistence<Tag>;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
