@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.2 2005/01/20 19:02:13 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.3 2005/01/20 21:59:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1111,6 +1111,88 @@ pbool_instance_reference::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Resolves a scalar or collective instance reference into a 
+	packed array of values.  
+	\param c unrolling context.
+	\return dense array of values, NULL if error.  
+ */
+count_ptr<const_param>
+pbool_instance_reference::unroll_resolve(const unroll_context& c) const {
+	typedef	count_ptr<const_param>		return_type;
+	if (pbool_inst_ref->dimensions) {
+#if 0
+		// dimension resolution should depend on current 
+		// state of instance collection, not static analysis
+		// from compile phase.
+		const const_index_list rdim(resolve_dimensions(/*c*/));
+		if (rdim.empty())
+			return return_type(NULL);
+		// else we have fully specified dimensions
+
+		const const_range_list crl(rdim.collapsed_dimension_ranges());
+		INVARIANT(!crl.empty());
+		// pbool_const_collection::array_type::key_type
+		// is a multikey_generic<size_t>
+		const count_ptr<pbool_const_collection>
+			ret(new pbool_const_collection(crl.resolve_sizes()));
+			// no index offset
+		NEVER_NULL(ret);
+
+		generic_index_generator_type key_gen(rdim.size());
+		// automatic and temporarily allocated
+		key_gen.get_lower_corner() = *rdim.lower_multikey();
+		key_gen.get_upper_corner() = *rdim.upper_multikey();
+		key_gen.initialize();
+		bool lookup_err = false;
+		pbool_const_collection::iterator coll_iter(ret->begin());
+		do {
+			// populate the collection with values
+			// lookup_value returns true on success, false on error
+			if (!pbool_inst_ref->lookup_value(
+					*coll_iter, key_gen)) {
+				cerr << "ERROR: looking up index " <<
+					key_gen << " of pbool collection " <<
+					pbool_inst_ref->get_qualified_name() <<
+					"." << endl;
+				lookup_err = true;
+			}
+			coll_iter++;			// unsafe, but checked
+			key_gen++;
+		} while (key_gen != key_gen.get_upper_corner());
+		INVARIANT(coll_iter == ret->end());	// sanity check
+		if (lookup_err) {
+			// discard incomplete results
+			cerr << "ERROR: in unroll_resolve-ing "
+				"pbool_instance_reference." << endl;
+			return return_type(NULL);
+		} else {
+			// safe up-cast
+			return return_type(ret);
+		}
+#else
+		STACKTRACE("pbool_instance_reference::unroll_resolve()");
+		cerr << "FANG, write pbool_const_collection!!!" << endl;
+		return return_type(NULL);
+#endif
+	} else {
+		// is 0-dimensional, scalar
+		value_type _val;
+		const never_ptr<pbool_scalar>
+			ps(pbool_inst_ref.is_a<pbool_scalar>());
+		INVARIANT(ps);
+		const bool valid(ps->lookup_value(_val));
+		if (!valid) {
+			cerr << "ERROR: in unroll_resolve-ing "
+				"pbool_instance_reference, "
+				"uninitialized value." << endl;
+			return return_type(NULL);
+		} else
+			return return_type(new pbool_const(_val));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visits children nodes and register pointers to object manager
 	for serialization.
 	\param m the persistent object manager.
@@ -1535,7 +1617,10 @@ pint_instance_reference::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: pass context to call to resolve_dimensions.
+	Resolves a scalar or collective instance reference into a 
+	packed array of values.  
+	\param c unrolling context.
+	\return dense array of values, NULL if error.  
  */
 count_ptr<const_param>
 pint_instance_reference::unroll_resolve(const unroll_context& c) const {
@@ -1558,36 +1643,26 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 			// no index offset
 		NEVER_NULL(ret);
 
-#if 0
-		const excl_ptr<multikey_generator_base<int> >
-			key_gen(multikey_generator_base<int>::make_multikey_generator(rdim.size()));
-#else
-		const excl_ptr<multikey_generator_generic<int> >
-			key_gen(new multikey_generator_generic<int>(rdim.size()));
-#endif
-		NEVER_NULL(key_gen);
+		generic_index_generator_type key_gen(rdim.size());
 		// automatic and temporarily allocated
-		key_gen->get_lower_corner() = *rdim.lower_multikey();
-		key_gen->get_upper_corner() = *rdim.upper_multikey();
-		key_gen->initialize();
+		key_gen.get_lower_corner() = *rdim.lower_multikey();
+		key_gen.get_upper_corner() = *rdim.upper_multikey();
+		key_gen.initialize();
 		bool lookup_err = false;
 		pint_const_collection::iterator coll_iter(ret->begin());
-		multikey_generator_base<int>& key_gen_ref(*key_gen);
 		do {
 			// populate the collection with values
 			// lookup_value returns true on success, false on error
-			if (!pint_inst_ref->lookup_value(
-					*coll_iter, key_gen_ref)) {
+			if (!pint_inst_ref->lookup_value(*coll_iter, key_gen)) {
 				cerr << "ERROR: looking up index " <<
-					key_gen_ref << 
-					" of pint collection " <<
+					key_gen << " of pint collection " <<
 					pint_inst_ref->get_qualified_name() <<
 					"." << endl;
 				lookup_err = true;
 			}
 			coll_iter++;			// unsafe, but checked
-			key_gen_ref++;
-		} while (key_gen_ref != key_gen_ref.get_upper_corner());
+			key_gen++;
+		} while (key_gen != key_gen.get_upper_corner());
 		INVARIANT(coll_iter == ret->end());	// sanity check
 		if (lookup_err) {
 			// discard incomplete results
@@ -1595,22 +1670,23 @@ pint_instance_reference::unroll_resolve(const unroll_context& c) const {
 				"pint_instance_reference." << endl;
 			return return_type(NULL);
 		} else {
+			// safe up-cast
 			return return_type(ret);
 		}
 	} else {
 		// is 0-dimensional, scalar
-		int _int;
+		value_type _val;
 		const never_ptr<pint_scalar>
 			ps(pint_inst_ref.is_a<pint_scalar>());
 		INVARIANT(ps);
-		const bool valid(ps->lookup_value(_int));
+		const bool valid(ps->lookup_value(_val));
 		if (!valid) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"pint_instance_reference, "
 				"uninitialized value." << endl;
 			return return_type(NULL);
 		} else
-			return return_type(new pint_const(_int));
+			return return_type(new pint_const(_val));
 	}
 }
 
@@ -1969,6 +2045,12 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const_collection,
 pint_const_collection::pint_const_collection(const size_t d) :
 		pint_expr(), const_param(), values(d) {
 	INVARIANT(d <= 4);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_const_collection::pint_const_collection(const array_type::key_type& k) :
+		pint_expr(), const_param(), values(k) {
+	INVARIANT(k.size() <= 4);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

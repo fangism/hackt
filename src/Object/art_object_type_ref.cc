@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22.4.1 2005/01/20 18:43:53 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22.4.2 2005/01/20 21:59:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -418,8 +418,9 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
 	// eventually pass a context argument
 	if (template_params) {
-		excl_ptr<const_param_expr_list>
-			actuals = template_params->unroll_resolve(c);
+		excl_ptr<const param_expr_list>
+			actuals = template_params->unroll_resolve(c)
+				.as_a_xfer<const param_expr_list>();
 		if (actuals) {
 			return return_type(new data_type_reference(
 				base_type_def, actuals));
