@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.17 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_base.h,v 1.18 2005/01/15 19:13:37 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -209,6 +209,8 @@ virtual	line_position
 	Methods defined in "art_parser_token.cc"
  */
 class token_char : public terminal {
+private:
+	typedef	token_char			this_type;
 protected:
 /// the character
 	int c;
@@ -221,22 +223,6 @@ public:
 
 	~token_char() { }
 
-	// overloaded to use pool allocation
-	static
-	void*
-	operator new (size_t t);
-
-	// placement new, needed by vector allocation, 
-	// just wraps to std::allocator
-	static
-	void*
-	operator new (size_t, void*&);
-
-	// overloaded to use pool allocation
-	static
-	void
-	operator delete (void* t);
-
 	int
 	get_char(void) const { return c; }
 
@@ -246,9 +232,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-private:
-	typedef	list_vector_pool<token_char>	pool_type;
-	static pool_type			pool;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+// private:
 };      // end class token_char
 
 //-----------------------------------------------------------------------------

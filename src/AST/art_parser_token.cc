@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.16 2005/01/15 06:09:41 fang Exp $
+	$Id: art_parser_token.cc,v 1.17 2005/01/15 19:13:38 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -121,50 +121,7 @@ token_char::~token_char() { }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Non-member static allocation pool for ALL token_char's.
-	Note static linkage.  
-	Allocation chunk size is 1024 token_char's.  
- */
-token_char::pool_type
-token_char::pool(1024);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Pool allocation for all token_char's.
-	\param s size is unused, only allocate one char at a time.  
- */
-void*
-token_char::operator new (size_t s) {
-	return pool.allocate();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Placement construct, needed by vector allocation.  
-	Just No-op.  Does nothing.  
- */
-inline
-void*
-token_char::operator new (size_t s, void*& p) {
-	NEVER_NULL(p);
-	return p;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Pool deallocation for all token_char's.
- */
-void
-token_char::operator delete (void* p) {
-	// safety check for type?
-	NEVER_NULL(p);
-	token_char* t = reinterpret_cast<token_char*>(p);
-	NEVER_NULL(t);
-	// cast needed because this particular allocator is 
-	// type-specific argument
-	pool.deallocate(t);
-}
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(token_char, 1024)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

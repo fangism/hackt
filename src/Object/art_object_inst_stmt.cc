@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.9 2005/01/15 06:16:59 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.10 2005/01/15 19:13:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -668,11 +668,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_instantiation_statement,
 	DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Data instantiation memory pool, initialized with chunk size 64.  
- */
-data_instantiation_statement::pool_type
-data_instantiation_statement::pool(64);
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(data_instantiation_statement, 64)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -697,38 +693,7 @@ data_instantiation_statement::~data_instantiation_statement() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void*
-data_instantiation_statement::operator new (size_t s) {
-	return pool.allocate();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Placement new, no-op.
- */
-void*
-data_instantiation_statement::operator new (size_t s, void*& p) {
-	NEVER_NULL(p);
-	return p;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-data_instantiation_statement::operator delete (void* p) {
-	NEVER_NULL(p);
-	this_type* t = reinterpret_cast<this_type*>(p);
-	pool.deallocate(t);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-data_instantiation_statement::what(ostream& o) const {
-	return o << "data-instantiation_statement";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(data_instantiation_statement)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

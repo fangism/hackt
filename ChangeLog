@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-01-15	David Fang	<fangism@users.sourceforge.net>
+
+	* Added macros for convenient default use of list_vector_pool, 
+	  in-class static member declarations and definitions.  
+
+
 2005-01-14	David Fang	<fangism@users.sourceforge.net>
 
 	* Solved global static initialization ordering problem w.r.t. 

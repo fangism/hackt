@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.6 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.7 2005/01/15 19:13:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -278,18 +278,15 @@ public:
 	void
 	unroll(void) const;
 #endif
-	static void* operator new (size_t);
-	static void* operator new (size_t, void*&);
-	static void operator delete (void*);
 
 public:
 	PERSISTENT_METHODS
 
-private:
-	// using pool allocation
+
+public:
 	friend class list_vector_pool<this_type>;
-	typedef	list_vector_pool<this_type>	pool_type;
-	static pool_type			pool;
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+// private:
 
 };	// end class data_instantiation_statement
 

@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.5 2005/01/14 19:40:18 fang Exp $
+	$Id: list_vector_pool.h,v 1.6 2005/01/15 19:13:43 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -13,7 +13,7 @@
 
 #include <pthread.h>
 
-#include <assert.h>
+#include <cassert>
 #include <queue>
 #include <list>
 #include <vector>
@@ -51,14 +51,44 @@
 
 // problem: preprocessor definition value not being evaluated correctly?
 #if DEBUG_USING_WHAT
-	#include "what.tcc"
+#include "what.tcc"
 #endif
+
+//=============================================================================
+// interface macros
+
+/**
+	\param T the class type to custom-allocate.
+	\param C the chunk size to allocate for this class.  
+
+        Non-member static allocation pool for a particular class.
+        Note static linkage.  
+        This static initialization must appear before any uses in methods.  
+
+	Placement construct, needed by vector allocation.  
+	Just No-op.  Does nothing.  
+
+	Pool deallocation for this class.  
+	A reinterpret_cast is needed because this particular allocator is 
+	works with type-specific arguments, but the standard allocator 
+	interface works with generic void-pointers.  
+ */
+#define	LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(T,C)			\
+T::pool_type T::pool(C);						\
+void* T::operator new (size_t s)				\
+	{ return pool.allocate(); }					\
+inline void* T::operator new (size_t s, void*& p)			\
+	{ NEVER_NULL(p); return p; }					\
+void T::operator delete (void* p)					\
+	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
+
+
+//=============================================================================
 
 namespace util {
 //=============================================================================
 /**
 	Memory-management utility namespace.
-	Should implement the std::allocator interface.  
  */
 namespace memory {
 typedef	pthread_mutex_t				mutex_type;
@@ -111,8 +141,9 @@ public:
 /**
 	Simple, efficient memory pool.  
 	No alignment or placement.  
+	Should implement the std::allocator interface.  
 	Only good for allocating one element at a time, 
-	so is not general purpose.  
+	so is not general-purpose, not intended for arrays.  
 	For a more general pool allocator use the __gnu_cxx::__pool_alloc, 
 	which is likely to be the default allocator.  
  */
