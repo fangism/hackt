@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-02-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set:
+	  Branch dedicated to developing multikey_set structure.  
+	  Consider re-doing all of multikey_map family:
+	  create a qtree, underlying base type to qmap, qset.
+	  Or a multikey-tree, with new multikey methods?
+
+
 2005-02-03	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-04-object-01-06:
