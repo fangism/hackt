@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.11 2005/02/27 22:12:00 fang Exp $
+ *	$Id: art++-lex.ll,v 1.12 2005/03/02 00:29:01 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -449,6 +449,8 @@ EXPORT		"export"
 	cerr << "bad identifier: \"" << yytext <<"\" " <<
 		LINE_COL(current) << endl;
 	TOKEN_UPDATE();
+	yylval._token_identifier = NULL;
+/*	return BAD_TOKEN;	*/
 	THROW_EXIT;
 }
 
@@ -457,6 +459,7 @@ EXPORT		"export"
 	cerr << "unexpected character: \'" << yytext << "\' " <<
 		LINE_COL(current) << endl;
 	TOKEN_UPDATE();
+	THROW_EXIT;
 }
 }
 

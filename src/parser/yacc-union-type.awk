@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "yacc-union-type.awk"
 # David Fang, 2004
-#	$Id: yacc-union-type.awk,v 1.3 2004/11/02 07:52:08 fang Exp $
+#	$Id: yacc-union-type.awk,v 1.4 2005/03/02 00:29:02 fang Exp $
 
 # DISCLAIMER:
 # Not guaranteed to work on 'bison -y' output, 
@@ -368,10 +368,16 @@ END {
 # a union resolution lookup using yychar
 	print type "*";
 	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
-	print "\tconst int i = token_to_type_enum_map[c];";
-	print "\tassert(i >= 0);";
-	print "\treturn (*yy_union_get[i])(u);";
+	print "\tif (c >= 0 && c < " token_enum ") {";
+	print "\t\tconst int i = token_to_type_enum_map[c];";
+	print "\t\tassert(i >= 0);";
+	print "\t\tassert(i < " member_count ");";
+	print "\t\treturn (*yy_union_get[i])(u);";
+	print "\t} else {";	# else is garbage yychar value, just drop it
+	print "\t\treturn NULL;";
+	print "\t}";
 	print "}";
+
 	print "";
 }
 

@@ -94,7 +94,7 @@ static_count_ptr_test_LDADD = libfangutil.la
 ring_node_test_SOURCES = ring_node_test.cc
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
-libbogusutil_la_SOURCES = bogus_stacktrace.cc static_trace.cc
+libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.h static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
 liblinktest_la_SOURCES = \

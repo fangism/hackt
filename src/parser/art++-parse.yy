@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.13 2005/02/27 22:54:18 fang Exp $
+	$Id: art++-parse.yy,v 1.14 2005/03/02 00:29:01 fang Exp $
  */
 
 %{
@@ -335,6 +335,12 @@ extern "C" {
  */
 extern	node* yy_union_resolve(const YYSTYPE& u, const short i, const short j);
 extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp, 
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
+		const YYSTYPE yylval);
 %}
 
 /*
@@ -1898,6 +1904,43 @@ complex_aggregate_reference_list
 /* ---- end complex expressions ------------------------------------------- */
 %%
 /**
+	Upon error or exception, must clean up stacks!
+	Now clean-up the symbol stack by calling destructors.
+	Technically, this is not needed, as bulk memory is 
+	reclaimed upon exit().  (This is a good exercise anyhow.)
+	We are currently assuming that no other handler will
+	take care of deleting the pointers on the stack.  
+	Because the union-pointer resolution can only return
+	one type, the base type, the mother destructor, 
+	ART::parser::node::~node(), must be virtual.  
+ */
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp, 
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
+		const YYSTYPE yylval) {
+	const short* s;
+	const YYSTYPE* v;
+	node* resolved_node = NULL;
+	s=yyss+1;
+	v=yyvs+1;
+	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
+		if (v) {
+			resolved_node = yy_union_resolve(*v, *(s-1), *s);
+			if (resolved_node)
+				delete resolved_node;
+		}
+	}
+	if (!at_eof()) {
+		// free the last token (if not EOF)
+		resolved_node = yy_union_lookup(yylval, yychar);
+		if (resolved_node)
+			delete resolved_node;
+	}
+}
+
+/*---------------------------------------------------------------------------*/
+/**
 	The goal is to keep the grammar in this "art.yy" clean, and not
 	litter the various productions with error handling cases.  
 	When the parser fails to match any productions, we want it
@@ -2039,32 +2082,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		}
 	}
 
-	/*
-	 *	Now clean-up the symbol stack by calling destructors.
-	 *	Technically, this is not needed, as bulk memory is 
-	 *	reclaimed upon exit().  (This is a good exercise anyhow.)
-	 *	We are currently assuming that no other handler will
-	 *	take care of deleting the pointers on the stack.  
-	 *	Because the union-pointer resolution can only return
-	 *	one type, the base type, the mother destructor, 
-	 * 	ART::parser::node::~node(), must be virtual.  
-	 *	TODO: put this clean-up routine into another function
-	 *	what can be called from an exception handler.  
-	 */
-	s=yyss+1;
-	v=yyvs+1;
-	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
-		if (v) {
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				delete resolved_node;
-		}
-	}
-	if (!at_eof()) {
-		// free the last token (if not EOF)
-		resolved_node = yy_union_lookup(yylval, yychar);
-		delete resolved_node;
-	}
+	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
 
 #endif	// NO_FAKE_PREFIX
 

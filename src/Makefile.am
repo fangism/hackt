@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.45 2005/03/01 04:50:53 fang Exp $
+#	$Id: Makefile.am,v 1.46 2005/03/02 00:29:01 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -337,13 +337,15 @@ ARTXX_YACC_PREFIX = artxx_
 # make these conditional on yacc vs. bison
 if HAVE_BISON
 parser/art++-parse-prefix.cc: parser/art++-parse.cc
-	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk $? | \
+	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk $? | \
+	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 else
 parser/art++-parse-prefix.cc: parser/art++-parse.cc
+	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk $? | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
+		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 endif
 
 parser/art++-parse-prefix.h: parser/art++-parse.h

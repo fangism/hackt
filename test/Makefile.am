@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:00 fang Exp $
+#	$Id: Makefile.am,v 1.6 2005/03/02 00:29:02 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 # this directory first, to clean the test-report
-SUBDIRS = . parser
+SUBDIRS = . lexer parser
 
 clean-test:
 	@$(ECHO) "#!$(SHELL)" > $@

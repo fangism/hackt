@@ -2,6 +2,17 @@
 
 2005-03-01	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-12:
+	  Made lexer/parser more exception-safe by throwing exceptions
+	  and proprely freeing memory when caught.  
+	  A few basic tests have been added to the lexer that demonstrate
+	  that no memory leaks occur with this mechanism in place.  
+	  Updated {yacc,bison}-union-type.awk to do a litle more 
+	  array-bounds checking on union-lookup.  
+	  To do eventually: make persistent object-loader exception safe.
+	  This will be much more difficult because of difficult
+	  guarantee that each object in the table is visited only once.  
+
 	* ARTXX-00-01-04-main-00-11-merged-what-01:
 	  Merged insignificant revisions from -10-what-01.  
 

@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "bison-union-type.awk"
 # David Fang, 2004
-#	$Id: bison-union-type.awk,v 1.3 2004/11/02 07:52:07 fang Exp $
+#	$Id: bison-union-type.awk,v 1.4 2005/03/02 00:29:02 fang Exp $
 
 # DISCLAIMER:
 # Not guaranteed to work on traditional yacc output, 
@@ -372,6 +372,7 @@ END {
 		print "\t/* then we've found a match, return appropriately wrapped pointer */";
 		print "\tconst int i = iter->type_enum;";
 		print "\tassert(i >= 0);";
+		print "\tassert(i < " member_count ");";
 		print "\t" type "* ret = (*yy_union_get[i])(u);";
 		print "\treturn ret;";
 	print "} else {";
@@ -383,9 +384,14 @@ END {
 # a union resolution lookup using yychar
 	print type "*";
 	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
-	print "\tconst int i = token_to_type_enum_map[c];";
-	print "\tassert(i >= 0);";
-	print "\treturn (*yy_union_get[i])(u);";
+	print "\tif (c >= 0 && c < " token_enum ") {";
+	print "\t\tconst int i = token_to_type_enum_map[c];";
+	print "\t\tassert(i >= 0);";
+	print "\t\tassert(i < " member_count ");";
+	print "\t\treturn (*yy_union_get[i])(u);";
+	print "\t} else {";	# else is garbage yychar value, just drop it
+	print "\t\treturn NULL;";
+	print "\t}";
 	print "}";
 	print "";
 }
