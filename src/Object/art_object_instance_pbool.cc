@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.11.4.1.2.1 2005/01/20 04:43:54 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.11.4.1.2.2 2005/01/20 06:46:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -138,7 +138,7 @@ pbool_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pbool_instance_collection::initialize(const count_ptr<const pbool_expr>& e) {
+pbool_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);		// must not already be initialized or assigned
 	if (dimensions == 0) {

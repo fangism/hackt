@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.1.2.1 2005/01/20 04:43:54 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.1.2.2 2005/01/20 06:46:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -144,7 +144,7 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pint_instance_collection::initialize(const count_ptr<const pint_expr>& e) {
+pint_instance_collection::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (dimensions == 0) {

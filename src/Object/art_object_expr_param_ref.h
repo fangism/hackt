@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.4.8.1 2005/01/20 04:43:53 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.4.8.2 2005/01/20 06:46:52 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -93,7 +93,7 @@ public:
 	static_constant_dimensions(void) const;
 
 	bool
-	initialize(const count_ptr<const pbool_expr>& i);
+	initialize(const init_arg_type& i);
 
 	string
 	hash_string(void) const;
@@ -179,6 +179,8 @@ public:
 private:
 	typedef	param_instance_reference		parent_type;
 	typedef	pint_expr				interface_type;
+public:
+	typedef	count_ptr<const interface_type>		init_arg_type;
 protected:
 	/**
 		Back-reference to integer collection.  
@@ -218,7 +220,7 @@ public:
 	static_constant_dimensions(void) const;
 
 	bool
-	initialize(const count_ptr<const pint_expr>& i);
+	initialize(const init_arg_type& i);
 
 	string
 	hash_string(void) const;

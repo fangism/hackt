@@ -1,13 +1,14 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.11.4.1.2.1 2005/01/20 04:43:54 fang Exp $
+	$Id: art_object_instance_param.h,v 1.11.4.1.2.2 2005/01/20 06:46:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
 #define	__ART_OBJECT_INSTANCE_PARAM_H__
 
 #include "art_object_instance_base.h"
+#include "art_object_expr_param_ref.h"	// for typedef init_arg_type
 #include "memory/pointer_classes.h"
 
 #include "multikey_fwd.h"
@@ -186,6 +187,8 @@ operator << (ostream& o, const pbool_instance& p);
 class pbool_instance_collection : public param_instance_collection {
 public:
 	typedef	pbool_value_type		value_type;
+	typedef	pbool_instance_reference	reference_type;
+	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
 // friend class pbool_instantiation_statement;
@@ -231,7 +234,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(const count_ptr<const pbool_expr>& e);
+	initialize(const init_arg_type& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);
@@ -503,6 +506,8 @@ operator << (ostream& o, const pint_instance& p);
 class pint_instance_collection : public param_instance_collection {
 public:
 	typedef	pint_value_type			value_type;
+	typedef	pint_instance_reference		reference_type;
+	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
 // friend class pint_instantiation_statement;
@@ -555,7 +560,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(const count_ptr<const pint_expr>& e);
+	initialize(const init_arg_type& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);

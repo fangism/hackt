@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.8.1 2005/01/20 04:43:52 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.8.2 2005/01/20 06:46:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -24,6 +24,7 @@
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
+#include "art_object_index.h"
 #include "art_object_expr.h"		// includes "art_object_expr_const.h"
 #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
@@ -933,7 +934,7 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 	\return true if sucessfully initialized with valid expression.  
  */
 bool
-pbool_instance_reference::initialize(const count_ptr<const pbool_expr>& i) {
+pbool_instance_reference::initialize(const init_arg_type& i) {
 	return pbool_inst_ref->initialize(i);
 }
 
@@ -991,9 +992,9 @@ pbool_instance_reference::resolve_value(value_type& i) const {
 		const const_index_list
 			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
-			const excl_ptr<multikey_base<pint_value_type> >
+			const excl_ptr<multikey_index_type>
 				lower = indices.lower_multikey();
-			const excl_ptr<multikey_base<pint_value_type> >
+			const excl_ptr<multikey_index_type>
 				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
@@ -1222,8 +1223,8 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 	}
 	// else good to continue
 
-	const excl_ptr<multikey_generator_base<pint_value_type> >
-		key_gen(multikey_generator_base<pint_value_type>::
+	const excl_ptr<index_generator_type>
+		key_gen(index_generator_type::
 			make_multikey_generator(dim.size()));
 	NEVER_NULL(key_gen);
 	// automatic and temporarily allocated
@@ -1233,7 +1234,7 @@ pbool_instance_reference::assigner::operator() (const value_type b,
 	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	multikey_generator_base<pint_value_type>& key_gen_ref = *key_gen;
+	index_generator_type& key_gen_ref = *key_gen;
 	do {
 		if (p.pbool_inst_ref->assign(key_gen_ref, *list_iter)) {
 			cerr << "ERROR: assigning index " << key_gen_ref << 
@@ -1348,7 +1349,7 @@ pint_instance_reference::static_constant_dimensions(void) const {
 	\return true if successfully initialized with valid expression.  
  */
 bool
-pint_instance_reference::initialize(const count_ptr<const pint_expr>& i) {
+pint_instance_reference::initialize(const init_arg_type& i) {
 	return pint_inst_ref->initialize(i);
 }
 
@@ -1408,9 +1409,9 @@ pint_instance_reference::resolve_value(value_type& i) const {
 		if (!indices.empty()) {
 			// really should pass indices into ->lookup_values();
 			// fix this later...
-			const excl_ptr<multikey_base<pint_value_type> >
+			const excl_ptr<multikey_index_type>
 				lower = indices.lower_multikey();
-			const excl_ptr<multikey_base<pint_value_type> >
+			const excl_ptr<multikey_index_type>
 				upper = indices.upper_multikey();
 			NEVER_NULL(lower);
 			NEVER_NULL(upper);
@@ -1658,8 +1659,8 @@ pint_instance_reference::assigner::operator() (const bool b,
 	}
 	// else good to continue
 
-	const excl_ptr<multikey_generator_base<pint_value_type> >
-		key_gen(multikey_generator_base<pint_value_type>::
+	const excl_ptr<index_generator_type>
+		key_gen(index_generator_type::
 			make_multikey_generator(dim.size()));
 	NEVER_NULL(key_gen);
 	// automatic and temporarily allocated
@@ -1669,7 +1670,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 	list<value_type>::const_iterator list_iter = vals.begin();
 	bool assign_err = false;
 	// alias for key_gen
-	multikey_generator_base<pint_value_type>& key_gen_ref = *key_gen;
+	index_generator_type& key_gen_ref = *key_gen;
 	do {
 		if (p.pint_inst_ref->assign(key_gen_ref, *list_iter)) {
 			cerr << "ERROR: assigning index " << key_gen_ref << 
@@ -3741,20 +3742,20 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<pint_value_type> >
+excl_ptr<multikey_index_type>
 const_range_list::lower_multikey(void) const {
-	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
-	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
+	typedef	excl_ptr<multikey_index_type>	return_type;
+	return_type ret(multikey_index_type::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select1st<const_range>());
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<pint_value_type> >
+excl_ptr<multikey_index_type>
 const_range_list::upper_multikey(void) const {
-	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
-	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
+	typedef	excl_ptr<multikey_index_type>	return_type;
+	return_type ret(multikey_index_type::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
 	return ret;
@@ -4198,9 +4199,10 @@ const_index_list::resolve_index_list(void) const {
 	\return true if resolved successfully.
  */
 bool
-const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
-	k = excl_ptr<multikey_base<int> >(
-		multikey_base<int>::make_multikey(size()));
+const_index_list::resolve_multikey(
+		excl_ptr<multikey_index_type>& k) const {
+	k = excl_ptr<multikey_index_type>(
+		multikey_index_type::make_multikey(size()));
 	NEVER_NULL(k);
 	const_iterator i = begin();
 	const const_iterator e = end();
@@ -4217,10 +4219,10 @@ const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<pint_value_type> >
+excl_ptr<multikey_index_type>
 const_index_list::lower_multikey(void) const {
-	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
-	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
+	typedef	excl_ptr<multikey_index_type>	return_type;
+	return_type ret(multikey_index_type::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
@@ -4232,10 +4234,10 @@ const_index_list::lower_multikey(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<multikey_base<pint_value_type> >
+excl_ptr<multikey_index_type>
 const_index_list::upper_multikey(void) const {
-	typedef	excl_ptr<multikey_base<pint_value_type> >	return_type;
-	return_type ret(multikey_base<pint_value_type>::make_multikey(size()));
+	typedef	excl_ptr<multikey_index_type>	return_type;
+	return_type ret(multikey_index_type::make_multikey(size()));
 	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
@@ -4508,9 +4510,10 @@ dynamic_index_list::resolve_index_list(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 bool
-dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
-	k = excl_ptr<multikey_base<int> >(
-		multikey_base<int>::make_multikey(size()));
+dynamic_index_list::resolve_multikey(
+		excl_ptr<multikey_index_type>& k) const {
+	k = excl_ptr<multikey_index_type>(
+		multikey_index_type::make_multikey(size()));
 	NEVER_NULL(k);
 	const_iterator i = begin();
 	const const_iterator e = end();
