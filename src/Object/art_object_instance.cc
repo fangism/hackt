@@ -455,17 +455,29 @@ instance_collection_base::load_index_collection_pointers(
 	Private empty constructor.
  */
 datatype_instance_collection::datatype_instance_collection() :
-		instance_collection_base(), type(NULL) {
+		instance_collection_base()
+#if 0
+		type(NULL)
+#endif
+		{
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::datatype_instance_collection(const scopespace& o, 
+#if 0
 		count_const_ptr<data_type_reference> t, 
+#endif
 		const string& n, 
 		const size_t d) : 
-		instance_collection_base(o, n, d), type(t) {
+		instance_collection_base(o, n, d)
+#if 0
+		type(t)
+#endif
+		{
+#if 0
 	assert(type);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -481,7 +493,12 @@ datatype_instance_collection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
+#if 0
 	return type;
+#else
+	assert(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -529,7 +546,9 @@ datatype_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_INSTANCE_COLLECTION_TYPE)) {
 	// don't bother visit the owner, assuming that's the caller
+#if 0
 	type->collect_transient_info(m);
+#endif
 	// go through index_collection
 	collect_index_collection_pointers(m);
 }
@@ -552,7 +571,9 @@ datatype_instance_collection::write_object(persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
 	write_string(f, key);
+#if 0
 	m.write_pointer(f, type);
+#endif
 	write_index_collection_pointers(m);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -568,7 +589,9 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
+#if 0
 	m.read_pointer(f, type);
+#endif
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -582,17 +605,29 @@ if (!m.flag_visit(this)) {
 	Private empty constructor.
  */
 process_instance_collection::process_instance_collection() :
-		instance_collection_base(), type(NULL) {
+		instance_collection_base()
+#if 0
+		type(NULL)
+#endif
+		{
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_instance_collection::process_instance_collection(const scopespace& o, 
+#if 0
 		count_const_ptr<process_type_reference> pt,
+#endif
 		const string& n, 
 		const size_t d) : 
-		instance_collection_base(o, n, d), type(pt) {
+		instance_collection_base(o, n, d)
+#if 0
+		type(pt)
+#endif
+		{
+#if 0
 	assert(type);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -608,7 +643,12 @@ process_instance_collection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 process_instance_collection::get_type_ref(void) const {
+#if 0
 	return type;
+#else
+	assert(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -656,7 +696,9 @@ process_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_INSTANCE_COLLECTION_TYPE)) {
 	// don't bother visit the owner, assuming that's the caller
+#if 0
 	type->collect_transient_info(m);
+#endif
 	// go through index_collection
 	collect_index_collection_pointers(m);
 }
@@ -676,7 +718,9 @@ process_instance_collection::write_object(persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
 	write_string(f, key);
+#if 0
 	m.write_pointer(f, type);
+#endif
 	write_index_collection_pointers(m);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -689,7 +733,9 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
+#if 0
 	m.read_pointer(f, type);
+#endif
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1291,16 +1337,26 @@ if (!m.flag_visit(this)) {
 	Private empty constructor.  
  */
 channel_instance_collection::channel_instance_collection() :
-		instance_collection_base(), type(NULL) {
+		instance_collection_base()
+#if 0
+		type(NULL)
+#endif
+		{
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_instance_collection::channel_instance_collection(const scopespace& o, 
+#if 0
 		count_const_ptr<channel_type_reference> ct,
+#endif
 		const string& n, 
 		const size_t d) : 
-		instance_collection_base(o, n, d), type(ct) {
+		instance_collection_base(o, n, d)
+#if 0
+		type(ct)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1316,7 +1372,12 @@ channel_instance_collection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_const_ptr<fundamental_type_reference>
 channel_instance_collection::get_type_ref(void) const {
+#if 0
 	return type;
+#else
+	assert(!index_collection.empty());
+	return (*index_collection.begin())->get_type_ref();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1365,7 +1426,9 @@ channel_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_INSTANCE_COLLECTION_TYPE)) {
 	// don't bother visit the owner, assuming that's the caller
+#if 0
 	type->collect_transient_info(m);
+#endif
 	// go through index_collection
 	collect_index_collection_pointers(m);
 }
@@ -1385,7 +1448,9 @@ channel_instance_collection::write_object(persistent_object_manager& m) const {
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
 	write_string(f, key);
+#if 0
 	m.write_pointer(f, type);
+#endif
 	write_index_collection_pointers(m);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1398,7 +1463,9 @@ if (!m.flag_visit(this)) {
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, owner);
 	read_string(f, const_cast<string&>(key));
+#if 0
 	m.read_pointer(f, type);
+#endif
 	load_index_collection_pointers(m);
 	STRIP_OBJECT_FOOTER(f);
 }

@@ -154,8 +154,6 @@ namespace entity {
 	class process_type_reference;
 	class param_type_reference;		// redundant
 
-//	class instance_collection_stack_item;
-
 	class instance_collection_base;
 	class channel_instance_collection;
 	class datatype_instance_collection;
@@ -173,8 +171,8 @@ namespace entity {
 	class channel_instance_reference;
 	class process_instance_reference;
 	class param_instance_reference;
-//	class pint_instance_reference;		// relocated "art_object_expr"
-//	class pbool_instance_reference;		// relocated "art_object_expr"
+	class pint_instance_reference;		// relocated "art_object_expr"
+	class pbool_instance_reference;		// relocated "art_object_expr"
 
 	class instance_management_base;
 //	class connection_assignment_base;
@@ -212,7 +210,6 @@ namespace entity {
 		We keep track of the state of instance collections at
 		various program points with this container.
 	 */
-//	typedef	deque<index_collection_item_ptr_type>
 	typedef	deque<never_const_ptr<instantiation_statement> >
 					index_collection_type;
 
@@ -892,6 +889,7 @@ virtual	excl_ptr<instantiation_statement>
 			count_const_ptr<fundamental_type_reference> t, 
 			index_collection_item_ptr_type d) const = 0;
 
+#if 0
 /** wrapper for the next private function */
 static	excl_ptr<instance_collection_base>
 		make_instance_collection(
@@ -899,16 +897,25 @@ static	excl_ptr<instance_collection_base>
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d);
-
 private:
+#else
+
+public:
+#endif
+
 /**
+	UPDATE COMMENT: instance_collections no longer contain
+	count_ptr to fundamental type reference.  
+
 	Since context's current_fundamental type is now a count_ptr, 
 	we can't invoke it and copy the 'this' pointer.  
 	't' is used to invoke.  
  */
 virtual	excl_ptr<instance_collection_base>
-		make_instance_collection_private(
+		make_instance_collection(
+#if 0
 			count_const_ptr<fundamental_type_reference> t, 
+#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const = 0;
@@ -988,8 +995,6 @@ explicit instance_collection_base();
 public:
 	// o should be reference, not pointer
 	instance_collection_base(const scopespace& o, const string& n, 
-//		index_collection_item_ptr_type d
-//		index_collection_type::value_type d
 		const size_t d);
 virtual	~instance_collection_base();
 

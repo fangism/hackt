@@ -158,6 +158,7 @@ fundamental_type_reference::make_instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Please explain.  
 	Can't just use t->make_instance_collection() because t is a counted
@@ -171,8 +172,13 @@ fundamental_type_reference::make_instance_collection(
 		never_const_ptr<scopespace> s,
 		const token_identifier& id,
 		const size_t d) {
+#if 0
 	return t->make_instance_collection_private(t, s, id, d);
+#else
+	return t->make_instance_collection_private(s, id, d);
+#endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -402,14 +408,19 @@ data_type_reference::make_instantiation_statement_private(
 	\return pointer to the created instance.  
  */
 excl_ptr<instance_collection_base>
-data_type_reference::make_instance_collection_private(
+data_type_reference::make_instance_collection(
+#if 0
 		count_const_ptr<fundamental_type_reference> t, 
+#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new datatype_instance_collection(*s,
-			t.is_a<data_type_reference>(), id, d));
+#if 0
+			t.is_a<data_type_reference>(),
+#endif
+			id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -536,14 +547,19 @@ channel_type_reference::make_instantiation_statement_private(
 	Returns a newly constructed channel instance object.  
  */
 excl_ptr<instance_collection_base>
-channel_type_reference::make_instance_collection_private(
+channel_type_reference::make_instance_collection(
+#if 0
 		count_const_ptr<fundamental_type_reference> t, 
+#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new channel_instance_collection(*s, 
-			t.is_a<channel_type_reference>(), id, d));
+#if 0
+			t.is_a<channel_type_reference>(),
+#endif
+			id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -653,14 +669,19 @@ process_type_reference::make_instantiation_statement_private(
 	\return pointer to the created instance.  
  */
 excl_ptr<instance_collection_base>
-process_type_reference::make_instance_collection_private(
+process_type_reference::make_instance_collection(
+#if 0
 		count_const_ptr<fundamental_type_reference> t, 
+#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		new process_instance_collection(*s, 
-			t.is_a<process_type_reference>(), id, d));
+#if 0
+			t.is_a<process_type_reference>(), 
+#endif
+			id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -764,13 +785,17 @@ param_type_reference::make_instantiation_statement_private(
 	\return pointer to the created instance.  
  */
 excl_ptr<instance_collection_base>
-param_type_reference::make_instance_collection_private(
+param_type_reference::make_instance_collection(
+#if 0
 		count_const_ptr<fundamental_type_reference> t, 
+#endif
 		never_const_ptr<scopespace> s, 
 		const token_identifier& id, 
 		const size_t d) const {
 	// hard coded... yucky, but efficient.  
+#if 0
 	assert(t == this);
+#endif
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			new pbool_instance_collection(*s, id, d));

@@ -90,8 +90,10 @@ private:
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
-		make_instance_collection_private(
+		make_instance_collection(
+#if 0
 			count_const_ptr<fundamental_type_reference> t, 
+#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
@@ -127,8 +129,10 @@ private:
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
-		make_instance_collection_private(
+		make_instance_collection(
+#if 0
 			count_const_ptr<fundamental_type_reference> t, 
+#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
@@ -166,8 +170,10 @@ private:
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
-		make_instance_collection_private(
+		make_instance_collection(
+#if 0
 			count_const_ptr<fundamental_type_reference> t, 
+#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;
@@ -203,8 +209,10 @@ private:
 			index_collection_item_ptr_type d) const;
 			
 	excl_ptr<instance_collection_base>
-		make_instance_collection_private(
+		make_instance_collection(
+#if 0
 			count_const_ptr<fundamental_type_reference> t, 
+#endif
 			never_const_ptr<scopespace> s, 
 			const token_identifier& id, 
 			const size_t d) const;

@@ -1051,11 +1051,17 @@ scopespace::add_instance(
 		}
 	} else {
 		// didn't exist before, just create and add new instance
+#if 0
 		excl_ptr<instance_collection_base> new_inst =
 			fundamental_type_reference::make_instance_collection(
 				inst_stmt->get_type_ref(), 
 				never_const_ptr<scopespace>(this), 
 				id, dim);
+#else
+		excl_ptr<instance_collection_base> new_inst =
+			inst_stmt->get_type_ref()->make_instance_collection(
+				never_const_ptr<scopespace>(this), id, dim);
+#endif
 		// attach non-const back-reference
 		inst_stmt->attach_collection(new_inst);
 		new_inst->add_instantiation_statement(inst_stmt);
