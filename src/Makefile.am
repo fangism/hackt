@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.38 2005/01/12 03:19:26 fang Exp $
+#	$Id: Makefile.am,v 1.39 2005/01/13 07:22:47 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -359,6 +359,7 @@ EXTRA_DIST = \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
+	parser/NOTES \
 	util/README \
 	util/TODO \
 	util/STL/README \
