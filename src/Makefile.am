@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2004/12/01 05:15:29 fang Exp $
+#	$Id: Makefile.am,v 1.26 2004/12/03 02:46:36 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -128,8 +128,9 @@ UTIL_HEADER_FILES = \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
 	util/hash_map.h \
-	util/hash_qmap.h \
 	util/hash_qmap_fwd.h \
+	util/hash_qmap.h \
+	util/hash_qmap.tcc \
 	util/hash_specializations.h \
 	util/indent.h \
 	util/likely.h \
@@ -155,8 +156,9 @@ UTIL_HEADER_FILES = \
 	util/persistent.h \
 	util/persistent_object_manager.h \
 	util/persistent_object_manager.tcc \
-	util/qmap.h \
 	util/qmap_fwd.h \
+	util/qmap.h \
+	util/qmap.tcc \
 	util/sstream.h \
 	util/sublist.h \
 	util/unique_list.h \

@@ -2,12 +2,13 @@
 	\file "multikey_qmap_test.cc"
 	Test for multidimensional, queryable map with multidimensional keys.  
 	Copied from "multidimensional_qmap_test.cc" with a few lines changes
-	$Id: multikey_qmap_test.cc,v 1.3 2004/11/02 07:52:25 fang Exp $
+	$Id: multikey_qmap_test.cc,v 1.4 2004/12/03 02:46:45 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "qmap.tcc"
 #include "multikey_qmap.h"
 
 using namespace std;

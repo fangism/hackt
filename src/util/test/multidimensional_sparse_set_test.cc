@@ -1,9 +1,12 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.2 2004/11/02 07:52:23 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.3 2004/12/03 02:46:45 fang Exp $
  */
 
+#include "qmap.tcc"
+
+// later, split the following into declarations and definitions.
 #include "multidimensional_sparse_set.h"
 
 using namespace std;

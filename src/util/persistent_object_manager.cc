@@ -1,13 +1,14 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.9 2004/12/02 06:33:57 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.10 2004/12/03 02:46:42 fang Exp $
  */
 
 #include <fstream>
 
 #include "hash_specializations.h"	// include this first
 	// for hash specialization to take effect
+#include "hash_qmap.tcc"
 #include "persistent_object_manager.h"
 	// includes "count_ptr.h"
 #include "macros.h"

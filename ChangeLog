@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2004-12-02	David Fang	<fangism@users.sourceforge.net>
+
+	* Further elaborated on pointer_traits.
+
+	* Improved persistent_object_manager pointer manipulation, 
+	  leveraging pointer_traits, resulting in much nicer
+	  compile-time specialization and selection.  
+
+	* Split hash_qmap and qmap into declaration (.h) and 
+	  definitions (.tcc) files, inlining very few basic
+	  methods in the declarations file.  
+	  So far, this makes squat different in binary size because
+	  the .h file still includes the entire definitions of the
+	  base classes.  Will experiment further with STL wrappers...
+
+
 2004-12-01	David Fang	<fangism@users.sourceforge.net>
 
 	* art_object_instance.{h,cc}: Subclassed pbool_instance_collection

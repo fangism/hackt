@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.12 2004/11/30 01:25:10 fang Exp $
+	$Id: art_object_expr.h,v 1.13 2004/12/03 02:46:39 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -1107,7 +1107,7 @@ public:
 	// change: const ptr& arguments
 	arith_expr(count_ptr<const pint_expr> l, const char o, 
 		count_ptr<const pint_expr> r);
-	~arith_expr() { }
+	~arith_expr();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1171,7 +1171,7 @@ private:
 public:
 	relational_expr(count_ptr<const pint_expr> l, const string& o, 
 		count_ptr<const pint_expr> r);
-	~relational_expr() { }
+	~relational_expr();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
@@ -1233,7 +1233,7 @@ private:
 public:
 	logical_expr(count_ptr<const pbool_expr> l, const string& o, 
 		count_ptr<const pbool_expr> r);
-	~logical_expr() { }
+	~logical_expr();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;

@@ -3,17 +3,16 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: qmap.h,v 1.6 2004/11/02 07:52:18 fang Exp $
+	$Id: qmap.h,v 1.7 2004/12/03 02:46:43 fang Exp $
  */
 
 #ifndef	__QMAP_H__
 #define	__QMAP_H__
 
-#ifndef NULL
-#define NULL    0
-#endif
-
+// wish we could just include the class declaration, leave definitions separate
 #include <map>
+
+#include "macros.h"
 #include "qmap_fwd.h"		// forward declarations only
 
 namespace QMAP_NAMESPACE {
@@ -26,14 +25,16 @@ using std::map;
 	Useful for maps of pointers and pointer classes.  
  */
 QMAP_TEMPLATE_SIGNATURE
-class qmap : public map<K,T,C,A> {
+class qmap {
 private:
 	typedef	map<K,T,C,A>				parent;
+	parent						the_map;
 public:
         typedef typename parent::key_type		key_type;
         typedef typename parent::mapped_type		mapped_type;   
         typedef typename parent::value_type		value_type;
         typedef typename parent::key_compare		key_compare;
+        typedef typename parent::value_compare		value_compare;
 	typedef typename parent::allocator_type		allocator_type;
 
 	/// this is not T&, this depends on implementation
@@ -53,10 +54,70 @@ public:
 
 public:
 	/** Default constructor. */
-	qmap() : parent() { }
+	qmap();
+
+	explicit
+	qmap(const key_compare& __comp,
+		const allocator_type& __a = allocator_type());
+
+	/** Default copy constructor */
+	qmap(const qmap& __x);
+
+	template <typename _InputIterator>
+	qmap(_InputIterator __first, _InputIterator __last);
+
+	template <typename _InputIterator>
+	qmap(_InputIterator __first, _InputIterator __last,
+		const key_compare& __comp,
+		const allocator_type& __a = allocator_type());
 
 	/** Default destructor. */
-	~qmap() { }
+	~qmap();
+
+	qmap&
+	operator = (const qmap& __x);
+
+	allocator_type
+	get_allocator(void) const { return the_map.get_allocator(); }
+
+	key_compare
+	key_comp(void) const { return the_map.key_comp(); }
+
+	value_compare
+	value_comp(void) const { return the_map.value_comp(); }
+
+	iterator
+	begin(void) { return the_map.begin(); }
+
+	iterator
+	end(void) { return the_map.end(); }
+
+	const_iterator
+	begin(void) const { return the_map.begin(); }
+
+	const_iterator
+	end(void) const { return the_map.end(); }
+
+	reverse_iterator
+	rbegin(void) { return the_map.rbegin(); }
+
+	reverse_iterator
+	rend(void) { return the_map.rend(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return the_map.rbegin(); }
+
+	const_reverse_iterator
+	rend(void) const { return the_map.rend(); }
+
+	bool
+	empty(void) const { return the_map.empty(); }
+
+	size_type
+	size(void) const { return the_map.size(); }
+
+	size_type
+	max_size(void) const { return the_map.max_size(); }
 
 	/**
 		Just wrapper to the parent's lookup operation, 
@@ -69,7 +130,7 @@ public:
 			else a freshly constructed object.  
 	 */
 	mapped_type&
-	operator [] (const key_type& k) { return parent::operator[](k); }
+	operator [] (const key_type& k);
 
 	/**
 		Constant query associative lookup.  
@@ -82,43 +143,77 @@ public:
 			such as a wrapper NULL pointer.  
 	 */
 	mapped_type
-	operator [] (const key_type& k) const {
-		const_iterator i = find(k);	// uses find() const;
-		return (i != this->end()) ? i->second : mapped_type();
-		// if T is a pointer class, should be equivalent to NULL
-		// or whatever the default constructor is
-	}
+	operator [] (const key_type& k) const;
 
 	/**
 		For all entries whose value is the default, remove them.  
 	 */
-	void clean(void) {
-		const mapped_type def;	// default value
-#if 0
-		// won't work because of pair<> b.s.
-		remove_if(index_map.begin(), index_map.end(),
-			unary_compose(     
-				bind2nd(equal_to<T>(), def),       
-				_Select2nd<typename map_type::value_type>()
-				// some error involving operator =
-				// with const first type.
-			)
-		);
-#else
-		iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; ) {
-			if (i->second == def) {
-				iterator j = i;
-				j++;
-				this->erase(i);
-				i = j;
-			} else {
-				i++;
-			}
-		}
-#endif
-	}
+	void clean(void);
+
+	pair<iterator,bool>
+	insert(const value_type& __x);
+
+	iterator
+	insert(iterator position, const value_type& __x);
+
+	template <typename _InputIterator>
+	void
+	insert(_InputIterator __first, _InputIterator __last);
+
+	void
+	erase(iterator __position);
+
+	size_type
+	erase(const key_type& __x);
+
+	void
+	erase(iterator __first, iterator __last);
+
+	void
+	swap(qmap& __x);
+
+	void
+	clear(void);
+
+	iterator
+	find(const key_type& __x);
+
+	const_iterator
+	find(const key_type& __x) const;
+
+	size_type
+	count(const key_type& __x) const;
+
+	iterator
+	lower_bound(const key_type& __x);
+
+	const_iterator
+	lower_bound(const key_type& __x) const;
+
+	iterator
+	upper_bound(const key_type& __x);
+
+	const_iterator
+	upper_bound(const key_type& __x) const;
+
+	pair<iterator,iterator>
+	equal_range(const key_type& __x);
+
+	pair<const_iterator,const_iterator>
+	equal_range(const key_type& __x) const;
+
+	template <typename _K1, typename _T1, typename _C1, typename _A1>
+	friend
+	bool
+	operator == (const qmap<_K1,_T1,_C1,_A1>&,
+		const qmap<_K1,_T1,_C1,_A1>&);
+
+	template <typename _K1, typename _T1, typename _C1, typename _A1>
+	friend
+	bool
+	operator < (const qmap<_K1,_T1,_C1,_A1>&,
+		const qmap<_K1,_T1,_C1,_A1>&);
+
 
 };	// end class qmap
 
@@ -138,10 +233,12 @@ QMAP_TEMPLATE_SIGNATURE
 class qmap<K,T*,C,A> : public map<K,T*,C,A> {
 private:
 	typedef map<K,T*,C,A>				parent;
+	parent						the_map;
 public:
         typedef typename parent::key_type		key_type;
         typedef typename parent::mapped_type		mapped_type;   
         typedef typename parent::value_type		value_type;
+        typedef typename parent::value_compare		value_compare;
         typedef typename parent::key_compare		key_compare;
 	typedef typename parent::allocator_type		allocator_type;
 
@@ -158,39 +255,167 @@ public:
 	typedef typename parent::allocator_type		allocator_type;
 
 public:
-	// use default constructor and destructors
+	/** Default constructor. */
+	qmap();
+
+	explicit
+	qmap(const key_compare& __comp,
+		const allocator_type& __a = allocator_type());
+
+	/** Default copy constructor */
+	qmap(const qmap& __x);
+
+	template <typename _InputIterator>
+	qmap(_InputIterator __first, _InputIterator __last);
+
+	template <typename _InputIterator>
+	qmap(_InputIterator __first, _InputIterator __last,
+		const key_compare& __comp,
+		const allocator_type& __a = allocator_type());
+
+	/** Default destructor. */
+	~qmap();
+
+	qmap&
+	operator = (const qmap& __x);
+
+	allocator_type
+	get_allocator(void) const { return the_map.get_allocator(); }
+
+	key_compare
+	key_comp(void) const { return the_map.key_comp(); }
+
+	value_compare
+	value_comp(void) const { return the_map.value_comp(); }
+
+	iterator
+	begin(void) { return the_map.begin(); }
+
+	iterator
+	end(void) { return the_map.end(); }
+
+	const_iterator
+	begin(void) const { return the_map.begin(); }
+
+	const_iterator
+	end(void) const { return the_map.end(); }
+
+	reverse_iterator
+	rbegin(void) { return the_map.rbegin(); }
+
+	reverse_iterator
+	rend(void) { return the_map.rend(); }
+
+	const_reverse_iterator
+	rbegin(void) const { return the_map.rbegin(); }
+
+	const_reverse_iterator
+	rend(void) const { return the_map.rend(); }
+
+	bool
+	empty(void) const { return the_map.empty(); }
+
+	size_type
+	size(void) const { return the_map.size(); }
+
+	size_type
+	max_size(void) const { return the_map.max_size(); }
 
 	/**
-		\return pointer by reference (T*&)
+		Just wrapper to the parent's lookup operation, 
+		which modifies the map even when querying for a
+		non-existent entry.  
+		Explicitly written here so the const version below
+		doesn't overshadow the parent's non-const version.  
+		\param k the key used to lookup.  
+		\return modifiable reference to the pointer if found, 
+			else a freshly constructed pointer (may be garbage!).  
 	 */
 	mapped_type&
-	operator [] (const key_type& k) { return parent::operator[](k); }
-
-	mapped_type
-	operator [] (const key_type& k) const {
-		const_iterator i = find(k);	// uses find() const;
-		return (i != this->end()) ? i->second : NULL;
-		// if T is a pointer class, should be equivalent to NULL
-		// or whatever the default constructor is
-	}
+	operator [] (const key_type& k);
 
 	/**
-		For all entries whose value is the default, remove them.
+		Constant query associative lookup.  
+		Since it's constant, it won't modify the map
+		by making a blank entry at the given key, 
+		which is what map<K,T> does.  
+		\param k the key used to lookup.  
+		\return read-only COPY of the object if found, 
+			else a freshly constructed object, 
+			such as a wrapper NULL pointer.  
 	 */
-	void clean(void) {
-		iterator i = this->begin();
-		const const_iterator e = this->end();
-		for ( ; i!=e; ) {
-			if (i->second == NULL) {
-				iterator j = i;
-				j++;
-				this->erase(i);
-				i = j;  
-			} else {
-				i++;
-			}
-		}
-	}
+	mapped_type
+	operator [] (const key_type& k) const;
+
+	/**
+		For all entries whose value is the default (NULL), 
+		remove them.  
+	 */
+	void clean(void);
+
+	pair<iterator,bool>
+	insert(const value_type& __x);
+
+	iterator
+	insert(iterator position, const value_type& __x);
+
+	template <typename _InputIterator>
+	void
+	insert(_InputIterator __first, _InputIterator __last);
+
+	void
+	erase(iterator __position);
+
+	size_type
+	erase(const key_type& __x);
+
+	void
+	erase(iterator __first, iterator __last);
+
+	void
+	swap(qmap& __x);
+
+	void
+	clear(void);
+
+	iterator
+	find(const key_type& __x);
+
+	const_iterator
+	find(const key_type& __x) const;
+
+	size_type
+	count(const key_type& __x) const;
+
+	iterator
+	lower_bound(const key_type& __x);
+
+	const_iterator
+	lower_bound(const key_type& __x) const;
+
+	iterator
+	upper_bound(const key_type& __x);
+
+	const_iterator
+	upper_bound(const key_type& __x) const;
+
+	pair<iterator,iterator>
+	equal_range(const key_type& __x);
+
+	pair<const_iterator,const_iterator>
+	equal_range(const key_type& __x) const;
+
+	template <typename _K1, typename _T1, typename _C1, typename _A1>
+	friend
+	bool
+	operator == (const qmap<_K1,_T1*,_C1,_A1>&,
+		const qmap<_K1,_T1*,_C1,_A1>&);
+
+	template <typename _K1, typename _T1, typename _C1, typename _A1>
+	friend
+	bool
+	operator < (const qmap<_K1,_T1*,_C1,_A1>&,
+		const qmap<_K1,_T1*,_C1,_A1>&);
 
 };      // and class qmap specialization
 

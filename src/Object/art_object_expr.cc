@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.20 2004/12/02 02:08:52 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.21 2004/12/03 02:46:39 fang Exp $
  */
 
 #include <stdlib.h>			// for ltoa
@@ -12,6 +12,8 @@
 #include "memory/pointer_classes.h"
 #include "sstream.h"			// for ostringstring, used by dump
 #include "discrete_interval_set.h"
+#include "hash_qmap.tcc"
+#include "qmap.tcc"
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
@@ -2161,6 +2163,10 @@ arith_expr::arith_expr() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+arith_expr::~arith_expr() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
 		count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
@@ -2397,6 +2403,10 @@ relational_expr::relational_expr() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+relational_expr::~relational_expr() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 relational_expr::relational_expr(count_ptr<const pint_expr> l,
 		const string& o, count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
@@ -2587,6 +2597,10 @@ logical_expr::op_map_init(void) {
  */
 logical_expr::logical_expr() :
 		lx(NULL), rx(NULL), op(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+logical_expr::~logical_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,13 +1,14 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.15 2004/11/30 02:33:13 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.16 2004/12/03 02:46:39 fang Exp $
  */
 
 #include <iostream>
 
 #include "art_parser_base.h"
 
+#include "hash_qmap.tcc"
 #include "hash_specializations.h"		// substitute for the following
 
 #include "art_object_definition.h"

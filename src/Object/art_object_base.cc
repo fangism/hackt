@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.21 2004/12/02 01:38:50 fang Exp $
+ 	$Id: art_object_base.cc,v 1.22 2004/12/03 02:46:39 fang Exp $
  */
 
 #include <iostream>
@@ -21,6 +21,8 @@
 
 // include this as early as possible
 #include "hash_specializations.h"		// substitute for the following
+#include "hash_qmap.tcc"
+#include "qmap.tcc"
 
 #include "art_parser_debug.h"
 #include "art_parser_base.h"

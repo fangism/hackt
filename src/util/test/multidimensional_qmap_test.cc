@@ -1,12 +1,16 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.2 2004/11/02 07:52:23 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.3 2004/12/03 02:46:45 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 #include <sstream>
+
+#include "qmap.tcc"
+
+// later separate the following into declarations and definitions
 #include "multidimensional_qmap.h"
 
 using namespace std;

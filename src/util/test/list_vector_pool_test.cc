@@ -1,14 +1,14 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.3 2004/11/26 23:24:56 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.4 2004/12/03 02:46:45 fang Exp $
  */
 
 #include <assert.h>
 #include <iostream>
 #include <algorithm>
 #include <string>
-#include "qmap.h"
+#include "qmap.tcc"
 #include "memory/list_vector_pool.h"
 
 using namespace std;
