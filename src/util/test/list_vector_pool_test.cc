@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.4 2004/12/03 02:46:45 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.5 2004/12/05 05:08:28 fang Exp $
  */
 
 #include <assert.h>
@@ -11,9 +11,11 @@
 #include "qmap.tcc"
 #include "memory/list_vector_pool.h"
 
-using namespace std;
-using namespace memory;
-using namespace QMAP_NAMESPACE;
+#include "using_ostream.h"
+using std::string;
+using util::memory::list_vector_pool;
+using QMAP_NAMESPACE::qmap;
+using std::next_permutation;
 
 //=============================================================================
 // bogus test class

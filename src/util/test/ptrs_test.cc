@@ -1,7 +1,7 @@
 /**
 	\file "ptrs_test.cc"
 	Test for exclusive pointer classes.  
-	$Id: ptrs_test.cc,v 1.4 2004/11/30 01:26:41 fang Exp $
+	$Id: ptrs_test.cc,v 1.5 2004/12/05 05:08:29 fang Exp $
  */
 
 #include <iostream>
@@ -11,7 +11,8 @@
 #include "var.h"
 #include "func.h"
 
-using namespace std;
+using std::vector;
+#include "using_ostream.h"
 using namespace PTRS_NAMESPACE;
 
 

@@ -1,14 +1,16 @@
 /**
 	\file "sublist_test.cc"
 	Test for sublist structure.  
-	$Id: sublist_test.cc,v 1.2 2004/11/02 07:52:26 fang Exp $
+	$Id: sublist_test.cc,v 1.3 2004/12/05 05:08:29 fang Exp $
  */
 
 #include <iostream>
-#include "sublist.h"
+#include "sublist.tcc"
+#include "STL/list.tcc"
 
-using namespace std;
-using namespace	SUBLIST_NAMESPACE;
+#include "using_ostream.h"
+USING_LIST
+using namespace	util;
 
 template<class T>
 ostream& operator << (ostream& o, const list<T>& l) {

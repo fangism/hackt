@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_test.cc"
 	Example for using the list_vector class.  
-	$Id: list_vector_test.cc,v 1.2 2004/11/28 23:46:49 fang Exp $
+	$Id: list_vector_test.cc,v 1.3 2004/12/05 05:08:28 fang Exp $
  */
 
 #include <iostream>
@@ -10,7 +10,10 @@
 #include <functional>
 #include "list_vector.tcc"
 
-using namespace std;
+#include "using_ostream.h"
+using std::ostream_iterator;
+using std::copy;
+using std::reverse_copy;
 using namespace util;
 
 // make sure this is off when running make check

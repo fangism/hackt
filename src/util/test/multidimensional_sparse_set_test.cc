@@ -1,15 +1,18 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.3 2004/12/03 02:46:45 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.4 2004/12/05 05:08:28 fang Exp $
  */
 
+#include <iostream>
 #include "qmap.tcc"
 
-// later, split the following into declarations and definitions.
-#include "multidimensional_sparse_set.h"
+#include "multidimensional_sparse_set.tcc"
 
-using namespace std;
+#include "STL/list.tcc"
+USING_LIST
+#include "using_ostream.h"
+
 using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
 
 template <class T, class R, template <class> class L>

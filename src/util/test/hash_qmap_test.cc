@@ -1,7 +1,7 @@
 /**
 	\file "hash_qmap_test.cc"
 	Test for queryable hash map.
-	$Id: hash_qmap_test.cc,v 1.4 2004/12/03 02:46:45 fang Exp $
+	$Id: hash_qmap_test.cc,v 1.5 2004/12/05 05:08:28 fang Exp $
  */
 
 #include <iostream>
@@ -11,7 +11,8 @@
 #include "memory/pointer_classes.h"
 #include "hash_specializations.h"
 
-using namespace std;
+#include "using_ostream.h"
+using std::string;
 using namespace HASH_QMAP_NAMESPACE;
 // using namespace PTRS_NAMESPACE;
 using namespace util::memory;

@@ -1,7 +1,7 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.2 2004/11/30 01:26:41 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.3 2004/12/05 05:08:29 fang Exp $
  */
 
 #include <iostream>
@@ -9,9 +9,9 @@
 
 #include "memory/pointer_classes.h"
 #include "var.h"
-// #include "func.h"
 
-using namespace std;
+using std::vector;
+#include "using_ostream.h"
 using namespace util::memory;
 
 void basic_vector_test(void);

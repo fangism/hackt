@@ -1,20 +1,25 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.2 2004/11/02 07:52:20 fang Exp $
+	$Id: cube_slice.h,v 1.3 2004/12/05 05:08:28 fang Exp $
  */
 
 #include <assert.h>
 #include <string>
-#include <list>
+#include "STL/list.tcc"
 #include <iostream>
 #include <algorithm>
 #include <numeric>
 #include "sstream.h"
-#include "multikey_qmap.h"
+#include "multikey_qmap.tcc"
 
 namespace testing {
-using namespace std;
+USING_LIST
+using std::string;
+#include "using_ostream.h"
+using std::accumulate;
+using std::ostringstream;
+using std::ostream_iterator;
 using namespace MULTIKEY_NAMESPACE;
 using namespace MULTIKEY_MAP_NAMESPACE;
 

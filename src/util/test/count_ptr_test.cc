@@ -1,7 +1,7 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.3 2004/11/30 01:26:40 fang Exp $
+	$Id: count_ptr_test.cc,v 1.4 2004/12/05 05:08:28 fang Exp $
  */
 
 #include <iostream>
@@ -9,9 +9,9 @@
 
 #include "var.h"
 #include "memory/pointer_classes.h"
-// #include "count_ptr.h"
 
-using namespace std;
+using std::string;
+#include "using_ostream.h"
 using namespace util::memory;
 // using namespace COUNT_PTR_NAMESPACE;
 
