@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.3 2004/11/28 23:44:27 fang Exp $
+	$Id: list_vector.h,v 1.4 2004/11/29 02:46:39 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_H__
@@ -155,19 +155,6 @@ private:
 	 */
 	vec_map_type			vec_map;
 
-#if 0
-	/**
-		Always points to the last valid chunk, 
-		which is one before the end-sentinel.  
-	 */
-	list_iterator			vec_list_back;
-	/**
-		Always points to the first valid chunk, 
-		one after the head-sentinel.  
-	 */
-	list_iterator			vec_list_front;
-#endif
-
 private:
 
 	/**
@@ -221,48 +208,27 @@ private:
 	vec_list_back(void) const { return --this->end_sentinel_iter(); }
 
 	/**
-		Reverse iterator pointing to the front of te chunk list.  
+		Reverse iterator pointing to the front of the chunk list.  
 	 */
 	inline
 	reverse_list_iterator
-	vec_list_rfront(void)
-	{ return --this->rend_sentinel_iter(); }
+	vec_list_rfront(void) { return --this->rend_sentinel_iter(); }
 
 	inline
 	const_reverse_list_iterator
-	vec_list_rfront(void) const
-	{ return --this->rend_sentinel_iter(); }
+	vec_list_rfront(void) const { return --this->rend_sentinel_iter(); }
 
-	inline
-	reverse_list_iterator
-	vec_list_rback(void)
-	{ return ++vec_list.rbegin(); }
-
-	inline
-	const_reverse_list_iterator
-	vec_list_rback(void) const
-	{ return ++vec_list.rbegin(); }
-
-
-#if 0
 	/**
-		Adds a dummy one-past-end chunk in the chunk list
-		so that ++ on an iterator pointing to the last element
-		of the last chunk is well-defined.  
-		Thus when the list grows, new chunks are inserted
-		before the sentinel.  
-		The sentinel is NOT checked for invariance.  Should it be?
+		Reverse iterator pointing to the back of the chunk list.  
 	 */
 	inline
-	void
-	update_sentinels(void) {
-		INVARIANT(vec_list.size() >= 2);
-		// initially, the front/back pointers are in the wrong order
-		// when the container is empty, this is intentional
-		vec_list_back = --this->end_sentinel_iter();
-		vec_list_front = ++vec_list.begin();
-	}
-#endif
+	reverse_list_iterator
+	vec_list_rback(void) { return ++vec_list.rbegin(); }
+
+	inline
+	const_reverse_list_iterator
+	vec_list_rback(void) const { return ++vec_list.rbegin(); }
+
 
 public:
 	/**
@@ -276,13 +242,7 @@ public:
 		Initializes with head and tail sentinels, empty vectors.
 	 */
 	list_vector() : current_chunk_size(DEFAULT_CHUNK_SIZE), 
-			vec_list(2), vec_map()
-#if 0
-			, 
-			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin())
-#endif
-			{
+			vec_list(2), vec_map() {
 	}
 
 	/**
@@ -291,13 +251,7 @@ public:
 		\param c number of elements, and new chunk size.
 	 */
 	list_vector(const size_type c) : current_chunk_size(c), 
-			vec_list(2), vec_map()
-#if 0
-			, 
-			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin())
-#endif
-			{
+			vec_list(2), vec_map() {
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(value_type());
@@ -312,13 +266,7 @@ public:
 	 */
 	list_vector(const size_type c, const value_type& v) :
 			current_chunk_size(c),
-			vec_list(2), vec_map()
-#if 0
-			, 
-			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin())
-#endif
-			{
+			vec_list(2), vec_map() {
 		size_type i = 0;
 		for ( ; i < c; i++)
 			push_back(v);
@@ -331,13 +279,7 @@ public:
 	template <class InIter>
 	list_vector(InIter first, InIter last,
 			const size_type s = DEFAULT_CHUNK_SIZE) :
-			current_chunk_size(c), vec_list(), vec_map()
-#if 0
-			, 
-			vec_list_back(--this->end_sentinel_iter()), 
-			vec_list_front(++vec_list.begin())
-#endif
-			{
+			current_chunk_size(s), vec_list(), vec_map() {
 		copy(first, last, back_inserter(*this));
 	}
 
@@ -441,7 +383,6 @@ public:
 		// should be same as begin() wbecause end sentinel is empty
 	}
 
-#if 1
 	/// Modifiable iterator to last element
 	reverse_iterator
 	rbegin(void) {
@@ -481,7 +422,6 @@ public:
 		return const_reverse_iterator(b, b->rend());
 		// should be same as b->rbegin()
 	}
-#endif
 
 	/**
 		Helper function for accumulating size of chunks.  
@@ -710,12 +650,8 @@ public:
 /****
 			In std::list, insert() does not invalidate
 			any other iterators or references.  
-			Otherwise, the following would be necessary.
-//			vec_list_back = --this->end_sentinel_iter();
-//			vec_list_front = ++vec_list.begin();
 ****/
 			// aw hell, we do it anyways, it's infrequent...
-//			this->update_sentinels();
 			last_chunk = &*vec_list_back();
 			vec_map[this->size()] = last_chunk;
 			last_chunk->reserve(current_chunk_size);
@@ -742,7 +678,6 @@ public:
 #endif
 		if (UNLIKELY(last_chunk->empty())) {
 			vec_list.erase(vec_list_back());
-//			this->update_sentinels();
 			// in case it was the last valid chunk
 			last_chunk = &*vec_list_back();
 			vec_map.erase(--vec_map.end());
@@ -810,10 +745,6 @@ public:
 		vec_map.swap(l.vec_map);
 		// yeah, I know can also swap without intermediate...
 		swap(this->chunk_size, l.chunk_size);
-#if 0
-		swap(vec_list_front, l.vec_list_front);
-		swap(vec_list_back, l.vec_list_back);
-#endif
 	}
 
 	/**
@@ -823,7 +754,6 @@ public:
 	clear(void) {
 		// really, only need to clean out everything between sentinels
 		vec_list.erase(vec_list_front(), this->end_sentinel_iter());
-//		this->update_sentinels();
 		vec_map.clear();
 	}
 
