@@ -136,6 +136,11 @@ pbool_instance_reference::hash_string(void) const {
 	return simple_instance_reference::hash_string();
 }
 
+size_t
+pbool_instance_reference::dimensions(void) const {
+	return simple_instance_reference::dimensions();
+}
+
 /**
 	\return true if sucessfully initialized with valid expression.  
  */
@@ -227,6 +232,11 @@ pint_instance_reference::dump(ostream& o) const {
 string
 pint_instance_reference::hash_string(void) const {
 	return simple_instance_reference::hash_string();
+}
+
+size_t
+pint_instance_reference::dimensions(void) const {
+	return simple_instance_reference::dimensions();
 }
 
 /**
@@ -331,12 +341,14 @@ pint_unary_expr::pint_unary_expr(
 		const char o, count_const_ptr<pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
+	assert(ex->dimensions() == 0);
 }
 
 pint_unary_expr::pint_unary_expr(
 		count_const_ptr<pint_expr> e, const char o) :
 		pint_expr(), op(o), ex(e) {
 	assert(ex);
+	assert(ex->dimensions() == 0);
 }
 
 ostream&
@@ -397,12 +409,14 @@ pbool_unary_expr::pbool_unary_expr(
 		const char o, count_const_ptr<pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
+	assert(ex->dimensions() == 0);
 }
 
 pbool_unary_expr::pbool_unary_expr(
 		count_const_ptr<pbool_expr> e, const char o) :
 		pbool_expr(), op(o), ex(e) {
 	assert(ex);
+	assert(ex->dimensions() == 0);
 }
 
 ostream&
@@ -450,6 +464,8 @@ arith_expr::arith_expr(count_const_ptr<pint_expr> l, const char o,
 		lx(l), rx(r), op(o) {
 	assert(lx);
 	assert(rx);
+	assert(lx->dimensions() == 0);
+	assert(rx->dimensions() == 0);
 }
 
 ostream&
@@ -511,6 +527,8 @@ relational_expr::relational_expr(count_const_ptr<pint_expr> l,
 		lx(l), rx(r), op(o) {
 	assert(lx);
 	assert(rx);
+	assert(lx->dimensions() == 0);
+	assert(rx->dimensions() == 0);
 }
 
 ostream&
@@ -569,6 +587,8 @@ logical_expr::logical_expr(count_const_ptr<pbool_expr> l,
 		lx(l), rx(r), op(o) {
 	assert(lx);
 	assert(rx);
+	assert(lx->dimensions() == 0);
+	assert(rx->dimensions() == 0);
 }
 
 ostream&
@@ -1027,6 +1047,18 @@ const_index_list::dimensions_collapsed(void) const {
 	return ret;
 }
 
+/**
+	Wrapper to list paren'ts push_back that checks that
+	expression is a 0-dimensional pint_inst reference.  
+ */
+void
+const_index_list::push_back(const count_ptr<const_index>& i) {
+	// check dimensionality
+	assert(i);
+	assert(i->dimensions() == 0);
+	parent::push_back(i);
+}
+
 #if 0
 bool
 const_index_list::is_initialized(void) const {
@@ -1089,6 +1121,13 @@ dynamic_index_list::hash_string(void) const {
 	return ret;
 }
 
+void
+dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
+	assert(i);
+	assert(i->dimensions() == 0);
+	parent::push_back(i);
+}
+
 size_t
 dynamic_index_list::size(void) const {
 	return parent::size();
@@ -1103,9 +1142,9 @@ dynamic_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		if (i->is_a<pint_const>())
+		if (i->is_a<pint_expr>())
 			ret++;
-		else assert(i->is_a<const_range>());
+		else assert(i->is_a<range_expr>());
 			// sanity check
 	}
 	return ret;

@@ -125,7 +125,15 @@ object_list::make_formal_dense_range_list(void) const {
 			cerr << "non-int expression found where single int "
 				"is expected in dense range declaration.  "
 				"ERROR!  " << endl;	// where?
+			err = true;
 		} else {
+			if (p->dimensions() != 0) {
+				cerr << "int expression must be 0-dimensional, "
+					"but is actually " <<
+					p->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err = true;
+			}
 			if (p->is_static_constant()) {
 				continue;
 			} else {
@@ -215,6 +223,13 @@ object_list::make_sparse_range_list(void) const {
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
+			if (p->dimensions() != 0) {
+				cerr << "int expression must be 0-dimensional, "
+					"but is actually " <<
+					p->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err = true;
+			}
 			if (p->is_static_constant()) {
 				continue;
 			} else {
@@ -236,6 +251,13 @@ object_list::make_sparse_range_list(void) const {
 			// can be conditional, do we need to track?
 		} else if (r) {
 			// same thing... copy
+			if (r->dimensions() != 0) {
+				cerr << "range expression must be 0-dimensional, "
+					"but is actually " <<
+					r->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err = true;
+			}
 			if (r->is_static_constant()) {
 				continue;
 			} else {
@@ -355,6 +377,13 @@ object_list::make_index_list(void) const {
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
+			if (p->dimensions() != 0) {
+				cerr << "int expression must be 0-dimensional, "
+					"but is actually " <<
+					p->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err = true;
+			}
 			if (p->is_static_constant()) {
 				continue;
 			} else {
@@ -376,6 +405,13 @@ object_list::make_index_list(void) const {
 			// can be conditional, do we need to track?
 		} else if (r) {
 			// same thing... copy
+			if (r->dimensions() != 0) {
+				cerr << "range expression must be 0-dimensional, "
+					"but is actually " <<
+					r->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err = true;
+			}
 			if (r->is_static_constant()) {
 				continue;
 			} else {
@@ -458,8 +494,10 @@ object_list::make_index_list(void) const {
 		for ( ; j!=end(); j++) {
 			if (j->is_a<pint_expr>()) {
 				// convert N to 0..N-1
+				// check dimensionality!
 				ret->push_back(j->is_a<pint_expr>());
 			} else {
+				// check dimensionality!
 				assert(j->is_a<pint_range>());
 				ret->push_back(j->is_a<pint_range>());
 			}
@@ -502,6 +540,9 @@ object_list::make_param_assignment(void) {
 	const_iterator last_obj = end();
 	last_obj--;		// safe because list is not empty
 	count_const_ptr<param_expr> rhse(last_obj->is_a<param_expr>());
+
+	// compare with this to make sure dimensions match
+	size_t last_dim = 666;	// initially garbage
 	if (!*last_obj) {
 		cerr << "ERROR: rhs of expression assignment "
 			"is malformed (null)" << endl;
@@ -517,6 +558,7 @@ object_list::make_param_assignment(void) {
 			err = true;
 			exit(1);		// temporary
 		}
+		last_dim = rhse->dimensions();
 	} else {
 		(*last_obj)->what(
 			cerr << "ERROR: rhs is unexpected object: ") << endl;
@@ -525,6 +567,7 @@ object_list::make_param_assignment(void) {
 
 	if (err)
 		return excl_ptr<param_expression_assignment>(NULL);
+	assert(last_dim != 666);		// stupid sanity check
 
 	size_t k = 0;
 	iterator iter = begin();
@@ -541,6 +584,13 @@ object_list::make_param_assignment(void) {
 			// make this body into subroutine...
 			// a single parameter instance reference
 			// make sure not already initialized!
+			if (ir->dimensions() != last_dim) {
+				cerr << "ERROR: dimensions of expression " <<
+					k+1 << " (" << ir->dimensions() <<
+					") doesn't match that of the rhs (" <<
+					last_dim << ")." << endl;
+				for_err = true;
+			}
 			if (ir->must_be_initialized()) {
 				// definitely initialized or formal
 				cerr << "ERROR: expression " << k+1 <<

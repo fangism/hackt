@@ -90,6 +90,8 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
 
+virtual	size_t dimensions(void) const = 0;
+
 /** is initialized if is resolved to constant or some other formal */
 #if 0
 virtual bool is_initialized(void) const = 0;
@@ -127,6 +129,7 @@ virtual	~index_expr();
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+virtual size_t dimensions(void) const = 0;
 #if 0
 virtual bool is_initialized(void) const = 0;
 #else
@@ -165,6 +168,7 @@ virtual	~pbool_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+virtual	size_t dimensions(void) const = 0;
 #if 0
 virtual bool is_initialized(void) const = 0;
 #else
@@ -188,6 +192,7 @@ virtual	~pint_expr() { }
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string hash_string(void) const = 0;
+virtual	size_t dimensions(void) const = 0;
 #if 0
 virtual bool is_initialized(void) const = 0;
 #else
@@ -216,6 +221,7 @@ public:
 
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const;
 };	// end class param_expr_collective
 **/
 
@@ -240,6 +246,8 @@ public:
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 	never_const_ptr<param_instantiation>
 		get_param_inst_base(void) const;
+
+	size_t dimensions(void) const;
 
 	bool initialize(count_const_ptr<param_expr> i);
 	string hash_string(void) const;
@@ -280,6 +288,8 @@ public:
 	never_const_ptr<param_instantiation>
 		get_param_inst_base(void) const;
 
+	size_t dimensions(void) const;
+
 	bool initialize(count_const_ptr<param_expr> i);
 	string hash_string(void) const;
 	// implement later.
@@ -309,6 +319,8 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
+
 #if 0
 	bool is_initialized(void) const { return true; }
 #else
@@ -334,6 +346,8 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
+
 #if 0
 	bool is_initialized(void) const { return true; }
 #else
@@ -353,6 +367,7 @@ public:
 class pint_unary_expr : public pint_expr {
 protected:
 	const char			op;
+	/** expression argument must be 0-dimensional */
 	count_const_ptr<pint_expr>	ex;
 public:
 	pint_unary_expr(const char o, count_const_ptr<pint_expr> e);
@@ -360,6 +375,7 @@ public:
 
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -381,13 +397,14 @@ public:
 class pbool_unary_expr : public pbool_expr {
 protected:
 	const char			op;
+	/** argument expression must be 0-dimensional */
 	count_const_ptr<pbool_expr>	ex;
 public:
 	pbool_unary_expr(const char o, count_const_ptr<pbool_expr> e);
 	pbool_unary_expr(count_const_ptr<pbool_expr> e, const char o);
-
 	ostream& what(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -419,6 +436,7 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -453,6 +471,7 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -487,6 +506,7 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+	size_t dimensions(void) const { return 0; }
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -524,6 +544,13 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;		// temporary
 virtual	string hash_string(void) const = 0;
 
+/**
+	A range is always 0-dimensional, which is not the same
+	as the dimensions *represented* by the range.  
+	Is virtual so that sub-classes that use the index interface can
+	override this.  
+ */
+virtual	size_t dimensions(void) const { return 0; }
 /** is initialized if is resolved to constant or some other formal */
 #if 0
 virtual bool is_initialized(void) const = 0;
@@ -798,7 +825,7 @@ virtual	bool is_unconditional(void) const = 0;
 	This means we need a const_index interface to objects.  
  */
 class const_index_list : public index_list, 
-		public list<count_ptr<const_index> > {
+		private list<count_ptr<const_index> > {
 protected:
 	/** need list of pointers b/c const_index is abstract */
 	typedef	list<count_ptr<const_index> >	parent;
@@ -819,6 +846,12 @@ public:
 	size_t size(void) const;
 	size_t dimensions_collapsed(void) const;
 
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+	void push_back(const count_ptr<const_index>& i);
+
 #if 0
 	bool is_initialized(void) const;
 #else
@@ -835,7 +868,7 @@ public:
 	Elements of this index list are no necessarily static constants.  
  */
 class dynamic_index_list : public index_list, 
-		public list<count_ptr<index_expr> > {
+		private list<count_ptr<index_expr> > {
 protected:
 	typedef	list<count_ptr<index_expr> >	parent;
 public:
@@ -850,6 +883,12 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
+
+	using parent::begin;
+	using parent::end;
+	using parent::rbegin;
+	using parent::rend;
+	void push_back(const count_ptr<index_expr>& i);
 
 /** NOT THE SAME **/
 	size_t size(void) const;

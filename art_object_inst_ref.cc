@@ -77,6 +77,11 @@ simple_instance_reference::hash_string(void) const {
 	(Should we allow under-specification of dimensions?
 		i.e. x[i] of a 2-D array to be a 1D array reference.)
 	Then referring to x is referring to the entire array of x.  
+
+	Fancy: an indexed instance reference may be under-specified
+	Referring to partial sub-arrays, e.g. x[i] where x is 2-dimensional.  
+	In this case, when we check for static instance coverage, 
+	
 	\return true if successful, else false.  
  */
 bool
@@ -89,7 +94,8 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// dimension-check:
 	const never_const_ptr<instantiation_base> inst_base(get_inst_base());
 	// number of indices must be <= dimension of instance collection.  
-	const size_t max_dim = inst_base->dimensions();
+//	const size_t max_dim = inst_base->dimensions();
+	const size_t max_dim = dimensions();	// depends on indices
 	if (i->size() > max_dim) {
 		cerr << "ERROR: instance collection " << inst_base->get_name()
 			<< " is " << max_dim << "-dimensional, and thus, "
@@ -121,14 +127,25 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// else is constant index list, can compute coverage
 	//	using multidimensional_sparse_set
 
+	const size_t cil_size = cil->size();
 	instantiation_state iter = inst_state;
 	const instantiation_state
 		end(inst_base->collection_state_end());
-	excl_ptr<mset_base> cov(
-		mset_base::make_multidimensional_sparse_set(max_dim));
+	excl_ptr<mset_base>
+		cov(mset_base::make_multidimensional_sparse_set(cil_size));
+//		cov(mset_base::make_multidimensional_sparse_set(max_dim));
 	assert(cov);
 	{
 		const_range_list crl(*cil);
+		// if dimensions are underspecified, then
+		// we need to trim the lower dimension indices.
+#if 0
+		cerr << "this->dimensions = " << max_dim << endl;
+		cerr << "crl.size = " << crl.size() << endl;
+		while(crl.size() > cil_size)
+			crl.pop_back();
+		cerr << "crl.size = " << crl.size() << endl;
+#endif
 		cov->add_ranges(crl);
 	}
 	for ( ; iter!=end; iter++) {
@@ -141,7 +158,11 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 			count_const_ptr<const_range_list>
 				crlp(iter->is_a<const_range_list>());
 			assert(crlp);
-			cov->delete_ranges(*crlp);
+			const_range_list crl(*crlp);	// make deep copy
+			// dimension-trimming
+			while(crl.size() > cil_size)
+				crl.pop_back();
+			cov->delete_ranges(crl);
 		}
 	}
 	// if this point reached, then all instance additions
