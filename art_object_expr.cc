@@ -285,7 +285,7 @@ pint_literal::static_constant_int(void) const {
 
 ostream&
 pint_const::what(ostream& o) const {
-	return o << "param-const-int";
+	return o << "pint-const";
 }
 
 ostream&
@@ -295,9 +295,9 @@ pint_const::dump(ostream& o) const {
 
 string
 pint_const::hash_string(void) const {
-	char* ret = new char[64];
+	char ret[64];
 	assert(sprintf(ret, "%ld", val) == 1);
-	return ret;			// will convert to string
+	return string(ret);			// will convert to string
 }
 
 //=============================================================================
@@ -305,7 +305,7 @@ pint_const::hash_string(void) const {
 
 ostream&
 pbool_const::what(ostream& o) const {
-	return o << "param-const-bool";
+	return o << "pbool-const";
 }
 
 ostream&
@@ -645,11 +645,16 @@ pint_range::pint_range(count_const_ptr<pint_expr> n) :
 		lower(new pint_const(0)),
 		upper(new arith_expr(n, '-', 
 			count_const_ptr<pint_expr>(new pint_const(1)))) {
+	assert(n);
+	assert(lower);
+	assert(upper);
 }
 
 pint_range::pint_range(count_const_ptr<pint_expr> l, 
 		count_const_ptr<pint_expr> u) :
 		range_expr(), lower(l), upper(u) {
+	assert(lower);
+	assert(upper);
 }
 
 pint_range::pint_range(const pint_range& pr) : object(), range_expr(), 
@@ -678,50 +683,143 @@ pint_range::is_initialized(void) const {
 	return lower->is_initialized() && upper->is_initialized();
 }
 
+/**
+	Range is sane if lower <= upper.
+	If expressions are not constant, then conservatively return true.  
+ */
+bool
+pint_range::is_sane(void) const {
+	if (is_static_constant()) {
+		return lower->static_constant_int() <=
+			upper->static_constant_int();
+	}
+	else return true;
+}
+
+bool
+pint_range::is_static_constant(void) const {
+	return lower->is_static_constant() && upper->is_static_constant();
+}
+
+const_range
+pint_range::static_constant_range(void) const {
+	return const_range(lower->static_constant_int(), 
+		upper->static_constant_int());
+}
+
 //=============================================================================
 // class const_range method definitions
 
-const_range::const_range(const int n) :
-		range_expr(),
-		lower(0), upper(n -1) {
-	assert(upper >= lower);		// else what!?!?
+/** Default empty constructor. */
+const_range::const_range() : range_expr(), interval() {
 }
 
+/** Protected internal constructor. */
+const_range::const_range(const impl_type& i) :
+		range_expr(), interval(i) {
+}
+
+/**
+	Explicit constructor of a dense range from 0 to N-1.  
+	\param n must be > 0, else assertion will fail.
+ */
+const_range::const_range(const int n) :
+		range_expr(),
+#if 0
+		lower(0), upper(n -1)
+#else
+		interval(0, n-1)
+#endif
+		{
+	assert(upper() >= lower());		// else what!?!?
+}
+
+/**
+	Should both l and u be non-negative too?
+	\param l is lower bound, inclusive.  
+	\param u is upper bound, inclusive, and must be >= l.  
+ */
 const_range::const_range(const int l, const int u) :
-		range_expr(), lower(l), upper(u) {
-	assert(upper >= lower);		// else what!?!?
+		range_expr(),
+#if 0
+		lower(l), upper(u)
+#else
+		interval(l, u)
+#endif
+		{
+	assert(upper() >= lower());		// else what!?!?
+}
+
+/** standard copy constructor */
+const_range::const_range(const const_range& r) :
+		object(), range_expr(), 
+#if 0
+		lower(r.lower), upper(r.upper)
+#else
+		interval(r.interval)
+#endif
+		{
 }
 
 ostream&
 const_range::what(ostream& o) const {
-	return o << "pint-const";
+	return o << "const-range";
 }
 
 ostream&
 const_range::dump(ostream& o) const {
-	return o << lower << ".." << upper;
+	return o << "[" << lower() << ".." << upper() << "]";
 }
 
 string
 const_range::hash_string(void) const {
 	ostringstream o;
-	o << lower << ".." << upper;
+	dump(o);
 	return o.str();
 }
 
 /**
 	Returns whether or not two intervals overlap.  
+	\return 
  */
-bool
+const_range
 const_range::static_overlap(const const_range& r) const {
+#if 0
+	// DEBUG
+	cerr << "In const_range::static_overlap with this = "
+		<< this << " .interval = " << interval << endl;
+	r.dump(cerr << "const const_range& r = ") << endl;
+#endif
+
+#if 0
+	// OLD and obsolete
 	return (lower <= r.lower && r.lower <= upper ||
 		lower <= r.upper && r.upper <= upper ||
 		r.lower <= lower && lower <= r.upper ||
 		r.lower <= upper && upper <= r.upper);
+#else
+	impl_type temp(interval);
+	temp.intersect(r.interval);
+#if 0
+	cerr << " ... finished computing temp.intersect: ";
+	cerr << "temp = " << temp;
+	cerr << endl;
+#endif
+	return const_range(temp);		// private constructor
+#endif
 }
 
 bool
 const_range::is_initialized(void) const {
+	return true;
+}
+
+/**
+	Presumably if this was successfully constructed, then it
+	passed the assertion.  No need to recheck.  
+ */
+bool
+const_range::is_sane(void) const {
 	return true;
 }
 
@@ -775,10 +873,19 @@ const_range_list::size(void) const {
 /**
 	Checks for overlap between two static multidimensional index ranges.  
 	If argument is actually dynamic, can only conservatively return false.  
+	\return a const_range_list which is either false if there's no overlap, 
+		or the valid overlap range if there is overlap.  
  */
-bool
+const_range_list
 const_range_list::static_overlap(const range_expr_list& r) const {
+#if 0
+	// DEBUG
+	cerr << "In const_range_list::static_overlap with this = "
+		<< this << endl;
+	r.dump(cerr << "const range_expr_list& r = ") << endl;
+#endif
 	const const_range_list* s = IS_A(const const_range_list*, &r);
+	const_range_list ret;	// initially empty
 	if (s) {
 		// dimensionality should match, or else!
 		assert(size() == s->size());    
@@ -788,17 +895,19 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 			// check for index overlap in ALL dimensions
 			const const_range& ir = *i;
 			const const_range& jr = *j;
-			if (ir.static_overlap(jr))
+			const_range o(ir.static_overlap(jr));
+			ret.push_back(o);
+			if (!o.empty())
 				continue;
-			else return false;     
+			else return const_range_list();
 			// if there is any dimension without overlap, false
 		}
 		// else there is some overlap in all dimensions
-		return true;
+		return ret;
 	} else {	// argument is dynamic, not static
 		// conservatively return false
 		// overlap is possible but not definite, can't reject now.  
-		return false;
+		return const_range_list();		// empty list
 	}
 }
 
@@ -819,8 +928,10 @@ dynamic_range_list::what(ostream& o) const {
 ostream&
 dynamic_range_list::dump(ostream& o) const {
 	const_iterator i = begin();
-	for ( ; i!=end(); i++)
-		i->dump(o);
+	for ( ; i!=end(); i++) {
+		assert(*i);
+		(*i)->dump(o);
+	}
 	return o;
 }
 
@@ -832,9 +943,9 @@ dynamic_range_list::size(void) const {
 /**
 	Overlap is indefinite with dynamic ranges, conservatively.  
  */
-bool
+const_range_list
 dynamic_range_list::static_overlap(const range_expr_list& r) const {
-	return false;
+	return const_range_list();
 }
 
 //=============================================================================

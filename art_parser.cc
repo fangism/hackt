@@ -1419,30 +1419,35 @@ instance_array::rightmost(void) const {
 }
 
 /**
-TO DO:
+	Instantiates an array of instances.  
+	Dimensions may be dense or sparse.  
+ */
 never_const_ptr<object>
 instance_array::check_build(never_ptr<context> c) const {
-	never_const_ptr<object> o;
 	TRACE_CHECK_BUILD(
 		cerr << c->auto_indent() <<
 			"instance_array::check_build(...): " << endl;
 	)
-	o = instance_base::check_build(c);		// re-use? no
-or:
 	if (ranges) {
+		never_const_ptr<instantiation_base> t;
 		ranges->check_build(c);
+		// expecting ranges and singe integer expressions
 		count_ptr<object> o(c->pop_top_object_stack());
-		// puts ranges expression onto object stack
-		c->add_instance(*id, ...);
+		// expect constructed (sparse) range_list on object stack
+		if (!o) {
+			cerr << "ERROR in dimensions!  " << 
+				ranges->where() << endl;
+			exit(1);
+		}
+		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
+		assert(d);
+		t = c->add_instance(*id, d);
+		// if there was error, would've exit(1)'d (temporary)
+		return t;
 	} else {
-		instance_base::check_build(c);
+		return instance_base::check_build(c);
 	}
-	
-	// then add array dimensions to instance
-	// complicated, need to check dense and sparse arrays
-	// adding to arrays, and collectives, etc...
 }
-**/
 
 //=============================================================================
 // class instance_declaration method definitions
@@ -1805,8 +1810,7 @@ port_formal_id::check_build(never_ptr<context> c) const {
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<instance_collection_stack_item>
-			d(o.is_a<instance_collection_stack_item>());
+		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
 		assert(d);
 		// attach array dimensions to current instantiation
 		t = c->add_port_formal(*name, d);
@@ -1912,25 +1916,16 @@ template_formal_id::check_build(never_ptr<context> c) const {
 	// type should already be set in the context
 	if (dim) {
 		// attach array dimensions to current instantiation
-		dim->check_build(c);	// useless return value
+		dim->check_build(c);	// useless return value, check stack
+		// should already construct an range_expr_list
 		count_ptr<object> o(c->pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
 				dim->where() << endl;
 			exit(1);
 		}
-		count_ptr<object_list> ol(o.is_a<object_list>());
-		assert(ol);
-		// convert plain object list into
-		//	instance_collection_stack_item...
-		// additional restriction: integer expression indices only
-		index_collection_item_ptr_type
-			d(ol->make_formal_dense_range_list());
-		if (!d) {
-			cerr << "ERROR in converting object list to "
-				"dense ranges " << dim->where() << endl;
-			exit(1);
-		}
+		count_ptr<range_expr_list> d(o.is_a<range_expr_list>());
+		assert(d);
 		t = c->add_template_formal(*name, d);
 	} else {
 		t = c->add_template_formal(*name);

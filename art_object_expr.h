@@ -7,10 +7,19 @@
 #include <string>
 
 // #include "art_object.h"	// before including this header
+#include "discrete_interval_set.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
 //	using string of fully-qualified name?
+
+/***
+	Instead of making two flavors of queries, use an integer return
+	value instead of a bool to enumerate:
+		definitely no, don't know (maybe), definitely yes.  
+		do we need may be yes, may be no?
+	May be bit fields?
+***/
 
 //=============================================================================
 namespace ART {
@@ -33,7 +42,7 @@ namespace entity {
 
 // forward declarations of classes defined here (table of contents)
 	class param_expr;
-	class index_expr;
+	class index_expr;		// BEWARE also in ART::parser!
 	class pbool_expr;
 	class pint_expr;
 //	class param_expr_collective;
@@ -178,6 +187,10 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	THIS class is POINTLESS, PHASE THIS OUT after 
+		literals are merged with instance references.  
+	This is the same as param_instance_reference.  
+
 	Abstract interface.  
 	A reference to single parameter instance.  
 	Actually, can be collective too, just depends on var.  
@@ -210,6 +223,8 @@ virtual	void initialize(count_const_ptr<param_expr> i) = 0;
 
 //-----------------------------------------------------------------------------
 /**
+	PHASE THIS INTO pbool_instance_reference.  Pointless wrapper this is.  
+
 	A reference to single parameter instance.  
 	Actually, can be collective too, just depends on var.  
 	Should sub-type into pbool and pbool...
@@ -240,6 +255,8 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	PHASE THIS INTO pint_instance_reference.  Pointless wrapper this is.  
+
 	A reference to single parameter instance.  
 	Actually, can be collective too, just depends on var.  
 	Should sub-type into pbool and pint...
@@ -500,6 +517,9 @@ virtual	string hash_string(void) const = 0;
 /** is initialized if is resolved to constant or some other formal */
 virtual bool is_initialized(void) const = 0;
 
+/** is sane if range makes sense */
+virtual	bool is_sane(void) const = 0;
+
 /** can be resolved to static constant value */
 virtual bool is_static_constant(void) const = 0;
 
@@ -523,7 +543,7 @@ protected:
 	count_const_ptr<pint_expr>	upper;
 public:
 	/** implicit conversion from x[N] to x[0..N-1] */
-	pint_range(count_const_ptr<pint_expr> n);
+explicit pint_range(count_const_ptr<pint_expr> n);
 	pint_range(count_const_ptr<pint_expr> l,
 		count_const_ptr<pint_expr> u);
 	pint_range(const pint_range& pr);
@@ -536,10 +556,12 @@ public:
 	string hash_string(void) const;		// unused?
 
 	bool is_initialized(void) const;
+	bool is_sane(void) const;
+	bool is_static_constant(void) const;
 	// for now just return false, don't bother checking recursively...
-	bool is_static_constant(void) const { return false; }
 	bool is_loop_independent(void) const { return false; }
 	bool is_unconditional(void) const { return false; }
+	const_range static_constant_range(void) const;
 };	// end class pint_range
 
 //-----------------------------------------------------------------------------
@@ -548,21 +570,44 @@ public:
  */
 class const_range : public range_expr {
 protected:
+	/** implementation type for range */
+	typedef	discrete_interval_set<int>	impl_type;
+protected:
+#if 0
 	const int			lower;
 	const int			upper;
+#else
+	const impl_type			interval;
+#endif
 public:
 	// dispense with pint_const objects here
-	/** implicit conversion from x[N] to x[0..N-1] */
-	const_range(const int n);
+	const_range();
+	/** explicit conversion from x[N] to x[0..N-1] */
+explicit const_range(const int n);
 	const_range(const int l, const int u);
+	const_range(const const_range& r);
+protected:
+	const_range(const impl_type& i);
+public:
 	~const_range() { }
 
+	/** use this to query whether or not range is valid */
+	bool empty(void) const { return interval.empty(); }
+	int lower(void) const {
+		assert(!interval.empty());	// only one member
+		return interval.begin()->first;
+	}
+	int upper(void) const {
+		assert(!interval.empty());	// only one member
+		return interval.begin()->second;
+	}
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 	string hash_string(void) const;
 
-	bool static_overlap(const const_range& r) const;
+	const_range static_overlap(const const_range& r) const;
 	bool is_initialized(void) const;
+	bool is_sane(void) const;
 	bool is_static_constant(void) const { return true; }
 	bool is_loop_independent(void) const { return true; }
 	bool is_unconditional(void) const { return false; }
@@ -573,6 +618,7 @@ public:
 	General interface to multidimensional indices.  
 	Make interface like std::list.  
 	Instance collection stack item?
+	Replace instance_collection_stack_item with this!
  */
 class range_expr_list : public object {
 protected:
@@ -582,12 +628,14 @@ public:
 virtual	~range_expr_list() { }
 
 virtual	size_t size(void) const = 0;
-virtual	bool static_overlap(const range_expr_list& r) const = 0;
+	size_t dimensions(void) const { return size(); }
+virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
 };	// end class range_expr_list
 
 //-----------------------------------------------------------------------------
 /**
 	List of constant range expressions.  
+	Would a vector be more appropriate?   consider changing later...
  */
 class const_range_list : public range_expr_list, public list<const_range> {
 protected:
@@ -601,9 +649,8 @@ public:
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const list<const_range>& list(void) const;
 	size_t size(void) const;
-	bool static_overlap(const range_expr_list& r) const;
+	const_range_list static_overlap(const range_expr_list& r) const;
 };	// end class const_range_list
 
 //-----------------------------------------------------------------------------
@@ -612,11 +659,19 @@ public:
 	List of range expressions, not necessarily constant.  
 	May contain constant ranges however.  
 	Interface methods for unrolling.  
+
+	Replace the dynamic subclasses of instance_collection_stack_item
+	with this class by adding attributes...
+		is_unconditional
+		is_loop_independent
+	also cache these results...?
  */
-class dynamic_range_list : public range_expr_list, public list<pint_range> {
+class dynamic_range_list : public range_expr_list,
+		public list<count_ptr<pint_range> > {
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
-	typedef	list<pint_range>	list_type;
+	// can't copy construct, is abstract
+	typedef	list<count_ptr<pint_range> >	list_type;
 protected:
 //	list_type			index_ranges;
 public:
@@ -625,9 +680,9 @@ virtual	~dynamic_range_list();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const list<pint_range>& list(void) const;
 	size_t size(void) const;
-	bool static_overlap(const range_expr_list& r) const;	// false
+	const_range_list static_overlap(const range_expr_list& r) const;
+		// false, will be empty
 };	// end class dynamic_range_list
 
 //-----------------------------------------------------------------------------

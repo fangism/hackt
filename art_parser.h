@@ -1377,6 +1377,7 @@ virtual	~instance_array();
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position rightmost(void) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_array
 
 //=============================================================================

@@ -34,7 +34,7 @@ context::context(never_ptr<name_space> g) :
 		current_definition_reference(NULL), 
 		current_fundamental_type(NULL), 
 		current_template_arguments(NULL), 
-		current_array_dimensions(NULL), 
+//		current_array_dimensions(NULL), 
 		dynamic_scope_stack(), 
 		object_stack(), 
 		global_namespace(g) {
@@ -577,10 +577,14 @@ context::add_instance(const token_identifier& id,
 		// .top_static_scope();
 	assert(current_scope);
 
+	// "ptrs.h" complains if the following is written as a constructor:
+	excl_ptr<instantiation_base> new_inst = 
+		current_fundamental_type->make_instantiation(
+			current_scope, id, dim);
+	assert(new_inst);
 	never_const_ptr<instantiation_base> ret(
-		current_scope->add_instance(
-			current_fundamental_type->make_instantiation(
-				current_scope, id, dim)));
+		current_scope->add_instance(new_inst));
+	assert(!new_inst);		// ownership transferred
 	if (!ret) {
 		cerr << id.where() << endl;
 		type_error_count++;
@@ -679,11 +683,23 @@ context::push_object_stack(count_ptr<object> o) {
 	if (o) {
 		const object* oself = &o->self();
 		// can we go back to not using maked pointer for check?
-		assert(IS_A(const param_expr*, oself) ||
-			IS_A(const index_expr*, oself) ||
-			IS_A(const object_list*, oself) ||
+		if (!(IS_A(const param_expr*, oself) ||
+			IS_A(const ART::entity::index_expr*, oself) ||
+//			IS_A(const object_list*, oself) ||
+//			IS_A(const pint_const*, oself) ||
 				// eliminate object_list after making others
-			IS_A(const range_list*, oself) ||
+			IS_A(const range_expr_list*, oself) ||
+			IS_A(const index_list*, oself) ||
+			IS_A(const instance_reference_base*, oself))) {
+			oself->what(cerr << "Unexpectedly got a ") <<
+				" on the context's object stack." << endl;
+		}
+		assert(IS_A(const param_expr*, oself) ||
+			IS_A(const ART::entity::index_expr*, oself) ||
+//			IS_A(const object_list*, oself) ||
+//			IS_A(const pint_const*, oself) ||
+				// eliminate object_list after making others
+			IS_A(const range_expr_list*, oself) ||
 			IS_A(const index_list*, oself) ||
 			IS_A(const instance_reference_base*, oself));
 	}

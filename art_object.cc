@@ -111,10 +111,11 @@ object_list::dump(ostream& o) const {
 	of formal parameters and formal ports.  
 	Cannot possibly be loop-dependent or conditional!
  */
-index_collection_item_ptr_type
+count_ptr<range_expr_list>
 object_list::make_formal_dense_range_list(void) const {
 	// initialize some bools to true
 	// and set them false approriately in iterations
+	bool err = false;
 	bool is_pint_expr = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
@@ -139,6 +140,7 @@ object_list::make_formal_dense_range_list(void) const {
 				// not initialized! error.  
 				cerr << "int expression is not initialized.  "
 					"ERROR!  " << endl;	// where?
+				err = true;
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
@@ -146,38 +148,228 @@ object_list::make_formal_dense_range_list(void) const {
 			assert(p->is_unconditional());
 		}
 	}
-	if (is_static_constant) {
+	if (err) {
+		cerr << "Failed to construct a formal dense range list!  "
+			<< endl;
+		return count_ptr<range_expr_list>(NULL);
+	} else if (is_static_constant) {
 		const_iterator j = begin();
-		excl_ptr<const_range_list> ret(new const_range_list);
+		count_ptr<const_range_list> ret(new const_range_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
-			ret->push_back(const_range(
-				j->is_a<pint_expr>()->static_constant_int()));
+			const int n = j->is_a<pint_expr>()
+				->static_constant_int();
+			if (n <= 0) {
+				cerr << "Integer size for a dense array "
+					"must be positive, but got: "
+					<< n << ".  ERROR!  " << endl;
+				// where? callers figure out...
+				return count_ptr<const_range_list>(NULL);
+			}
+			ret->push_back(const_range(n));
 		}
-		excl_const_ptr<const_range_list> const_ret(ret);
-		assert(const_ret);
-		assert(!ret);
-		return index_collection_item_ptr_type(
-			new static_collection_addition(const_ret));
-		assert(!const_ret);
+		return ret;
+//		return index_collection_item_ptr_type(
+//			new static_collection_addition(const_ret));
+//		assert(!const_ret);
 	} else if (is_initialized) {
 		const_iterator j = begin();
-		excl_ptr<dynamic_range_list> ret(new dynamic_range_list);
+		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
-			ret->push_back(pint_range(j->is_a<pint_expr>()));
+			ret->push_back(count_ptr<pint_range>(
+				new pint_range(j->is_a<pint_expr>())));
 		}
-		excl_const_ptr<dynamic_range_list> const_ret(ret);
-		return index_collection_item_ptr_type(
-			new dynamic_collection_addition(const_ret));
+		return ret;
+//		excl_const_ptr<dynamic_range_list> const_ret(ret);
+//		return index_collection_item_ptr_type(
+//			new dynamic_collection_addition(const_ret));
 	} else {
 		cerr << "Failed to construct a formal dense range list!  "
 			<< endl;
-		return index_collection_item_ptr_type(NULL);
+		return count_ptr<range_expr_list>(NULL);
+//		return index_collection_item_ptr_type(NULL);
+	}
+}
+
+/**
+	Creates an instance_collection_item.  
+	No restriction on this, may be single integer or pint_range.  
+	Will automatically convert to ranges.
+	Walks list twice, once to see what the best classification is, 
+	again to copy-create.  
+	Intended for use in resolving dense array dimensions
+	of formal parameters and formal ports.  
+	Cannot possibly be loop-dependent or conditional!
+ */
+count_ptr<range_expr_list>
+object_list::make_sparse_range_list(void) const {
+	// initialize some bools to true
+	// and set them false approriately in iterations
+	bool err = false;
+	bool is_valid_range = true;
+	bool is_static_constant = true;
+	bool is_initialized = true;
+	const_iterator i = begin();
+	int k = 1;
+	for ( ; i!=end(); i++, k++) {
+		if (!*i) {
+			cerr << "Error in dimension " << k <<
+				" of array indices.  " << endl;
+			continue;
+		}
+		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		// may be pint_const or pint_literal
+#if 0
+		if (i->is_a<pint_const>()) {		// sanity?
+			cerr << "pint_const => pint_expr" << endl;
+			assert(i->is_a<pint_expr>());
+			assert((*i).is_a<pint_expr>());
+		}
+		if (i->is_a<const_range>()) {		// sanity?
+			cerr << "const_range => range_expr" << endl;
+			assert(i->is_a<range_expr>());
+			assert((*i).is_a<range_expr>());
+		}
+#endif
+		count_ptr<range_expr> r(i->is_a<range_expr>());
+		// may be const_range or pint_range
+		if (p) {
+			// later modularize to some method function...
+#if 0
+			if (p.is_a<pint_const>()) {		// sanity?
+				cerr << "yup, is a pint_const." << endl;
+			}
+#endif
+			if (p->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (p->is_initialized()) {	// definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.  
+				cerr << "int expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;	// where?
+				err = true;
+			}
+			// can it be initialized, but non-const?
+			// yes, if a dimension depends on another formal param
+			// can be loop-independent, do we need to track?
+			// can be conditional, do we need to track?
+		} else if (r) {
+			// same thing... copy
+			if (r->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (r->is_initialized()) {	// definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.  
+				cerr << "range expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;	// where?
+				err = true;
+			}
+		} else {
+			// is neither pint_expr nor range_expr
+			assert(!p && !r);
+			assert(!i->is_a<pint_const>());
+			assert(!i->is_a<const_range>());
+			is_valid_range = false;
+			(*i)->what(cerr << "Expected integer or range "
+				"expression but got a ") << 
+				" in dimension " << k << " of array ranges.  "
+				"ERROR!  " << endl;	// where?
+			err = true;
+		}
+	}
+	if (err || !is_valid_range) {
+		cerr << "Failed to construct a sparse range list!  "
+			<< endl;
+		return count_ptr<range_expr_list>(NULL);
+//		return index_collection_item_ptr_type(NULL);
+	} else if (is_static_constant) {
+		const_iterator j = begin();
+		count_ptr<const_range_list> ret(new const_range_list);
+		for ( ; j!=end(); j++) {
+			// should be safe to do this, since we checked above
+			count_ptr<pint_expr> p(j->is_a<pint_expr>());
+			count_ptr<range_expr> r(j->is_a<range_expr>());
+			// don't forget to range check
+			if (p) {
+				const int n = p->static_constant_int();
+				if (n <= 0) {
+					cerr << "Integer size for a dense array "
+						"must be positive, but got: "
+						<< n << ".  ERROR!  " << endl;
+					// where? let caller figure out
+					return count_ptr<const_range_list>(NULL);
+				}
+				ret->push_back(const_range(n));
+			} else {
+				assert(r);
+				if (!r->is_sane()) {
+					cerr << "Range is not valid. ERROR!  "
+						<< endl;
+					return count_ptr<const_range_list>(NULL);
+				}
+				count_ptr<const_range> cr(
+					r.is_a<const_range>());
+				if (cr) {
+					// need deep copy, b/c not pointer list
+					ret->push_back(const_range(*cr));
+				} else {
+					count_ptr<pint_range> pr(
+						r.is_a<pint_range>());
+					assert(pr);
+					assert(pr->is_static_constant());
+					ret->push_back(
+						pr->static_constant_range());
+				}
+			}
+		}
+		return ret;
+//		excl_const_ptr<const_range_list> const_ret(ret);
+//		assert(const_ret);
+//		assert(!ret);
+//		return index_collection_item_ptr_type(
+//			new static_collection_addition(const_ret));
+//		assert(!const_ret);
+	} else if (is_initialized) {
+		const_iterator j = begin();
+		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
+		for ( ; j!=end(); j++) {
+			if (j->is_a<pint_expr>()) {
+				// convert N to 0..N-1
+				ret->push_back(count_ptr<pint_range>(
+					new pint_range(j->is_a<pint_expr>())));
+			} else {
+				assert(j->is_a<pint_range>());
+				ret->push_back(j->is_a<pint_range>());
+			}
+		}
+		return ret;
+//		excl_const_ptr<dynamic_range_list> const_ret(ret);
+//		return index_collection_item_ptr_type(
+//			new dynamic_collection_addition(const_ret));
+	} else {
+		cerr << "Failed to construct a sparse range list!  "
+			<< endl;
+		return count_ptr<range_expr_list>(NULL);
+//		return index_collection_item_ptr_type(NULL);
 	}
 }
 
 //=============================================================================
+#if 0
+OBSOLETE
 // class instance_collection_stack_item method definitions
 
 bool
@@ -225,6 +417,7 @@ size_t
 dynamic_collection_addition::dimensions(void) const {
 	return indices->size();
 }
+#endif
 
 //=============================================================================
 // class scopespace method definitions
@@ -346,6 +539,12 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
  */
 never_const_ptr<instantiation_base>
 scopespace::add_instance(excl_ptr<instantiation_base> i) {
+	assert(i);
+#if 0
+	// DEBUG
+	cerr << "In scopespace::add_instance with this = " << this << endl;
+	i->dump(cerr << "excl_ptr<instantiation_base> i = ") << endl;
+#endif
 	never_ptr<object> probe(
 		lookup_object_here_with_modify(i->get_name()));
 	if (probe) {
@@ -392,13 +591,18 @@ scopespace::add_instance(excl_ptr<instantiation_base> i) {
 					NULL);
 			}	// else dimensions match apropriately
 
+			assert(i);	// sanity
 			// here, we know we're referring to the same collection
 			// check for overlap with existing static-const indices
-			if (probe_inst->merge_index_ranges(i)) {
+			const_range_list overlap(
+				probe_inst->merge_index_ranges(i));
+			if (!overlap.empty()) {
 				// returned true if there is definite overlap
-				cerr << "detected overlap in indices in the "
-					"collection addition for " <<
-					i->get_name() << ", ERROR!  ";
+				cerr << "Detected overlap in the "
+					"sparse collection for " <<
+					i->get_name() << ", precisely: ";
+				overlap.dump(cerr);
+				cerr << ".  ERROR!  ";
 				return never_const_ptr<instantiation_base>(
 					NULL);
 			}
@@ -1622,7 +1826,13 @@ instantiation_base::~instantiation_base() {
 
 ostream&
 instantiation_base::dump(ostream& o) const {
-	return what(o) << " " << key;
+	get_type_ref()->dump(o) << " " << key;
+	index_collection_type::const_iterator i = index_collection.begin();
+	for ( ; i!=index_collection.end(); i++) {
+		assert(*i);
+		(*i)->dump(o) << endl;
+	}
+	return o;
 }
 
 string
@@ -1656,27 +1866,39 @@ instantiation_base::collection_state_end(void) const {
 }
 
 /**
+	Will need two flavors: may and must?
 	
 	\return true if the new range *definitely* overlaps with previous
 		static constant ranges.  Comparisons with dynamic ranges
 		will conservatively return false; they will be resolved
 		at unroll-time.  Also returns true if there was an error.  
+		By "true", we mean a valid precise range of overlap.  
  */
-bool
+const_range_list
 instantiation_base::detect_static_overlap(
 		index_collection_item_ptr_type r) const {
 	assert(r);
 	assert(r->dimensions() == depth);
-	if (r.is_a<static_collection_addition>()) {
+#if 0
+	// DEBUG
+	cerr << "In instantiation_base::detect_static_overlap with this = "
+		<< this << endl;
+	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
+#endif
+	if (r.is_a<const_range_list>()) {
 	index_collection_type::const_iterator i = index_collection.begin();
 	for ( ; i!=index_collection.end(); i++) {
-		if ((*i)->static_overlap(*r)) {
-			return true;
+		// return upon first overlap error
+		// later accumulate all overlaps.  
+		const_range_list ovlp((*i)->static_overlap(*r));
+		if (!ovlp.empty()) {
+			return ovlp;
 		}
+		// else keep checking...
 	}
 	// if this point reached, then return false
 	} // else just return false, can't know statically without analysis
-	return false;
+	return const_range_list();	// empty constructed list
 }
 
 /**
@@ -1684,58 +1906,54 @@ instantiation_base::detect_static_overlap(
 	which may be sparse or dense.  
 	This is only applicable if this instantiation was initialized
 	as a collective.  
-	The dimensions better damn well match!  
+	Pre-condition: The dimensions better damn well match!  
 	\param r the index ranges to be added.  
-	\return true if error condition. 
+	\return Overlapping range (true) if error condition. 
 	\sa detect_static_overlap
  */
-bool
+const_range_list
 instantiation_base::add_index_range(index_collection_item_ptr_type r) {
 	assert(r);
-	if (depth) {
-		if (r->dimensions() == depth) {
-			bool overlap = detect_static_overlap(r);
-			index_collection.push_back(r);
-			if (overlap) {
-				cerr << "ERROR: detected static constant "
-				"overlap in indices -- "
-				"reinstantiation collision.  ";
-			}
-			return overlap;
-		} else {
-			cerr << "ERROR: " << key << " was originally declared "
-				"a " << depth << "-dimension collection, thus "
-				"you cannot append with a " 
-				<< r->dimensions() <<
-				"-dimension index range!  ";
-			return true;
-		}
-	} else {
-		cerr << "ERROR: " << key << " was originally declared "
-			"as a single instance, not a collective, and hence, "
-			"may not be appended!  ";
-		return true;
-	}
+	assert(depth);
+	assert(depth == r->dimensions());
+#if 0
+	// DEBUG
+	cerr << "In instantiation_base::add_index_range with this = "
+		<< this << endl;
+	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
+#endif
+	const_range_list overlap(detect_static_overlap(r));
+	index_collection.push_back(r);
+	return overlap;
 }
 
 /**
 	Merges index ranges from another instantiation base, 
 	such as a redeclaration with more indices of the same collection.  
+	Pre-condition: dimensions of i must match this!
+	The only type of error caught from here are overlap errors.  
 	\return true if there is definite overlap, signaling an error.  
  */
-bool
+const_range_list
 instantiation_base::merge_index_ranges(never_const_ptr<instantiation_base> i) {
 	assert(i);
+	assert(dimensions() == i->dimensions());
+#if 0
+	// DEBUG
+	cerr << "In instantiation_base::merge_index_range with this = " <<
+		this << endl;
+	i->dump(cerr << "never_const_ptr<instantiation_base> i = ") << endl;
+#endif
 	// check type equality here, or push responsibility to caller?
-	bool err = false;
 	index_collection_type::const_reverse_iterator iter =
 		i->index_collection.rbegin();
 	for ( ; iter!=i->index_collection.rend(); iter++) {
-		if (add_index_range(*iter)) {
-			err = true;
-		}
+		const_range_list ret(add_index_range(*iter));
+		if (!ret.empty())
+			return ret;
+		// else keep checking...
 	}
-	return err;
+	return const_range_list();
 }
 
 //=============================================================================
@@ -2270,6 +2488,14 @@ param_instantiation::param_instantiation(const scopespace& o,
 
 param_instantiation::~param_instantiation() {
 }
+
+/**
+	Override instantiation_base's what() to suppress output of <>.
+ostream&
+param_instantiation::what(ostream& o) const {
+	return o << 
+}
+**/
 
 /**
 	To determine whether or not this is a formal parameter, 

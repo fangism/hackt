@@ -50,17 +50,19 @@ namespace entity {
 	class param_instantiation;
 	class param_instance_reference;
 
+	class param_expr;
+	class range_expr_list;
+
 	class instance_collection_stack_item;
-	typedef count_const_ptr<instance_collection_stack_item>
+	typedef count_const_ptr<range_expr_list>
 				index_collection_item_ptr_type;
 
 	class connection_assignment_base;
 	class param_expression_assignment;
 	class instance_reference_connection;
 
-	class param_expr;
 	// replicated typedefs from "art_object.h"
-	typedef class list<never_const_ptr<param_expr> >	array_dim_list;
+//	typedef class list<never_const_ptr<param_expr> >	array_dim_list;
 	typedef class list<never_const_ptr<param_expr> >	template_param_list;
 }
 using namespace entity;
@@ -167,7 +169,7 @@ protected:
 	excl_ptr<template_param_list>		current_template_arguments;
 
 	// need current_blah_inst for array/dimension/range additions
-	const array_dim_list*		current_array_dimensions;
+//	const array_dim_list*		current_array_dimensions;
 
 
 	/**

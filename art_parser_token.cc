@@ -139,8 +139,13 @@ token_int::rightmost(void) const {
  */
 never_const_ptr<object>
 token_int::check_build(never_ptr<context> c) const {
-	count_ptr<param_expr> pe(new pint_const(val));
+	count_ptr<pint_const> pe(new pint_const(val));
+	assert(pe);
 	c->push_object_stack(pe);
+#if 0
+	what(cerr) << endl;				// debug
+	pe->dump(pe->what(cerr) << " = ") << endl;	// debug
+#endif
 	return never_const_ptr<object>(NULL);
 }
 

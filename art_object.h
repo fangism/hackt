@@ -78,7 +78,7 @@ namespace entity {
 	class process_type_reference;
 	class param_type_reference;		// redundant
 
-	class instance_collection_stack_item;
+//	class instance_collection_stack_item;
 
 	class instantiation_base;
 	class channel_instantiation;
@@ -113,7 +113,7 @@ namespace entity {
 	class dynamic_range_list;
 	class index_list;
 
-	typedef	count_const_ptr<instance_collection_stack_item>
+	typedef	count_const_ptr<range_expr_list>
 					index_collection_item_ptr_type;
 	typedef	deque<index_collection_item_ptr_type>
 					index_collection_type;
@@ -159,6 +159,11 @@ virtual	ostream& dump(ostream& o) const = 0;
 	Use this method to automatically dereference object handles.  
  */
 virtual const object& self(void) const { return *this; }
+
+/**
+	Consider an interface to hierarchical errors embedded in the objects.  
+	Mmmm... fancy.
+**/
 };	// end class object
 
 //=============================================================================
@@ -222,13 +227,24 @@ public:
 	ostream& dump(ostream& o) const;
 // using parent's list interface
 
-	index_collection_item_ptr_type
+	// could use excl_ptr, but then would need to release to count_ptr...
+	count_ptr<range_expr_list>
 		make_formal_dense_range_list(void) const;
+	count_ptr<range_expr_list>
+		make_sparse_range_list(void) const;
+/** forthcoming:
+	excl_ptr<index_list>
+		make_index_list(void) const;
+**/
 };	// end class object_list
 
 //=============================================================================
+#if 0
 /**
 	PHASING INTO art_object_expr as range_expr_list.  or not...
+
+	temporary: derive from object to be usable on stack?
+
 	We keep track of the precise state of collections
 	(associater with an identifier in a definition scope) 
 	by maintaining a stack of collection-additions each time
@@ -240,12 +256,18 @@ public:
 	This class is the abstract interface class for items
 	on the instance-collection-stack.  
  */
-class instance_collection_stack_item {
+class instance_collection_stack_item : public object {
 protected:
 	never_const_ptr<instantiation_base>	owner;
 public:
 	instance_collection_stack_item() { }
 virtual	~instance_collection_stack_item() { }
+
+// temporary
+virtual ostream& what(ostream& o) const
+	{ return o << "instance_collection_stack_item"; }
+virtual ostream& dump(ostream& o) const
+	{ return what(o); }
 
 /** dimensionality of the indices */
 virtual	size_t	dimensions(void) const = 0;
@@ -335,6 +357,7 @@ protected:
 	size_t	dimensions(void) const { assert(0); return 0; }	// BARF for now
 
 };	// end class conditional_collection_addition
+#endif
 
 //=============================================================================
 /**
@@ -788,9 +811,10 @@ virtual	never_const_ptr<fundamental_type_reference>
 	size_t dimensions(void) const { return depth; }
 	instantiation_state collection_state_end(void) const;
 	instantiation_state current_collection_state(void) const;
-	bool detect_static_overlap(index_collection_item_ptr_type r) const;
-	bool add_index_range(index_collection_item_ptr_type r);
-	bool merge_index_ranges(never_const_ptr<instantiation_base> i);
+	const_range_list detect_static_overlap(
+		index_collection_item_ptr_type r) const;
+	const_range_list add_index_range(index_collection_item_ptr_type r);
+	const_range_list merge_index_ranges(never_const_ptr<instantiation_base> i);
 
 /** currently always returns NULL, useless */
 virtual	never_const_ptr<instance_reference_base>
@@ -1504,6 +1528,7 @@ public:
 virtual	~param_instantiation();
 
 virtual	ostream& what(ostream& o) const = 0;
+// virtual	ostream& dump(ostream& o) const;
 
 virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;

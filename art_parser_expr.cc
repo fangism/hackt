@@ -24,6 +24,8 @@
 
 //=============================================================================
 namespace ART {
+using namespace entity;
+
 namespace parser {
 
 //=============================================================================
@@ -297,17 +299,12 @@ ostream& operator << (ostream& o, const id_expr& id) {
 CONSTRUCTOR_INLINE
 range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
 	assert(lower); 
-	// ranges are not derived from expr anymore
-//	assert(!lower.is_a<range>());
 }
 
 CONSTRUCTOR_INLINE
 range::range(const expr* l, const terminal* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
-	assert(lower); assert(op); assert(u);
-	// ranges are not derived from expr anymore
-//	assert(!lower.is_a<range>());
-//	assert(!upper.is_a<range>());
+	assert(lower); assert(op); assert(upper);
 }
 
 DESTRUCTOR_INLINE
@@ -334,6 +331,7 @@ range::rightmost(void) const {
 /**
 	Both expressions of the range should be of type pint.  
 	No collective expressions, only single pints.  
+	Do we check for constant cases?
 	TO DO: finish me
 	How do we interpret x[i]?
 	\param c the context where to start resolving identifiers.  
@@ -360,10 +358,12 @@ range::check_build(never_ptr<context> c) const {
 		}
 		// check if expression is initialized
 	} else {
+		cerr << endl;
 		cerr << "Error resolving expression " << lower->where()
 			<< endl;
 		exit(1);
 	}
+
 	if (upper) {
 		o = upper->check_build(c);
 		// puts param_expr on stack
@@ -371,7 +371,7 @@ range::check_build(never_ptr<context> c) const {
 		// check that they are both pints, 
 		// and make a range object
 		count_ptr<object> u(c->pop_top_object_stack());
-		count_ptr<pint_expr> up(l.is_a<pint_expr>());
+		count_ptr<pint_expr> up(u.is_a<pint_expr>());
 		if (u) {
 			if (!up) {
 				cerr << "Expression is not a pint-type, "
@@ -385,9 +385,32 @@ range::check_build(never_ptr<context> c) const {
 			exit(1);
 		}
 		// at this point, is ok
+
 		// later: resolve constant if possible...
-		c->push_object_stack(count_ptr<pint_range>(
-			new pint_range(lp, up)));
+		// modularize this into a method in art_object_expr
+		if (lp->is_static_constant() && up->is_static_constant()) {
+			const int lb = lp->static_constant_int();
+			const int ub = up->static_constant_int();
+			if (lb > ub) {
+				// error!  can't construct invalid const_range
+				cerr << "Lower bound of range " <<
+					lower->where() << " is greater than "
+					"upper bound " << upper->where() <<
+					".  ERROR!" << endl;
+				c->push_object_stack(
+					count_ptr<const_range>(NULL));
+				// exit(1);
+				// or let error get caught elsewhere?
+			} else {
+				// make valid constant range
+				c->push_object_stack(count_ptr<const_range>(
+					new const_range(lb, ub)));
+			}
+		} else {
+			// can't determine validity of bounds statically
+			c->push_object_stack(count_ptr<pint_range>(
+				new pint_range(lp, up)));
+		}
 	} else {
 		// but check that it is of type pint
 		// and push it back onto stack
@@ -416,6 +439,9 @@ range_list::~range_list() { }
 	No range list has two different semantics
 	(depending on instantiation vs. reference),
 	so just leave as object_list.  
+
+	Should we take this opportunity to const-ify as much as possible?
+
 	\return NULL, useless.
  */
 never_const_ptr<object>
@@ -426,19 +452,24 @@ range_list::check_build(never_ptr<context> c) const {
 	for ( ; i<size(); i++) {
 		count_ptr<object> o(c->pop_top_object_stack());
 		if (!o) {
-			cerr << "problem with dimension " << i+1 <<
-				" of range_list between " << where() << endl;
+			cerr << "Problem with dimension " << i+1 <<
+				" of sparse_range_list between "
+				<< where() << endl;
 			exit(1);		// terminate?
-		} else if (!o.is_a<index_expr>()) {
+		} else if (!o.is_a<ART::entity::index_expr>()) {
+			// pint_const *should* => index_expr ...
 			// make sure each item is a range expression
 			cerr << "Expression in dimension " << i+1 <<
-				" of dense_range_list is not valid!  "
+				" of sparse_range_list is not valid!  "
 				<< where() << endl;
+//			o->what(cerr << "object is a ") << endl;
+//			o->dump(cerr << "object dump: ") << endl;
 			exit(1);
 		}
+		// else o is an index_expr
 		ol->push_front(o);
 	}
-	c->push_object_stack(ol);
+	c->push_object_stack(ol->make_sparse_range_list());
 	return never_const_ptr<object>(NULL);
 }
 
@@ -472,7 +503,7 @@ dense_range_list::check_build(never_ptr<context> c) const {
 		}
 		ol->push_front(o);
 	}
-	c->push_object_stack(ol);
+	c->push_object_stack(ol->make_formal_dense_range_list());
 	return never_const_ptr<object>(NULL);
 }
 
