@@ -153,7 +153,7 @@ port_formal_id::rightmost(void) const {
 never_const_ptr<object>
 port_formal_id::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> o;
-	never_const_ptr<instantiation_base> t;
+	never_const_ptr<instance_collection_base> t;
 		// should be anything but param_instantiation
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<
@@ -318,7 +318,7 @@ template_formal_id::rightmost(void) const {
 never_const_ptr<object>
 template_formal_id::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> o;
-	never_const_ptr<instantiation_base> t;
+	never_const_ptr<instance_collection_base> t;
 		// should be param_instantiation
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent()) <<

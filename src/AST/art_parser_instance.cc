@@ -298,7 +298,7 @@ instance_base::rightmost(void) const {
  */
 never_const_ptr<object>
 instance_base::check_build(never_ptr<context> c) const {
-	never_const_ptr<instantiation_base> inst;
+	never_const_ptr<instance_collection_base> inst;
 	TRACE_CHECK_BUILD(
 		what(cerr << c->auto_indent())
 			<< "instance_base::check_build(...): ";
@@ -351,7 +351,7 @@ instance_array::check_build(never_ptr<context> c) const {
 			"instance_array::check_build(...): " << endl;
 	)
 	if (ranges) {
-		never_const_ptr<instantiation_base> t;
+		never_const_ptr<instance_collection_base> t;
 		ranges->check_build(c);
 		// expecting ranges and singe integer expressions
 		count_ptr<object> o(c->pop_top_object_stack());

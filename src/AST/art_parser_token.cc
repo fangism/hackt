@@ -272,7 +272,7 @@ token_identifier::check_build(never_ptr<context> c) const {
 	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	never_const_ptr<instantiation_base>
+	never_const_ptr<instance_collection_base>
 		inst(c->lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {

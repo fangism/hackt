@@ -710,7 +710,7 @@ if (base->get_temp_spec()) {
 	// what kind of alias? we need to peek at the definition
 
 	excl_ptr<definition_base> td_ex =
-		d->make_typedef(c->get_current_scope(), *id);
+		d->make_typedef(c->get_current_named_scope(), *id);
 	never_ptr<definition_base> td(td_ex);
 	never_ptr<typedef_base> tdb(td.is_a<typedef_base>());
 	assert(tdb);

@@ -207,7 +207,7 @@ qualified_id::copy_beheaded(void) const {
 	Remember to check the return type in the caller, even virtual
 	calls through the abstract expr class.  
 	\param c the context from which the search starts.  
-	\return a pointer to a definition_base or an instantiation_base 
+	\return a pointer to a definition_base or an instance_collection_base 
 		with the matching [un]qualified identifier if found, else NULL.
 		Other possibilities: namespace?
 		Consumer should wrap in instance_reference?
@@ -315,10 +315,10 @@ id_expr::is_absolute(void) const {
 never_const_ptr<object>
 id_expr::check_build(never_ptr<context> c) const {
 	never_const_ptr<object> o;
-	never_const_ptr<instantiation_base> inst;
+	never_const_ptr<instance_collection_base> inst;
 	o = qid->check_build(c);		// will lookup_object
 	if (o) {
-		inst = o.is_a<instantiation_base>();
+		inst = o.is_a<instance_collection_base>();
 		if (inst) {
 			// we found an instance which may be single
 			// or collective... info is in inst.
@@ -822,7 +822,7 @@ member_expr::check_build(never_ptr<context> c) const {
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
-	never_const_ptr<instantiation_base>
+	never_const_ptr<instance_collection_base>
 		member_inst(base_def->lookup_port_formal(*member));
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
