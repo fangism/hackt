@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.2.24.1 2005/02/07 01:11:16 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.2.24.2 2005/02/07 06:02:33 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
@@ -20,43 +20,6 @@ using std::ostringstream;
 //=============================================================================
 // class base_multidimensional_sparse_set method definitions
 
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-BASE_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-bool
-base_multidimensional_sparse_set<T,R,L>::match_range_list(
-		const range_list_type& s, const range_list_type& t) {
-	INVARIANT(s.size() == t.size());
-	typename range_list_type::const_iterator si = s.begin();
-	typename range_list_type::const_iterator ti = t.begin();
-	for ( ; si!=s.end(); si++, ti++) {
-		if (si->first != ti->first ||
-				si->second != ti->second)
-			return false;
-		// else range matches, continue
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-base_multidimensional_sparse_set<T,R,L>*
-base_multidimensional_sparse_set<T,R,L>::
-make_multidimensional_sparse_set(const size_t d) {
-	// slow switch-case, but we need constants
-	INVARIANT(d > 0 && d <= LIMIT);                    // HARD LIMIT
-	// there may be some clever way to make a call table to 
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multidimensional_sparse_set<1,T,R,L>();
-		case 2: return new multidimensional_sparse_set<2,T,R,L>();
-		case 3: return new multidimensional_sparse_set<3,T,R,L>();
-		case 4: return new multidimensional_sparse_set<4,T,R,L>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-
-#else
 SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 bool
 multidimensional_sparse_set_traits<T,R,L>::match_range_list(
@@ -73,25 +36,17 @@ multidimensional_sparse_set_traits<T,R,L>::match_range_list(
 	return true;
 }
 
-#endif
-
 //=============================================================================
 // class multidimensional_sparse_set method definitions
 
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 multidimensional_sparse_set<D,T,R,L>::multidimensional_sparse_set() :
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		parent_type(), 
-#endif
 		index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 multidimensional_sparse_set<D,T,R,L>::multidimensional_sparse_set(
 		const multidimensional_sparse_set& s) :
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		parent_type(), 
-#endif
 		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -352,18 +307,12 @@ multidimensional_sparse_set<D,T,R,L>::query_compact_dimensions(
 
 SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 multidimensional_sparse_set<1,T,R,L>::multidimensional_sparse_set() :
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		parent_type(), 
-#endif
 		index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 multidimensional_sparse_set<1,T,R,L>::multidimensional_sparse_set(
 		const multidimensional_sparse_set<1,T,R,L>& s) :
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		parent_type(), 
-#endif
 		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.6.24.1 2005/02/07 01:11:15 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.6.24.2 2005/02/07 06:02:33 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -45,99 +45,6 @@ struct multidimensional_sparse_set_traits {
 };	// end struct multidimensional_sparse_set_traits
 
 //=============================================================================
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-/**
-	Abstract base-class, for multidimensional sparse set.  
-	T is the key type, like an integer.  
-	R is the range-type which must be like a pair of integers, 
-		and have the same interface as std::pair<T,T>, 
-		namely, first and second members.  
-	L must be like a list or list-slice with partial list interface,
-		such as sublist.  Only need to be able to pop_front, pop_back.  
-		Difference lies in whether or not a deep copy is desired. 
-	\todo employ nested_iterators.... oooooh!
- */
-BASE_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class base_multidimensional_sparse_set {
-public:
-	typedef	R				range_type;
-	/** format for a list of ranges to be added, list is also acceptable */
-	typedef	L<range_type>			range_list_type;
-	typedef	base_multidimensional_sparse_set<T,R,L>
-						this_type;
-public:
-	static const size_t			LIMIT = 4;
-
-public:
-virtual	~base_multidimensional_sparse_set() { }
-
-virtual	size_t
-	dimensions(void) const = 0;
-
-virtual	bool
-	empty(void) const = 0;
-
-virtual	void
-	clear(void) = 0;
-
-virtual range_list_type
-	query_compact_dimensions(const range_list_type& r) const = 0;
-
-virtual range_list_type
-	compact_dimensions(void) const = 0;
-
-virtual	bool
-	contains(const range_list_type& r) const = 0;
-
-virtual	bool
-	add_ranges(const range_list_type& r) = 0;
-
-virtual	bool
-	delete_ranges(const range_list_type& r) = 0;
-
-virtual	bool
-	join_sparse_set(const this_type& s) = 0;
-
-virtual	bool
-	meet_sparse_set(const this_type& s) = 0;
-
-virtual	bool
-	subtract_sparse_set(const this_type& s) = 0;
-#if 0
-	// expensive but sometimes necessary
-	deep_copy();
-	// to add dimension
-	promote();
-	// to lose a dimension
-	demote();
-#endif
-
-protected:
-virtual	ostream&
-	dump(ostream& o, const string& pre) const = 0;
-
-public:
-virtual	ostream&
-	dump(ostream& o) const = 0;
-
-// static functions
-	/** virtually, a virtual constructor */
-	static
-	this_type* 
-	make_multidimensional_sparse_set(const size_t d);
-#if 0
-	static
-	this_type* 
-	make_multidimensional_sparse_set(const range_list_type& r);
-#endif
-	static
-	bool
-	match_range_list(const range_list_type& s, const range_list_type& t);
-};	// end class base_multidimensional_sparse_set
-
-#endif	// WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-
-//=============================================================================
 /**
 	A representation of sparse indices in a multidimensional array.
 	Implemented as a fixed depth tree.  
@@ -158,13 +65,18 @@ virtual	ostream&
 		template <class> class V = count_ptr<child_type>, 
 		template <class, class> class map_type = qmap<T, V>
 		> class multidimensional_sparse_set;
+
+	\param T is the key type, like an integer.  
+	\param R is the range-type which must be like a pair of integers, 
+		and have the same interface as std::pair<T,T>, 
+		namely, first and second members.  
+	\param L must be like a list or list-slice with partial list interface,
+		such as sublist.  Only need to be able to pop_front, pop_back.  
+		Difference lies in whether or not a deep copy is desired. 
+	\todo employ nested_iterators.... oooooh!
  */
 MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class multidimensional_sparse_set
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		: public base_multidimensional_sparse_set<T, R, L>
-#endif
-{
+class multidimensional_sparse_set {
 friend class multidimensional_sparse_set<D+1,T,R,L>;
 
 protected:
@@ -173,15 +85,10 @@ protected:
 	/** need count_ptr to be copy-constructable */
 	typedef	count_ptr<child_type>			map_value_type;
 	typedef	qmap<T, map_value_type>			map_type;
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-	typedef	base_multidimensional_sparse_set<T,R,L>	parent_type;
-	typedef	typename parent_type::range_list_type	range_list_type;
-#else
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:
 	typedef	typename traits_type::range_type	range_type;
 	typedef	typename traits_type::range_list_type	range_list_type;
-#endif
 
 public:
 	// for array_traits<>
@@ -271,38 +178,6 @@ public:
 	bool
 	subtract(const this_type& s);
 
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-	/**
-		Join operator with run-type type-check.  
-	 */
-	bool
-	join_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return join(*t);
-	}
-
-	/**
-		Meet operator with run-type type-check.  
-	 */
-	bool
-	meet_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return meet(*t);
-	}
-
-	/**
-		Subtract operator with run-type type-check.  
-	 */
-	bool
-	subtract_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return subtract(*t);
-	}
-#endif
-
 	// write a generic walker for this bad boy?
 
 protected:
@@ -346,25 +221,16 @@ public:
 	Specialization of a one-dimensional array.  
  */
 SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
-class multidimensional_sparse_set<1,T,R,L>
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-		: public base_multidimensional_sparse_set<T,R,L>
-#endif
-{
+class multidimensional_sparse_set<1,T,R,L> {
 friend class multidimensional_sparse_set<2,T,R,L>;
 
 protected:
 	typedef	multidimensional_sparse_set<1,T,R,L>	this_type;
 	typedef	discrete_interval_set<T>		map_type;
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-	typedef	base_multidimensional_sparse_set<T,R,L>	parent_type;
-	typedef	typename parent_type::range_list_type	range_list_type;
-#else
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:
 	typedef	typename traits_type::range_type	range_type;
 	typedef	typename traits_type::range_list_type	range_list_type;
-#endif
 
 public:
 	// for array_traits<>
@@ -423,38 +289,6 @@ public:
 	bool subtract(const this_type& s) {
 		return index_map.subtract(s.index_map);
 	}
-
-#if WANT_BASE_MULTIDIMENSIONAL_SPARSE_SET
-	/**
-		Join operator with run-type type-check.  
-	 */
-	bool
-	join_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return join(*t);
-	}
-
-	/**
-		Meet operator with run-type type-check.  
-	 */
-	bool
-	meet_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return meet(*t);
-	}
-
-	/**
-		Subtract operator with run-type type-check.  
-	 */
-	bool
-	subtract_sparse_set(const parent_type& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		NEVER_NULL(t);
-		return subtract(*t);
-	}
-#endif
 
 protected:
 	/**

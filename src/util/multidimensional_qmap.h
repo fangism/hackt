@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.9.24.1 2005/02/07 01:11:15 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.9.24.2 2005/02/07 06:02:32 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -76,103 +76,9 @@ bool
 empty(const typename multidimensional_qmap<D,K,T,L>::value_type& i);
 
 //=============================================================================
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-/**
-	Abstract base-class for multidimensional queryable map.  
-	Param K is the key type, typically an integer, or integer-like class.  
-	Param T is the object's value type.  
-	Param L is the container for indexing (list, vector).  
-	// maybe introduce P for pointer class overriding?
-	Interface: unlike base_multidimensional_sparse_set, operations
-		cannot be done using ranges, but only one index at a time.  
-	Index lists are generalized as a pair of iterators, may even be T*.  
- */
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class base_multidimensional_qmap {
-public:
-	typedef	base_multidimensional_qmap<K,T,L>	this_type;
-	typedef	L<K>					key_list_type;
-	typedef	typename key_list_type::const_iterator	const_list_iterator;
-	typedef	pair<const_list_iterator, const_list_iterator>
-							index_arg_type;
-	typedef typename qmap<K,T>::size_type		size_type;
-public:
-	static const size_t			LIMIT = 4;
-
-public:
-virtual	~base_multidimensional_qmap() { }
-
-virtual bool
-	empty(void) const = 0;
-
-virtual void
-	clear(void) = 0;
-
-virtual	void
-	clean(void) = 0;
-
-virtual	size_t
-	dimensions(void) const = 0;
-
-virtual	size_type
-	population(void) const = 0;
-
-virtual	T&
-	operator [] (const index_arg_type& i) = 0;
-
-virtual	T
-	operator [] (const index_arg_type& i) const = 0;
-
-	/**
-		For convenience, need not be virtual.  
-	 */
-	T&
-	operator [] (const key_list_type& l) {
-		// pure virtual call
-		return (*this)[make_iter_range(l)];
-	}
-
-	/**
-		For convenience, need not be virtual.  
-	 */
-	T
-	operator [] (const key_list_type& l) const {
-		// pure virtual call
-		return AS_A(const this_type&, *this)[make_iter_range(l)];
-	}
-
-// virtual bool probe(...) const;
-
-virtual	bool
-	erase(const index_arg_type& l) = 0;
-
-	bool
-	erase(const key_list_type& l) {
-		return erase(make_iter_range(l));
-	}
-
-// another that dereferences one-level only, given an index
-// cannot be specified here in base class
-
-protected:
-virtual	ostream&
-	dump(ostream& o, const string& pre) const = 0;
-
-public:
-virtual	ostream&
-	dump(ostream& o) const = 0;
-
-// static functions
-	/** virtually, a virtual constructor */
-	static
-	this_type* 
-	make_multidimensional_qmap(const size_t d);
-};	// end class base_multidimensional_qmap
-#endif	// WANT_BASE_MULTIDIMENSIONAL_QMAP
-
-//=============================================================================
 #if 0
 // not ready yet...
+// CONSIDER NESTED_ITERATOR!
 template <size_t D, class K, class T>
 struct multdimensional_map_iterator_base {
 	typedef	multidimensional_map_iterator_base*		_base_ptr;
@@ -209,30 +115,23 @@ struct multidimensional_map_iterator :
 	problem: limits implementation's template depth.  
 	Places limit on dimensionality of arrays...
 	Is 4 enough?
+
+	\param K is the key type, typically an integer, or integer-like class.  
+	\param T is the object's value type.  
+	\param L is the container for indexing (list, vector).  
  */
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class multidimensional_qmap
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-	: public base_multidimensional_qmap<K, T, L>
-#endif
-	{
+class multidimensional_qmap {
 friend class multidimensional_qmap<D+1, K, T, L>;
-
-public:
+protected:
 	typedef	multidimensional_qmap<D, K, T, L>	this_type;
 	typedef multidimensional_qmap<D-1, K, T, L>	child_type;
 	typedef	child_type				map_value_type;
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-	typedef	base_multidimensional_qmap<K, T, L>	parent;
-	typedef	typename parent::key_list_type		key_list_type;
-	typedef	typename key_list_type::const_iterator	const_list_iterator;
-	typedef	typename parent::index_arg_type		index_arg_type;
-#else
+public:
 	typedef	L<K>					key_list_type;
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-#endif
 	typedef	qmap<K, map_value_type>			map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
@@ -344,26 +243,15 @@ public:
 	Specialization of a one-dimensional array.  
  */
 SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-class multidimensional_qmap<1,K,T,L>
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-		: public base_multidimensional_qmap<K,T,L>
-#endif
-{
+class multidimensional_qmap<1,K,T,L> {
 friend class multidimensional_qmap<2,K,T,L>;
-
-public:
+protected:
 	typedef	multidimensional_qmap<1,K,T,L>		this_type;
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-	typedef	base_multidimensional_qmap<K,T,L>	parent;
-	typedef	typename parent::index_arg_type		index_arg_type;
-	typedef	typename parent::key_list_type		key_list_type;
-	typedef	typename key_list_type::const_iterator	const_list_iterator;
-#else
+public:
 	typedef	L<K>					key_list_type;
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-#endif
 	typedef	qmap<K,T>				map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;

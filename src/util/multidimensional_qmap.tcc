@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap.tcc"
 	Template method definitions for multidimensional_qmap class.
-	$Id: multidimensional_qmap.tcc,v 1.1.24.1 2005/02/07 01:11:15 fang Exp $
+	$Id: multidimensional_qmap.tcc,v 1.1.24.2 2005/02/07 06:02:32 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
@@ -19,45 +19,15 @@ namespace MULTIDIMENSIONAL_QMAP_NAMESPACE {
 using std::accumulate;
 #include "using_ostream.h"
 
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-//=============================================================================
-// class base_multidimensional_qmap method definitions
-
-BASE_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-base_multidimensional_qmap<K,T,L>*
-base_multidimensional_qmap<K,T,L>::
-make_multidimensional_qmap(const size_t d) {
-	// slow switch-case, but we need constants
-	assert(d > 0 && d <= LIMIT);                    // HARD LIMIT
-	// there may be some clever way to make a call table to 
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multidimensional_qmap<1,K,T,L>();
-		case 2: return new multidimensional_qmap<2,K,T,L>();
-		case 3: return new multidimensional_qmap<3,K,T,L>();
-		case 4: return new multidimensional_qmap<4,K,T,L>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-#endif
-
 //=============================================================================
 // class multidimensional_qmap method definitions
 
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-multidimensional_qmap<D,K,T,L>::multidimensional_qmap() :
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-		parent(),
-#endif
-		index_map() { }
+multidimensional_qmap<D,K,T,L>::multidimensional_qmap() : index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
 multidimensional_qmap<D,K,T,L>::multidimensional_qmap(const this_type& s) :
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-		parent(), 
-#endif
 		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -181,19 +151,11 @@ multidimensional_qmap<D,K,T,L>::dump(ostream& o, const string& pre) const {
 // class multidimensional_qmap method definitions (specialized)
 
 SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-multidimensional_qmap<1,K,T,L>::multidimensional_qmap() :
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-		parent(), 
-#endif
-		index_map() { }
+multidimensional_qmap<1,K,T,L>::multidimensional_qmap() : index_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIDIMENSIONAL_QMAP_TEMPLATE_SIGNATURE
-multidimensional_qmap<1,K,T,L>::
-multidimensional_qmap(const this_type& s) :
-#if WANT_BASE_MULTIDIMENSIONAL_QMAP
-		parent(), 
-#endif
+multidimensional_qmap<1,K,T,L>::multidimensional_qmap(const this_type& s) :
 		index_map(s.index_map) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -24,12 +24,16 @@
 	  Eliminated virtual base classes (in comments, flagged out):
 		  base_multidimensional_qmap
 		  base_multidimensional_sparse_set
-	  Internalized/privatized implementaiton of 
+	  Internalized/privatized implementation of 
 	  simple_instance_reference::mset_base, defining as a module-local
 	  virtual base class in "art_object_inst_ref.cc".
 	  In general, we prefer this pattern of "let the user virtualize"
 	  the various dimension-specific data structures.  
 	  We provide a uniform functional interface to make this easy.  
+
+	+ -set-11:
+	  Cleaned out commented and flagged out blocks of code
+	  removed from revision -set-10.
 
 
 2005-02-05	David Fang	<fangism@users.sourceforge.net>
