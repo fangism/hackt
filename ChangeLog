@@ -12,6 +12,8 @@
 	  To do eventually: make persistent object-loader exception safe.
 	  This will be much more difficult because of difficult
 	  guarantee that each object in the table is visited only once.  
+	  May require a destructor-like method in each class that
+	  registers each visit with the persistent object manager.  
 
 	* ARTXX-00-01-04-main-00-11-merged-what-01:
 	  Merged insignificant revisions from -10-what-01.  
