@@ -1,11 +1,11 @@
 /**
 	\file "multikey_map_fwd.h"
 	Forward declarations for multidimensional map.  
-	$Id: multikey_map_fwd.h,v 1.5.24.2 2005/02/06 18:25:36 fang Exp $
+	$Id: multikey_map_fwd.h,v 1.5.24.3 2005/02/07 20:16:55 fang Exp $
  */
 
-#ifndef	__MULTIKEY_MAP_FWD_H__
-#define	__MULTIKEY_MAP_FWD_H__
+#ifndef	__UTIL_MULTIKEY_MAP_FWD_H__
+#define	__UTIL_MULTIKEY_MAP_FWD_H__
 
 #ifndef	MULTIKEY_MAP_NAMESPACE
 #define	MULTIKEY_MAP_NAMESPACE		util
@@ -30,5 +30,5 @@ template <size_t D, class K, class T,
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE
 
-#endif	//	__MULTIKEY_MAP_FWD_H__
+#endif	// __UTIL_MULTIKEY_MAP_FWD_H__
 

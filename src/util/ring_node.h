@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.2 2005/02/05 02:24:04 fang Exp $
+	$Id: ring_node.h,v 1.1.2.2.2.1 2005/02/07 20:16:56 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -145,7 +145,7 @@ protected:
 		point to the same reference element.  
 		See implementation of comparison operators.  
 	 */
-	ring_node_base*				last_node;
+	const ring_node_base*			last_node;
 
 protected:
 	// protecting constructors to prevent abuse...
@@ -166,7 +166,7 @@ protected:
 		\param p initial node pointer.  
 		\param l should be equal to p->next, unless it is NULL.
 	 */
-	ring_node_iterator_base(ring_node_base* p, ring_node_base* l) :
+	ring_node_iterator_base(ring_node_base* p, const ring_node_base* l) :
 		current_node(p), last_node(l) {
 		NEVER_NULL(l);
 		INVARIANT(l->points_to(p));
@@ -248,7 +248,7 @@ public:
 	/**
 		\pre n must point to l.
 	 */
-	ring_node_iterator(ring_node_base* n, ring_node_base* l) :
+	ring_node_iterator(ring_node_base* n, const ring_node_base* l) :
 		ring_node_iterator_base(n, l) { }
 
 	// using default copy constructor
@@ -384,18 +384,12 @@ public:
 	end(void) { return iterator(this->next, this); }
 
 	/**
-		const_cast is required because all nodes store
-		a non-const pointer.  
-		Thus, iterator constructors take non-const pointer arguments.  
-		The iterator interface will guarantee that only 
-		const_references and const_pointers are ever returned, 
-		so no need to lose sleep over it.  
 		Nodes and lists are actually one and the same
 		tightly coupled.  
 	 */
 	const_iterator
 	end(void) const {
-		return const_iterator(this->next, const_cast<this_type*>(this));
+		return const_iterator(this->next, this);
 	}
 
 	/**

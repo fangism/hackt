@@ -2,11 +2,11 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.24.5 2005/02/07 01:11:16 fang Exp $
+	$Id: multikey_map.h,v 1.14.24.6 2005/02/07 20:16:55 fang Exp $
  */
 
-#ifndef	__MULTIKEY_MAP_H__
-#define	__MULTIKEY_MAP_H__
+#ifndef	__UTIL_MULTIKEY_MAP_H__
+#define	__UTIL_MULTIKEY_MAP_H__
 
 #include "macros.h"
 #include "STL/list_fwd.h"
@@ -363,5 +363,5 @@ struct array_traits<MULTIKEY_MAP_NAMESPACE::multikey_map<D,K,T,M> > {
 
 }	// end namespace util
 
-#endif	//	__MULTIKEY_MAP_H__
+#endif	// __UTIL_MULTIKEY_MAP_H__
 
