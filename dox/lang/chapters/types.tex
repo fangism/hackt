@@ -23,10 +23,61 @@ Using uninitialized parameters is an error.
 
 We cover templates more in-depth in Chapter blah.  
 ART++ supports parametric types, or templates, much like C++. 
+Terminology: a template definition (or just template)
+is a parameterized definition.  
 User-defined datatypes, channels, and processes may be parameterized.  
 Currently the only types that may appear in template signatures
 are parameters and arrays thereof.  
 Later we may add support for template template arguments, muahahaha.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definitions}
+\label{sec:types:definition}
+
+A \emph{type} can either be a reference to a non-template definition
+(which may be built-in) or a reference to a template definition
+with a set of parameters.  
+
+Two (non-template) types are equivalent if and only if 
+they refer to the same non-template definition.  
+In Chapter~\ref{sec:templates} we extend the notion of type-equivalence
+to cover types with templates.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Completeness and Usability}
+\label{sec:types:completeness}
+
+In \artxx, there are three levels of completeness for definitions.  
+
+\begin{enumerate}
+\item A definition is \emph{declared}
+	if its template signature (which may be empty) has been defined.  
+	Forward declarations of a type only specify the name
+	and template parameters, and no other information.  
+\item A definition is \emph{signed} if it is declared 
+	and its public ports interface (which may be empty) has been defined.  
+\item A definition is \emph{defined} if it is signed
+	and its body has been defined.  
+\end{enumerate}
+
+Since type information only refers to template parameters, 
+a type may refer to any declared definition.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Instantiation}
+\label{sec:types:completeness:instantiation}
+
+An instantiation is the creation of 
+
+\subsection{Connection}
+\label{sec:types:completeness:connection}
+
+See Chapter~\ref{sec:connections}.  
+
+\subsection{Typedefs}
+\label{sec:types:completeness:typedefs}
+
+See Chapter~\ref{sec:typedefs}.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future extensions}

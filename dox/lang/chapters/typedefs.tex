@@ -20,6 +20,8 @@ Two kinds of typedefs, with three syntaces.
 
 In all three forms the \tit{identifier} is the name of the new
 typedef.  
+The only prerequisite for the existing definition is that it has already 
+been declared.  
 
 The first form is a pseudo-typedef, a pure \emph{definition} name alias, 
 as if one had written 
@@ -51,30 +53,43 @@ of typedef-ing.
 
 By construction, the graph of typedef definitions must form a tree,
 and thus, cannot have cycles.  
+Ultimately, every typedef must be defined in terms of a 
+unique non-typedef \emph{canonical definition}\index{canonical definition}.  
+The \emph{canonical parameters} are the values of the 
+parameters that are eventually passed to the canonical definition, 
+and are evaluated by the transformations defined by each typedef indirection.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type-equivalence}
 \label{sec:typedefs:equivalence}
 
-We extend the notion of type-equivalence to include typedefs as follows:
+\index{type-equivalence|(}
 
-Two instances of typedefs are type-equivalent if and only if...
+We extend the notion of \emph{type-equivalence} to include typedefs as follows:
+
+Two instances of typedefs are type-equivalent if and only if
+they refer to the same canonical definition, and their canonical 
+parameters are equal.  
 
 Some implementation hints.
 Given two typedef instances or references.  
 Find greatest common ancestor.  
 Common ancestor may simplify equivalence deduction.  
 
+\index{type-equivalence|)}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Questions}
 \label{sec:typedefs:questions}
 
 \textbf{Forward declarations.}
-Can typedefs have forward declarations?
+Can typedefs have forward declarations?  Should we allow this?  Rather not.
 ``I'm declaring this typedef's name, but it's definition will be bound
 later...''
+Beware of typedef cycles!
 
-Can typedefs have external linkage?
+Can typedefs have external linkage?  Can cycles form?
+But what class of type is it: channel, process?
 e.g. \ttt{extern typedef foo;}
 
 \ttt{extern template <...> typedef foo;}
