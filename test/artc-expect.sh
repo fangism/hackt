@@ -12,6 +12,11 @@
 
 # if [ $# -lt 6 ] ; then exit 1 ; fi
 
+# see if it crashes first
+$1 < $2/$3.in 2> /dev/null ; \
+if [ $? -gt 1 ] ; then exit 1 ; fi > /dev/null
+
+# the run real test, comparing outputs
 $1 < $2/$3.in 2>&1 | cat > $3.test
 $4 $3.test > $3.test.filter
 if [ -f $2/$3.stderr ] ; then \
