@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.3 2004/12/12 04:53:05 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.4 2004/12/12 22:26:35 fang Exp $
  */
 
 #include <iostream>
@@ -36,7 +36,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(struct_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 struct_instance_collection::struct_instance_collection(const scopespace& o, 
-		const string& n) : parent_type(o, n) {
+		const string& n, const size_t d) : parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,7 +68,7 @@ void
 struct_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		STRUCT_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
+		STRUCT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 }
 }
@@ -118,13 +118,13 @@ operator << (ostream& o, const struct_instance_alias& b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
-struct_array<D>::struct_array() : struct_instance_collection(), collection() {
+struct_array<D>::struct_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
 struct_array<D>::struct_array(const scopespace& o, const string& n) :
-		struct_instance_collection(o, n), collection() {
+		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -140,11 +140,13 @@ struct_array<D>::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
 size_t
 struct_array<D>::dimensions(void) const {
 	return D;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
@@ -224,7 +226,7 @@ STRUCT_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
 struct_array<D>::resolve_indices(const const_index_list& l) const {
 	const size_t l_size = l.size();
-	if (dimensions() == l_size) {
+	if (D == l_size) {
 		// already fully specified
 		return l;
 	}
@@ -340,12 +342,12 @@ if (!m.flag_visit(this)) {
 // class struct_array method definitions (specialized)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct_array<0>::struct_array() : struct_instance_collection(), the_instance() {
+struct_array<0>::struct_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct_array<0>::struct_array(const scopespace& o, const string& n) :
-		struct_instance_collection(o, n), the_instance() {
+		parent_type(o, n, 0), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -359,10 +361,12 @@ struct_array<0>::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 size_t
 struct_array<0>::dimensions(void) const {
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.15 2004/12/10 22:02:16 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.16 2004/12/12 22:26:32 fang Exp $
  */
 
 #include <iostream>
@@ -66,7 +66,7 @@ simple_instance_reference::~simple_instance_reference() {
  */
 size_t
 simple_instance_reference::dimensions(void) const {
-	size_t dim = get_inst_base()->dimensions();
+	size_t dim = get_inst_base()->dimensions;
 	if (array_indices) {
 		const size_t c = array_indices->dimensions_collapsed();
 		INVARIANT(c <= dim);
@@ -137,7 +137,7 @@ simple_instance_reference::is_static_constant_collection(void) const {
 bool
 simple_instance_reference::has_static_constant_dimensions(void) const {
 	// case 1: instance collection is not collective. 
-	const size_t base_dim = get_inst_base()->dimensions();
+	const size_t base_dim = get_inst_base()->dimensions;
 	if (base_dim == 0)
 		return true;
 	// case 2: reference is not-indexed, and instance is collective.
@@ -168,7 +168,7 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
  */
 bool
 simple_instance_reference::may_be_densely_packed(void) const {
-	const size_t base_dim = get_inst_base()->dimensions();
+	const size_t base_dim = get_inst_base()->dimensions;
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
@@ -214,7 +214,7 @@ simple_instance_reference::may_be_densely_packed(void) const {
  */
 bool
 simple_instance_reference::must_be_densely_packed(void) const {
-	const size_t base_dim = get_inst_base()->dimensions();
+	const size_t base_dim = get_inst_base()->dimensions;
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
@@ -270,7 +270,7 @@ simple_instance_reference::must_be_densely_packed(void) const {
  */
 const_range_list
 simple_instance_reference::static_constant_dimensions(void) const {
-	const size_t base_dim = get_inst_base()->dimensions();
+	const size_t base_dim = get_inst_base()->dimensions;
 	INVARIANT(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
 		const never_ptr<const index_list> il(array_indices);
@@ -313,7 +313,7 @@ simple_instance_reference::static_constant_dimensions(void) const {
  */
 const_index_list
 simple_instance_reference::implicit_static_constant_indices(void) const {
-	const size_t base_dim = get_inst_base()->dimensions();
+	const size_t base_dim = get_inst_base()->dimensions;
 	// if not collective, then return true (not really applicable)
 	INVARIANT(base_dim);		// non-zero dimension only!
 	// else is collective
@@ -639,7 +639,7 @@ simple_instance_reference::must_be_type_equivalent(
  */
 excl_ptr<simple_instance_reference::mset_base>
 simple_instance_reference::unroll_static_instances(const size_t dim) const {
-	INVARIANT(dim <= get_inst_base()->dimensions());
+	INVARIANT(dim <= get_inst_base()->dimensions);
 	instantiation_state iter = inst_state;
 	const instantiation_state end(get_inst_base()->collection_state_end());
 	excl_ptr<mset_base>
@@ -892,7 +892,7 @@ param_instance_reference::is_static_constant(void) const {
 	if (array_indices)
 		return false;
 	// or the instance_collection_base is collective (not 0-dimensional)
-	else if (get_inst_base()->dimensions())
+	else if (get_inst_base()->dimensions)
 		return false;
 	// else if singular, whether or not it is initialized once
 	// to another static constant (parameter variable or value).  
@@ -918,7 +918,7 @@ param_instance_reference::is_loop_independent(void) const {
 		return array_indices->is_loop_independent();
 	else 
 		// no array indices, see if instance_collection_base is collective
-	if (get_inst_base()->dimensions()) {
+	if (get_inst_base()->dimensions) {
 		// if collective, check if the instance_reference itself 
 		// is found within a loop that adds to the collection...
 		// ... but I'm too lazy to do this entirely now
@@ -949,7 +949,7 @@ param_instance_reference::is_unconditional(void) const {
 	if (array_indices)
 		return array_indices->is_unconditional();
 	// else see if point of reference is within some conditional scope
-	else if (get_inst_base()->dimensions()) {
+	else if (get_inst_base()->dimensions) {
 		// if collective, see if the instance_reference itself
 		// is found within a conditional body, by walking the 
 		// collection_state_iterator forward.

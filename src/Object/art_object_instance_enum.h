@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.3 2004/12/12 04:53:05 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.4 2004/12/12 22:26:34 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -123,13 +123,17 @@ public:
 	typedef	never_ptr<enum_instance_alias>		instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
 protected:
-	enum_instance_collection() { }
+	explicit
+	enum_instance_collection(const size_t d) : parent_type(d) { }
 public:
-	enum_instance_collection(const scopespace& o, const string& n);
+	enum_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~enum_instance_collection();
 
+#if 0
 virtual	size_t dimensions(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -209,7 +213,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return D; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -268,7 +272,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return 0; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif

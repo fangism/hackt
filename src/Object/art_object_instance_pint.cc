@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.4 2004/12/12 04:53:05 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.5 2004/12/12 22:26:35 fang Exp $
  */
 
 #include <iostream>
@@ -63,47 +63,27 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_instance_collection,
 /**
 	Private empty constructor.
  */
-pint_instance_collection::pint_instance_collection() :
-		param_instance_collection(), ival(NULL) {
+pint_instance_collection::pint_instance_collection(const size_t d) :
+		parent_type(d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
-		const string& n) :
-#if 0
-		param_instance_collection(o, n,
-			index_collection_item_ptr_type(NULL)),
-#else
-		param_instance_collection(o, n), 
-#endif
-		ival(NULL) {
+		const string& n, const size_t d) :
+		parent_type(o, n, d), ival(NULL) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-pint_instance_collection::pint_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) :
-		param_instance_collection(o, n, d), ival(NULL) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is a special case used by built-in definition construction, 
-	so we restrict the default argument to constant integer.  
+	so we restrict the default argument to constant scalar integer.  
 	This way, we can safely omit the call to
 	type_check_actual_param_expr(*i).
  */
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
-		const string& n, 
+		const string& n, const size_t d, 
 		count_ptr<const pint_const> i) :
-#if 0
-		param_instance_collection(o, n,
-			index_collection_item_ptr_type(NULL)),
-#else
-		param_instance_collection(o, n), 
-#endif
+		parent_type(o, n, d), 
 		ival(i) {
 	/***
 		assert(type_check_actual_param_expr(*i));
@@ -117,23 +97,12 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-pint_instance_collection::pint_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d, 
-		count_ptr<const pint_expr> i) :
-		param_instance_collection(o, n, d), ival(i) {
-	assert(type_check_actual_param_expr(*i));
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::~pint_instance_collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_instance_collection::what(ostream& o) const {
-	return o << "pint-inst<" << dimensions() << ">";
+	return o << "pint-inst<" << dimensions << ">";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -169,7 +138,7 @@ bool
 pint_instance_collection::initialize(count_ptr<const pint_expr> e) {
 	assert(e);
 	assert(!ival);
-	if (dimensions() == 0) {
+	if (dimensions == 0) {
 		if (type_check_actual_param_expr(*e)) {
 			ival = e;
 			return true;
@@ -273,7 +242,7 @@ void
 pint_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
-		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
+		PINT_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
@@ -340,13 +309,13 @@ pint_instance_collection::load_object_base(persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
-pint_array<D>::pint_array() : pint_instance_collection(), collection() {
+pint_array<D>::pint_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::pint_array(const scopespace& o, const string& n) :
-		pint_instance_collection(o, n), collection() {
+		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -355,11 +324,13 @@ PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::~pint_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 PINT_ARRAY_TEMPLATE_SIGNATURE
 size_t
 pint_array<D>::dimensions(void) const {
 	return D;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
@@ -446,7 +417,7 @@ PINT_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
 pint_array<D>::resolve_indices(const const_index_list& l) const {
 	const size_t l_size = l.size();
-	if (dimensions() == l_size) {
+	if (D == l_size) {
 		// already fully specified
 		return l;
 	}
@@ -580,25 +551,27 @@ if (!m.flag_visit(this)) {
 // class pint_array<0> specialization method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_array<0>::pint_array() : pint_instance_collection(), the_instance() {
+pint_array<0>::pint_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n) :
-		pint_instance_collection(o, n), the_instance() {
+		parent_type(o, n, 0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n, 
 		count_ptr<const pint_const> i) :
-		pint_instance_collection(o, n, i), the_instance() {
+		parent_type(o, n, 0, i), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 size_t
 pint_array<0>::dimensions(void) const {
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

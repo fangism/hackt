@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.3 2004/12/12 04:53:05 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.4 2004/12/12 22:26:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -120,17 +120,21 @@ class struct_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
 public:
-	typedef	never_ptr<struct_instance_alias>		instance_ptr_type;
+	typedef	never_ptr<struct_instance_alias>	instance_ptr_type;
 	typedef	multikey_base<int>			unroll_index_type;
 protected:
-	struct_instance_collection() { }
+	explicit
+	struct_instance_collection(const size_t d) : parent_type(d) { }
 public:
-	struct_instance_collection(const scopespace& o, const string& n);
+	struct_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~struct_instance_collection();
 
+#if 0
 virtual	size_t
 	dimensions(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -210,7 +214,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return D; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -269,7 +273,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return 0; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif

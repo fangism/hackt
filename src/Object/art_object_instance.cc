@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.30 2004/12/12 04:53:04 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.31 2004/12/12 22:26:32 fang Exp $
  */
 
 #include <iostream>
@@ -35,8 +35,9 @@ const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	Private empty constructor.
+	Private empty constructor, but with dimension established.
  */
 instance_collection_base::instance_collection_base() :
 		object(), persistent(), 
@@ -46,6 +47,7 @@ instance_collection_base::instance_collection_base() :
 #endif
 		{
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -62,18 +64,9 @@ instance_collection_base::instance_collection_base() :
  */
 // inline
 instance_collection_base::instance_collection_base(const scopespace& o, 
-		const string& n
-#if 0
-		, const size_t d
-#endif
-		) : 
-		object(), owner(never_ptr<const scopespace>(&o)),
-		key(n),
-		index_collection()
-#if 0
-		, depth(d)
-#endif
-		{
+		const string& n, const size_t d) : 
+		object(), owner(owner_ptr_type(&o)),
+		key(n), index_collection(), dimensions(d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -89,7 +82,7 @@ instance_collection_base::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
 	index_collection_type::const_iterator i = index_collection.begin();
 	for ( ; i!=index_collection.end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		index_collection_item_ptr_type ind((*i)->get_indices());
 		if (ind)
 			ind->dump(o) << endl;
@@ -161,11 +154,7 @@ const_range_list
 instance_collection_base::detect_static_overlap(
 		index_collection_item_ptr_type r) const {
 	NEVER_NULL(r);
-#if 0
-	INVARIANT(r->dimensions() == depth);
-#else
-	INVARIANT(r->dimensions() == dimensions());
-#endif
+	INVARIANT(r->dimensions() == dimensions);
 #if 0
 	// DEBUG
 	cerr << "In instance_collection_base::detect_static_overlap with this = "
@@ -209,17 +198,14 @@ instance_collection_base::add_instantiation_statement(
 		index_collection_type::value_type r) {
 	NEVER_NULL(r);
 	index_collection_item_ptr_type i(r->get_indices());
-#if 1
-	const size_t depth = dimensions();
-#endif
-	INVARIANT(depth || index_collection.empty());	// catches 0-D
+	INVARIANT(dimensions || index_collection.empty());	// catches 0-D
 	// TYPE CHECK!!!
 	const_range_list overlap;
 	if (i) {
-		INVARIANT(depth == i->dimensions());
+		INVARIANT(dimensions == i->dimensions());
 		overlap = detect_static_overlap(i);
 	} else {
-		INVARIANT(!depth);
+		INVARIANT(!dimensions);
 	}
 	// can the following accept NULL?
 	index_collection.push_back(r);
@@ -266,7 +252,7 @@ instance_collection_base::is_port_formal(void) const {
 bool
 instance_collection_base::template_formal_equivalent(
 		never_ptr<const instance_collection_base> b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// first make sure base types are equivalent.  
 	count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
@@ -291,7 +277,7 @@ instance_collection_base::template_formal_equivalent(
 bool
 instance_collection_base::port_formal_equivalent(
 		never_ptr<const instance_collection_base> b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// first make sure base types are equivalent.  
 	count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
@@ -321,8 +307,8 @@ instance_collection_base::port_formal_equivalent(
 bool
 instance_collection_base::formal_size_equivalent(
 		never_ptr<const instance_collection_base> b) const {
-	assert(b);
-	if (dimensions() != b->dimensions()) {
+	NEVER_NULL(b);
+	if (dimensions != b->dimensions) {
 		// useful error message here: dimensions don't match
 		return false;
 	}
@@ -331,8 +317,8 @@ instance_collection_base::formal_size_equivalent(
 	// and they must be dense arrays.  
 	const size_t this_coll = index_collection.size();
 	const size_t b_coll = b->index_collection.size();
-	assert(this_coll <= 1);
-	assert(b_coll <= 1);
+	INVARIANT(this_coll <= 1);
+	INVARIANT(b_coll <= 1);
 	if (this_coll != b_coll) {
 		// one is scalar, the other is array
 		return false;
@@ -379,7 +365,8 @@ instance_collection_base::check_expression_dimensions(
 		const param_expr& pe) const {
 	MUST_BE_A(const param_instance_collection*, this);
 	// else is not an expression class!
-#if 1
+
+	// dimensions() used to be a pure virtual method
 	// problem when dimensions() is called during construction:
 	// error: pure virtual method called (during construction)
 	// this occurs during static construction of the global 
@@ -391,16 +378,15 @@ instance_collection_base::check_expression_dimensions(
 	//	which is safe as long as no other global (outside of
 	//	art_built_ins.cc) depends on it.
 	// we choose 2 because it is a general solution.  
-	const size_t depth = dimensions();
-#endif
-	if (depth != pe.dimensions()) {
+
+	if (dimensions != pe.dimensions()) {
 		// number of dimensions doesn't even match!
 		// useful error message?
 		return false;
 	}
 	// dimensions match
-	if (depth != 0) {
-		assert(index_collection.size() == 1);	// huh? true?
+	if (dimensions != 0) {
+		INVARIANT(index_collection.size() == 1);	// huh? true?
 		// make sure sizes in each dimension
 		index_collection_type::const_iterator i =
 			index_collection.begin();
@@ -420,9 +406,9 @@ instance_collection_base::check_expression_dimensions(
 			return true;
 		}
 	} else {
-		// depth == 0 means instantiation is a single instance.  
+		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
-		assert(index_collection.size() <= 1);
+		INVARIANT(index_collection.size() <= 1);
 		return (pe.dimensions() == 0);
 	}
 }
@@ -456,7 +442,7 @@ instance_collection_base::collect_transient_info_base(
 /**
 	Write out serial list of pointers to index collection items, 
 	with pointers translated into indicies.  
-	Also saves the depth (dimensions).
+	Does NOT save the dimensions -- it is set upon reconstruction.
  */
 inline
 void
@@ -465,7 +451,7 @@ instance_collection_base::write_index_collection_pointers(
 	m.write_pointer(o, owner);
 	write_string(o, key);
 #if 0
-	write_value(o, depth);
+	write_value(o, dimensions);
 #endif
 	m.write_pointer_list(o, index_collection);
 		// is actually specialized for count_ptr's :)
@@ -482,14 +468,14 @@ instance_collection_base::write_object_base(
 /**
 	Loads serial list of pointers into index collection items, 
 	with indices translated into pointers.  
-	Also restores depth (dimensions).
+	Does NOT restore dimensions -- it is set at reconstruction.  
  */
 inline
 void
 instance_collection_base::load_index_collection_pointers(
 		persistent_object_manager& m, istream& i) {
 #if 0
-	read_value(i, depth);
+	read_value(i, dimensions);
 #endif
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
@@ -508,6 +494,7 @@ instance_collection_base::load_object_base(
 // class datatype_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Private empty constructor.
  */
@@ -515,10 +502,12 @@ datatype_instance_collection::datatype_instance_collection() :
 		instance_collection_base() {
 	// no assert
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_collection::datatype_instance_collection(const scopespace& o, 
-		const string& n) : instance_collection_base(o, n) {
+datatype_instance_collection::datatype_instance_collection(
+		const scopespace& o, const string& n, const size_t d) :
+		instance_collection_base(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -528,7 +517,7 @@ datatype_instance_collection::~datatype_instance_collection() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 datatype_instance_collection::get_type_ref(void) const {
-	assert(!index_collection.empty());
+	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
 
@@ -541,7 +530,7 @@ datatype_instance_collection::get_type_ref(void) const {
 count_ptr<member_instance_reference_base>
 datatype_instance_collection::make_member_instance_reference(
 		count_ptr<const simple_instance_reference> b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<datatype_member_instance_reference>(
 		new datatype_member_instance_reference(b,

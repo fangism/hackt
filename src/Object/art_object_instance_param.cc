@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.2 2004/12/12 04:53:05 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.3 2004/12/12 22:26:35 fang Exp $
  */
 
 #include <iostream>
@@ -30,14 +30,14 @@ namespace entity {
 /**
 	Private empty constructor.  
  */
-param_instance_collection::param_instance_collection() :
-		instance_collection_base() {
+param_instance_collection::param_instance_collection(const size_t d) :
+		parent_type(d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instance_collection::param_instance_collection(const scopespace& o, 
-		const string& n) :
-		instance_collection_base(o, n) {
+		const string& n, const size_t d) :
+		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,7 +109,7 @@ param_instance_collection::is_template_formal(void) const {
  */
 bool
 param_instance_collection::may_be_initialized(void) const {
-	if (dimensions() || is_template_formal())
+	if (dimensions || is_template_formal())
 		return true;
 	else {
 		// is not a template formal, thus we interpret
@@ -133,7 +133,7 @@ param_instance_collection::may_be_initialized(void) const {
  */
 bool
 param_instance_collection::must_be_initialized(void) const {
-	if (dimensions())
+	if (dimensions)
 		return false;
 	else if (is_template_formal())
 		return true;
@@ -153,7 +153,7 @@ param_instance_collection::must_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_instance_collection::is_static_constant(void) const {
-	if (dimensions()) {
+	if (dimensions) {
 		// conservatively return... depends on may or must...
 		return false;
 	} else if (is_template_formal()) {

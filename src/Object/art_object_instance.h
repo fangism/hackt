@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.28 2004/12/12 04:53:04 fang Exp $
+	$Id: art_object_instance.h,v 1.29 2004/12/12 22:26:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -47,14 +47,18 @@ protected:
 
 protected:
 	/// Private empty constructor.  
-	process_instance_collection() { }
+	explicit
+	process_instance_collection(const size_t d) : parent_type(d) { }
 public:
-	process_instance_collection(const scopespace& o, const string& n);
+	process_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~process_instance_collection();
 
+#if 0
 virtual	size_t
 	dimensions(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -120,9 +124,11 @@ class datatype_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
 protected:
-	datatype_instance_collection();
+	explicit
+	datatype_instance_collection(const size_t d) : parent_type(d) { }
 public:
-	datatype_instance_collection(const scopespace& o, const string& n);
+	datatype_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~datatype_instance_collection();
 
@@ -157,34 +163,6 @@ protected:	// propagate to children
 };	// end class datatype_instance_collection
 
 //=============================================================================
-#if 0
-/**
-	Instantiation of a channel type.  
-	Final class?
- */
-class channel_instance_collection : public instance_collection_base {
-private:
-	typedef	instance_collection_base	parent_type;
-protected:
-	channel_instance_collection();
-public:
-	channel_instance_collection(const scopespace& o, 
-		const string& n, const size_t d);
-	~channel_instance_collection();
-
-	ostream& what(ostream& o) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
-	count_ptr<instance_reference_base>
-		make_instance_reference(void) const;
-	count_ptr<member_instance_reference_base>
-		make_member_instance_reference(
-			count_ptr<const simple_instance_reference> b) const;
-public:
-	PERSISTENT_METHODS
-};	// end class channel_instance_collection
-#endif
-
-//=============================================================================
 /**
 	Channel instantiation.  
 	Type information is now in the instance_collection_list.
@@ -203,14 +181,18 @@ protected:
 
 protected:
 	/// Private empty constructor.  
-	channel_instance_collection() { }
+	explicit
+	channel_instance_collection(const size_t d) : parent_type(d) { }
 public:
-	channel_instance_collection(const scopespace& o, const string& n);
+	channel_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~channel_instance_collection();
 
+#if 0
 virtual	size_t
 	dimensions(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream& o) const = 0;

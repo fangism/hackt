@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2004-12-12	David Fang	<fangism@users.sourceforge.net>
+
+	* Removed virtual size_t dimensions() const = 0 from
+	  all children of instance_collection_base, in favor of caching
+	  a const size_t dimension member per collection.  
+	  This field, however, is not stored persistently, and is 
+	  set upon construction as a run-time constant per collection object.  
+
+
 2004-12-11	David Fang	<fangism@users.sourceforge.net>
 
 	* Split process and channel instance collections into 

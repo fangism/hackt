@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.5 2004/12/12 04:53:05 fang Exp $
+	$Id: art_object_instance_param.h,v 1.6 2004/12/12 22:26:35 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -36,9 +36,10 @@ private:
 	typedef	instance_collection_base	parent_type;
 
 protected:
-	param_instance_collection();
+	param_instance_collection(const size_t d);
 public:
-	param_instance_collection(const scopespace& o, const string& n);
+	param_instance_collection(const scopespace& o, const string& n, 
+		const size_t d);
 
 virtual	~param_instance_collection();
 
@@ -196,18 +197,17 @@ protected:
 	count_ptr<const pbool_expr>		ival;
 
 protected:
-	pbool_instance_collection();
+	explicit
+	pbool_instance_collection(const size_t d);
 public:
-	pbool_instance_collection(const scopespace& o, const string& n);
-
-#if 0
 	pbool_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
-#endif
 
 virtual	~pbool_instance_collection();
 
+#if 0
 virtual	size_t dimensions(void) const = 0;
+#endif
 
 	ostream& what(ostream& o) const;
 
@@ -311,7 +311,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return D; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -379,7 +379,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return 0; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -521,24 +521,20 @@ protected:
 	count_ptr<const pint_expr>		ival;
 
 protected:
-	pint_instance_collection();
+	pint_instance_collection(const size_t d);
 public:
-	pint_instance_collection(const scopespace& o, const string& n);
-#if 0
 	pint_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
-#endif
+
 	// keep these for built-in int datatype initialization
 	pint_instance_collection(const scopespace& o, const string& n, 
-		count_ptr<const pint_const> i);
-#if 0
-	pint_instance_collection(const scopespace& o, const string& n, 
-		const size_t d, count_ptr<const pint_expr> i);
-#endif
+		const size_t d, count_ptr<const pint_const> i);
 
 virtual	~pint_instance_collection();
 
+#if 0
 virtual	size_t dimensions(void) const = 0;
+#endif
 
 	ostream&
 	what(ostream& o) const;
@@ -651,7 +647,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return D; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -722,7 +718,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return 0; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.4 2004/12/12 04:53:05 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.5 2004/12/12 22:26:35 fang Exp $
  */
 
 #include <iostream>
@@ -63,30 +63,15 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection,
 /**
 	Private empty constructor.  
  */
-pbool_instance_collection::pbool_instance_collection() :
-		param_instance_collection(), ival(NULL) {
+pbool_instance_collection::pbool_instance_collection(const size_t d) :
+		parent_type(d), ival(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
-		const string& n) :
-#if 0
-		param_instance_collection(o, n,
-			index_collection_item_ptr_type(NULL)),
-#else
-		param_instance_collection(o, n), 
-#endif
-		ival(NULL) {
+		const string& n, const size_t d) :
+		parent_type(o, n, d), ival(NULL) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
-		const string& n, 
-		const size_t d) :
-		param_instance_collection(o, n, d), ival(NULL) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -149,7 +134,7 @@ bool
 pbool_instance_collection::initialize(count_ptr<const pbool_expr> e) {
 	assert(e);
 	assert(!ival);		// must not already be initialized or assigned
-	if (dimensions() == 0) {
+	if (dimensions == 0) {
 		if (type_check_actual_param_expr(*e)) {
 			ival = e;
 			return true;
@@ -235,7 +220,7 @@ void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
@@ -297,13 +282,13 @@ pbool_instance_collection::load_object_base(persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
-pbool_array<D>::pbool_array() : pbool_instance_collection(), collection() {
+pbool_array<D>::pbool_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
 pbool_array<D>::pbool_array(const scopespace& o, const string& n) :
-		pbool_instance_collection(o, n), collection() {
+		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -312,11 +297,13 @@ PBOOL_ARRAY_TEMPLATE_SIGNATURE
 pbool_array<D>::~pbool_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
 size_t
 pbool_array<D>::dimensions(void) const {
 	return D;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PBOOL_ARRAY_TEMPLATE_SIGNATURE 
@@ -403,7 +390,7 @@ PBOOL_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
 pbool_array<D>::resolve_indices(const const_index_list& l) const {
 	const size_t l_size = l.size();
-	if (dimensions() == l_size) {
+	if (D == l_size) {
 		// already fully specified
 		return l;
 	}
@@ -530,12 +517,12 @@ if (!m.flag_visit(this)) {
 // class pbool_array<0> specialization method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pbool_array<0>::pbool_array() : pbool_instance_collection(), the_instance() {
+pbool_array<0>::pbool_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_array<0>::pbool_array(const scopespace& o, const string& n) :
-		pbool_instance_collection(o, n), the_instance() {
+		parent_type(o, n, 0), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -549,10 +536,12 @@ pbool_array<0>::pbool_array(const scopespace& o, const string& n,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 size_t
 pbool_array<0>::dimensions(void) const {
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

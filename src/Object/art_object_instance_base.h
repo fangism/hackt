@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.5 2004/12/12 04:53:04 fang Exp $
+	$Id: art_object_instance_base.h,v 1.6 2004/12/12 22:26:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -57,6 +57,8 @@ typedef index_collection_type::const_iterator
 	use list of statements that contain indices.  
  */
 class instance_collection_base : public object, public persistent {
+public:
+	typedef	never_ptr<const scopespace>	owner_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -65,7 +67,7 @@ protected:
 		Is NEVER null, should be reference?
 		Should never be a loop or conditional namespace.  
 	 */
-	const never_ptr<const scopespace>	owner;
+	const owner_ptr_type		owner;
 
 	/**
 		Name of instance.
@@ -73,51 +75,41 @@ protected:
 	string				key;
 
 	/**
-		Optional array dimension sizes, which can be ranges.  
-
-		REPLACE this with a hierarchical dimension tree!
-		of expressions, mostly constants, some unresolved.  
-		Multidimensional and sparse arrays.  
-
-		Needs to be a grown stack of instances, because
-		of changing collection.  
-		Needs to be a deque so we can use iterators.  
-
-		UPDATE:
-		Is now a container of instantiation_statements.
+		This is a collection of instantiation statements 
+		that, when unrolled, will instantiate instances
+		at specified indices in the multidimensional collection, 
+		implemented in the leaf children classes.  
 	 */
 	index_collection_type			index_collection;
 
-#if 0
+public:
 	/**
-		Dimensions, >= 0, limit is 4.  
-		Once set, is fixed.  
-
-		This will be PHASED OUT as we subtype collections
-		by dimensionality.  
-		Keep maintaining until we can eliminate it completely.  
-
-		Although... this could result in faster calls, 
-		avoiding virtual function, if this is cached.  
-		Ah, screw it.
-		Can be cached/initialized with depth = dimensions().
+		A somewhat redundant field for the dimensionality of the
+		collection.  Really, this is a per-class compile-time
+		property, but rather than calling dimensions() through
+		a massive virtual function, we cache the value once
+		per-object.  
+		We allow this to be public because it is constant.  
 	 */
-	size_t	depth;
-#endif
+	const size_t	dimensions;
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
 protected:
-explicit instance_collection_base();
+	/**
+		Private, dimensions-specific construct, intended for
+		childrens' use only.  
+	 */
+	explicit
+	instance_collection_base(const size_t d) :
+		object(), persistent(), owner(), key(), 
+		index_collection(), dimensions(d) { }
 
 public:
 	// o should be reference, not pointer
-#if 0
 	instance_collection_base(const scopespace& o, const string& n, 
 		const size_t d);
-#else
-	instance_collection_base(const scopespace& o, const string& n);
-#endif
+
 virtual	~instance_collection_base();
 
 virtual	ostream&
@@ -145,18 +137,19 @@ virtual	string
 	built-in types.  
  */
 virtual	count_ptr<const fundamental_type_reference>
-		get_type_ref(void) const = 0;
+	get_type_ref(void) const = 0;
 
 	never_ptr<const definition_base>
-		get_base_def(void) const;
+	get_base_def(void) const;
 
-	never_ptr<const scopespace>
+	owner_ptr_type
 	get_owner(void) const { return owner; }
 
 #if 0
 	size_t
 	dimensions(void) const { return depth; }
-#else
+#elif 0
+	// phasing out
 virtual	size_t
 	dimensions(void) const = 0;
 #endif

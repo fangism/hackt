@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.2 2004/12/12 04:53:05 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.3 2004/12/12 22:26:33 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -111,77 +111,7 @@ ostream&
 operator << (ostream&, const chan_instance_alias&);
 
 //-----------------------------------------------------------------------------
-#if 0
-/**
-	Interface to collection of data-enum instance aliases.  
-	TODO: need to add reference to definition for layout/enum map.  
- */
-class channel_instance_collection : public datatype_instance_collection {
-private:
-	typedef	datatype_instance_collection		parent_type;
-public:
-	typedef	never_ptr<chan_instance_alias>		instance_ptr_type;
-	typedef	multikey_base<int>			unroll_index_type;
-protected:
-	channel_instance_collection() { }
-public:
-	channel_instance_collection(const scopespace& o, const string& n, 
-		const size_t d);
-
-virtual	~channel_instance_collection();
-
-virtual	size_t dimensions(void) const = 0;
-
-virtual	ostream&
-	what(ostream&) const = 0;
-
-virtual	bool
-	is_partially_unrolled(void) const = 0;
-
-#if 0
-	// this could just return hard-coded built-in type...
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-#endif
-
-	count_ptr<instance_reference_base>
-	make_instance_reference(void) const;
-
-virtual	void
-	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
-
-virtual instance_ptr_type
-	lookup_instance(const unroll_index_type& i) const = 0;
-
-virtual	bool
-	lookup_instance_collection(list<instance_ptr_type>& l, 
-		const const_range_list& r) const = 0;
-
-virtual	const_index_list
-	resolve_indices(const const_index_list& l) const = 0;
-
-#if 0
-virtual bool
-	connect(const unroll_index_type& k, const chan_instance_alias& b) = 0;
-#endif
-public:
-
-	static
-	channel_instance_collection*
-	make_chan_array(const scopespace& o, const string& n, const size_t d);
-
-	static
-	persistent*
-	construct_empty(const int);
-
-	void
-	collect_transient_info(persistent_object_manager& m) const;
-
-protected:
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-};	// end class channel_instance_collection
-#endif
+// class channel_instance_collection defined in "art_object_instance.h"
 
 //-----------------------------------------------------------------------------
 #define	CHAN_ARRAY_TEMPLATE_SIGNATURE		template <size_t D>
@@ -211,7 +141,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return D; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif
@@ -270,7 +200,7 @@ public:
 #if 0
 	size_t
 	dimensions(void) const { return 0; }
-#else
+#elif 0
 	size_t
 	dimensions(void) const;
 #endif

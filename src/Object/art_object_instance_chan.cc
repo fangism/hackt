@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.2 2004/12/12 04:53:04 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.3 2004/12/12 22:26:33 fang Exp $
  */
 
 #include <iostream>
@@ -38,7 +38,7 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 channel_instance_collection::channel_instance_collection(const scopespace& o, 
-		const string& n) : parent_type(o, n) {
+		const string& n, const size_t d) : parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,7 +98,7 @@ void
 channel_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, dimensions())) {
+		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
 	parent_type::collect_transient_info_base(m);
 }
 }
@@ -164,13 +164,13 @@ operator << (ostream& o, const chan_instance_alias& b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
-chan_array<D>::chan_array() : channel_instance_collection(), collection() {
+chan_array<D>::chan_array() : parent_type(D), collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 chan_array<D>::chan_array(const scopespace& o, const string& n) :
-		channel_instance_collection(o, n), collection() {
+		parent_type(o, n, D), collection() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -193,11 +193,13 @@ chan_array<D>::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 size_t
 chan_array<D>::dimensions(void) const {
 	return D;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
@@ -270,7 +272,7 @@ CHAN_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
 chan_array<D>::resolve_indices(const const_index_list& l) const {
 	const size_t l_size = l.size();
-	if (dimensions() == l_size) {
+	if (D == l_size) {
 		// already fully specified
 		return l;
 	}
@@ -386,12 +388,12 @@ if (!m.flag_visit(this)) {
 // class chan_array method definitions (specialized)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chan_array<0>::chan_array() : channel_instance_collection(), the_instance() {
+chan_array<0>::chan_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chan_array<0>::chan_array(const scopespace& o, const string& n) :
-		channel_instance_collection(o, n), the_instance() {
+		parent_type(o, n, 0), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -411,10 +413,12 @@ chan_array<0>::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 size_t
 chan_array<0>::dimensions(void) const {
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

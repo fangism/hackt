@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.3 2004/12/12 06:27:56 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.4 2004/12/12 22:26:35 fang Exp $
  */
 
 #include <iostream>
@@ -273,7 +273,7 @@ scopespace::add_instance(
 			}	// else good to continue
 			
 			// compare dimensions
-			const size_t p_dim = probe_inst->dimensions();
+			const size_t p_dim = probe_inst->dimensions;
 #if 0
 			cerr << "original dimensions = " << p_dim << 
 				", new dimensions = " << dim << endl;

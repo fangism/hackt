@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.25 2004/12/10 22:02:16 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.26 2004/12/12 22:26:32 fang Exp $
  */
 
 #include <iostream>
@@ -138,7 +138,7 @@ excl_ptr<param_expression_assignment>
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
-	assert(p == this);
+	INVARIANT(p == this);
 	return return_type(
 		new pbool_expression_assignment(p.is_a<const pbool_expr>()));
 }
@@ -187,7 +187,7 @@ excl_ptr<param_expression_assignment>
 pint_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
-	assert(p == this);
+	INVARIANT(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<const pint_expr>()));
 }
@@ -240,12 +240,13 @@ ostream&
 const_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
+	// hint: ostream_iterator
 	const_iterator i = begin();
-	assert(*i);
+	NEVER_NULL(*i);
 	(*i)->dump(o);
 	for (i++; i!=end(); i++) {
 		o << ", ";
-		assert(*i);
+		NEVER_NULL(*i);
 		(*i)->dump(o);
 	}
 	return o;
@@ -307,17 +308,17 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == cpl->end());		// sanity
+	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
-	assert(dpl);
+	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
 	const_iterator i = begin();
@@ -325,12 +326,12 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == dpl->end());		// sanity
+	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
 }
@@ -348,17 +349,17 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == cpl->end());		// sanity
+	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
-	assert(dpl);
+	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
 	const_iterator i = begin();
@@ -366,12 +367,12 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == dpl->end());		// sanity
+	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
 }
@@ -505,7 +506,7 @@ dynamic_param_expr_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_ptr<const param_expr> ip(*i);
-		assert(ip);	// nothing may be NULL at this point!
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->is_static_constant())
 			return false;
 		// else continue checking...
@@ -519,7 +520,7 @@ dynamic_param_expr_list::is_loop_independent(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_ptr<const param_expr> ip(*i);
-		assert(ip);	// nothing may be NULL at this point!
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->is_loop_independent())
 			return false;
 		// else continue checking...
@@ -533,7 +534,7 @@ dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_ptr<const param_expr> ip(*i);
-		assert(ip);	// nothing may be NULL at this point!
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->may_be_initialized())
 			return false;
 		// else continue checking...
@@ -547,7 +548,7 @@ dynamic_param_expr_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		count_ptr<const param_expr> ip(*i);
-		assert(ip);	// nothing may be NULL at this point!
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->must_be_initialized())
 			return false;
 		// else continue checking...
@@ -586,17 +587,17 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == cpl->end());		// sanity
+	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
-	assert(dpl);
+	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
 	const_iterator i = begin();
@@ -604,12 +605,12 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->may_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == dpl->end());		// sanity
+	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
 }
@@ -627,17 +628,17 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == cpl->end());		// sanity
+	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
-	assert(dpl);
+	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
 	const_iterator i = begin();
@@ -645,12 +646,12 @@ if (cpl) {
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
-		assert(ip && jp);
+		INVARIANT(ip && jp);
 		if (!ip->must_be_equivalent(*jp))
 			return false;
 		// else continue checking...
 	}
-	assert(j == dpl->end());		// sanity
+	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
 }
@@ -909,7 +910,7 @@ pbool_instance_reference::is_unconditional(void) const {
  */
 bool
 pbool_instance_reference::static_constant_bool(void) const {
-	assert(is_static_constant());
+	INVARIANT(is_static_constant());
 	return pbool_inst_ref->initial_value()->static_constant_bool();
 }
 
@@ -929,8 +930,8 @@ pbool_instance_reference::resolve_value(bool& i) const {
 				indices.lower_multikey();
 			const excl_ptr<multikey_base<int> > upper = 
 				indices.upper_multikey();
-			assert(lower);
-			assert(upper);
+			NEVER_NULL(lower);
+			NEVER_NULL(upper);
 			if (*lower != *upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
@@ -943,7 +944,7 @@ pbool_instance_reference::resolve_value(bool& i) const {
 	} else {
 		never_ptr<pbool_scalar>
 			scalar_inst(pbool_inst_ref.is_a<pbool_scalar>());
-		assert(scalar_inst);
+		NEVER_NULL(scalar_inst);
 		return scalar_inst->lookup_value(i);
 	}
 }
@@ -955,6 +956,8 @@ pbool_instance_reference::resolve_value(bool& i) const {
  */
 bool
 pbool_instance_reference::resolve_values_into_flat_list(list<bool>& l) const {
+	// base collection must be non-scalar
+	INVARIANT(pbool_inst_ref->dimensions);
 	const_index_list ranges(resolve_dimensions());
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
@@ -1067,7 +1070,7 @@ if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, pbool_inst_ref);
-	assert(pbool_inst_ref);
+	NEVER_NULL(pbool_inst_ref);
 	const_cast<pbool_instance_collection&>(*pbool_inst_ref).load_object(m);
 #if 0
 	load_instance_collection_state(f);
@@ -1134,7 +1137,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 		const pbool_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
-		assert(vals.size() == 1);
+		INVARIANT(vals.size() == 1);
 		// is scalar assignment, but may be indexed
 		never_ptr<pbool_scalar> 
 			scalar_inst(p.pbool_inst_ref.is_a<pbool_scalar>());
@@ -1169,12 +1172,12 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	// else good to continue
 	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
 	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
-	assert(lower);
-	assert(upper);
+	NEVER_NULL(lower);
+	NEVER_NULL(upper);
 	const sticky_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
-	assert(key_gen);
+	NEVER_NULL(key_gen);
 	key_gen->get_lower_corner() = *lower;
 	key_gen->get_upper_corner() = *upper;
 	key_gen->initialize();
@@ -1200,7 +1203,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 		list_iter++;			// unsafe, but checked
 		key_gen_ref++;
 	} while (key_gen_ref != key_gen_ref.get_upper_corner());
-	assert(list_iter == vals.end());	// sanity check
+	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
 
@@ -1330,7 +1333,7 @@ pint_instance_reference::is_unconditional(void) const {
  */
 int
 pint_instance_reference::static_constant_int(void) const {
-	assert(is_static_constant());
+	INVARIANT(is_static_constant());
 	return pint_inst_ref->initial_value()->static_constant_int();
 }
 
@@ -1352,8 +1355,8 @@ pint_instance_reference::resolve_value(int& i) const {
 				indices.lower_multikey();
 			const excl_ptr<multikey_base<int> > upper = 
 				indices.upper_multikey();
-			assert(lower);
-			assert(upper);
+			NEVER_NULL(lower);
+			NEVER_NULL(upper);
 			if (*lower != *upper) {
 				cerr << "ERROR: upper != lower" << endl;
 				return false;
@@ -1366,7 +1369,7 @@ pint_instance_reference::resolve_value(int& i) const {
 	} else {
 		never_ptr<pint_scalar>
 			scalar_inst(pint_inst_ref.is_a<pint_scalar>());
-		assert(scalar_inst);
+		NEVER_NULL(scalar_inst);
 		return scalar_inst->lookup_value(i);
 	}
 }
@@ -1383,7 +1386,7 @@ pint_instance_reference::resolve_value(int& i) const {
 bool
 pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
 	// base collection must be non-scalar
-	assert(pint_inst_ref->dimensions());
+	INVARIANT(pint_inst_ref->dimensions);
 	const_index_list ranges(resolve_dimensions());
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
@@ -1576,7 +1579,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 		const pint_instance_reference& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
-		assert(vals.size() == 1);
+		INVARIANT(vals.size() == 1);
 		// is scalar assignment, but may be indexed
 		never_ptr<pint_scalar> 
 			scalar_inst(p.pint_inst_ref.is_a<pint_scalar>());
@@ -1611,12 +1614,12 @@ pint_instance_reference::assigner::operator() (const bool b,
 	// else good to continue
 	const sticky_ptr<const multikey_base<int> > lower(dim.lower_multikey());
 	const sticky_ptr<const multikey_base<int> > upper(dim.upper_multikey());
-	assert(lower);
-	assert(upper);
+	NEVER_NULL(lower);
+	NEVER_NULL(upper);
 	const sticky_ptr<multikey_generator_base<int> >
 		key_gen(multikey_generator_base<int>::make_multikey_generator(
 			dim.size()));
-	assert(key_gen);
+	NEVER_NULL(key_gen);
 	key_gen->get_lower_corner() = *lower;
 	key_gen->get_upper_corner() = *upper;
 	key_gen->initialize();
@@ -1642,7 +1645,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 		list_iter++;			// unsafe, but checked
 		key_gen_ref++;
 	} while (key_gen_ref != key_gen_ref.get_upper_corner());
-	assert(list_iter == vals.end());	// sanity check
+	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
 }
 
@@ -1895,16 +1898,16 @@ pint_unary_expr::pint_unary_expr() :
 pint_unary_expr::pint_unary_expr(
 		const op_type o, count_ptr<const pint_expr> e) :
 		pint_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
+	NEVER_NULL(ex);
+	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
 		count_ptr<const pint_expr> e, const op_type o) :
 		pint_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
+	NEVER_NULL(ex);
+	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1959,7 +1962,7 @@ pint_unary_expr::static_constant_int(void) const {
 bool
 pint_unary_expr::resolve_value(int& i) const {
 	int j;
-	assert(ex);
+	NEVER_NULL(ex);
 	const bool ret = ex->resolve_value(j);
 	i = -j;		// regardless of ret
 	return ret;
@@ -2042,16 +2045,16 @@ pbool_unary_expr::pbool_unary_expr() :
 pbool_unary_expr::pbool_unary_expr(
 		const op_type o, count_ptr<const pbool_expr> e) :
 		pbool_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
+	NEVER_NULL(ex);
+	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
 		count_ptr<const pbool_expr> e, const op_type o) :
 		pbool_expr(), op(o), ex(e) {
-	assert(ex);
-	assert(ex->dimensions() == 0);
+	NEVER_NULL(ex);
+	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2193,7 +2196,7 @@ arith_expr::op_map_size = arith_expr::op_map_init();
  */
 void
 arith_expr::op_map_register(const char c, const op_type* o) {
-	assert(o);
+	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
 }
@@ -2209,7 +2212,7 @@ arith_expr::op_map_init(void) {
 	op_map_register('*', &multiplier);
 	op_map_register('/', &divider);
 	op_map_register('%', &remainder);
-	assert(op_map.size() == reverse_op_map.size());
+	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
 
@@ -2230,11 +2233,11 @@ arith_expr::~arith_expr() {
 arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
 		count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
-	assert(op);
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2299,7 +2302,7 @@ arith_expr::static_constant_int(void) const {
 bool
 arith_expr::resolve_value(int& i) const {
 	int a, b;
-	assert(lx);	assert(rx);
+	NEVER_NULL(lx);	NEVER_NULL(rx);
 	const bool lret = lx->resolve_value(a);
 	const bool rret = rx->resolve_value(b);
 	if (!lret) {
@@ -2324,6 +2327,7 @@ arith_expr::resolve_value(int& i) const {
 			assert(0); return false;
 	}
 #else
+	// OOooooh, virtual operator dispatch!
 	i = (*op)(a,b);
 #endif
 	return true;
@@ -2432,7 +2436,7 @@ relational_expr::op_map_size = relational_expr::op_map_init();
  */
 void
 relational_expr::op_map_register(const string& s, const op_type* o) {
-	assert(o);
+	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[s] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
 }
@@ -2449,7 +2453,7 @@ relational_expr::op_map_init(void) {
 	op_map_register(">", &op_greater);
 	op_map_register("<=", &op_less_equal);
 	op_map_register(">=", &op_greater_equal);
-	assert(op_map.size() == reverse_op_map.size());
+	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
 
@@ -2470,11 +2474,11 @@ relational_expr::~relational_expr() {
 relational_expr::relational_expr(count_ptr<const pint_expr> l,
 		const string& o, count_ptr<const pint_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
-	assert(op);
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2592,7 +2596,7 @@ if (!m.flag_visit(this)) {
 	string s;
 	read_value(f, s);
 	op = op_map[s];
-	assert(op);
+	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -2633,7 +2637,7 @@ logical_expr::op_map_size = logical_expr::op_map_init();
  */
 void
 logical_expr::op_map_register(const string& s, const op_type* o) {
-	assert(o);
+	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[s] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
 }
@@ -2647,7 +2651,7 @@ logical_expr::op_map_init(void) {
 	op_map_register("&&", &op_and);
 	op_map_register("||", &op_or);
 	op_map_register("^", &op_xor);
-	assert(op_map.size() == reverse_op_map.size());
+	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
 
@@ -2667,11 +2671,11 @@ logical_expr::~logical_expr() {
 logical_expr::logical_expr(count_ptr<const pbool_expr> l,
 		const string& o, count_ptr<const pbool_expr> r) :
 		lx(l), rx(r), op(op_map[o]) {
-	assert(op);
-	assert(lx);
-	assert(rx);
-	assert(lx->dimensions() == 0);
-	assert(rx->dimensions() == 0);
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2790,7 +2794,7 @@ if (!m.flag_visit(this)) {
 //	read_string(f, s);
 	read_value(f, s);
 	op = op_map[s];
-	assert(op);
+	NEVER_NULL(op);
 	}
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
@@ -2826,17 +2830,17 @@ pint_range::pint_range(count_ptr<const pint_expr> n) :
 		lower(new pint_const(0)),
 		upper(new arith_expr(n, '-', 
 			count_ptr<const pint_expr>(new pint_const(1)))) {
-	assert(n);
-	assert(lower);
-	assert(upper);
+	NEVER_NULL(n);
+	NEVER_NULL(lower);
+	NEVER_NULL(upper);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(count_ptr<const pint_expr> l, 
 		count_ptr<const pint_expr> u) :
 		range_expr(), lower(l), upper(u) {
-	assert(lower);
-	assert(upper);
+	NEVER_NULL(lower);
+	NEVER_NULL(upper);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2971,7 +2975,7 @@ const_range::const_range(const interval_type& i) :
 const_range::const_range(const int n) :
 		range_expr(), const_index(), 
 		parent(0, n-1) {
-	assert(upper() >= lower());		// else what!?!?
+	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2982,7 +2986,7 @@ const_range::const_range(const int n) :
 const_range::const_range(const pint_const& n) :
 		range_expr(), const_index(), 
 		parent(0, n.static_constant_int() -1) {
-	assert(upper() >= lower());		// else what!?!?
+	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2994,7 +2998,7 @@ const_range::const_range(const pint_const& n) :
 const_range::const_range(const int l, const int u) :
 		range_expr(), const_index(), 
 		parent(l, u) {
-	assert(upper() >= lower());		// else what!?!?
+	INVARIANT(upper() >= lower());		// else what!?!?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3241,15 +3245,15 @@ const_range_list::const_range_list(const const_index_list& i) :
 		range_expr_list(), list_type() {
 	const_index_list::const_iterator j = i.begin();
 	for ( ; j!=i.end(); j++) {
-		count_ptr<const_index> k(*j);
-		assert(k);
+		const count_ptr<const_index> k(*j);
+		NEVER_NULL(k);
 		count_ptr<pint_const> p(k.is_a<pint_const>());
 		count_ptr<const_range> r(k.is_a<const_range>());
 		if (p) {
 			const int min_max = p->static_constant_int();
 			push_back(const_range(min_max, min_max));	// copy
 		} else {
-			assert(r);
+			NEVER_NULL(r);
 			push_back(*r);		// deep copy
 		}
 	}
@@ -3299,7 +3303,7 @@ const_range_list::static_overlap(const range_expr_list& r) const {
 	const_range_list ret;	// initially empty
 	if (s) {
 		// dimensionality should match, or else!
-		assert(size() == s->size());    
+		INVARIANT(size() == s->size());    
 		const_iterator i = begin();
 		const_iterator j = s->begin();
 		for ( ; i!=end(); i++, j++) {
@@ -3461,7 +3465,7 @@ const_range_list::is_size_equivalent(const const_range_list& c) const {
 			return false;
 		}
 	}
-	assert(j == c.end());
+	INVARIANT(j == c.end());
 	return true;
 }
 
@@ -3481,7 +3485,7 @@ const_range_list::operator == (const const_range_list& c) const {
 		if (*i != *j)
 			return false;
 	}
-	assert(j == c.end());
+	INVARIANT(j == c.end());
 	return true;
 }
 
@@ -3497,7 +3501,7 @@ excl_ptr<multikey_base<int> >
 const_range_list::lower_multikey(void) const {
 	typedef	excl_ptr<multikey_base<int> >	return_type;
 	return_type ret(multikey_base<int>::make_multikey(size()));
-	assert(ret);
+	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select1st<const_range>());
 	return ret;
 }
@@ -3507,7 +3511,7 @@ excl_ptr<multikey_base<int> >
 const_range_list::upper_multikey(void) const {
 	typedef	excl_ptr<multikey_base<int> >	return_type;
 	return_type ret(multikey_base<int>::make_multikey(size()));
-	assert(ret);
+	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), _Select2nd<const_range>());
 	return ret;
 }
@@ -3520,7 +3524,7 @@ template <size_t D>
 void
 const_range_list::make_multikey_generator(multikey_generator<D, int>& k) const {
 	typedef multikey_generator<D, int>	arg_type;
-	assert(size() <= D);  // else error on user!
+	INVARIANT(size() <= D);  // else error on user!
 	typename arg_type::base_type::iterator li = k.lower_corner.begin();
 	typename arg_type::base_type::iterator ui = k.upper_corner.begin();
 	const_iterator i = begin();
@@ -3628,7 +3632,7 @@ ostream&
 dynamic_range_list::dump(ostream& o) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		(*i)->dump(o);
 	}
 	return o;
@@ -3646,7 +3650,7 @@ dynamic_range_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		const count_ptr<const pint_range> pr(*i);
-		assert(pr);
+		NEVER_NULL(pr);
 		if (!pr->is_static_constant())
 			return false;
 		// else continue checking
@@ -3795,31 +3799,31 @@ const_index_list::const_index_list(const const_index_list& l,
 		const pair<list<int>, list<int> >& f) :
 		index_list(), parent(l) {
 	if (f.first.empty()) {
-		assert(f.second.empty());
+		INVARIANT(f.second.empty());
 		clear();
 	} else {
-		assert(!f.second.empty());
+		INVARIANT(!f.second.empty());
 		const size_t f_size = f.first.size();
 		const size_t s_size = f.second.size();
-		assert(f_size == s_size);
+		INVARIANT(f_size == s_size);
 		const size_t skip = size();
-		assert(skip <= f_size);
+		INVARIANT(skip <= f_size);
 		size_t i = 0;
 		const_iterator this_iter = begin();
 		list<int>::const_iterator f_iter = f.first.begin();
 		list<int>::const_iterator s_iter = f.second.begin();
 		for ( ; i<skip; i++, this_iter++, f_iter++, s_iter++) {
 			// sanity check against arguments
-			assert(*this_iter);
-			assert((*this_iter)->lower_bound() == *f_iter);
-			assert((*this_iter)->upper_bound() == *s_iter);
+			NEVER_NULL(*this_iter);
+			INVARIANT((*this_iter)->lower_bound() == *f_iter);
+			INVARIANT((*this_iter)->upper_bound() == *s_iter);
 		}
 		for ( ; i<f_size; i++, f_iter++, s_iter++) {
-			assert(*f_iter <= *s_iter);
+			INVARIANT(*f_iter <= *s_iter);
 			push_back(count_ptr<const_range>(
 				new const_range(*f_iter, *s_iter)));
 		}
-		assert(size() == f_size);
+		INVARIANT(size() == f_size);
 	}
 }
 
@@ -3844,7 +3848,7 @@ const_index_list::hash_string(void) const {
 	string ret;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		const bool b = (i->is_a<const pint_expr>());
 		if (b) ret += '[';
 		ret += (*i)->hash_string();
@@ -3874,7 +3878,7 @@ const_index_list::dimensions_collapsed(void) const {
 	for ( ; i!=end(); i++) {
 		if (i->is_a<const pint_const>())
 			ret++;
-		else assert(i->is_a<const const_range>());
+		else INVARIANT(i->is_a<const const_range>());
 			// sanity check
 	}
 	return ret;
@@ -3890,7 +3894,7 @@ const_index_list::collapsed_dimension_ranges(void) const {
 			cr(i->is_a<const const_range>());
 		if (cr)
 			ret.push_back(*cr);	// will copy
-		else assert(i->is_a<const pint_const>());
+		else INVARIANT(i->is_a<const pint_const>());
 		// continue
 	}
 	return ret;
@@ -3904,8 +3908,8 @@ const_index_list::collapsed_dimension_ranges(void) const {
 void
 const_index_list::push_back(const count_ptr<const_index>& i) {
 	// check dimensionality
-	assert(i);
-	assert(i->dimensions() == 0);
+	NEVER_NULL(i);
+	INVARIANT(i->dimensions() == 0);
 	parent::push_back(i);
 }
 
@@ -3977,7 +3981,7 @@ excl_ptr<multikey_base<int> >
 const_index_list::lower_multikey(void) const {
 	typedef	excl_ptr<multikey_base<int> >	return_type;
 	return_type ret(multikey_base<int>::make_multikey(size()));
-	assert(ret);
+	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound), 
@@ -3992,7 +3996,7 @@ excl_ptr<multikey_base<int> >
 const_index_list::upper_multikey(void) const {
 	typedef	excl_ptr<multikey_base<int> >	return_type;
 	return_type ret(multikey_base<int>::make_multikey(size()));
-	assert(ret);
+	NEVER_NULL(ret);
 	transform(begin(), end(), ret->begin(), 
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound), 
@@ -4126,7 +4130,7 @@ dynamic_index_list::hash_string(void) const {
 	string ret;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		const bool b = (i->is_a<const pint_expr>());
 		if (b) ret += '[';
 		ret += (*i)->hash_string();
@@ -4138,10 +4142,10 @@ dynamic_index_list::hash_string(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
-	assert(i);
+	NEVER_NULL(i);
 	if (i->dimensions() != 0) {
 		cerr << "i->dimensions = " << i->dimensions() << endl;
-		assert(i->dimensions() == 0);
+		INVARIANT(i->dimensions() == 0);
 	}
 	parent::push_back(i);
 }
@@ -4164,7 +4168,7 @@ dynamic_index_list::dimensions_collapsed(void) const {
 	for ( ; i!=end(); i++) {
 		if (i->is_a<const pint_expr>())
 			ret++;
-		else assert(i->is_a<const range_expr>());
+		else INVARIANT(i->is_a<const range_expr>());
 			// sanity check
 	}
 	return ret;
@@ -4175,7 +4179,7 @@ bool
 dynamic_index_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		if (!(*i)->may_be_initialized())
 			return false;
 	}
@@ -4187,7 +4191,7 @@ bool
 dynamic_index_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		if (!(*i)->must_be_initialized())
 			return false;
 	}
@@ -4199,7 +4203,7 @@ bool
 dynamic_index_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		if (!(*i)->is_static_constant())
 			return false;
 	}
@@ -4211,7 +4215,7 @@ bool
 dynamic_index_list::is_loop_independent(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		if (!(*i)->is_loop_independent())
 			return false;
 	}
@@ -4223,7 +4227,7 @@ bool
 dynamic_index_list::is_unconditional(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		if (!(*i)->is_unconditional())
 			return false;
 	}
