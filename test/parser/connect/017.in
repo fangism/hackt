@@ -1,0 +1,10 @@
+// should pass: size matches after dimension collapsing
+
+defproc barf();
+
+barf bag;
+barf sack[5];
+
+bag = sack[4];		// right
+sack[0] = bag;		// right
+

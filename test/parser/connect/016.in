@@ -1,0 +1,9 @@
+// should fail: mismatch in size
+
+defproc barf();
+
+barf bag;
+barf sack[5];
+
+bag = sack;		// wrong
+

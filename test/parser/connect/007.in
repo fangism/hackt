@@ -1,0 +1,14 @@
+// should pass: types are equivalent
+// actually type-checker is lazy and won't check param actuals
+// of typedef'd types until unroll time.
+// see 008.in
+
+int fe;
+int<> fi;
+int<32> fo;
+
+typedef	int<32>		int32;
+
+int32 fum = fe = fi = fo;
+
+

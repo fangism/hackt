@@ -1,0 +1,7 @@
+// should pass: connecting two equivalent procs
+
+defproc foo();
+
+foo bar;
+foo blah = bar;
+
