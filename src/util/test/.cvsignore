@@ -18,4 +18,5 @@ hash_qmap_test
 multidimensional_sparse_set_test
 multidimensional_qmap_test
 multikey_qmap_test
+multikey_generator_test
 
