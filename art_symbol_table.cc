@@ -159,13 +159,9 @@ context::~context() {
 // name_space*
 void
 context::open_namespace(const token_identifier& id) {
-//	name_space* insub;
 	never_ptr<name_space> insub;
 	insub = current_namespace->add_open_namespace(id);
 
-//	current_namespace->dump(
-//		cerr << "AFTER return from add_open_namespace, " << endl);
-	
 	// caution: assigning to NULL may ruin the context!
 	// if this returns NULL, we signal to the caller to skip
 	// over this malformed namespace body, don't even enter it...
@@ -192,13 +188,11 @@ context::open_namespace(const token_identifier& id) {
  */
 void
 context::close_namespace(void) {
-//	const name_space* new_top;
 	never_const_ptr<name_space>
 		new_top(current_namespace->leave_namespace());
 	indent--;
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
-//	new_top = current_namespace->leave_namespace();
 	namespace_stack.pop();
 	assert(current_namespace == new_top);
 }
@@ -209,7 +203,6 @@ context::close_namespace(void) {
 void
 // const name_space*
 context::using_namespace(const qualified_id& id) {
-//	const name_space* ret =
 	never_const_ptr<name_space> ret =
 		current_namespace->add_using_directive(id);
 	if (!ret) {
@@ -225,15 +218,8 @@ context::using_namespace(const qualified_id& id) {
 void
 // const name_space*
 context::alias_namespace(const qualified_id& id, const string& a) {
-//	current_namespace->dump(
-//		cerr << "BEFORE calling add_using_alias, " << endl);
-
 	never_const_ptr<name_space> ret =
 		current_namespace->add_using_alias(id, a);
-
-//	current_namespace->dump(
-//		cerr << "AFTER return from add_using_alias, " << endl);
-
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -264,13 +250,11 @@ void
 context::declare_process(const token_identifier& pname) {
 	check_against_previous_definition_signature = 
 		(current_namespace->probe_process_definition(pname));
-//	process_definition* p =
 	never_ptr<process_definition> p =
 		current_namespace->add_proc_declaration(pname);
 	if (p) {
 		assert(!current_open_definition);	// sanity check
 		current_open_definition = p;
-//		current_open_definition = never_ptr<process_definition>(p);
 		indent++;
 	} else {
 		// no real reason why this should ever fail...
@@ -296,7 +280,6 @@ void
 context::open_process(const token_identifier& pname) {
 	check_against_previous_definition_signature = 
 		(current_namespace->probe_process_definition(pname));
-//	process_definition* p =
 	never_ptr<process_definition> p =
 		current_namespace->add_proc_definition(pname);
 	if (p) {
@@ -335,7 +318,6 @@ context::close_current_definition(void) {
 void
 context::close_process_definition(void) {
 	// sanity check
-//	MUST_BE_A(process_definition*, current_open_definition);
 	current_open_definition.must_be_a<process_definition>();
 	close_current_definition();
 }
@@ -348,7 +330,6 @@ context::close_process_definition(void) {
 void
 context::close_datatype_definition(void) {
 	// sanity check
-//	MUST_BE_A(datatype_definition*, current_open_definition);
 	current_open_definition.must_be_a<datatype_definition>();
 	close_current_definition();
 }
@@ -360,44 +341,35 @@ context::close_datatype_definition(void) {
  */
 void
 context::close_chantype_definition(void) {
-//	MUST_BE_A(channel_definition*, current_open_definition);
 	current_open_definition.must_be_a<channel_definition>();
 	close_current_definition();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// const built_in_param_def*
 never_const_ptr<built_in_param_def>
 context::get_current_param_definition(void) const {
-//	return IS_A(const built_in_param_def*, current_definition_reference);
 	return current_definition_reference.is_a<built_in_param_def>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// const datatype_definition*
 never_const_ptr<datatype_definition>
 context::get_current_datatype_definition(void) const {
-//	return IS_A(const datatype_definition*, current_definition_reference);
 	return current_definition_reference.is_a<datatype_definition>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// const channel_definition*
 never_const_ptr<channel_definition>
 context::get_current_channel_definition(void) const {
-//	return IS_A(const channel_definition*, current_definition_reference);
 	return current_definition_reference.is_a<channel_definition>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// const process_definition*
 never_const_ptr<process_definition>
 context::get_current_process_definition(void) const {
-//	return IS_A(const process_definition*, current_definition_reference);
 	return current_definition_reference.is_a<process_definition>();
 }
 
@@ -419,11 +391,6 @@ context::set_datatype_def(const token_datatype& id) {
 	assert(current_namespace);
 
 	// should always lookup in global namespace for built-in token datatype
-#if 0
-	const datatype_definition* ret = IS_A(const built_in_datatype_def*, 
-		current_namespace->get_global_namespace()->
-			lookup_object_here(id));
-#endif
 	never_const_ptr<datatype_definition> ret = global_namespace->
 		lookup_object_here(id).is_a<built_in_datatype_def>();
 	if (!ret) {
@@ -432,7 +399,6 @@ context::set_datatype_def(const token_datatype& id) {
 		exit(1);			// temporary
 	} else {
 		assert(!current_definition_reference);	// sanity check
-//		current_definition_reference = ret;
 		current_definition_reference = ret.as_a<definition_base>();
 			// stupid upcast
 		indent++;
@@ -440,23 +406,6 @@ context::set_datatype_def(const token_datatype& id) {
 	// to do elsewhere: set template width using w
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Sets the current instantiating data type definition.
-	Checks for NULL first.  
-	\param dd the data type definition.  
-	\return the data type definition.
- */
-const datatype_definition*
-context::set_inst_data_def(const datatype_definition& dd) {
-	assert(!current_definition_reference);
-	current_definition_reference = &dd;
-	return &dd;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -493,15 +442,11 @@ context::reset_current_fundamental_type(void) {
 	Sets current parameter instantiation type.
 	\param pt token for built-in parameter type, pbool or pint.  
  */
-// const built_in_param_def*
 never_const_ptr<built_in_param_def>
 context::set_param_def(const token_paramtype& pt) {
 	assert(current_namespace);
 	assert(!current_definition_reference);
 	// always just lookup in global namespace
-//	const built_in_param_def* ret = IS_A(const built_in_param_def*, 
-//		current_namespace->get_global_namespace()->
-//			lookup_object_here(pt));
 	never_const_ptr<built_in_param_def> ret = global_namespace->
 		lookup_object_here(pt).is_a<built_in_param_def>();
 	if (!ret) {
@@ -510,92 +455,11 @@ context::set_param_def(const token_paramtype& pt) {
 		exit(1);			// temporary
 	} else {
 		assert(!current_definition_reference);	// sanity check
-//		current_definition_reference = ret;
 		current_definition_reference = ret.as_a<definition_base>();
 		indent++;
 	}
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Sets the current instantiating param type definition.
-	Checks for NULL first.  
-	\param pd the param type definition.  
-	\return the param type definition.
- */
-const built_in_param_def*
-context::set_inst_param_def(const built_in_param_def& pd) {
-	assert(!current_definition_reference);
-	current_definition_reference = &pd;
-	return &pd;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sets the current instantiating channel type definition.
-	Checks for NULL first.  
-	\param cd the channel type definition.  
-	\return the channel type definition.
- */
-const channel_definition*
-context::set_inst_chan_def(const channel_definition& cd) {
-	assert(!current_definition_reference);
-	current_definition_reference = &cd;
-	return &cd;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sets the current instantiating process type definition.
-	Checks for NULL first.  
-	\param pd the process type definition.  
-	\return the process type definition.
- */
-const process_definition*
-context::set_inst_proc_def(const process_definition& pd) {
-	assert(!current_definition_reference);
-	current_definition_reference = &pd;
-	return &pd;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-const data_type_reference*
-context::set_inst_data_type_ref(const data_type_reference& dr) {
-	assert(!current_fundamental_type);
-	current_fundamental_type = &dr;
-	return &dr;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const param_type_reference*
-context::set_inst_param_type_ref(const param_type_reference& dr) {
-	assert(!current_fundamental_type);
-	current_fundamental_type = &dr;
-	return &dr;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const channel_type_reference*
-context::set_inst_chan_type_ref(const channel_type_reference& cr) {
-	assert(!current_fundamental_type);
-	current_fundamental_type = &cr;
-	return &cr;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const process_type_reference*
-context::set_inst_proc_type_ref(const process_type_reference& pr) {
-	assert(!current_fundamental_type);
-	current_fundamental_type = &pr;
-	return &pr;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -635,15 +499,12 @@ context::set_current_fundamental_type(void) {
 never_const_ptr<fundamental_type_reference>
 context::set_current_fundamental_type(const fundamental_type_reference& tr) {
 	assert(!current_fundamental_type);
-//	current_fundamental_type = &tr;
 	current_fundamental_type = 
 		never_const_ptr<fundamental_type_reference>(&tr);
 	return current_fundamental_type;
-//	return &tr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// const object*
 never_const_ptr<object>
 context::lookup_object(const qualified_id& id) const {
 	return get_current_scope()->lookup_object(id);
@@ -654,13 +515,10 @@ context::lookup_object(const qualified_id& id) const {
 	Ok to start search in namespace, because definitions
 	can only be found in namespaces, not other types of scopes.  
  */
-// const definition_base*
 never_const_ptr<definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	assert(current_namespace);
 	return current_namespace->lookup_object(id).is_a<definition_base>();
-//	return IS_A(const definition_base*, 
-//		current_namespace->lookup_object(id));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -668,23 +526,17 @@ context::lookup_definition(const token_identifier& id) const {
 	Ok to start search in namespace, because definitions
 	can only be found in namespaces, not other types of scopes.  
  */
-// const definition_base*
 never_const_ptr<definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	assert(current_namespace);
 	return current_namespace->lookup_object(id).is_a<definition_base>();
-//	return IS_A(const definition_base*, 
-//		current_namespace->lookup_object(id));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
 	return current_namespace->lookup_object(id).is_a<instantiation_base>();
-//	return IS_A(const instantiation_base*, 
-//		current_namespace->lookup_object(id));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -693,8 +545,6 @@ never_const_ptr<instantiation_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
 	return current_namespace->lookup_object(id).is_a<instantiation_base>();
-//	return IS_A(const instantiation_base*, 
-//		current_namespace->lookup_object(id));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -706,7 +556,6 @@ context::lookup_instance(const qualified_id& id) const {
 	Loops and conditionals may not contain any other types of scopes.  
 	Constant semantics.  
  */
-// const scopespace*
 never_const_ptr<scopespace>
 context::get_current_scope(void) const {
 	if (current_dynamic_scope)
@@ -726,7 +575,6 @@ context::get_current_scope(void) const {
 	Loops and conditionals may not contain any other types of scopes.  
 	Non-constant semantics.  
  */
-// scopespace*
 never_ptr<scopespace>
 context::get_current_scope(void) {
 	if (current_dynamic_scope)
@@ -751,64 +599,6 @@ context::add_instance(const token_identifier& id) {
 	return current_fundamental_type->add_instance_to_scope(
 		*current_scope, id);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Adds an instance of the current data-type with a particular
-	identifier.  Array instantiation is handled in a separate method.  
-	\param id name of instance.  
-	\return valid pointer to instance object.  
- */
-datatype_instantiation*
-context::add_datatype_instance(const token_identifier& id) {
-	datatype_instantiation* ret;
-	never_const_ptr<data_type_reference> dtr = 
-		current_fundamental_type.is_a<data_type_reference>();
-	assert(current_namespace);
-	assert(dtr);
-
-	// TO DO: need not just definition, but type_reference
-	// for now, ignore template parameters, add them later
-	ret = current_namespace->add_datatype_instantiation(*dtr, id);
-
-	if (!ret) {
-		type_error_count++;
-		cerr << id.where() << endl;
-		exit(1);			// temporary
-	} 
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Adds an instance of the current param-type with a particular
-	identifier.  Array instantiation is handled in a separate method.  
-	\param id name of instance.  
-	\return valid pointer to instance object.  
- */
-param_instantiation*
-context::add_paramtype_instance(const token_identifier& id) {
-	param_instantiation* ret;
-	const param_type_reference* ptr = 
-		IS_A(const param_type_reference*, current_fundamental_type);
-	assert(current_namespace);
-	assert(ptr);
-
-	// TO DO: need not just definition, but type_reference
-	// for now, ignore template parameters, add them later
-	ret = current_namespace->
-		add_paramtype_instantiation(*ptr, id);
-
-	if (!ret) {
-		type_error_count++;
-		cerr << id.where() << endl;
-		exit(1);			// temporary
-	} 
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -841,11 +631,6 @@ context::auto_indent(void) const {
 	ret += "+-";
 	return ret;
 }
-
-//=============================================================================
-// explicit template instantiations
-
-// template class list_of_const_ptr<param_expr>;
 
 //=============================================================================
 }	// end namespace entity

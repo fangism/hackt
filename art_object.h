@@ -151,8 +151,6 @@ public:
 	 */
 	object_handle(never_const_ptr<object> o) : object(), obj(*o)
 		{ assert(!o.is_a<object_handle>()); }
-//	object_handle(const object* o) : object(), obj(*o)
-//		{ assert(!IS_A(const object_handle*, o)); }
 
 	/**
 		No intention to de-allocate reference object.  
@@ -237,7 +235,6 @@ protected:	// members
 		make other const references to outside members through the
 		parent chain.  
 	 */
-//	const scopespace*			parent;
 	never_const_ptr<scopespace>		parent;
 
 	/**
@@ -258,7 +255,6 @@ protected:	// members
 	used_id_map_type	used_id_map;
 
 public:
-//	scopespace(const string& n, const scopespace* p);
 	scopespace(const string& n, never_const_ptr<scopespace> p);
 virtual	~scopespace();
 
@@ -266,17 +262,11 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
 virtual	string get_qualified_name(void) const = 0;
 
-#if 0
-virtual	const object*	lookup_object_here(const token_string& id) const;
-virtual	const object*	lookup_object(const token_string& id) const;
-virtual	const object*	lookup_object(const qualified_id_slice& id) const;
-#endif
 virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
 virtual	never_ptr<object>	lookup_object_here_with_modify(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object(const string& id) const;
 virtual	never_const_ptr<object>	lookup_object(const qualified_id_slice& id) const;
 
-// virtual	const scopespace*	lookup_namespace(const qualified_id_slice& id) const;
 virtual	never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
 
 virtual	const instantiation_base*
@@ -306,7 +296,6 @@ class name_space : public scopespace {
 protected:
 	// ummm... should this have been removed? scopespace already has one
 	const never_const_ptr<name_space>	parent;	// override parent
-//	const name_space*		parent;		// override parent
 
 	/**
 		The set of namespaces which are open to search within
@@ -337,30 +326,27 @@ protected:
 	// i.e. using A::my_type;
 
 public:
-//	name_space(const string& n, const name_space* p);
-	name_space(const string& n, never_const_ptr<name_space> p = NULL);
-// explicit name_space();	// for GLOBAL?
+explicit name_space(const string& n);
+	name_space(const string& n, never_const_ptr<name_space>);
 	~name_space();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
 string	get_qualified_name(void) const;
-// const name_space*	get_global_namespace(void) const;
 never_const_ptr<name_space>	get_global_namespace(void) const;
 
 // update these return types later
 never_ptr<name_space>	add_open_namespace(const string& n);
-// const name_space*	leave_namespace(void);	// or close_namespace
 never_const_ptr<name_space>	leave_namespace(void);	// or close_namespace
-// const name_space*	add_using_directive(const qualified_id& n);
-// const name_space*	add_using_alias(const qualified_id& n, const string& a);
 never_const_ptr<name_space>	add_using_directive(const qualified_id& n);
 never_const_ptr<name_space>	add_using_alias(const qualified_id& n, const string& a);
 
 // do we really need to specialize adding definitions by class?
 // to be used ONLY by the global namespace
 never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
+
+// convert me to pointer-class:
 datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
 
 // for generic concrete types, built-in and user-defined
@@ -369,36 +355,22 @@ never_const_ptr<fundamental_type_reference>
 
 // returns type if unique match found, else NULL
 never_const_ptr<scopespace>	lookup_namespace(const qualified_id_slice& id) const;
-// const scopespace*	lookup_namespace(const qualified_id_slice& id) const;
 
 // type-specific counterparts
-
-datatype_definition*	add_datatype_definition();
-
-#if 0
-datatype_instantiation*	add_datatype_instantiation(
-				const data_type_reference& t,
-				const string& id);
-param_instantiation*	add_paramtype_instantiation(
-				const param_type_reference& T, 
-				const string& id);
-#endif
 
 never_const_ptr<process_definition>
 			probe_process_definition(const string& s) const;
 never_ptr<process_definition>
 			add_proc_declaration(const token_identifier& pname);
-// process_definition*	add_proc_definition(const token_identifier& pname);
 never_ptr<process_definition>	add_proc_definition(const token_identifier& pname);
-process_instantiation*	add_proc_instantiation();
 
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
 private:
-// const name_space*	query_namespace_match(const qualified_id_slice& id) const;
-// const name_space*	query_subnamespace_match(const qualified_id_slice& id) const;
-never_const_ptr<name_space>	query_namespace_match(const qualified_id_slice& id) const;
-never_const_ptr<name_space>	query_subnamespace_match(const qualified_id_slice& id) const;
+never_const_ptr<name_space>
+		query_namespace_match(const qualified_id_slice& id) const;
+never_const_ptr<name_space>
+		query_subnamespace_match(const qualified_id_slice& id) const;
 
 void	query_import_namespace_match(namespace_list& m, const qualified_id& id) const;
 
@@ -478,7 +450,6 @@ protected:
 	template_formals_set*		template_formals;
 public:
 	definition_base(const string& n,
-//		const name_space* p, 
 		never_const_ptr<name_space> p, 
 		template_formals_set* tf = NULL);
 virtual	~definition_base();
@@ -523,7 +494,6 @@ protected:
 		Can be a namespace of definition's scopespace.  
 		Is NEVER null, should be reference?
 	 */
-//	const scopespace*		owner;
 	const never_const_ptr<scopespace>	owner;
 
 	/**
@@ -535,7 +505,6 @@ protected:
 		Optional array dimension sizes, which can be ranges.  
 	 */
 	excl_ptr<array_dim_list>	array_dimensions;
-//	array_dim_list*			array_dimensions;
 
 public:
 	// o should be reference, not pointer
@@ -549,12 +518,10 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 virtual	string get_qualified_name(void) const;
 virtual	string hash_string(void) const { return key; }
 
-// virtual	const fundamental_type_reference* get_type_ref(void) const = 0;
 virtual	never_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
 virtual	instance_reference_base* make_instance_reference(context& c) const = 0;
 
-//	void set_array_dimensions(array_dim_list* d);
 	void set_array_dimensions(excl_ptr<array_dim_list> d);
 
 	bool array_dimension_match(const instantiation_base& i) const;
@@ -593,22 +560,19 @@ protected:
 		Const?
 	 */
 	excl_ptr<template_param_list>		template_params;
-//	template_param_list*		template_params;
 
 public:
-//	fundamental_type_reference(template_param_list* pl);
-	fundamental_type_reference(excl_ptr<template_param_list> pl = NULL);
+	fundamental_type_reference(void);
+explicit fundamental_type_reference(excl_ptr<template_param_list> pl);
 virtual	~fundamental_type_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
-// virtual const definition_base* get_base_def(void) const = 0;
 virtual never_const_ptr<definition_base> get_base_def(void) const = 0;
 
 // TO DO: type equivalence relationship
 
 virtual string hash_string(void) const;
-// virtual	const fundamental_type_reference* set_context_type_reference(context& c) const = 0;
 	never_const_ptr<fundamental_type_reference> set_context_type_reference(context& c) const;
 virtual const instantiation_base* add_instance_to_scope(scopespace& s, 
 			const token_identifier& id) const = 0;
@@ -626,16 +590,11 @@ protected:
 	// don't own these members
 	never_const_ptr<type_reference_base>	base;
 	never_const_ptr<array_dim_list>		dim;
-//	const type_reference_base*		base;
-//	const array_dim_list*			dim;
 public:
 	collective_type_reference(const type_reference_base& b, 
-		never_const_ptr<array_dim_list> d
-//		const array_dim_list* d
-		);
+		never_const_ptr<array_dim_list> d);
 	~collective_type_reference();
 
-// methods...
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 };	// end class collective_type_reference
@@ -649,21 +608,16 @@ class data_type_reference : public fundamental_type_reference {
 protected:
 //	template_param_list*		template_params;	// inherited
 	never_const_ptr<datatype_definition>	base_type_def;
-//	const datatype_definition*	base_type_def;
 public:
 	data_type_reference(
-//		const datatype_definition* td, 
 		never_const_ptr<datatype_definition> td, 
-//		template_param_list* pl = NULL
-		excl_ptr<template_param_list> pl = NULL
-		);
+		excl_ptr<template_param_list> pl = NULL);
+		// not gcc-2.95.3 friendly default argument
 virtual	~data_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const definition_base* get_base_def(void) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	const fundamental_type_reference* set_context_type_reference(context& c) const;
 //	never_const_ptr<fundamental_type_reference>
 //			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
@@ -677,23 +631,19 @@ virtual	~data_type_reference();
  */
 class channel_type_reference : public fundamental_type_reference {
 protected:
-//	template_param_list*		template_params;	// inherited
+//	excl_ptr<template_param_list>	template_params;	// inherited
 	never_const_ptr<channel_definition>	base_chan_def;
-//	const channel_definition*	base_chan_def;
 public:
 	channel_type_reference(
-//		const channel_definition* td, 
+		never_const_ptr<channel_definition> td);
+	channel_type_reference(
 		never_const_ptr<channel_definition> td, 
-		excl_ptr<template_param_list> pl = NULL
-//		template_param_list* pl = NULL
-		);
+		excl_ptr<template_param_list> pl = NULL);
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const definition_base* get_base_def(void) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	const fundamental_type_reference* set_context_type_reference(context& c) const;
 //	never_const_ptr<fundamental_type_reference>
 //			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
@@ -709,21 +659,16 @@ class process_type_reference : public fundamental_type_reference {
 protected:
 //	template_param_list*		template_params;	// inherited
 	never_const_ptr<process_definition>	base_proc_def;
-//	const process_definition*	base_proc_def;
 public:
 	process_type_reference(
-//		const process_definition* td, 
 		never_const_ptr<process_definition> td, 
-		excl_ptr<template_param_list> pl = NULL
-//		template_param_list* pl = NULL
-		);
+		excl_ptr<template_param_list> pl = NULL);
+		// not gcc-2.95.3 friendly default argument
 virtual	~process_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const definition_base* get_base_def(void) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	const fundamental_type_reference* set_context_type_reference(context& c) const;
 //	never_const_ptr<fundamental_type_reference>
 //			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
@@ -743,17 +688,13 @@ class param_type_reference : public fundamental_type_reference {
 protected:
 //	template_param_list*		template_params;	// inherited, unused
 	never_const_ptr<built_in_param_def>	base_param_def;
-//	const built_in_param_def*	base_param_def;
 public:
-//	param_type_reference(const built_in_param_def* td);
 	param_type_reference(never_const_ptr<built_in_param_def> td);
 virtual	~param_type_reference();
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const definition_base* get_base_def(void) const;
 	never_const_ptr<definition_base> get_base_def(void) const;
-//	const fundamental_type_reference* set_context_type_reference(context& c) const;
 //	never_const_ptr<fundamental_type_reference>
 //			set_context_type_reference(context& c) const;
 	const instantiation_base* add_instance_to_scope(scopespace& s, 
@@ -773,7 +714,6 @@ virtual	~instance_reference_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
-// virtual const instantiation_base* get_inst_base(void) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
 };	// end class instance_reference_base
@@ -791,15 +731,9 @@ protected:
 	never_const_ptr<instance_reference_base>	base_array;
 	never_const_ptr<param_expr>			lower_index;
 	never_const_ptr<param_expr>			upper_index;
-#if 0
-	const instance_reference_base*		base_array;
-	const param_expr*			lower_index;
-	const param_expr*			upper_index;
-#endif
 public:
 	collective_instance_reference(
 		never_const_ptr<instance_reference_base> b, 
-//		const instance_reference_base* b, 
 		const param_expr* l = NULL, const param_expr* r = NULL);
 virtual	~collective_instance_reference();
 
@@ -835,7 +769,6 @@ protected:
 protected:
 	// consider letting collective_instance_reference take care of it...
 	excl_ptr<array_index_list>		array_indices;
-//	array_index_list*			array_indices;
 
 // for subclasses:
 //	const instantiation_base*		inst_ref;
@@ -847,7 +780,6 @@ virtual	~single_instance_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const;
-// virtual const instantiation_base* get_inst_base(void) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const;
 
@@ -862,7 +794,6 @@ protected:
 //	array_index_list*			array_indices;	// inherited
 //	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<datatype_instantiation>	data_inst_ref;
-//	const datatype_instantiation*		data_inst_ref;
 
 public:
 	datatype_instance_reference(const datatype_instantiation& di, 
@@ -872,7 +803,6 @@ public:
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const instantiation_base* get_inst_base(void) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class datatype_instance_reference
 
@@ -885,7 +815,6 @@ protected:
 //	array_index_list*			array_indices;	// inherited
 //	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<channel_instantiation>	channel_inst_ref;
-//	const channel_instantiation*		channel_inst_ref;
 
 public:
 	channel_instance_reference(const channel_instantiation& ci, 
@@ -895,7 +824,6 @@ public:
 
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
-//	const instantiation_base* get_inst_base(void) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class channel_instance_reference
 
@@ -908,7 +836,6 @@ protected:
 //	array_index_list*			array_indices;	// inherited
 //	excl_ptr<array_index_list>		array_indices;	// inherited
 	never_const_ptr<process_instantiation>	process_inst_ref;
-//	const process_instantiation*		process_inst_ref;
 
 public:
 	process_instance_reference(const process_instantiation& pi, 
@@ -917,7 +844,6 @@ public:
 	~process_instance_reference() { }
 
 	ostream& what(ostream& o) const;
-//	const instantiation_base* get_inst_base(void) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class process_instance_reference
 
@@ -954,20 +880,15 @@ protected:
 public:
 	process_definition(
 		never_const_ptr<name_space> o, 
-//		const name_space* o, 
 		const string& s, const bool d, 
 		template_formals_set* tf = NULL);
 virtual	~process_definition();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const definition_base* set_context_definition(context& c) const;
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 virtual	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
-
-// OBSOLETE:
-//	bool equals_signature(const process_signature& ps) const;
 
 	bool is_defined(void) const { return def; }
 
@@ -986,7 +907,6 @@ protected:
 		The type of process being instantiated.  
 	 */
 	never_const_ptr<process_type_reference>		type;
-//	const process_type_reference*		type;
 
 	// reserve these for connections between instance_references
 	// list of template actuals
@@ -999,9 +919,7 @@ public:
 	~process_instantiation();
 
 	ostream& what(ostream& o) const;
-//	const fundamental_type_reference* get_type_ref(void) const;
 	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-// virtual	string hash_string(void) const;
 	instance_reference_base* make_instance_reference(context& c) const;
 };	// end class process_instantiation
 
@@ -1015,19 +933,16 @@ protected:
 //	string			key;		///< name of type
 public:
 	datatype_definition(
-//		const name_space* o, 
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		template_formals_set* tf = NULL);
 virtual	~datatype_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
-// virtual	const definition_base* set_context_definition(context& c) const;
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 virtual	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
-// virtual	const datatype_definition* resolve_canonical(void) const;
 virtual	bool type_equivalent(const datatype_definition& t) const = 0;
 };	// end class datatype_definition
 
@@ -1044,7 +959,6 @@ public:
 virtual	~built_in_datatype_def();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const definition_base* set_context_definition(context& c) const;
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 virtual	never_const_ptr<fundamental_type_reference>
@@ -1068,7 +982,6 @@ public:
 virtual	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
-// virtual	const definition_base* set_context_definition(context& c) const;
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 virtual	never_const_ptr<fundamental_type_reference>
@@ -1130,7 +1043,6 @@ public:
 virtual	~channel_definition();
 
 virtual	ostream& what(ostream& o) const = 0;
-// virtual	const definition_base* set_context_definition(context& c) const;
 virtual	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
 virtual	never_const_ptr<fundamental_type_reference>
@@ -1179,14 +1091,11 @@ class type_alias : public definition_base {
 protected:
 	/// pointer to the type represented by this type-id
 	never_const_ptr<definition_base>	canonical;
-//	const definition_base*		canonical;
 public:
 	type_alias(
 		never_const_ptr<name_space> o,
-//		const name_space* o,
 		const string& n, 
 		never_const_ptr<definition_base> t,
-//		const definition_base* t,
 		template_formals_set* tf = NULL);
 virtual	~type_alias();
 	// never delete canonical (can't, it's const!)
@@ -1202,7 +1111,6 @@ virtual	ostream& what(ostream& o) const;
 /// Instantiation of a data type, either inside or outside definition.  
 class datatype_instantiation : public instantiation_base {
 protected:
-//	const data_type_reference*	type;		///< the actual type
 	never_const_ptr<data_type_reference>	type;	///< the actual type
 public:
 	datatype_instantiation(const scopespace& o, 
@@ -1211,11 +1119,9 @@ public:
 virtual	~datatype_instantiation();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const fundamental_type_reference* get_type_ref(void) const;
 virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 
 	bool equals_template_formal(const template_formal_decl& tf) const;
-// virtual	string hash_string(void) const;
 virtual	instance_reference_base* make_instance_reference(context& c) const;
 };	// end class datatype_instantiation
 
@@ -1226,7 +1132,6 @@ virtual	instance_reference_base* make_instance_reference(context& c) const;
  */
 class channel_instantiation : public instantiation_base {
 protected:
-//	const channel_type_reference*	type;
 	never_const_ptr<channel_type_reference>	type;
 public:
 	channel_instantiation(const scopespace& o, 
@@ -1235,9 +1140,7 @@ public:
 virtual	~channel_instantiation();
 
 virtual	ostream& what(ostream& o) const;
-// virtual	const fundamental_type_reference* get_type_ref(void) const;
 virtual	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-// virtual	string hash_string(void) const;
 virtual	instance_reference_base* make_instance_reference(context& c) const;
 };	// end class channel_instantiation
 
@@ -1252,7 +1155,6 @@ protected:
 		Type refers directly to a definition in this case, 
 		because parameters are never templatable.  
 	 */
-//	const param_type_reference*	type;
 	never_const_ptr<param_type_reference>	type;
 
 	/**
@@ -1265,7 +1167,6 @@ protected:
 		Or should this be never delete? cache-owned expressions?
 	 */
 	excl_const_ptr<param_expr>	ival;
-//	const param_expr*		ival;
 
 public:
 	param_instantiation(const scopespace& o, 
@@ -1275,15 +1176,11 @@ public:
 
 	ostream& what(ostream& o) const;
 
-//	const fundamental_type_reference* get_type_ref(void) const;
 	never_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-// virtual	string hash_string(void) const;
 	instance_reference_base* make_instance_reference(context& c) const;
 
-//	void initialize(const param_expr* e);
 	void initialize(excl_const_ptr<param_expr> e);
 
-//	const param_expr* default_value(void) const { return ival; }
 	never_const_ptr<param_expr> default_value(void) const { return ival; }
 
 /**
@@ -1303,7 +1200,6 @@ class param_instance_reference : public single_instance_reference {
 protected:
 //	array_index_list*			array_indices;	// inherited
 	never_const_ptr<param_instantiation>	param_inst_ref;
-//	const param_instantiation*		param_inst_ref;
 
 public:
 	param_instance_reference(const param_instantiation& pi, 
@@ -1312,7 +1208,6 @@ public:
 	~param_instance_reference() { }
 
 	ostream& what(ostream& o) const;
-//	const instantiation_base* get_inst_base(void) const;
 	never_const_ptr<instantiation_base> get_inst_base(void) const;
 };	// end class param_instance_reference
 

@@ -475,9 +475,10 @@ excl_ptr<T>& operator = (base_ptr_ref<T> r) throw() {
  */
 template <class T>
 class excl_const_ptr : public virtual base_const_ptr<T> {
-friend class excl_ptr<T>;
-friend class never_ptr<T>;
+// friend class excl_ptr<T>;
+// friend class never_ptr<T>;
 friend class never_const_ptr<T>;
+friend class some_const_ptr<T>;
 
 protected:
 const T*	release(void) throw() {
@@ -765,7 +766,10 @@ explicit never_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
 	Doesn't have to be explicit because it should always be safe
 	to copy a never-delete, read-only pointer.  
  */
-	never_const_ptr(const base_ptr<T>& p) throw() :
+	never_const_ptr(const never_ptr<T>& p) throw() :
+		base_const_ptr<T>(p.ptr) { }
+	never_const_ptr(const some_ptr<T>& p) throw();
+	never_const_ptr(const excl_ptr<T>& p) throw() :
 		base_const_ptr<T>(p.ptr) { }
 
 /**
@@ -773,7 +777,10 @@ explicit never_const_ptr(void) throw() : base_const_ptr<T>(NULL) { }
 	to copy a never-delete, read-only pointer.  
 	Pass by reference to keep base_const_ptr abstract.
  */
-	never_const_ptr(const base_const_ptr<T>& p) throw() :
+	never_const_ptr(const never_const_ptr<T>& p) throw() :
+		base_const_ptr<T>(p.cptr) { }
+	never_const_ptr(const some_const_ptr<T>& p) throw();
+	never_const_ptr(const excl_const_ptr<T>& p) throw() :
 		base_const_ptr<T>(p.cptr) { }
 
 virtual	~never_const_ptr() { }
@@ -1104,6 +1111,14 @@ excl_ptr<T>::excl_ptr(some_ptr<T>& s) throw() : base_ptr<T>(s.ptr) {
 	assert(s.own);		// else it didn't own it before!
 	s.own = false;
 }
+
+template <class T>
+never_const_ptr<T>::never_const_ptr(const some_ptr<T>& p) throw() :
+	base_const_ptr<T>(p.ptr) { }
+
+template <class T>
+never_const_ptr<T>::never_const_ptr(const some_const_ptr<T>& p) throw() :
+	base_const_ptr<T>(p.cptr) { }
 
 //-----------------------------------------------------------------------------
 #if 0

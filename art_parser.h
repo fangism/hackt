@@ -12,6 +12,7 @@
 #include "art_utils.h"		// for token_position
 #include "sublist.h"		// for efficient list slices
 #include "ptrs.h"		// experimental pointer classes
+#include "count_ptr.h"		// reference-counted pointers
 
 /**
 	This is the general namespace for all ART-related classes.  
@@ -146,23 +147,32 @@ virtual	line_position rightmost(void) const;
 	Then dynamically casting elements may be a pain?
  */
 template <class T>
-class node_list_base : virtual public node, public list<some_const_ptr<T> > {
+class node_list_base : virtual public node, public list<count_const_ptr<T> > {
 private:
 	/**
-		Base class.  (was derived from excl_const_ptr<>)
+		Base class.  (was derived from excl_const_ptr, 
+		then some_count_ptr)
 	 */
-	typedef		list<some_const_ptr<T> >	list_parent;
+	typedef		list<count_const_ptr<T> >	list_parent;
 	// read-only, but transferrable ownership
 public:
 	typedef	typename list_parent::iterator		iterator;
 	typedef	typename list_parent::const_iterator	const_iterator;
 public:
+	/**
+		Default empty constructor.  
+	 */
 	node_list_base();
-// non-owner-transfer copy constructor
-	// BEWARE! need to make a list of never_ptr<T>!!!
-	// else will result in NULL lists!
+
+	/**
+		Non-owner-transfer copy constructor.  
+	 */
+
 	node_list_base(const node_list_base<T>& l);
-// initializing with first element, T must be subclass of node!
+	/**
+		Constructor with initializing first element, 
+		T should be subclass of node!
+	 */
 	node_list_base(const T* n);
 
 virtual	~node_list_base();
@@ -203,7 +213,7 @@ public:
 	typedef	typename parent::const_iterator	const_iterator;
 	typedef	typename parent::reverse_iterator	reverse_iterator;
 	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
-	typedef	list<some_const_ptr<terminal> >	delim_list;
+	typedef	list<count_const_ptr<terminal> >	delim_list;
 protected:
 	excl_const_ptr<terminal>	open;	///< wrapping string, e.g. "("
 	excl_const_ptr<terminal>	close;	///< wrapping string, e.g. ")"
@@ -538,9 +548,9 @@ friend	ostream& operator << (ostream& o, const qualified_id& id);
 	IS_A(qualified_id*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class qualified_id_slice : public sublist<some_const_ptr<token_identifier> > {
+class qualified_id_slice : public sublist<count_const_ptr<token_identifier> > {
 protected:
-	typedef	sublist<some_const_ptr<token_identifier> >	parent;
+	typedef	sublist<count_const_ptr<token_identifier> >	parent;
 protected:
 	const bool	 absolute;
 public:
@@ -604,6 +614,7 @@ explicit namespace_id(qualified_id* i);
 
 	never_const_ptr<qualified_id> get_id(void) const
 		{ return never_const_ptr<qualified_id>(qid); }
+		// gcc-2.95.3 dies on this.
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 	qualified_id*	force_absolute(token_string* s)
@@ -630,6 +641,7 @@ class id_expr : public expr {
 protected:
 	/**
 		Wraps around a qualified_id.  
+		Is owned and non-transferrable.  
 	 */
 	const excl_ptr<qualified_id>	qid;
 public:
@@ -752,13 +764,8 @@ typedef node_list<range,comma>	range_list;
 /// abstract base class for unary expressions
 class unary_expr : public expr {
 protected:
-#if 0
-	expr*		e;		///< the argument expr
-	terminal*	op;		///< the operator, may be null
-#else
 	const excl_const_ptr<expr>	e;	///< the argument expr
 	const excl_const_ptr<terminal>	op;	///< the operator, may be null
-#endif
 public:
 	unary_expr(const expr* n, const terminal* o);
 virtual	~unary_expr();
@@ -773,7 +780,7 @@ virtual	const object* check_build(context* c) const = 0;
 /// class for prefix unary expressions
 class prefix_expr : public unary_expr {
 public:
-	prefix_expr(terminal* o, expr* n);
+	prefix_expr(const terminal* o, const expr* n);
 virtual	~prefix_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -786,7 +793,7 @@ virtual	const object* check_build(context* c) const;
 /// class for postfix unary expressions
 class postfix_expr : public unary_expr {
 public:
-	postfix_expr(expr* n, terminal* o);
+	postfix_expr(const expr* n, const terminal* o);
 virtual	~postfix_expr();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -801,11 +808,11 @@ virtual	const object* check_build(context* c) const = 0;
 // final class?
 class member_expr : public postfix_expr {
 protected:
-	// was expr*
-	token_identifier*	member;
-	// should be an id_expr or token_string
+	/// the member name
+	const excl_const_ptr<token_identifier>	member;
 public:
-	member_expr(expr* l, terminal* op, token_identifier* m);
+	member_expr(const expr* l, const terminal* op, 
+		const token_identifier* m);
 virtual	~member_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -818,9 +825,9 @@ virtual	const object* check_build(context* c) const;
 // final class?
 class index_expr : public postfix_expr {
 protected:
-	range_list*		ranges;		///< index
+	const excl_const_ptr<range_list>	ranges;		///< index
 public:
-	index_expr(expr* l, range_list* i);
+	index_expr(const expr* l, const range_list* i);
 virtual	~index_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -832,17 +839,10 @@ virtual	const object* check_build(context* c) const;
 /// base class for general binary expressions
 class binary_expr : public expr {
 protected:
-#if 0
-	expr* 		l;			///< left-hand side
-	terminal*	op;			///< operator
-	expr*		r;			///< right-hand side
-#else
 	const excl_const_ptr<expr> 	l;	///< left-hand side
 	const excl_const_ptr<terminal>	op;	///< operator
 	const excl_const_ptr<expr>	r;	///< right-hand side
-#endif
 public:
-//	binary_expr(expr* left, terminal* o, expr* right);
 	binary_expr(const expr* left, const terminal* o, const expr* right);
 virtual	~binary_expr();
 
@@ -856,7 +856,7 @@ virtual	const object* check_build(context* c) const;	// = 0;
 /// class of arithmetic expressions
 class arith_expr : public binary_expr {
 public:
-	arith_expr(expr* left, terminal* o, expr* right);
+	arith_expr(const expr* left, const terminal* o, const expr* right);
 virtual	~arith_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -867,7 +867,7 @@ virtual	ostream& what(ostream& o) const;
 /// class of relational expressions
 class relational_expr : public binary_expr {
 public:
-	relational_expr(expr* left, terminal* o, expr* right);
+	relational_expr(const expr* left, const terminal* o, const expr* right);
 virtual	~relational_expr();
 
 virtual	ostream& what(ostream& o) const;
@@ -878,7 +878,7 @@ virtual	ostream& what(ostream& o) const;
 /// class of logical expressions
 class logical_expr : public binary_expr {
 public:
-	logical_expr(expr* left, terminal* o, expr* right);
+	logical_expr(const expr* left, const terminal* o, const expr* right);
 virtual	~logical_expr();
 
 virtual	ostream& what(ostream& o) const;

@@ -40,7 +40,6 @@ param_expr_collective::hash_string(void) const {
 	list<excl_ptr<param_expr> >::const_iterator i = 
 		elist.begin();
 	for ( ; i!=elist.end(); i++) {
-//		const param_expr* p = *i;
 		const never_const_ptr<param_expr> p(*i);
 		assert(p);
 		ret += p->hash_string();
@@ -140,11 +139,6 @@ string
 param_binary_expr::hash_string(void) const {
 	return lx->hash_string() +op +rx->hash_string();
 }
-
-//=============================================================================
-// EXPLICIT TEMPLATE INSTANTIATIONS
-
-// template class list_of_ptr<param_expr>;		// array_dim_list
 
 //=============================================================================
 }	// end namepace entity

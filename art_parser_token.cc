@@ -11,7 +11,6 @@
 #include "art_switches.h"
 #include "art_parser_debug.h"
 #include "art_parser.h"
-// #include "art_parser_template_methods.h"	// no templates here
 #include "art_symbol_table.h"
 #include "art_object.h"
 #include "art_object_expr.h"

@@ -7,7 +7,7 @@
 
 #include "art_parser_debug.h"
 #include "art_macros.h"
-#include "art_parser.h"			// includes "ptrs.h"
+#include "art_parser.h"			// includes "ptrs.h", "count_ptr.h"
 #include "art_symbol_table.h"
 	// for class context, uses auto_indent()
 
@@ -62,8 +62,14 @@ node_list_base<T>::node_list_base() : node(), list_parent() {
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(const T* n) : node(), list_parent() {
-//	push_back(excl_const_ptr<T>(n));	// implicit
-	push_back(some_const_ptr<T>(excl_const_ptr<T>(n)));
+	push_back(count_const_ptr<T>(n));	// implicit
+#if 0
+	excl_const_ptr<T> xn(n);
+	some_const_ptr<T> sn(xn);
+	assert(sn.owned() && !xn);
+	push_back(sn);
+	assert(!sn.owned());
+#endif
 }
 
 NODE_LIST_BASE_TEMPLATE_SPEC
@@ -211,9 +217,15 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 		// will fail if incorrect token is passed
 		assert(!(d->string_compare(D)));
 		// now use separate list for delimiters
-		delim.push_back(some_const_ptr<terminal>(
-			excl_const_ptr<terminal>(d)));
+#if 0
+		excl_const_ptr<terminal> xd(d);
+		some_const_ptr<terminal> sd(xd);
+		assert(!xd && sd.owned());	// guarantee transfer
+		delim.push_back(sd);
+		assert(!sd.owned());
 		// explicit conversion
+#endif
+		delim.push_back(count_const_ptr<terminal>(d));
 	} else {
 		// consider using template specialization for this
 		// for effective conditional compilation
@@ -223,8 +235,16 @@ node_list<T,D>::append(const terminal* d, const T* n) {
 	// either use different pointer class or introduce 
 	// list sub-class, with new push_back operation.  
 	// n may be null, is ok
+#if 0
+	excl_const_ptr<T> xn(n);
+	some_const_ptr<T> sn(xn);
+	assert(!xn  && sn.owned());		// guarantee transfer
+	push_back(sn);
+	assert(!sn.owned());
 //	push_back(excl_const_ptr<T>(n));	// if implicit constructor allowed
-	push_back(some_const_ptr<T>(excl_const_ptr<T>(n)));
+#endif
+	push_back(count_const_ptr<T>(n));
+
 	return this;
 }
 

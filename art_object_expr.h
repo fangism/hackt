@@ -37,9 +37,6 @@ typedef list<never_const_ptr<param_expr> >		array_dim_list;
 	scopespaces' used_id_map.  
  */
 class param_expr : public object {
-protected:
-// ownership flag, reference count?
-//	mutable int ref_count;
 public:
 	param_expr() : object() { }
 virtual	~param_expr() { }

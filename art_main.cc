@@ -25,13 +25,9 @@ extern "C" {
 }
 
 int main(int argc, char* argv[]) {
-	excl_ptr<parser::node> root;	///< root of the syntax tree
-//	parser::node* root;	///< root of the syntax tree
-	/// root of type-checked object
-	const entity::object* top = NULL;
-//	entity::name_space* global = new name_space("",NULL);
+	excl_ptr<parser::node> root;		///< root of the syntax tree
+	const entity::object* top = NULL;	///< root type-checked object
 	excl_ptr<entity::name_space> global(new name_space(""));
-//	parser::context* the_context = new context(global);
 	excl_ptr<parser::context> the_context(new context(global));
 
 		yyparse();
@@ -40,7 +36,6 @@ DEBUG(DEBUG_BASIC,
 		<< endl;
 )
 	root = excl_ptr<parser::node>(yyval._root_body);
-//	root = yyval._root_body;
 if (root) {
 DEBUG(DEBUG_BASIC, 
 	root->what(cerr << "root is a ") << endl;	// what's our top root?
@@ -56,13 +51,10 @@ DEBUG(DEBUG_BASIC,
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 
-	// massive recursive deletion of syntax tree, reclaim memory
-//	SAFEDELETE(root);	// excl_ptr<> will delete itself.
-
-	// IMPORTANT: should be the same, don't delete both
 	if (top) assert(global == top);
-	// delete ART object and its hierarchy
-//	SAFEDELETE(global);	// excl_ptr<> will delete itself.
+	// massive recursive deletion of syntax tree, reclaim memory
+	// root will delete itself (also recursively)
+	// global will delete itself (also recursively)
 	return 0;
 }
 

@@ -101,17 +101,7 @@ scopespace::~scopespace() {
 // const object*
 never_const_ptr<object>
 scopespace::lookup_object_here(const string& id) const {
-#if 0
-	dump(cerr << "BEFORE lookup_object_here, " << endl);
-	never_const_ptr<object> ret = 
-		static_cast<const used_id_map_type&>(used_id_map)[id];
-	dump(cerr << "AFTER lookup_object_here, " << endl);
-	return ret;
-#else
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#endif
-//	never_const_ptr<object> ret(used_id_map[id]);
-//	return ret.unprotected_const_ptr();	// temporary
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -134,11 +124,8 @@ scopespace::lookup_object_here_with_modify(const string& id) const {
 	\param id the unqualified name of the object sought.  
 	\return an object with the same name, if found.  
  */
-// const object*
 never_const_ptr<object>
 scopespace::lookup_object(const string& id) const {
-//	const object* o = used_id_map[id];
-//	const object* o = used_id_map[id].unprotected_const_ptr();
 	never_const_ptr<object> o = lookup_object_here(id);
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
@@ -151,7 +138,6 @@ scopespace::lookup_object(const string& id) const {
 	If id is only a single identifier, and it is not absolute, 
 	then it is considered an unqualified identifier.  
  */
-// const object*
 never_const_ptr<object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
 if (id.is_absolute()) {
@@ -159,8 +145,6 @@ if (id.is_absolute()) {
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
 		qualified_id_slice idc(id);
-//		never_const_ptr<name_space> ns(IS_A(const name_space*, 
-//			lookup_namespace(idc.betail())));
 		never_const_ptr<name_space> ns = 
 			lookup_namespace(idc.betail()).is_a<name_space>();
 		if (ns)
@@ -172,8 +156,6 @@ if (id.is_absolute()) {
 } else {
 	// else need to resolve namespace portion first
 	qualified_id_slice idc(id);
-//	never_const_ptr<name_space> ns(IS_A(const name_space*, 
-//		lookup_namespace(idc.betail())));
 	never_const_ptr<name_space> ns = 
 		lookup_namespace(idc.betail()).is_a<name_space>();
 	if (ns)
@@ -192,7 +174,6 @@ if (id.is_absolute()) {
 	\param id is the entire name of the namespace.
 	\return pointer to the scope or namespace matched if found.  
  */
-// const scopespace*
 never_const_ptr<scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	return parent->lookup_namespace(id);
@@ -202,10 +183,7 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 
 const instantiation_base*
 scopespace::add_instance(instantiation_base& i) {
-//	used_id_map[i.get_name()] = &i;
 	used_id_map[i.get_name()] = excl_ptr<instantiation_base>(&i);
-//	used_id_map[i.get_name()] = some_ptr<instantiation_base>(
-//		excl_ptr<instantiation_base>(&i));
 	return &i;
 }
 
@@ -220,10 +198,23 @@ scopespace::add_instance(instantiation_base& i) {
 	\param n the name.  
 	\param p pointer to the parent namespace.  
  */
-// name_space::name_space(const string& n, const name_space* p) : 
 name_space::name_space(const string& n, never_const_ptr<name_space> p) : 
 		scopespace(n, p), 
 		parent(p), 
+		open_spaces(), open_aliases() {
+}
+
+/**
+	Constructor for the global namespace, which is the only
+	namespace without a parent.  
+	Written here instead of re-using the above constructor with
+	default argument because old compilers can't accept
+	default arguments (NULL) for class object formals.  
+ */
+name_space::name_space(const string& n) :
+		scopespace(n, never_const_ptr<scopespace>(NULL)),
+			// NULL parent
+		parent(NULL), 
 		open_spaces(), open_aliases() {
 }
 
@@ -251,14 +242,12 @@ name_space::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// Returns pointer to global namespace by following parent pointers.
-// const name_space*
 never_const_ptr<name_space>
 name_space::get_global_namespace(void) const {
 	if (parent)
 		return parent->get_global_namespace();
 	else	// no parent
 		return never_const_ptr<name_space>(this);
-//		return this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -303,12 +292,9 @@ name_space::dump(ostream& o) const {
  */
 never_ptr<name_space>
 name_space::add_open_namespace(const string& n) {
-//	dump(cerr << "BEFORE add_open_namespace, " << endl);	// DEBUG
-
 	never_ptr<name_space> ret;
 	never_const_ptr<object> probe = lookup_object_here(n);
 	if (probe) {
-//		const name_space* probe_ns = IS_A(const name_space*, probe);
 		never_const_ptr<name_space> probe_ns(probe.is_a<name_space>());
 		// an alias may return with valid pointer!
 		if (!probe_ns) {
@@ -325,47 +311,27 @@ name_space::add_open_namespace(const string& n) {
 			DEBUG(TRACE_NAMESPACE_NEW, 
 				cerr << n << " is already exists as subspace, re-opening")
 
-//			ret = IS_A(name_space*, used_id_map[n]);
 			ret = lookup_object_here_with_modify(n).is_a<name_space>();
 
-//			cerr << "probe_ns key = " << probe_ns->key << endl;
-//			cerr << "looked-up namespace key = " << ret->key << endl;
 			assert(probe_ns->key == ret->key);
 		}
 		assert(ret);
 	} else {
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
-//		ret = excl_ptr<name_space>(new name_space(n, this));
-//		ret = new name_space(n, never_const_ptr<name_space>(this));
 		excl_ptr<name_space> new_ns(
 			new name_space(n, never_const_ptr<name_space>(this)));
 		ret = new_ns;
-//		ret = new name_space(n, this);
 		assert(ret);
 		assert(new_ns.owned());
 		// register it as a used id
-//		used_id_map[n] = ret;
-//		used_id_map[n] = some_ptr<name_space>(
-//			excl_ptr<name_space>(ret));
-//		used_id_map[n] = some_ptr<name_space>(new_ns);
 		used_id_map[n] = new_ns;
 			// explicit transfer
 		assert(!new_ns);
-
-		if (0) {	// debugging
-			never_const_ptr<name_space> test =
-				lookup_object_here(n).is_a<name_space>();
-			cerr << "reading back out what was added, key = "
-				<< test->key << endl;
-		}
 	}
-//	dump(cerr << "AFTER add_open_namespace, " << endl);	// DEBUG
 
 	// silly sanity checks
 	assert(ret->parent == this);
-//	cerr << "DEBUG: ret->key = " << ret->key << ", n = " << n << endl;
-	cerr << endl;
 	assert(ret->key == n);
 	DEBUG(TRACE_NAMESPACE_NEW, 
 		cerr << " with parent: " << ret->parent->key)
@@ -385,7 +351,6 @@ name_space::add_open_namespace(const string& n) {
 	\return pointer to the parent namespace, should never be NULL.  
 	\sa add_open_namespace
  */
-// const name_space*
 never_const_ptr<name_space>
 name_space::leave_namespace(void) {
 	// for all open_aliases, release their names from used-map
@@ -407,10 +372,8 @@ name_space::leave_namespace(void) {
 	\sa add_using_alias
  */
 // idea: use ::id[::id]* as a way of specifying absolute namespace path
-// const name_space*
 never_const_ptr<name_space>
 name_space::add_using_directive(const qualified_id& n) {
-//	const name_space* ret;
 	never_const_ptr<name_space> ret;
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
@@ -431,8 +394,6 @@ name_space::add_using_directive(const qualified_id& n) {
 		case 1: 
 			ret = (*i);
 			open_spaces.push_back(ret);
-//			ret = i->unprotected_const_ptr();	// temp
-//			open_spaces.push_back(never_const_ptr<name_space>(ret));
 			break;
 		case 0:	{
 			cerr << "namespace " << n << " not found, ERROR! ";
@@ -449,8 +410,6 @@ name_space::add_using_directive(const qualified_id& n) {
 						(*i)->get_qualified_name();
 			}
 	}
-
-//	dump(cerr);		// DEBUG
 
 	// if not already in our list of mapped serachable namespaces,
 	// add it to our map of namespaces to search
@@ -476,11 +435,8 @@ name_space::add_using_directive(const qualified_id& n) {
 	This allows one to overshadow identifiers in higher namespaces.  
 	\sa add_using_directive
  */
-// const name_space*
 never_const_ptr<name_space>
 name_space::add_using_alias(const qualified_id& n, const string& a) {
-//	const object* probe;
-//	const name_space* ret;
 	never_const_ptr<object> probe;
 	never_const_ptr<name_space> ret;
 	namespace_list::const_iterator i;
@@ -489,27 +445,19 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	DEBUG(TRACE_NAMESPACE_ALIAS, 
 		cerr << endl << "adding using-alias in space: " 
 			<< get_qualified_name() << " as " << a)
-//	dump(cerr << "START of add_using_alias, " << endl);	// DEBUG
 
 	// need to force use of the constant version of the lookup
 	// because this method is non-const.  
 	// else it will modify the used_id_map!
 	// perhaps wrap with a probe() const method...
 	probe = lookup_object_here(a);
-//	probe = used_id_map[a];
-//	probe = used_id_map[a].unprotected_const_ptr();
-
-//	dump(cerr << "AFTER probe, " << endl);	// DEBUG
-
 	if (probe) {
 		probe = never_const_ptr<object>(&probe->self());
 		// resolve handles
-//		probe = &probe->self();		// resolve handles
 	}
 	if (probe) {
 		// then already, it conflicts with some other id
 		// we report the conflict precisely as follows:
-//		ret = IS_A(const name_space*, probe);
 		ret = probe.is_a<name_space>();
 		if (ret) {
 			if(open_aliases[a]) {
@@ -546,8 +494,6 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 			// or even open_aliases.  
 			// however, used_id_map is non-const, 
 			// so we need to wrap it in a const object_handle.  
-//			used_id_map[a] = new object_handle(ret);
-//			used_id_map[a] = some_ptr<object_handle>(ret);
 			used_id_map[a] = excl_ptr<object_handle>(
 				new object_handle(ret));
 			break;
@@ -582,7 +528,6 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
-// const name_space*
 never_const_ptr<name_space>
 name_space::query_namespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is a wrapper around qualified_id
@@ -597,20 +542,18 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			never_const_ptr<name_space>(this);
 	}
 	qualified_id_slice::const_iterator i = id.begin();	assert(*i);
-	never_const_ptr<token_identifier> tid(*i);
+//	never_const_ptr<token_identifier> tid(*i);
+	count_const_ptr<token_identifier> tid(*i);
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-//	const name_space* ns =
 	never_const_ptr<name_space> ns =
 		(id.is_absolute()) ? get_global_namespace()
 		: never_const_ptr<name_space>(this);
 	if (ns->key.compare(*tid)) {
 		// if names differ, already failed, try alias spaces
 		return never_const_ptr<name_space>(NULL);
-//		return NULL;
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
-//			const name_space* next;
 			never_const_ptr<name_space> next;
 			// no need to skip scope tokens anymore
 			tid = i->is_a<token_identifier>();
@@ -619,11 +562,8 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			next = ns->lookup_object_here(*tid).is_a<name_space>();
-//			next = IS_A(const name_space*, ns->used_id_map[*tid]);
-//			next = IS_A(const name_space*, ns->used_id_map[*tid].unprotected_const_ptr());
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-//			ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temporary
 			ns = (next) ? next : ns->open_aliases[*tid];
 		}
 
@@ -647,7 +587,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 	This variation excludes the invoking namespace in the pattern match.  
 	\param id the qualified/scoped name of the namespace to match
  */
-// const name_space*
 never_const_ptr<name_space>
 name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is just a wrapper around qualified_id
@@ -663,14 +602,11 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 			never_const_ptr<name_space>(this);
 	}
 	qualified_id_slice::const_iterator i = id.begin();
-	never_const_ptr<token_identifier> tid(*i);
+//	never_const_ptr<token_identifier> tid(*i);
+	count_const_ptr<token_identifier> tid(*i);
 	assert(tid);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
 	// no check for absoluteness
-//	const name_space* ns =
-//		IS_A(const name_space*, 
-//			((id.is_absolute()) ? get_global_namespace() : this)
-//				->used_id_map[*tid].unprotected_const_ptr());
 	never_const_ptr<name_space> ns;
 	if (id.is_absolute()) {
 		ns = get_global_namespace()->
@@ -679,26 +615,18 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		// force use of const probe
 		never_const_ptr<object> probe(lookup_object_here(*tid));
 		ns = probe.is_a<name_space>();
-//		ns = AS_A(const name_space*, this)->
-//			used_id_map[*tid].is_a<name_space>();
-//		ns = used_id_map[*tid].is_a<name_space>();	// fails!?
 	}
 
 	if (!ns) {				// else lookup in aliases
-//		ns = open_aliases[*tid].unprotected_const_ptr();	// temp
 		ns = open_aliases[*tid];	// replaced for const semantics
 	}
 	for (i++; ns && i!=id.end(); i++) {
-//		const name_space* next;
 		never_const_ptr<name_space> next;
 		tid = i->is_a<token_identifier>();
 		assert(tid);
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
 		next = ns->lookup_object_here(*tid).is_a<name_space>();
-//		next = IS_A(const name_space*, ns->used_id_map[*tid]);
-//		next = IS_A(const name_space*, ns->used_id_map[*tid].unprotected_const_ptr());
 		// if not found in subspaces, check aliases list
-//		ns = (next) ? next : ns->open_aliases[*tid].unprotected_const_ptr();	// temp
 		ns = (next) ? next : ns->open_aliases[*tid];
 	}
 	// for loop terminates when ns is NULL or i is at the end
@@ -729,20 +657,16 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 		cerr << endl << "query_import_namespace_match: " << id 
 			<< " in " << get_qualified_name())
 	{
-//		const name_space* ret = query_subnamespace_match(id);
 		never_const_ptr<name_space> ret = query_subnamespace_match(id);
 		if (ret) m.push_back(ret);
-//		if (ret) m.push_back(never_const_ptr<name_space>(ret));
 	}
 	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-//			const name_space* ret = 
 			never_const_ptr<name_space> ret = 
 				(*i)->query_subnamespace_match(id);
 			if (ret) m.push_back(ret);
-//			if (ret) m.push_back(never_const_ptr<name_space>(ret));
 		}
 	}
 	// When searching for imported namespaces matches found
@@ -779,10 +703,8 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	// 3) upward a namespace scope, which will search its 1,2
 	//	including the global scope, if reached
 	// terminates (returning NULL) if not found
-//	const name_space* ret = query_subnamespace_match(id);
 	never_const_ptr<name_space> ret = query_subnamespace_match(id);
 	if (ret)	m.push_back(ret);
-//	if (ret)	m.push_back(never_const_ptr<name_space>(ret));
 	query_import_namespace_match(m, id);
 	if (parent)
 		parent->find_namespace_ending_with(m, id);
@@ -798,14 +720,11 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	\param db the definition to add, newly created.
 	\return definition added if successful, else NULL.  
  */
-// definition_base*
 never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base> db) {
 	assert(db);
 	string k = db->get_name();
 	never_const_ptr<object> probe = lookup_object_here(k);
-//	const object* probe = used_id_map[k];
-//	const object* probe = used_id_map[k].unprotected_const_ptr();
 	if (probe) {
 		probe->what(cerr << "ERROR: identifier already taken by ")
 			<< "  Failed to add definition!";
@@ -816,7 +735,6 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 		assert(db);
 		assert(ret);
 		assert(ret == db);
-//		used_id_map[k] = db;
 		// explicit transfer!
 		used_id_map[k] = excl_ptr<definition_base>(db);
 		assert(!db);
@@ -897,19 +815,14 @@ name_space::add_type_alias(const qualified_id& t, const string& a) {
 	\return the same fundamental_type_reference if none was previously 
 		found, otherwise the existing matching reference.  
  */
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
-//	const object* o;
-//	const fundamental_type_reference* trb;
 	never_const_ptr<object> o;
 	never_const_ptr<fundamental_type_reference> trb;
 	assert(tb);
 	string k = tb->hash_string();
 	o = lookup_object_here(k);
-//	o = used_id_map[k].unprotected_const_ptr();
 	// see what is already there...
-//	trb = IS_A(const fundamental_type_reference*, o);
 	trb = o.is_a<fundamental_type_reference>();
 
 	if (o)	assert(trb);
@@ -918,7 +831,6 @@ name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
 
 	if (trb) {
 		// then found a match!, we can delete tb
-//		delete tb;
 		// since tb is an excl_ptr, it will delete itself
 		return trb;
 	} else {
@@ -939,7 +851,6 @@ name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
 		assert(tb);
 		used_id_map[k] = tb;
 		assert(!tb);
-//		used_id_map[k] = some_ptr<fundamental_type_reference>(tb);
 		return ret;
 	}
 }
@@ -950,81 +861,10 @@ name_space::add_type_reference(excl_ptr<fundamental_type_reference> tb) {
 	\param id is the entire name of the namespace.
 	\return pointer to the scope or namespace matched if found.  
  */
-// const scopespace*
 never_const_ptr<scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
 	return query_subnamespace_match(id);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-OBSOLETE
-/**
-	Create an instance of a data type and add it local symbol table.  
-	First checks to see if name is already taken in the used_id_map.  
-	If it collides with anything, then error.  
-	Doesn't check ever other namespace (imports, parents...)
-	because local identifiers are allowed to overshadow.  
-	\param t the type of the instance.
-	\param id the name of the instance.  
- */
-datatype_instantiation*
-name_space::add_datatype_instantiation(
-		const data_type_reference& t, 
-		const string& id) {
-	const object* probe;
-	datatype_instantiation* new_inst;
-//	probe = used_id_map[id];
-	probe = used_id_map[id].unprotected_const_ptr();
-	if (probe) {
-		probe->what(cerr << id << " is already declared ")
-			<< ", ERROR! ";
-		return NULL;
-	}
-	// consistency check
-	// else safe to proceed
-
-	new_inst = new datatype_instantiation(*this, t, id);
-	assert(new_inst);
-	// new_inst will be owned by used_id_map
-//	used_id_map[id] = new_inst;
-	used_id_map[id] = excl_ptr<datatype_instantiation>(new_inst);
-	return new_inst;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create an instance of a param type and add it local symbol table.  
-	First checks to see if name is already taken in the used_id_map.  
-	If it collides with anything, then error.  
-	Doesn't check ever other namespace (imports, parents...)
-	because local identifiers are allowed to overshadow.  
-	\param t the type of the instance.
-	\param id the name of the instance.  
- */
-param_instantiation*
-name_space::add_paramtype_instantiation(
-		const param_type_reference& t,
-		const string& id) {
-	const object* probe;
-	param_instantiation* new_inst;
-//	probe = used_id_map[id];
-	probe = used_id_map[id].unprotected_const_ptr();
-	if (probe) {
-		probe->what(cerr << id << " is already declared ")
-			<< ", ERROR! ";
-		return NULL;
-	}
-	// else safe to proceed
-
-	new_inst = new param_instantiation(*this, t, id);
-	assert(new_inst);
-	// new_inst will be owned by used_id_map
-//	used_id_map[id] = new_inst;
-	used_id_map[id] = excl_ptr<param_instantiation>(new_inst);
-	return new_inst;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1037,11 +877,6 @@ name_space::add_paramtype_instantiation(
 never_const_ptr<process_definition>
 name_space::probe_process_definition(const string& s) const {
 	return lookup_object_here(s).is_a<process_definition>();
-#if 0
-//	const object* probe = used_id_map[s];
-//	const object* probe = used_id_map[s].unprotected_const_ptr();
-//	return IS_A(const process_definition*, probe);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1055,22 +890,16 @@ name_space::probe_process_definition(const string& s) const {
  */
 never_ptr<process_definition>
 name_space::add_proc_declaration(const token_identifier& pname) {
-//	process_definition* pd = NULL;
-//	const object* probe = used_id_map[pname];
 	never_ptr<process_definition> pd;
 	never_const_ptr<object> probe = lookup_object_here(pname);
 	if (probe) {
 		// something already exists with name...
-//		const process_definition* probe_pd = 
-//			IS_A(const process_definition*, probe);
 		never_const_ptr<process_definition> probe_pd = 
 			probe.is_a<process_definition>();
 		if (probe_pd) {
 			// see if this declaration matches EXACTLY
 			// or punt check until check_build() on the templates
 			//	and ports?
-//			return IS_A(process_definition*, used_id_map[pname].unprotected_ptr());
-//			return IS_A(process_definition*, used_id_map[pname]);
 			return lookup_object_here_with_modify(pname)
 				.is_a<process_definition>();
 		} else {
@@ -1081,7 +910,6 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		}
 	} else {
 		// slot is free, allocate new entry for process definition
-//		pd = new process_definition(this, pname, false);
 		excl_ptr<process_definition> new_pd(
 			new process_definition(
 				never_const_ptr<name_space>(this), 
@@ -1090,8 +918,6 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		// template formals? later? earlier?
 		assert(new_pd);
 		assert(pd);
-//		used_id_map[pname] = excl_ptr<process_definition>(pd);
-//		used_id_map[pname] = pd;
 		used_id_map[pname] = new_pd;
 		assert(!new_pd);
 	}
@@ -1105,19 +931,13 @@ name_space::add_proc_declaration(const token_identifier& pname) {
 		optional template signature, and port signature.  
 	Details: ...
  */
-// process_definition*
 never_ptr<process_definition>
 name_space::add_proc_definition(const token_identifier& pname) {
-//	process_definition* pd = NULL;
 	never_ptr<process_definition> pd;
 	// look up used_id_map
-//	const object* probe = used_id_map[pname];
 	never_const_ptr<object> probe(used_id_map[pname]);
-//	const object* probe = used_id_map[pname].unprotected_const_ptr();	// looks up used_id_map
 	if (probe) {
 		// something already exists with name...
-//		const process_definition* probe_pd = 
-//			IS_A(const process_definition*, probe);
 		never_const_ptr<process_definition> probe_pd(
 			probe.is_a<process_definition>());
 		if (probe_pd) {
@@ -1129,9 +949,8 @@ name_space::add_proc_definition(const token_identifier& pname) {
 			} else {
 			// probably already declared
 			// punt check, until traversing templates/ports
-//				return IS_A(process_definition*, used_id_map[pname]);
-//				return IS_A(process_definition*, used_id_map[pname].unprotected_ptr());
-				return used_id_map[pname].is_a<process_definition>();
+				return used_id_map[pname]
+					.is_a<process_definition>();
 			}
 		} else {
 			// already declared as something else in this scope.
@@ -1141,60 +960,26 @@ name_space::add_proc_definition(const token_identifier& pname) {
 		}
 	} else {
 		// slot is free, allocate new entry for process definition
-//		pd = new process_definition(this, pname, true);
 		excl_ptr<process_definition> new_pd(new process_definition(
 			never_const_ptr<name_space>(this), pname, true));
 		pd = new_pd;
 		assert(new_pd);
 		assert(pd);
 		used_id_map[pname] = new_pd;
-//		used_id_map[pname] = some_ptr<process_definition>(new_pd);
-//		used_id_map[pname] = pd;
 		assert(!new_pd);		// was transferred away
 	}
 	return pd;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	OBSOLETE.
-	This searches the parent for built-in types and creates local 
-	aliases to them under the same name, for accelerated type resolution.  
-	Types that qualify for inheritance are either built-in types, 
-	which should only be in the global namespace, or aliases thereof.  
-	To be used only by the constructor, hence private.  
-void
-name_space::inherit_built_in_types(void) {
-if (parent) {
-	type_def_set::const_iterator i = parent->data_defs.begin();
-	for ( ; i!=parent->data_defs.end(); i++) {
-		const datatype_definition* t;
-		t = (*i).second;
-		assert(t);
-		t = t->resolve_canonical();	// resolve
-		assert(t);
-
-		// detect built-in types
-		if (IS_A(const built_in_datatype_def*, t)) {
-			assert(!used_id_map[(*i).first]);
-			type_alias* new_alias = 
-				new type_alias(this, (*i).first, t);
-			assert(new_alias);
-			data_defs[(*i).first] = new_alias;
-		} 
-		// else don't add
-	}
-} // end if (parent)
-}
-**/
-
 //=============================================================================
 // class definition_base method definitions
 
-// p is parent
+/**
+	Definition basic constructor.  
+	\param p the parent scope, a namespace.  
+ */
 inline
 definition_base::definition_base(const string& n,
-//		const name_space* p, 
 		never_const_ptr<name_space> p, 
 		template_formals_set* tf) : 
 		scopespace(n, p), template_formals(tf) {
@@ -1226,7 +1011,6 @@ definition_base::check_null_template_argument(void) const {
 		template_formals_set::const_iterator i =
 			template_formals->begin();
 		for ( ; i!=template_formals->end(); i++) {
-//			const param_instantiation* p = *i;
 			never_const_ptr<param_instantiation> p(*i);
 			assert(p);
 		// if any formal is missing a default value, then this 
@@ -1283,10 +1067,6 @@ definition_base::add_template_formal(instantiation_base* f) {
 		return NULL;
 	}
 
-#if 0
-	const param_instantiation** ret =
-		template_formals->append(pf->hash_string(), pf);
-#endif
 	const never_const_ptr<param_instantiation>* ret =
 		template_formals->append(pf->hash_string(),
 			never_const_ptr<param_instantiation>(pf));
@@ -1305,15 +1085,17 @@ definition_base::add_template_formal(instantiation_base* f) {
 // class fundamental_type_reference method definitions
 
 fundamental_type_reference::fundamental_type_reference(
-//		template_param_list* pl
-		excl_ptr<template_param_list> pl
-		)
+		excl_ptr<template_param_list> pl)
 		: type_reference_base(), 
 		template_params(pl) {
 }
 
+fundamental_type_reference::fundamental_type_reference(void) :
+		type_reference_base(), template_params() {
+		// NULL
+}
+
 fundamental_type_reference::~fundamental_type_reference() {
-//	SAFEDELETE(template_params);
 }
 
 /**
@@ -1335,7 +1117,6 @@ fundamental_type_reference::hash_string(void) const {
 			template_params->begin();
 		// add commas?
 		for ( ; i!=template_params->end(); i++) {
-//			const param_expr* e = *i;
 			never_const_ptr<param_expr> e(*i);
 			if (e)
 				ret += e->hash_string();
@@ -1358,9 +1139,7 @@ fundamental_type_reference::set_context_type_reference(context& c) const {
 
 collective_type_reference::collective_type_reference(
 		const type_reference_base& b, 
-		never_const_ptr<array_dim_list> d
-//		const array_dim_list* d
-		) :
+		never_const_ptr<array_dim_list> d) :
 		type_reference_base(), base(&b), dim(d) {
 }
 
@@ -1382,11 +1161,8 @@ collective_type_reference::dump(ostream& o) const {
 // class data_type_reference method definitions
 
 data_type_reference::data_type_reference(
-//		const datatype_definition* td, 
 		never_const_ptr<datatype_definition> td, 
-//		template_param_list* pl
-		excl_ptr<template_param_list> pl
-		) :
+		excl_ptr<template_param_list> pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	assert(base_type_def);
@@ -1411,18 +1187,6 @@ data_type_reference::get_base_def(void) const {
 	return base_type_def;
 }
 
-#if 0
-/**
-	PHASE THIS OUT.  only needs to be in parent class.  
- */
-// const fundamental_type_reference*
-never_const_ptr<fundamental_type_reference>
-data_type_reference::set_context_type_reference(context& c) const {
-	return c.set_current_fundamental_type(*this));
-//	return c.set_inst_data_type_ref(*this);
-}
-#endif
-
 /**
 	Creates an instance of a data type, 
 	and adds it to a scope.
@@ -1435,7 +1199,6 @@ data_type_reference::add_instance_to_scope(scopespace& s,
 		const token_identifier& id) const {
 	// make sure doesn't collide with something in s.
 	// what if s is a loop-scope, not a namespace?  PUNT!
-//	const object* probe = s.lookup_object_here(id);
 	never_const_ptr<object> probe = s.lookup_object_here(id);
 	if (probe) {
 		probe->what(cerr << id << " is already declared ") <<
@@ -1452,13 +1215,22 @@ data_type_reference::add_instance_to_scope(scopespace& s,
 //=============================================================================
 // class channel_type_reference method definitions
 
+/**
+	Concrete channel type reference.  
+	\param cd reference to a channel definition.
+	\param pl (optional) parameter list for templates.  
+ */
 channel_type_reference::channel_type_reference(
-//		const channel_definition* cd, 
 		never_const_ptr<channel_definition> cd, 
-		excl_ptr<template_param_list> pl
-//		template_param_list* pl
-		) :
+		excl_ptr<template_param_list> pl) :
 		fundamental_type_reference(pl), 
+		base_chan_def(cd) {
+	assert(base_chan_def);
+}
+
+channel_type_reference::channel_type_reference(
+		never_const_ptr<channel_definition> cd) :
+		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
 	assert(base_chan_def);
 }
@@ -1482,18 +1254,6 @@ channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
 }
 
-#if 0
-/**
-	PHASE OUT, redundant.  
- */
-// const fundamental_type_reference*
-never_const_ptr<fundamental_type_reference>
-channel_type_reference::set_context_type_reference(context& c) const {
-	return c.set_current_fundamental_type(*this));
-//	return c.set_inst_chan_type_ref(*this);
-}
-#endif
-
 /**
 	Creates an instance of a channel type, 
 	and adds it to a scope.
@@ -1515,11 +1275,8 @@ channel_type_reference::add_instance_to_scope(scopespace& s,
 // class process_type_reference method definitions
 
 process_type_reference::process_type_reference(
-//		const process_definition* pd, 
 		never_const_ptr<process_definition> pd, 
-		excl_ptr<template_param_list> pl
-//		template_param_list* pl
-		) :
+		excl_ptr<template_param_list> pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
@@ -1544,18 +1301,6 @@ process_type_reference::get_base_def(void) const {
 	return base_proc_def;
 }
 
-#if 0
-/**
-	PHASE OUT, redundant.  
- */
-// const fundamental_type_reference*
-never_const_ptr<fundamental_type_reference>
-process_type_reference::set_context_type_reference(context& c) const {
-	return c.set_current_fundamental_type(*this));
-//	return c.set_inst_proc_type_ref(*this);
-}
-#endif
-
 /**
 	Creates an instance of a process type, 
 	and adds it to a scope.
@@ -1577,9 +1322,7 @@ process_type_reference::add_instance_to_scope(scopespace& s,
 // class param_type_reference method definitions
 
 param_type_reference::param_type_reference(
-//		const built_in_param_def* pd
-		never_const_ptr<built_in_param_def> pd
-		) : 
+		never_const_ptr<built_in_param_def> pd) : 
 		fundamental_type_reference(), 	// NULL
 		base_param_def(pd) {
 	assert(base_param_def);
@@ -1598,20 +1341,10 @@ param_type_reference::dump(ostream& o) const {
 	return what(o);
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 param_type_reference::get_base_def(void) const {
 	return base_param_def;
 }
-
-#if 0
-// const fundamental_type_reference*
-never_const_ptr<fundamental_type_reference>
-param_type_reference::set_context_type_reference(context& c) const {
-	return c.set_current_fundamental_type(*this));
-//	return c.set_inst_param_type_ref(*this);
-}
-#endif
 
 /**
 	Creates an instance of a parameter type, 
@@ -1642,7 +1375,6 @@ instantiation_base::instantiation_base(const scopespace& o,
 
 inline
 instantiation_base::~instantiation_base() {
-//	SAFEDELETE(array_dimensions);
 }
 
 ostream&
@@ -1673,7 +1405,6 @@ instantiation_base::hash_string(void) const {
 void
 instantiation_base::set_array_dimensions(excl_ptr<array_dim_list> d) {
 	// just in case, delete what was previously there
-//	SAFEDELETE(array_dimensions);
 	array_dimensions = d;
 }
 
@@ -1696,7 +1427,6 @@ instantiation_base::array_dimension_match(const instantiation_base& i) const {
 // make sure that this constructor is never invoked outside this file
 inline
 datatype_definition::datatype_definition(
-//		const name_space* o,
 		never_const_ptr<name_space> o,
 		const string& n, 
 		template_formals_set* tf) :
@@ -1707,14 +1437,11 @@ inline
 datatype_definition::~datatype_definition() {
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 datatype_definition::set_context_definition(context& c) const {
-//	return c.set_inst_data_def(*this);
 	return c.set_current_definition_reference(*this);
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 datatype_definition::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -1726,25 +1453,12 @@ datatype_definition::set_context_fundamental_type(context& c) const {
 	return c.set_current_fundamental_type(*dtr);
 }
 
-#if 0
-OBSOLETE
-/**
-	Call this to automatically resolve type, if type referenced
-	is an alias or typedef.  
- */
-const datatype_definition*
-datatype_definition::resolve_canonical(void) const {
-	return this;
-}
-#endif
-
 //=============================================================================
 // class channel_definition method definitions
 
 // make sure that this constructor is never invoked outside this file
 inline
 channel_definition::channel_definition(
-//		const name_space* o, 
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		template_formals_set* tf) :
@@ -1754,14 +1468,11 @@ channel_definition::channel_definition(
 channel_definition::~channel_definition() {
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 channel_definition::set_context_definition(context& c) const {
-//	return c.set_inst_chan_def(*this);
 	return c.set_current_definition_reference(*this);
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 channel_definition::set_context_fundamental_type(context& c) const {
 	channel_type_reference* dtr = new channel_type_reference(
@@ -1785,27 +1496,14 @@ channel_definition::set_context_fundamental_type(context& c) const {
 	\param t pointer to the actual type being aliased.  
  */
 type_alias::type_alias(
-//		const name_space* o, 
 		never_const_ptr<name_space> o, 
 		const string& n, 
 		never_const_ptr<definition_base> t, 
-//		const definition_base* t, 
 		template_formals_set* tf) :
 		definition_base(n, o, tf),
 		canonical(t->resolve_canonical()) {
 	assert(canonical);
 	// just in case t is not a canonical type, i.e. another alias...
-#if 0
-//	const type_alias* a = IS_A(const type_alias*, canonical);
-	never_const_ptr<type_alias> a(canonical.is_a<type_alias>());
-	while (a) {
-		// will be different when template is added...
-		canonical = a;
-		a = a->canonical.is_a<type_alias>();
-//		a = IS_A(const type_alias*, a->canonical);
-// can use resolve canonical?
-	}
-#endif
 }
 
 /**
@@ -1818,7 +1516,6 @@ type_alias::~type_alias() { }
 	\return the canonical pointer.  
  */
 inline
-// const definition_base*
 never_const_ptr<definition_base>
 type_alias::resolve_canonical(void) const {
 	return canonical;
@@ -1835,7 +1532,6 @@ type_alias::what(ostream& o) const {
 // doesn't like inlining this, linker can't find definition on gcc-3.3
 // is used in "art_symbol_table.cc", unless you -fkeep-inline-functions
 built_in_datatype_def::built_in_datatype_def(
-//		const name_space* o, 
 		never_const_ptr<name_space> o, 
 		const string& n) :
 		datatype_definition(o, n) {
@@ -1848,14 +1544,11 @@ built_in_datatype_def::what(ostream& o) const {
 	return o << key;
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 built_in_datatype_def::set_context_definition(context& c) const {
-//	return c.set_inst_data_def(*this);
 	return c.set_current_definition_reference(*this);
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 built_in_datatype_def::set_context_fundamental_type(context& c) const {
 	data_type_reference* dtr = new data_type_reference(
@@ -1876,8 +1569,6 @@ built_in_datatype_def::set_context_fundamental_type(context& c) const {
  */
 bool
 built_in_datatype_def::type_equivalent(const datatype_definition& t) const {
-//	const built_in_datatype_def* b = 
-//		IS_A(const built_in_datatype_def*, t.resolve_canonical());
 	never_const_ptr<built_in_datatype_def> b = 
 		t.resolve_canonical().is_a<built_in_datatype_def>();
 	if (b) {
@@ -1905,13 +1596,11 @@ built_in_param_def::what(ostream& o) const {
 	return o << key;
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 built_in_param_def::set_context_definition(context& c) const {
 	return c.set_current_definition_reference(*this);
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 built_in_param_def::set_context_fundamental_type(context& c) const {
 	param_type_reference* dtr = new param_type_reference(
@@ -1946,8 +1635,6 @@ user_def_datatype::what(ostream& o) const {
  */
 bool
 user_def_datatype::type_equivalent(const datatype_definition& t) const {
-//	const user_def_datatype* u = 
-//		IS_A(const user_def_datatype*, t.resolve_canonical());
 	never_const_ptr<user_def_datatype> u = 
 		t.resolve_canonical().is_a<user_def_datatype>();
 	if (u) {
@@ -1978,7 +1665,6 @@ datatype_instantiation::what(ostream& o) const {
 	return o << "datatype-inst";
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 datatype_instantiation::get_type_ref(void) const {
 	return type;
@@ -2027,7 +1713,6 @@ datatype_instantiation::make_instance_reference(context& c) const {
 	Constructor for a process definition symbol table entry.  
  */
 process_definition::process_definition(
-//		const name_space* o, 
 		never_const_ptr<name_space> o, 
 		const string& s, const bool d,
 		template_formals_set* tf) : 
@@ -2045,14 +1730,11 @@ process_definition::what(ostream& o) const {
 	return o << "process-definition";
 }
 
-// const definition_base*
 never_const_ptr<definition_base>
 process_definition::set_context_definition(context& c) const {
-//	return c.set_inst_proc_def(*this);
 	return c.set_current_definition_reference(*this);
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 process_definition::set_context_fundamental_type(context& c) const {
 	process_type_reference* dtr = new process_type_reference(
@@ -2080,7 +1762,6 @@ process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 process_instantiation::get_type_ref(void) const {
 	return type;
@@ -2117,7 +1798,6 @@ param_instantiation::param_instantiation(const scopespace& o,
 }
 
 param_instantiation::~param_instantiation() {
-//	SAFEDELETE(ival);
 }
 
 ostream&
@@ -2125,7 +1805,6 @@ param_instantiation::what(ostream& o) const {
 	return o << "param-inst";
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 param_instantiation::get_type_ref(void) const {
 	return type;
@@ -2184,7 +1863,6 @@ channel_instantiation::what(ostream& o) const {
 	return o << "channel-inst";
 }
 
-// const fundamental_type_reference*
 never_const_ptr<fundamental_type_reference>
 channel_instantiation::get_type_ref(void) const {
 	return type;
@@ -2215,7 +1893,6 @@ channel_instantiation::make_instance_reference(context& c) const {
 // class single_instance_reference method definitions
 
 single_instance_reference::~single_instance_reference() {
-//	SAFEDELETE(array_indices);
 }
 
 ostream&
@@ -2243,15 +1920,11 @@ single_instance_reference::hash_string(void) const {
 // class collective_instance_reference method definitions
 
 collective_instance_reference::collective_instance_reference(
-//		const instance_reference_base* b, 
 		never_const_ptr<instance_reference_base> b, 
 		const param_expr* l, const param_expr* r) :
 		instance_reference_base(), 
 		lower_index(never_const_ptr<param_expr>(l)),
-		upper_index(never_const_ptr<param_expr>(r))
-//		lower_index(l),
-//		upper_index(r)
-		{
+		upper_index(never_const_ptr<param_expr>(r)) {
 }
 
 collective_instance_reference::~collective_instance_reference() {
@@ -2283,7 +1956,6 @@ collective_instance_reference::hash_string(void) const {
 //=============================================================================
 // class param_instance_reference method definitions
 
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 param_instance_reference::get_inst_base(void) const {
 	return param_inst_ref;
@@ -2297,7 +1969,6 @@ param_instance_reference::what(ostream& o) const {
 //=============================================================================
 // class process_instance_reference method definitions
 
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 process_instance_reference::get_inst_base(void) const {
 	return process_inst_ref;
@@ -2311,7 +1982,6 @@ process_instance_reference::what(ostream& o) const {
 //=============================================================================
 // class datatype_instance_reference method definitions
 
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 datatype_instance_reference::get_inst_base(void) const {
 	return data_inst_ref;
@@ -2330,7 +2000,6 @@ datatype_instance_reference::dump(ostream& o) const {
 //=============================================================================
 // class channel_instance_reference method definitions
 
-// const instantiation_base*
 never_const_ptr<instantiation_base>
 channel_instance_reference::get_inst_base(void) const {
 	return channel_inst_ref;

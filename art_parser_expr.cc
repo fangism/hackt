@@ -49,7 +49,6 @@ paren_expr::paren_expr(const token_char* l, const expr* n,
 
 DESTRUCTOR_INLINE
 paren_expr::~paren_expr() {
-//	SAFEDELETE(lp); SAFEDELETE(e); SAFEDELETE(rp);
 }
 
 ostream&
@@ -189,7 +188,7 @@ ostream& operator << (ostream& o, const qualified_id& id) {
 		qualified_id::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		never_const_ptr<token_identifier> tid(*i);
+		count_const_ptr<token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
@@ -209,7 +208,7 @@ ostream& operator << (ostream& o, const qualified_id_slice& id) {
 		qualified_id_slice::const_iterator i = id.begin();
 		if (id.is_absolute())
 			o << scope;
-		never_const_ptr<token_identifier> tid(*i);
+		count_const_ptr<token_identifier> tid(*i);
 		assert(tid);
 		o << *tid;
 		for (i++ ; i!=id.end(); i++) {
@@ -233,7 +232,6 @@ id_expr::id_expr(const id_expr& i) : expr(), qid(new qualified_id(*i.qid)) {
 }
 
 id_expr::~id_expr() {
-//	SAFEDELETE(qid);
 }
 
 ostream&
@@ -311,7 +309,6 @@ range::range(const expr* l, const terminal* o, const expr* u) :
 
 DESTRUCTOR_INLINE
 range::~range() {
-//	SAFEDELETE(lower); SAFEDELETE(op); SAFEDELETE(upper);
 }
 
 ostream&
@@ -370,14 +367,15 @@ unary_expr::unary_expr(const expr* n, const terminal* o) : expr(),
 
 DESTRUCTOR_INLINE
 unary_expr::~unary_expr() {
-//	SAFEDELETE(e); SAFEDELETE(op);
 }
 
 //=============================================================================
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(terminal* o, expr* n) : unary_expr(n,o) { }
+prefix_expr::prefix_expr(const terminal* o, const expr* n) :
+		unary_expr(n,o) {
+}
 
 DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
@@ -408,7 +406,9 @@ prefix_expr::check_build(context* c) const {
 // class postfix_expr method definitions
 
 CONSTRUCTOR_INLINE
-postfix_expr::postfix_expr(expr* n, terminal* o) : unary_expr(n,o) { }
+postfix_expr::postfix_expr(const expr* n, const terminal* o) :
+		unary_expr(n,o) {
+}
 
 DESTRUCTOR_INLINE
 postfix_expr::~postfix_expr() { }
@@ -427,13 +427,14 @@ postfix_expr::rightmost(void) const {
 // class member_expr method definitions
 
 CONSTRUCTOR_INLINE
-member_expr::member_expr(expr* l, terminal* op, token_identifier* m) :
+member_expr::member_expr(const expr* l, const terminal* op, 
+		const token_identifier* m) :
 		postfix_expr(l,op), member(m) {
 	assert(member);
 }
 
 DESTRUCTOR_INLINE
-member_expr::~member_expr() { SAFEDELETE(member); }
+member_expr::~member_expr() { }
 
 ostream&
 member_expr::what(ostream& o) const {
@@ -479,12 +480,13 @@ member_expr::check_build(context* c) const {
 // class index_expr method definitions
 
 CONSTRUCTOR_INLINE
-index_expr::index_expr(expr* l, range_list* i) : postfix_expr(l, NULL),
+index_expr::index_expr(const expr* l, const range_list* i) :
+		postfix_expr(l, NULL),
 		ranges(i) {
 }
 
 DESTRUCTOR_INLINE
-index_expr::~index_expr() { SAFEDELETE(ranges); }
+index_expr::~index_expr() { }
 
 ostream&
 index_expr::what(ostream& o) const {
@@ -525,7 +527,6 @@ binary_expr::binary_expr(const expr* left, const terminal* o,
 
 DESTRUCTOR_INLINE
 binary_expr::~binary_expr() {
-//	SAFEDELETE(l); SAFEDELETE(op); SAFEDELETE(r);
 }
 
 line_position
@@ -554,8 +555,9 @@ binary_expr::check_build(context* c) const {
 // class arith_expr method definitions
 
 CONSTRUCTOR_INLINE
-arith_expr::arith_expr(expr* left, terminal* o, expr* right) :
-	binary_expr(left, o, right) {
+arith_expr::arith_expr(const expr* left, const terminal* o, 
+		const expr* right) :
+		binary_expr(left, o, right) {
 }
 
 DESTRUCTOR_INLINE
@@ -570,8 +572,9 @@ arith_expr::what(ostream& o) const {
 // class relational_expr method definitions
 
 CONSTRUCTOR_INLINE
-relational_expr::relational_expr(expr* left, terminal* o, expr* right) :
-	binary_expr(left, o, right) {
+relational_expr::relational_expr(const expr* left, const terminal* o, 
+		const expr* right) :
+		binary_expr(left, o, right) {
 }
 
 DESTRUCTOR_INLINE
@@ -586,8 +589,9 @@ relational_expr::what(ostream& o) const {
 // class logical_expr method definitions
 
 CONSTRUCTOR_INLINE
-logical_expr::logical_expr(expr* left, terminal* o, expr* right) :
-	binary_expr(left, o, right) {
+logical_expr::logical_expr(const expr* left, const terminal* o, 
+		const expr* right) :
+		binary_expr(left, o, right) {
 }
 
 DESTRUCTOR_INLINE

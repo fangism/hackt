@@ -132,7 +132,7 @@ template_argument_list::check_build(context* c) const {
 	// o = expr_list::check_build(c);	// DON'T USE, override
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		never_const_ptr<expr> e(*i);
+		count_const_ptr<expr> e(*i);
 		assert(e);			// ever blank expression?
 		// this should cache parameter expressions
 		const object* eret = e->check_build(c);
@@ -285,7 +285,6 @@ type_id::type_id(const qualified_id* b) : node(),
 
 DESTRUCTOR_INLINE
 type_id::~type_id() {
-//	SAFEDELETE(base);
 }
 
 ostream&
@@ -355,7 +354,6 @@ user_data_type_prototype::user_data_type_prototype(
 
 DESTRUCTOR_INLINE
 user_data_type_prototype::~user_data_type_prototype() {
-//	SAFEDELETE(semi);
 }
 
 ostream&
@@ -413,8 +411,6 @@ user_data_type_def::user_data_type_def(const template_formal_decl_list* tf,
 
 DESTRUCTOR_INLINE
 user_data_type_def::~user_data_type_def() {
-//	SAFEDELETE(lb); SAFEDELETE(setb);
-//	SAFEDELETE(getb); SAFEDELETE(rb);
 }
 
 ostream&
@@ -466,7 +462,6 @@ chan_type::chan_type(const token_keyword* c, const token_char* d,
 
 DESTRUCTOR_INLINE
 chan_type::~chan_type() {
-//	SAFEDELETE(chan); SAFEDELETE(dir); SAFEDELETE(dtypes);
 }
 
 ostream&
@@ -524,8 +519,6 @@ user_chan_type_signature::user_chan_type_signature(
 
 DESTRUCTOR_INLINE
 user_chan_type_signature::~user_chan_type_signature() {
-//	SAFEDELETE(def); SAFEDELETE(dop);
-//	SAFEDELETE(bct); SAFEDELETE(params);
 }
 
 //=============================================================================
@@ -545,7 +538,6 @@ user_chan_type_prototype::user_chan_type_prototype(
 
 DESTRUCTOR_INLINE
 user_chan_type_prototype::~user_chan_type_prototype() {
-//	SAFEDELETE(semi);
 }
 
 ostream&
@@ -583,7 +575,6 @@ user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf,
 
 DESTRUCTOR_INLINE
 user_chan_type_def::~user_chan_type_def() {
-//	SAFEDELETE(lb); SAFEDELETE(sendb); SAFEDELETE(recvb); SAFEDELETE(rb);
 }
 
 ostream&
@@ -823,8 +814,6 @@ namespace_body(const token_keyword* s, const token_identifier* n,
 DESTRUCTOR_INLINE
 namespace_body::
 ~namespace_body() {
-//	SAFEDELETE(ns); SAFEDELETE(name); SAFEDELETE(lb);
-//	SAFEDELETE(body); SAFEDELETE(rb); SAFEDELETE(semi);
 }
 
 /// what eeeez it, man?
@@ -881,7 +870,6 @@ namespace_id::namespace_id(qualified_id* i) : node(), qid(i) {
 }
 
 namespace_id::~namespace_id() {
-//	SAFEDELETE(qid);
 }
 
 ostream&
@@ -950,8 +938,6 @@ using_namespace(const token_keyword* o, const namespace_id* i,
 /// default destructor
 DESTRUCTOR_INLINE
 using_namespace::~using_namespace() {
-//	SAFEDELETE(open); SAFEDELETE(id);
-//	SAFEDELETE(as); SAFEDELETE(alias); SAFEDELETE(semi);
 }
 
 ostream&
@@ -1006,7 +992,6 @@ actuals_base::actuals_base(const expr_list* a) :
 
 DESTRUCTOR_INLINE
 actuals_base::~actuals_base() {
-//	SAFEDELETE(actuals);
 }
 
 //=============================================================================
@@ -1020,7 +1005,6 @@ instance_base::instance_base(const token_identifier* i) :
 
 DESTRUCTOR_INLINE
 instance_base::~instance_base() {
-//	SAFEDELETE(id);
 }
 
 ostream&
@@ -1069,7 +1053,6 @@ instance_array::instance_array(const token_identifier* i,
 
 DESTRUCTOR_INLINE
 instance_array::~instance_array() {
-//	SAFEDELETE(ranges);
 }
 
 ostream&
@@ -1119,7 +1102,6 @@ instance_declaration::instance_declaration(const concrete_type_ref* t,
 
 DESTRUCTOR_INLINE
 instance_declaration::~instance_declaration() {
-//	SAFEDELETE(type); SAFEDELETE (ids); SAFEDELETE(semi);
 }
 
 ostream&
@@ -1171,7 +1153,6 @@ instance_connection::instance_connection(const token_identifier* i,
 
 DESTRUCTOR_INLINE
 instance_connection::~instance_connection() {
-//	SAFEDELETE(semi);
 }
 
 // remember to check for declaration context when checking id
@@ -1212,7 +1193,6 @@ connection_statement::connection_statement(const expr* l, const expr_list* a,
 
 DESTRUCTOR_INLINE
 connection_statement::~connection_statement() {
-//	SAFEDELETE(lvalue); SAFEDELETE(semi);
 }
 
 ostream&
@@ -1243,7 +1223,6 @@ instance_alias::instance_alias(const token_identifier* i, const alias_list* a,
 
 DESTRUCTOR_INLINE
 instance_alias::~instance_alias() {
-//	SAFEDELETE(aliases); SAFEDELETE(semi);
 }
 
 ostream&
@@ -1313,9 +1292,6 @@ loop_instantiation::loop_instantiation(const terminal* l, const terminal* d,
 
 DESTRUCTOR_INLINE
 loop_instantiation::~loop_instantiation() {
-//	SAFEDELETE(lp); SAFEDELETE(delim); SAFEDELETE(index);
-//	SAFEDELETE(colon1); SAFEDELETE(rng); SAFEDELETE(colon2);
-//	SAFEDELETE(body); SAFEDELETE(rp);
 }
 
 ostream&
@@ -1349,7 +1325,6 @@ port_formal_id::port_formal_id(const token_identifier* n, const range_list* d)
 
 DESTRUCTOR_INLINE
 port_formal_id::~port_formal_id() {
-//	SAFEDELETE(name); SAFEDELETE(dim);
 }
 
 ostream&
@@ -1381,7 +1356,6 @@ port_formal_decl::port_formal_decl(const concrete_type_ref* t,
 
 DESTRUCTOR_INLINE
 port_formal_decl::~port_formal_decl() {
-//	SAFEDELETE(type); SAFEDELETE(ids);
 }
 
 ostream&
@@ -1419,7 +1393,6 @@ template_formal_id::template_formal_id(const token_identifier* n,
 
 DESTRUCTOR_INLINE
 template_formal_id::~template_formal_id() {
-//	SAFEDELETE(name); SAFEDELETE(dim);
 }
 
 ostream&
@@ -1471,7 +1444,6 @@ template_formal_decl::template_formal_decl(
 
 DESTRUCTOR_INLINE
 template_formal_decl::~template_formal_decl() {
-//	SAFEDELETE(type); SAFEDELETE(ids);
 }
 
 ostream&
@@ -1518,7 +1490,6 @@ concrete_type_ref::concrete_type_ref(const type_base* n,
 
 DESTRUCTOR_INLINE
 concrete_type_ref::~concrete_type_ref() {
-//	SAFEDELETE(base); SAFEDELETE(temp_spec);
 }
 
 ostream&
@@ -1609,8 +1580,6 @@ definition::~definition() {
 
 DESTRUCTOR_INLINE
 signature_base::~signature_base() {
-//	SAFEDELETE(temp_spec);
-//	SAFEDELETE(id);
 }
 
 //=============================================================================
@@ -1626,7 +1595,6 @@ process_signature::process_signature(const template_formal_decl_list* tf,
 
 DESTRUCTOR_INLINE
 process_signature::~process_signature() {
-//	SAFEDELETE(def); SAFEDELETE(ports);
 }
 
 const token_identifier&
@@ -1649,7 +1617,6 @@ process_prototype::process_prototype(const template_formal_decl_list* tf,
 
 DESTRUCTOR_INLINE
 process_prototype::~process_prototype() {
-//	SAFEDELETE(semi);
 }
 
 ostream&
@@ -1699,7 +1666,6 @@ process_def::process_def(const template_formal_decl_list* tf,
 
 DESTRUCTOR_INLINE
 process_def::~process_def() {
-//	SAFEDELETE(body);
 }
 
 ostream&
@@ -1752,8 +1718,6 @@ user_data_type_signature::user_data_type_signature(
 }
 
 user_data_type_signature::~user_data_type_signature() {
-//	SAFEDELETE(def); SAFEDELETE(dop);
-//	SAFEDELETE(bdt); SAFEDELETE(params);
 }
 
 //=============================================================================
@@ -1768,7 +1732,6 @@ guarded_definition_body::guarded_definition_body(const expr* e,
 
 DESTRUCTOR_INLINE
 guarded_definition_body::~guarded_definition_body() {
-//	SAFEDELETE(guard); SAFEDELETE(arrow); SAFEDELETE(body);
 }
 
 ostream&
@@ -1798,7 +1761,6 @@ conditional_instantiation::conditional_instantiation(
 
 DESTRUCTOR_INLINE
 conditional_instantiation::~conditional_instantiation() {
-//	SAFEDELETE(gd);
 }
 
 ostream&
