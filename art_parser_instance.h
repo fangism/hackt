@@ -144,7 +144,7 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 //=============================================================================
 /**
 	Abstract base class for connection statements of instantiations.  
-	Contains actuals list of arguments.  
+	Contains actuals list of arguments, just wrapped around expr_list.  
  */
 class actuals_base : virtual public instance_management {
 protected:
@@ -155,9 +155,9 @@ virtual	~actuals_base();
 
 // same virtual methods
 // virtual	ostream& what(ostream& o) const;
-// virtual	line_position leftmost(void) const;
-// virtual	line_position rightmost(void) const;
-// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+virtual	line_position leftmost(void) const;
+virtual	line_position rightmost(void) const;
+virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -204,11 +204,11 @@ protected:
 	const excl_const_ptr<range_list>	ranges;	///< optional ranges
 public:
 	instance_array(const token_identifier* i, const range_list* rl);
-virtual	~instance_array();
+	~instance_array();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_array
 
 //=============================================================================
@@ -230,16 +230,19 @@ protected:
 public:
 	instance_declaration(const concrete_type_ref* t, 
 		const instance_id_list* i, const terminal* s = NULL);
-virtual	~instance_declaration();
+	~instance_declaration();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
-};	// end class instance declaration
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
+};	// end class instance_declaration
 
 //=============================================================================
-/// class for an or instance port connection or declaration connection
+/**
+	Class for an or instance port connection or declaration connection.
+	Declarator cannot be an array or indexed, may only be single instance.  
+ */
 class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_const_ptr<token_identifier>	id;		// inherited
@@ -248,14 +251,13 @@ protected:
 public:
 	instance_connection(const token_identifier* i, const expr_list* a, 
 		const terminal* s = NULL);
-virtual	~instance_connection();
+	~instance_connection();
 
 // remember to check for declaration context when checking id
-
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_connection
 
 //-----------------------------------------------------------------------------
@@ -268,16 +270,20 @@ virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
 class connection_statement : public actuals_base {
 protected:
 //	const excl_const_ptr<expr_list>		actuals;	// inherited
+	/**
+		Instance reference to connect, may be indexed,
+		but must be scalar.  
+	 */
 	const excl_const_ptr<expr>		lvalue;
 	const excl_const_ptr<terminal>		semi;
 public:
 	connection_statement(const expr* l, const expr_list* a, 
 		const terminal* s = NULL);
-virtual	~connection_statement();
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-// virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	~connection_statement();
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------
@@ -296,12 +302,12 @@ protected:
 public:
 	instance_alias(const token_identifier* i, alias_list* al, 
 		const terminal* s = NULL);
-virtual	~instance_alias();
+	~instance_alias();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
-virtual	never_const_ptr<object> check_build(never_ptr<context> c) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
+	never_const_ptr<object> check_build(never_ptr<context> c) const;
 };	// end class instance_alias
 
 //=============================================================================
@@ -321,11 +327,11 @@ public:
 		const token_identifier* i, const terminal* c1, 
 		const range* g, const terminal* c2, 
 		const definition_body* b, const terminal* r);
-virtual	~loop_instantiation();
+	~loop_instantiation();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class loop_instantiation
 
 //=============================================================================
@@ -338,11 +344,11 @@ protected:
 public:
 	guarded_definition_body(const expr* e, const terminal* a, 
 		const definition_body* b);
-virtual	~guarded_definition_body();
+	~guarded_definition_body();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -368,11 +374,11 @@ protected:
 	const excl_const_ptr<guarded_definition_body_list>	gd;
 public:
 	conditional_instantiation(const guarded_definition_body_list* n);
-virtual	~conditional_instantiation();
+	~conditional_instantiation();
 
-virtual	ostream& what(ostream& o) const;
-virtual	line_position leftmost(void) const;
-virtual	line_position rightmost(void) const;
+	ostream& what(ostream& o) const;
+	line_position leftmost(void) const;
+	line_position rightmost(void) const;
 };	// end class conditional_instantiation
 
 //=============================================================================

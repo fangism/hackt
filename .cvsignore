@@ -5,6 +5,7 @@ core.*
 *.d
 .depend
 *.o
+*.a
 *.yy.*
 y.tab.*
 y.output

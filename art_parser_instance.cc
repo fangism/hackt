@@ -245,6 +245,24 @@ DESTRUCTOR_INLINE
 actuals_base::~actuals_base() {
 }
 
+line_position
+actuals_base::leftmost(void) const {
+	return actuals->leftmost();
+}
+
+line_position
+actuals_base::rightmost(void) const {
+	return actuals->rightmost();
+}
+
+/**
+	Just a wrapped call to expr_list::check_build.
+ */
+never_const_ptr<object>
+actuals_base::check_build(never_ptr<context> c) const {
+	return actuals->check_build(c);
+}
+
 //=============================================================================
 // class instance_base method definitions
 
@@ -508,6 +526,54 @@ line_position
 connection_statement::rightmost(void) const {
 	if (semi) return semi->rightmost();
 	else return actuals->rightmost();
+}
+
+/**
+	\return NULL always, rather useless.  
+ */
+never_const_ptr<object>
+connection_statement::check_build(never_ptr<context> c) const {
+	TRACE_CHECK_BUILD(
+		what(cerr << c->auto_indent()) <<
+			"connection_statement::check_build(...): ";
+	)
+	lvalue->check_build(c);
+	// useless return value, expect instance_reference_base on object_stack
+	count_const_ptr<object> o(c->pop_top_object_stack());
+	if (!o) {
+		cerr << "ERROR resolving instance reference of "
+			"connection_statement at " << lvalue->where() << endl;
+		exit(1);
+	}
+	count_const_ptr<simple_instance_reference>
+		inst_ref(o.is_a<simple_instance_reference>());
+	assert(inst_ref);
+
+	actuals_base::check_build(c);
+	// useless return value, expect an object_list on object_stack
+	o = c->pop_top_object_stack();
+	if (!o) {
+		cerr << "ERROR in object_list produced at "
+			<< actuals_base::where() << endl;
+		exit(1);
+	}
+	count_const_ptr<object_list>
+		obj_list(o.is_a<object_list>());
+	assert(obj_list);
+
+	excl_const_ptr<port_connection> port_con = 
+		obj_list->make_port_connection(inst_ref);
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where() << endl;
+		exit(1);
+	} else {
+		c->add_connection(
+			excl_const_ptr<connection_assignment_base>(
+				port_con));
+		assert(!port_con.owned());	// explicit transfer
+	}
+	return never_const_ptr<object>(NULL);
 }
 
 //=============================================================================

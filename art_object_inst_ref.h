@@ -47,9 +47,13 @@ virtual	~instance_reference_base() { }
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
+virtual	ostream& dump_type_size(ostream& o) const = 0;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 virtual	string hash_string(void) const = 0;
 virtual	size_t dimensions(void) const = 0;
+virtual	never_const_ptr<definition_base> get_base_def(void) const = 0;
+virtual	count_const_ptr<fundamental_type_reference>
+		get_type_ref(void) const = 0;
 virtual	bool may_be_densely_packed(void) const = 0;
 virtual	bool must_be_densely_packed(void) const = 0;
 virtual	bool has_static_constant_dimensions(void) const = 0;
@@ -172,6 +176,7 @@ virtual	~simple_instance_reference();
 
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
+	ostream& dump_type_size(ostream& o) const;
 virtual never_const_ptr<instantiation_base> get_inst_base(void) const = 0;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 	never_const_ptr<definition_base> get_base_def(void) const;

@@ -47,7 +47,6 @@ protected:
 		Or some_ptr, beause built in type_references are static...  
 		Can only use never_ptr if SOMEONE else owns it, e.g. cache.  
 	 */
-//	never_const_ptr<process_type_reference>		type;
 	count_const_ptr<process_type_reference>		type;
 
 	// reserve these for connections between instance_references
@@ -56,7 +55,6 @@ protected:
 
 public:
 	process_instantiation(const scopespace& o, 
-//		const process_type_reference& pt,
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
 		index_collection_item_ptr_type d);
@@ -66,23 +64,20 @@ public:
 //	ostream& dump(ostream& o) const;
 	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 	// why is this a never_ptr?
-	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const;
-	never_const_ptr<member_instance_reference_base>
+	count_ptr<instance_reference_base>
+		make_instance_reference(void) const;
+	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b, 
-			context& c) const;
+			count_const_ptr<simple_instance_reference> b) const;
 };	// end class process_instantiation
 
 //=============================================================================
 /// Instantiation of a data type, either inside or outside definition.  
 class datatype_instantiation : public instantiation_base {
 protected:
-//	never_const_ptr<data_type_reference>	type;	///< the actual type
 	count_const_ptr<data_type_reference>	type;	///< the actual type
 public:
 	datatype_instantiation(const scopespace& o, 
-//		const data_type_reference& t,
 		count_const_ptr<data_type_reference> t,
 		const string& n, 
 		index_collection_item_ptr_type d);
@@ -94,12 +89,11 @@ virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
 	// why is this never?
-virtual	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const;
-virtual	never_const_ptr<member_instance_reference_base>
+virtual	count_ptr<instance_reference_base>
+		make_instance_reference(void) const;
+virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b, 
-			context& c) const;
+			count_const_ptr<simple_instance_reference> b) const;
 };	// end class datatype_instantiation
 
 //=============================================================================
@@ -109,11 +103,9 @@ virtual	never_const_ptr<member_instance_reference_base>
  */
 class channel_instantiation : public instantiation_base {
 protected:
-//	never_const_ptr<channel_type_reference>	type;
 	count_const_ptr<channel_type_reference>	type;
 public:
 	channel_instantiation(const scopespace& o, 
-//		const channel_type_reference& ct,
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
 		index_collection_item_ptr_type d);
@@ -121,12 +113,11 @@ virtual	~channel_instantiation();
 
 virtual	ostream& what(ostream& o) const;
 virtual	count_const_ptr<fundamental_type_reference> get_type_ref(void) const;
-virtual	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const;
-virtual	never_const_ptr<member_instance_reference_base>
+virtual	count_ptr<instance_reference_base>
+		make_instance_reference(void) const;
+virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b, 
-			context& c) const;
+			count_const_ptr<simple_instance_reference> b) const;
 };	// end class channel_instantiation
 
 //=============================================================================
@@ -155,13 +146,12 @@ virtual	ostream& what(ostream& o) const = 0;
 virtual	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const = 0;
 	// why is this never?
-virtual	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const = 0;
+virtual	count_ptr<instance_reference_base>
+		make_instance_reference(void) const = 0;
 	/** should just assert fail, forbid reference to param members */
-	never_const_ptr<member_instance_reference_base>
+	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b, 
-			context& c) const;
+			count_const_ptr<simple_instance_reference> b) const;
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_const_ptr<param_expr> default_value(void) const = 0;
@@ -243,8 +233,8 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const;
 	// why never?
-	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const;
+	count_ptr<instance_reference_base>
+		make_instance_reference(void) const;
 
 	bool initialize(count_const_ptr<pbool_expr> e);
 	bool assign_default_value(count_const_ptr<param_expr> p);
@@ -288,8 +278,8 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		get_type_ref(void) const;
 	// why never?
-	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const;
+	count_ptr<instance_reference_base>
+		make_instance_reference(void) const;
 
 	bool initialize(count_const_ptr<pint_expr> e);
 	bool assign_default_value(count_const_ptr<param_expr> p);

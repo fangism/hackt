@@ -253,15 +253,14 @@ public:
 		make_index_list(void) const;
 	excl_ptr<dynamic_param_expr_list>
 		make_param_expr_list(void) const;
+	// not const because may modify self
 	excl_ptr<param_expression_assignment>
 		make_param_assignment(void);
 	excl_const_ptr<aliases_connection>
 		make_alias_connection(void) const;
-#if 0
-	// needs base process type
-	excl_const_ptr<instance_reference_connection>
-		make_port_connection(void) const;
-#endif
+	excl_const_ptr<port_connection>
+		make_port_connection(
+			count_const_ptr<simple_instance_reference> ir) const;
 };	// end class object_list
 
 //=============================================================================
@@ -675,6 +674,8 @@ protected:
 public:
 	excl_ptr<dynamic_param_expr_list>
 		make_default_template_arguments(void) const;
+	/** by default returns false */
+virtual	bool certify_port_actuals(const object_list& ol) const;
 
 public:
 // proposing to replace set_context_fundamental_type with the following:
@@ -915,12 +916,11 @@ public:
 	always pushes onto context's object_stack, 
 	currently always returns NULL, useless
  */
-virtual	never_const_ptr<instance_reference_base>
-		make_instance_reference(context& c) const = 0;
-virtual	never_const_ptr<member_instance_reference_base>
+virtual	count_ptr<instance_reference_base>
+		make_instance_reference(void) const = 0;
+virtual	count_ptr<member_instance_reference_base>
 		make_member_instance_reference(
-			count_const_ptr<simple_instance_reference> b, 
-			context& c) const = 0;
+			count_const_ptr<simple_instance_reference> b) const = 0;
 };	// end class instantiation_base
 
 //=============================================================================

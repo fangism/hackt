@@ -3,13 +3,8 @@
 #include <iostream>
 
 // #include "art_parser_debug.h"		// need this?
-#include "art_parser_base.h"
-#include "art_symbol_table.h"
-
-// CAUTION on ordering of the following two include files!
-// including "art_object.h" first will cause compiler to complain
-// about redefinition of struct hash<> template upon specialization of
-// hash<string>.  
+// #include "art_parser_base.h"
+// #include "art_symbol_table.h"
 
 #include "art_object_instance.h"
 #include "art_object_expr.h"
@@ -20,6 +15,13 @@
 
 //=============================================================================
 namespace ART {
+#if 0
+namespace parser {
+	extern const char scope[];		// "::"		// "::"
+}
+using namespace parser;
+#endif
+
 namespace entity {
 
 //=============================================================================
@@ -68,7 +70,8 @@ instantiation_base::dump(ostream& o) const {
 string
 instantiation_base::get_qualified_name(void) const {
 	if (owner)
-		return owner->get_qualified_name() +scope +key;
+		return owner->get_qualified_name() +"::" +key;
+		// "::" should be the same as ART::parser::scope
 	else return key;
 }
 
@@ -379,7 +382,6 @@ instantiation_base::check_expression_dimensions(const param_expr& pe) const {
 // class datatype_instantiation method definitions
 
 datatype_instantiation::datatype_instantiation(const scopespace& o, 
-//		const data_type_reference& t, 
 		count_const_ptr<data_type_reference> t, 
 		const string& n, 
 		index_collection_item_ptr_type d) : 
@@ -395,7 +397,6 @@ datatype_instantiation::what(ostream& o) const {
 	return o << "datatype-inst";
 }
 
-// never_const_ptr<fundamental_type_reference>
 count_const_ptr<fundamental_type_reference>
 datatype_instantiation::get_type_ref(void) const {
 	return type;
@@ -409,18 +410,20 @@ datatype_instantiation::get_type_ref(void) const {
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-never_const_ptr<instance_reference_base>
-datatype_instantiation::make_instance_reference(context& c) const {
+count_ptr<instance_reference_base>
+datatype_instantiation::make_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions -- when attach_indices() invoked
-	count_ptr<datatype_instance_reference>
-		new_ir(new datatype_instance_reference(
+	return count_ptr<datatype_instance_reference>(
+		new datatype_instance_reference(
 			never_const_ptr<datatype_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+#if 0
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+#endif
 }
 
 /**
@@ -428,27 +431,26 @@ datatype_instantiation::make_instance_reference(context& c) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-never_const_ptr<member_instance_reference_base>
+count_ptr<member_instance_reference_base>
 datatype_instantiation::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		context& c) const {
-	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+		count_const_ptr<simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
-	count_ptr<datatype_member_instance_reference>
-		new_mir(new datatype_member_instance_reference(
+	return count_ptr<datatype_member_instance_reference>(
+		new datatype_member_instance_reference(
 			b, never_const_ptr<datatype_instantiation>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+#if 0
 	c.push_object_stack(new_mir);
 	return return_type(NULL);
+#endif
 }
 
 //=============================================================================
 // class process_instantiation method definitions
 
 process_instantiation::process_instantiation(const scopespace& o, 
-//		const process_type_reference& pt,
 		count_const_ptr<process_type_reference> pt,
 		const string& n, 
 		index_collection_item_ptr_type d) : 
@@ -463,7 +465,6 @@ process_instantiation::what(ostream& o) const {
 	return o << "process-inst";
 }
 
-// never_const_ptr<fundamental_type_reference>
 count_const_ptr<fundamental_type_reference>
 process_instantiation::get_type_ref(void) const {
 	return type;
@@ -477,22 +478,20 @@ process_instantiation::get_type_ref(void) const {
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-never_const_ptr<instance_reference_base>
-process_instantiation::make_instance_reference(context& c) const {
-#if 0
-	cerr << "process_instantiation::make_instance_reference() "
-		"INCOMPLETE, FINISH ME!" << endl;
-#endif
+count_ptr<instance_reference_base>
+process_instantiation::make_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	count_ptr<process_instance_reference> new_ir(
+	return count_ptr<process_instance_reference>(
 		new process_instance_reference(
 			never_const_ptr<process_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
 		// may attach in parser::instance_array::check_build()
+#if 0
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+#endif
 }
 
 /**
@@ -500,20 +499,20 @@ process_instantiation::make_instance_reference(context& c) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-never_const_ptr<member_instance_reference_base>
+count_ptr<member_instance_reference_base>
 process_instantiation::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		context& c) const {
-	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+		count_const_ptr<simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
-	count_ptr<process_member_instance_reference>
-		new_mir(new process_member_instance_reference(
+	return count_ptr<process_member_instance_reference>(
+		new process_member_instance_reference(
 			b, never_const_ptr<process_instantiation>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+#if 0
 	c.push_object_stack(new_mir);
 	return return_type(NULL);
+#endif
 }
 
 //=============================================================================
@@ -641,11 +640,10 @@ param_instantiation::is_loop_independent(void) const {
 	2) Thus they cannot even be referenced.  
 	3) This is just a placeholder that should never be called.  
  */
-never_const_ptr<member_instance_reference_base>
+count_ptr<member_instance_reference_base>
 param_instantiation::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		context& c) const {
-	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+		count_const_ptr<simple_instance_reference> b) const {
+	typedef	count_ptr<member_instance_reference_base>	return_type;
 	assert(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
 	assert(0);
@@ -762,20 +760,22 @@ pbool_instantiation::initial_value(void) const {
 		Therefore, cache them in the global (or built-in) namespace.  
 	\return NULL.
  */
-never_const_ptr<instance_reference_base>
-pbool_instantiation::make_instance_reference(context& c) const {
+count_ptr<instance_reference_base>
+pbool_instantiation::make_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
-	count_ptr<param_instance_reference> new_ir(
+	return count_ptr<param_instance_reference>(
 		new pbool_instance_reference(
 			never_ptr<pbool_instantiation>(
 			const_cast<pbool_instantiation*>(this)), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
+#if 0
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+#endif
 }
 
 /**
@@ -902,20 +902,22 @@ pint_instantiation::initial_value(void) const {
 		Therefore, cache them in the global (or built-in) namespace.  
 	\return NULL.
  */
-never_const_ptr<instance_reference_base>
-pint_instantiation::make_instance_reference(context& c) const {
+count_ptr<instance_reference_base>
+pint_instantiation::make_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
-	count_ptr<param_instance_reference> new_ir(
+	return count_ptr<param_instance_reference>(
 		new pint_instance_reference(
 			never_ptr<pint_instantiation>(
 			const_cast<pint_instantiation*>(this)), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
+#if 0
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+#endif
 }
 
 /**
@@ -940,7 +942,6 @@ pint_instantiation::type_check_actual_param_expr(const param_expr& pe) const {
 // class channel_instantiation method definitions
 
 channel_instantiation::channel_instantiation(const scopespace& o, 
-//		const channel_type_reference& ct,
 		count_const_ptr<channel_type_reference> ct,
 		const string& n, 
 		index_collection_item_ptr_type d) : 
@@ -955,7 +956,6 @@ channel_instantiation::what(ostream& o) const {
 	return o << "channel-inst";
 }
 
-// never_const_ptr<fundamental_type_reference>
 count_const_ptr<fundamental_type_reference>
 channel_instantiation::get_type_ref(void) const {
 	return type;
@@ -969,19 +969,21 @@ channel_instantiation::get_type_ref(void) const {
 	Else, register the new one in the context, and return it.  
 	Depends on context's method for checking references in used_id_map.  
  */
-never_const_ptr<instance_reference_base>
-channel_instantiation::make_instance_reference(context& c) const {
+count_ptr<instance_reference_base>
+channel_instantiation::make_instance_reference(void) const {
 	cerr << "channel_instantiation::make_instance_reference() "
 		"INCOMPLETE, FINISH ME!" << endl;
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
-	count_ptr<channel_instance_reference> new_ir(
+	return count_ptr<channel_instance_reference>(
 		new channel_instance_reference(
 			never_const_ptr<channel_instantiation>(this), 
 			excl_ptr<index_list>(NULL)));
 		// omitting index argument
+#if 0
 	c.push_object_stack(new_ir);
 	return never_const_ptr<instance_reference_base>(NULL);
+#endif
 }
 
 /**
@@ -989,20 +991,20 @@ channel_instantiation::make_instance_reference(context& c) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-never_const_ptr<member_instance_reference_base>
+count_ptr<member_instance_reference_base>
 channel_instantiation::make_member_instance_reference(
-		count_const_ptr<simple_instance_reference> b, 
-		context& c) const {
-	typedef	never_const_ptr<member_instance_reference_base>	return_type;
+		count_const_ptr<simple_instance_reference> b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
-	count_ptr<channel_member_instance_reference>
-		new_mir(new channel_member_instance_reference(
+	return count_ptr<channel_member_instance_reference>(
+		new channel_member_instance_reference(
 			b, never_const_ptr<channel_instantiation>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+#if 0
 	c.push_object_stack(new_mir);
 	return return_type(NULL);
+#endif
 }
 
 //=============================================================================

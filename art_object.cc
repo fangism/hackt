@@ -699,6 +699,10 @@ object_list::make_param_expr_list(void) const {
 #endif
 }
 
+/**
+	Creates an alias connection object, given a list of instance
+	references.  Performs type-checking.  
+ */
 excl_const_ptr<aliases_connection>
 object_list::make_alias_connection(void) const {
 	excl_ptr<aliases_connection>
@@ -729,6 +733,35 @@ object_list::make_alias_connection(void) const {
 		}
 	}
 	return excl_const_ptr<aliases_connection>(ret);	// const-ify
+}
+
+/**
+	Creates a port connection object, given an invoking instance
+	reference and a list of port actuals (instance references).
+	\param ir the invoking instance to which port should connect.  
+ */
+excl_const_ptr<port_connection>
+object_list::make_port_connection(
+		count_const_ptr<simple_instance_reference> ir) const {
+//	cerr << "In object_list::make_port_connection(): FINISH ME!" << endl;
+	typedef	excl_const_ptr<port_connection>		return_type;
+	excl_ptr<port_connection>
+		ret(new port_connection(ir));
+	never_const_ptr<definition_base>
+		base_def(ir->get_base_def());
+
+	if (base_def->certify_port_actuals(*this)) {
+		const_iterator i = begin();
+		for ( ; i!=end(); i++) {
+			count_const_ptr<instance_reference_base>
+				ir(i->is_a<instance_reference_base>());
+			ret->append_instance_reference(ir);
+		}
+		return return_type(ret);
+	} else {
+		cerr << "At least one error in port connection.  " << endl;
+		return return_type(NULL);
+	}
 }
 
 //=============================================================================

@@ -272,14 +272,13 @@ token_identifier::check_build(never_ptr<context> c) const {
 	)
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	never_const_ptr<instantiation_base> inst(c->lookup_instance(*this));
+	never_const_ptr<instantiation_base>
+		inst(c->lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
 		// we will then make an instance_reference
 		// what about indexed instance references?
-		inst->make_instance_reference(*c);
-		// already pushes onto context's object_stack
-		// useless return value, always NULL
+		c->push_object_stack(inst->make_instance_reference());
 	} else {
 		// push a NULL placeholder
 		c->push_object_stack(count_ptr<object>(NULL));

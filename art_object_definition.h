@@ -130,7 +130,6 @@ public:
 		Needs to be ordered for argument checking, 
 		and have fast lookup, thus hashlist.  
 		Implemented as a hash_qmap and list.  
-		Implemented as a hash_qmap and list.  
 	**/
 	typedef list<never_const_ptr<instantiation_base> >
 						port_formals_list_type;
@@ -169,6 +168,7 @@ public:
 
 never_const_ptr<instantiation_base>
 	add_port_formal(excl_ptr<instantiation_base> p);
+	bool certify_port_actuals(const object_list& ol) const;
 
 	bool equivalent_port_formals(
 		never_const_ptr<process_definition> p) const;
@@ -372,7 +372,8 @@ public:
 
 	bool require_signature_match(
 		never_const_ptr<definition_base> d) const { return false; }
-		// temporary
+
+//	bool certify_port_actuals(const object_list& ol) const;
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
@@ -454,6 +455,7 @@ public:
 		make_fundamental_type_reference(
 			excl_ptr<dynamic_param_expr_list> ta) const;
 #endif
+//	bool certify_port_actuals(const object_list& ol) const;
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------

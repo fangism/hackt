@@ -355,6 +355,36 @@ simple_instance_reference::dump(ostream& o) const {
 	return o;
 }
 
+/**
+	Prints out the type and size (if known).  
+ */
+ostream&
+simple_instance_reference::dump_type_size(ostream& o) const {
+	get_type_ref()->dump(o);
+	if (!dimensions()) {
+		return o;
+	} else if (has_static_constant_dimensions()) {
+		const const_index_list
+			cil(implicit_static_constant_indices());
+		// consider making this into a method:
+		const_index_list::const_iterator i = cil.begin();
+		for ( ; i!=cil.end(); i++) {
+			const count_const_ptr<const_index> ind(*i);
+			const count_const_ptr<const_range>
+				cr(ind.is_a<const_range>());
+			if (cr) {
+				const int diff = cr->second -cr->first +1;
+				o << "[" << diff << "]";
+			}
+			// else don't print collapsed dimensions
+		}
+	} else {
+		// don't know all dimensions statically
+		o << "{" << dimensions() << "-dim}";
+	}
+	return o;
+}
+
 string
 simple_instance_reference::hash_string(void) const {
 	string ret(get_inst_base()->get_qualified_name());
@@ -442,8 +472,9 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// now, covered set must completely contain indices
 	if (!cov->empty()) {
 		// empty means covered.  
-		cerr << "ERROR: The following referenced indices "
-			"have definitely not been instantiated: {";
+		cerr << "ERROR: The following referenced indices of \""
+			<< get_inst_base()->get_name() <<
+			"\" have definitely not been instantiated: {";
 		cov->dump(cerr << endl) << "} ";
 		// cerr << where() << endl;	// caller
 		// fancy: list indices not instantiated?

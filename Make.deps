@@ -29,15 +29,21 @@ makeinfo:
 	@$(ECHO) "#	LD = $(LD) $(LDFLAGS)"
 	@$(ECHO) "#	LEX = $(LEX) $(LFLAGS)"
 	@$(ECHO) "#	YACC = $(YACC) $(YFLAGS)"
+	@$(ECHO) "#	AR = $(AR) $(ARFLAGS)"
+	@$(ECHO) "#	RANLIB = $(RANLIB)"
 	@$(ECHO) "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 
 # for parallel make, .depend and TARGETS should be sequential
 all: .depend
 	$(RECURSIVE_MAKE) $(TARGETS)
 
+$(LIBARTXX): $(LIBARTXX_OBJ)
+	$(AR) $(ARFLAGS) $@ $(LIBARTXX_OBJ)
+	$(RANLIB) $@
+
 # parallel make: LANG_OBJ needs to be built first... hmmm.
-$(ARTC): y.tab.h $(ART_OBJ)
-	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
+$(ARTC): y.tab.h $(ARTC_OBJ) $(LIBARTXX)
+	$(LD) $(LDFLAGS) $(ARTC_OBJ) $(LIBARTXX) -o $@
 # gmake doesn't interpret $> correctly, otherwise the following would work:
 #	$(LD) $(LDFLAGS) $> -o $@
 
@@ -152,10 +158,12 @@ cleantests:
 
 cleanobjects:
 	-$(RM) *.o
+# or more precisely, $(ALL_ART_OBJ)
 
 cleanjunk:
 	-$(RM) *.tmp.*
 	-$(RM) *.core
+	-$(RM) core.*
 
 clean: cleanlexer cleanparser cleandepend cleantests cleanobjects cleanjunk
 
@@ -170,6 +178,7 @@ clobberdepend: cleandepend
 
 clobber: clean clobberdepend
 	-$(RM) $(TARGETS)
+	-$(RM) $(LIBARTXX)
 
 tarball: clobber
 	-$(RM) $(TARBALL)

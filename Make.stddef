@@ -2,6 +2,9 @@
 # make-independent definitions
 
 SHELL = /bin/sh
+AR = ar
+ARFLAGS = -ru
+# add -v for verbose
 AWK = awk
 CAT = cat
 CPP = cpp
@@ -12,6 +15,7 @@ ECHO = echo
 GREP = grep
 SED = sed
 LN = ln -fs
+RANLIB = ranlib
 RM = rm -f
 MV = mv -f
 SYNC = sync

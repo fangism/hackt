@@ -166,24 +166,6 @@ definition_base::lookup_port_formal(const string& id) const {
 	return never_const_ptr<instantiation_base>(NULL);
 }
 
-#if 0
-REDEFINED, this one is obsolete
-/**
-	Need template_formal_set to be a queryable-hashlist...
- */
-never_const_ptr<param_instantiation>
-definition_base::lookup_template_formal(const string& id) const {
-	if (!template_formals_list.empty()) {
-		never_const_ptr<param_instantiation> ret(
-			(static_cast<const template_formals_map_type&>
-			(template_formals_map))[id]);
-		return ret;
-	} else {
-		return never_const_ptr<param_instantiation>(NULL);
-	}
-}
-#endif
-
 /**
 	Compares the sequence of template formals for a generic definition.  
 	\return true if they are equivalent.  
@@ -233,21 +215,6 @@ definition_base::get_qualified_name(void) const {
 		return parent->get_qualified_name() +scope +key;
 	else return key;
 }
-
-#if 0
-/**
-	Sub-classes only need to re-implement if behavior is different.  
-	e.g. an assertion fail for built-in types.  
- */
-never_const_ptr<definition_base>
-definition_base::set_context_definition(context& c) const {
-#if 0
-	return c.set_current_definition_reference(*this);
-#else
-	return c.push_current_definition_reference(*this);
-#endif
-}
-#endif
 
 /**
 	Certifies the template arguments against this definition's
@@ -329,6 +296,17 @@ if (ta) {
 	// null, or every formal has default values.  
 	return check_null_template_argument();
 }
+}
+
+/**
+	Default: return false (if unimplemented)
+	Temporarily prints an error message.  
+ */
+bool
+definition_base::certify_port_actuals(const object_list& ol) const {
+	cerr << "Default definition_base::certify_port_actuals() = false."
+		<< endl;
+	return false;
 }
 
 /**
@@ -1162,18 +1140,72 @@ process_definition::lookup_port_formal(const string& id) const {
 	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
 }
 
+/**
+	Validates a list of objects (instance references) against
+	the port formal specification.  
+	\return true if type checks (is conservative).
+ */
+bool
+process_definition::certify_port_actuals(const object_list& ol) const {
+#if 0
+	cerr << "process_definition::certify_port_actuals(): FINISH ME!"
+		<< endl;
+#endif
+	const size_t num_formals = port_formals_list.size();
+	const size_t num_actuals = ol.size();
+	if (port_formals_list.size() != ol.size()) {
+		cerr << "Number of port actuals (" << num_actuals <<
+			") doesn\'t match the number of port formals (" <<
+			num_formals << ").  ERROR!  " << endl;
+		return false;
+	}
+	object_list::const_iterator
+		a_iter = ol.begin();
+	port_formals_list_type::const_iterator
+		f_iter = port_formals_list.begin();
+	const port_formals_list_type::const_iterator
+		f_end = port_formals_list.end();
+	size_t i = 1;
+	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
+		const count_const_ptr<object> a_obj(*a_iter);
+		if (a_obj) {
+			const count_const_ptr<instance_reference_base>
+				a_iref(a_obj.is_a<instance_reference_base>());
+			const never_const_ptr<instantiation_base>
+				f_inst(*f_iter);
+			// FINISH ME
+			const count_const_ptr<instance_reference_base>
+				f_iref(f_inst->make_instance_reference());
+			if (!f_iref->may_be_type_equivalent(*a_iref)) {
+				cerr << "ERROR: actual instance reference "
+					<< i << " of port connection "
+					"doesn\'t match the formal type/size."
+					<< endl << "\tgot: ";
+				a_iref->dump_type_size(cerr);
+				f_iref->dump_type_size(
+					cerr << ", expected: ") << endl;
+				return false;
+			}
+			// else continue checking
+		}
+		// else is NULL, no connection to check, just continue
+	}
+	// if we've made it here, then no errors!
+	return true;
+}
+
 count_const_ptr<fundamental_type_reference>
 process_definition::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
+	typedef count_const_ptr<fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_const_ptr<fundamental_type_reference>(
-			new process_type_reference(
+		return return_type(new process_type_reference(
 				never_const_ptr<process_definition>(this),
 				excl_const_ptr<param_expr_list>(ta)));
 	} else {
 		cerr << "ERROR: failed to make process_type_reference "
 			"because template argument types do not match." << endl;
-		return count_const_ptr<fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
 

@@ -322,7 +322,7 @@ id_expr::check_build(never_ptr<context> c) const {
 		if (inst) {
 			// we found an instance which may be single
 			// or collective... info is in inst.
-			inst->make_instance_reference(*c);
+			c->push_object_stack(inst->make_instance_reference());
 			// pushes the created reference onto
 			// context's instance_reference_stack.
 			// if indexed, check in the caller, and modify
@@ -330,12 +330,14 @@ id_expr::check_build(never_ptr<context> c) const {
 
 			// doesn't have to be a parameter, does it?
 		} else {
+			// push NULL or error object to continue?
 			cerr << "object \"" << *qid <<
 				"\" is not an instance, ERROR!  "
 				<< qid->where() << endl;
 			exit(1);
 		}
 	} else {
+		// push NULL or error object to continue?
 		cerr << "object \"" << *qid << "\" not found, ERROR!  "
 			<< qid->where() << endl;
 		exit(1);
@@ -831,7 +833,8 @@ member_expr::check_build(never_ptr<context> c) const {
 			"\" at " << member->where() << endl;
 		exit(1);
 	}
-	member_inst->make_member_instance_reference(inst_ref, *c);
+	c->push_object_stack(
+		member_inst->make_member_instance_reference(inst_ref));
 	// useless return value: NULL
 	// will result in member_instance_reference on object_stack
 
