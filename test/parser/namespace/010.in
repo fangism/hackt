@@ -1,0 +1,11 @@
+// should pass namespace test
+
+namespace A {
+namespace B {
+namespace C {
+};
+};
+};
+
+open A::B;
+

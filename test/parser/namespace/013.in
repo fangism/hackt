@@ -1,0 +1,11 @@
+// should fail namespace test
+
+namespace A {
+namespace B {
+namespace C {
+};
+};
+};
+
+open B;		// should fail, have to open A first
+

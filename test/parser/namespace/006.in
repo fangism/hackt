@@ -1,0 +1,5 @@
+// testing namespace opening
+// this should die
+
+open not_found;
+

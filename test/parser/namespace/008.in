@@ -1,0 +1,9 @@
+// using namespace test, this should pass
+
+namespace foo {
+	namespace bar { };
+	open bar;		// OPEN BAR!!!
+};
+
+open foo::bar;
+

@@ -1,0 +1,13 @@
+// this namespace test should pass
+
+namespace J {
+
+};
+
+open J as K;
+
+open K as L;
+
+// no reason why this shouldn't work
+
+

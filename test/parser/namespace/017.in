@@ -1,0 +1,13 @@
+// this namespace test should pass
+
+namespace W {
+	namespace X { };
+	namespace Y { };
+	namespace Z {
+		namespace A {
+			open X;
+			// won't find it in A or Z, will find in W
+		};
+	};
+};
+

@@ -1,0 +1,13 @@
+// this namespace test should pass
+
+namespace J {
+
+};
+
+open J as K;
+
+open K as L;
+
+open L as J;		// BAD! J already taken as a sub-namespace
+
+

@@ -1,0 +1,6 @@
+// testing open namespace, this should pass
+
+namespace sesame { };
+
+open sesame;
+

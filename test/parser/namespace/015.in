@@ -1,0 +1,12 @@
+// should pass namespace test
+
+namespace A {
+namespace B {
+namespace C {
+};
+};
+};
+
+open A::B;
+open C;		// should pass now, because space A is in search space
+
