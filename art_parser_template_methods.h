@@ -3,6 +3,7 @@
 #ifndef	__ART_PARSER_TEMPLATE_METHODS_H__
 #define	__ART_PARSER_TEMPLATE_METHODS_H__
 
+#include "art_macros.h"
 #include "art_parser.h"
 #include "list_of_ptr_template_methods.h"
 #include "art_symbol_table.h"
@@ -42,6 +43,10 @@ namespace parser {
 
 /// base constructor, initialized with one element
 NODE_LIST_BASE_TEMPLATE_SPEC
+node_list_base<T>::node_list_base() : nonterminal(), list_of_ptr<node>() {
+}
+
+NODE_LIST_BASE_TEMPLATE_SPEC
 node_list_base<T>::node_list_base(node* n) : node_list_base() {
 	if(n && !dynamic_cast<T*>(n)) {
 		// throw type exception
@@ -49,6 +54,10 @@ node_list_base<T>::node_list_base(node* n) : node_list_base() {
 		exit(1);
 	}
 	push_back(n);
+}
+
+NODE_LIST_BASE_TEMPLATE_SPEC
+node_list_base<T>::~node_list_base() {
 }
 
 //-----------------------------------------------------------------------------
@@ -67,6 +76,11 @@ node_list_base<T>::what(ostream& o) const {
 
 //=============================================================================
 // for class node_list<>
+
+/// default empty constructor
+NODE_LIST_TEMPLATE_SPEC
+node_list<T,D>::node_list() : parent(), open(NULL), close(NULL) {
+}
 
 /// constructor initialized with first element
 NODE_LIST_TEMPLATE_SPEC

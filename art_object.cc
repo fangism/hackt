@@ -1,14 +1,25 @@
 // "art_object.cc"
 
 #include "art_parser.h"
-#include "art_object.h"
-#include "list_of_ptr_template_methods.h"
 #include "map_of_ptr_template_methods.h"
-// #include "hashlist_template_methods.h"
 
+// CAUTION on ordering of the following two include files!
+// including "art_object.h" first will cause compiler to complain
+// about redefinition of struct hash<> template upon specialization of
+// hash<string>.  
+
+#include "hashlist_template_methods.h"
+	// includes "list_of_ptr_template_methods.h"
+#include "art_object.h"
+
+
+//=============================================================================
+// template specialization, needed by some compilers
+
+//=============================================================================
 namespace ART {
 namespace entity {
-//=============================================================================
+//-----------------------------------------------------------------------------
 // class name_space methods
 
 /**
@@ -323,6 +334,25 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This lookup function returns a pointer to some object that belongs to 
+	this scope, be it a namespace, process, definition, or instantiation.
+	This query will not look in higher namespaces or imported namespaces.
+	we want to forbid reuse of identifiers among different classes
+	in the same namespace, but allow local names to overshadow
+	identifiers in other namespaces.  
+	\param id the hash key.  
+	\return pointer to object indexed by hash key, otherwise NULL 
+		if object there doesn't already exist.  
+ */
+inline
+object*
+name_space::
+what_is(const string& id) {
+	return used_id_map[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Finds a namespace ending with a (optionally) scoped identifier
 	(allows multiple matches, hence the use of a list reference).
 	Currently not used.  
@@ -352,8 +382,8 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) {
 // class user_type_def methods
 
 /// constructor for user defined type
-user_type_def::user_type_def(const string& name) :
-	type_definition(name), template_params(), members() {
+user_type_def::user_type_def(const name_space* o, const string& name) :
+	type_definition(o, name), template_params(), members() {
 }
 
 //=============================================================================

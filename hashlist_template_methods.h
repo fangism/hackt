@@ -10,7 +10,7 @@
 #include "list_of_ptr_template_methods.h"
 
 //=============================================================================
-// template specializations, needed by some compilers
+// template specializations
 
 #if 1			// enable if compiler can't figure it out
 namespace
@@ -20,6 +20,10 @@ namespace
 	std
 #endif
 {
+/**
+	Explicit template specialization of hash of a string class, 
+	which just uses the internal char* representation as a wrapper.
+ */
 template <>   
 struct hash<string> {
 	size_t operator() (const string& x) const {

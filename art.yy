@@ -12,7 +12,7 @@
 #include "art_parser.h"
 #include "art_parser_prs.h"
 #include "art_parser_hse.h"
-// #include "art_parser_chp.h"
+#include "art_parser_chp.h"
 
 using namespace std;
 using namespace ART::parser;
@@ -125,6 +125,7 @@ extern "C" {
 %type	<n>	base_data_type_list_in_parens
 %type	<n>	base_data_type_list base_data_type
 %type	<n>	deftype defchan
+%type	<n>	set_body get_body send_body recv_body
 %type	<n>	data_param_list data_param data_param_list_in_parens
 %type	<n>	data_param_id_list data_param_id
 %type	<n>	definition_body
@@ -135,14 +136,14 @@ extern "C" {
 %type	<n>	guarded_definition_body_list guarded_definition_body
 %type	<n>	language_body
 %type	<n>	chp_body full_chp_body_item_list full_chp_body_item
-%type	<n>	chp_body_item chp_loop chp_do_until chp_selection
+%type	<n>	chp_body_item chp_loop chp_do_until chp_selection chp_wait
 %type	<n>	chp_nondet_guarded_command_list
 %type	<n>	chp_unmatched_det_guarded_command_list
 %type	<n>	chp_matched_det_guarded_command_list
 %type	<n>	chp_guarded_command chp_else_clause chp_assignment
 %type	<n>	chp_comm_list chp_comm_action chp_send chp_recv
 %type	<n>	hse_body full_hse_body_item_list full_hse_body_item
-%type	<n>	hse_body_item hse_loop hse_do_until hse_selection
+%type	<n>	hse_body_item hse_loop hse_do_until hse_selection hse_wait
 %type	<n>	hse_guarded_command hse_else_clause
 %type	<n>	hse_nondet_guarded_command_list
 %type	<n>	hse_matched_det_guarded_command_list
@@ -157,7 +158,7 @@ extern "C" {
 %type	<n>	relational_equality_expr and_expr
 %type	<n>	exclusive_or_expr inclusive_or_expr
 %type	<n>	logical_and_expr logical_or_expr
-%type	<n>	assignment_stmt
+%type	<n>	assignment_stmt binary_assignment unary_assignment
 //%type	<n>	conditional_expr optional_expr_in_braces
 %type	<n>	optional_member_index_expr_list_in_angles
 %type	<n>	member_index_expr_list_in_angles
@@ -211,8 +212,8 @@ namespace_management
 definition
 	// default actions
 	: defproc 
-	| deftype 			// not done yet
-	| defchan 			// not done yet
+	| deftype
+	| defchan
 	;
 
 
@@ -375,19 +376,35 @@ base_data_type
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
           data_param_list_in_parens
-	  '{'
-		SET '{' chp_body '}'
-		GET '{' chp_body '}'
-	  '}'
+	  '{' set_body get_body '}'
+		{ $$ = new data_type($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+	;
+
+set_body
+	: SET '{' chp_body '}'
+		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	;
+
+get_body
+	: GET '{' chp_body '}'
+		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	;
 
 defchan
        : DEFCHAN ID DEFINEOP base_chan_type 
          data_param_list_in_parens
-	 '{'
-		SEND '{' chp_body '}'
-		RECV '{' chp_body '}'
-	 '}'
+	 '{' send_body recv_body '}'
+		{ $$ = new user_chan_type($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+	;
+
+send_body
+	: SEND '{' chp_body '}'
+		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	;
+
+recv_body
+	: RECV '{' chp_body '}'
+		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	;
 
 data_param_list_in_parens
@@ -539,7 +556,7 @@ guarded_definition_body
 
 language_body
 	: CHP_LANG '{' chp_body '}'
-//		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
 	| HSE_LANG '{' hse_body '}'
 		{ $$ = new HSE::body($1, hse_stmt_list_wrap($2, $3, $4)); }
 	| PRS_LANG '{' prs_body '}'
@@ -557,7 +574,9 @@ chp_body
 
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
+		{ $$ = chp_stmt_list_append($1, $2, $3); }
 	| full_chp_body_item
+		{ $$ = new CHP::stmt_list($1); }
 	;
 
 // make _this_ string together the pieces, rather than having the item
@@ -576,68 +595,88 @@ chp_body_item
 	: chp_loop
 	| chp_do_until
 	| chp_selection
+	| chp_wait
 	| chp_assignment
 	| chp_comm_list
-	| SKIP
+	| SKIP { $$ = new CHP::skip($1); }
 	| LOG expr_list_in_parens
+		{ $$ = new CHP::log($1, $2); }
 	;
 
 chp_loop
 	// do-forever loop
 	: BEGINLOOP chp_body ']'
+		{ $$ = new CHP::loop(hse_stmt_list_wrap($1, $2, $3)); }
 	;
 
 chp_do_until
 	// do-until-all-guards-false
 	: BEGINLOOP chp_matched_det_guarded_command_list ']'
+		{ $$ = new CHP::do_until(chp_det_selection_wrap($1, $2, $3)); }
+	;
+
+chp_wait
+	// wait for expr to become true
+	: '[' expr ']'
+		{ $$ = new CHP::wait($1, $2, $3); }
 	;
 
 chp_selection
-	// wait for expr to become true
-	: '[' expr ']'
-	| '[' chp_matched_det_guarded_command_list ']'
+	: '[' chp_matched_det_guarded_command_list ']'
+		{ $$ = chp_det_selection_wrap($1, $2, $3); }
 	| '[' chp_nondet_guarded_command_list ']'
+		{ $$ = chp_nondet_selection_wrap($1, $2, $3); }
 
 	// wtf is this?... probalistic selection for FT
 //	| "%[" { chp_guarded_command ":" }** "]%"
-	| BEGINPROB chp_nondet_guarded_command_list ENDPROB
+//	| BEGINPROB chp_nondet_guarded_command_list ENDPROB
 	;
 
 // note: these lists must have at least 2 clauses, will have to fix with "else"
 chp_nondet_guarded_command_list
 	: chp_nondet_guarded_command_list ':' chp_guarded_command
+		{ $$ = chp_nondet_selection_append($1, $2, $3); }
 	| chp_guarded_command ':' chp_guarded_command
 	// can't have else clause in non-deterministic selection?
+		{ $$ = (new CHP::nondet_selection($1))->append($2, $3); }
 	;
 
 chp_matched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_else_clause
+		{ $$ = chp_det_selection_append($1, $2, $3); }
 	| chp_unmatched_det_guarded_command_list
 	;
 
 chp_unmatched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_guarded_command
+		{ $$ = chp_det_selection_append($1, $2, $3); }
 	| chp_guarded_command
+		{ $$ = new CHP::det_selection($1); }
 	;
 
 chp_guarded_command
 	: expr RARROW chp_body
+		{ $$ = new CHP::guarded_command($1, $2, $3); }
 	;
 
 chp_else_clause
 	: ELSE RARROW chp_body
+		{ $$ = new CHP::else_clause($1, $2, $3); }
 	;
 
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
 chp_assignment
+// allow binary and unary assignments
 	: assignment_stmt
 	;
 
 chp_comm_list
 	// gives comma-separated communications precedence
 	: chp_comm_list ',' chp_comm_action
+		{ $$ = chp_comm_list_append($1, $2, $3); }
 	| chp_comm_action
+		{ $$ = new CHP::comm_list($1); }
 	;
 
 chp_comm_action
@@ -649,12 +688,13 @@ chp_send
 	// for now, require parens like function-call to
 	// disambiguate between ( expr ) and ( expr_list )
 	: member_index_expr '!' expr_list_in_parens
-//	| member_index_expr '!' expr
+		{ $$ = new CHP::send($1, $2, $3); }
 	;
 
 chp_recv
+	// parens are now required
 	: member_index_expr '?' member_index_expr_list_in_parens
-//	| member_index_expr '?' member_index_expr
+		{ $$ = new CHP::receive($1, $2, $3); }
 	;
 
 //--- Language: HSE ---
@@ -673,6 +713,7 @@ full_hse_body_item_list
 full_hse_body_item
 	// temporary removal of assertions
 //	: optional_expr_in_braces hse_body_item optional_expr_in_braces
+//		{ $$ = $2; }
 	: hse_body_item
 	;
 
@@ -680,6 +721,7 @@ hse_body_item
 	// returns an HSE::statement
 	: hse_loop
 	| hse_do_until
+	| hse_wait
 	| hse_selection
 	| hse_assignment
 	| SKIP { $$ = new HSE::skip($1); }
@@ -696,10 +738,13 @@ hse_do_until
 		{ $$ = new HSE::do_until(hse_det_selection_wrap($1, $2, $3)); }
 	;
 
-hse_selection
+hse_wait
 	: '[' expr ']'
 		{ $$ = new HSE::wait($1, $2, $3); }
-	| '[' hse_matched_det_guarded_command_list ']'
+	;
+
+hse_selection
+	: '[' hse_matched_det_guarded_command_list ']'
 		{ $$ = hse_nondet_selection_wrap($1, $2, $3); }
 	| '[' hse_nondet_guarded_command_list ']'
 		{ $$ = hse_det_selection_wrap($1, $2, $3); }
@@ -737,7 +782,9 @@ hse_unmatched_det_guarded_command_list
 	;
 
 hse_assignment
-	: assignment_stmt
+//	: assignment_stmt
+// only allow ++ and -- assignments
+	: unary_assignment
 		{ $$ = new HSE::assignment(
 			dynamic_cast<ART::parser::incdec_stmt*>($1)); }
 	;
@@ -836,6 +883,7 @@ member_index_expr
 		{ $$ = new index_expr($1, $2); }
 	| member_index_expr '.' id_expr
 		{ $$ = new member_expr($1, $2, $3); }
+	//			or just ID?
 	// no function calls in expressions... yet
 	;
 
@@ -935,6 +983,11 @@ conditional_expr
 **/
 
 assignment_stmt
+	: binary_assignment
+	| unary_assignment
+	;
+
+binary_assignment
 //	: conditional_expr		// not supported
 //	: logical_or_expr		// not supported
 	: member_index_expr '=' expr
@@ -949,7 +1002,10 @@ assignment_stmt
 //	| member_index_expr ANDMASK expr
 //	| member_index_expr ORMASK expr
 //	| member_index_expr XORMASK expr
-	| member_index_expr PLUSPLUS
+	;
+
+unary_assignment
+	: member_index_expr PLUSPLUS
 		{ $$ = new incdec_stmt($1, $2); }
 	| member_index_expr MINUSMINUS
 		{ $$ = new incdec_stmt($1, $2); }

@@ -3,16 +3,10 @@
 #ifndef	__ART_OBJECT_H__
 #define	__ART_OBJECT_H__
 
-/****
-	Should the classes in this file maintain the symbol tables?
-	Should symbol tables be generic or class-specific and separate?
+#include <string>
 
-****/
-
-#include <map>
-
-#include "list_of_ptr.h"
 #include "map_of_ptr.h"
+#include "hashlist.h"		// includes "list_of_ptr.h"
 #include "art_macros.h"
 
 namespace ART {
@@ -65,22 +59,25 @@ private:
 	/// may become hash_map if need be, for now map suffices (r/b-tree)
 	typedef	map_of_ptr<string, name_space>		subns_map_type;
 
-	/// resolves identifier to actual data type, we own these pointers
-	typedef	map_of_ptr<string, type_definition>	type_def_map_type;
-	typedef	list<type_definition*>			type_def_list;
+	/**
+		Resolves identifier to actual data type.  
+		Remember that public members of defined types, 
+		must be accessible both in sequential order
+		(for actuals type-checking) and in random order
+		by member name mapping, as in x.y.z.  
+		This structure owns the pointers to these definitions,
+		and thus, is responsible for deleteing them.  
+	 */
+	typedef	hashlist_of_ptr<string, type_definition>	type_def_list;
 
 	/// resolves identifier to actual data type, we own these pointers
-	typedef	map_of_ptr<string, type_instantiation>	type_inst_map_type;
-	typedef	list<type_instantiation*>		type_inst_list;
+	typedef	hashlist_of_ptr<string, type_instantiation>	type_inst_list;
 
 	/// resolves identifier to actual process type, we own these pointers
-	typedef	map_of_ptr<string, process_definition>	proc_def_map_type;
-	typedef	list<process_definition*>		proc_def_list;
+	typedef	hashlist_of_ptr<string, process_definition>	proc_def_list;
 
 	/// resolves identifier to actual process type, we own these pointers
-	typedef	map_of_ptr<string, process_instantiation>
-							proc_inst_map_type;
-	typedef	list<process_instantiation*>		proc_inst_list;
+	typedef	hashlist_of_ptr<string, process_instantiation>	proc_inst_list;
 
 	/**
 		Container for open namespaces with optional aliases.  
@@ -89,7 +86,26 @@ private:
 		whole list will always be searched.  
 		These pointers are not owned by this namespace.  
 	 */
-	typedef list<name_space*>		namespace_list;
+	typedef list<name_space*>			namespace_list;
+
+	/**
+		This set contains the list of identifiers for this namespace
+		that have been mapped to some clas: either another namespace, 
+		a process/data-type/channel definitions/instantiation.  
+		The language currently forbids reuse of identifiers within
+		this namespace, so one cannot say namespace x {}; followed
+		by int x, even though the syntax tree is sufficient to 
+		disambiguate between the uses of x, based on context.  
+		We do, however, allow the overshadowing of names from
+		other namespaces, say that of the parent, or of an 
+		imported or sub-space.  
+		This type is needed to rapid lookup of identifiers in a body
+		that can refer to a symbol declared in the template formals, 
+		port parameters, or local definitions and instantiations.  
+		The stored value is a generic polymorphic object pointer 
+		whose type is deduced in the grammar.  
+	 */
+	typedef	hash_map<string,object*>		used_id_map_type;
 protected:
 	/**
 		Reference to the parent namespace, if applicable.  
@@ -143,28 +159,36 @@ protected:
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	type_def_map_type	type_defs;
+	type_def_list		type_defs;
 	/**
 		Container of data type instantiations in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	type_inst_map_type	type_insts;
+	type_inst_list		type_insts;
 	/**
 		Container of process definitions in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	proc_def_map_type	proc_defs;
+	proc_def_list		proc_defs;
 	/**
 		Container of process instantiations in this scope.
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
-	proc_inst_map_type	proc_insts;
+	proc_inst_list		proc_insts;
 
 	// later instroduce single symbol imports?
 	// i.e. using A::my_type;
+
+	/**
+		Before mapping a new symbol to a symbolic object, 
+		it must not already be mapped to an existing object.  
+		All additions to the current namespace must register
+		through this map.  
+	 */
+	used_id_map_type	used_id_map;
 
 public:
 	name_space(const string& n, name_space* p);
@@ -198,6 +222,8 @@ void	query_type_inst_match(type_def_list& m, const id_expr& pid);
 void	query_proc_def_match(type_def_list& m, const id_expr& pid);
 void	query_proc_inst_match(type_def_list& m, const id_expr& pid);
 
+object*	what_is(const string& id);
+
 // the following are not used... yet
 void	find_namespace_ending_with(namespace_list& m, const id_expr& id);
 void	find_namespace_starting_with(namespace_list& m, const id_expr& id);
@@ -212,6 +238,15 @@ void	find_namespace_starting_with(namespace_list& m, const id_expr& id);
 //=============================================================================
 /// base class for definition objects
 class definition : public object {
+protected:
+	/**
+		Back-pointer to the namespace to which this definition 
+		belongs.  Should be const?  Do not delete.  
+	 */
+	const name_space*		owner;
+public:
+	definition(const name_space* o) : object(), owner(o) { }
+virtual	~definition() { }
 
 };
 
@@ -223,6 +258,15 @@ class definition : public object {
 	instantiations in the object file.  
  */
 class instantiation : public object {
+protected:
+	/**
+		Back-pointer to the namespace to which this definition 
+		belongs.  Should be const?  Do not delete.  
+	 */
+	const name_space*		owner;
+public:
+	instantiation(const name_space* o) : object(), owner(o) { }
+virtual	~instantiation() { }
 
 };
 
@@ -242,7 +286,8 @@ private:
 protected:
 	
 public:
-
+	process_definition(const name_space* o) : definition(o) { }
+virtual	~process_definition();
 };
 
 //=============================================================================
@@ -254,8 +299,11 @@ private:
 
 protected:
 	// list of template actuals
+	string			key;		///< name of instance
 
 public:
+	process_instantiation(const name_space* o) : instantiation(o) { }
+virtual	~process_instantiation();
 
 };
 
@@ -265,7 +313,8 @@ class type_definition : public definition {
 protected:
 	string			key;		///< name of type
 public:
-	type_definition(const string& n) : definition(), key(n) { }
+	type_definition(const name_space* o, const string& n) : 
+		definition(o), key(n) { }
 virtual	~type_definition() { }
 
 };
@@ -274,20 +323,24 @@ virtual	~type_definition() { }
 /// Reserved for special built-in fundamental base types.  
 class built_in_type_def : public type_definition {
 public:
-	built_in_type_def(const string& n) : type_definition(n) { }
+	built_in_type_def(const name_space* o, const string& n) : 
+		type_definition(o, n) { }
 virtual	~built_in_type_def() { }
 
 };
 
 //-----------------------------------------------------------------------------
-// no formal name, just type name
+/**
+	Generalizable user-defined data type, which can (eventually) bulid upon
+	other user-defined data types.  
+ */
 class user_type_def : public type_definition {
 private:
 	/**
 		Members will be kept as a map, 
-		because their order doesn't matter
+		because their order doesn't matter, or do they?
 	 */
-	typedef	map<string, const type_definition*>	type_members;
+	typedef	hash_map<string, const type_definition*>	type_members;
 	/**
 		Template parameter will be kept in a list because their
 		order matters in type-checking.
@@ -298,7 +351,7 @@ protected:
 	temp_param_list		template_params;
 	type_members		members;
 public:
-	user_type_def(const string& name);
+	user_type_def(const name_space* o, const string& name);
 virtual	~user_type_def() { }
 
 };
@@ -311,8 +364,9 @@ protected:
 	/// pointer to the type represented by this type-id
 	const type_definition*		canonical;
 public:
-	type_alias(const string& n, const type_definition* t) :
-		type_definition(n), canonical(t) { assert(canonical); }
+	type_alias(const name_space* o, const string& n, 
+		const type_definition* t) :
+		type_definition(o, n), canonical(t) { assert(canonical); }
 virtual	~type_alias() { }
 
 };
@@ -323,8 +377,11 @@ class type_instantiation : public instantiation {
 protected:
 	const type_definition*	type;		/// the actual type
 	string			key;		///< name of instance
+	// more to come...
 public:
-
+	type_instantiation(const name_space* o, const type_definition* t,
+		const string& n) : instantiation(o), type(t), key(n) { }
+virtual	~type_instantiation() { }
 
 };
 
