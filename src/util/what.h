@@ -1,13 +1,29 @@
 /**
 	\file "what.h"
 	Utility for user-defined type-names.
-	$Id: what.h,v 1.2 2005/01/12 03:19:41 fang Exp $
+	$Id: what.h,v 1.3 2005/01/14 06:28:46 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_H__
 #define	__UTIL_WHAT_H__
 
+#include "string_fwd.h"
+
 #define	UTIL_WHAT_TEMPLATE_SIGNATURE		template <class T>
+
+#ifndef	UTIL_WHAT_PARTIAL_SPECIALIZATIONS
+#define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	1
+#endif
+
+/**
+	Where does the `const' go?  
+	To be unambiguous const follows the thing that is const, 
+	so a const T is printed as T const.  
+	Default set to 1: suffix-style.
+	But if you want to be bass-ackwards about it (or is it?)
+	then you can set this to 0.  
+ */
+#define	SUFFIX_STYLE_CONST			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -51,6 +67,7 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace util {
+using std::string;
 
 /**
 	The default implementation of the type name.  
@@ -67,6 +84,44 @@ struct what {
 	/// the full name of the type
 	static const name_type		name;
 };	// end struct what
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if UTIL_WHAT_PARTIAL_SPECIALIZATIONS
+// partial specializations of what
+// compound types like *& will automatically be printed correctly!
+
+UTIL_WHAT_TEMPLATE_SIGNATURE
+struct what<const T> {
+	static const string		name_string;
+	typedef	const char*		name_type;
+	static const name_type		name;
+};
+
+UTIL_WHAT_TEMPLATE_SIGNATURE
+struct what<T&> {
+	static const string		name_string;
+	typedef	const char*		name_type;
+	static const name_type		name;
+};
+
+UTIL_WHAT_TEMPLATE_SIGNATURE
+struct what<T*> {
+	static const string		name_string;
+	typedef	const char*		name_type;
+	static const name_type		name;
+};
+
+#if !SUFFIX_STYLE_CONST
+// this is not necessary when using the suffix-style const qualifier
+UTIL_WHAT_TEMPLATE_SIGNATURE
+struct what<T* const> {
+	static const string		name_string;
+	typedef	const char*		name_type;
+	static const name_type		name;
+};
+#endif
+
+#endif	// UTIL_WHAT_PARTIAL_SPECIALIZATIONS
 
 }	// end namespace util
 

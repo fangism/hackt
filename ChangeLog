@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-01-14	David Fang	<fangism@users.sourceforge.net>
+
+	* Added partial specializations for util::what template, 
+	  pointer, reference, const-ness.  
+	  Only one module has trouble with static initializations:
+	  art_parser_definition.cc, don't know why yet...
+
+
 2005-01-13	David Fang	<fangism@users.sourceforge.net>
 
 	* Cleaned up the AST/* headers and definitions, with some corrections.
