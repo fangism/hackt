@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.8 2005/01/14 19:40:27 fang Exp $
+	$Id: art_object_definition_base.h,v 1.8.12.1 2005/01/26 22:30:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -220,7 +220,8 @@ virtual	never_ptr<const instance_collection_base>
 		const token_identifier& id);
 
 #if 0
-virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
+virtual	bool
+	exclude_object(const used_id_map_type::value_type& i) const;
 #endif
 
 private:
@@ -241,6 +242,10 @@ protected:
 
 	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
+
+	static
+	void
+	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
 	load_object_base(persistent_object_manager& m, istream&);

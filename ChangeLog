@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-01-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-08:
+	  Been spending a few days fixing up a mysterious pseudo
+	  memory leak (*GASP*).  The problem is cause by improper handling
+	  of the built-in datatype definitions.  The whole definition
+	  contents were still written out, which cause bad reconstruction.  
+	  Data-type references have special handling for built-in types.
+	  This snapshot has fixed it, but kept all the extraneous 
+	  debugging options on.  After more testing, will gradually
+	  recede the debugging level.  
+
+
 2005-01-22	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-09:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3.6.3 2005/01/26 20:55:13 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3.6.4 2005/01/26 22:30:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -499,8 +499,19 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 scopespace::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
+	      ostream& o) const {
 	write_object_used_id_map(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out an empty map.
+ */
+void
+scopespace::write_object_base_fake(const persistent_object_manager& m, 
+		ostream& o) {
+	static const size_t zero = 0;
+	write_value(o, zero);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.2.6.2 2005/01/26 20:55:03 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2.6.3 2005/01/26 22:30:38 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -515,6 +515,17 @@ definition_base::write_object_template_formals(
 	STACKTRACE("definition_base::write_object_template_formals()");
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	m.write_pointer_list(o, template_formals_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Fake empty list.  
+ */
+void
+definition_base::write_object_base_fake(
+		const persistent_object_manager& m, ostream& o) {
+	static const template_formals_list_type dummy;
+	m.write_pointer_list(o, dummy);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1170,8 +1181,10 @@ built_in_datatype_def::collect_transient_info(
 	STACKTRACE("built_in_data::collect_transients()");
 	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
 	// don't bother with parent pointer to built-in namespace
+#if 0
 	definition_base::collect_transient_info_base(m);
 	// STOP: definition is built in! don't recur!
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1194,15 +1207,28 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
 
+#if 0
 	definition_base::write_object_base(m, f);	// is empty
-//	write_object_port_formals(m);
+#else
+	definition_base::write_object_base_fake(m, f);	// is empty
+#endif
 
+#if 0
+	INVARIANT(used_id_map.empty());
 	scopespace::write_object_base(m, f);
-	// connections and assignments
+#else
+	scopespace::write_object_base_fake(m, f);
+#endif
 
+	// connections and assignments
+#if 0
 	// need to IMITATE sequential_scope::write_object_base
-	const list<never_ptr<const instantiation_statement> > bogus;
+	// const list<never_ptr<const instantiation_statement> > bogus;
+	const sequential_scope::instance_management_list_type bogus;
 	m.write_pointer_list(f, bogus);		// empty
+#else
+	sequential_scope::write_object_base_fake(m, f);
+#endif
 
 	WRITE_OBJECT_FOOTER(f);
 }

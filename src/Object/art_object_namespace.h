@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.6.12.3 2005/01/26 20:55:14 fang Exp $
+	$Id: art_object_namespace.h,v 1.6.12.4 2005/01/26 22:30:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -260,6 +260,10 @@ protected:
 
 	void
 	write_object_base(const persistent_object_manager& m, ostream&) const;
+
+	static
+	void
+	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
 	load_object_base(persistent_object_manager& m, istream&);
