@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.2.2.5 2005/02/15 07:32:02 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.2.2.6 2005/02/15 22:31:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -39,6 +39,9 @@ using util::multikey_set_element_derived;
 
 class bool_instance;
 
+template <size_t>
+class bool_array;
+
 // forward declaration
 #if 0
 class bool_instance_alias_base;
@@ -51,6 +54,7 @@ class bool_instance_alias_base;
 	Each object of this type represents a unique qualified name.  
  */
 class bool_instance_alias_info {
+	typedef	bool_instance_alias_info		this_type;
 public:
 	/**
 		The reference count pointer type to the underlying
@@ -74,16 +78,23 @@ public:
 		Consider using this to determine "instantiated" state.  
 	 */
 	never_ptr<const container_type>			container;
-public:
+
+protected:
+	// constructors only intended for children classes
 	bool_instance_alias_info() :
 		instance(NULL), container(NULL) { }
 
+public:
+	// constructors only intended for children classes
 	bool_instance_alias_info(const never_ptr<const container_type> m) :
 		instance(NULL), container(m) { }
 
+public:
+
 	// default copy-constructor
 
-	// default destructor
+	// default destructor, non-virtual?
+virtual	~bool_instance_alias_info();
 
 	// default assignment
 
@@ -102,6 +113,25 @@ public:
 		INVARIANT(!container);
 		container = p;
 	}
+
+	// consider: pure virtual multikey_generic<K>
+
+	/**
+		Equality comparison is required to determine
+		whether or not an object of this type has default value.
+	 */
+	bool
+	operator == (const this_type& i) const {
+		return instance == i.instance &&
+			container == i.container;
+	}
+
+	/**
+		Wants to be pure virtual but can't...
+	 */
+virtual	void
+	write_next_connection(const persistent_object_manager& m, 
+		ostream& o) const;
 
 public:
 	void
@@ -299,13 +329,46 @@ public:
 	Alternate idea, use a multikey_generic instead of dimension-specific.
  */
 template <size_t D>
-class bool_instance_alias : public bool_instance_alias_base
+class bool_instance_alias :
+#if 0
+		public bool_instance_alias_base
+#else
+		public multikey_set_element_derived<
+			D, pint_value_type, bool_instance_alias_base>
+#endif
 {
 private:
 	typedef	bool_instance_alias<D>			this_type;
-	typedef	bool_instance_alias_base		parent_type;
 public:
+#if 0
+	typedef	bool_instance_alias_base		parent_type;
+#else
+	typedef	multikey_set_element_derived<
+			D, pint_value_type, bool_instance_alias_base>
+							parent_type;
+private:
+	/**
+		grandparent_type is maplikeset_element_derived.
+	 */
+	typedef	typename parent_type::value_type	grandparent_type;
+	/**
+		great_grandparent_type is ring_node_derived
+	 */
+	typedef	typename grandparent_type::parent_type	great_grandparent_type;
+#if 0
+	/**
+		great_great_grandparent_type is bool_instance_alias_info
+	 */
+	typedef	typename great_grandparent_type::parent_type
+						great_great_grandparent_type;
+#endif
+#endif
+public:
+#if 0
 	typedef	multikey<D, pint_value_type>		key_type;
+#else
+	typedef	typename parent_type::key_type		key_type;
+#endif
 	// or simple_type?
 public:
 	bool_instance_alias() : parent_type() { }
@@ -314,8 +377,14 @@ public:
 		Implicit constructor for creating an empty alias element, 
 		used for creating keys to search sets.  
 	 */
-	bool_instance_alias(const key_type& k) : 
-			bool_instance_alias_base(k) { }
+	bool_instance_alias(const key_type& k) : parent_type(k) { }
+
+	bool_instance_alias(const key_type& k, 
+		never_ptr<const bool_instance_collection> p) :
+
+			parent_type(k, grandparent_type(
+
+				great_grandparent_type(p))) { }
 
 #if 0
 	bool_instance_alias(const never_ptr<const bool_instance_collection> p, 
@@ -325,13 +394,21 @@ public:
 
 	~bool_instance_alias();
 
+	void
+	write_next_connection(const persistent_object_manager& m, 
+		ostream& o) const;
+
+
+#if 0
 	// compare keys
 	bool
 	operator < (const this_type& b) const {
 		return key < b.key;
 	}
+#endif
 
 	/**
+		Use with maplikeset_element requires comparison operator.  
 		Not sure if this is the correct thing to do.  
 		TODO: Be sure to review when this is used in the context
 		of instance collections and connections.  
@@ -347,7 +424,31 @@ public:
 	operator << <>(ostream&, const bool_instance_alias<D>&);
 #endif
 
+public:
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
 };	// end class bool_instance_alias
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need final overrider for pure virtual base.  
+ */
+template <>
+class bool_instance_alias<0> : public bool_instance_alias_base {
+private:
+	typedef	bool_instance_alias<0>			this_type;
+	typedef	bool_instance_alias_base		parent_type;
+public:
+	~bool_instance_alias();
+
+	void
+	write_next_connection(const persistent_object_manager& m, 
+		ostream& o) const;
+
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+};
 
 //-----------------------------------------------------------------------------
 /**
@@ -433,18 +534,28 @@ protected:
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 class bool_array : public bool_instance_collection {
 private:
+// to grant access to this private constructor
 friend class bool_instance_collection;
 	typedef	bool_array<D>				this_type;
 	typedef	bool_instance_collection		parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
+#if 0
 	typedef	multikey_set_element_derived<D, 
 			pint_value_type, bool_instance_alias<D> >
 							element_type;
+#else
+	typedef	bool_instance_alias<D>			element_type;
+#endif
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
 protected:
+#if 0
+	typedef	typename collection_type::reference	reference;
+#else
+	typedef	element_type&				reference;
+#endif
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator
 							const_iterator;
@@ -480,13 +591,35 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
+	class element_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		element_writer(const persistent_object_manager& m, ostream& o)
+			: os(o), pom(m) { }
+
+		void
+		operator () (const element_type& ) const;
+	};	// end struct element_writer
+
+	class connection_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		connection_writer(const persistent_object_manager& m, 
+			ostream& o) : os(o), pom(m) { }
+
+		void
+		operator () (const element_type& ) const;
+	};	// end struct connection_writer
+
 	struct key_dumper {
 		ostream& os;
 
 		key_dumper(ostream& o) : os(o) { }
 
 		ostream&
-		operator () (const typename collection_type::value_type& );
+		operator () (const value_type& );
 	};	// end struct key_dumper
 
 public:
@@ -499,8 +632,14 @@ class bool_array<0> : public bool_instance_collection {
 friend class bool_instance_collection;
 	typedef	bool_instance_collection	parent_type;
 	typedef	bool_array<0>			this_type;
+public:
+#if 0
+	typedef	bool_instance_alias_base	instance_type;
+#else
+	typedef	bool_instance_alias<0>		instance_type;
+#endif
 private:
-	bool_instance_alias_base		the_instance;
+	instance_type				the_instance;
 
 private:
 	bool_array();

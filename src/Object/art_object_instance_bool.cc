@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.6 2005/02/15 07:32:02 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.7 2005/02/15 22:31:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -59,6 +59,9 @@
 
 STATIC_TRACE_BEGIN("instance-bool")
 
+//=============================================================================
+// module-local specializations
+
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<0>, "bool_scalar")
 	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array<1>, "bool_array_1D")
@@ -70,6 +73,22 @@ namespace memory {
 }	// end namespace memory
 }	// end namespace util
 
+namespace std {
+using ART::entity::bool_instance_alias;
+
+template <size_t D>
+struct _Select1st<bool_instance_alias<D> > :
+	public _Select1st<typename bool_instance_alias<D>::parent_type> {
+};	// end struct _Select1st
+
+template <size_t D>
+struct _Select2nd<bool_instance_alias<D> > :
+	public _Select2nd<typename bool_instance_alias<D>::parent_type> {
+};
+
+}	// end namespace std
+
+//=============================================================================
 namespace ART {
 namespace entity {
 using std::string;
@@ -81,12 +100,16 @@ using util::dereference;
 using std::for_each;
 using std::mem_fun_ref;
 USING_STACKTRACE
-using util::write_value;
-using util::read_value;
+using util::value_writer;
+using util::value_reader;
 
 //=============================================================================
 // class bool_instance_alias_info method definitions
 
+// inline
+bool_instance_alias_info::~bool_instance_alias_info() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Doesn't register itself because this is not directly
 	dynamically allocated.  
@@ -101,6 +124,18 @@ bool_instance_alias_info::collect_transient_info_base(
 	// in which case, the parent may not have been visited before...
 	NEVER_NULL(container);
 	container->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Virtually pure virtual.  Never supposed to be called, 
+	yet this definition must exist to allow construction
+	of the types that immedately derived from this type.  
+ */
+void
+bool_instance_alias_info::write_next_connection(
+		const persistent_object_manager& m, ostream& o) const {
+	DIE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,6 +231,53 @@ operator << (ostream& o, const bool_instance_alias<D>& b) {
 	return o;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+bool_instance_alias<D>::write_next_connection(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, container);
+#if 0
+	value_writer<key_type> kw(os);
+	kw(e.key);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+bool_instance_alias<D>::collect_transient_info(
+		persistent_object_manager& m) const {
+	// this isn't truly a persistent type, so we don't register this addr.
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+bool_instance_alias<D>::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <size_t D>
+void
+bool_instance_alias<D>::load_object(const persistent_object_manager& m, 
+		istream& i) {
+
+}
+
+//=============================================================================
+// class bool_instance_alias<0> method definitions
+
+bool_instance_alias<0>::~bool_instance_alias() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_alias<0>::write_next_connection(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, container);
+}
 
 //=============================================================================
 // class bool_instance_collection method definitions
@@ -383,10 +465,12 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
+	bool err = false;
 	do {
 		// will create if necessary
 //		iterator bi(collection.find(key_gen));
 //		bool_instance_alias<D>& pi(collection[key_gen]);
+#if 0
 		typename collection_type::reference ref(collection[key_gen]);
 		bool_instance_alias<D>& pi(ref.value());
 		if (pi.valid()) {
@@ -396,8 +480,26 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			THROW_EXIT;
 		}
 		pi.instantiate(never_ptr<const this_type>(this));
+#else
+		const_iterator iter = collection.find(key_gen);
+		if (iter == collection.end()) {
+			// then we can insert a new one
+			// create with back-ref!
+			collection.insert(element_type(key_gen, 
+				never_ptr<const this_type>(this)));
+		} else {
+			// found one that already exists!
+			// more detailed message, please!
+			cerr << "ERROR: Index " << key_gen << " of ";
+			what(cerr) << ' ' << get_qualified_name() <<
+				" already instantiated!" << endl;
+			err = true;
+		}
+#endif
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+	if (err)
+		THROW_EXIT;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -461,7 +563,7 @@ bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 			get_qualified_name() << " at index: " << i << endl;
 		return instance_ptr_type(NULL);
 	}
-	const bool_instance_alias<D>& b(it->value());
+	const bool_instance_alias<D>& b(*it);
 #endif
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
@@ -504,7 +606,7 @@ bool_array<D>::lookup_instance_collection(
 			l.push_back(instance_ptr_type(NULL));
 			ret = false;
 		} else {
-		const bool_instance_alias<D>& pi(it->value());
+		const bool_instance_alias<D>& pi(*it);
 #endif
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
@@ -522,6 +624,36 @@ bool_array<D>::lookup_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param e is a reference to a bool_instance_alias<D>.
+ */
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+bool_array<D>::element_writer::operator () (const element_type& e) const {
+	value_writer<key_type> kw(os);
+	kw(e.key);
+	e.write_object_base(pom, os);
+	// postpone connection writing until next phase
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+BOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+bool_array<D>::connection_writer::operator() (const element_type& e) const {
+	const bool_instance_alias_base* const next = e.get_next();
+#if 0
+	NEVER_NULL(next);
+	NEVER_NULL(next->container);
+	pom.write_pointer(os, next->container);
+	value_writer<generic_key_type> gwk(os);
+	gkw(next->get_generic_key());
+#else
+	// need persistent_object_manager?
+	next->write_next_connection(pom, os);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::write_object(const persistent_object_manager& m, 
@@ -533,16 +665,35 @@ bool_array<D>::write_object(const persistent_object_manager& m,
 	for_each(collection.begin(), collection.end(), 
 		instance_set_element_writer()
 	);
+#elif 0			// almost ready...
+	for_each(collection.begin(), collection.end(), 
+		element_writer(m, f)
+	);
+	for_each(collection.begin(), collection.end(), 
+		connection_writer(m, f)
+	);
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This requires extra caution, because this may recursively invoke
+	load_object of other collections through connection and alias
+	reconstruction.  Therefore, must go through 
+	persistent_object_manager's visit_once check.  
+ */
 BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 #if 0
 	collection.read(f);
+#else
+	// procedure:
+	// 1) load all instantiated indices *without* their connections
+	//	let them start out pointing to themselves.  
+	// 2) each element contains information to reconstruct, 
+	//	we need temporary local storage for it.
 #endif
 }
 
@@ -628,7 +779,7 @@ bool_array<0>::lookup_instance(const multikey_index_type& i) const {
 		cerr << "ERROR: Reference to uninstantiated bool!" << endl;
 		return instance_ptr_type(NULL);
 	} else	return instance_ptr_type(
-		const_cast<bool_instance_alias_base*>(&the_instance));
+		const_cast<instance_type*>(&the_instance));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
 }

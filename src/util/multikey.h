@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.19.2.1.2.3 2005/02/15 07:32:08 fang Exp $
+	$Id: multikey.h,v 1.19.2.1.2.4 2005/02/15 22:31:44 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -14,6 +14,7 @@
 #include "STL/reverse_iterator.h"
 #include <valarray>
 #include <iosfwd>
+#include "IO_utils_fwd.h"
 
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K>
@@ -919,6 +920,35 @@ public:
 //=============================================================================
 }	// end namespace util
 
+//=============================================================================
+// specializations of other structs
+namespace util {
 
+template <class K>
+struct value_writer<multikey_generic<K> > {
+	typedef	multikey_generic<K>	value_type;
+	ostream& os;
+
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const value_type&);
+};	// end struct
+
+template <class K>
+struct value_reader<multikey_generic<K> > {
+	typedef	multikey_generic<K>	value_type;
+	istream& is;
+
+	value_reader(istream& o) : is(o) { }
+
+	void
+	operator () (value_type&);
+};	// end struct
+
+
+}	// end namespace util
+
+//=============================================================================
 #endif	// __UTIL_MULTIKEY_H__
 

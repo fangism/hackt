@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1.2.4 2005/02/15 02:04:15 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.5 2005/02/15 22:31:43 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -307,6 +307,8 @@ public:
 template <class K, class V>
 class maplikeset_element_derived : public V {
 	typedef	maplikeset_element_derived<K,V>		this_type;
+protected:
+	typedef	V					parent_type;
 public:
 	typedef	K					key_type;
 	typedef	V					value_type;
@@ -432,7 +434,7 @@ struct _Select2nd<maplikeset_element_derived<K,V> > :
 	operator () (const pair_type& p) const {
 		return static_cast<const second_type&>(p);
 	}
-};	// end struct _Select1st
+};	// end struct _Select2nd
 
 }	// end namespace std
 

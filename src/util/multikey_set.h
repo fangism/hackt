@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.4.1.2.2 2005/02/14 21:35:36 fang Exp $
+	$Id: multikey_set.h,v 1.1.4.1.2.3 2005/02/15 22:31:44 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -102,6 +102,7 @@ class multikey_set_element :
 {
 private:
 	typedef	multikey_set_element<D,K,T>		this_type;
+protected:
 	typedef	maplikeset_element<typename multikey<D,K>::simple_type, T>
 							parent_type;
 public:
@@ -144,6 +145,7 @@ class multikey_set_element_derived :
 		typename multikey<D,K>::simple_type, T> {
 private:
 	typedef	multikey_set_element_derived<D,K,T>	this_type;
+protected:
 	typedef	maplikeset_element_derived<
 		typename multikey<D,K>::simple_type, T>
 							parent_type;

@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5.2.1.2.1 2005/02/15 07:32:08 fang Exp $
+	$Id: multikey.tcc,v 1.5.2.1.2.2 2005/02/15 22:31:44 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -601,6 +601,24 @@ multikey_generator_generic<K>::operator ++ (int) {
 	return *this;
 }
 
+//=============================================================================
+// specializations
+
+template <class K>
+void
+value_writer<multikey_generic<K> >::operator () (const value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	write_array(os, AS_A(const valarray<K>&, v));
+}
+
+//-----------------------------------------------------------------------------
+
+template <class K>
+void
+value_reader<multikey_generic<K> >::operator () (value_type& v) {
+	// readlly should reference typename value_type::impl_type
+	read_sequence_resize(is, AS_A(valarray<K>&, v));
+}
 
 //=============================================================================
 }	// end namespace util

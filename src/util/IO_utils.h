@@ -1,18 +1,20 @@
 /**
 	\file "IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.4 2005/01/28 19:58:46 fang Exp $
+	$Id: IO_utils.h,v 1.4.14.1 2005/02/15 22:31:43 fang Exp $
  */
 
-#ifndef __IO_UTILS_H__
-#define __IO_UTILS_H__
+#ifndef __UTIL_IO_UTILS_H__
+#define __UTIL_IO_UTILS_H__
 
-#include <iosfwd>
+#include "IO_utils_fwd.h"
 #include "string_fwd.h"
 #include "STL/pair_fwd.h"
 #include "STL/valarray_fwd.h"
 
 #define	USING_IO_UTILS							\
+using util::value_writer;						\
+using util::value_reader;						\
 using util::read_value;							\
 using util::write_value;						\
 using util::read_string;						\
@@ -35,6 +37,26 @@ using std::string;
 using std::ostream;
 using std::istream;
 using std::pair;
+
+template <class T>
+struct value_writer {
+	ostream& os;
+
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const T& t);
+};      // end struct value_writer
+
+template <class T>
+struct value_reader {
+	istream& is;
+
+	value_reader(istream& i) : is(i) { }
+
+	void
+	operator () (T& t);
+};	// end struct value_reader
 
 template <class T>
 void	write_value(ostream& f, const T& v);
@@ -102,5 +124,5 @@ void	read_map(istream& f, M& m);
 
 //=============================================================================
 
-#endif	// __IO_UTILS_H__
+#endif	// __UTIL_IO_UTILS_H__
 

@@ -6,6 +6,18 @@
 	  Namespace clean-up only, replaced *_NAMESPACE in the util/
 	  directory with 'util'.  
 
+	+ -multikey-06:
+	  IO_utils*: added value_writer and value_reader functors to
+	  facilitate partial specializations with template classes.  
+	  Defaults to using plain-old write_value and read_value.  
+	  Skeletal implementations of bool alias persistence and 
+	  reconstruction.  
+	  bool_instance_alias<D> is now derived from 
+	  multikey_set_element_derived!  (except when D == 0)
+	  Thus, bool_array<D> may directly use multikey_set<element_type>.
+	  This revision compiles, same as before, but not all tests pass
+	  because code is in transient state.  
+
 
 2005-02-14	David Fang	<fangism@users.sourceforge.net>
 

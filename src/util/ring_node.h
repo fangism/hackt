@@ -1,7 +1,7 @@
 /**
 	\file "ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.1.2.3.2.3 2005/02/15 02:04:16 fang Exp $
+	$Id: ring_node.h,v 1.1.2.3.2.4 2005/02/15 22:31:44 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -640,6 +640,8 @@ template <class> friend class ring_node_iterator_base;
 // template <class, class, class> friend class ring_node_derived_iterator;
 	typedef	T					base_type;
 	typedef	ring_node_derived<T>			this_type;
+protected:
+	typedef	T					parent_type;
 public:
 	typedef	this_type*				next_type;
 	typedef	const this_type*			const_next_type;
@@ -692,6 +694,9 @@ public:
 virtual	~ring_node_derived();
 
 public:
+
+	const_next_type
+	get_next(void) const { return next; }
 
 	// no assignment
 #if 0
