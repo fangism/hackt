@@ -128,7 +128,11 @@ UTIL_HEADER_FILES = \
 	util/qmap.h \
 	util/qmap_fwd.h \
 	util/sstream.h \
-	util/sublist.h
+	util/sublist.h \
+	util/binders.h \
+	util/compose.h \
+	util/conditional.h \
+	util/ptrs_functional.h
 
 libart___la_SOURCES = \
 	parser/yacc_or_bison.h \
