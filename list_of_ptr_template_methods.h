@@ -20,7 +20,7 @@ list_of_ptr<T>::~list_of_ptr() {
 		for (i=begin(); i!=end(); i++)
 			if (*i) delete (*i);
 	}
-	clear();		// may not be necessary
+	// clear();		// will be done by base class
 }
 
 #endif	// __LIST_OF_PTR_TEMPLATE_METHODS_H__

@@ -25,7 +25,7 @@ using std::list;
 	constructed objects such as syntax trees.  
  */
 template <class T>
-class list_of_ptr : public list<T*> {
+class list_of_ptr : virtual public list<T*> {
 public:
 	typedef	typename list<T*>::iterator		iterator;
 	typedef	typename list<T*>::const_iterator	const_iterator;
@@ -42,6 +42,10 @@ explicit list_of_ptr() : list<T*>(), own(1) { }
 
 /// The destructor frees memory to non-NULL pointers in the list.  
 virtual	~list_of_ptr();		// don't want to inline this
+
+// overriding methods
+void	pop_back(void);
+void	clear(void);
 
 // non-essential add-on methods
 
