@@ -430,7 +430,8 @@ persistent_object_manager::write_header(ofstream& f) {
 		write_value(f, e.head_pos());
 		write_value(f, e.tail_pos());
 	}
-	write_value(f, -1L);
+	static const long neg_one = -1L;
+	write_value(f, neg_one);
 	start_of_objects = f.tellp();
 }
 
