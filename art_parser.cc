@@ -1298,7 +1298,6 @@ class node_list<guarded_definition_body,thickbar>;
 };
 };
 
-
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 

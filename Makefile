@@ -45,7 +45,7 @@ DOXYGEN_CONFIG = art.doxygen.config
 .SUFFIXES: .cc .o .l .yy .d
 
 # careful using this...
-.BEGIN:	.depend
+.BEGIN:	makeinfo .depend
 
 .cc.o:
 	$(CC) $(CFLAGS) $< -o $@
@@ -54,6 +54,9 @@ DOXYGEN_CONFIG = art.doxygen.config
 	$(MAKEDEPEND) $< > $@
 
 default: all
+
+makeinfo:
+	@$(ECHO) "MAKE = $(MAKE) $(MAKEFLAGS)"
 
 all: .depend $(TARGETS)
 
@@ -86,17 +89,21 @@ art.yy.cc: art.l y.tab.h
 	$(LEX) $(LFLAGS) art.l > $@
 
 # y.tab.cc will depend on y.output.h
-y.tab.h y.tab.cc y.output.h y.union.cc: art.yy
+y.tab.h y.tab.cc y.output y.output.h: art.yy
 	-$(YACC) $(YFLAGS) $?; \
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h; \
-	$(CPP) -P y.tab.h > y.union; \
+	$(MV) y.tab.c y.tab.cc
+
+art.yy.types: art.yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" > $?.types; \
-	$(AWK) -f yacc-union-type.awk -v yaccfile=$?.types \
+		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" > $@
+
+
+y.union.cc: y.output art.yy.types
+	$(AWK) -f yacc-union-type.awk -v yaccfile=art.yy.types \
 		-v include="art_parser.h" \
 		-v namespace=ART::parser \
-		-v type=ART::parser::node y.output > y.union.cc; \
-	$(MV) y.tab.c y.tab.cc
+		-v type=ART::parser::node y.output > $@
 
 # documentation targets
 docs:
@@ -110,7 +117,6 @@ cleanparser:
 	-$(RM) y.tab.*
 	-$(RM) y.output
 	-$(RM) y.output.h
-	-$(RM) y.union
 	-$(RM) y.union.cc
 
 cleandepend:
@@ -153,4 +159,3 @@ commit: clobberdepend
 # but BSD make dies when it can't find it :(
 # hence the self-modifying Makefile
 # the following line will magically appear and disappear...
-include .depend

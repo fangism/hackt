@@ -2,9 +2,8 @@
 	"art.yy"
 	AsynchRonous Tools (.art)
 
-	to do: find out how to unwind the stack for accurate error reporting
-	walk through yyssp, yyvsp... in y.tab.cc
-	state stack pointer and value stack pointer?
+	note: this is not the same language as that found in lib/art.cy
+	but is very close.  Differences are mostly syntactic and not semantic.  
 
 	note: ancient versions of yacc reject // end-of-line comments
 */
@@ -29,8 +28,10 @@ extern "C" {
 //	void yyerror(char* msg);	// replace with this if necessary
 }
 
-// useful typedefs are defined in art_parser.h
-// macros: d = delimiter, n = node, b = begin, e = end, l = list
+/*
+useful typedefs are defined in art_parser.h
+macros: d = delimiter, n = node, b = begin, e = end, l = list
+*/
 
 /**
 	documenting yacc's internal tables:
@@ -145,12 +146,15 @@ extern const char* const yyrule[];
  */
 	ART::parser::node*	n;
 /***
-	It is always safe to refer to the node* n member of the union
-	as long as all of the below members of the union are 
-	somehow derived from node.  
+	It is not safe to refer to the node* n member of the union
+	even if all of the below members of the union are 
+	somehow derived from node, because their virtual tables differ.  
+	Instead one must write a wrapper to properly convert
+	pointers with their virtual tables.  
+	How do we know what union member it is?
+	A just question.  We walk the state stack pointer.  
+	This is done using yacc-union-type.awk.  
 ***/
-// let the various constructors perform optional dynamic type-cast checks
-// experimenting with union
 	terminal*		_terminal;
 	token_keyword*		_token_keyword;
 	token_string*		_token_string;
