@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.5 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.5.4.1 2005/01/27 23:36:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -128,6 +128,10 @@ protected:
 	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
+	static
+	void
+	write_object_base_fake(const persistent_object_manager& m, ostream&);
+
 // need not be virtual?
 // may need context later...
 	void unroll(void) const;

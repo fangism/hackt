@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.4.4.2 2005/01/20 19:02:14 fang Exp $
+	$Id: art_object_expr_base.h,v 1.4.4.3 2005/01/27 23:36:04 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -311,7 +311,8 @@ public:
 public:
 	pbool_expr() : param_expr() { }
 
-virtual	~pbool_expr() { }
+	// temporary de-inline for debugging
+virtual	~pbool_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -385,7 +386,8 @@ public:
 public:
 	pint_expr() : param_expr(), index_expr() { }
 
-virtual	~pint_expr() { }
+	// temporary de-inline for debugging purposes
+virtual	~pint_expr();
 
 virtual	ostream&
 	what(ostream& o) const = 0;

@@ -1,11 +1,13 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3 2005/01/19 04:53:16 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.4 2005/01/27 23:36:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
 #define	__ART_OBJECT_NAMESPACE_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <fstream>
@@ -41,6 +43,7 @@
 #include "art_object_type_ref_base.h"
 #include "art_object_type_hash.h"
 
+#include "memory/list_vector_pool.tcc"
 #include "indent.h"
 #include "stacktrace.h"
 #include "persistent_object_manager.tcc"
@@ -117,6 +120,10 @@ scopespace::scopespace() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 scopespace::~scopespace() {
+#if 0
+	STACKTRACE("~scopespace()");
+	cerr << "\t@ " << this << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,7 +297,7 @@ scopespace::add_instance(
 			}	// else good to continue
 			
 			// compare dimensions
-			const size_t p_dim = probe_inst->dimensions;
+			const size_t p_dim = probe_inst->get_dimensions();
 #if 0
 			cerr << "original dimensions = " << p_dim << 
 				", new dimensions = " << dim << endl;
@@ -370,6 +377,8 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 	const string id(i->get_name());
 	INVARIANT(id != "");		// cannot be empty string
 	used_id_map[id] = i;
+	// IS THE NEW ENTRY OWNED? IT SHOULD BE
+	INVARIANT(used_id_map[id].owned());
 	INVARIANT(!i);
 	return ret;
 }
@@ -471,6 +480,7 @@ inline
 void
 scopespace::write_object_used_id_map(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE("scopespace::write_object_used_id_map()");
 	MUST_BE_A(const persistent*, this);
 	// filter any objects out? yes
 	// how many objects to exclude? need to subtract
@@ -492,8 +502,19 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 scopespace::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
+	      ostream& o) const {
 	write_object_used_id_map(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Writes out an empty map.
+ */
+void
+scopespace::write_object_base_fake(const persistent_object_manager& m, 
+		ostream& o) {
+	static const size_t zero = 0;
+	write_value(o, zero);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -510,6 +531,7 @@ scopespace::write_object_base(const persistent_object_manager& m,
  */
 void
 scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
+	STACKTRACE("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
@@ -647,6 +669,8 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
 
+LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const never_ptr<const name_space>
 name_space::null(NULL);
@@ -699,6 +723,7 @@ name_space::name_space(const string& n) :
  */
 name_space::~name_space() {
 	// default destructors will take care of everything
+	STACKTRACE("~namespace()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1489,6 +1514,7 @@ name_space::write_object(const persistent_object_manager& m) const {
 void
 name_space::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("namespace::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 
@@ -1541,6 +1567,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 			icbp = o.is_a_xfer<instance_collection_base>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
+		// NEED TO GUARANTEE THAT IT IS OWNED!
 	} else {
 		o->what(cerr << "TO DO: define method for adding ")
 			<< " back to namespace." << endl;

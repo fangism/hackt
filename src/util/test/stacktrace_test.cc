@@ -12,6 +12,9 @@
 
 using util::stacktrace;
 
+// only needed for static, dynamically-allocated uses
+// REQUIRES_STACKTRACE_STATIC_INIT
+
 static
 int
 f_a(const int x) {
@@ -53,6 +56,7 @@ verbose_function_trace(const char* a, int b[4]) {
 
 int
 main(int argc, char* argv[]) {
+	STACKTRACE_VERBOSE;
 	static int four[4];
 	{
 		STACKTRACE_ECHO_ON;

@@ -2,13 +2,13 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.15.4.1 2005/01/23 01:33:53 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15.4.2 2005/01/27 23:36:01 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
 #define	__ART_BUILT_INS_CC__
 
-// #include <iostream>		// debug only
+#define	DEBUG_ART_BUILT_INS			0
 
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.h"
@@ -17,10 +17,31 @@
 #include "art_object_type_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_expr_const.h"
+#include "static_trace.h"
+
+STATIC_TRACE_BEGIN("built-ins");
+
+#if DEBUG_ART_BUILT_INS
+	#define	ENABLE_STACKTRACE			1
+	#include "stacktrace.h"
+
+USING_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+#endif
 
 // global static initializations...
 namespace ART {
 namespace entity {
+//=============================================================================
+// needed to ensure that pint_const pool is ready to dish out pints
+// this holds onto a reference count that will be guaranteed to be
+// discarded AFTER subsequent static objects are deallocated in this module
+// becaused of reverse-order static destruction.
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
+// this early because int_def contains a pint_scalar, 
+// and built_in_namespace contains the int_def.
+
 //=============================================================================
 /**
 	The built-in namespace, not global.
@@ -42,6 +63,8 @@ const built_in_param_def
 pint_def = built_in_param_def(
 	never_ptr<const name_space>(&built_in_namespace), "pint");
 
+// will need to pool param_type_reference?
+
 /** built-in parameter pbool type reference */
 const count_ptr<const param_type_reference> pbool_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
@@ -53,6 +76,7 @@ const count_ptr<const param_type_reference> pint_type_ptr =
 	never_ptr<const built_in_param_def>(&pint_def)));
 
 //-----------------------------------------------------------------------------
+
 /** built-in data bool type definition initialization */
 const built_in_datatype_def
 bool_def = built_in_datatype_def(
@@ -65,22 +89,14 @@ const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
 
-#if 0
-OBSOLETE
-// needed to ensure that pint_const pool is ready to dish out pints
-REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const);
-// this holds onto a reference count that will be guaranteed to be
-// discarded AFTER subsequent static objects are deallocated in this module
-// becaused of reverse-order static destruction.
-#endif
 
 static const count_ptr<const pint_const>
 int_def_width_default(new pint_const(32));
 
 #if 0
-// OBSERVATION:
-// enabling this causes pbool_const pool to not be destroyed upon
-// program termination.  
+// EXAMPLE:
+// this is the correct way to dynamically allocate during static initialization
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pbool_const);
 static const excl_ptr<const pbool_const>
 dummy_bool(new pbool_const(true));
 #endif
@@ -125,6 +141,10 @@ bool_type = data_type_reference(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#undef	DEBUG_ART_BUILT_INS
+
+STATIC_TRACE_END("built-ins");
 
 #endif	// __ART_BUILT_INS_CC__
 

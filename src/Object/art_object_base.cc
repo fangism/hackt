@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.27.4.1 2005/01/20 19:02:12 fang Exp $
+ 	$Id: art_object_base.cc,v 1.27.4.2 2005/01/27 23:36:02 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -39,6 +39,9 @@ using namespace util::memory;
 
 //=============================================================================
 // class object method definitions
+
+void
+object::bogus(void) const { }
 
 //=============================================================================
 // class object_handle method definitions

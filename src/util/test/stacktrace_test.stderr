@@ -1,14 +1,16 @@
-enter: f_g
-| enter: f_c
-| | enter: f_a
-| | leave: f_a
-| | enter: f_b
-| | leave: f_b
-| leave: f_c
-leave: f_g
+\- int main(int, char**)
+| \- f_g
+| | \- f_c
+| | | \- f_a
+| | | /- f_a
+| | | \- f_b
+| | | /- f_b
+| | /- f_c
+| /- f_g
 10
-enter: dude_wheres_my_prototype
-leave: dude_wheres_my_prototype
-enter: float verbose_function_trace(const char*, int*)
-leave: float verbose_function_trace(const char*, int*)
+| \- dude_wheres_my_prototype
+| /- dude_wheres_my_prototype
+| \- float verbose_function_trace(const char*, int*)
+| /- float verbose_function_trace(const char*, int*)
 10
+/- int main(int, char**)

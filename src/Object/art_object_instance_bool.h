@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.8.4.3 2005/01/21 01:55:36 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.8.4.4 2005/01/27 23:36:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -10,22 +10,18 @@
 
 #include "art_object_instance.h"
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool_fwd.h"
 
-#include "multikey_fwd.h"
 #include "multikey_qmap_fwd.h"
 
 namespace ART {
-namespace parser {
-class token_identifier;
-}
-
 namespace entity {
 USING_LIST
+USING_CONSTRUCT
+using std::ostream;
 using std::string;
-using parser::token_identifier;
 using namespace util::memory;
 using QMAP_NAMESPACE::qmap;
-using MULTIKEY_NAMESPACE::multikey_base;
 using MULTIKEY_MAP_NAMESPACE::multikey_map;
 
 //=============================================================================
@@ -265,6 +261,7 @@ template <>
 class bool_array<0> : public bool_instance_collection {
 friend class bool_instance_collection;
 	typedef	bool_instance_collection	parent_type;
+	typedef	bool_array<0>			this_type;
 private:
 	bool_instance_alias			the_instance;
 
@@ -299,8 +296,11 @@ public:
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
-
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_STATIC_DECLARATIONS
 };	// end class bool_array (specialized)
+
+typedef	bool_array<0>	bool_scalar;
 
 //=============================================================================
 }	// end namespace entity

@@ -1,7 +1,7 @@
 /**
 	\file "what.tcc"
 	Default implementation for user-defined type-names.
-	$Id: what.tcc,v 1.3.4.1 2005/01/23 01:33:57 fang Exp $
+	$Id: what.tcc,v 1.3.4.2 2005/01/27 23:36:12 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_TCC__
@@ -12,7 +12,7 @@
 #include <typeinfo>
 
 namespace util {
-
+using std::string;
 //-----------------------------------------------------------------------------
 /**
 	Default static initializer of type name.  

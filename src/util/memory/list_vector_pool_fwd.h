@@ -2,11 +2,13 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1 2005/01/23 01:34:01 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.2 2005/01/27 23:36:15 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
 #define	__LIST_VECTOR_POOL_FWD_H__
+
+#include "STL/construct_fwd.h"
 
 /**
 	These are the enw and delete operators required when
@@ -63,29 +65,33 @@ private:								\
 #define	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS			\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
+private:								\
 	static void*	operator new (size_t, void*&);			\
-private:								\
 	typedef	list_vector_pool<this_type>		pool_type;	\
-private:								\
+	typedef	raw_count_ptr<pool_type>	pool_ref_ref_type;	\
+public:									\
+	typedef	count_ptr<const pool_type>		pool_ref_type;	\
+									\
 	static								\
-	pool_type&							\
+	pool_ref_ref_type						\
 	get_pool(void);
 
-
-#if 0
 /**
-	Convenient macro for explicitly requiring that a memory pool
-	be ready during static initialization of a particular module.  
-	This is not required now... kept in comments for historical reference.  
+	Friends needed only if default constructor is private.
+	NOTE: the formal parameters identifiers for the _Construct 
+	friend declarations (__p, __value) are kept to work around a 
+	major lookup bug in gcc-3.3.
+	Otherwise, it would be better off without it.  
+	Fortunately, there's no harm in keeping them; only the definition's
+	formal parameters matter -- it's just an eyesore to see them here.  
+
+	See "util/test/friend_function_formal_bug.cc" for example.  
  */
-#define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
-static T::pool_type&							\
-__pool_ref_ ## T ## __ (T::acquire_pool_reference());
-
-static const T::pool_ref_type
-__pool_ref_ ## T ## __ (T::acquire_pool_reference());
-#endif
-
+#define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
+	friend class list_vector_pool<this_type>;			\
+	friend void _Construct<this_type>(this_type* __p);		\
+	friend void _Construct<this_type, this_type>(			\
+		this_type* __p, const this_type& __value);
 
 namespace util {
 //=============================================================================

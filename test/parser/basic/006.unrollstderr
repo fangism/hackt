@@ -2,28 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3100224	module__	0	0	43
-	2	 0x31025a0	namespc_	0	43	71
-	3	 0x31025b4	dintcoll	1	71	213
-	4	 0x3805004	datainst	0	213	233
-	5	 0x3100244	datatprf	0	233	249
-	6	 0x3102600	datadefn	0	249	284
-	7	 0x3102654	pintcoll	0	284	321
-	8	 0x31026b0	cnstpi__	0	321	333
-	9	 0x3100254	dprmlst_	0	333	349
-	10	 0x31026d0	cnstpi__	0	349	361
-	11	 0x31026e4	crnglst_	0	361	381
-	12	 0x3102740	namespc_	0	381	420
-	13	 0x3102754	dintcoll	3	420	1585
-	14	 0x3805020	datainst	0	1585	1605
-	15	 0x31026f4	datatprf	0	1605	1621
-	16	 0x3102704	dprmlst_	0	1621	1637
-	17	 0x31027a4	crnglst_	0	1637	1673
-	18	 0x31027b4	dintcoll	2	1673	2076
-	19	 0x380503c	datainst	0	2076	2096
-	20	 0x3102804	datatprf	0	2096	2112
-	21	 0x3102814	dprmlst_	0	2112	2128
-	22	 0x3102824	crnglst_	0	2128	2156
+	1	 0x3302494	module__	0	0	43
+	2	 0x3300170	namespc_	0	43	71
+	3	 0x33024b4	dintcoll	1	71	213
+	4	 0x3804604	datainst	0	213	233
+	5	 0x3302504	datatprf	0	233	249
+	6	 0x3302510	datadefn	0	249	280
+	7	 0x3302564	dprmlst_	0	280	296
+	8	 0x2641024	cnstpi__	0	296	308
+	9	 0x3302574	crnglst_	0	308	328
+	10	 0x33001a4	namespc_	0	328	367
+	11	 0x3302584	dintcoll	3	367	1532
+	12	 0x3804620	datainst	0	1532	1552
+	13	 0x33025d4	datatprf	0	1552	1568
+	14	 0x33025e4	dprmlst_	0	1568	1584
+	15	 0x33025f4	crnglst_	0	1584	1620
+	16	 0x3302634	dintcoll	2	1620	2023
+	17	 0x380463c	datainst	0	2023	2043
+	18	 0x3302604	datatprf	0	2043	2059
+	19	 0x3302614	dprmlst_	0	2059	2075
+	20	 0x3302624	crnglst_	0	2075	2103
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

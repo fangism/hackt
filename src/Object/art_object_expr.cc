@@ -1,26 +1,19 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5 2005/01/23 01:33:54 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.6 2005/01/27 23:36:03 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
-// #define	DEBUG_LIST_VECTOR_POOL		1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
-
-#include "memory/pointer_classes.h"
-#include "sstream.h"			// for ostringstring, used by dump
-#include "discrete_interval_set.tcc"
-
-#include "what.tcc"
-#include "STL/list.tcc"
-#include "qmap.tcc"
-#include "stacktrace.h"
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
@@ -31,6 +24,7 @@
 #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
+#include "art_object_type_hash.h"
 
 #if 0
 #include "multikey.h"			// extern template instantiations
@@ -40,11 +34,16 @@
 #include "art_object_extern_templates.h"
 #endif
 
-#include "memory/list_vector_pool.h"
+#include "what.tcc"
+#include "STL/list.tcc"
+#include "qmap.tcc"
+#include "stacktrace.h"
+#include "static_trace.h"
+#include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
-
-#include "art_object_type_hash.h"
-
+#include "memory/pointer_classes.h"
+#include "sstream.h"			// for ostringstring, used by dump
+#include "discrete_interval_set.tcc"
 #include "compose.h"
 #include "conditional.h"		// for compare_if
 #include "ptrs_functional.h"
@@ -95,7 +94,16 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
+namespace memory {
+	// pool-allocator managed types that are safe to destroy lazily
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_const)
+}	// end namespace memory
 }	// end namespace util
+
+//=============================================================================
+// start of static initializations
+STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace ART {
@@ -112,6 +120,11 @@ using std::mem_fun_ref;
 using std::dereference;
 using std::ostringstream;
 USING_STACKTRACE
+
+#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
+REQUIRES_STACKTRACE_STATIC_INIT
+// the robust list_vector_pool requires this.  
+#endif
 
 //=============================================================================
 // local types (not externally visible)
@@ -170,6 +183,10 @@ const_param::~const_param() { }
 //-----------------------------------------------------------------------------
 // class pbool_expr method definitions
 
+pbool_expr::~pbool_expr() {
+	STACKTRACE("~pbool_expr()");
+}
+
 bool
 pbool_expr::may_be_equivalent(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
@@ -219,6 +236,11 @@ pbool_expr::make_param_expression_assignment_private(
 //-----------------------------------------------------------------------------
 // class pint_expr method definitions
 
+pint_expr::~pint_expr() {
+	STACKTRACE("~pint_expr()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::may_be_equivalent(const param_expr& p) const {
 	const pint_expr* i = IS_A(const pint_expr*, &p);
@@ -301,7 +323,9 @@ const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_param_expr_list::~const_param_expr_list() { }
+const_param_expr_list::~const_param_expr_list() {
+	STACKTRACE("~const_param_expr_list()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
@@ -518,6 +542,7 @@ const_param_expr_list::write_object(const persistent_object_manager& m) const {
 void
 const_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("const_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;
@@ -547,7 +572,20 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_param_expr_list::~dynamic_param_expr_list() { }
+dynamic_param_expr_list::~dynamic_param_expr_list() {
+	STACKTRACE("~dynamic_param_expr_list()");
+#if 0
+	cerr << "list contains " << size() << " pointers." << endl;
+	dump(cerr) << endl;
+	cerr << "reference counts in list:" << endl;
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		cerr << "\t" << i->refs() << " @ " << 
+			((*i) ? &**i : NULL) << endl;
+	}
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
@@ -558,9 +596,10 @@ dynamic_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
 	const_iterator i = begin();
+	const const_iterator e = end();
 	if (*i)	(*i)->dump(o);
 	else	o << "(null)";
-	for (i++; i!=end(); i++) {
+	for (i++; i!=e; i++) {
 		o << ", ";
 		if (*i)	(*i)->dump(o);
 		else	o << "(null)";
@@ -821,6 +860,7 @@ dynamic_param_expr_list::write_object(
 void
 dynamic_param_expr_list::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("dyn_param_expr_list::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);
 	size_t s, i=0;
@@ -1924,6 +1964,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
  */
 inline
 pint_const::pint_const() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_const::~pint_const() {
+	STACKTRACE("~pint_const()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -5034,6 +5079,8 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namepace entity
 }	// end namepace ART
+
+STATIC_TRACE_END("object-expr")
 
 #endif	// __ART_OBJECT_EXPR_CC__
 

@@ -1,5 +1,59 @@
 "ChangeLog"
 
+2005-01-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-11-merged-fixutil-12:
+	  Merged changes from the -fixutil sub-branch (up to -12)
+	  into the main object branch.  
+
+	* ARTXX-00-01-04-object-00-10-fixutil-12:
+	  Test directory updated for new expected unrolled objects.
+	  Differences to due to exclusion of built-in template int
+	  definition argument.  (wasn't supposed to be there anyways)
+	  Typedef_alias forgot to call scopespace base persistent
+	  methods, resulting in fake leak.  Fixed.  
+	  This revision should be sufficiently stable (verified on
+	  darwin) to commit to the parent branch.  
+
+
+2005-01-26	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-10-merged-gcc-01:
+	  Merged gcc-3.3 workaround into this parent branch.
+	  Enhanced test scripts in src/util/test to be able to write
+	  hook filters/scripts in case tests need more than the 
+	  default filtering.  
+	  This is intended to permit *slightly* different or even
+	  non-deterministic behavior of various compilers, 
+	  a common variation being LINK-ORDERING and global static
+	  module initialization and destruction ordering.  
+	  Fortunately, the revisions in this series have made 
+	  the libraries extremely robust to "the ordering problem"
+	  with explicit dependence macros.  
+	  Slowly, we'll work our back out of "fixutil" to the parent branch.
+
+
+2005-01-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-09-gcc:
+	  New quick branch spawned off to work around a gcc-3.3 bug.
+	  (Not a problem in gcc-3.4)
+	  Problem is related to friend function formal parameter misuse.
+	  Problem can be demonstrated by
+	  "util/test/friend_function_formal_bug.cc" in gcc-3.3.
+	  Fixed, and merged back into -fixutil-10.
+
+	* ARTXX-00-01-04-object-00-10-fixutil-08:
+	  Been spending a few days fixing up a mysterious pseudo
+	  memory leak (*GASP*).  The problem is cause by improper handling
+	  of the built-in datatype definitions.  The whole definition
+	  contents were still written out, which cause bad reconstruction.  
+	  Data-type references have special handling for built-in types.
+	  This snapshot has fixed it, but kept all the extraneous 
+	  debugging options on.  After more testing, will gradually
+	  recede the debugging level.  
+
+
 2005-01-22	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-09:

@@ -2,11 +2,13 @@
 	\file "art_object_IO.cc"
 	Template method instantiations for 
 	persistent object management, specific to ART.  
- 	$Id: art_object_IO.cc,v 1.13 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_IO.cc,v 1.13.4.1 2005/01/27 23:36:01 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_IO_CC__
 #define	__ART_OBJECT_IO_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include "art_object_module.h"
 #include "persistent_object_manager.tcc"

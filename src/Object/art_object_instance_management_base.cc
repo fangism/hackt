@@ -1,13 +1,13 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.7 2005/01/16 04:47:23 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.7.4.1 2005/01/27 23:36:06 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 #define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>
@@ -37,7 +37,9 @@ sequential_scope::sequential_scope() : instance_management_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-sequential_scope::~sequential_scope() { }
+sequential_scope::~sequential_scope() {
+	STACKTRACE("~sequential_scope()");
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -146,6 +148,14 @@ sequential_scope::write_object_pointer_list(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+sequential_scope::write_object_base_fake(
+		const persistent_object_manager& m, ostream& f) {
+	static const instance_management_list_type dummy;
+	m.write_pointer_list(f, dummy);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 sequential_scope::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	write_object_pointer_list(m, f);
@@ -156,6 +166,7 @@ inline
 void
 sequential_scope::load_object_pointer_list(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE("sequential_scope::load_object_pointer_list()");
 	m.read_pointer_list(f, instance_management_list);
 }
 
@@ -163,6 +174,7 @@ sequential_scope::load_object_pointer_list(
 void
 sequential_scope::load_object_base(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE("sequential_scope::load_object_base()");
 	load_object_pointer_list(m, f);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.2.4.1 2005/01/23 01:34:05 fang Exp $
+	$Id: what_test.cc,v 1.2.4.2 2005/01/27 23:36:22 fang Exp $
  */
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include "what.tcc"
 
 #define	DEBUG_LIST_VECTOR_POOL		1	// pre-define to enable debug
-#include "memory/list_vector_pool.h"
+#include "memory/list_vector_pool.tcc"
 
 #include "using_ostream.h"
 using util::what;

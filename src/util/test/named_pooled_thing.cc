@@ -1,9 +1,10 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.1.4.1 2005/01/23 01:34:03 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.1.4.2 2005/01/27 23:36:19 fang Exp $
  */
 
+#define ENABLE_STATIC_TRACE				1
 #define ENABLE_STACKTRACE				1
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
@@ -15,12 +16,28 @@
 #include "using_ostream.h"
 #include "what.h"
 #include "stacktrace.h"
+#include "static_trace.h"
 
-#include "memory/list_vector_pool.h"
 #include "memory/pointer_classes.h"
-
+#include "memory/list_vector_pool.tcc"
 
 USING_STACKTRACE;
+
+namespace util {
+namespace memory {
+	// this changes the deletion policy to be lazy
+	// which is safe for terminal (non-recursive) objects
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(named_thing)
+}
+}
+
+
+STATIC_TRACE_BEGIN("named_pooled_thing.o")
+
+// needed because stacktrace may be invoked (indirectly)
+// during static initialization
+REQUIRES_STACKTRACE_STATIC_INIT
+
 using std::cin;
 
 #if 1
@@ -89,4 +106,6 @@ namespace util {
 // intentionally defining this last as a test...
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(named_thing, 16)
 #endif
+
+STATIC_TRACE_END("named_pooled_thing.o")
 

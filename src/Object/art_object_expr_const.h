@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.6.4.4 2005/01/23 01:33:54 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6.4.5 2005/01/27 23:36:04 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -20,6 +20,7 @@ namespace entity {
 
 using namespace MULTIKEY_NAMESPACE;
 USING_LIST
+USING_CONSTRUCT
 using std::pair;
 using std::string;
 using std::ostream;
@@ -375,7 +376,8 @@ public:
 	pint_const(const long v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
 
-	~pint_const() { }
+	// change back to inline later
+	~pint_const();
 
 	ostream&
 	what(ostream& o) const;
@@ -460,7 +462,7 @@ private:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<this_type>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_const
 
@@ -654,7 +656,7 @@ private:
 public:
 	PERSISTENT_METHODS
 
-	friend class list_vector_pool<pbool_const>;
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pbool_const
 

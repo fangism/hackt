@@ -1,13 +1,13 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22.4.3 2005/01/21 01:55:37 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22.4.4 2005/01/27 23:36:07 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
 #define	__ART_OBJECT_TYPE_REF_CC__
 
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
@@ -53,6 +53,7 @@ fundamental_type_reference::fundamental_type_reference(void) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fundamental_type_reference::~fundamental_type_reference() {
+	STACKTRACE("~fundamental_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,6 +311,7 @@ fundamental_type_reference::collect_transient_info_base(
 void
 fundamental_type_reference::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE("fund_type_ref::write_object_base()");
 	m.write_pointer(o, template_params);
 }
 
@@ -317,6 +319,7 @@ fundamental_type_reference::write_object_base(
 void
 fundamental_type_reference::load_object_base(
 		persistent_object_manager& m, istream& i) {
+	STACKTRACE("fund_type_ref::load_object_base()");
 	m.read_pointer(i, template_params);
 	if (template_params)
 		const_cast<param_expr_list&>(*template_params).load_object(m);
@@ -384,6 +387,7 @@ data_type_reference::data_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
+	STACKTRACE("~data_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -498,6 +502,7 @@ void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -512,6 +517,7 @@ data_type_reference::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_type_reference::write_object(const persistent_object_manager& m) const {
+	STACKTRACE("data_type_ref::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
@@ -526,6 +532,7 @@ data_type_reference::write_object(const persistent_object_manager& m) const {
 void
 data_type_reference::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("data_type_ref::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_type_def);

@@ -8,7 +8,7 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behoavior...
 
-	$Id: local_static_store_test.cc,v 1.1.4.1 2005/01/23 01:34:03 fang Exp $
+	$Id: local_static_store_test.cc,v 1.1.4.2 2005/01/27 23:36:18 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
@@ -17,6 +17,7 @@
 // #include <string>
 #include "using_ostream.h"
 #include "named_pooled_thing.h"
+#include "memory/list_vector_pool.h"
 #include "stacktrace.h"
 
 // DEBUG memory pool using stacktrace, seeing double destruction!
@@ -24,6 +25,8 @@
 USING_STACKTRACE;
 // using std::string;
 
+// declare this before any dynamic allocation of this type in this module
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(named_thing)
 
 static
 void
@@ -59,27 +62,22 @@ actually_called_two(void) {
 		anon2(new named_thing("Anna"));
 }
 
-#if 1
 static const named_thing anon_static("Dot");
-#endif
-#if 1
 static const excl_ptr<const named_thing>
 anon_dynamic(new named_thing("Eve"));
-#endif
 
 int
 main(int argc, char* argv[]) {
-	STACKTRACE("main()");
+	STACKTRACE("MAIN()");	// magic expression used to filter for test
 	cerr << "anon_static sitting at " << &anon_static << endl;
 	cerr << "anon_dynamic sitting at " << &*anon_dynamic << endl;
-#if 1
+
 	actually_called_one();
 	actually_called_one();
-#endif
-#if 1
+
 	actually_called_two();
 	actually_called_two();
-#endif
+
 	return 0;
 }
 

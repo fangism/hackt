@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.5 2005/01/21 20:52:03 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.6 2005/01/27 23:35:58 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -172,6 +172,7 @@ UTIL_HEADER_FILES = \
 	util/STL/reverse_iterator.h \
 	util/STL/stack_fwd.h \
 	util/STL/valarray_fwd.h \
+	util/STL/vector_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
 	util/array_traits.h \
@@ -191,9 +192,14 @@ UTIL_HEADER_FILES = \
 	util/list_vector.tcc \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
+	util/memory/list_vector_pool.tcc \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
+	util/memory/pointer_manipulator.h \
+	util/memory/excl_ptr.h \
+	util/memory/count_ptr.h \
+	util/memory/thread_lock.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_qmap.h \
 	util/multidimensional_qmap.tcc \
@@ -222,6 +228,7 @@ UTIL_HEADER_FILES = \
 	util/qmap.tcc \
 	util/sstream.h \
 	util/stacktrace.h \
+	util/static_trace.h \
 	util/string_fwd.h \
 	util/sublist.h \
 	util/sublist.tcc \
@@ -229,6 +236,7 @@ UTIL_HEADER_FILES = \
 	util/unique_list.tcc \
 	util/using_istream.h \
 	util/using_ostream.h \
+	util/what_fwd.h \
 	util/what.h \
 	util/what.tcc \
 	util/binders.h \
@@ -250,13 +258,15 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
-	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	util/stacktrace.cc \
+	util/static_trace.cc \
+	util/memory/thread_lock.cc \
+	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \

@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artc-expect.sh"
-#	$Id: artc-expect.sh,v 1.4.4.1 2005/01/17 22:08:55 fang Exp $
+#	$Id: artc-expect.sh,v 1.4.4.2 2005/01/27 23:36:28 fang Exp $
 
 # $1 is the executable, expecting input from stdin
 # $2 is the path to the source directory, which is not necessarily ./
@@ -38,7 +38,7 @@ else
 	touch $bldroot.stderr.filter
 fi
 
-diff $bldroot.stderr.filter $bldroot.test.filter 2>&1 | cat > $bldroot.diff
+diff -u $bldroot.stderr.filter $bldroot.test.filter 2>&1 | cat > $bldroot.diff
 
 # first-try: if different, see if it's because of bison...
 # if so, re-run using bison's expected output
