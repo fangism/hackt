@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.10.4.1.2.1 2005/01/26 20:55:25 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.10.4.1.2.2 2005/01/27 00:56:08 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -175,14 +175,14 @@ persistent_object_manager::__read_pointer(istream& f,
 	if (p) {
 		size_t* c = lookup_ref_count(p);
 		NEVER_NULL(c);
-#if 1
+#if 0
 		cerr << "ref_count @ " << p << " = " << *c << endl;
 #endif
 		// uses the unsafe constructor
 		const_cast<P&>(ptr) = P(p, c);
 		// the reference-count pointer is responsible for
 		// deleting the size_t*
-#if 1
+#if 0
 		cerr << "ref_count @ " << p << " = " << *c << endl;
 #endif
 	} else {

@@ -1,12 +1,13 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.1.4.1.2.5 2005/01/25 21:41:04 fang Exp $
+	$Id: pool_module_a.cc,v 1.1.4.1.2.6 2005/01/27 00:56:17 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 #define	ENABLE_STACKTRACE				1
+#define	ENABLE_STATIC_TRACE				1
 
 #include <iostream>
 #include "using_ostream.h"

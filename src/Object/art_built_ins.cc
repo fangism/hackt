@@ -2,13 +2,13 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.15.4.1.2.2 2005/01/25 05:22:51 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15.4.1.2.3 2005/01/27 00:55:17 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
 #define	__ART_BUILT_INS_CC__
 
-#define	DEBUG_ART_BUILT_INS			1
+#define	DEBUG_ART_BUILT_INS			0
 
 #include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.h"

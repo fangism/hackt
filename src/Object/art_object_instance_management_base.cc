@@ -1,13 +1,13 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.7.12.2 2005/01/26 22:30:40 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.7.12.3 2005/01/27 00:55:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 #define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
-// #define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>

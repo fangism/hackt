@@ -3,13 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11.4.4.4.1 2005/01/25 05:22:56 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11.4.4.4.2 2005/01/27 00:55:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>

@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.5.4.1.2.3 2005/01/24 22:28:45 fang Exp $
+	$Id: stacktrace.h,v 1.5.4.1.2.4 2005/01/27 00:56:09 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -21,34 +21,34 @@
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
 	#define	USING_STACKTRACE	using util::stacktrace;
-	#define	STACKTRACE(str)	stacktrace __stacktrace__(str)
+	#define	STACKTRACE(str)	util::stacktrace __stacktrace__(str)
 	/**
 		No user-supplied string required, uses __PRETTY_FUNCTION__
 		built-in internal string.  Is this gcc-only?
 		There's always __func__ for brevity.
 	 */
 	#define	STACKTRACE_BRIEF					\
-			stacktrace __stacktrace__(__func__)
+			util::stacktrace __stacktrace__(__func__)
 	#define	STACKTRACE_VERBOSE					\
-			stacktrace __stacktrace__(__PRETTY_FUNCTION__)
+			util::stacktrace __stacktrace__(__PRETTY_FUNCTION__)
 	/**
 		This enables echoing each time trace stack is updated, i.e., 
 		upon entering and leaving function call stack 
 		or lexical scopes.  
 	 */
 	#define STACKTRACE_ECHO_ON					\
-			stacktrace::echo __echo_stacktrace__(1)
+			util::stacktrace::echo __echo_stacktrace__(1)
 	#define STACKTRACE_ECHO_OFF					\
-			stacktrace::echo __echo_stacktrace__(0)
+			util::stacktrace::echo __echo_stacktrace__(0)
 	#define	STACKTRACE_STREAM					\
-			stacktrace::stream()
+			util::stacktrace::stream()
 	#define REDIRECT_STACKTRACE(os)					\
-			stacktrace::redirect __redir_stacktrace__(os)
+			util::stacktrace::redirect __redir_stacktrace__(os)
 	#define	ASSERT_STACKTRACE(expr)					\
-			if (!(expr)) { stacktrace::full_dump(); assert(expr); }
+			if (!(expr)) { util::stacktrace::full_dump(); assert(expr); }
 	#define	REQUIRES_STACKTRACE_STATIC_INIT				\
-			static const stacktrace::init_token		\
-			__stacktrace_init__(stacktrace::require_static_init());
+			static const util::stacktrace::init_token		\
+			__stacktrace_init__(util::stacktrace::require_static_init());
 #else
 	#define	USING_STACKTRACE
 	#define	STACKTRACE(str)
@@ -73,9 +73,7 @@
 
 #include "STL/list_fwd.h"
 #include "STL/stack_fwd.h"
-#if 1
 #include <stack>
-#endif
 
 // need count pointer to be able to guarantee proper initialization
 // across modules during static construction debugging

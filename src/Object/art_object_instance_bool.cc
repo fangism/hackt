@@ -1,15 +1,15 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.8.4.3.4.1 2005/01/26 20:55:10 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.8.4.3.4.2 2005/01/27 00:55:25 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
 #define	__ART_OBJECT_INSTANCE_BOOL_CC__
 
-#define	DEBUG_LIST_VECTOR_POOL				1
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
-#define	ENABLE_STACKTRACE				1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>

@@ -1,10 +1,10 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.12.4.2.2.1 2005/01/26 20:55:25 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12.4.2.2.2 2005/01/27 00:56:08 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <fstream>
 
@@ -661,7 +661,7 @@ persistent_object_manager::load_objects(void) {
 	// 0th object is reserved NULL, skip it
 	size_t i = 1;
 	for ( ; i<max; i++) {
-#if 1
+#if 0
 		ostringstream oss;
 		oss << "iter: " << i;
 		STACKTRACE(oss.str());
@@ -671,7 +671,7 @@ persistent_object_manager::load_objects(void) {
 		if (o) {
 			o->load_object(*this);
 			// virtual call, unavoidable const cast
-#if 1
+#if 0
 			o->what(cerr << "@ " << o << ", ") << endl;
 #endif
 		}

@@ -5,14 +5,14 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.8.12.2 2005/01/26 20:54:58 fang Exp $
+	$Id: art_main.cc,v 1.8.12.3 2005/01/27 00:55:11 fang Exp $
  */
 
 #include <iostream>
 #include <fstream>
 #include "art++.h"			// has everything you need
 
-#define ENABLE_STACKTRACE		1
+#define ENABLE_STACKTRACE		0
 
 #include "stacktrace.h"
 USING_STACKTRACE
@@ -69,7 +69,7 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 
 //	global->dump(cerr);
 	{
-#if 1
+#if 0
 	STACKTRACE("main-quarantine");
 	persistent_object_manager::dump_reconstruction_table = true;
 #endif

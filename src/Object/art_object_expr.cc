@@ -1,15 +1,15 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.5.2.4 2005/01/26 20:55:05 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.5.2.5 2005/01/27 00:55:21 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
-#define	DEBUG_LIST_VECTOR_POOL				1
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
-#define	ENABLE_STACKTRACE				1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>
@@ -574,7 +574,7 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() {
 	STACKTRACE("~dynamic_param_expr_list()");
-#if 1
+#if 0
 	cerr << "list contains " << size() << " pointers." << endl;
 	dump(cerr) << endl;
 	cerr << "reference counts in list:" << endl;

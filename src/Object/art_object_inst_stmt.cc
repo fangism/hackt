@@ -1,16 +1,16 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.3 2005/01/26 20:55:09 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.11.4.3.4.4 2005/01/27 00:55:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
 #define	__ART_OBJECT_INST_STMT_CC__
 
 // for debugging only, before inclusion of header file
-#define	DEBUG_LIST_VECTOR_POOL				1
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
-#define	ENABLE_STACKTRACE				1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
@@ -709,7 +709,7 @@ data_instantiation_statement::data_instantiation_statement(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_instantiation_statement::~data_instantiation_statement() {
 	STACKTRACE("~data_instantiation_statement()");
-#if 1
+#if 0
 	cerr << "data-type-ref has " << type.refs() << " references." << endl;
 #endif
 }

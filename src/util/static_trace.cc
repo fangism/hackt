@@ -2,8 +2,11 @@
 	\file "static_trace.cc"
 	Implementation (simple) of static initialization tracing utility
 	class. 
-	$Id: static_trace.cc,v 1.1.2.1 2005/01/25 05:24:19 fang Exp $
+	$Id: static_trace.cc,v 1.1.2.2 2005/01/27 00:56:09 fang Exp $
  */
+
+// force proper preprocessing of its own header file
+#define	ENABLE_STATIC_TRACE		1
 
 #include <iostream>
 #include "static_trace.h"
@@ -33,7 +36,6 @@ static_end::~static_end() {
 	INVARIANT(cerr.good());
 	cerr << "START-destruction: " << msg << endl;
 }
-
 
 }	// end namespace util
 

@@ -2,23 +2,32 @@
 	\file "static_trace.h"
 	Utility class for identifiying global static initialization
 	and destruction of modules, and debugging ordering...
-	$Id: static_trace.h,v 1.1.2.1 2005/01/25 05:24:20 fang Exp $
+	$Id: static_trace.h,v 1.1.2.2 2005/01/27 00:56:10 fang Exp $
  */
 
 #ifndef	__UTIL_STATIC_TRACE_H__
 #define	__UTIL_STATIC_TRACE_H__
 
-#include <string>
-using std::string;
-
 #ifndef	ENABLE_STATIC_TRACE
-#define	ENABLE_STATIC_TRACE		1
+#define	ENABLE_STATIC_TRACE		0
 #endif
 
+//=============================================================================
 // Public Macros
 #if ENABLE_STATIC_TRACE
+	/**
+		Define this as the first static object in a module
+		to trace initialization and destruction ordering.
+		\param m any string.
+	 */
 	#define	STATIC_TRACE_BEGIN(m)					\
 		static const util::static_begin __static_trace_begin__(m);
+	/**
+		Define this as the last static object in a module
+		to trace initialization and destruction ordering.
+		\param m any string, preferably the same one as the 
+			beginning counterpart.
+	 */
 	#define	STATIC_TRACE_END(m)					\
 		static const util::static_end __static_trace_end__(m);
 #else
@@ -26,10 +35,21 @@ using std::string;
 	#define	STATIC_TRACE_END(m)
 #endif
 
-namespace util {
+//=============================================================================
+#if ENABLE_STATIC_TRACE
 
+#include <string>
+
+namespace util {
+using std::string;
+
+/**
+	Class intended for diagnosing when static initialization of a module
+	(translation unit) begins, and when its destruction ends.  
+ */
 class static_begin {
 private:
+	/// string that uniquely identifies this module
 	const string	msg;
 public:
 	static_begin(const string&);
@@ -37,8 +57,13 @@ public:
 
 };	// end class static begin
 
+/**
+	Class intended for diagnosing when static initialization of a module
+	(translation unit) ends, and when its destruction begins.  
+ */
 class static_end {
 private:
+	/// string that uniquely identifies this module
 	const string	msg;
 public:
 	static_end(const string&);
@@ -46,6 +71,9 @@ public:
 };	// end class static end
 
 }	// end namespace util
+#endif	// ENABLE_STATIC_TRACE
+//=============================================================================
+// else don't even bother defining class
 
 #endif	// __UTIL_STATIC_TRACE_H__
 

@@ -1,5 +1,3 @@
-START-initialization: stacktrace
-END---initialization: stacktrace
 \- int main(int, char**)
 | \- f_g
 | | \- f_c
@@ -16,5 +14,3 @@ END---initialization: stacktrace
 | /- float verbose_function_trace(const char*, int*)
 10
 /- int main(int, char**)
-START-destruction: stacktrace
-END---destruction: stacktrace

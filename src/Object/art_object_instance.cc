@@ -1,13 +1,13 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.38.4.2.4.3 2005/01/26 20:55:09 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.38.4.2.4.4 2005/01/27 00:55:24 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
 #define	__ART_OBJECT_INSTANCE_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>

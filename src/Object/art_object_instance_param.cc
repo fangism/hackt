@@ -1,13 +1,13 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.8.4.1.6.1 2005/01/25 05:22:56 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.8.4.1.6.2 2005/01/27 00:55:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
 #define	__ART_OBJECT_INSTANCE_PARAM_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 

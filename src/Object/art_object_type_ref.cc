@@ -1,13 +1,13 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.22.4.3.4.1 2005/01/26 20:55:14 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.22.4.3.4.2 2005/01/27 00:55:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
 #define	__ART_OBJECT_TYPE_REF_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 

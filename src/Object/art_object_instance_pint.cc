@@ -1,15 +1,15 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.4 2005/01/26 20:55:12 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.5 2005/01/27 00:55:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
 #define	__ART_OBJECT_INSTANCE_PINT_CC__
 
-#define	DEBUG_LIST_VECTOR_POOL				1
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
-#define ENABLE_STACKTRACE				1
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
+#define ENABLE_STACKTRACE				0
 
 #include <exception>
 #include <iostream>
@@ -602,7 +602,7 @@ pint_array<0>::pint_array(const scopespace& o, const string& n,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::~pint_array() {
 	STACKTRACE("~pint_scalar()");
-	STACKTRACE_STREAM << "@ " << this << endl;
+//	STACKTRACE_STREAM << "@ " << this << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

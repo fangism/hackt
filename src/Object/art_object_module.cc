@@ -1,13 +1,13 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.13.4.2.6.1 2005/01/26 20:55:13 fang Exp $
+ 	$Id: art_object_module.cc,v 1.13.4.2.6.2 2005/01/27 00:55:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
 #define	__ART_OBJECT_MODULE_CC__
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include "art_object_module.h"

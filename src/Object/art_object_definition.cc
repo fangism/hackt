@@ -1,13 +1,13 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.2.6.3 2005/01/26 22:30:38 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2.6.4 2005/01/27 00:55:20 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
 #define	__ART_OBJECT_DEFINITION_CC__
 
-#define ENABLE_STACKTRACE		1
+// #define ENABLE_STACKTRACE		1
 
 #include <exception>
 #include <iostream>
@@ -1206,30 +1206,10 @@ built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
-
-#if 0
-	definition_base::write_object_base(m, f);	// is empty
-#else
 	definition_base::write_object_base_fake(m, f);	// is empty
-#endif
-
-#if 0
-	INVARIANT(used_id_map.empty());
-	scopespace::write_object_base(m, f);
-#else
 	scopespace::write_object_base_fake(m, f);
-#endif
-
 	// connections and assignments
-#if 0
-	// need to IMITATE sequential_scope::write_object_base
-	// const list<never_ptr<const instantiation_statement> > bogus;
-	const sequential_scope::instance_management_list_type bogus;
-	m.write_pointer_list(f, bogus);		// empty
-#else
 	sequential_scope::write_object_base_fake(m, f);
-#endif
-
 	WRITE_OBJECT_FOOTER(f);
 }
 
