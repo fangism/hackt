@@ -132,14 +132,6 @@ private:
 					reconstruction_function_map_type;
 
 private:
-#if 0
-	/**
-		Lookup map of reconstruction functions (allocators).
-		Every persistent type must statically register 
-		its type in this map.  
-	 */
-	static reconstruction_function_map_type	reconstruction_function_map;
-#endif
 
 	/** maps pointer address to entry index */
 	addr_to_index_map_type			addr_to_index_map;
@@ -167,6 +159,39 @@ public:
 
 	/** Wrapping static object in accessor guarantees orderly initialization */
 private:
+#if 0
+	/**
+		Lookup map of reconstruction functions (allocators).
+		Every persistent type must statically register 
+		its type in this map.  
+	 */
+	static reconstruction_function_map_type	reconstruction_function_map;
+#endif
+
+	/**
+		Why naked pointer?  because objects of non-built-in type
+		are not guaranteed to be initialized.  
+		Built-in types, such as pointers, are guaranteed
+		to be initialized before static objects are initialized.  
+		It would take extra work for this memory to be properly	
+		released, but because there's only one global static instance
+		throughout the entire program, we say, "screw it".
+	 */
+	static
+	reconstruction_function_map_type*
+	the_reconstruction_function_map_ptr;
+
+	/**
+		Extra hackery to ensure that the global private static
+		naked pointer is properly deleted.  
+	 */
+	static
+	excl_ptr<reconstruction_function_map_type>
+	the_reconstruction_function_map_ptr_wrapped;
+
+	/**
+		The safe accessor to global private static table.  
+	 */
 	static
 	reconstruction_function_map_type&
 	get_reconstruction_function_map(void);

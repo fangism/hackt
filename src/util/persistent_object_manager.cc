@@ -22,107 +22,6 @@
 
 namespace util {
 //=============================================================================
-
-#if 0
-OBSOLETE, but kept here for one revision as a historic landmark
-/**
-	The entries in this table should correspond to the enumerations in
-	type_index_enum, defined in "art_object_type_enum.h".  
-	Each function pointer is just a reference to a static function
-	that allocates (without initializing) an object of the corresponding
-	type, which also establishes its vptr, so that it can be used 
-	directly to invoke member functions.  
- */
-const reconstruct_function_ptr_type
-persistent_object_manager::
-reconstruction_function_table[MAX_TYPE_INDEX_ENUM] = {
-	NULL, 			// first slot is reserved
-
-	&module::construct_empty, 
-
-	&name_space::construct_empty, 
-
-	&process_definition::construct_empty, 
-	&process_definition_alias::construct_empty, 
-
-	&user_def_chan::construct_empty, 
-	&channel_definition_alias::construct_empty, 
-
-	&user_def_datatype::construct_empty, 
-	&enum_datatype_def::construct_empty, 
-	&datatype_definition_alias::construct_empty, 
-
-	&process_type_reference::construct_empty, 
-	&channel_type_reference::construct_empty, 
-	&data_type_reference::construct_empty, 
-
-	&process_instance_collection::construct_empty, 
-	&channel_instance_collection::construct_empty, 
-	&datatype_instance_collection::construct_empty, 
-	&pbool_instance_collection::construct_empty, 
-	&pint_instance_collection::construct_empty, 
-
-	// simple instance references
-	&process_instance_reference::construct_empty, 
-	&channel_instance_reference::construct_empty, 
-	&datatype_instance_reference::construct_empty, 
-	&pbool_instance_reference::construct_empty, 
-	&pint_instance_reference::construct_empty, 
-
-	// aggregate instance references
-	NULL, 
-	NULL, 
-	NULL, 
-	NULL, 
-	NULL, 
-
-	// member instance references
-	&process_member_instance_reference::construct_empty, 
-	&channel_member_instance_reference::construct_empty, 
-	&datatype_member_instance_reference::construct_empty, 
-
-	// expressions
-	&pbool_const::construct_empty, 
-	&pint_const::construct_empty, 
-
-	&const_range::construct_empty, 
-	&pint_range::construct_empty, 
-
-	&const_param_expr_list::construct_empty, 
-	&dynamic_param_expr_list::construct_empty, 
-
-	// index and range list
-	&const_index_list::construct_empty, 
-	&dynamic_index_list::construct_empty, 
-	&const_range_list::construct_empty, 
-	&dynamic_range_list::construct_empty, 
-
-	// symbolic expressions
-	&pint_unary_expr::construct_empty, 
-	&pbool_unary_expr::construct_empty, 
-	&arith_expr::construct_empty, 
-	&relational_expr::construct_empty, 
-	&logical_expr::construct_empty, 
-
-	// sequential instantiations
-	&process_instantiation_statement::construct_empty, 
-	&channel_instantiation_statement::construct_empty, 
-	&data_instantiation_statement::construct_empty, 
-	&pbool_instantiation_statement::construct_empty, 
-	&pint_instantiation_statement::construct_empty, 
-
-	// assignments and connections
-	&pbool_expression_assignment::construct_empty, 
-	&pint_expression_assignment::construct_empty, 
-	&aliases_connection::construct_empty, 
-	&port_connection::construct_empty, 
-	NULL, 	// &loop_scope::construct_empty, 
-	NULL, 	// &conditional_scope::construct_empty, 
-	// more reconstructors here...
-};	// end recontruction_function_table
-#endif
-
-//=============================================================================
 // class reconstruction_table_entry method definitions
 
 const ios_base::openmode
@@ -136,6 +35,24 @@ persistent_object_manager::dump_reconstruction_table = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+/**
+	Is statically initialized to NULL before any objects use it.  
+ */
+persistent_object_manager::reconstruction_function_map_type*
+persistent_object_manager::the_reconstruction_function_map_ptr = NULL;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Proper orderly initialization to guarantee that this
+	is properly deleted upon program termination.  
+	Note the use of unsafe "address-taking" of reference to 
+	initialize the pointer-class object.  
+ */
+excl_ptr<persistent_object_manager::reconstruction_function_map_type>
+persistent_object_manager::the_reconstruction_function_map_ptr_wrapped(
+	&get_reconstruction_function_map());
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent_object_manager::reconstruction_table_entry::
 	reconstruction_table_entry() :
 		otype(), recon_addr(NULL), ref_count(NULL), 
@@ -423,9 +340,23 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
  */
 persistent_object_manager::reconstruction_function_map_type&
 persistent_object_manager::get_reconstruction_function_map(void) {
+#if 0
 	static reconstruction_function_map_type
 		reconstruction_function_map;
 	return reconstruction_function_map;
+#else
+	if (!the_reconstruction_function_map_ptr) {
+		the_reconstruction_function_map_ptr = 
+#if 0
+			excl_ptr<reconstruction_function_map_type>(
+				new reconstruction_function_map_type);
+#else
+			new reconstruction_function_map_type;
+#endif
+		assert(the_reconstruction_function_map_ptr);
+	}
+	return *the_reconstruction_function_map_ptr;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
