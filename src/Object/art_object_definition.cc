@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.26 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.27 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -124,8 +124,8 @@ void
 definition_base::fill_template_actuals_map(
 		template_actuals_map_type& am, 
 		const param_expr_list& al) const {
-	assert(am.empty());
-	assert(template_formals_list.size() == al.size());
+	INVARIANT(am.empty());
+	INVARIANT(template_formals_list.size() == al.size());
 	// convert to virtual call interface to param_expr_list?
 	const const_param_expr_list* cpl =
 		IS_A(const const_param_expr_list*, &al);
@@ -139,21 +139,21 @@ if (cpl) {
 		// const-reference saves unnecessary copying
 		const template_formals_value_type& tf(*f_iter);
 		// reminder: value type is pointer to param_instance_collection
-		assert(tf);
+		NEVER_NULL(tf);
 		// reminder: actuals map is of count_ptr
-		assert(*i);
+		NEVER_NULL(*i);
 		am[tf->get_name()] = *i;
 	}
 } else {
-	assert(dpl);
+	NEVER_NULL(dpl);
 	dynamic_param_expr_list::const_iterator i = dpl->begin();
 	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
 		// const-reference saves unnecessary copying
 		const template_formals_value_type& tf(*f_iter);
 		// reminder: value type is pointer to param_instance_collection
-		assert(tf);
+		NEVER_NULL(tf);
 		// reminder: actuals map is of count_ptr
-		assert(*i);
+		NEVER_NULL(*i);
 		am[tf->get_name()] = *i;
 	}
 }
@@ -227,8 +227,8 @@ definition_base::lookup_port_formal(const string& id) const {
  */
 bool
 definition_base::equivalent_template_formals(
-		never_ptr<const definition_base> d) const {
-	assert(d);
+		const never_ptr<const definition_base> d) const {
+	NEVER_NULL(d);
 	const template_formals_list_type& dtemp = d->template_formals_list;
 	if (template_formals_list.size() != dtemp.size()) {
 		// useful error message here
@@ -242,8 +242,8 @@ definition_base::equivalent_template_formals(
 	for ( ; i!=template_formals_list.end() && j!=dtemp.end(); i++, j++) {
 		const never_ptr<const param_instance_collection> itf(*i);
 		const never_ptr<const param_instance_collection> jtf(*j);
-		assert(itf);		// template formals not optional
-		assert(jtf);		// template formals not optional
+		NEVER_NULL(itf);	// template formals not optional
+		NEVER_NULL(jtf);	// template formals not optional
 		// only type and size need to be equal, not name
 		if (!itf->template_formal_equivalent(jtf)) {
 			// useful error message goes here
@@ -253,7 +253,7 @@ definition_base::equivalent_template_formals(
 		// else continue checking
 	}
 	// sanity check, we made sure sizes match.
-	assert(i == template_formals_list.end() && j == dtemp.end());
+	INVARIANT(i == template_formals_list.end() && j == dtemp.end());
 	return true;
 }
 
@@ -287,7 +287,7 @@ definition_base::get_qualified_name(void) const {
  */
 bool
 definition_base::certify_template_arguments(
-		never_ptr<dynamic_param_expr_list> ta) const {
+		const never_ptr<dynamic_param_expr_list> ta) const {
 if (ta) {
 	// first, number of arguments must match
 	const size_t a_size = ta->size();
@@ -304,7 +304,7 @@ if (ta) {
 		for ( ; f_iter!=f_end; f_iter++) {
 			const never_ptr<const param_instance_collection>
 				pinst(*f_iter);
-			assert(pinst);
+			NEVER_NULL(pinst);
 			const count_ptr<const param_expr>
 				default_expr(pinst->default_value());
 			if (!default_expr) {
@@ -326,7 +326,7 @@ if (ta) {
 		const count_ptr<const param_expr> pex(*p_iter);
 		const never_ptr<const param_instance_collection>
 			pinst(*f_iter);
-		assert(pinst);
+		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
 			if (!pinst->type_check_actual_param_expr(*pex)) {
@@ -379,7 +379,7 @@ definition_base::certify_port_actuals(const object_list& ol) const {
 excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
 	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
-	assert(check_null_template_argument());
+	INVARIANT(check_null_template_argument());
 	if (template_formals_list.empty())
 		return return_type(NULL);
 	// defaulting to dynamic_param_expr_list
@@ -388,7 +388,7 @@ definition_base::make_default_template_arguments(void) const {
 		template_formals_list.begin();
 	for ( ; i!=template_formals_list.end(); i++) {
 		const count_ptr<const param_expr> d((*i)->default_value());
-		assert(d);	// everything must have default
+		NEVER_NULL(d);	// everything must have default
 		ret->push_back(d);
 	}
 	// should transfer ownership
@@ -433,19 +433,19 @@ definition_base::add_template_formal(
 
 	// this construction is ugly, TO DO: define clean interface
 	scopespace* ss = IS_A(scopespace*, this);
-	assert(ss);
+	NEVER_NULL(ss);
 	// this creates and adds to the definition
 	// and bi-links statement to collection
 	const never_ptr<const param_instance_collection>
 		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
-	assert(pf);
-	assert(pf->get_name() == id);	// consistency check
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);	// consistency check
 
 	template_formals_list.push_back(pf);
 	template_formals_map[id] = pf;
 
 	// sanity check
-	assert(lookup_template_formal(id));
+	INVARIANT(lookup_template_formal(id));
 	// later return a never_ptr<>
 	return pf;
 }
@@ -460,7 +460,7 @@ never_ptr<const instance_collection_base>
 definition_base::add_port_formal(
 		never_ptr<instantiation_statement> f, 
 		const token_identifier& i) {
-	assert(0);
+	DIE;
 	return never_ptr<const instance_collection_base>(NULL);
 }
 
@@ -537,7 +537,7 @@ definition_base::load_object_template_formals(
 		const_cast<param_instance_collection*>(&*inst_ptr)->load_object(m);
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
-	assert(template_formals_list.size() == template_formals_map.size());
+	INVARIANT(template_formals_list.size() == template_formals_map.size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -618,10 +618,10 @@ if (pa) {
 		if (pl->is_static_constant()) {
 			excl_ptr<dynamic_param_expr_list>
 				dpl(pl.is_a_xfer<dynamic_param_expr_list>());
-			assert(dpl);	// temporary
+			NEVER_NULL(dpl);	// temporary
 			count_ptr<const fundamental_type_reference>
 				cftr(bd->make_fundamental_type_reference(dpl));
-			assert(cftr.refs() == 1);
+			INVARIANT(cftr.refs() == 1);
 			return return_type(cftr.exclusive_release());
 		} else {
 			// not static constant scalar, conservatively, 
@@ -630,7 +630,7 @@ if (pa) {
 	} else {
 		count_ptr<const fundamental_type_reference>
 			cftr(bd->make_fundamental_type_reference());
-		assert(cftr.refs() == 1);
+		INVARIANT(cftr.refs() == 1);
 		return return_type(cftr.exclusive_release());
 	}
 }
@@ -825,7 +825,7 @@ user_def_chan::construct_empty(const int i) {
 void
 user_def_chan::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -846,7 +846,7 @@ void
 user_def_chan::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
@@ -922,9 +922,9 @@ channel_definition_alias::get_base_type_ref(void) const {
 bool
 channel_definition_alias::assign_typedef(
 		excl_ptr<const fundamental_type_reference>& f) {
-	assert(f);
+	NEVER_NULL(f);
 	base = f.is_a_xfer<const channel_type_reference>();
-	assert(base);
+	NEVER_NULL(base);
 	return true;
 }
 
@@ -962,7 +962,7 @@ void
 channel_definition_alias::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -977,7 +977,7 @@ void
 channel_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
@@ -1041,7 +1041,7 @@ built_in_datatype_def::built_in_datatype_def(
 		scopespace(), 
 		key(n), 
 		parent(o) {
-	assert(p);
+	NEVER_NULL(p);
 //	const string param_str(p->get_name());
 	add_template_formal(p.as_a_xfer<instance_collection_base>());
 	mark_defined();
@@ -1118,7 +1118,7 @@ built_in_datatype_def::add_template_formal(
 	STACKTRACE("built_in_datatype_def::add_template_formal()");
 	const never_ptr<const param_instance_collection>
 		pf(f.is_a<const param_instance_collection>());
-	assert(pf);
+	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	const never_ptr<const object> probe(
 		datatype_definition_base::lookup_object_here(pf->get_name()));
@@ -1136,7 +1136,7 @@ built_in_datatype_def::add_template_formal(
 	// no used_id_map to update, b/c this is not a scopespace!
 
 	// sanity check
-	assert(lookup_template_formal(pf->hash_string()));
+	INVARIANT(lookup_template_formal(pf->hash_string()));
 	// later return a never_ptr<>
 	return pf;
 }
@@ -1166,7 +1166,7 @@ built_in_datatype_def::collect_transient_info(
 void
 built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	// use bogus parent pointer
@@ -1189,7 +1189,7 @@ void
 built_in_datatype_def::load_object(persistent_object_manager& m) {
 	cerr << "ERROR: built_in_datatype_def::load_object() "
 		"should never be called!" << endl;
-	assert(0);
+	DIE;
 	exit(1);
 }
 
@@ -1198,7 +1198,7 @@ void
 built_in_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
 		"should never be called!" << endl;
-	assert(0);
+	DIE;
 	exit(1);
 }
 
@@ -1247,7 +1247,7 @@ built_in_param_def::get_parent(void) const {
 excl_ptr<definition_base>
 built_in_param_def::make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const {
-	assert(0);
+	DIE;
 	return excl_ptr<definition_base>(NULL);
 }
 
@@ -1265,7 +1265,7 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 count_ptr<const fundamental_type_reference>
 built_in_param_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	assert(!ta);
+	INVARIANT(!ta);
 	return count_ptr<const fundamental_type_reference>(
 		new param_type_reference(
 			never_ptr<const built_in_param_def>(this)));
@@ -1382,10 +1382,10 @@ enum_datatype_def::make_fundamental_type_reference(
  */
 bool
 enum_datatype_def::require_signature_match(
-		never_ptr<const definition_base> d) const {
-	assert(d);
-	assert(key == d->get_name());
-	never_ptr<const enum_datatype_def>
+		const never_ptr<const definition_base> d) const {
+	NEVER_NULL(d);
+	INVARIANT(key == d->get_name());
+	const never_ptr<const enum_datatype_def>
 		ed(d.is_a<const enum_datatype_def>());
 	if (ed) {
 		// only names need to match...
@@ -1410,7 +1410,7 @@ enum_datatype_def::add_member(const token_identifier& em) {
 	if (probe) {
 		const never_ptr<const enum_member> probe_em(
 			probe.is_a<const enum_member>());
-		assert(probe_em);	// can't contain enything else
+		NEVER_NULL(probe_em);	// can't contain enything else
 		return false;
 	} else {
 #if 0
@@ -1420,7 +1420,7 @@ enum_datatype_def::add_member(const token_identifier& em) {
 #else
 		excl_ptr<enum_member> member_ptr(new enum_member(em));
 		used_id_map[em] = member_ptr;
-		assert(!member_ptr);
+		INVARIANT(!member_ptr);
 #endif
 		return true;
 	}
@@ -1505,7 +1505,7 @@ void
 enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "ERROR: not supposed to call "
 		"enum_datatype_def::load_used_id_map_object()!" << endl;
-	assert(0);
+	DIE;
 }
 
 //=============================================================================
@@ -1625,7 +1625,7 @@ user_def_datatype::construct_empty(const int i) {
 void
 user_def_datatype::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -1643,7 +1643,7 @@ void
 user_def_datatype::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
@@ -1732,9 +1732,9 @@ datatype_definition_alias::get_base_type_ref(void) const {
 bool
 datatype_definition_alias::assign_typedef(
 		excl_ptr<const fundamental_type_reference>& f) {
-	assert(f);
+	NEVER_NULL(f);
 	base = f.is_a_xfer<const data_type_reference>();
-	assert(base);
+	NEVER_NULL(base);
 	return true;
 }
 
@@ -1759,7 +1759,7 @@ datatype_definition_alias::make_fundamental_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 datatype_definition_alias::require_signature_match(
-		never_ptr<const definition_base> d) const {
+		const never_ptr<const definition_base> d) const {
 	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
 	return false;
 }
@@ -1798,7 +1798,7 @@ void
 datatype_definition_alias::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -1813,7 +1813,7 @@ void
 datatype_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
@@ -1884,7 +1884,7 @@ process_definition::process_definition(
 		port_formals_list(), 
 		port_formals_map() {
 	// fill me in...
-	// assert(o);		// no: because of partial reconstruction
+	// NEVER_NULL(o);		// no: because of partial reconstruction
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2046,8 +2046,8 @@ never_ptr<const instance_collection_base>
 process_definition::add_port_formal(
 		never_ptr<instantiation_statement> f, 
 		const token_identifier& id) {
-	assert(f);
-	assert(!f.is_a<param_instantiation_statement>());
+	NEVER_NULL(f);
+	INVARIANT(!f.is_a<param_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
@@ -2058,17 +2058,17 @@ process_definition::add_port_formal(
 	}
 	}
 
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		pf(add_instance(f, id));
-	assert(pf);
-	assert(pf->get_name() == id);
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);
 
 	{
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
 	port_formals_list.push_back(pf);
 	port_formals_map[id] = pf;
-	assert(lookup_port_formal(id));
+	INVARIANT(lookup_port_formal(id));
 	}
 
 	return pf;
@@ -2086,8 +2086,8 @@ process_definition::add_port_formal(
  */
 bool
 process_definition::require_signature_match(
-		never_ptr<const definition_base> d) const {
-	assert(d);
+		const never_ptr<const definition_base> d) const {
+	NEVER_NULL(d);
 	const never_ptr<const process_definition>
 		pd(d.is_a<const process_definition>());
 	if (!pd) {
@@ -2127,8 +2127,8 @@ process_definition::require_signature_match(
  */
 bool
 process_definition::equivalent_port_formals(
-		never_ptr<const process_definition> p) const {
-	assert(p);
+		const never_ptr<const process_definition> p) const {
+	NEVER_NULL(p);
 	const port_formals_list_type& pports = p->port_formals_list;
 	if (port_formals_list.size() != pports.size()) {
 		cerr << "ERROR: number of port formal parameters "
@@ -2142,15 +2142,15 @@ process_definition::equivalent_port_formals(
 	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
 		const never_ptr<const instance_collection_base> ipf(*i);
 		const never_ptr<const instance_collection_base> jpf(*j);
-		assert(ipf);
-		assert(jpf);
+		NEVER_NULL(ipf);
+		NEVER_NULL(jpf);
 		if (!ipf->port_formal_equivalent(jpf)) {
 			// descriptive error message, please
 			cerr << "ERROR: port formals do not match!" << endl;
 			return false;
 		}
 	}
-	assert(i == port_formals_list.end() && j == pports.end());
+	INVARIANT(i == port_formals_list.end() && j == pports.end());
 	return true;
 }
 
@@ -2185,7 +2185,7 @@ process_definition::construct_empty(const int i) {
 void
 process_definition::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -2202,7 +2202,7 @@ void
 process_definition::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
@@ -2261,7 +2261,7 @@ process_definition::load_object_port_formals(
 		end = port_formals_list.end();
 	for ( ; iter!=end; iter++) {
 		const port_formals_value_type inst_ptr = *iter;
-		assert(inst_ptr);
+		NEVER_NULL(inst_ptr);
 		const_cast<instance_collection_base*>(&*inst_ptr)->load_object(m);
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
@@ -2331,9 +2331,9 @@ process_definition_alias::get_base_type_ref(void) const {
 bool
 process_definition_alias::assign_typedef(
 		excl_ptr<const fundamental_type_reference>& f) {
-	assert(f);
+	NEVER_NULL(f);
 	base = f.is_a_xfer<const process_type_reference>();
-	assert(base);
+	NEVER_NULL(base);
 	return true;
 }
 
@@ -2389,7 +2389,7 @@ void
 process_definition_alias::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
@@ -2404,7 +2404,7 @@ void
 process_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.12 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_module.cc,v 1.13 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -40,7 +40,7 @@ module::module() :
 module::module(const string& s) :
 		object(), persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")), unrolled(false) {
-	assert(global_namespace);
+	NEVER_NULL(global_namespace);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -113,7 +113,7 @@ if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 void
 module::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
@@ -127,7 +127,7 @@ void
 module::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	read_string(f, name);
 	m.read_pointer(f, global_namespace);

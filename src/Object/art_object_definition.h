@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.21 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_definition.h,v 1.22 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -203,10 +203,11 @@ public:
 	certify_port_actuals(const object_list& ol) const;
 
 	bool
-	equivalent_port_formals(never_ptr<const process_definition> p) const;
+	equivalent_port_formals(
+		const never_ptr<const process_definition> p) const;
 
 	bool
-	require_signature_match(never_ptr<const definition_base> d) const;
+	require_signature_match(const never_ptr<const definition_base> d) const;
 
 // methods for object file I/O
 public:
@@ -308,7 +309,7 @@ virtual	count_ptr<const fundamental_type_reference>
 		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
 
 virtual	bool
-	require_signature_match(never_ptr<const definition_base> d) const = 0;
+	require_signature_match(const never_ptr<const definition_base> d) const = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;
@@ -369,7 +370,7 @@ public:
 	add_template_formal(excl_ptr<instance_collection_base>& f);
 
 	bool
-	require_signature_match(never_ptr<const definition_base> d) const
+	require_signature_match(const never_ptr<const definition_base> d) const
 		{ assert(d); return key == d->get_name(); }
 		// really, this should never be called...
 public:
@@ -442,7 +443,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 	bool
-	require_signature_match(never_ptr<const definition_base> d) const;
+	require_signature_match(const never_ptr<const definition_base> d) const;
 
 	bool
 	add_member(const token_identifier& em);
@@ -536,7 +537,7 @@ public:
 	dump(ostream& o) const;
 
 	bool
-	require_signature_match(never_ptr<const definition_base> d) const
+	require_signature_match(const never_ptr<const definition_base> d) const
 		{ return false; }
 
 	count_ptr<const fundamental_type_reference>
@@ -592,7 +593,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 	bool
-	require_signature_match(never_ptr<const definition_base> d) const;
+	require_signature_match(const never_ptr<const definition_base> d) const;
 
 public:
 	PERSISTENT_METHODS

@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-01-13	David Fang	<fangism@users.sourceforge.net>
+
+	* More clean up in the src/Object directory, 
+	  replaced assert() with NEVER_NULL and INVARIANT macros.  
+
+	* Added some notes regarding parser.  
+
+	* Tested everything with bison-2.0 -generated parser, all good!
+
+	* Added -ansi compilation flag to everything.  
+
+
 2005-01-12	David Fang	<fangism@users.sourceforge.net>
 
 	* Massive clean up of code in the src/Object directory.

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.18 2005/01/13 05:28:30 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.19 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -61,7 +61,7 @@ simple_instance_reference::simple_instance_reference(
 		array_indices(i), 
 		inst_state(st) {
 	// in sub-type constructors, 
-	// assert(array_indices->size < get_inst_base->dimensions());
+	// INVARIANT(array_indices->size < get_inst_base->dimensions());
 }
 #endif
 

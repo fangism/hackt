@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.5 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.6 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -88,7 +88,7 @@ channel_instance_collection::make_instance_reference(void) const {
 count_ptr<member_instance_reference_base>
 channel_instance_collection::make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<channel_member_instance_reference>(
 		new channel_member_instance_reference(

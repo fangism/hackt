@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.35 2005/01/13 05:28:30 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.36 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -587,7 +587,7 @@ process_instance_collection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 process_instance_collection::get_type_ref(void) const {
-	assert(!index_collection.empty());
+	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
 
@@ -621,7 +621,7 @@ process_instance_collection::make_instance_reference(void) const {
 count_ptr<member_instance_reference_base>
 process_instance_collection::make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<process_member_instance_reference>(
 		new process_member_instance_reference(
@@ -707,7 +707,7 @@ channel_instance_collection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 channel_instance_collection::get_type_ref(void) const {
-	assert(!index_collection.empty());
+	INVARIANT(!index_collection.empty());
 	return (*index_collection.begin())->get_type_ref();
 }
 
@@ -742,7 +742,7 @@ channel_instance_collection::make_instance_reference(void) const {
 count_ptr<member_instance_reference_base>
 channel_instance_collection::make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const {
-	assert(b);
+	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<channel_member_instance_reference>(
 		new channel_member_instance_reference(

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.6 2005/01/13 05:28:29 fang Exp $
+	$Id: art_object_definition_base.h,v 1.7 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -154,12 +154,12 @@ protected:
 	// MAY be equivalent
 	bool
 	equivalent_template_formals(
-	never_ptr<const definition_base> d) const;
+		const never_ptr<const definition_base> d) const;
 
 protected:
 	bool
 	certify_template_arguments(
-	never_ptr<dynamic_param_expr_list> ta) const;
+		const never_ptr<dynamic_param_expr_list> ta) const;
 
 public:
 	excl_ptr<dynamic_param_expr_list>
@@ -199,7 +199,7 @@ virtual	string
 
 /** definition signature comparison, true if equal */
 virtual	bool
-	require_signature_match(never_ptr<const definition_base> d) const
+	require_signature_match(const never_ptr<const definition_base> d) const
 		{ return false; }	// temporary, should be pure
 
 /**

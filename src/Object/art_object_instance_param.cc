@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.6 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.7 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -62,7 +62,7 @@ param_instance_collection::dump(ostream& o) const {
 	index_collection_type::const_iterator i = index_collection.begin();
 	const index_collection_type::const_iterator e = index_collection.end();
 	for ( ; i!=e; i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		const index_collection_item_ptr_type
 			ind((*i)->get_indices());
 		if (ind)
@@ -102,7 +102,7 @@ param_instance_collection::is_template_formal(void) const {
 	if (def) {
 		return def->lookup_template_formal(key);
 	} else {
-		assert(owner.is_a<const name_space>());
+		INVARIANT(owner.is_a<const name_space>());
 		// is owned by a namespace, i.e. actually instantiated
 		return false;
 	}
@@ -208,9 +208,9 @@ count_ptr<member_instance_reference_base>
 param_instance_collection::make_member_instance_reference(
 		const count_ptr<const simple_instance_reference>& b) const {
 	typedef	count_ptr<member_instance_reference_base>	return_type;
-	assert(b);
+	NEVER_NULL(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
-	assert(0);
+	DIE;
 	return return_type(NULL);
 }
 

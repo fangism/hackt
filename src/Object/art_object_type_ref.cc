@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.20 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.21 2005/01/13 18:59:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -120,7 +120,7 @@ fundamental_type_reference::resolve_canonical_type(void) const {
 	typedef	excl_ptr<const fundamental_type_reference>	return_type;
 	never_ptr<const definition_base>
 		base_def(get_base_def());
-	assert(base_def);
+	NEVER_NULL(base_def);
 if (base_def.is_a<typedef_base>()) {
 	// then we need to resolve it recursively
 	// precondition: actuals' and formals' types already checked
@@ -199,7 +199,7 @@ fundamental_type_reference::may_be_equivalent(
 	if (rtdb) {
 		rtdb->resolve_complete_type(t.template_params);
 	}
-	assert(!ltdb && !rtdb);		// down to canonical definitions
+	INVARIANT(!ltdb && !rtdb);		// down to canonical definitions
 #endif
 	if (have_typedef) {
 		if (left != right)
@@ -364,7 +364,7 @@ data_type_reference::data_type_reference(
 		const definition_ptr_type td) :
 		fundamental_type_reference(), 
 		base_type_def(td) {
-	assert(base_type_def);
+	NEVER_NULL(base_type_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,7 +373,7 @@ data_type_reference::data_type_reference(
 		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
-	assert(base_type_def);
+	NEVER_NULL(base_type_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,7 +452,7 @@ data_type_reference::make_instance_collection(
 			return return_type(int_instance_collection
 				::make_int_array(*s, id, d));
 		} else {
-			assert(0);	// WTF!?
+			DIE;	// WTF!?
 			return return_type(NULL);
 		}
 	}
@@ -539,7 +539,7 @@ channel_type_reference::channel_type_reference(
 		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
-	assert(base_chan_def);
+	NEVER_NULL(base_chan_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -547,7 +547,7 @@ channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd) :
 		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
-	assert(base_chan_def);
+	NEVER_NULL(base_chan_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -652,7 +652,7 @@ process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd) :
 		fundamental_type_reference(), 
 		base_proc_def(pd) {
-	assert(base_proc_def);
+	NEVER_NULL(base_proc_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -661,7 +661,7 @@ process_type_reference::process_type_reference(
 		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
-	assert(base_proc_def);
+	NEVER_NULL(base_proc_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -757,7 +757,7 @@ param_type_reference::param_type_reference(
 		const never_ptr<const built_in_param_def> pd) : 
 		fundamental_type_reference(), 	// NULL
 		base_param_def(pd) {
-	assert(base_param_def);
+	NEVER_NULL(base_param_def);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -785,7 +785,7 @@ param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
 	typedef	excl_ptr<instantiation_statement>	return_type;
-	assert(t == this);
+	INVARIANT(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return return_type(new pbool_instantiation_statement(d));
 	else if (this->must_be_equivalent(*pint_type_ptr))
@@ -794,7 +794,7 @@ param_type_reference::make_instantiation_statement_private(
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		dump(cerr) << " at " << this << endl;
-		assert(0);		// WTF?
+		DIE;		// WTF?
 		return return_type(NULL);
 	}
 }
@@ -822,7 +822,7 @@ param_type_reference::make_instance_collection(
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		dump(cerr) << " at " << this << endl;
-		assert(0);		// WTF?
+		DIE;		// WTF?
 		return excl_ptr<instance_collection_base>(NULL);
 	}
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.8 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.9 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -393,7 +393,7 @@ scopespace::add_definition_alias(const never_ptr<const definition_base> d,
 #else
 		excl_ptr<object_handle> handle_ptr(new object_handle(d));
 		used_id_map[a] = handle_ptr;
-		assert(!handle_ptr);
+		INVARIANT(!handle_ptr);
 #endif
 		return true;
 	}
@@ -442,7 +442,7 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
 		const never_ptr<const object> m_obj(m_iter->second);
-		assert(m_obj);			// no NULLs in hash_map
+		NEVER_NULL(m_obj);		// no NULLs in hash_map
 		// checks for excluded objects, virtual call
 		if (!exclude_object(*m_iter)) {
 			never_ptr<const persistent>
@@ -475,7 +475,7 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m,
 	// how many objects to exclude? need to subtract
 	size_t s = used_id_map.size();
 	size_t ex = exclude_population();
-	assert(ex <= s);		// sanity check b/c unsigned
+	INVARIANT(ex <= s);		// sanity check b/c unsigned
 	write_value(f, s -ex);
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
@@ -553,7 +553,7 @@ scopespace::bin_sort::bin_sort() :
 void
 scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 	const never_ptr<object> o_p(i.second);
-	assert(o_p);
+	NEVER_NULL(o_p);
 	const never_ptr<name_space>
 		n_b(o_p.is_a<name_space>());
 	const never_ptr<definition_base>
@@ -598,7 +598,7 @@ void
 scopespace::const_bin_sort::operator () (
 		const used_id_map_type::value_type& i) {
 	const never_ptr<const object> o_p(i.second);
-	assert(o_p);
+	NEVER_NULL(o_p);
 	const never_ptr<const name_space>
 		n_b(o_p.is_a<const name_space>());
 	const never_ptr<const definition_base>
@@ -607,22 +607,22 @@ scopespace::const_bin_sort::operator () (
 		i_b(o_p.is_a<const instance_collection_base>());
 	const string& k = i.first;
 	if (n_b) {
-		ns_bin[k] = n_b;		assert(ns_bin[k]);
+		ns_bin[k] = n_b;		INVARIANT(ns_bin[k]);
 	} else if (d_b) {
 		const never_ptr<const typedef_base>
 			t_b(d_b.is_a<const typedef_base>());
 		if (t_b) {
-			alias_bin[k] = t_b;	assert(alias_bin[k]);
+			alias_bin[k] = t_b;	INVARIANT(alias_bin[k]);
 		} else {
-			def_bin[k] = d_b;	assert(def_bin[k]);
+			def_bin[k] = d_b;	INVARIANT(def_bin[k]);
 		}
 	} else if (i_b) {
 		const never_ptr<const param_instance_collection>
 			p_b(i_b.is_a<const param_instance_collection>());
 		if (p_b) {
-			param_bin[k] = p_b;	assert(param_bin[k]);
+			param_bin[k] = p_b;	INVARIANT(param_bin[k]);
 		} else {
-			inst_bin[k] = i_b;	assert(inst_bin[k]);
+			inst_bin[k] = i_b;	INVARIANT(inst_bin[k]);
 		}
 	} else {
 		o_p->dump(cerr << "object ") << 
@@ -889,10 +889,10 @@ name_space::add_open_namespace(const string& n) {
 					"re-opening")
 			ret = lookup_object_here_with_modify(n)
 				.is_a<name_space>();
-//			assert(lookup_object_here(n).is_a<name_space>());
-			assert(probe_ns->key == ret->key);
+//			INVARIANT(lookup_object_here(n).is_a<name_space>());
+			INVARIANT(probe_ns->key == ret->key);
 		}
-		assert(ret);
+		INVARIANT(ret);
 	} else {
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
@@ -901,12 +901,12 @@ name_space::add_open_namespace(const string& n) {
 				n, never_ptr<const name_space>(this)));
 		ret = add_namespace(new_ns);
 		// explicit transfer
-		assert(!new_ns);
+		INVARIANT(!new_ns);
 	}
 
 	// silly sanity checks
-	assert(ret->parent == this);
-	assert(ret->key == n);
+	INVARIANT(ret->parent == this);
+	INVARIANT(ret->key == n);
 	DEBUG(TRACE_NAMESPACE_NEW, 
 		cerr << " with parent: " << ret->parent->key)
 	return ret;
@@ -920,12 +920,12 @@ name_space::add_open_namespace(const string& n) {
 never_ptr<name_space>
 name_space::add_namespace(excl_ptr<name_space>& new_ns) {
 	const never_ptr<name_space> ret(new_ns);
-	assert(ret);
-	assert(new_ns.owned());
+	NEVER_NULL(ret);
+	INVARIANT(new_ns.owned());
 	// register it as a used id
 	used_id_map[new_ns->key] = new_ns;
 		// explicit transfer
-	assert(!new_ns);
+	INVARIANT(!new_ns);
 	return ret;
 }
 
@@ -1106,7 +1106,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 			excl_ptr<object_handle>
 				handle_ptr(new object_handle(ret));
 			used_id_map[a] = handle_ptr;
-			assert(!handle_ptr);
+			INVARIANT(!handle_ptr);
 #endif
 			break;
 			}
@@ -1154,9 +1154,10 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : 
 			return_type(this);
 	}
-	qualified_id_slice::const_iterator i = id.begin();	assert(*i);
+	qualified_id_slice::const_iterator i = id.begin();
+	NEVER_NULL(*i);
 	const count_ptr<const token_identifier>& tidp(*i);
-	assert(tidp);
+	NEVER_NULL(tidp);
 	const token_identifier& tid(*tidp);
 	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
 	never_ptr<const name_space>
@@ -1170,7 +1171,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			// no need to skip scope tokens anymore
 			const count_ptr<const token_identifier>&
 				tidp2(i->is_a<const token_identifier>());
-			assert(tidp2);
+			NEVER_NULL(tidp2);
 			const token_identifier& tid2(*tidp2);
 			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 			// the [] operator of map<> doesn't have const 
@@ -1347,14 +1348,14 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base>& db) {
 	typedef	never_ptr<definition_base>	return_type;
-	assert(db);
+	NEVER_NULL(db);
 	string k = db->get_name();
 	const never_ptr<const object> probe(lookup_object_here(k));
 	if (probe) {
 		const never_ptr<const definition_base>
 			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
-			assert(k == probe_def->get_name());	// consistency
+			INVARIANT(k == probe_def->get_name());	// consistency
 			if (probe_def->require_signature_match(db)) {
 				// definition signatures match
 				// can discard new declaration
@@ -1380,9 +1381,9 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 	} else {
 		// used_id_map owns this type is reponsible for deleting it
 		const never_ptr<definition_base> ret = db;
-		assert(ret);
+		NEVER_NULL(ret);
 		used_id_map[k] = db;
-		assert(!db);		// after explicit transfer of ownership
+		INVARIANT(!db);		// after explicit transfer of ownership
 		return ret;
 	}
 }
@@ -1452,7 +1453,7 @@ name_space::construct_empty(const int i) {
 void
 name_space::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 
 	// First, write out the index number associated with this address.  
 	WRITE_POINTER_INDEX(f, m);
@@ -1479,7 +1480,7 @@ void
 name_space::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 
 	// First, strip away the index number associated with this address.
 	STRIP_POINTER_INDEX(f, m);

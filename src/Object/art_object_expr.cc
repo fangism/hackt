@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.33 2005/01/13 05:28:29 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.34 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -347,7 +347,7 @@ const_param_expr_list::get_const_ref_list(void) const {
 	list<const param_expr&> ret;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		assert(*i);
+		NEVER_NULL(*i);
 		ret.push_back(**i);
 	}
 	return ret;
@@ -623,7 +623,7 @@ dynamic_param_expr_list::get_const_ref_list(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++, j++) {
 		count_ptr<const param_expr> ip(*i);
-		assert(ip);
+		NEVER_NULL(ip);
 		ret.push_back(*ip);
 	}
 	return ret;
@@ -831,7 +831,7 @@ param_expr_collective::hash_string(void) const {
 	list<excl_ptr<param_expr> >::const_iterator i = elist.begin();
 	for ( ; i!=elist.end(); i++) {
 		const never_ptr<const param_expr> p(*i);
-		assert(p);
+		NEVER_NULL(p);
 		ret += p->hash_string();
 		ret += ",";
 	}
@@ -2522,7 +2522,7 @@ arith_expr::static_constant_int(void) const {
 		default:
 			cerr << "FATAL: Unexpected operator \'" << op <<
 				"\', aborting." << endl;
-			assert(0); return 0;
+			DIE; return 0;
 	}
 #else
 	// Oooooh, virtual operator dispatch!
@@ -2556,7 +2556,7 @@ arith_expr::resolve_value(int& i) const {
 		default:	
 			cerr << "FATAL: Unexpected operator \'" << op <<
 				"\', aborting." << endl;
-			assert(0); return false;
+			DIE; return false;
 	}
 #else
 	// Oooooh, virtual operator dispatch!
@@ -3188,7 +3188,7 @@ const_range::const_range(const interval_type& i) :
 		parent(i.empty() ? 0 : i.begin()->first,
 			i.empty() ? -1 : i.begin()->second) {
 	if (!i.empty())
-		assert(upper() >= lower());		// else what!?!?
+		INVARIANT(upper() >= lower());		// else what!?!?
 }
 #endif
 
@@ -3573,22 +3573,22 @@ const_range_list
 const_range_list::collapsed_dimension_ranges(
 		const const_index_list& il) const {
 	const_index_list ret;
-	assert(size() == il.size());
+	INVARIANT(size() == il.size());
 	const_iterator i = begin();
 	const_index_list::const_iterator j = il.begin();
 	for ( ; j!=il.end(); i++, j++) {
 		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
-			assert(i != end());
-			assert(i->first == pi->static_constant_int());
-			assert(i->first == i->second);
+			INVARIANT(i != end());
+			INVARIANT(i->first == pi->static_constant_int());
+			INVARIANT(i->first == i->second);
 		} else {
 			const count_ptr<const const_range>
 				pr(j->is_a<const_range>());
-			assert(pr);
-			assert(pr->first == i->first);
-			assert(pr->second == i->second);
+			NEVER_NULL(pr);
+			INVARIANT(pr->first == i->first);
+			INVARIANT(pr->second == i->second);
 			ret.push_back(*pr);
 		}
 	}
@@ -3612,15 +3612,15 @@ ABANDONING, see comments within
  */
 void
 const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
-	assert(size() >= il.size());
+	INVARIANT(size() >= il.size());
 	iterator i = begin();
 	const_index_list::const_iterator j = il.begin();
 	for ( ; j!=il.end(); i++, j++) {
 		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
 		if (pi) {
-			assert(i != end());
-			assert(i->first == i->second);
+			INVARIANT(i != end());
+			INVARIANT(i->first == i->second);
 #if 1
 			i = erase(i);	// potential libstdc++ bug? don't trust
 
@@ -3642,8 +3642,8 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 		} else {
 			const count_ptr<const const_range>
 				pr(j->is_a<const_range>());
-			assert(pr);
-			assert(pr->first == i->first);
+			NEVER_NULL(pr);
+			INVARIANT(pr->first == i->first);
 #if 1
 			if (pr->second != i->second) {
 				cerr << "pr->second = " << pr->second << endl;
@@ -3652,7 +3652,7 @@ const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 			// following assertion produces different results
 			// on gcc-3.2,3.3 vs 3.4
 #endif
-			assert(pr->second == i->second);
+			INVARIANT(pr->second == i->second);
 		}
 	}
 	// any remaining indices are kept
@@ -4173,7 +4173,7 @@ bool
 const_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	k = excl_ptr<multikey_base<int> >(
 		multikey_base<int>::make_multikey(size()));
-	assert(k);
+	NEVER_NULL(k);
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j=0;
@@ -4483,7 +4483,7 @@ bool
 dynamic_index_list::resolve_multikey(excl_ptr<multikey_base<int> >& k) const {
 	k = excl_ptr<multikey_base<int> >(
 		multikey_base<int>::make_multikey(size()));
-	assert(k);
+	NEVER_NULL(k);
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 0;

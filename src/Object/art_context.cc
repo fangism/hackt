@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.17 2005/01/13 05:28:27 fang Exp $
+ 	$Id: art_context.cc,v 1.18 2005/01/13 18:59:43 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -67,8 +67,8 @@ context::context(module& m) :
 	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
-	assert(current_namespace);	// make sure allocated properly
-	assert(global_namespace);	// same pointer
+	NEVER_NULL(current_namespace);	// make sure allocated properly
+	NEVER_NULL(global_namespace);	// same pointer
 
 	// Q: should built-ins be in a super namespace about the globals?
 	// some static global set?  shared among all objects?
@@ -146,7 +146,7 @@ context::close_namespace(void) {
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
 	namespace_stack.pop();
-	assert(current_namespace == new_top);
+	INVARIANT(current_namespace == new_top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -245,7 +245,7 @@ context::open_enum_definition(const token_identifier& ename) {
 				"redefinition at " << ename.where() << endl;
 			exit(1);
 		}
-		assert(!current_open_definition);	// sanity check
+		INVARIANT(!current_open_definition);	// sanity check
 		current_open_definition = ed;
 		ed->mark_defined();
 		indent++;
@@ -317,7 +317,7 @@ context::open_process_definition(const token_identifier& pname) {
 				"redefinition at " << pname.where() << endl;
 			exit(1);
 		}
-		assert(!current_open_definition);	// sanity check
+		INVARIANT(!current_open_definition);	// sanity check
 		current_open_definition = pd;
 		sequential_scope_stack.push(pd.as_a<sequential_scope>());
 		pd->mark_defined();
@@ -442,7 +442,7 @@ context::get_current_process_definition(void) const {
  */
 void
 context::pop_current_definition_reference(void) {
-	assert(current_definition_reference);
+	INVARIANT(current_definition_reference);
 	definition_stack.pop();
 }
 
@@ -586,7 +586,7 @@ context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
  */
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
-	assert(current_namespace);
+	INVARIANT(current_namespace);
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
@@ -602,7 +602,7 @@ context::lookup_definition(const token_identifier& id) const {
  */
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
-	assert(current_namespace);
+	INVARIANT(current_namespace);
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
@@ -616,7 +616,7 @@ context::lookup_definition(const qualified_id& id) const {
  */
 never_ptr<const instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
-	assert(current_namespace);
+	INVARIANT(current_namespace);
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
@@ -630,7 +630,7 @@ context::lookup_instance(const token_identifier& id) const {
  */
 never_ptr<const instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
-	assert(current_namespace);
+	INVARIANT(current_namespace);
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
@@ -655,9 +655,9 @@ context::get_current_named_scope(void) const {
 			// .as_a<scopespace>();
 	else if (current_open_definition) {
 		// no longer a static cast
-		never_ptr<const scopespace>
+		const never_ptr<const scopespace>
 			ret(current_open_definition.is_a<const scopespace>());
-		assert(ret);
+		INVARIANT(ret);
 		return ret;
 	} else
 		return current_namespace.as_a<scopespace>();
@@ -677,9 +677,9 @@ context::get_current_named_scope(void) {
 	// what about current_prototype?
 	if (current_open_definition) {
 		// used to be static cast
-		never_ptr<scopespace>
+		const never_ptr<scopespace>
 			ret(current_open_definition.is_a<scopespace>());
-		assert(ret);
+		INVARIANT(ret);
 		return ret;
 	} else
 		return current_namespace.as_a<scopespace>();
@@ -848,17 +848,16 @@ context::add_template_formal(const token_identifier& id,
 never_ptr<const instance_collection_base>
 context::add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
-	assert(current_prototype);	// valid definition_base
-	assert(!current_fundamental_type.is_a<const param_type_reference>());
+	INVARIANT(current_prototype);	// valid definition_base
+	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
 	excl_ptr<instantiation_statement> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
-	assert(inst_stmt);
+	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
-	never_ptr<const instance_collection_base>
-		inst_base(current_prototype->add_port_formal(
-			inst_stmt, id));
+	const never_ptr<const instance_collection_base>
+		inst_base(current_prototype->add_port_formal(inst_stmt, id));
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
@@ -869,10 +868,10 @@ context::add_port_formal(const token_identifier& id,
 
 	excl_ptr<const instance_management_base>
 		imb = inst_stmt.as_a_xfer<const instance_management_base>();
-	never_ptr<sequential_scope>
+	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 		// same as current_sequential_scope? perhaps assert check?
-	assert(seq_scope);
+	NEVER_NULL(seq_scope);
 	seq_scope->append_instance_management(imb);
 
 	return inst_base;
@@ -912,7 +911,7 @@ context::push_object_stack(const count_ptr<object>& o)
 			oself->what(cerr << "Unexpectedly got a ") <<
 				" on the context's object stack." << endl;
 		}
-		assert(IS_A(const param_expr*, oself) ||
+		INVARIANT(IS_A(const param_expr*, oself) ||
 			IS_A(const ART::entity::index_expr*, oself) ||
 			IS_A(const object_list*, oself) ||
 //			IS_A(const pint_const*, oself) ||

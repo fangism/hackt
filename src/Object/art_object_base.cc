@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.26 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_base.cc,v 1.27 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -274,8 +274,8 @@ object_list::make_sparse_range_list(void) const {
 			}
 		} else {
 			// is neither pint_expr nor range_expr
-			assert(!i->is_a<pint_const>());
-			assert(!i->is_a<const_range>());
+			INVARIANT(!i->is_a<pint_const>());
+			INVARIANT(!i->is_a<const_range>());
 			is_valid_range = false;
 			(*i)->what(cerr << "Expected integer or range "
 				"expression but got a ") << 
@@ -308,7 +308,7 @@ object_list::make_sparse_range_list(void) const {
 				}
 				ret->push_back(const_range(n));
 			} else {
-				assert(r);
+				NEVER_NULL(r);
 				if (!r->is_sane()) {
 					cerr << "Range is not valid. ERROR!  "
 						<< endl;
@@ -322,8 +322,8 @@ object_list::make_sparse_range_list(void) const {
 				} else {
 					const count_ptr<pint_range>
 						pr(r.is_a<pint_range>());
-					assert(pr);
-					assert(pr->is_static_constant());
+					NEVER_NULL(pr);
+					INVARIANT(pr->is_static_constant());
 					ret->push_back(
 						pr->static_constant_range());
 				}
@@ -340,7 +340,7 @@ object_list::make_sparse_range_list(void) const {
 				ret->push_back(count_ptr<pint_range>(
 					new pint_range(j->is_a<pint_expr>())));
 			} else {
-				assert(j->is_a<pint_range>());
+				INVARIANT(j->is_a<pint_range>());
 				ret->push_back(j->is_a<pint_range>());
 			}
 		}
@@ -433,8 +433,8 @@ object_list::make_index_list(void) const {
 			}
 		} else {
 			// is neither pint_expr nor range_expr
-			assert(!i->is_a<pint_const>());
-			assert(!i->is_a<const_range>());
+			INVARIANT(!i->is_a<pint_const>());
+			INVARIANT(!i->is_a<const_range>());
 			is_valid_index = false;
 			(*i)->what(cerr << "Expected integer or range "
 				"expression but got a ") << 
@@ -467,7 +467,7 @@ object_list::make_index_list(void) const {
 				ret->push_back(count_ptr<pint_const>(
 					new pint_const(n)));
 			} else {
-				assert(r);
+				NEVER_NULL(r);
 				if (!r->is_sane()) {
 					cerr << "Index-range is not valid.  "
 						"ERROR!  " << endl;
@@ -483,8 +483,8 @@ object_list::make_index_list(void) const {
 				} else {
 					const count_ptr<pint_range>
 						pr(r.is_a<pint_range>());
-					assert(pr);
-					assert(pr->is_static_constant());
+					NEVER_NULL(pr);
+					INVARIANT(pr->is_static_constant());
 					ret->push_back(count_ptr<const_index>(
 						new const_range(
 						pr->static_constant_range())));
@@ -503,7 +503,7 @@ object_list::make_index_list(void) const {
 				ret->push_back(j->is_a<pint_expr>());
 			} else {
 				// check dimensionality!
-				assert(j->is_a<pint_range>());
+				INVARIANT(j->is_a<pint_range>());
 				ret->push_back(j->is_a<pint_range>());
 			}
 		}
@@ -532,7 +532,7 @@ object_list::make_param_assignment(void) {
 	const parent::value_type& last_obj = back();
 	const count_ptr<const param_expr>
 		rhse = last_obj.is_a<const param_expr>();
-	assert(rhse);
+	INVARIANT(rhse);
 
 	excl_ptr<param_expression_assignment> ret;
 
@@ -545,7 +545,7 @@ object_list::make_param_assignment(void) {
 		// last term must be initialized or be dependent on formals
 		// if collective, conservative: may-be-initialized
 		ret = param_expr::make_param_expression_assignment(rhse);
-		assert(ret);
+		INVARIANT(ret);
 	} else {
 		last_obj->what(
 			cerr << "ERROR: rhs is unexpected object: ") << endl;
@@ -582,7 +582,7 @@ object_list::make_param_expr_list(void) const {
 		const count_ptr<const object> o(*i);
 		const count_ptr<const param_expr>
 			pe(o.is_a<const param_expr>());
-		if (o)	assert(pe);
+		if (o)	INVARIANT(pe);
 		ret->push_back(pe);	// NULL is ok.  
 	}
 	return ret;
@@ -599,7 +599,7 @@ object_list::make_alias_connection(void) const {
 	excl_ptr<aliases_connection>
 		ret(new aliases_connection);
 	const_iterator i = begin();
-	assert(size() > 1);		// else what are you connecting?
+	INVARIANT(size() > 1);		// else what are you connecting?
 	const count_ptr<const object> fo(*i);
 	const count_ptr<const instance_reference_base>
 		fir(fo.is_a<const instance_reference_base>());
@@ -609,10 +609,10 @@ object_list::make_alias_connection(void) const {
 	int j = 2;
 	for (i++; i!=end(); i++, j++) {
 		const count_ptr<const object> o(*i);
-		assert(o);
-		count_ptr<const instance_reference_base>
+		NEVER_NULL(o);
+		const count_ptr<const instance_reference_base>
 			ir(o.is_a<const instance_reference_base>());
-		assert(ir);
+		INVARIANT(ir);
 		if (!fir->may_be_type_equivalent(*ir)) {
 			cerr << "ERROR: type/size of instance reference " 
 				<< j << " of alias list doesn't match the "

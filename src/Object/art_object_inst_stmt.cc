@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.6 2005/01/13 05:28:30 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.7 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -73,9 +73,9 @@ instantiation_statement::~instantiation_statement() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instantiation_statement::dump(ostream& o) const {
-	count_ptr<const fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
-	assert(type_base);
+	NEVER_NULL(type_base);
 	type_base->dump(o) << " ";
 	never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
@@ -92,9 +92,9 @@ instantiation_statement::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instantiation_statement::get_name(void) const {
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	return inst_base->get_name();
 }
 
@@ -217,22 +217,22 @@ pbool_instantiation_statement::dump(ostream& o) const {
 void
 pbool_instantiation_statement::attach_collection(
 		const never_ptr<instance_collection_base> i) {
-	assert(!inst_base);
+	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<instance_collection_base>
 pbool_instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	return inst_base.as_a<instance_collection_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 pbool_instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	return inst_base;
 }
 
@@ -245,7 +245,7 @@ pbool_instantiation_statement::get_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instantiation_statement::unroll(void) const {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	inst_base->instantiate_indices(indices);
 }
 
@@ -272,7 +272,7 @@ void
 pbool_instantiation_statement::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);
 	parent_type::write_object_base(m, f);
@@ -284,7 +284,7 @@ void
 pbool_instantiation_statement::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);
 	parent_type::load_object_base(m, f);
@@ -337,22 +337,22 @@ pint_instantiation_statement::dump(ostream& o) const {
 void
 pint_instantiation_statement::attach_collection(
 		const never_ptr<instance_collection_base> i) {
-	assert(!inst_base);
+	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
-	assert(inst_base);
+	INVARIANT(inst_base);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<instance_collection_base>
 pint_instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base.as_a<instance_collection_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 pint_instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base;
 }
 
@@ -365,7 +365,7 @@ pint_instantiation_statement::get_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_instantiation_statement::unroll(void) const {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	inst_base->instantiate_indices(indices);
 }
 
@@ -375,7 +375,7 @@ pint_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 STACKTRACE("pint_instantiation_statement::collect_transient_info()");
 if (!m.register_transient_object(this, PINT_INSTANTIATION_STATEMENT_TYPE_KEY)) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	// let the scopespace take care of it
 	// inst_base->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -393,7 +393,7 @@ void
 pint_instantiation_statement::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);
 	parent_type::write_object_base(m, f);
@@ -405,7 +405,7 @@ void
 pint_instantiation_statement::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);
 	parent_type::load_object_base(m, f);
@@ -434,7 +434,7 @@ process_instantiation_statement::process_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
 		object(), instantiation_statement(i),
 		type(t), inst_base(NULL) {
-	assert(type);
+	NEVER_NULL(type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -460,22 +460,22 @@ process_instantiation_statement::dump(ostream& o) const {
 void
 process_instantiation_statement::attach_collection(
 		const never_ptr<instance_collection_base> i) {
-	assert(!inst_base);
+	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
-	assert(inst_base);
+	INVARIANT(inst_base);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<instance_collection_base>
 process_instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base.as_a<instance_collection_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 process_instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base;
 }
 
@@ -509,7 +509,7 @@ void
 process_instantiation_statement::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
@@ -522,7 +522,7 @@ void
 process_instantiation_statement::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
@@ -558,7 +558,7 @@ channel_instantiation_statement::channel_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
 		object(), instantiation_statement(i),
 		type(t), inst_base(NULL) {
-	assert(type);
+	NEVER_NULL(type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -584,22 +584,22 @@ channel_instantiation_statement::dump(ostream& o) const {
 void
 channel_instantiation_statement::attach_collection(
 		const never_ptr<instance_collection_base> i) {
-	assert(!inst_base);
+	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
-	assert(inst_base);
+	INVARIANT(inst_base);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<instance_collection_base>
 channel_instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base.as_a<instance_collection_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 channel_instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	return inst_base;
 }
 
@@ -614,7 +614,7 @@ void
 channel_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY)) {
-	assert(inst_base);
+	INVARIANT(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -632,7 +632,7 @@ void
 channel_instantiation_statement::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
@@ -645,7 +645,7 @@ void
 channel_instantiation_statement::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
@@ -688,7 +688,7 @@ data_instantiation_statement::data_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
 		object(), instantiation_statement(i),
 		type(t), inst_base(NULL) {
-	assert(type);
+	NEVER_NULL(type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -804,7 +804,7 @@ void
 data_instantiation_statement::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.write_pointer(f, type);		NEVER_NULL(type);
@@ -817,17 +817,11 @@ void
 data_instantiation_statement::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst_base);		NEVER_NULL(inst_base);
 	m.read_pointer(f, type);		NEVER_NULL(type);
 	parent_type::load_object_base(m, f);
-#if 0
-	type->load_object(m);
-	inst_base->load_object(m);
-	if (indices)
-		indices->load_object(m);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 }

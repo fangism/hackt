@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.17 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -42,7 +42,7 @@ instance_reference_connection::~instance_reference_connection() {
 void
 instance_reference_connection::append_instance_reference(
 		const count_ptr<const instance_reference_base>& i) {
-	assert(i);
+	NEVER_NULL(i);
 	inst_list.push_back(i);
 }
 
@@ -64,13 +64,13 @@ aliases_connection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 aliases_connection::dump(ostream& o) const {
-	assert(inst_list.size() > 1);
+	INVARIANT(inst_list.size() > 1);
 	inst_list_type::const_iterator iter = inst_list.begin();
 	const inst_list_type::const_iterator end = inst_list.end();
-	assert(*iter);
+	NEVER_NULL(*iter);
 	(*iter)->dump(o);
 	for (iter++ ; iter!=end; iter++) {
-		assert(*iter);
+		NEVER_NULL(*iter);
 		(*iter)->dump(o << " = ");
 	}
 	return o << ';';
@@ -84,7 +84,7 @@ aliases_connection::dump(ostream& o) const {
 void
 aliases_connection::prepend_instance_reference(
 		const count_ptr<const instance_reference_base>& i) {
-	assert(i);
+	NEVER_NULL(i);
 	inst_list.push_front(i);
 }
 
@@ -119,7 +119,7 @@ aliases_connection::construct_empty(const int i) {
 void
 aliases_connection::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer_list(f, inst_list);
 	WRITE_OBJECT_FOOTER(f);
@@ -130,7 +130,7 @@ void
 aliases_connection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer_list(f, inst_list);
 	STRIP_OBJECT_FOOTER(f);
@@ -160,7 +160,7 @@ port_connection::port_connection() :
 port_connection::port_connection(
 		const count_ptr<const simple_instance_reference>& i) :
 		instance_reference_connection(), inst(i) {
-	assert(inst);
+	NEVER_NULL(inst);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -179,7 +179,7 @@ port_connection::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 port_connection::dump(ostream& o) const {
-	assert(inst);
+	NEVER_NULL(inst);
 	inst->dump(o) << " (";
 
 	if (!inst_list.empty()) {
@@ -224,7 +224,7 @@ void
 port_connection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PORT_CONNECTION_TYPE_KEY)) {
-	assert(inst);
+	NEVER_NULL(inst);
 	inst->collect_transient_info(m);
 	inst_list_type::const_iterator iter = inst_list.begin();
 	const inst_list_type::const_iterator end = inst_list.end();
@@ -247,7 +247,7 @@ port_connection::construct_empty(const int i) {
 void
 port_connection::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, inst);
 	m.write_pointer_list(f, inst_list);
@@ -259,7 +259,7 @@ void
 port_connection::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, inst);
 	m.read_pointer_list(f, inst_list);

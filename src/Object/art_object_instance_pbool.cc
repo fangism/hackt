@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.8 2005/01/13 05:28:32 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.9 2005/01/13 18:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -44,7 +44,7 @@ using util::stacktrace;
 
 bool
 operator == (const pbool_instance& p, const pbool_instance& q) {
-	assert(p.instantiated && q.instantiated);
+	INVARIANT(p.instantiated && q.instantiated);
 	if (p.valid && q.valid) {
 		return p.value == q.value;
 	} else return (p.valid == q.valid); 
@@ -53,7 +53,7 @@ operator == (const pbool_instance& p, const pbool_instance& q) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 operator << (ostream& o, const pbool_instance& p) {
-	assert(p.instantiated);
+	INVARIANT(p.instantiated);
 	if (p.valid) {
 		return o << "?";
 	} else	return o << p.value;
@@ -87,7 +87,7 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
 		ival(i) {
-	assert(type_check_actual_param_expr(*i));
+	INVARIANT(type_check_actual_param_expr(*i));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,7 +96,7 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 		index_collection_item_ptr_type d, 
 		count_ptr<const pbool_expr> i) :
 		param_instance_collection(o, n, d), ival(i) {
-	assert(type_check_actual_param_expr(*i));
+	INVARIANT(type_check_actual_param_expr(*i));
 }
 #endif
 
@@ -138,8 +138,8 @@ pbool_instance_collection::get_type_ref(void) const {
  */
 bool
 pbool_instance_collection::initialize(const count_ptr<const pbool_expr>& e) {
-	assert(e);
-	assert(!ival);		// must not already be initialized or assigned
+	NEVER_NULL(e);
+	INVARIANT(!ival);		// must not already be initialized or assigned
 	if (dimensions == 0) {
 		if (type_check_actual_param_expr(*e)) {
 			ival = e;
@@ -217,7 +217,7 @@ pbool_instance_collection::type_check_actual_param_expr(
 		return false;
 	}
 	// only for formal parameters is this assertion valid.  
-	assert(index_collection.size() <= 1);
+	INVARIANT(index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return check_expression_dimensions(*pb);
 }
@@ -343,7 +343,7 @@ pbool_array<D>::key_value_dumper::operator () (
 PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
-	assert(i);
+	NEVER_NULL(i);
 	// indices is a range_expr_list (base class)
 	// resolve into constants now using const_range_list
 	// if unable, (b/c uninitialized) then report error
@@ -379,7 +379,7 @@ pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		}
 		pi.instantiated = true;
 		// sanity check: shouldn't start out valid
-		assert(!pi.valid);
+		INVARIANT(!pi.valid);
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 }
@@ -465,7 +465,7 @@ pbool_array<D>::lookup_value_collection(
 	bool ret = true;
 	do {
 		const pbool_instance& pi(collection[key_gen]);
-		// assert(pi.instantiated);	// else earlier check failed
+		// INVARIANT(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated)
 			cerr << "FATAL: reference to uninstantiated pbool index "
 				<< key_gen << endl;
@@ -497,7 +497,7 @@ PBOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 pbool_array<D>::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance map
@@ -511,7 +511,7 @@ void
 pbool_array<D>::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance map
@@ -638,7 +638,7 @@ bool
 pbool_array<0>::lookup_value(bool& v, const multikey_base<int>& i) const {
 	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
 		"should never be called!" << endl;
-	assert(0);
+	DIE;
 	return false;
 }
 
@@ -661,7 +661,7 @@ pbool_array<0>::assign(const multikey_base<int>& k, const bool i) {
 	// this should never be called
 	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
 		"should never be called!" << endl;
-	assert(0);
+	DIE;
 	return true;
 }
 
@@ -669,7 +669,7 @@ pbool_array<0>::assign(const multikey_base<int>& k, const bool i) {
 void
 pbool_array<0>::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	write_object_base(m, f);
 	// write out the instance
@@ -682,7 +682,7 @@ void
 pbool_array<0>::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	load_object_base(m, f);
 	// load the instance

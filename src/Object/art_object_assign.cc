@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.10 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.11 2005/01/13 18:59:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -121,7 +121,7 @@ pbool_expression_assignment::pbool_expression_assignment() :
 pbool_expression_assignment::pbool_expression_assignment(
 		const src_const_ptr_type& s) :
 		param_expression_assignment(), src(s), dests() {
-	assert(src);
+	NEVER_NULL(src);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,8 +151,8 @@ pbool_expression_assignment::what(ostream& o) const {
  */
 ostream&
 pbool_expression_assignment::dump(ostream& o) const {
-	assert(src);
-	assert(!dests.empty());
+	NEVER_NULL(src);
+	INVARIANT(!dests.empty());
 	dumper dumpit(o);
 	for_each(dests.begin(), dests.end(), dumpit);
 	return src->dump(o << " = ") << ';';
@@ -174,7 +174,7 @@ pbool_expression_assignment::dumper::dumper(ostream& o, const size_t i) :
 void
 pbool_expression_assignment::dumper::operator() (
 		const dest_list_type::value_type& i) {
-	assert(i);
+	NEVER_NULL(i);
 	if (index) os << " = ";
 	i->dump(os);
 	index++;
@@ -190,7 +190,7 @@ bool
 pbool_expression_assignment::append_param_instance_reference(
 		const parent_type::dest_ptr_type& e) {
 	// cache the value of dimensions to avoid recomputation?
-	assert(e);
+	NEVER_NULL(e);
 	bool err = false;
 	size_t dim = src->dimensions();
 	if (!validate_dimensions_match(e, dim))
@@ -220,7 +220,7 @@ pbool_expression_assignment::append_param_instance_reference(
  */
 void
 pbool_expression_assignment::unroll(void) const {
-	assert(!dests.empty());		// sanity check
+	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pbool_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
@@ -266,7 +266,7 @@ void
 pbool_expression_assignment::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
@@ -278,7 +278,7 @@ void
 pbool_expression_assignment::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
@@ -310,7 +310,7 @@ pint_expression_assignment::pint_expression_assignment() :
 pint_expression_assignment::pint_expression_assignment(
 		const src_const_ptr_type& s) :
 		param_expression_assignment(), src(s), dests() {
-	assert(src);
+	NEVER_NULL(src);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -334,8 +334,8 @@ pint_expression_assignment::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pint_expression_assignment::dump(ostream& o) const {
-	assert(src);
-	assert(!dests.empty());
+	NEVER_NULL(src);
+	INVARIANT(!dests.empty());
 	dumper dumpit(o);
 	for_each (dests.begin(), dests.end(), dumpit);
 	return src->dump(o << " = ") << ';';
@@ -353,7 +353,7 @@ pint_expression_assignment::dumper::dumper(ostream& o, const size_t i) :
 void
 pint_expression_assignment::dumper::operator() (
 		const dest_list_type::value_type& i) {
-	assert(i);
+	NEVER_NULL(i);
 	if (index) os << " = ";
 	i->dump(os);
 	index++;
@@ -369,7 +369,7 @@ bool
 pint_expression_assignment::append_param_instance_reference(
 		const parent_type::dest_ptr_type& e) {
 	// cache the value of dimensions to avoid recomputation?
-	assert(e);
+	NEVER_NULL(e);
 	bool err = false;
 	size_t dim = src->dimensions();
 	if (!validate_dimensions_match(e, dim))
@@ -399,7 +399,7 @@ pint_expression_assignment::append_param_instance_reference(
  */
 void
 pint_expression_assignment::unroll(void) const {
-	assert(!dests.empty());		// sanity check
+	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pint_instance_reference::assigner the_assigner(*src);
 	// will exit upon error
@@ -440,7 +440,7 @@ void
 pint_expression_assignment::write_object(
 		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, src);
 	m.write_pointer_list(f, dests);
@@ -452,7 +452,7 @@ void
 pint_expression_assignment::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-	assert(f.good());
+	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
