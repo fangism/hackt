@@ -4,6 +4,11 @@ core.*
 *.diff
 *.filter
 *.artctest
+*.artobjtest
+*.artobj
+*.indump
+*.outdump
+*.objdiff
 Makefile
 subdir.not_a_test
 ignore

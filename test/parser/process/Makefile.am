@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.9
 
-SUFFIXES = .artctest .in
+SUFFIXES = .in .artctest .artobjtest
 
 ARTC_TEST_SUBJECTS = \
 	    001 002 003 004 005 006 007 008 009 \
@@ -12,7 +12,13 @@ ARTC_TEST_SUBJECTS = \
 	040 041 042 043 044 045 046 047 048 049 \
 	050
 
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest)
+ARTOBJ_TEST_SUBJECTS = \
+	020 022 024 027 028 029 \
+	030 035 036 037 \
+	040 041 042 043 049
+
+TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS = 001 002 003 004 005 006 007 008 009 010 \

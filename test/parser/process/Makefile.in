@@ -169,7 +169,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.9
-SUFFIXES = .artctest .in
+SUFFIXES = .in .artctest .artobjtest
 ARTC_TEST_SUBJECTS = \
 	    001 002 003 004 005 006 007 008 009 \
 	010 011 012 013 014 015 016 017 018 019 \
@@ -178,7 +178,14 @@ ARTC_TEST_SUBJECTS = \
 	040 041 042 043 044 045 046 047 048 049 \
 	050
 
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest)
+ARTOBJ_TEST_SUBJECTS = \
+	020 022 024 027 028 029 \
+	030 035 036 037 \
+	040 041 042 043 049
+
+TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest)
+
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS = 001 002 003 004 005 006 007 008 009 010 \
@@ -188,15 +195,23 @@ BISON_OUTPUTS = 001 002 003 004 005 006 007 008 009 010 \
 # define empty, let template Makefile add to it
 
 # must be previously defined
-EXTRA_DIST = $(TESTS:.artctest=.in) $(TESTS:.artctest=.stderr) \
+EXTRA_DIST = $(ARTC_TEST_SUBJECTS:=.in) $(ARTC_TEST_SUBJECTS:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison)
+# assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
 
 # must be previously defined
-CLEANFILES = $(TESTS) $(TESTS:.artctest=.diff) \
-	$(TESTS:.artctest=.test) $(TESTS:.artctest=.test.filter) \
-	$(TESTS:.artctest=.stderr.filter) \
+CLEANFILES = $(TESTS) subdir.not_a_test $(ARTC_TEST_SUBJECTS:=.diff) \
+	$(ARTC_TEST_SUBJECTS:=.test) \
+	$(ARTC_TEST_SUBJECTS:=.test.filter) \
+	$(ARTC_TEST_SUBJECTS:=.stderr.filter) \
 	$(BISON_OUTPUTS:=.stderr.bison.filter) \
-	$(BISON_OUTPUTS:=.stderr.bison.diff) subdir.not_a_test
+	$(BISON_OUTPUTS:=.stderr.bison.diff) \
+	$(ARTOBJ_TEST_SUBJECTS:=.outdump) \
+	$(ARTOBJ_TEST_SUBJECTS:=.indump) \
+	$(ARTOBJ_TEST_SUBJECTS:=.outdump.filter) \
+	$(ARTOBJ_TEST_SUBJECTS:=.indump.filter) \
+	$(ARTOBJ_TEST_SUBJECTS:=.artobj) \
+	$(ARTOBJ_TEST_SUBJECTS:=.objdiff)
 CAT = cat
 CHMOD = chmod
 CVS = cvs
@@ -221,13 +236,17 @@ TOUCH = touch
 # defined with intention of self-modification...
 THISMAKEFILE = Makefile
 ARTC_EXE = $(top_builddir)/src/artc
+ART2OBJ_EXE = $(top_builddir)/src/art++2obj
+ARTODUMP_EXE = $(top_builddir)/src/artobjdump
 ARTC_TEST_SH = $(top_srcdir)/test/artc-expect.sh
+ARTOBJ_TEST_SH = $(top_srcdir)/test/artobj-diff.sh
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
+ARTOBJ_DIFF_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .artctest .in .stderr
+.SUFFIXES: .in .artctest .artobjtest .stderr
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/test/Make.test $(top_srcdir)/Make.stddef $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -464,7 +483,7 @@ uninstall-am: uninstall-info-am
 
 
 # This needs to be specified in Makefile.am to take effect
-# SUFFIXES = .artctest .in
+# SUFFIXES = .in .artctest .artobjtest
 
 .in.stderr:
 	@$(TOUCH) $@
@@ -477,14 +496,23 @@ subdir.not_a_test:
 .in.artctest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) "$(ARTC_TEST_SH) $(ARTC_EXE) $(srcdir) $* \"$(STATE_ENUM_FILTER)\" $(TEST_REPORT)" >> $@
+	@$(ECHO) $(ARTC_TEST_SH) $(ARTC_EXE) $(srcdir) $* \
+		"\"$(STATE_ENUM_FILTER)\"" $(TEST_REPORT) >> $@
+	@$(CHMOD) a+x $@
+
+.in.artobjtest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(ARTOBJ_TEST_SH) $(ART2OBJ_EXE) $(ARTODUMP_EXE) $(srcdir) \
+		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) a+x $@
 
 all-local: subdir.not_a_test $(TESTS)
 
 # automatically removes $(CLEANFILES)
 clean-local:
-	$(RM) *.core core.*
+	-$(RM) *.core core.*
+	-$(RM) *.filter *.diff
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
