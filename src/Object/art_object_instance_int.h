@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.1 2005/02/18 06:07:44 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.1.2.1 2005/02/20 07:25:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -22,8 +22,6 @@ USING_LIST
 using std::set;
 using std::string;
 using namespace util::memory;
-// using util::qmap;
-// using util::multikey_map;
 using util::ring_node_derived;
 using util::multikey_set;
 using util::multikey_set_element_derived;
@@ -31,29 +29,10 @@ using util::multikey_set_element_derived;
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"
 
-#if 1
 class int_instance;
 
 template <size_t>
 class int_array;
-#endif
-
-//=============================================================================
-#if 0
-/**
-	An actual instantiated instance of a int.
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
- */
-struct int_instance {
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	int		state;
-
-public:
-	int_instance();
-
-};	// end class int_instance
-#endif
 
 //=============================================================================
 class int_instance_alias_info {
@@ -148,15 +127,6 @@ class int_instance_alias :
 			D, pint_value_type, int_instance_alias_base> {
 	typedef	int_instance_alias<D>			this_type;
 public:
-#if 0
-	typedef	never_ptr<const int_instance_alias>	alias_ptr_type;
-private:
-	// consider alloc_ptr
-	count_ptr<int_instance>			instance;
-	alias_ptr_type				alias;
-	// validity fields?
-	bool					instantiated;
-#endif
 	typedef	multikey_set_element_derived<
 			D, pint_value_type, int_instance_alias_base>
 							parent_type;
@@ -175,42 +145,6 @@ public:
 	// or simple_type?
 
 public:
-#if 0
-	int_instance_alias() : instance(NULL), alias(NULL), 
-		instantiated(false) { }
-
-	// default destructor suffices
-
-	bool
-	valid(void) const { return instantiated; }
-
-	void
-	instantiate(void) { INVARIANT(!instantiated); instantiated = true; }
-
-	const int_instance_alias&
-	canonical(void) const {
-		alias_ptr_type ptr = alias;
-		while (ptr) {
-			ptr = ptr->alias;
-		}
-		return *ptr;
-	}
-
-	/// dereference, create
-	int_instance&
-	operator * () const;
-
-#if 0
-	/**
-		Alias connection.  
-	 */
-	int_instance_alias&
-	operator = (const int_instance_alias& b) {
-		alias = alias_ptr_type(&b);
-		return *this;
-	}
-#endif
-#else
 	int_instance_alias() : parent_type() { }
 
 	int_instance_alias(const key_type& k) : parent_type(k) { }
@@ -227,7 +161,6 @@ public:
 
 	void
 	dump_alias(ostream&) const;
-#endif
 
 	/**
 		Whether or not they refer to the same node.
@@ -281,12 +214,14 @@ public:
 class int_instance_collection : public datatype_instance_collection {
 private:
 	typedef	datatype_instance_collection		parent_type;
+	typedef	int_instance_collection			this_type;
 public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	int_instance_alias_base			instance_alias_type;
-//	typedef	never_ptr<int_instance_alias>		instance_ptr_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
 	typedef	pint_value_type				param_type;
+	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 private:
 	/**
 		The bit-width of the integers in this collection.  
@@ -327,6 +262,9 @@ virtual	bool
 	count_ptr<instance_reference_base>
 	make_instance_reference(void) const;
 
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type&) const;
+
 virtual	void
 	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
 
@@ -357,11 +295,6 @@ public:
 	persistent*
 	construct_empty(const int);
 
-#if 0
-	void
-	collect_transient_info(persistent_object_manager& m) const;
-#endif
-
 protected:
 	void
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
@@ -381,16 +314,9 @@ friend class int_instance_collection;
 	typedef	int_instance_collection			parent_type;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
-//	typedef	int_instance_alias			element_type;
 	typedef	int_instance_alias<D>			element_type;
-#if 0
-	typedef	multikey_map<D, pint_value_type, element_type, qmap>
-							collection_type;
-	typedef	typename collection_type::key_type	key_type;
-#else
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
-#endif
 	typedef	typename collection_type::value_type	value_type;
 protected:
 	typedef	element_type&				reference;

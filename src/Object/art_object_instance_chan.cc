@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.8.2.4.4.1 2005/02/19 08:40:59 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.2.4.4.2 2005/02/20 07:25:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -106,12 +106,12 @@ channel_instance_collection::make_instance_reference(void) const {
 	and pushes it onto the context's object_stack.  
 	\param b is the parent owner of this instantiation referenced.  
  */
-count_ptr<member_instance_reference_base>
+channel_instance_collection::member_inst_ref_ptr_type
 channel_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
+		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
-	return count_ptr<channel_member_instance_reference>(
+	return member_inst_ref_ptr_type(
 		new channel_member_instance_reference(
 			b, never_ptr<const channel_instance_collection>(this)));
 		// omitting index argument, set it later...

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.5 2005/02/17 00:10:15 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.5.4.1 2005/02/20 07:25:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -35,6 +35,10 @@ using util::multikey_map;
 class param_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
+public:
+	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
+	typedef	parent_type::member_inst_ref_ptr_type
+						member_inst_ref_ptr_type;
 
 protected:
 	param_instance_collection(const size_t d);
@@ -63,19 +67,12 @@ virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
 	/** should just assert fail, forbid reference to param members */
-	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const;
+	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type& b) const;
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
-
-#if 0
-	OBSOLETE
-	bool
-	is_template_formal(void) const;
-#endif
 
 /**
 	A parameter is considered "usable" if it is either initialized
@@ -384,11 +381,6 @@ public:
 
 	pbool_array(const scopespace& o, const string& n);
 
-#if 0
-	pbool_array(const scopespace& o, const string& n, 
-		const count_ptr<const pbool_expr>& i);
-#endif
-
 	~pbool_array() { }
 
 	bool
@@ -510,15 +502,13 @@ operator << (ostream& o, const pint_instance& p);
 	Hard-wired to pint_type, defined in "art_built_ins.h".  
  */
 class pint_instance_collection : public param_instance_collection {
+friend class pint_instance_reference;
 public:
 	typedef	pint_value_type			value_type;
 	typedef	pint_instance_reference		reference_type;
 	typedef	reference_type::init_arg_type	init_arg_type;
 private:
 	typedef	param_instance_collection	parent_type;
-// friend class pint_instantiation_statement;
-friend class pint_instance_reference;
-// friend class pint_instance_reference::assigner;
 protected:
 	/**
 		Expression or value with which parameter is initialized. 

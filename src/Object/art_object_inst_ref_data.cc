@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.2 2005/02/19 08:40:58 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4.16.2.4.3 2005/02/20 07:25:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_CC__
@@ -13,6 +13,7 @@
 #include "art_object_instance_enum.h"
 #include "art_object_instance_struct.h"
 #include "art_object_connect.h"
+#include "art_object_member_inst_ref.tcc"
 
 #include "art_object_type_hash.h"
 #include "persistent_object_manager.tcc"
@@ -30,6 +31,30 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::datastruct_instance_reference, 
 		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::int_member_instance_reference, 
+		MEMBER_DINT_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::bool_member_instance_reference, 
+		MEMBER_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_member_instance_reference, 
+		MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datastruct_member_instance_reference, 
+		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)
+
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::int_member_instance_reference, "int-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::bool_member_instance_reference, "bool-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::enum_member_instance_reference, "enum-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::datastruct_member_instance_reference,
+		"struct-member-inst-ref")
+
 }	// end namespace util
 
 namespace ART {
@@ -82,11 +107,19 @@ int_instance_reference::make_aliases_connection_private(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-int_instance_reference::collect_transient_info(
+int_instance_reference::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY)) {
 	parent_type::collect_transient_info_base(m);
 	int_inst_ref->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -99,10 +132,28 @@ int_instance_reference::construct_empty(const int) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-int_instance_reference::write_object(
+int_instance_reference::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, int_inst_ref);
 	parent_type::write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_reference::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	this->write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_instance_reference::load_object_base(const persistent_object_manager& m, 
+		istream& f) {
+	m.read_pointer(f, int_inst_ref);
+	NEVER_NULL(int_inst_ref);
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*int_inst_ref));
+	parent_type::load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -117,11 +168,7 @@ int_instance_reference::write_object(
 void
 int_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	m.read_pointer(f, int_inst_ref);
-	NEVER_NULL(int_inst_ref);
-	m.load_object_once(
-		const_cast<instance_collection_type*>(&*int_inst_ref));
-	parent_type::load_object_base(m, f);
+	this->load_object_base(m, f);
 }
 
 //=============================================================================
@@ -168,11 +215,19 @@ bool_instance_reference::make_aliases_connection_private(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-bool_instance_reference::collect_transient_info(
+bool_instance_reference::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)) {
 	parent_type::collect_transient_info_base(m);
 	bool_inst_ref->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -185,10 +240,28 @@ bool_instance_reference::construct_empty(const int) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-bool_instance_reference::write_object(
+bool_instance_reference::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, bool_inst_ref);
 	parent_type::write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_reference::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	this->write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_instance_reference::load_object_base(const persistent_object_manager& m, 
+		istream& f) {
+	m.read_pointer(f, bool_inst_ref);
+	NEVER_NULL(bool_inst_ref);
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*bool_inst_ref));
+	parent_type::load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,11 +276,7 @@ bool_instance_reference::write_object(
 void
 bool_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	m.read_pointer(f, bool_inst_ref);
-	NEVER_NULL(bool_inst_ref);
-	m.load_object_once(
-		const_cast<instance_collection_type*>(&*bool_inst_ref));
-	parent_type::load_object_base(m, f);
+	this->load_object_base(m, f);
 }
 
 //=============================================================================
@@ -254,11 +323,19 @@ enum_instance_reference::make_aliases_connection_private(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-enum_instance_reference::collect_transient_info(
+enum_instance_reference::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY)) {
 	parent_type::collect_transient_info_base(m);
 	enum_inst_ref->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -271,10 +348,28 @@ enum_instance_reference::construct_empty(const int) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-enum_instance_reference::write_object(
+enum_instance_reference::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, enum_inst_ref);
 	parent_type::write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance_reference::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	this->write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance_reference::load_object_base(const persistent_object_manager& m, 
+		istream& f) {
+	m.read_pointer(f, enum_inst_ref);
+	NEVER_NULL(enum_inst_ref);
+	m.load_object_once(const_cast<instance_collection_type*>(
+		&*enum_inst_ref));
+	parent_type::load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -289,11 +384,7 @@ enum_instance_reference::write_object(
 void
 enum_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	m.read_pointer(f, enum_inst_ref);
-	NEVER_NULL(enum_inst_ref);
-	m.load_object_once(const_cast<instance_collection_type*>(
-		&*enum_inst_ref));
-	parent_type::load_object_base(m, f);
+	this->load_object_base(m, f);
 }
 
 //=============================================================================
@@ -340,11 +431,19 @@ datastruct_instance_reference::make_aliases_connection_private(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-datastruct_instance_reference::collect_transient_info(
+datastruct_instance_reference::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)) {
 	parent_type::collect_transient_info_base(m);
 	struct_inst_ref->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datastruct_instance_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY)) {
+	this->collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -357,10 +456,28 @@ datastruct_instance_reference::construct_empty(const int) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-datastruct_instance_reference::write_object(
+datastruct_instance_reference::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, struct_inst_ref);
 	parent_type::write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datastruct_instance_reference::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	this->write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datastruct_instance_reference::load_object_base(
+		const persistent_object_manager& m, istream& f) {
+	m.read_pointer(f, struct_inst_ref);
+	NEVER_NULL(struct_inst_ref);
+	m.load_object_once(
+		const_cast<instance_collection_type*>(&*struct_inst_ref));
+	parent_type::load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -375,12 +492,16 @@ datastruct_instance_reference::write_object(
 void
 datastruct_instance_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	m.read_pointer(f, struct_inst_ref);
-	NEVER_NULL(struct_inst_ref);
-	m.load_object_once(
-		const_cast<instance_collection_type*>(&*struct_inst_ref));
-	parent_type::load_object_base(m, f);
+	this->load_object_base(m, f);
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template class member_instance_reference<bool_instance_reference>;
+template class member_instance_reference<int_instance_reference>;
+template class member_instance_reference<enum_instance_reference>;
+template class member_instance_reference<datastruct_instance_reference>;
 
 //=============================================================================
 }	// end namespace entity

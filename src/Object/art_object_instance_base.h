@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11.2.2 2005/02/03 03:34:51 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.2.12.1 2005/02/20 07:25:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -62,6 +62,13 @@ typedef index_collection_type::const_iterator
 class instance_collection_base : public object, public persistent {
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
+	// should be consistent with 
+	//	member_instance_reference_base::base_inst_ptr_type
+	typedef	count_ptr<const instance_reference_base>
+						inst_ref_ptr_type;
+	// needs to be of a type that can be pushed onto object stack
+	typedef	count_ptr<instance_reference_base>
+						member_inst_ref_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -210,9 +217,9 @@ public:
 virtual	count_ptr<instance_reference_base>
 	make_instance_reference(void) const = 0;
 
-virtual	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const = 0;
+// return type may become generic...
+virtual	member_inst_ref_ptr_type
+	make_member_instance_reference(const inst_ref_ptr_type& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
 	void

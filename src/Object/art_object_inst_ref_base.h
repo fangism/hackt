@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.1 2005/02/19 06:56:49 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.6.2.2.6.2.2.2 2005/02/20 07:25:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -81,7 +81,6 @@ virtual	bool
 virtual	bool
 	must_be_type_equivalent(const instance_reference_base& i) const = 0;
 
-#if 1	// SUBTYPE_ALIASES_CONNECTION
 	/**
 		Start an aliases connection list based on the referenced type.  
 		We have the option of adding the first element to the list...
@@ -94,7 +93,6 @@ virtual	bool
 private:
 virtual	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const = 0;
-#endif
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -295,41 +293,54 @@ private:
 };	// end class simple_instance_reference
 
 //=============================================================================
+#define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\
+template <class InstRef>
+
+#define	MEMBER_INSTANCE_REFERENCE_CLASS					\
+member_instance_reference<InstRef>
+
 /**
-	Abstract interface class for member instance references.  
-	Make type-specific {process,data,channel}?
-	Don't need instantiation_state because members, can only
-	refer to ports, which cannot be appended with more instances
-	and indices.  
+	Re-usable type-specific member_instance_reference class template.  
+	\param InstRef must be a type derived from simple_instance_reference.
  */
-class member_instance_reference_base : virtual public instance_reference_base {
+template <class InstRef>
+class member_instance_reference : public InstRef {
+private:
+	typedef	member_instance_reference<InstRef>	this_type;
+public:
+	typedef	InstRef					parent_type;
+	// consider changing this to instance_reference_base?
+	typedef	instance_reference_base			base_inst_type;
+	typedef	typename parent_type::instance_collection_type
+						instance_collection_type;
+	// should be kept consistent with
+	//	instance_collection_base::inst_ref_ptr_type
+	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
 protected:
 	/**
 		The owning base instance reference, 
 		must have dimension-0, scalar... for now
-		Is type limiter to simple? or can it be nested member?
+		Is type limited to simple? or can it be nested member?
 	 */
-	const count_ptr<const simple_instance_reference>	base_inst_ref;
+	const base_inst_ptr_type			base_inst_ref;
 protected:
-	member_instance_reference_base();
+	member_instance_reference();
 public:
-	explicit
-	member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b);
+	member_instance_reference(const base_inst_ptr_type& b, 
+		const never_ptr<const instance_collection_type> m);
 
-virtual	~member_instance_reference_base();
+	~member_instance_reference();
 
-protected:	// for children only
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	ostream&
+	what(ostream&) const;
 
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+// already implicit
+//	using parent_type::make_aliases_connection_private;
 
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-
-};	// end class member_instance_reference_base
+public:
+	// final, non-virtual
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class member_instance_reference
 
 //=============================================================================
 /**
@@ -341,18 +352,11 @@ protected:
 	typedef	simple_instance_reference	parent_type;
 //	excl_ptr<index_list>			array_indices;	// inherited
 
-// virtualized
-//	never_ptr<param_instance_collection>		param_inst_ref;
 protected:
 	param_instance_reference();
 public:
 	explicit
 	param_instance_reference(const instantiation_state& st);
-
-#if 0
-	param_instance_reference(excl_ptr<index_list>& i, 
-		const instantiation_state& st);
-#endif
 
 virtual	~param_instance_reference() { }
 

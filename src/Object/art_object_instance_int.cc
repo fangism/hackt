@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.4.1 2005/02/19 08:40:59 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.4.2 2005/02/20 07:25:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -357,6 +357,16 @@ int_instance_collection::make_instance_reference(void) const {
 			never_ptr<const int_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_instance_collection::member_inst_ref_ptr_type
+int_instance_collection::make_member_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_inst_ref_ptr_type(
+		new int_member_instance_reference(
+			b, never_ptr<const this_type>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

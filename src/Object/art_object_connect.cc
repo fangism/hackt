@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.2 2005/02/19 08:40:56 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.3.2.3 2005/02/20 07:25:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -60,11 +60,14 @@ SPECIALIZE_UTIL_WHAT(ART::entity::channel_alias_connection, "channel_connection"
 SPECIALIZE_UTIL_WHAT(ART::entity::process_alias_connection, "process_connection")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_alias_connection, DBOOL_ALIAS_CONNECTION_TYPE_KEY)
+	ART::entity::bool_alias_connection, 
+		DBOOL_ALIAS_CONNECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_alias_connection, DINT_ALIAS_CONNECTION_TYPE_KEY)
+	ART::entity::int_alias_connection, 
+		DINT_ALIAS_CONNECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_alias_connection, ENUM_ALIAS_CONNECTION_TYPE_KEY)
+	ART::entity::enum_alias_connection, 
+		ENUM_ALIAS_CONNECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::datastruct_alias_connection, 
 		STRUCT_ALIAS_CONNECTION_TYPE_KEY)
@@ -271,6 +274,13 @@ ALIAS_CONNECTION_CLASS::append_instance_reference(
 	const inst_ref_ptr_type
 		irp(i.template is_a<const instance_reference_type>());
 		// gcc-3.3 slightly crippled, needs template keyword :(
+#if 0
+	// dynamic cast assertion is failing on member referencecs?
+	if (!irp) {
+		i->what(cerr) << endl;
+		THROW_EXIT;
+	}
+#endif
 	NEVER_NULL(irp);
 	inst_list.push_back(irp);
 }

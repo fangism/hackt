@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.6.4.1 2005/02/19 08:40:58 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.6.4.2 2005/02/20 07:25:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -454,6 +454,16 @@ bool_instance_collection::make_instance_reference(void) const {
 			never_ptr<const bool_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_instance_collection::member_inst_ref_ptr_type
+bool_instance_collection::make_member_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	NEVER_NULL(b);
+	return member_inst_ref_ptr_type(
+		new bool_member_instance_reference(
+			b, never_ptr<const this_type>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
