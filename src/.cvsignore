@@ -8,6 +8,7 @@ art++2obj
 artobjdump
 artobjunroll
 art_persistent_table
+death
 core.*
 *.core
 *.artobj

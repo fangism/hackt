@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42 2005/01/28 19:58:30 fang Exp $
+#	$Id: Makefile.am,v 1.24.2.1 2005/02/22 03:33:17 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -42,7 +42,7 @@ endif
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 
-noinst_PROGRAMS = art_persistent_table
+noinst_PROGRAMS = art_persistent_table death
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -63,6 +63,8 @@ artobjunroll_LDADD = libart++.la
 
 art_persistent_table_SOURCES = test/art_persistent_table.cc
 art_persistent_table_LDADD = libart++.la
+
+death_SOURCES = death.cc
 
 # convenience libraries
 noinst_LTLIBRARIES = libart++.la libbogus.la
@@ -99,12 +101,8 @@ AST_CC_FILES = \
 	AST/art_parser_prs.cc
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
-	AST/art_parser_fwd.h \
-	AST/art_parser.h \
-	AST/art_parser.tcc \
 	AST/art_parser_debug.h
 
-# all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
@@ -112,135 +110,57 @@ OBJECT_CC_FILES = \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
-	Object/art_object_instance_param.cc \
-	Object/art_object_instance_bool.cc \
-	Object/art_object_instance_int.cc \
-	Object/art_object_instance_enum.cc \
-	Object/art_object_instance_struct.cc \
-	Object/art_object_instance_proc.cc \
-	Object/art_object_instance_chan.cc \
-	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
-	Object/art_object_inst_ref_data.cc \
-	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
-	Object/art_object_namespace.cc \
-	Object/art_object_unroll_context.cc \
-	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc
 
-# these source files have no .h file (use other name)
-OBJECT_CC_NO_H_FILES = \
-	Object/art_object_instance_pint.cc \
-	Object/art_object_instance_pbool.cc
-
-# these header files have source (.cc) files with different names
-OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
-	Object/art_object_fwd.h \
-	Object/art_object.h \
-	Object/art_object_definition_base.h \
-	Object/art_object_expr_base.h \
-	Object/art_object_expr_const.h \
-	Object/art_object_expr_param_ref.h \
-	Object/art_object_index.h \
-	Object/art_object_instance_base.h \
-	Object/art_object_instance_management_base.h \
-	Object/art_object_inst_stmt_base.h \
-	Object/art_object_inst_ref_base.h \
-	Object/art_object_type_ref_base.h \
-	Object/art_object_type_hash.h
+# for all Object files with corresponding header
+OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h)
 
 UTIL_HEADER_FILES = \
 	util/art_debug.h \
 	util/art_switches.h \
 	util/macros.h \
-	util/STL/allocator_fwd.h \
-	util/STL/construct_fwd.h \
-	util/STL/deque_fwd.h \
-	util/STL/functional_fwd.h \
-	util/STL/list_fwd.h \
-	util/STL/list.h \
-	util/STL/list.tcc \
-	util/STL/map_fwd.h \
-	util/STL/map.h \
-	util/STL/map.tcc \
-	util/STL/namespace.h \
-	util/STL/pair_fwd.h \
-	util/STL/reverse_iterator.h \
-	util/STL/stack_fwd.h \
-	util/STL/valarray_fwd.h \
-	util/STL/vector_fwd.h \
 	util/IO_utils.h \
 	util/IO_utils.tcc \
-	util/array_traits.h \
-	util/discrete_interval_set_fwd.h \
 	util/discrete_interval_set.h \
-	util/discrete_interval_set.tcc \
+	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
 	util/hash_map.h \
-	util/hash_qmap_fwd.h \
 	util/hash_qmap.h \
-	util/hash_qmap.tcc \
+	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
-	util/ifthenelse.h \
-	util/indent.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
-	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
-	util/memory/list_vector_pool.tcc \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
-	util/memory/pointer_manipulator.h \
-	util/memory/excl_ptr.h \
-	util/memory/count_ptr.h \
-	util/memory/thread_lock.h \
-	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_qmap.h \
-	util/multidimensional_qmap.tcc \
-	util/multidimensional_sparse_set_fwd.h \
+	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_sparse_set.h \
-	util/multidimensional_sparse_set.tcc \
+	util/multidimensional_sparse_set_fwd.h \
 	util/multikey_fwd.h \
 	util/multikey.h \
-	util/multikey.tcc \
 	util/multikey_map_fwd.h \
 	util/multikey_map.h \
-	util/multikey_map.tcc \
 	util/multikey_qmap_fwd.h \
 	util/multikey_qmap.h \
-	util/multikey_qmap.tcc \
 	util/nested_iterator.h \
-	util/numeric/integer_traits.h \
 	util/operators.h \
-	util/packed_array_fwd.h \
-	util/packed_array.h \
-	util/packed_array.tcc \
 	util/persistent.h \
 	util/persistent_object_manager.h \
 	util/persistent_object_manager.tcc \
-	util/qmap_fwd.h \
 	util/qmap.h \
-	util/qmap.tcc \
+	util/qmap_fwd.h \
 	util/sstream.h \
-	util/stacktrace.h \
-	util/static_trace.h \
-	util/string_fwd.h \
 	util/sublist.h \
-	util/sublist.tcc \
 	util/unique_list.h \
-	util/unique_list.tcc \
-	util/using_istream.h \
-	util/using_ostream.h \
-	util/what_fwd.h \
-	util/what.h \
-	util/what.tcc \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
@@ -250,7 +170,6 @@ UTIL_HEADER_FILES = \
 	util/obsolete/count_ptr.h \
 	util/obsolete/count_ptr_fwd.h
 
-# the generated lexer and parser sources aren't supposed to be distributed!
 libart___la_SOURCES = \
 	parser/yacc_or_bison.h \
 	parser/art++-parse-prefix.h \
@@ -260,18 +179,17 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
+	$(AST_CC_FILES) $(AST_H_FILES) \
+	AST/art_parser.h \
+	AST/art_parser.tcc \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
-	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
-	util/stacktrace.cc \
-	util/static_trace.cc \
-	util/memory/thread_lock.cc \
-	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
-	$(OBJECT_CC_NO_H_FILES) \
+	Object/art_object.h \
 	Object/art_object_IO.cc \
+	Object/art_object_type_hash.h \
 	config.h \
 	art++.h
 
@@ -314,14 +232,9 @@ $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
-# NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
-# gcc -E ignores file that require no preprocessing
-
-CPP_TRADITIONAL = cpp
 
 parser/art++.types: parser/art++-parse.yy
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 		$(SED) '/^[ \t]*$$/d' > $@
 
@@ -342,10 +255,6 @@ YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
 parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-parse-prefix.h
-	@if ! [ -s parser/art++.types ] ; then \
-		$(ECHO) "parser/art++.types is empty!" ; \
-		exit 1 ; \
-	fi
 	$(AWK) -f $(YACC_UNION_SCRIPT) \
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
@@ -358,8 +267,7 @@ AM_CPPFLAGS = -DREGRESSION_TEST_MODE \
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-WARN_CFLAGS = -W -Wall -Wno-unused -Werror
-MORE_CFLAGS = -ansi -pipe $(WARN_CFLAGS)
+MORE_CFLAGS = -pipe -W -Wall -Wno-unused -Werror
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CFLAGS)
@@ -386,10 +294,7 @@ EXTRA_DIST = \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
-	parser/NOTES \
-	util/README \
 	util/TODO \
-	util/STL/README \
 	util/obsolete/README \
 	wc-l
 
