@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.11.4.3.6.5 2005/01/27 00:55:28 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11.4.3.6.6 2005/01/27 23:25:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -120,7 +120,10 @@ scopespace::scopespace() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 scopespace::~scopespace() {
+#if 0
 	STACKTRACE("~scopespace()");
+	cerr << "\t@ " << this << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

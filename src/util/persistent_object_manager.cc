@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.12.4.2.2.2 2005/01/27 00:56:08 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.12.4.2.2.3 2005/01/27 23:25:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -669,6 +669,14 @@ persistent_object_manager::load_objects(void) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		persistent* o = const_cast<persistent*>(e.addr());
 		if (o) {
+		/***
+			CONSIDER: moving common header and footer code
+			common to all load_object implementations here, 
+			including visit-once check.  
+			Or factor it out into another (private) proxy
+			member function, because load_object is allowed
+			to call load_object recursively.
+		***/
 			o->load_object(*this);
 			// virtual call, unavoidable const cast
 #if 0

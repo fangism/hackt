@@ -1,13 +1,13 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.13.12.1 2005/01/25 22:33:32 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.13.12.2 2005/01/27 23:25:21 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
 #define	__ART_OBJECT_ASSIGN_CC__
 
-// #define	DEBUG_LIST_VECTOR_POOL		1
+#define	DEBUG_LIST_VECTOR_POOL		0
 
 #include <iostream>
 #include <exception>

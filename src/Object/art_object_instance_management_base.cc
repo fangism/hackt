@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.7.12.3 2005/01/27 00:55:26 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.7.12.4 2005/01/27 23:25:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -166,6 +166,7 @@ inline
 void
 sequential_scope::load_object_pointer_list(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE("sequential_scope::load_object_pointer_list()");
 	m.read_pointer_list(f, instance_management_list);
 }
 
@@ -173,6 +174,7 @@ sequential_scope::load_object_pointer_list(
 void
 sequential_scope::load_object_base(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE("sequential_scope::load_object_base()");
 	load_object_pointer_list(m, f);
 }
 

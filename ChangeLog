@@ -1,6 +1,18 @@
 "ChangeLog"
 
-2005-01-25	David Fang	<fangism@users.sourceforge.net>
+2005-01-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-object-00-10-fixutil-12:
+	  Test directory updated for new expected unrolled objects.
+	  Differences to due to exclusion of built-in template int
+	  definition argument.  (wasn't supposed to be there anyways)
+	  Typedef_alias forgot to call scopespace base persistent
+	  methods, resulting in fake leak.  Fixed.  
+	  This revision should be sufficiently stable (verified on
+	  darwin) to commit to the parent branch.  
+
+
+2005-01-26	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-10-fixutil-10-merged-gcc-01:
 	  Merged gcc-3.3 workaround into this parent branch.
@@ -15,6 +27,9 @@
 	  the libraries extremely robust to "the ordering problem"
 	  with explicit dependence macros.  
 	  Slowly, we'll work our back out of "fixutil" to the parent branch.
+
+
+2005-01-25	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-10-fixutil-09-gcc:
 	  New quick branch spawned off to work around a gcc-3.3 bug.

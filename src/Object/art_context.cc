@@ -2,13 +2,13 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.21 2005/01/16 04:47:22 fang Exp $
+ 	$Id: art_context.cc,v 1.21.12.1 2005/01/27 23:25:21 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
 #define	__ART_CONTEXT_CC__
 
-// #define ENABLE_STACKTRACE		1
+#define ENABLE_STACKTRACE		0
 
 #include <cassert>
 #include <exception>

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.5 2005/01/27 00:55:27 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3.4.6 2005/01/27 23:25:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -139,7 +139,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_collection::~pint_instance_collection() {
-	STACKTRACE("~pint_instance_collection()");
+//	STACKTRACE("~pint_instance_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -215,7 +215,7 @@ pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
  */
 count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
-	STACKTRACE("pint_instance_collection::default_value()");
+//	STACKTRACE("pint_instance_collection::default_value()");
 	return ival;
 }
 

@@ -1,13 +1,13 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.31.4.2.6.4 2005/01/27 00:55:20 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31.4.2.6.5 2005/01/27 23:25:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
 #define	__ART_OBJECT_DEFINITION_CC__
 
-// #define ENABLE_STACKTRACE		1
+#define ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
@@ -69,7 +69,10 @@ definition_base::definition_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 definition_base::~definition_base() {
-	STACKTRACE_VERBOSE;
+	STACKTRACE("~definition_base()");
+#if 0
+	cerr << "\t@ " << this << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,6 +409,18 @@ definition_base::make_default_template_arguments(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Wrapper for making a type reference with default template args.  
+ */
+count_ptr<const fundamental_type_reference>
+definition_base::make_fundamental_type_reference(void) const {
+	// assign, not copy construct!
+	excl_ptr<dynamic_param_expr_list>
+		dplp = make_default_template_arguments();
+	return make_fundamental_type_reference(dplp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	DO ME NOW!
 	Adds an instantiation to the current definition's scope, and 
 	also registers it in the list of template formals for 
@@ -578,11 +593,13 @@ definition_base::load_object_base(
 typedef_base::typedef_base() : 
 		definition_base(), scopespace(), sequential_scope() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
 typedef_base::~typedef_base() {
+	STACKTRACE("~typedef_base()");
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
@@ -661,18 +678,6 @@ if (pa) {
 }
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Wrapper for making a type reference with default template args.  
- */
-count_ptr<const fundamental_type_reference>
-definition_base::make_fundamental_type_reference(void) const {
-	// assign, not copy construct!
-	excl_ptr<dynamic_param_expr_list>
-		dplp = make_default_template_arguments();
-	return make_fundamental_type_reference(dplp);
-}
-
 //=============================================================================
 // class datatype_definition_base method definitions
 
@@ -682,12 +687,13 @@ inline
 datatype_definition_base::datatype_definition_base() :
 		definition_base() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 datatype_definition_base::~datatype_definition_base() {
+	STACKTRACE("~datatype_definition_base()");
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -963,8 +969,8 @@ channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
-//	scopespace::collect_transient_info_base(m);	// covers formals?
 	definition_base::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);	// covers formals?
 	sequential_scope::collect_transient_info_base(m);
 }
 }
@@ -993,6 +999,7 @@ channel_definition_alias::write_object(
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
+	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1008,6 +1015,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
+	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1016,12 +1024,16 @@ if (!m.flag_visit(this)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Virtually called from scopespace to load formal parameters
+	into the typedef's scopespace, which contains only formal parameters.  
 	Really, typedefs shouldn't have any non-formal members...
  */
 void
 channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
+#if 0
 	cerr << "WARNING: didn't expect to call "
 		"channel_definition_alias::load_used_id_map_object()." << endl;
+#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -1720,6 +1732,7 @@ datatype_definition_alias::datatype_definition_alias(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::~datatype_definition_alias() {
+	STACKTRACE("~data_def_alias()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1764,6 +1777,7 @@ datatype_definition_alias::assign_typedef(
 		excl_ptr<const fundamental_type_reference>& f) {
 	NEVER_NULL(f);
 	base = f.is_a_xfer<const data_type_reference>();
+	INVARIANT(!f);
 	NEVER_NULL(base);
 	return true;
 }
@@ -1806,6 +1820,7 @@ if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
 //	scopespace::collect_transient_info_base(m);	// covers formals?
 	definition_base::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
 }
 }
@@ -1827,6 +1842,7 @@ datatype_definition_alias::construct_empty(const int i) {
 void
 datatype_definition_alias::write_object(
 		const persistent_object_manager& m) const {
+	STACKTRACE("data_def_alias::write_object()");
 	ostream& f = m.lookup_write_buffer(this);
 	INVARIANT(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1834,6 +1850,7 @@ datatype_definition_alias::write_object(
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
+	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -1842,6 +1859,7 @@ datatype_definition_alias::write_object(
 void
 datatype_definition_alias::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
+	STACKTRACE("data_def_alias::load_object()");
 	istream& f = m.lookup_read_buffer(this);
 	INVARIANT(f.good());
 	STRIP_POINTER_INDEX(f, m);
@@ -1849,6 +1867,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
+	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -1861,8 +1880,10 @@ if (!m.flag_visit(this)) {
  */
 void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
+#if 0
 	cerr << "WARNING: didn't expect to call "
 		"datatype_definition_alias::load_used_id_map_object()." << endl;
+#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -2396,8 +2417,8 @@ process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
 	base->collect_transient_info(m);
-//	scopespace::collect_transient_info_base(m);	// covers formals?
 	definition_base::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);	// covers formals?
 	sequential_scope::collect_transient_info_base(m);
 }
 }
@@ -2425,6 +2446,7 @@ process_definition_alias::write_object(
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
+	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
 	WRITE_OBJECT_FOOTER(f);
 }
@@ -2440,6 +2462,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
+	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
 	STRIP_OBJECT_FOOTER(f);
 }
@@ -2452,8 +2475,10 @@ if (!m.flag_visit(this)) {
  */
 void
 process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
+#if 0
 	cerr << "WARNING: didn't expect to call "
 		"process_definition_alias::load_used_id_map_object()." << endl;
+#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
