@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.4 2005/01/15 06:03:04 fang Exp $
+	$Id: stacktrace.cc,v 1.5 2005/01/15 06:20:46 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -14,6 +14,7 @@
 #include <stack>
 
 #include "stacktrace.h"
+#include "likely.h"
 #include "STL/list.tcc"
 #include "qmap.tcc"
 #include "memory/pointer_classes.h"
@@ -41,11 +42,6 @@ using memory::excl_ptr;
 	(This technique is also used in util::persistent_object_manager.)
  */
 class stacktrace::manager {
-#if 0
-friend class stacktrace;
-friend class stacktrace::echo;
-friend class stacktrace::redirect;
-#endif
 public:
 	/// the type of stack used to hold feedback text
 	typedef	list<string>	stack_text_type;
@@ -80,12 +76,6 @@ public:
 
 private:
 	manager() {
-#if 0
-		// must guarantee that they aren't empty
-		get_stack_echo().push(1);
-		// or if you push(1) instead, echo will default ON
-		get_stack_streams().push(&cerr);
-#endif
 		// initialization moved to static initialization below.
 	}
 
@@ -114,7 +104,7 @@ stacktrace::manager::stack_text_ptr(NULL);
 
 stacktrace::manager::stack_text_type&
 stacktrace::manager::get_stack_text(void) {
-	if (!stack_text) {
+	if (UNLIKELY(!stack_text)) {
 		stack_text = new stack_text_type;
 		stack_text_ptr = excl_ptr<stack_text_type>(stack_text);
 	}
@@ -132,7 +122,7 @@ stacktrace::manager::stack_indent_ptr(NULL);
 
 stacktrace::manager::stack_text_type&
 stacktrace::manager::get_stack_indent(void) {
-	if (!stack_indent) {
+	if (UNLIKELY(!stack_indent)) {
 		stack_indent = new stack_text_type;
 		stack_indent_ptr = excl_ptr<stack_text_type>(stack_indent);
 	}
@@ -153,7 +143,7 @@ stacktrace::manager::stack_echo_ptr(NULL);
  */
 stacktrace::manager::stack_echo_type&
 stacktrace::manager::get_stack_echo(void) {
-	if (!stack_echo) {
+	if (UNLIKELY(!stack_echo)) {
 		stack_echo = new stack_echo_type;
 		stack_echo_ptr = excl_ptr<stack_echo_type>(stack_echo);
 		stack_echo->push(1);
@@ -175,7 +165,7 @@ stacktrace::manager::stack_streams_ptr(NULL);
  */
 stacktrace::manager::stack_streams_type&
 stacktrace::manager::get_stack_streams(void) {
-	if (!stack_streams) {
+	if (UNLIKELY(!stack_streams)) {
 		stack_streams = new stack_streams_type;
 		stack_streams_ptr = excl_ptr<stack_streams_type>(stack_streams);
 		stack_streams->push(&cerr);
@@ -184,49 +174,9 @@ stacktrace::manager::get_stack_streams(void) {
 	return *stack_streams;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if 0
-stacktrace::manager*
-stacktrace::the_manager = NULL;
-
-excl_ptr<stacktrace::manager>
-stacktrace::the_manager_manager;		// initially NULL
-
-stacktrace::manager&
-stacktrace::get_the_manager(void) {
-	if (!the_manager) {
-		the_manager = new manager;
-		the_manager_manager = excl_ptr<manager>(the_manager);
-		// the_manager_manager will release during static termination
-	}
-	NEVER_NULL(the_manager);
-	return *the_manager;
-}
-#endif
-
 //=============================================================================
 // class stacktrace method definitions
 
-#if 0
-// removed because it introduces ambiguity with next definition
-// because implicit conversion exists from const char* to std::string.
-stacktrace::stacktrace(const char* s) {
-	// if this appears outside in global static scope, 
-	// it may not be initialized in time!
-	static const string default_stack_indent_string("| ");
-	stacktrace::manager::get_stack_text().push_back(s);
-	if (stacktrace::manager::get_stack_echo().top())
-		stacktrace::manager::print_auto_indent(
-			*stacktrace::manager::get_stack_streams().top()) <<
-			"enter: " <<
-			stacktrace::manager::get_stack_text().back() << endl;
-	stacktrace::manager::get_stack_indent().push_back(
-		default_stack_indent_string);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::stacktrace(const string& s) {
 	// if this appears outside in global static scope, 
 	// it may not be initialized in time!

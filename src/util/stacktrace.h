@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.4 2005/01/15 06:03:03 fang Exp $
+	$Id: stacktrace.h,v 1.5 2005/01/15 06:20:46 fang Exp $
  */
 
 #ifndef	__STACK_TRACE_H__
@@ -53,20 +53,15 @@
 #if ENABLE_STACKTRACE
 
 #include <iosfwd>
-// #include <stack>
 #include "macros.h"
 #include "STL/list_fwd.h"
 #include "string_fwd.h"
-// #include "memory/pointer_classes_fwd.h"
-
 
 
 namespace util {
 USING_LIST
 using std::ostream;
 using std::string;
-// using std::stack;
-// using memory::excl_ptr;
 
 //=============================================================================
 /**
@@ -82,23 +77,8 @@ public:
 	class manager;
 	struct echo;
 	struct redirect;
-	// static objects?
-private:
-#if 0
-// not really used
-	/// bare-naked pointer, guaranteed to be 0 before static initialization
-	static manager*			the_manager;
 
-	/// pointer class to manage static deallocation upon termination
-	static excl_ptr<manager>	the_manager_manager;
-
-	/// interface accessor to the stack manager
-	static
-	manager&
-	get_the_manager(void);
-#endif
 public:
-//	stacktrace(const char*);
 	stacktrace(const string&);
 	~stacktrace();
 public:
