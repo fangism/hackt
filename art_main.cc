@@ -11,10 +11,15 @@ using namespace std;
 extern  YYSTYPE yyval;			// root token
 extern "C" {
 	int yyparse(void);              // in "y.tab.cc"
+	void yyerror(const char*);
 }
 
 int main(int argc, char* argv[]) {
-	yyparse();
+	try {
+		yyparse();
+	} catch (...) {
+		yyerror("uncaught exception");
+	}
 	return 0;
 }
 

@@ -4,11 +4,13 @@
 #ifndef	__ART_L_H__
 #define	__ART_L_H__
 
+/// structure for tracking token positions in the input file
+// consider including file stream/pointer later...
 typedef struct _token_position_ {
-	long line;		// line of start of token
-	long leng;		// length, applies for single-line tokens
-	long col;		// column position of start of token
-	const long off;		// offset: where yymore actually starts
+	long line;		///< line of start of token
+	long leng;		///< length, applies for single-line tokens
+	long col;		///< column position of start of token
+	const long off;		///< offset: where yymore actually starts
 } token_position;
 
 

@@ -26,6 +26,11 @@ using namespace std;
  */
 template <class T>
 class list_of_ptr : public list<T*> {
+public:
+	typedef	list<T*>::iterator			iterator;
+	typedef	list<T*>::const_iterator		const_iterator;
+	typedef	list<T*>::reverse_iterator		reverse_iterator;
+	typedef	list<T*>::const_reverse_iterator	const_reverse_iterator;
 private:
 	// none
 public:
@@ -38,10 +43,12 @@ virtual	~list_of_ptr() {
         typename list<T*>::iterator i;
         for (i=begin(); i!=end(); i++) if (*i) delete (*i);
         clear();
-
-// non-essential add-on methods
 }
 
+// non-essential add-on methods
+
+using	list<T*>::begin;
+using	list<T*>::end;
 
 };
 

@@ -32,8 +32,13 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-statement)"; }
 /// HSE body is just a list of statements
 class body : public language_body, public node_list<statement> {
 public:
-	body(node* r) : language_body(), node_list<statement>(r) { }
+	body(node* r) : language_body(NULL), node_list<statement>(r) { }
 virtual	~body() { }
+
+#define hse_body_tag_wrap(t,l,b,r)					\
+	dynamic_cast<HSE::body*>(					\
+		dynamic_cast<HSE::body*>(b)->attach_tag(t))->wrap(l,r)
+
 
 virtual	ostream& what(ostream& o) const { return o << "(hse-body)"; }
 };
@@ -128,6 +133,7 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-selection)"; }
 };
 
 //=============================================================================
+/// container for deterministic selection statement
 class det_selection : public selection, 
 		public node_list<guarded_command,thickbar> {
 public:
@@ -139,6 +145,7 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-det-sel)"; }
 };
 
 //=============================================================================
+/// container for non-deterministic selection statement
 class nondet_selection : public selection, 
 		public node_list<guarded_command,colon> {
 public:
@@ -150,6 +157,7 @@ virtual	ostream& what(ostream& o) const { return o << "(hse-nondet-sel)"; }
 };
 
 //=============================================================================
+/// container for probablistic selection statement
 class prob_selection : public selection, 
 		public node_list<guarded_command,thickbar> {
 public:

@@ -17,17 +17,8 @@ namespace PRS {
 /// for now, just a carbon copy of expr class type, type-check later
 typedef	expr	prs_expr;
 
-/***
-class prs_expr : public expr {
-public:
-	prs_expr() : expr() { }
-virtual	~prs_expr() { }
-
-virtual	ostream& what(ostream& o) const { return o << "(prs-expr)"; }
-};
-***/
-
 //=============================================================================
+/// a single production rule
 class rule : public expr {
 protected:
 	prs_expr*	guard;
@@ -49,10 +40,21 @@ virtual	ostream& what(ostream& o) const { return o << "(prs-rule)"; }
 };
 
 //=============================================================================
+/// a collection of production rules
 class body : public language_body, public node_list<rule> {
+protected:
 public:
-	body(node* r) : language_body(), node_list<rule>(r) { }
+	body(node* r) : language_body(NULL), node_list<rule>(r) { }
 virtual	~body() { }
+
+/**
+	attaches the "prs" keyword to a language body
+	attach_tag();
+ */
+
+#define	prs_body_tag_wrap(t,l,b,r)					\
+	dynamic_cast<PRS::body*>(					\
+		dynamic_cast<PRS::body*>(b)->attach_tag(t))->wrap(l,r)
 
 virtual	ostream& what(ostream& o) const { return o << "(prs-body)"; }
 };

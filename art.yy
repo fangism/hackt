@@ -12,6 +12,7 @@
 #include "art_parser.h"
 #include "art_parser_prs.h"
 #include "art_parser_hse.h"
+// #include "art_parser_chp.h"
 
 using namespace std;
 using namespace ART::parser;
@@ -23,10 +24,7 @@ extern "C" {
 
 }
 
-// useful typedefs, delimiter strings are defined in "art_parser.cc"
-typedef	node_list<token_string,scope>	id_expr;
-typedef	node_list<expr,comma>		expr_list;	// use for member_index too
-typedef	node_list<range,comma>		range_list;
+// useful typedefs are defined in art_parser.h
 
 // macros: d = delimiter, n = node, b = begin, e = end, l = list
 #define	hse_body_wrap(b,l,e)						\
@@ -44,25 +42,12 @@ typedef	node_list<range,comma>		range_list;
 #define	hse_nondet_selection_append(l,d,n)				\
 	dynamic_cast<HSE::nondet_selection*>(l)->append(d,n)
 
-#define	id_expr_append(l,d,n)						\
-	dynamic_cast<id_expr*>(l)->append(d,n)
-
-#define	expr_list_wrap(b,l,e)						\
-	dynamic_cast<expr_list*>(l)->wrap(b,e)
-#define	expr_list_append(l,d,n)						\
-	dynamic_cast<expr_list*>(l)->append(d,n)
-
-#define	range_list_wrap(b,l,e)						\
-	dynamic_cast<range_list*>(l)->wrap(b,e)
-#define	range_list_append(l,d,n)					\
-	dynamic_cast<range_list*>(l)->append(d,n)
-
 %}
 
 %union {
 /// use this universal symbol type for both lexer and parser
 	node* n;
-// let the various constructors perform static type-cast checks
+// let the various constructors perform optional dynamic type-cast checks
 }
 
 /*
@@ -131,13 +116,14 @@ typedef	node_list<range,comma>		range_list;
 
 // non-terminals
 %type	<n>	top_root body basic_item namespace_management
-%type	<n>	definition def_or_proc defproc
-%type	<n>	optional_template_param_list_in_angles
-%type	<n>	template_param_list template_param
+%type	<n>	definition def_or_proc defproc def_type_id
+%type	<n>	optional_template_formal_decl_list_in_angles
+%type	<n>	template_formal_decl_list template_formal_decl
 %type	<n>	template_formal_id_list template_formal_id
-%type	<n>	optional_port_formal_list port_formal_list
-%type	<n>	port_formal port_formal_id_list port_formal_id
-%type	<n>	type_id formal_id base_template_type
+%type	<n>	optional_port_formal_decl_list_in_parens port_formal_decl_list
+%type	<n>	port_formal_decl port_formal_id_list port_formal_id
+%type	<n>	type_id base_template_type
+//%type	<n>	formal_id
 %type	<n>	base_chan_type chan_or_port
 %type	<n>	base_data_type_list base_data_type
 %type	<n>	deftype defchan
@@ -149,7 +135,7 @@ typedef	node_list<range,comma>		range_list;
 %type	<n>	guarded_definition_body_list guarded_definition_body
 %type	<n>	language_body
 %type	<n>	chp_body full_chp_body_item_list full_chp_body_item
-%type	<n>	chp_body_item chp_loop chp_selection
+%type	<n>	chp_body_item chp_loop chp_do_until chp_selection
 %type	<n>	chp_nondet_guarded_command_list
 %type	<n>	chp_unmatched_det_guarded_command_list
 %type	<n>	chp_matched_det_guarded_command_list
@@ -212,9 +198,12 @@ basic_item
 namespace_management
 	// C++ style classes/namespaces require semicolon
 	: NAMESPACE ID '{' top_root '}' ';'
-//	| NAMESPACE ID ';'
+		{ $$ = new namespace_body($1, $2, $3, $4, $5, $6); }
+	// or C++ style: using namespace blah;
 	| OPEN id_expr AS ID ';'
+		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
 	| OPEN id_expr ';'
+		{ $$ = new using_namespace($1, $2, NULL, NULL, $3); }
 	// ever close namespace?
 	;
 
@@ -239,120 +228,143 @@ def_or_proc
 
 defproc
 	// using <> to follow C+ template parameters
-	: def_or_proc ID
-	  optional_template_param_list_in_angles
-	  '(' optional_port_formal_list ')'
+	: def_or_proc def_type_id
+	  optional_port_formal_decl_list_in_parens
 	  '{' definition_body '}'
+	{ $$ = new process_def($1, $2, $3, 
+		definition_body_wrap($4, $5, $6));
+	}
 	;
 
+optional_port_formal_decl_list_in_parens
+	// note: the parens are NOT optional!
+	: '(' port_formal_decl_list ')'
+		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
+	| '(' ')'
+		{ $$ = (new port_formal_decl_list(NULL))->wrap($1, $2); }
+	;
+
+def_type_id
+	: ID optional_template_formal_decl_list_in_angles
+		{ $$ = new def_type_id($1, $2); }
+	;
 
 // Meta (template) language parameters
 
-optional_template_param_list_in_angles
-	: '<' template_param_list '>'
-		{ $$ = $2; /* template_param_list_wrap($$, $1, $3); */ }
+optional_template_formal_decl_list_in_angles
+	: '<' template_formal_decl_list '>'
+		{ $$ = template_formal_decl_list_wrap($1, $2, $3); }
 	| { $$ = NULL; }
 	;
 
-template_param_list
-	: template_param_list ';' template_param
-		{ $$ = $1; /* template_param_list_append($$, $2, $3); */ }
-	| template_param { /* $$ = new template_param_list($1); */ }
+template_formal_decl_list
+	: template_formal_decl_list ';' template_formal_decl
+		{ $$ = template_formal_decl_list_append($1, $2, $3); }
+	| template_formal_decl
+		{ $$ = new template_formal_decl_list($1); }
 	;
 
-template_param
+template_formal_decl
 	// changing to C-style formal parameters, allowing comma-lists
 	// is there any need for user-defined types in template argument?
 	: base_template_type template_formal_id_list
-	//	{ $$ = new template_param($1, $2); }
+		{ $$ = new template_formal_decl($1, $2); }
 	;
 
 template_formal_id_list
 	: template_formal_id_list ',' template_formal_id
-		{ $$ = $1; /* template_formal_list_append($$, $2, $3); */ }
+		{ $$ = template_formal_id_list_append($1, $2, $3); }
 	| template_formal_id
-	//	{ $$ = new template_formal_id_list($1); }
+		{ $$ = new template_formal_id_list($1); }
 	;
 
 template_formal_id
-	: formal_id optional_range_list_in_brackets
-	//	{ $$ = new template_formal_id($1, $2); }
+	: ID optional_range_list_in_brackets
+		{ $$ = new template_formal_id($1, $2); }
 	;
 
-optional_port_formal_list
-	: port_formal_list
+/*** obsolete
+optional_port_formal_decl_list
+	: port_formal_decl_list
 	| { $$ = NULL; }
 	;
+***/
 
 // port parameters
-port_formal_list
+port_formal_decl_list
 	// would rather use ','-delimiter, but wth...
-	: port_formal_list ';' port_formal
-	//	{ $$ = $1; port_formal_list_append($$, $2, $3); }
-	| port_formal
-	//	{ $$ = new port_formal_list($1); }
+	: port_formal_decl_list ';' port_formal_decl
+		{ $$ = port_formal_decl_list_append($1, $2, $3); }
+	| port_formal_decl
+		{ $$ = new port_formal_decl_list($1); }
 	;
 
-port_formal
+port_formal_decl
 	// must switch to C-style formals, eliminate id_list
 	: type_id port_formal_id_list
-	//	{ $$ = new port_formal($1, $2); }
+		{ $$ = new port_formal_decl($1, $2); }
 	;
 
 port_formal_id_list
 	: port_formal_id_list ',' port_formal_id
-	//	{ $$ = $1; port_formal_id_list_append($$, $2, $3); }
+		{ $$ = port_formal_id_list_append($1, $2, $3); }
 	| port_formal_id
-	//	{ $$ = new port_formal_id_list($1); }
+		{ $$ = new port_formal_id_list($1); }
 	;
 
 port_formal_id
-	: formal_id optional_range_list_in_brackets
-	//	{ $$ = new port_formal_id($1, $2); }
+	: ID optional_range_list_in_brackets
+		{ $$ = new port_formal_id($1, $2); }
 	;
 
 type_id
 	: id_expr optional_member_index_expr_list_in_angles
 		// for userdef or chan type, and templating
-	//	{ $$ = new type_id($1, $2); }
+		{ $$ = new type_id($1, $2); }
 	| base_chan_type
 	| base_data_type
 	;
 
+/*** obsolete
 formal_id
 	: ID
 	;
+***/
 
 //------------------------------------------------------------------------
 //	base types
 //------------------------------------------------------------------------
-// need to distinguish formals/declarations from instantiations w/o context
 
 // template type
 base_template_type
 	// default actions
 	: PINT_TYPE  // integer parameter
-	| PBOOL_TYPE // Boolean parameter
+	| PBOOL_TYPE // boolean parameter
 	;
 
-// channel type: channel, inport, outport
+// channel type: channel, inport, outport, and data types
 base_chan_type
 	: chan_or_port '(' base_data_type_list ')'
-	// eliminate defaulting? (to int?)
+	// eliminate defaulting? (to int?), use <template> style?
+		{ $$ = new chan_type($1, 
+			base_data_type_list_wrap($2, $3, $4)); }
 //	| chan_or_port
 	;
 
 chan_or_port
 	: CHANNEL		// a channel
+		{ $$ = new chan_type_root($1); }
 	| CHANNEL '!'		// an output port
+		{ $$ = new chan_type_root($1, $2); }
 	| CHANNEL '?'		// an input port
+		{ $$ = new chan_type_root($1, $2); }
 	;
 
 base_data_type_list
 	: base_data_type_list ',' base_data_type
-	//	{ $$ = $1; base_data_type_list_append($$, $2, $3); }
+		{ $$ = base_data_type_list_append($1, $2, $3); }
 	| base_data_type
-	//	{ $$ = new base_data_type_list($1); }
+		{ $$ = new base_data_type_list($1); }
 	;
 
 // actual data: int<width> or bool
@@ -361,10 +373,14 @@ base_data_type
 	// optional parens get confused with template-parameters
 	// going to use angle brackets <> in the template-fashion
 	: INT_TYPE '<' INT '>'
+		{ $$ = new data_type_base($1, $2, $3, $4); }
 	| INT_TYPE
+		{ $$ = new data_type_base($1); }
 	| BOOL_TYPE
+		{ $$ = new data_type_base($1); }
 	;
 
+// TO DO
 // definition types
 deftype
 	: DEFTYPE ID DEFINEOP base_data_type 
@@ -407,13 +423,13 @@ data_param
 
 definition_body
 	: definition_body instance_item
-	//	{ $$ = $1; definition_body_append($$, $2); }
+		{ $$ = definition_body_append($$, $1, $2); }
 	| instance_item
-	//	{ $$ = new definition_body($1); }
+		{ $$ = new definition_body($1); }
 	| definition_body language_body
-	//	{ $$ = $1; definition_body_append($$, $2); }
+		{ $$ = definition_body_append($$, $1, $2); }
 	| language_body
-	//	{ $$ = new definition_body($1); }
+		{ $$ = new definition_body($1); }
 	;
 
 // considering splitting declarations from connection, e.g.
@@ -473,10 +489,14 @@ connection_actuals_list
 guarded_definition_body_list
 	: guarded_definition_body_list THICKBAR guarded_definition_body
 	| guarded_definition_body
+//		{ $$ = new node_list<guarded_definition_body>($1); }
 	;
+
+// any else clause?
 
 guarded_definition_body
 	: expr RARROW definition_body
+//		{ $$ = new guarded_definition_body($1, $2, $3); }
 	;
 
 
@@ -486,9 +506,13 @@ guarded_definition_body
 
 language_body
 	: CHP_LANG '{' chp_body '}'
+//		{ $$ = hse_body_tag_wrap($1, $2, $3, $4); }
 	| HSE_LANG '{' hse_body '}'
+		{ $$ = hse_body_tag_wrap($1, $2, $3, $4); }
 	| PRS_LANG '{' prs_body '}'
+		{ $$ = prs_body_tag_wrap($1, $2, $3, $4); }
 //	| STACK_LANG '{' stack_body '}'
+//		{ $$ = stack_body_tag_wrap($1, $2, $3, $4); }
 //	and more...
 	;
 
@@ -517,6 +541,7 @@ full_chp_body_item
 // statement
 chp_body_item
 	: chp_loop
+	| chp_do_until
 	| chp_selection
 	| chp_assignment
 	| chp_comm_list
@@ -527,8 +552,11 @@ chp_body_item
 chp_loop
 	// do-forever loop
 	: BEGINLOOP chp_body ']'
+	;
+
+chp_do_until
 	// do-until-all-guards-false
-	| BEGINLOOP chp_matched_det_guarded_command_list ']'
+	: BEGINLOOP chp_matched_det_guarded_command_list ']'
 	;
 
 chp_selection
@@ -991,11 +1019,11 @@ void yyerror(const char* msg) {
 	// msg is going to be "syntax error" from y.tab.cc
 	cerr << "parse error: " << msg << endl;
 	// we've kept track of the position of every token
-	cerr << "here is the yy-state-stack:";
+	cerr << "yy-state-stack:";
 	for (s=yyss; s <= yyssp; s++)
 		cerr << ' ' << *s;
 	cerr << endl;
-	cerr << "here is the yy-value-stack:" << endl;
+	cerr << "yy-value-stack:" << endl;
 	for (v=yyvs; v <= yyvsp; v++) {
 		if (v && v->n) {
 			v->n->what(cerr << '\t') << endl;

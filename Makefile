@@ -8,7 +8,8 @@ SHELL = /bin/sh
 
 CC = gcc
 LD = $(CC)
-CFLAGS = -O4 -Wall -c -g
+CFLAGS = -O3 -Wall -c -g
+# turn on -O4 later...
 LDFLAGS = -lc -lstdc++
 #	-lfl: don't need this for flex, because classes are self-contained
 #	NOTE: -lc MUST appear before -lstdc++ on Mac OS X's gcc-3.3!!!
@@ -17,7 +18,7 @@ LEXFLAGS = -t
 YACC = yacc
 YACCFLAGS = -d -t -v
 
-TARGETS = art_main
+TARGETS = artc
 TARBALL = art.tar.gz
 
 DOXYGEN_CONFIG = art.doxygen.config
@@ -36,7 +37,7 @@ default: all
 all: $(TARGETS)
 
 ART_OBJ = art.yy.o y.tab.o art_parser.o art_main.o
-art_main: $(ART_OBJ)
+artc: $(ART_OBJ)
 	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
 
 art.yy.cc: art.l y.tab.h
@@ -75,4 +76,5 @@ tarball: clobber
 # header file dependencies could be generated automatically... not bothering
 art_main.o: art_parser.h list_of_ptr.h art_switches.h
 art.yy.o: y.tab.h
+y.tab.o: art_parser.h
 
