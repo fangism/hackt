@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.17.2.1 2005/03/05 00:55:13 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.17.2.2 2005/03/05 01:26:39 fang Exp $
  */
 
 // flags and switches
@@ -14,8 +14,8 @@
 	// for hash specialization to take effect
 #include "hash_qmap.tcc"
 #include "new_functor.tcc"
-// #include "persistent_object_manager.h"
-#include "persistent_object_manager.tcc"
+#include "list_vector.tcc"
+#include "persistent_object_manager.tcc"	// for read_pointer
 	// includes "count_ptr.h"
 #include "macros.h"
 #include "IO_utils.tcc"
@@ -470,9 +470,11 @@ persistent_object_manager::reconstruction_table_entry::adjust_offsets(
 
 persistent_object_manager::persistent_object_manager() :
 		addr_to_index_map(),
-		reconstruction_table(), 
+		reconstruction_table(),
 		start_of_objects(0), 
 		root(NULL) {
+ 	// set list_vector(chunk-size)
+	reconstruction_table.set_chunk_size(64);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -536,7 +538,8 @@ persistent_object_manager::register_transient_object(
 void
 persistent_object_manager::initialize_null(void) {
 	STACKTRACE("pom::initialize_null()");
-	assert(!reconstruction_table.size());
+	const size_t s = reconstruction_table.size();
+	assert(!s);
 	register_transient_object(NULL, persistent::hash_key::null);
 }
 

@@ -1,14 +1,14 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.15.2.1 2005/03/05 00:55:13 fang Exp $
+	$Id: persistent_object_manager.h,v 1.15.2.2 2005/03/05 01:26:39 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>			// include stringstream
-#include <vector>
+#include "list_vector.h"
 #include "persistent.h"
 
 #include "hash_qmap.h"
@@ -17,7 +17,7 @@
 
 //=============================================================================
 namespace util {
-using std::vector;
+using util::list_vector;
 using std::istream;
 using std::ostream;
 using std::streampos;
@@ -143,7 +143,7 @@ private:
 		fully reconstruct itself.  
 		Is the reverse map of addr_to_index_map_type.  
 	 */
-	typedef	vector<reconstruction_table_entry>
+	typedef	list_vector<reconstruction_table_entry>
 						reconstruction_table_type;
 
 	/**

@@ -22,6 +22,14 @@
 	  To do: upgrade the reconstruction_table to list_vector to 
 	  avoid bulk copy-construction on a push back operation.  
 
+	* -collect-02:
+	  Upgraded persistent_object_manager's reconstruction_table
+	  to util::list_vector<reconstruction_table_entry>.  
+	  NEVERMORE will the entire array of entries be reallocated to 
+	  new locations upon push_back()!  
+	  Accesses to the array are now O(log(N/C)) where N is the 
+	  total size, and C is the chunk-size (because of internal map).  
+
 
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 

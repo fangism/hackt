@@ -3,11 +3,11 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.6 2005/02/27 22:54:22 fang Exp $
+	$Id: list_vector.h,v 1.6.8.1 2005/03/05 01:26:38 fang Exp $
  */
 
-#ifndef	__LIST_VECTOR_H__
-#define	__LIST_VECTOR_H__
+#ifndef	__UTIL_LIST_VECTOR_H__
+#define	__UTIL_LIST_VECTOR_H__
 
 
 #include <iosfwd>
@@ -817,5 +817,5 @@ operator << (ostream&, const typename list_vector<T,ValAlloc>::list_map_checker&
 //=============================================================================
 }	// end namespace util
 
-#endif	// __LIST_VECTOR_H__
+#endif	// __UTIL_LIST_VECTOR_H__
 

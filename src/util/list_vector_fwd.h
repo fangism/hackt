@@ -2,11 +2,11 @@
 	\file "list_vector_fwd.h"
 	Forward declaration of list_vector class.
 
-	$Id: list_vector_fwd.h,v 1.1 2004/11/26 23:24:16 fang Exp $
+	$Id: list_vector_fwd.h,v 1.1.52.1 2005/03/05 01:26:39 fang Exp $
  */
 
-#ifndef	__LIST_VECTOR_FWD__
-#define	__LIST_VECTOR_FWD__
+#ifndef	__UTIL_LIST_VECTOR_FWD_H__
+#define	__UTIL_LIST_VECTOR_FWD_H__
 
 #include <memory>		// for std::allocator
 #include <vector>
@@ -24,5 +24,5 @@ class list_vector;
 
 }	// end namespace util
 
-#endif	// __LIST_VECTOR_FWD__
+#endif	// __UTIL_LIST_VECTOR_FWD_H__
 
