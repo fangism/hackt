@@ -1,0 +1,33 @@
+# "NOTES"
+
+Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2004-12-12: Regarding unroll-time parameter resolution.
+
+Dependencies: unroll-time type-resolution, with templates, 
+	simple example being built-in datatype int<width>
+
+Issues: need to resolve into constants, or detect error
+	What kind of parameter objects do template arguments need?
+	Something that can hold list of arbitrary collections, 
+		guaranteed to be densely packed, but need not be implemented so.
+	Currently, const_param_expr_list can only hold scalars.  
+	Need an abstract placeholder besides const_param, 
+		perhaps const_param_collection?
+	However, we already have param_instance_collections, 
+		as sparse multidimensional maps.  
+	Would seem a waste to implement yet another set of arrays...
+
+Observations:
+	Assignment was already implemented as passing around flattened 
+		lists of values while retaining dimensions requirements.  
+		Seemed like a quick short cut to get things to work.
+		We might be able to reuse this idea when "assigning"
+		type parameters.  
+
+Prerequisites: (what do I need to do...)
+	For typedefs, may need a parameter value context stack.
+
+//=============================================================================
+

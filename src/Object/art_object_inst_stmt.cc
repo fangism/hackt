@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.2 2004/12/12 23:32:06 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.3 2004/12/13 05:45:11 fang Exp $
  */
 
 #include <iostream>
@@ -684,22 +684,22 @@ data_instantiation_statement::dump(ostream& o) const {
 void
 data_instantiation_statement::attach_collection(
 		never_ptr<instance_collection_base> i) {
-	assert(!inst_base);
+	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<instance_collection_base>
 data_instantiation_statement::get_inst_base(void) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	return inst_base.as_a<instance_collection_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const instance_collection_base>
 data_instantiation_statement::get_inst_base(void) const {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	return inst_base;
 }
 
@@ -710,11 +710,28 @@ data_instantiation_statement::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// almost ready to unveil
+void
+data_instantiation_statement::unroll(void) const {
+	// we need to type-check against template parameters!
+	// perhaps this should be made virtual...
+	type->unroll_resolve();
+	if (inst_base->partially_unrolled()) {
+		// then we must check type-consistency
+	} else {
+		// is first instance, which will determine the type
+	}
+	inst_base->instantiate_indices(indices);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_instantiation_statement::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, DATA_INSTANTIATION_STATEMENT_TYPE_KEY)) {
-	assert(inst_base);
+	NEVER_NULL(inst_base);
 	inst_base->collect_transient_info(m);
 	type->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);

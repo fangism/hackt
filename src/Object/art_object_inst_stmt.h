@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.3 2004/12/12 23:32:07 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.4 2004/12/13 05:45:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -185,6 +185,12 @@ public:
 	never_ptr<instance_collection_base> get_inst_base(void);
 	never_ptr<const instance_collection_base> get_inst_base(void) const;
 	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+
+#if 0
+	// almost ready to unveil...
+	void
+	unroll(void) const;
+#endif
 
 public:
 	PERSISTENT_METHODS

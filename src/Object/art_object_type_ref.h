@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.15 2004/12/11 06:22:43 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.16 2004/12/13 05:45:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -57,18 +57,30 @@ public:
 class data_type_reference : public fundamental_type_reference {
 private:
 	typedef	fundamental_type_reference		parent_type;
+	typedef	datatype_definition_base		definition_type;
+	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
-	never_ptr<const datatype_definition_base>	base_type_def;
+	/**
+		Reference to data type definition, which may be a 
+		built-in type, enumeration, struct, or another typedef.  
+	 */
+	definition_ptr_type				base_type_def;
+
+	// NEW: resolved type
+	// resolve const_param_expr_list...
+	// but needs to be able to take arrays of constants.  
+	
 private:
 	data_type_reference();
 public:
-	data_type_reference(
-		never_ptr<const datatype_definition_base> td);
-	data_type_reference(
-		never_ptr<const datatype_definition_base> td, 
+	explicit
+	data_type_reference(definition_ptr_type td);
+
+	data_type_reference(definition_ptr_type td, 
 		excl_ptr<const param_expr_list> pl);
 		// not gcc-2.95.3 friendly default argument = NULL
+
 virtual	~data_type_reference();
 
 	ostream&
@@ -79,6 +91,10 @@ virtual	~data_type_reference();
 
 	never_ptr<const datatype_definition_base>
 	get_base_datatype_def(void) const;
+
+	/// unroll-time type-resolution... arguments? return?
+	bool
+	unroll_resolve(void);
 
 private:
 	excl_ptr<instantiation_statement>
