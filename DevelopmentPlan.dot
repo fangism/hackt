@@ -13,13 +13,16 @@ DOCS_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow,
 				label="language spec.\ndocumentation"];
 PARSER_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow,
 				label="general parser\nimprovements"];
+LEX_00_01_04		[shape=ellipse, label="lexer token positions"];
+TOKENPOOL_00_01_04	[shape=ellipse, label="token pooling"];
+NODELIST_00_01_04	[shape=ellipse, label="node-list template"];
 UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
 ALIAS_00_01_04		[shape=ellipse, style=filled, label="alias connection"];
 PORT_00_01_04		[shape=ellipse, label="port connection"];
 MEMBER_00_01_04		[shape=ellipse, label="member reference\nunrolling"];
 TYPEDEF_00_01_04	[shape=ellipse, label="typedef unrolling\nresolution"];
 DEFLAYOUT_00_01_04	[shape=ellipse, label="definition layout"];
-INSTSTMT_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
+INSTSTMT_00_01_04	[shape=ellipse, style=filled, 
 				label="rework inst. stmt.\ntemplates"];
 TYPEREF_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
 				label="rework type\nreference templates"];
@@ -27,11 +30,14 @@ EXTTEMPLATE_00_01_04	[shape=ellipse, label="extended\ntemplate signatures"];
 CONNECTEQ_00_01_04	[shape=ellipse, label="connection\ntype-equivalence"];
 CFLAT_00_01_04		[shape=ellipse, label="CFLAT backward\ncompatbility"];
 PRS_00_01_04		[shape=ellipse, label="PRS type-check"];
+ERRORTREE_00_01_04	[shape=ellipse, label="error tree construction"];
 
 ARTXX_00_01_04 -> DOCS_00_01_04;
 ARTXX_00_01_04 -> PARSER_00_01_04;
 ARTXX_00_01_04 -> ALIAS_00_01_04;
-PARSER_00_01_04 -> ARTXX_00_01_04_b;
+PARSER_00_01_04 -> LEX_00_01_04;
+PARSER_00_01_04 -> TOKENPOOL_00_01_04;
+PARSER_00_01_04 -> NODELIST_00_01_04;
 ALIAS_00_01_04 -> PORT_00_01_04;
 PORT_00_01_04 -> UNIQUE_00_01_04;
 MEMBER_00_01_04 -> UNIQUE_00_01_04;
@@ -56,6 +62,7 @@ PRS_00_01_04 -> CFLAT_00_01_04;
 ARTXX_00_01_04_c -> CFLAT_00_01_04;
 CONNECTEQ_00_01_04 -> ARTXX_00_01_04_c;
 DOCS_00_01_04 -> ARTXX_00_01_05;
+ERRORTREE_00_01_04 -> ARTXX_00_01_05;
 
 CHP_00_01_05		[shape=ellipse, label="CHP type-check"];
 CHPSYNTH_00_01_05	[shape=ellipse, label="CHP synthesis"];

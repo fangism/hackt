@@ -2,6 +2,11 @@
 
 2005-03-11	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-20:
+	  Upgraded param_expression_assignments to use template.  
+	  Updated DevelopmentPlan.dot.
+	  Updated a few artc test outputs' error messages.  
+
 	* ARTXX-00-01-04-main-00-19-merged-inststmt-09:
 	  Merged all revisions from -inststmt branch (-09) to main trunk.  
 

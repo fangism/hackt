@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.3 2005/03/11 08:47:25 fang Exp $
+	$Id: art_object_classification_details.h,v 1.4 2005/03/11 20:50:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -476,12 +476,13 @@ struct class_traits<pint_tag> {
 						member_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
-	typedef	channel_alias_connection	alias_connection_type;
-	typedef	aliases_connection_base		alias_connection_parent_type;
 #else
 	typedef	never_ptr<pint_instance>	value_reference_ptr_type;
 	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
+	typedef	pint_expression_assignment	expression_assignment_type;
+	typedef	param_expression_assignment	expression_assignment_parent_type;
+	enum { assignment_chunk_size = 32 };
 #endif
 	// need real type here!
 	typedef	void			value_collection_parameter_type;
@@ -533,7 +534,7 @@ struct class_traits<pbool_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
-	typedef	pbool_instance_reference		instance_reference_type;
+	typedef	pbool_instance_reference	instance_reference_type;
 	typedef	param_instance_reference	instance_reference_parent_type;
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
@@ -542,12 +543,13 @@ struct class_traits<pbool_tag> {
 						member_instance_reference_type;
 	typedef	packed_array_generic<pbool_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
-	typedef	channel_alias_connection	alias_connection_type;
-	typedef	aliases_connection_base		alias_connection_parent_type;
 #else
 	typedef	never_ptr<pbool_instance>	value_reference_ptr_type;
 	typedef	packed_array_generic<pbool_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
+	typedef	pbool_expression_assignment	expression_assignment_type;
+	typedef	param_expression_assignment	expression_assignment_parent_type;
+	enum { assignment_chunk_size = 64 };
 #endif
 	// need real type here!
 	typedef	void			value_collection_parameter_type;

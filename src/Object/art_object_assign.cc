@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.19 2005/03/11 08:47:24 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.20 2005/03/11 20:50:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -18,6 +18,10 @@
 #include "art_object_value_reference.h"
 #include "art_object_classification_details.h"
 #include "art_object_type_hash.h"
+
+#if USE_EXPR_ASSIGNMENT_TEMPLATE
+#include "art_object_assign.tcc"
+#endif
 
 #include "STL/list.tcc"
 #include "persistent_object_manager.tcc"
@@ -123,6 +127,7 @@ param_expression_assignment::validate_reference_is_uninitialized(
 }
 
 //=============================================================================
+#if !USE_EXPR_ASSIGNMENT_TEMPLATE
 // class pbool_expression_assignment method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,8 +306,10 @@ pbool_expression_assignment::load_object(
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
 }
+#endif	// USE_EXPR_ASSIGNMENT_TEMPLATE
 
 //=============================================================================
+#if !USE_EXPR_ASSIGNMENT_TEMPLATE
 // class pint_expression_assignment method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -467,6 +474,12 @@ pint_expression_assignment::load_object(
 	m.read_pointer(f, src);
 	m.read_pointer_list(f, dests);
 }
+#endif	// USE_EXPR_ASSIGNMENT_TEMPLATE
+
+#if USE_EXPR_ASSIGNMENT_TEMPLATE
+template class expression_assignment<pbool_tag>;
+template class expression_assignment<pint_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity
