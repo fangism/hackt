@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.2 2005/02/24 06:17:06 fang Exp $
+	$Id: art_parser_node_list.h,v 1.3 2005/02/25 06:12:20 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
@@ -137,6 +137,16 @@ virtual	~node_list_base();
 
 using	list_parent::begin;
 using	list_parent::end;
+
+	void
+	push_back(const T* v) {
+		list_parent::push_back(value_type(v));
+	}
+
+	void
+	push_back(const value_type& v) {
+		list_parent::push_back(v);
+	}
 
 // later, use static functions (operator <<) to determine type name...
 /// Prints out type of first element in list, if not null.  
