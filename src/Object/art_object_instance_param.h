@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.11.4.2.4.1 2005/01/25 05:22:56 fang Exp $
+	$Id: art_object_instance_param.h,v 1.11.4.2.4.2 2005/01/27 06:35:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -750,6 +750,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_array specialization
 
