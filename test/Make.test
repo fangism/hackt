@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.6 2005/01/28 19:59:00 fang Exp $
+#	$Id: Make.test,v 1.7 2005/01/28 20:40:25 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -87,7 +87,8 @@ all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
 # consider using CLEANFILES
-AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr)
+AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
