@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.29 2005/01/14 20:55:06 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.30 2005/01/15 06:16:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -38,7 +38,7 @@ namespace entity {
 using parser::scope;
 using util::indent;
 using util::auto_indent;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class definition_base method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.7 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.8 2005/01/15 06:17:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
@@ -29,7 +29,7 @@ namespace entity {
 #include "using_ostream.h"
 using util::indent;
 using util::auto_indent;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class param_instance_collection method definitions

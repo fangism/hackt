@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.5 2005/01/13 05:28:31 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.6 2005/01/15 06:17:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -26,7 +26,7 @@ using std::dereference;
 using std::istream;
 #include "using_ostream.h"
 using namespace ADS;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class sequential_scope method definitions

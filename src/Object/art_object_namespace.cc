@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.10 2005/01/14 20:55:07 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.11 2005/01/15 06:17:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -103,7 +103,7 @@ using namespace util::memory;
 using namespace ADS;		// for function compositions
 using util::indent;
 using util::auto_indent;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // general non-member function definitions

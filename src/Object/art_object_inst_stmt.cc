@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.8 2005/01/14 03:46:41 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.9 2005/01/15 06:16:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -46,7 +46,7 @@ SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
 //=============================================================================
 namespace ART {
 namespace entity {
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class instantiation_statement method definitions

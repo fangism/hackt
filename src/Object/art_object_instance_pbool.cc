@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.9 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.10 2005/01/15 06:17:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -36,7 +36,7 @@ namespace entity {
 using namespace ADS;		// for composition functors
 using std::dereference;
 using std::mem_fun_ref;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // struct pbool_instance method definitions

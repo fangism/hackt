@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.18 2005/01/13 18:59:43 fang Exp $
+ 	$Id: art_context.cc,v 1.19 2005/01/15 06:16:59 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -31,7 +31,7 @@ using namespace entity;
 
 namespace parser {
 #include "using_ostream.h"
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class context method definition

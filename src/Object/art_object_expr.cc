@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.34 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.35 2005/01/15 06:16:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -99,7 +99,7 @@ using std::_Select2nd;
 using std::mem_fun_ref;
 using std::dereference;
 using std::ostringstream;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // local types (not externally visible)

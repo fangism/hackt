@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.36 2005/01/13 18:59:45 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.37 2005/01/15 06:17:00 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -35,7 +35,7 @@ using namespace ADS;		// for composition functors
 using std::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
-using util::stacktrace;
+USING_STACKTRACE
 
 //=============================================================================
 // class instance_collection_base method definitions
