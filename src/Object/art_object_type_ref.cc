@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.29 2005/03/06 22:45:52 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.29.2.1 2005/03/07 01:29:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -168,7 +168,7 @@ if (base_def.is_a<typedef_base>()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
@@ -451,11 +451,11 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 /**
 	Returns a newly constructed data instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d));
 }
@@ -614,11 +614,11 @@ channel_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed channel instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
 			t.is_a<const channel_type_reference>(), d));
 }
@@ -743,11 +743,11 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 /**
 	Returns a newly constructed process instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d));
 }
@@ -827,11 +827,11 @@ param_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed param instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	typedef	excl_ptr<instantiation_statement>	return_type;
+	typedef	excl_ptr<instantiation_statement_base>	return_type;
 	INVARIANT(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return return_type(new pbool_instantiation_statement(d));

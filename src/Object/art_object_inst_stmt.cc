@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.16 2005/03/04 07:00:06 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.16.6.1 2005/03/07 01:29:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -91,30 +91,30 @@ REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 
 //=============================================================================
-// class instantiation_statement method definitions
+// class instantiation_statement_base method definitions
 
 #if 0
 /**	Private empty constructor. */
-instantiation_statement::instantiation_statement(void) :
+instantiation_statement_base::instantiation_statement_base(void) :
 //		inst_base(NULL), type_base(NULL),
 		indices(NULL) {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-instantiation_statement::instantiation_statement(
+instantiation_statement_base::instantiation_statement_base(
 		const index_collection_item_ptr_type& i) :
 		indices(i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-instantiation_statement::~instantiation_statement() {
-	STACKTRACE_DTOR("~instantiation_statement()");
+instantiation_statement_base::~instantiation_statement_base() {
+	STACKTRACE_DTOR("~instantiation_statement_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-instantiation_statement::dump(ostream& o) const {
+instantiation_statement_base::dump(ostream& o) const {
 //	STACKTRACE("instantation_statement::dump()");
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
@@ -134,7 +134,7 @@ instantiation_statement::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
-instantiation_statement::get_name(void) const {
+instantiation_statement_base::get_name(void) const {
 	const never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
 	NEVER_NULL(inst_base);
@@ -147,13 +147,13 @@ instantiation_statement::get_name(void) const {
 		which contains expressions, and may be null.  
  */
 index_collection_item_ptr_type
-instantiation_statement::get_indices(void) const {
+instantiation_statement_base::get_indices(void) const {
 	return indices;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
-instantiation_statement::dimensions(void) const {
+instantiation_statement_base::dimensions(void) const {
 	if (indices)
 		return indices->dimensions();
 	else return 0;
@@ -164,30 +164,30 @@ instantiation_statement::dimensions(void) const {
 	Temporary, should be pure virtual in the end.
  */
 void
-instantiation_statement::unroll(unroll_context& c) const {
-	cerr << "instantiation_statement::unroll(): Fang, finish me!" << endl;
+instantiation_statement_base::unroll(unroll_context& c) const {
+	cerr << "instantiation_statement_base::unroll(): Fang, finish me!" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-instantiation_statement::collect_transient_info_base(
+instantiation_statement_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT(
-		"instantiation_statement::collect_transient_info_base()");
+		"instantiation_statement_base::collect_transient_info_base()");
 	if (indices)
 		indices->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-instantiation_statement::write_object_base(
+instantiation_statement_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-instantiation_statement::load_object_base(
+instantiation_statement_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, indices);
 }
@@ -200,14 +200,14 @@ instantiation_statement::load_object_base(
 	Private empty constructor.
  */
 param_instantiation_statement::param_instantiation_statement() :
-		instantiation_statement() {
+		parent_type() {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instantiation_statement::param_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
-		instantiation_statement(i) {
+		parent_type(i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -227,14 +227,14 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pbool_instantiation_statement, 128)
 	Private empty constructor.
  */
 pbool_instantiation_statement::pbool_instantiation_statement() :
-		param_instantiation_statement(), 
+		parent_type(), 
 		inst_base(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instantiation_statement::pbool_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
-		param_instantiation_statement(i), 
+		parent_type(i), 
 		inst_base(NULL) {
 }
 
@@ -248,7 +248,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instantiation_statement)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_instantiation_statement::dump(ostream& o) const {
-	return instantiation_statement::dump(o);
+	return parent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -330,14 +330,14 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(pint_instantiation_statement, 256)
 	Private empty constructor.
  */
 pint_instantiation_statement::pint_instantiation_statement() :
-		param_instantiation_statement(), 
+		parent_type(), 
 		inst_base(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instantiation_statement::pint_instantiation_statement(
 		const index_collection_item_ptr_type& i) :
-		param_instantiation_statement(i), 
+		parent_type(i), 
 		inst_base(NULL) {
 }
 
@@ -352,7 +352,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instantiation_statement)
 ostream&
 pint_instantiation_statement::dump(ostream& o) const {
 //	STACKTRACE("pint_instantation_statement::dump()");
-	return instantiation_statement::dump(o);
+	return parent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -432,7 +432,7 @@ pint_instantiation_statement::load_object(const persistent_object_manager& m,
 	Private empty constructor.
  */
 process_instantiation_statement::process_instantiation_statement() :
-		instantiation_statement(), 
+		parent_type(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -440,7 +440,7 @@ process_instantiation_statement::process_instantiation_statement() :
 process_instantiation_statement::process_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		instantiation_statement(i),
+		parent_type(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }
@@ -458,7 +458,7 @@ process_instantiation_statement::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_instantiation_statement::dump(ostream& o) const {
-	return instantiation_statement::dump(o);
+	return parent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -562,7 +562,7 @@ process_instantiation_statement::load_object(
 	Private empty constructor.
  */
 channel_instantiation_statement::channel_instantiation_statement() :
-		instantiation_statement(), 
+		parent_type(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -570,7 +570,7 @@ channel_instantiation_statement::channel_instantiation_statement() :
 channel_instantiation_statement::channel_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		instantiation_statement(i),
+		parent_type(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }
@@ -588,7 +588,7 @@ channel_instantiation_statement::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_instantiation_statement::dump(ostream& o) const {
-	return instantiation_statement::dump(o);
+	return parent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -671,7 +671,7 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(data_instantiation_statement, 64)
 	Private empty constructor.
  */
 data_instantiation_statement::data_instantiation_statement() :
-		instantiation_statement(), 
+		parent_type(), 
 		type(NULL), inst_base(NULL) {
 }
 
@@ -679,7 +679,7 @@ data_instantiation_statement::data_instantiation_statement() :
 data_instantiation_statement::data_instantiation_statement(
 		const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i) :
-		instantiation_statement(i),
+		parent_type(i),
 		type(t), inst_base(NULL) {
 	NEVER_NULL(type);
 }
@@ -698,7 +698,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(data_instantiation_statement)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 data_instantiation_statement::dump(ostream& o) const {
-	return instantiation_statement::dump(o);
+	return parent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.27 2005/03/04 06:19:54 fang Exp $
+	$Id: art_object_definition.h,v 1.27.6.1 2005/03/07 01:29:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -201,7 +201,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 	never_ptr<const instance_collection_base>
-	add_port_formal(const never_ptr<instantiation_statement> f, 
+	add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
 	good_bool

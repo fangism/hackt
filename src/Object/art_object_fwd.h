@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.7 2005/02/27 22:54:11 fang Exp $
+	$Id: art_object_fwd.h,v 1.7.12.1 2005/03/07 01:29:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -144,7 +144,7 @@ namespace entity {
 	typedef alias_connection<process_tag>
 		process_alias_connection;
 
-	class instantiation_statement;
+	class instantiation_statement_base;
 	class param_instantiation_statement;
 	class pbool_instantiation_statement;
 	class pint_instantiation_statement;
@@ -214,8 +214,10 @@ namespace entity {
 
 		We keep track of the state of instance collections at
 		various program points with this container.
+
+		Eventually work with sub-types only?
 	 */
-	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement>)
+	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
 			index_collection_type;
 
 	class unroll_context;

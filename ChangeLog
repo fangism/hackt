@@ -2,6 +2,12 @@
 
 2005-03-06	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-18-inststmt-01:
+	  Spawned branch for reworking instantiation statement classes
+	  into easier-to-maintain templates, using class_traits<Tag>.
+	  This first revision just renamed instantiation_statement to
+	  instantiation_statement_base to make way for the template name.  
+
 	* ARTXX-00-01-04-main-00-18:
 	  Major cleanup.
 	  Stripped archaic debugging files "art_debug.h"

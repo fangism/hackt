@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.12 2005/03/06 04:36:48 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.12.2.1 2005/03/07 01:29:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -11,6 +11,8 @@
 #include "memory/count_ptr.h"
 #include "memory/list_vector_pool_fwd.h"
 
+#define	USE_INST_STMT_TEMPLATE		0
+
 namespace ART {
 namespace entity {
 //=============================================================================
@@ -19,14 +21,23 @@ USING_CONSTRUCT
 using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
+#if USE_INST_STMT_TEMPLATE
+
+#define	INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE			\
+template <class Tag>
+
+
+#endif
+
+//=============================================================================
 /**
 	Abstract base class for built-in parameter type instantiations.  
  */
-class param_instantiation_statement : public instantiation_statement {
+class param_instantiation_statement : public instantiation_statement_base {
 private:
-	typedef	instantiation_statement		parent_type;
+	typedef	instantiation_statement_base		parent_type;
 protected:
-	param_instantiation_statement() : instantiation_statement() { }
+	param_instantiation_statement() : parent_type() { }
 public:
 	explicit
 	param_instantiation_statement(const index_collection_item_ptr_type& i);
@@ -148,10 +159,10 @@ public:
 /**
 	Process instantiation statement.
  */
-class process_instantiation_statement : public instantiation_statement {
+class process_instantiation_statement : public instantiation_statement_base {
 private:
 	typedef	process_instantiation_statement	this_type;
-	typedef	instantiation_statement		parent_type;
+	typedef	instantiation_statement_base		parent_type;
 public:
 	typedef	process_instance_collection	collection_type;
 	typedef	count_ptr<const process_type_reference>	type_ptr_type;
@@ -197,10 +208,10 @@ public:
 /**
 	Channel instantiation statement.
  */
-class channel_instantiation_statement : public instantiation_statement {
+class channel_instantiation_statement : public instantiation_statement_base {
 private:
 	typedef	channel_instantiation_statement	this_type;
-	typedef	instantiation_statement		parent_type;
+	typedef	instantiation_statement_base		parent_type;
 public:
 	typedef	channel_instance_collection	collection_type;
 	typedef	count_ptr<const channel_type_reference>	type_ptr_type;
@@ -243,9 +254,9 @@ public:
 /**
 	Data-type instantiation statement.
  */
-class data_instantiation_statement : public instantiation_statement {
+class data_instantiation_statement : public instantiation_statement_base {
 private:
-	typedef	instantiation_statement		parent_type;
+	typedef	instantiation_statement_base		parent_type;
 	typedef	data_instantiation_statement	this_type;
 public:
 	typedef	datatype_instance_collection	collection_type;
