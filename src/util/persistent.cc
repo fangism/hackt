@@ -104,6 +104,9 @@ operator << (ostream& o, const persistent::hash_key& k) {
 	size_t i = 0;
 	for ( ; i<persistent::hash_key::MAX_LEN && k.key[i]; i++)
 		o << k.key[i];
+	// space-filler
+	for ( ; i<persistent::hash_key::MAX_LEN; i++)
+		o << '_';
 	return o;
 }
 

@@ -395,7 +395,7 @@ persistent_object_manager::dump_text(ostream& o) const {
 	o << "Persistent Object Manager text dump: " << endl;
 	long i = 0;
 	const long max = reconstruction_table.size();
-	o << "\ti\taddr\t\ttype\thead\ttail" << endl;
+	o << "\ti\taddr\t\ttype\t\thead\ttail" << endl;
 	for ( ; i < max; i++) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
 		o << '\t' << i << '\t';
