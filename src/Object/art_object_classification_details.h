@@ -1,7 +1,8 @@
 /**
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.h,v 1.1.4.6 2005/02/25 21:08:30 fang Exp $
+	Consider splitting into one file per tag type?
+	$Id: art_object_classification_details.h,v 1.1.4.7 2005/02/25 23:01:13 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -129,7 +130,12 @@ class int_instance_alias_info;
 typedef	instance_alias_info<int_tag>		int_instance_alias_info;
 #endif
 
+#if 0
 class enum_instance_alias_info;
+#else
+typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
+#endif
+
 class datastruct_instance_alias_info;
 class channel_instance_alias_info;
 class process_instance_alias_info;
@@ -225,9 +231,7 @@ struct class_traits<enum_tag> {
 	static const char			tag_name[];
 	typedef	enum_instance			instance_type;
 
-	// temporary
-	typedef	enum_instance_alias		instance_alias_base_type;
-//	typedef	enum_instance_alias_base	instance_alias_base_type;
+	typedef	enum_instance_alias_base	instance_alias_base_type;
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
@@ -250,7 +254,8 @@ struct class_traits<enum_tag> {
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	typedef	void				instance_collection_parameter_type;
+	typedef	never_ptr<const enum_datatype_def>
+						instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;

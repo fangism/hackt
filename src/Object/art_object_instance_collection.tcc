@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_collection.tcc,v 1.1.4.7 2005/02/25 21:08:31 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.1.4.8 2005/02/25 23:01:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -47,6 +47,7 @@
 // #include "memory/list_vector_pool.tcc"
 #include "persistent_object_manager.tcc"
 #include "indent.h"
+#include "what.h"
 #include "stacktrace.h"
 #include "static_trace.h"
 #include "ptrs_functional.h"

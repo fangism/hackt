@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.6.2.2 2005/02/25 21:08:32 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.6.2.3 2005/02/25 23:01:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -12,18 +12,20 @@
 #include "memory/pointer_classes.h"
 #include "art_object_classification_details.h"
 
-#include <set>
-#include "multikey_set.h"
-#include "ring_node.h"
-#include "packed_array_fwd.h"
 
 #if USE_INSTANCE_COLLECTION_TEMPLATE
 #include "art_object_instance_collection.h"
 #include "art_object_instance_alias.h"
+#else
+#include <set>
+#include "multikey_set.h"
+#include "ring_node.h"
+#include "packed_array_fwd.h"
 #endif
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 USING_LIST
 using std::set;
 using std::string;
@@ -32,6 +34,7 @@ using util::ring_node_derived;
 using util::multikey_set;
 using util::multikey_set_element_derived;
 using util::packed_array_generic;
+#endif
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"

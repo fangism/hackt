@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.2 2005/02/25 21:08:32 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3.2.3 2005/02/25 23:01:15 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -27,7 +27,6 @@
 #include "art_object_type_hash.h"
 #include "art_built_ins.h"
 
-#include "art_object_classification_details.h"
 #if USE_INSTANCE_COLLECTION_TEMPLATE
 #include "art_object_instance_collection.tcc"
 #endif

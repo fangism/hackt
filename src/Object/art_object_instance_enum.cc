@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.3.2.1 2005/02/23 21:21:28 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.3.2.2 2005/02/25 23:01:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -23,11 +23,10 @@
 #include "art_object_type_hash.h"
 #include "art_object_definition.h"
 
-#include "art_object_classification_details.h"
-
 // experimental: suppressing automatic template instantiation
 #include "art_object_extern_templates.h"
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
 #include "packed_array.tcc"
@@ -37,15 +36,26 @@
 #include "dereference.h"
 #include "compose.h"
 #include "binders.h"
+#else
+#include "art_object_instance_collection.tcc"
+#endif
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::enum_instance_collection, 
 		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_scalar, "enum_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_1D, "enum_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_2D, "enum_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_3D, "enum_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_4D, "enum_array_4D")
+#endif
 }	// end namespace util
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 using std::string;
 #include "using_ostream.h"
 using util::multikey_generator;
@@ -57,8 +67,89 @@ using util::read_value;
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
+#endif
 
 //=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template <>
+struct type_dumper<enum_tag> {
+	typedef class_traits<enum_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	ostream& os;
+	type_dumper(ostream& o) : os(o) { }
+
+	ostream&
+	operator () (const instance_collection_generic_type& c) {
+		return os << "enum " <<
+			c.get_base_def()->get_qualified_name() <<
+			'^' << c.get_dimensions();
+	}
+};      // end struct type_dumper<enum_tag>
+
+//-----------------------------------------------------------------------------
+template <>
+struct collection_parameter_persistence<enum_tag> {
+	typedef class_traits<enum_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<enum_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
+	const persistent_object_manager& pom;
+
+	collection_parameter_persistence(const persistent_object_manager& m) :
+		pom(m) { }
+
+	// transient collection?
+
+	void
+	operator () (ostream& o,
+		const instance_collection_generic_type& c) const {
+		pom.write_pointer(o, c.type_parameter);
+	}
+
+	void
+	operator () (istream& i,
+		instance_collection_generic_type& c) const {
+		pom.read_pointer(i, c.type_parameter);
+	}
+};      // end struct collection_parameter_persistence
+
+//-----------------------------------------------------------------------------
+
+template <>
+struct collection_type_committer<enum_tag> {
+	typedef class_traits<enum_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<enum_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	/**
+		During unroll phase, this commits the type of the collection.  
+		\param t the data integer type reference, containing width, 
+			must already be resolved to a const_param_expr_list.  
+		\return false on success, true on error.  
+		\post the integer width is fixed for the rest of the program.  
+	 */
+	bool
+	operator () (instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) const {
+		// make sure this is the canonical definition
+		//	in case type is typedef!
+		// this really should be statically type-checked
+		// until we allow templates to include type parameters.  
+		if (c.type_parameter)
+			INVARIANT(t->get_base_def() == c.type_parameter);
+		else
+			c.type_parameter = t->get_base_def()
+				.is_a<const enum_datatype_def>();
+		return false;
+	}
+};
+
+
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class enum_instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,17 +256,21 @@ enum_instance_collection::construct_empty(const int i) {
 			return NULL;
 	}
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
 
 //=============================================================================
 // class enum_instance_alias method definitions
 
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 ostream&
-operator << (ostream& o, const enum_instance_alias& b) {
+operator << (ostream& o, const enum_instance_alias_base& b) {
 	INVARIANT(b.valid());
 	return o << "(enum-alias)";
 }
+#endif
 
 //=============================================================================
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 // class enum_array method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -572,6 +667,17 @@ enum_array<0>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 	read_value(f, the_instance);
 }
+#endif	// USE_INSTANCE_COLLECTION_TEMPLATE
+
+//=============================================================================
+#if USE_INSTANCE_COLLECTION_TEMPLATE
+template class instance_collection<enum_tag>;
+template class instance_array<enum_tag, 0>;
+template class instance_array<enum_tag, 1>;
+template class instance_array<enum_tag, 2>;
+template class instance_array<enum_tag, 3>;
+template class instance_array<enum_tag, 4>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.6 2005/02/25 21:08:31 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5.2.7 2005/02/25 23:01:14 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -13,17 +13,19 @@
 #include "memory/list_vector_pool_fwd.h"
 #include "art_object_classification_details.h"		// temporary
 
-#include <set>
-#include "multikey_set.h"
-#include "ring_node.h"
 
 #if USE_INSTANCE_COLLECTION_TEMPLATE
 #include "art_object_instance_alias.h"
 #include "art_object_instance_collection.h"
+#else
+#include <set>
+#include "multikey_set.h"
+#include "ring_node.h"
 #endif
 
 namespace ART {
 namespace entity {
+#if !USE_INSTANCE_COLLECTION_TEMPLATE
 USING_LIST
 USING_CONSTRUCT
 using std::set;
@@ -33,6 +35,7 @@ using util::ring_node_derived;
 using namespace util::memory;
 using util::multikey_set;
 using util::multikey_set_element_derived;
+#endif
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"

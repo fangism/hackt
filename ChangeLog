@@ -12,6 +12,11 @@
 	  Will perform massive cleanup after applying instance collection
 	  template to remaining types: enum, struct, channel, process.
 
+	* -instance-11:
+	  Ported and upgraded enum to instance_collection template, 
+	  same story as before.  They now have alias connections.  
+	  Sweet, that was easy... structs, you're next.
+
 
 2005-02-24	David Fang	<fangism@users.sourceforge.net>
 
