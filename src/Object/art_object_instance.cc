@@ -2,7 +2,7 @@
 	\file "art_object_instance.cc"
 	Method definitions for instance collection and 
 	instantiation statement classes.  
- 	$Id: art_object_instance.cc,v 1.20 2004/11/30 01:25:10 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.21 2004/12/02 01:38:50 fang Exp $
  */
 
 #include <iostream>
@@ -18,6 +18,7 @@
 #include "compose.h"
 #include "binders.h"
 #include "ptrs_functional.h"
+#include "indent.h"
 
 //=============================================================================
 // DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
@@ -731,6 +732,7 @@ param_instance_collection::~param_instance_collection() {
 ostream&
 param_instance_collection::dump(ostream& o) const {
 	get_type_ref()->dump(o) << " " << key;
+	// collection of indices to instantiate sequentially during unroll
 	index_collection_type::const_iterator i = index_collection.begin();
 	const index_collection_type::const_iterator e = index_collection.end();
 	for ( ; i!=e; i++) {
@@ -745,6 +747,16 @@ param_instance_collection::dump(ostream& o) const {
 			init_def->dump(o << " (default = ") << ")";
 		else	init_def->dump(o << " (init = ") << ")";
 	}
+	// print out the values of instances that have been unrolled
+	if (is_partially_unrolled()) {
+		o << endl;
+		o << auto_indent << "unrolled values: {" << endl;
+		{
+			indent indenter(o);
+			dump_unrolled_values(o);
+		}
+		o << auto_indent << "}" << endl;
+	}
 	return o;
 }
 
@@ -756,7 +768,8 @@ param_instance_collection::dump(ostream& o) const {
 bool
 param_instance_collection::is_template_formal(void) const {
 	// look itself up in owner namespace
-	never_ptr<const definition_base> def(owner.is_a<const definition_base>());
+	never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
 	if (def) {
 		return def->lookup_template_formal(key);
 	} else {
@@ -901,7 +914,11 @@ DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_instance_collection,
 	Private empty constructor.  
  */
 pbool_instance_collection::pbool_instance_collection() :
-		param_instance_collection(), ival(NULL) {
+		param_instance_collection(), ival(NULL)
+#if !SUBCLASS_PBOOL_ARRAY
+		, collection(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -909,14 +926,22 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 		const string& n) :
 		param_instance_collection(o, n,
 			index_collection_item_ptr_type(NULL)),
-		ival(NULL) {
+		ival(NULL)
+#if !SUBCLASS_PBOOL_ARRAY
+		, collection(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_collection::pbool_instance_collection(const scopespace& o, 
 		const string& n, 
 		const size_t d) :
-		param_instance_collection(o, n, d), ival(NULL) {
+		param_instance_collection(o, n, d), ival(NULL)
+#if !SUBCLASS_PBOOL_ARRAY
+		, collection(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -941,10 +966,24 @@ pbool_instance_collection::pbool_instance_collection(const scopespace& o,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_instance_collection::~pbool_instance_collection() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_instance_collection::what(ostream& o) const {
 	return o << "pbool-inst";
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
+ostream&
+pbool_instance_collection::dump_unrolled_values(ostream& o) const {
+	return o << auto_indent <<
+		"pbool_instance_collection::dump_unrolled_values(): "
+		"(only temporary)" << endl;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
@@ -1058,6 +1097,7 @@ pbool_instance_collection::type_check_actual_param_expr(const param_expr& pe) co
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
 void
 pbool_instance_collection::instantiate_indices(
 		const index_collection_item_ptr_type& i) {
@@ -1155,8 +1195,10 @@ pbool_instance_collection::instantiate_indices(
 		assert(!pi.valid);
 	}
 }
+#endif	// SUBCLASS_PBOOL_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
 /**
 	This version assumes collection is a scalar.  
  */
@@ -1203,8 +1245,10 @@ pbool_instance_collection::lookup_value(bool& v,
 	}
 	return pi.valid;
 }
+#endif	// SUBCLASS_PBOOL_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
 /**
 	\param l list in which to accumulate values.
 	\param r the ranges, must be valid.
@@ -1245,8 +1289,10 @@ pbool_instance_collection::lookup_value_collection(
 	} while (key_gen_ref != key_gen_ref.get_lower_corner());
 	return ret;
 }
+#endif	// SUBCLASS_BOOL_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
 /**
 	Expands indices which may be under-specified into explicit
 	indices for the implicit subslice, if it is densely packed.  
@@ -1284,8 +1330,10 @@ pbool_instance_collection::resolve_indices(const const_index_list& l) const {
 	return const_index_list(l, 
 		collection->is_compact_slice(lower_list, upper_list));
 }
+#endif	// SUBCLASS_PBOOL_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SUBCLASS_PBOOL_ARRAY
 /**
 	Assigns a single value.
 	Only call this if this is scalar, 0-D.
@@ -1313,12 +1361,19 @@ pbool_instance_collection::assign(const multikey_base<int>& k, const bool b) {
 	pbool_instance& pi = (*collection)[k];
 	return !(pi = b);
 }
+#endif	// SUBCLASS_PBOOL_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instance_collection::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY)) {
+#if SUBCLASS_PBOOL_ARRAY
+if (!m.register_transient_object(this, 
+		PBOOL_INSTANCE_COLLECTION_TYPE_KEY, dimensions()))
+#else
+if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY))
+#endif
+{
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	collect_index_collection_pointers(m);
@@ -1329,38 +1384,500 @@ if (!m.register_transient_object(this, PBOOL_INSTANCE_COLLECTION_TYPE_KEY)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBCLASS_PBOOL_ARRAY
+pbool_instance_collection*
+pbool_instance_collection::make_pbool_array(
+		const scopespace& o, const string& n, const size_t D) {
+	switch(D) {
+		case 0: return new pbool_array<0>(o, n);
+		case 1: return new pbool_array<1>(o, n);
+		case 2: return new pbool_array<2>(o, n);
+		case 3: return new pbool_array<3>(o, n);
+		case 4: return new pbool_array<4>(o, n);
+		default:
+			cerr << "FATAL: dimension limit is 4!" << endl;
+			return NULL;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 persistent*
 pbool_instance_collection::construct_empty(const int i) {
+#if !SUBCLASS_PBOOL_ARRAY
 	return new pbool_instance_collection();
+#else
+	switch(i) {
+		case 0: return new pbool_array<0>();
+		case 1: return new pbool_array<1>();
+		case 2: return new pbool_array<2>();
+		case 3: return new pbool_array<3>();
+		case 4: return new pbool_array<4>();
+		default:
+			cerr << "FATAL: dimension limit is 4!" << endl;
+			return NULL;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::write_object(
-		const persistent_object_manager& m) const {
+#if SUBCLASS_PBOOL_ARRAY
+pbool_instance_collection::write_object_base
+#else
+pbool_instance_collection::write_object
+#endif
+		(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
+#if !SUBCLASS_PBOOL_ARRAY
 	WRITE_POINTER_INDEX(f, m);
+#endif
 	m.write_pointer(f, owner);
 	write_string(f, key);
 	write_index_collection_pointers(m);
 	m.write_pointer(f, ival);
+#if !SUBCLASS_PBOOL_ARRAY
+	WRITE_OBJECT_FOOTER(f);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+#if SUBCLASS_PBOOL_ARRAY
+pbool_instance_collection::load_object_base
+#else
+pbool_instance_collection::load_object
+#endif
+		(persistent_object_manager& m) {
+#if !SUBCLASS_PBOOL_ARRAY
+if (!m.flag_visit(this))
+#endif
+{
+	istream& f = m.lookup_read_buffer(this);
+#if !SUBCLASS_PBOOL_ARRAY
+	STRIP_POINTER_INDEX(f, m);
+#endif
+	m.read_pointer(f, owner);
+	read_string(f, const_cast<string&>(key));
+	load_index_collection_pointers(m);
+	m.read_pointer(f, ival);
+#if !SUBCLASS_PBOOL_ARRAY
+	STRIP_OBJECT_FOOTER(f);
+#endif
+}
+// else already visited
+}
+
+//=============================================================================
+#if SUBCLASS_PBOOL_ARRAY
+// class pbool_array method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+pbool_array<D>::pbool_array() : pbool_instance_collection(), collection() {
+	depth = D;
+	// until we eliminate that field from instance_collection_base
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+pbool_array<D>::pbool_array(const scopespace& o, const string& n) :
+		pbool_instance_collection(o, n, D), collection() {
+	// until we eliminate that field from instance_collection_base
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+pbool_array<D>::~pbool_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+bool
+pbool_array<D>::is_partially_unrolled(void) const {
+	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+ostream&
+pbool_array<D>::dump_unrolled_values(ostream& o) const {
+	for_each(collection.begin(), collection.end(), key_value_dumper(o));
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE 
+ostream&
+pbool_array<D>::key_value_dumper::operator () (
+		const typename collection_type::value_type& p) {
+	return os << auto_indent << p.first << " = " << p.second << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	Instantiates integer parameters at the specified indices.
+	\param i fully-specified range of indices to instantiate.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+pbool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	assert(i);
+	// indices is a range_expr_list (base class)
+	// resolve into constants now using const_range_list
+	// if unable, (b/c uninitialized) then report error
+	const_range_list ranges;	// initially empty
+	if (!i->resolve_ranges(ranges)) {
+		// ranges is passed and returned by reference
+		// fail
+		cerr << "ERROR: unable to resolve indices "
+			"for instantiation: ";
+		i->dump(cerr) << endl;
+		exit(1);
+	}
+	// else success
+	// now iterate through, unrolling one at a time...
+	// stop as soon as there is a conflict
+	// later: factor this out into common helper class
+	multikey_generator<D, int> key_gen;
+	ranges.make_multikey_generator(key_gen);
+	key_gen.initialize();
+#if 0
+	const typename multikey_generator<D, int>::base_type&
+		key_end = key_gen.get_lower_corner();
+#endif
+	do {
+#if 0
+		multikey_base<int>::const_iterator ci = key_gen.begin();
+		for ( ; ci!=key_gen.end(); ci++)
+			cerr << '[' << *ci << ']';
+		cerr << endl;
+#endif
+		pbool_instance& pi = collection[key_gen];
+		if (pi.instantiated) {
+			// more detailed message, please!
+			cerr << "ERROR: Index already instantiated!"
+				<< endl;
+			exit(1);
+		}
+		pi.instantiated = true;
+		// sanity check: shouldn't start out valid
+		assert(!pi.valid);
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	Expands indices which may be under-specified into explicit
+	indices for the implicit subslice, if it is densely packed.
+	Depends on the current state of the collection.
+	\param l is list of indices, which may be under-specified,
+		or even empty.
+	\return fully-specified index list, or empty list if there is error.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+const_index_list
+pbool_array<D>::resolve_indices(const const_index_list& l) const {
+	const size_t l_size = l.size();
+	if (dimensions() == l_size) {
+		// already fully specified
+		return l;
+	}
+	// convert indices to pair of list of multikeys
+	if (!l_size) {
+		return const_index_list(l, collection.is_compact());
+	}
+	// else construct slice
+	list<int> lower_list, upper_list;
+	transform(l.begin(), l.end(), back_inserter(lower_list),
+		unary_compose(
+			mem_fun_ref(&const_index::lower_bound),
+			dereference<count_ptr, const const_index>()
+		)
+	);
+	transform(l.begin(), l.end(), back_inserter(upper_list),
+		unary_compose(
+			mem_fun_ref(&const_index::upper_bound),
+			dereference<count_ptr, const const_index>()
+		)
+	);
+	return const_index_list(l,
+		collection.is_compact_slice(lower_list, upper_list));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+/**
+	Assumes that index resolves down to a single integer.
+	Returns value of a single integer, if it can be resolved.
+	If integer is uninitialized, report as error.
+
+	TODO: really this should take a const_index_list argument,
+	to valid dynamic allocation in pbool_instance_reference methods.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+bool
+pbool_array<D>::lookup_value(bool& v, const multikey_base<int>& i) const {
+	assert(depth == i.dimensions());
+	const pbool_instance& pi = collection[i];
+	if (pi.valid) {
+		v = pi.value;
+	} else {
+		cerr << "ERROR: reference to uninitialized pbool " <<
+			get_qualified_name() << " at index: " << i << endl;
+	}
+	return pi.valid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param l list in which to accumulate values.
+	\param r the ranges, must be valid, and fully resolved.
+	\return false on error, e.g. if value doesn't exist or
+		is uninitialized; true on success.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+bool
+pbool_array<D>::lookup_value_collection(
+		list<bool>& l, const const_range_list& r) const {
+	assert(!r.empty());
+#if 1
+	multikey_generator<D, int> key_gen;
+	r.make_multikey_generator(key_gen);
+#else
+	const multikey<D, int> lower(r.lower_multikey());
+	const multikey<D, int> upper(r.upper_multikey());
+	multikey_generator<D, int> key_gen;
+	copy(lower.begin(), lower.end(), key_gen.get_lower_corner().begin());
+	copy(upper.begin(), upper.end(), key_gen.get_upper_corner().begin());
+#endif
+	key_gen.initialize();
+	bool ret = true;
+	do {
+		const pbool_instance& pi = collection[key_gen];
+		// assert(pi.instantiated);	// else earlier check failed
+		if (!pi.instantiated)
+			cerr << "FATAL: reference to uninstantiated pbool index "
+				<< key_gen << endl;
+		else if (!pi.valid)
+			cerr << "ERROR: reference to uninitialized pbool index "
+				<< key_gen << endl;
+		ret &= (pi.valid && pi.instantiated);
+		l.push_back(pi.value);
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a single value, using an index.
+	Only call this if this is non-scalar (array).
+	\return true on error.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+bool
+pbool_array<D>::assign(const multikey_base<int>& k, const bool i) {
+	pbool_instance& pi = collection[k];
+	return !(pi = i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+pbool_array<D>::write_object(const persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	write_object_base(m);
+	// write out the instance map
+	collection.write(f);
+	WRITE_OBJECT_FOOTER(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+void
+pbool_array<D>::load_object(persistent_object_manager& m) {
+if (!m.flag_visit(this)) {
+	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
+	STRIP_POINTER_INDEX(f, m);
+	load_object_base(m);
+	// load the instance map
+	collection.read(f);
+	STRIP_OBJECT_FOOTER(f);
+}
+}
+
+//-----------------------------------------------------------------------------
+// class pbool_array<0> specialization method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_array<0>::pbool_array() : pbool_instance_collection(), the_instance() {
+	depth = 0;
+	// until we eliminate that field from instance_collection_base
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_array<0>::pbool_array(const scopespace& o, const string& n) :
+		pbool_instance_collection(o, n, 0), the_instance() {
+	// until we eliminate that field from instance_collection_base
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+pbool_array<0>::pbool_array(const scopespace& o, const string& n,
+		count_ptr<const pbool_expr> i) :
+		pbool_instance_collection(o, n, 0, i), the_instance() {
+	// until we eliminate that field from instance_collection_base
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_array<0>::is_partially_unrolled(void) const {
+	return the_instance.instantiated;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pbool_array<0>::dump_unrolled_values(ostream& o) const {
+	return o << auto_indent << the_instance << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Instantiates the_instance of parameter integer.
+	Ideally, the error should never trigger because
+	re-instantiation / redeclaration of a scalar instance
+	is easily detected (and actually detected) during the compile phase.
+	\param i indices must be NULL because this is not an array.
+ */
+void
+pbool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
+	assert(!i);
+	// 0-D, or scalar
+	if (the_instance.instantiated) {
+		// should never happen... but just in case
+		cerr << "ERROR: Already instantiated!" << endl;
+		exit(1);
+	}
+	the_instance.instantiated = true;
+	assert(!the_instance.valid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This specialization isn't ever supposed to be called.
+	\param l is list of indices, which may be under-specified,
+		or even empty.
+	\return empty index list, always.
+ */
+const_index_list
+pbool_array<0>::resolve_indices(const const_index_list& l) const {
+	cerr << "WARNING: pbool_array<0>::resolve_indices(const_index_list) "
+		"always returns an empty list!" << endl;
+	// calling this is probably not intended, and is an error.
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version assumes collection is a scalar.
+	\return true if lookup found a valid value.
+ */
+bool
+pbool_array<0>::lookup_value(bool& v) const {
+	if (!the_instance.instantiated) { 
+		cerr << "ERROR: Reference to uninstantiated pbool!" << endl;
+		return false;
+	}
+	if (the_instance.valid) {
+		v = the_instance.value;
+	} else {
+		dump(cerr << "ERROR: use of uninitialized ") << endl;
+	}
+	return the_instance.valid;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_array<0>::lookup_value_collection(
+		list<bool>& l, const const_range_list& r) const {
+	cerr << "WARNING: pbool_array<0>::lookup_value_collection(...) "
+		"should never be called." << endl;
+	assert(r.empty());
+	bool i;
+	const bool ret = lookup_value(i);
+	l.push_back(i);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should never be called.
+ */
+bool
+pbool_array<0>::lookup_value(bool& v, const multikey_base<int>& i) const {
+	cerr << "FATAL: pbool_array<0>::lookup_value(int&, multikey_base) "
+		"should never be called!" << endl;
+	assert(0);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns a single value.
+	Only call this if this is scalar, 0-D.
+	Decision: should we allow multiple assignments of the same value?
+	\return true on error, false on success.
+ */
+bool
+pbool_array<0>::assign(const bool i) {
+	return !(the_instance = i);
+		// error message perhaps?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_array<0>::assign(const multikey_base<int>& k, const bool i) {
+	// this should never be called
+	cerr << "FATAL: pbool_array<0>::assign(multikey_base, int) "
+		"should never be called!" << endl;
+	assert(0);
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_array<0>::write_object(const persistent_object_manager& m) const {
+	ostream& f = m.lookup_write_buffer(this);
+	assert(f.good());
+	WRITE_POINTER_INDEX(f, m);
+	write_object_base(m);
+	// write out the instance
+	write_value(f, the_instance);
 	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::load_object(persistent_object_manager& m) {
+pbool_array<0>::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
+	assert(f.good());
 	STRIP_POINTER_INDEX(f, m);
-	m.read_pointer(f, owner);
-	read_string(f, const_cast<string&>(key));
-	load_index_collection_pointers(m);
-	m.read_pointer(f, ival);
+	load_object_base(m);
+	// load the instance
+	read_value(f, the_instance);
 	STRIP_OBJECT_FOOTER(f);
 }
-// else already visited
 }
+
+#endif	// SUBCLASS_PBOOL_ARRAY
 
 //=============================================================================
 // struct pint_instance method definitions
@@ -1379,8 +1896,8 @@ ostream&
 operator << (ostream& o, const pint_instance& p) {
 	assert(p.instantiated);
 	if (p.valid) {
-		return o << "?";
-	} else	return o << p.value;
+		return o << p.value;
+	} else	return o << "?";
 }
 
 //=============================================================================
@@ -1452,9 +1969,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBCLASS_PINT_ARRAY
 pint_instance_collection::~pint_instance_collection() { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1981,6 +2496,29 @@ PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::~pint_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PINT_ARRAY_TEMPLATE_SIGNATURE
+bool
+pint_array<D>::is_partially_unrolled(void) const {
+	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PINT_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+pint_array<D>::dump_unrolled_values(ostream& o) const {
+	for_each(collection.begin(), collection.end(), key_value_dumper(o));
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PINT_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+pint_array<D>::key_value_dumper::operator () (
+		const typename collection_type::value_type& p) {
+	return os << auto_indent << p.first << " = " << p.second << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates integer parameters at the specified indices.  
 	\param i fully-specified range of indices to instantiate.  
@@ -2199,8 +2737,23 @@ pint_array<0>::pint_array(const scopespace& o, const string& n,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_array<0>::is_partially_unrolled(void) const {
+	return the_instance.instantiated;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pint_array<0>::dump_unrolled_values(ostream& o) const {
+	return o << auto_indent << the_instance << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates the_instance of parameter integer.  
+	Ideally, the error should never trigger because
+	re-instantiation / redeclaration of a scalar instance
+	is easily detected (and actually detected) during the compile phase.  
 	\param i indices must be NULL because this is not an array.
  */
 void
@@ -2208,6 +2761,7 @@ pint_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	assert(!i);
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
+		// should never happen... but just in case
 		cerr << "ERROR: Already instantiated!" << endl;
 		exit(1);
 	}
@@ -3161,6 +3715,14 @@ if (!m.flag_visit(this)) {
 
 //=============================================================================
 // explicit template instantiations
+
+#if SUBCLASS_PBOOL_ARRAY
+template class pbool_array<0>;
+template class pbool_array<1>;
+template class pbool_array<2>;
+template class pbool_array<3>;
+template class pbool_array<4>;
+#endif
 
 #if SUBCLASS_PINT_ARRAY
 template class pint_array<0>;

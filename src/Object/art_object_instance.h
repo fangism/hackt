@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection and statement classes for ART.  
-	$Id: art_object_instance.h,v 1.18 2004/11/30 01:25:10 fang Exp $
+	$Id: art_object_instance.h,v 1.19 2004/12/02 01:38:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -158,6 +158,12 @@ virtual	~param_instance_collection();
 virtual	ostream& what(ostream& o) const = 0;
 	ostream& dump(ostream& o) const;
 
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
+virtual	ostream&
+	dump_unrolled_values(ostream& o) const = 0;
+
 virtual	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const = 0;
 	// why is this never?
@@ -266,6 +272,7 @@ ostream&
 operator << (ostream& o, const pbool_instance& p);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	SUBCLASS_PBOOL_ARRAY	1
 /**
 	Hard-wired to pbool_type, defined in "art_built_ins.h".  
  */
@@ -273,10 +280,12 @@ class pbool_instance_collection : public param_instance_collection {
 // friend class pbool_instantiation_statement;
 friend class pbool_instance_reference;
 public:
+#if !SUBCLASS_PBOOL_ARRAY
 	// int or size_t (unsigned)?
 	typedef	multikey_qmap_base<int, pbool_instance>		collection_type;
 	typedef	multikey_qmap<0, int, pbool_instance>		scalar_type;
         typedef multikey_qmap_base<int, bool>			value_type;
+#endif
 protected:
 	/**
 		Expression or value with which parameter is initialized. 
@@ -291,19 +300,44 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_ptr<const pbool_expr>		ival;
+
+#if !SUBCLASS_PBOOL_ARRAY
 	/**
 		The unrolled collection of pbool instances.  
 	 */
 	excl_ptr<collection_type>		collection;
+#endif
 
-private:
+protected:
 	pbool_instance_collection();
 public:
 	pbool_instance_collection(const scopespace& o, const string& n);
 	pbool_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
+#if SUBCLASS_PBOOL_ARRAY
+virtual	~pbool_instance_collection();
+virtual	size_t dimensions(void) const = 0;
+#else
+	~pbool_instance_collection();
+#endif
 
 	ostream& what(ostream& o) const;
+
+// temporary
+#if SUBCLASS_PBOOL_ARRAY
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
+virtual	ostream&
+	dump_unrolled_values(ostream& o) const = 0;
+#else
+	bool
+	is_partially_unrolled(void) const { return false; }
+
+	ostream&
+	dump_unrolled_values(ostream& o) const;
+#endif
+// end temporary
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
@@ -319,8 +353,18 @@ public:
 
 	bool type_check_actual_param_expr(const param_expr& pe) const;
 
-	void instantiate_indices(const index_collection_item_ptr_type& i);
+#if SUBCLASS_PBOOL_ARRAY
+virtual	void instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+// virtual	bool lookup_value(bool& v) const = 0;
+virtual	bool lookup_value(bool& v, const multikey_base<int>& i) const = 0;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
+virtual	bool lookup_value_collection(list<bool>& l, 
+		const const_range_list& r) const = 0;
 
+virtual	const_index_list resolve_indices(const const_index_list& l) const = 0;
+#else
+	void instantiate_indices(const index_collection_item_ptr_type& i);
 	bool lookup_value(bool& v) const;
 	bool lookup_value(bool& v, const multikey_base<int>& i) const;
 	// need methods for looking up dense sub-collections of values?
@@ -329,18 +373,143 @@ public:
 		const const_range_list& r) const;
 
 	const_index_list resolve_indices(const const_index_list& l) const;
+#endif
 
 public:
 // really should be protected, usable by pbool_instance_reference::assigner
+#if SUBCLASS_PBOOL_ARRAY
+virtual	bool assign(const multikey_base<int>& k, const bool b) = 0;
+#else
 	bool assign(const bool b);
 	bool assign(const multikey_base<int>& k, const bool b);
+#endif
 
 public:
 	PERSISTENT_STATIC_MEMBERS_DECL
+#if !SUBCLASS_PBOOL_ARRAY
 	PERSISTENT_METHODS
+#else
+	static pbool_instance_collection*
+	make_pbool_array(const scopespace& o, const string& n, const size_t d);
+
+	// only intended for children class
+	// need not be virtual, no pointers in subclasses
+	static persistent* construct_empty(const int);
+	void collect_transient_info(persistent_object_manager& m) const;
+	void write_object_base(const persistent_object_manager& m) const;
+	void load_object_base(persistent_object_manager& m);
+
+	// subclasses are responsible for implementing:
+	// write_object and load_object.
+#endif
 };	// end class pbool_instance_collection
 
 //-----------------------------------------------------------------------------
+#if SUBCLASS_PBOOL_ARRAY
+#define	PBOOL_ARRAY_TEMPLATE_SIGNATURE		template <size_t D>
+
+/**
+	Dimension-specific array of boolean parameters.
+ */
+PBOOL_ARRAY_TEMPLATE_SIGNATURE
+class pbool_array : public pbool_instance_collection {
+public:
+	/// Type for actual values, including validity and status.
+	typedef	multikey_qmap<D, int, pbool_instance>	collection_type;
+	/// collection of valid values passed around.
+	typedef	multikey_qmap<D, int, int>		value_type;
+
+protected:
+	/// the collection of boolean instances
+	collection_type					collection;
+public:
+	pbool_array();
+	pbool_array(const scopespace& o, const string& n);
+	~pbool_array();
+
+	size_t dimensions(void) const { return D; }
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_values(ostream& o) const;
+
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+	const_index_list resolve_indices(const const_index_list& l) const;
+	bool lookup_value(bool& v, const multikey_base<int>& i) const;
+	bool lookup_value_collection(list<bool>& l,
+		const const_range_list& r) const;
+	bool assign(const multikey_base<int>& k, const bool i);
+
+	/// helper functor for dumping values
+	struct key_value_dumper {
+		ostream& os;
+		key_value_dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const typename collection_type::value_type&);
+	};      // end struct key_value_dumper
+
+public:
+//	PERSISTENT_METHODS
+	void write_object(const persistent_object_manager& m) const;
+	void load_object(persistent_object_manager& m);
+
+};	// end class pbool_array
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization of scalar boolean parameter.
+ */
+template <>
+class pbool_array<0> : public pbool_instance_collection {
+public:
+	typedef	pbool_instance				instance_type;
+	typedef	int					value_type;
+protected:
+	instance_type					the_instance;
+public:
+	pbool_array();
+	pbool_array(const scopespace& o, const string& n);
+	pbool_array(const scopespace& o, const string& n, 
+		count_ptr<const pbool_expr> i);
+	~pbool_array() { }
+
+	size_t dimensions(void) const { return 0; }
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_values(ostream& o) const;
+
+	bool lookup_value(bool& i) const;
+	bool assign(const bool i);
+
+// there are implemented to do nothing but sanity check, 
+// since it doesn't even make sense to call these.  
+	void instantiate_indices(const index_collection_item_ptr_type& i);
+	bool lookup_value(bool& v, const multikey_base<int>& i) const;
+	// need methods for looking up dense sub-collections of values?
+	// what should they return?
+	bool lookup_value_collection(list<bool>& l, 
+		const const_range_list& r) const;
+	bool assign(const multikey_base<int>& k, const bool i);
+
+	const_index_list resolve_indices(const const_index_list& l) const;
+
+public:
+//	PERSISTENT_METHODS
+	void write_object(const persistent_object_manager& m) const;
+	void load_object(persistent_object_manager& m);
+};	// end class pbool_array specialization
+
+typedef	pbool_array<0>			pbool_scalar;
+
+#endif	// SUBCLASS_PBOOL_ARRAY
+
+//=============================================================================
 /**
 	Run-time instance of integer parameter.  
  */
@@ -466,9 +635,17 @@ public:
 #if SUBCLASS_PINT_ARRAY
 virtual	~pint_instance_collection();
 virtual	size_t dimensions(void) const = 0;
+#else
+	~pint_instance_collection();
 #endif
 
 	ostream& what(ostream& o) const;
+#if SUBCLASS_PINT_ARRAY
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+virtual	ostream&
+	dump_unrolled_values(ostream& o) const = 0;
+#endif
 
 	count_ptr<const fundamental_type_reference>
 		get_type_ref(void) const;
@@ -520,8 +697,8 @@ public:
 #if !SUBCLASS_PINT_ARRAY
 	PERSISTENT_METHODS
 #else
-	static pint_instance_collection* make_pint_array(
-		const scopespace& o, const string& n, const size_t d);
+	static pint_instance_collection*
+	make_pint_array(const scopespace& o, const string& n, const size_t d);
 	// need not be virtual, no pointers in subclasses
 	static persistent* construct_empty(const int);
 	void collect_transient_info(persistent_object_manager& m) const;
@@ -560,12 +737,28 @@ public:
 	~pint_array();
 
 	size_t dimensions(void) const { return D; }
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_values(ostream& o) const;
+
 	void instantiate_indices(const index_collection_item_ptr_type& i);
 	const_index_list resolve_indices(const const_index_list& l) const;
 	bool lookup_value(int& v, const multikey_base<int>& i) const;
 	bool lookup_value_collection(list<int>& l, 
 		const const_range_list& r) const;
 	bool assign(const multikey_base<int>& k, const int i);
+
+	/// helper functor for dumping values
+	struct key_value_dumper {
+		ostream& os;
+		key_value_dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const typename collection_type::value_type&);
+	};	// end struct key_value_dumper
 
 public:
 //	PERSISTENT_METHODS
@@ -592,6 +785,13 @@ public:
 	~pint_array() { }
 
 	size_t dimensions(void) const { return 0; }
+
+	bool
+	is_partially_unrolled(void) const;
+
+	ostream&
+	dump_unrolled_values(ostream& o) const;
+
 	bool lookup_value(int& i) const;
 	bool assign(const int i);
 
@@ -612,6 +812,8 @@ public:
 	void write_object(const persistent_object_manager& m) const;
 	void load_object(persistent_object_manager& m);
 };	// end class pint_array specialization
+
+typedef	pint_array<0>			pint_scalar;
 
 #endif	// SUBCLASS_PINT_ARRAY
 

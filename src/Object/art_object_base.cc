@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.20 2004/11/30 02:33:13 fang Exp $
+ 	$Id: art_object_base.cc,v 1.21 2004/12/02 01:38:50 fang Exp $
  */
 
 #include <iostream>
@@ -856,10 +856,10 @@ scopespace::add_instance(
 				return return_type(NULL);
 			}
 			// compare types, must match!
-			assert(inst_stmt);		// sanity check
-			count_ptr<const fundamental_type_reference>
+			// just change these to references to avoid ref_count
+			const count_ptr<const fundamental_type_reference>
 				old_type(probe_inst->get_type_ref());
-			count_ptr<const fundamental_type_reference>
+			const count_ptr<const fundamental_type_reference>
 				new_type(inst_stmt->get_type_ref());
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
@@ -874,7 +874,12 @@ scopespace::add_instance(
 			}	// else good to continue
 			
 			// compare dimensions
-			if (!probe_inst->dimensions()) {
+			const size_t p_dim = probe_inst->dimensions();
+#if 0
+			cerr << "original dimensions = " << p_dim << 
+				", new dimensions = " << dim << endl;
+#endif
+			if (!p_dim) {
 				// if original declaration was not collective, 
 				// then one cannot add more.  
 				probe->dump(cerr) << " was originally declared "
@@ -882,9 +887,9 @@ scopespace::add_instance(
 					"not be extended or re-declared, "
 					"ERROR!  ";
 				return return_type(NULL);
-			} else if (probe_inst->dimensions()!=dim) {
+			} else if (p_dim != dim) {
 				probe->dump(cerr) << " was originally declared "
-					"as a " << probe_inst->dimensions() <<
+					"as a " << p_dim <<
 					"-D array, so the new declaration "
 					"cannot add a " << dim <<
 					"-D array, ERROR!  ";

@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.10 2004/11/30 02:33:13 fang Exp $
+ 	$Id: art_context.cc,v 1.11 2004/12/02 01:38:50 fang Exp $
  */
 
 #include <assert.h>
@@ -657,8 +657,8 @@ context::add_instance(const token_identifier& id,
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	assert(inst_stmt);
-	never_ptr<const instance_collection_base>
-		inst_base(current_named_scope->add_instance(inst_stmt, id));
+	return_type inst_base(
+		current_named_scope->add_instance(inst_stmt, id));
 	// adds non-const back-reference
 
 	if (!inst_base) {
@@ -671,6 +671,7 @@ context::add_instance(const token_identifier& id,
 		imb = inst_stmt.as_a_xfer<const instance_management_base>();
 	assert(current_sequential_scope);
 	current_sequential_scope->append_instance_management(imb);
+	INVARIANT(!imb);
 	return inst_base;
 }
 
