@@ -11,9 +11,23 @@
 #define	QMAP_NAMESPACE		qmap_namespace
 #endif
 
-namespace QMAP_NAMESPACE {
+#include <map>
 
-template <class K, class T>	class qmap;
+#define	QMAP_TEMPLATE_SIGNATURE						\
+template <class K, class T, typename C, typename A>
+
+/**
+	Namespace for queryable map, one with const-semantics lookup.  
+ */
+namespace QMAP_NAMESPACE {
+using std::less;
+using std::allocator;
+using std::pair;
+
+template <class K, class T,
+	typename C = less<K>,
+	typename A = allocator<pair<const K, T> > >
+class qmap;
 
 }	// end namespace
 

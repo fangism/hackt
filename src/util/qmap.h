@@ -8,6 +8,10 @@
 #ifndef	__QMAP_H__
 #define	__QMAP_H__
 
+#ifndef NULL
+#define NULL    0
+#endif
+
 #include <map>
 #include "qmap_fwd.h"		// forward declarations only
 
@@ -20,10 +24,10 @@ using std::map;
 	whether or not something is in the map, but without modifying it.  
 	Useful for maps of pointers and pointer classes.  
  */
-template <class K, class T>
-class qmap : public map<K,T> {
+QMAP_TEMPLATE_SIGNATURE
+class qmap : public map<K,T,C,A> {
 private:
-	typedef	map<K,T>			parent;
+	typedef	map<K,T,C,A>				parent;
 public:
         typedef typename parent::key_type		key_type;
         typedef typename parent::mapped_type		mapped_type;   
@@ -31,8 +35,11 @@ public:
         typedef typename parent::key_compare		key_compare;
 	typedef typename parent::allocator_type		allocator_type;
 
+	/// this is not T&, this depends on implementation
 	typedef typename parent::reference		reference;
+	/// this is not const T&, this depends on implementation
 	typedef typename parent::const_reference	const_reference;
+
 	typedef typename parent::iterator		iterator;
 	typedef typename parent::const_iterator		const_iterator;
 	typedef typename parent::reverse_iterator	reverse_iterator;
@@ -45,7 +52,7 @@ public:
 
 public:
 	/** Default constructor. */
-	qmap() : map<K,T>() { }
+	qmap() : parent() { }
 
 	/** Default destructor. */
 	~qmap() { }
@@ -60,7 +67,8 @@ public:
 		\return modifiable reference to the object if found, 
 			else a freshly constructed object.  
 	 */
-	T& operator [] (const K& k) { return map<K,T>::operator[](k); }
+	mapped_type&
+	operator [] (const key_type& k) { return parent::operator[](k); }
 
 	/**
 		Constant query associative lookup.  
@@ -72,9 +80,10 @@ public:
 			else a freshly constructed object, 
 			such as a wrapper NULL pointer.  
 	 */
-	T operator [] (const K& k) const {
+	mapped_type
+	operator [] (const key_type& k) const {
 		const_iterator i = find(k);	// uses find() const;
-		return (i != this->end()) ? i->second : T();
+		return (i != this->end()) ? i->second : mapped_type();
 		// if T is a pointer class, should be equivalent to NULL
 		// or whatever the default constructor is
 	}
@@ -83,7 +92,7 @@ public:
 		For all entries whose value is the default, remove them.  
 	 */
 	void clean(void) {
-		const T def;	// default value
+		const mapped_type def;	// default value
 #if 0
 		// won't work because of pair<> b.s.
 		remove_if(index_map.begin(), index_map.end(),
@@ -113,11 +122,6 @@ public:
 };	// end class qmap
 
 //-----------------------------------------------------------------------------
-
-#ifndef NULL
-#define NULL    0
-#endif
-
 /**
 	Specialization for qmap that contains bare pointers.  
 	Since pointers, by default, are not initialized, 
@@ -129,19 +133,40 @@ public:
 	exist in the map.  
 	The clean() function removes NULL pointers from the hash-map.  
  */
-template <class K, class T>
-class qmap<K,T*> : public map<K,T*> {
+QMAP_TEMPLATE_SIGNATURE
+class qmap<K,T*,C,A> : public map<K,T*,C,A> {
 private:
-	typedef map<K,T*>				parent;
+	typedef map<K,T*,C,A>				parent;
 public:
+        typedef typename parent::key_type		key_type;
+        typedef typename parent::mapped_type		mapped_type;   
+        typedef typename parent::value_type		value_type;
+        typedef typename parent::key_compare		key_compare;
+	typedef typename parent::allocator_type		allocator_type;
+
+	typedef typename parent::reference		reference;
+	typedef typename parent::const_reference	const_reference;
 	typedef typename parent::iterator		iterator;
 	typedef typename parent::const_iterator		const_iterator;
+	typedef typename parent::reverse_iterator	reverse_iterator;
+	typedef typename parent::const_reverse_iterator	const_reverse_iterator; 
+	typedef typename parent::size_type		size_type;
+	typedef typename parent::difference_type	difference_type;
+	typedef typename parent::pointer		pointer;
+	typedef typename parent::const_pointer		const_pointer;
+	typedef typename parent::allocator_type		allocator_type;
+
 public:
 	// use default constructor and destructors
 
-	T*& operator [] (const K& k) { return parent::operator[](k); }
+	/**
+		\return pointer by reference (T*&)
+	 */
+	mapped_type&
+	operator [] (const key_type& k) { return parent::operator[](k); }
 
-	T* operator [] (const K& k) const {
+	mapped_type
+	operator [] (const key_type& k) const {
 		const_iterator i = find(k);	// uses find() const;
 		return (i != this->end()) ? i->second : NULL;
 		// if T is a pointer class, should be equivalent to NULL
