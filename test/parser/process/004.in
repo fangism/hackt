@@ -1,3 +1,3 @@
-// should still die on incomplete defproc
+// should still die on bad template
 
 defproc foo <pint bar

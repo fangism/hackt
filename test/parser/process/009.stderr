@@ -2,14 +2,12 @@ parse error: syntax error
 parser stacks:
 state	value
 	(null) 
-0	keyword: defproc [3:1..7]
-22	(def-type-id) [3:9..46]
-82	(node_list): ... [3:47..48]
-135	end-of-file
-in state 135, possible rules are:
-	declare_proc_proto : def_or_proc def_type_id optional_port_formal_decl_list_in_parens . ';'  (22)
-	defproc : def_or_proc def_type_id optional_port_formal_decl_list_in_parens . '{' definition_body '}'  (23)
-	defproc : def_or_proc def_type_id optional_port_formal_decl_list_in_parens . '{' '}'  (24)
+0	(null) 
+26	keyword: defproc [3:1..7]
+89	identifier: barbar [3:9..14]
+143	< [3:15]
+in state 143, possible rules are:
+	declare_proc_proto : optional_template_specification def_or_proc ID . optional_port_formal_decl_list_in_parens ';'  (26)
+	defproc : optional_template_specification def_or_proc ID . optional_port_formal_decl_list_in_parens '{' optional_definition_body '}'  (27)
 acceptable tokens are: 
-	';' (shift)
-	'{' (shift)
+	'(' (shift)

@@ -2,9 +2,9 @@ parse error: syntax error
 parser stacks:
 state	value
 	(null) 
-0	(null) 
-26	keyword: defproc [3:1..7]
-89	identifier: fang [3:9..12]
+0	(node_list): (template-formal-decl) ... [3:10..41]
+26	keyword: defproc [4:1..7]
+89	identifier: barbar [4:9..14]
 143	end-of-file
 in state 143, possible rules are:
 	declare_proc_proto : optional_template_specification def_or_proc ID . optional_port_formal_decl_list_in_parens ';'  (26)

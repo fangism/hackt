@@ -1,3 +1,3 @@
-// should die on incomplete defproc
+// should die on bad template
 
 defproc barbar<pint milk, 

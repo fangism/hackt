@@ -1,0 +1,17 @@
+parse error: syntax error
+parser stacks:
+state	value
+	(null) 
+0	keyword: template [3:1..8]
+8	< [3:10]
+82	paramtype: pint [3:11..14]
+140	identifier: bar [3:16..18]
+193	keyword: defproc [4:1..7]
+in state 193, possible rules are:
+	template_formal_id : ID . optional_range_list_in_brackets  (36)
+	optional_range_list_in_brackets : .  (235)
+acceptable tokens are: 
+	',' (reduce)
+	';' (reduce)
+	'>' (reduce)
+	'[' (shift)

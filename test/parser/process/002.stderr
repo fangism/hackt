@@ -2,12 +2,12 @@ parse error: syntax error
 parser stacks:
 state	value
 	(null) 
-0	keyword: defproc [3:1..7]
-22	identifier: fang_again [3:9..18]
-81	< [3:19]
-132	end-of-file
-in state 132, possible rules are:
-	optional_template_formal_decl_list_in_angles : '<' . template_formal_decl_list '>'  (28)
+0	(null) 
+26	keyword: defproc [3:1..7]
+89	identifier: fang_again [3:9..18]
+143	< [3:19]
+in state 143, possible rules are:
+	declare_proc_proto : optional_template_specification def_or_proc ID . optional_port_formal_decl_list_in_parens ';'  (26)
+	defproc : optional_template_specification def_or_proc ID . optional_port_formal_decl_list_in_parens '{' optional_definition_body '}'  (27)
 acceptable tokens are: 
-	PINT_TYPE (shift)
-	PBOOL_TYPE (shift)
+	'(' (shift)

@@ -1,4 +1,4 @@
-// should die: incomplete process definition again
+// should die: old-style template declaration
 
 defproc bad_fang <pint
 
