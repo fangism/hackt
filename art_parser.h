@@ -249,6 +249,18 @@ typedef node_list<expr,comma>	expr_list;
 
 
 //=============================================================================
+/*** not used
+/// special EOF (end-of-file) token
+class token_EOF : public terminal {
+public:
+	token_EOF();
+virtual	~token_EOF();
+virtual	int string_compare(const char* d) const;
+virtual	ostream& what(ostream& o) const;
+};
+***/
+
+//=============================================================================
 /// single token characters
 class token_char : public terminal {
 protected:
@@ -380,6 +392,7 @@ virtual	~id_expr();
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 id_expr*	force_absolute(node* s);
+int		is_absolute(void) const { return absolute == NULL; }
 
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;

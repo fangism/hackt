@@ -16,19 +16,115 @@
 #include "art_parser_prs.h"
 #include "art_parser_hse.h"
 #include "art_parser_chp.h"
+#include "y.output.h"			// auto-generated state strings! :)
 
 using namespace std;
 using namespace ART::parser;
 
 extern	int yylex(void);		// ancient compiler rejects
+extern	int at_eof(void);		// from "art.l"
 extern "C" {
-	int yyparse(void);			// parser routine to call
-	void yyerror(const char* msg);		// ancient compiler rejects
+	int yyparse(void);		// parser routine to call
+	void yyerror(const char* msg);	// ancient compiler rejects
 //	void yyerror(char* msg);	// replace with this if necessary
 }
 
 // useful typedefs are defined in art_parser.h
 // macros: d = delimiter, n = node, b = begin, e = end, l = list
+
+/**
+	documenting yacc's internal tables:
+	The extern declarations are needed so the compiler doesn't complain
+	about uninitialized values.  
+	They are actually defined in the same generated file y.tab.cc.
+	The definitions are not actually used.  
+ */
+namespace yacc {
+
+/**
+	The values of this table correspond to the reduction rule as
+	enumerated in order of appearance in the grammar file.  
+	The table is indexed by the production rule number.  
+ */
+extern const short yylhs[];
+
+/**
+	The value of this table correspond to the number of symbols
+	on the right-hand-side of a production.  
+	This number is used to determine the number of symbols to 
+	pop off of the yyss symbol stack.  
+	Tha table is indexed by the production rule number.  
+ */
+extern const short yylen[];
+
+/**
+	This table is used to determine whether the parser is in a state
+	to reduce (as the first action to check in yyloop).  
+	If the value is zero, then the parser continues without reducing, 
+	otherwise it jumps to yyreduce.  
+	This table is indexed by yystate, which is declared as a
+	local int in yyparse().  
+ */
+extern const short yydefred[];
+
+/**
+	Still figuring this one out...
+	the state to jump to if yyn is a valid state, 
+	This table is indexed by yym, yylhs[yyn].
+ */
+extern const short yydgoto[];
+
+/**
+	Values are used to determine whether parser is in a valid
+	state for shifting.  
+	This table is indexed by yystate and *yyssp (only for error recovery).  
+ */
+extern const short yysindex[];
+
+/**
+	Values are used to determine whether parser is in a valid 
+	state for reducing.  
+	This table is indexed by yystate.  
+ */
+extern const short yyrindex[];
+
+/**
+	Values are used to determine whether parser is in a valid 
+	state for goto.  
+	This table is indexed by yystate.  
+ */
+extern const short yygindex[];
+
+/**
+	State transition table for updating yyn, indexed by yyn.  
+ */
+extern const short yytable[];
+
+/**
+	Values correspond to enumerated tokens, 
+	indexed by yyn, and compared to yychar for consistency.  
+ */
+extern const short yycheck[];
+
+/**
+	The string names with which tokens, both terminal and nonterminal,
+	were defined.  The indices of the table correspond to either 
+	single characters' value or the automatic enumerations of 
+	token symbols, yychar.  
+	Value of NULL implies that no string is associated
+	with a particular index.  
+ */
+extern const char* const yyname[];
+
+/**
+	The string representations of the production rules, shown as
+	left-hand-side : right-hand-side.  
+	This table is indexed by the rule number, enumerated in the order
+	of appearance in the grammar file.  
+ */
+extern const char* const yyrule[];
+
+};	// end namespace yacc
 
 %}
 
@@ -72,13 +168,13 @@ extern "C" {
 		first.  Finally, to include a literal - place it last.
 
 
-%token	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
-%token	LT GT				// angle brackets
-%token	SEMICOLON COMMA COLON MEMBER 
-%token	ASSIGN
-%token	PLUS MINUS STAR DIVIDE PERCENT
-%token	BANG QUERY
-%token	TILDE AND PIPE XOR
+%token	<n>	LBRACE RBRACE LPAREN RPAREN LBRACKET RBRACKET
+%token	<n>	LT GT				// angle brackets
+%token	<n>	SEMICOLON COMMA COLON MEMBER 
+%token	<n>	ASSIGN
+%token	<n>	PLUS MINUS STAR DIVIDE PERCENT
+%token	<n>	BANG QUERY
+%token	<n>	TILDE AND PIPE XOR
 */
 %type	<n>	'{' '}' '[' ']' '(' ')' '<' '>'
 %type	<n>	',' '.' ';' ':'
@@ -94,6 +190,7 @@ extern "C" {
 %token	<n>	FLOAT
 %token	<n>	INT
 %token	<n>	STRING
+/* %token	<n>	END_OF_FILE		-- don't use yet */
 
 %token	<n>	LE GE EQUAL NOTEQUAL
 %token	<n>	THICKBAR SCOPE RANGE
@@ -116,7 +213,7 @@ extern "C" {
 %token	<n>	BOOL_TRUE BOOL_FALSE
 
 /* non-terminals */
-%type	<n>	top_root body body_item basic_item namespace_management
+%type	<n>	module top_root body body_item basic_item namespace_management
 %type	<n>	definition def_or_proc defproc def_type_id
 %type	<n>	declaration declare_proc_proto
 %type	<n>	declare_type_proto declare_chan_proto
@@ -174,17 +271,24 @@ extern "C" {
 %type	<n>	range_list range
 
 
-%start	top_root
+%start	module
 %%
 /******************************************************************************
 //	Grammar -- re-written to be LALR(1)
 ******************************************************************************/
 
 /* top level syntax */
+
+module
+	: top_root /* END_OF_FILE (doesn't work they way I want yet...) */
+		{ $$ = $1; }
+	;
+
 top_root
 	: body
 	/* allow empty file */
-	| { $$ = NULL; }
+	| 
+		{ $$ = NULL; }
 	;
 
 body
@@ -200,6 +304,7 @@ body_item
 
 basic_item
 /* namespace_management already includes semicolon where needed */
+/* proposed change: forbid nested namespacs, only allow in root_item */
 	: namespace_management
 /* instance_item already includes semicolon where needed */
 	| instance_item
@@ -1171,9 +1276,10 @@ range
 */
 // void yyerror(char* msg)		// replace with this if necessary
 void yyerror(const char* msg) { 	// ancient compiler rejects
-	short* s;
-	YYSTYPE* v;
+	const short* s;
+	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
+	//	very useless in general
 	cerr << "parse error: " << msg << endl;
 	// we've kept track of the position of every token
 	cerr << "yy-state-stack:";
@@ -1192,10 +1298,46 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		}
 	}
 	assert(yylval.n);	// NULL check
-	yylval.n->what(cerr << "received: ") << " "
-		<< yylval.n->where() << endl;
+	cerr << "received: ";
+	if (at_eof()) {
+		cerr << yyname[0];	// "end-of-file"
+	} else {
+		(yylval.n->what(cerr) << " ") << yylval.n->where();
+	}
+	cerr << endl;
 
-	// to do: list possible expected tokens based on state table
+	// take current state off of top of stack and 
+	// print out possible points in productions
+	cerr << "in state " << *yyssp << ", possible rules are:" << endl;
+	{	int i;
+		assert(*yyssp < yynss);
+		for (i=0; i < yysss[*yyssp].n; i++) {
+			cerr << yysss[*yyssp].rule[i] << endl;
+		}
+	}
+
+	// list possible expected tokens based on state table
+	// code ripped off from YYDEBUG parts of y.tab.c
+	cerr << "acceptable tokens are: " << endl;
+	{
+		int yychar;
+		int yyn;
+		for (yychar = 0; yychar <= YYMAXTOKEN; yychar++) {
+			// try all terminal tokens
+			if ((yyn = yysindex[*yyssp]) && 
+					(yyn += yychar) >= 0 && 
+					yyn <= YYTABLESIZE && 
+					yycheck[yyn] == yychar)
+				cerr << '\t' << yyname[yychar]
+					<< " (shift)" << endl;
+			else if ((yyn = yyrindex[*yyssp]) && 
+					(yyn += yychar) >= 0 && 
+					yyn <= YYTABLESIZE && 
+					yycheck[yyn] == yychar)
+				cerr << '\t' << yyname[yychar]
+					<< " (reduce)" << endl;
+		}
+	}
 	
 	// or throw exception
 	exit(1);

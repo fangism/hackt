@@ -45,8 +45,6 @@
 ******************************************************************************/
 /****** DEFINITIONS **********************************************************/
 
-%option noyywrap
-
 %{
 /* scanner-specific header */
 
@@ -113,6 +111,9 @@ int comment_feedback = 0;		/* reporting of comment state */
 		2 = null and endline comments, 
 		3 = ignored text feedback details
 	*/
+
+/* checking whether or not we are at end of file, defined below */
+int at_eof(void);
 
 %}
 
@@ -254,7 +255,6 @@ FALSE		"false"
 {TRUE}		{ BOOL_UPDATE; return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE; return BOOL_FALSE; }
 
-
 {WHITESPACE}	TOKEN_UPDATE;
 {NEWLINE}	NEWLINE_UPDATE;
 {NULLCOMMENT} { 
@@ -346,6 +346,7 @@ FALSE		"false"
 	TOKEN_UPDATE;
 	exit(1);
 }
+
 .	{
 	/* for everything else that doesn't match... */
 	fprintf(stderr, "unexpected character: \'%s\' ", yytext);
@@ -353,7 +354,6 @@ FALSE		"false"
 	fprintf(stderr, "\n");
 	TOKEN_UPDATE;
 }
-
 }
 
 <incomment>{
@@ -478,8 +478,23 @@ FALSE		"false"
 	fprintf(stderr, "\n");
 	exit(1);
 }
+<<EOF>>	{
+	fprintf(stderr, "unterminated string, starting on line %ld, "
+		"got <<EOF>>\n", current.line);
+	exit(1);
+}
 }
 
 %%
 /****** user-code ************************************************************/
+
+int yywrap(void) {
+	return 1;
+	// or read another input file
+}
+
+int at_eof(void) {
+	assert(yy_current_buffer);
+	return yy_current_buffer->yy_n_chars == 0;
+}
 

@@ -21,7 +21,7 @@ extern "C" {
 
 int main(int argc, char* argv[]) {
 	parser::node* root;	///< root of the syntax tree
-	entity::object* top;	///< root of type-checked and bound object
+	entity::object* top = NULL;	///< root of type-checked object
 	// parser::context* global;
 
 	try {
@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
 	cerr << "parsing successful... tree built, on to type-checking!" 
 		<< endl;
 	root = yyval.n;
-	if (root)
-		root->what(cerr << "root is a ") << endl;
+if (root) {
+	root->what(cerr << "root is a ") << endl;
 		// what's our top root?
 	cerr << "----------------------------------------------------";
 
@@ -42,9 +42,9 @@ int main(int argc, char* argv[]) {
 	// need to build global table first, then pass it in context
 	// global = new context();
 	top = root->check_build(new context());
-
-
 	cerr << endl;
+}	// end if (root)
+
 	// massive recursive deletion of syntax tree, reclaim memory
 	SAFEDELETE(root);
 	// delete ART object and its hierarchy

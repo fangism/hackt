@@ -5,7 +5,8 @@ backup
 *.o
 *.yy.*
 y.tab.*
-*.output
+y.output
+y.output.h
 *.tar.gz
 artc
 

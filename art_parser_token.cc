@@ -50,6 +50,26 @@ terminal::rightmost(void) const {
 }
 
 //=============================================================================
+/*** not used
+// class token_EOF method definitions
+
+CONSTRUCTOR_INLINE
+token_EOF::token_EOF() : terminal() { }
+
+DESTRUCTOR_INLINE
+token_EOF::~token_EOF() { }
+
+ostream&
+token_EOF::what(ostream& o) const {
+	return o << "END-OF-FILE";
+}
+
+int
+token_EOF::string_compare(const char* d) const {
+	return -1;
+}
+***/
+//=============================================================================
 // class token_char method definitions
 
 CONSTRUCTOR_INLINE

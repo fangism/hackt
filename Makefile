@@ -6,6 +6,7 @@
 # MAKE = make
 SHELL = /bin/sh
 
+AWK = awk
 CAT = cat
 ECHO = echo
 RM = rm -f
@@ -17,7 +18,8 @@ CC = gcc
 # to use distcc, can even prefix compile command with "distcc"
 LD = $(CC)
 # using gcc, because Mach ld needs some additional directives on Mac...
-CFLAGS = -O3 -Wall -c -g
+CFLAGS = -O2 -Wall -c -g -pipe
+# -pipe for faster compilation
 # -fkeep-inline-functions
 # turn on -O4 later...
 LDFLAGS = -lc -lstdc++
@@ -67,9 +69,10 @@ artc: $(ART_OBJ)
 art.yy.cc: art.l y.tab.h
 	$(LEX) $(LEXFLAGS) art.l > $@
 
-
-y.tab.h y.tab.cc: art.yy
+# y.tab.cc will depend on y.output.h
+y.tab.h y.tab.cc y.output.h: art.yy
 	$(YACC) $(YACCFLAGS) $?
+	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
 	-$(MV) y.tab.c y.tab.cc
 
 # documentation targets
@@ -82,7 +85,8 @@ cleanlexer:
 
 cleanparser:
 	-$(RM) y.tab.*
-	-$(RM) *.output
+	-$(RM) y.output
+	-$(RM) y.output.h
 
 cleandepend:
 	-$(RM) *.d
