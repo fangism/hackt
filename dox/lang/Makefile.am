@@ -32,9 +32,11 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	chapters/processes.tex \
 	chapters/channels.tex \
 	chapters/datatypes.tex \
+	chapters/namespaces.tex \
 	chapters/templates.tex \
 	chapters/typedefs.tex \
-	chapters/connections.tex
+	chapters/connections.tex \
+	chapters/linkage.tex
 
 # automatically generated dependencies
 -include $(srcdir)/artxx.depend
@@ -43,7 +45,7 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	@$(ECHO) "Generating auto-dependencies $@..."
 	@if [ -f $@ ] ; then \
 		$(MAKETEXDEPEND) $< > $@.new ; \
-		if ! $(DIFF) -q $@ $@.new ; then \
+		if $(DIFF) -q $@ $@.new ; then \
 			mv -f $@.new $@ ; \
 		else 	$(RM) $@.new ; \
 		fi > /dev/null ; \

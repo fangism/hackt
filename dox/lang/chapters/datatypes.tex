@@ -3,7 +3,8 @@
 \chapter{Datatypes}
 \label{sec:datatypes}
 
-Datatypes are physical representations of informations.  
+Datatypes are physical representations of information.  
+Or not.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11,12 +12,75 @@ Datatypes are physical representations of informations.
 \label{sec:datatypes:builtin}
 
 Currently, \artxx\ has two built in datatypes: \bool\ and \int.  
-These are not to be confused with the parameter types \pbool\ and \pint\.  
-A \bool\ represents the state of a physical or electrical node.  
-An \int\ is simply an array of \bool s.  
+These are not to be confused with the parameter types \pbool\ and \pint.  
+A \bool\ represents the state of a physical or logical node.  
+An \int\ is simply an array of \bool s with an integer interpretation.  
+
+The \int\ type can take an optional \emph{width} parameter that specifies
+the \emph{physical} number of bits used to represent the integer.  
+An integer value need not necessarily be encoded in two's-complement; 
+one may use more bits to encode more abstract values (like ``not-an-number''), 
+or employ error-correcting codes.  
+The default width of an \int\ is 32\footnote{32 was chosen arbitrarily.}.
+Technically speaking, \int\ is a built-in templated (parameterized) 
+datatype definition.  
+Templates are discussed in more detail in Chapter~\ref{sec:templates}.  
+The specify an \int's width, one can write \ttt{int<}\tit{pint}\ttt{>}.  
+
+In CHP, the standard arithmetic operations on \int\ types interprets
+the bits as signed two's-complement integers.  
+Operator overloading is not yet supported for user-defined datatypes, 
+but may be in the future.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Enumerations}
 \label{sec:datatype:enum}
 
+Enumerations are sets of values associated with user-specified names.  
+The value members of an enumeration represent a set of 
+logical values that only have meaning in the enumeration's context, 
+i.e. they are not publicly observable values.  
+(This is unlike C, in which enumerations can take integer values that 
+can be passed to and from integer variables.)
+Enumerations are particularly useful for specifying 
+control and data interfaces between communicating processes.  
+Think of enumerations as tags that can be understood by 
+the sender and receiver of the enumerated type.  
+
+The only values that an enumerated instance can take are 
+those specified in the enumerated type.  
+Thus one can never assign an integer or boolean value to an enumeration, 
+nor can one assign an enumerated value to an \int\ or \bool\ or
+other user-defined type.  
+One can only compare enumerated values of the same enumerated type.  
+
+There is no notion of equivalence between enumerated types 
+(outside of typedefs, Ch.~\ref{sec:typedefs}).  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{User-defined datatypes}
+\label{sec:datatype:userdef}
+
+In \artxx, one can define arbitrarily complex datatypes.  
+User-defined datatypes resemble structs in C.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Declarations}
+\label{sec:datatype:userdef:declaration}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Definitions}
+\label{sec:datatype:userdef:definition}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Views}
+\label{sec:datatype:userdef:views}
+
+Views are a way of sub-typing datatypes.  
+
+Views are simply specific interpretations or refinements of a datatype.  
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

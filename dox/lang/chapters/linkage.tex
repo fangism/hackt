@@ -1,0 +1,37 @@
+% "chapters/linkage.tex"
+
+\chapter{Linkage}
+\label{sec:linkage}
+
+One of the strengths of the \artxx\ language is modularity.  
+The old implementation of the CAST \index{CAST} language 
+was a single-pass interpreter.  
+The current implementation of an \artxx\ compiler allows
+one to compile modules independently and later link modules together
+into a coherent object file.  
+Modular compilation leads to efficient recompilation, 
+library development...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Visibility}
+\label{sec:linkage:visibility}
+
+Definitions and instantiations within a compilation module can either be
+publicly accessible to other modules, or private and inaccessible.  
+By default, all entities are public, i.e. their uses are \emph{exported}.  
+To make an entity private, simply prefix the first declaration
+or prototype with the keyword \ttt{static}, like in C.  
+To refer to an entity defined in another module, 
+simply prefix a declaration with the keyword \ttt{extern}, like in C.  
+
+Implementation:
+Generate automatic headers from implementation files.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ordering}
+\label{sec:linkage:ordering}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

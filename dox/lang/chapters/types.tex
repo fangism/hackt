@@ -6,11 +6,19 @@
 In \artxx, there are four classes of types to use:
 parameters, datatypes, channels, and processes.  
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Parameters}
+\label{sec:parameters}
+
 Parameters differ from the others in that they don't correspond
 to any physical instances; they are merely user-manipulated values.  
 Currently, there are only two (built-in) parameter types: 
 \pint, which is an integer value,
 and \pbool, which is a boolean value.  
+
+Parameters may be set no more than once, and they must be 
+initialized before they are used.  
+Using uninitialized parameters is an error.  
 
 
 We cover templates more in-depth in Chapter blah.  
@@ -19,5 +27,11 @@ User-defined datatypes, channels, and processes may be parameterized.
 Currently the only types that may appear in template signatures
 are parameters and arrays thereof.  
 Later we may add support for template template arguments, muahahaha.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Future extensions}
+\label{sec:types:future}
+
+Support \ttt{typeof()} operator and \ttt{sizeof()} operator.  
 
 
