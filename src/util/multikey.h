@@ -2,7 +2,7 @@
 	\file "multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.15 2004/12/20 23:21:15 fang Exp $
+	$Id: multikey.h,v 1.16 2004/12/23 00:07:44 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H__
@@ -18,7 +18,7 @@
 template <class K>
 
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
-template <size_t D, class K, K init>
+template <size_t D, class K>
 
 #define MULTIKEY_GENERIC_TEMPLATE_SIGNATURE				\
 template <class K>
@@ -125,7 +125,7 @@ static	multikey_base<K>*
  */
 MULTIKEY_TEMPLATE_SIGNATURE
 class multikey : virtual public multikey_base<K> {
-	template <size_t, class C, C>
+	template <size_t, class C>
 	friend class multikey;
 public:
 	typedef	K					value_type;
@@ -147,16 +147,18 @@ public:
 	/**
 		Default constructor.  
 		Requires key type K to be assignable and copiable.  
+		\param i the default value with which to fill indices.  
+			Plain-old-data types will default to 0.
 	 */
-	multikey(const K i = init);
+	multikey(const K i = K());
 
 	/**
 		Copy constructor compatible with other dimensions.  
 		If this is larger than argument, fill remaining
 		dimensions with 0.  
 	 */
-	template <size_t D2, K init2>
-	multikey(const multikey<D2,K,init2>& k, const K i = init);
+	template <size_t D2>
+	multikey(const multikey<D2,K>& k, const K i = K());
 
 #if 0
 	multikey(const multikey_base<K>& k);
@@ -168,13 +170,13 @@ public:
 	 */
 	template <template <class> class S>
 	explicit
-	multikey(const S<K>& s, const K i = init);
+	multikey(const S<K>& s, const K i = K());
 
 	size_t
 	dimensions(void) const { return D; }
 
 	K
-	default_value(void) const { return init; }
+	default_value(void) const { return K(); }
 
 	iterator
 	begin(void) { return &indices[0]; }

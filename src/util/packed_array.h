@@ -2,7 +2,7 @@
 	\file "packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.5 2004/12/20 23:21:16 fang Exp $
+	$Id: packed_array.h,v 1.6 2004/12/23 00:07:45 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_H__
@@ -50,9 +50,9 @@ private:
 	typedef	std::valarray<T>			impl_type;
 public:
 	typedef	T					value_type;
-	typedef	multikey<D, size_t, 0>			key_type;
+	typedef	multikey<D, size_t>			key_type;
 	typedef	key_type				zeros_type;
-	typedef	multikey<D, size_t, 1>			ones_type;
+	typedef	key_type				ones_type;
 	typedef	multikey_generator<D, size_t>		key_generator_type;
 	typedef	T*					pointer;
 	typedef	const T*				const_pointer;
@@ -71,7 +71,7 @@ protected:
 	/**
 		Coefficient default to 1, because used for multiplication.  
 	 */
-	typedef	multikey<D-1, size_t, 1>		coeffs_type;
+	typedef	multikey<D-1, size_t>			coeffs_type;
 protected:
 	key_type					sizes;
 	impl_type					values;
@@ -82,7 +82,7 @@ protected:
 	 */
 	coeffs_type					coeffs;
 public:
-	packed_array() : sizes(), values(), offset(), coeffs() { }
+	packed_array() : sizes(), values(), offset(), coeffs(1) { }
 
 	explicit
 	packed_array(const key_type& s);
@@ -189,8 +189,8 @@ private:
 	typedef	std::vector<bool>			impl_type;
 public:
 	typedef	bool					value_type;
-	typedef	multikey<D, size_t, 0>			key_type;
-	typedef	multikey<D, size_t, 1>			ones_type;
+	typedef	multikey<D, size_t>			key_type;
+	typedef	key_type				ones_type;
 	typedef	key_type				zeros_type;
 	typedef	multikey_generator<D, size_t>		key_generator_type;
 	typedef	typename impl_type::pointer		pointer;
@@ -211,7 +211,7 @@ protected:
 	/**
 		Coefficient default to 1, because used for multiplication.  
 	 */
-	typedef	multikey<D-1, size_t, 1>		coeffs_type;
+	typedef	multikey<D-1, size_t>			coeffs_type;
 protected:
 	key_type					sizes;
 	impl_type					values;
@@ -222,7 +222,7 @@ protected:
 	 */
 	coeffs_type					coeffs;
 public:
-	packed_array() : sizes(), values(), offset(), coeffs() { }
+	packed_array() : sizes(), values(), offset(), coeffs(1) { }
 
 	explicit
 	packed_array(const key_type& s);

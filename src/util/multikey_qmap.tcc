@@ -2,7 +2,7 @@
 	\file "multikey_qmap.tcc"
 	Template method definitions for queryable multikey map.
 	Almost entirely copied from multikey_map.tcc.
-	$Id: multikey_qmap.tcc,v 1.4 2004/12/20 23:21:16 fang Exp $
+	$Id: multikey_qmap.tcc,v 1.5 2004/12/23 00:07:45 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_TCC__
@@ -57,45 +57,45 @@ multikey_map<D,K,T,qmap>::clean(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::iterator
-multikey_map<D,K,T,qmap>::lower_bound(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,qmap>::lower_bound(const multikey<D2,K>& k) {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::const_iterator
-multikey_map<D,K,T,qmap>::lower_bound(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,qmap>::lower_bound(const multikey<D2,K>& k) const {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::iterator
-multikey_map<D,K,T,qmap>::upper_bound(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,qmap>::upper_bound(const multikey<D2,K>& k) {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::const_iterator
-multikey_map<D,K,T,qmap>::upper_bound(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,qmap>::upper_bound(const multikey<D2,K>& k) const {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::size_type
-multikey_map<D,K,T,qmap>::count(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,qmap>::count(const multikey<D2,K>& k) const {
 	key_type l(k);
 	l[D2-1]++;
 	return distance(lower_bound(k), lower_bound(l));
@@ -115,11 +115,11 @@ multikey_map<D,K,T,qmap>::count(const K i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,qmap>::size_type
-multikey_map<D,K,T,qmap>::erase(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,qmap>::erase(const multikey<D2,K>& k) {
 	if (D2 < D) {
-		multikey<D2,K,init2> m(k);
+		multikey<D2,K> m(k);
 		m[D2-1]++;
 		const iterator l(lower_bound(k));
 		const iterator u(lower_bound(m));

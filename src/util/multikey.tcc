@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.1 2004/12/20 23:21:15 fang Exp $
+	$Id: multikey.tcc,v 1.2 2004/12/23 00:07:44 fang Exp $
  */
 
 #ifndef	__MULTIKEY_TCC__
@@ -48,15 +48,15 @@ multikey_base<K>::make_multikey(const size_t d) {
 // class multikey method definitions
 
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K,init>::multikey(const K i) :
+multikey<D,K>::multikey(const K i) :
 		base_type() {
 	fill(indices, &indices[D], i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
-multikey<D,K,init>::multikey(const multikey<D2,K,init2>& k, const K i) {
+template <size_t D2>
+multikey<D,K>::multikey(const multikey<D2,K>& k, const K i) {
 	// depends on <algorithm>
 	if (D <= D2) {
 		copy(k.indices, &k.indices[D], indices);
@@ -69,7 +69,7 @@ multikey<D,K,init>::multikey(const multikey<D2,K,init2>& k, const K i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 MULTIKEY_TEMPLATE_SIGNATURE
-multikey<D,K,init>::multikey(const multikey_base<K>& k) {
+multikey<D,K>::multikey(const multikey_base<K>& k) {
 	// depends on <algorithm>
 	const size_t D2 = k.dimensions();
 	if (D <= D2) {
@@ -84,7 +84,7 @@ multikey<D,K,init>::multikey(const multikey_base<K>& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 template <template <class> class S>
-multikey<D,K,init>::multikey(const S<K>& s, const K i) {
+multikey<D,K>::multikey(const S<K>& s, const K i) {
 	const size_t sz = s.size();
 	if (D < sz) {
 		size_t i = 0;
@@ -140,7 +140,7 @@ multikey<D,K,init>::multikey(const S<K>& s, const K i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 multikey_base<K>&
-multikey<D,K,init>::operator = (const multikey_base<K>& s) {
+multikey<D,K>::operator = (const multikey_base<K>& s) {
 	const size_t sz = s.dimensions();
 	if (D < sz) {
 		size_t i = 0;
@@ -149,7 +149,7 @@ multikey<D,K,init>::operator = (const multikey_base<K>& s) {
 			indices[i] = *iter;
 	} else {
 		copy(s.begin(), s.end(), indices);
-		fill(&indices[sz], &indices[D], init);
+		fill(&indices[sz], &indices[D], default_value());
 	}
 	return *this;
 }
@@ -157,7 +157,7 @@ multikey<D,K,init>::operator = (const multikey_base<K>& s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 multikey<D,K>&
-multikey<D,K,init>::operator = (const this_type& s) {
+multikey<D,K>::operator = (const this_type& s) {
 	copy(s.begin(), s.end(), this->begin());
 	return *this;
 }
@@ -165,7 +165,7 @@ multikey<D,K,init>::operator = (const this_type& s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 multikey<D,K>&
-multikey<D,K,init>::operator += (const this_type& k) {
+multikey<D,K>::operator += (const this_type& k) {
 	transform(this->begin(), this->end(), k.begin(), 
 		this->begin(), std::plus<K>());
 	return *this;
@@ -174,7 +174,7 @@ multikey<D,K,init>::operator += (const this_type& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 multikey<D,K>&
-multikey<D,K,init>::operator -= (const this_type& k) {
+multikey<D,K>::operator -= (const this_type& k) {
 	transform(this->begin(), this->end(), k.begin(), 
 		this->begin(), std::minus<K>());
 	return *this;
@@ -183,7 +183,7 @@ multikey<D,K,init>::operator -= (const this_type& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 ostream&
-multikey<D,K,init>::write(ostream& o) const {
+multikey<D,K>::write(ostream& o) const {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(o.good());
 	const_iterator i = begin();
@@ -196,7 +196,7 @@ multikey<D,K,init>::write(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 istream&
-multikey<D,K,init>::read(istream& f) {
+multikey<D,K>::read(istream& f) {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(f.good());
 	iterator i = begin();
@@ -212,7 +212,7 @@ multikey<D,K,init>::read(istream& f) {
 MULTIKEY_TEMPLATE_SIGNATURE
 // inline	// private
 K
-multikey<D,K,init>::accumulate_extremities::mymin(const K& a, const K& b) {
+multikey<D,K>::accumulate_extremities::mymin(const K& a, const K& b) {
 	return (a<b)?a:b;
 }
 
@@ -220,14 +220,14 @@ multikey<D,K,init>::accumulate_extremities::mymin(const K& a, const K& b) {
 MULTIKEY_TEMPLATE_SIGNATURE
 // inline	// private
 K
-multikey<D,K,init>::accumulate_extremities::mymax(const K& a, const K& b) {
+multikey<D,K>::accumulate_extremities::mymax(const K& a, const K& b) {
 	return (a>b)?a:b;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
 void
-multikey<D,K,init>::accumulate_extremities::operator () (
+multikey<D,K>::accumulate_extremities::operator () (
 		const multikey<D,K>& k) {
 	transform(min.begin(), min.end(), k.begin(), 
 		min.begin(), ptr_fun(mymin));
@@ -237,8 +237,8 @@ multikey<D,K,init>::accumulate_extremities::operator () (
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
-typename multikey<D,K,init>::accumulate_extremities::key_pair
-multikey<D,K,init>::accumulate_extremities::operator () (
+typename multikey<D,K>::accumulate_extremities::key_pair
+multikey<D,K>::accumulate_extremities::operator () (
 		const key_pair& a, const multikey<D,K>& b) {
 	key_pair ret;
 	transform(a.first.begin(), a.first.end(), b.begin(), 
@@ -255,7 +255,7 @@ multikey<D,K,init>::accumulate_extremities::operator () (
 MULTIKEY_TEMPLATE_SIGNATURE
 template <class T>
 void
-multikey<D,K,init>::accumulate_extremities::operator () (
+multikey<D,K>::accumulate_extremities::operator () (
 		const pair<const multikey<D,K>, T>& p) {
 	this->operator()(p.first);
 }
@@ -264,7 +264,7 @@ multikey<D,K,init>::accumulate_extremities::operator () (
 MULTIKEY_TEMPLATE_SIGNATURE
 template <class T>
 key_pair
-multikey<D,K,init>::accumulate_extremities::operator () (
+multikey<D,K>::accumulate_extremities::operator () (
 		const key_pair& a, const pair<const multikey<D,K>, T>& p) {
 	return this->operator()(a, p.first);
 }

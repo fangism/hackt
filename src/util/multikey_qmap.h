@@ -3,7 +3,7 @@
 	Multidimensional queryable map.  
 	NOTE: this should erally be redefined as a template specialization, 
 	not as a child class.
-	$Id: multikey_qmap.h,v 1.10 2004/12/16 01:08:53 fang Exp $
+	$Id: multikey_qmap.h,v 1.11 2004/12/23 00:07:45 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_H__
@@ -87,36 +87,36 @@ public:
 	using map_type::rbegin;
 	using map_type::rend;
 
-	template <size_t D2, K init2>
+	template <size_t D2>
 	iterator
-	lower_bound(const multikey<D2,K,init2>& k);
+	lower_bound(const multikey<D2,K>& k);
 
-	template <size_t D2, K init2>
+	template <size_t D2>
 	const_iterator
-	lower_bound(const multikey<D2,K,init2>& k) const;
+	lower_bound(const multikey<D2,K>& k) const;
 
-	template <size_t D2, K init2>
+	template <size_t D2>
 	iterator
-	upper_bound(const multikey<D2,K,init2>& k);
+	upper_bound(const multikey<D2,K>& k);
 
-	template <size_t D2, K init2>
+	template <size_t D2>
 	const_iterator
-	upper_bound(const multikey<D2,K,init2>& k) const;
+	upper_bound(const multikey<D2,K>& k) const;
 
 	/**
 		How many members match the given prefix of sub-dimensions?
 	 */
-	template <size_t D2, K init2>
+	template <size_t D2>
 	size_type
-	count(const multikey<D2,K,init2>& k) const;
+	count(const multikey<D2,K>& k) const;
 
 	/** specialization for D2 == 1 */
 	size_type
 	count(const K i) const; 
 
-	template <size_t D2, K init2>
+	template <size_t D2>
 	size_type
-	erase(const multikey<D2,K,init2>& k);
+	erase(const multikey<D2,K>& k);
 
 	/** specialization of erase() for only 1 dimension specified */
 	size_type

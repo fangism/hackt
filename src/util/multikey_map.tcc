@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.3 2004/12/20 23:21:16 fang Exp $
+	$Id: multikey_map.tcc,v 1.4 2004/12/23 00:07:45 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_TCC__
@@ -94,45 +94,45 @@ multikey_map<D,K,T,M>::clean(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::iterator
-multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K>& k) {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::const_iterator
-multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,M>::lower_bound(const multikey<D2,K>& k) const {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::lower_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::iterator
-multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K>& k) {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::const_iterator
-multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,M>::upper_bound(const multikey<D2,K>& k) const {
 	key_type x(k, numeric_limits<K>::min());
 	return map_type::upper_bound(x);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::count(const multikey<D2,K,init2>& k) const {
+multikey_map<D,K,T,M>::count(const multikey<D2,K>& k) const {
 	key_type l(k);
 	l[D2-1]++;
 	return distance(lower_bound(k), lower_bound(l));
@@ -152,11 +152,11 @@ multikey_map<D,K,T,M>::count(const K i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <size_t D2, K init2>
+template <size_t D2>
 typename multikey_map<D,K,T,M>::size_type
-multikey_map<D,K,T,M>::erase(const multikey<D2,K,init2>& k) {
+multikey_map<D,K,T,M>::erase(const multikey<D2,K>& k) {
 	if (D2 < D) {
-		multikey<D2,K,init2> m(k);
+		multikey<D2,K> m(k);
 		m[D2-1]++;
 		const iterator l(lower_bound(k));
 		const iterator u(lower_bound(m));

@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2004-12-22	David Fang	<fangism@users.sourceforge.net>
+
+	* Eliminated last template argument of multikey, the default value. 
+	  Constructors take an optional default value argument.  
+
+
 2004-12-20	David Fang	<fangism@users.sourceforge.net>
 
 	* Split multikey into declaration and definition files, 

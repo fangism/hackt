@@ -1,6 +1,6 @@
 /**
 	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.5 2004/12/20 23:21:16 fang Exp $
+	$Id: packed_array.tcc,v 1.6 2004/12/23 00:07:45 fang Exp $
  */
 
 #ifndef	__PACKED_ARRAY_TCC__
@@ -23,7 +23,7 @@ using MULTIKEY_NAMESPACE::multikey_generator;
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 const
 typename packed_array<D,T>::ones_type
-packed_array<D,T>::ones;
+packed_array<D,T>::ones(1);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -33,7 +33,7 @@ packed_array<D,T>::ones;
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,T>::packed_array(const key_type& s) :
-		sizes(s), values(sizes_product(s)), offset(), coeffs() {
+		sizes(s), values(sizes_product(s)), offset(), coeffs(1) {
 	reset_coeffs();
 }
 
@@ -45,7 +45,7 @@ packed_array<D,T>::packed_array(const key_type& s) :
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,T>::packed_array(const key_type& s, const key_type& o) :
-		sizes(s), values(sizes_product(s)), offset(o), coeffs() {
+		sizes(s), values(sizes_product(s)), offset(o), coeffs(1) {
 	reset_coeffs();
 }
 
@@ -60,7 +60,7 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,T>::packed_array(const packed_array& a, 
 		const key_type& l, const key_type& u) :
 		sizes((INVARIANT(l <= u), u - l + ones)), 
-		values(sizes_product(sizes)), offset(), coeffs() {
+		values(sizes_product(sizes)), offset(), coeffs(1) {
 	// offset remains 0
 	reset_coeffs();
 	multikey_generator<D,size_t> key_gen(l, u);
@@ -197,7 +197,7 @@ packed_array<D,T>::dump(ostream& o) const {
 PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
 const
 typename packed_array<D,bool>::ones_type
-packed_array<D,bool>::ones;
+packed_array<D,bool>::ones(1);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -207,7 +207,7 @@ packed_array<D,bool>::ones;
  */
 PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,bool>::packed_array(const key_type& s) :
-		sizes(s), values(sizes_product(s)), offset(), coeffs() {
+		sizes(s), values(sizes_product(s)), offset(), coeffs(1) {
 	reset_coeffs();
 }
 
@@ -219,7 +219,7 @@ packed_array<D,bool>::packed_array(const key_type& s) :
  */
 PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,bool>::packed_array(const key_type& s, const key_type& o) :
-		sizes(s), values(sizes_product(s)), offset(o), coeffs() {
+		sizes(s), values(sizes_product(s)), offset(o), coeffs(1) {
 	reset_coeffs();
 }
 
@@ -234,7 +234,7 @@ PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
 packed_array<D,bool>::packed_array(const packed_array& a, 
 		const key_type& l, const key_type& u) :
 		sizes((INVARIANT(l <= u), u - l + ones)), 
-		values(sizes_product(sizes)), offset(), coeffs() {
+		values(sizes_product(sizes)), offset(), coeffs(1) {
 	// offset remains 0
 	reset_coeffs();
 	multikey_generator<D,size_t> key_gen(l, u);

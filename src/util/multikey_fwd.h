@@ -1,7 +1,7 @@
 /**
 	\file "multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
-	$Id: multikey_fwd.h,v 1.8 2004/12/20 23:21:15 fang Exp $
+	$Id: multikey_fwd.h,v 1.9 2004/12/23 00:07:44 fang Exp $
  */
 
 #ifndef	__MULTIKEY_H_FWD__
@@ -21,7 +21,7 @@ using std::ostream;
 template <class K>
 class multikey_base;
 
-template <size_t D, class K = int, K init = 0>
+template <size_t D, class K = int>
 class multikey;
 
 template <class K>
