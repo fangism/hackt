@@ -1,0 +1,164 @@
+% "chapters/arrays.tex"
+
+\chapter{Arrays}
+\label{sec:arrays}
+
+In many languages, arrays are useful for collective or repetitive constructs.  
+In \artxx, arrays come in two flavors: sparse and dense.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dense arrays}
+\label{sec:arrays:dense}
+
+Dense arrays, which may be multidimensional, have the constraint that
+each dimension is precisely covered by a set of contiguous indices.  
+
+The syntax for dense arrays is similar to that of C declarations,
+with a few extensions.  
+
+[listing of examples]
+
+Notion of densely packed.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sparse arrays}
+\label{sec:arrays:sparse}
+
+A sparse array, on the other hand, is a generalization of a 
+(possibly multidimensional) set, whose indices need not be continuous.  
+
+One feature of \artxx\ is that one may arbitrarily extend 
+arrays, as sets of indices, with multiple declarations.  
+A dense array can be made sparse by adding indexed instances that
+break the dense condition.
+A sparse array can be made dense by filling in indices to satisfy
+the dense condition.  
+The only constraint is that one cannot re-instantiate an index
+that has been previously instantiated.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Size-equivalence}
+\label{sec:arrays:size}
+
+\index{size-equivalent}
+
+Two arrays are \emph{size-equivalent} if the following are true:
+\begin{enumerate}
+\item The number of dimensions match.
+\item Both are densely packed.  
+\item The size of each dimension is equal.  
+\end{enumerate}
+
+The range of indices covered by each dimension need not be equal.  
+\emph{Range-equivalence} is a stronger relationship that 
+requires that the respective upper and lower bounds of two arrays match.  
+
+Any array that is sparse cannot be size-equivalent to any other array, 
+even if the set of indices contained are identical!  
+
+When we refer to instances as being type-equivalent, 
+we also mean that they are size-equivalent.  
+A connection between two instances is legal if and only if 
+they are type-equivalent and size-equivalent.  
+In Chapter blah, we discuss connections more in-depth.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Declarations}
+\label{sec:arrays:declarations}
+
+Arrays of any type (parameters, channels, processes, datatypes) 
+are declared the same way.  
+Two syntaces are available for declarations. 
+For example, a 1-D array may be declared using:
+\begin{itemize}
+\item \tit{type identifier} \ttt{[} \tit{range} \ttt{]} \hfill
+	(where \tit{range} : \tit{pint} .. \tit{pint})
+\item \tit{type identifier} \ttt{[} \tit{pint} \ttt{]} \hfill
+	($\equiv$ \tit{type identifier} \ttt{[} 0 ..\tit{eval(pint)}-1 \ttt{]})
+\end{itemize}
+The first form explicitly specifies the range to instantiate, 
+whereas the second form implicitly starts instantiating from 0 and 
+ends at one less than the evaluated integer argument.  
+The second form is just a convenient syntax for a common construct.  
+
+Multidimensional arrays are declared with multiple dimension specifiers.  
+Each dimension of a multidimensional array may be specified using
+either style.  
+
+Instance declarations that extend an existing array are no different, 
+as long as the added range doesn't overlap with previous declarations.  
+
+Objet implementation detail:
+Ranges of the second form are expanded out in the intermediate format.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{References}
+\label{sec:arrays:references}
+
+Referencing arrays can be a little tricky.  
+One may reference dense subsets of either sparse or dense arrays
+by specifying the precise range of each dimension.  
+An error occurs if not every instance referenced has been instantiated.  
+
+For example, given the declaration \ttt{int z[100]}, 
+the reference \ttt{z[0..9]} would refer to the
+1-D array of length 10 containing z[0] through z[9].  
+\ttt{z[0..0]} refers to the 1-D array of length 1 containing z[0], 
+which is \emph{not} size-equivalent to \ttt{z[0]}, 
+a 0-D (single instance) reference to z[0], 
+because the number of dimensions do not match.  
+
+Indexing an array with a single \pint\ results in a size-type of one less
+dimension, in other words, every dimension singly indexed is \emph{collapsed}.  
+Dimensions indexed with an explicit range are \emph{preserved}.  
+Consider the following examples, given that \ttt{y} is a 2-D array:
+\begin{itemize}
+\item \ttt{y[i][j]} is a 0-D array, or single instance
+\item \ttt{y[i..i][j]} is a 1-D array of size 1
+\item \ttt{y[i][j..j]} is a 1-D array of size 1
+\item \ttt{y[i..i][j..j]} is a 2-D array of size 1 x 1
+\end{itemize}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Implicit size}
+\label{sec:arrays:references:implicit}
+
+For convenience, one may refer to the entire collection
+of an array with just the name of the instance.  
+However, such an \emph{implicit} collection reference is valid
+if and only if the implied collection (or sub-array) is densely packed.  
+
+[some valid and invalid examples]
+
+The idea of implicit collections extends to higher dimensions as well.  
+Supposing the first $m$ out of $n$ dimensions are indexed, 
+with $k$ unspecified dimensions, then the number of dimensions of the 
+reference is $m-d+k$ or $n-d$,
+where $d$ is the number of collapsed dimensions in $m$.  
+In addition, for such a reference to be valid, 
+the set of subarrays rooted at the nodes indexed by the 
+first $m$ dimensions must all be \emph{range-equivalent}, 
+not just size-equivalent.  
+Implicit array references that do not satisfy this are considered errors.  
+
+[tons of examples]
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Complex aggregates}
+\label{sec:arrays:references:aggregate}
+
+Quite advanced, not yet implemented.  
+
+Splicing, concatenating, building higher dimensions... oh my.  
+
+Requiring size-equivalence (not range-equivalence) for construction.
+Remapping of indices.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Issues}
+\label{sec:arrays:issues}
+
+Interpreter vs. compiler.
+
+Tracking what instances are available at the point-of-reference.  
+

@@ -26,7 +26,15 @@ ps-local: $(PSS)
 EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	artxx.bib artxx.tex \
 	chapters/intro.tex \
-	chapters/types.tex
+	chapters/types.tex \
+	chapters/expressions.tex \
+	chapters/arrays.tex \
+	chapters/processes.tex \
+	chapters/channels.tex \
+	chapters/datatypes.tex \
+	chapters/templates.tex \
+	chapters/typedefs.tex \
+	chapters/connections.tex
 
 # automatically generated dependencies
 -include $(srcdir)/artxx.depend
