@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.11.16.1 2005/02/27 05:13:12 fang Exp $
+#	$Id: Makefile.am,v 1.11.16.2 2005/02/27 18:33:18 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -44,7 +44,7 @@ endif
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot
-	$(DOT) -Tps $< -o$@
+	$(DOT) -Tps $? -o$@
 else
 DevelopmentPlan.ps: DevelopmentPlan.dot
 	@$(ECHO) No dot found in path.  
