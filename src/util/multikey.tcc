@@ -1,7 +1,7 @@
 /**
 	\file "multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.5.2.2 2005/02/17 00:10:19 fang Exp $
+	$Id: multikey.tcc,v 1.5.2.3 2005/02/17 00:43:13 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -146,8 +146,8 @@ ostream&
 multikey<D,K>::write(ostream& o) const {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(o.good());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i = this->begin();
+	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
 		write_value(o, *i);
 	return o;
@@ -159,7 +159,7 @@ istream&
 multikey<D,K>::read(istream& f) {
 	// wish there was ostream_iterator equivalent for write()
 	INVARIANT(f.good());
-	iterator i = begin();
+	iterator i = this->begin();
 	size_t j = 0;
 	for ( ; j < D; j++, i++)
 		read_value(f, *i);

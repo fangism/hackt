@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.13.2.4 2005/02/17 00:10:15 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.13.2.5 2005/02/17 00:43:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -63,6 +63,7 @@ STATIC_TRACE_BEGIN("instance_pint")
 //=============================================================================
 namespace ART {
 namespace entity {
+#include "using_ostream.h"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;

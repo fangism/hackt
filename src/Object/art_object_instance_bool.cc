@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.3 2005/02/17 00:10:14 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.4 2005/02/17 00:43:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -93,6 +93,7 @@ namespace ART {
 namespace entity {
 using std::string;
 using std::_Select1st;
+#include "using_ostream.h"
 USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;

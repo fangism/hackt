@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32.2.4 2005/02/17 00:10:10 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.5 2005/02/17 00:43:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -46,6 +46,7 @@ STATIC_TRACE_BEGIN("object-definition")
 namespace ART {
 namespace entity {
 using std::_Select2nd;
+#include "using_ostream.h"
 using parser::scope;
 using util::indent;
 using util::auto_indent;

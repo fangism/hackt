@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21.2.3 2005/02/17 00:10:12 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.21.2.4 2005/02/17 00:43:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -30,6 +30,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+#include "using_ostream.h"
 using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;
 using util::write_value;

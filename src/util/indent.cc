@@ -2,7 +2,7 @@
 	\file "indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.4 2005/01/28 19:58:46 fang Exp $
+	$Id: indent.cc,v 1.4.2.1 2005/02/17 00:43:13 fang Exp $
  */
 
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <stack>
 
-#include "hash_map.h"
+#include "STL/hash_map.h"
 #include "hash_specializations.h"
 #include "indent.h"
 

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.1.4.2 2005/02/17 00:10:21 fang Exp $
+	$Id: multikey_set.h,v 1.1.4.3 2005/02/17 00:43:14 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -52,7 +52,6 @@ public:
 	typedef	typename set_type::difference_type	difference_type;
 	typedef	typename set_type::pointer		pointer;
 	typedef	typename set_type::const_pointer	const_pointer;
-	typedef	typename set_type::allocator_type	allocator_type;
 
 	typedef	typename set_type::index_type		index_type;
 	typedef	typename set_type::key_list_type	key_list_type;
@@ -118,11 +117,6 @@ public:
 	// default copy-constructor
 
 	// default destructor
-
-#if 0
-	const index_type&
-	operator [] (const size_t i) const { return key[i]; }
-#endif
 
 	const this_type&
 	operator = (const value_type& v) const {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.12.2.4 2005/02/17 00:10:15 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.12.2.5 2005/02/17 00:43:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -83,6 +83,7 @@ STATIC_TRACE_BEGIN("instance_pbool")
 //=============================================================================
 namespace ART {
 namespace entity {
+#include "using_ostream.h"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;

@@ -2,7 +2,7 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.16.2 2005/02/17 00:10:20 fang Exp $
+	$Id: multikey_map.h,v 1.14.16.3 2005/02/17 00:43:14 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
@@ -64,7 +64,6 @@ public:
 	typedef	typename mt::difference_type		difference_type;
 	typedef	typename mt::pointer			pointer;
 	typedef	typename mt::const_pointer		const_pointer;
-	typedef	typename mt::allocator_type		allocator_type;
 
 	typedef	typename mt::key_list_type		key_list_type;
 	typedef	typename mt::key_list_pair_type		key_list_pair_type;

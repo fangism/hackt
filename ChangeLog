@@ -2,6 +2,14 @@
 
 2005-02-16	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-11-merged-gcc4-02:
+	  Merged tiny revisions from the -09-gcc child branch, 
+	  through rev -02.
+	  These were micro-changes needed to make gcc-4.0 (prerelease)
+	  happy, because of more standard-conforming behavior.  
+	  That snapshot of gcc-4.0 (20050130) will not actually compile
+	  succesfully due to a bug discovered, see 02-14 entry of ChangeLog.  
+
 	* ARTXX-00-01-04-main-00-04-object-01-10-merged-multikey-09:
 	  Merged all revisions from the -09-multikey child branch 
 	  (through rev. -09)
@@ -66,6 +74,13 @@
 	  Some updating in maplikeset.h, multikey_assoc.h now uses
 	  _Select1st, _Select2nd functors to allow specialization
 	  of key-value accessors.  (Needs clean-up.)
+
+	* ARTXX-0-01-04-main-00-04-object-01-09-gcc:
+	  Branch created for the sake of isolating an ICE bug with
+	  gcc-4.0 prerelease 20050130.  
+
+	+ ICE-trigger example reduced to about 30 lines in "gcc4death.cc"
+	  Submitted to gcc bugzilla database as report # 19948.  
 
 
 2005-02-13	David Fang	<fangism@users.sourceforge.net>

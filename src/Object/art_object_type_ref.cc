@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23.2.1 2005/02/03 03:34:55 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.23.2.2 2005/02/17 00:43:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -36,6 +36,7 @@
 namespace ART {
 namespace entity {
 using std::ostringstream;
+#include "using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================

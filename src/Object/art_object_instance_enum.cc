@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.3 2005/02/17 00:10:14 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.4 2005/02/17 00:43:10 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -36,6 +36,7 @@
 namespace ART {
 namespace entity {
 using std::string;
+#include "using_ostream.h"
 using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;

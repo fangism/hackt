@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.39.2.5 2005/02/17 00:10:13 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.39.2.6 2005/02/17 00:43:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CC__
@@ -53,6 +53,7 @@ namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
+#include "using_ostream.h"
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE

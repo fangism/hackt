@@ -1,7 +1,7 @@
 /**
 	\file "integer_traits_test.cc"
 	Testing compile-time integer traits facilities.
-	$Id: integer_traits_test.cc,v 1.2 2005/01/28 19:04:05 fang Exp $
+	$Id: integer_traits_test.cc,v 1.2.2.1 2005/02/17 00:43:20 fang Exp $
  */
 
 #include <string>
@@ -55,6 +55,7 @@ template <size_t N>
 static
 void
 test_prime(void) {
+	// OBSERVE: no functioncall!
 	cout << N << " is " << ifthenelse_value<is_prime<N>::value,
 		const char*, prime_str, composite_str>::value << endl;
 }
@@ -125,6 +126,7 @@ main(int argc, char* argv[]) {
 	test_value<11>();
 	test_value<12>();
 	test_value<13>();
+#if 1
 	// factorial overflows beyond N = 13
 	test_prime<14>();
 	test_prime<15>();
@@ -220,6 +222,7 @@ main(int argc, char* argv[]) {
 	test_prime<97>();
 	test_prime<98>();
 	test_prime<99>();
+#endif
 
 	return 0;
 }

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.16.2 2005/02/17 00:10:20 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.16.3 2005/02/17 00:43:14 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -73,7 +73,7 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 ostream&
 multikey_map<D,K,T,M>::write(ostream& f) const {
 	INVARIANT(f.good());
-	write_value(f, population());
+	write_value(f, this->population());
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++) {
@@ -93,7 +93,7 @@ MULTIKEY_MAP_TEMPLATE_SIGNATURE
 istream&
 multikey_map<D,K,T,M>::read(istream& f) {
 	INVARIANT(f.good());
-	INVARIANT(empty());
+	INVARIANT(this->empty());
 	size_t size, i=0;
 	read_value(f, size);
 	for ( ; i<size; i++) {
