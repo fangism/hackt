@@ -1,7 +1,7 @@
 /**
 	\file "hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
-	$Id: hash_qmap.h,v 1.7.16.1.2.1 2005/02/06 02:22:10 fang Exp $
+	$Id: hash_qmap.h,v 1.7.16.1.2.2 2005/02/06 03:20:52 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_H__
@@ -16,14 +16,8 @@ namespace util {
 using HASH_MAP_NAMESPACE::hash_map;
 using std::pair;
 
+//-----------------------------------------------------------------------------
 #if 1
-//-----------------------------------------------------------------------------
-HASH_QMAP_TEMPLATE_SIGNATURE
-class hash_qmap : public const_assoc_query<hash_map<K,T,H,E,A> > {
-};
-
-#else
-//-----------------------------------------------------------------------------
 /**
 	Extension of Standard Template Library's map container.  
 	Adds an lookup operator with constant semantics for querying
@@ -35,6 +29,12 @@ class hash_qmap : public const_assoc_query<hash_map<K,T,H,E,A> > {
 	\param E the equal_to comparator function.
 	\param A the allocator.  
  */
+HASH_QMAP_TEMPLATE_SIGNATURE
+class hash_qmap : public const_assoc_query<hash_map<K,T,H,E,A> > {
+};
+
+#else
+//-----------------------------------------------------------------------------
 HASH_QMAP_TEMPLATE_SIGNATURE
 class hash_qmap {
 private:

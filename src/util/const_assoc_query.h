@@ -2,7 +2,7 @@
 	"const_assoc_query.h"
 	Adapter around map-like classes to alter the semantics of 
 	the associative lookup operator [].
-	$Id: const_assoc_query.h,v 1.1.2.1 2005/02/06 02:22:09 fang Exp $
+	$Id: const_assoc_query.h,v 1.1.2.2 2005/02/06 03:20:52 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_ASSOC_QUERY_H__
@@ -27,26 +27,23 @@ public:
 	typedef	M					parent_type;
 
 	typedef typename parent_type::key_type          key_type;
-	typedef typename parent_type::data_type         data_type;
 	typedef typename parent_type::mapped_type       mapped_type;
 	typedef typename parent_type::value_type        value_type;
 
+	typedef typename parent_type::iterator          iterator;
+	typedef typename parent_type::const_iterator    const_iterator;
 #if 0
-	typedef typename parent_type::hasher            hasher;
-	typedef typename parent_type::key_equal         key_equal;
-#endif
 	typedef typename parent_type::allocator_type    allocator_type;
 
 	typedef typename parent_type::reference         reference;
 	typedef typename parent_type::const_reference   const_reference;
 
-	typedef typename parent_type::iterator          iterator;
-	typedef typename parent_type::const_iterator    const_iterator;
 	typedef typename parent_type::size_type         size_type;
 	typedef typename parent_type::difference_type   difference_type;
 	typedef typename parent_type::pointer           pointer;
 	typedef typename parent_type::const_pointer     const_pointer;
 	typedef typename parent_type::allocator_type    allocator_type;
+#endif
 
 public:
 
