@@ -14,6 +14,10 @@ include $(top_srcdir)/Make.stddef
 	@$(CHMOD) +x $@
 
 noinst_PROGRAMS = \
+	exit_test \
+	throw_test \
+	what_test \
+	stacktrace_test \
 	ptrs_test \
 	pointer_classes_test \
 	count_ptr_test \
@@ -23,6 +27,7 @@ noinst_PROGRAMS = \
 	discrete_interval_set_test \
 	list_vector_test \
 	list_vector_pool_test \
+	static_count_ptr_test \
 	local_static_store_test \
 	multi_pool_module_test \
 	multidimensional_sparse_set_test \
@@ -31,10 +36,6 @@ noinst_PROGRAMS = \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
 	packed_array_test \
-	exit_test \
-	throw_test \
-	stacktrace_test \
-	what_test \
 	pretty_function_test
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
@@ -61,6 +62,8 @@ local_static_store_test_SOURCES = local_static_store_test.cc stacktrace.cc \
 	named_pooled_thing.cc named_pooled_thing.h
 multi_pool_module_test_SOURCES = multi_pool_module_test.cc stacktrace.cc \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
+static_count_ptr_test_SOURCES = static_count_ptr_test.cc stacktrace.cc \
+	named_pooled_thing.cc
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 

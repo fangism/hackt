@@ -1,7 +1,7 @@
 /**
 	\file "stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.5.4.1 2005/01/23 01:33:57 fang Exp $
+	$Id: stacktrace.h,v 1.5.4.1.2.1 2005/01/24 19:46:02 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -46,6 +46,9 @@
 			stacktrace::redirect __redir_stacktrace__(os)
 	#define	ASSERT_STACKTRACE(expr)					\
 			if (!(expr)) { stacktrace::full_dump(); assert(expr); }
+	#define	REQUIRES_STACKTRACE_STATIC_INIT				\
+			static const stacktrace::init_token		\
+			__stacktrace_init__(stacktrace::require_static_init());
 #else
 	#define	USING_STACKTRACE
 	#define	STACKTRACE(str)
@@ -56,6 +59,7 @@
 	#define	STACKTRACE_STREAM		std::cerr
 	#define REDIRECT_STACKTRACE(os)
 	#define	ASSERT_STACKTRACE(expr)		assert(expr)
+	#define	REQUIRES_STACKTRACE_STATIC_INIT	
 #endif
 
 
@@ -65,14 +69,24 @@
 
 #include <iosfwd>
 #include "macros.h"
-#include "STL/list_fwd.h"
 #include "string_fwd.h"
+
+#include "STL/list_fwd.h"
+#include "STL/stack_fwd.h"
+#if 1
+#include <stack>
+#endif
+
+// need count pointer to be able to guarantee proper initialization
+// across modules during static construction debugging
+#include "memory/count_ptr.h"
 
 
 namespace util {
 USING_LIST
 using std::ostream;
 using std::string;
+using memory::count_ptr;
 
 //=============================================================================
 /**
@@ -85,11 +99,25 @@ using std::string;
  */
 class stacktrace {
 public:
+	/// the type of stack used to hold feedback text
+	typedef std::list<string>	stack_text_type;
+	/// the type of stack used to track on/off mode
+	typedef DEFAULT_STACK(int)	stack_echo_type;
+	/// the type of stack used to track stream redirections
+	typedef DEFAULT_STACK(ostream*)	stack_streams_type;
+
+public:
 	class manager;
 	struct echo;
 	struct redirect;
 
+	class init_token;
+
+private:
+	const string	local_str;	///< deep copy of string argument
+
 public:
+//	stacktrace(const char*);
 	stacktrace(const string&);
 	~stacktrace();
 public:
@@ -97,6 +125,10 @@ public:
 	ostream&
 	stream(void);
 
+	static
+	init_token&
+	require_static_init(void);
+	
 	/**
 		Explicit request by user to dump the stack trace.
 		Useful in assertion failures.  
@@ -108,6 +140,33 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	Initializer token is requires for all modules that want to 
+	use stacktrace for debugging during static construction and 
+	destruction of the program.  
+	Reference counting guarantees that the last module to need
+	stacktrace's servives will take responsibility for freeing
+	its resources.  
+ */
+class stacktrace::init_token {
+	friend class stacktrace;
+private:
+	const count_ptr<stack_text_type>	stack_text_ref;
+	const count_ptr<stack_text_type>	stack_indent_ref;
+	const count_ptr<stack_echo_type>	stack_echo_ref;
+	const count_ptr<stack_streams_type>	stack_streams_ref;
+public:
+	init_token();
+
+	// default copy constructor suffices
+
+	~init_token();
+
+	void
+	check(void) const;
+};	// end class init_token
+
+//-----------------------------------------------------------------------------
+/**
 	Whether or not to print upon entering and exiting.
 	Pass in 0 to disable.  
 	Enabling/disable lasts for the duration of the scope.  
@@ -115,7 +174,7 @@ public:
 struct stacktrace::echo {
 	echo(const int i = 1);
 	~echo();
-};
+};	// end struct echo
 
 //-----------------------------------------------------------------------------
 /**
@@ -125,7 +184,7 @@ struct stacktrace::echo {
 struct stacktrace::redirect {
 	redirect(ostream&);
 	~redirect();
-};
+};	// end struct redirect
 
 //=============================================================================
 

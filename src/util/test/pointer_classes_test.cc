@@ -1,13 +1,13 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.4 2005/01/16 04:47:33 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.4.12.1 2005/01/24 19:47:57 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 
-#include "memory/pointer_classes.h"
+#include "memory/excl_ptr.h"
 #include "var.h"
 
 using std::vector;

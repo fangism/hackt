@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7.4.1 2005/01/23 01:34:01 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.4.1.2.1 2005/01/24 19:46:11 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -96,6 +96,15 @@ void T::operator delete (void* p)					\
 	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
 
 /**
+	Convenient macro for explicitly requiring that a memory pool
+	be ready during static initialization of a particular module.
+	This is not required now... kept in comments for historical reference.
+ */
+#define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
+static const T::pool_ref_type						\
+__pool_ref_ ## T ## __ (T::get_pool());
+
+/**
 	These definitions are intended for using a reference-counted
 	memory pool, as required by static global initialization ordering.  
 	The static reference count object for the global pool will be 
@@ -121,23 +130,35 @@ void T::operator delete (void* p)					\
  */
 #define	LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(T,C)			\
 									\
-T::pool_type&								\
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)				\
+									\
+T::pool_ref_type							\
 T::get_pool(void) {							\
-	static pool_type pool(C);					\
-	return pool;							\
+	static pool_type*	pool = new pool_type(C);		\
+	static size_t*		count = new size_t(0);			\
+	static const pool_ref_type ret(pool, count);			\
+	return ret;							\
 }									\
 									\
-void* T::operator new (size_t s) {					\
+void*									\
+T::operator new (size_t s) {						\
+	static pool_type& pool(*get_pool());				\
 	LIST_VECTOR_POOL_STACKTRACE("operator new");			\
-	return get_pool().allocate();					\
+	return pool.allocate();						\
 }									\
-inline void* T::operator new (size_t s, void*& p) {			\
+									\
+inline									\
+void*									\
+T::operator new (size_t s, void*& p) {					\
 	NEVER_NULL(p); return p;					\
 }									\
-void T::operator delete (void* p) {					\
+									\
+void									\
+T::operator delete (void* p) {						\
+	static pool_type& pool(*get_pool());				\
 	LIST_VECTOR_POOL_STACKTRACE("operator delete");			\
 	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);			\
-	get_pool().deallocate(t);					\
+	pool.deallocate(t);						\
 }
 
 									

@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.1.4.1 2005/01/23 01:34:03 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.1.4.1.2.1 2005/01/24 19:47:57 fang Exp $
  */
 
 #define ENABLE_STACKTRACE				1
@@ -21,6 +21,11 @@
 
 
 USING_STACKTRACE;
+
+// needed because stacktrace may be invoked (indirectly)
+// during static initialization
+REQUIRES_STACKTRACE_STATIC_INIT
+
 using std::cin;
 
 #if 1

@@ -26,7 +26,7 @@ fi
 
 $filter $srcroot.stderr > $bldroot.stderr.filter
 
-diff $bldroot.stderr.filter $bldroot.out.filter 2>&1 | cat > $bldroot.diff
+diff -u $bldroot.stderr.filter $bldroot.out.filter 2>&1 | cat > $bldroot.diff
 
 if [ -s $bldroot.diff ] ; then
 	echo "$bldroot.diff is non-empty!"

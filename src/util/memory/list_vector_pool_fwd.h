@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2.4.1 2005/01/23 01:34:01 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.4.1.2.1 2005/01/24 19:46:12 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -63,28 +63,15 @@ private:								\
 #define	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS			\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
+private:								\
 	static void*	operator new (size_t, void*&);			\
-private:								\
 	typedef	list_vector_pool<this_type>		pool_type;	\
-private:								\
+public:									\
+	typedef	count_ptr<pool_type>			pool_ref_type;	\
+									\
 	static								\
-	pool_type&							\
+	pool_ref_type							\
 	get_pool(void);
-
-
-#if 0
-/**
-	Convenient macro for explicitly requiring that a memory pool
-	be ready during static initialization of a particular module.  
-	This is not required now... kept in comments for historical reference.  
- */
-#define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
-static T::pool_type&							\
-__pool_ref_ ## T ## __ (T::acquire_pool_reference());
-
-static const T::pool_ref_type
-__pool_ref_ ## T ## __ (T::acquire_pool_reference());
-#endif
 
 
 namespace util {

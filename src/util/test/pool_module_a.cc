@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.1.4.1 2005/01/23 01:34:04 fang Exp $
+	$Id: pool_module_a.cc,v 1.1.4.1.2.1 2005/01/24 19:47:58 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -38,7 +38,9 @@ REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dee);
 REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum);
 #endif
 
-// REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dee);
+REQUIRES_STACKTRACE_STATIC_INIT
+
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dee);
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(twiddle_dum, 8)
 
 #if 1

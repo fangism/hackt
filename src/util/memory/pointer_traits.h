@@ -2,11 +2,11 @@
 	\file "pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.3 2004/12/02 06:34:21 fang Exp $
+	$Id: pointer_traits.h,v 1.3.12.1 2005/01/24 19:46:15 fang Exp $
  */
 
-#ifndef	__POINTER_TRAITS_H__
-#define	__POINTER_TRAITS_H__
+#ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
+#define	__UTIL_MEMORY_POINTER_TRAITS_H__
 
 /***
 	For hints on implementation: look at std::iterator_traits.  
@@ -19,6 +19,8 @@ namespace util {
 	The home of pointer_traits will be in the 
 	memory sub-namespace because it is used primarily for
 	memory-management.
+        The classes contained herein offer efficient light-weight
+        pointer management with static type-checking.
 ***/
 namespace memory {
 
@@ -182,5 +184,5 @@ __pointer_category(const P&) {
 }	// end namespace memory
 }	// end namespace util
 
-#endif	// __POINTER_TRAITS_H__
+#endif	// __UTIL_MEMORY_POINTER_TRAITS_H__
 
