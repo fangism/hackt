@@ -1,0 +1,10 @@
+// this should fail on the random identifier
+
+defproc myinverter(node a; node b) {
+prs {
+	a		-> b-
+	~a		-> b+
+}
+oooga_booga
+}
+
