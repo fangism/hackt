@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.7 2005/01/16 02:44:23 fang Exp $
+	$Id: list_vector_pool.h,v 1.7.10.1 2005/01/22 06:38:28 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
@@ -76,13 +76,96 @@
  */
 #define	LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(T,C)			\
 T::pool_type T::pool(C);						\
-void* T::operator new (size_t s)				\
+void* T::operator new (size_t s)					\
 	{ return pool.allocate(); }					\
 inline void* T::operator new (size_t s, void*& p)			\
 	{ NEVER_NULL(p); return p; }					\
 void T::operator delete (void* p)					\
 	{ T* t = reinterpret_cast<T*>(p); NEVER_NULL(t); pool.deallocate(t); }
 
+/**
+	These definitions are intended for using a reference-counted
+	memory pool, as required by static global initialization ordering.  
+	The static reference count object for the global pool will be 
+	set by the call to acquire_pool_reference(), which is the only
+	public interface to the allocator.  
+
+	We cannot use a static count_ptr because we cannot guarantee
+	that it will be initialized once by acquire_pool_reference()
+	across all modules -- the home module may come along later and
+	clobber it to NULL, because of object initialization.  
+	Thus we must resort to plain-old-data (POD) 
+	pool and pool_ref_count, which are guaranteed to be 
+	NULL upon initialization.  
+
+	Fortunately, count_ptr gives us a means of faking reference 
+	counts for such situations.  We return corecively constructed
+	reference-count pointers with explicit count* arguments.  
+ */
+#define	LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(T,C)			\
+									\
+T::pool_type&								\
+T::get_pool(void) {							\
+	static pool_type pool(C);					\
+	return pool;							\
+}									\
+									\
+void* T::operator new (size_t s) {					\
+	return get_pool().allocate();					\
+}									\
+inline void* T::operator new (size_t s, void*& p) {			\
+	NEVER_NULL(p); return p;					\
+}									\
+void T::operator delete (void* p) {					\
+	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);			\
+	get_pool().deallocate(t);					\
+}
+
+//	static const excl_ptr<pool_type> pool(new pool_type(C));
+//	static pool_type pool(C);
+
+//	static pool_type& pool(get_pool());
+
+//	return pool_ref_type(pool, pool_ref_count);			
+// T::pool_type* T::pool;					
+// size_t* T::pool_ref_count;				
+// T::pool_ref_type T::pool_ref;
+//	pool_ref = pool_ref_type(pool);	
+
+#if 0
+T::pool_ref_type&
+T::acquire_pool_reference(void) {
+	static pool_type* pool = NULL;
+	static size_t* pool_ref_count = NULL;
+	static pool_ref_type pool_ref(NULL);
+	if (!pool) {
+		INVARIANT(!pool_ref_count);
+		pool = new pool_type(C);
+		NEVER_NULL(pool);
+		pool_ref_count = new size_t(0);
+		pool_ref = pool_ref_type(pool, pool_ref_count);
+		INVARIANT(pool_ref.refs() == 1);
+	}
+	NEVER_NULL(pool_ref_count);
+	NEVER_NULL(pool_ref);
+	INVARIANT(pool_ref.refs());
+	return pool_ref;
+}
+void* T::operator new (size_t s) {
+	static const pool_ref_type pool(acquire_pool_reference());
+	return pool->allocate();
+}
+inline void* T::operator new (size_t s, void*& p) {
+	NEVER_NULL(p); return p;
+}
+void T::operator delete (void* p) {
+	static const pool_ref_type pool(acquire_pool_reference());
+	T* t = reinterpret_cast<T*>(p); NEVER_NULL(t);
+	pool->deallocate(t);
+}
+
+#endif
+									
 
 //=============================================================================
 

@@ -23,6 +23,8 @@ noinst_PROGRAMS = \
 	discrete_interval_set_test \
 	list_vector_test \
 	list_vector_pool_test \
+	local_static_store_test \
+	multi_pool_module_test \
 	multidimensional_sparse_set_test \
 	multidimensional_qmap_test \
 	multikey_qmap_test \
@@ -55,6 +57,9 @@ throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
 stacktrace_test_SOURCES = stacktrace_test.cc stacktrace.cc
 what_test_SOURCES = what_test.cc
 pretty_function_test_SOURCES = pretty_function_test.cc
+local_static_store_test_SOURCES = local_static_store_test.cc stacktrace.cc
+multi_pool_module_test_SOURCES = multi_pool_module_test.cc stacktrace.cc \
+	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
@@ -90,9 +95,11 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
 .cvsignore: test.cvsignore
-	$(ECHO) $(noinst_PROGRAMS) | $(SPACES_TO_NEWLINE) > $@.temp
+	@$(ECHO) $(noinst_PROGRAMS) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
+
+.cvsignore: Makefile.am Makefile.in
 
 all-local: .cvsignore
 

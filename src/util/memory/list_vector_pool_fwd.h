@@ -2,7 +2,7 @@
 	\file "list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.2 2005/01/15 19:13:44 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.2.10.1 2005/01/22 06:38:28 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_FWD_H__
@@ -37,6 +37,47 @@
 private:								\
 	typedef	list_vector_pool<this_type>		pool_type;	\
 	static pool_type				pool;
+
+/**
+	Similar macro to the non-robust version defined above.  
+	This version is needed when allocation from such list_vector_pools
+	is done during static initialization across modules.  
+	Use of this macro requires inclusion of the "memory/pointer_classes.h"
+	header.  
+ */
+#define	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS			\
+	static void*	operator new (size_t);				\
+	static void	operator delete (void*);			\
+	static void*	operator new (size_t, void*&);			\
+private:								\
+	typedef	list_vector_pool<this_type>		pool_type;	\
+private:								\
+	static								\
+	pool_type&							\
+	get_pool(void);
+
+// public:
+//	typedef	count_ptr<pool_type>			pool_ref_type;
+// private:							
+//	static pool_type*				pool;		
+//	static size_t*					pool_ref_count;	
+
+//	static pool_ref_type				pool_ref;
+
+/**
+	Convenient macro for explicitly requiring that a memory pool
+	be ready during static initialization of a particular module.  
+	This is not required now...
+ */
+#define REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(T)			\
+static T::pool_type&							\
+__pool_ref_ ## T ## __ (T::acquire_pool_reference());
+
+#if 0
+static const T::pool_ref_type
+__pool_ref_ ## T ## __ (T::acquire_pool_reference());
+#endif
+
 
 namespace util {
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.15 2005/01/16 21:47:10 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.15.10.1 2005/01/22 06:38:19 fang Exp $
  */
 
 #ifndef	__ART_BUILT_INS_CC__
@@ -11,6 +11,7 @@
 // #include <iostream>		// debug only
 
 #include "memory/pointer_classes.h"
+#include "memory/list_vector_pool.h"
 #include "art_built_ins.h"
 #include "art_object_definition.h"
 #include "art_object_type_ref.h"
@@ -63,6 +64,12 @@ bool_def = built_in_datatype_def(
 const built_in_datatype_def
 int_def = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
+
+// needed to ensure that pint_const pool is ready to dish out pints
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const);
+// this holds onto a reference count that will be guaranteed to be
+// discarded AFTER subsequent static objects are deallocated in this module
+// becaused of reverse-order static destruction.
 
 static const count_ptr<const pint_const>
 int_def_width_default(new pint_const(32));
