@@ -6,11 +6,17 @@ AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 
 SUBDIRS = src test .
 
+include $(top_srcdir)/Make.stddef
+
+
+
 DOXYGEN_CONFIG = art++.doxygen.config
 
 # When to update the libtool script:
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
+
+# see configure.in for adding libtool flags
 
 CLEANFILES = art++.doxygen.config
 
@@ -25,7 +31,7 @@ $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 	$(LN_S) $? $@
 else
 $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-	sed '/^HAVE_DOT/s/YES/NO/g' $? > $@
+	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
 endif
 
 if HAVE_DOXYGEN
@@ -34,23 +40,25 @@ docs: $(DOXYGEN_CONFIG)
 	(cd dox/latex; $(MAKE) < /dev/null )
 else
 docs:
-	@echo No doxygen found in path.  
+	@$(ECHO) No doxygen found in path.  
 endif
 
 clean-local:
 
 distcleandirs:
-	rm -rf $(DISTCLEANDIRS)
+	$(RM) -r $(DISTCLEANDIRS)
 
 distclean-local: distcleandirs
 
 # don't include CVS directories in distribution
 dist-hook:
-	rm -rf `find $(distdir) -name CVS`
+	$(RM) -r `find $(distdir) -name CVS`
 
-cvsdiffs:
-	-cvs diff > $@
+cvsdiffs: force
+	-$(CVS) diff > $@
 
 commit: distcheck
-	cvs commit
+	$(CVS) commit
+
+force:
 

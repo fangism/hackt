@@ -1,6 +1,5 @@
 to do list:
 
-What happened to CFLAGS? didn't accumulate in automake?
 
 Write objects!!!
 	issues: converting pointers to indices
@@ -9,6 +8,18 @@ Write objects!!!
 	linkability: 
 	translation tables:
 	compare object dumps
+
+specifically:
+	definitions: write used_id_maps
+	type_refs: definition and param references
+	instances: 
+	instance references: 
+	expressions:
+	assignments, connections:
+
+make simplest tests possible:
+	empty definitions
+	enum type
 
 PRS -- new context for type-checking expressions, 
 	expecting bool (not pbool) and returning bool.  (datatype)

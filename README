@@ -6,3 +6,15 @@ I'll write more in the README when I have time.
 
 Fang
 
+
+-------------------------------------------------------------------------------
+CVS tags:
+
+If you have cvs read access, then you can select specific versions and 
+releases of the art++ package.  
+
+The standard tag names are: ARTXX-##-##-##
+	where ## is a 2 digit number (including leading zeros).  
+Eventually, branch tags wil be introduced by appending
+	-BRANCHNAME-##-## to the tag names.  
+

@@ -33,6 +33,9 @@ AC_PROG_LIBTOOL
 # Adds corresponding dependencies to "Makefile.in".  
 AC_SUBST(LIBTOOL_DEPS)
 
+# appends --silent option to all libtool invocations
+LIBTOOL="$LIBTOOL --silent"
+
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 

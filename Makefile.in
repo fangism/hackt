@@ -16,6 +16,12 @@
 
 # "Makefile.am"
 # Process this file with "automake" to generate "Makefile.in".
+
+# "Make.stddef"
+# make-independent definitions
+
+# SHELL = /bin/sh
+# add -v for verbose
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -39,9 +45,10 @@ POST_UNINSTALL = :
 host_triplet = @host@
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	TODO config/config.guess config/config.sub config/depcomp \
-	config/install-sh config/ltmain.sh config/missing
+	$(top_srcdir)/Make.stddef $(top_srcdir)/configure AUTHORS \
+	COPYING ChangeLog INSTALL NEWS TODO config/config.guess \
+	config/config.sub config/depcomp config/install-sh \
+	config/ltmain.sh config/missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
@@ -86,7 +93,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-CPP = @CPP@
+CPP = cpp
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
 CXXCPP = @CXXCPP@
@@ -97,7 +104,8 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DOT = @DOT@
 DOXYGEN = @DOXYGEN@
-ECHO = @ECHO@
+# -B: ignore blank line diffs
+ECHO = echo
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
@@ -186,7 +194,32 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 SUBDIRS = src test .
+CAT = cat
+CHMOD = chmod
+CVS = cvs
+DIFF = diff -B
+GREP = grep
+HEAD = head
+SED = sed
+TAIL = tail
+RM = rm -f
+MV = mv -f
+SYNC = sync
+TOUCH = touch
+# TAR = tar -czvf
+
+# The following are detected by autoconf
+# AR = ar
+# ARFLAGS = -ru
+# AWK = awk
+# LN = ln -fs
+# RANLIB = ranlib
+
+# defined with intention of self-modification...
+THISMAKEFILE = Makefile
 DOXYGEN_CONFIG = art++.doxygen.config
+
+# see configure.in for adding libtool flags
 CLEANFILES = art++.doxygen.config
 DISTCLEANFILES = config.in.h~
 DISTCLEANDIRS = autom4te.cache
@@ -197,7 +230,7 @@ all: config.h
 .SUFFIXES:
 am--refresh:
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/Make.stddef $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -628,30 +661,32 @@ libtool: $(LIBTOOL_DEPS)
 @HAVE_DOT_TRUE@$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 @HAVE_DOT_TRUE@	$(LN_S) $? $@
 @HAVE_DOT_FALSE@$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-@HAVE_DOT_FALSE@	sed '/^HAVE_DOT/s/YES/NO/g' $? > $@
+@HAVE_DOT_FALSE@	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
 
 @HAVE_DOXYGEN_TRUE@docs: $(DOXYGEN_CONFIG)
 @HAVE_DOXYGEN_TRUE@	$(DOXYGEN) $(DOXYGEN_CONFIG)
 @HAVE_DOXYGEN_TRUE@	(cd dox/latex; $(MAKE) < /dev/null )
 @HAVE_DOXYGEN_FALSE@docs:
-@HAVE_DOXYGEN_FALSE@	@echo No doxygen found in path.  
+@HAVE_DOXYGEN_FALSE@	@$(ECHO) No doxygen found in path.  
 
 clean-local:
 
 distcleandirs:
-	rm -rf $(DISTCLEANDIRS)
+	$(RM) -r $(DISTCLEANDIRS)
 
 distclean-local: distcleandirs
 
 # don't include CVS directories in distribution
 dist-hook:
-	rm -rf `find $(distdir) -name CVS`
+	$(RM) -r `find $(distdir) -name CVS`
 
-cvsdiffs:
-	-cvs diff > $@
+cvsdiffs: force
+	-$(CVS) diff > $@
 
 commit: distcheck
-	cvs commit
+	$(CVS) commit
+
+force:
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
