@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.4 2005/02/22 03:00:57 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.5 2005/02/22 05:05:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -235,6 +235,12 @@ public:
 				great_grandparent_type(p))) { }
 
 	~bool_instance_alias();
+
+	/**
+		Implicit conversion need for some multikey_assoc
+		algorithms.  
+	 */
+	operator const key_type& () const { return key; }
 
 	void
 	write_next_connection(const persistent_object_manager& m, 

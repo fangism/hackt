@@ -2,7 +2,7 @@
 	\file "art_object_instance_int.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_int.h,v 1.9.2.3.2.5 2005/02/22 03:00:58 fang Exp $
+	$Id: art_object_instance_int.h,v 1.9.2.3.2.6 2005/02/22 05:05:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_H__
@@ -156,6 +156,12 @@ public:
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
 	~int_instance_alias();
+
+	/**
+		Implicit conversion needed for some multikey_assoc
+		algorithms.  
+	 */
+	operator const key_type& () const { return key; }
 
 	void
 	write_next_connection(const persistent_object_manager&, 

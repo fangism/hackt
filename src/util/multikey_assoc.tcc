@@ -1,7 +1,7 @@
 /**
 	\file "multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.1.4.2.2.1 2005/02/22 03:01:00 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.1.4.2.2.2 2005/02/22 05:05:49 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -404,7 +404,7 @@ multikey_assoc<D,C>::is_compact(void) const {
 		return return_type();
 	const_iterator first = this->begin();
 	const_iterator last = --(this->end());
-#if 1
+#if 0
 	// this seems WRONG
 	key_list_type start, end;
 #if 0

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.6 2005/02/22 03:00:54 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.7 2005/02/22 05:05:46 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -300,6 +300,11 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 		NEVER_NULL(*iter);
 		if ((*iter)->unroll_references(c, *ref_iter))
 			err = true;
+	}
+	if (err) {
+		what(cerr << "ERROR: unrolling instance references in ") <<
+			"::unroll()." << endl;
+		return;
 	}
 /***
 	Make sure each packed array has the same dimensions.  

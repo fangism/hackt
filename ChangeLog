@@ -2,6 +2,13 @@
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09:
+	  Fixed multikey_assoc::is_compact(), adding necessary, 
+	  implicit conversion to key type in {int,bool}_instance_alias.  
+	  Really sick and tired of maintaining copies of code for each
+	  physical instance collection type... it's time to employ
+	  templates with policy functors... (sub-branch).
+
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-08:
 	  Initial testing of instance unrolling, without connections, 
 	  just for int_instance_collection, our guinea pig.  
