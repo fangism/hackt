@@ -1,0 +1,23 @@
+# "Make.stddef"
+# make-independent definitions
+
+SHELL = /bin/sh
+AWK = awk
+CAT = cat
+CPP = cpp
+CVS = cvs
+DIFF = diff -B
+# -B: ignore blank line diffs
+ECHO = echo
+GREP = grep
+SED = sed
+RM = rm -f
+MV = mv -f
+SYNC = sync
+TOUCH = touch
+TAR = tar -czvf
+
+# defined with intention of self-modification...
+THISMAKEFILE = Makefile
+
+

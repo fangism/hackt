@@ -1,0 +1,177 @@
+# "Make.deps"
+# make-independent dependencies
+# macos and definitions are defined in "Make.stddef" and "Make.vars"
+# RECURSIVE_MAKE must be defined before including this file
+
+.SUFFIXES: .cc .o .l .yy .d
+
+.cc.o:
+	$(CC) $(ALL_CFLAGS) -c $< -o $@
+
+.cc.d:
+	$(MAKEDEPEND) $< > $@
+
+force:
+
+# force disk synchronization
+sync:
+	$(SYNC)
+
+makeinfo:
+	@$(ECHO) "###############################################################################"
+	@$(ECHO) "#	MAKE = $(MAKE) $(MAKEFLAGS)"
+	@$(ECHO) "#	CC = $(CC) $(ALL_CFLAGS)"
+	@$(ECHO) "#	MAKEDEPEND = $(MAKEDEPEND)"
+	@$(ECHO) "#	LD = $(LD) $(LDFLAGS)"
+	@$(ECHO) "#	LEX = $(LEX) $(LFLAGS)"
+	@$(ECHO) "#	YACC = $(YACC) $(YFLAGS)"
+	@$(ECHO) "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
+
+# for parallel make, .depend and TARGETS should be sequential
+all: .depend
+	$(RECURSIVE_MAKE) $(TARGETS)
+
+# parallel make: LANG_OBJ needs to be built first... hmmm.
+$(ARTC): y.tab.h $(ART_OBJ)
+	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
+# gmake doesn't interpret $> correctly, otherwise the following would work:
+#	$(LD) $(LDFLAGS) $> -o $@
+
+# with separate makefiles, no longer need to make self-modifying
+.depend: y.tab.cc $(ART_DEPS)
+	@$(ECHO) "$(CAT) *.d > $@"
+	@$(CAT) $(ART_DEPS) > $@
+
+art.yy.cc: art.l y.tab.h
+	$(LEX) $(LFLAGS) art.l > $@
+
+# y.tab.cc will depend on y.output.h
+y.tab.h y.tab.cc y.output y.output.h: art.yy
+	$(YACC) $(YFLAGS) $?
+	@if $(GREP) "conflict" y.output; then exit 1; fi
+	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
+	-$(MV) y.tab.c y.tab.cc
+
+art.yy.types: art.yy
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
+		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" > $@
+
+
+y.union.cc: y.output art.yy.types
+	$(AWK) -f yacc-union-type.awk -v yaccfile=art.yy.types \
+		-v include="art_parser.h art_parser_chp.h art_parser_hse.h art_parser_prs.h" \
+		-v namespace=ART::parser \
+		-v type=ART::parser::node y.output > $@
+
+# extra dependencies to ensure correct in-order parallel builds
+art_main.o: y.tab.h y.tab.cc
+
+# explicitly not parallel
+regression: clobber
+	$(RECURSIVE_MAKE) regression-target
+	$(RECURSIVE_MAKE) regression-norebuild
+
+# MAKEFLAGS is redundant for gmake?
+regression-target:
+	$(RECURSIVE_MAKE) CDEFS="-DREGRESSION_TEST_MODE=1" all
+
+# just to make sure nothing crashes
+regression-preliminary: cleantests
+	@$(ECHO) "Running regression preliminaries...";
+	@for f in $(TEST_SUBJECTS); do \
+		$(ECHO) "Trying $$f.in ..."; \
+		$(ARTC) < $$f.in 2>&1 | $(CAT) > /dev/null ; \
+	done 2>&1 | $(CAT) > $(TEST_REPORT); 
+	@if grep -v ^Trying $(TEST_REPORT) ; then \
+		$(ECHO) "Uh oh!  Something crashed..."; \
+		$(ECHO) "See \"$(TEST_REPORT)\" for failed tests."; \
+		exit 1; \
+	fi
+
+regression-norebuild: regression-preliminary
+	$(MAKE) cleantests
+	@$(ECHO) "Running regression tests...";
+	@for f in $(TEST_SUBJECTS); do \
+		$(ARTC) < $$f.in 2>&1 | $(CAT) > $$f.test ; \
+		$(TEST_FILTER) $$f.test > $$f.test.filter ; \
+		if [ -f $$f.stderr ] ; then \
+			$(TEST_FILTER) $$f.stderr > $$f.stderr.filter ; \
+		else \
+			$(TOUCH) $$f.stderr.filter ; \
+		fi; \
+		$(DIFF) $$f.stderr.filter $$f.test.filter 2>&1 | $(CAT) > $$f.diff ; \
+		if [ -s $$f.diff ] ; then \
+			$(ECHO) "$$f.diff is non-empty!"; \
+			$(ECHO) $$f.diff >> $(TEST_REPORT); \
+		fi; \
+	done;
+	@if [ -s $(TEST_REPORT) ] ; then \
+		$(ECHO) "Test output differences were found!"; \
+		$(ECHO) "See \"$(TEST_REPORT)\" for list of differences."; \
+		$(ECHO) "Fix them before committing! (or else...)"; \
+		exit 1; \
+	else \
+		$(ECHO) "All tests passed."; \
+	fi
+
+
+# documentation targets
+docs:
+	doxygen $(DOXYGEN_CONFIG)
+	(cd dox/latex; $(MAKE) < /dev/null )
+
+cleanlexer:
+	-$(RM) *.yy.*
+
+cleanparser:
+	-$(RM) y.tab.*
+	-$(RM) y.output
+	-$(RM) y.output.h
+	-$(RM) y.union.cc
+
+cleandepend:
+	-$(RM) *.d
+
+cleantests:
+	@$(ECHO) "rm -rf *.test *.diff *.filter"
+	-@$(RM) $(TEST_SUBJECTS:=.test)
+	-@$(RM) $(TEST_SUBJECTS:=.test.filter)
+	-@$(RM) $(TEST_SUBJECTS:=.stderr.filter)
+	-@$(RM) $(TEST_SUBJECTS:=.diff)
+	-$(RM) $(TEST_REPORT)
+
+cleanobjects:
+	-$(RM) *.o
+
+cleanjunk:
+	-$(RM) *.tmp.*
+	-$(RM) *.core
+
+clean: cleanlexer cleanparser cleandepend cleantests cleanobjects cleanjunk
+
+# for now don't always clobber this, until everyone else can generate docs...
+nodocs:
+	-$(RM) -r dox/html
+	-$(RM) -r dox/latex
+
+# with separate makefiles, no longer need to make self-modifying
+clobberdepend: cleandepend
+	-$(RM) .depend
+
+clobber: clean clobberdepend
+	-$(RM) $(TARGETS)
+
+tarball: clobber
+	-$(RM) $(TARBALL)
+	$(TAR) $(TARBALL) ./*
+
+# if regression fails, make will abort and abandon commit
+# strongly suggest running with ccache to speedup re-build
+commit: regression
+	$(RECURSIVE_MAKE) clobberdepend
+	$(RECURSIVE_MAKE) cvsdiffs
+	$(CVS) commit
+
+cvsdiffs: force
+	-$(CVS) diff > $@
+
