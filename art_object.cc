@@ -24,14 +24,18 @@ namespace entity {
 
 /**
 	Constructor for a new namespace.  
+	Inherits from its parents: type aliases to built-in types, 
+	such as bool and int.  
 	\param n the name.  
 	\param p pointer to the parent namespace.  
+	\sa inherit_built_in_types
  */
 name_space::name_space(const string& n, name_space* p) : 
 		object(), parent(p), key(n), 
 		subns(), open_spaces(), open_aliases(), 
 		type_defs(), type_insts(),
 		proc_defs(), proc_insts() {
+	inherit_built_in_types();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,7 +79,6 @@ name_space::what(ostream& o) const {
 	Either creates a new sub-namespace or opens if it already exists.  
 	\param n the name of the namespace to enter.
 	\return pointer to the referenced namespace, if found, else NULL.
-	\sa leave_namespace
 	Details: First searches list of aliased namespaces to check for
 	collision, which is currently reported as an error.  
 	(We want to simply head off potential ambiguity here.)
@@ -83,6 +86,7 @@ name_space::what(ostream& o) const {
 	or instance in the used_id_map.  
 	Then searches subnamespace to determine if already exists.
 	If exists, re-open, else create new and link to parent.  
+	\sa leave_namespace
  */
 name_space*
 name_space::add_open_namespace(const string& n) {
@@ -211,13 +215,13 @@ name_space::add_using_directive(const id_expr& n) {
 	but using a different name, and taking a spot in used_id_map.  
 	\param n the referenced namespace qualified identifier
 	\param a the new name local identifier
-	\sa add_using_directive
 	Procedure outline: 
 	Check if alias name is already taken by something else
 	in this namespace.  Any local collision is reported as an error.  
 	Note: name clashes with namespaces in higher scopes are permitted, 
 	and in imported (unaliased) spaces.  
 	This allows one to overshadow identifiers in higher namespaces.  
+	\sa add_using_directive
  */
 name_space*
 name_space::add_using_alias(const id_expr& n, const string& a) {
@@ -411,6 +415,41 @@ query_import_namespace_match(namespace_list& m, const id_expr& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Searches this namespace, then imported (unaliased) namespaces, 
+	and then parents' namespace.  Does not search down subnamespaces, 
+	or aliased imported namespaces.  Searching in those places
+	requires that the identifier be qualified with scope.  
+	\param m the list of accumulated matches (also returned).  
+	\param tid the name of type to search for.  
+ */
+void
+name_space::query_type_def_match(type_def_list& m, const string& tid) {
+	cerr << endl << "query_type_def_match: " << tid
+		<< " in " << get_qualified_name();
+	{
+		type_definition* ret = type_defs[tid];
+		if (ret) m.push_back(ret);
+	}
+	// always search these unconditionally? or only if not found so far?
+	{	// with open namespaces list
+		namespace_list::const_iterator i = open_spaces.begin();
+		for ( ; i!=open_spaces.end(); i++) {
+			// type_definition* ret = 
+			//	(*i)->query_type_def_match(tid);
+			type_definition* ret = (*i)->type_defs[tid];
+			if (ret) m.push_back(ret);
+		}
+	}
+
+	// until list is not empty, keep querying parents
+#if 1
+	if (m.empty() && parent)
+#endif
+		parent->query_type_def_match(m, tid);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This lookup function returns a pointer to some object that belongs to 
 	this scope, be it a namespace, process, definition, or instantiation.
 	This query will not look in higher namespaces or imported namespaces.
@@ -455,12 +494,271 @@ find_namespace_ending_with(namespace_list& m, const id_expr& id) {
 		parent->find_namespace_ending_with(m, id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a built-in type definition, generally reserved only for use 
+	with the global scope.  
+ */
+built_in_type_def*
+name_space::add_built_in_type_definition(built_in_type_def* d) {
+if (parent) {
+	cerr << "Adding of built-in types is reserved for the "
+		<< "global namespace only!";
+	return NULL;
+} else {
+	assert(d);
+	string k = d->get_name();
+	object* probe = used_id_map[k];
+	assert(!probe);
+	// else "ERROR: identifier already taken, failed to add built-in type!";
+
+	// type_defs owns this type is reponsible for deleting it
+	type_defs[k] = d;
+	used_id_map[k] = d;
+	return d;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+type_definition*
+name_space::add_type_alias(const id_expr& t, const string& a) {
+	type_definition* ret = NULL;
+/*** not done yet
+	object* probe;
+	namespace_list::iterator i;
+	namespace_list candidates;		// empty list
+
+	cerr << endl << "adding type-alias in space: " 
+		<< get_qualified_name() << " as " << a;
+
+	probe = used_id_map[a];
+	if (probe) {
+		// then already, it conflicts with some other id
+		probe->what(cerr << " ... already declared ")
+			<< ", ERROR! ";
+		return NULL;
+	}
+
+*** not done yet
+	// else we're ok to proceed to add alias
+	// first find the referenced type name...
+	query_type_definition_match(candidates, t);
+	i = candidates.begin();
+
+	switch (candidates.size()) {
+	// if list's size > 1, ambiguity
+	// else if list is empty, unresolved type
+	// else we've narrowed it down to one
+		case 1: {
+			ret = (*i);
+			def_types[a] = ret;
+			used_id_map[a] = ret;
+			break;
+			}
+		case 0:	{
+			cerr << " ... not found, ERROR! ";
+			ret = NULL;
+			break;	// no matches
+			}
+		default: {	// > 1
+			ret = NULL;
+			cerr << " ERROR: ambiguous type alias, " << 
+				"need to be more specific.  candidates are: ";
+				for ( ; i!=candidates.end(); i++)
+					cerr << endl << "\t" << 
+						(*i)->get_qualified_name();
+			}
+	}
+***/
+
+	return ret;		// NULL => error
+	// candidates will automatically be cleared (not owned pointers)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public interface to lookup a single type_definition.  
+	This version take a single identifier string.  
+	Will need to make sure that template params of matched type is null.  
+	\param id the unqualified name of the type
+	\return pointer to matched type_definition, only if it unique, 
+		otherwise returns NULL
+	\sa query_type_def_match
+ */
+
+// const?
+type_definition*
+name_space::instance_type(const string& id) {
+	// const
+	type_definition* ret;
+	type_def_list::iterator i;
+	type_def_list candidates;
+
+	query_type_def_match(candidates, id);
+
+	i = candidates.begin();
+	switch (candidates.size()) {
+		case 1: {
+			ret = (*i);
+			break;
+			}
+		case 0:	{
+			cerr << " ... not found, ERROR! ";
+			ret = NULL;
+			break;	// no matches
+			}
+		default: {	// > 1
+			ret = NULL;
+			cerr << " ERROR: ambiguous type definition, " << 
+				"need to be more specific.  candidates are: ";
+				for ( ; i!=candidates.end(); i++)
+					cerr << endl << "\t" << 
+						(*i)->get_qualified_name();
+			}
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This searches the parent for built-in types and creates local 
+	aliases to them under the same name, for accelerated type resolution.  
+	Types that qualify for inheritance are either built-in types, 
+	which should only be in the global namespace, or aliases thereof.  
+	To be used only by the constructor, hence private.  
+ */
+void
+name_space::inherit_built_in_types(void) {
+if (parent) {
+	type_def_set::iterator i = parent->type_defs.begin();
+	for ( ; i!=parent->type_defs.end(); i++) {
+		const type_definition* t;
+		t = (*i).second;
+		assert(t);
+
+		// is t is an alias, resolve first
+		const type_alias* a = IS_A(const type_alias*, t);
+		if (a) {
+			t = a->resolve_canonical();
+		}	// else proceed
+
+		if (IS_A(const built_in_type_def*, t)) {
+			assert(!used_id_map[(*i).first]);
+			type_alias* new_alias = 
+				new type_alias(this, (*i).first, t);
+			assert(new_alias);
+			type_defs[(*i).first] = new_alias;
+		} 
+		// else don't add
+	}
+} // end if (parent)
+}
+
+//=============================================================================
+// class type_definition method definitions
+
+inline
+type_definition::type_definition(const name_space* o, const string& n) :
+	definition(o), key(n) {
+}
+
+type_definition::~type_definition() {
+}
+
+string
+type_definition::get_qualified_name(void) const {
+	return owner->get_qualified_name() +scope +key;
+}
+
+string
+type_definition::get_name(void) const {
+	return key;
+}
+
+//=============================================================================
+// class type_alias method definitions
+
+/**
+	Type alias constructor follows the argument pointer until, 
+	it encounters a canonical type, one that is not an alias.  
+	\param o the namespace to which this belongs.  
+	\param n the name of the aliased type.  
+	\param t pointer to the actual type being aliased.  
+ */
+type_alias::type_alias(const name_space* o, const string& n, 
+		const type_definition* t) :
+		type_definition(o, n), canonical(t) {
+	assert(canonical);
+	// just in case t is not a canonical type, i.e. another alias...
+	const type_alias* a = IS_A(const type_alias*, canonical);
+	while (a) {
+		canonical = a;
+		a = IS_A(const type_alias*, a->canonical);
+	}
+}
+
+/**
+	Destructor, never deletes the canonical type pointer.  
+ */
+type_alias::~type_alias() { }
+
+/**
+	Fancy name for "just return the canonical pointer."
+	\return the canonical pointer.  
+ */
+inline
+const type_definition*
+type_alias::resolve_canonical(void) const {
+	return canonical;
+}
+
+ostream&
+type_alias::what(ostream& o) const {
+	return o << "aliased-type: " << key;
+}
+
+
+//=============================================================================
+// class built_in_type_def method definitions
+
+inline
+built_in_type_def::built_in_type_def(const name_space* o, const string& n) :
+	type_definition(o, n) {
+}
+
+built_in_type_def::~built_in_type_def() { }
+
+ostream&
+built_in_type_def::what(ostream& o) const {
+	return o << key;
+}
+
 //=============================================================================
 // class user_type_def methods
 
 /// constructor for user defined type
 user_type_def::user_type_def(const name_space* o, const string& name) :
 	type_definition(o, name), template_params(), members() {
+}
+
+ostream&
+user_type_def::what(ostream& o) const {
+	return o << "used-defined-type: " << key;
+}
+
+//=============================================================================
+// class type_instantiation method definitions
+
+type_instantiation::type_instantiation(const name_space* o, 
+		const type_definition* t, const string& n) : 
+		instantiation(o), type(t), key(n) {
+}
+
+type_instantiation::~type_instantiation() { }
+
+ostream&
+type_instantiation::what(ostream& o) const {
+	return o << "type-inst";
 }
 
 //=============================================================================

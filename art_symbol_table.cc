@@ -16,22 +16,30 @@ using namespace std;
 //=============================================================================
 // class context method definition
 
-/// default constructor
+/**
+	Default context constructor.  Should really only be invoked
+	once (per source file or module).  
+	Creates and initializes the global namespace.  
+ */
 context::context() : 
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		// create the global namespace
-		current_ns(new name_space("",NULL)) {
-	assert(current_ns);		// make sure allocated
+		current_ns(new name_space("",NULL)), 
+		current_dt(NULL) {
+	assert(current_ns);		// make sure allocated properly
+
 	// add to the global namespace all built-in types and definitions
-	
+	assert(current_ns->add_built_in_type_definition(
+		new built_in_type_def(current_ns, "bool")));
+	assert(current_ns->add_built_in_type_definition(
+		new built_in_type_def(current_ns, "int")));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// currently, default destructor
 context::~context() {
-	// don't delete current_ns... yet
-
+	SAFEDELETE(current_ns);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,14 +77,13 @@ context::open_namespace(const token_identifier& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// closes namespace, leaving the scope
-name_space*
+void
 context::close_namespace(void) {
 	indent--;
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
 	current_ns = current_ns->leave_namespace();
 	// should always be safe, right?
-	return current_ns;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,6 +111,36 @@ context::alias_namespace(const id_expr& id, const string& a) {
 		exit(1);			// temporary
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies the context's current type definition (current_dt) 
+	if the referenced type is resolved without error.  
+	\param id the name of the type (unqualified).  
+	\return pointer to defined or declared type if unique found, 
+		else NULL of no match or ambiguous.  
+ */
+type_definition*
+context::set_type_def(const token_string& id) {
+	// lookup type (will be built-in int or bool)
+	type_definition* ret = current_ns->instance_type(id);
+	if (!ret) {
+		type_error_count++;
+		cerr << id.where() << endl;
+		exit(1);			// temporary
+	} else {
+		current_dt = ret;
+		indent++;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::unset_type_def(void) {
+	indent--;
+	current_dt = NULL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

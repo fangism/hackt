@@ -96,6 +96,7 @@ CONSTRUCTOR_INLINE
 type_id::type_id(node* b, node* t) : type_base(),
 	base(b),        // can't restrict type yet...
 		// may be id_expr, or chan_type, or data_type
+		// or user-defined qualified id...
 	temp_spec(dynamic_cast<expr_list*>(t))  // may be NULL
 	{ }
 
@@ -163,6 +164,17 @@ data_type_base::rightmost(void) const {
 	else if (width) return width->rightmost();
 	else if (la)    return la->rightmost();
 	else            return type->rightmost();
+}
+
+object*
+data_type_base::check_build(context* c) const {
+// where do we report the error? in c?
+/**
+	if (width)
+		return c->set_type_def(*type, *width);
+	else
+**/
+		return c->set_type_def(*type);
 }
 
 //=============================================================================
@@ -669,13 +681,21 @@ instance_base::where(void) const {
 //=============================================================================
 // class instance_declaration method definitions
 
+/**
+	Creates an instance declaration, which may contain a list of 
+	identifiers to instantiation.  
+	\param t the base type (no array).  
+	\param i the identifier list (may contain arrays).
+	\param s the terminating semicolon.  
+ */
 CONSTRUCTOR_INLINE
 instance_declaration::instance_declaration(node* t, node* i, node* s) :
 		instance_base(),
 		type(dynamic_cast<type_base*>(t)),
 		ids(dynamic_cast<declaration_id_list*>(i)),
 		semi(dynamic_cast<terminal*>(s)) {
-	assert(type); assert(ids);
+	assert(type);
+	assert(ids);
 	if(s) assert(semi);
 }
 
@@ -697,6 +717,18 @@ instance_declaration::leftmost(void) const {
 line_position
 instance_declaration::rightmost(void) const {
 	return semi->rightmost();
+}
+
+object*
+instance_declaration::check_build(context* c) const {
+	object* t;
+	what(cerr << c->auto_indent()) << ": ";
+	t = type->check_build(c);
+	if (t) {
+		ids->check_build(c);
+	} 
+	c->unset_type_def();
+	return t;
 }
 
 //=============================================================================

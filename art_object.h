@@ -54,6 +54,7 @@ class process_definition;
 class instantiation;
 class type_instantiation;
 class process_instantiation;
+class built_in_type_def;
 
 //=============================================================================
 /// the root object type
@@ -96,12 +97,15 @@ private:
 		and thus, is responsible for deleteing them.  
 	 */
 	typedef	map_of_ptr<string, type_definition>	type_def_set;
+	/// list useful for query returns, const pointer?
+	typedef	list<type_definition*>			type_def_list;
 
 	/// resolves identifier to actual data type, we own these pointers
 	typedef	map_of_ptr<string, type_instantiation>	type_inst_set;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_definition>	proc_def_set;
+	typedef	list<process_definition*>		proc_def_list;
 
 	/// resolves identifier to actual process type, we own these pointers
 	typedef	map_of_ptr<string, process_instantiation>	proc_inst_set;
@@ -187,6 +191,7 @@ protected:
 
 	/**
 		Container of data type definitions in this scope.
+		Also contains local type aliases.  
 		These definitions are owned by this scope, and should
 		be deleted in the destructor.  
 	 */
@@ -236,6 +241,14 @@ name_space*	leave_namespace(void);	// or close_namespace
 name_space*	add_using_directive(const id_expr& n);
 name_space*	add_using_alias(const id_expr& n, const string& a);
 
+// to be used ONLY by the global namespace
+built_in_type_def*	add_built_in_type_definition(built_in_type_def* d);
+type_definition*	add_type_alias(const id_expr& t, const string& a);
+
+// returns type if unique match found, else NULL
+type_definition*	instance_type(const string& id);
+
+
 type_definition*	add_type_definition();
 type_instantiation*	add_type_instantiation();
 process_definition*	add_proc_definition();
@@ -250,10 +263,11 @@ void	query_import_namespace_match(namespace_list& m, const id_expr& id);
 
 // these will not be recursive, but iteratively invoked by
 // add_blah_inst/def();
-void	query_type_def_match(type_def_set& m, const id_expr& pid);
-void	query_type_inst_match(type_def_set& m, const id_expr& pid);
-void	query_proc_def_match(type_def_set& m, const id_expr& pid);
-void	query_proc_inst_match(type_def_set& m, const id_expr& pid);
+void	query_type_def_match(type_def_list& m, const string& tid);
+void	query_type_def_match(type_def_list& m, const type_id& tid);
+void	query_type_inst_match(type_def_list& m, const id_expr& tid);
+void	query_proc_def_match(proc_def_list& m, const type_id& pid);
+void	query_proc_inst_match(proc_def_list& m, const id_expr& pid);
 
 object*	what_is(const string& id);
 
@@ -261,6 +275,7 @@ object*	what_is(const string& id);
 void	find_namespace_ending_with(namespace_list& m, const id_expr& id);
 void	find_namespace_starting_with(namespace_list& m, const id_expr& id);
 
+void	inherit_built_in_types(void);
 
 // will we need generalized versions of queries that return object*
 // if we don't know a priori what an identifier's class is?
@@ -349,28 +364,37 @@ class type_definition : public definition {
 protected:
 	string			key;		///< name of type
 public:
-	type_definition(const name_space* o, const string& n) : 
-		definition(o), key(n) { }
-virtual	~type_definition() { }
+	type_definition(const name_space* o, const string& n);
+virtual	~type_definition();
 
-// virtual	ostream& what(ostream& o) const;
-};
-
-//-----------------------------------------------------------------------------
-/// Reserved for special built-in fundamental base types.  
-class built_in_type_def : public type_definition {
-public:
-	built_in_type_def(const name_space* o, const string& n) : 
-		type_definition(o, n) { }
-virtual	~built_in_type_def() { }
-
-// virtual	ostream& what(ostream& o) const;
+string	get_qualified_name(void) const;
+virtual	string get_name(void) const;
+virtual	ostream& what(ostream& o) const = 0;
 };
 
 //-----------------------------------------------------------------------------
 /**
-	Generalizable user-defined data type, which can (eventually) bulid upon
-	other user-defined data types.  
+	Reserved for special built-in fundamental base types.  
+	May potentially build off of this as a base class for 
+	specialization.  
+ */
+class built_in_type_def : public type_definition {
+public:
+	built_in_type_def(const name_space* o, const string& n);
+virtual	~built_in_type_def();
+
+virtual	ostream& what(ostream& o) const;
+};
+
+//-----------------------------------------------------------------------------
+// may need a template type that refers to an abstract template
+// with template actuals/parameters
+// or just use user_def_type below...
+
+//-----------------------------------------------------------------------------
+/**
+	Generalizable user-defined data type, which can (eventually) 
+	build upon other user-defined data types.  
  */
 class user_type_def : public type_definition {
 private:
@@ -392,23 +416,29 @@ public:
 	user_type_def(const name_space* o, const string& name);
 virtual	~user_type_def() { }
 
-// virtual	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const;
 };
 
 //-----------------------------------------------------------------------------
 /// Type aliases are analogous to typedefs in C (not yet implemented)
 // for renaming convenience
+// going to use this mechanism to inherit built-in types into each namespace
+//	to accelerate their resolution, not having to search sequentially
+//	up to the global namespace.  
+// add an alias into each scope's used_id_map...
 class type_alias : public type_definition {
 protected:
 	/// pointer to the type represented by this type-id
 	const type_definition*		canonical;
 public:
 	type_alias(const name_space* o, const string& n, 
-		const type_definition* t) :
-		type_definition(o, n), canonical(t) { assert(canonical); }
-virtual	~type_alias() { }
+		const type_definition* t);
+virtual	~type_alias();
+	// never delete canonical
 
-// virtual	ostream& what(ostream& o) const;
+const type_definition*	resolve_canonical(void) const;
+
+virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
@@ -420,20 +450,15 @@ protected:
 	// more to come...
 public:
 	type_instantiation(const name_space* o, const type_definition* t,
-		const string& n) : instantiation(o), type(t), key(n) { }
-virtual	~type_instantiation() { }
+		const string& n);
+virtual	~type_instantiation();
 
-// virtual	ostream& what(ostream& o) const;
+virtual	ostream& what(ostream& o) const;
 };
 
 //=============================================================================
-// built-in types will be added to the global scope
-// built-in types need to be statically initialized
-// static type_definition("int")
-
-//=============================================================================
-};
-};
+};	// end namespace entity
+};	// end namespace ART
 
 #endif	// __ART_OBJECT_H__
 

@@ -638,6 +638,7 @@ virtual	~data_type_base();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual	object* check_build(context* c) const;
 };
 
 /// list of base data types
@@ -870,6 +871,7 @@ virtual	~instance_declaration();
 virtual	ostream& what(ostream& o) const;
 virtual	line_position leftmost(void) const;
 virtual	line_position rightmost(void) const;
+virtual object* check_build(context* c) const;
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

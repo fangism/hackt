@@ -21,7 +21,7 @@ extern "C" {
 int main(int argc, char* argv[]) {
 	parser::node* root;	///< root of the syntax tree
 	entity::object* top;	///< root of type-checked and bound object
-	parser::context* global;
+	// parser::context* global;
 
 	try {
 		yyparse();
@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
-	global = new context();
-	top = root->check_build(global);
+	// global = new context();
+	top = root->check_build(new context());
 
 
 	cerr << endl;
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	// delete ART object and its hierarchy
 	SAFEDELETE(top);
 	// delete global context
-	SAFEDELETE(global);
+	// SAFEDELETE(global);	// no need, global is owned by top
 	return 0;
 }
 

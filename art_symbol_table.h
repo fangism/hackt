@@ -22,6 +22,7 @@ namespace entity {
 	class name_space;
 	class built_in_type_def;
 	class user_def_type;
+	class type_definition;
 	class type_instantiation;
 	class process_definition;
 	class process_instantiation;
@@ -63,6 +64,12 @@ protected:
 		Do not delete.  
 	 */
 	name_space*		current_ns;
+
+	/**
+		Pointer to current data type, useful in list declarations.  
+	 */
+	type_definition*	current_dt;
+
 	/// Reference to the current open process definition.  
 	process_definition*	current_proc_def;
 	/// Reference to the current open data type definition.  
@@ -84,10 +91,16 @@ public:
 	~context();
 
 name_space*	open_namespace(const token_identifier& id);
-name_space*	close_namespace(void);
+void		close_namespace(void);
 name_space*	using_namespace(const id_expr& id);
 name_space*	alias_namespace(const id_expr& id, const string& a);
 
+type_definition*	set_type_def(const id_expr& tid);
+type_definition*	set_type_def(const token_string& tid);
+	// for keyword: int or bool
+type_definition*	set_type_def(const token_string& tid, const expr& w);
+	// for int<width>, for now only accept token_int... later expressions
+void	unset_type_def(void);
 
 string		auto_indent(void) const;
 

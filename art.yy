@@ -360,7 +360,7 @@ base_data_type_list
 
 // actual data: int<width> or bool
 base_data_type
-	// ever need user-defined types?
+	// ever need user-defined types? eventually...
 	// optional parens get confused with template-parameters
 	// going to use angle brackets <> in the template-fashion
 	: INT_TYPE '<' INT '>'
