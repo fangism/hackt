@@ -316,7 +316,8 @@ context::close_process_definition(void) {
 void
 context::close_datatype_definition(void) {
 	// sanity check
-	current_open_definition.must_be_a<datatype_definition>();
+//	current_open_definition.must_be_a<datatype_definition>();
+	current_open_definition.must_be_a<datatype_definition_base>();
 	close_current_definition();
 }
 
@@ -327,7 +328,8 @@ context::close_datatype_definition(void) {
  */
 void
 context::close_chantype_definition(void) {
-	current_open_definition.must_be_a<channel_definition>();
+//	current_open_definition.must_be_a<channel_definition>();
+	current_open_definition.must_be_a<channel_definition_base>();
 	close_current_definition();
 }
 
@@ -340,23 +342,29 @@ context::get_current_param_definition(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-never_const_ptr<datatype_definition>
+// never_const_ptr<datatype_definition>
+never_const_ptr<datatype_definition_base>
 context::get_current_datatype_definition(void) const {
-	return current_definition_reference.is_a<datatype_definition>();
+//	return current_definition_reference.is_a<datatype_definition>();
+	return current_definition_reference.is_a<datatype_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-never_const_ptr<channel_definition>
+// never_const_ptr<channel_definition>
+never_const_ptr<channel_definition_base>
 context::get_current_channel_definition(void) const {
-	return current_definition_reference.is_a<channel_definition>();
+//	return current_definition_reference.is_a<channel_definition>();
+	return current_definition_reference.is_a<channel_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-never_const_ptr<process_definition>
+// never_const_ptr<process_definition>
+never_const_ptr<process_definition_base>
 context::get_current_process_definition(void) const {
-	return current_definition_reference.is_a<process_definition>();
+//	return current_definition_reference.is_a<process_definition>();
+	return current_definition_reference.is_a<process_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -602,9 +610,13 @@ context::get_current_scope(void) const {
 	else if (current_prototype)	// careful, is excl_ptr<>
 		return never_const_ptr<definition_base>(current_prototype);
 			// .as_a<scopespace>();
-	else if (current_open_definition)
-		return current_open_definition.as_a<scopespace>();
-	else
+	else if (current_open_definition) {
+		// no longer a static cast
+		never_const_ptr<scopespace>
+			ret(current_open_definition.is_a<scopespace>());
+		assert(ret);
+		return ret;
+	} else
 		return current_namespace.as_a<scopespace>();
 }
 
@@ -621,9 +633,13 @@ never_ptr<scopespace>
 context::get_current_scope(void) {
 	if (current_dynamic_scope)
 		return current_dynamic_scope;
-	else if (current_open_definition)
-		return current_open_definition.as_a<scopespace>();
-	else
+	else if (current_open_definition) {
+		// used to be static cast
+		never_ptr<scopespace>
+			ret(current_open_definition.is_a<scopespace>());
+		assert(ret);
+		return ret;
+	} else
 		return current_namespace.as_a<scopespace>();
 }
 
@@ -761,7 +777,8 @@ context::add_port_formal(const token_identifier& id,
 		current_prototype->add_port_formal(
 			fundamental_type_reference::make_instantiation(
 				current_fundamental_type, 
-				current_prototype, id, dim)));
+				current_prototype.is_a<scopespace>(),
+				id, dim)));
 	if (!ret) {
 		cerr << id.where() << endl;
 		type_error_count++;

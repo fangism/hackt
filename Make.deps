@@ -3,10 +3,11 @@
 # macos and definitions are defined in "Make.stddef" and "Make.vars"
 # RECURSIVE_MAKE must be defined before including this file
 
-.SUFFIXES: .cc .o .l .yy .d
+# disable ALL implicit rules first, then add the ones we want (gmake-ism)
+# GNUmake -r accomplishes the same thing
+.SUFFIXES:
 
-# disable implicit rule
-%.o:%.c
+.SUFFIXES: .cc .o .l .yy .d
 
 .cc.o:
 	$(CC) $(ALL_CFLAGS) -c $< -o $@
@@ -53,10 +54,9 @@ y.tab.h y.tab.c y.output y.output.h: art.yy
 	$(YACC) $(YFLAGS) $?
 	@if $(GREP) "conflict" y.output; then exit 1; fi
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h
-#	-$(MV) y.tab.c y.tab.cc
 
-# trying linking to avoid parallel make synchronization issues
-# .cc to forces use of C++ compiler
+# linking instead of moving to avoid parallel make synchronization issues
+# .cc suffix forces use of C++ compiler
 y.tab.cc: y.tab.c
 	$(LN) y.tab.c y.tab.cc
 

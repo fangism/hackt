@@ -201,14 +201,23 @@ collective_type_reference::dump(ostream& o) const {
 // class data_type_reference method definitions
 
 data_type_reference::data_type_reference(
-		never_const_ptr<datatype_definition> td) :
+#if NEW_DEF_HIER
+		never_const_ptr<datatype_definition_base> td
+#else
+		never_const_ptr<datatype_definition> td
+#endif
+		) :
 		fundamental_type_reference(), 
 		base_type_def(td) {
 	assert(base_type_def);
 }
 
 data_type_reference::data_type_reference(
+#if NEW_DEF_HIER
+		never_const_ptr<datatype_definition_base> td, 
+#else
 		never_const_ptr<datatype_definition> td, 
+#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
@@ -268,7 +277,11 @@ data_type_reference::make_instantiation_private(
 	\param pl (optional) parameter list for templates.  
  */
 channel_type_reference::channel_type_reference(
+#if NEW_DEF_HIER
+		never_const_ptr<channel_definition_base> cd, 
+#else
 		never_const_ptr<channel_definition> cd, 
+#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
@@ -276,7 +289,12 @@ channel_type_reference::channel_type_reference(
 }
 
 channel_type_reference::channel_type_reference(
-		never_const_ptr<channel_definition> cd) :
+#if NEW_DEF_HIER
+		never_const_ptr<channel_definition_base> cd
+#else
+		never_const_ptr<channel_definition> cd
+#endif
+		) :
 		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -323,14 +341,23 @@ channel_type_reference::make_instantiation_private(
 // class process_type_reference method definitions
 
 process_type_reference::process_type_reference(
-		never_const_ptr<process_definition> pd) :
+#if NEW_DEF_HIER
+		never_const_ptr<process_definition_base> pd
+#else
+		never_const_ptr<process_definition> pd
+#endif
+		) :
 		fundamental_type_reference(), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
 }
 
 process_type_reference::process_type_reference(
+#if NEW_DEF_HIER
+		never_const_ptr<process_definition_base> pd, 
+#else
 		never_const_ptr<process_definition> pd, 
+#endif
 		excl_const_ptr<param_expr_list> pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
@@ -471,9 +498,13 @@ param_type_reference::make_template_formal(
 		const token_identifier& id,
 		index_collection_item_ptr_type d,
 		count_const_ptr<param_expr> def) {
+	// not sure if this is correct, what if is typedef?
+	never_const_ptr<scopespace>
+		defscope(s.is_a<scopespace>());
+	assert(defscope);
 	if (t->must_be_equivalent(*pbool_type_ptr)) {
 		excl_ptr<pbool_instantiation>
-			ret(new pbool_instantiation(*s, id, d));
+			ret(new pbool_instantiation(*defscope, id, d));
 		if (def) {
 			if (!ret->assign_default_value(def)) {
 				// error: type-check fail
@@ -484,7 +515,7 @@ param_type_reference::make_template_formal(
 		return excl_ptr<instantiation_base>(ret);
 	} else if (t->must_be_equivalent(*pint_type_ptr)) {
 		excl_ptr<pint_instantiation>
-			ret(new pint_instantiation(*s, id, d));
+			ret(new pint_instantiation(*defscope, id, d));
 		if (def) {
 			if (!ret->assign_default_value(def)) {
 				// error: type-check fail

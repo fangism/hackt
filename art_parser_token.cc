@@ -14,7 +14,6 @@
 #include "art_parser_token.h"
 
 #include "art_symbol_table.h"
-#include "art_object_base.h"
 #include "art_object_expr.h"
 #include "art_built_ins.h"
 

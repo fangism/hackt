@@ -49,9 +49,20 @@ namespace entity {
 // forward declarations
 
 	class definition_base;
+#if NEW_DEF_HIER
+	class process_definition_base;
+	class process_definition;
+	class process_definition_alias;
+	class channel_definition_base;
+	class channel_definition_alias;
+	class datatype_definition_base;
+	class datatype_definition_alias;
+	// user_defs?
+#else
 	class channel_definition;
 	class datatype_definition;
 	class process_definition;
+#endif
 	class enum_datatype_def;
 	class built_in_datatype_def;
 	class built_in_param_def;
@@ -60,14 +71,39 @@ namespace entity {
 // class definition_base declared in "art_object_base.h"
 
 //=============================================================================
+#if NEW_DEF_HIER
 /**
-	Process definition.  Contains optional set of template formals, 
+	Process definition base class.  From this, there will arise: true
+	process definitions, and typedef process definitions. 
+ */
+class process_definition_base : public definition_base {
+protected:
+	// no new members?
+public:
+	process_definition_base(const string& n,
+		never_const_ptr<name_space> p);
+virtual	~process_definition_base();
+
+// inherited pure virtuals are still pure virtuals
+};	// end class process_definition_base
+#endif
+
+//=============================================================================
+/**
+	Process definition.  
+	All processes are user-defined.  
+	Contains optional set of template formals, 
 	set of port formals, and body of instantiations and language bodies.  
 	Is there a way to re-use name resolution code
 	from class name_space without copying?  
 	No other class derives from this?
  */
-class process_definition : public definition_base {
+#if NEW_DEF_HIER
+class process_definition : public process_definition_base, public scopespace
+#else
+class process_definition : public definition_base
+#endif
+{
 public:
 
 	/**
@@ -102,6 +138,12 @@ public:
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
+	const string& get_key(void) const;
+	string get_qualified_name(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+
+	never_const_ptr<object> lookup_object_here(const string& id) const;
+
 #if 0
 	never_const_ptr<fundamental_type_reference>
 		set_context_fundamental_type(context& c) const;
@@ -125,6 +167,50 @@ never_const_ptr<instantiation_base>
 };	// end class process_definition
 
 //=============================================================================
+#if NEW_DEF_HIER
+/**
+	A process-class typedef.  
+	Is usable as a process_definition_base for complete types, 
+	but not definable.  
+	Has no contents, just a level of indirection to the encapsulated
+	process type. 
+	May be templated for partial type specifications.  
+ */
+class process_definition_alias : public process_definition_base {
+protected:
+	excl_const_ptr<process_type_reference>		base;
+public:
+	process_definition_alias(const string& n, 
+		never_const_ptr<name_space> p);
+	~process_definition_alias();
+};	// end class process_definition_alias
+#endif
+
+//=============================================================================
+#if NEW_DEF_HIER
+/**
+	Base class interface for data type definitions.  
+ */
+class datatype_definition_base : public definition_base {
+protected:
+public:
+	datatype_definition_base(const string& n, 
+		never_const_ptr<name_space> p);
+	datatype_definition_base(never_const_ptr<name_space> p, 
+		const string& n);
+virtual	~datatype_definition_base();
+
+virtual	ostream& what(ostream& o) const = 0;
+virtual	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+virtual	bool require_signature_match(
+		never_const_ptr<definition_base> d) const = 0;
+};	// end class datatype_definition_base
+#endif
+
+//=============================================================================
+#if !NEW_DEF_HIER
 /**
 	Abstract base class for types and their representations.
  */
@@ -153,6 +239,7 @@ virtual	bool type_equivalent(const datatype_definition& t) const = 0;
 virtual	bool require_signature_match(
 		never_const_ptr<definition_base> d) const = 0;
 };	// end class datatype_definition
+#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -160,7 +247,12 @@ virtual	bool require_signature_match(
 	All user-defined data types will boil down to these types.  
 	Final class.  
  */
-class built_in_datatype_def : public datatype_definition {
+#if NEW_DEF_HIER
+class built_in_datatype_def : public datatype_definition_base
+#else
+class built_in_datatype_def : public datatype_definition
+#endif
+{
 public:
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n);
 	built_in_datatype_def(never_const_ptr<name_space> o, const string& n, 
@@ -179,6 +271,10 @@ public:
 	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<param_expr_list> ta) const;
+	// overrides definition_base's, exception to rule
+	// because this is not a scopespace
+	never_const_ptr<instantiation_base>
+		add_template_formal(excl_ptr<instantiation_base> f);
 #if 0
 	bool type_equivalent(const datatype_definition& t) const;
 #endif
@@ -208,7 +304,13 @@ public:
 	Enumerations are special fundamental types of data, like int and bool.  
 	There are no built in enumerations, all are user-defined.  
  */
-class enum_datatype_def : public datatype_definition {
+#if NEW_DEF_HIER
+class enum_datatype_def : public datatype_definition_base, 
+		public scopespace
+#else
+class enum_datatype_def : public datatype_definition
+#endif
+{
 protected:
 	// no new members
 	// don't we need to track ordering of identifiers added?  later...
@@ -217,6 +319,11 @@ public:
 	~enum_datatype_def();
 
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
+
+	const string& get_key(void) const;
+	string get_qualified_name(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
 
 #if 0
 	never_const_ptr<fundamental_type_reference>
@@ -265,6 +372,7 @@ public:
 	~built_in_param_def();
 
 	ostream& what(ostream& o) const;
+//	ostream& dump(ostream& o) const;
 #if 0
 	never_const_ptr<definition_base>
 		set_context_definition(context& c) const;
@@ -283,7 +391,13 @@ public:
 	Generalizable user-defined data type, which can (eventually) 
 	build upon other user-defined data types.  
  */
-class user_def_datatype : public datatype_definition {
+#if NEW_DEF_HIER
+class user_def_datatype : public datatype_definition_base, 
+		public scopespace
+#else
+class user_def_datatype : public datatype_definition
+#endif
+{
 private:
 #if 0
 TEMPORARY... later replace
@@ -309,9 +423,16 @@ protected:
 #endif
 public:
 	user_def_datatype(never_const_ptr<name_space> o, const string& name);
-	~user_def_datatype() { }
+	~user_def_datatype();
+
+	const string& get_key(void) const;
+	string get_qualified_name(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+
+	never_const_ptr<object> lookup_object_here(const string& id) const;
 
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 #if 0
 	bool type_equivalent(const datatype_definition& t) const;
 #endif
@@ -321,6 +442,39 @@ public:
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
+/**
+	Data-type typedef.  
+ */
+class datatype_definition_alias : public datatype_definition_base {
+protected:
+	// inherited template formals
+	never_const_ptr<data_type_reference>	base;
+public:
+	datatype_definition_alias(const string& n, 
+		never_const_ptr<name_space> p);
+	~datatype_definition_alias();
+
+};	// end class datatype_definition_alias
+
+//=============================================================================
+#if NEW_DEF_HIER
+/// abstract base class for channels and their representations
+class channel_definition_base : public definition_base {
+protected:
+//	string			key;		// inherited
+public:
+	channel_definition_base(never_const_ptr<name_space> o, const string& n);
+virtual	~channel_definition_base();
+
+// virtual	ostream& what(ostream& o) const = 0;
+
+virtual	count_const_ptr<fundamental_type_reference>
+		make_fundamental_type_reference(
+			excl_ptr<param_expr_list> ta) const;
+};	// end class channel_definition_base
+
+#else
+
 /// abstract base class for channels and their representations
 class channel_definition : public definition_base {
 protected:
@@ -339,20 +493,34 @@ virtual	count_const_ptr<fundamental_type_reference>
 		make_fundamental_type_reference(
 			excl_ptr<param_expr_list> ta) const;
 };	// end class channel_definition
+#endif
 
 //-----------------------------------------------------------------------------
 /**
 	Generalizable user-defined channel type, which can (eventually) 
 	build upon other user-defined channel types.  
  */
-class user_def_chan : public channel_definition {
+#if NEW_DEF_HIER
+class user_def_chan : public channel_definition_base, 
+		public scopespace
+#else
+class user_def_chan : public channel_definition
+#endif
+{
 protected:
 	// list of other type definitions
 public:
 	user_def_chan(never_const_ptr<name_space> o, const string& name);
 	~user_def_chan();
 
+	const string& get_key(void) const;
+	string get_qualified_name(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+
+	never_const_ptr<object> lookup_object_here(const string& id) const;
+
 	ostream& what(ostream& o) const;
+	ostream& dump(ostream& o) const;
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------
@@ -364,6 +532,9 @@ public:
 // add an alias into each scope's used_id_map...
 // also templatable, for partial template spcifications?  YES
 // should we sub-type? hold off...
+// new definition class hierarchy sub-types!
+
+#if !NEW_DEF_HIER
 class type_alias : public definition_base {
 protected:
 	// inherits template formals
@@ -399,6 +570,7 @@ never_const_ptr<fundamental_type_reference>	resolve_canonical(void) const;
 
 virtual	ostream& what(ostream& o) const;
 };	// end class type_alias
+#endif
 
 //=============================================================================
 }	// end namespace entity

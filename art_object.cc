@@ -716,8 +716,11 @@ dynamic_collection_addition::dimensions(void) const {
 
 //=============================================================================
 // class scopespace method definitions
-scopespace::scopespace(const string& n, never_const_ptr<scopespace> p) : 
-		object(), parent(p), key(n), 
+scopespace::scopespace(
+//		const string& n, never_const_ptr<scopespace> p
+		) : 
+		object(),
+//		parent(p), key(n), 
 		used_id_map(), connect_assign_list() {
 	// note that parent may be NULL, is this ok?
 }
@@ -766,6 +769,7 @@ scopespace::lookup_object_here_with_modify(const string& id) const {
 never_const_ptr<object>
 scopespace::lookup_object(const string& id) const {
 	never_const_ptr<object> o = lookup_object_here(id);
+	never_const_ptr<scopespace> parent(get_parent());
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
 	else return never_const_ptr<object>(NULL);
@@ -780,6 +784,7 @@ scopespace::lookup_object(const string& id) const {
 never_const_ptr<object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
 if (id.is_absolute()) {
+	never_const_ptr<scopespace> parent(get_parent());
 	if (parent)
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
@@ -815,6 +820,8 @@ if (id.is_absolute()) {
  */
 never_const_ptr<scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
+	never_const_ptr<scopespace> parent(get_parent());
+	assert(parent);
 	return parent->lookup_namespace(id);
 }
 
@@ -968,7 +975,9 @@ scopespace::add_connection_to_scope(
 	\param p pointer to the parent namespace.  
  */
 name_space::name_space(const string& n, never_const_ptr<name_space> p) : 
-		scopespace(n, p), 
+		scopespace(), 
+//		scopespace(n, p), 
+		key(n), 
 		parent(p), 
 		open_spaces(), open_aliases() {
 }
@@ -981,7 +990,9 @@ name_space::name_space(const string& n, never_const_ptr<name_space> p) :
 	default arguments (NULL) for class object formals.  
  */
 name_space::name_space(const string& n) :
-		scopespace(n, never_const_ptr<scopespace>(NULL)),
+//		scopespace(n, never_const_ptr<scopespace>(NULL)),
+		scopespace(), 
+		key(n), 
 			// NULL parent
 		parent(NULL), 
 		open_spaces(), open_aliases() {
@@ -996,6 +1007,24 @@ name_space::name_space(const string& n) :
  */
 name_space::~name_space() {
 	// default destructors will take care of everything
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the key.
+ */
+const string&
+name_space::get_key(void) const {
+	return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the parent namespace.
+ */
+never_const_ptr<scopespace>
+name_space::get_parent(void) const {
+	return parent;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1536,6 +1565,8 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+OBSOLETE
 /**
 	Adds an alias for a type, like typedef in C.  
 	Later: template typedefs, ooooh!
@@ -1594,6 +1625,7 @@ name_space::add_type_alias(const qualified_id& t, const string& a) {
 	// candidates will automatically be cleared (not owned pointers)
 *** not done ***/
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

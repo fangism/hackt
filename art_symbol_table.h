@@ -33,14 +33,17 @@ namespace entity {
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
-	class channel_definition;
+	class channel_definition_base;
+//	class channel_definition;
 	class channel_type_reference;
 	class channel_instantiation;
 	class channel_instance_reference;
-	class datatype_definition;
+	class datatype_definition_base;
+//	class datatype_definition;
 	class data_type_reference;
 	class datatype_instantiation;
 	class datatype_instance_reference;
+	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
 	class process_instantiation;
@@ -305,8 +308,13 @@ excl_ptr<definition_base>
 never_const_ptr<definition_base>
 	get_current_prototype(void) const { return current_prototype; }
 
+#if 0
 never_const_ptr<datatype_definition>
 		get_current_datatype_definition(void) const;
+#else
+never_const_ptr<datatype_definition_base>
+		get_current_datatype_definition(void) const;
+#endif
 
 // should be called by parser after done using definitions
 void	reset_current_definition_reference(void);
@@ -315,10 +323,10 @@ void	reset_current_fundamental_type(void);
 never_const_ptr<built_in_param_def>
 	get_current_param_definition(void) const;
 
-never_const_ptr<channel_definition>
+never_const_ptr<channel_definition_base>
 	get_current_channel_definition(void) const;
 
-never_const_ptr<process_definition>
+never_const_ptr<process_definition_base>
 	get_current_process_definition(void) const;
 
 #if 0

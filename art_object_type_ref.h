@@ -3,7 +3,7 @@
 #ifndef	__ART_OBJECT_TYPE_REF_H__
 #define	__ART_OBJECT_TYPE_REF_H__
 
-#include "art_macros.h"
+// #include "art_macros.h"
 #include "art_object_base.h"
 
 namespace ART {
@@ -68,13 +68,25 @@ public:
 class data_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
+#if NEW_DEF_HIER
+	never_const_ptr<datatype_definition_base>	base_type_def;
+#else
 	never_const_ptr<datatype_definition>	base_type_def;
+#endif
 public:
+#if NEW_DEF_HIER
+	data_type_reference(
+		never_const_ptr<datatype_definition_base> td);
+	data_type_reference(
+		never_const_ptr<datatype_definition_base> td, 
+		excl_const_ptr<param_expr_list> pl);
+#else
 	data_type_reference(
 		never_const_ptr<datatype_definition> td);
 	data_type_reference(
 		never_const_ptr<datatype_definition> td, 
 		excl_const_ptr<param_expr_list> pl);
+#endif
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~data_type_reference();
 
@@ -104,13 +116,25 @@ private:
 class channel_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
+#if NEW_DEF_HIER
+	never_const_ptr<channel_definition_base>	base_chan_def;
+#else
 	never_const_ptr<channel_definition>	base_chan_def;
+#endif
 public:
+#if NEW_DEF_HIER
+	channel_type_reference(
+		never_const_ptr<channel_definition_base> td);
+	channel_type_reference(
+		never_const_ptr<channel_definition_base> td, 
+		excl_const_ptr<param_expr_list> pl);
+#else
 	channel_type_reference(
 		never_const_ptr<channel_definition> td);
 	channel_type_reference(
 		never_const_ptr<channel_definition> td, 
 		excl_const_ptr<param_expr_list> pl);
+#endif
 virtual	~channel_type_reference();
 
 	ostream& what(ostream& o) const;
@@ -138,13 +162,25 @@ virtual	~channel_type_reference();
 class process_type_reference : public fundamental_type_reference {
 protected:
 //	excl_const_ptr<param_expr_list>	template_params;	// inherited
+#if NEW_DEF_HIER
+	never_const_ptr<process_definition_base>	base_proc_def;
+#else
 	never_const_ptr<process_definition>	base_proc_def;
+#endif
 public:
+#if NEW_DEF_HIER
+	process_type_reference(
+		never_const_ptr<process_definition_base> td);
+	process_type_reference(
+		never_const_ptr<process_definition_base> td, 
+		excl_const_ptr<param_expr_list> pl);
+#else
 	process_type_reference(
 		never_const_ptr<process_definition> td);
 	process_type_reference(
 		never_const_ptr<process_definition> td, 
 		excl_const_ptr<param_expr_list> pl);
+#endif
 		// not gcc-2.95.3 friendly default argument = NULL
 virtual	~process_type_reference();
 

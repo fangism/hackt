@@ -27,7 +27,11 @@ list.
 Maps...
 
 ********************** end note **************************/
+//=============================================================================
+// temporary switches
+#define NEW_DEF_HIER	1
 
+//=============================================================================
 namespace ART {
 //=============================================================================
 // forward declarations from outside namespaces
@@ -63,9 +67,16 @@ namespace entity {
 	class conditional_scope;
 
 	class definition_base;
+#if NEW_DEF_HIER
+	class channel_definition_base;
+	class datatype_definition_base;
+	class process_definition_base;
+	class process_definition;
+#else
 	class channel_definition;
 	class datatype_definition;
 	class process_definition;
+#endif
 	class enum_datatype_def;
 	class built_in_datatype_def;
 	class built_in_param_def;
@@ -261,7 +272,7 @@ public:
 	process definitions, and namespaces do not contain formals or
 	naked language bodies.  
  */
-class scopespace : public object {
+class scopespace : virtual public object {
 protected:	// typedefs -- keep these here for re-use
 
 	/**
@@ -317,6 +328,8 @@ protected:	// typedefs -- keep these here for re-use
 protected:	// members
 	// should really only contain instantiations? no definitions?
 	// what should a generic scopespace contain?
+#if 0
+	// these members need to be implemented in children classes
 	/**
 		Reference to the parent namespace, if applicable.  
 		The only symbol table that can be a parent is another 
@@ -335,6 +348,7 @@ protected:	// members
 		the table that contains this namespace.  
 	 */
 	string			key;
+#endif
 
 	/**
 		Before mapping a new symbol to a symbolic object, 
@@ -358,12 +372,16 @@ protected:	// members
 	connect_assign_list_type	connect_assign_list;
 
 public:
-	scopespace(const string& n, never_const_ptr<scopespace> p);
+	scopespace();
+//	scopespace(const string& n, never_const_ptr<scopespace> p);
 virtual	~scopespace();
 
 virtual	ostream& what(ostream& o) const = 0;
 virtual	ostream& dump(ostream& o) const = 0;
+
+virtual	const string& get_key(void) const = 0;
 virtual	string get_qualified_name(void) const = 0;
+virtual never_const_ptr<scopespace> get_parent(void) const = 0;
 
 virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
 virtual	never_ptr<object>	lookup_object_here_with_modify(const string& id) const;
@@ -402,6 +420,7 @@ class name_space : public scopespace {
 	// order of instantiations? shouldn't matter.
 
 protected:
+	const string				key;
 	// ummm... should this have been removed? scopespace already has one
 	const never_const_ptr<name_space>	parent;	// override parent
 
@@ -438,6 +457,9 @@ explicit name_space(const string& n);
 	name_space(const string& n, never_const_ptr<name_space>);
 	~name_space();
 
+	const string& get_key(void) const;
+	never_const_ptr<scopespace> get_parent(void) const;
+
 	ostream& what(ostream& o) const;
 	ostream& dump(ostream& o) const;
 
@@ -455,7 +477,9 @@ never_const_ptr<name_space>	add_using_alias(const qualified_id& n, const string&
 never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
 
 // convert me to pointer-class:
+#if 0
 datatype_definition*	add_type_alias(const qualified_id& t, const string& a);
+#endif
 
 // for generic concrete types, built-in and user-defined
 never_const_ptr<fundamental_type_reference>
@@ -547,7 +571,12 @@ public:
 	name-resolving functionality.  
 	All definitions are potentially templatable.  
  */
-class definition_base : public scopespace {
+#if NEW_DEF_HIER
+class definition_base : virtual public object
+#else
+class definition_base : public scopespace
+#endif
+{
 public:
 	/**
 		Table of template formals.  
@@ -573,11 +602,18 @@ public:
 					template_formals_map_type;
 	typedef	list<never_const_ptr<param_instantiation> >
 					template_formals_list_type;
-private:
+
+protected:
+#if NEW_DEF_HIER
+	const string			key;
+	const never_const_ptr<name_space>	parent;
+#else
 	// never_const_ptr<scopespace>	parent;		// inherited
 	// string			key;		// inherited
 	// used_id_map_type		used_id_map;	// inherited
+#endif
 
+protected:
 	/** subset of used_id_map, must be coherent with list */
 	template_formals_map_type	template_formals_map;
 	/** subset of used_id_map, must be coherent with map */
@@ -590,9 +626,7 @@ private:
 	 */
 	bool				defined;
 public:
-	definition_base(const string& n,
-		never_const_ptr<name_space> p);
-//		template_formals_set* tf = NULL
+	definition_base(const string& n, never_const_ptr<name_space> p);
 virtual	~definition_base();
 
 virtual	ostream& what(ostream& o) const = 0;
@@ -600,6 +634,8 @@ virtual	ostream& dump(ostream& o) const;	// temporary
 
 	bool is_defined(void) const { return defined; }
 	void mark_defined(void) { assert(!defined); defined = true; }
+
+virtual	never_const_ptr<object>	lookup_object_here(const string& id) const;
 
 virtual	bool check_null_template_argument(void) const;
 
@@ -611,6 +647,7 @@ protected:
 	// e.g. with arrays of parameters... and referenced indices.
 	// well, they must be at least initialized (usable).  
 	// need notion of formal equivalence
+	// MAY be equivalent
 	bool equivalent_template_formals(
 		never_const_ptr<definition_base> d) const;
 
