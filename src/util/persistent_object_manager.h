@@ -1,13 +1,14 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.12.6.1 2005/02/02 03:40:20 fang Exp $
+	$Id: persistent_object_manager.h,v 1.12.6.2 2005/02/02 07:59:50 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>
+#include <vector>
 #include "persistent.h"
 
 #include "hash_qmap.h"
@@ -35,7 +36,7 @@ using std::stringstream;
 using std::ofstream;
 using std::ifstream;
 using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
+using util::hash_qmap;
 
 //=============================================================================
 /**
@@ -370,6 +371,19 @@ public:
 	write_pointer_map(ostream& f, const M<K, P<T> >& l) const;
 #endif
 
+	template <class P>
+	void
+	load_object(const P& p) const;
+
+private:
+	void
+	__load_object(persistent* p, raw_pointer_tag) const;
+
+	template <class P>
+	void
+	__load_object(const P& p, pointer_class_base_tag) const;
+
+public:
 
 // two interface functions suffice for file interaction:
 	static

@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15 2005/01/13 05:28:28 fang Exp $
+	$Id: art_object_connect.h,v 1.15.20.1 2005/02/02 07:59:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -69,7 +69,7 @@ public:
 	unroll(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class aliases_connection
 
 //-----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ public:
 	unroll(void) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class port_connection
 
 //-----------------------------------------------------------------------------

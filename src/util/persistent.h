@@ -1,18 +1,16 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.8 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent.h,v 1.8.6.1 2005/02/02 07:59:50 fang Exp $
  */
 
-#ifndef	__PERSISTENT_H__
-#define	__PERSISTENT_H__
+#ifndef	__UTIL_PERSISTENT_H__
+#define	__UTIL_PERSISTENT_H__
 
 #include <iosfwd>
-#include <string>
+#include "string_fwd.h"
 
-#include <functional>
-
-#include "hash_map.h"
+#include "STL/hash_map_fwd.h"
 
 //=============================================================================
 // macros
@@ -27,21 +25,27 @@
 	Don't stick a semicolon after this.  
 ***/
 
-#define	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
-	void write_object(const persistent_object_manager& m) const;	\
-	void load_object(persistent_object_manager& m);
+#define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
+	void								\
+	write_object(const persistent_object_manager&, ostream&) const;	\
+	void								\
+	load_object(const persistent_object_manager&, istream&);
 
-#define	PERSISTENT_METHODS_NO_POINTERS					\
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
-static	persistent* construct_empty(const int);
+#define	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
+	static								\
+	persistent*							\
+	construct_empty(const int);
 
-#define	PERSISTENT_METHODS_NO_ALLOC					\
-	PERSISTENT_METHODS_NO_ALLOC_NO_POINTERS				\
-	void collect_transient_info(persistent_object_manager& m) const;
+#define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC			\
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
+	void								\
+	collect_transient_info(persistent_object_manager&) const;
 
-#define	PERSISTENT_METHODS						\
-	PERSISTENT_METHODS_NO_POINTERS					\
-	void collect_transient_info(persistent_object_manager& m) const;
+#define	PERSISTENT_METHODS_DECLARATIONS					\
+	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
+	void								\
+	collect_transient_info(persistent_object_manager&) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -52,10 +56,14 @@ static	persistent* construct_empty(const int);
 	This macro supplies default no-op definitions for them.  
  */
 #define	PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(T)			\
-persistent* T::construct_empty(const int i) { return NULL; }		\
-void T::collect_transient_info(persistent_object_manager& m) const { }	\
-void T::write_object(const persistent_object_manager& m) const { }	\
-void T::load_object(persistent_object_manager& m) { }
+persistent*								\
+T::construct_empty(const int i) { return NULL; }			\
+void									\
+T::collect_transient_info(persistent_object_manager&) const { }		\
+void									\
+T::write_object(const persistent_object_manager&, ostream&) const { }	\
+void									\
+T::load_object(const persistent_object_manager&, istream&) { }
 
 /**
 	Default implementation of ostream& what(ostream&) const 
@@ -69,91 +77,18 @@ T::what(std::ostream& o) const {					\
 }
 
 //-----------------------------------------------------------------------------
-// macros for use in write_object and load_object
-// just sanity-check extraneous information, later enable or disable
-// with another switch.
-
-// sanity check switch is overrideable by the includer
-#ifndef	NO_OBJECT_SANITY
-#define	NO_OBJECT_SANITY	0	// default 0, keep sanity checks
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the numeric index of the object, which really isn't
-	necessary, but adds a consistency check.  
-	This macro can be added inside a write_object method implementation.  
-	If used, it should be complemented with STRIP_POINTER_INDEX
-	in the load_object counterpart.  
- */
-#if NO_OBJECT_SANITY
-#define	WRITE_POINTER_INDEX(f, m)
-#else
-#define	WRITE_POINTER_INDEX(f, m)					\
-	write_value(f, m.lookup_ptr_index(this))
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reads the object enumerated index for a consistency check.  
- */
-#if NO_OBJECT_SANITY
-#define	STRIP_POINTER_INDEX(f, m)
-#else
-#define	STRIP_POINTER_INDEX(f, m) 					\
-	{								\
-	long index;							\
-	read_value(f, index);						\
-	if (index != m.lookup_ptr_index(this)) {			\
-		long hohum = m.lookup_ptr_index(this);			\
-		cerr << "<persistent>::load_object(): " << endl		\
-			<< "\tthis = " << this << ", index = " << index	\
-			<< ", expected: " << hohum << endl;		\
-		assert(index == m.lookup_ptr_index(this));		\
-	}								\
-	}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sanity check value for end-of-object.
-	To be complemented by STRIP_OBJECT_FOOTER.  
- */
-#if NO_OBJECT_SANITY
-#define	WRITE_OBJECT_FOOTER(f)
-#else
-#define	WRITE_OBJECT_FOOTER(f)						\
-	write_value(f, -1L)
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sanity check for object alignment.  
- */
-#if NO_OBJECT_SANITY
-#define	STRIP_OBJECT_FOOTER(f)
-#else
-#define	STRIP_OBJECT_FOOTER(f)						\
-	{								\
-	long neg_one;							\
-	read_value(f, neg_one);						\
-	assert(neg_one == -1L);						\
-	}
-#endif
-
-//=============================================================================
-// temporary switches
+// macros for use in write_object and load_object, 
+// have been relocated to persistent_object_manager.cc (2005-02-01)
 
 //=============================================================================
 /**
 	Handy utilities go here.
  */
 namespace util {
-//=============================================================================
+	using std::istream;
 	using std::ostream;
 	using std::string;
 
-//=============================================================================
 // forward declarations
 	class persistent;
 	class persistent_object_manager;
@@ -204,16 +139,20 @@ public:
 virtual ~persistent() { }
 
 /** The infamous what-function */
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
 /** walks object hierarchy and registers reachable pointers with manager */
-virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
+virtual	void
+	collect_transient_info(persistent_object_manager& m) const = 0;
 
 /** Writes the object out to a managed buffer */
-virtual	void write_object(const persistent_object_manager& m) const = 0;
+virtual	void
+	write_object(const persistent_object_manager& m, ostream& o) const = 0;
 
 /** Loads the object from a managed buffer */
-virtual	void load_object(persistent_object_manager& m) = 0;
+virtual	void
+	load_object(const persistent_object_manager& m, istream& i) = 0;
 
 public:
 	/**
@@ -275,7 +214,7 @@ public:
 
 //=============================================================================
 namespace HASH_MAP_NAMESPACE {
-using namespace util;
+using util::persistent;
 
 /**
 	Since hash_key::key is not null-terminated, don't use 
@@ -292,5 +231,5 @@ struct hash<persistent::hash_key> {
 
 //=============================================================================
 
-#endif	// __PERSISTENT_H__
+#endif	// __UTIL_PERSISTENT_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.24 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_definition.h,v 1.24.6.1 2005/02/02 07:59:40 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -212,17 +212,19 @@ public:
 
 // methods for object file I/O
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
 protected:
 	void
-	write_object_port_formals(const persistent_object_manager& m) const;
+	write_object_port_formals(const persistent_object_manager& m, 
+		ostream& o) const;
 
 	void
-	load_object_port_formals(persistent_object_manager& m);
+	load_object_port_formals(const persistent_object_manager& m,
+		istream& i);
 
 };	// end class process_definition
 
@@ -270,7 +272,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -378,7 +380,7 @@ public:
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object
-	PERSISTENT_METHODS		// dummy methods
+	PERSISTENT_METHODS_DECLARATIONS
 	// thus we need only collect and write...
 //	void collect_transient_info(persistent_object_manager& m) const;
 //	void write_object(const persistent_object_manager& m) const;
@@ -450,7 +452,7 @@ public:
 	bool
 	add_member(const token_identifier& em);
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -499,7 +501,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 private:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class built_in_param_def
 
@@ -548,7 +550,7 @@ public:
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -598,7 +600,7 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -675,7 +677,7 @@ public:
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void
@@ -721,7 +723,7 @@ public:
 #endif
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 private:
 	void

@@ -7,13 +7,19 @@
 	We've kept the original namespace to attribute credit to its source.  
 	The original source can be found at:
 	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
-	$Id: compose.h,v 1.5 2004/12/05 05:07:23 fang Exp $
+	$Id: compose.h,v 1.5.20.1 2005/02/02 07:59:49 fang Exp $
  */
 
-#ifndef	__COMPOSE_H__
-#define	__COMPOSE_H__
+#ifndef	__UTIL_COMPOSE_H__
+#define	__UTIL_COMPOSE_H__
 
 #include <functional>
+// note: <ext/functional> contains SGI extensions for some of these...
+
+#define	USING_UTIL_COMPOSE						\
+using ADS::unary_compose;						\
+using ADS::unary_compose_void;						\
+using ADS::binary_compose;
 
 namespace ADS {
 //=============================================================================
@@ -219,5 +225,5 @@ binary_compose(F f, G g, H h) {
 
 }	// end namespace ADS
 
-#endif	//	__COMPOSE_H__
+#endif	// __UTIL_COMPOSE_H__
 

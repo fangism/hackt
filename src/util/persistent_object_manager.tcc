@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11.2.1.2.1 2005/02/02 03:40:21 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.1.2.2 2005/02/02 07:59:50 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -406,6 +406,27 @@ persistent_object_manager::self_test(const string& s, const T& m) {
 	return load_object_from_file<T>(s);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param P is generic pointer to a persistent type.  
+ */
+template <class P>
+void
+persistent_object_manager::load_object(const P& p) const {
+	__load_object(p, __pointer_category(p));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param P is generic pointer to a persistent type.  
+ */
+template <class P>
+void
+persistent_object_manager::__load_object(const P& p, 
+		pointer_class_base_tag) const {
+	__load_object(&*p, __pointer_category(&*p));
+}
 
 //=============================================================================
 // class persistent_traits method definitions (default)

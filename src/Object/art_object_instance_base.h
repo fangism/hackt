@@ -1,19 +1,20 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11.2.1 2005/01/31 04:16:34 fang Exp $
+	$Id: art_object_instance_base.h,v 1.11.2.1.2.1 2005/02/02 07:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
 #define	__ART_OBJECT_INSTANCE_BASE_H__
 
+#include <string>
 #include <deque>
 #include "STL/list.h"
 
 #include "macros.h"
 #include "art_object_base.h"
 #include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
+	// includes <iosfwd>
 
 #include "memory/pointer_classes.h"
 	// need complete definition (never_ptr members)
@@ -214,7 +215,7 @@ private:
 
 	void
 	load_index_collection_pointers(
-		persistent_object_manager& m, istream&);
+		const persistent_object_manager& m, istream&);
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -224,7 +225,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 public:
 	/** just for convenience */

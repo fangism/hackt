@@ -1,8 +1,21 @@
 "ChangeLog"
 
+2005-02-02	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-02:
+	  Factored out "safety" code for persistent object management
+	  out of all implementations of write_object, load_object.  
+	  Gave write/load object references to iostream arguments.  
+	  Gave persistent::load_object const persistent_object_manager& 
+	  argument.
+	  Cleaned out hash_map headers, moved to STL subdir, with forward
+	  declaration file.  
+	  Next, clean up the commented out code mess.  
+
+
 2005-02-01	David Fang	<fangism@users.sourceforge.net>
 
-	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00:
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-01:
 	  Un-templated some non-essential method functions in
 	  persistent_object_manager.tcc, relocated to .cc.  
 

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.10 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_assign.h,v 1.10.6.1 2005/02/02 07:59:39 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -146,7 +146,7 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS
@@ -212,7 +212,7 @@ public:
 	};	// end class dumper
 
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_STATIC_DECLARATIONS

@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.8 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.8.6.1 2005/02/02 07:59:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -35,7 +35,7 @@ namespace ART {
 namespace entity {
 using std::string;
 using namespace MULTIKEY_NAMESPACE;
-using namespace ADS;
+USING_UTIL_COMPOSE
 using std::dereference;
 using std::mem_fun_ref;
 
@@ -154,7 +154,7 @@ channel_instance_collection::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_instance_collection::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
 	// until new members added...
 }
@@ -361,27 +361,28 @@ chan_array<D>::lookup_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 void
-chan_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+chan_array<D>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+//	ostream& f = m.lookup_write_buffer(this);
+//	INVARIANT(f.good());
+//	WRITE_POINTER_INDEX(f, m);
 	parent_type::write_object_base(m, f);
 	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
+//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
 void
-chan_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+chan_array<D>::load_object(const persistent_object_manager& m, istream& f) {
+// if (!m.flag_visit(this)) {
+//	istream& f = m.lookup_read_buffer(this);
+//	INVARIANT(f.good());
+//	STRIP_POINTER_INDEX(f, m);
 	parent_type::load_object_base(m, f);
 	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
-}
+//	STRIP_OBJECT_FOOTER(f);
+// }
 }
 
 //=============================================================================
@@ -483,26 +484,27 @@ chan_array<0>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-chan_array<0>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+chan_array<0>::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+//	ostream& f = m.lookup_write_buffer(this);
+//	INVARIANT(f.good());
+//	WRITE_POINTER_INDEX(f, m);
 	parent_type::write_object_base(m, f);
 	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
+//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-chan_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+chan_array<0>::load_object(const persistent_object_manager& m, istream& f) {
+// if (!m.flag_visit(this)) {
+//	istream& f = m.lookup_read_buffer(this);
+//	INVARIANT(f.good());
+//	STRIP_POINTER_INDEX(f, m);
 	parent_type::load_object_base(m, f);
 	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
+//	STRIP_OBJECT_FOOTER(f);
+// }
 }
 
 //=============================================================================

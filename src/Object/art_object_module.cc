@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.14 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_module.cc,v 1.14.6.1 2005/02/02 07:59:48 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -124,33 +124,33 @@ if (!m.register_transient_object(this, MODULE_TYPE_KEY)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-module::write_object(const persistent_object_manager& m) const {
+module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("module::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+//	ostream& f = m.lookup_write_buffer(this);
+//	INVARIANT(f.good());
+//	WRITE_POINTER_INDEX(f, m);
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
 	write_value(f, unrolled);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
+//	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-module::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+module::load_object(const persistent_object_manager& m, istream& f) {
+// if (!m.flag_visit(this)) {
 	STACKTRACE("module::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+//	istream& f = m.lookup_read_buffer(this);
+//	INVARIANT(f.good());
+//	STRIP_POINTER_INDEX(f, m);
 	read_string(f, name);
 	m.read_pointer(f, global_namespace);
 	read_value(f, unrolled);
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
+//	STRIP_OBJECT_FOOTER(f);
+// }
 }
 
 //=============================================================================
