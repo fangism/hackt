@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2004/11/30 03:50:20 fang Exp $
+#	$Id: Makefile.am,v 1.25 2004/12/01 05:15:29 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -131,6 +131,7 @@ UTIL_HEADER_FILES = \
 	util/hash_qmap.h \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
+	util/indent.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
@@ -182,6 +183,7 @@ libart___la_SOURCES = \
 	AST/art_parser.tcc \
 	$(UTIL_HEADER_FILES) \
 	util/IO_utils.cc \
+	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
