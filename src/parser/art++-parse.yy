@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.8 2004/12/07 02:22:43 fang Exp $
+	$Id: art++-parse.yy,v 1.9 2005/01/03 21:13:44 fang Exp $
  */
 
 %{
@@ -2053,6 +2053,27 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 			}
 		}
 	}
+
+	/*
+	 *	Now clean-up the symbol stack by calling destructors.
+	 *	Technically, this is not needed, as bulk memory is 
+	 *	reclaimed upon exit().  (This is a good exercise anyhow.)
+	 *	We are currently assuming that no other handler will
+	 *	take care of deleting the pointers on the stack.  
+	 *	Because the union-pointer resolution can only return
+	 *	one type, the base type, the mother destructor, 
+	 * 	ART::parser::node::~node(), must be virtual.  
+	 */
+	s=yyss+1;
+	v=yyvs+1;
+	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
+		if (v) {
+			resolved_node = yy_union_resolve(*v, *(s-1), *s);
+			if (resolved_node)
+				delete resolved_node;
+		}
+	}
+
 #endif	// NO_FAKE_PREFIX
 
 /***
