@@ -81,7 +81,7 @@ if (!m.register_transient_object(this, MODULE_TYPE)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-module::write_object(persistent_object_manager& m) const {
+module::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	write_string(f, name);

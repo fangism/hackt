@@ -431,7 +431,7 @@ instance_collection_base::collect_index_collection_pointers(
  */
 void
 instance_collection_base::write_index_collection_pointers(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	// need a specialization for count_ptrs
 	write_value(f, depth);
@@ -551,7 +551,8 @@ datatype_instance_collection::construct_empty(void) {
 	Need special case handling for built-in types? int and bool?
  */
 void
-datatype_instance_collection::write_object(persistent_object_manager& m) const {
+datatype_instance_collection::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
@@ -671,7 +672,8 @@ process_instance_collection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_instance_collection::write_object(persistent_object_manager& m) const {
+process_instance_collection::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
@@ -1053,7 +1055,8 @@ pbool_instance_collection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_instance_collection::write_object(persistent_object_manager& m) const {
+pbool_instance_collection::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
@@ -1416,7 +1419,8 @@ pint_instance_collection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_instance_collection::write_object(persistent_object_manager& m) const {
+pint_instance_collection::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
@@ -1536,7 +1540,8 @@ channel_instance_collection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_instance_collection::write_object(persistent_object_manager& m) const {
+channel_instance_collection::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, owner);
@@ -1745,7 +1750,7 @@ pbool_instantiation_statement::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_instantiation_statement::write_object(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1861,7 +1866,7 @@ pint_instantiation_statement::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_instantiation_statement::write_object(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1973,7 +1978,7 @@ process_instantiation_statement::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_instantiation_statement::write_object(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -2093,7 +2098,7 @@ channel_instantiation_statement::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_instantiation_statement::write_object(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -2213,7 +2218,7 @@ data_instantiation_statement::construct_empty(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_instantiation_statement::write_object(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);

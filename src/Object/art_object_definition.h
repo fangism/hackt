@@ -200,7 +200,8 @@ public:
 	ART_OBJECT_IO_METHODS
 
 	void load_used_id_map_object(excl_ptr<object> o);
-	void write_object_port_formals(persistent_object_manager& m) const;
+	void write_object_port_formals(
+		const persistent_object_manager& m) const;
 	void load_object_port_formals(persistent_object_manager& m);
 };	// end class process_definition
 
@@ -310,7 +311,7 @@ public:
 //	ART_OBJECT_IO_METHODS
 	// thus we need only collect and write...
 	void collect_transient_info(persistent_object_manager& m) const;
-	void write_object(persistent_object_manager& m) const;
+	void write_object(const persistent_object_manager& m) const;
 	void load_used_id_map_object(excl_ptr<object> o);
 };	// end class_built_in_datatype_def
 

@@ -174,7 +174,8 @@ param_expression_assignment::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-param_expression_assignment::write_object(persistent_object_manager& m) const {
+param_expression_assignment::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -366,7 +367,8 @@ pbool_expression_assignment::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_expression_assignment::write_object(persistent_object_manager& m) const {
+pbool_expression_assignment::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -525,7 +527,8 @@ pint_expression_assignment::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_expression_assignment::write_object(persistent_object_manager& m) const {
+pint_expression_assignment::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -629,7 +632,7 @@ aliases_connection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-aliases_connection::write_object(persistent_object_manager& m) const {
+aliases_connection::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -743,7 +746,7 @@ port_connection::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::write_object(persistent_object_manager& m) const {
+port_connection::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);

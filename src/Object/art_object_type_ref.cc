@@ -401,7 +401,7 @@ data_type_reference::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-data_type_reference::write_object(persistent_object_manager& m) const {
+data_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
@@ -533,7 +533,7 @@ channel_type_reference::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_type_reference::write_object(persistent_object_manager& m) const {
+channel_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_chan_def);
@@ -648,7 +648,7 @@ process_type_reference::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_type_reference::write_object(persistent_object_manager& m) const {
+process_type_reference::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_proc_def);

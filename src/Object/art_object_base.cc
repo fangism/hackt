@@ -124,7 +124,7 @@ object::collect_transient_info(persistent_object_manager& m) const {
 	Default behavior for undefined writing to stream.  
  */
 void
-object::write_object(persistent_object_manager& m) const {
+object::write_object(const persistent_object_manager& m) const {
 	if (warn_unimplemented) {
 		what(cerr << "WARNING: write_object() not implemented for ")
 			<< " yet." << endl;
@@ -1207,7 +1207,7 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	output stream, translating pointers to indices.  
  */
 void
-scopespace::write_object_used_id_map(persistent_object_manager& m) const {
+scopespace::write_object_used_id_map(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 
@@ -2150,7 +2150,7 @@ name_space::construct_empty(void) {
 		only modifies the flagged state of the entries.  
  */
 void
-name_space::write_object(persistent_object_manager& m) const {
+name_space::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 

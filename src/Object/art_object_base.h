@@ -32,7 +32,7 @@
 	Don't stick a semicolon after this.  
 ***/
 #define	ART_OBJECT_IO_METHODS_NO_POINTERS				\
-	void write_object(persistent_object_manager& m) const;		\
+	void write_object(const persistent_object_manager& m) const;	\
 static	object* construct_empty(void);					\
 	void load_object(persistent_object_manager& m);
 
@@ -263,7 +263,7 @@ virtual const object& self(void) const { return *this; }
 /** walks object hierarchy and registers reachable pointers with manager */
 virtual	void collect_transient_info(persistent_object_manager& m) const;
 /** Writes the object out to a managed buffer */
-virtual	void write_object(persistent_object_manager& m) const;
+virtual	void write_object(const persistent_object_manager& m) const;
 /** Loads the object from a managed buffer */
 virtual	void load_object(persistent_object_manager& m);
 
@@ -522,7 +522,7 @@ virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
 protected:
 	// for used_id_map
 	void collect_used_id_map_pointers(persistent_object_manager& m) const;
-	void write_object_used_id_map(persistent_object_manager& m) const;
+	void write_object_used_id_map(const persistent_object_manager& m) const;
 	void load_object_used_id_map(persistent_object_manager& m);
 
 // no concrete method for loading -- that remains derived-class specific
@@ -818,7 +818,7 @@ virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
 
 protected:
 void	collect_template_formal_pointers(persistent_object_manager& m) const;
-void	write_object_template_formals(persistent_object_manager& m) const;
+void	write_object_template_formals(const persistent_object_manager& m) const;
 void	load_object_template_formals(persistent_object_manager& m);
 public:
 	static const never_const_ptr<definition_base>	null;
@@ -1036,7 +1036,7 @@ protected:
 	void collect_index_collection_pointers(
 			persistent_object_manager& m) const;
 	void write_index_collection_pointers(
-			persistent_object_manager& m) const;
+			const persistent_object_manager& m) const;
 	void load_index_collection_pointers(
 			persistent_object_manager& m);
 public:
@@ -1110,7 +1110,7 @@ public:
 virtual	ostream& dump(ostream& o) const = 0;
 
 virtual	void collect_transient_info(persistent_object_manager& m) const = 0;
-virtual	void write_object(persistent_object_manager& m) const = 0;
+virtual	void write_object(const persistent_object_manager& m) const = 0;
 virtual	void load_object(persistent_object_manager& m) = 0;
 
 	// need pure virtual unrolling methods

@@ -953,7 +953,8 @@ process_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-process_instance_reference::write_object(persistent_object_manager& m) const {
+process_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, process_inst_ref);
@@ -1073,7 +1074,8 @@ datatype_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-datatype_instance_reference::write_object(persistent_object_manager& m) const {
+datatype_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, data_inst_ref);
@@ -1188,7 +1190,8 @@ channel_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-channel_instance_reference::write_object(persistent_object_manager& m) const {
+channel_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, channel_inst_ref);
@@ -1289,7 +1292,8 @@ process_member_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-process_member_instance_reference::write_object(persistent_object_manager& m) const {
+process_member_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);
@@ -1392,7 +1396,8 @@ datatype_member_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-datatype_member_instance_reference::write_object(persistent_object_manager& m) const {
+datatype_member_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);
@@ -1495,7 +1500,8 @@ channel_member_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.  
  */
 void
-channel_member_instance_reference::write_object(persistent_object_manager& m) const {
+channel_member_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, base);

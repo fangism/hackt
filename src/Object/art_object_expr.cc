@@ -437,7 +437,7 @@ const_param_expr_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-const_param_expr_list::write_object(persistent_object_manager& m) const {
+const_param_expr_list::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?
@@ -712,7 +712,8 @@ dynamic_param_expr_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_param_expr_list::write_object(persistent_object_manager& m) const {
+dynamic_param_expr_list::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?
@@ -975,7 +976,8 @@ pbool_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.
  */
 void    
-pbool_instance_reference::write_object(persistent_object_manager& m) const {
+pbool_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pbool_inst_ref);
@@ -1208,7 +1210,8 @@ pint_instance_reference::construct_empty(void) {
 	\param m the persistent object manager.
  */
 void    
-pint_instance_reference::write_object(persistent_object_manager& m) const {
+pint_instance_reference::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pint_inst_ref);
@@ -1311,7 +1314,7 @@ pint_const::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_const::write_object(persistent_object_manager& m) const {
+pint_const::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// wasteful
 	write_value(f, val);
@@ -1383,7 +1386,7 @@ pbool_const::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_const::write_object(persistent_object_manager& m) const {
+pbool_const::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);		// wasteful
 	write_value(f, val);
@@ -1503,7 +1506,7 @@ pint_unary_expr::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_unary_expr::write_object(persistent_object_manager& m) const {
+pint_unary_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, op);
@@ -1609,7 +1612,7 @@ pbool_unary_expr::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pbool_unary_expr::write_object(persistent_object_manager& m) const {
+pbool_unary_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, op);
@@ -1751,7 +1754,7 @@ arith_expr::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::write_object(persistent_object_manager& m) const {
+arith_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, op);
@@ -1859,7 +1862,7 @@ relational_expr::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::write_object(persistent_object_manager& m) const {
+relational_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, op);
@@ -1967,7 +1970,7 @@ logical_expr::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::write_object(persistent_object_manager& m) const {
+logical_expr::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, op);
@@ -2097,7 +2100,7 @@ pint_range::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_range::write_object(persistent_object_manager& m) const {
+pint_range::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, lower);
@@ -2272,7 +2275,7 @@ const_range::construct_empty(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-const_range::write_object(persistent_object_manager& m) const {
+const_range::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, first);
@@ -2612,7 +2615,7 @@ const_range_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-const_range_list::write_object(persistent_object_manager& m) const {
+const_range_list::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?
@@ -2764,7 +2767,7 @@ dynamic_range_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_range_list::write_object(persistent_object_manager& m) const {
+dynamic_range_list::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?
@@ -2993,7 +2996,7 @@ const_index_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-const_index_list::write_object(persistent_object_manager& m) const {
+const_index_list::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?
@@ -3226,7 +3229,7 @@ dynamic_index_list::construct_empty(void) {
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_index_list::write_object(persistent_object_manager& m) const {
+dynamic_index_list::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	write_value(f, size());		// how many exprs to expect?

@@ -455,7 +455,7 @@ definition_base::collect_template_formal_pointers(
  */
 void
 definition_base::write_object_template_formals(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	assert(template_formals_list.size() == template_formals_map.size());
 	ostream& f = m.lookup_write_buffer(this);
 	m.write_pointer_list(f, template_formals_list);
@@ -742,7 +742,7 @@ user_def_chan::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-user_def_chan::write_object(persistent_object_manager& m) const {
+user_def_chan::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -871,7 +871,8 @@ channel_definition_alias::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-channel_definition_alias::write_object(persistent_object_manager& m) const {
+channel_definition_alias::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1061,7 +1062,7 @@ built_in_datatype_def::collect_transient_info(
 	name as the built-in types because they are reserved keywords.  
  */
 void
-built_in_datatype_def::write_object(persistent_object_manager& m) const {
+built_in_datatype_def::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1307,7 +1308,7 @@ enum_datatype_def::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-enum_datatype_def::write_object(persistent_object_manager& m) const {
+enum_datatype_def::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 
 	// Index number: not necessary, but can't hurt
@@ -1448,7 +1449,7 @@ user_def_datatype::construct_empty(void) {
 	built_in_datatype_def::write_object.  
  */
 void
-user_def_datatype::write_object(persistent_object_manager& m) const {
+user_def_datatype::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1599,7 +1600,8 @@ datatype_definition_alias::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-datatype_definition_alias::write_object(persistent_object_manager& m) const {
+datatype_definition_alias::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -1974,7 +1976,7 @@ process_definition::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-process_definition::write_object(persistent_object_manager& m) const {
+process_definition::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
@@ -2025,7 +2027,7 @@ process_definition::load_used_id_map_object(excl_ptr<object> o) {
  */
 void
 process_definition::write_object_port_formals(
-		persistent_object_manager& m) const {
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	m.write_pointer_list(f, port_formals_list);
 }
@@ -2168,7 +2170,8 @@ process_definition_alias::construct_empty(void) {
 	Not recursive, manager will call this once.  
  */
 void
-process_definition_alias::write_object(persistent_object_manager& m) const {
+process_definition_alias::write_object(
+		const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
 	assert(f.good());
 	WRITE_POINTER_INDEX(f, m);
