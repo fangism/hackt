@@ -2,9 +2,9 @@
 
 defproc barf();
 
-barf bag[2..4];
+barf bag[5];
 barf sack[5][5];
 
-bag = sack[4][0..2];		// right
-sack[1..3][0] = bag;		// right
+bag = sack[4];		// right
+// sack[0] = bag;		// right
 

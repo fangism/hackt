@@ -1,0 +1,12 @@
+// should fail: sizes don't match
+
+defproc fang();
+
+pint N = 2;
+pint M = 3;
+
+fang this[N][M];
+fang that[N][M-1];
+
+this = that;
+
