@@ -122,8 +122,8 @@ private:
 	typedef		list<T*>			list_grandparent;
 	typedef		list_of_ptr<T>			list_parent;
 public:
-	typedef		list_parent::iterator		iterator;
-	typedef		list_parent::const_iterator	const_iterator;
+	typedef	typename list_parent::iterator		iterator;
+	typedef	typename list_parent::const_iterator	const_iterator;
 public:
 	node_list_base();
 	node_list_base(const node_list_base<T>& l);
@@ -163,7 +163,7 @@ public:
 	typedef	typename parent::const_iterator	const_iterator;
 	typedef	typename parent::reverse_iterator	reverse_iterator;
 	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
-	typedef	list_of_ptr<terminal>	delim_list;
+	typedef	list_of_ptr<terminal>		delim_list;
 protected:
 	terminal*	open;		///< wrapping string, such as "("
 	terminal*	close;		///< wrapping string, such as ")"
