@@ -2,12 +2,13 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.11 2005/02/27 22:54:08 fang Exp $
+	$Id: art_object_assign.h,v 1.11.2.1 2005/02/28 02:27:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
 #define	__ART_OBJECT_ASSIGN_H__
 
+#include "boolean_types.h"
 #include "art_object_instance_management_base.h"
 #include "art_object_expr_base.h"
 #include "memory/pointer_classes.h"
@@ -19,6 +20,7 @@ USING_LIST
 USING_CONSTRUCT
 using std::ostream;
 using namespace util::memory;	// for experimental pointer classes
+using util::bad_bool;
 class unroll_context;
 
 //=============================================================================
@@ -56,7 +58,7 @@ virtual	ostream&
 virtual	size_t
 	size(void) const = 0;
 
-virtual	bool
+virtual	bad_bool
 	append_param_instance_reference(const dest_ptr_type& e) = 0;
 
 	/**
@@ -74,8 +76,9 @@ virtual	bool
 		instance_reference_appender(param_expression_assignment& p) :
 			index(0), ex_ass(p) { }
 
-		bool
-		operator () (const bool b, const object_list::value_type& i);
+		bad_bool
+		operator () (const bad_bool b,
+			const object_list::value_type& i);
 	};	// end class instance_reference_appender
 
 protected:
@@ -129,7 +132,7 @@ public:
 	size_t
 	size(void) const;
 
-	bool
+	bad_bool
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void
@@ -198,7 +201,7 @@ public:
 	size_t
 	size(void) const;
 
-	bool
+	bad_bool
 	append_param_instance_reference(const parent_type::dest_ptr_type& e);
 
 	void

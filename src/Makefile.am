@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.44 2005/02/27 22:54:07 fang Exp $
+#	$Id: Makefile.am,v 1.44.2.1 2005/02/28 02:27:04 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -206,6 +206,7 @@ UTIL_HEADER_FILES = \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
+	util/boolean_types.h \
 	util/const_assoc_query.h \
 	util/const_assoc_query.tcc \
 	util/const_traits.h \

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.29 2005/02/27 22:54:08 fang Exp $
+ 	$Id: art_object_base.cc,v 1.29.2.1 2005/02/28 02:27:05 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_CC__
@@ -530,7 +530,7 @@ object_list::make_index_list(void) const {
 excl_ptr<param_expression_assignment>
 object_list::make_param_assignment(void) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
-	bool err = false;
+	bad_bool err(false);
 	// right-hand-side source expression
 	const value_type& last_obj = back();
 	const count_ptr<const param_expr>
@@ -563,7 +563,8 @@ object_list::make_param_assignment(void) {
 
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
-	if (err) return return_type(NULL);
+	if (err.bad)
+		return return_type(NULL);
 	else	return ret;		// is ok
 }
 

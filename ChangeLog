@@ -2,6 +2,13 @@
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-08-bool-01:
+	  This branch is for changing ALL diagnostic functions to 
+	  return a "good_bool" or "bad_bool" two new bool types defined
+	  in "util/boolean_types.h".  This will help keep the meaning of 
+	  return values clear and self-documenting.  
+	  Initially testing on a few classes at a time.  
+
 	* ARTXX-00-01-04-main-00-08:
 	  Passes on all tested platforms and compilers:
 	  {gcc-3.3, 3.4, 4.0} x {FreeBSD, linux, darwin}
