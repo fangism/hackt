@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.22 2005/01/28 19:58:39 fang Exp $
+ 	$Id: art_context.cc,v 1.22.2.1 2005/01/29 02:52:11 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -271,7 +271,7 @@ context::open_enum_definition(const token_identifier& ename) {
  */
 bool
 context::add_enum_member(const token_identifier& em) {
-	never_ptr<enum_datatype_def>
+	const never_ptr<enum_datatype_def>
 		ed(current_open_definition.is_a<enum_datatype_def>());
 	if (!ed) {
 		cerr << "expected current_open_definition to be "

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.32.2.1 2005/01/29 02:52:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -11,6 +11,7 @@
 
 #include <exception>
 #include <iostream>
+#include <functional>
 
 #include "art_parser_base.h"
 
@@ -29,6 +30,8 @@
 #include "art_object_type_hash.h"
 
 #include "indent.h"
+#include "binders.h"
+#include "compose.h"
 #include "stacktrace.h"
 #include "static_trace.h"
 #include "persistent_object_manager.tcc"
@@ -42,10 +45,12 @@ STATIC_TRACE_BEGIN("object-definition")
 //=============================================================================
 namespace ART {
 namespace entity {
+using std::_Select2nd;
 using parser::scope;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+using namespace ADS;
 
 //=============================================================================
 // class definition_base method definitions
@@ -90,12 +95,13 @@ definition_base::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints key in addition to dumping.  
+	Prints key in addition to dumping, including newline.  
+	Called by the name_space::dump().
  */
 ostream&
 definition_base::pair_dump(ostream& o) const {
 	o << auto_indent << get_key() << " = ";
-	return dump(o);
+	return dump(o) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -540,6 +546,9 @@ void
 definition_base::write_object_base_fake(
 		const persistent_object_manager& m, ostream& o) {
 	static const template_formals_list_type dummy;
+	// this is a non-member function, emulating write_object_base
+	static const bool fake_defined = false;	// value doesn't matter
+	write_value(o, fake_defined);
 	m.write_pointer_list(o, dummy);
 }
 
@@ -547,6 +556,7 @@ definition_base::write_object_base_fake(
 void
 definition_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	write_value(o, defined);
 	write_object_template_formals(m, o);
 }
 
@@ -583,6 +593,7 @@ definition_base::load_object_template_formals(
 void
 definition_base::load_object_base(
 		persistent_object_manager& m, istream& f) {
+	read_value(f, defined);
 	load_object_template_formals(m, f);
 }
 
@@ -1367,7 +1378,20 @@ enum_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
-	return what(o) << ": " << key;
+	what(o) << ": " << key;
+	if (defined) {
+		indent enum_ind(o);
+		o << endl << auto_indent << "{ ";
+		used_id_map_type::const_iterator i = used_id_map.begin();
+		const used_id_map_type::const_iterator e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			o << i->first << ", ";
+		}
+		o << " }";
+	} else {
+		o << " (undefined)";
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1447,10 +1471,11 @@ enum_datatype_def::require_signature_match(
  */
 bool
 enum_datatype_def::add_member(const token_identifier& em) {
-	never_ptr<const object> probe(scopespace::lookup_object_here(em));
+	const never_ptr<const object>
+		probe(scopespace::lookup_object_here(em));
 	if (probe) {
-		const never_ptr<const enum_member> probe_em(
-			probe.is_a<const enum_member>());
+		const never_ptr<const enum_member>
+			probe_em(probe.is_a<const enum_member>());
 		NEVER_NULL(probe_em);	// can't contain enything else
 		return false;
 	} else {
@@ -1476,9 +1501,9 @@ void
 enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE_KEY)) {
-
-// later: template formals... but enums cannot be templated!
-
+	definition_base::collect_transient_info_base(m);
+		// but no templates
+	scopespace::collect_transient_info_base(m);
 }
 }
 
@@ -1494,45 +1519,64 @@ enum_datatype_def::construct_empty(const int i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
+	Since enum-members are merely strings, we just write them out as 
+	strings.  
  */
 void
 enum_datatype_def::write_object(const persistent_object_manager& m) const {
 	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+	INVARIANT(f.good());
+	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
+	definition_base::write_object_base(m, f);
 
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	// can't use scopespace because enum_member is not persistent
+//	scopespace::write_object_base(m, f);
+	{
+		const size_t s = used_id_map.size();
+		write_value(f, s);
+		used_id_map_type::const_iterator i = used_id_map.begin();
+		const used_id_map_type::const_iterator e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			write_value(f, i->first);
+		}
+	}
+	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+	Since enum-members are merely strings, we just read them in as 
+	strings.  
+ */
 void
 enum_datatype_def::load_object(persistent_object_manager& m) {
 if (!m.flag_visit(this)) {
 	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+	INVARIANT(f.good());
+	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
+	definition_base::load_object_base(m, f);
 
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	// can't use scopespace because enum_member is not persistent
+//	scopespace::load_object_base(m, f);
+	{
+		size_t s;
+		read_value(f, s);
+		size_t i = 0;
+		for ( ; i<s; i++) {
+			string temp;
+			read_value(f, temp);
+			// copied from ::add_member, member function
+			excl_ptr<enum_member> member_ptr(new enum_member(temp));
+			used_id_map[temp] = member_ptr;
+			INVARIANT(!member_ptr);
+		}
+	}
+	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
 }

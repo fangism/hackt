@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.9 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_definition_base.h,v 1.9.2.1 2005/01/29 02:52:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -97,8 +97,9 @@ protected:
 		to allow self-recursive template definitions.  
 	 */
 	bool				defined;
-public:
+protected:
 	definition_base();
+public:
 
 virtual	~definition_base();
 

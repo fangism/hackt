@@ -1,0 +1,12 @@
+parse error: syntax error
+parser stacks:
+state	value
+0	(null) 
+30	keyword: deftype [3:1..7]
+107	identifier: my_precious [3:9..19]
+170	; [3:20]
+in state 170, possible rules are:
+	declare_datatype_proto: optional_template_specification DEFTYPE ID . DEFINEOP data_type_ref data_param_decl_list_in_parens ';'  (66)
+	defdatatype: optional_template_specification DEFTYPE ID . DEFINEOP data_type_ref data_param_decl_list_in_parens '{' set_body get_body '}'  (67)
+acceptable tokens are: 
+	DEFINEOP (shift)

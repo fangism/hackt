@@ -25,14 +25,14 @@ Persistent Object Manager text dump:
 	21	 0x33037e4	dintcoll	0	597	644
 	22	 0x3804604	datainst	0	644	664
 	23	 0x3303834	datatprf	0	664	680
-	24	 0x3303840	datadefn	0	680	711
-	25	 0x3303894	dprmlst_	0	711	727
-	26	 0x263f024	cnstpi__	0	727	739
-	27	 0x330370c	namespc_	0	739	774
-	28	 0x3303740	namespc_	0	774	801
-	29	 0x3303774	namespc_	0	801	827
-	30	 0x33037a8	namespc_	0	827	852
-	31	 0x33037dc	namespc_	0	852	875
+	24	 0x3303840	datadefn	0	680	712
+	25	 0x3303894	dprmlst_	0	712	728
+	26	 0x2682024	cnstpi__	0	728	740
+	27	 0x330370c	namespc_	0	740	775
+	28	 0x3303740	namespc_	0	775	802
+	29	 0x3303774	namespc_	0	802	828
+	30	 0x33037a8	namespc_	0	828	853
+	31	 0x33037dc	namespc_	0	853	876
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

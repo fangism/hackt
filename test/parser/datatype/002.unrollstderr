@@ -1,0 +1,41 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3302404	module__	0	0	52
+	2	 0x3300170	namespc_	0	52	96
+	3	 0x3302424	dintcoll	0	96	141
+	4	 0x3804604	datainst	0	141	161
+	5	 0x3302474	datatprf	0	161	177
+	6	 0x3302480	datadefn	0	177	209
+	7	 0x33024d4	dprmlst_	0	209	225
+	8	 0x2682024	cnstpi__	0	225	237
+	9	 0x33024e4	dintcoll	0	237	282
+	10	 0x3804620	datainst	0	282	302
+	11	 0x3302534	dintcoll	0	302	347
+	12	 0x380463c	datainst	0	347	367
+	13	 0x268f004	dboolcol	0	367	408
+	14	 0x3804658	datainst	0	408	428
+	15	 0x3302584	datatprf	0	428	444
+	16	 0x3302590	datadefn	0	444	477
+	17	 0x268f050	dboolcol	0	477	518
+	18	 0x3804674	datainst	0	518	538
+	19	 0x268f09c	dboolcol	0	538	579
+	20	 0x3804690	datainst	0	579	599
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  6 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    a = int<32> a
+    b = int<32> b
+    c = int<32> c
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
+}
+

@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.9 2005/01/28 19:58:31 fang Exp $
+	$Id: art_main.cc,v 1.9.2.1 2005/01/29 02:52:10 fang Exp $
  */
 
 #include <iostream>
@@ -68,7 +68,7 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 	}
 
 //	global->dump(cerr);
-	{
+try {
 #if 0
 	STACKTRACE("MAIN-QUARANTINE");
 	persistent_object_manager::dump_reconstruction_table = true;
@@ -79,7 +79,13 @@ DEBUG(DEBUG_BASIC, top->dump(cerr))
 	NEVER_NULL(module_copy);
 #endif
 //	the_module.dump(cerr);
-	}
+}
+catch(...) {
+	// can get a run-time type mismatch.  
+	cerr << "Unhandled exception in "
+		"persistent_object_manager::self_test_no_file()." << endl;
+	return -1;
+}
 
 	// massive recursive deletion of syntax tree, reclaim memory
 	// root will delete itself (also recursively)

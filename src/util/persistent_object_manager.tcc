@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.11 2005/01/28 19:58:47 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.11.2.1 2005/01/29 02:52:13 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -19,8 +19,8 @@
 #include "stacktrace.h"
 #include "IO_utils.tcc"
 
-#if ENABLE_STACKTRACE
 #include "what.tcc"
+#if ENABLE_STACKTRACE
 #include "sstream.h"
 #endif
 
@@ -52,8 +52,8 @@ namespace util {
 #include "using_ostream.h"
 USING_STACKTRACE
 using namespace util::memory;
-#if ENABLE_STACKTRACE
 using util::what;
+#if ENABLE_STACKTRACE
 using std::ostringstream;
 #endif
 
@@ -94,6 +94,13 @@ persistent_object_manager::register_persistent_type(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates a raw pointer into an integer index and writes
+	it out to binary.  
+	\param ptr pointer need NOT be statically derived from
+		util::persistent, but must at least be dynamically
+		cast-able to util::persistent.  
+ */
 template <class P>
 inline
 void
@@ -102,7 +109,16 @@ persistent_object_manager::__write_pointer(ostream& o,
 	// P is a bare pointer type (T*), according to the raw_pointer_tag
 	if (ptr) {
 		const persistent* t = IS_A(const persistent*, ptr);
-		NEVER_NULL(t);
+		// really should write a concept check
+		if (!t) {
+			cerr << "Pointer @ " << ptr << " of type " <<
+				util::what<typename util::memory::
+					pointer_traits<P>::element_type
+				>::name() << " is not derived from "
+				"util::persistent, and this is unusable "
+				"by write_pointer." << endl;
+			THROW_EXIT;
+		}
 		write_value(o, lookup_ptr_index(t));
 	} else	write_value(o, lookup_ptr_index(NULL));
 }

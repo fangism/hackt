@@ -8,9 +8,9 @@ Persistent Object Manager text dump:
 	4	 0x33006a4	dintcoll	0	85	135
 	5	 0x3804604	datainst	0	135	155
 	6	 0x33006f4	datatprf	0	155	171
-	7	 0x3301430	datadefn	0	171	202
-	8	 0x3300704	dprmlst_	0	202	218
-	9	 0x263f024	cnstpi__	0	218	230
+	7	 0x3301430	datadefn	0	171	203
+	8	 0x3300704	dprmlst_	0	203	219
+	9	 0x2682024	cnstpi__	0	219	231
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
