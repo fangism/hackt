@@ -43,6 +43,8 @@ noinst_PROGRAMS = \
 
 noinst_LTLIBRARIES = libfangutil.la
 
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
+
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
@@ -150,6 +152,7 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES)
 
 clean-local:
+	-$(RM) $(BUILT_SOURCES)
 	-$(RM) *.core core.*
 	-$(RM) *.diff *.test *.out *.filter
 
