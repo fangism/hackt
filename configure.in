@@ -1,14 +1,14 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
 #
-#	$Id: configure.in,v 1.12 2005/01/17 06:27:26 fang Exp $
+#	$Id: configure.in,v 1.13 2005/01/17 06:28:06 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(artxx, 0.1.3, fangism@users.sourceforge.net)
+AC_INIT(artxx, 0.1.4, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/art_main.cc])
@@ -70,7 +70,11 @@ AC_PROG_LN_S
 echo -n "checking for fang's sanity"
 sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."
 sleep 1; echo " no"
+# not enough sleep
 
+# check whether or not bison is disguising as yacc (with bison -y)
+# some parser builds in sub-directories will compile differently
+# depending on which parser is used.  
 AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 
 # documentation support
@@ -79,6 +83,9 @@ AM_CONDITIONAL(HAVE_DOXYGEN, test "$DOXYGEN" = doxygen)
 
 AC_CHECK_PROG([DOT], dot, dot)
 AM_CONDITIONAL(HAVE_DOT, test "$DOT" = dot)
+
+AC_CHECK_PROG([LATEX], latex, latex)
+AM_CONDITIONAL(HAVE_LATEX, test "$LATEX" = latex)
 
 AC_CONFIG_FILES([
 	Makefile

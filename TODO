@@ -1,28 +1,24 @@
 to do list:
 
-#	$Id: TODO,v 1.20 2004/12/15 23:31:05 fang Exp $
+#	$Id: TODO,v 1.21 2005/01/17 06:28:06 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 
 REVISION TARGETS:
 
-Current series: 0.1.3 -- main trunk of development line, 
-	getting really old... shoot for 0.1.4 by end of November.  
+Current series: 0.1.3 -- main trunk of development line, now closed.  
 
-0.1.4 Goals:
-	unrolling parameter expression assignments (promoted from 0.1.5)
-	BASIC parameter unrolling only (scalars)
-		done for integers, including arrays.
-	MAJOR ISSUES with parameter unrolling and assignment ordering
-		(resolved: ordered items are decoupled from scopes)
-	Hold off on parameter assignments until after restructuring
-		parameter_assignment classes.  
-		(*done* -- 10/09/04)
-	keep definitions around as back-references in unpacked objects.
-	unpack instantiation_bases into live instances
-		using multidimensional_qmap, or now, multikey_qmap.  
-		Make live instances and multidimensional sets persistent.
-		Mark modules as unrolled or not.  
+0.1.4 series goals for 0.1.5:
+	Organize development lines into branches in CVS.  
+
+	Language update, lexer/parser... documentation/specification.
+		Redo parser to eliminate insignificant terminals, 
+		pool_allocate tokens, etc...
+	Update language to support strict and relaxed template parameters, 
+		see dox/lang/artxx.ps for documentation.  
+
+	unrolling parameter expression assignments
+		(started, intend to complete)
 
 	Make instance_collection final classes dimension-specific
 		with template <size_t D>, re-using as much code 
@@ -34,37 +30,25 @@ Current series: 0.1.3 -- main trunk of development line,
 	Upgrade testing suite to include unrolling tests.  
 		* dump unrolled instances and collections and compare
 
-	Add cvs Id tags to all source files (done -- 11/01/04).  
-		Maybe non-essential files as well...
-	
-	Documentation: add documentation headers to beginning of
-		every source file, so doxygen will create file
-		inclusion dependence graphs! (*done* -- 10/09/04)
-
-	Parameters MUST be fully implemented before proceeding with
-		other physical entities.  
-
 	Need to make const_param_collection (pint, pbool) expressions
+		(started, not applied to final type parameters yet)
+
+	User-defined datatype (struct) layout per instantiated type, 
+		keep around a dictionary of template types (per definition).  
+
 	for unrolled parameter resolution.  
 		Is const_param_expr_list obsolete?
 		May be, once we introduce complex_aggregates... ooooh!
 
-0.1.5 Goals:
-	for 0.1.5 unrolling with physical instance collections
-
-	Redo parser to eliminate insignificant terminals, 
-	pool_allocate tokens, etc...
-
 	Decide whether to support loops and conditional scopes 
 		in this series.
 
-	Update language to support strict and relaxed template parameters, 
-		see dox/lang/artxx.ps for documentation.  
 
 0.1.6 Goals:
 	General language support for PRS needs to catch up.  
 	Introduce PRS object classes, based on old prsim.
 	Unrolling production rules
+	Target: VTPRSIM.
 
 At any point, preferably ASAP:
 *	In object file format, identify which VERSION/REVISION of the ART
@@ -84,6 +68,33 @@ At any point, preferably ASAP:
 and beyond...
 	cflat -prsim backwards compatibility mode
 		(and other tools)
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+for lack of organization:
+	list of things accomplished in 0.1.3 series:
+
+	BASIC parameter unrolling only (scalars)
+		done for integers, including arrays.
+
+	MAJOR ISSUES with parameter unrolling and assignment ordering
+		(resolved: ordered items are decoupled from scopes)
+	keep definitions around as back-references in unpacked objects.
+	unpack instantiation_bases into live instances
+		using multidimensional_qmap, or now, multikey_qmap.  
+		Make live instances and multidimensional sets persistent.
+		Mark modules as unrolled or not.  
+
+	Hold off on parameter assignments until after restructuring
+		parameter_assignment classes.  
+		(*done* -- 10/09/04)
+
+	Add cvs Id tags to all source files (done -- 11/01/04).  
+		Maybe non-essential files as well...
+	
+	Documentation: add documentation headers to beginning of
+		every source file, so doxygen will create file
+		inclusion dependence graphs! (*done* -- 10/09/04)
+
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instantiation statement needs to check template arguments of type!

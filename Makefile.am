@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.10 2004/12/02 01:37:35 fang Exp $
+#	$Id: Makefile.am,v 1.11 2005/01/17 06:28:05 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -44,7 +44,9 @@ endif
 if HAVE_DOXYGEN
 docs: $(DOXYGEN_CONFIG)
 	$(DOXYGEN) $(DOXYGEN_CONFIG)
+if HAVE_LATEX
 	(cd dox/latex; $(MAKE) < /dev/null )
+endif
 else
 docs:
 	@$(ECHO) No doxygen found in path.  

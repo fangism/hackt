@@ -1,5 +1,16 @@
 "NEWS"
 
+2005-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	Looks like this file hasn't been touched in a long time... oops.
+	All the NEWS worth reading (and not worth) is in the ChangeLog.
+	New Year's resolution: organize updates a little better this year.  
+
+	Releasing 0.1.4.  (just a few months late...)
+	Goals for this series (up to 0.1.5) are outlined in TODO.  
+	The root tag for this series is ARTXX-00-01-04.  
+
+
 2004-10-12
 
 	Major rework of persistent object de/serialization framework
