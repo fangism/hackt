@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.16 2005/03/01 21:26:47 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.17 2005/03/04 06:19:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -118,8 +118,13 @@ namespace util {
 SPECIALIZE_UTIL_WHAT_DEFINITION(ART::entity::name_space, "namespace")
 #endif
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::name_space, NAMESPACE_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::name_space, NAMESPACE_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 namespace ART {
@@ -1499,6 +1504,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Only allocates and initializes non-transient members
 	(non-members) of the namespace object.  
@@ -1510,6 +1516,7 @@ persistent*
 name_space::construct_empty(const int i) {
 	return new name_space();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

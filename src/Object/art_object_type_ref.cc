@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.25 2005/02/27 22:54:18 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.26 2005/03/04 06:19:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -34,12 +34,21 @@
 
 //=============================================================================
 namespace util {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 namespace ART {
@@ -521,10 +530,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 data_type_reference::construct_empty(const int i) {
 	return new data_type_reference();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -648,10 +659,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 channel_type_reference::construct_empty(const int i) {
 	return new channel_type_reference();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -786,10 +799,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 process_type_reference::construct_empty(const int i) {
 	return new process_type_reference();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.3 2005/03/01 04:50:59 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.4 2005/03/04 06:19:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MEMBER_INST_REF_H__
@@ -77,6 +77,7 @@ public:
 	unroll_references(unroll_context&, alias_collection_type&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	// final, non-virtual
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class member_instance_reference

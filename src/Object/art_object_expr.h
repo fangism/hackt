@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.21 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_expr.h,v 1.22 2005/03/04 06:19:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -315,6 +315,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_unary_expr
 
@@ -394,6 +395,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_unary_expr
 
@@ -499,6 +501,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class arith_expr
 
@@ -605,6 +608,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class relational_expr
 
@@ -706,6 +710,7 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class logical_expr
 
@@ -784,6 +789,7 @@ public:
 	must_be_formal_size_equivalent(const range_expr& ) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_range
 

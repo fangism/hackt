@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.7 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.8 2005/03/04 06:19:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -179,6 +179,7 @@ protected:
 	using parent_type::load_object_base;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_instance_reference
 
@@ -320,6 +321,7 @@ protected:
 	using parent_type::load_object_base;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_instance_reference
 

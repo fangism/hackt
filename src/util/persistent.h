@@ -1,7 +1,7 @@
 /**
 	\file "persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.9 2005/02/27 22:54:26 fang Exp $
+	$Id: persistent.h,v 1.10 2005/03/04 06:19:59 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_H__
@@ -11,6 +11,10 @@
 #include "string_fwd.h"
 
 #include "STL/hash_map_fwd.h"
+#include "nullary_function_fwd.h"
+#include "new_functor_fwd.h"
+
+#define	HAVE_PERSISTENT_CONSTRUCT_EMPTY			0
 
 //=============================================================================
 // macros
@@ -24,6 +28,14 @@
 	because they are all non-virtual.  
 	Don't stick a semicolon after this.  
 ***/
+
+/**
+	If constructor is private, use this to grant persistent_traits
+	access to the private constructor.  
+ */
+#define	FRIEND_PERSISTENT_TRAITS					\
+	friend struct util::new_functor<this_type,persistent>;		\
+	friend struct util::persistent_traits<this_type>;
 
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
 	void								\
@@ -40,6 +52,7 @@ virtual	void								\
 virtual	void								\
 	load_object(const persistent_object_manager&, istream&);
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
 	static								\
@@ -51,6 +64,12 @@ virtual	void								\
 	static								\
 	persistent*							\
 	construct_empty(const int);
+#else
+#define	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+#define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS		\
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC			\
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
@@ -80,6 +99,7 @@ virtual	void								\
 	actually ever be saved at run-time.  
 	This macro supplies default no-op definitions for them.  
  */
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 #define	PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(T)			\
 persistent*								\
 T::construct_empty(const int i) { return NULL; }			\
@@ -89,6 +109,15 @@ void									\
 T::write_object(const persistent_object_manager&, ostream&) const { }	\
 void									\
 T::load_object(const persistent_object_manager&, istream&) { }
+#else
+#define	PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(T)			\
+void									\
+T::collect_transient_info(persistent_object_manager&) const { }		\
+void									\
+T::write_object(const persistent_object_manager&, ostream&) const { }	\
+void									\
+T::load_object(const persistent_object_manager&, istream&) { }
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 /**
 	Default implementation of ostream& what(ostream&) const 
@@ -133,10 +162,18 @@ namespace util {
 	maps to one concrete type.  
 	The role of such function is to just allocate, even if it leaves
 	object members in an incoherent state.  
- */
-typedef	persistent* reconstruction_function_type(const int);
 
+	Argument (if applicable) should be aux_alloc_arg_type.
+ */
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+typedef	persistent* reconstruction_function_type(const int);
 typedef	reconstruction_function_type*	reconstruct_function_ptr_type;
+#else
+// typedef	persistent* reconstruction_function_type(void);
+typedef	nullary_function_virtual<persistent*>	reconstruction_function_type;
+typedef	const reconstruction_function_type*	reconstruct_function_ptr_type;
+#endif
+
 
 #if 0
 // need way of comparing with pointers for null check
@@ -159,6 +196,14 @@ typedef	pointer_to_unary_function<persistent*, const int>
 	
  */
 class persistent {
+public:
+	/**
+		Type for auxiliary construction argument.  
+		Should be small like a char for space-efficiency.
+		NOTE: currently construct_empty does NOT follow this...
+		This should be fixed for consistency sake.  
+	 */
+	typedef	char			aux_alloc_arg_type;
 public:
 /** standard default destructor, but virtual */
 virtual ~persistent() { }
@@ -249,12 +294,12 @@ public:
 	as opposed to in a source module.  
  */
 template <class T>
-struct persistent_traits {
-};	// end struct persistent_traits
+struct persistent_traits;	// end struct persistent_traits
 
 /**
 	This macro is only effective in the util namespace!
  */
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 #define	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
 template <>								\
 struct persistent_traits<T> {						\
@@ -264,10 +309,28 @@ struct persistent_traits<T> {						\
 	static const reconstruct_function_ptr_type			\
 						reconstructor;		\
 };
+#else
+#define	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
+template <>								\
+struct persistent_traits<T> {						\
+	typedef	persistent_traits<T>		this_type;		\
+	typedef	T				type;			\
+	static const persistent::hash_key	type_key;		\
+	static const persistent::aux_alloc_arg_type			\
+						sub_index;		\
+	static const int			type_id;		\
+	static								\
+	persistent*							\
+	construct_empty(void);						\
+									\
+	static const new_functor<T,persistent>	empty_constructor;	\
+};	// end struct persistent_traits (specialized)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 /**
 	This macro is only effective in the util namespace!
  */
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 #define	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key)		\
 const persistent::hash_key						\
 persistent_traits<T>::type_key(key);					\
@@ -276,11 +339,33 @@ persistent_traits<T>::type_id =						\
 	persistent_object_manager::register_persistent_type<T>();	\
 const reconstruct_function_ptr_type					\
 persistent_traits<T>::reconstructor = &T::construct_empty;
+#else
+#define	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key, index)	\
+const persistent::hash_key						\
+persistent_traits<T>::type_key(key);					\
+const persistent::aux_alloc_arg_type					\
+persistent_traits<T>::sub_index = index;				\
+persistent*								\
+persistent_traits<T>::construct_empty(void) {				\
+	return new T();							\
+}									\
+const new_functor<T,persistent>						\
+persistent_traits<T>::empty_constructor;				\
+const int								\
+persistent_traits<T>::type_id =						\
+	persistent_object_manager::register_persistent_type<T>();
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 #define	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(T, key)		\
 	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
 	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key)
+#else
+#define	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(T, key, index)	\
+	SPECIALIZE_PERSISTENT_TRAITS_DECLARATION(T)			\
+	SPECIALIZE_PERSISTENT_TRAITS_INITIALIZATION(T, key, index)
+#endif
 
 //-----------------------------------------------------------------------------
 }	// end namespace util

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.15 2005/03/01 04:50:59 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.16 2005/03/04 06:19:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -40,8 +40,8 @@
 #include "static_trace.h"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
-
+// start of static initializations
+STATIC_TRACE_BEGIN("instance_pint")
 
 //=============================================================================
 namespace util {
@@ -51,18 +51,36 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<3>, "pint_array<3>")
 	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array<4>, "pint_array<4>")
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_instance_collection, 
 		PINT_INSTANCE_COLLECTION_TYPE_KEY)
+#else
+template <>
+struct persistent_traits<ART::entity::pint_instance_collection> {
+	static const persistent::hash_key	type_key;
+};
+
+const persistent::hash_key
+persistent_traits<ART::entity::pint_instance_collection>::type_key(
+	PINT_INSTANCE_COLLECTION_TYPE_KEY);
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_scalar, PINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_array_1D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_array_2D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
 }	// end namespace memory
 }	// end namespace util
-
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("instance_pint")
 
 //=============================================================================
 namespace ART {
@@ -326,6 +344,7 @@ pint_instance_collection::make_pint_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Later: will become dimension-specific.
  */
@@ -343,6 +362,7 @@ pint_instance_collection::construct_empty(const int i) {
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

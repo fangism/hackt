@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.3 2005/03/01 04:50:58 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.4 2005/03/04 06:19:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -527,6 +527,7 @@ INSTANCE_COLLECTION_CLASS::make_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 persistent*
 INSTANCE_COLLECTION_CLASS::construct_empty(const int i) {
@@ -541,6 +542,7 @@ INSTANCE_COLLECTION_CLASS::construct_empty(const int i) {
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
@@ -940,7 +942,12 @@ void
 INSTANCE_ARRAY_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		persistent_traits<parent_type>::type_key, D)) {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+		persistent_traits<parent_type>::type_key, 
+#else
+		persistent_traits<this_type>::type_key, 
+#endif
+D)) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 }
@@ -1149,7 +1156,12 @@ void
 INSTANCE_SCALAR_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
-		persistent_traits<parent_type>::type_key, 0)) {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+		persistent_traits<parent_type>::type_key, 0
+#else
+		persistent_traits<this_type>::type_key, 0
+#endif
+)) {
 	STACKTRACE_PERSISTENT("instance_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	this->the_instance.check(this);

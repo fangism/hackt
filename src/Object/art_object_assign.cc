@@ -1,7 +1,7 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.16 2005/03/01 04:50:54 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.17 2005/03/04 06:19:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
@@ -34,12 +34,21 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_expression_assignment,
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_expression_assignment, 
 		"pbool-expression-assignment")
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_expression_assignment,
 		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_expression_assignment,
 		PINT_EXPR_ASSIGNMENT_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_expression_assignment,
+		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_expression_assignment,
+		PINT_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 //=============================================================================
@@ -285,10 +294,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pbool_expression_assignment::construct_empty(const int i) {
 	return new pbool_expression_assignment();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -457,10 +468,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_expression_assignment::construct_empty(const int i) {
 	return new pint_expression_assignment();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.12 2005/02/27 22:54:26 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.13 2005/03/04 06:19:59 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -16,6 +16,7 @@
 // already includes <iostream>
 
 #include "macros.h"
+#include "new_functor.tcc"
 #include "stacktrace.h"
 #include "IO_utils.tcc"
 
@@ -50,6 +51,8 @@ using std::ostringstream;
 	Of course, the persistent_type_key must be properly initialized
 	before use.  
  */
+
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 template <class T>
 int
 persistent_object_manager::register_persistent_type(void) {
@@ -75,6 +78,67 @@ persistent_object_manager::register_persistent_type(void) {
 #endif
 	return s;
 }
+
+#else	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
+
+/**
+	The default means of registering a persistent type statically.  
+ */
+template <class T>
+int
+persistent_object_manager::register_persistent_type(void) {
+	typedef	persistent_traits<T>	traits_type;
+	reconstruction_function_map_type& m = reconstruction_function_map();
+	const persistent::hash_key& type_key = traits_type::type_key;
+	const aux_alloc_arg_type sub_index = traits_type::sub_index;
+	const reconstruct_function_ptr_type
+		cf = &traits_type::empty_constructor;
+	return register_persistent_type<T>(sub_index, cf);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Manual override for persistent type registration, 
+	where one may pass in any custom construction functor.  
+ */
+template <class T>
+int
+persistent_object_manager::register_persistent_type(
+		const aux_alloc_arg_type a, 
+		const reconstruct_function_ptr_type cf) {
+	typedef	persistent_traits<T>	traits_type;
+	NEVER_NULL(cf);
+	reconstruction_function_map_type& m = reconstruction_function_map();
+	const persistent::hash_key& type_key = traits_type::type_key;
+	const size_t sub_index = a;
+	INVARIANT(type_key != persistent::hash_key::null);
+	reconstructor_vector_type& ctor_vec = m[type_key];
+		// will create an empty vec if not already there
+	if (sub_index >= ctor_vec.size())
+		ctor_vec.resize(sub_index+1, NULL);
+		// automatically resize if necessary
+#if WELCOME_TO_TYPE_REGISTRATION
+	cerr << "Welcome to persistent type registration, "
+		<< type_key << '[' << sub_index << "]!  ";
+#endif
+	const reconstruct_function_ptr_type probe = ctor_vec[sub_index];
+	if (probe) {
+		cerr << "FATAL: Persistent type with key \"" <<
+			type_key << "\" and sub-index " << sub_index <<
+			" already taken!" << endl;
+		THROW_EXIT;
+	} else {
+		ctor_vec[sub_index] = cf;
+	}
+	// get a unique id
+	const int s = registered_type_sequence_number();
+#if WELCOME_TO_TYPE_REGISTRATION
+	cerr << "You are number " << s << "." << endl;
+#endif
+	return s;
+}
+
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -129,7 +193,7 @@ persistent_object_manager::__read_pointer(istream& f,
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 	unsigned long i;
 	read_value(f, i);
-	INVARIANT(i < reconstruction_table.size());
+	INVARIANT(check_reconstruction_table_range(i));
 	persistent* o(lookup_obj_ptr(i));
 	// for this to work, pointer_type must be a raw_pointer
 	const_cast<P&>(ptr) = dynamic_cast<pointer_type>(o);

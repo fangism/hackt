@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.39 2005/03/01 04:50:55 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.40 2005/03/04 06:19:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -116,6 +116,7 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list,
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
 		"dynamic-index-list")
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_param_expr_list, CONST_PARAM_EXPR_LIST_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -154,6 +155,91 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_param_expr_list,
+		CONST_PARAM_EXPR_LIST_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_param_expr_list,
+		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instance_reference, 
+		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instance_reference, 
+		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
+
+#if 0
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_const_collection, CONST_PINT_COLLECTION_TYPE_KEY, 0)
+#else
+
+using ART::entity::pint_const_collection;
+
+template <>
+struct persistent_traits<pint_const_collection> {
+	typedef pint_const_collection			type;
+	static const persistent::hash_key		type_key;
+	static const int				type_ids[5];
+	static const binder_new_functor<type,persistent,int>
+							empty_constructors[5];
+};
+
+const persistent::hash_key
+persistent_traits<pint_const_collection>::type_key(
+	CONST_PINT_COLLECTION_TYPE_KEY);
+
+const binder_new_functor<pint_const_collection,persistent,int>
+persistent_traits<pint_const_collection>::empty_constructors[5] = {
+	binder_new_functor<pint_const_collection,persistent,int>(0), 
+	binder_new_functor<pint_const_collection,persistent,int>(1), 
+	binder_new_functor<pint_const_collection,persistent,int>(2), 
+	binder_new_functor<pint_const_collection,persistent,int>(3), 
+	binder_new_functor<pint_const_collection,persistent,int>(4)
+};
+
+const int
+persistent_traits<pint_const_collection>::type_ids[5] = {
+persistent_object_manager::register_persistent_type<pint_const_collection>(
+	0, &empty_constructors[0]), 
+persistent_object_manager::register_persistent_type<pint_const_collection>(
+	1, &empty_constructors[1]), 
+persistent_object_manager::register_persistent_type<pint_const_collection>(
+	2, &empty_constructors[2]), 
+persistent_object_manager::register_persistent_type<pint_const_collection>(
+	3, &empty_constructors[3]), 
+persistent_object_manager::register_persistent_type<pint_const_collection>(
+	4, &empty_constructors[4])
+};
+
+#endif
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::arith_expr, ARITH_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::relational_expr, RELATIONAL_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::logical_expr, LOGICAL_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range, CONST_RANGE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
@@ -602,6 +688,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -610,6 +697,7 @@ persistent*
 const_param_expr_list::construct_empty(const int i) {
 	return new const_param_expr_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -910,6 +998,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -918,6 +1007,7 @@ persistent*
 dynamic_param_expr_list::construct_empty(const int) {
 	return new dynamic_param_expr_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1418,6 +1508,7 @@ if (!m.register_transient_object(this,
 }
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Just allocates with bogus contents, first pass of reconstruction.
  */
@@ -1425,6 +1516,7 @@ persistent*
 pbool_instance_reference::construct_empty(const int i) {
 	return new pbool_instance_reference();
 }
+#endif
  
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2006,6 +2098,7 @@ if (!m.register_transient_object(this,
 }
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Just allocates with bogus contents, first pass of reconstruction.
  */
@@ -2013,6 +2106,7 @@ persistent*
 pint_instance_reference::construct_empty(const int i) {
 	return new pint_instance_reference();
 }
+#endif
  
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2311,10 +2405,12 @@ pint_const::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_const::construct_empty(const int i) {
 	return new pint_const(0);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2543,12 +2639,14 @@ pint_const_collection::collect_transient_info(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_const_collection::construct_empty(const int d) {
 	INVARIANT(d >= 0);
 	INVARIANT(d <= 4);
 	return new pint_const_collection(d);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2651,10 +2749,12 @@ pbool_const::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pbool_const::construct_empty(const int i) {
 	return new pbool_const(0);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2834,10 +2934,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_unary_expr::construct_empty(const int i) {
 	return new pint_unary_expr();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2993,10 +3095,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pbool_unary_expr::construct_empty(const int i) {
 	return new pbool_unary_expr();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3252,10 +3356,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 arith_expr::construct_empty(const int i) {
 	return new arith_expr();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3502,10 +3608,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 relational_expr::construct_empty(const int i) {
 	return new relational_expr();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3735,10 +3843,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 logical_expr::construct_empty(const int i) {
 	return new logical_expr();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3907,10 +4017,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_range::construct_empty(const int i) {
 	return new pint_range();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -4161,10 +4273,12 @@ const_range::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 const_range::construct_empty(const int i) {
 	return new const_range();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -4633,6 +4747,7 @@ const_range_list::collect_transient_info(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -4641,6 +4756,7 @@ persistent*
 const_range_list::construct_empty(const int i) {
 	return new const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -4811,6 +4927,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -4819,6 +4936,7 @@ persistent*
 dynamic_range_list::construct_empty(const int i) {
 	return new dynamic_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -5201,6 +5319,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -5209,6 +5328,7 @@ persistent*
 const_index_list::construct_empty(const int i) {
 	return new const_index_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -5524,6 +5644,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty constructor / allocator for the first pass of 
 	deserialization reconstruction.  
@@ -5532,6 +5653,7 @@ persistent*
 dynamic_index_list::construct_empty(const int i) {
 	return new dynamic_index_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

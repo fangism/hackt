@@ -2,7 +2,7 @@
 	\file "art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.10 2005/03/01 04:50:57 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.11 2005/03/04 06:19:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
@@ -29,9 +29,6 @@
 #include "art_object_instance_collection.tcc"
 
 namespace util {
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_instance_collection, 
-		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
 
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_collection,
 		"channel_instance_collection")
@@ -40,6 +37,23 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_2D, "channel_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_3D, "channel_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_4D, "channel_array_4D")
+
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instance_collection, 
+		CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_array_1D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 1)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_array_2D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 2)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_array_3D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 3)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_array_4D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 4)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 namespace ART {

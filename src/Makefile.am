@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.47 2005/03/02 05:27:49 fang Exp $
+#	$Id: Makefile.am,v 1.48 2005/03/04 06:19:53 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -263,6 +263,11 @@ UTIL_HEADER_FILES = \
 	util/multikey_set.h \
 	util/multikey_set.tcc \
 	util/nested_iterator.h \
+	util/new_functor_fwd.h \
+	util/new_functor.h \
+	util/new_functor.tcc \
+	util/nullary_function_fwd.h \
+	util/nullary_function.h \
 	util/null_construct.h \
 	util/numeric/integer_traits.h \
 	util/operators.h \

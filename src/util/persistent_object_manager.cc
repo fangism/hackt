@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.15 2005/02/27 22:54:26 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.16 2005/03/04 06:19:59 fang Exp $
  */
 
 // flags and switches
@@ -13,6 +13,7 @@
 #include "hash_specializations.h"	// include this first
 	// for hash specialization to take effect
 #include "hash_qmap.tcc"
+#include "new_functor.tcc"
 #include "persistent_object_manager.h"
 	// includes "count_ptr.h"
 #include "macros.h"
@@ -115,6 +116,103 @@ using std::stringbuf;
 using std::streamsize;
 using std::ostringstream;
 USING_STACKTRACE
+
+//=============================================================================
+/**
+	The class contains the information necessary for reconstructing
+	persistent objects associated with a pointer.  
+ */
+class persistent_object_manager::reconstruction_table_entry {
+private:
+	/** constant default ios mode */
+	static const ios_base::openmode	mode;
+private:
+	/** object type enumeration */
+	persistent::hash_key	otype;
+	/** location of reconstruction, consider object*? */
+	const persistent*	recon_addr;
+
+	/**
+		Auxiliary allocator argument, useful for 2-level 
+		constructor tables.  
+	 */
+	aux_alloc_arg_type	alloc_arg;
+
+	/** reference count for counter pointers */
+mutable	size_t*			ref_count;
+	/**
+		scratch flag, general purpose flag,
+		consider making mutable
+	 */
+	bool			scratch;
+	/** start of stream position */
+	streampos		buf_head;
+	/** end of stream position */
+	streampos		buf_tail;
+	/** stream buffer for temporary storage, count_ptr
+		for transferrable semantics with copy assignment */
+	count_ptr<stringstream>	buffer;
+public:
+// need default constructor to create an invalid object
+	reconstruction_table_entry();
+
+	reconstruction_table_entry(const persistent::hash_key& t, 
+		const aux_alloc_arg_type a, 
+		const streampos h, const streampos t);
+
+	reconstruction_table_entry(const persistent::hash_key& t, 
+		const streampos h, const streampos t);
+
+	reconstruction_table_entry(const persistent* p,
+		const persistent::hash_key& t, 
+		const aux_alloc_arg_type a);
+
+	// default copy constructor suffices
+
+	~reconstruction_table_entry();
+
+	const persistent::hash_key&
+	type(void) const { return otype; }
+
+	const persistent*
+	addr(void) const { return recon_addr; }
+
+	aux_alloc_arg_type
+	get_alloc_arg(void) const { return alloc_arg; }
+
+	size_t*
+	count(void) const;
+
+	void
+	assign_addr(persistent* ptr);
+
+	void
+	reset_addr();
+
+	void
+	flag(void) { scratch = true; }
+
+	void
+	unflag(void) { scratch = false; }
+
+	bool
+	flagged(void) const { return scratch; }
+
+	stringstream&
+	get_buffer(void) const { return *buffer; }
+
+	void
+	initialize_offsets(void);
+
+	void
+	adjust_offsets(const streampos s);
+
+	streampos
+	head_pos(void) const { return buf_head; }
+
+	streampos
+	tail_pos(void) const { return buf_tail; }
+};	// end class reconstruction_table_entry
 
 //=============================================================================
 // class reconstruction_table_entry method definitions
@@ -321,9 +419,10 @@ persistent_object_manager::initialize_null(void) {
 bool
 persistent_object_manager::flag_visit(const persistent* ptr) {
 	const long probe = addr_to_index_map[ptr];
-	assert(probe >= 0);
+	INVARIANT(probe >= 0);
+	INVARIANT(size_t(probe) < reconstruction_table.size());
 	reconstruction_table_entry& e = reconstruction_table[probe];
-	assert(e.addr() == ptr);		// sanity check
+	INVARIANT(e.addr() == ptr);		// sanity check
 	if (e.flagged())
 		return true;
 	else {
@@ -367,6 +466,13 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
 	assert((unsigned long) i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return const_cast<persistent*>(e.addr());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+persistent_object_manager::check_reconstruction_table_range(
+		const size_t i) const {
+	return (i < reconstruction_table.size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -433,6 +539,9 @@ persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
 	Needs to be be private for protection, because it returns
 	a non-const reference!  
 	Add-only access is granted through register_persistent_type.
+
+	Don't really care when this is destroyed statically, 
+	order is irrelevant, because no other destructors depend on this.  
 	\return valid reference to the only reconstruction function map.  
  */
 persistent_object_manager::reconstruction_function_map_type&
@@ -444,6 +553,18 @@ persistent_object_manager::reconstruction_function_map(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unique number during persistent type registration.  
+ */
+int
+persistent_object_manager::registered_type_sequence_number(void) {
+	static int count = 0;
+	count++;
+	return count;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 bool
 persistent_object_manager::verify_registered_type(
 		const persistent::hash_key& k) {
@@ -452,6 +573,21 @@ persistent_object_manager::verify_registered_type(
 			reconstruction_function_map())[k];
 	return (probe != NULL);
 }
+#else
+bool
+persistent_object_manager::verify_registered_type(
+		const persistent::hash_key& k, const aux_alloc_arg_type i) {
+	const reconstructor_vector_type& ctor_vec =
+		static_cast<const reconstruction_function_map_type&>(
+			reconstruction_function_map())[k];
+	if (size_t(i) >= ctor_vec.size())
+		return false;
+	else {
+		const reconstruct_function_ptr_type probe = ctor_vec[i];
+		return (probe != NULL);
+	}
+}
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -462,17 +598,36 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 	const reconstruction_function_map_type::const_iterator end = m.end();
 	o << "persistent_object_manager::reconstruction_function_map has " <<
 		reconstruction_function_map().size() << " entries." << endl;
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 	o << "\tkey\t\twhat" << endl;
+#else
+	o << "(Each entry may contain multiple constructor functors.)" << endl;
+	o << "\tkey[index]\twhat" << endl;
+#endif
 	for ( ; iter != end; iter++) {
 		// this calls the appropriate construct_empty()
 		// really should be a unique_ptr, after I finish it...
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 		excl_ptr<persistent> tmp((*iter->second)(0));
 		assert(tmp);
 		// DANGER: may not be safe to call what() on uninitialized
 		// objects, if it depends on internal field members!
 		// Thus, we should guarantee that what() is independent of
 		// field members.  
-		tmp->what(o << '\t' << iter->first << "    \t") << endl;
+		tmp->what(o << '\t' << iter->first << '\t') << endl;
+#else
+		const reconstructor_vector_type& ctor_vec(iter->second);
+		size_t j = 0;
+		for ( ; j < ctor_vec.size(); j++) {
+			reconstruct_function_ptr_type ctor = ctor_vec[j];
+			if (ctor) {
+				const excl_ptr<persistent> tmp((*ctor)());
+				assert(tmp);
+				tmp->what(o << '\t' << iter->first << '[' <<
+					j << "]\t") << endl;
+			}
+		}
+#endif
 	}
 	return o;
 }
@@ -561,9 +716,20 @@ persistent_object_manager::load_header(ifstream& f) {
 		read_value(f, tail);
 		// make sure t is a registered type
 		if (t != persistent::hash_key::null && 
-				!verify_registered_type(t)) {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+				!verify_registered_type(t)
+#else
+				!verify_registered_type(t, aux)
+#endif
+		) {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 			cerr << "FATAL: persistent type code \"" <<
 				t << "\" has not been registered!" << endl;
+#else
+			cerr << "FATAL: persistent type code \"" <<
+				t << "\", index " << aux <<
+				" has not been registered!" << endl;
+#endif
 			THROW_EXIT;
 		}
 		reconstruction_table.push_back(
@@ -592,6 +758,7 @@ persistent_object_manager::reconstruct(void) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		const persistent::hash_key& t = e.type();
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 			const reconstruct_function_ptr_type f = 
 				reconstruction_function_map()[t];
 			if (f) {
@@ -603,6 +770,21 @@ persistent_object_manager::reconstruct(void) {
 					" yet, skipping..." << endl;
 				e.assign_addr(NULL);
 			}
+#else
+			const reconstructor_vector_type&
+				ctor_vec(reconstruction_function_map()[t]);
+			const size_t j = e.get_alloc_arg();
+			if (j >= ctor_vec.size() || !ctor_vec[j]) {
+				cerr << "WARNING: don\'t know how to "
+					"reconstruct/allocate type " << t <<
+					" yet, skipping..." << endl;
+				e.assign_addr(NULL);
+			} else {
+				// this allocates and empty constructs
+				e.assign_addr((*ctor_vec[j])());
+				addr_to_index_map[e.addr()] = i;
+			}
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 		} else {
 			e.assign_addr(NULL);
 		}

@@ -2,7 +2,7 @@
 	\file "art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.10 2005/03/01 04:50:59 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.11 2005/03/04 06:19:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -32,12 +32,6 @@
 
 
 namespace util {
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instance_collection, 
-		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
-
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_collection,
 		"process_instance_collection")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_scalar, "process_scalar")
@@ -45,6 +39,28 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_2D, "process_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_3D, "process_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_4D, "process_array_4D")
+
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance_collection, 
+		PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_scalar, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_array_1D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 1)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_array_2D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 2)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_array_3D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 3)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_array_4D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 4)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
+
 }	// end namespace util
 
 namespace ART {
@@ -154,10 +170,12 @@ process_instance::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 process_instance::construct_empty(const int) {
 	return new process_instance;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

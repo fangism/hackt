@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.26 2005/03/01 04:50:55 fang Exp $
+	$Id: art_object_definition.h,v 1.27 2005/03/04 06:19:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -168,6 +168,8 @@ protected:
 	port_formals_map_type			port_formals_map;
 	// list language bodies
 	
+private:
+	process_definition();
 public:
 	process_definition(never_ptr<const name_space> o, const string& s); 
 	~process_definition();
@@ -214,6 +216,7 @@ public:
 
 // methods for object file I/O
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -252,7 +255,7 @@ private:
 	process_definition_alias();
 public:
 	process_definition_alias(const string& n, 
-		never_ptr<const scopespace> p);
+		const never_ptr<const scopespace> p);
 
 	~process_definition_alias();
 
@@ -276,6 +279,7 @@ public:
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -431,6 +435,8 @@ protected:
 	const never_ptr<const name_space>		parent;
 	// realy this has no template arguments...
 	// don't we need to track ordering of identifiers added?  later...
+private:
+	enum_datatype_def();
 public:
 	enum_datatype_def(never_ptr<const name_space> o, const string& n);
 	~enum_datatype_def();
@@ -463,6 +469,7 @@ public:
 	bool
 	add_member(const token_identifier& em);
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -529,8 +536,11 @@ private:
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
+private:
+	user_def_datatype();
 public:
-	user_def_datatype(never_ptr<const name_space> o, const string& name);
+	user_def_datatype(const never_ptr<const name_space> o, 
+		const string& name);
 	~user_def_datatype();
 
 	const string&
@@ -567,6 +577,7 @@ public:
 	certify_port_actuals(const object_list& ol) const;
 #endif
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -587,9 +598,12 @@ protected:
 	const never_ptr<const scopespace>	parent;
 	// inherited template formals
 	excl_ptr<const data_type_reference>	base;
+private:
+	datatype_definition_alias();
+
 public:
 	datatype_definition_alias(const string& n, 
-		never_ptr<const scopespace> p);
+		const never_ptr<const scopespace> p);
 
 	~datatype_definition_alias();
 
@@ -619,6 +633,7 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -668,8 +683,10 @@ protected:
 	// list of other type definitions
 	const string				key;
 	const never_ptr<const name_space>	parent;
+private:
+	user_def_chan();
 public:
-	user_def_chan(never_ptr<const name_space> o, const string& name);
+	user_def_chan(const never_ptr<const name_space> o, const string& name);
 	~user_def_chan();
 
 	const string&
@@ -700,6 +717,7 @@ public:
 	certify_port_actuals(const object_list& ol) const;
 #endif
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:
@@ -720,9 +738,11 @@ protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
 	excl_ptr<const channel_type_reference>	base;
+private:
+	channel_definition_alias();
 public:
 	channel_definition_alias(const string& n, 
-		never_ptr<const scopespace> p);
+		const never_ptr<const scopespace> p);
 
 	~channel_definition_alias();
 
@@ -748,6 +768,7 @@ public:
 #endif
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 private:

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.3 2005/03/01 04:50:58 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.4 2005/03/04 06:19:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -11,6 +11,7 @@
 #include <set>
 
 #include "memory/pointer_classes.h"
+#include "persistent.h"
 #include "multikey_set.h"
 #include "boolean_types.h"
 
@@ -256,13 +257,9 @@ public:
 							instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
-#if 0
-	typedef	typename class_traits<Tag>::instance_alias<D>::type
-#else
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_alias<D>::type
 							element_type;
-#endif
 	/**
 		This is the data structure used to implement the collection.  
 	 */
@@ -370,6 +367,7 @@ public:
 	};	// end struct key_dumper
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 };	// end class instance_array
 
@@ -437,6 +435,7 @@ public:
 
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 #if 0
 	// soon...

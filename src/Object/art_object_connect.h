@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.16 2005/02/27 22:54:09 fang Exp $
+	$Id: art_object_connect.h,v 1.17 2005/03/04 06:19:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -194,6 +194,7 @@ public:
 	unroll(unroll_context& ) const;
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class port_connection
 

@@ -30,6 +30,7 @@ noinst_PROGRAMS = \
 	hash_qmap_test \
 	discrete_interval_set_test \
 	integer_traits_test \
+	new_functor_test \
 	list_vector_test \
 	list_vector_pool_test \
 	static_count_ptr_test \
@@ -74,6 +75,7 @@ multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
 multikey_set_test_SOURCES = multikey_set_test.cc
 multikey_set_derived_test_SOURCES = multikey_set_derived_test.cc
 integer_traits_test_SOURCES = integer_traits_test.cc
+new_functor_test_SOURCES = new_functor_test.cc
 packed_array_test_SOURCES = packed_array_test.cc
 exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
 exit_test_LDADD = libfangutil.la

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.35 2005/03/01 04:50:54 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.36 2005/03/04 06:19:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -43,6 +43,7 @@
 STATIC_TRACE_BEGIN("object-definition")
 
 namespace util {
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -57,6 +58,22 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 //=============================================================================
@@ -825,7 +842,18 @@ channel_definition_base::make_fundamental_type_reference(
 // class user_def_chan method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-user_def_chan::user_def_chan(never_ptr<const name_space> o, 
+/// Private empty constructor.  
+user_def_chan::user_def_chan() :
+		definition_base(), 
+		channel_definition_base(), 
+		scopespace(),
+		sequential_scope(), 
+		key(), 
+		parent() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+user_def_chan::user_def_chan(const never_ptr<const name_space> o, 
 		const string& name) :
 		definition_base(), 
 		channel_definition_base(), 
@@ -891,6 +919,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Just allocate with bogus arguments.  
  */
@@ -898,6 +927,7 @@ persistent*
 user_def_chan::construct_empty(const int i) {
 	return new user_def_chan(never_ptr<const name_space>(NULL), "");
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -950,8 +980,17 @@ user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 // class channel_definition_alias method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Private empty constructor.
+channel_definition_alias::channel_definition_alias() :
+		definition_base(), 
+		channel_definition_base(), 
+		typedef_base(), 
+		key(), parent(), base(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::channel_definition_alias(
-		const string& n, never_ptr<const scopespace> p) :
+		const string& n, const never_ptr<const scopespace> p) :
 		definition_base(), 
 		channel_definition_base(), 
 		typedef_base(), 
@@ -1014,6 +1053,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty allocator.  
  */
@@ -1022,6 +1062,7 @@ channel_definition_alias::construct_empty(const int i) {
 	return new channel_definition_alias("",
 		never_ptr<const scopespace>(NULL));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1370,6 +1411,16 @@ enum_member::dump(ostream& o) const {
 // class enum_datatype_def method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Private empty constructor.  
+enum_datatype_def::enum_datatype_def() :
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(), 
+		key(), 
+		parent() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::enum_datatype_def(never_ptr<const name_space> o, 
 		const string& n) : 
 		definition_base(), 
@@ -1523,6 +1574,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty allocator.  
  */
@@ -1530,6 +1582,7 @@ persistent*
 enum_datatype_def::construct_empty(const int i) {
 	return new enum_datatype_def(never_ptr<const name_space>(NULL), "");
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1602,9 +1655,20 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 // class user_def_datatype method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// private empty constructor
+user_def_datatype::user_def_datatype() :
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(),
+		sequential_scope(), 
+		key(), 
+		parent() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// constructor for user defined type
 user_def_datatype::user_def_datatype(
-		never_ptr<const name_space> o,
+		const never_ptr<const name_space> o,
 		const string& name) :
 		definition_base(), 
 		datatype_definition_base(), 
@@ -1696,6 +1760,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty allocator.  
  */
@@ -1703,6 +1768,7 @@ persistent*
 user_def_datatype::construct_empty(const int i) {
 	return new user_def_datatype(never_ptr<const name_space>(NULL), "");
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1756,8 +1822,18 @@ user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 // class datatype_definition_alias method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// private empty constructor
+datatype_definition_alias::datatype_definition_alias() :
+		definition_base(), 
+		datatype_definition_base(), 
+		typedef_base(), 
+		key(), 
+		parent() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::datatype_definition_alias(
-		const string& n, never_ptr<const scopespace> p) :
+		const string& n, const never_ptr<const scopespace> p) :
 		definition_base(), 
 		datatype_definition_base(), 
 		typedef_base(), 
@@ -1862,6 +1938,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty allocator.  
  */
@@ -1870,6 +1947,7 @@ datatype_definition_alias::construct_empty(const int i) {
 	return new datatype_definition_alias("",
 		never_ptr<const scopespace>(NULL));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1944,6 +2022,22 @@ process_definition_base::make_typedef(never_ptr<const scopespace> s,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Private empty constructor.
+ */
+process_definition::process_definition() :
+		definition_base(), 
+		process_definition_base(),
+		scopespace(),
+		sequential_scope(), 
+		key(), 
+		parent(), 
+		port_formals_list(), 
+		port_formals_map() {
+	// no null check: because of partial reconstruction
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Constructor for a process definition symbol table entry.  
  */
 process_definition::process_definition(
@@ -1958,7 +2052,7 @@ process_definition::process_definition(
 		port_formals_list(), 
 		port_formals_map() {
 	// fill me in...
-	// NEVER_NULL(o);		// no: because of partial reconstruction
+	NEVER_NULL(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2257,6 +2351,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Temporary allocation.  
  */
@@ -2264,6 +2359,7 @@ persistent*
 process_definition::construct_empty(const int i) {
 	return new process_definition(never_ptr<const name_space>(NULL), "");
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2362,7 +2458,7 @@ process_definition_alias::process_definition_alias() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_definition_alias::process_definition_alias(const string& n, 
-		never_ptr<const scopespace> p) :
+		const never_ptr<const scopespace> p) :
 		definition_base(), 
 		process_definition_base(), 
 		typedef_base(), 
@@ -2449,6 +2545,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 /**
 	Empty allocator.  
  */
@@ -2456,6 +2553,7 @@ persistent*
 process_definition_alias::construct_empty(const int i) {
 	return new process_definition_alias();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

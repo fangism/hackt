@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.9 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_expr_const.h,v 1.10 2005/03/04 06:19:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -491,6 +491,7 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
@@ -699,6 +700,7 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.17 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.18 2005/03/04 06:19:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -100,6 +100,7 @@ protected:
 	load_object_base(const persistent_object_manager&, istream&);
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class instance_reference

@@ -1,7 +1,7 @@
 /**
 	\file "persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.13 2005/02/27 22:54:26 fang Exp $
+	$Id: persistent_object_manager.h,v 1.14 2005/03/04 06:19:59 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -14,19 +14,6 @@
 #include "hash_qmap.h"
 #include "memory/pointer_classes.h"
 #include "IO_utils.h"			// for read and write to streams
-
-//=============================================================================
-// macros
-
-#if 0
-/**
-	Default manner for static persistent type registration.  
-	Using this macro will invoke type registration per object
-	during global static initialization.  
- */
-#define	DEFAULT_PERSISTENT_TYPE_REGISTRATION(T, str)			\
-static const util::persistent_traits<T> __persistent_traits_ ## T ## __(str);
-#endif
 
 //=============================================================================
 namespace util {
@@ -50,107 +37,11 @@ using util::hash_qmap;
  */
 class persistent_object_manager {
 public:
-	/**
-		Type for auxiliary construction argument.  
-		Should be small like a char for space-efficiency.
-	 */
-	typedef	char			aux_alloc_arg_type;
+	// just a char
+	typedef	persistent::aux_alloc_arg_type
+					aux_alloc_arg_type;
 private:
-	/**
-		The class contains the information necessary for reconstructing
-		persistent objects associated with a pointer.  
-	 */
-	class reconstruction_table_entry {
-	private:
-		/** constant default ios mode */
-		static const ios_base::openmode	mode;
-	private:
-		/** object type enumeration */
-		persistent::hash_key	otype;
-		/** location of reconstruction, consider object*? */
-		const persistent*	recon_addr;
-
-		/**
-			Auxiliary allocator argument, useful for 2-level 
-			constructor tables.  
-		 */
-		aux_alloc_arg_type	alloc_arg;
-
-		/** reference count for counter pointers */
-	mutable	size_t*			ref_count;
-		/**
-			scratch flag, general purpose flag,
-			consider making mutable
-		 */
-		bool			scratch;
-		/** start of stream position */
-		streampos		buf_head;
-		/** end of stream position */
-		streampos		buf_tail;
-		/** stream buffer for temporary storage, count_ptr
-			for transferrable semantics with copy assignment */
-		count_ptr<stringstream>	buffer;
-	public:
-	// need default constructor to create an invalid object
-		reconstruction_table_entry();
-
-		reconstruction_table_entry(const persistent::hash_key& t, 
-			const aux_alloc_arg_type a, 
-			const streampos h, const streampos t);
-
-		reconstruction_table_entry(const persistent::hash_key& t, 
-			const streampos h, const streampos t);
-
-		reconstruction_table_entry(const persistent* p,
-			const persistent::hash_key& t, 
-			const aux_alloc_arg_type a);
-
-		// default copy constructor suffices
-
-		~reconstruction_table_entry();
-
-		const persistent::hash_key&
-		type(void) const { return otype; }
-
-		const persistent*
-		addr(void) const { return recon_addr; }
-
-		aux_alloc_arg_type
-		get_alloc_arg(void) const { return alloc_arg; }
-
-		size_t*
-		count(void) const;
-
-		void
-		assign_addr(persistent* ptr);
-
-		void
-		reset_addr();
-
-		void
-		flag(void) { scratch = true; }
-
-		void
-		unflag(void) { scratch = false; }
-
-		bool
-		flagged(void) const { return scratch; }
-
-		stringstream&
-		get_buffer(void) const { return *buffer; }
-
-		void
-		initialize_offsets(void);
-
-		void
-		adjust_offsets(const streampos s);
-
-		streampos
-		head_pos(void) const { return buf_head; }
-
-		streampos
-		tail_pos(void) const { return buf_tail; }
-	};	// end class reconstruction_table_entry
+	class reconstruction_table_entry;
 
 	/**
 		Out of paranoia, writing this class to guarantee
@@ -184,11 +75,13 @@ private:
 	/**
 		Map from of persistent type's key to allocator function.  
 	 */
-#if 0
-	typedef hash_qmap<persistent::hash_key, reconstruction_functor>
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+	typedef hash_qmap<persistent::hash_key, reconstruct_function_ptr_type>
 					reconstruction_function_map_type;
 #else
-	typedef hash_qmap<persistent::hash_key, reconstruct_function_ptr_type>
+	typedef	vector<reconstruct_function_ptr_type>
+					reconstructor_vector_type;
+	typedef hash_qmap<persistent::hash_key, reconstructor_vector_type>
 					reconstruction_function_map_type;
 #endif
 
@@ -220,6 +113,18 @@ public:
 	int
 	register_persistent_type(void);
 
+#if !HAVE_PERSISTENT_CONSTRUCT_EMPTY
+	/**
+		Mechanism that allows one to customize the reconstructor
+		functors.  
+	 */
+	template <class T>
+	static
+	int
+	register_persistent_type(const aux_alloc_arg_type,
+		const reconstruct_function_ptr_type);
+#endif
+
 private:
 	/**
 		The safe accessor to global private static table.  
@@ -228,10 +133,21 @@ private:
 	reconstruction_function_map_type&
 	reconstruction_function_map(void);
 
+	static
+	int
+	registered_type_sequence_number(void);
+
 public:
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 	static
 	bool
 	verify_registered_type(const persistent::hash_key& k);
+#else
+	static
+	bool
+	verify_registered_type(const persistent::hash_key& k, 
+		const aux_alloc_arg_type);
+#endif
 
 	static
 	ostream&
@@ -264,6 +180,9 @@ private:
 public:
 	persistent*
 	lookup_obj_ptr(const long i) const;
+
+	bool
+	check_reconstruction_table_range(const size_t) const;
 
 private:
 	size_t*
@@ -448,65 +367,6 @@ private:
 	reset_for_loading(void);
 
 };	// end class persistent_object_manager
-
-//=============================================================================
-#if 0
-/**
-	Using per-class traits removes the burden of adding
-	static const members to persistent classes.  
-	This may be specialized for classes that need more than the default
-	type registration.  
-	To register a type, create one instance of the traits in the source
-	file, preferably where the class methods are defined.  
- */
-template <class T>
-class persistent_traits {
-friend class persistent_object_manager;
-public:
-	typedef	T				type;
-private:
-	/**
-		Unique hash string identifier for a type.  
-	 */
-	static persistent::hash_key	type_key;
-
-	/**
-		Value is determined at run-time, and is dependent on
-		the global ordering of static globals, so do not count
-		on the number being consistent across compilers
-		and platforms.  
-	 */
-	static int			type_id;
-
-	/**
-		Default static method for allocating.  
-	 */
-	static reconstruct_function_ptr_type reconstructor;
-
-	/**
-		To guarantee that type T is derived somehow from persistent.
-	 */
-	static persistent* null;
-
-public:
-	/**
-		Construct one static instance of the traits to 
-		set the type_key with a designated string.  
-		Check to make sure it wasn't already set.
-		i.e. only one instance of the traits is allowed globally.  
-		\param s the hash string for type T.
-	 */
-	explicit
-	persistent_traits(const string& s);
-
-	// default destructor
-
-	static
-	const persistent::hash_key&
-	get_type_key(void);
-
-};	// end class persistent_traits
-#endif
 
 //=============================================================================
 }	// end namespace util

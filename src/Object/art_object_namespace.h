@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.10 2005/03/01 21:26:47 fang Exp $
+	$Id: art_object_namespace.h,v 1.11 2005/03/04 06:19:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -455,6 +455,7 @@ public:
 
 // methods for object file I/O
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
 /** helper method for adding a variety of objects */

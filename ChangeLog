@@ -1,5 +1,54 @@
 "ChangeLog"
 
+2005-03-03	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-14-merged-persistent-02:
+	  Some file tags were screwed up in CVS, so merging early back to
+	  main trunk first (for coherence sake), then splitting off again.  
+
+	* ARTXX-00-01-04-main-00-13-persistent-02:
+	  (With old code kept commented out)
+	  Replaced bare construct_empty function pointers with
+	  nullary constructor functors, more generalizable.
+	  (Tradeoff: virtual dispatch overhead.)
+	  Almost every file in src/Object affected.  
+		+ util: improvements to new_functor, and nullary_function
+			templates including compile-time switch
+			between virtual and non-virtual parent.  
+		+ new_functor is always derived from virtual base, 
+			nullary_function_virtual<T*>.
+	  Some later revision will have to clean-up code as always.  
+
+
+2005-03-02	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-13-persistent-01:
+	  Some big plans for this line of development.  
+	  This revision just added a few utility classes for turning
+	  constructor calls into functors (with virtual function).  
+	  Some persistence files were touched up for clean up.  
+	  Plans include: re-doing the persistent reconstruction 
+		framework to use constructor functors, rather than
+		raw pointers to static construct_empty(int).
+		+ Instead of overloading one type-key entry for the 
+		  table of reconstructors, we'll upgrade to a table
+		  of vectors of constructor functors, where the vector
+		  is indexed by the auxiliary constructor argument, 
+		  (instead of passing it to construct empty).  
+		+ Will phase out the construct_empty pattern.  
+		+ re-do collect_transient_info so that the object
+		  manager will handle visit once traversal.  
+		+ Transient object registration will be done through
+		  passing pointer-objects so that each visit may be flagged
+		  with the type of pointer used to visit.  
+		  (But we also don't want to burden the caller with 
+		  knowing the type-key, that should be automatic still.)
+		+ Handle exceptions during load object, and ensure 
+		  proper methodical clean-up of allocated but un-touched
+		  memory upon exception in load_objects().  
+		  This will require some finesse.  
+
+
 2005-03-01	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-13:

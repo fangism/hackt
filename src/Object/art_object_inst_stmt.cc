@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.14 2005/03/01 04:50:57 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.15 2005/03/04 06:19:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_CC__
@@ -60,6 +60,7 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
 
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_instantiation_statement, 
 		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY)
@@ -75,6 +76,23 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::data_instantiation_statement, 
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pbool_instantiation_statement, 
+		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::pint_instantiation_statement, 
+		PINT_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_instantiation_statement, 
+		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_instantiation_statement, 
+		CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_instantiation_statement, 
+		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 //=============================================================================
@@ -304,10 +322,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pbool_instantiation_statement::construct_empty(const int i) {
 	return new pbool_instantiation_statement();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -415,10 +435,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 pint_instantiation_statement::construct_empty(const int i) {
 	return new pint_instantiation_statement();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -543,10 +565,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 process_instantiation_statement::construct_empty(const int i) {
 	return new process_instantiation_statement();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -655,10 +679,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 channel_instantiation_statement::construct_empty(const int i) {
 	return new channel_instantiation_statement();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -802,10 +828,12 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 persistent*
 data_instantiation_statement::construct_empty(const int i) {
 	return new data_instantiation_statement();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

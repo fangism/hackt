@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.14 2005/03/01 04:50:58 fang Exp $
+	$Id: art_object_instance_param.h,v 1.15 2005/03/04 06:19:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -363,6 +363,7 @@ public:
 	};      // end struct key_value_dumper
 
 public:
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 
 };	// end class pbool_array
@@ -427,6 +428,10 @@ public:
 };	// end class pbool_array specialization
 
 typedef	pbool_array<0>			pbool_scalar;
+typedef	pbool_array<1>			pbool_array_1D;
+typedef	pbool_array<2>			pbool_array_2D;
+typedef	pbool_array<3>			pbool_array_3D;
+typedef	pbool_array<4>			pbool_array_4D;
 
 //=============================================================================
 /**
@@ -762,6 +767,10 @@ public:
 };	// end class pint_array specialization
 
 typedef	pint_array<0>			pint_scalar;
+typedef	pint_array<1>			pint_array_1D;
+typedef	pint_array<2>			pint_array_2D;
+typedef	pint_array<3>			pint_array_3D;
+typedef	pint_array<4>			pint_array_4D;
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.11 2005/03/01 04:50:58 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.12 2005/03/04 06:19:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -30,9 +30,6 @@
 #include "art_object_instance_collection.tcc"
 
 namespace util {
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_instance_collection, 
-		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
 
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_instance_collection,
 		"enum_instance_collection")
@@ -41,6 +38,23 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_2D, "enum_array_2D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_3D, "enum_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_4D, "enum_array_4D")
+
+#if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_instance_collection, 
+		ENUM_INSTANCE_COLLECTION_TYPE_KEY)
+#else
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_scalar, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_1D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 1)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_2D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 2)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_3D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 3)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_4D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 4)
+#endif	// HAVE_PERSISTENT_CONSTRUCT_EMPTY
 }	// end namespace util
 
 namespace ART {
