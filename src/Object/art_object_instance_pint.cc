@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.12.4.2 2005/01/20 19:02:16 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12.4.3 2005/01/21 20:52:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -18,6 +18,9 @@
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
 
 #include "STL/list.tcc"
 #include "multikey_qmap.tcc"		// include "qmap.tcc"

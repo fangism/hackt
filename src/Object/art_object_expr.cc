@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.36.4.3 2005/01/20 21:59:41 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36.4.4 2005/01/21 20:52:08 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -29,8 +29,15 @@
 #include "art_object_expr_param_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_assign.h"
-#include "multikey.tcc"
-#include "packed_array.tcc"
+
+#if 0
+#include "multikey.h"			// extern template instantiations
+#include "packed_array.h"		// extern template instantiations
+#else
+// experimental: suppressing automatic instantiation of template code
+#include "art_object_extern_templates.h"
+#endif
+
 #include "persistent_object_manager.tcc"
 
 #include "art_object_type_hash.h"

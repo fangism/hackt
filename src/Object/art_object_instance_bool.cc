@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.8.4.2 2005/01/21 01:55:36 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.8.4.3 2005/01/21 20:52:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -18,6 +18,9 @@
 #include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
 #include "art_built_ins.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
 
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"

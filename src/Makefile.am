@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.40.4.4 2005/01/21 06:08:15 fang Exp $
+#	$Id: Makefile.am,v 1.40.4.5 2005/01/21 20:52:03 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -129,6 +129,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
 	Object/art_object_unroll_context.cc \
+	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc
 
 # these source files have no .h file (use other name)
@@ -210,6 +211,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_qmap.tcc \
 	util/nested_iterator.h \
 	util/operators.h \
+	util/packed_array_fwd.h \
 	util/packed_array.h \
 	util/packed_array.tcc \
 	util/persistent.h \

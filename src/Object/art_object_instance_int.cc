@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.11.4.3 2005/01/21 01:55:37 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11.4.4 2005/01/21 20:52:09 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -22,6 +22,9 @@
 #include "art_object_type_ref.h"
 #include "art_object_type_hash.h"
 #include "art_built_ins.h"
+
+// experimental: suppressing automatic template instantiation
+#include "art_object_extern_templates.h"
 
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"

@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-01-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-objject-00-08:
+	  New files: src/Object/art_object_extern_templates.{h,cc}
+	  Tried playing around with separate template compilation for 
+	  a few classes (multikey, packed_array).
+	  Very little reduction in compilation time and final binary size.  
+	  Only the smallest, most common classes were factored out.  
+	  More signficant dimension-specific, content-type-specific
+	  map classes cannot be efficiently collated.  
+	  "With great specialization come great replication."
+
+
 2005-01-20	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-04-cleanup:
