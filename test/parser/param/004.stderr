@@ -1,2 +1,0 @@
-ERROR: rhs of expr-assignment is not initialized or dependent on formals: N
-HALT: at least one error in alias list.

@@ -1,5 +1,6 @@
-// should fail, use of initialized parameter variable, which is not formal
+// should pass both parsing and type-checking
+// old version of this is now 013.in
 
-pint N;
+pint N = 2;
 pint M = N;
 
