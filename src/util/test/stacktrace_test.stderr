@@ -1,0 +1,10 @@
+enter: f_g
+| enter: f_c
+| | enter: f_a
+| | leave: f_a
+| | enter: f_b
+| | leave: f_b
+| leave: f_c
+leave: f_g
+10
+10
