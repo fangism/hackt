@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
-SUFFIXES = .yy .l
+SUFFIXES = .yy .ll
 
 include $(top_srcdir)/Make.stddef
 
@@ -284,13 +284,21 @@ CLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 DISTCLEANFILES = 
 
 clean-parser:
-	rm -f $(CLEANPARSER)
+	-$(RM) $(CLEANPARSER)
 
 clean-lexer:
-	rm -f $(CLEANLEXER)
+	-$(RM) $(CLEANLEXER)
+
+clean-AST:
+	-$(RM) AST/*.$(OBJEXT)
+	-$(RM) AST/*.lo
+
+clean-Object:
+	-$(RM) Object/*.$(OBJEXT)
+	-$(RM) Object/*.lo
 
 # implies CLEANFILES
-clean-local:
+clean-local: clean-AST clean-Object
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
