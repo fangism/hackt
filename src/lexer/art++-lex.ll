@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.7 2004/12/09 23:48:13 fang Exp $
+ *	$Id: art++-lex.ll,v 1.7.6.1 2005/01/19 01:21:12 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -595,8 +595,8 @@ namespace lexer {
 	to the outside world).  
  */
 int at_eof(void) {
-	assert(yy_current_buffer);
-	return yy_current_buffer->yy_n_chars == 0;
+	assert(YY_CURRENT_BUFFER);
+	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }
 
 }	/* end namespace lexer */
