@@ -2,7 +2,7 @@
 	\file "multikey_qmap.tcc"
 	Template method definitions for queryable multikey map.
 	Almost entirely copied from multikey_map.tcc.
-	$Id: multikey_qmap.tcc,v 1.5.24.1 2005/02/06 16:23:45 fang Exp $
+	$Id: multikey_qmap.tcc,v 1.5.24.2 2005/02/06 18:25:36 fang Exp $
  */
 
 #ifndef	__MULTIKEY_QMAP_TCC__
@@ -24,21 +24,13 @@ using util::write_value;
 using util::read_value;
 using util::write_map;
 using util::read_map;
-#if WANT_MULTIKEY_BASE
-using MULTIKEY_NAMESPACE::multikey_generator_base;
-#endif
 using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
 // class multikey_map method definitions
 
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-multikey_map<D,K,T,qmap>::multikey_map() :
-		map_type()
-#if WANT_MULTIKEY_MAP_BASE
-		, interface_type()
-#endif
-{ }
+multikey_map<D,K,T,qmap>::multikey_map() : map_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
@@ -175,28 +167,6 @@ multikey_map<D,K,T,qmap>::operator [] (const list<K>& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_MULTIKEY_BASE
-MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-T&
-multikey_map<D,K,T,qmap>::operator [] (const multikey_base<K>& k) {
-	// what if initial value is different?
-	const key_type* dk = IS_A(const key_type*, &k);
-	NEVER_NULL(dk);
-	return map_type::operator[](*dk);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-T
-multikey_map<D,K,T,qmap>::operator [] (const multikey_base<K>& k) const {
-	// what if initial value is different?
-	const key_type* dk = IS_A(const key_type*, &k);
-	NEVER_NULL(dk);
-	return map_type::operator[](*dk);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_QMAP_TEMPLATE_SIGNATURE
 typename multikey_map<D,K,T,qmap>::key_list_pair_type
 multikey_map<D,K,T,qmap>::is_compact_slice(
@@ -225,22 +195,11 @@ multikey_map<D,K,T,qmap>::is_compact_slice(
 	}
 #endif
 
-#if WANT_MULTIKEY_BASE
-	std::auto_ptr<multikey_generator_base<K> >
-		key_gen( multikey_generator_base<K>::
-			make_multikey_generator(l_size));
-	INVARIANT(key_gen.get());
-	copy(l.begin(), l.end(), key_gen->get_lower_corner().begin());
-	copy(u.begin(), u.end(), key_gen->get_upper_corner().begin());
-	key_gen->initialize();
-	key_list_type list_key(key_gen->begin(), key_gen->end());
-#else
 	multikey_generator_generic<K> key_gen(l_size);
 	copy(l.begin(), l.end(), key_gen.get_lower_corner().begin());
 	copy(u.begin(), u.end(), key_gen.get_upper_corner().begin());
 	key_gen.initialize();
 	key_list_type list_key(key_gen.begin(), key_gen.end());
-#endif
 
 	const return_type s = is_compact_slice(list_key);
 	if (s.first.empty()) {
@@ -260,18 +219,13 @@ multikey_map<D,K,T,qmap>::is_compact_slice(
 		);
 	}
 
-#if WANT_MULTIKEY_BASE
-	#define	KEYGEN			(*key_gen)
-#else
-	#define KEYGEN			key_gen
-#endif
 
-	KEYGEN++;
+	key_gen++;
 	// why not do-while?
-	const multikey_generic<K>& last_key(KEYGEN.get_lower_corner());
-	for ( ; KEYGEN != last_key; KEYGEN++) {
-		key_list_type
-			for_list_key(KEYGEN.begin(), KEYGEN.end());
+	const multikey_generic<K>& last_key(key_gen.get_lower_corner());
+	for ( ; key_gen != last_key; key_gen++) {
+		const key_list_type
+			for_list_key(key_gen.begin(), key_gen.end());
 		const return_type t = is_compact_slice(for_list_key);
 		if (t.first.empty()) {
 			INVARIANT(t.second.empty());
@@ -299,16 +253,15 @@ multikey_map<D,K,T,qmap>::is_compact_slice(
 	}
 	// if this is reached, then all subdimensions matched
 	const key_list_type
-		ret_l(KEYGEN.get_lower_corner().begin(),
-			KEYGEN.get_lower_corner().end());
+		ret_l(key_gen.get_lower_corner().begin(),
+			key_gen.get_lower_corner().end());
 	const key_list_type
-		ret_u(KEYGEN.get_upper_corner().begin(),
-			KEYGEN.get_upper_corner().end());
+		ret_u(key_gen.get_upper_corner().begin(),
+			key_gen.get_upper_corner().end());
 	return_type ret(ret_l, ret_u);
 	copy(s_first_start, s.first.end(), back_inserter(ret.first));
 	copy(s_second_start, s.second.end(), back_inserter(ret.second));
 
-#undef	KEYGEN
 
 #if DEBUG_SLICE
 	{
@@ -505,12 +458,7 @@ multikey_map<D,K,T,qmap>::read(istream& f) {
 // class multikey_map method definitions (specialized)
 
 BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-multikey_map<1,K,T,qmap>::multikey_map() :
-		map_type()
-#if WANT_MULTIKEY_MAP_BASE
-		, interface_type()
-#endif
-{ }
+multikey_map<1,K,T,qmap>::multikey_map() : map_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE
@@ -548,30 +496,6 @@ multikey_map<1,K,T,qmap>::operator [] (const key_list_type& k) const {
 	INVARIANT(k.size() == 1);
 	return map_type::operator[](k.front());
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_MULTIKEY_BASE
-BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-T&
-multikey_map<1,K,T,qmap>::operator [] (const multikey_base<K>& k) {
-	// what if initial value is different?
-	const multikey<1,K>* dk = // IS_A(const multikey<1,K>*, &k);
-		dynamic_cast<const multikey<1,K>*>(&k);
-	NEVER_NULL(dk);
-	return map_type::operator[]((*dk)[0]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE
-T
-multikey_map<1,K,T,qmap>::operator [] (const multikey_base<K>& k) const {
-	// what if initial value is different?
-	const multikey<1,K>* dk = // IS_A(const multikey<1,K>*, &k);
-		dynamic_cast<const multikey<1,K>*>(&k);
-	NEVER_NULL(dk);
-	return map_type::operator[]((*dk)[0]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BASE_MULTIKEY_QMAP_TEMPLATE_SIGNATURE

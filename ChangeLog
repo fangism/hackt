@@ -8,6 +8,10 @@
 	  A few regression tests were updated with more accurate
 	  error reporting in test/parser/param.  
 
+	+ -set-08:
+	  Expurgated any and all references to the virtual base types
+	  involving multikey and multikey_map.  
+
 
 2005-02-05	David Fang	<fangism@users.sourceforge.net>
 

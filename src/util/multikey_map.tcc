@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.24.1 2005/02/06 16:23:45 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.24.2 2005/02/06 18:25:35 fang Exp $
  */
 
 #ifndef	__MULTIKEY_MAP_TCC__
@@ -15,7 +15,6 @@
 #include <algorithm>
 
 #include <iterator>
-#include <memory>
 
 #include "IO_utils.tcc"
 
@@ -35,38 +34,10 @@ using MULTIKEY_NAMESPACE::multikey_generator_base;
 using MULTIKEY_NAMESPACE::multikey_generator;
 
 //=============================================================================
-// class multikey_map_base method definitions
-
-#if WANT_MULTIKEY_MAP_BASE
-BASE_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-template <template <class, class> class M>
-multikey_map_base<K,T>*
-multikey_map_base<K,T>::make_multikey_map(const size_t d) {
-	// slow switch-case, but we need constants
-	INVARIANT(d > 0 && d <= LIMIT);
-	// there may be some clever way to make a call table to
-	// the various constructors, but this is a rare operation: who cares?
-	switch(d) {
-		case 1: return new multikey_map<1,K,T,M>();
-		case 2: return new multikey_map<2,K,T,M>();
-		case 3: return new multikey_map<3,K,T,M>();
-		case 4: return new multikey_map<4,K,T,M>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-#endif
-
-//=============================================================================
 // class multikey_map method definitions
 
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<D,K,T,M>::multikey_map() :
-		map_type()
-#if WANT_MULTIKEY_MAP_BASE
-		, interface_type()
-#endif
-{ }
+multikey_map<D,K,T,M>::multikey_map() : map_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -212,28 +183,6 @@ multikey_map<D,K,T,M>::operator [] (const list<K>& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_MULTIKEY_BASE
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T&
-multikey_map<D,K,T,M>::operator [] (const multikey_base<K>& k) {
-	// what if initial value is different?
-	const key_type* dk = IS_A(const key_type*, &k);
-	NEVER_NULL(dk);
-	return map_type::operator[](*dk);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T
-multikey_map<D,K,T,M>::operator [] (const multikey_base<K>& k) const {
-	// what if initial value is different?
-	const key_type* dk = IS_A(const key_type*, &k);
-	NEVER_NULL(dk);
-	return map_type::operator[](*dk);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
 typename multikey_map<D,K,T,M>::key_list_pair_type
 multikey_map<D,K,T,M>::is_compact_slice(
@@ -262,14 +211,12 @@ multikey_map<D,K,T,M>::is_compact_slice(
 	}
 #endif
 
-	std::auto_ptr<multikey_generator_base<K> >
-		key_gen( multikey_generator_base<K>::
-			make_multikey_generator(l_size));
-	INVARIANT(key_gen.get());
-	copy(l.begin(), l.end(), key_gen->get_lower_corner().begin());
-	copy(u.begin(), u.end(), key_gen->get_upper_corner().begin());
-	key_gen->initialize();
-	key_list_type list_key(key_gen->begin(), key_gen->end());
+	multikey_generator_generic<K>
+		key_gen(l_size);
+	copy(l.begin(), l.end(), key_gen.get_lower_corner().begin());
+	copy(u.begin(), u.end(), key_gen.get_upper_corner().begin());
+	key_gen.initialize();
+	key_list_type list_key(key_gen.begin(), key_gen.end());
 
 	const return_type s = is_compact_slice(list_key);
 	if (s.first.empty()) {
@@ -289,10 +236,10 @@ multikey_map<D,K,T,M>::is_compact_slice(
 		);
 	}
 
-	(*key_gen)++;
-	for ( ; *key_gen != key_gen->get_lower_corner(); (*key_gen)++) {
-		key_list_type
-			for_list_key(key_gen->begin(), key_gen->end());
+	key_gen++;
+	for ( ; key_gen != key_gen.get_lower_corner(); key_gen++) {
+		const key_list_type
+			for_list_key(key_gen.begin(), key_gen.end());
 		const return_type t = is_compact_slice(for_list_key);
 		if (t.first.empty()) {
 			INVARIANT(t.second.empty());
@@ -319,10 +266,12 @@ multikey_map<D,K,T,M>::is_compact_slice(
 		}
 	}
 	// if this is reached, then all subdimensions matched
-	const key_list_type ret_l(key_gen->get_lower_corner().begin(),
-		key_gen->get_lower_corner().end());
-	const key_list_type ret_u(key_gen->get_upper_corner().begin(),
-		key_gen->get_upper_corner().end());
+	const key_list_type
+		ret_l(key_gen.get_lower_corner().begin(),
+			key_gen.get_lower_corner().end());
+	const key_list_type
+		ret_u(key_gen.get_upper_corner().begin(),
+			key_gen.get_upper_corner().end());
 	return_type ret(ret_l, ret_u);
 	copy(s_first_start, s.first.end(), back_inserter(ret.first));
 	copy(s_second_start, s.second.end(), back_inserter(ret.second));
@@ -522,12 +471,7 @@ multikey_map<D,K,T,M>::read(istream& f) {
 // class multikey_map method definitions (specialized)
 
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-multikey_map<1,K,T,M>::multikey_map() :
-		map_type()
-#if WANT_MULTIKEY_MAP_BASE
-		, interface_type()
-#endif
-{ }
+multikey_map<1,K,T,M>::multikey_map() : map_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -574,30 +518,6 @@ multikey_map<1,K,T,M>::operator [] (const key_list_type& k) const {
 	INVARIANT(k.size() == 1);
 	return map_type::operator[](k.front());
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_MULTIKEY_BASE
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T&
-multikey_map<1,K,T,M>::operator [] (const multikey_base<K>& k) {
-	// what if initial value is different?
-	const multikey<1,K>* dk = // IS_A(const multikey<1,K>*, &k);
-		dynamic_cast<const multikey<1,K>*>(&k);
-	NEVER_NULL(dk);
-	return map_type::operator[]((*dk)[0]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
-T
-multikey_map<1,K,T,M>::operator [] (const multikey_base<K>& k) const {
-	// what if initial value is different?
-	const multikey<1,K>* dk = // IS_A(const multikey<1,K>*, &k);
-		dynamic_cast<const multikey<1,K>*>(&k);
-	NEVER_NULL(dk);
-	return map_type::operator[]((*dk)[0]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
