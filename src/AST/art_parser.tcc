@@ -1,4 +1,7 @@
-// "art_parser.tcc"
+/**
+	\file "art_parser.tcc"
+	Template-only definitions for parser classes and methods.  
+ */
 
 #ifndef	__ART_PARSER_TCC__
 #define	__ART_PARSER_TCC__
@@ -6,7 +9,6 @@
 #include <iostream>
 
 #include "art_parser_debug.h"
-#include "art_macros.h"
 #include "art_parser_base.h"		// includes "ptrs.h", "count_ptr.h"
 #include "art_context.h"
 	// for class context, uses auto_indent()

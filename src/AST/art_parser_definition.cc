@@ -1,8 +1,8 @@
-// "art_parser_definition.cc"
-// class method definitions for ART::parser
-// organized for definition-related branches of the parse-tree classes
-
-// template instantiations are at the end of the file
+/**
+	\file "art_parser_definition.cc"
+	Class method definitions for ART::parser definition-related classes.
+	Organized for definition-related branches of the parse-tree classes.
+ */
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "art_parser_debug.h"
-#include "art_macros.h"
 #include "art_switches.h"
 #include "art_parser.tcc"
 

@@ -1,7 +1,9 @@
-// "art_parser_debug.h"
-// parser-specific debug switches
-// only include this in compilation modules (.cc),
-// not other header files if possible
+/**
+	\file "art_parser_debug.h"
+	Parser-specific debug switches.
+	Only include this in compilation modules (.cc) that need debugging,
+	and not in any header files if possible.
+ */
 
 #ifndef	__ART_PARSER_DEBUG_H__
 #define	__ART_PARSER_DEBUG_H__

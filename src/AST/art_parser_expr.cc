@@ -1,11 +1,10 @@
-// "art_parser_expr.cc"
-// class method definitions for ART::parser, related to expr
-
-// template instantiations are at the end of the file
+/**
+	\file "art_parser_expr.cc"
+	Class method definitions for ART::parser, related to expressions.  
+ */
 
 #include <iostream>
 
-#include "art_macros.h"
 #include "art_parser_token.h"
 #include "art_parser_expr.h"
 #include "art_parser.tcc"

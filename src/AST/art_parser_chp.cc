@@ -1,4 +1,7 @@
-// "art_parser_chp.cc"
+/**
+	\file "art_parser_chp.cc"
+	Class method definitions for CHP parser classes.
+ */
 
 #include "art_parser.tcc"
 #include "art_parser_chp.h"

@@ -1,13 +1,12 @@
-// "art_parser_token.cc"
-// class method definitions for ART::parser, related to terminal tokens
-
-// template instantiations are at the end of the file
+/**
+	\file "art_parser_token.cc"
+	Class method definitions for ART::parser, related to terminal tokens.
+ */
 
 #include <iostream>
 #include <stdio.h>		// for sprintf
 #include <string.h>		// for a few C-string functions
 
-// #include "art_macros.h"		// actually not needed
 #include "art_switches.h"
 #include "art_parser_debug.h"
 

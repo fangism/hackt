@@ -1,5 +1,7 @@
-// "art_parser_definition.h"
-// parser classes for ART only!
+/**
+	\file "art_parser_definition.h"
+	Definition-related parser classes for ART.  
+ */
 
 #ifndef __ART_PARSER_DEFINITION_H__
 #define __ART_PARSER_DEFINITION_H__
@@ -20,7 +22,7 @@ namespace entity {
 
 using namespace std;
 using namespace entity;
-using namespace fang;		// for experimental pointer classes
+using namespace PTRS_NAMESPACE;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  

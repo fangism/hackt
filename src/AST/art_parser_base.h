@@ -1,5 +1,7 @@
-// "art_parser_base.h"
-// parser classes for ART only!
+/**
+	\file "art_parser_base.h"
+	Base set of classes for the ART parser.  
+ */
 
 #ifndef __ART_PARSER_BASE_H__
 #define __ART_PARSER_BASE_H__

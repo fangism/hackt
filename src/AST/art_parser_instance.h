@@ -1,5 +1,7 @@
-// "art_parser_instance.h"
-// parser classes for ART only!
+/**
+	\file "art_parser_instance.h"
+	Instance-related parser classes for ART.  
+ */
 
 #ifndef __ART_PARSER_INSTANCE_H__
 #define __ART_PARSER_INSTANCE_H__
@@ -8,15 +10,6 @@
 #include <string>
 
 #include "art_parser_base.h"
-// #include "art_parser_expr.h"
-
-#if 0
-#include "art_macros.h"
-#include "art_utils.h"		// for token_position
-#include "sublist.h"		// for efficient list slices
-#include "ptrs.h"		// experimental pointer classes
-#include "count_ptr.h"		// reference-counted pointers
-#endif
 
 /**
 	This is the general namespace for all ART-related classes.  
@@ -34,7 +27,7 @@ namespace entity {
 
 using namespace std;
 using namespace entity;
-using namespace fang;		// for experimental pointer classes
+using namespace PTRS_NAMESPACE;		// for experimental pointer classes
 
 //=============================================================================
 /// This namespace is reserved for ART's parser-related classes.  

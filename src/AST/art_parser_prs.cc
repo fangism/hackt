@@ -1,4 +1,7 @@
-// "art_parser_prs.cc"
+/**
+	\file "art_parser_prs.cc"
+	PRS-related syntax class method definitions.
+ */
 
 #include "art_parser.tcc"
 #include "art_parser_prs.h"

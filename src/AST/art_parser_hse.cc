@@ -1,4 +1,7 @@
-// "art_parser_hse.cc"
+/**
+	\file "art_parser_hse.cc"
+	Class method definitions for HSE-related syntax tree.  
+ */
 
 #include "art_parser.tcc"
 #include "art_parser_hse.h"

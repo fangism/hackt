@@ -1,10 +1,12 @@
-// "art_parser_chp.h"
-// CHP-specific syntax tree
+/**
+	\file "art_parser_chp.h"
+	CHP-specific syntax tree classes.  
+ */
 
 #ifndef	__ART_PARSER_CHP_H__
 #define	__ART_PARSER_CHP_H__
 
-#include "art_macros.h"
+#include "art_parser_base.h"
 
 namespace ART {
 namespace parser {

@@ -1,4 +1,9 @@
-// "art_parser.h"
+/**
+	\file "art_parser.h"
+	Includes all parser-related header files.  
+	Using this without thinking may slow down compilations
+	unnecessarily.  
+ */
 // includes all "art_parser_*.h" headers
 
 #ifndef	__ART_PARSER_H__
