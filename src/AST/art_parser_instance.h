@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_instance.h,v 1.9 2005/02/27 22:11:58 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
 #define __ART_PARSER_INSTANCE_H__
 
-#include "art_parser_base.h"
+#include "art_parser_expr_list.h"
+#include "art_parser_root.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -31,11 +33,6 @@ using	expr_list::rightmost;
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class connection_argument_list
-
-#define connection_argument_list_wrap(b,l,e)				\
-	IS_A(connection_argument_list*, l->wrap(b,e))
-#define connection_argument_list_append(l,d,n)				\
-	IS_A(connection_argument_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -85,11 +82,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class alias_list
-
-#define alias_list_wrap(b,l,e)						\
-	IS_A(alias_list*, l->wrap(b,e))
-#define alias_list_append(l,d,n)					\
-        IS_A(alias_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -162,11 +154,6 @@ public:
 	~instance_id_list();
 
 };	// end class instance_id_list
-
-#define instance_id_list_wrap(b,l,e)					\
-	IS_A(instance_id_list*, l->wrap(b,e))
-#define instance_id_list_append(l,d,n)					\
-	IS_A(instance_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /// instance identifier with ranges
@@ -348,6 +335,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class loop_instantiation
 
 //=============================================================================
@@ -371,6 +363,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -389,11 +386,6 @@ public:
 
 	~guarded_definition_body_list();
 };	// end class guarded_definition_body_list
-
-#define guarded_definition_body_list_wrap(b,l,e)			\
-	IS_A(guarded_definition_body_list*, l->wrap(b,e))
-#define guarded_definition_body_list_append(l,d,n)			\
-	IS_A(guarded_definition_body_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /// wrapper class for conditional instantiations
@@ -414,6 +406,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class conditional_instantiation
 
 //=============================================================================

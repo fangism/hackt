@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_formal.h,v 1.9 2005/02/27 22:11:58 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -22,6 +22,7 @@ protected:
 	const excl_ptr<const dense_range_list>	dim;
 public:
 	data_param_id(const token_identifier* i, const dense_range_list* d);
+
 	~data_param_id();
 
 	ostream&
@@ -32,6 +33,10 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& ) const;
+
 };	// end class data_param_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -50,11 +55,6 @@ public:
 	~data_param_id_list();
 
 };	// end class data_param_id_list
-
-#define data_param_id_list_wrap(b,l,e)					\
-	IS_A(data_param_id_list*, l->wrap(b,e))
-#define data_param_id_list_append(l,d,n)				\
-	IS_A(data_param_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**
@@ -81,6 +81,10 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& ) const;
+
 };	// end class data_param_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,11 +104,6 @@ public:
 	~data_param_decl_list();
 
 };	// end class data_param_decl_list
-
-#define data_param_decl_list_wrap(b,l,e)				\
-	IS_A(data_param_decl_list*, l->wrap(b,e))
-#define data_param_decl_list_append(l,d,n)				\
-	IS_A(data_param_decl_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -146,11 +145,6 @@ public:
 	~port_formal_id_list();
 
 };	// end class port_formal_id_list
-
-#define port_formal_id_list_wrap(b,l,e)					\
-	IS_A(port_formal_id_list*, l->wrap(b,e))
-#define port_formal_id_list_append(l,d,n)				\
-	IS_A(port_formal_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**
@@ -199,11 +193,6 @@ public:
 	~port_formal_decl_list();
 };	// end class port_formal_decl_list
 
-#define port_formal_decl_list_wrap(b,l,e)				\
-	IS_A(port_formal_decl_list*, l->wrap(b,e))
-#define port_formal_decl_list_append(l,d,n)				\
-	IS_A(port_formal_decl_list*, l->append(d,n))
-
 //=============================================================================
 /**
 	Single template formal identifier,
@@ -250,11 +239,6 @@ public:
 
 	~template_formal_id_list();
 };	// end class template_formal_id_list
-
-#define template_formal_id_list_wrap(b,l,e)				\
-	IS_A(template_formal_id_list*, l->wrap(b,e))
-#define template_formal_id_list_append(l,d,n)				\
-	IS_A(template_formal_id_list*, l->append(d,n))
 
 //-----------------------------------------------------------------------------
 /**
@@ -304,11 +288,6 @@ public:
 
 	~template_formal_decl_list();
 };	// end class template_formal_decl_list
-
-#define template_formal_decl_list_wrap(b,l,e)				\
-	IS_A(template_formal_decl_list*, l->wrap(b,e))
-#define template_formal_decl_list_append(l,d,n)				\
-	IS_A(template_formal_decl_list*, l->append(d,n))
 
 //=============================================================================
 

@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.8 2005/01/14 00:00:52 fang Exp $
+	$Id: art_parser_definition.h,v 1.9 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
 #define __ART_PARSER_DEFINITION_H__
 
-#include "art_parser_base.h"
+#include "art_parser_root_item.h"
+#include "art_parser_type.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -230,6 +232,13 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 0
+	using user_data_type_signature::check_build;
+#else
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_data_type_def
 
 //-----------------------------------------------------------------------------
@@ -297,11 +306,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end enum_member_list
-
-#define enum_member_list_wrap(b,l,e)					\
-	IS_A(enum_member_list*, l->wrap(b,e))
-#define enum_member_list_append(l,d,n)					\
-	IS_A(enum_member_list*, l->append(d,n))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -372,6 +376,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_chan_type_prototype
 
 //-----------------------------------------------------------------------------
@@ -405,6 +414,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class user_chan_type_def
 
 //=============================================================================

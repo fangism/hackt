@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.13 2005/02/27 22:11:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -32,7 +32,8 @@
 #include "STL/list.tcc"
 
 #include "art_parser_debug.h"
-#include "art_parser_base.h"
+#include "art_parser_terminal.h"
+#include "art_parser_identifier.h"
 
 #include "art_object_namespace.h"
 #include "art_object_definition.h"		// for typedef

@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.5 2005/01/13 22:47:54 fang Exp $
+	$Id: art_parser_chp.h,v 1.6 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
 #define	__ART_PARSER_CHP_H__
 
-#include "art_parser_base.h"
+#include "art_parser_terminal.h"
+#include "art_parser_statement.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -36,14 +38,14 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& ) const = 0;
+#endif
 };
 
 typedef	node_list<const statement,semicolon>	stmt_list;
-
-#define chp_stmt_list_wrap(b,l,e)					\
-	IS_A(CHP::stmt_list*, l->wrap(b,e))
-#define chp_stmt_list_append(l,d,n)					\
-	IS_A(CHP::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -62,6 +64,11 @@ using	language_body::leftmost;
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -85,6 +92,11 @@ virtual	ostream&
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -123,6 +135,11 @@ public:
 	rightmost(void) const;
 
 using	token_keyword::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -145,6 +162,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -171,6 +193,11 @@ public:
 	rightmost(void) const;
 
 using	assign_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //-----------------------------------------------------------------------------
@@ -197,6 +224,11 @@ public:
 	rightmost(void) const;
 
 using	incdec_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -235,12 +267,12 @@ public:
 	rightmost(void) const;
 
 using	comm_list_base::where;
-};
 
-#define chp_comm_list_wrap(b,l,e)					\
-	IS_A(CHP::comm_list*, l->wrap(b,e))
-#define chp_comm_list_append(l,d,n)					\
-	IS_A(CHP::comm_list*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};
 
 
 //-----------------------------------------------------------------------------
@@ -258,6 +290,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //-----------------------------------------------------------------------------
@@ -275,6 +312,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -312,12 +354,12 @@ public:
 	rightmost(void) const;
 
 using	det_sel_base::where;
-};
 
-#define chp_det_selection_wrap(b,l,e)					\
-	IS_A(CHP::det_selection*, l->wrap(b,e))
-#define chp_det_selection_append(l,d,n)					\
-	IS_A(CHP::det_selection*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};
 
 //=============================================================================
 /// container for non-deterministic selection statement
@@ -341,12 +383,12 @@ public:
 	rightmost(void) const;
 
 using	nondet_sel_base::where;
-};
 
-#define chp_nondet_selection_wrap(b,l,e)				\
-	IS_A(CHP::nondet_selection*, l->wrap(b,e))
-#define chp_nondet_selection_append(l,d,n)				\
-	IS_A(CHP::nondet_selection*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};
 
 //=============================================================================
 /// container for probablistic selection statement
@@ -370,12 +412,12 @@ public:
 	rightmost(void) const;
 
 using	prob_sel_base::where;
-};
 
-#define chp_prob_selection_wrap(b,l,e)					\
-	IS_A(CHP::prob_selection*, l->wrap(b,e))
-#define chp_prob_selection_append(l,d,n)				\
-	IS_A(CHP::prob_selection*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};
 
 //=============================================================================
 /// CHP loop contains a list of statements
@@ -396,6 +438,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -419,6 +466,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================
@@ -440,6 +492,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };
 
 //=============================================================================

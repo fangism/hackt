@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.6 2005/01/14 03:46:39 fang Exp $
+	$Id: art_parser_hse.h,v 1.7 2005/02/27 22:11:58 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
 #define	__ART_PARSER_HSE_H__
 
-#include "art_parser_base.h"
+#include "art_parser_definition_item.h"
+#include "art_parser_terminal.h"
+#include "art_parser_statement.h"
 
 namespace ART {
 namespace parser {
@@ -35,14 +37,14 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& c) const = 0;
+#endif
 };	// end class statement
 
 typedef	node_list<const statement,semicolon>	stmt_list;
-
-#define hse_stmt_list_wrap(b,l,e)					\
-	IS_A(HSE::stmt_list*, l->wrap(b,e))
-#define hse_stmt_list_append(l,d,n)					\
-	IS_A(HSE::stmt_list*, l->append(d,n))
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -60,6 +62,11 @@ using	language_body::leftmost;
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class body
 
 //=============================================================================
@@ -83,6 +90,11 @@ virtual	ostream&
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class guarded_command
 
 //=============================================================================
@@ -95,6 +107,11 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class else_clause
 
 //=============================================================================
@@ -122,6 +139,11 @@ public:
 	rightmost(void) const;
 
 using	token_keyword::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class skip
 
 //=============================================================================
@@ -144,6 +166,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class wait
 
 //=============================================================================
@@ -169,6 +196,11 @@ public:
 	rightmost(void) const;
 
 using	incdec_stmt::where;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class assignment
 
 //=============================================================================
@@ -205,12 +237,12 @@ public:
 	rightmost(void) const;
 
 using	det_sel_base::where;
-};	// end class det_selection
 
-#define hse_det_selection_wrap(b,l,e)					\
-	IS_A(HSE::det_selection*, l->wrap(b,e))
-#define hse_det_selection_append(l,d,n)					\
-	IS_A(HSE::det_selection*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};	// end class det_selection
 
 //=============================================================================
 /// container for non-deterministic selection statement
@@ -234,12 +266,12 @@ public:
 	rightmost(void) const;
 
 using	nondet_sel_base::where;
-};	// end class nondet_selection
 
-#define hse_nondet_selection_wrap(b,l,e)				\
-	IS_A(HSE::nondet_selection*, l->wrap(b,e))
-#define hse_nondet_selection_append(l,d,n)				\
-	IS_A(HSE::nondet_selection*, l->append(d,n))
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
+};	// end class nondet_selection
 
 //=============================================================================
 /*** not available ***
@@ -286,6 +318,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class loop
 
 //=============================================================================
@@ -309,6 +346,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class do_until
 
 //=============================================================================

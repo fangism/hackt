@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.42 2005/01/28 19:58:30 fang Exp $
+#	$Id: Makefile.am,v 1.43 2005/02/27 22:11:56 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -89,6 +89,7 @@ libbogus_la_SOURCES = \
 
 AST_CC_FILES = \
 	AST/art_parser_base.cc \
+	AST/art_parser_node_position.cc \
 	AST/art_parser_expr.cc \
 	AST/art_parser_token.cc \
 	AST/art_parser_definition.cc \
@@ -102,6 +103,20 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_fwd.h \
 	AST/art_parser.h \
 	AST/art_parser.tcc \
+	AST/art_parser_node_list.tcc \
+	AST/art_parser_definition_item.h \
+	AST/art_parser_expr_base.h \
+	AST/art_parser_expr_list.h \
+	AST/art_parser_identifier.h \
+	AST/art_parser_node_list.h \
+	AST/art_parser_range.h \
+	AST/art_parser_range_list.h \
+	AST/art_parser_root.h \
+	AST/art_parser_root_item.h \
+	AST/art_parser_statement.h \
+	AST/art_parser_terminal.h \
+	AST/art_parser_type.h \
+	AST/art_parser_type_base.h \
 	AST/art_parser_debug.h
 
 # all of these .cc files have a corresponding .h file
@@ -191,6 +206,11 @@ UTIL_HEADER_FILES = \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
 	util/list_vector.tcc \
+	util/memory/chunk_map_pool_fwd.h \
+	util/memory/chunk_map_pool.h \
+	util/memory/chunk_map_pool.tcc \
+	util/memory/destruction_policy.h \
+	util/memory/destruction_policy.tcc \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/list_vector_pool.h \
 	util/memory/list_vector_pool.tcc \

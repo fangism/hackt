@@ -1,7 +1,7 @@
 /**
 	\file "STL/construct_fwd.h"
-	Forward declaration of std::_Construct.
-	$Id: construct_fwd.h,v 1.2 2005/01/28 19:58:50 fang Exp $
+	Forward declaration of std::_Construct, and std::_Destroy.
+	$Id: construct_fwd.h,v 1.3 2005/02/27 22:12:00 fang Exp $
  */
 
 #ifndef	__UTIL_STL_CONSTRUCT_FWD_H__
@@ -26,9 +26,27 @@ inline
 void
 _Construct(_T1*, const _T2&);
 
-}
+/**
+	Invoke destructor of referenced object.  
+ */
+template <class _Tp>
+inline
+void
+_Destroy(_Tp*);
+
+
+/**
+	Invoke destructor over range of objects.  
+ */
+template <class FwdIter>
+inline
+void
+_Destroy(FwdIter, FwdIter);
+
+}	// end namespace std
 
 #define	USING_CONSTRUCT		using std::_Construct;
+#define	USING_DESTROY		using std::_Destroy;
 
 #endif	// __UTIL_STL_CONSTRUCT_FWD_H__
 

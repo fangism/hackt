@@ -1,13 +1,14 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.6 2005/01/14 00:00:53 fang Exp $
+	$Id: art_parser_prs.h,v 1.7 2005/02/27 22:11:59 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
 #define	__ART_PARSER_PRS_H__
 
-#include "art_parser_base.h"
+#include "art_parser_expr_base.h"
+#include "art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -32,13 +33,13 @@ public:
 
 virtual	~body_item();
 
+#if 1
+virtual	never_ptr<const object>
+	check_build(context& c) const = 0;
+#endif
 };	// end class body_item
 
 typedef node_list<const body_item>		rule_list;
-#define prs_rule_list_wrap(b,l,e)					\
-	IS_A(PRS::rule_list*, l->wrap(b,e))
-#define prs_rule_list_append(l,d,n)					\
-	IS_A(PRS::rule_list*, l->append(d,n))
 
 //=============================================================================
 /**
@@ -65,7 +66,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -102,7 +103,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -127,6 +128,11 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+#if 1
+	never_ptr<const object>
+	check_build(context& ) const;
+#endif
 };	// end class body
 
 //=============================================================================

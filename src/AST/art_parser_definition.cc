@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.14 2005/01/16 02:44:17 fang Exp $
+	$Id: art_parser_definition.cc,v 1.15 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -23,9 +23,10 @@
 #include "art_switches.h"
 #include "art_parser.tcc"
 
-#include "art_parser_expr.h"
+#include "art_parser_expr_base.h"
 #include "art_parser_definition.h"
 #include "art_parser_formal.h"
+#include "art_parser_terminal.h"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"
@@ -197,6 +198,12 @@ line_position
 user_data_type_def::rightmost(void) const {
 	if (rb)		return rb->rightmost();
 	else		return getb->rightmost();
+}
+
+never_ptr<const object>
+user_data_type_def::check_build(context& c) const {
+	cerr << "Fang, finish user_data_type_def::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 /*** unveil later...
@@ -450,6 +457,12 @@ user_chan_type_prototype::rightmost(void) const {
 	else		return params->rightmost();
 }
 
+never_ptr<const object>
+user_chan_type_prototype::check_build(context& c) const {
+	cerr << "Fang, finish user_chan_type_prototype::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class user_chan_type_def method definitions
 
@@ -488,6 +501,12 @@ line_position
 user_chan_type_def::rightmost(void) const {
 	if (rb)         return rb->rightmost();
 	else            return recvb->rightmost();
+}
+
+never_ptr<const object>
+user_chan_type_def::check_build(context& c) const {
+	cerr << "Fang, finish user_chan_type_def::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

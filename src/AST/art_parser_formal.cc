@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.13 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_formal.cc,v 1.14 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -21,8 +21,10 @@
 #include "art_parser.tcc"
 
 #include "art_parser_formal.h"
-#include "art_parser_expr.h"
+#include "art_parser_expr_base.h"
+#include "art_parser_range_list.h"
 #include "art_parser_token.h"
+#include "art_parser_type.h"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"
@@ -88,6 +90,13 @@ data_param_id::rightmost(void) const {
 	else		return id->rightmost();
 }
 
+never_ptr<const object>
+data_param_id::check_build(context& c) const {
+	cerr << "Fang, finish data_param_id::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+
 //=============================================================================
 // class data_param_id_list method definitions
 
@@ -125,6 +134,12 @@ data_param_decl::leftmost(void) const {
 line_position
 data_param_decl::rightmost(void) const {
 	return ids->rightmost();
+}
+
+never_ptr<const object>
+data_param_decl::check_build(context& c) const {
+	cerr << "Fang, finish data_param_decl::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

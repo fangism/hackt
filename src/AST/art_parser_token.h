@@ -1,14 +1,15 @@
 /**
 	\file "art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.8 2005/01/14 00:00:53 fang Exp $
+	$Id: art_parser_token.h,v 1.9 2005/02/27 22:11:59 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_H__
 #define __ART_PARSER_TOKEN_H__
 
-#include "art_parser_base.h"
-#include "art_parser_expr.h"
+#include "art_parser_terminal.h"
+#include "art_parser_expr_base.h"
+#include "art_parser_type_base.h"
 
 namespace ART {
 namespace parser {

@@ -1,15 +1,16 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.7 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_chp.cc,v 1.8 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
 #define	__ART_PARSER_CHP_CC__
 
+#include <iostream>
 #include "art_parser.tcc"
 #include "art_parser_chp.h"
-#include "art_parser_expr.h"
+#include "art_parser_expr_list.h"
 #include "art_parser_token.h"
 
 #include "what.h"
@@ -40,6 +41,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::CHP::log, "(chp-log)")
 namespace ART {
 namespace parser {
 namespace CHP {
+#include "using_ostream.h"
+
 //=============================================================================
 // class statement method definitions
 
@@ -74,6 +77,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(body)
 line_position 
 body::rightmost(void) const {
 	return stmts->rightmost();
+}
+
+never_ptr<const object>
+body::check_build(context& c) const {
+	cerr << "Fang, finish CHP::body::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -112,6 +121,12 @@ line_position
 guarded_command::rightmost(void) const {
 	NEVER_NULL(command);
 	return command->rightmost();
+}
+
+never_ptr<const object>
+guarded_command::check_build(context& c) const {
+	cerr << "Fang, finish CHP::guarded_command::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -170,6 +185,13 @@ skip::rightmost(void) const {
 	return token_keyword::rightmost();
 }
 
+never_ptr<const object>
+skip::check_build(context& c) const {
+	cerr << "Fang, finish CHP::skip::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+
 //=============================================================================
 // class wait method definitions
 
@@ -203,6 +225,13 @@ line_position
 wait::rightmost(void) const {
 	return rb->rightmost();
 }
+
+never_ptr<const object>
+wait::check_build(context& c) const {
+	cerr << "Fang, finish CHP::wait::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 
 //=============================================================================
 // class assignment method definitions
@@ -243,6 +272,13 @@ assignment::rightmost(void) const {
 	return assign_stmt::rightmost();
 }
 
+never_ptr<const object>
+assignment::check_build(context& c) const {
+	cerr << "Fang, finish CHP::assignment::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+
 //=============================================================================
 // class incdec_stmt method definitions
 
@@ -274,6 +310,13 @@ line_position
 incdec_stmt::rightmost(void) const {
 	return incdec_stmt::rightmost();
 }
+
+never_ptr<const object>
+incdec_stmt::check_build(context& c) const {
+	cerr << "Fang, finish CHP::incdec_stmt::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 
 //=============================================================================
 // class communication method definitions
@@ -323,6 +366,12 @@ comm_list::rightmost(void) const {
 	return comm_list_base::rightmost();
 }
 
+never_ptr<const object>
+comm_list::check_build(context& c) const {
+	cerr << "Fang, finish CHP::comm_list::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 
 //=============================================================================
 // class send method definitions
@@ -350,6 +399,12 @@ send::rightmost(void) const {
 	return rvalues->rightmost();
 }
 
+never_ptr<const object>
+send::check_build(context& c) const {
+	cerr << "Fang, finish CHP::send::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class receive method definitions
 
@@ -374,6 +429,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(receive)
 line_position
 receive::rightmost(void) const {
 	return lvalues->rightmost();
+}
+
+never_ptr<const object>
+receive::check_build(context& c) const {
+	cerr << "Fang, finish CHP::received::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -415,6 +476,12 @@ det_selection::rightmost(void) const {
 	return det_sel_base::rightmost();
 }
 
+never_ptr<const object>
+det_selection::check_build(context& c) const {
+	cerr << "Fang, finish CHP::det_selection::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class nondet_selection method definitions
 
@@ -443,6 +510,12 @@ nondet_selection::leftmost(void) const {
 line_position
 nondet_selection::rightmost(void) const {
 	return nondet_sel_base::rightmost();
+}
+
+never_ptr<const object>
+nondet_selection::check_build(context& c) const {
+	cerr << "Fang, finish CHP::nondet_selection::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -475,6 +548,12 @@ prob_selection::rightmost(void) const {
 	return prob_sel_base::rightmost();
 }
 
+never_ptr<const object>
+prob_selection::check_build(context& c) const {
+	cerr << "Fang, finish CHP::prob_selection::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 
 //=============================================================================
 // class loop method definitions
@@ -503,6 +582,12 @@ loop::leftmost(void) const {
 line_position
 loop::rightmost(void) const {
 	return commands->rightmost();
+}
+
+never_ptr<const object>
+loop::check_build(context& c) const {
+	cerr << "Fang, finish CHP::loop::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -534,6 +619,12 @@ do_until::rightmost(void) const {
 	return sel->rightmost();
 }
 
+never_ptr<const object>
+do_until::check_build(context& c) const {
+	cerr << "Fang, finish CHP::do_until::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
 //=============================================================================
 // class log method definitions
 
@@ -563,6 +654,12 @@ log::leftmost(void) const {
 line_position
 log::rightmost(void) const {
 	return args->rightmost();
+}
+
+never_ptr<const object>
+log::check_build(context& c) const {
+	cerr << "Fang, finish CHP::log::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

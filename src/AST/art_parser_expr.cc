@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.13 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_expr.cc,v 1.14 2005/02/27 22:11:57 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -12,6 +12,8 @@
 
 #include "art_parser_token.h"
 #include "art_parser_expr.h"
+#include "art_parser_expr_list.h"
+#include "art_parser_range_list.h"
 #include "art_parser.tcc"
 #include "sublist.tcc"
 
@@ -1164,7 +1166,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 never_ptr<const object>
 relational_expr::check_build(context& c) const {
 	// temporary
-	return node::check_build(c);
+	cerr << "Fang, finish relational_expr::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -1190,8 +1193,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 
 never_ptr<const object>
 logical_expr::check_build(context& c) const {
-	// temporary
-	return node::check_build(c);
+	cerr << "Fang, finish relational_expr::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -1234,7 +1237,8 @@ array_concatenation::check_build(context& c) const {
 		const const_iterator only = begin();
 		return (*only)->check_build(c);
 	} else {
-		return node::check_build(c);
+		cerr << "Fang, finish array_concatenation::check_build()!" << endl;
+		return never_ptr<const object>(NULL);
 	}
 }
 
@@ -1280,7 +1284,8 @@ loop_concatenation::rightmost(void) const {
 
 never_ptr<const object>
 loop_concatenation::check_build(context& c) const {
-	return node::check_build(c);
+	cerr << "Fang, finish loop_concatenation::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -1318,7 +1323,8 @@ array_construction::rightmost(void) const {
 
 never_ptr<const object>
 array_construction::check_build(context& c) const {
-	return node::check_build(c);
+	cerr << "Fang, finish array_construction::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================

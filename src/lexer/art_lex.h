@@ -3,7 +3,7 @@
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
-	$Id: art_lex.h,v 1.4 2004/11/02 07:51:53 fang Exp $
+	$Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp $
  */
 
 #ifndef	__ART_LEX_H__
@@ -13,6 +13,7 @@
 #include <iosfwd>
 
 namespace ART {
+namespace lexer {
 using std::ostream;
 
 /// structure for tracking token positions in the input file
@@ -66,6 +67,7 @@ friend ostream& operator << (ostream& o, const line_range& l);
 
 //=============================================================================
 
+}	// end namespace lexer
 }	// end namespace ART
 
 #endif	// __ART_LEX_H__

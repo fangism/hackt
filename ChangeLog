@@ -2,9 +2,61 @@
 
 2005-02-27	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-06-merged-parser-01-05:
+	  Merged moderate revisions to parser and front-end into mainline.  
+
 	* ARTXX-00-01-04-main-00-05-merged-docs-00-01:
 	  Merged in tiny revisions to documentation from last series
 	  into mainline.  
+
+	* ARTXX-00-01-04-main-00-04-parser-01-05:
+	  Slight reorganization of some util library headers.  
+	  Added placeholder code for chunk_map_pool.  
+	  Definition is pending a merge to the main trunk, 
+	  will depend on maplikeset, defined in -object-01 branch.  
+	  It's time for convergence!
+
+
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-03:
+	  art++-parse.yy: deleted uses of *_append *_wrap macros, 
+	  in preparation for substituting code with new node_list.
+
+	* -parser-01-03:
+	  Some clean-up of macros, added node_position class, 
+	  wrote new node_list class.  
+
+
+2005-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-02:
+	  Started to re-organize parser code base some.
+	  check_build is no longer in ART::parser_node, because we only ever
+	  call it from main through root_body.  
+	  Later, each sub-class may have its own prototype, 
+	  especially for return types -- makes much more sense
+	  and waill actually make some use of the return value, which 
+	  is currently ignored in most cases.  
+	  Some lexer structs moved into the ART::lexer namespace.
+	  Supplied "Fang, write me!" to many unimplemented 
+	  check_build()'s temporarily, causing a few updates to
+	  test suite expected outputs.  
+	  Coming soon: replacement code for node_list class template.
+
+
+2005-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-01:
+	  New branch started off of the trunk, dedicated to improving the
+	  front-end lexer/parser.  
+	  In this revision, we sliced and diced the AST/ header files into
+	  more manageable units, resulting in noticeably faster 
+	  compile-times, and even smaller binaries.  
+	  See what a little organization can do?
+	  Later revisions will re-work the parser, especially the 
+	  node_list aspect, eliminating non-essential terminals.  
+
 
 2005-01-31	David Fang	<fangism@users.sourceforge.net>
 
