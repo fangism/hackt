@@ -1,6 +1,6 @@
 /**
 	\file "packed_array_test.cc"
-	$Id: packed_array_test.cc,v 1.4 2004/12/20 23:21:17 fang Exp $
+	$Id: packed_array_test.cc,v 1.4.32.1 2005/02/22 03:01:01 fang Exp $
  */
 
 #include "packed_array.tcc"
@@ -13,9 +13,9 @@ using util::multikey_generator;
 #include "using_ostream.h"
 using std::inner_product;
 
-typedef	packed_array<3, float>		float_3d;
-typedef	packed_array<3, bool>		bool_3d;
-typedef	packed_array_generic<int>	int_3d;
+typedef	packed_array<3, size_t, float>		float_3d;
+typedef	packed_array<3, size_t, bool>		bool_3d;
+typedef	packed_array_generic<size_t, int>	int_3d;
 
 int
 main(int argc, char* argv[]) {

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.4.2.1 2005/02/20 09:08:16 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.4.2.2 2005/02/22 03:00:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -130,7 +130,8 @@ operator << (ostream&, const proc_instance_alias&);
 PROC_ARRAY_TEMPLATE_SIGNATURE
 class proc_array : public process_instance_collection {
 private:
-	typedef	process_instance_collection			parent_type;
+	typedef	proc_array<D>				this_type;
+	typedef	process_instance_collection		parent_type;
 friend class process_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
@@ -138,6 +139,9 @@ public:
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
+private:
+	typedef	typename util::multikey<D,pint_value_type>::generator_type
+							key_generator_type;
 private:
 	collection_type					collection;
 private:
@@ -169,6 +173,10 @@ public:
 	bool
 	lookup_instance_collection(list<instance_ptr_type>& l, 
 		const const_range_list& r) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 	struct key_dumper {
 		ostream& os;
@@ -224,6 +232,10 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC

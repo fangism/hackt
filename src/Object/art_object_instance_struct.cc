@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.9.2.4.2.2 2005/02/21 19:48:10 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.9.2.4.2.3 2005/02/22 03:00:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -26,6 +26,7 @@
 
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
+#include "packed_array.tcc"
 #include "indent.h"
 #include "stacktrace.h"
 
@@ -362,6 +363,19 @@ struct_array<D>::lookup_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Packs resolved range of aliases into a collection.  
+	\return true on error, else false.  
+ */
+STRUCT_ARRAY_TEMPLATE_SIGNATURE
+bool
+struct_array<D>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+	cerr << "FANG: finish struct_array<D>::unroll_aliases()!" << endl;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
 void
 struct_array<D>::write_object(const persistent_object_manager& m, 
@@ -477,6 +491,17 @@ struct_array<0>::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        \return true on error, false on success.
+ */
+bool
+struct_array<0>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+	cerr << "FANG: finish struct_array<0>::unroll_aliases()!" << endl;
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "art_object_extern_templates.cc"
 	Repository of explici template instantiations needed 
 	by the object-related library.  
-	$Id: art_object_extern_templates.cc,v 1.2.2.1 2005/02/09 04:14:08 fang Exp $
+	$Id: art_object_extern_templates.cc,v 1.2.2.1.6.1 2005/02/22 03:00:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXTERN_TEMPLATES_CC__
@@ -28,7 +28,7 @@ template class multikey<1, pint_value_type>;
 template class multikey<2, pint_value_type>;
 template class multikey<3, pint_value_type>;
 template class multikey<4, pint_value_type>;
-template class packed_array_generic<pint_value_type>;
+template class packed_array_generic<pint_value_type, pint_value_type>;
 template class multikey_generator_generic<pint_value_type>;
 
 }	// end namespace util

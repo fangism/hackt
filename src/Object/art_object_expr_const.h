@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7.2.4.2.2 2005/02/21 19:48:07 fang Exp $
+	$Id: art_object_expr_const.h,v 1.7.2.4.2.3 2005/02/22 03:00:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -367,7 +367,7 @@ public:
 		multikey_generator<D, pint_value_type>& k) const;
 
 	// is a pint_const_collection::array_type::key_type
-	multikey_generic<size_t>
+	multikey_index_type
 	resolve_sizes(void) const;
 
 	bool
@@ -508,7 +508,8 @@ class pint_const_collection : public pint_expr, public const_param {
 	typedef	pint_const_collection			this_type;
 public:
 	typedef	pint_value_type				value_type;
-	typedef	util::packed_array_generic<value_type>	array_type;
+	typedef	util::packed_array_generic<pint_value_type, value_type>
+							array_type;
 	typedef	array_type::iterator			iterator;
 	typedef	array_type::const_iterator		const_iterator;
 protected:

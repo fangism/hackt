@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.1.4.2 2005/02/21 19:48:08 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.1.4.3 2005/02/22 03:00:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_TCC__
@@ -12,6 +12,7 @@
 #include "art_object_inst_ref.h"
 #include "art_object_expr_const.h"	// for const_index_list
 #include "what.h"
+#include "packed_array.tcc"		// for packed_array_generic<>::resize()
 #include "persistent_object_manager.tcc"
 
 //=============================================================================
@@ -73,40 +74,57 @@ bool
 INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
 		alias_collection_type& a) const {
 	// possibly factor this part out into simple_instance_reference?
+if (this->inst_collection_ref->get_dimensions()) {
+	const_index_list cil;
 	if (this->array_indices) {
-		const const_index_list
-			cil(this->array_indices->unroll_resolve(c));
+		cil = this->array_indices->unroll_resolve(c);
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;
 			return true;
 		}
-		// else we have resolve constant indices
-		const const_index_list
-			full_indices(this->inst_collection_ref->resolve_indices(cil));
-		if (cil.empty()) {
-			// more descriptive error message later...
-			cerr << "ERROR: failed to resolve indices." << endl;
-			return true;
-		}
-		// construct the range of aliases to collect
-		const multikey_index_type lower(full_indices.lower_multikey());
-		const multikey_index_type upper(full_indices.upper_multikey());
-		// this will set the size and dimensions of packed_array a
-#if 0
-		if (this->inst_collection_ref->unroll_aliases(lower, upper, a)) {
-			cerr << "ERROR: unrolling aliases." << endl;
-			return true;
-		}
-#endif
-		// success!
-		return false;
-	} else if (this->inst_collection_ref->get_dimensions()) {
-		// return the whole instance collection
-		// if it's non-scalar, see if it's compact...
 	}
-	// TODO: FINISH ME!
+	// else empty, implicitly refer to whole collection if it is dense
+	// we have resolve constant indices
+	const const_index_list
+		full_indices(this->inst_collection_ref->resolve_indices(cil));
+	if (full_indices.empty()) {
+		// more descriptive error message later...
+		cerr << "ERROR: failed to resolve indices." << endl;
+		return true;
+	}
+	// resize the array according to the collapsed dimensions, 
+	// before passing it to unroll_aliases.
+	{
+	const const_range_list
+		crl(full_indices.collapsed_dimension_ranges());
+	const multikey_index_type
+		array_sizes(crl.resolve_sizes());
+	a.resize(array_sizes);
+	// a.resize(upper -lower +ones);
+	}
+
+	// construct the range of aliases to collect
+	const multikey_index_type lower(full_indices.lower_multikey());
+	const multikey_index_type upper(full_indices.upper_multikey());
+	// this will set the size and dimensions of packed_array a
+	if (this->inst_collection_ref->unroll_aliases(lower, upper, a)) {
+		cerr << "ERROR: unrolling aliases." << endl;
+		return true;
+	}
+	// success!
 	return false;
+} else {
+	// is a scalar instance
+	// size the alias_collection_type appropriately
+	a.resize();		// empty
+	const multikey_index_type bogus;
+	if (this->inst_collection_ref->unroll_aliases(bogus, bogus, a)) {
+		cerr << "ERROR: unrolling aliases." << endl;
+		return true;
+	}
+	return false;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

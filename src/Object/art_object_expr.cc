@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.37.2.5.2.3 2005/02/21 19:48:06 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.37.2.5.2.4 2005/02/22 03:00:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -4678,10 +4678,9 @@ INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 	\return the sizes of the ranges spanned.  
 	Return type should be pint_const_collection::array_type::key_type
  */
-multikey_generic<size_t>
+multikey_index_type
 const_range_list::resolve_sizes(void) const {
-	typedef	multikey_generic<size_t>	return_type;
-	return_type ret(size());
+	multikey_index_type ret(size());
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 0;

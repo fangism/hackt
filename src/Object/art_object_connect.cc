@@ -1,7 +1,7 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.18.16.1.10.5 2005/02/21 19:48:06 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.18.16.1.10.6 2005/02/22 03:00:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_CC__
@@ -288,7 +288,7 @@ ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 void
 ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	typedef	vector<alias_collection_type>	alias_collection_array_type;
-	cerr << "Fang, finish alias_connection<>::unroll()!" << endl;
+	what(cerr << "Fang, finish ") << "::unroll()!" << endl;
 //	Create a vector of alias_collection_type (packed_array_generic)
 	alias_collection_array_type ref_array(inst_list.size());
 	const_iterator iter = inst_list.begin();
@@ -298,8 +298,8 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	bool err = false;
 	for ( ; iter != end; iter++, ref_iter++) {
 		NEVER_NULL(*iter);
-		(*iter)->unroll_references(c, *ref_iter);
-		// error condition?
+		if ((*iter)->unroll_references(c, *ref_iter))
+			err = true;
 	}
 /***
 	Make sure each packed array has the same dimensions.  

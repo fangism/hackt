@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.12.2.5.2.2 2005/02/21 19:48:09 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.12.2.5.2.3 2005/02/22 03:00:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
@@ -654,6 +654,7 @@ int_array<D>::lookup_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Packs resolved range of aliases into a collection.  
+	\pre array a must already be sized properly, do not resize here.  
 	\return true on error, else false.  
  */
 INT_ARRAY_TEMPLATE_SIGNATURE
@@ -669,11 +670,9 @@ int_array<D>::unroll_aliases(const multikey_index_type& l,
 	key_generator_type key_gen(lower, upper);
 	key_gen.initialize();
 	bool ret = false;
-	const collection_key_type
-		array_size = u - l +alias_collection_type::ones(D);
-	a.resize(array_size);		// create
 	alias_collection_iterator a_iter(a.begin());
 	const const_iterator collection_end(collection.end());
+	// maybe INVARIANT(sizes == iterations)
 	do {
 		// really is a monotonic incremental search, 
 		// don't need log(N) lookup each time, fix later...
@@ -690,7 +689,7 @@ int_array<D>::unroll_aliases(const multikey_index_type& l,
 		}
 		a_iter++;
 		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
+	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
 	return ret;
 }
@@ -895,7 +894,6 @@ int_array<0>::lookup_instance_collection(
 bool
 int_array<0>::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
-	a.resize();	// no-arguments, scalar
 	if (the_instance.valid()) {
 		*(a.begin()) = never_ptr<instance_type>(
 			const_cast<instance_type*>(&the_instance));

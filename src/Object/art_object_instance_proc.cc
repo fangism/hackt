@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.2 2005/02/21 19:48:09 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.8.2.5.2.3 2005/02/22 03:00:59 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_CC__
@@ -28,6 +28,7 @@
 
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
+#include "packed_array.tcc"
 #include "indent.h"
 #include "stacktrace.h"
 #include "ptrs_functional.h"
@@ -554,6 +555,19 @@ proc_array<D>::lookup_instance_collection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Packs resolved range of aliases into a collection.  
+	\return true on error, else false.  
+ */
+PROC_ARRAY_TEMPLATE_SIGNATURE
+bool
+proc_array<D>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+	cerr << "FANG: finish proc_array<D>::unroll_aliases()!" << endl;
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO:
 	\todo visit all members of collection and collect pointers.  
  */
@@ -703,6 +717,17 @@ proc_array<0>::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        \return true on error, false on success.
+ */
+bool
+proc_array<0>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+	cerr << "FANG: finish proc_array<0>::unroll_aliases()!" << endl;
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

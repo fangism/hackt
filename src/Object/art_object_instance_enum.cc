@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.2 2005/02/21 19:48:09 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.5.2.3 2005/02/22 03:00:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -27,6 +27,7 @@
 
 #include "multikey_qmap.tcc"
 #include "persistent_object_manager.tcc"
+#include "packed_array.tcc"
 #include "indent.h"
 
 #include "ptrs_functional.h"
@@ -363,6 +364,52 @@ enum_array<D>::lookup_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Packs resolved range of aliases into a collection.  
+	\return true on error, else false.  
+ */
+ENUM_ARRAY_TEMPLATE_SIGNATURE
+bool
+enum_array<D>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+#if 0
+	typedef typename alias_collection_type::key_type
+						collection_key_type;
+	typedef typename alias_collection_type::iterator
+						alias_collection_iterator;
+	const key_type lower(l);	// this will assert dimension match!
+	const key_type upper(u);	// this will assert dimension match!
+	key_generator_type key_gen(lower, upper);
+	key_gen.initialize();
+	bool ret = false;
+	alias_collection_iterator a_iter(a.begin());
+	const const_iterator collection_end(collection.end());
+	do {
+		// really is a monotonic incremental search, 
+		// don't need log(N) lookup each time, fix later...
+		const const_iterator it(collection.find(key_gen));
+		if (it == collection_end) {
+			cerr << "FATAL: reference to uninstantiated int index "
+				<< key_gen << endl;
+			*a_iter = never_ptr<element_type>(NULL);
+			ret = true;
+		} else {
+			const element_type& pi(*it);
+			*a_iter = never_ptr<element_type>(
+				const_cast<element_type*>(&pi));
+		}
+		a_iter++;
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+	INVARIANT(a_iter == a.end());
+	return ret;
+#else
+	cerr << "FANG: finish enum_array<>::unroll_aliases()!" << endl;
+	return true;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 void
 enum_array<D>::write_object(const persistent_object_manager& m, 
@@ -484,6 +531,28 @@ enum_array<0>::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true on error, false on success.
+ */
+bool
+enum_array<0>::unroll_aliases(const multikey_index_type& l,
+		const multikey_index_type& u, alias_collection_type& a) const {
+#if 0
+	if (the_instance.valid()) {
+		*(a.begin()) = never_ptr<instance_type>(
+			const_cast<instance_type*>(&the_instance));
+		return false;
+	} else {
+		cerr << "ERROR: Reference to uninstantiated int!" << endl;
+		return true;
+	}
+#else
+	cerr << "FANG: finish enum_array<0>::unroll_aliases()!" << endl;
+	return true;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

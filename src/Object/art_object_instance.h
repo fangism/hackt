@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.34.2.5.2.2 2005/02/20 20:59:20 fang Exp $
+	$Id: art_object_instance.h,v 1.34.2.5.2.3 2005/02/22 03:00:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -10,6 +10,7 @@
 #include "art_object_instance_base.h"
 #include "art_object_index.h"
 #include "memory/pointer_classes.h"
+#include "packed_array_fwd.h"
 
 
 namespace ART {
@@ -17,6 +18,7 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
+using util::packed_array_generic;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -34,6 +36,8 @@ public:
 	typedef	proc_instance_alias		instance_alias_type;
 	typedef	process_alias_connection	alias_connection_type;
 	typedef never_ptr<instance_alias_type>	instance_ptr_type;
+	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
+						alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
@@ -101,6 +105,9 @@ virtual bool
 virtual const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const = 0;
 
 public:
 	static
@@ -199,6 +206,8 @@ public:
 	typedef chan_instance_alias		instance_alias_type;
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
+	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
+						alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
@@ -249,6 +258,10 @@ virtual bool
 
 virtual const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
+
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const = 0;
 
 
 public:

@@ -2,6 +2,20 @@
 
 2005-02-21	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-08:
+	  Initial testing of instance unrolling, without connections, 
+	  just for int_instance_collection, our guinea pig.  
+	  Placeholder code pasted into other instance collections, 
+	  but marked as empty for now.  
+
+		+ Updated packed_array[_generic] template signature to 
+		  include type for index, so it's not hard-coded to size_t.  
+
+		+ Fixed bug in multikey_assoc::is_compact()'s return value
+		  for the case where D == 1.
+		  There may be another bug for D != 1, related to 
+		  index_extremities, look for "WRONG" in "multikey_assoc.tcc".
+
 	* ARTXX-00-01-04-main-00-04-object-01-13-alias-07:
 	  Added draft of code for alias_connection unrolling, untested.  
 	  Added draft code for reference unrolling, packing aliases

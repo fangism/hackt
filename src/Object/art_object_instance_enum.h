@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.2.3.2.3 2005/02/20 20:59:20 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.2.3.2.4 2005/02/22 03:00:58 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -121,6 +121,8 @@ public:
 	typedef	enum_alias_connection			alias_connection_type;
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
+							alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 protected:
@@ -173,6 +175,11 @@ virtual	const_index_list
 virtual bool
 	connect(const multikey_index_type& k, const enum_instance_alias& b) = 0;
 #endif
+
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&,
+		alias_collection_type&) const = 0;
+
 public:
 
 	static
@@ -197,7 +204,8 @@ protected:
 ENUM_ARRAY_TEMPLATE_SIGNATURE
 class enum_array : public enum_instance_collection {
 private:
-	typedef	enum_instance_collection			parent_type;
+	typedef	enum_array<D>				this_type;
+	typedef	enum_instance_collection		parent_type;
 friend class enum_instance_collection;
 public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
@@ -205,6 +213,12 @@ public:
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
+private:
+	typedef	typename util::multikey<D,pint_value_type>::generator_type
+							key_generator_type;
+	typedef	typename collection_type::iterator	iterator;
+	typedef	typename collection_type::const_iterator
+							const_iterator;
 private:
 	collection_type					collection;
 private:
@@ -227,6 +241,10 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&,
+		alias_collection_type&) const;
 
 	instance_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -288,6 +306,9 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&,
+		alias_collection_type&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS

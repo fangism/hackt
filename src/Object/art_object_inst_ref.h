@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15.16.1.10.4 2005/02/21 19:48:08 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15.16.1.10.5 2005/02/22 03:00:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -10,7 +10,7 @@
 #include "art_object_inst_ref_base.h"
 #include "art_object_instance_base.h"
 #include "memory/pointer_classes.h"
-#include "packed_array.h"
+#include "packed_array_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -53,7 +53,7 @@ public:
 	typedef	never_ptr<const instance_collection_type>
 						instance_collection_ptr_type;
 	/// type used to unroll collections of instance aliases
-	typedef	packed_array_generic<never_ptr<instance_alias_type> >
+	typedef	packed_array_generic<pint_value_type, never_ptr<instance_alias_type> >
 						alias_collection_type;
 private:
 	const instance_collection_ptr_type	inst_collection_ref;

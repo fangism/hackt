@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.15.16.1.10.5 2005/02/21 19:48:06 fang Exp $
+	$Id: art_object_connect.h,v 1.15.16.1.10.6 2005/02/22 03:00:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -158,11 +158,7 @@ public:
 	typedef	typename inst_list_type::const_iterator
 						const_iterator;
 	/// the type of collection for unrolled aliases
-#if 0
-	typedef	packed_array_generic<never_ptr<instance_alias_type> >
-#else
 	typedef	typename instance_reference_type::alias_collection_type
-#endif
 						alias_collection_type;
 protected:
 	inst_list_type				inst_list;

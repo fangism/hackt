@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.9.2.4.2.3 2005/02/20 20:59:20 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.9.2.4.2.4 2005/02/22 03:00:57 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -320,6 +320,8 @@ public:
 	typedef	parent_type::type_ref_ptr_type		type_ref_ptr_type;
 	typedef	bool_instance_alias_base		instance_alias_type;
 	typedef	never_ptr<instance_alias_type>		instance_ptr_type;
+	typedef	packed_array_generic<pint_value_type, instance_ptr_type>
+							alias_collection_type;
 	typedef	parent_type::inst_ref_ptr_type		inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	member_inst_ref_ptr_type;
 	typedef	bool_alias_connection			alias_connection_type;
@@ -376,6 +378,11 @@ virtual	const_index_list
 virtual bool
 	connect(const multikey_index_type& k, const bool_instance_alias& b) = 0;
 #endif
+
+virtual	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const = 0;
+
 public:
 virtual	bool_instance_alias_base&
 	load_reference(istream& i) const = 0;
@@ -410,6 +417,8 @@ public:
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
 protected:
+	typedef	typename util::multikey<D,pint_value_type>::generator_type
+							key_generator_type;
 	typedef	element_type&				reference;
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator
@@ -445,6 +454,10 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 	bool_instance_alias_base&
 	load_reference(istream& i) const;
@@ -550,6 +563,10 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
+
+	bool
+	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
+		alias_collection_type&) const;
 
 	bool_instance_alias_base&
 	load_reference(istream& i) const;

@@ -1,7 +1,7 @@
 /**
 	\file "multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.1.4.2 2005/02/17 00:10:19 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.1.4.2.2.1 2005/02/22 03:01:00 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -390,14 +390,22 @@ multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Suspiciously WRONG...
+	The keys of the first and last element don't necessarily
+	represent the extremities covered by the indexed members.  
+	For example, [0][0], [0][4], [1][0].
+ */
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::key_list_pair_type
 multikey_assoc<D,C>::is_compact(void) const {
 	typedef key_list_pair_type	return_type;
-	if (empty()) 
+	if (this->empty()) 
 		return return_type();
 	const_iterator first = this->begin();
 	const_iterator last = --(this->end());
+#if 1
+	// this seems WRONG
 	key_list_type start, end;
 #if 0
 	start.push_back(first->first.front());
@@ -409,6 +417,11 @@ multikey_assoc<D,C>::is_compact(void) const {
 	end.push_back(_Select1st<value_type>()(*last).front());
 #endif
 	return is_compact_slice(start, end);
+#else
+	// this seems better...
+	const key_list_pair_type ext(this->index_extremities());
+	return is_compact_slice(ext.first, ext.second);
+#endif
 }
 
 
@@ -519,7 +532,8 @@ multikey_assoc<1,C>::is_compact(void) const {
 	ret.first.push_back(last->first);
 #else
 	ret.first.push_back(_Select1st<value_type>()(*first));
-	ret.first.push_back(_Select1st<value_type>()(*last));
+//	ret.first.push_back(_Select1st<value_type>()(*last));	// WRONG!?!?
+	ret.second.push_back(_Select1st<value_type>()(*last));
 #endif
 	return ret;
 #endif
