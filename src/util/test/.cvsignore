@@ -27,4 +27,5 @@ list_vector_test
 list_vector_pool_test
 packed_array_test
 stacktrace_test
+what_test
 
