@@ -31,4 +31,5 @@ stacktrace_test
 what_test
 exit_test
 throw_test
+pretty_function_test
 

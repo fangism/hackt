@@ -1,0 +1,5 @@
+int main(int, char**)
+bar::bar()
+static void bar::greet()
+void bar::hello() const
+bar::~bar()

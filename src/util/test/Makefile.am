@@ -32,7 +32,8 @@ noinst_PROGRAMS = \
 	exit_test \
 	throw_test \
 	stacktrace_test \
-	what_test
+	what_test \
+	pretty_function_test
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -53,6 +54,7 @@ exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
 throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
 stacktrace_test_SOURCES = stacktrace_test.cc stacktrace.cc
 what_test_SOURCES = what_test.cc
+pretty_function_test_SOURCES = pretty_function_test.cc
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
