@@ -23,12 +23,9 @@ TARBALL = art.tar.gz
 
 DOXYGEN_CONFIG = art.doxygen.config
 
-.SUFFIXES: .c .cc .o .l .yy
+.SUFFIXES: .cc .o .l .yy
 
 .cc.o:
-	$(CC) $(CFLAGS) $< -o $@
-
-.c.o:
 	$(CC) $(CFLAGS) $< -o $@
 
 
@@ -36,7 +33,7 @@ default: all
 
 all: $(TARGETS)
 
-ART_OBJ = art.yy.o y.tab.o art_parser.o art_parser_prs.o art_parser_hse.o \
+ART_OBJ = y.tab.o art.yy.o art_parser.o art_parser_prs.o art_parser_hse.o \
 	art_symbol_table.o art_main.o art_utils.o art_object.o
 artc: $(ART_OBJ)
 	$(LD) $(LDFLAGS) $(ART_OBJ) -o $@
@@ -47,7 +44,7 @@ art.yy.cc: art.l y.tab.h
 
 y.tab.h y.tab.cc: art.yy
 	$(YACC) $(YACCFLAGS) $?
-	mv y.tab.c y.tab.cc
+	ln -fs y.tab.c y.tab.cc
 
 # documentation targets
 docs:
