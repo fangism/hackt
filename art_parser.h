@@ -392,11 +392,10 @@ friend	ostream& operator << (ostream& o, const id_expr& id);
 /// keyword version of token_string class, not necessarily an expr
 class token_keyword : public token_string {
 public:
-	token_keyword(const char* s) : token_string(s) { }
-virtual	~token_keyword() { }
+	token_keyword(const char* s);
+virtual	~token_keyword();
 
-virtual	ostream& what(ostream& o) const
-		{ return o << "keyword: " << *((const string*) this); }
+virtual	ostream& what(ostream& o) const;
 };
 
 //-----------------------------------------------------------------------------

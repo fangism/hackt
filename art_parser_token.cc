@@ -190,6 +190,19 @@ token_identifier::rightmost(void) const {
 	return token_string::rightmost();
 }
 
+//=============================================================================
+// class token_keyword method definitions
+
+CONSTRUCTOR_INLINE
+token_keyword::token_keyword(const char* s) : token_string(s) { }
+
+DESTRUCTOR_INLINE
+token_keyword::~token_keyword() { }
+
+ostream& 
+token_keyword::what(ostream& o) const {
+	return o << "keyword: " << *((const string*) this);
+}
 
 //=============================================================================
 // class token_bool method definitions

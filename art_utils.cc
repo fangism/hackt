@@ -1,5 +1,6 @@
 // "art_utils.cc"
 
+#include <iostream>
 #include "art_utils.h"
 
 namespace ART {

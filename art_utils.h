@@ -4,13 +4,12 @@
 #define __ART_UTILS_H__
 
 #include <assert.h>
-#include <iostream>
+#include <iosfwd>
 
 #include "art_lex.h"
 
-using namespace std;
-
 namespace ART {
+using std::ostream;
 
 //=============================================================================
 /// just a line number and column position

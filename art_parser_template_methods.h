@@ -3,6 +3,8 @@
 #ifndef	__ART_PARSER_TEMPLATE_METHODS_H__
 #define	__ART_PARSER_TEMPLATE_METHODS_H__
 
+#include <iostream>
+
 #include "art_macros.h"
 #include "art_parser.h"
 #include "list_of_ptr_template_methods.h"

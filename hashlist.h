@@ -7,17 +7,17 @@
 #define	__HASHLIST_H__
 
 #include "list_of_ptr.h"	// includes <list>
+using std::list;
 
-#ifdef  __APPLE__		// different location with gcc-3.3 on OS X
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-#else
+// different location with gcc-3.3 on OS X
+#if	defined(__GNU_C__) && (__GNU_C__ <= 2)
 #include <hash_map>
+using std::hash_map;
+#else
+#include <ext/hash_map>
+using __gnu_cxx::hash_map;
 #endif
 
-using namespace std;
-// using std::list;
-// using std::hash_map;
 
 //=============================================================================
 /**

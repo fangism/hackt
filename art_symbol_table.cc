@@ -1,6 +1,7 @@
 // "art_symbol_table.cc"
 
 #include <assert.h>
+#include <iostream>
 
 #include "art_parser.h"
 #include "art_symbol_table.h"

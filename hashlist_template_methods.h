@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+using std::string;
 
 #include "hashlist.h"
 #include "list_of_ptr_template_methods.h"
@@ -12,12 +13,11 @@
 //=============================================================================
 // template specializations
 
-#if 1			// enable if compiler can't figure it out
 namespace
-#ifdef  __APPLE__
-	__gnu_cxx
-#else
+#if	defined(__GNU_C__) && (__GNU_C__ <= 2)
 	std
+#else
+	__gnu_cxx
 #endif
 {
 /**
@@ -31,7 +31,6 @@ struct hash<string> {
 	}
 };	// end hash<>
 };	// end namespace
-#endif
 
 
 //=============================================================================

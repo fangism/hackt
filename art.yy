@@ -10,6 +10,8 @@
 */
 
 %{
+#include <iostream>
+
 #include "art_parser.h"
 #include "art_parser_prs.h"
 #include "art_parser_hse.h"
