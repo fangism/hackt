@@ -90,7 +90,7 @@ y.tab.h y.tab.cc y.output.h y.union.cc: art.yy
 	-$(YACC) $(YFLAGS) $?; \
 	$(AWK) -f yacc-output-to-C.awk y.output > y.output.h; \
 	$(CPP) -P y.tab.h > y.union; \
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | \
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP) -P | $(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" > $?.types; \
 	$(AWK) -f yacc-union-type.awk -v yaccfile=$?.types \
 		-v include="art_parser.h" \
