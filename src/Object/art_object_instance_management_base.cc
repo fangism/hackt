@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.9 2005/02/27 22:54:16 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.9.8.1 2005/03/05 00:55:11 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -163,6 +163,7 @@ inline
 void
 sequential_scope::write_object_pointer_list(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_pointer_list()");
 	m.write_pointer_list(f, instance_management_list);
 }
 
@@ -171,6 +172,7 @@ void
 sequential_scope::write_object_base_fake(
 		const persistent_object_manager& m, ostream& f) {
 	static const instance_management_list_type dummy;
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_base_fake()");
 	m.write_pointer_list(f, dummy);
 }
 
@@ -178,6 +180,7 @@ sequential_scope::write_object_base_fake(
 void
 sequential_scope::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_base()");
 	write_object_pointer_list(m, f);
 }
 

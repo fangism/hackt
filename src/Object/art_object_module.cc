@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.17 2005/03/04 07:00:08 fang Exp $
+ 	$Id: art_object_module.cc,v 1.17.2.1 2005/03/05 00:55:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_CC__
@@ -57,18 +57,12 @@ using util::persistent_traits;
 	Private empty constructor.
  */
 module::module() :
-#if 0
-		object(), 
-#endif
 		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL), unrolled(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
-#if 0
-		object(), 
-#endif
 		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")), unrolled(false) {
 	NEVER_NULL(global_namespace);

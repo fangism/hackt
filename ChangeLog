@@ -2,6 +2,29 @@
 
 2005-03-03	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-15-collect-01:
+	  This branch is intended really a continuation of where the last
+	  -13-persistent branch left off.  This focuses on improvements
+	  to the persistent object manager.  
+	  Major improvements in this revision:
+	  Added mechanism to mark and classify visits through
+	  persistent_object_manager::read_pointer<>().
+	  This allows the manager to verify the status of ownership of each
+	  reconstructed pointer during load_objects().  
+	  Any object that doesn't meet the "claimed" criterion may be
+	  deleted by the reconstruction_table_entry when it expires
+	  (unless otherwise flagged).  
+	  This makes load_objects() exception-safe!  
+	  Little note: needed "special handling" of built-in-datatype-def
+	  pointers faked as user-defined-datatypes,
+		see "art_object_type_ref.cc"
+	  Minor improvements include cleanup of other source and header files.  
+	  To do: upgrade the reconstruction_table to list_vector to 
+	  avoid bulk copy-construction on a push back operation.  
+
+
+2005-03-03	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-15:
 	  Cleaned up commented out code in #if HAVE_PERSISTENT_CONSTRUCT_EMPTY
 

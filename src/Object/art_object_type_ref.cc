@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.27 2005/03/04 07:00:09 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.27.2.1 2005/03/05 00:55:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -532,6 +532,7 @@ data_type_reference::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	May need special case handling for built-in definitions!
+	Call the HACK POLICE!!!
  */
 void
 data_type_reference::load_object(const persistent_object_manager& m, 
@@ -540,16 +541,21 @@ data_type_reference::load_object(const persistent_object_manager& m,
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
 
-	// MINOR HACK: recursion and intercept built-in types
+	// MINOR HACK: shallow recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
 	m.load_object_once(
 		const_cast<datatype_definition_base*>(&*base_type_def));
-	if (base_type_def->get_key() == "bool")
+	if (base_type_def->get_key() == "bool") {
+		m.please_delete(&*base_type_def);	// HACKERY
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&bool_def);
-	else if (base_type_def->get_key() == "int")
+		// must flag visit specially
+	} else if (base_type_def->get_key() == "int") {
+		m.please_delete(&*base_type_def);	// HACKERY
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&int_def);
+		// must flag visit specially
+	}
 	// else leave the base definition as is
 	// reference count will take care of discarded memory :)
 }

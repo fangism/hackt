@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.3 2005/02/27 22:54:29 fang Exp $
+	$Id: excl_ptr.h,v 1.3.8.1 2005/03/05 00:55:13 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -85,7 +85,7 @@ public:
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
-	typedef	single_owner_pointer_tag	pointer_category;
+	typedef	exclusive_owner_pointer_tag	pointer_category;
 	static const bool		is_array = false;
 	static const bool		is_intrusive = false;
 	static const bool		is_counted = false;
@@ -393,7 +393,7 @@ public:
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
-	typedef	single_owner_pointer_tag	pointer_category;
+	typedef	exclusive_owner_pointer_tag	pointer_category;
 	static const bool		is_array = false;
 	static const bool		is_intrusive = false;
 	static const bool		is_counted = false;
@@ -533,7 +533,7 @@ public:
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
-	typedef	single_owner_pointer_tag	pointer_category;
+	typedef	never_owner_pointer_tag	pointer_category;
 	static const bool		is_array = false;
 	static const bool		is_intrusive = false;
 	static const bool		is_counted = false;
@@ -748,7 +748,7 @@ public:
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
-	typedef	single_owner_pointer_tag	pointer_category;
+	typedef	sometimes_owner_pointer_tag	pointer_category;
 	static const bool		is_array = false;
 	static const bool		is_intrusive = false;
 	static const bool		is_counted = false;
