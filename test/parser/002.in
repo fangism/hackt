@@ -1,4 +1,6 @@
 // this should pass
 
-namespace fang;
+namespace fang {
+
+};
 
