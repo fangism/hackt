@@ -39,15 +39,32 @@ f_g(void) {
 	return f_c(2, 3);
 }
 
+float
+dude_wheres_my_prototype(const char* a, int b[4]) {
+	STACKTRACE_BRIEF;
+	return 0.0;
+}
+
+float
+verbose_function_trace(const char* a, int b[4]) {
+	STACKTRACE_VERBOSE;
+	return 0.0;
+}
+
 int
 main(int argc, char* argv[]) {
+	static int four[4];
 	{
 		STACKTRACE_ECHO_ON;
 		cerr << f_g() << endl;
+		dude_wheres_my_prototype("useless", four);
+		verbose_function_trace("useless", four);
 	}
 	{
 		STACKTRACE_ECHO_OFF;
 		cerr << f_g() << endl;
+		dude_wheres_my_prototype("useless", four);
+		verbose_function_trace("useless", four);
 	}
 }
 
