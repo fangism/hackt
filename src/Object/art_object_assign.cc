@@ -1,13 +1,14 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.11 2005/01/13 18:59:44 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.12 2005/01/16 02:44:18 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_CC__
 #define	__ART_OBJECT_ASSIGN_CC__
 
 #include <iostream>
+#include <exception>
 #include <numeric>
 
 #include "art_object_assign.h"
@@ -229,7 +230,7 @@ pbool_expression_assignment::unroll(void) const {
 	if (assign_err) {
 		cerr << "ERROR: something went wrong in pbool assignment."
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 	}
 }
 
@@ -408,7 +409,7 @@ pint_expression_assignment::unroll(void) const {
 	if (assign_err) {
 		cerr << "ERROR: something went wrong in pint assignment."
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 	}
 }
 

@@ -1,12 +1,13 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.30 2005/01/15 06:16:59 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.31 2005/01/16 02:44:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
 #define	__ART_OBJECT_DEFINITION_CC__
 
+#include <exception>
 #include <iostream>
 
 #include "art_parser_base.h"
@@ -1191,7 +1192,7 @@ built_in_datatype_def::load_object(persistent_object_manager& m) {
 	cerr << "ERROR: built_in_datatype_def::load_object() "
 		"should never be called!" << endl;
 	DIE;
-	exit(1);
+	THROW_EXIT;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1200,7 +1201,7 @@ built_in_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
 		"should never be called!" << endl;
 	DIE;
-	exit(1);
+	THROW_EXIT;
 }
 
 //=============================================================================

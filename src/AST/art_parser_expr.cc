@@ -1,12 +1,13 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.11 2005/01/14 03:46:38 fang Exp $
+	$Id: art_parser_expr.cc,v 1.12 2005/01/16 02:44:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
 #define	__ART_PARSER_EXPR_CC__
 
+#include <exception>
 #include <iostream>
 
 #include "art_parser_token.h"
@@ -395,13 +396,13 @@ id_expr::check_build(context& c) const {
 			cerr << "object \"" << *qid <<
 				"\" is not an instance, ERROR!  "
 				<< qid->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	} else {
 		// push NULL or error object to continue?
 		cerr << "object \"" << *qid << "\" not found, ERROR!  "
 			<< qid->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	return never_ptr<const object>(NULL);
 //	return c.lookup_instance(*qid);
@@ -478,14 +479,14 @@ range::check_build(context& c) const {
 		if (!lp) {
 			cerr << "Expression is not a pint-type, ERROR!  " <<
 				lower->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		// check if expression is initialized
 	} else {
 		cerr << endl;
 		cerr << "Error resolving expression " << lower->where()
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	if (upper) {
@@ -500,13 +501,13 @@ range::check_build(context& c) const {
 			if (!up) {
 				cerr << "Expression is not a pint-type, "
 					"ERROR!  " << upper->where() << endl;
-				exit(1);
+				THROW_EXIT;
 			}
 			// check if expression is initialized
 		} else {
 			cerr << "Error resolving expression " << upper->where()
 				<< endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		// at this point, is ok
 
@@ -523,7 +524,7 @@ range::check_build(context& c) const {
 					".  ERROR!" << endl;
 				c.push_object_stack(
 					count_ptr<const_range>(NULL));
-				// exit(1);
+				// THROW_EXIT;
 				// or let error get caught elsewhere?
 			} else {
 				// make valid constant range
@@ -591,7 +592,7 @@ range_list::check_build(context& c) const {
 			cerr << "Problem with dimension " << i+1 <<
 				" of sparse_range_list between "
 				<< where() << endl;
-			exit(1);		// terminate?
+			THROW_EXIT;		// terminate?
 		} else if (!o.is_a<ART::entity::index_expr>()) {
 			// pint_const *should* => index_expr ...
 			// make sure each item is a range expression
@@ -600,7 +601,7 @@ range_list::check_build(context& c) const {
 				<< where() << endl;
 //			o->what(cerr << "object is a ") << endl;
 //			o->dump(cerr << "object dump: ") << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		// else o is an index_expr
 		ol->push_front(o);
@@ -643,13 +644,13 @@ dense_range_list::check_build(context& c) const {
 			cerr << "Problem with dimension " << i+1 <<
 				" of dense_range_list between "
 				<< where() << endl;
-			exit(1);		// terminate?
+			THROW_EXIT;		// terminate?
 		} else if (!o.is_a<pint_expr>()) {
 			// make sure that each item is an integer expr
 			cerr << "Expression in dimension " << i+1 <<
 				" of dense_range_list is not integer!  "
 				<< where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		ol->push_front(o);
 	}
@@ -868,7 +869,7 @@ member_expr::check_build(context& c) const {
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< e->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	const count_ptr<const simple_instance_reference>
 		inst_ref(o.is_a<const simple_instance_reference>());
@@ -878,7 +879,7 @@ member_expr::check_build(context& c) const {
 			inst_ref->dimensions() << "-dimension array, "
 			"must be scalar!  (for now...)  " <<
 			e->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	const never_ptr<const definition_base>
@@ -904,7 +905,7 @@ member_expr::check_build(context& c) const {
 			base_def->get_qualified_name() << 
 			" has no public member named \"" << *member <<
 			"\" at " << member->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	c.push_object_stack(
 		member_inst->make_member_instance_reference(inst_ref));
@@ -969,7 +970,7 @@ index_expr::check_build(context& c) const {
 	// see range_list::check_build()
 	if (!index_obj) {
 		cerr << "ERROR in indices!  " << ranges->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	const count_ptr<object_list>
 		ol(index_obj.is_a<object_list>());
@@ -979,7 +980,7 @@ index_expr::check_build(context& c) const {
 	if (!index_list_obj) {
 		cerr << "ERROR in index list!  "
 			<< ranges->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	NEVER_NULL(index_list_obj);
 
@@ -989,7 +990,7 @@ index_expr::check_build(context& c) const {
 	if (!base_obj) {
 		cerr << "ERROR in base instance_reference!  "
 			<< e->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	// later this may be a member_instance_reference...
@@ -1002,7 +1003,7 @@ index_expr::check_build(context& c) const {
 	const bool ai = base_inst->attach_indices(index_list_obj);
 	if (!ai) {
 		cerr << ranges->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// push indexed instance reference back onto stack
 	c.push_object_stack(base_inst);

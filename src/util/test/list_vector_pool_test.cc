@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.5 2004/12/05 05:08:28 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.6 2005/01/16 02:44:27 fang Exp $
  */
 
 #include <assert.h>
@@ -11,11 +11,17 @@
 #include "qmap.tcc"
 #include "memory/list_vector_pool.h"
 
+#include "what.h"
+
 #include "using_ostream.h"
 using std::string;
 using util::memory::list_vector_pool;
 using QMAP_NAMESPACE::qmap;
 using std::next_permutation;
+
+namespace util {
+	SPECIALIZE_UTIL_WHAT(string, "string")
+}
 
 //=============================================================================
 // bogus test class
@@ -61,6 +67,8 @@ public:
 //=============================================================================
 int
 main(int argc, char* argv[]) {
+	cout << "NOTE: do not be alarmed by memory leak warnings!" << endl <<
+		"they are intentional for testing diagnostics." << endl;
 {
 	cout << "test 1: " << endl;
 	string_manager m;

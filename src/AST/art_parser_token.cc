@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.17 2005/01/15 19:13:38 fang Exp $
+	$Id: art_parser_token.cc,v 1.18 2005/01/16 02:44:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -10,6 +10,7 @@
 #include <ostream>
 #include <cstdio>		// for sprintf
 #include <cstring>		// for a few C-string functions
+#include <exception>
 
 #include "art_switches.h"
 #include "art_parser_debug.h"
@@ -337,7 +338,7 @@ token_identifier::check_build(context& c) const {
 		c.push_object_stack(count_ptr<object>(NULL));
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
-		exit(1);		// temporary termination
+		THROW_EXIT;		// temporary termination
 	}
 	return inst;
 }

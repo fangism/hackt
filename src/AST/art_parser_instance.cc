@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.15 2005/01/15 06:09:41 fang Exp $
+	$Id: art_parser_instance.cc,v 1.16 2005/01/16 02:44:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -13,6 +13,7 @@
 // inline methods other than defining in the header or using
 // -fkeep-inline-functions
 
+#include <exception>
 #include <iostream>
 
 #include "art_parser_debug.h"
@@ -167,7 +168,7 @@ if (size() > 0) {		// non-empty
 	if (!*first_obj) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 	} else if (first_obj->is_a<const param_instance_reference>()) {
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
@@ -186,7 +187,7 @@ if (size() > 0) {		// non-empty
 		if (!exass) {
 			cerr << "HALT: at least one error in the "
 				"assignment list.  " << where() << endl;
-			exit(1);
+			THROW_EXIT;
 		} else {
 			excl_ptr<const param_expression_assignment>
 				exass_c(exass);
@@ -202,7 +203,7 @@ if (size() > 0) {		// non-empty
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "
 				<< where() << endl;
-			exit(1);
+			THROW_EXIT;
 		} else {
 			excl_ptr<const instance_reference_connection>
 				ircp = connection.as_a_xfer<const instance_reference_connection>();
@@ -215,7 +216,7 @@ if (size() > 0) {		// non-empty
 		cerr << "WTF? first element of alias_list is not "
 			"an instance reference!"
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	return ret;
@@ -407,7 +408,7 @@ instance_array::check_build(context& c) const {
 		if (!o) {
 			cerr << "ERROR in dimensions!  " << 
 				ranges->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		const count_ptr<object_list>
 			ol(o.is_a<object_list>());
@@ -418,11 +419,11 @@ instance_array::check_build(context& c) const {
 		if (!d) {
 			cerr << "ERROR in building sparse range list!  "
 				<< ranges->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		const never_ptr<const instance_collection_base>
 			t(c.add_instance(*id, d));
-		// if there was error, would've exit(1)'d (temporary)
+		// if there was error, would've THROW_EXIT'd (temporary)
 		return t;
 	} else {
 		return instance_base::check_build(c);
@@ -552,7 +553,7 @@ instance_connection::check_build(context& c) const {
 	if (!o) {
 		// instance_base already prints error message...
 //		cerr << "ERROR with " << *id << " at " << id->where() << endl;
-		exit(1);
+		THROW_EXIT;
 		return return_type(NULL);
 	}
 
@@ -570,7 +571,7 @@ instance_connection::check_build(context& c) const {
 	if (!obj) {
 		cerr << "ERROR in object_list produced at "
 			<< actuals_base::where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
 		obj_list(obj.is_a<const object_list>());
@@ -581,7 +582,7 @@ instance_connection::check_build(context& c) const {
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where() << endl;
-		exit(1);
+		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
 			ircp = port_con.as_a_xfer<const instance_reference_connection>();
@@ -641,7 +642,7 @@ connection_statement::check_build(context& c) const {
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
 			"connection_statement at " << lvalue->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	const count_ptr<const simple_instance_reference>
 		inst_ref(o.is_a<const simple_instance_reference>());
@@ -653,7 +654,7 @@ connection_statement::check_build(context& c) const {
 	if (!o) {
 		cerr << "ERROR in object_list produced at "
 			<< actuals_base::where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
 		obj_list(o.is_a<const object_list>());
@@ -664,7 +665,7 @@ connection_statement::check_build(context& c) const {
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where() << endl;
-		exit(1);
+		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
 			ircp = port_con.as_a_xfer<const instance_reference_connection>();

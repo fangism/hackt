@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.13 2005/01/15 06:09:41 fang Exp $
+	$Id: art_parser_definition.cc,v 1.14 2005/01/16 02:44:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -14,6 +14,7 @@
 // inline methods other than defining in the header or using
 // -fkeep-inline-functions
 
+#include <exception>
 #include <iostream>
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
@@ -249,7 +250,7 @@ enum_signature::check_build(context& c) const {
 	if (!ret) {
 		// error handling?
 		cerr << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	return ret;
 //	return c.set_current_prototype(ed);
@@ -371,7 +372,7 @@ enum_def::check_build(context& c) const {
 #if 0
 	if (!o) {
 		cerr << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 #endif
 	c.close_enum_definition();
@@ -531,7 +532,7 @@ process_signature::check_build(context& c) const {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
 			cerr << temp_spec->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	}
 	if (ports && !ports->empty()) {
@@ -541,7 +542,7 @@ process_signature::check_build(context& c) const {
 #if 0
 		if (!o) {
 			cerr << ports->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 #endif
 	}
@@ -552,7 +553,7 @@ process_signature::check_build(context& c) const {
 	INVARIANT(!c.get_current_prototype());
 	if (!o) {
 		cerr << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	return o;
 //	return c.set_current_prototype(ret);
@@ -656,11 +657,11 @@ process_def::check_build(context& c) const {
 		cerr << "ERROR checking signature for process "
 			<< get_name() << " doesn\'t match that of "
 			"previous declaration!  " << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	// only problem from here is if process was already defined.  
-	// in which case, open_process_definition will exit(1);
+	// in which case, open_process_definition will THROW_EXIT;
 	c.open_process_definition(get_name());		// will handle errors
 	o = body->check_build(c);
 	// useless return value
@@ -764,7 +765,7 @@ typedef_alias::check_build(context& c) const {
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
 			"ERROR!  " << basedef->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// need to worry about resetting definition reference?
 
@@ -785,7 +786,7 @@ if (base->get_temp_spec()) {
 		if (!o) {
 			cerr << "ERROR in template formals of typedef!  "
 				<< temp_spec->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	}
 	base->check_build(c);	// make sure is complete type
@@ -800,7 +801,7 @@ if (base->get_temp_spec()) {
 	if (!ftr) {
 		cerr << "ERROR resolving concrete type reference in typedef!  "
 			<< base->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// must reset because not making instances
 	c.reset_current_fundamental_type();
@@ -813,7 +814,7 @@ if (base->get_temp_spec()) {
 	bool b = tdb->assign_typedef(ftr_ex);
 	if (!b) {
 		cerr << "ERROR assigning typedef!  " << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// let context add the complete alias to the scope
 	// check for collision error
@@ -824,13 +825,13 @@ if (base->get_temp_spec()) {
 	if (temp_spec) {
 		cerr << "ERROR: pure definition alias cannot have "
 			"a template signature.  " << where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// issue warning about this interpretation?
 	const bool b = c.alias_definition(d, *id);
 	if (!b) {
 		cerr << id->where() << endl;
-		exit(1);
+		THROW_EXIT;
 		return never_ptr<const object>(NULL);
 	}
 	// else was successful

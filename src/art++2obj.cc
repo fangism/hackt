@@ -2,7 +2,7 @@
 	\file "art++2obj.cc"
 	Converts ART source code to an object file (pre-unrolled).
 
-	$Id: art++2obj.cc,v 1.7 2005/01/14 00:00:50 fang Exp $
+	$Id: art++2obj.cc,v 1.8 2005/01/16 02:44:15 fang Exp $
  */
 
 #include <iostream>
@@ -46,7 +46,12 @@ main(int argc, char* argv[]) {
 	parser::context the_context(the_module);
 
 	// make sure yyin (in our case, artxx_in)  is set
+try {
 	artxx_parse();
+}
+catch (...) {
+	return 1;
+}
 	fclose(artxx_in);
 #if USING_YACC
 	root = excl_ptr<parser::node>(artxx_val._root_body);
@@ -57,7 +62,12 @@ if (root) {
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
+try {
 	root->check_build(the_context);		// useless return value
+}
+catch (...) {
+	return 1;
+}
 } else if (0) {
 	// don't print and exit, just continue to write empty object
 	cerr << "Empty file." << endl;

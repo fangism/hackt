@@ -6,7 +6,7 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.4 2005/01/13 19:00:02 fang Exp $
+	$Id: macros.h,v 1.5 2005/01/16 02:44:22 fang Exp $
  */
 
 #ifndef	__MACROS_H__
@@ -16,7 +16,7 @@
 #define	NULL			0
 #endif
 
-#include <assert.h>
+#include <cassert>
 
 //=============================================================================
 /**
@@ -102,6 +102,14 @@
 
 //=============================================================================
 // exception throwing...
+
+/**
+	A replacement for exit(1).  
+	exit(1) is reserved for a point (say, in main()), where the stack is
+	cleaned up, because exit() skips stack clean-up.  
+	Exceptions, on the other hand, will clean-up the stack as it unwinds.  
+ */
+#define	THROW_EXIT		throw std::exception()
 
 //=============================================================================
 // error reporting...

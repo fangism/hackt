@@ -3,13 +3,14 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.6 2005/01/15 19:13:43 fang Exp $
+	$Id: list_vector_pool.h,v 1.7 2005/01/16 02:44:23 fang Exp $
  */
 
 #ifndef	__LIST_VECTOR_POOL_H__
 #define	__LIST_VECTOR_POOL_H__
 
 #include "memory/list_vector_pool_fwd.h"
+#include "macros.h"
 
 #include <pthread.h>
 
@@ -146,6 +147,10 @@ public:
 	so is not general-purpose, not intended for arrays.  
 	For a more general pool allocator use the __gnu_cxx::__pool_alloc, 
 	which is likely to be the default allocator.  
+
+	For stronger diagnostics.
+	IDEA: use a bit-vector map to track which addresses are available.
+	IDEA: use a discrete_interval_set to track address ranges.
  */
 template <class T, bool Threaded>
 class list_vector_pool {
@@ -210,6 +215,11 @@ private:
 	const size_t				chunk_size;
 	impl_type				pool;
 	free_list_type				free_list;
+	/**
+		Records the peak number of elements allocated.
+		Useful for detecting memory leaks.  
+	 */
+	size_t					peak;
 public:
 	/**
 		Reserves one chunk up-front.  
@@ -218,7 +228,7 @@ public:
 	 */
 	explicit
 	list_vector_pool(const size_type C = 16) : 
-			chunk_size(C), pool(), free_list() {
+			chunk_size(C), pool(), free_list(), peak(0) {
 		assert(chunk_size);
 		// worry about alignment, placement and pages sizes later
 		pool.push_back(chunk_type());
@@ -240,14 +250,22 @@ public:
 
 	// no copy-constructor
 
-	// default destructor suffices
+	/**
+		Default destructor with diagnostics.
+		There is a non-fatal memory leak if peak != free_list's size, 
+		because all elements that belong to this allocator's region
+		should be returned to this free list before the entire
+		allocator is released!  Else subsequent memory allocations
+		may overwrite the same physical space in memory, 
+		corrupting memory reference by the old non-freed pointers!
+	 */
 	~list_vector_pool() {
 #if VERBOSE_ALLOC
 		status(cerr << "~list_vector_pool<" <<
 #if DEBUG_USING_WHAT
 			what<T>::name <<
 #endif
-			">()" << endl);
+			">() at " << this << endl);
 #if VERBOSE_ALLOC && 0
 		// for debugging deallocation path only
 		typename impl_type::iterator i = pool.begin();
@@ -265,6 +283,13 @@ public:
 		cerr << "...cleared." << endl;
 #endif
 #endif
+		INVARIANT(free_list.size() <= peak);
+		const size_t leak = peak -free_list.size();
+		if (leak) {
+			cerr << "\t*** YOU MAY HAVE A MEMORY LEAK! ***" << endl;
+			cerr << '\t' << leak << ' ' << what<T>::name <<
+				" are unaccounted for." << endl;
+		}
 	}
 
 	/**
@@ -327,6 +352,7 @@ public:
 #endif
 				" from pool @ " << ret << endl;
 #endif
+			peak++;
 			return ret;
 		}
 		// lock will expire at end-of-scope
@@ -399,21 +425,23 @@ public:
 	}
 
 	// other miscellaneous methods
-	size_type max_size() const;
+	size_type
+	max_size() const;
 
 	// rebinding typedef
 
-	// feedback IO
+	/// feedback IO, indented one-tab by default
 	ostream&
 	status(ostream& o) const {
-		o << pool.size() << " chunks of " << chunk_size << "*" <<
-			sizeof(T) << " " <<
+		o << '\t' << pool.size() << " chunks of " << chunk_size <<
+			"*" << sizeof(T) << " " <<
 #if DEBUG_USING_WHAT
 			what<T>::name <<
 #endif
-			" have been allocated." << endl;
-		o << "Free-list has " << free_list.size() << 
-			" entries available." << endl;
+			" allocated." << endl;
+		o << '\t' << "Peak usage: " << peak << " elements, " <<
+			"free-list has " << free_list.size() << 
+			" remaining." << endl;
 		return o;
 	}
 

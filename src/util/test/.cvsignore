@@ -9,6 +9,7 @@ core.*
 *.swp
 *.test
 *.out
+*.filter
 *.diff
 ignore
 ptrs_test
@@ -28,4 +29,6 @@ list_vector_pool_test
 packed_array_test
 stacktrace_test
 what_test
+exit_test
+throw_test
 

@@ -1,12 +1,13 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.35 2005/01/15 06:16:59 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.36 2005/01/16 02:44:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
 #define	__ART_OBJECT_EXPR_CC__
 
+#include <exception>
 #include <iostream>
 #include <algorithm>
 
@@ -138,7 +139,7 @@ param_expr::make_param_expression_assignment(
 	if (!p->may_be_initialized()) {
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
 			"not initialized or dependent on formals: ") << endl;
-		exit(1);		// temporary
+		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	} else	return p->make_param_expression_assignment_private(p);
 }
@@ -1151,14 +1152,14 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 			cerr << "ERROR: assignment unrolling expecting "
 				"valid dimensions!" << endl;
 			// or throw exception
-			exit(1);
+			THROW_EXIT;
 		}
 		// load values into cache list as a sequence
 		// pass list by reference to a virtual func?
 		const bool err = src.resolve_values_into_flat_list(vals);
 		if (err) {
 			cerr << "ERROR: in flattening integer values." << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
@@ -1168,7 +1169,7 @@ pbool_instance_reference::assigner::assigner(const pbool_expr& p) :
 		} else {
 			cerr << "ERROR: resolving scalar integer value!"
 				<< endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	}
 }
@@ -1199,7 +1200,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	if (dim.empty()) {
 		cerr << "ERROR: unable to resolve constant dimensions."
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 		// return true;
 	}
 	// We are assured that the dimensions of the references
@@ -1215,7 +1216,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 			"dimension-equivalent!" << endl;
 		ranges.dump(cerr << "got: ");
 		dim.dump(cerr << " and: ") << endl;
-		exit(1);
+		THROW_EXIT;
 		// return true;
 	}
 	// else good to continue
@@ -1243,7 +1244,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 				key_gen->get_lower_corner();
 			cerr << ", upper_corner = " <<
 				key_gen->get_upper_corner() << endl;
-			exit(1);
+			THROW_EXIT;
 #endif
 			assign_err = true;
 		}
@@ -1586,14 +1587,14 @@ pint_instance_reference::assigner::assigner(const pint_expr& p) :
 			cerr << "ERROR: assignment unrolling expecting "
 				"valid dimensions!" << endl;
 			// or throw exception
-			exit(1);
+			THROW_EXIT;
 		}
 		// load values into cache list as a sequence
 		// pass list by reference to a virtual func?
 		const bool err = src.resolve_values_into_flat_list(vals);
 		if (err) {
 			cerr << "ERROR: in flattening integer values." << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	} else {	// is just scalar value
 		// leave ranges empty
@@ -1603,7 +1604,7 @@ pint_instance_reference::assigner::assigner(const pint_expr& p) :
 		} else {
 			cerr << "ERROR: resolving scalar integer value!"
 				<< endl;
-			exit(1);
+			THROW_EXIT;
 		}
 	}
 }
@@ -1634,7 +1635,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 	if (dim.empty()) {
 		cerr << "ERROR: unable to resolve constant dimensions."
 			<< endl;
-		exit(1);
+		THROW_EXIT;
 		// return true;
 	}
 	// We are assured that the dimensions of the references
@@ -1650,7 +1651,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 			"dimension-equivalent!" << endl;
 		ranges.dump(cerr << "got: ");
 		dim.dump(cerr << " and: ") << endl;
-		exit(1);
+		THROW_EXIT;
 		// return true;
 	}
 	// else good to continue
@@ -1678,7 +1679,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 				key_gen->get_lower_corner();
 			cerr << ", upper_corner = " <<
 				key_gen->get_upper_corner() << endl;
-			exit(1);
+			THROW_EXIT;
 #endif
 			assign_err = true;
 		}
@@ -1854,7 +1855,7 @@ pint_const_collection::dump(ostream& o) const {
 string
 pint_const_collection::hash_string(void) const {
 	cerr << "FANG, write pint_const_collection::hash_string()!" << endl;
-	exit(1);
+	THROW_EXIT;
 	return string();
 }
 
@@ -1946,7 +1947,7 @@ bool
 pint_const_collection::resolve_value(int& ) const {
 	cerr << "Never supposed to call pint_const_collection::resolve_value()."
 		<< endl;
-	exit(1);
+	THROW_EXIT;
 	return false;
 }
 
@@ -1954,7 +1955,7 @@ pint_const_collection::resolve_value(int& ) const {
 int
 pint_const_collection::static_constant_int(void) const {
 	cerr << "Never supposed to call pint_const_collection::static_constant_int()." << endl;
-	exit(1);
+	THROW_EXIT;
 	return -1;
 }
 

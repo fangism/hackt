@@ -1,11 +1,17 @@
+NOTE: do not be alarmed by memory leak warnings!
+they are intentional for testing diagnostics.
 test 1: 
 cleaning up string_manager...
 test 2a[0]: 
 added 40320 strings to map.
 cleaning up string_manager...
+	*** YOU MAY HAVE A MEMORY LEAK! ***
+	40320 string are unaccounted for.
 test 2a[1]: 
 added 40320 strings to map.
 cleaning up string_manager...
+	*** YOU MAY HAVE A MEMORY LEAK! ***
+	40320 string are unaccounted for.
 test 2b[0]: 
 added/deleted 40320 strings to map.
 cleaning up string_manager...
@@ -16,12 +22,18 @@ test 3[0]:
 added 40320 strings to map.
 deleted every 10th strings from map.
 cleaning up string_manager...
+	*** YOU MAY HAVE A MEMORY LEAK! ***
+	36288 string are unaccounted for.
 test 3[1]: 
 added 40320 strings to map.
 deleted every 10th strings from map.
 cleaning up string_manager...
+	*** YOU MAY HAVE A MEMORY LEAK! ***
+	36288 string are unaccounted for.
 test 4: 
 added 40320 strings to map.
 deleted every 10th strings from map.
 added and replaced with numeric strings
 cleaning up string_manager...
+	*** YOU MAY HAVE A MEMORY LEAK! ***
+	36792 string are unaccounted for.

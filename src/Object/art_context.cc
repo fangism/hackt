@@ -2,13 +2,14 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.19 2005/01/15 06:16:59 fang Exp $
+ 	$Id: art_context.cc,v 1.20 2005/01/16 02:44:18 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
 #define	__ART_CONTEXT_CC__
 
 #include <cassert>
+#include <exception>
 #include <iostream>
 
 #include "art_context.h"
@@ -127,7 +128,7 @@ context::open_namespace(const token_identifier& id) {
 		// leave current_namespace as it is
 		type_error_count++;
 		cerr << id.where() << endl;
-		exit(1);			// temporary
+		THROW_EXIT;			// temporary
 		// return NULL
 	}
 }
@@ -162,7 +163,7 @@ context::using_namespace(const qualified_id& id) {
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
-		exit(1);			// temporary
+		THROW_EXIT;			// temporary
 	}
 }
 
@@ -179,7 +180,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
-		exit(1);			// temporary
+		THROW_EXIT;			// temporary
 	}
 }
 
@@ -243,7 +244,7 @@ context::open_enum_definition(const token_identifier& ename) {
 		if (ed->is_defined()) {
 			cerr << ename << " is already defined!  attempted "
 				"redefinition at " << ename.where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
 		current_open_definition = ed;
@@ -253,7 +254,7 @@ context::open_enum_definition(const token_identifier& ename) {
 		// no real reason why this should ever fail...
 		type_error_count++;
 		cerr << ename.where() << endl;
-		exit(1);			// temporary
+		THROW_EXIT;			// temporary
 		// return NULL
 	}
 }
@@ -273,14 +274,14 @@ context::add_enum_member(const token_identifier& em) {
 	if (!ed) {
 		cerr << "expected current_open_definition to be "
 			"enum_datatype_def!  FATAL ERROR." << endl;
-		exit(1);
+		THROW_EXIT;
 	} else if (ed->add_member(em)) {
 		return true;
 	} else {
 		cerr << "enum " << ed->get_name() << " already has a member "
 			"named " << em << ".  ERROR! " << em.where() << endl;
 		type_error_count++;
-		exit(1);
+		THROW_EXIT;
 		return false;
 	}
 }
@@ -315,7 +316,7 @@ context::open_process_definition(const token_identifier& pname) {
 		if (pd->is_defined()) {
 			cerr << pname << " is already defined!  attempted "
 				"redefinition at " << pname.where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
 		current_open_definition = pd;
@@ -326,7 +327,7 @@ context::open_process_definition(const token_identifier& pname) {
 		// no real reason why this should ever fail...
 		type_error_count++;
 		cerr << pname.where() << endl;
-		exit(1);			// temporary
+		THROW_EXIT;			// temporary
 		// return NULL
 	}
 }
@@ -743,7 +744,7 @@ context::add_instance(const token_identifier& id,
 	if (!inst_base) {
 		cerr << id.where() << endl;
 		type_error_count++;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	excl_ptr<const instance_management_base>
@@ -794,7 +795,7 @@ context::add_template_formal(const token_identifier& id,
 	if (!inst_base) {
 		cerr << id.where() << endl;
 		type_error_count++;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	if (d) {
@@ -809,7 +810,7 @@ context::add_template_formal(const token_identifier& id,
 			cerr << "ERROR assigning default value to " << id <<
 				", type/size mismatch!  " << id.where() << endl;
 			type_error_count++;
-			exit(1);
+			THROW_EXIT;
 		}
 	}
 
@@ -863,7 +864,7 @@ context::add_port_formal(const token_identifier& id,
 	if (!inst_base) {
 		cerr << id.where() << endl;
 		type_error_count++;
-		exit(1);
+		THROW_EXIT;
 	}
 
 	excl_ptr<const instance_management_base>

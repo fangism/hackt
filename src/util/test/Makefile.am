@@ -29,6 +29,8 @@ noinst_PROGRAMS = \
 	multikey_generator_test \
 	multikey_qmap_slice_test \
 	packed_array_test \
+	exit_test \
+	throw_test \
 	stacktrace_test \
 	what_test
 
@@ -47,8 +49,17 @@ multikey_qmap_test_SOURCES = multikey_qmap_test.cc
 multikey_generator_test_SOURCES = multikey_generator_test.cc
 multikey_qmap_slice_test_SOURCES = multikey_qmap_slice_test.cc cube_slice.h
 packed_array_test_SOURCES = packed_array_test.cc
-stacktrace_test_SOURCES = stacktrace_test.cc ../stacktrace.cc
+exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
+throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
+stacktrace_test_SOURCES = stacktrace_test.cc stacktrace.cc
 what_test_SOURCES = what_test.cc
+
+# do not explicitly reference files in parent directory, because automake
+# will clobber the .deps dependencies in the parent directory, 
+# possibly confusing the parent directories when they expect .deps to
+# exist, especially on make distclean.  
+stacktrace.cc: ../stacktrace.cc
+	$(LN_S) $< $@
 
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/..
@@ -64,11 +75,12 @@ EXTRA_DIST = test-expect.sh $(noinst_PROGRAMS:=.stderr)
 CLEANFILES = \
 	$(noinst_PROGRAMS:=.test) \
 	$(noinst_PROGRAMS:=.diff) \
+	$(noinst_PROGRAMS:=.filter) \
 	$(noinst_PROGRAMS:=.out)
 
 TESTS = $(noinst_PROGRAMS:=.test)
 
 clean-local:
 	-$(RM) *.core core.*
-	-$(RM) *.diff *.test *.out
+	-$(RM) *.diff *.test *.out *.filter
 

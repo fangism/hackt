@@ -1,12 +1,13 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.11 2005/01/15 06:17:00 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.12 2005/01/16 02:44:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
 #define	__ART_OBJECT_INSTANCE_PINT_CC__
 
+#include <exception>
 #include <iostream>
 #include <algorithm>
 
@@ -373,7 +374,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		cerr << "ERROR: unable to resolve indices "
 			"for instantiation: ";
 		i->dump(cerr) << endl;
-		exit(1);
+		THROW_EXIT;
 	} 
 	// else success
 	// now iterate through, unrolling one at a time...
@@ -394,7 +395,7 @@ pint_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen << 
 				"already instantiated!" << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		pi.instantiated = true;
 		// sanity check: shouldn't start out valid
@@ -583,7 +584,7 @@ pint_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
 		cerr << "ERROR: Already instantiated!" << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	the_instance.instantiated = true;
 	INVARIANT(!the_instance.valid);

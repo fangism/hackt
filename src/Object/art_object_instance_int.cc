@@ -3,12 +3,13 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_int.cc,v 1.10 2005/01/15 06:17:00 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.11 2005/01/16 02:44:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_INT_CC__
 #define	__ART_OBJECT_INSTANCE_INT_CC__
 
+#include <exception>
 #include <iostream>
 #include <algorithm>
 
@@ -205,7 +206,7 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		cerr << "ERROR: unable to resolve indices "
 			"for instantiation: ";
 		i->dump(cerr) << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// else success
 	// now iterate through, unrolling one at a time...
@@ -221,7 +222,7 @@ int_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
 				" already instantiated!" << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		pi.instantiate();
 		key_gen++;
@@ -399,7 +400,7 @@ int_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (the_instance.valid()) {
 		// should never happen, but just in case...
 		cerr << "ERROR: Scalar int already instantiated!" << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	the_instance.instantiate();
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.12 2005/01/15 06:09:40 fang Exp $
+	$Id: art_parser_base.cc,v 1.13 2005/01/16 02:44:16 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -13,6 +13,7 @@
 // inline methods other than defining in the header or using
 // -fkeep-inline-functions
 
+#include <exception>
 #include <iostream>
 
 #include "art_parser_debug.h"
@@ -761,7 +762,7 @@ concrete_type_ref::check_build(context& c) const {
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << base->where() << endl;
-		exit(1);		// temporary
+		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	}
 
@@ -784,7 +785,7 @@ concrete_type_ref::check_build(context& c) const {
 			cerr << "concrete_type_ref: "
 				"bad template args!  ERROR " 
 				<< temp_spec->where() << endl;
-			exit(1);		// temporary
+			THROW_EXIT;		// temporary
 			return return_type(NULL);
 		} 
 		const count_ptr<object_list>
@@ -796,14 +797,14 @@ concrete_type_ref::check_build(context& c) const {
 			cerr << "ERROR building template parameter "
 				"expression list.  " << temp_spec->where()
 				<< endl;
-			exit(1);		// temporary
+			THROW_EXIT;		// temporary
 		}
 		const count_ptr<const fundamental_type_reference>
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {
 			cerr << "ERROR making complete type reference.  "
 				<< where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		c.set_current_fundamental_type(type_ref);
 	} else {
@@ -813,7 +814,7 @@ concrete_type_ref::check_build(context& c) const {
 		if(!d->check_null_template_argument()) {
 			cerr << "definition expecting template arguments "
 				"where none were given!  " << where() << endl;
-			exit(1);		// temporary
+			THROW_EXIT;		// temporary
 			return never_ptr<const object>(NULL);
 		} else {
 			const count_ptr<const fundamental_type_reference>
@@ -821,7 +822,7 @@ concrete_type_ref::check_build(context& c) const {
 			if (!type_ref) {
 				cerr << "ERROR making complete type reference.  "
 					<< where() << endl;
-				exit(1);
+				THROW_EXIT;
 			}
 			c.set_current_fundamental_type(type_ref);
 		}

@@ -1,12 +1,13 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.7 2005/01/13 05:28:31 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.8 2005/01/16 02:44:19 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
 #define	__ART_OBJECT_INSTANCE_BOOL_CC__
 
+#include <exception>
 #include <iostream>
 #include <algorithm>
 
@@ -182,7 +183,7 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		cerr << "ERROR: unable to resolve indices "
 			"for instantiation: ";
 		i->dump(cerr) << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	// else success
 	// now iterate through, unrolling one at a time...
@@ -198,7 +199,7 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
 				" already instantiated!" << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		pi.instantiate();
 		key_gen++;
@@ -376,7 +377,7 @@ bool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	if (the_instance.valid()) {
 		// should never happen, but just in case...
 		cerr << "ERROR: Scalar bool already instantiated!" << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	the_instance.instantiate();
 }

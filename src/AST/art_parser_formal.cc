@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.11 2005/01/15 06:09:41 fang Exp $
+	$Id: art_parser_formal.cc,v 1.12 2005/01/16 02:44:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -13,6 +13,7 @@
 // inline methods other than defining in the header or using
 // -fkeep-inline-functions
 
+#include <exception>
 #include <iostream>
 
 #include "art_parser_debug.h"
@@ -193,7 +194,7 @@ port_formal_id::check_build(context& c) const {
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
 				dim->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
 			d(o.is_a<const range_expr_list>());
@@ -271,7 +272,7 @@ port_formal_decl::check_build(context& c) const {
 	} else {
 		cerr << "ERROR with concrete-type in port formal decl. at "
 			<< type->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
 	return return_type(NULL);
@@ -364,7 +365,7 @@ template_formal_id::check_build(context& c) const {
 		if (!o) {
 			cerr << "ERROR in default value expression " <<
 				dflt->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		const count_ptr<const param_expr>
 			p(o.is_a<const param_expr>());
@@ -379,7 +380,7 @@ template_formal_id::check_build(context& c) const {
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
 				dim->where() << endl;
-			exit(1);
+			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
 			d(o.is_a<const range_expr_list>());
@@ -452,7 +453,7 @@ template_formal_decl::check_build(context& c) const {
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
 			type->where() << endl;
-		exit(1);
+		THROW_EXIT;
 	}
 	c.set_current_fundamental_type(def->make_fundamental_type_reference());
 		// don't anticipate any problems here...

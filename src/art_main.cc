@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.7 2005/01/14 00:00:50 fang Exp $
+	$Id: art_main.cc,v 1.8 2005/01/16 02:44:15 fang Exp $
  */
 
 #include <iostream>
@@ -19,7 +19,13 @@ main(int argc, char* argv[]) {
 	entity::module the_module("-stdin-");
 	parser::context the_context(the_module);
 
+try {
 	artxx_parse();
+}
+catch (...) {
+	// parsing error
+	return 1;
+}
 
 DEBUG(DEBUG_BASIC, 
 	cerr << "parsing successful... tree built, on to type-checking!" 
@@ -39,7 +45,13 @@ DEBUG(DEBUG_BASIC,
 	// type-check, build a useful manipulable art object, and return it
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
+try {
 	top = root->check_build(the_context);
+}
+catch (...) {
+	// type-checking error
+	return 1;
+}
 }	// end if (root)
 DEBUG(DEBUG_BASIC, cerr << endl)
 

@@ -1,0 +1,35 @@
+Reserved pooled_thing chunk of size 4*4 starting at 0x1800a00
+Allocated pooled_thing from pool @ 0x1800a00
+Allocated pooled_thing from pool @ 0x1800a04
+Allocated pooled_thing from pool @ 0x1800a08
+Allocated pooled_thing from pool @ 0x1800a0c
+New chunk of 4 pooled_thing allocated.
+Allocated pooled_thing from pool @ 0x1800a60
+Allocated pooled_thing from pool @ 0x1800a64
+Allocated pooled_thing from pool @ 0x1800a68
+Allocated pooled_thing from pool @ 0x1800a6c
+New chunk of 4 pooled_thing allocated.
+Allocated pooled_thing from pool @ 0x1800ab0
+Allocated pooled_thing from pool @ 0x1800ab4
+Allocated pooled_thing from pool @ 0x1800ab8
+Allocated pooled_thing from pool @ 0x1800abc
+New chunk of 4 pooled_thing allocated.
+Allocated pooled_thing from pool @ 0x1800b00
+Allocated pooled_thing from pool @ 0x1800b04
+Returned pooled_thing @ 0x1800a00 to free-list.
+Returned pooled_thing @ 0x1800a04 to free-list.
+Returned pooled_thing @ 0x1800a08 to free-list.
+Returned pooled_thing @ 0x1800a0c to free-list.
+Returned pooled_thing @ 0x1800a60 to free-list.
+Returned pooled_thing @ 0x1800a64 to free-list.
+Returned pooled_thing @ 0x1800a68 to free-list.
+Returned pooled_thing @ 0x1800a6c to free-list.
+Returned pooled_thing @ 0x1800ab0 to free-list.
+Returned pooled_thing @ 0x1800ab4 to free-list.
+Returned pooled_thing @ 0x1800ab8 to free-list.
+Returned pooled_thing @ 0x1800abc to free-list.
+Returned pooled_thing @ 0x1800b00 to free-list.
+Returned pooled_thing @ 0x1800b04 to free-list.
+~list_vector_pool<pooled_thing>() at 0x54020
+	4 chunks of 4*4 pooled_thing allocated.
+	Peak usage: 14 elements, free-list has 14 remaining.

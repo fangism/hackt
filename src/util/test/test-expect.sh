@@ -11,7 +11,11 @@
 # the run real test, comparing outputs
 $1 2>&1 | cat > $1.out
 
-diff $2/$1.stderr $1.out 2>&1 | cat > $1.diff
+filter=$2/../../../test/address_filter.sed
+$filter $1.out > $1.out.filter
+$filter $2/$1.stderr > $1.stderr.filter
+
+diff $1.stderr.filter $1.out.filter 2>&1 | cat > $1.diff
 
 if [ -s $1.diff ] ; then
 	echo "$1.diff is non-empty!"
