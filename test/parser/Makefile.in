@@ -76,7 +76,6 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
-BISON = @BISON@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -200,7 +199,9 @@ CHMOD = chmod
 CVS = cvs
 DIFF = diff -B
 GREP = grep
+HEAD = head
 SED = sed
+TAIL = tail
 RM = rm -f
 MV = mv -f
 SYNC = sync
@@ -541,6 +542,7 @@ all-local: subdir.not_a_test $(TESTS)
 
 # automatically removes $(CLEANFILES)
 clean-local:
+	$(RM) *.core core.*
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...

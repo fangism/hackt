@@ -1,3 +1,5 @@
 *.core
+core.*
 ignore
 Makefile
+subdir.not_a_test
