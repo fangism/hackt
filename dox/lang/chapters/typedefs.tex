@@ -1,6 +1,6 @@
 % "chapters/typedefs.tex"
 
-%	$Id: typedefs.tex,v 1.4 2004/12/01 02:50:04 fang Exp $
+%	$Id: typedefs.tex,v 1.5 2004/12/08 03:48:40 fang Exp $
 
 \chapter{Typedefs}
 \label{sec:typedefs}
@@ -15,11 +15,11 @@ Two kinds of typedefs, with three syntaces.
 \noindent
 \tit{typedef-declaration}:
 \begin{enumerate}
-\item \ttt{typedef} \tit{existing-definition} \tit{identifier}\ttt{;}
-\item \ttt{typedef} \tit{existing-definition} 
+\item \ttt{typedef} \tit{existing-definition-id} \tit{identifier}\ttt{;}
+\item \ttt{typedef} \tit{existing-definition-id} 
 	\ttt{<} \tit{template argument list} \ttt{>} \tit{identifier}\ttt{;}
 \item \tit{template-signature}\\
-	\ttt{typedef} \tit{existing-definition} 
+	\ttt{typedef} \tit{existing-definition-id} 
 	\ttt{<} \tit{template-argument-list} \ttt{>} \tit{identifier}\ttt{;}
 \end{enumerate}
 
@@ -30,10 +30,12 @@ been declared.
 
 The first form is a pseudo-typedef, a pure \emph{definition} name alias, 
 as if one had written 
-\ttt{\#define} \tit{identifier} \tit{existing-definition} in C-preprocessing, 
+\ttt{\#define} \tit{identifier} \tit{existing-definition-id} 
+in C-preprocessing, 
 with the existing defininition being a simple identifier.  
+(\tit{existing-definition-id} may be a relative or absolute hierarchical name.) 
 The potential confusion with the first typedef is that 
-\tit{existing-definition} identifier may be mistaken for a templated type
+\tit{existing-definition-id} identifier may be mistaken for a templated type
 with all parameter arguments with defaults 
 (the only condition in which template arguments 
 may be omitted from a templated definition).  

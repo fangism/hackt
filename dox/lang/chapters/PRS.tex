@@ -1,0 +1,62 @@
+% "chapters/PRS.tex"
+
+%	$Id: PRS.tex,v 1.1 2004/12/08 03:48:39 fang Exp $
+
+\chapter{Production Rule Set (PRS)}
+\label{sec:prs}
+
+This chapter describes the Production Rule Set sub-language.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Attributes}
+\label{sec:prs:attrib}
+
+We need a clean way to tag nodes and rules with attributes
+for various tools.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Node attributes}
+\label{sec:prs:attrib:node}
+
+What happens when we connect nodes with conflicting attributes?
+
+Attributes from super-cells or sub-cells?
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Rule attributes}
+\label{sec:prs:attrib:rule}
+
+What happens when we OR-combine rules with different attributes?
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Literal attributes}
+\label{sec:prs:attrib:literal}
+
+The literals of the rule expressions may have attributes.  
+
+Mostly tool-specific use.
+
+Most common use: transistor sizing.  
+Also: for LVS.  
+
+Instance-specific attributes?
+Procedural layout?
+
+Automatic sizing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Loops}
+\label{sec:prs:loops}
+
+Loop syntax, unrolling, etc...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Options}
+\label{sec:prs:options}
+
+Compiler warnings:
+
+CMOS-implementability (exceptions allowed for attribute).  
+
+Staticizers?
+
