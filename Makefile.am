@@ -37,7 +37,7 @@ endif
 if HAVE_DOXYGEN
 docs: $(DOXYGEN_CONFIG)
 	$(DOXYGEN) $(DOXYGEN_CONFIG)
-	(cd dox/latex; $(MAKE) ps pdf < /dev/null )
+	(cd dox/latex; $(MAKE) < /dev/null )
 else
 docs:
 	@$(ECHO) No doxygen found in path.  
