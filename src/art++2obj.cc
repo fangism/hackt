@@ -53,7 +53,8 @@ if (root) {
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
 	root->check_build(the_context);		// useless return value
-} else {
+} else if (0) {
+	// don't print and exit, just continue to write empty object
 	cerr << "Empty file." << endl;
 	exit(0);
 }

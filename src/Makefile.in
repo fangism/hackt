@@ -436,15 +436,12 @@ CLEANPARSER = \
 	parser/art++-parse.lo \
 	parser/art++-parse.cc \
 	parser/art++-parse.h \
-	parser/art++-parse.loT \
-	parser/art++-parse-prefix.loT \
 	parser/art++-parse-prefix.lo \
 	parser/art++-parse-prefix.$(OBJEXT) \
 	parser/art++-parse-prefix.cc \
 	parser/art++-parse-prefix.h \
 	parser/art++-parse.output \
 	parser/art++-parse.output.h \
-	parser/libart___la-art++-parse.loT \
 	parser/libbogus_la-art++-parse.lo \
 	parser/libbogus_la-art++-parse.$(OBJEXT) \
 	parser/art++-union.lo \
@@ -457,7 +454,6 @@ CLEANLEXER = \
 	lexer/art++-lex-prefix.lo \
 	lexer/art++-lex-prefix.cc \
 	lexer/art++-lex.cc \
-	lexer/libbogus_la-art++-lex.loT \
 	lexer/libbogus_la-art++-lex.lo \
 	lexer/libbogus_la-art++-lex.$(OBJEXT)
 
@@ -1052,7 +1048,10 @@ clean-Object:
 	-$(RM) Object/*.lo
 
 # implies CLEANFILES
-clean-local: clean-AST clean-Object
+clean-local: clean-AST clean-Object clean-lexer clean-parser
+	for d in $(SUBDIRS); do \
+		$(RM) $$d/*.loT ; 
+	done
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
