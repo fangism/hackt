@@ -26,17 +26,24 @@ extern "C" {
 %}
 
 %union {
-// lexer members
-	long long_val;
-	double double_val;
-	string* text;
-// parser members
+/// use this universal symbol type for both lexer and parser
+	node* n;
+// let the various constructors perform static type-cast checks
 }
 
-/* the following single characters are legitimate tokens:
+/*
+	The lexer returns newly allocated nodes FOR ALL TOKENS, 
+	even ones that are just symbols.  
+	If you don't want to use a returned symbol, delete it!
+	We are keeping the memory and performance overhead of the 
+	front-end for now, for the sake of precise error reporting.  
+	If performance is a concern, consider writing new allocators
+	(using memory pools) to replace the default.  
+
+	The following single characters are legitimate tokens:
 	][(){}<>*%/=:;|!?~&^.+-
 
-	(can just copy these into a lex declaration)
+	(can just copy these into a lex declaration, enclosed in [])
 
 	note on character classes from grep's man page:
 		Most metacharacters  lose  their  special  meaning  inside
@@ -55,7 +62,7 @@ extern "C" {
 
 	the following tokens are defined below because they consist of
 	2 or more characters
-**/
+*/
 
 %token	ID
 %token	FLOAT
@@ -770,16 +777,34 @@ range
  */
 /*	as a reminder, these are the variables in the parser
 	hint: look at how they are used in the various yydebug blocks.  
-	short* yyss;
-	short* yyssp;
-	YYSTYPE* yyvs;
-	YYSTYPE* yyvsp;
+	short* yyss;		// state stack base
+	short* yyssp;		// state stack pointer
+	YYSTYPE* yyvs;		// value stack base
+	YYSTYPE* yyvsp;		// value stack pointer
+	YYSTYPE yylval;		// the last token received
 */
 void yyerror(const char* msg) {
+	short* s;
+	YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
 	cerr << "parse error: " << msg << endl;
 	// we've kept track of the position of every token
-	cerr << "near line " << current.line << " col " << current.col << endl;
+	cerr << "here is the yy-state-stack:";
+	for (s=yyss; s <= yyssp; s++)
+		cerr << ' ' << *s;
+	cerr << endl;
+	cerr << "here is the yy-value-stack:" << endl;
+	for (v=yyvs; v <= yyvsp; v++) {
+		if (v && v->n) {
+			v->n->what(cerr << '\t') << endl;
+		} else {
+			cerr << "\t(null) " << endl;
+		}
+	}
+	assert(yylval.n);	// NULL check
+	yylval.n->what(cerr << "received: ") << endl;
+	cerr << "on line " << current.line << " col " << current.col << endl;
+	// or throw exception
 	exit(1);
 }
 

@@ -77,6 +77,9 @@ static	char* string_buf_ptr = NULL;
 /* macros for tracking single line tokens (no new line) */
 #define TOKEN_UPDATE	current.col += yyleng;
 #define	NEWLINE_UPDATE	{ current.line++; current.col = 1; }
+#define	KEYWORD_UPDATE	{ yylval.n = new token_keyword(yytext); TOKEN_UPDATE; }
+#define	MULTICHAR_UPDATE						\
+			{ yylval.n = new token_string(yytext); TOKEN_UPDATE; }
 #define	STRING_UPDATE	{ TOKEN_UPDATE; 				\
 		assert(string_buf_ptr -string_buf < STRING_MAX_LEN);	\
 			}
@@ -167,6 +170,9 @@ OCTAL_ESCAPE	"\\"[0-7]{1,3}
 BAD_ESCAPE	"\\"[0-9]+
 
 /****** keywords ****/
+NAMESPACE	"namespace"
+OPEN		"open"
+AS		"as"
 DEFINE		"define"
 DEFCHAN		"defchan"
 DEFTYPE		"deftype"
@@ -189,6 +195,7 @@ CHANNEL		"chan"
 TRUE		"true"
 FALSE		"false"
 
+/* consider recording all tokens' (including punctuation) positions? */
 
 /****** states ******/
 %s incomment
@@ -200,27 +207,54 @@ FALSE		"false"
 
 <INITIAL>{
 
-{LE}		{ TOKEN_UPDATE; return LE; }
-{GE}		{ TOKEN_UPDATE; return GE; }
-{EQUAL}		{ TOKEN_UPDATE; return EQUAL; }
-{NOTEQUAL}	{ TOKEN_UPDATE; return NOTEQUAL; }
-{THICKBAR}	{ TOKEN_UPDATE; return THICKBAR; }
-{SCOPE}		{ TOKEN_UPDATE; return SCOPE; }
-{RANGE}		{ TOKEN_UPDATE; return RANGE; }
-{IMPLIES}	{ TOKEN_UPDATE; return IMPLIES; }
-{RARROW}	{ TOKEN_UPDATE; return RARROW; }
-{BEGINLOOP}	{ TOKEN_UPDATE; return BEGINLOOP; }
-{BEGINPROB}	{ TOKEN_UPDATE; return BEGINPROB; }
-{ENDPROB}	{ TOKEN_UPDATE; return ENDPROB; }
-{PLUSPLUS}	{ TOKEN_UPDATE; return PLUSPLUS; }
-{MINUSMINUS}	{ TOKEN_UPDATE; return MINUSMINUS; }
-{DEFINEOP}	{ TOKEN_UPDATE; return DEFINEOP; }
-{LOGICAL_AND}	{ TOKEN_UPDATE; return LOGICAL_AND; }
-{LOGICAL_OR}	{ TOKEN_UPDATE; return LOGICAL_OR; }
-{INSERT}	{ TOKEN_UPDATE; return INSERT; }
-{EXTRACT}	{ TOKEN_UPDATE; return EXTRACT; }
+{LE}		{ MULTICHAR_UPDATE; return LE; }
+{GE}		{ MULTICHAR_UPDATE; return GE; }
+{EQUAL}		{ MULTICHAR_UPDATE; return EQUAL; }
+{NOTEQUAL}	{ MULTICHAR_UPDATE; return NOTEQUAL; }
+{THICKBAR}	{ MULTICHAR_UPDATE; return THICKBAR; }
+{SCOPE}		{ MULTICHAR_UPDATE; return SCOPE; }
+{RANGE}		{ MULTICHAR_UPDATE; return RANGE; }
+{IMPLIES}	{ MULTICHAR_UPDATE; return IMPLIES; }
+{RARROW}	{ MULTICHAR_UPDATE; return RARROW; }
+{BEGINLOOP}	{ MULTICHAR_UPDATE; return BEGINLOOP; }
+{BEGINPROB}	{ MULTICHAR_UPDATE; return BEGINPROB; }
+{ENDPROB}	{ MULTICHAR_UPDATE; return ENDPROB; }
+{PLUSPLUS}	{ MULTICHAR_UPDATE; return PLUSPLUS; }
+{MINUSMINUS}	{ MULTICHAR_UPDATE; return MINUSMINUS; }
+{DEFINEOP}	{ MULTICHAR_UPDATE; return DEFINEOP; }
+{LOGICAL_AND}	{ MULTICHAR_UPDATE; return LOGICAL_AND; }
+{LOGICAL_OR}	{ MULTICHAR_UPDATE; return LOGICAL_OR; }
+{INSERT}	{ MULTICHAR_UPDATE; return INSERT; }
+{EXTRACT}	{ MULTICHAR_UPDATE; return EXTRACT; }
 
-{UNICHARTOKEN}	{ TOKEN_UPDATE; return yytext[0]; }
+{UNICHARTOKEN}	{ yylval.n = new token_char(yytext[0]); 
+			TOKEN_UPDATE; return yytext[0]; }
+
+{NAMESPACE}	{ KEYWORD_UPDATE; return NAMESPACE; }
+{OPEN}		{ KEYWORD_UPDATE; return OPEN; }
+{AS}		{ KEYWORD_UPDATE; return AS; }
+{DEFINE}	{ KEYWORD_UPDATE; return DEFINE; }
+{DEFCHAN}	{ KEYWORD_UPDATE; return DEFCHAN; }
+{DEFTYPE}	{ KEYWORD_UPDATE; return DEFTYPE; }
+{DEFPROC}	{ KEYWORD_UPDATE; return DEFPROC; }
+{CHP}		{ KEYWORD_UPDATE; return CHP; }
+{HSE}		{ KEYWORD_UPDATE; return HSE; }
+{PRS}		{ KEYWORD_UPDATE; return PRS; }
+{SKIP}		{ KEYWORD_UPDATE; return SKIP; }
+{ELSE}		{ KEYWORD_UPDATE; return ELSE; }
+{LOG}		{ KEYWORD_UPDATE; return LOG; }
+{SEND}		{ KEYWORD_UPDATE; return SEND; }
+{RECV}		{ KEYWORD_UPDATE; return RECV; }
+{SET}		{ KEYWORD_UPDATE; return SET; }
+{GET}		{ KEYWORD_UPDATE; return GET; }
+{INT_TYPE}	{ KEYWORD_UPDATE; return INT_TYPE; }
+{BOOL_TYPE}	{ KEYWORD_UPDATE; return BOOL_TYPE; }
+{PINT_TYPE}	{ KEYWORD_UPDATE; return PINT_TYPE; }
+{PBOOL_TYPE}	{ KEYWORD_UPDATE; return PBOOL_TYPE; }
+{CHANNEL}	{ KEYWORD_UPDATE; return CHANNEL; }
+{TRUE}		{ KEYWORD_UPDATE; return BOOL_TRUE; }
+{FALSE}		{ KEYWORD_UPDATE; return BOOL_FALSE; }
+
 
 {WHITESPACE}	TOKEN_UPDATE;
 {NEWLINE}	NEWLINE_UPDATE;
@@ -246,8 +280,8 @@ FALSE		"false"
 		LINE_COL(current);
 		fprintf(stderr, "\n");
 	}
+	yylval.n = new token_float(atof(yytext));
 	TOKEN_UPDATE;
-	yylval.double_val = atof(yytext);
 	return FLOAT;
 }
 
@@ -257,8 +291,8 @@ FALSE		"false"
 		LINE_COL(current);
 		fprintf(stderr, "\n");
 	}
+	yylval.n = new token_int(atoi(yytext));
 	TOKEN_UPDATE;
-	yylval.long_val = atoi(yytext);
 	return INT;
 }
 
@@ -268,8 +302,8 @@ FALSE		"false"
 		LINE_COL(current);
 		fprintf(stderr, "\n");
 	}
+	yylval.n = new token_string(yytext);
 	TOKEN_UPDATE;
-	yylval.text = new string(yytext);
 	return ID;
 }
 
@@ -414,7 +448,7 @@ FALSE		"false"
 	}
 	STRING_UPDATE;
 	BEGIN(INITIAL);
-	yylval.text = new string(string_buf);
+	yylval.n = new token_string(string_buf);
 	return STRING;
 }
 
