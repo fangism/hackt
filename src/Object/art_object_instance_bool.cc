@@ -1,8 +1,11 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.6 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.7 2005/01/13 05:28:31 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
+#define	__ART_OBJECT_INSTANCE_BOOL_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -57,9 +60,7 @@ bool_instance_collection::make_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	return count_ptr<datatype_instance_reference>(
 		new bool_instance_reference(
-			never_ptr<const bool_instance_collection>(this)
-//			, excl_ptr<index_list>(NULL)
-		));
+			never_ptr<const bool_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -145,15 +146,6 @@ ostream&
 bool_array<D>::what(ostream& o) const {
 	return o << "bool-array<" << D << ">";
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-BOOL_ARRAY_TEMPLATE_SIGNATURE
-size_t
-bool_array<D>::dimensions(void) const {
-	return D;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BOOL_ARRAY_TEMPLATE_SIGNATURE
@@ -365,14 +357,6 @@ bool_array<0>::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-bool_array<0>::dimensions(void) const {
-	return 0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_array<0>::dump_unrolled_instances(ostream& o) const {
 	return o << auto_indent << the_instance << endl;
@@ -468,4 +452,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_BOOL_CC__
 

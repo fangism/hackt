@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.3 2004/12/10 22:02:18 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.4 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -56,53 +56,71 @@ protected:
 protected:
 	fundamental_type_reference();
 public:
-explicit fundamental_type_reference(excl_ptr<const param_expr_list> pl);
+	explicit
+	fundamental_type_reference(excl_ptr<const param_expr_list>& pl);
+
 virtual	~fundamental_type_reference();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const;
-virtual never_ptr<const definition_base> get_base_def(void) const = 0;
-	string template_param_string(void) const;
-	string get_qualified_name(void) const;
-	string hash_string(void) const;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const;
+
+virtual never_ptr<const definition_base>
+	get_base_def(void) const = 0;
+
+	string
+	template_param_string(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	string
+	hash_string(void) const;
 
 	excl_ptr<param_expr_list>
-		get_copy_template_params(void) const;
+	get_copy_template_params(void) const;
 
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
-	bool is_dynamically_parameter_dependent(void) const;
+	bool
+	is_dynamically_parameter_dependent(void) const;
 
 	// later add dimensions and indices?
 
-excl_ptr<const fundamental_type_reference>
+	excl_ptr<const fundamental_type_reference>
 	resolve_canonical_type(void) const;
 
-static	excl_ptr<instantiation_statement>
-		make_instantiation_statement(
-			count_ptr<const fundamental_type_reference> t, 
-			index_collection_item_ptr_type d);
+	static	
+	excl_ptr<instantiation_statement>
+	make_instantiation_statement(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d);
 
+private:
 virtual	excl_ptr<instantiation_statement>
-		make_instantiation_statement_private(
-			count_ptr<const fundamental_type_reference> t, 
-			index_collection_item_ptr_type d) const = 0;
-
-virtual	excl_ptr<instance_collection_base>
-		make_instance_collection(
-			never_ptr<const scopespace> s, 
-			const token_identifier& id, 
-			const size_t d) const = 0;
+	make_instantiation_statement_private(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const = 0;
 
 public:
-	bool may_be_equivalent(const fundamental_type_reference& t) const;
-	bool must_be_equivalent(const fundamental_type_reference& t) const;
+virtual	excl_ptr<instance_collection_base>
+	make_instance_collection(const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const = 0;
+
+public:
+	bool
+	may_be_equivalent(const fundamental_type_reference& t) const;
+
+	bool
+	must_be_equivalent(const fundamental_type_reference& t) const;
 
 	// something for resolving typedefs
 	// or return by value? statically would require copy constructor
 	// wth, just allocate one...
 	excl_ptr<const fundamental_type_reference>
-		make_canonical_type_reference(void) const;
+	make_canonical_type_reference(void) const;
 
 protected:
 	void

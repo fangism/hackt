@@ -1,7 +1,7 @@
 /**
 	\file "art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.9 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_module.h,v 1.10 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_MODULE_H__
@@ -64,11 +64,17 @@ explicit	module(const string& s);
 	~module();
 	// operations: merge, diff?
 
-	never_ptr<name_space>	get_global_namespace(void) const;
-	void set_global_namespace(excl_ptr<name_space> n);
+	never_ptr<name_space>
+	get_global_namespace(void) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	void
+	set_global_namespace(excl_ptr<name_space> n);
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
 
 #if 1
 	/**
@@ -76,7 +82,8 @@ explicit	module(const string& s);
 		and is non-virtual.  
 		Protected-ness keep user from accessing parent's unroll().
 	 */
-	void unroll_module(void);
+	void
+	unroll_module(void);
 #endif
 
 public:
@@ -104,7 +111,8 @@ public:
 	~multi_module();
 
 	// note: destructive merge (link-phase)
-	bool	merge_module(module& m);
+	bool
+	merge_module(module& m);
 
 };	// end class multi_module
 

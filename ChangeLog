@@ -1,8 +1,26 @@
 "ChangeLog"
 
+2005-01-12	David Fang	<fangism@users.sourceforge.net>
+
+	* Massive clean up of code in the src/Object directory.
+
+	* Changed many function / method prototypes to pass
+	  excl_ptr arguments by reference, 
+	  count_ptr arguments by const reference, 
+	  never_ptr arguments by const.
+
+	* Bunch of formatting improvement for readability.  
+
+	* Spotty documentation added, always going to be behind on this...
+
+	* Tomorrow: the AST directory clean-up.
+
+	* Soon: release 0.1.4
+
+
 2005-01-11	David Fang	<fangism@users.sourceforge.net>
 
-	* MACJOR BUG FIXED: memory management by pointer classes corrected.
+	* MAJOR BUG FIXED: memory management by pointer classes corrected.
 	  Basically, ownership transfer failed in a few cases where they were
 	  expected to have occured. 
 

@@ -1,8 +1,11 @@
 /**
 	\file "art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.4 2005/01/12 04:14:18 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.5 2005/01/13 05:28:31 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -133,7 +136,6 @@ sequential_scope::load_object_base(
 	load_object_pointer_list(m, f);
 }
 
-
 //=============================================================================
 // class instance_management_base::dumper method definitions
 
@@ -141,6 +143,10 @@ instance_management_base::dumper::dumper(ostream& o) : os(o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param P pointer class template for the instance management object.
+	\param i pointer to the instance management object to dump.
+ */
 template <template <class> class P>
 ostream&
 instance_management_base::dumper::operator () (
@@ -151,4 +157,6 @@ instance_management_base::dumper::operator () (
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 

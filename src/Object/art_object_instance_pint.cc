@@ -1,8 +1,11 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.8 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.9 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
+#define	__ART_OBJECT_INSTANCE_PINT_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -87,7 +90,7 @@ pint_instance_collection::pint_instance_collection(const scopespace& o,
  */
 pint_instance_collection::pint_instance_collection(const scopespace& o, 
 		const string& n, const size_t d, 
-		count_ptr<const pint_const> i) :
+		const count_ptr<const pint_const>& i) :
 		parent_type(o, n, d), 
 		ival(i) {
 	/***
@@ -140,7 +143,7 @@ pint_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pint_instance_collection::initialize(count_ptr<const pint_expr> e) {
+pint_instance_collection::initialize(const count_ptr<const pint_expr>& e) {
 	assert(e);
 	assert(!ival);
 	if (dimensions == 0) {
@@ -161,7 +164,7 @@ pint_instance_collection::initialize(count_ptr<const pint_expr> e) {
  */
 bool
 pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
-	count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
+	const count_ptr<const pint_expr> i(p.is_a<const pint_expr>());
 	if (i && type_check_actual_param_expr(*i)) {
 		ival = i;
 		return true;
@@ -178,11 +181,6 @@ pint_instance_collection::assign_default_value(count_ptr<const param_expr> p) {
 count_ptr<const param_expr>
 pint_instance_collection::default_value(void) const {
 	STACKTRACE("pint_instance_collection::default_value()");
-#if 0
-	indent cerr_ind(cerr);
-	cerr << auto_indent <<
-		"pint_instance_collection::default_value()" << endl;
-#endif
 	return ival;
 }
 
@@ -219,8 +217,7 @@ pint_instance_collection::make_instance_reference(void) const {
 	return count_ptr<param_instance_reference>(
 		new pint_instance_reference(
 			never_ptr<pint_instance_collection>(
-			const_cast<pint_instance_collection*>(this)), 
-			excl_ptr<index_list>(NULL)));
+			const_cast<pint_instance_collection*>(this))));
 		// omitting index argument
 }
 
@@ -232,7 +229,7 @@ pint_instance_collection::make_instance_reference(void) const {
  */
 bool
 pint_instance_collection::type_check_actual_param_expr(const param_expr& pe) const {
-	const pint_expr* pi(IS_A(const pint_expr*, &pe));
+	const never_ptr<const pint_expr> pi(IS_A(const pint_expr*, &pe));
 	if (!pi) {
 		// useful error message?
 		return false;
@@ -333,15 +330,6 @@ pint_array<D>::pint_array(const scopespace& o, const string& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
 pint_array<D>::~pint_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-PINT_ARRAY_TEMPLATE_SIGNATURE
-size_t
-pint_array<D>::dimensions(void) const {
-	return D;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PINT_ARRAY_TEMPLATE_SIGNATURE
@@ -489,16 +477,8 @@ bool
 pint_array<D>::lookup_value_collection(
 		list<int>& l, const const_range_list& r) const {
 	assert(!r.empty());
-#if 1
 	multikey_generator<D, int> key_gen;
 	r.make_multikey_generator(key_gen);
-#else
-	const multikey<D, int> lower(r.lower_multikey());
-	const multikey<D, int> upper(r.upper_multikey());
-	multikey_generator<D, int> key_gen;
-	copy(lower.begin(), lower.end(), key_gen.get_lower_corner().begin());
-	copy(upper.begin(), upper.end(), key_gen.get_upper_corner().begin());
-#endif
 	key_gen.initialize();
 	bool ret = true;
 	do {
@@ -572,17 +552,9 @@ pint_array<0>::pint_array(const scopespace& o, const string& n) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_array<0>::pint_array(const scopespace& o, const string& n, 
-		count_ptr<const pint_const> i) :
+		const count_ptr<const pint_const>& i) :
 		parent_type(o, n, 0, i), the_instance() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-pint_array<0>::dimensions(void) const {
-	return 0;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -739,4 +711,6 @@ template class pint_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_PINT_CC__
 

@@ -1,8 +1,11 @@
 /**
 	\file "art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.16 2004/12/16 01:08:51 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.17 2005/01/13 05:28:28 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_CONNECT_CC__
+#define	__ART_OBJECT_CONNECT_CC__
 
 #include <iostream>
 
@@ -32,11 +35,13 @@ instance_reference_connection::~instance_reference_connection() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Initializes an instance reference connection with the
+	first instance reference.  
 	\param i instance reference to connect, may not be NULL.
  */
 void
 instance_reference_connection::append_instance_reference(
-		count_ptr<const instance_reference_base> i) {
+		const count_ptr<const instance_reference_base>& i) {
 	assert(i);
 	inst_list.push_back(i);
 }
@@ -72,9 +77,13 @@ aliases_connection::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds an instance reference to the front of the connection list.  
+	\param i the instance reference to add.  
+ */
 void
 aliases_connection::prepend_instance_reference(
-		count_ptr<const instance_reference_base> i) {
+		const count_ptr<const instance_reference_base>& i) {
 	assert(i);
 	inst_list.push_front(i);
 }
@@ -145,20 +154,20 @@ port_connection::port_connection() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Default destructor.
- */
-port_connection::~port_connection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Initial constructor for a port-connection.  
 	\param i an instance of the definition that is to be connected.
  */
 port_connection::port_connection(
-		count_ptr<const simple_instance_reference> i) :
+		const count_ptr<const simple_instance_reference>& i) :
 		instance_reference_connection(), inst(i) {
 	assert(inst);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default destructor.
+ */
+port_connection::~port_connection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,16 +199,20 @@ port_connection::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Adds an instance reference to the back of the connection list.  
 	\param i instance reference to connect, may be NULL.
  */
 void
 port_connection::append_instance_reference(
-		count_ptr<const instance_reference_base> i) {
+		const count_ptr<const instance_reference_base>& i) {
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands and finalizes the connection at unroll time.  
+ */
 void
 port_connection::unroll(void) const {
 	cerr << "port_connection::unroll(): "
@@ -272,4 +285,6 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_CONNECT_CC__
 

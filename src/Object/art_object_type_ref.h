@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.16 2004/12/13 05:45:11 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.17 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -75,10 +75,10 @@ private:
 	data_type_reference();
 public:
 	explicit
-	data_type_reference(definition_ptr_type td);
+	data_type_reference(const definition_ptr_type td);
 
-	data_type_reference(definition_ptr_type td, 
-		excl_ptr<const param_expr_list> pl);
+	data_type_reference(const definition_ptr_type td, 
+		excl_ptr<const param_expr_list>& pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 
 virtual	~data_type_reference();
@@ -99,11 +99,11 @@ virtual	~data_type_reference();
 private:
 	excl_ptr<instantiation_statement>
 	make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const;
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
 			
 	excl_ptr<instance_collection_base>
-	make_instance_collection(never_ptr<const scopespace> s, 
+	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
 	PERSISTENT_METHODS
@@ -123,11 +123,14 @@ protected:
 private:
 	channel_type_reference();
 public:
+	explicit
 	channel_type_reference(
-		never_ptr<const channel_definition_base> td);
+		const never_ptr<const channel_definition_base> td);
+
 	channel_type_reference(
-		never_ptr<const channel_definition_base> td, 
-		excl_ptr<const param_expr_list> pl);
+		const never_ptr<const channel_definition_base> td, 
+		excl_ptr<const param_expr_list>& pl);
+
 virtual	~channel_type_reference();
 
 	ostream&
@@ -138,11 +141,11 @@ virtual	~channel_type_reference();
 private:
 	excl_ptr<instantiation_statement>
 	make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const;
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
 			
 	excl_ptr<instance_collection_base>
-	make_instance_collection(never_ptr<const scopespace> s, 
+	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
 	PERSISTENT_METHODS
@@ -161,14 +164,17 @@ protected:
 // should be const?  reference to base definition shouldn't change...
 	never_ptr<const process_definition_base>	base_proc_def;
 private:
-explicit process_type_reference();
+	process_type_reference();
 public:
+	explicit
 	process_type_reference(
-		never_ptr<const process_definition_base> td);
+		const never_ptr<const process_definition_base> td);
+
 	process_type_reference(
-		never_ptr<const process_definition_base> td, 
-		excl_ptr<const param_expr_list> pl);
+		const never_ptr<const process_definition_base> td, 
+		excl_ptr<const param_expr_list>& pl);
 		// not gcc-2.95.3 friendly default argument = NULL
+
 virtual	~process_type_reference();
 
 	ostream&
@@ -180,11 +186,11 @@ virtual	~process_type_reference();
 private:
 	excl_ptr<instantiation_statement>
 	make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const;
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
 			
 	excl_ptr<instance_collection_base>
-	make_instance_collection(never_ptr<const scopespace> s, 
+	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
 	// macro expand to method prototypes
@@ -208,7 +214,9 @@ protected:
 //	excl_ptr<const param_expr_list>	template_params;	// inherited, unused
 	never_ptr<const built_in_param_def>	base_param_def;
 public:
-	param_type_reference(never_ptr<const built_in_param_def> td);
+	explicit
+	param_type_reference(const never_ptr<const built_in_param_def> td);
+
 virtual	~param_type_reference();
 
 	ostream&
@@ -220,11 +228,11 @@ virtual	~param_type_reference();
 private:
 	excl_ptr<instantiation_statement>
 	make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const;
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
 			
 	excl_ptr<instance_collection_base>
-	make_instance_collection(never_ptr<const scopespace> s,
+	make_instance_collection(const never_ptr<const scopespace> s,
 		const token_identifier& id, const size_t d) const;
 
 private:

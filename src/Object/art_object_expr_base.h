@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.3 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_expr_base.h,v 1.4 2005/01/13 05:28:29 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -30,39 +30,60 @@ using util::persistent;
 class param_expr : virtual public object, virtual public persistent {
 public:
 	param_expr() : object(), persistent() { }
+
 virtual	~param_expr() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-virtual	size_t dimensions(void) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
-virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	string
+	hash_string(void) const = 0;
+
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	bool
+	has_static_constant_dimensions(void) const = 0;
+
 // only call this if dimensions are non-zero and sizes are static constant.  
-virtual	const_range_list static_constant_dimensions(void) const = 0;
+virtual	const_range_list
+	static_constant_dimensions(void) const = 0;
 
 /** is initialized if is resolved to constant or some other formal */
-virtual bool may_be_initialized(void) const = 0;
-virtual bool must_be_initialized(void) const = 0;
-virtual bool may_be_equivalent(const param_expr& p) const = 0;
-virtual bool must_be_equivalent(const param_expr& p) const = 0;
+virtual bool
+	may_be_initialized(void) const = 0;
+
+virtual bool
+	must_be_initialized(void) const = 0;
+
+virtual bool
+	may_be_equivalent(const param_expr& p) const = 0;
+
+virtual bool
+	must_be_equivalent(const param_expr& p) const = 0;
 
 /** can be resolved to static constant value */
-virtual bool is_static_constant(void) const = 0;
+virtual bool
+	is_static_constant(void) const = 0;
 
 virtual	count_ptr<const const_param>
-		static_constant_param(void) const = 0;
+	static_constant_param(void) const = 0;
 
 /** doesn't depend on loop variables */
-virtual bool is_loop_independent(void) const = 0;
+virtual bool
+	is_loop_independent(void) const = 0;
 
 /** doesn't depend on conditional variables */
-virtual bool is_unconditional(void) const = 0;
+virtual bool
+	is_unconditional(void) const = 0;
 
-static	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment(
-		const count_ptr<const param_expr>& p);
+	static
+	excl_ptr<param_expression_assignment>
+	make_param_expression_assignment(const count_ptr<const param_expr>& p);
+
 #if 0
 	// can't make template virtual functions...
 	virtual multikey_qmap<D,size_t,pbool_instance>
@@ -82,29 +103,45 @@ virtual	excl_ptr<param_expression_assignment>
 class param_expr_list : public object, public persistent {
 public:
 	param_expr_list() : object(), persistent() { }
+
 virtual	~param_expr_list() { }
 
-virtual	size_t size(void) const = 0;
+virtual	size_t
+	size(void) const = 0;
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
 virtual	excl_ptr<param_expr_list>
-		make_copy(void) const = 0;
+	make_copy(void) const = 0;
 
-virtual	bool may_be_initialized(void) const = 0;
-virtual	bool must_be_initialized(void) const = 0;
+virtual	bool
+	may_be_initialized(void) const = 0;
+
+virtual	bool
+	must_be_initialized(void) const = 0;
 
 /** return a compatible list for comparison */
 #if 0
-virtual	list<const param_expr&>	get_const_ref_list(void) const = 0;
+virtual	list<const param_expr&>
+	get_const_ref_list(void) const = 0;
 #endif
 
-virtual	bool may_be_equivalent(const param_expr_list& p) const = 0;
-virtual	bool must_be_equivalent(const param_expr_list& p) const = 0;
+virtual	bool
+	may_be_equivalent(const param_expr_list& p) const = 0;
 
-virtual	bool is_static_constant(void) const = 0;
-virtual	bool is_loop_independent(void) const = 0;
+virtual	bool
+	must_be_equivalent(const param_expr_list& p) const = 0;
+
+virtual	bool
+	is_static_constant(void) const = 0;
+
+virtual	bool
+	is_loop_independent(void) const = 0;
+
 };	// end class param_expr_list
 
 //-----------------------------------------------------------------------------
@@ -121,19 +158,38 @@ class index_expr : virtual public object, virtual public persistent {
 protected:
 public:
 	index_expr() : object(), persistent() { }
+
 virtual	~index_expr() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
-virtual size_t dimensions(void) const = 0;
-virtual bool may_be_initialized(void) const = 0;
-virtual bool must_be_initialized(void) const = 0;
-virtual bool is_static_constant(void) const = 0;
-virtual bool is_loop_independent(void) const = 0;
-virtual bool is_unconditional(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-virtual	count_ptr<const_index> resolve_index(void) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
+
+virtual size_t
+	dimensions(void) const = 0;
+
+virtual bool
+	may_be_initialized(void) const = 0;
+
+virtual bool
+	must_be_initialized(void) const = 0;
+
+virtual bool
+	is_static_constant(void) const = 0;
+
+virtual bool
+	is_loop_independent(void) const = 0;
+
+virtual bool
+	is_unconditional(void) const = 0;
+
+virtual	count_ptr<const_index>
+	resolve_index(void) const = 0;
 
 // additional virtual functions for dimensionality...
 };	// end class index_expr
@@ -154,26 +210,47 @@ virtual	count_ptr<const_index> resolve_index(void) const = 0;
 class index_list : public object, public persistent {
 public:
 	index_list() : object(), persistent() { }
+
 virtual	~index_list() { }
 
 // copy over most param_expr interface functions...
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
 
 /** NOT THE SAME **/
-virtual	size_t size(void) const = 0;
-virtual	size_t dimensions_collapsed(void) const = 0;
+virtual	size_t
+	size(void) const = 0;
 
-virtual	bool may_be_initialized(void) const = 0;
-virtual	bool must_be_initialized(void) const = 0;
-virtual	bool is_static_constant(void) const = 0;
-virtual	bool is_loop_independent(void) const = 0;
-virtual	bool is_unconditional(void) const = 0;
+virtual	size_t
+	dimensions_collapsed(void) const = 0;
 
-virtual	const_index_list resolve_index_list(void) const = 0;
+virtual	bool
+	may_be_initialized(void) const = 0;
+
+virtual	bool
+	must_be_initialized(void) const = 0;
+
+virtual	bool
+	is_static_constant(void) const = 0;
+
+virtual	bool
+	is_loop_independent(void) const = 0;
+
+virtual	bool
+	is_unconditional(void) const = 0;
+
+virtual	const_index_list
+	resolve_index_list(void) const = 0;
+
 #if 0
-virtual	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
+virtual	bool
+	resolve_multikey(excl_ptr<multikey_base<int> >& k) const = 0;
 #endif
 };	// end class index_list
 
@@ -191,14 +268,24 @@ protected:
 //	never_ptr<const instance_collection_base>	owner;
 public:
 	range_expr_list() : object(), persistent() { }
+
 virtual	~range_expr_list() { }
 
-virtual	size_t size(void) const = 0;
-	size_t dimensions(void) const { return size(); }
-virtual	bool is_static_constant(void) const = 0;
-virtual	const_range_list static_overlap(const range_expr_list& r) const = 0;
+virtual	size_t
+	size(void) const = 0;
 
-virtual	bool resolve_ranges(const_range_list& r) const = 0;
+	size_t
+	dimensions(void) const { return size(); }
+
+virtual	bool
+	is_static_constant(void) const = 0;
+
+virtual	const_range_list
+	static_overlap(const range_expr_list& r) const = 0;
+
+virtual	bool
+	resolve_ranges(const_range_list& r) const = 0;
+
 };	// end class range_expr_list
 
 //=============================================================================
@@ -208,26 +295,59 @@ virtual	bool resolve_ranges(const_range_list& r) const = 0;
 class pbool_expr : virtual public param_expr {
 public:
 	pbool_expr() : param_expr() { }
+
 virtual	~pbool_expr() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
-virtual	size_t dimensions(void) const = 0;
-virtual	bool has_static_constant_dimensions(void) const = 0;
-virtual	const_range_list static_constant_dimensions(void) const = 0;
-virtual bool may_be_initialized(void) const = 0;
-virtual bool must_be_initialized(void) const = 0;
-	bool may_be_equivalent(const param_expr& p) const;
-	bool must_be_equivalent(const param_expr& p) const;
-virtual bool is_static_constant(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
+
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	bool
+	has_static_constant_dimensions(void) const = 0;
+
+virtual	const_range_list
+	static_constant_dimensions(void) const = 0;
+
+virtual bool
+	may_be_initialized(void) const = 0;
+
+virtual bool
+	must_be_initialized(void) const = 0;
+
+	bool
+	may_be_equivalent(const param_expr& p) const;
+
+	bool
+	must_be_equivalent(const param_expr& p) const;
+
+virtual bool
+	is_static_constant(void) const = 0;
+
 virtual	count_ptr<const const_param>
-		static_constant_param(void) const;
-virtual bool is_loop_independent(void) const = 0;
-virtual bool static_constant_bool(void) const = 0;
-virtual	bool resolve_value(bool& i) const = 0;
-virtual	const_index_list resolve_dimensions(void) const = 0;
-virtual	bool resolve_values_into_flat_list(list<bool>& l) const = 0;
+	static_constant_param(void) const;
+
+virtual bool
+	is_loop_independent(void) const = 0;
+
+virtual bool
+	static_constant_bool(void) const = 0;
+
+virtual	bool
+	resolve_value(bool& i) const = 0;
+
+virtual	const_index_list
+	resolve_dimensions(void) const = 0;
+
+virtual	bool
+	resolve_values_into_flat_list(list<bool>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>
@@ -245,29 +365,65 @@ public:
 	typedef	long			value_type;
 public:
 	pint_expr() : param_expr(), index_expr() { }
+
 virtual	~pint_expr() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
-virtual	size_t dimensions(void) const = 0;
-virtual	bool has_static_constant_dimensions(void) const = 0;
-virtual	const_range_list static_constant_dimensions(void) const = 0;
-virtual bool may_be_initialized(void) const = 0;
-virtual bool must_be_initialized(void) const = 0;
-	bool may_be_equivalent(const param_expr& p) const;
-	bool must_be_equivalent(const param_expr& p) const;
-virtual bool is_static_constant(void) const = 0;
-virtual	count_ptr<const const_param>
-		static_constant_param(void) const;
-virtual bool is_unconditional(void) const = 0;
-virtual bool is_loop_independent(void) const = 0;
-virtual int static_constant_int(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-	count_ptr<const_index> resolve_index(void) const;
-virtual	bool resolve_value(int& i) const = 0;
-virtual	const_index_list resolve_dimensions(void) const = 0;
-virtual	bool resolve_values_into_flat_list(list<int>& l) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
+
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	bool
+	has_static_constant_dimensions(void) const = 0;
+
+virtual	const_range_list
+	static_constant_dimensions(void) const = 0;
+
+virtual bool
+	may_be_initialized(void) const = 0;
+
+virtual bool
+	must_be_initialized(void) const = 0;
+
+	bool
+	may_be_equivalent(const param_expr& p) const;
+
+	bool
+	must_be_equivalent(const param_expr& p) const;
+
+virtual bool
+	is_static_constant(void) const = 0;
+
+virtual	count_ptr<const const_param>
+	static_constant_param(void) const;
+
+virtual bool
+	is_unconditional(void) const = 0;
+
+virtual bool
+	is_loop_independent(void) const = 0;
+
+virtual int
+	static_constant_int(void) const = 0;
+
+	count_ptr<const_index>
+	resolve_index(void) const;
+
+virtual	bool
+	resolve_value(int& i) const = 0;
+
+virtual	const_index_list
+	resolve_dimensions(void) const = 0;
+
+virtual	bool
+	resolve_values_into_flat_list(list<int>& l) const = 0;
 
 protected:
 	excl_ptr<param_expression_assignment>
@@ -290,11 +446,17 @@ class range_expr : virtual public index_expr {
 protected:
 public:
 	range_expr() : index_expr() { }
+
 virtual	~range_expr() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const;		// temporary
-virtual	string hash_string(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const;		// temporary
+
+virtual	string
+	hash_string(void) const = 0;
 
 /**
 	A range is always 0-dimensional, which is not the same
@@ -302,25 +464,37 @@ virtual	string hash_string(void) const = 0;
 	Is virtual so that sub-classes that use the index interface can
 	override this.  
  */
-virtual	size_t dimensions(void) const { return 0; }
+virtual	size_t
+	dimensions(void) const { return 0; }
+
 /** is initialized if is resolved to constant or some other formal */
-virtual bool may_be_initialized(void) const = 0;
-virtual bool must_be_initialized(void) const = 0;
+virtual bool
+	may_be_initialized(void) const = 0;
+
+virtual bool
+	must_be_initialized(void) const = 0;
 
 /** is sane if range makes sense */
-virtual	bool is_sane(void) const = 0;
+virtual	bool
+	is_sane(void) const = 0;
 
 /** can be resolved to static constant value */
-virtual bool is_static_constant(void) const = 0;
+virtual bool
+	is_static_constant(void) const = 0;
 
 /** doesn't depend on loop variables */
-virtual bool is_loop_independent(void) const = 0;
+virtual bool
+	is_loop_independent(void) const = 0;
 
 /** doesn't depend on conditional variables */
-virtual bool is_unconditional(void) const = 0;
+virtual bool
+	is_unconditional(void) const = 0;
 
-	count_ptr<const_index> resolve_index(void) const;
-virtual	bool resolve_range(const_range& r) const = 0;
+	count_ptr<const_index>
+	resolve_index(void) const;
+
+virtual	bool
+	resolve_range(const_range& r) const = 0;
 };	// end class range_expr
 
 //=============================================================================

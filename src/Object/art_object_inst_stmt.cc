@@ -1,8 +1,11 @@
 /**
 	\file "art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.5 2005/01/12 04:14:18 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.6 2005/01/13 05:28:30 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INST_STMT_CC__
+#define	__ART_OBJECT_INST_STMT_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -213,7 +216,7 @@ pbool_instantiation_statement::dump(ostream& o) const {
  */
 void
 pbool_instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
+		const never_ptr<instance_collection_base> i) {
 	assert(!inst_base);
 	inst_base = i.is_a<collection_type>();
 	assert(inst_base);
@@ -333,7 +336,7 @@ pint_instantiation_statement::dump(ostream& o) const {
  */
 void
 pint_instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
+		const never_ptr<instance_collection_base> i) {
 	assert(!inst_base);
 	inst_base = i.is_a<collection_type>();
 	assert(inst_base);
@@ -456,7 +459,7 @@ process_instantiation_statement::dump(ostream& o) const {
  */
 void
 process_instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
+		const never_ptr<instance_collection_base> i) {
 	assert(!inst_base);
 	inst_base = i.is_a<collection_type>();
 	assert(inst_base);
@@ -580,7 +583,7 @@ channel_instantiation_statement::dump(ostream& o) const {
  */
 void
 channel_instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
+		const never_ptr<instance_collection_base> i) {
 	assert(!inst_base);
 	inst_base = i.is_a<collection_type>();
 	assert(inst_base);
@@ -734,7 +737,7 @@ data_instantiation_statement::dump(ostream& o) const {
  */
 void
 data_instantiation_statement::attach_collection(
-		never_ptr<instance_collection_base> i) {
+		const never_ptr<instance_collection_base> i) {
 	INVARIANT(!inst_base);
 	inst_base = i.is_a<collection_type>();
 	NEVER_NULL(inst_base);
@@ -832,4 +835,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INST_STMT_CC__
 

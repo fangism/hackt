@@ -1,8 +1,11 @@
 /**
 	\file "art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.25 2004/12/07 02:22:06 fang Exp $
+ 	$Id: art_object_base.cc,v 1.26 2005/01/13 05:28:28 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_BASE_CC__
+#define	__ART_OBJECT_BASE_CC__
 
 #include <iostream>
 #include <numeric>
@@ -40,9 +43,15 @@ using namespace util::memory;
 //=============================================================================
 // class object_handle method definitions
 
+/**
+	Constructs an object handle, wrapping around a non-owned
+	pointer to the canonical object.  
+	\param o pointer to object to be wrapped, 
+		which may not be another handle.  
+ */
 object_handle::object_handle(never_ptr<const object> o) :
 		object(), obj(*o) {
-	assert(!o.is_a<const object_handle>());
+	INVARIANT(!o.is_a<const object_handle>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -60,12 +69,10 @@ object_handle::dump(ostream& o) const {
 //=============================================================================
 // class object_list method definitions
 
-object_list::object_list() : object(), parent() {
-}
+object_list::object_list() : object(), parent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-object_list::~object_list() {
-}
+object_list::~object_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -93,18 +100,20 @@ object_list::dump(ostream& o) const {
 	Intended for use in resolving dense array dimensions
 	of formal parameters and formal ports.  
 	Cannot possibly be loop-dependent or conditional!
+	\return pointer to newly allocated range expression list.  
  */
 count_ptr<range_expr_list>
 object_list::make_formal_dense_range_list(void) const {
 	// initialize some bools to true
 	// and set them false approriately in iterations
+	typedef	count_ptr<range_expr_list>	return_type;
 	bool err = false;
 	bool is_pint_expr = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		if (!p) {
 			is_pint_expr = false;
 			cerr << "non-int expression found where single int "
@@ -135,17 +144,18 @@ object_list::make_formal_dense_range_list(void) const {
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
-			assert(p->is_loop_independent());
-			assert(p->is_unconditional());
+			INVARIANT(p->is_loop_independent());
+			INVARIANT(p->is_unconditional());
 		}
 	}
 	if (err) {
 		cerr << "Failed to construct a formal dense range list!  "
 			<< endl;
-		return count_ptr<range_expr_list>(NULL);
+		return return_type(NULL);
 	} else if (is_static_constant) {
 		const_iterator j = begin();
-		count_ptr<const_range_list> ret(new const_range_list);
+		const count_ptr<const_range_list>
+			ret(new const_range_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
 			const int n = j->is_a<const pint_expr>()
@@ -155,14 +165,15 @@ object_list::make_formal_dense_range_list(void) const {
 					"must be positive, but got: "
 					<< n << ".  ERROR!  " << endl;
 				// where? callers figure out...
-				return count_ptr<const_range_list>(NULL);
+				return return_type(NULL);
 			}
 			ret->push_back(const_range(n));
 		}
 		return ret;
 	} else if (is_initialized) {
 		const_iterator j = begin();
-		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
+		const count_ptr<dynamic_range_list>
+			ret(new dynamic_range_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
 			ret->push_back(count_ptr<pint_range>(
@@ -172,7 +183,7 @@ object_list::make_formal_dense_range_list(void) const {
 	} else {
 		cerr << "Failed to construct a formal dense range list!  "
 			<< endl;
-		return count_ptr<range_expr_list>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -186,9 +197,11 @@ object_list::make_formal_dense_range_list(void) const {
 	Intended for use in resolving dense array dimensions
 	of formal parameters and formal ports.  
 	Cannot possibly be loop-dependent or conditional!
+	\return pointer to newly allocated range expression list.  
  */
 count_ptr<range_expr_list>
 object_list::make_sparse_range_list(void) const {
+	typedef	count_ptr<range_expr_list>		return_type;
 	// initialize some bools to true
 	// and set them false approriately in iterations
 	bool err = false;
@@ -203,9 +216,9 @@ object_list::make_sparse_range_list(void) const {
 				" of array indices.  " << endl;
 			continue;
 		}
-		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		// may be pint_const or pint_literal
-		count_ptr<range_expr> r(i->is_a<range_expr>());
+		const count_ptr<range_expr> r(i->is_a<range_expr>());
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
@@ -274,14 +287,15 @@ object_list::make_sparse_range_list(void) const {
 	if (err || !is_valid_range) {
 		cerr << "Failed to construct a sparse range list!  "
 			<< endl;
-		return count_ptr<range_expr_list>(NULL);
+		return return_type(NULL);
 	} else if (is_static_constant) {
 		const_iterator j = begin();
-		count_ptr<const_range_list> ret(new const_range_list);
+		const count_ptr<const_range_list>
+			ret(new const_range_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
-			count_ptr<pint_expr> p(j->is_a<pint_expr>());
-			count_ptr<range_expr> r(j->is_a<range_expr>());
+			const count_ptr<pint_expr> p(j->is_a<pint_expr>());
+			const count_ptr<range_expr> r(j->is_a<range_expr>());
 			// don't forget to range check
 			if (p) {
 				const int n = p->static_constant_int();
@@ -290,7 +304,7 @@ object_list::make_sparse_range_list(void) const {
 						"must be positive, but got: "
 						<< n << ".  ERROR!  " << endl;
 					// where? let caller figure out
-					return count_ptr<const_range_list>(NULL);
+					return return_type(NULL);
 				}
 				ret->push_back(const_range(n));
 			} else {
@@ -298,16 +312,16 @@ object_list::make_sparse_range_list(void) const {
 				if (!r->is_sane()) {
 					cerr << "Range is not valid. ERROR!  "
 						<< endl;
-					return count_ptr<const_range_list>(NULL);
+					return return_type(NULL);
 				}
-				count_ptr<const_range> cr(
+				const count_ptr<const_range> cr(
 					r.is_a<const_range>());
 				if (cr) {
 					// need deep copy, b/c not pointer list
 					ret->push_back(const_range(*cr));
 				} else {
-					count_ptr<pint_range> pr(
-						r.is_a<pint_range>());
+					const count_ptr<pint_range>
+						pr(r.is_a<pint_range>());
 					assert(pr);
 					assert(pr->is_static_constant());
 					ret->push_back(
@@ -318,7 +332,8 @@ object_list::make_sparse_range_list(void) const {
 		return ret;
 	} else if (is_initialized) {
 		const_iterator j = begin();
-		count_ptr<dynamic_range_list> ret(new dynamic_range_list);
+		const count_ptr<dynamic_range_list>
+			ret(new dynamic_range_list);
 		for ( ; j!=end(); j++) {
 			if (j->is_a<pint_expr>()) {
 				// convert N to 0..N-1
@@ -333,7 +348,7 @@ object_list::make_sparse_range_list(void) const {
 	} else {
 		cerr << "Failed to construct a sparse range list!  "
 			<< endl;
-		return count_ptr<range_expr_list>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -341,9 +356,11 @@ object_list::make_sparse_range_list(void) const {
 /**
 	First half should be similar to make_sparse_range_list.  
 	At the end build an index_list instead.  
+	\return newly constructed index list.  
  */
 excl_ptr<index_list>
 object_list::make_index_list(void) const {
+	typedef	excl_ptr<index_list>		return_type;
 	// initialize some bools to true
 	// and set them false approriately in iterations
 	bool err = false;
@@ -358,9 +375,9 @@ object_list::make_index_list(void) const {
 				" of array indices.  " << endl;
 			continue;
 		}
-		count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		// may be pint_const or pint_literal
-		count_ptr<range_expr> r(i->is_a<range_expr>());
+		const count_ptr<range_expr> r(i->is_a<range_expr>());
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
@@ -429,14 +446,14 @@ object_list::make_index_list(void) const {
 	if (err || !is_valid_index) {
 		cerr << "Failed to construct an index list!  "
 			<< endl;
-		return excl_ptr<index_list>(NULL);
+		return return_type(NULL);
 	} else if (is_static_constant) {
 		const_iterator j = begin();
 		excl_ptr<const_index_list> ret(new const_index_list);
 		for ( ; j!=end(); j++) {
 			// should be safe to do this, since we checked above
-			count_ptr<pint_expr> p(j->is_a<pint_expr>());
-			count_ptr<range_expr> r(j->is_a<range_expr>());
+			const count_ptr<pint_expr> p(j->is_a<pint_expr>());
+			const count_ptr<range_expr> r(j->is_a<range_expr>());
 			// don't forget to range check
 			if (p) {
 				const int n = p->static_constant_int();
@@ -445,7 +462,7 @@ object_list::make_index_list(void) const {
 						"be non-negative, but got: "
 						<< n << ".  ERROR!  " << endl;
 					// where? let caller figure out
-					return excl_ptr<index_list>(NULL);
+					return return_type(NULL);
 				}
 				ret->push_back(count_ptr<pint_const>(
 					new pint_const(n)));
@@ -454,18 +471,18 @@ object_list::make_index_list(void) const {
 				if (!r->is_sane()) {
 					cerr << "Index-range is not valid.  "
 						"ERROR!  " << endl;
-					return excl_ptr<index_list>(NULL);
+					return return_type(NULL);
 				}
-				count_ptr<const_range> cr(
-					r.is_a<const_range>());
+				const count_ptr<const_range>
+					cr(r.is_a<const_range>());
 				if (cr) {
 					// need deep copy, b/c not pointer list
 					ret->push_back(
 						count_ptr<const_index>(
 							new const_range(*cr)));
 				} else {
-					count_ptr<pint_range> pr(
-						r.is_a<pint_range>());
+					const count_ptr<pint_range>
+						pr(r.is_a<pint_range>());
 					assert(pr);
 					assert(pr->is_static_constant());
 					ret->push_back(count_ptr<const_index>(
@@ -474,7 +491,8 @@ object_list::make_index_list(void) const {
 				}
 			}
 		}
-		return excl_ptr<index_list>(ret);
+		// transfers ownership
+		return return_type(ret);
 	} else if (is_initialized) {
 		const_iterator j = begin();
 		excl_ptr<dynamic_index_list> ret(new dynamic_index_list);
@@ -489,11 +507,10 @@ object_list::make_index_list(void) const {
 				ret->push_back(j->is_a<pint_range>());
 			}
 		}
-		return excl_ptr<index_list>(ret);
+		return return_type(ret);
 	} else {
-		cerr << "Failed to construct a index list!  "
-			<< endl;
-		return excl_ptr<index_list>(NULL);
+		cerr << "Failed to construct a index list!  " << endl;
+		return return_type(NULL);
 	}
 }
 
@@ -553,16 +570,18 @@ object_list::make_param_assignment(void) {
 	Now does checking for static constants.  
 	Objects may be null, but all others must be param_expr.  
 	For now always return a dynamic list.
+	\return newly allocated dynamic expression list.  
  */
 excl_ptr<dynamic_param_expr_list>
 object_list::make_param_expr_list(void) const {
+	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
 	// first walk to determine if it qualified as a const_param_expr_list
 	const_iterator i = begin();
-	excl_ptr<dynamic_param_expr_list>
-		ret(new dynamic_param_expr_list);
+	return_type ret(new dynamic_param_expr_list);
 	for ( ; i!=end(); i++) {
-		count_ptr<const object> o(*i);
-		count_ptr<const param_expr> pe(o.is_a<const param_expr>());
+		const count_ptr<const object> o(*i);
+		const count_ptr<const param_expr>
+			pe(o.is_a<const param_expr>());
 		if (o)	assert(pe);
 		ret->push_back(pe);	// NULL is ok.  
 	}
@@ -576,19 +595,20 @@ object_list::make_param_expr_list(void) const {
  */
 excl_ptr<const aliases_connection>
 object_list::make_alias_connection(void) const {
+	typedef	excl_ptr<const aliases_connection>	return_type;
 	excl_ptr<aliases_connection>
 		ret(new aliases_connection);
 	const_iterator i = begin();
 	assert(size() > 1);		// else what are you connecting?
-	count_ptr<const object> fo(*i);
-	count_ptr<const instance_reference_base>
+	const count_ptr<const object> fo(*i);
+	const count_ptr<const instance_reference_base>
 		fir(fo.is_a<const instance_reference_base>());
 	// keep this around for type-checking comparisons
 	ret->append_instance_reference(fir);
 	// starting with second instance reference, type-check and alias
 	int j = 2;
 	for (i++; i!=end(); i++, j++) {
-		count_ptr<const object> o(*i);
+		const count_ptr<const object> o(*i);
 		assert(o);
 		count_ptr<const instance_reference_base>
 			ir(o.is_a<const instance_reference_base>());
@@ -598,12 +618,13 @@ object_list::make_alias_connection(void) const {
 				<< j << " of alias list doesn't match the "
 				"type/size of the first instance reference!  "
 				<< endl;
-			return excl_ptr<const aliases_connection>(NULL);
+			return return_type(NULL);
 		} else {
 			ret->append_instance_reference(ir);
 		}
 	}
-	return excl_ptr<const aliases_connection>(ret);	// const-ify
+	// transfers ownership
+	return return_type(ret);	// const-ify
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -614,8 +635,7 @@ object_list::make_alias_connection(void) const {
  */
 excl_ptr<const port_connection>
 object_list::make_port_connection(
-		count_ptr<const simple_instance_reference> ir) const {
-//	cerr << "In object_list::make_port_connection(): FINISH ME!" << endl;
+		const count_ptr<const simple_instance_reference>& ir) const {
 	typedef	excl_ptr<const port_connection>		return_type;
 	excl_ptr<port_connection>
 		ret(new port_connection(ir));
@@ -634,6 +654,7 @@ object_list::make_port_connection(
 				ir(i->is_a<const instance_reference_base>());
 			ret->append_instance_reference(ir);
 		}
+		// transfers ownership
 		return return_type(ret);
 	} else {
 		cerr << "At least one error in port connection.  " << endl;
@@ -644,4 +665,6 @@ object_list::make_port_connection(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_BASE_CC__
 

@@ -3,8 +3,11 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_struct.cc,v 1.6 2005/01/06 17:44:54 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.7 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
+#define	__ART_OBJECT_INSTANCE_STRUCT_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -59,9 +62,7 @@ struct_instance_collection::make_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	return count_ptr<datatype_instance_reference>(
 		new datastruct_instance_reference(
-			never_ptr<const struct_instance_collection>(this)
-//			, excl_ptr<index_list>(NULL)
-	));
+			never_ptr<const struct_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -141,15 +142,6 @@ bool
 struct_array<D>::is_partially_unrolled(void) const {
 	return !collection.empty();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-STRUCT_ARRAY_TEMPLATE_SIGNATURE
-size_t
-struct_array<D>::dimensions(void) const {
-	return D;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STRUCT_ARRAY_TEMPLATE_SIGNATURE
@@ -364,14 +356,6 @@ struct_array<0>::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-struct_array<0>::dimensions(void) const {
-	return 0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 struct_array<0>::what(ostream& o) const {
 	return o << "struct-scalar";
@@ -473,4 +457,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_STRUCT_CC__
 

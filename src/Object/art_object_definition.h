@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.20 2005/01/12 03:19:36 fang Exp $
+	$Id: art_object_definition.h,v 1.21 2005/01/13 05:28:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -75,19 +75,30 @@ public:
 	typedef_base() : definition_base(), scopespace(), sequential_scope() { }
 virtual	~typedef_base() { }
 
-virtual	const string& get_key(void) const = 0;
-	string get_qualified_name(void) const;
-virtual	ostream& what(ostream& o) const = 0;
-	ostream& dump(ostream& o) const;
+virtual	const string&
+	get_key(void) const = 0;
+
+	string
+	get_qualified_name(void) const;
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	ostream&
+	dump(ostream& o) const;
+
 virtual never_ptr<const fundamental_type_reference>
-		get_base_type_ref(void) const = 0;
-virtual	bool assign_typedef(excl_ptr<const fundamental_type_reference> f) = 0;
+	get_base_type_ref(void) const = 0;
+
+virtual	bool
+	assign_typedef(excl_ptr<const fundamental_type_reference>& f) = 0;
 
 	excl_ptr<const fundamental_type_reference>
-		resolve_complete_type(never_ptr<const param_expr_list> p) const;
+	resolve_complete_type(never_ptr<const param_expr_list> p) const;
 
 private:
-virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
+virtual	void
+	load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class typedef_base
 
 //=============================================================================
@@ -106,8 +117,8 @@ public:
 virtual	~process_definition_base() { }
 
 	excl_ptr<definition_base>
-		make_typedef(never_ptr<const scopespace> s, 
-			const token_identifier& id) const;
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const;
 
 // inherited pure virtuals are still pure virtuals
 protected:
@@ -158,42 +169,59 @@ public:
 	process_definition(never_ptr<const name_space> o, const string& s); 
 	~process_definition();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 
-	const string& get_key(void) const;
-	string get_qualified_name(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
 
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>
-		lookup_port_formal(const string& id) const;
-	never_ptr<const object> lookup_object_here(const string& id) const;
+	lookup_port_formal(const string& id) const;
+
+	never_ptr<const object>
+	lookup_object_here(const string& id) const;
 
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 	never_ptr<const instance_collection_base>
-		add_port_formal(never_ptr<instantiation_statement> f, 
-			const token_identifier& id);
+	add_port_formal(never_ptr<instantiation_statement> f, 
+		const token_identifier& id);
 
-	bool certify_port_actuals(const object_list& ol) const;
+	bool
+	certify_port_actuals(const object_list& ol) const;
 
-	bool equivalent_port_formals(
-		never_ptr<const process_definition> p) const;
-	bool require_signature_match(never_ptr<const definition_base> d) const;
+	bool
+	equivalent_port_formals(never_ptr<const process_definition> p) const;
+
+	bool
+	require_signature_match(never_ptr<const definition_base> d) const;
 
 // methods for object file I/O
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
 protected:
-	void write_object_port_formals(
-		const persistent_object_manager& m) const;
-	void load_object_port_formals(persistent_object_manager& m);
+	void
+	write_object_port_formals(const persistent_object_manager& m) const;
+
+	void
+	load_object_port_formals(persistent_object_manager& m);
+
 };	// end class process_definition
 
 //=============================================================================
@@ -217,23 +245,34 @@ private:
 public:
 	process_definition_alias(const string& n, 
 		never_ptr<const scopespace> p);
+
 	~process_definition_alias();
 
-	ostream& what(ostream& o) const;
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
-	never_ptr<const fundamental_type_reference>
-		get_base_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
+	const string&
+	get_key(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const fundamental_type_reference>
+	get_base_type_ref(void) const;
+
+	bool
+	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class process_definition_alias
 
 //=============================================================================
@@ -245,7 +284,6 @@ private:
 	typedef	definition_base				parent_type;
 public:
 	datatype_definition_base() : definition_base() { }
-//	datatype_definition_base(const string& n);
 virtual	~datatype_definition_base() { }
 
 	excl_ptr<definition_base>
@@ -267,10 +305,11 @@ virtual	never_ptr<const datatype_definition_base>
 
 virtual	count_ptr<const fundamental_type_reference>
 	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const = 0;
+		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
 
 virtual	bool
 	require_signature_match(never_ptr<const definition_base> d) const = 0;
+
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
@@ -301,27 +340,36 @@ public:
 
 	~built_in_datatype_def();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	const string& get_key(void) const;
-	string get_qualified_name(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
 
 	never_ptr<const instance_collection_base>
-		add_template_formal(excl_ptr<instance_collection_base>& f);
+	add_template_formal(excl_ptr<instance_collection_base>& f);
 
-	bool require_signature_match(
-		never_ptr<const definition_base> d) const
+	bool
+	require_signature_match(never_ptr<const definition_base> d) const
 		{ assert(d); return key == d->get_name(); }
 		// really, this should never be called...
 public:
@@ -332,7 +380,8 @@ public:
 //	void collect_transient_info(persistent_object_manager& m) const;
 //	void write_object(const persistent_object_manager& m) const;
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class built_in_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -343,11 +392,16 @@ class enum_member : public object {
 protected:
 	const string			id;
 public:
+	explicit
 	enum_member(const string& n) : object(), id(n) { }
+
 	~enum_member() { }
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
 };	// end class enum_member
 
 //-----------------------------------------------------------------------------
@@ -365,28 +419,40 @@ public:
 	enum_datatype_def(never_ptr<const name_space> o, const string& n);
 	~enum_datatype_def();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 
-	const string& get_key(void) const;
-	string get_qualified_name(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 
-	bool require_signature_match(never_ptr<const definition_base> d) const;
+	bool
+	require_signature_match(never_ptr<const definition_base> d) const;
 
-	bool add_member(const token_identifier& em);
+	bool
+	add_member(const token_identifier& em);
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
 };	// end class enum_datatype_def
 
 //-----------------------------------------------------------------------------
@@ -414,19 +480,24 @@ public:
 	ostream& what(ostream& o) const;
 //	ostream& dump(ostream& o) const;
 
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	const string&
+	get_key(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
 
 	/** can't alias built-in param types, would be confusing */
 	excl_ptr<definition_base>
-		make_typedef(never_ptr<const scopespace> s, 
-			const token_identifier& id) const;
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const;
 
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+
 private:
 	PERSISTENT_METHODS
+
 };	// end class built_in_param_def
 
 //-----------------------------------------------------------------------------
@@ -443,31 +514,42 @@ public:
 	user_def_datatype(never_ptr<const name_space> o, const string& name);
 	~user_def_datatype();
 
-	const string& get_key(void) const;
-	string get_qualified_name(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
-	never_ptr<const object> lookup_object_here(const string& id) const;
+	never_ptr<const object>
+	lookup_object_here(const string& id) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool require_signature_match(
-		never_ptr<const definition_base> d) const { return false; }
+	ostream&
+	dump(ostream& o) const;
+
+	bool
+	require_signature_match(never_ptr<const definition_base> d) const
+		{ return false; }
 
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
 };	// end class user_def_datatype
 
 //-----------------------------------------------------------------------------
@@ -484,28 +566,41 @@ protected:
 public:
 	datatype_definition_alias(const string& n, 
 		never_ptr<const scopespace> p);
+
 	~datatype_definition_alias();
 
-	ostream& what(ostream& o) const;
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	const string&
+	get_key(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
 	never_ptr<const fundamental_type_reference>
-		get_base_type_ref(void) const;
+	get_base_type_ref(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
-	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
+	bool
+	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
-	bool require_signature_match(
-		never_ptr<const definition_base> d) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+
+	bool
+	require_signature_match(never_ptr<const definition_base> d) const;
+
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
 };	// end class datatype_definition_alias
 
 //=============================================================================
@@ -515,18 +610,17 @@ private:
 	typedef	definition_base			parent_type;
 public:
 	channel_definition_base() : parent_type() { }
-//	channel_definition_base(const string& n);
 virtual	~channel_definition_base() { }
 
 // virtual	ostream& what(ostream& o) const = 0;
 
 	excl_ptr<definition_base>
-		make_typedef(never_ptr<const scopespace> s, 
-			const token_identifier& id) const;
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const;
 
 virtual	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 
 protected:
 	using parent_type::collect_transient_info_base;
@@ -553,26 +647,37 @@ public:
 	user_def_chan(never_ptr<const name_space> o, const string& name);
 	~user_def_chan();
 
-	const string& get_key(void) const;
-	string get_qualified_name(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
+	const string&
+	get_key(void) const;
 
-	never_ptr<const object> lookup_object_here(const string& id) const;
+	string
+	get_qualified_name(void) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const object>
+	lookup_object_here(const string& id) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
 
 #if 0
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 #endif
 //	bool certify_port_actuals(const object_list& ol) const;
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
 };	// end class user_def_chan
 
 //-----------------------------------------------------------------------------
@@ -588,25 +693,37 @@ protected:
 public:
 	channel_definition_alias(const string& n, 
 		never_ptr<const scopespace> p);
+
 	~channel_definition_alias();
 
-	ostream& what(ostream& o) const;
-	const string& get_key(void) const;
-	never_ptr<const scopespace> get_parent(void) const;
-	never_ptr<const fundamental_type_reference>
-		get_base_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool assign_typedef(excl_ptr<const fundamental_type_reference> f);
+	const string&
+	get_key(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const fundamental_type_reference>
+	get_base_type_ref(void) const;
+
+	bool
+	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
 #if 0
 	count_ptr<const fundamental_type_reference>
-		make_fundamental_type_reference(
-			excl_ptr<dynamic_param_expr_list> ta) const;
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
 #endif
+
 public:
 	PERSISTENT_METHODS
 
 private:
-	void load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
 };	// end class channel_definition_alias
 
 //-----------------------------------------------------------------------------

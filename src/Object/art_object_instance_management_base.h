@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.4 2005/01/12 03:19:37 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.5 2005/01/13 05:28:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -47,7 +47,8 @@ public:
 		private:
 			ostream& os;
 		public:
-			explicit dumper(ostream& o);
+			explicit
+			dumper(ostream& o);
 
 			template <template <class> class P>
 			ostream&
@@ -55,17 +56,13 @@ public:
 	};      // end class dumper
 
 public:
-virtual ostream& dump(ostream& o) const = 0;
-
-#if 0
-virtual void collect_transient_info(persistent_object_manager& m) const = 0;
-virtual void write_object(const persistent_object_manager& m) const = 0;
-virtual void load_object(persistent_object_manager& m) = 0;
-#endif
+virtual ostream&
+	dump(ostream& o) const = 0;
 
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
-virtual void unroll(void) const = 0;
+virtual void
+	unroll(void) const = 0;
 };	// end class instance_management_base
 
 //=============================================================================
@@ -99,8 +96,11 @@ private:
 	sequential_scope(const sequential_scope&);
 
 public:
-	ostream& dump(ostream& o) const;
-	void append_instance_management(
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	append_instance_management(
 		excl_ptr<const instance_management_base>& i);
 
 private:

@@ -2,7 +2,7 @@
 	\file "art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.7 2004/12/11 06:22:41 fang Exp $
+	$Id: art_object_assign.h,v 1.8 2005/01/13 05:28:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_ASSIGN_H__
@@ -44,11 +44,17 @@ public:
 virtual	~param_expression_assignment();
 
 // virtualize
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	size_t	size(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-virtual	bool	append_param_instance_reference(const dest_ptr_type& e) = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	size_t
+	size(void) const = 0;
+
+virtual	bool
+	append_param_instance_reference(const dest_ptr_type& e) = 0;
 
 	/**
 		Helper class for appending instance references to
@@ -61,17 +67,21 @@ virtual	bool	append_param_instance_reference(const dest_ptr_type& e) = 0;
 		size_t				index;
 		param_expression_assignment&	ex_ass;
 	public:
+		explicit
 		instance_reference_appender(param_expression_assignment& p) :
 			index(0), ex_ass(p) { }
+
 		bool
 		operator () (const bool b, const object_list::value_type& i);
 	};	// end class instance_reference_appender
 
 protected:
-	bool	validate_dimensions_match(
-			const dest_const_ptr_type&, const size_t ) const;
-	bool	validate_reference_is_uninitialized(
-			const dest_const_ptr_type&) const;
+	bool
+	validate_dimensions_match(const dest_const_ptr_type&, 
+		const size_t ) const;
+
+	bool
+	validate_reference_is_uninitialized(const dest_const_ptr_type&) const;
 
 };	// end class param_expression_assignment
 
@@ -97,17 +107,25 @@ protected:
 private:
 	pbool_expression_assignment();
 public:
+	explicit
 	pbool_expression_assignment(const src_const_ptr_type& s);
+
 	~pbool_expression_assignment();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	size_t	size(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool	append_param_instance_reference(
-			const parent_type::dest_ptr_type& e);
+	ostream&
+	dump(ostream& o) const;
 
-	void unroll(void) const;
+	size_t
+	size(void) const;
+
+	bool
+	append_param_instance_reference(const parent_type::dest_ptr_type& e);
+
+	void
+	unroll(void) const;
 
 public:
 	/** helper class for printing dump of list */
@@ -116,8 +134,11 @@ public:
 		size_t index;
 		ostream& os;
 	public:
+		explicit
 		dumper(ostream& o, const size_t i = 0);
-		void operator () (const dest_list_type::value_type& i);
+
+		void
+		operator () (const dest_list_type::value_type& i);
 	};	// end class dumper
 
 public:
@@ -147,17 +168,25 @@ protected:
 private:
 	pint_expression_assignment();
 public:
+	explicit
 	pint_expression_assignment(const src_const_ptr_type& s);
+
 	~pint_expression_assignment();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	size_t	size(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool	append_param_instance_reference(
-			const parent_type::dest_ptr_type& e);
+	ostream&
+	dump(ostream& o) const;
 
-	void unroll(void) const;
+	size_t
+	size(void) const;
+
+	bool
+	append_param_instance_reference(const parent_type::dest_ptr_type& e);
+
+	void
+	unroll(void) const;
 
 public:
 	/** helper class for printing dump of list */
@@ -166,8 +195,11 @@ public:
 		size_t index;
 		ostream& os;
 	public:
+		explicit
 		dumper(ostream& o, const size_t i = 0);
-		void operator () (const dest_list_type::value_type& i);
+
+		void
+		operator () (const dest_list_type::value_type& i);
 	};	// end class dumper
 
 public:

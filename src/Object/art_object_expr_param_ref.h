@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.3 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.4 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
@@ -57,36 +57,73 @@ protected:
 private:
 	pbool_instance_reference();
 public:
-	pbool_instance_reference(never_ptr<pbool_instance_collection> pi, 
-		excl_ptr<index_list> i);
+	explicit
+	pbool_instance_reference(const never_ptr<pbool_instance_collection> pi);
+
+	pbool_instance_reference(const never_ptr<pbool_instance_collection> pi, 
+		excl_ptr<index_list>& i);
+
 	~pbool_instance_reference();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
 	using param_instance_reference::dump;
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
 	never_ptr<const param_instance_collection>
-		get_param_inst_base(void) const;
+	get_param_inst_base(void) const;
 
-	size_t dimensions(void) const;
-	bool has_static_constant_dimensions(void) const;
-	const_range_list static_constant_dimensions(void) const;
+	size_t
+	dimensions(void) const;
 
-	bool initialize(count_ptr<const pbool_expr> i);
-	string hash_string(void) const;
+	bool
+	has_static_constant_dimensions(void) const;
+
+	const_range_list
+	static_constant_dimensions(void) const;
+
+	bool
+	initialize(const count_ptr<const pbool_expr>& i);
+
+	string
+	hash_string(void) const;
+
 	// try these
 	// using param_instance_reference::may_be_initialized;
 	// using param_instance_reference::must_be_initialized;
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_unconditional(void) const;
-	bool is_loop_independent(void) const;
-	bool static_constant_bool(void) const;
 
-	bool resolve_value(bool& i) const;
-	const_index_list resolve_dimensions(void) const;
-	bool resolve_values_into_flat_list(list<bool>& l) const;
+	bool
+	may_be_initialized(void) const;
+
+	bool
+	must_be_initialized(void) const;
+
+	bool
+	is_static_constant(void) const;
+
+	bool
+	is_unconditional(void) const;
+
+	bool
+	is_loop_independent(void) const;
+
+	bool
+	static_constant_bool(void) const;
+
+	bool
+	resolve_value(bool& i) const;
+
+	const_index_list
+	resolve_dimensions(void) const;
+
+	bool
+	resolve_values_into_flat_list(list<bool>& l) const;
 public:
 	/**
 		Helper class for assigning values to instances.
@@ -145,32 +182,67 @@ protected:
 private:
 	pint_instance_reference();
 public:
-	pint_instance_reference(never_ptr<pint_instance_collection> pi, 
-		excl_ptr<index_list> i);
+	explicit
+	pint_instance_reference(const never_ptr<pint_instance_collection> pi);
+
+	pint_instance_reference(const never_ptr<pint_instance_collection> pi, 
+		excl_ptr<index_list>& i);
+
 	~pint_instance_reference();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
 	never_ptr<const param_instance_collection>
-		get_param_inst_base(void) const;
+	get_param_inst_base(void) const;
 
-	size_t dimensions(void) const;
-	bool has_static_constant_dimensions(void) const;
-	const_range_list static_constant_dimensions(void) const;
+	size_t
+	dimensions(void) const;
 
-	bool initialize(count_ptr<const pint_expr> i);
-	string hash_string(void) const;
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_unconditional(void) const;
-	bool is_loop_independent(void) const;
-	int static_constant_int(void) const;
+	bool
+	has_static_constant_dimensions(void) const;
 
-	bool resolve_value(int& i) const;
-	const_index_list resolve_dimensions(void) const;
-	bool resolve_values_into_flat_list(list<int>& l) const;
+	const_range_list
+	static_constant_dimensions(void) const;
+
+	bool
+	initialize(const count_ptr<const pint_expr>& i);
+
+	string
+	hash_string(void) const;
+
+	bool
+	may_be_initialized(void) const;
+
+	bool
+	must_be_initialized(void) const;
+
+	bool
+	is_static_constant(void) const;
+
+	bool
+	is_unconditional(void) const;
+
+	bool
+	is_loop_independent(void) const;
+
+	int
+	static_constant_int(void) const;
+
+	bool
+	resolve_value(int& i) const;
+
+	const_index_list
+	resolve_dimensions(void) const;
+
+	bool
+	resolve_values_into_flat_list(list<int>& l) const;
 
 protected:
 //	bool assign(const list<int>& l) const;

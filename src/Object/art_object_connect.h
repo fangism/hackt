@@ -2,7 +2,7 @@
 	\file "art_object_connect.h"
 	Declarations for classes related to connection of physical
 	entites. 
-	$Id: art_object_connect.h,v 1.14 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_connect.h,v 1.15 2005/01/13 05:28:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONNECT_H__
@@ -36,8 +36,9 @@ public:
 virtual	~instance_reference_connection();
 
 // non-virtual
-virtual	void	append_instance_reference(
-			count_ptr<const instance_reference_base> i);
+virtual	void
+	append_instance_reference(
+		const count_ptr<const instance_reference_base>& i);
 };	// end class instance_reference_connection
 
 //-----------------------------------------------------------------------------
@@ -54,12 +55,18 @@ public:
 	aliases_connection();
 	~aliases_connection() { }
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void	prepend_instance_reference(
-			count_ptr<const instance_reference_base> i);
+	ostream&
+	what(ostream& o) const;
 
-	void unroll(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	prepend_instance_reference(
+		const count_ptr<const instance_reference_base>& i);
+
+	void
+	unroll(void) const;
 
 public:
 	PERSISTENT_METHODS
@@ -81,15 +88,23 @@ private:
 	port_connection();
 public:
 	/** later, accept complex_aggregate_instance_references? */
-	port_connection(count_ptr<const simple_instance_reference> i);
+	explicit
+	port_connection(const count_ptr<const simple_instance_reference>& i);
+
 	~port_connection();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void	append_instance_reference(
-			count_ptr<const instance_reference_base> i);
+	ostream&
+	what(ostream& o) const;
 
-	void unroll(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	append_instance_reference(
+		const count_ptr<const instance_reference_base>& i);
+
+	void
+	unroll(void) const;
 
 public:
 	PERSISTENT_METHODS

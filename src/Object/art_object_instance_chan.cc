@@ -3,8 +3,11 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_chan.cc,v 1.4 2004/12/15 23:31:10 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.5 2005/01/13 05:28:31 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_CHAN_CC__
+#define	__ART_OBJECT_INSTANCE_CHAN_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -71,8 +74,7 @@ channel_instance_collection::make_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	return count_ptr<channel_instance_reference>(
 		new channel_instance_reference(
-			never_ptr<const channel_instance_collection>(this), 
-			excl_ptr<index_list>(NULL)));
+			never_ptr<const channel_instance_collection>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
 }
@@ -85,7 +87,7 @@ channel_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 channel_instance_collection::make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const {
+		const count_ptr<const simple_instance_reference>& b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<channel_member_instance_reference>(
@@ -193,15 +195,6 @@ ostream&
 chan_array<D>::what(ostream& o) const {
 	return o << "chan-array<" << D << ">";
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-CHAN_ARRAY_TEMPLATE_SIGNATURE
-size_t
-chan_array<D>::dimensions(void) const {
-	return D;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHAN_ARRAY_TEMPLATE_SIGNATURE
@@ -415,14 +408,6 @@ chan_array<0>::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-chan_array<0>::dimensions(void) const {
-	return 0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 chan_array<0>::dump_unrolled_instances(ostream& o) const {
 	return o << auto_indent << the_instance << endl;
@@ -518,4 +503,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_CHAN_CC__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.5 2005/01/12 03:19:38 fang Exp $
+	$Id: art_object_namespace.h,v 1.6 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -186,35 +186,57 @@ public:
 	scopespace();
 virtual	~scopespace();
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
-virtual	const string& get_key(void) const = 0;
-virtual	string get_qualified_name(void) const = 0;
-virtual never_ptr<const scopespace> get_parent(void) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
-virtual	never_ptr<const object>	lookup_object_here(const string& id) const;
-virtual	never_ptr<object>	lookup_object_here_with_modify(const string& id) const;
-virtual	never_ptr<const object>	lookup_object(const string& id) const;
-virtual	never_ptr<const object>	lookup_object(const qualified_id_slice& id) const;
+virtual	const string&
+	get_key(void) const = 0;
+
+virtual	string
+	get_qualified_name(void) const = 0;
+
+virtual never_ptr<const scopespace>
+	get_parent(void) const = 0;
+
+virtual	never_ptr<const object>
+	lookup_object_here(const string& id) const;
+
+virtual	never_ptr<object>
+	lookup_object_here_with_modify(const string& id) const;
+
+virtual	never_ptr<const object>
+	lookup_object(const string& id) const;
+
+virtual	never_ptr<const object>
+	lookup_object(const qualified_id_slice& id) const;
 
 virtual	never_ptr<const scopespace>
-		lookup_namespace(const qualified_id_slice& id) const;
+	lookup_namespace(const qualified_id_slice& id) const;
 
 protected:
 	never_ptr<const instance_collection_base>
-		add_instance(excl_ptr<instance_collection_base>& i);
+	add_instance(excl_ptr<instance_collection_base>& i);
 public:
 	// need id because instantiation statement won't be named yet!
 	never_ptr<const instance_collection_base>
-		add_instance(never_ptr<instantiation_statement> i, 
-			const token_identifier& id);
-	bool add_definition_alias(never_ptr<const definition_base> d, 
+	add_instance(never_ptr<instantiation_statement> i, 
+		const token_identifier& id);
+
+	bool
+	add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a);
 
-	size_t exclude_population(void) const;
-virtual	bool exclude_object(const used_id_map_type::value_type& i) const;
-	bool exclude_object_val(const used_id_map_type::value_type i) const;
+	size_t
+	exclude_population(void) const;
+
+virtual	bool
+	exclude_object(const used_id_map_type::value_type& i) const;
+
+	bool
+	exclude_object_val(const used_id_map_type::value_type i) const;
 
 // helper functions for object IO
 private:
@@ -243,7 +265,8 @@ protected:
 private:
 // no concrete method for loading -- that remains derived-class specific
 // so each sub-class may impose its own restrictions
-virtual	void load_used_id_map_object(excl_ptr<persistent>& o) = 0;
+virtual	void
+	load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class scopespace
 
 //=============================================================================
@@ -314,49 +337,68 @@ explicit name_space(const string& n);
 	ostream& dump(ostream& o) const;
 	ostream& pair_dump(ostream& o) const;
 
-string	get_qualified_name(void) const;
-never_ptr<const name_space>	get_global_namespace(void) const;
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const name_space>
+	get_global_namespace(void) const;
 
 // update these return types later
-never_ptr<name_space>	add_open_namespace(const string& n);
-never_ptr<const name_space>	leave_namespace(void);	// or close_namespace
-never_ptr<const name_space>	add_using_directive(const qualified_id& n);
-never_ptr<const name_space>	add_using_alias(const qualified_id& n, const string& a);
+	never_ptr<name_space>
+	add_open_namespace(const string& n);
+
+	never_ptr<const name_space>
+	leave_namespace(void);	// or close_namespace
+
+	never_ptr<const name_space>
+	add_using_directive(const qualified_id& n);
+
+	never_ptr<const name_space>
+	add_using_alias(const qualified_id& n, const string& a);
 
 private:
-never_ptr<name_space>	add_namespace(excl_ptr<name_space> ns);
+	never_ptr<name_space>
+	add_namespace(excl_ptr<name_space>& ns);
 
 public:
 
-// do we really need to specialize adding definitions by class?
-// to be used ONLY by the global namespace (???)
-never_ptr<definition_base>	add_definition(excl_ptr<definition_base> db);
-
-// convert me to pointer-class:
+	// do we really need to specialize adding definitions by class?
+	// to be used ONLY by the global namespace (???)
+	never_ptr<definition_base>
+	add_definition(excl_ptr<definition_base>& db);
 
 // returns type if unique match found, else NULL
-never_ptr<const scopespace>	lookup_namespace(const qualified_id_slice& id) const;
-never_ptr<const name_space>	lookup_open_alias(const string& id) const;
+	never_ptr<const scopespace>
+	lookup_namespace(const qualified_id_slice& id) const;
+
+	never_ptr<const name_space>
+	lookup_open_alias(const string& id) const;
 
 // type-specific counterparts, obsolete
 
 // some private utility functions (may become public later)
 // add versions for querying for types, instantiations, etc...
 private:
-never_ptr<const name_space>
-		query_namespace_match(const qualified_id_slice& id) const;
-never_ptr<const name_space>
-		query_subnamespace_match(const qualified_id_slice& id) const;
+	never_ptr<const name_space>
+	query_namespace_match(const qualified_id_slice& id) const;
 
-void	query_import_namespace_match(namespace_list& m, const qualified_id& id) const;
+	never_ptr<const name_space>
+	query_subnamespace_match(const qualified_id_slice& id) const;
 
-// these will not be recursive, but iteratively invoked by
-// add_blah_inst/def();
-
-// the following are not used... yet
-void	find_namespace_ending_with(namespace_list& m, 
+	void	
+	query_import_namespace_match(namespace_list& m, 
 		const qualified_id& id) const;
-void	find_namespace_starting_with(namespace_list& m, 
+
+	// these will not be recursive, but iteratively invoked by
+	// add_blah_inst/def();
+
+	// the following are not used... yet
+	void
+	find_namespace_ending_with(namespace_list& m, 
+		const qualified_id& id) const;
+
+	void
+	find_namespace_starting_with(namespace_list& m, 
 		const qualified_id& id) const;
 
 // void	inherit_built_in_types(void);		// OBSOLETE
@@ -365,19 +407,26 @@ void	find_namespace_starting_with(namespace_list& m,
 // if we don't know a priori what an identifier's class is?
 // single symbol table or separate?
 
-bool	exclude_object(const used_id_map_type::value_type& i) const;
+	bool
+	exclude_object(const used_id_map_type::value_type& i) const;
 
 public:
-	void unroll_params(void);
-	void unroll_instances(void);
-	void unroll_connections(void);
+	void
+	unroll_params(void);
+
+	void
+	unroll_instances(void);
+
+	void
+	unroll_connections(void);
 
 // methods for object file I/O
 public:
 	PERSISTENT_METHODS
 
 /** helper method for adding a variety of objects */
-void	load_used_id_map_object(excl_ptr<persistent>& o);
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
 public:
 	static const never_ptr<const name_space>	null;
 };	// end class name_space

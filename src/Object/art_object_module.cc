@@ -1,8 +1,11 @@
 /**
 	\file "art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.11 2004/12/12 06:27:56 fang Exp $
+ 	$Id: art_object_module.cc,v 1.12 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_MODULE_CC__
+#define	__ART_OBJECT_MODULE_CC__
 
 #include <iostream>
 #include "art_object_module.h"
@@ -138,4 +141,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_MODULE_CC__
 

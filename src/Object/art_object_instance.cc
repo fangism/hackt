@@ -1,12 +1,16 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.34 2005/01/12 04:14:18 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.35 2005/01/13 05:28:30 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_CC__
+#define	__ART_OBJECT_INSTANCE_CC__
 
 #include <iostream>
 #include <algorithm>
 
+#include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_instance_param.h"
@@ -88,7 +92,8 @@ instance_collection_base::dump(ostream& o) const {
 	index_collection_type::const_iterator i = index_collection.begin();
 	for ( ; i!=index_collection.end(); i++) {
 		NEVER_NULL(*i);
-		index_collection_item_ptr_type ind((*i)->get_indices());
+		const index_collection_item_ptr_type
+			ind((*i)->get_indices());
 		if (ind)
 			ind->dump(o) << endl;
 	}
@@ -171,7 +176,8 @@ instance_collection_base::detect_static_overlap(
 	for ( ; i!=index_collection.end(); i++) {
 		// return upon first overlap error
 		// later accumulate all overlaps.  
-		const_range_list ovlp((*i)->get_indices()->static_overlap(*r));
+		const const_range_list
+			ovlp((*i)->get_indices()->static_overlap(*r));
 		if (!ovlp.empty()) {
 			return ovlp;
 		}
@@ -203,7 +209,7 @@ instance_collection_base::add_instantiation_statement(
 		const index_collection_type::value_type& r) {
 	STACKTRACE("instance_collection_base::add_instantiation_statement()");
 	NEVER_NULL(r);
-	index_collection_item_ptr_type i(r->get_indices());
+	const index_collection_item_ptr_type i(r->get_indices());
 	INVARIANT(dimensions || index_collection.empty());	// catches 0-D
 	// TYPE CHECK!!!
 	const_range_list overlap;
@@ -225,7 +231,7 @@ instance_collection_base::add_instantiation_statement(
  */
 bool
 instance_collection_base::is_template_formal(void) const {
-	never_ptr<const definition_base>
+	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def)
 		return def->lookup_template_formal(key);
@@ -239,7 +245,7 @@ instance_collection_base::is_template_formal(void) const {
  */
 bool
 instance_collection_base::is_port_formal(void) const {
-	never_ptr<const definition_base>
+	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def)
 		return def->lookup_port_formal(key);
@@ -257,12 +263,12 @@ instance_collection_base::is_port_formal(void) const {
  */
 bool
 instance_collection_base::template_formal_equivalent(
-		never_ptr<const instance_collection_base> b) const {
+		const never_ptr<const instance_collection_base> b) const {
 	NEVER_NULL(b);
 	// first make sure base types are equivalent.  
-	count_ptr<const fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
-	count_ptr<const fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
@@ -282,12 +288,12 @@ instance_collection_base::template_formal_equivalent(
  */
 bool
 instance_collection_base::port_formal_equivalent(
-		never_ptr<const instance_collection_base> b) const {
+		const never_ptr<const instance_collection_base> b) const {
 	NEVER_NULL(b);
 	// first make sure base types are equivalent.  
-	count_ptr<const fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		this_type(get_type_ref());
-	count_ptr<const fundamental_type_reference>
+	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	if (!this_type->may_be_equivalent(*b_type)) {
 		// then their instantiation types differ
@@ -312,7 +318,7 @@ instance_collection_base::port_formal_equivalent(
  */
 bool
 instance_collection_base::formal_size_equivalent(
-		never_ptr<const instance_collection_base> b) const {
+		const never_ptr<const instance_collection_base> b) const {
 	NEVER_NULL(b);
 	if (dimensions != b->dimensions) {
 		// useful error message here: dimensions don't match
@@ -331,17 +337,17 @@ instance_collection_base::formal_size_equivalent(
 	}
 	if (this_coll == 1) {
 		// compare their collections
-		const index_collection_type::const_iterator i =
-			index_collection.begin();
-		const index_collection_type::const_iterator j =
-			b->index_collection.begin();
+		const index_collection_type::const_iterator
+			i = index_collection.begin();
+		const index_collection_type::const_iterator
+			j = b->index_collection.begin();
 		// difficult: what if some dimensions are not static?
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
 		// former template formals list when visited with the second.  
-		count_ptr<const const_range_list>
+		const count_ptr<const const_range_list>
 			ic((*i)->get_indices().is_a<const const_range_list>());
-		count_ptr<const const_range_list>
+		const count_ptr<const const_range_list>
 			jc((*j)->get_indices().is_a<const const_range_list>());
 		if (ic && jc) {
 			// compare dense ranges in each dimension
@@ -396,11 +402,11 @@ instance_collection_base::check_expression_dimensions(
 		// make sure sizes in each dimension
 		index_collection_type::const_iterator i =
 			index_collection.begin();
-		count_ptr<const const_range_list>
+		const count_ptr<const const_range_list>
 			crl((*i)->get_indices().is_a<const const_range_list>());
 		if (crl) {
 			if (pe.has_static_constant_dimensions()) {
-				const_range_list
+				const const_range_list
 					d(pe.static_constant_dimensions());
 				return (*crl == d);
 			} else {
@@ -458,9 +464,6 @@ instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, owner);
 	write_string(o, key);
-#if 0
-	write_value(o, dimensions);
-#endif
 	m.write_pointer_list(o, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -482,9 +485,6 @@ inline
 void
 instance_collection_base::load_index_collection_pointers(
 		persistent_object_manager& m, istream& i) {
-#if 0
-	read_value(i, dimensions);
-#endif
 	m.read_pointer_list(i, index_collection);
 		// is actually specialized for count_ptr's :)
 }
@@ -537,7 +537,7 @@ datatype_instance_collection::get_type_ref(void) const {
  */
 count_ptr<member_instance_reference_base>
 datatype_instance_collection::make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const {
+		const count_ptr<const simple_instance_reference>& b) const {
 	NEVER_NULL(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<datatype_member_instance_reference>(
@@ -620,7 +620,7 @@ process_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 process_instance_collection::make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const {
+		const count_ptr<const simple_instance_reference>& b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<process_member_instance_reference>(
@@ -741,7 +741,7 @@ channel_instance_collection::make_instance_reference(void) const {
  */
 count_ptr<member_instance_reference_base>
 channel_instance_collection::make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const {
+		const count_ptr<const simple_instance_reference>& b) const {
 	assert(b);
 	// maybe verify that b contains this, as sanity check
 	return count_ptr<channel_member_instance_reference>(
@@ -795,4 +795,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_CC__
 

@@ -2,7 +2,7 @@
 	\file "art_object_control.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: art_object_control.h,v 1.6 2004/12/06 07:11:18 fang Exp $
+	$Id: art_object_control.h,v 1.7 2005/01/13 05:28:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONTROL_H__
@@ -52,6 +52,7 @@ protected:
 	// range expression
 public:
 	/** what about name of scope? none. */
+	explicit
 	loop_scope(never_ptr<const sequential_scope> p);
 		// more args...  
 	~loop_scope();

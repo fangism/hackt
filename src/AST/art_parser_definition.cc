@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.8 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_definition.cc,v 1.9 2005/01/13 05:28:25 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -500,8 +500,10 @@ process_signature::check_build(never_ptr<context> c) const {
 #endif
 	}
 	// this checks for conflicts in definitions.  
+	// transfers ownership between context members
 	never_ptr<const object>
 		o(c->add_declaration(c->get_current_prototype()));
+	INVARIANT(!c->get_current_prototype());
 	if (!o) {
 		cerr << where() << endl;
 		exit(1);
@@ -740,9 +742,11 @@ if (base->get_temp_spec()) {
 		}
 	}
 	base->check_build(c);	// make sure is complete type
+	// transfers ownership between context members
 	never_ptr<const object>
 		obj(c->add_declaration(c->get_current_prototype()));
 		// also resets current_prototype, *after* checking type ref
+	INVARIANT(!c->get_current_prototype());
 	// useless return value NULL, check current_fundamental_type
 	count_ptr<const fundamental_type_reference>
 		ftr(c->get_current_fundamental_type());

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.14 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.15 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -36,14 +36,17 @@ protected:
 	explicit
 	datatype_instance_reference(const instantiation_state& s);
 
+#if 0
 	// may be obsolete...
-	datatype_instance_reference(excl_ptr<index_list> i, 
+	datatype_instance_reference(excl_ptr<index_list>& i, 
 		const instantiation_state& s);
+#endif
 
 public:
 virtual	~datatype_instance_reference();
 
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
 //	ostream& dump(ostream& o) const;
 
@@ -66,18 +69,31 @@ private:
 	typedef	simple_instance_reference		parent_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const channel_instance_collection>	channel_inst_ref;
+	const never_ptr<const channel_instance_collection>
+							channel_inst_ref;
 
 protected:
 	channel_instance_reference();
 public:
-	channel_instance_reference(never_ptr<const channel_instance_collection> ci, 
-		excl_ptr<index_list> i);
+	explicit
+	channel_instance_reference(
+		const never_ptr<const channel_instance_collection> ci);
+
+#if 0
+	channel_instance_reference(
+		const never_ptr<const channel_instance_collection> ci, 
+		excl_ptr<index_list>& i);
+#endif
+
 virtual	~channel_instance_reference();
 
-virtual	ostream& what(ostream& o) const;
+virtual	ostream&
+	what(ostream& o) const;
+
 //	ostream& dump(ostream& o) const;
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
 
 protected:
 	void
@@ -100,17 +116,29 @@ private:
 	typedef	simple_instance_reference		parent_type;
 protected:
 //	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const process_instance_collection>	process_inst_ref;
+	const never_ptr<const process_instance_collection>
+							process_inst_ref;
 
 protected:
 	process_instance_reference();
 public:
-	process_instance_reference(never_ptr<const process_instance_collection> pi, 
-		excl_ptr<index_list> i);
+	explicit
+	process_instance_reference(
+		const never_ptr<const process_instance_collection> pi);
+
+#if 0
+	process_instance_reference(
+		const never_ptr<const process_instance_collection> pi, 
+		excl_ptr<index_list>& i);
+#endif
+
 virtual	~process_instance_reference();
 
-virtual	ostream& what(ostream& o) const;
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
 
 protected:
 	void
@@ -144,11 +172,13 @@ private:
 	process_member_instance_reference();
 public:
 	process_member_instance_reference(
-		count_ptr<const simple_instance_reference> b, 
-		never_ptr<const process_instance_collection> m);
+		const count_ptr<const simple_instance_reference>& b, 
+		const never_ptr<const process_instance_collection> m);
+
 	~process_member_instance_reference();
 
-	ostream& what(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 // can also attach indices!
 
 public:
@@ -176,11 +206,13 @@ private:
 	datatype_member_instance_reference();
 public:
 	datatype_member_instance_reference(
-		count_ptr<const simple_instance_reference> b, 
-		never_ptr<const datatype_instance_collection> m);
+		const count_ptr<const simple_instance_reference>& b, 
+		const never_ptr<const datatype_instance_collection> m);
+
 	~datatype_member_instance_reference();
 
-	ostream& what(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 // can also attach indices!
 
 	never_ptr<const instance_collection_base>
@@ -210,11 +242,13 @@ private:
 	channel_member_instance_reference();
 public:
 	channel_member_instance_reference(
-		count_ptr<const simple_instance_reference> b, 
-		never_ptr<const channel_instance_collection> m);
+		const count_ptr<const simple_instance_reference>& b, 
+		const never_ptr<const channel_instance_collection> m);
+
 	~channel_member_instance_reference();
 
-	ostream& what(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
 // can also attach indices!
 
 public:

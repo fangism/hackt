@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.11 2005/01/12 04:14:16 fang Exp $
+	$Id: art_parser_token.cc,v 1.12 2005/01/13 05:28:25 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "art_parser_token.h"
 
 #include "art_context.h"
+#include "art_object_definition.h"
 #include "art_object_instance_base.h"
 #include "art_object_inst_ref_base.h"
 #include "art_object_expr_const.h"

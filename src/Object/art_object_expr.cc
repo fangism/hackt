@@ -1,8 +1,11 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.32 2005/01/12 04:14:18 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.33 2005/01/13 05:28:29 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_EXPR_CC__
+#define	__ART_OBJECT_EXPR_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -289,14 +292,7 @@ const_param_expr_list::const_param_expr_list() :
 const_param_expr_list::~const_param_expr_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-const_param_expr_list::what(ostream& o) const {
-	return o << "const-param-expr-list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -528,14 +524,7 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 dynamic_param_expr_list::~dynamic_param_expr_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-dynamic_param_expr_list::what(ostream& o) const {
-	return o << "param-expr-list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -572,7 +561,7 @@ bool
 dynamic_param_expr_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->is_static_constant())
 			return false;
@@ -586,7 +575,7 @@ bool
 dynamic_param_expr_list::is_loop_independent(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->is_loop_independent())
 			return false;
@@ -600,7 +589,7 @@ bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->may_be_initialized())
 			return false;
@@ -614,7 +603,7 @@ bool
 dynamic_param_expr_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
-		count_ptr<const param_expr> ip(*i);
+		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
 		if (!ip->must_be_initialized())
 			return false;
@@ -644,8 +633,8 @@ dynamic_param_expr_list::get_const_ref_list(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
-	const const_param_expr_list* cpl =
-		IS_A(const const_param_expr_list*, &p);
+	const never_ptr<const const_param_expr_list>
+		cpl(IS_A(const const_param_expr_list*, &p));
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
@@ -662,8 +651,8 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
-	const dynamic_param_expr_list* dpl =
-		IS_A(const dynamic_param_expr_list*, &p);
+	const never_ptr<const dynamic_param_expr_list>
+		dpl(IS_A(const dynamic_param_expr_list*, &p));
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
@@ -685,8 +674,8 @@ if (cpl) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
-	const const_param_expr_list* cpl =
-		IS_A(const const_param_expr_list*, &p);
+	const never_ptr<const const_param_expr_list>
+		cpl(IS_A(const const_param_expr_list*, &p));
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
@@ -703,8 +692,8 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
-	const dynamic_param_expr_list* dpl =
-		IS_A(const dynamic_param_expr_list*, &p);
+	const never_ptr<const dynamic_param_expr_list>
+		dpl(IS_A(const dynamic_param_expr_list*, &p));
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
@@ -867,12 +856,22 @@ pbool_instance_reference::pbool_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_instance_reference::pbool_instance_reference(
-		never_ptr<pbool_instance_collection> pi,
-		excl_ptr<index_list> i) :
+		const never_ptr<pbool_instance_collection> pi) :
+		param_instance_reference(pi->current_collection_state()),
+		pbool_expr(), 
+		pbool_inst_ref(pi) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+pbool_instance_reference::pbool_instance_reference(
+		const never_ptr<pbool_instance_collection> pi,
+		excl_ptr<index_list>& i) :
 		param_instance_reference(i, pi->current_collection_state()),
 		pbool_expr(), 
 		pbool_inst_ref(pi) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -894,14 +893,7 @@ pbool_instance_reference::get_param_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pbool_instance_reference::what(ostream& o) const {
-	return o << "pbool-inst-ref";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_instance_reference)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -940,7 +932,7 @@ pbool_instance_reference::static_constant_dimensions(void) const {
 	\return true if sucessfully initialized with valid expression.  
  */
 bool
-pbool_instance_reference::initialize(count_ptr<const pbool_expr> i) {
+pbool_instance_reference::initialize(const count_ptr<const pbool_expr>& i) {
 	return pbool_inst_ref->initialize(i);
 }
 
@@ -995,7 +987,8 @@ bool
 pbool_instance_reference::resolve_value(bool& i) const {
 	// lookup pbool_instance_collection
 	if (array_indices) {
-		const_index_list indices(array_indices->resolve_index_list());
+		const const_index_list
+			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
 			const excl_ptr<multikey_base<int> > lower = 
 				indices.lower_multikey();
@@ -1013,7 +1006,7 @@ pbool_instance_reference::resolve_value(bool& i) const {
 			return false;
 		}
 	} else {
-		never_ptr<pbool_scalar>
+		const never_ptr<pbool_scalar>
 			scalar_inst(pbool_inst_ref.is_a<pbool_scalar>());
 		NEVER_NULL(scalar_inst);
 		return scalar_inst->lookup_value(i);
@@ -1029,7 +1022,8 @@ bool
 pbool_instance_reference::resolve_values_into_flat_list(list<bool>& l) const {
 	// base collection must be non-scalar
 	INVARIANT(pbool_inst_ref->dimensions);
-	const_index_list ranges(resolve_dimensions());
+	const const_index_list
+		ranges(resolve_dimensions());
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
 			<< endl;
@@ -1052,7 +1046,8 @@ const_index_list
 pbool_instance_reference::resolve_dimensions(void) const {
 	// criterion 1: indices (if any) must be resolved to constant values.  
 	if (array_indices) {
-		const const_index_list c_i(array_indices->resolve_index_list());
+		const const_index_list
+			c_i(array_indices->resolve_index_list());
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to resolve index list." << endl;
 			return c_i;
@@ -1082,12 +1077,7 @@ pbool_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY))
 {  
-#if 0
-	if (array_indices)
-		array_indices->collect_transient_info(m);
-#else
 	collect_transient_info_base(m);
-#endif
 	pbool_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -1117,12 +1107,7 @@ pbool_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pbool_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 	
@@ -1143,14 +1128,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, pbool_inst_ref);
 	NEVER_NULL(pbool_inst_ref);
 	const_cast<pbool_instance_collection&>(*pbool_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1210,7 +1188,7 @@ pbool_instance_reference::assigner::operator() (const bool b,
 	if (ranges.empty()) {
 		INVARIANT(vals.size() == 1);
 		// is scalar assignment, but may be indexed
-		never_ptr<pbool_scalar> 
+		const never_ptr<pbool_scalar> 
 			scalar_inst(p.pbool_inst_ref.is_a<pbool_scalar>());
 		if (scalar_inst) {
 			return scalar_inst->assign(vals.front()) || b;
@@ -1292,12 +1270,22 @@ pint_instance_reference::pint_instance_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_instance_reference::pint_instance_reference(
-		never_ptr<pint_instance_collection> pi,
-		excl_ptr<index_list> i) :
+		const never_ptr<pint_instance_collection> pi) :
+		param_instance_reference(pi->current_collection_state()),
+		pint_expr(), 
+		pint_inst_ref(pi) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+pint_instance_reference::pint_instance_reference(
+		const never_ptr<pint_instance_collection> pi,
+		excl_ptr<index_list>& i) :
 		param_instance_reference(i, pi->current_collection_state()),
 		pint_expr(), 
 		pint_inst_ref(pi) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1319,14 +1307,7 @@ pint_instance_reference::get_param_inst_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_instance_reference::what(ostream& o) const {
-	return o << "pint-inst-ref";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_instance_reference)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1365,7 +1346,7 @@ pint_instance_reference::static_constant_dimensions(void) const {
 	\return true if successfully initialized with valid expression.  
  */
 bool
-pint_instance_reference::initialize(count_ptr<const pint_expr> i) {
+pint_instance_reference::initialize(const count_ptr<const pint_expr>& i) {
 	return pint_inst_ref->initialize(i);
 }
 
@@ -1420,7 +1401,8 @@ bool
 pint_instance_reference::resolve_value(int& i) const {
 	// lookup pint_instance_collection
 	if (array_indices) {
-		const_index_list indices(array_indices->resolve_index_list());
+		const const_index_list
+			indices(array_indices->resolve_index_list());
 		if (!indices.empty()) {
 			// really should pass indices into ->lookup_values();
 			// fix this later...
@@ -1440,7 +1422,7 @@ pint_instance_reference::resolve_value(int& i) const {
 			return false;
 		}
 	} else {
-		never_ptr<pint_scalar>
+		const never_ptr<pint_scalar>
 			scalar_inst(pint_inst_ref.is_a<pint_scalar>());
 		NEVER_NULL(scalar_inst);
 		return scalar_inst->lookup_value(i);
@@ -1460,7 +1442,8 @@ bool
 pint_instance_reference::resolve_values_into_flat_list(list<int>& l) const {
 	// base collection must be non-scalar
 	INVARIANT(pint_inst_ref->dimensions);
-	const_index_list ranges(resolve_dimensions());
+	const const_index_list
+		ranges(resolve_dimensions());
 	if (ranges.empty()) {
 		cerr << "ERROR: could not unroll values with bad index."
 			<< endl;
@@ -1483,7 +1466,8 @@ const_index_list
 pint_instance_reference::resolve_dimensions(void) const {
 	// criterion 1: indices (if any) must be resolved to constant values.  
 	if (array_indices) {
-		const const_index_list c_i(array_indices->resolve_index_list());
+		const const_index_list
+			c_i(array_indices->resolve_index_list());
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to resolve index list." << endl;
 			return c_i;
@@ -1528,12 +1512,7 @@ pint_instance_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY)) {  
-#if 0
-	if (array_indices)
-		array_indices->collect_transient_info(m);
-#else
 	collect_transient_info_base(m);
-#endif
 	pint_inst_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -1563,12 +1542,7 @@ pint_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, pint_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 	
@@ -1589,14 +1563,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, pint_inst_ref);
 	NEVER_NULL(pint_inst_ref);
 	const_cast<pint_instance_collection&>(*pint_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -1656,7 +1623,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 	if (ranges.empty()) {
 		INVARIANT(vals.size() == 1);
 		// is scalar assignment, but may be indexed
-		never_ptr<pint_scalar> 
+		const never_ptr<pint_scalar> 
 			scalar_inst(p.pint_inst_ref.is_a<pint_scalar>());
 		if (scalar_inst) {
 			return scalar_inst->assign(vals.front()) || b;
@@ -1728,14 +1695,7 @@ pint_instance_reference::assigner::operator() (const bool b,
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pint_const, CONST_PINT_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_const::what(ostream& o) const {
-	return o << "pint-const";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1882,15 +1842,7 @@ pint_const_collection::pint_const_collection(const size_t d) :
 pint_const_collection::~pint_const_collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_const_collection::what(ostream& o) const {
-	return o << util::what<pint_const_collection>::name;
-	// comes out mangled if not specialized
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const_collection)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1956,7 +1908,8 @@ pint_const_collection::static_constant_dimensions(void) const {
  */
 bool
 pint_const_collection::may_be_equivalent(const param_expr& e) const {
-	const pint_const_collection* p = IS_A(const pint_const_collection*, &e);
+	const never_ptr<const pint_const_collection>
+		p(IS_A(const pint_const_collection*, &e));
 	if (p) {
 		// precisely
 		return (values.dimensions() == p->values.dimensions() &&
@@ -1975,7 +1928,8 @@ pint_const_collection::may_be_equivalent(const param_expr& e) const {
  */
 bool
 pint_const_collection::must_be_equivalent(const param_expr& e) const {
-	const pint_const_collection* p = IS_A(const pint_const_collection*, &e);
+	const never_ptr<const pint_const_collection>
+		p(IS_A(const pint_const_collection*, &e));
 	if (p) {
 		// precisely
 		return (values.dimensions() == p->values.dimensions() &&
@@ -2080,14 +2034,7 @@ if (!m.flag_visit(this)) {
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(pbool_const, CONST_PBOOL_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pbool_const::what(ostream& o) const {
-	return o << "pbool-const";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_const)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2188,7 +2135,7 @@ pint_unary_expr::pint_unary_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		const op_type o, count_ptr<const pint_expr> e) :
+		const op_type o, const count_ptr<const pint_expr>& e) :
 		pint_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -2196,21 +2143,14 @@ pint_unary_expr::pint_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		count_ptr<const pint_expr> e, const op_type o) :
+		const count_ptr<const pint_expr>& e, const op_type o) :
 		pint_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_unary_expr::what(ostream& o) const {
-	return o << "pint-unary-expr";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2248,7 +2188,7 @@ pint_unary_expr::is_unconditional(void) const {
 int
 pint_unary_expr::static_constant_int(void) const {
 	// depends on op
-	return -ex->static_constant_int();
+	return - ex->static_constant_int();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2339,7 +2279,7 @@ pbool_unary_expr::pbool_unary_expr() :
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		const op_type o, count_ptr<const pbool_expr> e) :
+		const op_type o, const count_ptr<const pbool_expr>& e) :
 		pbool_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -2347,21 +2287,14 @@ pbool_unary_expr::pbool_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		count_ptr<const pbool_expr> e, const op_type o) :
+		const count_ptr<const pbool_expr>& e, const op_type o) :
 		pbool_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pbool_unary_expr::what(ostream& o) const {
-	return o << "pbool-unary-expr";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2480,6 +2413,7 @@ arith_expr::op_map;
 const arith_expr::reverse_op_map_type
 arith_expr::reverse_op_map;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: will be initialized to 0 (POD -- plain old data) before 
 		static objects will be constructed, then will initialized
@@ -2530,8 +2464,8 @@ arith_expr::~arith_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
-		count_ptr<const pint_expr> r) :
+arith_expr::arith_expr(const count_ptr<const pint_expr>& l, const char o,
+		const count_ptr<const pint_expr>& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -2541,14 +2475,7 @@ arith_expr::arith_expr(count_ptr<const pint_expr> l, const char o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-arith_expr::what(ostream& o) const {
-	return o << "arith-expr";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2583,8 +2510,8 @@ arith_expr::is_unconditional(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 arith_expr::static_constant_int(void) const {
-	int a = lx->static_constant_int();
-	int b = rx->static_constant_int();
+	const int a = lx->static_constant_int();
+	const int b = rx->static_constant_int();
 #if 0
 	switch(op) {
 		case '+':	return a + b;
@@ -2598,6 +2525,7 @@ arith_expr::static_constant_int(void) const {
 			assert(0); return 0;
 	}
 #else
+	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
 #endif
 }
@@ -2631,7 +2559,7 @@ arith_expr::resolve_value(int& i) const {
 			assert(0); return false;
 	}
 #else
-	// OOooooh, virtual operator dispatch!
+	// Oooooh, virtual operator dispatch!
 	i = (*op)(a,b);
 #endif
 	return true;
@@ -2724,6 +2652,7 @@ relational_expr::op_map;
 const relational_expr::reverse_op_map_type
 relational_expr::reverse_op_map;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: will be initialized to 0 (POD -- plain old data) before 
 		static objects will be constructed, then will initialized
@@ -2775,8 +2704,8 @@ relational_expr::~relational_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(count_ptr<const pint_expr> l,
-		const string& o, count_ptr<const pint_expr> r) :
+relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
+		const string& o, const count_ptr<const pint_expr>& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -2786,14 +2715,7 @@ relational_expr::relational_expr(count_ptr<const pint_expr> l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-relational_expr::what(ostream& o) const {
-	return o << "relational-expr";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -2831,8 +2753,8 @@ relational_expr::is_unconditional(void) const {
  */
 bool
 relational_expr::static_constant_bool(void) const {
-	int a = lx->static_constant_int();
-	int b = rx->static_constant_int();
+	const int a = lx->static_constant_int();
+	const int b = rx->static_constant_int();
 	return (*op)(a,b);
 }
 
@@ -2929,6 +2851,7 @@ logical_expr::op_map;
 const logical_expr::reverse_op_map_type
 logical_expr::reverse_op_map;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: will be initialized to 0 (POD -- plain old data) before 
 		static objects will be constructed, then will initialized
@@ -2976,8 +2899,8 @@ logical_expr::~logical_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(count_ptr<const pbool_expr> l,
-		const string& o, count_ptr<const pbool_expr> r) :
+logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
+		const string& o, const count_ptr<const pbool_expr>& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -2987,14 +2910,7 @@ logical_expr::logical_expr(count_ptr<const pbool_expr> l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-logical_expr::what(ostream& o) const {
-	return o << "logical-expr";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3137,7 +3053,7 @@ pint_range::~pint_range() {
 	Construct a range given one integer expression, 
 	implicitly from 0 too expr -1, inclusive.
  */
-pint_range::pint_range(count_ptr<const pint_expr> n) :
+pint_range::pint_range(const count_ptr<const pint_expr>& n) :
 		range_expr(),
 		lower(new pint_const(0)),
 		upper(new arith_expr(n, '-', 
@@ -3148,8 +3064,8 @@ pint_range::pint_range(count_ptr<const pint_expr> n) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pint_range::pint_range(count_ptr<const pint_expr> l, 
-		count_ptr<const pint_expr> u) :
+pint_range::pint_range(const count_ptr<const pint_expr>& l, 
+		const count_ptr<const pint_expr>& u) :
 		range_expr(), lower(l), upper(u) {
 	NEVER_NULL(lower);
 	NEVER_NULL(upper);
@@ -3164,14 +3080,7 @@ pint_range::pint_range(const pint_range& pr) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-pint_range::what(ostream& o) const {
-	return o << "pint-range";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_range)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3355,14 +3264,7 @@ const_range::const_range(const parent& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-const_range::what(ostream& o) const {
-	return o << "const-range";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3399,8 +3301,7 @@ const_range::static_overlap(const const_range& r) const {
 	interval_type temp2(r.first, r.second);
 	temp.intersect(temp2);
 
-//	return const_range(temp);	// private constructor (obsolete)
-	const_range ret(temp.empty() ? 0 : temp.begin()->first,
+	const const_range ret(temp.empty() ? 0 : temp.begin()->first,
 		temp.empty() ? -1 : temp.begin()->second, true);
 	if (!temp.empty())
 		INVARIANT(ret.upper() >= ret.lower());		// else what!?!?
@@ -3459,7 +3360,7 @@ const_range::resolve_index(void) const {
  */
 bool
 const_range::range_size_equivalent(const const_index& i) const {
-	const const_range* r = IS_A(const const_range*, &i);
+	const never_ptr<const const_range> r(IS_A(const const_range*, &i));
 	return r && (r->second - r->first == second -first);
 }
 
@@ -3567,8 +3468,8 @@ const_range_list::const_range_list(const const_index_list& i) :
 	for ( ; j!=i.end(); j++) {
 		const count_ptr<const_index> k(*j);
 		NEVER_NULL(k);
-		count_ptr<pint_const> p(k.is_a<pint_const>());
-		count_ptr<const_range> r(k.is_a<const_range>());
+		const count_ptr<pint_const> p(k.is_a<pint_const>());
+		const count_ptr<const_range> r(k.is_a<const_range>());
 		if (p) {
 			const int min_max = p->static_constant_int();
 			push_back(const_range(min_max, min_max));	// copy
@@ -3584,14 +3485,7 @@ const_range_list::~const_range_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-const_range_list::what(ostream& o) const {
-	return o << "const_range_list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -3946,14 +3840,7 @@ dynamic_range_list::~dynamic_range_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-dynamic_range_list::what(ostream& o) const {
-	return o << "dynamic_range_list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_range_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4159,14 +4046,7 @@ const_index_list::const_index_list(const const_index_list& l,
 const_index_list::~const_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-const_index_list::what(ostream& o) const {
-	return o << "const-index-list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4445,14 +4325,7 @@ dynamic_index_list::dynamic_index_list() : index_list(), parent() { }
 dynamic_index_list::~dynamic_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-dynamic_index_list::what(ostream& o) const {
-	return o << "dynamic-index-list";
-}
-#else
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_index_list)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -4711,4 +4584,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namepace entity
 }	// end namepace ART
+
+#endif	// __ART_OBJECT_EXPR_CC__
 

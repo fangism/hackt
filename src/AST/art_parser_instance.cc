@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.10 2005/01/12 03:19:34 fang Exp $
+	$Id: art_parser_instance.cc,v 1.11 2005/01/13 05:28:25 fang Exp $
  */
 
 // rule-of-thumb for inline directives:
@@ -161,19 +161,14 @@ if (size() > 0) {		// non-empty
 				"assignment list.  " << where() << endl;
 			exit(1);
 		} else {
-			c->add_assignment(
-				excl_ptr<const param_expression_assignment>(
-					exass));
+			excl_ptr<const param_expression_assignment>
+				exass_c(exass);
+			c->add_assignment(exass_c);
 			// and transfer ownership
-			assert(!exass.owned());
+			INVARIANT(!exass_c);
+			INVARIANT(!exass.owned());
 		}
 	} else if (first_obj->is_a<const instance_reference_base>()) {
-#if 0
-		cerr << "alias_list::check_build(): not done yet "
-			"for non-param/expr instance connections yet.  "
-			"Aborting." << endl;
-		exit(1);
-#else
 		excl_ptr<const aliases_connection> connection =
 			connect.make_alias_connection();
 		// also type-checks connections
@@ -182,12 +177,12 @@ if (size() > 0) {		// non-empty
 				<< where() << endl;
 			exit(1);
 		} else {
-			c->add_connection(
-				excl_ptr<const instance_reference_connection>(
-					connection));
+			excl_ptr<const instance_reference_connection>
+				ircp = connection.as_a_xfer<const instance_reference_connection>();
+			c->add_connection(ircp);
+			INVARIANT(!ircp);
 			assert(!connection.owned());
 		}
-#endif
 	} else {
 		// ERROR
 		cerr << "WTF? first element of alias_list is not "
@@ -537,17 +532,18 @@ instance_connection::check_build(never_ptr<context> c) const {
 		obj_list(obj.is_a<const object_list>());
 	assert(obj_list);
 
-	excl_ptr<const port_connection> port_con = 
-		obj_list->make_port_connection(inst_ref);
+	excl_ptr<const port_connection>
+		port_con = obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where() << endl;
 		exit(1);
 	} else {
-		c->add_connection(
-			excl_ptr<const instance_reference_connection>(
-				port_con));
-		assert(!port_con.owned());	// explicit transfer
+		excl_ptr<const instance_reference_connection>
+			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		c->add_connection(ircp);
+		INVARIANT(!ircp);
+		INVARIANT(!port_con.owned());	// explicit transfer
 	}
 	return never_ptr<const object>(NULL);
 }
@@ -622,10 +618,11 @@ connection_statement::check_build(never_ptr<context> c) const {
 			<< where() << endl;
 		exit(1);
 	} else {
-		c->add_connection(
-			excl_ptr<const instance_reference_connection>(
-				port_con));
-		assert(!port_con.owned());	// explicit transfer
+		excl_ptr<const instance_reference_connection>
+			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		c->add_connection(ircp);
+		INVARIANT(!ircp);
+		INVARIANT(!port_con.owned());	// explicit transfer
 	}
 	return never_ptr<const object>(NULL);
 }

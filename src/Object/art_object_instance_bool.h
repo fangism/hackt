@@ -2,7 +2,7 @@
 	\file "art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.7 2004/12/15 23:31:10 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.8 2005/01/13 05:28:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
@@ -69,7 +69,8 @@ public:
 	bool_instance_alias() : instance(NULL), alias(NULL), 
 		instantiated(false) { }
 
-explicit bool_instance_alias(const alias_ptr_type& p) :
+	explicit
+	bool_instance_alias(const alias_ptr_type& p) :
 		instance(NULL), alias(p), instantiated(true) { }
 
 	// default copy constructor
@@ -207,11 +208,8 @@ public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
 	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	bool_instance_alias			element_type;
-#if 0
-	typedef	multikey_qmap<D, int, element_type>	collection_type;
-#else
-	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
-#endif
+	typedef	multikey_map<D, int, element_type, qmap>
+							collection_type;
 
 private:
 	collection_type					collection;

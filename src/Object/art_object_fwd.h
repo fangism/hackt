@@ -1,7 +1,7 @@
 /**
 	\file "art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.4 2004/12/11 21:26:50 fang Exp $
+	$Id: art_object_fwd.h,v 1.5 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_FWD_H__
@@ -22,7 +22,7 @@ namespace entity {
 	class scopespace;
 	class sequential_scope;
 	class name_space;
-	class built_in_type_def;
+	class built_in_datatype_def;
 	class fundamental_type_reference;
 	class simple_instance_reference;
 	class instance_collection_base;

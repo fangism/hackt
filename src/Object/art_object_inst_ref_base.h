@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.4 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.5 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -35,25 +35,47 @@ public:
 	instance_reference_base() : object(), persistent() { }
 virtual	~instance_reference_base() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	ostream& dump_type_size(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	ostream&
+	dump_type_size(ostream& o) const = 0;
+
 virtual never_ptr<const instance_collection_base>
-		get_inst_base(void) const = 0;
-virtual	string hash_string(void) const = 0;
-virtual	size_t dimensions(void) const = 0;
+	get_inst_base(void) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
+
+virtual	size_t
+	dimensions(void) const = 0;
+
 virtual	never_ptr<const definition_base>
-		get_base_def(void) const = 0;
+	get_base_def(void) const = 0;
+
 virtual	count_ptr<const fundamental_type_reference>
-		get_type_ref(void) const = 0;
-virtual	bool may_be_densely_packed(void) const = 0;
-virtual	bool must_be_densely_packed(void) const = 0;
-virtual	bool has_static_constant_dimensions(void) const = 0;
-virtual	const_range_list static_constant_dimensions(void) const = 0;
-virtual	bool may_be_type_equivalent(
-		const instance_reference_base& i) const = 0;
-virtual	bool must_be_type_equivalent(
-		const instance_reference_base& i) const = 0;
+	get_type_ref(void) const = 0;
+
+virtual	bool
+	may_be_densely_packed(void) const = 0;
+
+virtual	bool
+	must_be_densely_packed(void) const = 0;
+
+virtual	bool
+	has_static_constant_dimensions(void) const = 0;
+
+virtual	const_range_list
+	static_constant_dimensions(void) const = 0;
+
+virtual	bool
+	may_be_type_equivalent(const instance_reference_base& i) const = 0;
+
+virtual	bool
+	must_be_type_equivalent(const instance_reference_base& i) const = 0;
 };	// end class instance_reference_base
 
 //=============================================================================
@@ -79,11 +101,17 @@ public:
 	collective_instance_reference(
 		never_ptr<const instance_reference_base> b, 
 		const param_expr* l = NULL, const param_expr* r = NULL);
+
 virtual	~collective_instance_reference();
 
-virtual	ostream& what(ostream& o) const;
-virtual	ostream& dump(ostream& o) const;
-virtual	string hash_string(void) const;
+virtual	ostream&
+	what(ostream& o) const;
+
+virtual	ostream&
+	dump(ostream& o) const;
+
+virtual	string
+	hash_string(void) const;
 };	// end class collective_instance_reference
 #endif
 
@@ -157,35 +185,67 @@ public:
 	explicit
 	simple_instance_reference(const instantiation_state& st);
 
-	simple_instance_reference(excl_ptr<index_list> i, 
+	simple_instance_reference(excl_ptr<index_list>& i, 
 		const instantiation_state& st);
 
 virtual	~simple_instance_reference();
 
-	size_t dimensions(void) const;
-	bool may_be_densely_packed(void) const;
-	bool must_be_densely_packed(void) const;
-	bool is_static_constant_collection(void) const;
-	bool has_static_constant_dimensions(void) const;
-	const_range_list static_constant_dimensions(void) const;
-	const_index_list implicit_static_constant_indices(void) const;
+	size_t
+	dimensions(void) const;
 
-	bool attach_indices(excl_ptr<index_list> i);
+	bool
+	may_be_densely_packed(void) const;
 
-virtual	ostream& what(ostream& o) const = 0;
-	ostream& dump(ostream& o) const;
-	ostream& dump_type_size(ostream& o) const;
-virtual never_ptr<const instance_collection_base> get_inst_base(void) const = 0;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
-	never_ptr<const definition_base> get_base_def(void) const;
-virtual	string hash_string(void) const;
+	bool
+	must_be_densely_packed(void) const;
+
+	bool
+	is_static_constant_collection(void) const;
+
+	bool
+	has_static_constant_dimensions(void) const;
+
+	const_range_list
+	static_constant_dimensions(void) const;
+
+	const_index_list
+	implicit_static_constant_indices(void) const;
+
+	bool
+	attach_indices(excl_ptr<index_list> i);
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+	ostream&
+	dump(ostream& o) const;
+
+	ostream&
+	dump_type_size(ostream& o) const;
+
+virtual never_ptr<const instance_collection_base>
+	get_inst_base(void) const = 0;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
+
+virtual	string
+	hash_string(void) const;
+
 	// need not be virtual
-	bool may_be_type_equivalent(const instance_reference_base& i) const;
-	bool must_be_type_equivalent(const instance_reference_base& i) const;
+	bool
+	may_be_type_equivalent(const instance_reference_base& i) const;
+
+	bool
+	must_be_type_equivalent(const instance_reference_base& i) const;
 
 private:
 	// compute static index coverage
-	excl_ptr<mset_base> unroll_static_instances(const size_t dim) const;
+	excl_ptr<mset_base>
+	unroll_static_instances(const size_t dim) const;
 
 protected:		// for children only
 	// persistent object IO helper methods
@@ -223,8 +283,10 @@ protected:
 protected:
 	member_instance_reference_base();
 public:
+	explicit
 	member_instance_reference_base(
-		count_ptr<const simple_instance_reference> b);
+		const count_ptr<const simple_instance_reference>& b);
+
 virtual	~member_instance_reference_base();
 
 protected:	// for children only
@@ -255,8 +317,14 @@ protected:
 protected:
 	param_instance_reference();
 public:
-	param_instance_reference(excl_ptr<index_list> i, 
+	explicit
+	param_instance_reference(const instantiation_state& st);
+
+#if 0
+	param_instance_reference(excl_ptr<index_list>& i, 
 		const instantiation_state& st);
+#endif
+
 virtual	~param_instance_reference() { }
 
 virtual	ostream&
@@ -270,11 +338,20 @@ virtual	never_ptr<const param_instance_collection>
 
 	// consider moving these functions into instance_reference_base
 	//	where array_indices are inherited from.  
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
+	bool
+	may_be_initialized(void) const;
+
+	bool
+	must_be_initialized(void) const;
+
+	bool
+	is_static_constant(void) const;
+
+	bool
+	is_loop_independent(void) const;
+
+	bool
+	is_unconditional(void) const;
 
 protected:
 	using parent_type::collect_transient_info_base;

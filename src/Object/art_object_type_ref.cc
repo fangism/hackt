@@ -1,12 +1,16 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.19 2004/12/15 23:31:11 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.20 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_TYPE_REF_CC__
+#define	__ART_OBJECT_TYPE_REF_CC__
 
 #include <iostream>
 
 #include "art_parser_base.h"	// so token_identifier : string
+#include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance.h"
 #include "art_object_instance_bool.h"
@@ -34,9 +38,8 @@ using std::ostringstream;
 // class fundamental_type_reference method definitions
 
 fundamental_type_reference::fundamental_type_reference(
-		excl_ptr<const param_expr_list> pl)
-		: type_reference_base(), 
-		template_params(pl) {
+		excl_ptr<const param_expr_list>& pl) :
+		type_reference_base(), template_params(pl) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,8 +153,8 @@ if (base_def.is_a<typedef_base>()) {
 // is static
 excl_ptr<instantiation_statement>
 fundamental_type_reference::make_instantiation_statement(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) {
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) {
 	return t->make_instantiation_statement_private(t, d);
 }
 
@@ -175,8 +178,10 @@ fundamental_type_reference::may_be_equivalent(
 	// TO resolve typedefs and aliases
 	// self-recursive call to expand parameters...
 	// or PUNT unrolling actual parameters until later...
-	never_ptr<const typedef_base> ltdb(left.is_a<const typedef_base>());
-	never_ptr<const typedef_base> rtdb(right.is_a<const typedef_base>());
+	never_ptr<const typedef_base>
+		ltdb(left.is_a<const typedef_base>());
+	never_ptr<const typedef_base>
+		rtdb(right.is_a<const typedef_base>());
 	while (ltdb) {
 		have_typedef = true;
 		left = ltdb->get_base_type_ref()->get_base_def();
@@ -239,8 +244,8 @@ fundamental_type_reference::may_be_equivalent(
 bool
 fundamental_type_reference::must_be_equivalent(
 		const fundamental_type_reference& t) const {
-	never_ptr<const definition_base> left(get_base_def());
-	never_ptr<const definition_base> right(t.get_base_def());
+	const never_ptr<const definition_base> left(get_base_def());
+	const never_ptr<const definition_base> right(t.get_base_def());
 	// may need to resolve alias? TO DO
 	if (left != right) {
 #if 0
@@ -356,7 +361,7 @@ data_type_reference::data_type_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
-		never_ptr<const datatype_definition_base> td) :
+		const definition_ptr_type td) :
 		fundamental_type_reference(), 
 		base_type_def(td) {
 	assert(base_type_def);
@@ -364,8 +369,8 @@ data_type_reference::data_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
-		never_ptr<const datatype_definition_base> td, 
-		excl_ptr<const param_expr_list> pl) :
+		const definition_ptr_type td, 
+		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	assert(base_type_def);
@@ -399,8 +404,8 @@ data_type_reference::get_base_datatype_def(void) const {
  */
 excl_ptr<instantiation_statement>
 data_type_reference::make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const {
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
 	return excl_ptr<instantiation_statement>(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d));
@@ -418,20 +423,16 @@ data_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 data_type_reference::make_instance_collection(
-		never_ptr<const scopespace> s, 
-		const token_identifier& id, 
-		const size_t d) const {
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
 	typedef excl_ptr<instance_collection_base>	return_type;
 /***
 	datatype_instance_collection is now pure virtual, 
 	we use a temporary shortcut to effectively sub-class...
 	save us the trouble of expanding more classes until later...
 ***/
-#if 0
-	return return_type(new datatype_instance_collection(*s, id, d));
-#else
 	NEVER_NULL(base_type_def);
-	never_ptr<const datatype_definition_base>
+	const never_ptr<const datatype_definition_base>
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
@@ -455,7 +456,6 @@ data_type_reference::make_instance_collection(
 			return return_type(NULL);
 		}
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -535,8 +535,8 @@ channel_type_reference::channel_type_reference() :
 	\param pl (optional) parameter list for templates.  
  */
 channel_type_reference::channel_type_reference(
-		never_ptr<const channel_definition_base> cd, 
-		excl_ptr<const param_expr_list> pl) :
+		const never_ptr<const channel_definition_base> cd, 
+		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -544,7 +544,7 @@ channel_type_reference::channel_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::channel_type_reference(
-		never_ptr<const channel_definition_base> cd) :
+		const never_ptr<const channel_definition_base> cd) :
 		fundamental_type_reference(), 	// NULL
 		base_chan_def(cd) {
 	assert(base_chan_def);
@@ -572,8 +572,8 @@ channel_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 channel_type_reference::make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const {
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
 	return excl_ptr<instantiation_statement>(
 		new channel_instantiation_statement(
 			t.is_a<const channel_type_reference>(), d));
@@ -585,16 +585,10 @@ channel_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 channel_type_reference::make_instance_collection(
-		never_ptr<const scopespace> s, 
-		const token_identifier& id, 
-		const size_t d) const {
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-#if 0
-		new channel_instance_collection(*s, id, d)
-#else
-		channel_instance_collection::make_chan_array(*s, id, d)
-#endif
-	);
+		channel_instance_collection::make_chan_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -655,7 +649,7 @@ process_type_reference::process_type_reference() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
-		never_ptr<const process_definition_base> pd) :
+		const never_ptr<const process_definition_base> pd) :
 		fundamental_type_reference(), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
@@ -663,8 +657,8 @@ process_type_reference::process_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
-		never_ptr<const process_definition_base> pd, 
-		excl_ptr<const param_expr_list> pl) :
+		const never_ptr<const process_definition_base> pd, 
+		excl_ptr<const param_expr_list>& pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	assert(base_proc_def);
@@ -692,8 +686,8 @@ process_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 process_type_reference::make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const {
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
 	return excl_ptr<instantiation_statement>(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d));
@@ -708,16 +702,10 @@ process_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 process_type_reference::make_instance_collection(
-		never_ptr<const scopespace> s, 
-		const token_identifier& id, 
-		const size_t d) const {
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-#if 0
-		new process_instance_collection(*s, id, d)
-#else
-		process_instance_collection::make_proc_array(*s, id, d)
-#endif
-	);
+		process_instance_collection::make_proc_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -766,7 +754,7 @@ if (!m.flag_visit(this)) {
 	Only used in construction of built-in types.  
  */
 param_type_reference::param_type_reference(
-		never_ptr<const built_in_param_def> pd) : 
+		const never_ptr<const built_in_param_def> pd) : 
 		fundamental_type_reference(), 	// NULL
 		base_param_def(pd) {
 	assert(base_param_def);
@@ -794,8 +782,8 @@ param_type_reference::get_base_def(void) const {
  */
 excl_ptr<instantiation_statement>
 param_type_reference::make_instantiation_statement_private(
-		count_ptr<const fundamental_type_reference> t, 
-		index_collection_item_ptr_type d) const {
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
 	typedef	excl_ptr<instantiation_statement>	return_type;
 	assert(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr))
@@ -821,9 +809,8 @@ param_type_reference::make_instantiation_statement_private(
  */
 excl_ptr<instance_collection_base>
 param_type_reference::make_instance_collection(
-		never_ptr<const scopespace> s, 
-		const token_identifier& id, 
-		const size_t d) const {
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
@@ -847,4 +834,6 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_TYPE_REF_CC__
 

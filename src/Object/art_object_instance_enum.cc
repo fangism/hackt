@@ -3,8 +3,11 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.6 2005/01/06 17:44:54 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.7 2005/01/13 05:28:31 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
+#define	__ART_OBJECT_INSTANCE_ENUM_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -141,15 +144,6 @@ bool
 enum_array<D>::is_partially_unrolled(void) const {
 	return !collection.empty();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-size_t
-enum_array<D>::dimensions(void) const {
-	return D;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ENUM_ARRAY_TEMPLATE_SIGNATURE
@@ -364,14 +358,6 @@ enum_array<0>::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-enum_array<0>::dimensions(void) const {
-	return 0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_array<0>::what(ostream& o) const {
 	return o << "enum-scalar";
@@ -473,4 +459,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_ENUM_CC__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.3 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.4 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_DATA_H__
@@ -38,12 +38,6 @@ public:
 	explicit
 	int_instance_reference(
 		const never_ptr<const instance_collection_type> iic);
-
-#if 0
-	int_instance_reference(
-		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list>& i);
-#endif
 
 	~int_instance_reference();
 
@@ -86,13 +80,7 @@ private:
 public:
 	explicit
 	bool_instance_reference(
-		never_ptr<const instance_collection_type> bic);
-
-#if 0
-	bool_instance_reference(
-		never_ptr<const instance_collection_type> bic, 
-		excl_ptr<index_list>& i);
-#endif
+		const never_ptr<const instance_collection_type> bic);
 
 	~bool_instance_reference();
 
@@ -131,13 +119,7 @@ private:
 public:
 	explicit
 	datastruct_instance_reference(
-		never_ptr<const instance_collection_type> sic);
-
-#if 0
-	datastruct_instance_reference(
-		never_ptr<const instance_collection_type> sic, 
-		excl_ptr<index_list> i);
-#endif
+		const never_ptr<const instance_collection_type> sic);
 
 	~datastruct_instance_reference();
 
@@ -176,13 +158,7 @@ private:
 public:
 	explicit
 	enum_instance_reference(
-		never_ptr<const instance_collection_type> sic);
-
-#if 0
-	enum_instance_reference(
-		never_ptr<const instance_collection_type> sic, 
-		excl_ptr<index_list> i);
-#endif
+		const never_ptr<const instance_collection_type> eic);
 
 	~enum_instance_reference();
 

@@ -2,13 +2,17 @@
 	\file "art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.13 2005/01/12 04:14:17 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.14 2005/01/13 05:28:27 fang Exp $
  */
 
-#include <iostream>		// debug only
+#ifndef	__ART_BUILT_INS_CC__
+#define	__ART_BUILT_INS_CC__
+
+// #include <iostream>		// debug only
 
 #include "memory/pointer_classes.h"
 #include "art_built_ins.h"
+#include "art_object_definition.h"
 #include "art_object_type_ref.h"
 #include "art_object_instance_param.h"
 #include "art_object_expr_const.h"
@@ -97,4 +101,6 @@ bool_type = data_type_reference(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_BUILT_INS_CC__
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.3 2005/01/12 03:19:37 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.4 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_BASE_H__
@@ -42,20 +42,29 @@ public:
 
 virtual	~instantiation_statement() { }
 
-	ostream& dump(ostream& o) const;
+	ostream&
+	dump(ostream& o) const;
 
-virtual	void attach_collection(never_ptr<instance_collection_base> i) = 0;
+virtual	void
+	attach_collection(const never_ptr<instance_collection_base> i) = 0;
+
 virtual	never_ptr<instance_collection_base>
-		get_inst_base(void) = 0;
-virtual	never_ptr<const instance_collection_base>
-		get_inst_base(void) const = 0;
+	get_inst_base(void) = 0;
 
-	string get_name(void) const;
-	size_t dimensions(void) const;
-	index_collection_item_ptr_type get_indices(void) const;
+virtual	never_ptr<const instance_collection_base>
+	get_inst_base(void) const = 0;
+
+	string
+	get_name(void) const;
+
+	size_t
+	dimensions(void) const;
+
+	index_collection_item_ptr_type
+	get_indices(void) const;
 
 virtual	count_ptr<const fundamental_type_reference>
-		get_type_ref(void) const = 0;
+	get_type_ref(void) const = 0;
 
 // should be pure virtual eventually
 virtual	void unroll(void) const;

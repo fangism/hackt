@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.9 2005/01/12 03:19:37 fang Exp $
+	$Id: art_object_instance_base.h,v 1.10 2005/01/13 05:28:31 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BASE_H__
@@ -162,7 +162,7 @@ virtual	count_ptr<const fundamental_type_reference>
 private:
 	bool
 	formal_size_equivalent(
-		never_ptr<const instance_collection_base> b) const;
+		const never_ptr<const instance_collection_base> b) const;
 public:
 	bool
 	is_template_formal(void) const;
@@ -172,11 +172,11 @@ public:
 
 	bool
 	template_formal_equivalent(
-		never_ptr<const instance_collection_base> b) const;
+		const never_ptr<const instance_collection_base> b) const;
 
 	bool
 	port_formal_equivalent(
-		never_ptr<const instance_collection_base> b) const;
+		const never_ptr<const instance_collection_base> b) const;
 
 protected:
 	bool
@@ -192,7 +192,7 @@ virtual	count_ptr<instance_reference_base>
 
 virtual	count_ptr<member_instance_reference_base>
 	make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const = 0;
+		const count_ptr<const simple_instance_reference>& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
 	void

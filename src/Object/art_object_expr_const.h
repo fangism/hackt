@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.5 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_expr_const.h,v 1.6 2005/01/13 05:28:29 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -39,28 +39,50 @@ public:
 	const_param() : param_expr() { }
 virtual	~const_param() { }
 
-virtual	ostream& what(ostream& o) const = 0;
-virtual	ostream& dump(ostream& o) const = 0;
-virtual	string hash_string(void) const = 0;
-virtual	size_t dimensions(void) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+virtual	string
+	hash_string(void) const = 0;
+
+virtual	size_t
+	dimensions(void) const = 0;
 
 // don't know if these are applicable... 
 // depends on whether or not we use this for collective constants...
-virtual	bool has_static_constant_dimensions(void) const = 0;
+virtual	bool
+	has_static_constant_dimensions(void) const = 0;
+
 // only call this if dimensions are non-zero and sizes are static constant.  
-virtual	const_range_list static_constant_dimensions(void) const = 0;
+virtual	const_range_list
+	static_constant_dimensions(void) const = 0;
 
-	bool may_be_initialized(void) const { return true; }
-	bool must_be_initialized(void) const { return true; }
-virtual bool may_be_equivalent(const param_expr& p) const = 0;
-virtual bool must_be_equivalent(const param_expr& p) const = 0;
+	bool
+	may_be_initialized(void) const { return true; }
 
-	bool is_static_constant(void) const { return true; }
+	bool
+	must_be_initialized(void) const { return true; }
+
+virtual bool
+	may_be_equivalent(const param_expr& p) const = 0;
+
+virtual bool
+	must_be_equivalent(const param_expr& p) const = 0;
+
+	bool
+	is_static_constant(void) const { return true; }
+
 virtual	count_ptr<const const_param>
-		static_constant_param(void) const = 0;
+	static_constant_param(void) const = 0;
 
-	bool is_loop_independent(void) const { return true; }
-	bool is_unconditional(void) const { return true; }
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
 };	// end class const_param
 
 //-----------------------------------------------------------------------------
@@ -84,32 +106,53 @@ public:
 //	const_param_expr_list(const const_param_expr_list& pl);
 	~const_param_expr_list();
 
-	size_t size(void) const;
+	size_t
+	size(void) const;
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
 
 	excl_ptr<param_expr_list>
-		make_copy(void) const;
+	make_copy(void) const;
 
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
+	bool
+	may_be_initialized(void) const;
+
+	bool
+	must_be_initialized(void) const;
 
 #if 0
-	list<const param_expr&>	get_const_ref_list(void) const;
+	list<const param_expr&>
+	get_const_ref_list(void) const;
 #else
-	bool may_be_equivalent(const param_expr_list& p) const;
-	bool must_be_equivalent(const param_expr_list& p) const;
+	bool
+	may_be_equivalent(const param_expr_list& p) const;
+
+	bool
+	must_be_equivalent(const param_expr_list& p) const;
 #endif
 
-	bool is_static_constant(void) const { return true; }
-	bool is_loop_independent(void) const { return true; }
+	bool
+	is_static_constant(void) const { return true; }
+
+	bool
+	is_loop_independent(void) const { return true; }
 #if 0
 private:
-	bool may_be_equivalent_const(const const_param_expr_list& p) const;
-	bool may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-	bool must_be_equivalent_const(const const_param_expr_list& p) const;
-	bool must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+	bool
+	may_be_equivalent_const(const const_param_expr_list& p) const;
+
+	bool
+	may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
+
+	bool
+	must_be_equivalent_const(const const_param_expr_list& p) const;
+
+	bool
+	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
 #endif
 public:
 	PERSISTENT_METHODS
@@ -123,15 +166,26 @@ class const_index : virtual public index_expr {
 protected:
 public:
 	const_index() : index_expr() { }
+
 virtual	~const_index() { }
 
 // same pure virtual functions, and more...
 
-virtual	count_ptr<const_index> resolve_index(void) const = 0;
-virtual	int lower_bound(void) const = 0;
-virtual	int upper_bound(void) const = 0;
-virtual	bool operator == (const const_range& c) const = 0;
-virtual	bool range_size_equivalent(const const_index& i) const = 0;
+virtual	count_ptr<const_index>
+	resolve_index(void) const = 0;
+
+virtual	int
+	lower_bound(void) const = 0;
+
+virtual	int
+	upper_bound(void) const = 0;
+
+virtual	bool
+	operator == (const const_range& c) const = 0;
+
+virtual	bool
+	range_size_equivalent(const const_index& i) const = 0;
+
 };	// end class const_index
 
 //-----------------------------------------------------------------------------
@@ -156,19 +210,30 @@ public:
 	typedef parent::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_index_list();
+
 	const_index_list(const const_index_list& l, 
 		const pair<list<int>, list<int> >& f);
+
 	~const_index_list();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	string
+	hash_string(void) const;
 
 /** NOT THE SAME **/
-	size_t size(void) const;
-	size_t dimensions_collapsed(void) const;
+	size_t
+	size(void) const;
 
-	const_range_list collapsed_dimension_ranges(void) const;
+	size_t
+	dimensions_collapsed(void) const;
+
+	const_range_list
+	collapsed_dimension_ranges(void) const;
 
 	using parent::empty;
 	using parent::clear;
@@ -176,22 +241,40 @@ public:
 	using parent::end;
 	using parent::rbegin;
 	using parent::rend;
-	void push_back(const const_index_ptr_type& i);
 
-	bool may_be_initialized(void) const;
-	bool must_be_initialized(void) const;
-	bool is_static_constant(void) const;
-	bool is_loop_independent(void) const;
-	bool is_unconditional(void) const;
+	void
+	push_back(const const_index_ptr_type& i);
 
-	const_index_list resolve_index_list(void) const;
+	bool
+	may_be_initialized(void) const;
+
+	bool
+	must_be_initialized(void) const;
+
+	bool
+	is_static_constant(void) const;
+
+	bool
+	is_loop_independent(void) const;
+
+	bool
+	is_unconditional(void) const;
+
+	const_index_list
+	resolve_index_list(void) const;
 #if 0
-	bool resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+	bool
+	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
 #endif
-	excl_ptr<multikey_base<int> > upper_multikey(void) const;
-	excl_ptr<multikey_base<int> > lower_multikey(void) const;
+	excl_ptr<multikey_base<int> >
+	upper_multikey(void) const;
 
-	bool equal_dimensions(const const_index_list& ) const;
+	excl_ptr<multikey_base<int> >
+	lower_multikey(void) const;
+
+	bool
+	equal_dimensions(const const_index_list& ) const;
+
 public:
 	PERSISTENT_METHODS
 };	// end class const_index_list
@@ -211,43 +294,49 @@ public:
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
-#if 0
-	// maybe don't need?
-	/**
-		Utility class for generating keys within a multidimensional
-		range.  
-	 */
-	template <size_t D>
-	class multikey_generator {
-	protected:
-		const_range_list	range_list;
-	public:
-		multikey_generator(const const_range_list& rl);
-		// default destructor
-
-	};	// end class multikey_generator
-#endif
-public:
 	const_range_list();
+
+	explicit
 	const_range_list(const list_type& l);
-explicit const_range_list(const const_index_list& i);
+
+	explicit
+	const_range_list(const const_index_list& i);
+
 	~const_range_list();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	size_t size(void) const;
-	bool is_static_constant(void) const { return true; }
-	const_range_list static_overlap(const range_expr_list& r) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool is_size_equivalent(const const_range_list& il) const;
-	bool operator == (const const_range_list& c) const;
+	ostream&
+	dump(ostream& o) const;
 
-	bool resolve_ranges(const_range_list& r) const;
-	excl_ptr<multikey_base<int> > upper_multikey(void) const;
-	excl_ptr<multikey_base<int> > lower_multikey(void) const;
+	size_t
+	size(void) const;
+
+	bool
+	is_static_constant(void) const { return true; }
+
+	const_range_list
+	static_overlap(const range_expr_list& r) const;
+
+	bool
+	is_size_equivalent(const const_range_list& il) const;
+
+	bool
+	operator == (const const_range_list& c) const;
+
+	bool
+	resolve_ranges(const_range_list& r) const;
+
+	excl_ptr<multikey_base<int> >
+	upper_multikey(void) const;
+
+	excl_ptr<multikey_base<int> >
+	lower_multikey(void) const;
 
 	template <size_t D>
-	void make_multikey_generator(multikey_generator<D, int>& k) const;
+	void
+	make_multikey_generator(multikey_generator<D, int>& k) const;
 public:
 	PERSISTENT_METHODS
 };	// end class const_range_list
@@ -263,38 +352,83 @@ public:
 protected:
 	const value_type		val;
 public:
+	explicit
 	pint_const(const long v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
+
 	~pint_const() { }
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-	size_t dimensions(void) const { return 0; }
-	bool has_static_constant_dimensions(void) const { return true; }
-	const_range_list static_constant_dimensions(void) const
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	string
+	hash_string(void) const;
+
+	size_t
+	dimensions(void) const { return 0; }
+
+	bool
+	has_static_constant_dimensions(void) const { return true; }
+
+	const_range_list
+	static_constant_dimensions(void) const
 		{ return const_range_list(); }	// empty list
 
-	bool may_be_initialized(void) const { return true; }
-	bool must_be_initialized(void) const { return true; }
-	bool may_be_equivalent(const param_expr& e) const
-		{ return pint_expr::may_be_equivalent(e); }
-	bool must_be_equivalent(const param_expr& e) const
-		{ return pint_expr::must_be_equivalent(e); }
-	bool is_static_constant(void) const { return true; }
-	count_ptr<const const_param>
-		static_constant_param(void) const;
-	int static_constant_int(void) const { return val; }
-	bool is_loop_independent(void) const { return true; }
-	bool is_unconditional(void) const { return true; }
-	bool operator == (const const_range& c) const;
-	bool range_size_equivalent(const const_index& i) const;
+	bool
+	may_be_initialized(void) const { return true; }
 
-	int lower_bound(void) const;
-	int upper_bound(void) const;
-	bool resolve_value(int& i) const;
-	count_ptr<const_index> resolve_index(void) const;
-	const_index_list resolve_dimensions(void) const;
-	bool resolve_values_into_flat_list(list<int>& l) const;
+	bool
+	must_be_initialized(void) const { return true; }
+
+	bool
+	may_be_equivalent(const param_expr& e) const
+		{ return pint_expr::may_be_equivalent(e); }
+
+	bool
+	must_be_equivalent(const param_expr& e) const
+		{ return pint_expr::must_be_equivalent(e); }
+
+	bool
+	is_static_constant(void) const { return true; }
+
+	count_ptr<const const_param>
+	static_constant_param(void) const;
+
+	int
+	static_constant_int(void) const { return val; }
+
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
+
+	bool
+	operator == (const const_range& c) const;
+
+	bool
+	range_size_equivalent(const const_index& i) const;
+
+	int
+	lower_bound(void) const;
+
+	int
+	upper_bound(void) const;
+
+	bool
+	resolve_value(int& i) const;
+
+	count_ptr<const_index>
+	resolve_index(void) const;
+
+	const_index_list
+	resolve_dimensions(void) const;
+
+	bool
+	resolve_values_into_flat_list(list<int>& l) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -393,33 +527,68 @@ public:
 protected:
 	const value_type		val;
 public:
+	explicit
 	pbool_const(const bool v) :
 		pbool_expr(), const_param(), val(v) { }
+
 	~pbool_const() { }
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
-	size_t dimensions(void) const { return 0; }
-	bool has_static_constant_dimensions(void) const { return true; }
-	const_range_list static_constant_dimensions(void) const
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	string
+	hash_string(void) const;
+
+	size_t
+	dimensions(void) const { return 0; }
+
+	bool
+	has_static_constant_dimensions(void) const { return true; }
+
+	const_range_list
+	static_constant_dimensions(void) const
 		{ return const_range_list(); }
 
-	bool may_be_initialized(void) const { return true; }
-	bool must_be_initialized(void) const { return true; }
-	bool may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent(e); }
-	bool must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent(e); }
-	bool is_static_constant(void) const { return true; }
-	count_ptr<const const_param>
-		static_constant_param(void) const;
-	bool static_constant_bool(void) const { return val; }
-	bool is_loop_independent(void) const { return true; }
-	bool is_unconditional(void) const { return true; }
+	bool
+	may_be_initialized(void) const { return true; }
 
-	bool resolve_value(bool& i) const;
-	const_index_list resolve_dimensions(void) const;
-	bool resolve_values_into_flat_list(list<bool>& l) const;
+	bool
+	must_be_initialized(void) const { return true; }
+
+	bool
+	may_be_equivalent(const param_expr& e) const
+		{ return pbool_expr::may_be_equivalent(e); }
+
+	bool
+	must_be_equivalent(const param_expr& e) const
+		{ return pbool_expr::must_be_equivalent(e); }
+
+	bool
+	is_static_constant(void) const { return true; }
+
+	count_ptr<const const_param>
+	static_constant_param(void) const;
+
+	bool
+	static_constant_bool(void) const { return val; }
+
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
+
+	bool
+	resolve_value(bool& i) const;
+
+	const_index_list
+	resolve_dimensions(void) const;
+
+	bool
+	resolve_values_into_flat_list(list<bool>& l) const;
 
 private:
 	excl_ptr<param_expression_assignment>
@@ -444,50 +613,87 @@ private:
 public:
 	// dispense with pint_const objects here
 	const_range();
+
 	/** explicit conversion from x[N] to x[0..N-1] */
-explicit const_range(const int n);
-explicit const_range(const pint_const& n);
-explicit const_range(const parent& p);
+	explicit
+	const_range(const int n);
+
+	explicit
+	const_range(const pint_const& n);
+
+	explicit
+	const_range(const parent& p);
+
 	const_range(const int l, const int u);
 	const_range(const const_range& r);
 private:
-#if 0
-	const_range(const interval_type& i);
-#else
 	const_range(const int l, const int u, const bool);
-#endif
 public:
 	~const_range() { }
 
 	/** use this to query whether or not range is valid */
-	bool empty(void) const { return first > second; }
-	int lower(void) const {
+	bool
+	empty(void) const { return first > second; }
+
+	int
+	lower(void) const {
 		assert(!empty());
 		return first;
 	}
-	int upper(void) const {
+
+	int
+	upper(void) const {
 		assert(!empty());
 		return second;
 	}
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	string hash_string(void) const;
 
-	const_range static_overlap(const const_range& r) const;
+	ostream&
+	what(ostream& o) const;
 
-	bool operator == (const const_range& c) const;
-	bool may_be_initialized(void) const { return !empty(); }
-	bool must_be_initialized(void) const { return !empty(); }
-	bool is_sane(void) const;
-	bool is_static_constant(void) const { return !empty(); }
-	bool is_loop_independent(void) const { return !empty(); }
-	bool is_unconditional(void) const { return !empty(); }
-	bool range_size_equivalent(const const_index& i) const;
+	ostream&
+	dump(ostream& o) const;
 
-	int lower_bound(void) const;
-	int upper_bound(void) const;
-	bool resolve_range(const_range& r) const;
-	count_ptr<const_index> resolve_index(void) const;
+	string
+	hash_string(void) const;
+
+	const_range
+	static_overlap(const const_range& r) const;
+
+	bool
+	operator == (const const_range& c) const;
+
+	bool
+	may_be_initialized(void) const { return !empty(); }
+
+	bool
+	must_be_initialized(void) const { return !empty(); }
+
+	bool
+	is_sane(void) const;
+
+	bool
+	is_static_constant(void) const { return !empty(); }
+
+	bool
+	is_loop_independent(void) const { return !empty(); }
+
+	bool
+	is_unconditional(void) const { return !empty(); }
+
+	bool
+	range_size_equivalent(const const_index& i) const;
+
+	int
+	lower_bound(void) const;
+
+	int
+	upper_bound(void) const;
+
+	bool
+	resolve_range(const_range& r) const;
+
+	count_ptr<const_index>
+	resolve_index(void) const;
 public:
 	PERSISTENT_METHODS
 };	// end class const_range

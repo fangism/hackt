@@ -1,8 +1,11 @@
 /**
 	\file "art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.7 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.8 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
+#define	__ART_OBJECT_INSTANCE_PBOOL_CC__
 
 #include <iostream>
 #include <algorithm>
@@ -12,7 +15,6 @@
 #include "art_object_inst_ref.h"
 #include "art_object_inst_stmt.h"
 #include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
-// #include "art_object_expr.h"		// for range_expr_list
 #include "art_built_ins.h"
 #include "art_object_type_hash.h"
 
@@ -135,7 +137,7 @@ pbool_instance_collection::get_type_ref(void) const {
 	\sa must_be_initialized
  */
 bool
-pbool_instance_collection::initialize(count_ptr<const pbool_expr> e) {
+pbool_instance_collection::initialize(const count_ptr<const pbool_expr>& e) {
 	assert(e);
 	assert(!ival);		// must not already be initialized or assigned
 	if (dimensions == 0) {
@@ -196,8 +198,7 @@ pbool_instance_collection::make_instance_reference(void) const {
 	return count_ptr<param_instance_reference>(
 		new pbool_instance_reference(
 			never_ptr<pbool_instance_collection>(
-			const_cast<pbool_instance_collection*>(this)), 
-			excl_ptr<index_list>(NULL)));
+			const_cast<pbool_instance_collection*>(this))));
 		// omitting index argument
 }
 
@@ -208,8 +209,9 @@ pbool_instance_collection::make_instance_reference(void) const {
 	Should also check dimensionality and size.  
  */
 bool
-pbool_instance_collection::type_check_actual_param_expr(const param_expr& pe) const {
-	const pbool_expr* pb(IS_A(const pbool_expr*, &pe));
+pbool_instance_collection::type_check_actual_param_expr(
+		const param_expr& pe) const {
+	const never_ptr<const pbool_expr> pb(IS_A(const pbool_expr*, &pe));
 	if (!pb) {
 		// useful error message?
 		return false;
@@ -534,7 +536,7 @@ pbool_array<0>::pbool_array(const scopespace& o, const string& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 pbool_array<0>::pbool_array(const scopespace& o, const string& n,
-		count_ptr<const pbool_expr> i) :
+		const count_ptr<const pbool_expr>& i) :
 		pbool_instance_collection(o, n, 0, i), the_instance() {
 	// until we eliminate that field from instance_collection_base
 }
@@ -703,4 +705,6 @@ template class pbool_array<4>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_PBOOL_CC__
 

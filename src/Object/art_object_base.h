@@ -1,7 +1,7 @@
 /**
 	\file "art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.23 2004/12/07 02:22:06 fang Exp $
+	$Id: art_object_base.h,v 1.24 2005/01/13 05:28:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_BASE_H__
@@ -44,42 +44,42 @@ virtual ~object() { }
 
 /**
 	What eeeeez it man?
+	\param o the output stream.
+	\return the output stream.
  */
-virtual	ostream& what(ostream& o) const = 0;
+virtual	ostream&
+	what(ostream& o) const = 0;
 
 /**
 	Detailed hierarchical dump of contents.  
 	Later: add detail-level argument.  
+	\param o the output stream.
+	\return the output stream.
  */
-virtual	ostream& dump(ostream& o) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
 #if 0
-/**	prints out what it (may have) looked like in source */
+/**
+	TODO:
+	Prints out what it (may have) looked like in source
+	\param o the output stream.
+	\return the output stream.
+ */
 virtual	ostream& source(ostream& o) const = 0;
 #endif
 
 /**
 	Use this method to automatically dereference object handles.  
  */
-virtual const object& self(void) const { return *this; }
+virtual const object&
+	self(void) const { return *this; }
 
 /**
 	Consider an interface to hierarchical errors embedded in the objects.  
 	Mmmm... fancy.
 **/
 
-#if 0
-FACTORED OUT INTO class persistent;
-/** walks object hierarchy and registers reachable pointers with manager */
-virtual	void collect_transient_info(persistent_object_manager& m) const;
-/** Writes the object out to a managed buffer */
-virtual	void write_object(const persistent_object_manager& m) const;
-/** Loads the object from a managed buffer */
-virtual	void load_object(persistent_object_manager& m);
-
-public:
-	static bool			warn_unimplemented;
-#endif
 };	// end class object
 
 //=============================================================================
@@ -108,6 +108,7 @@ public:
 		\param o may not be a handle.  
 			Someone else should have responsibility for deleting.  
 	 */
+	explicit
 	object_handle(never_ptr<const object> o);
 
 	/**
@@ -115,9 +116,14 @@ public:
 	 */
 	~object_handle() { }
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	const object& self(void) const { return obj; }
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	const object&
+	self(void) const { return obj; }
 };	// end class object_handle
 
 // after note: if we need object_handle (non-const) implement later...
@@ -140,27 +146,37 @@ protected:
 public:
 	object_list();
 	~object_list();
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
 // using parent's list interface
 
 	// could use excl_ptr, but then would need to release to count_ptr...
 	count_ptr<range_expr_list>
-		make_formal_dense_range_list(void) const;
+	make_formal_dense_range_list(void) const;
+
 	count_ptr<range_expr_list>
-		make_sparse_range_list(void) const;
+	make_sparse_range_list(void) const;
+
 	excl_ptr<index_list>
-		make_index_list(void) const;
+	make_index_list(void) const;
+
 	excl_ptr<dynamic_param_expr_list>
-		make_param_expr_list(void) const;
+	make_param_expr_list(void) const;
+
 	// not const because may modify self
 	excl_ptr<param_expression_assignment>
-		make_param_assignment(void);
+	make_param_assignment(void);
+
 	excl_ptr<const aliases_connection>
-		make_alias_connection(void) const;
+	make_alias_connection(void) const;
+
 	excl_ptr<const port_connection>
-		make_port_connection(
-			count_ptr<const simple_instance_reference> ir) const;
+	make_port_connection(
+		const count_ptr<const simple_instance_reference>& ir) const;
 };	// end class object_list
 
 //=============================================================================

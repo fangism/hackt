@@ -1,8 +1,11 @@
 /**
 	\file "art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.3 2005/01/06 17:44:53 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.4 2005/01/13 05:28:30 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INST_REF_DATA_CC__
+#define	__ART_OBJECT_INST_REF_DATA_CC__
 
 #include "art_object_inst_ref_data.h"
 #include "art_object_instance_bool.h"
@@ -41,20 +44,6 @@ int_instance_reference::int_instance_reference(
 		int_inst_ref(iic) {
 	NEVER_NULL(int_inst_ref);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Obsolete constructor...
- */
-int_instance_reference::int_instance_reference(
-		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list>& i) :
-		parent_type(i, iic->current_collection_state()), 
-		int_inst_ref(iic) {
-	NEVER_NULL(int_inst_ref);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance_reference::~int_instance_reference() {
@@ -96,12 +85,7 @@ int_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, int_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -122,14 +106,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, int_inst_ref);
 	NEVER_NULL(int_inst_ref);
 	const_cast<instance_collection_type&>(*int_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -152,22 +129,11 @@ bool_instance_reference::bool_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool_instance_reference::bool_instance_reference(
-		const never_ptr<const instance_collection_type> iic) :
-		parent_type(iic->current_collection_state()), 
-		bool_inst_ref(iic) {
+		const never_ptr<const instance_collection_type> bic) :
+		parent_type(bic->current_collection_state()), 
+		bool_inst_ref(bic) {
 	NEVER_NULL(bool_inst_ref);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-bool_instance_reference::bool_instance_reference(
-		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list>& i) :
-		parent_type(i, iic->current_collection_state()), 
-		bool_inst_ref(iic) {
-	NEVER_NULL(bool_inst_ref);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance_reference::~bool_instance_reference() {
@@ -209,12 +175,7 @@ bool_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, bool_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -235,14 +196,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, bool_inst_ref);
 	NEVER_NULL(bool_inst_ref);
 	const_cast<instance_collection_type&>(*bool_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -265,22 +219,11 @@ enum_instance_reference::enum_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 enum_instance_reference::enum_instance_reference(
-		const never_ptr<const instance_collection_type> iic) :
-		parent_type(iic->current_collection_state()), 
-		enum_inst_ref(iic) {
+		const never_ptr<const instance_collection_type> eic) :
+		parent_type(eic->current_collection_state()), 
+		enum_inst_ref(eic) {
 	NEVER_NULL(enum_inst_ref);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-enum_instance_reference::enum_instance_reference(
-		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list> i) :
-		parent_type(i, iic->current_collection_state()), 
-		enum_inst_ref(iic) {
-	NEVER_NULL(enum_inst_ref);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance_reference::~enum_instance_reference() {
@@ -322,12 +265,7 @@ enum_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, enum_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -348,14 +286,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, enum_inst_ref);
 	NEVER_NULL(enum_inst_ref);
 	const_cast<instance_collection_type&>(*enum_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -378,22 +309,11 @@ datastruct_instance_reference::datastruct_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 datastruct_instance_reference::datastruct_instance_reference(
-		const never_ptr<const instance_collection_type> iic) :
-		parent_type(iic->current_collection_state()), 
-		struct_inst_ref(iic) {
+		const never_ptr<const instance_collection_type> sic) :
+		parent_type(sic->current_collection_state()), 
+		struct_inst_ref(sic) {
 	NEVER_NULL(struct_inst_ref);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-datastruct_instance_reference::datastruct_instance_reference(
-		const never_ptr<const instance_collection_type> iic, 
-		excl_ptr<index_list> i) :
-		parent_type(i, iic->current_collection_state()), 
-		struct_inst_ref(iic) {
-	NEVER_NULL(struct_inst_ref);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datastruct_instance_reference::~datastruct_instance_reference() {
@@ -435,12 +355,7 @@ datastruct_instance_reference::write_object(
 	ostream& f = m.lookup_write_buffer(this);
 	WRITE_POINTER_INDEX(f, m);
 	m.write_pointer(f, struct_inst_ref);
-#if 0
-	write_instance_collection_state(f);
-	m.write_pointer(f, array_indices);
-#else
 	parent_type::write_object_base(m, f);
-#endif
 	WRITE_OBJECT_FOOTER(f);
 }
 
@@ -461,14 +376,7 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, struct_inst_ref);
 	NEVER_NULL(struct_inst_ref);
 	const_cast<instance_collection_type&>(*struct_inst_ref).load_object(m);
-#if 0
-	load_instance_collection_state(f);
-	m.read_pointer(f, array_indices);
-	if (array_indices)
-		array_indices->load_object(m);
-#else
 	parent_type::load_object_base(m, f);
-#endif
 	STRIP_OBJECT_FOOTER(f);
 }
 // else already visited
@@ -477,4 +385,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INST_REF_DATA_CC__
 

@@ -2,20 +2,17 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.11 2005/01/06 17:44:52 fang Exp $
+	$Id: art_context.h,v 1.12 2005/01/13 05:28:27 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
 #define __ART_CONTEXT_H__
 
-#include <stdlib.h>
 #include <string>
 #include <stack>
 
 #include "STL/list.h"
-
 #include "memory/pointer_classes.h"
-
 #include "art_object_fwd.h"
 
 namespace ART {
@@ -54,10 +51,15 @@ class token_paramtype;
 	and is updated in the order of the syntax tree traversal.  
 	No virtual functions.  
 	Some of these members should be collapsed into mutexs...
+
+	IDEA: instead of push pop-like operations, 
+	we can make nested classes to manipulate the stack automatically
+	upon construction and destruction.  
+
+	TODO: replace indent with util/indent implementation.  
  */
 class context {
 protected:
-//	stack<name_space*>	namespace_scope;
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
 
@@ -94,7 +96,7 @@ protected:
 		possibly checked against previous definitions.  
 		Intended for adding template formals and port formals.  
 		Exclusive-pointer because is freshly constructed.  
-	*/
+	 */
 	excl_ptr<definition_base>	current_prototype;
 
 	/**
@@ -198,7 +200,7 @@ public:
 	top_namespace(void) const;
 
 	never_ptr<definition_base>
-	add_declaration(excl_ptr<definition_base> d);
+	add_declaration(excl_ptr<definition_base>& d);
 
 // void	declare_process(const token_identifier& ps);
 	void
@@ -235,14 +237,14 @@ public:
 	close_chantype_definition(void);
 
 	bool
-	alias_definition(never_ptr<const definition_base> d, 
+	alias_definition(const never_ptr<const definition_base> d, 
 		const token_identifier& id);
 
 	void
-	add_connection(excl_ptr<const instance_reference_connection> c);
+	add_connection(excl_ptr<const instance_reference_connection>& c);
 
 	void
-	add_assignment(excl_ptr<const param_expression_assignment> a);
+	add_assignment(excl_ptr<const param_expression_assignment>& a);
 
 /**
 	Need to make distinctions:
@@ -256,7 +258,8 @@ public:
 	get_current_named_scope(void);
 
 	never_ptr<const name_space>
-	get_current_namespace(void) const { return current_namespace; }
+	get_current_namespace(void) const
+		{ return current_namespace; }
 
 // sets context's definition for instantiation, or for member lookup
 	never_ptr<const definition_base>	
@@ -266,8 +269,7 @@ public:
 // pointer instead of reference?
 	never_ptr<const definition_base>
 	push_current_definition_reference(const definition_base& d) {
-		definition_stack.push(
-			never_ptr<const definition_base>(&d));
+		definition_stack.push(never_ptr<const definition_base>(&d));
 		return current_definition_reference;
 	}
 
@@ -276,11 +278,11 @@ public:
 	get_current_fundamental_type(void) const;
 
 	never_ptr<definition_base>
-	set_current_prototype(excl_ptr<definition_base> d);
+	set_current_prototype(excl_ptr<definition_base>& d);
 // void	reset_current_prototype(void);
 
 /** destructive transfer return */
-	excl_ptr<definition_base>
+	excl_ptr<definition_base>&
 	get_current_prototype(void);
 
 	never_ptr<const definition_base>
@@ -296,8 +298,10 @@ public:
 	void
 	reset_current_fundamental_type(void);
 
+#if 0
 	never_ptr<const built_in_param_def>
 	get_current_param_definition(void) const;
+#endif
 
 	never_ptr<const channel_definition_base>
 	get_current_channel_definition(void) const;
@@ -307,7 +311,7 @@ public:
 
 	void
 	set_current_fundamental_type(
-		count_ptr<const fundamental_type_reference> tr);
+		const count_ptr<const fundamental_type_reference>& tr);
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;
@@ -340,7 +344,7 @@ public:
 	never_ptr<const instance_collection_base>
 	add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
-		count_ptr<const param_expr> d);
+		const count_ptr<const param_expr>& d);
 
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id);
@@ -350,7 +354,7 @@ public:
 		index_collection_item_ptr_type dim);
 
 	void
-	push_object_stack(count_ptr<object> i);
+	push_object_stack(const count_ptr<object>& i);
 
 	count_ptr<object>
 	pop_top_object_stack(void);

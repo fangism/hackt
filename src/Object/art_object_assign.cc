@@ -1,8 +1,11 @@
 /**
 	\file "art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.9 2004/12/15 23:31:09 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.10 2005/01/13 05:28:28 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_ASSIGN_CC__
+#define	__ART_OBJECT_ASSIGN_CC__
 
 #include <iostream>
 #include <numeric>
@@ -18,9 +21,6 @@
 #include "binders.h"
 #include "compose.h"
 #include "ptrs_functional.h"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
 
 //=============================================================================
 namespace ART {
@@ -114,6 +114,10 @@ pbool_expression_assignment::pbool_expression_assignment() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s the right-most expression in the assignment, 
+		called the source value. 
+ */
 pbool_expression_assignment::pbool_expression_assignment(
 		const src_const_ptr_type& s) :
 		param_expression_assignment(), src(s), dests() {
@@ -124,6 +128,9 @@ pbool_expression_assignment::pbool_expression_assignment(
 pbool_expression_assignment::~pbool_expression_assignment() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the number of left-expressions, or destinations.  
+ */
 size_t
 pbool_expression_assignment::size(void) const {
 	return dests.size();
@@ -136,16 +143,26 @@ pbool_expression_assignment::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints out assignment statement with sequential expressions.  
+	Consider using ostream_iterator and copy.  
+	\param o the output stream.
+	\return the output stream.
+ */
 ostream&
 pbool_expression_assignment::dump(ostream& o) const {
 	assert(src);
 	assert(!dests.empty());
 	dumper dumpit(o);
-	for_each (dests.begin(), dests.end(), dumpit);
+	for_each(dests.begin(), dests.end(), dumpit);
 	return src->dump(o << " = ") << ';';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param o the output stream.  
+	\param i the initial index, used to suppress delimiter.  
+ */
 pbool_expression_assignment::dumper::dumper(ostream& o, const size_t i) :
 		index(i), os(o) {
 }
@@ -166,6 +183,8 @@ pbool_expression_assignment::dumper::operator() (
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a destination instance reference to the assignment list.  
+	\param e new destination expression.  
+	\return true if there is an error, else false.  
  */
 bool
 pbool_expression_assignment::append_param_instance_reference(
@@ -201,10 +220,6 @@ pbool_expression_assignment::append_param_instance_reference(
  */
 void
 pbool_expression_assignment::unroll(void) const {
-#if 0
-	cerr << "pbool_expression_assignment::unroll(): "
-		"Fang, finish me!" << endl;
-#endif
 	assert(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
 	pbool_instance_reference::assigner the_assigner(*src);
@@ -219,23 +234,23 @@ pbool_expression_assignment::unroll(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits dynamic pointers, and registers them with persistent
+	object manager.
+	\param m the persistent object manager.  
+ */
 void
 pbool_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PBOOL_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	src->collect_transient_info(m);
-#if 0
 	for_each(dests.begin(), dests.end(), 
-	bind2nd(mem_fun(&ex_list_type::value_type::collect_transient_info), m)
+	unary_compose(
+		bind2nd_argval(mem_fun_ref(
+			&pbool_instance_reference::collect_transient_info), m), 
+		dereference<count_ptr, const pbool_instance_reference>()
+	)
 	);
-	// bind2nd_argval?
-#else
-	dest_list_type::const_iterator iter = dests.begin();
-	const dest_list_type::const_iterator end = dests.end();
-	for ( ; iter!=end; iter++) {
-		(*iter)->collect_transient_info(m);
-	}
-#endif
 }
 // else already visited
 }
@@ -287,6 +302,11 @@ pint_expression_assignment::pint_expression_assignment() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs and initalizes an integer assignment with a
+	source expression.  
+	\param s the rightmost (source) expression.  
+ */
 pint_expression_assignment::pint_expression_assignment(
 		const src_const_ptr_type& s) :
 		param_expression_assignment(), src(s), dests() {
@@ -297,6 +317,9 @@ pint_expression_assignment::pint_expression_assignment(
 pint_expression_assignment::~pint_expression_assignment() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the number of destinations to assign.  
+ */
 size_t
 pint_expression_assignment::size(void) const {
 	return dests.size();
@@ -339,6 +362,8 @@ pint_expression_assignment::dumper::operator() (
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a destination instance reference to the assignment list.  
+	\param e new destination expression.  
+	\return true if there is an error, else false.  
  */
 bool
 pint_expression_assignment::append_param_instance_reference(
@@ -393,7 +418,6 @@ pint_expression_assignment::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
 	src->collect_transient_info(m);
-#if 1
 	for_each(dests.begin(), dests.end(), 
 	unary_compose(
 		bind2nd_argval(mem_fun_ref(
@@ -401,13 +425,6 @@ if (!m.register_transient_object(this, PINT_EXPR_ASSIGNMENT_TYPE_KEY)) {
 		dereference<count_ptr, const pint_instance_reference>()
 	)
 	);
-#else
-	dest_list_type::const_iterator iter = dests.begin();
-	const dest_list_type::const_iterator end = dests.end();
-	for ( ; iter!=end; iter++) {
-		(*iter)->collect_transient_info(m);
-	}
-#endif
 }
 // else already visited
 }
@@ -447,4 +464,6 @@ if (!m.flag_visit(this)) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_ASSIGN_CC__
 

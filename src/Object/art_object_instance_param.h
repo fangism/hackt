@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.10 2005/01/12 03:19:37 fang Exp $
+	$Id: art_object_instance_param.h,v 1.11 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -66,7 +66,7 @@ virtual	count_ptr<instance_reference_base>
 	/** should just assert fail, forbid reference to param members */
 	count_ptr<member_instance_reference_base>
 	make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const;
+		const count_ptr<const simple_instance_reference>& b) const;
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
@@ -227,7 +227,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(count_ptr<const pbool_expr> e);
+	initialize(const count_ptr<const pbool_expr>& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);
@@ -294,7 +294,8 @@ friend class pbool_instance_collection;
 public:
 	typedef	pbool_instance				element_type;
 	/// Type for actual values, including validity and status.
-	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
+	typedef	multikey_map<D, int, element_type, qmap>
+							collection_type;
 
 protected:
 	/// the collection of boolean instances
@@ -360,8 +361,10 @@ public:
 
 	pbool_array(const scopespace& o, const string& n);
 
+#if 0
 	pbool_array(const scopespace& o, const string& n, 
-		count_ptr<const pbool_expr> i);
+		const count_ptr<const pbool_expr>& i);
+#endif
 
 	~pbool_array() { }
 
@@ -502,6 +505,7 @@ protected:
 	count_ptr<const pint_expr>		ival;
 
 protected:
+	explicit
 	pint_instance_collection(const size_t d);
 public:
 	pint_instance_collection(const scopespace& o, const string& n, 
@@ -509,7 +513,7 @@ public:
 
 	// keep these for built-in int datatype initialization
 	pint_instance_collection(const scopespace& o, const string& n, 
-		const size_t d, count_ptr<const pint_const> i);
+		const size_t d, const count_ptr<const pint_const>& i);
 
 virtual	~pint_instance_collection();
 
@@ -529,7 +533,7 @@ virtual	ostream&
 	make_instance_reference(void) const;
 
 	bool
-	initialize(count_ptr<const pint_expr> e);
+	initialize(const count_ptr<const pint_expr>& e);
 
 	bool
 	assign_default_value(count_ptr<const param_expr> p);
@@ -674,7 +678,7 @@ public:
 		definition construction.
 	 */
 	pint_array(const scopespace& o, const string& n, 
-		count_ptr<const pint_const> i);
+		const count_ptr<const pint_const>& i);
 
 	~pint_array() { }
 

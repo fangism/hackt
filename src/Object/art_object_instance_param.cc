@@ -1,8 +1,11 @@
 /**
 	\file "art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.5 2005/01/12 03:19:37 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.6 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
+#define	__ART_OBJECT_INSTANCE_PARAM_CC__
 
 #include <iostream>
 
@@ -60,11 +63,13 @@ param_instance_collection::dump(ostream& o) const {
 	const index_collection_type::const_iterator e = index_collection.end();
 	for ( ; i!=e; i++) {
 		assert(*i);
-		index_collection_item_ptr_type ind((*i)->get_indices());
+		const index_collection_item_ptr_type
+			ind((*i)->get_indices());
 		if (ind)
 			ind->dump(o) << endl;
 	}
-	count_ptr<const param_expr> init_def(default_value());
+	const count_ptr<const param_expr>
+		init_def(default_value());
 	if (init_def) {
 		if (is_template_formal())
 			init_def->dump(o << " (default = ") << ")";
@@ -92,7 +97,7 @@ bool
 param_instance_collection::is_template_formal(void) const {
 	STACKTRACE("param_instance_collection::is_template_formal()");
 	// look itself up in owner namespace
-	never_ptr<const definition_base>
+	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def) {
 		return def->lookup_template_formal(key);
@@ -123,7 +128,8 @@ param_instance_collection::may_be_initialized(void) const {
 		// is not a template formal, thus we interpret
 		// the "default_value" field as a one-time initialization
 		// value.  
-		count_ptr<const param_expr> ret(default_value());
+		const count_ptr<const param_expr>
+			ret(default_value());
 		if (ret)
 			return ret->may_be_initialized();
 		// if there's no initial value, then it is definitely
@@ -149,7 +155,8 @@ param_instance_collection::must_be_initialized(void) const {
 		// is not a template formal, thus we interpret
 		// the "default_value" field as a one-time initialization
 		// value.  
-		count_ptr<const param_expr> ret(default_value());
+		const count_ptr<const param_expr>
+			ret(default_value());
 		if (ret)
 			return ret->must_be_initialized();
 		// if there's no initial value, then it is definitely
@@ -167,7 +174,8 @@ param_instance_collection::is_static_constant(void) const {
 	} else if (is_template_formal()) {
 		return false;
 	} else {
-		count_ptr<const param_expr> ret(default_value());
+		const count_ptr<const param_expr>
+			ret(default_value());
 		if (ret)
 			return ret->is_static_constant();
 		else return false;
@@ -198,7 +206,7 @@ param_instance_collection::is_loop_independent(void) const {
  */
 count_ptr<member_instance_reference_base>
 param_instance_collection::make_member_instance_reference(
-		count_ptr<const simple_instance_reference> b) const {
+		const count_ptr<const simple_instance_reference>& b) const {
 	typedef	count_ptr<member_instance_reference_base>	return_type;
 	assert(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
@@ -209,4 +217,6 @@ param_instance_collection::make_member_instance_reference(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_INSTANCE_PARAM_CC__
 

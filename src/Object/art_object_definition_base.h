@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.5 2004/12/15 23:31:09 fang Exp $
+	$Id: art_object_definition_base.h,v 1.6 2005/01/13 05:28:29 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -173,7 +173,7 @@ public:
 // proposing to replace set_context_fundamental_type with the following:
 virtual count_ptr<const fundamental_type_reference>
 	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const = 0;
+		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
 
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!

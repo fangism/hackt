@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.7 2004/12/16 01:08:51 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.8 2005/01/13 05:28:32 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -194,7 +194,8 @@ public:
 	typedef	parent_type::instance_ptr_type		instance_ptr_type;
 	typedef parent_type::unroll_index_type		unroll_index_type;
 	typedef	struct_instance_alias			element_type;
-	typedef	multikey_map<D, int, element_type, qmap>	collection_type;
+	typedef	multikey_map<D, int, element_type, qmap>
+							collection_type;
 
 private:
 	collection_type					collection;

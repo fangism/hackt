@@ -2,10 +2,13 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.16 2005/01/12 03:19:36 fang Exp $
+ 	$Id: art_context.cc,v 1.17 2005/01/13 05:28:27 fang Exp $
  */
 
-#include <assert.h>
+#ifndef	__ART_CONTEXT_CC__
+#define	__ART_CONTEXT_CC__
+
+#include <cassert>
 #include <iostream>
 
 #include "art_context.h"
@@ -147,8 +150,11 @@ context::close_namespace(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// adds a using namespace directive, adds namespace to search list
-// error possible
+/**
+	Adds a using namespace directive, adds namespace to search list.
+	Currently exits on error.  
+	\param id qualified identifier to add to namespace.  
+ */
 void
 context::using_namespace(const qualified_id& id) {
 	never_ptr<const name_space> ret =
@@ -161,11 +167,15 @@ context::using_namespace(const qualified_id& id) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// adds a using namespace directive under a different local name
+/**
+	Adds a using namespace directive under a different local name.
+	\param id the referenced namespace.
+	\param a the local alias.  
+ */
 void
 context::alias_namespace(const qualified_id& id, const string& a) {
-	never_ptr<const name_space> ret =
-		current_namespace->add_using_alias(id, a);
+	const never_ptr<const name_space>
+		ret(current_namespace->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
 		cerr << id.where() << endl;
@@ -190,14 +200,24 @@ context::top_namespace(void) const {
 	Caller should check the return value if there is an error to report.  
  */
 never_ptr<definition_base>
-context::add_declaration(excl_ptr<definition_base> d) {
-	never_ptr<definition_base> ret(current_namespace->add_definition(d));
+context::add_declaration(excl_ptr<definition_base>& d) {
+	// careful, passing by reference may breaks some invariant!
+	const never_ptr<definition_base>
+		ret(current_namespace->add_definition(d));
 	if (!ret) {
 		// something went wrong
 		type_error_count++;
 		// additional error message isn't really necessary...
 //		cerr << endl << "ERROR in context::add_declaration().  ";
 //		cerr << d->where() << endl;	// caller will do
+		// For now, we intentionally delete the bad definition, 
+		// though later, it may be useful for precise error messages.
+		INVARIANT(d);
+		const excl_ptr<definition_base> delete_d(d);
+		INVARIANT(!d);
+	} else {
+		// should transfer ownership, unless there is an error
+		INVARIANT(!d);
 	}
 	return ret;
 }
@@ -216,7 +236,7 @@ context::add_declaration(excl_ptr<definition_base> d) {
  */
 void
 context::open_enum_definition(const token_identifier& ename) {
-	never_ptr<enum_datatype_def>
+	const never_ptr<enum_datatype_def>
 		ed(current_namespace->lookup_object_here_with_modify(ename)
 				.is_a<enum_datatype_def>());
 	if (ed) {
@@ -241,6 +261,9 @@ context::open_enum_definition(const token_identifier& ename) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 /**
+	Adds an enumeration named member to the current enumeration
+	definition.  
+	\param em name of the enumeration member.  
 	\return true if successful, false if there was conflict.  
  */
 bool
@@ -263,6 +286,9 @@ context::add_enum_member(const token_identifier& em) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the current open (modifying) definition.  
+ */
 void
 context::close_enum_definition(void) {
 	current_open_definition = never_ptr<definition_base>(NULL);
@@ -273,7 +299,7 @@ context::close_enum_definition(void) {
 /**
 	THIS NEEDS SERIOUS RE-WORK.  
 	Registers a process definition's signature.  
-	\param ps the process signature, which contains and identifier, 
+	\param pname the process signature, which contains and identifier, 
 		optional template signature, and port signature.  
 	Details: checks to see if prototype was already declared.  
 	If already declared, then this re-declaration MUST be indentical, 
@@ -359,7 +385,7 @@ context::close_chantype_definition(void) {
 /**
 	\return destructive transfer of active definition (modifiable).  
  */
-excl_ptr<definition_base>
+excl_ptr<definition_base>&
 context::get_current_prototype(void) {
 	return current_prototype;
 }
@@ -372,34 +398,48 @@ never_ptr<const definition_base>
 context::get_current_prototype(void) const { return current_prototype; }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+#if 0
+UNUSED
+/**
+	\return the current active parameter definition.  
+ */
 never_ptr<const built_in_param_def>
 context::get_current_param_definition(void) const {
 	return current_definition_reference.is_a<const built_in_param_def>();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/**
+	\return the current active datatype definition.  
+ */
 never_ptr<const datatype_definition_base>
 context::get_current_datatype_definition(void) const {
 	return current_definition_reference.is_a<const datatype_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/**
+	\return the current active channel definition.  
+ */
 never_ptr<const channel_definition_base>
 context::get_current_channel_definition(void) const {
 	return current_definition_reference.is_a<const channel_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/**
+	\return the current active process definition.  
+ */
 never_ptr<const process_definition_base>
 context::get_current_process_definition(void) const {
 	return current_definition_reference.is_a<const process_definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Deactivates the current definition.  
+ */
 void
 context::pop_current_definition_reference(void) {
 	assert(current_definition_reference);
@@ -424,9 +464,14 @@ context::reset_current_fundamental_type(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the current definition being constructed (activate).  
+	\param d owned pointer to the constructed definition.  
+	\return non-owned pointer to the constructed definition.  
+ */
 never_ptr<definition_base>
-context::set_current_prototype(excl_ptr<definition_base> d) {
-	assert(!current_prototype);
+context::set_current_prototype(excl_ptr<definition_base>& d) {
+	INVARIANT(!current_prototype);
 	current_prototype = d;
 	return current_prototype;
 }
@@ -434,17 +479,20 @@ context::set_current_prototype(excl_ptr<definition_base> d) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Given a valid complete type reference, set the context to use it.  
+	\param tr the expanded type reference to be used for 
+		subsequent instantiations.  
  */
 void
 context::set_current_fundamental_type(
-		count_ptr<const fundamental_type_reference> tr) {
-	assert(!current_fundamental_type);
+		const count_ptr<const fundamental_type_reference>& tr) {
+	INVARIANT(!current_fundamental_type);
 	current_fundamental_type = tr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Query the fundamental type to instantiate.  
+	\return the current type used for instantiations.  
  */
 count_ptr<const fundamental_type_reference>
 context::get_current_fundamental_type(void) const {
@@ -455,10 +503,10 @@ context::get_current_fundamental_type(void) const {
 /**
 	TO FIX: when checking a prototype, current scope should be 
 	updated to that prototype's definition.  
-	fixed: resolves object_handle automatically.
  */
 never_ptr<const object>
 context::lookup_object(const qualified_id& id) const {
+	// automatically resolve object handles.  
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
@@ -475,7 +523,7 @@ context::lookup_object(const qualified_id& id) const {
 	\return true if successful (no collisions).  
  */
 bool
-context::alias_definition(never_ptr<const definition_base> d,
+context::alias_definition(const never_ptr<const definition_base> d,
 		const token_identifier& a) {
 	return get_current_named_scope()->add_definition_alias(d, a);
 }
@@ -487,7 +535,7 @@ context::alias_definition(never_ptr<const definition_base> d,
 	\param c the new connection or assignment list.
  */
 void
-context::add_connection(excl_ptr<const instance_reference_connection> c) {
+context::add_connection(excl_ptr<const instance_reference_connection>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 
 	STACKTRACE("context::add_connection()");
@@ -499,14 +547,8 @@ context::add_connection(excl_ptr<const instance_reference_connection> c) {
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
-#if 0
-		// no excl_ptr copy constructor
+		// should transfer ownership to the list
 		master_instance_list.push_back(imb);
-#else
-		master_instance_list.push_back(imb);
-//		assert(imb);		// doesn't transfer!
-//		master_instance_list.back() = imb;
-#endif
 	}
 	INVARIANT(!imb);
 }
@@ -520,7 +562,7 @@ context::add_connection(excl_ptr<const instance_reference_connection> c) {
 	\param c the new connection or assignment list.
  */
 void
-context::add_assignment(excl_ptr<const param_expression_assignment> c) {
+context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 
 	STACKTRACE("context::add_assignment()");
@@ -555,6 +597,8 @@ context::lookup_definition(const token_identifier& id) const {
 /**
 	Ok to start search in namespace, because definitions
 	can only be found in namespaces, not other types of scopes.  
+	\param id the qualified name of the definition sought.  
+	\return const pointer to the identified definition, if found.  
  */
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
@@ -566,6 +610,10 @@ context::lookup_definition(const qualified_id& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param id the name of the instance sought.  
+	\return const pointer to the named instance sought, if found.  
+ */
 never_ptr<const instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
 	assert(current_namespace);
@@ -576,6 +624,10 @@ context::lookup_instance(const token_identifier& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param id the qualified name of the instance sought.  
+	\return const pointer to the named instance sought, if found.  
+ */
 never_ptr<const instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
 	assert(current_namespace);
@@ -587,7 +639,7 @@ context::lookup_instance(const qualified_id& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Returns the current scope, be it namespace, or definition.  
+	\return the current scope, be it namespace, or definition.  
 	Namespaces are kept on a stack, 
 	Definitions may not be nested, but loops and conditionals
 	may be nested.  
@@ -613,7 +665,7 @@ context::get_current_named_scope(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Returns the current scope, be it namespace, or definition.  
+	\return the current scope, be it namespace, or definition.  
 	Namespaces (which may be nested) are kept on a stack, 
 	definitions may not be nested, but loops and conditionals
 	may be nested.  
@@ -719,7 +771,7 @@ context::add_instance(const token_identifier& id,
 never_ptr<const instance_collection_base>
 context::add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
-		count_ptr<const param_expr> d) {
+		const count_ptr<const param_expr>& d) {
 	STACKTRACE("context::add_template_formal()");
 	NEVER_NULL(current_prototype);	// valid definition_base
 	NEVER_NULL(current_fundamental_type);
@@ -842,10 +894,11 @@ context::add_port_formal(const token_identifier& id) {
 	We permit NULL objects on the stack, as error placeholders.  
  */
 void
-context::push_object_stack(count_ptr<object> o)
+context::push_object_stack(const count_ptr<object>& o)
 // context::push_object_stack(excl_ptr<object> o)
 {
 	if (o) {
+		// UGLY... rework later
 		const object* oself = &o->self();
 		// can we go back to not using maked pointer for check?
 		if (!(IS_A(const param_expr*, oself) ||
@@ -871,17 +924,19 @@ context::push_object_stack(count_ptr<object> o)
 	object_stack.push(o);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<object>
-// excl_ptr<object>
 context::pop_top_object_stack(void) {
 	count_ptr<object> ret = object_stack.top();
-//	excl_ptr<object> ret = object_stack.top();
 	object_stack.pop();
 	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// automatic indentation for nicer debug printing
+/**
+	Automatic indentation for nicer debug printing.
+	TODO: phase this out in favor of util::indent.  
+ */
 string
 context::auto_indent(void) const {
 	long i = 0;
@@ -895,4 +950,6 @@ context::auto_indent(void) const {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_CONTEXT_CC__
 

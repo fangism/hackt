@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.5 2005/01/12 03:19:37 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.6 2005/01/13 05:28:30 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -64,14 +64,26 @@ public:
 
 	~pbool_instantiation_statement();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void attach_collection(never_ptr<instance_collection_base> i);
-	never_ptr<instance_collection_base> get_inst_base(void);
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	void unroll(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	attach_collection(const never_ptr<instance_collection_base> i);
+
+	never_ptr<instance_collection_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
+	void
+	unroll(void) const;
 
 public:
 	PERSISTENT_METHODS
@@ -100,14 +112,26 @@ public:
 
 	~pint_instantiation_statement();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void attach_collection(never_ptr<instance_collection_base> i);
-	never_ptr<instance_collection_base> get_inst_base(void);
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
 
-	void unroll(void) const;
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	attach_collection(const never_ptr<instance_collection_base> i);
+
+	never_ptr<instance_collection_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
+	void
+	unroll(void) const;
 
 public:
 	PERSISTENT_METHODS
@@ -133,14 +157,26 @@ private:
 public:
 	process_instantiation_statement(const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
+
 	~process_instantiation_statement();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void attach_collection(never_ptr<instance_collection_base> i);
-	never_ptr<instance_collection_base> get_inst_base(void);
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	attach_collection(const never_ptr<instance_collection_base> i);
+
+	never_ptr<instance_collection_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 public:
 	PERSISTENT_METHODS
@@ -166,14 +202,26 @@ private:
 public:
 	channel_instantiation_statement(const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
+
 	~channel_instantiation_statement();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void attach_collection(never_ptr<instance_collection_base> i);
-	never_ptr<instance_collection_base> get_inst_base(void);
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	attach_collection(const never_ptr<instance_collection_base> i);
+
+	never_ptr<instance_collection_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 public:
 	PERSISTENT_METHODS
@@ -204,14 +252,26 @@ private:
 public:
 	data_instantiation_statement(const type_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
+
 	~data_instantiation_statement();
 
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-	void attach_collection(never_ptr<instance_collection_base> i);
-	never_ptr<instance_collection_base> get_inst_base(void);
-	never_ptr<const instance_collection_base> get_inst_base(void) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	attach_collection(const never_ptr<instance_collection_base> i);
+
+	never_ptr<instance_collection_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_collection_base>
+	get_inst_base(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 #if 0
 	// almost ready to unveil...

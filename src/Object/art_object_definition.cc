@@ -1,8 +1,11 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.25 2005/01/12 04:14:18 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.26 2005/01/13 05:28:28 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_DEFINITION_CC__
+#define	__ART_OBJECT_DEFINITION_CC__
 
 #include <iostream>
 
@@ -75,7 +78,9 @@ definition_base::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/**
+	Prints key in addition to dumping.  
+ */
 ostream&
 definition_base::pair_dump(ostream& o) const {
 	o << "  " << get_key() << " = ";
@@ -83,6 +88,9 @@ definition_base::pair_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequentially prints template formal parameters.  
+ */
 ostream&
 definition_base::dump_template_formals(ostream& o) const {
 	STACKTRACE("definition_base::dump_template_formals()");
@@ -188,7 +196,7 @@ definition_base::check_null_template_argument(void) const {
 	template_formals_list_type::const_iterator i =
 		template_formals_list.begin();
 	for ( ; i!=template_formals_list.end(); i++) {
-		never_ptr<const param_instance_collection> p(*i);
+		const never_ptr<const param_instance_collection> p(*i);
 		NEVER_NULL(p);
 		p.must_be_a<const param_instance_collection>();
 		// if any formal is missing a default value, then this 
@@ -232,8 +240,8 @@ definition_base::equivalent_template_formals(
 		template_formals_list.begin();
 	template_formals_list_type::const_iterator j = dtemp.begin();
 	for ( ; i!=template_formals_list.end() && j!=dtemp.end(); i++, j++) {
-		never_ptr<const param_instance_collection> itf(*i);
-		never_ptr<const param_instance_collection> jtf(*j);
+		const never_ptr<const param_instance_collection> itf(*i);
+		const never_ptr<const param_instance_collection> jtf(*j);
 		assert(itf);		// template formals not optional
 		assert(jtf);		// template formals not optional
 		// only type and size need to be equal, not name
@@ -245,7 +253,7 @@ definition_base::equivalent_template_formals(
 		// else continue checking
 	}
 	// sanity check, we made sure sizes match.
-	assert(i==template_formals_list.end() && j==dtemp.end());
+	assert(i == template_formals_list.end() && j == dtemp.end());
 	return true;
 }
 
@@ -259,7 +267,7 @@ definition_base::get_name(void) const {
 string
 definition_base::get_qualified_name(void) const {
 	const string key = get_key();
-	never_ptr<const scopespace> parent(get_parent());
+	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
 		return parent->get_qualified_name() +scope +key;
 	else return key;
@@ -294,9 +302,10 @@ if (ta) {
 		// else a_size == 0, passed actuals list is empty, 
 		// try to fill in all default arguments
 		for ( ; f_iter!=f_end; f_iter++) {
-			never_ptr<const param_instance_collection> pinst(*f_iter);
+			const never_ptr<const param_instance_collection>
+				pinst(*f_iter);
 			assert(pinst);
-			count_ptr<const param_expr>
+			const count_ptr<const param_expr>
 				default_expr(pinst->default_value());
 			if (!default_expr) {
 				// no default value to supply
@@ -314,8 +323,9 @@ if (ta) {
 		// need method to check param_instance_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
-		count_ptr<const param_expr> pex(*p_iter);
-		never_ptr<const param_instance_collection> pinst(*f_iter);
+		const count_ptr<const param_expr> pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
 		assert(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
@@ -328,7 +338,7 @@ if (ta) {
 			// no parameter expression given, 
 			// check for default -- if exists, use it, 
 			// else is error
-			count_ptr<const param_expr>
+			const count_ptr<const param_expr>
 				default_expr(pinst->default_value());
 			if (!default_expr) {
 				// error message?
@@ -368,19 +378,21 @@ definition_base::certify_port_actuals(const object_list& ol) const {
  */
 excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
+	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
 	assert(check_null_template_argument());
 	if (template_formals_list.empty())
-		return excl_ptr<dynamic_param_expr_list>(NULL);
+		return return_type(NULL);
 	// defaulting to dynamic_param_expr_list
-	dynamic_param_expr_list* ret = new dynamic_param_expr_list;
+	return_type ret(new dynamic_param_expr_list);
 	template_formals_list_type::const_iterator i = 
 		template_formals_list.begin();
 	for ( ; i!=template_formals_list.end(); i++) {
-		count_ptr<const param_expr> d((*i)->default_value());
+		const count_ptr<const param_expr> d((*i)->default_value());
 		assert(d);	// everything must have default
 		ret->push_back(d);
 	}
-	return excl_ptr<dynamic_param_expr_list>(ret);
+	// should transfer ownership
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -400,14 +412,15 @@ definition_base::add_template_formal(
 		never_ptr<instantiation_statement> i, 
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_template_formal()");
+	typedef	never_ptr<const instance_collection_base>	return_type;
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
 	{
-	never_ptr<const object>
-	probe(lookup_object_here(id));
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
-		return never_ptr<const instance_collection_base>(NULL);
+		return return_type(NULL);
 	} 
 	}
 
@@ -423,7 +436,7 @@ definition_base::add_template_formal(
 	assert(ss);
 	// this creates and adds to the definition
 	// and bi-links statement to collection
-	never_ptr<const param_instance_collection>
+	const never_ptr<const param_instance_collection>
 		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
 	assert(pf);
 	assert(pf->get_name() == id);	// consistency check
@@ -518,7 +531,7 @@ definition_base::load_object_template_formals(
 	const template_formals_list_type::const_iterator
 		end = template_formals_list.end();
 	for ( ; iter!=end; iter++) {
-		template_formals_value_type inst_ptr = *iter;
+		const template_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
 		const_cast<param_instance_collection*>(&*inst_ptr)->load_object(m);
@@ -630,8 +643,9 @@ if (pa) {
  */
 count_ptr<const fundamental_type_reference>
 definition_base::make_fundamental_type_reference(void) const {
-	return make_fundamental_type_reference(
-		make_default_template_arguments());
+	excl_ptr<dynamic_param_expr_list>
+		dplp(make_default_template_arguments());
+	return make_fundamental_type_reference(dplp);
 }
 
 //=============================================================================
@@ -651,6 +665,11 @@ datatype_definition_base::~datatype_definition_base() {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a typedef (definition alias) from this definition.  
+	\param s the namespace in which the alias resides.  
+	\param id the local name of the alias.  
+ */
 excl_ptr<definition_base>
 datatype_definition_base::make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const {
@@ -704,13 +723,14 @@ channel_definition_base::make_typedef(never_ptr<const scopespace> s,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 channel_definition_base::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
+		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new channel_type_reference(
 				never_ptr<const channel_definition_base>(this), 
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make channel_type_reference "
 			"because template argument types do not match." << endl;
@@ -901,7 +921,7 @@ channel_definition_alias::get_base_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_definition_alias::assign_typedef(
-		excl_ptr<const fundamental_type_reference> f) {
+		excl_ptr<const fundamental_type_reference>& f) {
 	assert(f);
 	base = f.is_a_xfer<const channel_type_reference>();
 	assert(base);
@@ -1070,16 +1090,18 @@ built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 built_in_datatype_def::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_ptr<const fundamental_type_reference>(
+		excl_ptr<const param_expr_list> plp(ta);
+		return return_type(
 			new data_type_reference(
 				never_ptr<const built_in_datatype_def>(this), 
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make built_in_data_type_reference "
 			"because template argument types do not match." << endl;
-		return count_ptr<const fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -1094,11 +1116,11 @@ never_ptr<const instance_collection_base>
 built_in_datatype_def::add_template_formal(
 		excl_ptr<instance_collection_base>& f) {
 	STACKTRACE("built_in_datatype_def::add_template_formal()");
-	never_ptr<const param_instance_collection>
+	const never_ptr<const param_instance_collection>
 		pf(f.is_a<const param_instance_collection>());
 	assert(pf);
 	// check and make sure identifier wasn't repeated in formal list!
-	never_ptr<const object> probe(
+	const never_ptr<const object> probe(
 		datatype_definition_base::lookup_object_here(pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
@@ -1242,7 +1264,7 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
  */
 count_ptr<const fundamental_type_reference>
 built_in_param_def::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
 	assert(!ta);
 	return count_ptr<const fundamental_type_reference>(
 		new param_type_reference(
@@ -1334,14 +1356,17 @@ enum_datatype_def::resolve_canonical_datatype_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: ta is not used.
+ */
 count_ptr<const fundamental_type_reference>
 enum_datatype_def::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
+	INVARIANT(!ta);
 	return return_type(
 		new data_type_reference(
-			never_ptr<const datatype_definition_base>(this), 
-			excl_ptr<const param_expr_list>(NULL)));
+			never_ptr<const datatype_definition_base>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1383,7 +1408,7 @@ bool
 enum_datatype_def::add_member(const token_identifier& em) {
 	never_ptr<const object> probe(scopespace::lookup_object_here(em));
 	if (probe) {
-		never_ptr<const enum_member> probe_em(
+		const never_ptr<const enum_member> probe_em(
 			probe.is_a<const enum_member>());
 		assert(probe_em);	// can't contain enything else
 		return false;
@@ -1552,13 +1577,14 @@ user_def_datatype::lookup_object_here(const string& id) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 user_def_datatype::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
+		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
 				never_ptr<const datatype_definition_base>(this), 
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make data_type_reference "
 			"because template argument types do not match." << endl;
@@ -1705,7 +1731,7 @@ datatype_definition_alias::get_base_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 datatype_definition_alias::assign_typedef(
-		excl_ptr<const fundamental_type_reference> f) {
+		excl_ptr<const fundamental_type_reference>& f) {
 	assert(f);
 	base = f.is_a_xfer<const data_type_reference>();
 	assert(base);
@@ -1715,16 +1741,18 @@ datatype_definition_alias::assign_typedef(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 datatype_definition_alias::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_ptr<const fundamental_type_reference>(
+		excl_ptr<const param_expr_list> plp(ta);
+		return return_type(
 			new data_type_reference(
 				never_ptr<const datatype_definition_alias>(this), 
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make data_type_alias type reference "
 			"because template argument types do not match." << endl;
-		return count_ptr<const fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -1996,12 +2024,13 @@ process_definition::certify_port_actuals(const object_list& ol) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 process_definition::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
+		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(new process_type_reference(
 				never_ptr<const process_definition>(this),
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make process_type_reference "
 			"because template argument types do not match." << endl;
@@ -2021,7 +2050,7 @@ process_definition::add_port_formal(
 	assert(!f.is_a<param_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
 	{
-	never_ptr<const object>
+	const never_ptr<const object>
 	probe(lookup_object_here(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
@@ -2059,7 +2088,7 @@ bool
 process_definition::require_signature_match(
 		never_ptr<const definition_base> d) const {
 	assert(d);
-	never_ptr<const process_definition>
+	const never_ptr<const process_definition>
 		pd(d.is_a<const process_definition>());
 	if (!pd) {
 		cerr << "ERROR: definition " << d->get_name() <<
@@ -2106,12 +2135,13 @@ process_definition::equivalent_port_formals(
 			"doesn\'t match!" << endl;
 		return false;
 	}
-	port_formals_list_type::const_iterator i = 
-		port_formals_list.begin();
-	port_formals_list_type::const_iterator j = pports.begin();
+	port_formals_list_type::const_iterator
+		i = port_formals_list.begin();
+	port_formals_list_type::const_iterator
+		j = pports.begin();
 	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
-		never_ptr<const instance_collection_base> ipf(*i);
-		never_ptr<const instance_collection_base> jpf(*j);
+		const never_ptr<const instance_collection_base> ipf(*i);
+		const never_ptr<const instance_collection_base> jpf(*j);
 		assert(ipf);
 		assert(jpf);
 		if (!ipf->port_formal_equivalent(jpf)) {
@@ -2120,7 +2150,7 @@ process_definition::equivalent_port_formals(
 			return false;
 		}
 	}
-	assert(i==port_formals_list.end() && j==pports.end());
+	assert(i == port_formals_list.end() && j == pports.end());
 	return true;
 }
 
@@ -2230,7 +2260,7 @@ process_definition::load_object_port_formals(
 	const port_formals_list_type::const_iterator
 		end = port_formals_list.end();
 	for ( ; iter!=end; iter++) {
-		port_formals_value_type inst_ptr = *iter;
+		const port_formals_value_type inst_ptr = *iter;
 		assert(inst_ptr);
 		const_cast<instance_collection_base*>(&*inst_ptr)->load_object(m);
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
@@ -2300,7 +2330,7 @@ process_definition_alias::get_base_type_ref(void) const {
  */
 bool
 process_definition_alias::assign_typedef(
-		excl_ptr<const fundamental_type_reference> f) {
+		excl_ptr<const fundamental_type_reference>& f) {
 	assert(f);
 	base = f.is_a_xfer<const process_type_reference>();
 	assert(base);
@@ -2310,17 +2340,19 @@ process_definition_alias::assign_typedef(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 process_definition_alias::make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list> ta) const {
+		excl_ptr<dynamic_param_expr_list>& ta) const {
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
 	if (certify_template_arguments(ta)) {
-		return count_ptr<const fundamental_type_reference>(
+		excl_ptr<const param_expr_list> plp(ta);
+		return return_type(
 			new process_type_reference(
 				never_ptr<const process_definition_alias>(this), 
-				excl_ptr<const param_expr_list>(ta)));
+				plp));
 	} else {
 		cerr << "ERROR: failed to make process_definition_alias "
 			"type reference because template argument types "
 			"do not match." << endl;
-		return count_ptr<const fundamental_type_reference>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -2406,4 +2438,6 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_DEFINITION_CC__
 

@@ -1,8 +1,11 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.7 2005/01/12 03:19:38 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.8 2005/01/13 05:28:32 fang Exp $
  */
+
+#ifndef	__ART_OBJECT_NAMESPACE_CC__
+#define	__ART_OBJECT_NAMESPACE_CC__
 
 #include <iostream>
 #include <fstream>
@@ -129,15 +132,7 @@ scopespace::~scopespace() {
  */
 never_ptr<const object>
 scopespace::lookup_object_here(const string& id) const {
-#if 0
-cerr << "AH HA! id @ " << &id << " = " << id << endl;
-	some_ptr<object>
-		ret(static_cast<const used_id_map_type&>(used_id_map)[id]);
-cerr << "AH huh?" << endl;
-	return ret;
-#else
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -177,45 +172,31 @@ scopespace::lookup_object(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
+	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("scopespace::lookup_object()");
-#if 0
-	indent cerr_ind(cerr);
-	cerr << auto_indent << "scopespace::lookup_object()" << endl;
-#endif
 if (id.is_absolute()) {
 	never_ptr<const scopespace> parent(get_parent());
 	if (parent)
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
 		qualified_id_slice idc(id);
-#if 0
-		cerr << auto_indent << "before lookup_namespace" << endl;
-#endif
-		never_ptr<const name_space> ns = 
-			lookup_namespace(idc.betail()).is_a<const name_space>();
-#if 0
-		cerr << auto_indent << "after lookup_namespace" << endl;
-#endif
+		const never_ptr<const name_space>
+			ns = lookup_namespace(
+				idc.betail()).is_a<const name_space>();
 		if (ns)
 			return ns->lookup_object(**(--id.end()));
-		else return never_ptr<const object>(NULL);
+		else return return_type(NULL);
 	}
 } else if (id.size() <= 1) {
 	return lookup_object(**id.begin());
 } else {
 	// else need to resolve namespace portion first
 	qualified_id_slice idc(id);
-#if 0
-		cerr << auto_indent << "before lookup_namespace" << endl;
-#endif
-	never_ptr<const name_space> ns = 
-		lookup_namespace(idc.betail()).is_a<const name_space>();
-#if 0
-		cerr << auto_indent << "after lookup_namespace" << endl;
-#endif
+	const never_ptr<const name_space>
+		ns = lookup_namespace(idc.betail()).is_a<const name_space>();
 	if (ns)
 		return ns->lookup_object(**(--id.end()));
-	else return never_ptr<const object>(NULL);
+	else return return_type(NULL);
 }
 }
 
@@ -232,12 +213,7 @@ if (id.is_absolute()) {
 never_ptr<const scopespace>
 scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	STACKTRACE("scopespace::lookup_namespace()");
-#if 1
-	indent cerr_ind(cerr);
-	cerr << auto_indent << "scopespace::lookup_namespace(): id @ " 
-		<< &id << " = " << id << endl;
-#endif
-	never_ptr<const scopespace> parent(get_parent());
+	const never_ptr<const scopespace> parent(get_parent());
 	NEVER_NULL(parent);
 	return parent->lookup_namespace(id);
 }
@@ -277,10 +253,10 @@ scopespace::add_instance(
 	inst_stmt->dump(cerr << "never_ptr<instantiation_statement> inst_stmt = ") << endl;
 	dump(cerr);	// dump the entire namespace
 #endif
-	never_ptr<object> probe(lookup_object_here_with_modify(id));
+	const never_ptr<object> probe(lookup_object_here_with_modify(id));
 	if (probe) {
-		never_ptr<instance_collection_base> probe_inst(
-			probe.is_a<instance_collection_base>());
+		const never_ptr<instance_collection_base>
+			probe_inst(probe.is_a<instance_collection_base>());
 		if (probe_inst) {
 			// make sure is not a template or port formal instance!
 			// can't append to those.  
@@ -337,8 +313,9 @@ scopespace::add_instance(
 
 			// here, we know we're referring to the same collection
 			// check for overlap with existing static-const indices
-			const_range_list
-			overlap(probe_inst->add_instantiation_statement(inst_stmt));
+			const const_range_list
+				overlap(probe_inst->add_instantiation_statement(
+					inst_stmt));
 			if (!overlap.empty()) {
 				// returned true if there is definite overlap
 				cerr << "Detected overlap in the "
@@ -370,17 +347,10 @@ scopespace::add_instance(
 		new_inst->add_instantiation_statement(inst_stmt);
 		INVARIANT(inst_stmt->get_name() == id);
 		NEVER_NULL(new_inst);
-		never_ptr<const instance_collection_base>
-		ret(add_instance(new_inst));
+		const never_ptr<const instance_collection_base>
+			ret(add_instance(new_inst));
 		INVARIANT(!new_inst.owned());
 		NEVER_NULL(ret);
-#if 0
-		ret->dump(cerr << "just added: ") << endl;
-		never_ptr<const object> probe(
-			lookup_object_here(ret->get_name()));
-		probe->dump(cerr << "re-lookup: ") << endl;
-		dump(cerr);	// dump the entire namespace
-#endif
 		return ret;
 	}
 }
@@ -408,16 +378,15 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 	Adds a definition name alias to this scope.  
  */
 bool
-scopespace::add_definition_alias(never_ptr<const definition_base> d, 
+scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
-	never_ptr<const object> probe(lookup_object_here(a));
+	const never_ptr<const object> probe(lookup_object_here(a));
 	if (probe) {
 		cerr << "Identifier \"" << a << "\" already taken by a ";
 		probe->what(cerr) << " in ";
 		what(cerr) << " " << get_qualified_name() << ".  ERROR!  ";
 		return false;
 	} else {
-//		used_id_map[a] = d;
 #if 0
 		// gcc-3.4.0 rejects, thinking that excl_ptr is const!
 		used_id_map[a] = excl_ptr<object_handle>(new object_handle(d));
@@ -898,9 +867,9 @@ name_space::add_open_namespace(const string& n) {
 	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
 #endif
 	never_ptr<name_space> ret;
-	never_ptr<const object> probe = lookup_object_here(n);
+	const never_ptr<const object> probe = lookup_object_here(n);
 	if (probe) {
-		never_ptr<const name_space>
+		const never_ptr<const name_space>
 			probe_ns(probe.is_a<const name_space>());
 		// an alias may return with valid pointer!
 		if (!probe_ns) {
@@ -927,8 +896,9 @@ name_space::add_open_namespace(const string& n) {
 	} else {
 		// create it, linking this as its parent
 		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
-		excl_ptr<name_space> new_ns(
-			new name_space(n, never_ptr<const name_space>(this)));
+		excl_ptr<name_space>
+			new_ns(new name_space(
+				n, never_ptr<const name_space>(this)));
 		ret = add_namespace(new_ns);
 		// explicit transfer
 		assert(!new_ns);
@@ -948,8 +918,8 @@ name_space::add_open_namespace(const string& n) {
 	Ideally, should already be checked before calling this.  
  */
 never_ptr<name_space>
-name_space::add_namespace(excl_ptr<name_space> new_ns) {
-	never_ptr<name_space> ret(new_ns);
+name_space::add_namespace(excl_ptr<name_space>& new_ns) {
+	const never_ptr<name_space> ret(new_ns);
 	assert(ret);
 	assert(new_ns.owned());
 	// register it as a used id
@@ -1007,7 +977,8 @@ name_space::leave_namespace(void) {
  */
 never_ptr<const name_space>
 name_space::add_using_directive(const qualified_id& n) {
-	never_ptr<const name_space> ret;
+	typedef	never_ptr<const name_space>	return_type;
+	return_type ret;
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
@@ -1031,11 +1002,11 @@ name_space::add_using_directive(const qualified_id& n) {
 		case 0:	{
 			cerr << "namespace " << n << " not found, ERROR! ";
 			// or n is not a namespace
-			ret = never_ptr<const name_space>(NULL);
+			ret = return_type(NULL);
 			break;	// no matches
 			}
 		default: {	// > 1
-			ret = never_ptr<const name_space>(NULL);
+			ret = return_type(NULL);
 			cerr << " ERROR: ambiguous import of namespaces, "
 				"need to be more specific.  candidates are: ";
 				for ( ; i!=candidates.end(); i++)
@@ -1171,6 +1142,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
  */
 never_ptr<const name_space>
 name_space::query_namespace_match(const qualified_id_slice& id) const {
+	typedef	never_ptr<const name_space>	return_type;
 	// qualified_id_slice is a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
@@ -1180,31 +1152,34 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 
 	if (id.empty())	{	// what if it's absolute and empty?
 		return (id.is_absolute()) ? get_global_namespace() : 
-			never_ptr<const name_space>(this);
+			return_type(this);
 	}
 	qualified_id_slice::const_iterator i = id.begin();	assert(*i);
-	count_ptr<const token_identifier> tid(*i);
-	assert(tid);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << *tid)
-	never_ptr<const name_space> ns =
-		(id.is_absolute()) ? get_global_namespace()
+	const count_ptr<const token_identifier>& tidp(*i);
+	assert(tidp);
+	const token_identifier& tid(*tidp);
+	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
+	never_ptr<const name_space>
+		ns = (id.is_absolute()) ? get_global_namespace()
 		: never_ptr<const name_space>(this);
-	if (ns->key.compare(*tid)) {
+	if (ns->key.compare(tid)) {
 		// if names differ, already failed, try alias spaces
-		return never_ptr<const name_space>(NULL);
+		return return_type(NULL);
 	} else {
 		for (i++; ns && i!=id.end(); i++) {
-			never_ptr<const name_space> next;
 			// no need to skip scope tokens anymore
-			tid = i->is_a<const token_identifier>();
-			assert(tid);
-			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << *tid)
+			const count_ptr<const token_identifier>&
+				tidp2(i->is_a<const token_identifier>());
+			assert(tidp2);
+			const token_identifier& tid2(*tidp2);
+			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
-			next = ns->lookup_object_here(*tid).is_a<const name_space>();
+			const never_ptr<const name_space>
+				next = ns->lookup_object_here(tid2).is_a<const name_space>();
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
-			ns = (next) ? next : ns->lookup_open_alias(*tid);
+			ns = (next) ? next : ns->lookup_open_alias(tid2);
 		}
 
 	// for loop terminates when ns is NULL or i is at the end
@@ -1235,8 +1210,6 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	DEBUG(TRACE_NAMESPACE_QUERY, 
 		cerr << endl << "query_subnamespace_match: " << id 
 			<< " in " << get_qualified_name() << endl)
-//	cerr << endl << "query_subnamespace_match: " << id 
-//		<< " in " << get_qualified_name() << endl;
 
 	// here, does NOT check for global-absoluteness
 	if (id.empty())	{	// what if it's absolute and empty?
@@ -1246,8 +1219,6 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	qualified_id_slice::const_iterator i = id.begin();
 	NEVER_NULL(*i);		// *i is a count_ptr<const token_identifier>
 	const token_identifier& tid(**i);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
-//	cerr << "\ttesting: " << tid << endl;
 	// no check for absoluteness
 	never_ptr<const name_space> ns;
 	if (id.is_absolute()) {
@@ -1255,7 +1226,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 			lookup_object_here(tid).is_a<const name_space>();
 	} else {
 		// force use of const probe
-		never_ptr<const object> probe(lookup_object_here(tid));
+		const never_ptr<const object> probe(lookup_object_here(tid));
 		ns = probe.is_a<const name_space>();
 	}
 
@@ -1263,12 +1234,12 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		ns = lookup_open_alias(tid);	// replaced for const semantics
 	}
 	for (i++; ns && i!=id.end(); i++) {
-		never_ptr<const name_space> next;
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
 		// tid = i->is_a<const token_identifier>();
 		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
-		next = ns->lookup_object_here(tid2).is_a<const name_space>();
+		const never_ptr<const name_space>
+			next = ns->lookup_object_here(tid2).is_a<const name_space>();
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->lookup_open_alias(tid2);
 	}
@@ -1300,15 +1271,16 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 		cerr << endl << "query_import_namespace_match: " << id 
 			<< " in " << get_qualified_name())
 	{
-		never_ptr<const name_space> ret = query_subnamespace_match(id);
+		const never_ptr<const name_space>
+			ret(query_subnamespace_match(id));
 		if (ret) m.push_back(ret);
 	}
 	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
 		namespace_list::const_iterator i = open_spaces.begin();
 		for ( ; i!=open_spaces.end(); i++) {
-			never_ptr<const name_space> ret = 
-				(*i)->query_subnamespace_match(id);
+			const never_ptr<const name_space>
+				ret((*i)->query_subnamespace_match(id));
 			if (ret) m.push_back(ret);
 		}
 	}
@@ -1346,7 +1318,8 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	// 3) upward a namespace scope, which will search its 1,2
 	//	including the global scope, if reached
 	// terminates (returning NULL) if not found
-	never_ptr<const name_space> ret = query_subnamespace_match(id);
+	const never_ptr<const name_space>
+		ret(query_subnamespace_match(id));
 	if (ret)	m.push_back(ret);
 	query_import_namespace_match(m, id);
 	if (parent)
@@ -1364,25 +1337,32 @@ find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
 	for deleting it.  
 	On failure, however, pointer is not added, so need to handle
 	memory in the caller.  
+
+	If the signature matches an existing definition, 
+	then the new one is a duplicate, thus we delete it.  
 	
 	\param db the definition to add, newly created.
 	\return modifiable pointer to definition if successful, else NULL.  
  */
 never_ptr<definition_base>
-name_space::add_definition(excl_ptr<definition_base> db) {
+name_space::add_definition(excl_ptr<definition_base>& db) {
+	typedef	never_ptr<definition_base>	return_type;
 	assert(db);
 	string k = db->get_name();
-	never_ptr<const object> probe(lookup_object_here(k));
+	const never_ptr<const object> probe(lookup_object_here(k));
 	if (probe) {
-		never_ptr<const definition_base> probe_def(
-			probe.is_a<const definition_base>());
+		const never_ptr<const definition_base>
+			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
 			assert(k == probe_def->get_name());	// consistency
 			if (probe_def->require_signature_match(db)) {
 				// definition signatures match
 				// can discard new declaration
-				// db will self-delete (excl_ptr)
-				return never_ptr<definition_base>(db);
+				// to delete db, we steal ownership, 
+				// and deallocate it with a local excl_ptr
+				excl_ptr<definition_base>
+					release_db(db);
+				return return_type(release_db);
 			} else {
 				// signature mismatch!
 				// also catches class type mismatch
@@ -1390,16 +1370,16 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 					"\" doesn't match previous "
 					"declaration.  ERROR! ";
 				// give details...
-				return never_ptr<definition_base>(NULL);
+				return return_type(NULL);
 			}
 		} else {
 			probe->what(cerr << "Identifier already taken by ")
 				<< endl << "ERROR: Failed to add definition! ";
-			return never_ptr<definition_base>(NULL);
+			return return_type(NULL);
 		}
 	} else {
 		// used_id_map owns this type is reponsible for deleting it
-		never_ptr<definition_base> ret = db;
+		const never_ptr<definition_base> ret = db;
 		assert(ret);
 		used_id_map[k] = db;
 		assert(!db);		// after explicit transfer of ownership
@@ -1416,11 +1396,6 @@ name_space::add_definition(excl_ptr<definition_base> db) {
 never_ptr<const scopespace>
 name_space::lookup_namespace(const qualified_id_slice& id) const {
 	STACKTRACE("namespace::lookup_namespace()");
-#if 1
-	indent cerr_ind(cerr);
-	cerr << auto_indent <<
-		"name_space::lookup_namespace: id @ " << &id << " = " << id;
-#endif
 	return query_subnamespace_match(id);
 }
 
@@ -1540,9 +1515,15 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE("name_space::load_used_id_map_object()");
 	NEVER_NULL(o);
 	if (o.is_a<name_space>()) {
-		add_namespace(o.is_a_xfer<name_space>());
+		excl_ptr<name_space>
+			nsp(o.is_a_xfer<name_space>());
+		add_namespace(nsp);
+		INVARIANT(!nsp);
 	} else if (o.is_a<definition_base>()) {
-		add_definition(o.is_a_xfer<definition_base>());
+		excl_ptr<definition_base>
+			defp(o.is_a_xfer<definition_base>());
+		add_definition(defp);
+		INVARIANT(!defp);
 	// ownership restored here!
 	} else if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
@@ -1558,4 +1539,6 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// __ART_OBJECT_NAMESPACE_CC__
 
