@@ -13,6 +13,11 @@ namespace MULTIKEY_MAP_NAMESPACE {
 using namespace std;
 
 //=============================================================================
+
+template <class K = int,
+	class T = char* >
+	class multikey_map_base;
+
 template <size_t D,
 	class K = int,
 	class T = char*,

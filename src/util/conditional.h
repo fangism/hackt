@@ -69,7 +69,11 @@ for_each_if<In, Pred, Op&> (In first, In last, Pred p, Op& f) {
 #endif
 
 //=============================================================================
+/**
+	Consider writing may and must binary comparisons, using for-loops.  
+**/
 
+//=============================================================================
 }	// end namespace std
 
 #endif	//	__CONDITIONAL_H__

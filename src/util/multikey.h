@@ -26,6 +26,20 @@ using namespace std;
 
 //=============================================================================
 /**
+	Abstract interface for an N-dimensional key.  
+ */
+template <class K>
+class multikey_base {
+public:
+virtual	~multikey_base() { }
+virtual	size_t dimensions(void) const = 0;
+virtual	K default_value(void) const = 0;
+virtual	K& operator [] (const size_t i) = 0;
+virtual	const K& operator [] (const size_t i) const = 0;
+};	// end class multikey_base
+
+//=============================================================================
+/**
 	Just a wrapper class for a fixed-size array.  
 	Useful for emulating a multidimensional map using a flat map
 	with a multidimensional key.  
@@ -36,7 +50,7 @@ using namespace std;
 	Perhaps add another field for default value?
  */
 template <size_t D, class K, K init>
-class multikey {
+class multikey : public multikey_base<K> {
 	template <size_t, class C, C>
 	friend class multikey;
 public:
@@ -49,6 +63,12 @@ public:
 	 */
 	multikey(const K i = init) { fill(indices, &indices[D], i); }
 
+	size_t
+	dimensions(void) const { return D; }
+
+	K
+	default_value(void) const { return init; }
+
 	/**
 		Copy construtor compatible with other dimensions.  
 		If this is larger than argument, fill remaining
@@ -56,7 +76,7 @@ public:
 	 */
 	template <size_t D2, K init2>
 	multikey(const multikey<D2,K,init2>& k, const K i = init) {
-// depends on <algorithm>
+		// depends on <algorithm>
 		if (D <= D2) {
 			copy(k.indices, &k.indices[D], indices);
 		} else {

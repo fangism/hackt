@@ -13,17 +13,48 @@ using MULTIKEY_NAMESPACE::multikey;
 
 //=============================================================================
 /**
+	Abstract base class for pseudo-multidimensional map.
+	Implementation-independent.  
+ */
+template <class K, class T>
+class multikey_map_base {
+public:
+	typedef	multikey_map_base<K,T>			this_type;
+public:
+	static const size_t				LIMIT = 4;
+public:
+virtual	~multikey_map_base() { }
+
+virtual	size_t dimensions(void) const = 0;
+virtual	size_t population(void) const = 0;
+virtual	bool empty(void) const = 0;
+virtual	void clear(void) = 0;
+virtual	void clean(void) = 0;
+
+virtual	ostream& dump(ostream& o) const = 0;
+
+template <template <class, class> class M>
+static	this_type* make_multikey_map(const size_t d);
+
+};	// end class multikey_map_base
+
+//=============================================================================
+/**
 	Adapter class for pseudo-multidimensional maps.  
-	D is the dimension.  
-	K is the key type, such as integer.  
-	T is the element type.  
-	M is the map class.  {e.g. map, qmap}
-	// allocater? comparator?
+	\param D is the dimension.  
+	\param K is the key type, such as integer.  
+	\param T is the element type.  
+	\param M is the map class.  {e.g. map, qmap}
+
+	allocater? comparator?
+
+	\example multikey_qmap_test.cc
  */
 template <size_t D, class K, class T, template <class, class> class M>
-class multikey_map : public M<multikey<D,K>, T> {
-private:
+class multikey_map : public M<multikey<D,K>, T>, multikey_map_base<K,T> {
+protected:
 	/** this is the representation-type */
+	typedef	multikey_map_base<K,T>			interface_type;
 	typedef	M<multikey<D,K>, T>			map_type;
 	typedef	map_type				mt;
 public:
@@ -46,15 +77,64 @@ public:
 	typedef	typename mt::allocator_type		allocator_type;
 
 public:
-	multikey_map() : map_type() { }
+	/**
+		Default empty constructor.  
+	 */
+	multikey_map() : map_type(), interface_type() { }
 
+	/**
+		Default destructor.
+	 */
 	~multikey_map() { }
+
+	/**
+		Whether or not this map contains any elements.
+		Need final overrider here to resolve ambiguity.  
+	 */
+	bool
+	empty(void) const {
+		return map_type::empty();
+	}
+
+	/**
+		Number of dimensions.
+	 */
+	size_t
+	dimensions(void) const { return D; }
 
 	/**
 		\return The number of elements (leaves) in map.  
 	 */
 	size_t
 	population(void) const { return this->size(); }
+
+	/**
+		Removes all elements.
+	 */
+	void
+	clear(void) {
+		map_type::clear();
+	}
+
+	/**
+		General method for removing default values.  
+	 */
+	void
+	clean(void) {
+		const T def;
+		iterator i = this->begin();
+		const const_iterator e = this->end();
+		for ( ; i!=e; ) {
+			if (i->second == def) {
+				iterator j = i;
+				j++;
+				map_type::erase(i);
+				i = j;
+			} else {
+				i++;
+			}
+		}
+	}
 
 	/**
 		\param k The key of the (key, value) pair to find.  
@@ -162,8 +242,9 @@ public:
 	Specialization for one-dimension: just use base map type.  
  */
 template <class K, class T, template <class, class> class M>
-class multikey_map<1,K,T,M> : public M<K,T> {
-private:
+class multikey_map<1,K,T,M> : public M<K,T>, public multikey_map_base<K,T> {
+protected:
+	typedef	multikey_map_base<K,T>			interface_type;
 	typedef	M<K, T>					map_type;
 	typedef	map_type				mt;
 public:
@@ -186,11 +267,41 @@ public:
 	typedef	typename mt::allocator_type		allocator_type;
 
 public:
-	multikey_map() : map_type() { }
+	multikey_map() : map_type(), interface_type() { }
 	~multikey_map() { }
+
+	bool
+	empty(void) const {
+		return map_type::empty();
+	}
+
+	void
+	clear(void) {
+		map_type::clear();
+	}
+
+	size_t
+	dimensions(void) const { return 1; }
 
 	size_t
 	population(void) const { return this->size(); }
+
+	void
+	clean(void) {
+		const T def;
+		iterator i = this->begin();
+		const const_iterator e = this->end();
+		for ( ; i!=e; ) {
+			if (i->second == def) {
+				iterator j = i;
+				j++;
+				this->erase(i);
+				i = j;
+			} else {
+				i++;
+			}
+		}
+	}
 
 	ostream&
 	dump(ostream& o) const {
@@ -202,7 +313,30 @@ public:
 		return o;
 	}
 
+	// all other methods are the same as general template class
+
 };	// end class multikey_map specialization
+
+//=============================================================================
+// static function definitions
+
+template <class K, class T>
+template <template <class, class> class M>
+multikey_map_base<K,T>*
+multikey_map_base<K,T>::make_multikey_map(const size_t d) {
+	// slow switch-case, but we need constants
+	assert(d > 0 && d <= LIMIT);
+	// there may be some clever way to make a call table to
+	// the various constructors, but this is a rare operation: who cares?
+	switch(d) {
+		case 1: return new multikey_map<1,K,T,M>();
+		case 2: return new multikey_map<2,K,T,M>();
+		case 3: return new multikey_map<3,K,T,M>();
+		case 4: return new multikey_map<4,K,T,M>();
+		// add more cases if LIMIT is ever extended.
+		default: return NULL;
+	}
+}
 
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE
