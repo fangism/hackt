@@ -1,7 +1,7 @@
 /**
 	\file "maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.1.4.1 2005/02/09 04:14:14 fang Exp $
+	$Id: maplikeset.h,v 1.1.4.1.2.1 2005/02/11 06:14:30 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
@@ -215,6 +215,9 @@ public:
 	typedef	V					value_type;
 protected:
 	const key_type					key;
+#if 1
+public:
+#endif
 	/**
 		Kludge:
 		Sets only return const pointer/reference/iterators, 
@@ -238,10 +241,10 @@ public:
 #if 0
 	value_type&
 	get_value(void) { return value; }
-#endif
 
 	const value_type&
 	get_value(void) const { return value; }
+#endif
 
 #if 0
 	/**

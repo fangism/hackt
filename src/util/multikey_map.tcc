@@ -1,7 +1,7 @@
 /**
 	\file "multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.4.16.1 2005/02/09 04:14:17 fang Exp $
+	$Id: multikey_map.tcc,v 1.4.16.1.2.1 2005/02/11 06:14:31 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -449,6 +449,7 @@ multikey_map<D,K,T,M>::write(ostream& f) const {
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++) {
+		// won't work for D==1
 		i->first.write(f);
 		write_value(f, i->second);
 	}
@@ -476,6 +477,7 @@ multikey_map<D,K,T,M>::read(istream& f) {
 
 
 //=============================================================================
+#if SPECIALIZE_MULTIKEY_MAP_1
 // class multikey_map method definitions (specialized)
 
 SPECIALIZED_MULTIKEY_MAP_TEMPLATE_SIGNATURE
@@ -653,6 +655,8 @@ multikey_map<1,K,T,M>::read(istream& f) {
 #endif
 	return f;
 }
+
+#endif	// SPECIALIZE_MULTIKEY_MAP_1
 
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE

@@ -2,13 +2,14 @@
 	\file "multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.14.16.1 2005/02/09 04:14:16 fang Exp $
+	$Id: multikey_map.h,v 1.14.16.1.2.1 2005/02/11 06:14:30 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
 #define	__UTIL_MULTIKEY_MAP_H__
 
 #define	USE_MULTIKEY_ASSOC			1
+#define	SPECIALIZE_MULTIKEY_MAP_1		0
 
 #include "macros.h"
 #include "STL/list_fwd.h"
@@ -44,7 +45,11 @@ using MULTIKEY_NAMESPACE::multikey;
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
 class multikey_map :
 #if USE_MULTIKEY_ASSOC
+#if SPECIALIZE_MULTIKEY_MAP_1
 	public multikey_assoc<D, M< multikey<D,K>, T> >
+#else
+	public multikey_assoc<D, M<typename multikey<D,K>::simple_type, T> >
+#endif
 #else
 	protected M<multikey<D,K>, T>
 #endif
@@ -54,7 +59,12 @@ private:
 protected:
 	/** this is the representation-type */
 #if USE_MULTIKEY_ASSOC
+#if SPECIALIZE_MULTIKEY_MAP_1
 	typedef	multikey_assoc<D, M<multikey<D,K>, T> >	map_type;
+#else
+	typedef	multikey_assoc<D, M<typename multikey<D,K>::simple_type, T> >
+							map_type;
+#endif
 #else
 	typedef	M<multikey<D,K>, T>			map_type;
 #endif
@@ -269,6 +279,7 @@ public:
 };	// end class multikey_map
 
 //-----------------------------------------------------------------------------
+#if SPECIALIZE_MULTIKEY_MAP_1
 /**
 	Specialization for one-dimension: just use base map type.  
  */
@@ -409,6 +420,7 @@ public:
 	// all other methods are the same as general template class
 
 };	// end class multikey_map (specialization)
+#endif	// SPECIALIZE_MULTIKEY_MAP_1
 
 //=============================================================================
 }	// end namespace MULTIKEY_MAP_NAMESPACE

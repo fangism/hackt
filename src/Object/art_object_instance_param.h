@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.12.2.4 2005/02/09 04:14:11 fang Exp $
+	$Id: art_object_instance_param.h,v 1.12.2.4.2.1 2005/02/11 06:14:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -318,7 +318,7 @@ public:
 	/// Type for actual values, including validity and status.
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
-
+	typedef	typename collection_type::key_type	key_type;
 protected:
 	/// the collection of boolean instances
 	collection_type					collection;
@@ -649,6 +649,7 @@ public:
 	 */
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
+	typedef	typename collection_type::key_type	key_type;
 protected:
 	/** The collection of value instances */
 	collection_type					collection;

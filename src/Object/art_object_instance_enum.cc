@@ -3,7 +3,7 @@
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
 	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9.2.2 2005/02/09 04:14:10 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.9.2.2.2.1 2005/02/11 06:14:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
@@ -291,7 +291,7 @@ typename enum_array<D>::instance_ptr_type
 enum_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
-	const multikey<D, pint_value_type> index(i);
+	const key_type index(i);
 	const enum_instance_alias&
 		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
@@ -348,7 +348,9 @@ void
 enum_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	collection.write(f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -356,7 +358,9 @@ ENUM_ARRAY_TEMPLATE_SIGNATURE
 void
 enum_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	collection.read(f);
+#endif
 }
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "multikey_set.tcc"
 	Method definitions for multidimensional set, based on
 	multikey_assoc wrapper interface. 
-	$Id: multikey_set.tcc,v 1.1.4.1 2005/02/09 04:14:18 fang Exp $
+	$Id: multikey_set.tcc,v 1.1.4.1.2.1 2005/02/11 06:14:31 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_TCC__
@@ -36,7 +36,7 @@ multikey_set<D,T,S>::clean(void) {
 	iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; ) {
-		if (i->get_value() == def) {
+		if (i->value == def) {
 			iterator j = i;
 			j++;
 			set_type::erase(i);
@@ -54,7 +54,7 @@ multikey_set<D,T,S>::dump(ostream& o) const {
 	const_iterator i = this->begin();
 	const const_iterator e = this->end();
 	for ( ; i!=e; i++)
-		o << i->get_key() << " = " << i->get_value() << endl;
+		o << i->get_key() << " = " << i->value << endl;
 	return o;
 }
 

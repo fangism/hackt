@@ -2,7 +2,7 @@
 	\file "multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.1.4.1 2005/02/09 04:14:16 fang Exp $
+	$Id: multikey_assoc.h,v 1.1.4.1.2.1 2005/02/11 06:14:30 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -41,7 +41,19 @@ protected:
 	typedef	C					assoc_type;
 public:
 	typedef	typename assoc_type::value_type		value_type;
+#if 0
 	typedef	typename assoc_type::key_type		key_type;
+#else
+	/**
+		Using the "simple_type" of the multikey, automatically
+		specializes associative structures for the case where
+		dimension = 1.
+		The removes the burden of having to specialize
+		multikey_map and multikey_set separately.  
+	 */
+	typedef	typename assoc_type::key_type::simple_type
+							key_type;
+#endif
 	typedef	typename assoc_type::mapped_type	mapped_type;
 	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;
@@ -266,7 +278,8 @@ public:
 
 	// only works for map's type:
 	typedef	key_type				index_type;
-	typedef	list<key_type>				key_list_type;
+//	typedef	typename key_type::value_type		index_type;
+	typedef	list<index_type>			key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 

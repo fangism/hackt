@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.8.2.2 2005/02/09 04:14:10 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.8.2.2.2.1 2005/02/11 06:14:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_CHAN_H__
@@ -123,7 +123,7 @@ public:
 	typedef	chan_instance_alias			element_type;
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
-
+	typedef	typename collection_type::key_type	key_type;
 private:
 	collection_type					collection;
 private:

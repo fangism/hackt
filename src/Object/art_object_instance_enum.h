@@ -2,7 +2,7 @@
 	\file "art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.9.2.2 2005/02/09 04:14:11 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.9.2.2.2.1 2005/02/11 06:14:27 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ENUM_H__
@@ -197,7 +197,7 @@ public:
 	typedef	enum_instance_alias			element_type;
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
-
+	typedef	typename collection_type::key_type	key_type;
 private:
 	collection_type					collection;
 private:

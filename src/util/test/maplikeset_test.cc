@@ -24,7 +24,7 @@ maplikeset<set<maplikeset_element<int, string> > >;
 template <class K, class V>
 ostream&
 dump_maplikeset_element(ostream& o, const maplikeset_element<K,V>& e) {
-	return o << "( " << e.get_key() << ", " << e.get_value() << " )";
+	return o << "( " << e.get_key() << ", " << e.value << " )";
 }
 
 template <class E>
@@ -74,7 +74,7 @@ main(int argc, char* argv[]) {
 	cout << "set foo has 2 empty strings:" << endl;
 	dump_maplikeset(cout, foo) << endl;
 
-	foo[0] = foo[1].get_value() +foo[4].get_value();
+	foo[0] = foo[1].value +foo[4].value;
 	cout << "set foo has 1 empty string:" << endl;
 	dump_maplikeset(cout, foo) << endl;
 

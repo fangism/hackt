@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.9.2.2 2005/02/09 04:14:10 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.9.2.2.2.1 2005/02/11 06:14:26 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_BOOL_CC__
@@ -159,10 +159,12 @@ bool_instance_collection::construct_empty(const int i) {
 //=============================================================================
 // class bool_instance_alias method definitions
 
+template <size_t D>
 ostream&
-operator << (ostream& o, const bool_instance_alias& b) {
+operator << (ostream& o, const bool_instance_alias<D>& b) {
 	INVARIANT(b.valid());
-	return o << "(bool-alias)";
+	// show all aliases?
+	return o << "(bool-alias-" << D << ")";
 }
 
 //=============================================================================
@@ -243,14 +245,17 @@ bool_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
 	key_gen.initialize();
 	do {
 		// will create if necessary
-		bool_instance_alias& pi(collection[key_gen]);
+//		iterator bi(collection.find(key_gen));
+//		bool_instance_alias<D>& pi(collection[key_gen]);
+		typename collection_type::reference ref(collection[key_gen]);
+		bool_instance_alias<D>& pi(ref.value);
 		if (pi.valid()) {
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen <<
 				" already instantiated!" << endl;
 			THROW_EXIT;
 		}
-		pi.instantiate();
+		pi.instantiate(never_ptr<const this_type>(this));
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 }
@@ -304,14 +309,25 @@ typename bool_array<D>::instance_ptr_type
 bool_array<D>::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	// will create and return an "uninstantiated" instance if not found
-	const multikey<D, pint_value_type> index(i);
-	const bool_instance_alias&
+	const key_type index(i);
+#if 0
+	const bool_instance_alias<D>&
 		b(collection[index]);
 //		b(AS_A(const collection_type&, collection)[i]);
+#else
+	const const_iterator it(collection.find(index));
+	if (it == collection.end()) {
+		cerr << "ERROR: reference to uninstantiated bool " <<
+			get_qualified_name() << " at index: " << i << endl;
+		return instance_ptr_type(NULL);
+	}
+	const bool_instance_alias<D>& b(it->value);
+#endif
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
-		return instance_ptr_type(const_cast<bool_instance_alias*>(&b));
+		return instance_ptr_type(
+			const_cast<bool_instance_alias<D>*>(&b));
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
@@ -338,16 +354,28 @@ bool_array<D>::lookup_instance_collection(
 	key_gen.initialize();
 	bool ret = true;
 	do {
-		const bool_instance_alias& pi(collection[key_gen]);
+#if 0
+		const bool_instance_alias<D>& pi(collection[key_gen]);
+#else
+		const const_iterator it(collection.find(key_gen));
+		if (it == collection.end()) {
+			cerr << "FATAL: reference to uninstantiated bool index "
+				<< key_gen << endl;
+			l.push_back(instance_ptr_type(NULL));
+			ret = false;
+		} else {
+		const bool_instance_alias<D>& pi(it->value);
+#endif
 		if (pi.valid()) {
 			l.push_back(instance_ptr_type(
-				const_cast<bool_instance_alias*>(&pi)));
+				const_cast<bool_instance_alias<D>*>(&pi)));
 		} else {
 			cerr << "FATAL: reference to uninstantiated bool index "
 				<< key_gen << endl;
 			l.push_back(instance_ptr_type(NULL));
+			ret = false;
 		}
-		ret &= pi.valid();
+		}
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return ret;
@@ -359,7 +387,13 @@ void
 bool_array<D>::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if 0
 	collection.write(f);
+	// need a method for saving and loading these sets
+	for_each(collection.begin(), collection.end(), 
+		instance_set_element_writer()
+	);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -367,7 +401,9 @@ BOOL_ARRAY_TEMPLATE_SIGNATURE
 void
 bool_array<D>::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if 0
 	collection.read(f);
+#endif
 }
 
 //=============================================================================
@@ -424,7 +460,7 @@ bool_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
 		cerr << "ERROR: Scalar bool already instantiated!" << endl;
 		THROW_EXIT;
 	}
-	the_instance.instantiate();
+	the_instance.instantiate(never_ptr<const this_type>(this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,7 +488,7 @@ bool_array<0>::lookup_instance(const multikey_index_type& i) const {
 		cerr << "ERROR: Reference to uninstantiated bool!" << endl;
 		return instance_ptr_type(NULL);
 	} else	return instance_ptr_type(
-		const_cast<bool_instance_alias*>(&the_instance));
+		const_cast<bool_instance_alias_base*>(&the_instance));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
 }

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.8.2.3 2005/02/09 04:14:12 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.8.2.3.2.1 2005/02/11 06:14:28 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -147,7 +147,7 @@ public:
 	typedef	proc_instance_alias			element_type;
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
-
+	typedef	typename collection_type::key_type	key_type;
 private:
 	collection_type					collection;
 private:
