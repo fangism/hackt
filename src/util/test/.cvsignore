@@ -8,6 +8,7 @@ core.*
 *.test
 *.out
 *.diff
+ignore
 ptrs_test
 count_ptr_test
 sublist_test
