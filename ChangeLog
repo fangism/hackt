@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2004-11-05	David Fang	<fangism@users.sourceforge.net>
+
+	* Minor fixes in template code to make gcc-3.4.0 happy, 
+	  changes which make code more standard-compliant. 
+
+	* Recovered from a week of using only Apple gcc-3.3
+	  while home directory on FreeBSD metwork was dead
+	  on a failed hard drive.  Thank goodness for CVS 
+	  (being on separate disk/server was *crucial*.)
+
+
 2004-11-04	David Fang	<fangism@users.sourceforge.net>
 
 	* art_object_instance.{h,cc}: Subclassed pint_instance_collection
