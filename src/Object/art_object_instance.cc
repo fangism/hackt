@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.28 2004/12/10 23:18:07 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.29 2004/12/11 21:26:51 fang Exp $
  */
 
 #include <iostream>
@@ -521,6 +521,8 @@ datatype_instance_collection::make_member_instance_reference(
 //=============================================================================
 // class process_instance_collection method definitions
 
+// relocated to "art_object_instance_proc.cc"
+#if 0
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_collection, 
 	PROCESS_INSTANCE_COLLECTION_TYPE_KEY)
 
@@ -545,10 +547,13 @@ process_instance_collection::~process_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// pure virtual
 ostream&
 process_instance_collection::what(ostream& o) const {
 	return o << "process-inst";
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
@@ -635,10 +640,12 @@ if (!m.flag_visit(this)) {
 }
 // else already visited
 }
+#endif
 
 //=============================================================================
 // class channel_instance_collection method definitions
 
+#if 0
 DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_collection, 
 	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY)
 
@@ -754,6 +761,7 @@ if (!m.flag_visit(this)) {
 }
 // else already visited
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

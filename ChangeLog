@@ -2,6 +2,15 @@
 
 2004-12-11	David Fang	<fangism@users.sourceforge.net>
 
+	* Split process and channel instance collections into 
+	  dimension-specific subclasses.  
+
+	* Working on phasing out the depth (dimensions) member
+	  of instance_collection_base.  
+
+
+2004-12-11	David Fang	<fangism@users.sourceforge.net>
+
 	* Tagging this snapshot as ARTXX-00-01-03-u
 
 	* UPDATED persistent_object management slightly.

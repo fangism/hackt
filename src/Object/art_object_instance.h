@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.26 2004/12/11 06:22:42 fang Exp $
+	$Id: art_object_instance.h,v 1.27 2004/12/11 21:26:51 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_H__
@@ -10,9 +10,8 @@
 #include "art_object_instance_base.h"
 #include "memory/pointer_classes.h"
 
-#if 0
-// will need these later...
 #include "multikey_fwd.h"
+#if 0
 #include "multikey_qmap_fwd.h"
 #endif
 
@@ -21,8 +20,8 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes
-#if 0
 using namespace MULTIKEY_NAMESPACE;
+#if 0
 using namespace MULTIKEY_MAP_NAMESPACE;
 #endif
 
@@ -37,30 +36,78 @@ using namespace MULTIKEY_MAP_NAMESPACE;
 class process_instance_collection : public instance_collection_base {
 private:
 	typedef	instance_collection_base	parent_type;
+public:
+	typedef never_ptr<proc_instance_alias>	instance_ptr_type;
+	typedef multikey_base<int>		unroll_index_type;
+
 protected:
 	// reserve these for connections between instance_references
 	// list of template actuals
 	// list of port actuals
 
 protected:
-	process_instance_collection();
+	/// Private empty constructor.  
+	process_instance_collection() { }
 public:
 	process_instance_collection(const scopespace& o, 
 		const string& n, const size_t d);
-	~process_instance_collection();
+virtual	~process_instance_collection();
 
-	ostream& what(ostream& o) const;
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
 //	ostream& dump(ostream& o) const;
-	count_ptr<const fundamental_type_reference> get_type_ref(void) const;
-	// why is this a never_ptr?
+
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
 	count_ptr<instance_reference_base>
-		make_instance_reference(void) const;
+	make_instance_reference(void) const;
+
 	count_ptr<member_instance_reference_base>
-		make_member_instance_reference(
-			count_ptr<const simple_instance_reference> b) const;
+	make_member_instance_reference(
+		count_ptr<const simple_instance_reference> b) const;
+
+virtual void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+virtual instance_ptr_type
+	lookup_instance(const unroll_index_type& i) const = 0;
+
+virtual bool
+	lookup_instance_collection(list<instance_ptr_type>& l,
+		const const_range_list& r) const = 0;
+
+virtual const_index_list
+	resolve_indices(const const_index_list& l) const = 0;
+
 
 public:
-	PERSISTENT_METHODS
+//	PERSISTENT_METHODS
+
+	static
+	process_instance_collection*
+	make_proc_array(const scopespace& o, const string& n, const size_t d);
+
+	static
+	persistent*
+	construct_empty(const int);
+
+	void
+	collect_transient_info(persistent_object_manager& m) const;
+
+protected:
+	void
+	write_object_base(const persistent_object_manager& m, ostream& ) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& );
 
 };	// end class process_instance_collection
 
@@ -111,6 +158,7 @@ protected:	// propagate to children
 };	// end class datatype_instance_collection
 
 //=============================================================================
+#if 0
 /**
 	Instantiation of a channel type.  
 	Final class?
@@ -134,6 +182,90 @@ public:
 			count_ptr<const simple_instance_reference> b) const;
 public:
 	PERSISTENT_METHODS
+};	// end class channel_instance_collection
+#endif
+
+//=============================================================================
+/**
+	Channel instantiation.  
+	Type information is now in the instance_collection_list.
+ */
+class channel_instance_collection : public instance_collection_base {
+private:
+	typedef	instance_collection_base	parent_type;
+public:
+	typedef never_ptr<chan_instance_alias>	instance_ptr_type;
+	typedef multikey_base<int>		unroll_index_type;
+
+protected:
+	// reserve these for connections between instance_references
+	// list of template actuals
+	// list of port actuals
+
+protected:
+	/// Private empty constructor.  
+	channel_instance_collection() { }
+public:
+	channel_instance_collection(const scopespace& o, 
+		const string& n, const size_t d);
+virtual	~channel_instance_collection();
+
+virtual	size_t
+	dimensions(void) const = 0;
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+//	ostream& dump(ostream& o) const;
+
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
+	count_ptr<instance_reference_base>
+	make_instance_reference(void) const;
+
+	count_ptr<member_instance_reference_base>
+	make_member_instance_reference(
+		count_ptr<const simple_instance_reference> b) const;
+
+virtual void
+	instantiate_indices(const index_collection_item_ptr_type& i) = 0;
+
+virtual instance_ptr_type
+	lookup_instance(const unroll_index_type& i) const = 0;
+
+virtual bool
+	lookup_instance_collection(list<instance_ptr_type>& l,
+		const const_range_list& r) const = 0;
+
+virtual const_index_list
+	resolve_indices(const const_index_list& l) const = 0;
+
+
+public:
+//	PERSISTENT_METHODS
+
+	static
+	channel_instance_collection*
+	make_chan_array(const scopespace& o, const string& n, const size_t d);
+
+	static
+	persistent*
+	construct_empty(const int);
+
+	void
+	collect_transient_info(persistent_object_manager& m) const;
+
+protected:
+	void
+	write_object_base(const persistent_object_manager& m, ostream& ) const;
+
+	void
+	load_object_base(persistent_object_manager& m, istream& );
+
 };	// end class channel_instance_collection
 
 //=============================================================================
