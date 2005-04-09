@@ -2,7 +2,7 @@
 	\file "numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.5 2005/03/06 04:36:49 fang Exp $
+	$Id: integer_traits.h,v 1.5.8.1 2005/04/09 23:10:36 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -88,7 +88,7 @@ template <size_t N, class I>
 inline
 I
 __divide_by_constant(const I& val, power_of_2_tag<false> ) {
-	return val * N;
+	return val / N;
 }
 
 template <size_t N, class I>
