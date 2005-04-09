@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.3.8.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_fwd.h,v 1.3.8.2 2005/04/09 23:09:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -9,7 +9,7 @@
 
 #include "art_parser_delim.h"
 
-#define USE_NEW_NODE_LIST		0
+#define USE_NEW_NODE_LIST		1
 
 namespace ART {
 namespace parser {
@@ -154,6 +154,14 @@ class token_bool_type;
 class token_paramtype;
 class token_pbool_type;
 class token_pint_type;
+
+#if USE_NEW_NODE_LIST
+	typedef	node_position		char_punctuation_type;
+	typedef	node_position		string_punctuation_type;
+#else
+	typedef	token_char		char_punctuation_type;
+	typedef	token_string		string_punctuation_type;
+#endif
 
 //-----------------------------------------------------------------------------
 // declared in "Object/art_context.h"

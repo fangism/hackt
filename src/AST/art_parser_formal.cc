@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.15.8.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_formal.cc,v 1.15.8.2 2005/04/09 23:09:51 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -16,10 +16,9 @@
 #include <exception>
 #include <iostream>
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
 #include "art_parser.tcc"
 
+#include "art_parser_node_position.h"
 #include "art_parser_formal.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_range_list.h"
@@ -294,7 +293,7 @@ port_formal_decl_list::~port_formal_decl_list() { }
  */
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
-		const dense_range_list* d, const token_char* e, 
+		const dense_range_list* d, const char_punctuation_type* e, 
 		const expr* v) : 
 		node(), name(n), dim(d), eq(e), dflt(v) {
 	NEVER_NULL(name);

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.20.8.1 2005/03/12 03:43:07 fang Exp $
+	$Id: art_parser_instance.cc,v 1.20.8.2 2005/04/09 23:09:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -20,8 +20,10 @@
 // #include "art_switches.h"
 #include "art_parser.tcc"
 
+#include "art_parser_node_position.h"
 #include "art_parser_instance.h"
 #include "art_parser_expr_base.h"
+#include "art_parser_expr_list.h"
 #include "art_parser_range_list.h"
 #include "art_parser_token_string.h"
 #include "art_parser_type.h"
@@ -429,7 +431,7 @@ instance_id_list::~instance_id_list() { }
  */
 CONSTRUCTOR_INLINE
 instance_declaration::instance_declaration(const concrete_type_ref* t, 
-	const instance_id_list* i, const terminal* s) :
+	const instance_id_list* i, const char_punctuation_type* s) :
 		instance_management(),
 		type(t), ids(i), semi(s) {
 	NEVER_NULL(type);
@@ -479,7 +481,7 @@ instance_declaration::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 instance_connection::instance_connection(const token_identifier* i, 
-		const expr_list* a, const terminal* s) :
+		const expr_list* a, const char_punctuation_type* s) :
 		instance_base(i), actuals_base(a), semi(s) {
 }
 
@@ -556,7 +558,8 @@ instance_connection::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 connection_statement::connection_statement(const expr* l, const expr_list* a, 
-		const terminal* s) : actuals_base(a), lvalue(l), semi(s) {
+		const char_punctuation_type* s) :
+		actuals_base(a), lvalue(l), semi(s) {
 	NEVER_NULL(lvalue);
 }
 
@@ -637,15 +640,14 @@ connection_statement::check_build(context& c) const {
  */
 // CONSTRUCTOR_INLINE
 instance_alias::instance_alias(const token_identifier* i, alias_list* a, 
-		const terminal* s) :
+		const char_punctuation_type* s) :
 		instance_base(i),
 		aliases(
 			(NEVER_NULL(a),
 			// need deep copy of i as an expression, 
 			// because already managed by parent, 
 			// and list uses count_ptr<const expr>
-			a->push_front(count_ptr<const token_identifier>(
-				new token_identifier(*i))),
+			a->push_front(new token_identifier(*i)),
 			// caution, unless we add an '=' token to delim_list
 			// assertion will be broken, but who cares?
 			a)
@@ -701,10 +703,11 @@ instance_alias::check_build(context& c) const {
 // class loop_instantiation method definitions
 
 CONSTRUCTOR_INLINE
-loop_instantiation::loop_instantiation(const terminal* l, const terminal* d, 
-		const token_identifier* i, const terminal* c1, 
-		const range* g, const terminal* c2, 
-		const definition_body* b, const terminal* r) :
+loop_instantiation::loop_instantiation(const char_punctuation_type* l,
+		const char_punctuation_type* d, 
+		const token_identifier* i, const char_punctuation_type* c1, 
+		const range* g, const char_punctuation_type* c2, 
+		const definition_body* b, const char_punctuation_type* r) :
 		instance_management(),
 		lp(l), delim(d), index(i), colon1(c1), 
 		rng(g), colon2(c2), body(b), rp(r) {

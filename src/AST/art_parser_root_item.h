@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root_item.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_root_item.h,v 1.1.18.1 2005/04/09 23:09:53 fang Exp $
  */
 
 #ifndef __ART_PARSER_ROOT_ITEM_H__
@@ -17,14 +17,16 @@ class namespace_body : public root_item {
 protected:
 	const excl_ptr<const token_keyword>	ns;	///< keyword "namespace"
 	const excl_ptr<const token_identifier>	name;	///< name of namespace
-	const excl_ptr<const terminal>		lb;
+//	const excl_ptr<const char_punctuation_type>	lb;
 	const excl_ptr<const root_body>		body;	///< contents of namespace
-	const excl_ptr<const terminal>		rb;
-	const excl_ptr<const terminal>		semi;	///< semicolon token
+//	const excl_ptr<const char_punctuation_type>	rb;
+	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon token
 public:
 	namespace_body(const token_keyword* s, const token_identifier* n, 
-		const terminal* l, const root_body* b,
-		const terminal* r, const terminal* c);
+//		const node_position* l, 
+		const root_body* b,
+//		const node_position* r, 
+		const char_punctuation_type* c);
 
 	~namespace_body();
 
@@ -49,15 +51,15 @@ protected:
 	const excl_ptr<const namespace_id>		id;
 	const excl_ptr<const token_keyword>		as;
 	const excl_ptr<const token_identifier>		alias;
-	const excl_ptr<const token_char>		semi;
+	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	using_namespace(const token_keyword* o, const namespace_id* i,
-		const token_char* s);
+		const char_punctuation_type* s);
 		// a "AS" and n (alias) are optional
 
 	using_namespace(const token_keyword* o, const namespace_id* i, 
 		const token_keyword* a, const token_identifier* n,
-		const token_char* s);
+		const char_punctuation_type* s);
 
 	~using_namespace();
 

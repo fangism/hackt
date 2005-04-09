@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.12 2005/03/02 00:29:01 fang Exp $
+ *	$Id: art++-lex.ll,v 1.12.14.1 2005/04/09 23:09:56 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -141,6 +141,12 @@ MULTICHAR_UPDATE(void) {
 }
 
 static inline void
+NODE_POSITION_UPDATE(void) {
+	yylval._node_position = new node_position(yytext, current);
+	TOKEN_UPDATE();
+}
+
+static inline void
 STRING_UPDATE(void) {
 	TOKEN_UPDATE();
 	assert(string_buf_ptr -string_buf < STRING_MAX_LEN);
@@ -235,11 +241,13 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
+/* UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]	*/
+UNICHARTOKEN	[<>*%/|!?~&^+-]
+POSITIONTOKEN	[][(){},.;:=#]
 
-AT		"@"
-POUND		"#"
-DOLLAR		"$"
+/* AT		"@"	*/
+/* POUND		"#"	*/
+/* DOLLAR		"$"	*/
 
 PLUSPLUS	"++"
 MINUSMINUS	"--"
@@ -255,6 +263,8 @@ EXTRACT		"<<"
 FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
+
+/** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
 BEGINPROB	"%["
 ENDPROB		"]%"
@@ -323,24 +333,27 @@ EXPORT		"export"
 {GE}		{ MULTICHAR_UPDATE(); return GE; }
 {EQUAL}		{ MULTICHAR_UPDATE(); return EQUAL; }
 {NOTEQUAL}	{ MULTICHAR_UPDATE(); return NOTEQUAL; }
-{THICKBAR}	{ MULTICHAR_UPDATE(); return THICKBAR; }
-{SCOPE}		{ MULTICHAR_UPDATE(); return SCOPE; }
-{RANGE}		{ MULTICHAR_UPDATE(); return RANGE; }
 {IMPLIES}	{ MULTICHAR_UPDATE(); return IMPLIES; }
 {RARROW}	{ MULTICHAR_UPDATE(); return RARROW; }
-{BEGINLOOP}	{ MULTICHAR_UPDATE(); return BEGINLOOP; }
-{BEGINPROB}	{ MULTICHAR_UPDATE(); return BEGINPROB; }
-{ENDPROB}	{ MULTICHAR_UPDATE(); return ENDPROB; }
 {PLUSPLUS}	{ MULTICHAR_UPDATE(); return PLUSPLUS; }
 {MINUSMINUS}	{ MULTICHAR_UPDATE(); return MINUSMINUS; }
-{DEFINEOP}	{ MULTICHAR_UPDATE(); return DEFINEOP; }
 {LOGICAL_AND}	{ MULTICHAR_UPDATE(); return LOGICAL_AND; }
 {LOGICAL_OR}	{ MULTICHAR_UPDATE(); return LOGICAL_OR; }
 {INSERT}	{ MULTICHAR_UPDATE(); return INSERT; }
 {EXTRACT}	{ MULTICHAR_UPDATE(); return EXTRACT; }
 
+{BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
+{BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }
+{ENDPROB}	{ NODE_POSITION_UPDATE(); return ENDPROB; }
+{THICKBAR}	{ NODE_POSITION_UPDATE(); return THICKBAR; }
+{SCOPE}		{ NODE_POSITION_UPDATE(); return SCOPE; }
+{RANGE}		{ NODE_POSITION_UPDATE(); return RANGE; }
+{DEFINEOP}	{ NODE_POSITION_UPDATE(); return DEFINEOP; }
+
 {UNICHARTOKEN}	{ yylval._token_char = new token_char(yytext[0]); 
 			TOKEN_UPDATE(); return yytext[0]; }
+
+{POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
 
 {NAMESPACE}	{ KEYWORD_UPDATE(); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(); return OPEN; }

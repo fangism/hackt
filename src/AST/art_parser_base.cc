@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.17.8.1 2005/03/12 03:43:05 fang Exp $
+	$Id: art_parser_base.cc,v 1.17.8.2 2005/04/09 23:09:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -20,6 +20,7 @@
 // #include "art_switches.h"
 #include "art_parser.tcc"
 
+#include "art_parser_node_position.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
@@ -337,7 +338,7 @@ incdec_stmt::rightmost(void) const {
 // class assign_stmt method definitions
 
 CONSTRUCTOR_INLINE
-assign_stmt::assign_stmt(const expr* left, const terminal* o, 
+assign_stmt::assign_stmt(const expr* left, const char_punctuation_type* o, 
 		const expr* right) : statement(),
 		lhs(left), op(o), rhs(right) {
 	NEVER_NULL(lhs); NEVER_NULL(op); NEVER_NULL(rhs);
@@ -380,9 +381,9 @@ assign_stmt::release_lhs(void) {
 	return ret;
 }
 
-const terminal*
+const char_punctuation_type*
 assign_stmt::release_op(void) {
-	const terminal* ret = op;
+	const char_punctuation_type* ret = op;
 	op = NULL;
 	return ret;
 }
@@ -469,13 +470,12 @@ language_body::leftmost(void) const {
 CONSTRUCTOR_INLINE
 namespace_body::namespace_body(
 		const token_keyword* s, const token_identifier* n, 
-		const terminal* l, const root_body* b,
-		const terminal* r, const terminal* c) :
+		const root_body* b, const char_punctuation_type* c) :
 		root_item(),       
-		ns(s), name(n), lb(l), body(b), rb(r), semi(c) {
-	NEVER_NULL(ns); NEVER_NULL(name); NEVER_NULL(lb);
+		ns(s), name(n), body(b), semi(c) {
+	NEVER_NULL(ns); NEVER_NULL(name);
 	// body may be NULL
-	NEVER_NULL(rb); NEVER_NULL(semi);
+	NEVER_NULL(semi);	// don't really care about syntax sugar
 }
 
 /// destructor
@@ -503,9 +503,9 @@ namespace_body::leftmost(void) const {
 line_position
 namespace_body::rightmost(void) const {
 	if (semi)	return semi->rightmost();
-	else if (rb)	return rb->rightmost();
+//	else if (rb)	return rb->rightmost();
 	else if (body)	return body->rightmost();
-	else if (lb)	return lb->rightmost();
+//	else if (lb)	return lb->rightmost();
 	else		return name->rightmost();
 }
 
@@ -559,7 +559,7 @@ namespace_id::rightmost(void) const {
 }
 
 qualified_id*
-namespace_id::force_absolute(const token_string* s) {
+namespace_id::force_absolute(const string_punctuation_type* s) {
 	return qid->force_absolute(s);
 }
 
@@ -594,7 +594,7 @@ operator << (ostream& o, const namespace_id& id) {
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
 		const token_keyword* o, const namespace_id* i, 
-		const token_char* s) : root_item(),
+		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(NULL), alias(NULL), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
 }
@@ -611,10 +611,11 @@ CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
 		const token_keyword* o, const namespace_id* i, 
 		const token_keyword* a, const token_identifier* n, 
-		const token_char* s) : root_item(),
+		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(a), alias(n), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);
 	NEVER_NULL(alias); NEVER_NULL(semi);
+	// get rid of non-essentials...
 }
 
 /// default destructor

@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.9.8.1 2005/03/12 03:43:05 fang Exp $
+	$Id: art_parser_chp.cc,v 1.9.8.2 2005/04/09 23:09:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
 #define	__ART_PARSER_CHP_CC__
 
 #include <iostream>
+
+#include "art_parser_node_position.h"
 #include "art_parser.tcc"
 #include "art_parser_chp.h"
 #include "art_parser_expr_list.h"
@@ -169,11 +171,9 @@ skip::check_build(context& c) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(const terminal* l, const expr* c, const terminal* r) :
-		statement(),
-		lb(IS_A(const terminal*, l)),
-		cond(IS_A(const expr*, c)),
-		rb(IS_A(const terminal*, r)) {
+wait::wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r) :
+		statement(), lb(l), cond(c), rb(l) {
 	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
 }
 
@@ -554,11 +554,20 @@ log::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
+#if USE_NEW_NODE_LIST
+template class node_list<const statement>;	// CHP::stmt_list
+template class node_list<const guarded_command>;	// CHP::det_sel_base
+							// CHP::prob_sel_base
+							// CHP::nondet_sel_base
+	// actually distinguish these types for the sake of printing?
+template class node_list<const communication>;	// CHP::comm_list_base
+#else
 template class node_list<const statement,semicolon>;	// CHP::stmt_list
 template class node_list<const guarded_command,thickbar>;	// CHP::det_sel_base
 							// CHP::prob_sel_base
 template class node_list<const guarded_command,colon>;	// CHP::nondet_sel_base
 template class node_list<const communication,comma>;	// CHP::comm_list_base
+#endif
 
 //=============================================================================
 }	// end namespace CHP

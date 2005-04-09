@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-04-09	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-02:
+	  Modified parser to use node_position for syntactic sugar tokens
+		  such as characters and short symbol strings.
+	  Enabled USE_NEW_NODE_LIST in "AST/art_parser_fwd.h".
+	  art_parser.tcc can be replaced by art_parser_node_list.tcc.
+		No more delimiter lists, but open/close list-wrappers kept.
+	  Replaced most non-essential token_char and token_string with
+		  node_position (using char_punctuation_type, etc...)
+	  Fixed typo bug in "util/numeric/integer_traits.h".
+	
+
 2005-03-11	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-21-parser-02-01:

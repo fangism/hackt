@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.9.18.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_formal.h,v 1.9.18.2 2005/04/09 23:09:52 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -220,12 +220,13 @@ class template_formal_id : public node {
 protected:
 	const excl_ptr<const token_identifier>	name;	///< formal name
 	const excl_ptr<const dense_range_list>	dim;	///< optional dimensions
-	const excl_ptr<const token_char>	eq;	///< '=' token
+	const excl_ptr<const char_punctuation_type>	eq;	///< '=' token
 	const excl_ptr<const expr>		dflt;	///< default value
 public:
 	template_formal_id(const token_identifier* n,
 		const dense_range_list* d, 
-		const token_char* e = NULL, const expr* v = NULL);
+		const char_punctuation_type* e = NULL,
+		const expr* v = NULL);
 
 	~template_formal_id();
 

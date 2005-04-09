@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.8.8.1 2005/03/12 03:43:08 fang Exp $
+	$Id: art_parser_prs.h,v 1.8.8.2 2005/04/09 23:09:53 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -77,19 +77,19 @@ public:
  */
 class loop : public body_item {
 protected:
-	const excl_ptr<const token_char>	lp;
-	const excl_ptr<const token_char>	col1;
+	const excl_ptr<const char_punctuation_type>	lp;
+	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>	index;
-	const excl_ptr<const token_char>	col2;
+	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>		bounds;
-	const excl_ptr<const token_char>	col3;
+	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const rule_list>		rules;
-	const excl_ptr<const token_char>	rp;
+	const excl_ptr<const char_punctuation_type>	rp;
 public:
-	loop(const token_char* l, const token_char* c1,
-		const token_identifier* id, const token_char* c2, 
-		const range* b, const token_char* c3, 
-		const rule_list* rl, const token_char* r);
+	loop(const char_punctuation_type* l, const char_punctuation_type* c1,
+		const token_identifier* id, const char_punctuation_type* c2, 
+		const range* b, const char_punctuation_type* c3, 
+		const rule_list* rl, const char_punctuation_type* r);
 
 	~loop();
 
@@ -141,20 +141,22 @@ public:
  */
 class op_loop : public expr {
 protected:
-	const excl_ptr<const token_char>	lp;
+	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_char>	op;
-	const excl_ptr<const token_char>	col1;
+	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>	index;
-	const excl_ptr<const token_char>	col2;
+	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>		bounds;
-	const excl_ptr<const token_char>	col3;
+	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const expr>		ex;
-	const excl_ptr<const token_char>	rp;
+	const excl_ptr<const char_punctuation_type>	rp;
 public:
-	op_loop(const token_char* l, const token_char* o, const token_char* c1,
-		const token_identifier* id, const token_char* c2, 
-		const range* b, const token_char* c3, 
-		const expr* e, const token_char* r);
+	op_loop(const char_punctuation_type* l,
+		const token_char* o,
+		const char_punctuation_type* c1,
+		const token_identifier* id, const char_punctuation_type* c2, 
+		const range* b, const char_punctuation_type* c3, 
+		const expr* e, const char_punctuation_type* r);
 
 	~op_loop();
 

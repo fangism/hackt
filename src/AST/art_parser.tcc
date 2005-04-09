@@ -2,7 +2,7 @@
 	\file "art_parser.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser.tcc,v 1.14 2005/03/06 22:45:48 fang Exp $
+	$Id: art_parser.tcc,v 1.14.8.1 2005/04/09 23:09:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TCC__
@@ -15,6 +15,9 @@
 // #include "art_parser_debug.h"
 #include "art_parser_terminal.h"
 #include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
+#if USE_NEW_NODE_LIST
+#include "art_parser_node_list.tcc"
+#endif
 #include "art_context.h"
 	// for class context, uses auto_indent()
 
@@ -57,6 +60,7 @@ namespace parser {
 using util::what;
 USING_STACKTRACE
 
+#if !USE_NEW_NODE_LIST
 //=============================================================================
 // TEMPLATE METHOD DEFINITIONS
 //=============================================================================
@@ -341,6 +345,8 @@ node_list<T,D>::release_append(node_list<T,D>& dest) {
 		dest.delim.push_back(*i);
 	}
 }
+
+#endif	// USE_NEW_NODE_LIST
 
 //=============================================================================
 }	// end namespace parser

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.15.14.1 2005/03/12 03:43:08 fang Exp $
+	$Id: art++-parse.yy,v 1.15.14.2 2005/04/09 23:09:57 fang Exp $
  */
 
 %{
@@ -45,6 +45,14 @@ macros: d = delimiter, n = node, b = begin, e = end, l = list
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
 #define	DELETE_TOKEN(tok)		delete tok
+
+// kind of wasteful...
+#define	WRAP_ANGLE_LIST(left, list, right)				\
+	const char lc = left->get_char();				\
+	const char rc = right->get_char();				\
+	WRAP_LIST(new node_position(&lc, left->leftmost()),		\
+		list, new node_position(&rc, right->leftmost()));	\
+	DELETE_TOKEN(left); DELETE_TOKEN(right)
 
 #define	APPEND_LIST(list, delim, item)					\
 	DELETE_TOKEN(delim); list->push_back(item)
@@ -376,12 +384,13 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_char>	BANG QUERY
 %token	<_token_char>	TILDE AND PIPE XOR
 */
-/* change these to _token_char */
-%type	<_token_char>	'{' '}' '[' ']' '(' ')' '<' '>'
-%type	<_token_char>	',' '.' ';' ':'
-%type	<_token_char>	'=' '+' '-' '*' '/' '%'
-%type	<_token_char>	'!' '?' '~' '&' '|' '^'
-%type	<_token_char>	'#'
+/* change these to _node_position (was _token_char) */
+%type	<_node_position>	'{' '}' '[' ']' '(' ')'
+%type	<_token_char>		'<' '>'
+%type	<_node_position>	',' '.' ';' ':' '=' '#'
+	/* used as template list wrappers and as comparators */
+%type	<_token_char>		'+' '-' '*' '/' '%'
+%type	<_token_char>		'!' '?' '~' '&' '|' '^'
 
 /*
 	the following tokens are defined below because they consist of
@@ -393,17 +402,18 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_int>		INT
 %token	<_token_quoted_string>	STRING
 
+%token	<_node_position>	THICKBAR SCOPE RANGE
+%token	<_node_position>	BEGINLOOP BEGINPROB ENDPROB
+%token	<_node_position>	DEFINEOP
+
 /* _token_string */
 %token	<_token_string>		LE GE EQUAL NOTEQUAL
-%token	<_token_string>		THICKBAR SCOPE RANGE
 %token	<_token_string>		IMPLIES RARROW
-%token	<_token_string>		BEGINLOOP BEGINPROB ENDPROB
-%token	<_token_string>		DEFINEOP
 %token	<_token_string>		LOGICAL_AND LOGICAL_OR
 %token	<_token_string>		INSERT EXTRACT
 %token	<_token_string>		PLUSPLUS MINUSMINUS
 
-/* _token_keyword */
+/* _token_keyword: covert most of these to _node_position */
 %token	<_token_keyword>	NAMESPACE
 %token	<_token_keyword>	OPEN AS
 %token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
@@ -623,9 +633,12 @@ namespace_item
 	;
 
 namespace_management
-	/* C++ style classes/namespaces require semicolon */
+	/* C++ style classes require semicolon, but not afer namespace */
 	: NAMESPACE ID '{' top_root '}' ';'
-		{ $$ = new namespace_body($1, $2, $3, $4, $5, $6); }
+		{ if (!$4)
+			$4 = new root_body(NULL);
+		  WRAP_LIST($3, $4, $5);
+		  $$ = new namespace_body($1, $2, $4, $6); }
 	/* or C++ style: using namespace blah; */
 	| OPEN namespace_id AS ID ';'
 		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
@@ -730,7 +743,7 @@ concrete_type_ref
 
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
-		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
 	;
 
 /** OBSOLETE
@@ -1768,7 +1781,7 @@ optional_template_arguments_in_angles
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
-		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list

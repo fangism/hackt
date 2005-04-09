@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.17 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_definition.cc,v 1.17.8.1 2005/04/09 23:09:51 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -23,6 +23,7 @@
 // #include "art_switches.h"
 #include "art_parser.tcc"
 
+#include "art_parser_node_position.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_definition.h"
 #include "art_parser_formal.h"
@@ -105,9 +106,9 @@ signature_base::~signature_base() {
 CONSTRUCTOR_INLINE
 user_data_type_prototype::user_data_type_prototype(
 	const template_formal_decl_list* tf, const token_keyword* df, 
-	const token_identifier* n, const token_string* dp, 
+	const token_identifier* n, const string_punctuation_type* dp, 
 	const concrete_type_ref* b, 
-	const data_param_decl_list* p, const token_char* s) :
+	const data_param_decl_list* p, const char_punctuation_type* s) :
 		prototype(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
@@ -156,10 +157,10 @@ user_data_type_prototype::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 user_data_type_def::user_data_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
-		const token_string* dp, const concrete_type_ref* b, 
-		const data_param_decl_list* p, const token_char* l, 
+		const string_punctuation_type* dp, const concrete_type_ref* b, 
+		const data_param_decl_list* p, const char_punctuation_type* l, 
 		const language_body* s, const language_body* g,
-		const token_char* r) :
+		const char_punctuation_type* r) :
 		definition(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
 		lb(l), setb(s), getb(g), rb(r) {
@@ -246,7 +247,7 @@ enum_signature::check_build(context& c) const {
 // class enum_prototype method definitions
 
 enum_prototype::enum_prototype(const token_keyword* e, 
-		const token_identifier* i, const token_char* s) :
+		const token_identifier* i, const char_punctuation_type* s) :
 		prototype(), enum_signature(e, i), semi(s) {
 }
 
@@ -358,7 +359,7 @@ CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
 		const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n,
-		const token_string* dp, 
+		const string_punctuation_type* dp, 
 		const chan_type* b, const data_param_decl_list* p) :
 		signature_base(tf, n), 
 		def(df), dop(dp), bct(b), params(p) {
@@ -390,8 +391,8 @@ CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
 		const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
-		const token_string* dp, const chan_type* b, 
-		const data_param_decl_list* p, const token_char* s) :
+		const string_punctuation_type* dp, const chan_type* b, 
+		const data_param_decl_list* p, const char_punctuation_type* s) :
 		prototype(), 
 		user_chan_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
@@ -427,10 +428,10 @@ user_chan_type_prototype::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
-		const token_string* dp, const chan_type* b, 
-		const data_param_decl_list* p, const token_char* l, 
+		const string_punctuation_type* dp, const chan_type* b, 
+		const data_param_decl_list* p, const char_punctuation_type* l, 
 		const language_body* s, const language_body* g, 
-		const token_char* r) :
+		const char_punctuation_type* r) :
 		definition(), 
 		user_chan_type_signature(tf, df, n, dp, b, p), 
 		lb(l), sendb(s), recvb(g), rb(r) {
@@ -535,7 +536,8 @@ process_signature::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 process_prototype::process_prototype(const template_formal_decl_list* tf, 
 		const token_keyword* d, const token_identifier* i, 
-		const port_formal_decl_list* p, const token_char* s) :
+		const port_formal_decl_list* p,
+		const char_punctuation_type* s) :
 		prototype(),
 		process_signature(tf, d, i, p), 
 		semi(s) {
@@ -629,7 +631,7 @@ process_def::check_build(context& c) const {
 user_data_type_signature::user_data_type_signature(
 		const template_formal_decl_list* tf, 
 		const token_keyword* df, const token_identifier* n, 
-		const token_string* dp, 
+		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 
 		const data_param_decl_list* p) :
 		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {
@@ -657,7 +659,7 @@ user_data_type_signature::check_build(context& c) const {
 
 typedef_alias::typedef_alias(const template_formal_decl_list* t,
 		const token_keyword* k, const concrete_type_ref* b,
-		const token_identifier* i, const token_char* s) :
+		const token_identifier* i, const char_punctuation_type* s) :
 		def_body_item(), root_item(), 
 		temp_spec(t), td(k), base(b), id(i), semi(s) {
 	NEVER_NULL(base); NEVER_NULL(id);

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.8.8.1 2005/03/12 03:43:07 fang Exp $
+	$Id: art_parser_hse.h,v 1.8.8.2 2005/04/09 23:09:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -155,11 +155,12 @@ using	token_keyword::where;
 /// HSE wait contains just an expression
 class wait : public statement {
 protected:
-	const excl_ptr<const terminal>	lb;
-	const excl_ptr<const expr>	cond;
-	const excl_ptr<const terminal>	rb;
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const expr>			cond;
+	const excl_ptr<const char_punctuation_type>	rb;
 public:
-	wait(const terminal* l, const expr* c, const terminal* r);
+	wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r);
 
 	~wait();
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.7.8.1 2005/03/12 03:43:05 fang Exp $
+	$Id: art_parser_chp.h,v 1.7.8.2 2005/04/09 23:09:50 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -145,11 +145,12 @@ using	token_keyword::where;
 /// CHP wait contains just an expression
 class wait : public statement {
 protected:
-	const excl_ptr<const terminal>	lb;	///< left bracket
-	const excl_ptr<const expr>	cond;	///< wait until condition
-	const excl_ptr<const terminal>	rb;	///< right bracket
+	const excl_ptr<const char_punctuation_type>	lb;	///< left bracket
+	const excl_ptr<const expr>			cond;	///< wait until condition
+	const excl_ptr<const char_punctuation_type>	rb;	///< right bracket
 public:
-	wait(const terminal* l, const expr* c, const terminal* r);
+	wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r);
 
 	~wait();
 

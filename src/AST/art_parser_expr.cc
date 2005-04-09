@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.17.2.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_expr.cc,v 1.17.2.2 2005/04/09 23:09:51 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -10,6 +10,7 @@
 #include <exception>
 #include <iostream>
 
+#include "art_parser_node_position.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
 #include "art_parser_expr.h"
@@ -77,9 +78,9 @@ expr::~expr() { }
 //=============================================================================
 // class expr_list method definitions
 
-expr_list::expr_list() : parent() { }
+expr_list::expr_list() : parent_type() { }
 
-expr_list::expr_list(const expr* e) : parent(e) { }
+expr_list::expr_list(const expr* e) : parent_type(e) { }
 
 expr_list::~expr_list() { }
 
@@ -116,8 +117,8 @@ expr_list::check_build(context& c) const {
 // class paren_expr method definitions
 
 CONSTRUCTOR_INLINE
-paren_expr::paren_expr(const token_char* l, const expr* n, 
-		const token_char* r) : expr(),
+paren_expr::paren_expr(const char_punctuation_type* l, const expr* n, 
+		const char_punctuation_type* r) : expr(),
 		lp(l), e(n), rp(r) {
 	NEVER_NULL(lp); NEVER_NULL(e); NEVER_NULL(rp);
 }
@@ -149,19 +150,19 @@ paren_expr::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const token_identifier* n) : 
-	parent(n), absolute(NULL) {
+		parent_type(n), absolute(NULL) {
 }
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const qualified_id& i) :
-		node(), qualified_id_base(i), absolute(NULL) {
+		node(), parent_type(i), absolute(NULL) {
 #if DEBUG_ID_EXPR
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
 	if (i.absolute) {
-		absolute = excl_ptr<const token_string>(
-			new token_string(*i.absolute));
+		absolute = excl_ptr<const string_punctuation_type>(
+			new string_punctuation_type(*i.absolute));
 		// actually *copy* the token
 		NEVER_NULL(absolute);
 	}
@@ -178,18 +179,25 @@ qualified_id::~qualified_id() { }
 	\return pointer to this object
  */
 qualified_id*
-qualified_id::force_absolute(const token_string* s) {
-	absolute = excl_ptr<const token_string>(s);
+qualified_id::force_absolute(const string_punctuation_type* s) {
+	absolute = excl_ptr<const string_punctuation_type>(s);
 	INVARIANT(absolute);
 	return this;
 }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(qualified_id)
 
+#if !USE_NEW_NODE_LIST
 qualified_id*
 qualified_id::append(terminal* d, token_identifier* n) {
+#if USE_NEW_NODE_LIST
+	parent_type::push_back(n);
+	delete d;
+#else
 	return IS_A(qualified_id*, qualified_id_base::append(d,n));
+#endif
 }
+#endif
 
 line_position
 qualified_id::leftmost(void) const {
@@ -210,8 +218,10 @@ qualified_id::copy_namespace_portion(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_back();		// remove last element
+#if !USE_NEW_NODE_LIST
 	if (!ret.delim.empty())
 		ret.delim.pop_back();
+#endif
 	return ret;
 }
 
@@ -220,8 +230,10 @@ qualified_id::copy_beheaded(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_front();		// remove last element
+#if !USE_NEW_NODE_LIST
 	if (!ret.delim.empty())
 		ret.delim.pop_front();
+#endif
 	return ret;
 }
 
@@ -291,7 +303,7 @@ operator << (ostream& o, const qualified_id_slice& id) {
 // class qualified_id_slice method definitions
 
 qualified_id_slice::qualified_id_slice(const qualified_id& qid) :
-		parent(qid), absolute(qid.is_absolute()) {
+		parent(qid.raw_list()), absolute(qid.is_absolute()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -337,7 +349,7 @@ id_expr::rightmost(void) const {
 }
 
 qualified_id*
-id_expr::force_absolute(token_string* s) {
+id_expr::force_absolute(const string_punctuation_type* s) {
 	return qid->force_absolute(s);
 }
 
@@ -406,7 +418,7 @@ range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
 }
 
 CONSTRUCTOR_INLINE
-range::range(const expr* l, const terminal* o, const expr* u) : 
+range::range(const expr* l, const string_punctuation_type* o, const expr* u) : 
 		lower(l), op(o), upper(u) {
 	NEVER_NULL(lower); NEVER_NULL(op); NEVER_NULL(upper);
 }
@@ -558,7 +570,7 @@ range_list::~range_list() { }
  */
 never_ptr<const object>
 range_list::check_build(context& c) const {
-	parent::check_build(c);
+	parent_type::check_build(c);
 	const count_ptr<object_list> ol(new object_list);
 	size_t i = 0;
 	for ( ; i<size(); i++) {
@@ -610,7 +622,7 @@ dense_range_list::~dense_range_list() {
  */
 never_ptr<const object>
 dense_range_list::check_build(context& c) const {
-	parent::check_build(c);
+	parent_type::check_build(c);
 	const count_ptr<object_list> ol(new object_list);
 	size_t i = 0;
 	for ( ; i<size(); i++) {
@@ -797,9 +809,9 @@ postfix_expr::rightmost(void) const {
 // class member_expr method definitions
 
 CONSTRUCTOR_INLINE
-member_expr::member_expr(const expr* l, const terminal* op, 
+member_expr::member_expr(const expr* l, const char_punctuation_type* o, 
 		const token_identifier* m) :
-		postfix_expr(l,op), member(m) {
+		expr(), owner(l), op(o), member(m) {
 	NEVER_NULL(member);
 }
 
@@ -808,6 +820,10 @@ member_expr::~member_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(member_expr)
 
+line_position
+member_expr::leftmost(void) const {
+	return owner->leftmost();
+}
 line_position
 member_expr::rightmost(void) const {
 	return member->rightmost();
@@ -821,13 +837,13 @@ member_expr::rightmost(void) const {
  */
 never_ptr<const object>
 member_expr::check_build(context& c) const {
-	e->check_build(c);
+	owner->check_build(c);
 	// useless return value
 	// expect: simple_instance_reference on object stack
 	const count_ptr<const object> o(c.pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
-			<< e->where() << endl;
+			<< owner->where() << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const simple_instance_reference>
@@ -837,7 +853,7 @@ member_expr::check_build(context& c) const {
 		cerr << "ERROR: cannot take the member of a " <<
 			inst_ref->dimensions() << "-dimension array, "
 			"must be scalar!  (for now...)  " <<
-			e->where() << endl;
+			owner->where() << endl;
 		THROW_EXIT;
 	}
 
@@ -855,7 +871,7 @@ member_expr::check_build(context& c) const {
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		member_inst(base_def->lookup_port_formal(*member));
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
@@ -1168,11 +1184,11 @@ array_concatenation::check_build(context& c) const {
 // class loop_concatenation method definitions
 
 loop_concatenation::loop_concatenation(
-		const token_char* l, const token_char* h,
-		const token_char* c1, const token_identifier* i,   
-		const token_char* c2, const range* rng,
-		const token_char* c3, const expr* e,
-		const token_char* r) :
+		const char_punctuation_type* l, const char_punctuation_type* h,
+		const char_punctuation_type* c1, const token_identifier* i,   
+		const char_punctuation_type* c2, const range* rng,
+		const char_punctuation_type* c3, const expr* e,
+		const char_punctuation_type* r) :
 		lp(l), pd(h), col1(c1), id(i), col2(c2),
 		bounds(rng), col3(c3), ex(e), rp(r) {
 	NEVER_NULL(id); NEVER_NULL(bounds); NEVER_NULL(ex);
@@ -1206,8 +1222,8 @@ loop_concatenation::check_build(context& c) const {
 //=============================================================================
 // class array_construction method definitions
 
-array_construction::array_construction(const token_char* l,
-		const expr* e, const token_char* r) : 
+array_construction::array_construction(const char_punctuation_type* l,
+		const expr* e, const char_punctuation_type* r) : 
 		expr(), lb(l), ex(e), rb(r) {
 	NEVER_NULL(ex);
 }
@@ -1238,9 +1254,15 @@ array_construction::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
+#if USE_NEW_NODE_LIST
+template class node_list<const expr>;			// expr_list
+template class node_list<const token_identifier>;	// qualified_id_base
+template class node_list<const range>;			// range_list
+#else
 template class node_list<const expr,comma>;			// expr_list
 template class node_list<const token_identifier,scope>;	// qualified_id_base
 template class node_list<const range,comma>;			// range_list
+#endif
 
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_range.h,v 1.1.18.1 2005/04/09 23:09:53 fang Exp $
  */
 
 #ifndef __ART_PARSER_RANGE_H__
@@ -22,7 +22,7 @@ namespace parser {
 class range : public node {
 protected:
 	const excl_ptr<const expr>	lower;	///< inclusive lower bound
-	const excl_ptr<const terminal>	op;	///< range operator token ".."
+	const excl_ptr<const string_punctuation_type>	op;	///< range operator token ".."
 	const excl_ptr<const expr>	upper;	///< inclusive upper bound
 public:
 /// simple constructor for when range is just one integer expression
@@ -31,7 +31,7 @@ public:
 /**
 	Full range constructor with min and max.  
  */
-	range(const expr* l, const terminal* o, const expr* u);
+	range(const expr* l, const string_punctuation_type* o, const expr* u);
 
 	~range();
 

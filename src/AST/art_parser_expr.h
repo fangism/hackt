@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.9.18.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_expr.h,v 1.9.18.2 2005/04/09 23:09:51 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -23,11 +23,12 @@ namespace parser {
  */
 class paren_expr : public expr {
 protected:
-	const excl_ptr<const token_char>	lp;	///< left parenthesis
+	const excl_ptr<const char_punctuation_type>	lp;	///< left parenthesis
 	const excl_ptr<const expr>		e;	///< enclosed expression
-	const excl_ptr<const token_char>	rp;	///< right parenthesis
+	const excl_ptr<const char_punctuation_type>	rp;	///< right parenthesis
 public:
-	paren_expr(const token_char* l, const expr* n, const token_char* r);
+	paren_expr(const char_punctuation_type* l, const expr* n, 
+		const char_punctuation_type* r);
 
 	~paren_expr();
 
@@ -93,7 +94,7 @@ public:
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 	qualified_id*
-	force_absolute(token_string* s);
+	force_absolute(const string_punctuation_type* s);
 
 	bool
 	is_absolute(void) const;
@@ -184,18 +185,25 @@ virtual	never_ptr<const object>
 /// class for member (of user-defined type) expressions
 // is not really unary, derive directly from expr?
 // final class?
-class member_expr : public postfix_expr {
+class member_expr : public expr {
 protected:
+	const excl_ptr<const expr>	owner;	///< the argument expr
+	const excl_ptr<const char_punctuation_type>	op;	///< the operator, may be null
 	/// the member name
 	const excl_ptr<const token_identifier>	member;
 public:
-	member_expr(const expr* l, const terminal* op, 
+	member_expr(const expr* l, const char_punctuation_type* o, 
 		const token_identifier* m);
+
+	// non-default copy-constructor?
 
 	~member_expr();
 
 	ostream&
 	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
 
 	line_position
 	rightmost(void) const;
@@ -342,21 +350,22 @@ public:
  */
 class loop_concatenation : public expr {
 protected:
-	const excl_ptr<const token_char>		lp;
-	const excl_ptr<const token_char>		pd;
-	const excl_ptr<const token_char>		col1;
+	const excl_ptr<const char_punctuation_type>		lp;
+	const excl_ptr<const char_punctuation_type>		pd;
+	const excl_ptr<const char_punctuation_type>		col1;
 	const excl_ptr<const token_identifier>		id;
-	const excl_ptr<const token_char>		col2;
+	const excl_ptr<const char_punctuation_type>		col2;
 	const excl_ptr<const range>			bounds;
-	const excl_ptr<const token_char>		col3;
+	const excl_ptr<const char_punctuation_type>		col3;
 	const excl_ptr<const expr>			ex;
-	const excl_ptr<const token_char>		rp;
+	const excl_ptr<const char_punctuation_type>		rp;
 public:
-	loop_concatenation(const token_char* l, const token_char* h, 
-		const token_char* c1, const token_identifier* i, 
-		const token_char* c2, const range* rng, 
-		const token_char* c3, const expr* e, 
-		const token_char* r);
+	loop_concatenation(const char_punctuation_type* l, 
+		const char_punctuation_type* h, 
+		const char_punctuation_type* c1, const token_identifier* i, 
+		const char_punctuation_type* c2, const range* rng, 
+		const char_punctuation_type* c3, const expr* e, 
+		const char_punctuation_type* r);
 
 	~loop_concatenation();
 
@@ -380,13 +389,13 @@ public:
  */
 class array_construction : public expr {
 protected:
-	const excl_ptr<const token_char>	lb;
+	const excl_ptr<const char_punctuation_type>	lb;
 	/** either simple expression or concatenation */
 	const excl_ptr<const expr>		ex;
-	const excl_ptr<const token_char>	rb;
+	const excl_ptr<const char_punctuation_type>	rb;
 public:
-	array_construction(const token_char* l, 
-		const expr* e, const token_char* r);
+	array_construction(const char_punctuation_type* l, 
+		const expr* e, const char_punctuation_type* r);
 
 	~array_construction();
 

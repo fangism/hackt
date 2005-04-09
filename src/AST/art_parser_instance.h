@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.9.18.1 2005/03/12 03:43:07 fang Exp $
+	$Id: art_parser_instance.h,v 1.9.18.2 2005/04/09 23:09:53 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -74,6 +74,9 @@ public:
 	alias_list(const expr* e);
 
 	~alias_list();
+
+	using parent_type::size;
+	using parent_type::push_front;
 
 	ostream&
 	what(ostream& o) const;
@@ -199,10 +202,11 @@ protected:
 		List of instance_base.  
 	 */
 	const excl_ptr<const instance_id_list>		ids;
-	const excl_ptr<const terminal>			semi;
+	const excl_ptr<const char_punctuation_type>	semi;
 public:
 	instance_declaration(const concrete_type_ref* t, 
-		const instance_id_list* i, const terminal* s = NULL);
+		const instance_id_list* i,
+		const char_punctuation_type* s = NULL);
 
 	~instance_declaration();
 
@@ -228,10 +232,10 @@ class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;		// inherited
 //	const excl_ptr<const expr_list>		actuals;	// inherited
-	const excl_ptr<const terminal>		semi;	///< semicolon (optional)
+	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon (optional)
 public:
 	instance_connection(const token_identifier* i, const expr_list* a, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~instance_connection();
 
@@ -264,10 +268,10 @@ protected:
 		but must be scalar.  
 	 */
 	const excl_ptr<const expr>		lvalue;
-	const excl_ptr<const terminal>		semi;
+	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	connection_statement(const expr* l, const expr_list* a, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~connection_statement();
 
@@ -296,10 +300,10 @@ class instance_alias : public instance_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
 	const excl_ptr<const alias_list>	aliases;
-	const excl_ptr<const terminal>		semi;	///< semicolon
+	const excl_ptr<const char_punctuation_type>		semi;	///< semicolon
 public:
 	instance_alias(const token_identifier* i, alias_list* al, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~instance_alias();
 
@@ -320,19 +324,20 @@ public:
 /// class for loop instantiations, to be unrolled in the build phase
 class loop_instantiation : public instance_management {
 protected:
-	const excl_ptr<const terminal>		lp;
-	const excl_ptr<const terminal>		delim;
-	const excl_ptr<const token_identifier>	index;
-	const excl_ptr<const terminal>		colon1;
-	const excl_ptr<const range>		rng;
-	const excl_ptr<const terminal>		colon2;
-	const excl_ptr<const definition_body>	body;
-	const excl_ptr<const terminal>		rp;
+	const excl_ptr<const char_punctuation_type>	lp;
+	const excl_ptr<const char_punctuation_type>	delim;
+	const excl_ptr<const token_identifier>		index;
+	const excl_ptr<const char_punctuation_type>	colon1;
+	const excl_ptr<const range>			rng;
+	const excl_ptr<const char_punctuation_type>	colon2;
+	const excl_ptr<const definition_body>		body;
+	const excl_ptr<const char_punctuation_type>	rp;
 public:
-	loop_instantiation(const terminal* l, const terminal* d, 
-		const token_identifier* i, const terminal* c1, 
-		const range* g, const terminal* c2, 
-		const definition_body* b, const terminal* r);
+	loop_instantiation(const char_punctuation_type* l,
+		const char_punctuation_type* d, 
+		const token_identifier* i, const char_punctuation_type* c1, 
+		const range* g, const char_punctuation_type* c2, 
+		const definition_body* b, const char_punctuation_type* r);
 
 	~loop_instantiation();
 

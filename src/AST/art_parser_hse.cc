@@ -1,13 +1,15 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.9.8.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_hse.cc,v 1.9.8.2 2005/04/09 23:09:52 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
 #define	__ART_PARSER_HSE_CC__
 
 #include <iostream>
+
+#include "art_parser_node_position.h"
 #include "art_parser.tcc"
 #include "art_parser_hse.h"
 #include "art_parser_token.h"
@@ -162,7 +164,8 @@ skip::check_build(context& c) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(const terminal* l, const expr* c, const terminal* r) :
+wait::wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r) :
 		statement(), lb(l), cond(c), rb(r) {
 	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
 }
@@ -370,10 +373,18 @@ do_until::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
+#if USE_NEW_NODE_LIST
+template class node_list<const statement>;	// HSE::stmt_list
+template class node_list<const guarded_command>;	// HSE::det_sel_base
+							// HSE::prob_sel_base
+							// HSE::nondet_sel_base
+	// distinguish types, specialize delimiter (node_list_traits)
+#else
 template class node_list<const statement,semicolon>;	// HSE::stmt_list
 template class node_list<const guarded_command,thickbar>;	// HSE::det_sel_base
 							// HSE::prob_sel_base
 template class node_list<const guarded_command,colon>;	// HSE::nondet_sel_base
+#endif
 
 //=============================================================================
 }	// end namespace HSE
