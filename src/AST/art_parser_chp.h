@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.7.8.2 2005/04/09 23:09:50 fang Exp $
+	$Id: art_parser_chp.h,v 1.7.8.3 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -52,7 +52,7 @@ class body : public language_body {
 protected:
 	const excl_ptr<const stmt_list>	stmts;	///< list of CHP statements
 public:
-	body(const token_keyword* t, const stmt_list* s);
+	body(const generic_keyword_type* t, const stmt_list* s);
 
 	~body();
 
@@ -111,14 +111,17 @@ public:
 
 //=============================================================================
 /// CHP skip statement
-class skip : public statement, public token_keyword {
+class skip : public statement {
+// , public token_keyword {
+private:
+	const excl_ptr<const generic_keyword_type>	kw;
 public:
 /**
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
 	explicit
-	skip(const token_keyword* s);
+	skip(const generic_keyword_type* s);
 
 	~skip();
 
@@ -133,7 +136,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	token_keyword::where;
+// using	token_keyword::where;
 
 #if 1
 	never_ptr<const object>
@@ -505,10 +508,10 @@ public:
 /// CHP log statement
 class log : public statement {
 protected:
-	const excl_ptr<const token_keyword>		lc;
+	const excl_ptr<const generic_keyword_type>	lc;
 	const excl_ptr<const expr_list>			args;
 public:
-	log(const token_keyword* l, const expr_list* n);
+	log(const generic_keyword_type* l, const expr_list* n);
 
 	~log();
 

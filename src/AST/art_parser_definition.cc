@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.17.8.1 2005/04/09 23:09:51 fang Exp $
+	$Id: art_parser_definition.cc,v 1.17.8.2 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -105,7 +105,7 @@ signature_base::~signature_base() {
 
 CONSTRUCTOR_INLINE
 user_data_type_prototype::user_data_type_prototype(
-	const template_formal_decl_list* tf, const token_keyword* df, 
+	const template_formal_decl_list* tf, const generic_keyword_type* df, 
 	const token_identifier* n, const string_punctuation_type* dp, 
 	const concrete_type_ref* b, 
 	const data_param_decl_list* p, const char_punctuation_type* s) :
@@ -156,7 +156,7 @@ user_data_type_prototype::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_data_type_def::user_data_type_def(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
 		const language_body* s, const language_body* g,
@@ -213,7 +213,7 @@ user_data_type_def::check_build(context& c) const {
 	Basic constructor.  
 	Enums cannot be templated, so we pass NULL to the parent constructor.  
  */
-enum_signature::enum_signature(const token_keyword* e, 
+enum_signature::enum_signature(const generic_keyword_type* e, 
 		const token_identifier* i) :
 		signature_base(NULL, i), en(e) {
 }
@@ -246,7 +246,7 @@ enum_signature::check_build(context& c) const {
 //=============================================================================
 // class enum_prototype method definitions
 
-enum_prototype::enum_prototype(const token_keyword* e, 
+enum_prototype::enum_prototype(const generic_keyword_type* e, 
 		const token_identifier* i, const char_punctuation_type* s) :
 		prototype(), enum_signature(e, i), semi(s) {
 }
@@ -307,7 +307,7 @@ enum_member_list::check_build(context& c) const {
 //=============================================================================
 // class enum_def method definitions
 
-enum_def::enum_def(const token_keyword* e, const token_identifier* i,
+enum_def::enum_def(const generic_keyword_type* e, const token_identifier* i,
 		const enum_member_list* m) :
 		definition(), enum_signature(e, i), members(m) {
 	NEVER_NULL(members);
@@ -358,7 +358,7 @@ enum_def::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
 		const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n,
+		const generic_keyword_type* df, const token_identifier* n,
 		const string_punctuation_type* dp, 
 		const chan_type* b, const data_param_decl_list* p) :
 		signature_base(tf, n), 
@@ -390,7 +390,7 @@ user_chan_type_signature::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
 		const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* s) :
 		prototype(), 
@@ -427,7 +427,7 @@ user_chan_type_prototype::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
 		const language_body* s, const language_body* g, 
@@ -466,7 +466,7 @@ user_chan_type_def::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 process_signature::process_signature(const template_formal_decl_list* tf, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
 		signature_base(tf,i), def(d), ports(p) {
 	NEVER_NULL(def);
@@ -535,7 +535,7 @@ process_signature::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 process_prototype::process_prototype(const template_formal_decl_list* tf, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p,
 		const char_punctuation_type* s) :
 		prototype(),
@@ -575,7 +575,7 @@ process_prototype::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 process_def::process_def(const template_formal_decl_list* tf, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b) :
 		definition(),
 		process_signature(tf, d, i, p), 
@@ -630,7 +630,7 @@ process_def::check_build(context& c) const {
 
 user_data_type_signature::user_data_type_signature(
 		const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 
 		const data_param_decl_list* p) :
@@ -658,7 +658,7 @@ user_data_type_signature::check_build(context& c) const {
 // class typedef_alias method definitions
 
 typedef_alias::typedef_alias(const template_formal_decl_list* t,
-		const token_keyword* k, const concrete_type_ref* b,
+		const generic_keyword_type* k, const concrete_type_ref* b,
 		const token_identifier* i, const char_punctuation_type* s) :
 		def_body_item(), root_item(), 
 		temp_spec(t), td(k), base(b), id(i), semi(s) {

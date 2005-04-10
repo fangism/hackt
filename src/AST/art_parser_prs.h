@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.8.8.2 2005/04/09 23:09:53 fang Exp $
+	$Id: art_parser_prs.h,v 1.8.8.3 2005/04/10 21:36:38 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -116,7 +116,7 @@ class body : public language_body {
 protected:
 	const excl_ptr<const rule_list>		rules;
 public:
-	body(const token_keyword* t, const rule_list* r);
+	body(const generic_keyword_type* t, const rule_list* r);
 	~body();
 
 	ostream&

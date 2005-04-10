@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.15.14.2 2005/04/09 23:09:57 fang Exp $
+	$Id: art++-parse.yy,v 1.15.14.3 2005/04/10 21:36:41 fang Exp $
  */
 
 %{
@@ -182,6 +182,7 @@ extern const char* const yyrule[];
 ***/
 	terminal*		_terminal;
 	node_position*		_node_position;
+	keyword_position*	_keyword_position;
 	token_keyword*		_token_keyword;
 	token_string*		_token_string;
 	token_char*		_token_char;
@@ -413,17 +414,19 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_string>		INSERT EXTRACT
 %token	<_token_string>		PLUSPLUS MINUSMINUS
 
-/* _token_keyword: covert most of these to _node_position */
-%token	<_token_keyword>	NAMESPACE
-%token	<_token_keyword>	OPEN AS
-%token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
-%token	<_token_keyword>	SKIP LOG
-%token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
-%token	<_token_keyword>	TYPEDEF
-%token	<_token_keyword>	SET GET SEND RECV
-%token	<_token_keyword>	CHANNEL
-%token	<_token_keyword>	TEMPLATE
-%token	<_token_keyword>	ENUM
+/* _token_keyword: covert most of these to _keyword_position */
+%token	<_keyword_position>	NAMESPACE
+%token	<_keyword_position>	OPEN AS
+%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG
+%token	<_keyword_position>	SKIP LOG
+%token	<_keyword_position>	DEFINE DEFPROC DEFCHAN DEFTYPE
+%token	<_keyword_position>	TYPEDEF
+%token	<_keyword_position>	SET GET SEND RECV
+%token	<_keyword_position>	CHANNEL
+%token	<_keyword_position>	TEMPLATE
+%token	<_keyword_position>	ENUM
+
+/* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
 
 %token	<_token_else>		ELSE
@@ -453,7 +456,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_typedef_alias>	type_alias
 %type	<_definition>	definition
 %type	<_process_def>	defproc
-%type	<_token_keyword>	def_or_proc
+%type	<_keyword_position>	def_or_proc
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
 %type	<_user_data_type_prototype>	declare_datatype_proto

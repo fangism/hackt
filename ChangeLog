@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-04-10	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-03:
+	  Replaced most token_keyword with faster keyword_position, 
+	  	which still stores redundant strings, using a fixed-length
+		char array[12].  
+
+
 2005-04-09	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-21-parser-02-02:

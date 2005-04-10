@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.17.8.2 2005/04/09 23:09:50 fang Exp $
+	$Id: art_parser_base.cc,v 1.17.8.3 2005/04/10 21:36:36 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -210,7 +210,7 @@ ostream& operator << (ostream& o, const type_id& id) {
 // class chan_type method definitions
 
 CONSTRUCTOR_INLINE
-chan_type::chan_type(const token_keyword* c, const token_char* d, 
+chan_type::chan_type(const generic_keyword_type* c, const token_char* d, 
 		const data_type_ref_list* t) : type_base(),
 		chan(c), dir(d), dtypes(t) {
 	NEVER_NULL(c);
@@ -432,7 +432,7 @@ definition_body::~definition_body() { }
 // class language_body methd definitions
 
 CONSTRUCTOR_INLINE
-language_body::language_body(const token_keyword* t) :
+language_body::language_body(const generic_keyword_type* t) :
 		def_body_item(), tag(t) {
 }
 
@@ -440,9 +440,9 @@ DESTRUCTOR_INLINE
 language_body::~language_body() { }
 
 language_body*
-language_body::attach_tag(token_keyword* t) {
+language_body::attach_tag(generic_keyword_type* t) {
 	// need to safe-delete first?  nah...
-	tag = excl_ptr<const token_keyword>(t);
+	tag = excl_ptr<const generic_keyword_type>(t);
 	NEVER_NULL(tag);
 	return this;
 }
@@ -469,7 +469,7 @@ language_body::leftmost(void) const {
  */
 CONSTRUCTOR_INLINE
 namespace_body::namespace_body(
-		const token_keyword* s, const token_identifier* n, 
+		const generic_keyword_type* s, const token_identifier* n, 
 		const root_body* b, const char_punctuation_type* c) :
 		root_item(),       
 		ns(s), name(n), body(b), semi(c) {
@@ -593,7 +593,7 @@ operator << (ostream& o, const namespace_id& id) {
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const token_keyword* o, const namespace_id* i, 
+		const generic_keyword_type* o, const namespace_id* i, 
 		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(NULL), alias(NULL), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
@@ -609,8 +609,8 @@ using_namespace::using_namespace(
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const token_keyword* o, const namespace_id* i, 
-		const token_keyword* a, const token_identifier* n, 
+		const generic_keyword_type* o, const namespace_id* i, 
+		const generic_keyword_type* a, const token_identifier* n, 
 		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(a), alias(n), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);

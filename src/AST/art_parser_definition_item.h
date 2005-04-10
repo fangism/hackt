@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.3.18.1 2005/03/12 03:43:06 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.3.18.2 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
@@ -63,15 +63,15 @@ public:
  */
 class language_body : public def_body_item {
 protected:
-	excl_ptr<const token_keyword>	tag;	///< what language
+	excl_ptr<const generic_keyword_type>	tag;	///< what language
 public:
 	explicit
-	language_body(const token_keyword* t);
+	language_body(const generic_keyword_type* t);
 
 virtual	~language_body();
 
 virtual language_body*
-	attach_tag(token_keyword* t);
+	attach_tag(generic_keyword_type* t);
 
 virtual	ostream&
 	what(ostream& o) const = 0;

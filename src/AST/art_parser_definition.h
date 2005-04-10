@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.9.18.2 2005/04/09 23:09:51 fang Exp $
+	$Id: art_parser_definition.h,v 1.9.18.3 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -75,7 +75,7 @@ virtual	never_ptr<const object>
  */
 class process_signature : public signature_base {
 protected:
-	const excl_ptr<const token_keyword>	def;	///< definition keyword
+	const excl_ptr<const generic_keyword_type>	def;	///< definition keyword
 		// should never be NULL, could be const reference?
 	/**
 		Optional port formal list.  
@@ -84,7 +84,7 @@ protected:
 	const excl_ptr<const port_formal_decl_list>	ports;
 public:
 	process_signature(const template_formal_decl_list* tf, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
 virtual	~process_signature();
@@ -104,7 +104,7 @@ protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon token
 public:
 	process_prototype(const template_formal_decl_list* tf, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p,
 		const char_punctuation_type* s);
 
@@ -129,13 +129,13 @@ public:
  */
 class process_def : public definition, public process_signature {
 protected:
-//	const excl_ptr<const token_keyword>		def;	//  inherited
+//	const excl_ptr<const generic_keyword_type>	def;	//  inherited
 //	const excl_ptr<const concrete_type_ref>		idt;	//  inherited
 //	const excl_ptr<const port_formal_decl_list>	ports;	//  inherited
 	const excl_ptr<const definition_body>		body;	///< definition body
 public:
 	process_def(const template_formal_decl_list*, 
-		const token_keyword* d, const token_identifier* i, 
+		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b);
 
 	~process_def();
@@ -157,14 +157,14 @@ public:
 /// user-defined data type
 class user_data_type_signature : public signature_base {
 protected:
-	const excl_ptr<const token_keyword>	def;	///< "deftype" keyword
+	const excl_ptr<const generic_keyword_type>	def;	///< "deftype" keyword
 	const excl_ptr<const string_punctuation_type>	dop;	///< <: operator
 	const excl_ptr<const concrete_type_ref>	bdt;	///< the represented type
 	const excl_ptr<const data_param_decl_list>
 						params;	///< implementation type
 public:
 	user_data_type_signature(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
 		const data_param_decl_list* p);
@@ -183,7 +183,7 @@ protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
 	user_data_type_prototype(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p,
 		const char_punctuation_type* s);
@@ -208,7 +208,7 @@ public:
 class user_data_type_def : public definition, public user_data_type_signature {
 protected:
 	typedef	char_punctuation_type		brace_type;
-//	const excl_ptr<const token_keyword>	def;	// inherited
+//	const excl_ptr<const generic_keyword_type>	def;	// inherited
 //	const excl_ptr<const token_identifier>	name;	// inherited
 //	const excl_ptr<const token_string>	dop;	// inherited
 //	const excl_ptr<const concrete_type_ref>	bdt;	// inherited
@@ -219,7 +219,7 @@ protected:
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
 public:
 	user_data_type_def(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, 
 		const brace_type* l, const language_body* s,
@@ -252,9 +252,9 @@ class enum_signature : public signature_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
 	/** "enum" keyword */
-	const excl_ptr<const token_keyword>	en;
+	const excl_ptr<const generic_keyword_type>	en;
 public:
-	enum_signature(const token_keyword* e, const token_identifier* i);
+	enum_signature(const generic_keyword_type* e, const token_identifier* i);
 
 virtual	~enum_signature();
 
@@ -272,7 +272,7 @@ protected:
 	/** semicolon token (optional) */
 	const excl_ptr<const char_punctuation_type>	semi;
 public:
-	enum_prototype(const token_keyword* e, const token_identifier* i, 
+	enum_prototype(const generic_keyword_type* e, const token_identifier* i, 
 		const char_punctuation_type* s);
 
 	~enum_prototype();
@@ -323,7 +323,7 @@ protected:
 	/** names of the enumerated members */
 	const excl_ptr<const enum_member_list>	members;
 public:
-	enum_def(const token_keyword* e, const token_identifier* i,      
+	enum_def(const generic_keyword_type* e, const token_identifier* i,      
 		const enum_member_list*	m);
 
 	~enum_def();
@@ -345,14 +345,14 @@ public:
 /// user-defined channel type signature
 class user_chan_type_signature : public signature_base {
 protected:
-	const excl_ptr<const token_keyword>	def;	///< "defchan" keyword
+	const excl_ptr<const generic_keyword_type>	def;	///< "defchan" keyword
 	const excl_ptr<const string_punctuation_type>	dop;	///< <: operator
 	const excl_ptr<const chan_type>		bct;	///< the represented type
 	const excl_ptr<const data_param_decl_list>
 						params;	///< the implementation type
 public:
 	user_chan_type_signature(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p);
 
@@ -370,7 +370,7 @@ protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
 	user_chan_type_prototype(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* s);
 	~user_chan_type_prototype();
@@ -394,7 +394,7 @@ public:
 /// user-defined channel type definition
 class user_chan_type_def : public definition, public user_chan_type_signature {
 protected:
-//	const excl_ptr<const token_keyword>	def;	// inherited
+//	const excl_ptr<const generic_keyword_type>	def;	// inherited
 //	const excl_ptr<const token_identifier>	name;	// inherited
 //	const excl_ptr<const token_string>	dop;	// inherited
 //	const excl_ptr<const chan_type>		bct;	// inherited
@@ -405,7 +405,7 @@ protected:
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
 public:
 	user_chan_type_def(const template_formal_decl_list* tf, 
-		const token_keyword* df, const token_identifier* n, 
+		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, 
 		const char_punctuation_type* l, const language_body* s, 
@@ -433,13 +433,13 @@ public:
 class typedef_alias : public def_body_item, public root_item {
 protected:
 	const excl_ptr<const template_formal_decl_list>	temp_spec;
-	const excl_ptr<const token_keyword>		td;
+	const excl_ptr<const generic_keyword_type>		td;
 	const excl_ptr<const concrete_type_ref>		base;
 	const excl_ptr<const token_identifier>		id;
 	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	typedef_alias(const template_formal_decl_list* t, 
-		const token_keyword* k, const concrete_type_ref* b, 
+		const generic_keyword_type* k, const concrete_type_ref* b, 
 		const token_identifier* i, const char_punctuation_type* s);
 
 	~typedef_alias();

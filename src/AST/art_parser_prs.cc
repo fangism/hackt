@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.10.8.1 2005/04/09 23:09:53 fang Exp $
+	$Id: art_parser_prs.cc,v 1.10.8.2 2005/04/10 21:36:38 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -122,7 +122,7 @@ loop::check_build(context& c) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(const token_keyword* t, const rule_list* r) :
+body::body(const generic_keyword_type* t, const rule_list* r) :
 		language_body(t), rules(r) {
 	if (r) NEVER_NULL(rules);
 }

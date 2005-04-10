@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.12.14.1 2005/04/09 23:09:56 fang Exp $
+ *	$Id: art++-lex.ll,v 1.12.14.2 2005/04/10 21:36:40 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -102,6 +102,12 @@ NEWLINE_UPDATE(void) {
 
 static inline void
 KEYWORD_UPDATE(void) {
+	yylval._keyword_position = new keyword_position(yytext, current);
+	TOKEN_UPDATE();
+}
+
+static inline void
+LINKAGE_UPDATE(void) {
 	yylval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE();
 }
 
@@ -375,16 +381,16 @@ EXPORT		"export"
 {SET}		{ KEYWORD_UPDATE(); return SET; }
 {GET}		{ KEYWORD_UPDATE(); return GET; }
 {ENUM}		{ KEYWORD_UPDATE(); return ENUM; }
+{CHANNEL}	{ KEYWORD_UPDATE(); return CHANNEL; }
 {INT_TYPE}	{ INT_TYPE_UPDATE(); return INT_TYPE; }
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(); return BOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(); return PBOOL_TYPE; }
-{CHANNEL}	{ KEYWORD_UPDATE(); return CHANNEL; }
 {TRUE}		{ BOOL_UPDATE(); return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE(); return BOOL_FALSE; }
-{EXTERN}	{ KEYWORD_UPDATE(); return EXTERN; }
-{STATIC}	{ KEYWORD_UPDATE(); return STATIC; }
-{EXPORT}	{ KEYWORD_UPDATE(); return EXPORT; }
+{EXTERN}	{ LINKAGE_UPDATE(); return EXTERN; }
+{STATIC}	{ LINKAGE_UPDATE(); return STATIC; }
+{EXPORT}	{ LINKAGE_UPDATE(); return EXPORT; }
 
 {WHITESPACE}	TOKEN_UPDATE();
 {NEWLINE}	NEWLINE_UPDATE();

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.9.8.2 2005/04/09 23:09:52 fang Exp $
+	$Id: art_parser_hse.cc,v 1.9.8.3 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -56,7 +56,7 @@ statement::~statement() { }
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(const token_keyword* t, const stmt_list* s) :
+body::body(const generic_keyword_type* t, const stmt_list* s) :
 		language_body(t), stmts(s) {
 	if(s) NEVER_NULL(stmts);
 }
@@ -132,9 +132,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(else_clause)
 // class skip method definitions
 
 CONSTRUCTOR_INLINE
-skip::skip(const token_keyword* s) : statement(),
-		token_keyword(IS_A(const token_keyword*, s)->c_str()) {
-	excl_ptr<const token_keyword> delete_me(s);
+skip::skip(const generic_keyword_type* s) : statement(), kw(s) {
+	NEVER_NULL(kw);
 }
 
 DESTRUCTOR_INLINE
@@ -146,12 +145,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(skip)
 
 line_position
 skip::leftmost(void) const {
-	return token_keyword::leftmost();
+	return kw->leftmost();
 }
 
 line_position
 skip::rightmost(void) const {
-	return token_keyword::rightmost();
+	return kw->rightmost();
 }
 
 never_ptr<const object>

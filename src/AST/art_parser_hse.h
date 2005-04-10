@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.8.8.2 2005/04/09 23:09:52 fang Exp $
+	$Id: art_parser_hse.h,v 1.8.8.3 2005/04/10 21:36:37 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -57,7 +57,7 @@ class body : public language_body {
 protected:
 	const excl_ptr<const stmt_list>	stmts;	///< list of HSE statements
 public:
-	body(const token_keyword* t, const stmt_list* s);
+	body(const generic_keyword_type* t, const stmt_list* s);
 	~body();
 
 	ostream&
@@ -121,14 +121,16 @@ public:
 
 //=============================================================================
 /// HSE skip statement
-class skip : public statement, public token_keyword {
+class skip : public statement {
+private:
+	const excl_ptr<const generic_keyword_type>	kw;
 public:
 /**
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
 	explicit
-	skip(const token_keyword* s);
+	skip(const generic_keyword_type* s);
 
 	~skip();
 
@@ -143,7 +145,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	token_keyword::where;
+// using	token_keyword::where;
 
 #if 1
 	never_ptr<const object>
