@@ -2,14 +2,13 @@
 	\file "art_parser_token_char.h"
 	Base set of classes for the ART parser.  
 	Definition of this class is in "art_parser_token.cc"
-	$Id: art_parser_token_char.h,v 1.1 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_token_char.h,v 1.1.8.1 2005/04/10 22:23:02 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_CHAR_H__
 #define __ART_PARSER_TOKEN_CHAR_H__
 
 #include "art_parser_terminal.h"
-// #include "memory/list_vector_pool_fwd.h"
 #include "memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
@@ -44,9 +43,7 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-//	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
-// private:
 };      // end class token_char
 
 //=============================================================================

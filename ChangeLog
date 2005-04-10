@@ -7,6 +7,9 @@
 	  	which still stores redundant strings, using a fixed-length
 		char array[12].  
 
+	* ARTXX-00-01-04-main-00-21-parser-02-04:
+	  Enabled chunk-map pooling of most (terminal) token classes.
+
 
 2005-04-09	David Fang	<fangism@users.sourceforge.net>
 

@@ -13,9 +13,11 @@ DOCS_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow,
 				label="language spec.\ndocumentation"];
 PARSER_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow,
 				label="general parser\nimprovements"];
-LEX_00_01_04		[shape=ellipse, label="lexer token positions"];
-TOKENPOOL_00_01_04	[shape=ellipse, label="token pooling"];
-NODELIST_00_01_04	[shape=ellipse, label="node-list template"];
+LEX_00_01_04		[shape=ellipse, style=filled,
+				label="lexer token positions"];
+TOKENPOOL_00_01_04	[shape=ellipse, style=filled, label="token pooling"];
+NODELIST_00_01_04	[shape=ellipse, style = filled, 
+				label="node-list template"];
 UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
 ALIAS_00_01_04		[shape=ellipse, style=filled, label="alias connection"];
 PORT_00_01_04		[shape=ellipse, label="port connection"];
