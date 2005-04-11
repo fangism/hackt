@@ -1,13 +1,14 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.9.18.2 2005/04/09 23:09:52 fang Exp $
+	$Id: art_parser_formal.h,v 1.9.18.3 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
 #define __ART_PARSER_FORMAL_H__
 
 #include "art_parser_base.h"
+#include "art_parser_node_list.h"
 
 namespace ART {
 namespace parser {
@@ -40,11 +41,7 @@ public:
 };	// end class data_param_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const data_param_id>		data_param_id_list_base;
-#else
-typedef	node_list<const data_param_id,comma>	data_param_id_list_base;
-#endif
 
 /**
 	Data or parameter identifier list.  
@@ -92,12 +89,7 @@ public:
 };	// end class data_param_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const data_param_decl>	data_param_decl_list_base;
-#else
-typedef	node_list<const data_param_decl,semicolon>
-		data_param_decl_list_base;
-#endif
 
 /**
 	Data or parameter declaration list.  
@@ -140,11 +132,7 @@ public:
 };	// end class port_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const port_formal_id>		port_formal_id_list_base;
-#else
-typedef	node_list<const port_formal_id,comma>	port_formal_id_list_base;
-#endif
 
 /// list of port-formal identifiers (optional arrays)
 class port_formal_id_list : public port_formal_id_list_base {
@@ -186,13 +174,7 @@ public:
 };	// end class port_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
-typedef	node_list<const port_formal_decl>
-		port_formal_decl_list_base;
-#else
-typedef	node_list<const port_formal_decl,semicolon>
-		port_formal_decl_list_base;
-#endif
+typedef	node_list<const port_formal_decl>	port_formal_decl_list_base;
 
 /**
 	List of port-formal declarations.  
@@ -244,13 +226,7 @@ public:
 };	// end class template_formal_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
-typedef	node_list<const template_formal_id>
-		template_formal_id_list_base;
-#else
-typedef	node_list<const template_formal_id,comma>
-		template_formal_id_list_base;
-#endif
+typedef	node_list<const template_formal_id>	template_formal_id_list_base;
 
 /// list of template-formal identifiers (optional arrays)
 class template_formal_id_list : public template_formal_id_list_base {
@@ -296,13 +272,8 @@ public:
 };	// end class template_formal_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const template_formal_decl>
 					template_formal_decl_list_base;
-#else
-typedef	node_list<const template_formal_decl,semicolon>
-					template_formal_decl_list_base;
-#endif
 
 /**
 	Template formal declaration list.  

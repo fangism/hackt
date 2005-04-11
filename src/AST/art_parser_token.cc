@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.21.8.1 2005/04/10 22:23:02 fang Exp $
+	$Id: art_parser_token.cc,v 1.21.8.2 2005/04/11 17:59:15 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -11,9 +11,6 @@
 #include <cstdio>		// for sprintf
 #include <cstring>		// for a few C-string functions
 #include <exception>
-
-// #include "art_switches.h"
-// #include "art_parser_debug.h"
 
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
@@ -28,7 +25,6 @@
 
 #include "what.h"
 #include "stacktrace.h"
-// #include "memory/list_vector_pool.tcc"
 #include "memory/chunk_map_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file

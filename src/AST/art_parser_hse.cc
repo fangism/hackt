@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.9.8.3 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_hse.cc,v 1.9.8.4 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -9,11 +9,10 @@
 
 #include <iostream>
 
-#include "art_parser_node_position.h"
-#include "art_parser.tcc"
 #include "art_parser_hse.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
+#include "art_parser_node_list.tcc"
 
 #include "what.h"
 
@@ -372,7 +371,7 @@ do_until::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-#if USE_NEW_NODE_LIST
+#if 1
 template class node_list<const statement>;	// HSE::stmt_list
 template class node_list<const guarded_command>;	// HSE::det_sel_base
 							// HSE::prob_sel_base

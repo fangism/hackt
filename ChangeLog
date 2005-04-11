@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-04-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-05:
+	  Clean-up, making USE_NEW_NODE_LIST permanent.  
+	  (Removed old "AST/art_parser.tcc")
+
+
 2005-04-10	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-21-parser-02-03:

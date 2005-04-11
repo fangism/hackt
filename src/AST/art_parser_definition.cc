@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.17.8.2 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_definition.cc,v 1.17.8.3 2005/04/11 17:59:12 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -19,16 +19,12 @@
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
-#include "art_parser.tcc"
-
-#include "art_parser_node_position.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_definition.h"
 #include "art_parser_formal.h"
 #include "art_parser_token_char.h"
 #include "art_parser_token_string.h"
+#include "art_parser_node_list.tcc"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"

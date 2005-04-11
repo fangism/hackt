@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.17.2.2 2005/04/09 23:09:51 fang Exp $
+	$Id: art_parser_expr.cc,v 1.17.2.3 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -10,13 +10,12 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_node_position.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
 #include "art_parser_expr.h"
 #include "art_parser_expr_list.h"
 #include "art_parser_range_list.h"
-#include "art_parser.tcc"
+#include "art_parser_node_list.tcc"
 #include "sublist.tcc"
 
 // will need these come time for type-checking
@@ -187,18 +186,6 @@ qualified_id::force_absolute(const string_punctuation_type* s) {
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(qualified_id)
 
-#if !USE_NEW_NODE_LIST
-qualified_id*
-qualified_id::append(terminal* d, token_identifier* n) {
-#if USE_NEW_NODE_LIST
-	parent_type::push_back(n);
-	delete d;
-#else
-	return IS_A(qualified_id*, qualified_id_base::append(d,n));
-#endif
-}
-#endif
-
 line_position
 qualified_id::leftmost(void) const {
 	return qualified_id_base::leftmost();
@@ -218,10 +205,6 @@ qualified_id::copy_namespace_portion(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_back();		// remove last element
-#if !USE_NEW_NODE_LIST
-	if (!ret.delim.empty())
-		ret.delim.pop_back();
-#endif
 	return ret;
 }
 
@@ -230,10 +213,6 @@ qualified_id::copy_beheaded(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_front();		// remove last element
-#if !USE_NEW_NODE_LIST
-	if (!ret.delim.empty())
-		ret.delim.pop_front();
-#endif
 	return ret;
 }
 
@@ -1254,7 +1233,7 @@ array_construction::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
-#if USE_NEW_NODE_LIST
+#if 1
 template class node_list<const expr>;			// expr_list
 template class node_list<const token_identifier>;	// qualified_id_base
 template class node_list<const range>;			// range_list

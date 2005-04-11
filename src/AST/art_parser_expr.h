@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.9.18.2 2005/04/09 23:09:51 fang Exp $
+	$Id: art_parser_expr.h,v 1.9.18.3 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -313,11 +313,7 @@ public:
 };	// end class logical_expr
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef	node_list<const expr>			array_concatenation_base;
-#else
-typedef	node_list<const expr,pound>		array_concatenation_base;
-#endif
 
 /**
 	Concatenation of arrays to make bigger arrays.  
@@ -350,15 +346,15 @@ public:
  */
 class loop_concatenation : public expr {
 protected:
-	const excl_ptr<const char_punctuation_type>		lp;
-	const excl_ptr<const char_punctuation_type>		pd;
-	const excl_ptr<const char_punctuation_type>		col1;
+	const excl_ptr<const char_punctuation_type>	lp;
+	const excl_ptr<const char_punctuation_type>	pd;
+	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>		id;
-	const excl_ptr<const char_punctuation_type>		col2;
+	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>			bounds;
-	const excl_ptr<const char_punctuation_type>		col3;
+	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const expr>			ex;
-	const excl_ptr<const char_punctuation_type>		rp;
+	const excl_ptr<const char_punctuation_type>	rp;
 public:
 	loop_concatenation(const char_punctuation_type* l, 
 		const char_punctuation_type* h, 

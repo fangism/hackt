@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.7.8.3 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_chp.h,v 1.7.8.4 2005/04/11 17:59:12 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -240,7 +240,7 @@ class communication : public statement {
 protected:
 	const excl_ptr<const expr>		chan;
 	const excl_ptr<const token_char>	dir;
-#if USE_NEW_NODE_LIST
+#if 0
 public:
 	static const char			separator[];	// comma
 #endif
@@ -255,11 +255,7 @@ virtual	~communication();
 
 //-----------------------------------------------------------------------------
 /// base type for CHP communication list
-#if USE_NEW_NODE_LIST
 typedef	node_list<const communication>			comm_list_base;
-#else
-typedef	node_list<const communication,comma>		comm_list_base;
-#endif
 
 /**
 	CHP concurrent communication list.  
@@ -349,11 +345,7 @@ virtual	ostream&
 };
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef	node_list<const guarded_command>		det_selection_list_base;
-#else
-typedef	node_list<const guarded_command,thickbar>	det_selection_list_base;
-#endif
 
 /// container for deterministic selection statement
 class det_selection : public selection, public det_selection_list_base {
@@ -383,11 +375,7 @@ using	parent_type::where;
 };
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef	node_list<const guarded_command>	nondet_selection_list_base;
-#else
-typedef	node_list<const guarded_command,colon>	nondet_selection_list_base;
-#endif
 
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, public nondet_selection_list_base {
@@ -417,11 +405,7 @@ using	parent_type::where;
 };
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef	node_list<const guarded_command>	prob_selection_list_base;
-#else
-typedef	node_list<const guarded_command,thickbar>	prob_selection_list_base;
-#endif
 
 /// container for probablistic selection statement
 class prob_selection : public selection, public prob_selection_list_base {

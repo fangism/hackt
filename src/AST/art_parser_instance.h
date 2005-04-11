@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.9.18.2 2005/04/09 23:09:53 fang Exp $
+	$Id: art_parser_instance.h,v 1.9.18.3 2005/04/11 17:59:14 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -57,11 +57,7 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
-#if USE_NEW_NODE_LIST
 typedef	node_list<const expr>			alias_list_base;
-#else
-typedef	node_list<const expr,alias>		alias_list_base;
-#endif
 
 /**
 	A list of lvalue expressions aliased/connected together.  
@@ -147,11 +143,7 @@ virtual	never_ptr<const object>
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const instance_base>		instance_id_list_base;
-#else
-typedef	node_list<const instance_base,comma>	instance_id_list_base;
-#endif
 
 /**
 	Instance identifier list.  
@@ -385,13 +377,8 @@ public:
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NEW_NODE_LIST
 typedef	node_list<const guarded_definition_body>
 		guarded_definition_body_list_base;
-#else
-typedef	node_list<const guarded_definition_body,thickbar>
-		guarded_definition_body_list_base;
-#endif
 
 /**
 	Conditional (guarded) body inside definition.  

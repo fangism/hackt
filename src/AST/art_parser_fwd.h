@@ -1,15 +1,13 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.3.8.3 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_fwd.h,v 1.3.8.4 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
 #define	__ART_PARSER_FWD_H__
 
 #include "art_parser_delim.h"
-
-#define USE_NEW_NODE_LIST		1
 
 namespace ART {
 namespace parser {
@@ -26,18 +24,8 @@ class token_keyword;
 class node_position;
 class keyword_position;
 
-#if 0
-template <class T>
-class node_list_base;			// defined in "art_parser.tcc"
-#endif
-
-#if USE_NEW_NODE_LIST
 template <class T>
 class node_list;			// defined in "art_parser_node_list.h"
-#else
-template <class T, const char[] = none>
-class node_list;			// defined in "art_parser.tcc"
-#endif
 
 class expr_list;
 class root_item;
@@ -156,15 +144,10 @@ class token_paramtype;
 class token_pbool_type;
 class token_pint_type;
 
-#if USE_NEW_NODE_LIST
-	typedef	node_position		char_punctuation_type;
-	typedef	node_position		string_punctuation_type;
-	typedef	keyword_position	generic_keyword_type;
-#else
-	typedef	token_char		char_punctuation_type;
-	typedef	token_string		string_punctuation_type;
-	typedef	token_keyword		generic_keyword_type;
-#endif
+//-----------------------------------------------------------------------------
+typedef	node_position		char_punctuation_type;
+typedef	node_position		string_punctuation_type;
+typedef	keyword_position	generic_keyword_type;
 
 //-----------------------------------------------------------------------------
 // declared in "Object/art_context.h"

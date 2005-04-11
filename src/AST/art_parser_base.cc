@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.17.8.3 2005/04/10 21:36:36 fang Exp $
+	$Id: art_parser_base.cc,v 1.17.8.4 2005/04/11 17:59:11 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -16,11 +16,6 @@
 #include <exception>
 #include <iostream>
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
-#include "art_parser.tcc"
-
-#include "art_parser_node_position.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
@@ -29,6 +24,7 @@
 #include "art_parser_identifier.h"
 #include "art_parser_statement.h"
 #include "art_parser_definition_item.h"
+#include "art_parser_node_list.tcc"
 
 #include "art_context.h"
 #include "art_object_definition_base.h"

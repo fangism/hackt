@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_list.h,v 1.2.18.2 2005/04/09 23:09:51 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.2.18.3 2005/04/11 17:59:13 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_LIST_H__
@@ -21,11 +21,7 @@ namespace parser {
 	template args and actuals.  
 
  */
-#if USE_NEW_NODE_LIST
 typedef node_list<const expr>				expr_list_base;
-#else
-typedef node_list<const expr,comma>			expr_list_base;
-#endif
 
 /**
 	General parser expression list.  

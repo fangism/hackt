@@ -1,13 +1,13 @@
 /**
 	"art_parser_node_position.h"
 	Node whose sole purpose is to record a position of a token.  
-	$Id: art_parser_node_position.h,v 1.2.18.3 2005/04/10 21:36:38 fang Exp $
+	$Id: art_parser_node_position.h,v 1.2.18.4 2005/04/11 17:59:15 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_POSITION_H__
 #define	__ART_PARSER_NODE_POSITION_H__
 
-#include <cstring>
+#include <cstring>		// for strncpy
 #include "art_parser_base.h"
 #include "memory/chunk_map_pool_fwd.h"
 

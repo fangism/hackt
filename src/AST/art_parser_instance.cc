@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.20.8.2 2005/04/09 23:09:52 fang Exp $
+	$Id: art_parser_instance.cc,v 1.20.8.3 2005/04/11 17:59:14 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -16,17 +16,12 @@
 #include <exception>
 #include <iostream>
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
-#include "art_parser.tcc"
-
-#include "art_parser_node_position.h"
 #include "art_parser_instance.h"
-#include "art_parser_expr_base.h"
 #include "art_parser_expr_list.h"
 #include "art_parser_range_list.h"
 #include "art_parser_token_string.h"
 #include "art_parser_type.h"
+#include "art_parser_node_list.tcc"
 
 #include "art_context.h"
 #include "art_object_namespace.h"

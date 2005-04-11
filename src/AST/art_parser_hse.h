@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.8.8.3 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_hse.h,v 1.8.8.4 2005/04/11 17:59:14 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -45,11 +45,7 @@ virtual	never_ptr<const object>
 #endif
 };	// end class statement
 
-#if USE_NEW_NODE_LIST
 typedef	node_list<const statement>		stmt_list;
-#else
-typedef	node_list<const statement,semicolon>	stmt_list;
-#endif
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -224,11 +220,7 @@ virtual	ostream&
 };	// end class selection
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef	node_list<const guarded_command>		det_selection_list_base;
-#else
-typedef	node_list<const guarded_command,thickbar>	det_selection_list_base;
-#endif
 
 /// container for deterministic selection statement
 class det_selection : public selection, public det_selection_list_base {
@@ -258,11 +250,7 @@ using	parent_type::where;
 };	// end class det_selection
 
 //=============================================================================
-#if USE_NEW_NODE_LIST
 typedef node_list<const guarded_command>	nondet_selection_list_base;
-#else
-typedef node_list<const guarded_command,colon>	nondet_selection_list_base;
-#endif
 
 /// container for non-deterministic selection statement
 class nondet_selection : public selection, public nondet_selection_list_base {

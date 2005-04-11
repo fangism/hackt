@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.9.8.3 2005/04/10 21:36:36 fang Exp $
+	$Id: art_parser_chp.cc,v 1.9.8.4 2005/04/11 17:59:12 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
@@ -9,12 +9,11 @@
 
 #include <iostream>
 
-#include "art_parser_node_position.h"
-#include "art_parser.tcc"
 #include "art_parser_chp.h"
 #include "art_parser_expr_list.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
+#include "art_parser_node_list.tcc"
 
 #include "what.h"
 
@@ -552,7 +551,7 @@ log::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-#if USE_NEW_NODE_LIST
+#if 1
 template class node_list<const statement>;	// CHP::stmt_list
 template class node_list<const guarded_command>;	// CHP::det_sel_base
 							// CHP::prob_sel_base

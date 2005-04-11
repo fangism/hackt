@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.9.18.3 2005/04/10 21:36:37 fang Exp $
+	$Id: art_parser_definition.h,v 1.9.18.4 2005/04/11 17:59:12 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -291,11 +291,7 @@ public:
 };	// end class enum_prototype
 
 //-----------------------------------------------------------------------------
-#if USE_NEW_NODE_LIST
 typedef	node_list<const token_identifier>	enum_member_list_base;
-#else
-typedef	node_list<const token_identifier,comma>	enum_member_list_base;
-#endif
 
 /**
 	Specialized list of identifiers for enumeration members.  
