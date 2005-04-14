@@ -4,7 +4,7 @@
 	* ARTXX-00-01-04-main-00-23:
 	  Bring code up to speed with gcc-4 (20050409).
 	  Compiles and runs cleanly with gcc-3.3 through 4.0 on
-		powerpc-darwin, i686-linux.
+		powerpc-darwin, i686-linux, i386-freebsd.
 	  Needed to respect missing virtual destructor warning with struct
 		  functors in "util/operators.h".  
 
