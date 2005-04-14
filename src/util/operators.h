@@ -1,7 +1,7 @@
 /**
 	\file "operators.h'
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.3 2004/12/05 05:07:25 fang Exp $
+	$Id: operators.h,v 1.4 2005/04/14 20:49:18 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
@@ -40,6 +40,15 @@ namespace util {
  */
 template <class R = int, class A = int>
 struct binary_arithmetic_operation {
+/**
+	Required by gcc4 with -W.
+	... even if we never delete subclass objects through these pointers.  
+ */
+virtual	~binary_arithmetic_operation() { }
+
+/**
+	Standard function interface for operators.  
+ */
 virtual	R operator () (const A& a, const A& b) const = 0;
 };	// end struct binary_arithmetic_operation
 
@@ -52,6 +61,15 @@ virtual	R operator () (const A& a, const A& b) const = 0;
  */
 template <class R = bool, class A = int>
 struct binary_relational_operation {
+/**
+	Required by gcc4 with -W.
+	... even if we never delete subclass objects through these pointers.  
+ */
+virtual	~binary_relational_operation() { }
+
+/**
+	Standard function interface for operators.  
+ */
 virtual	R operator () (const A& a, const A& b) const = 0;
 };	// end struct binary_relational_operation
 
@@ -64,6 +82,15 @@ virtual	R operator () (const A& a, const A& b) const = 0;
  */
 template <class R = bool, class A = bool>
 struct binary_logical_operation {
+/**
+	Required by gcc4 with -W.
+	... even if we never delete subclass objects through these pointers.  
+ */
+virtual	~binary_logical_operation() { }
+
+/**
+	Standard function interface for operators.  
+ */
 virtual	R operator () (const A& a, const A& b) const = 0;
 };	// end struct binary_logical_operation
 
@@ -78,6 +105,15 @@ virtual	R operator () (const A& a, const A& b) const = 0;
  */
 template <class R = int, class A = int, class S = int>
 struct shift_operation {
+/**
+	Required by gcc4 with -W.
+	... even if we never delete subclass objects through these pointers.  
+ */
+virtual	~shift_operation() { }
+
+/**
+	Standard function interface for shift operators.  
+ */
 virtual	R operator () (const A& a, const S& s) const = 0;
 };	// end struct_operation
 

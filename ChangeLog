@@ -1,6 +1,15 @@
 "ChangeLog"
 
 2005-04-14	David Fang	<fangism@users.sourceforge.net>
+	* ARTXX-00-01-04-main-00-23:
+	  Bring code up to speed with gcc-4 (20050409).
+	  Compiles and runs cleanly with gcc-3.3 through 4.0 on
+		powerpc-darwin, i686-linux.
+	  Needed to respect missing virtual destructor warning with struct
+		  functors in "util/operators.h".  
+
+
+2005-04-14	David Fang	<fangism@users.sourceforge.net>
 	* ARTXX-00-01-04-main-00-22-merged-parser-02-05:
 	  Merged parser-02 branch, through revision -05.  
 
