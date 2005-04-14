@@ -1,13 +1,11 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.5 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_node_list.h,v 1.6 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
 #define __ART_PARSER_NODE_LIST_H__
-
-#define	USE_NEW_NODE_LIST		0
 
 #include "STL/list.h"
 #include "art_parser_fwd.h"
@@ -24,9 +22,21 @@ using util::memory::count_ptr;
 //=============================================================================
 // replacement node list
 
-#if USE_NEW_NODE_LIST
-
 class node_position;
+
+/**
+	Characteristics of syntax details and appearance of 
+	node_list template classes.  
+	This is just the default definition.
+	Each list type may specialize with its own delimiters.  
+ */
+template <class L>
+class node_list_traits {
+	static const char open[];
+	static const char close[];
+	static const char delim[];
+	// other useful traits?
+};	// end class node_list_traits
 
 #define	NODE_LIST_TEMPLATE_SIGNATURE					\
 template <class T>
@@ -37,7 +47,8 @@ template <class T>
 	OR rely on inferring the delimiter from the value_type parameter.  
 	Delimiter is only useful for spitting out source.  
  */
-class node_list : public node {
+NODE_LIST_TEMPLATE_SIGNATURE
+class node_list : virtual public node {
 	typedef	node_list<T>				this_type;
 protected:
 	// consider using a vector
@@ -51,8 +62,9 @@ protected:
 							const_reverse_iterator;
 protected:
 	list_type					nodes;
-	excl_ptr<const node_position>			open;
-	excl_ptr<const node_position>			close;
+	// consider count_ptr to make copy-constructible
+	count_ptr<const node_position>			open;
+	count_ptr<const node_position>			close;
 public:
 	node_list();
 
@@ -60,6 +72,9 @@ public:
 	node_list(const T*);
 
 	~node_list();
+
+	const list_type&
+	raw_list(void) const { return nodes; }
 
 	iterator
 	begin(void) { return nodes.begin(); }
@@ -73,15 +88,36 @@ public:
 	const_iterator
 	end(void) const { return nodes.end(); }
 
+	bool
+	empty(void) const { return nodes.empty(); }
+
+	size_t
+	size(void) const { return nodes.size(); }
+
 #if 0
 	this_type*
 	append(const T*);		// basically push_back
 #endif
 	void
-	push_back(const T*);
+	push_back(const T* p) { nodes.push_back(value_type(p)); }
 
 	void
-	wrap(const node_position*, const node_position*);
+	push_front(const T* p) { nodes.push_front(value_type(p)); }
+
+	void
+	pop_back(void) { nodes.pop_back(); }
+
+	void
+	pop_front(void) { nodes.pop_front(); }
+
+	void
+	wrap(const node_position* o, const node_position* c) {
+		open = count_ptr<const node_position>(o);
+		close = count_ptr<const node_position>(c);
+	}
+
+	void
+	release_append(this_type&);
 
 	ostream&
 	what(ostream&) const;
@@ -106,178 +142,6 @@ public:
 	check_build(context&) const;
 
 };	// end class node_list
-
-#else	// USE_NEW_NODE_LIST
-
-//=============================================================================
-#define	NODE_LIST_BASE_TEMPLATE_SIGNATURE				\
-	template <class T>
-
-/**
-	This is the general class for list structures of nodes in the
-	syntax tree.  What is unique about this implementation is that
-	its derived classes keep track of the delimiter tokens that 
-	separated the lists, if applicable.  
-	The specifier T, a derived class from node, is only used for 
-	type-checking.  
-	Consider deriving from list<base_ptr<const T> > to allow 
-	copyable lists, using never_ptr<const T>'s.  
-	Then dynamically casting elements may be a pain?
- */
-template <class T>
-class node_list_base : virtual public node, public list<count_ptr<T> > {
-private:
-	/**
-		Base class.  (was derived from excl_const_ptr, 
-		then some_count_ptr)
-	 */
-	typedef		list<count_ptr<T> >	list_parent;
-	// read-only, but transferrable ownership
-public:
-	typedef	typename list_parent::value_type	value_type;
-	typedef	typename list_parent::iterator		iterator;
-	typedef	typename list_parent::const_iterator	const_iterator;
-public:
-	/**
-		Default empty constructor.  
-	 */
-	node_list_base();
-
-	/**
-		Non-owner-transfer copy constructor.  
-	 */
-
-	node_list_base(const node_list_base<T>& l);
-	/**
-		Constructor with initializing first element, 
-		T should be subclass of node!
-	 */
-	explicit
-	node_list_base(const T* n);
-
-virtual	~node_list_base();
-
-using	list_parent::begin;
-using	list_parent::end;
-
-	void
-	push_back(const T* v) {
-		list_parent::push_back(value_type(v));
-	}
-
-	void
-	push_back(const value_type& v) {
-		list_parent::push_back(v);
-	}
-
-// later, use static functions (operator <<) to determine type name...
-/// Prints out type of first element in list, if not null.  
-virtual	ostream&
-	what(ostream& o) const;
-
-virtual	line_position
-	leftmost(void) const = 0;
-
-virtual	line_position
-	rightmost(void) const = 0;
-
-virtual	never_ptr<const object>
-	check_build(context& c) const;
-
-/// Releases memory to the destination list, transfering ownership
-virtual	void
-	release_append(node_list_base<T>& dest);
-};	// end template class node_list_base
-
-//-----------------------------------------------------------------------------
-#define	NODE_LIST_TEMPLATE_SIGNATURE_DEFAULT				\
-	template <class T, const char D[] = none>
-#define	NODE_LIST_TEMPLATE_SIGNATURE					\
-	template <class T, const char D[]>
-#define	NODE_LIST_TEMPLATE_SIGNATURE_EXPORT				\
-	export NODE_LIST_TEMPLATE_SIGNATURE
-	// "export" is ignored by gcc, even 3.3
-
-/**
-	The delimiter specifier, D, is used for checking that every other
-	token is separated by a D character (if D is not '\0').  
- */
-NODE_LIST_TEMPLATE_SIGNATURE
-class node_list : public node_list_base<T> {
-private:
-	typedef		node_list_base<T>	parent;
-public:
-	typedef	typename parent::iterator	iterator;
-	typedef	typename parent::const_iterator	const_iterator;
-	typedef	typename parent::reverse_iterator	reverse_iterator;
-	typedef	typename parent::const_reverse_iterator	const_reverse_iterator;
-	typedef	list<count_ptr<const terminal> >	delim_list;
-protected:
-	excl_ptr<const terminal>	open;	///< wrapping string, e.g. "("
-	excl_ptr<const terminal>	close;	///< wrapping string, e.g. ")"
-	/**
-		We now keep the delimiter tokens in a separate list
-		so they no longer collide with the useful elements.
-		Alternative is to just keep a list of file positions, 
-		since the D template parameter tells us what the delimiter 
-		token is already.  
-		If we really care about saving memory, can just delete
-		the delimiter tokens as they are passed in.  
-		If we really care about performance, just don't produce
-		allocated tokens and ignore the arguments.  
-	 */
-	delim_list	delim;
-public:
-	node_list();
-
-	node_list(const node_list<T,D>& l);
-
-	explicit
-	node_list(const T* n);
-
-virtual	~node_list();
-
-using	parent::begin;
-using	parent::end;
-
-/**
-	This attaches enclosing text, such as brackets, braces, parentheses, 
-	around a node_list.  The arguments are type-checked as token_strings
-	or token_chars.  
-	\param b the beginning token such as open-parenthesis.  
-	\param e the end token such as open-parenthesis.  
-	\return this.
- */
-virtual	node_list<T,D>*
-	wrap(const terminal* b, const terminal* e);
-
-/**
-	Adds an element to a node list, along with the delimiting
-	character token.  Also checks that delimiter matchs, and
-	that type of argument matches.
-	\param d the delimiter token, such as a comma, must match D.
-	\param n the useful node.  
-	\return this.
- */
-virtual	node_list<T,D>*
-	append(const terminal* d, const T* n);
-
-// the following methods are defined in "art_parser_template_methods.h"
-
-/// Prints out type of first element in list, if not null.  
-// virtual	ostream& what(ostream& o) const;
-
-virtual	line_position
-	leftmost(void) const;
-
-virtual	line_position
-	rightmost(void) const;
-
-virtual	void
-	release_append(node_list<T,D>& dest);
-};	// end of template class node_list<>
-
-#endif	// USE_NEW_NODE_LIST
 
 //=============================================================================
 }	// end namespace parser

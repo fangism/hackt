@@ -1,13 +1,14 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.3 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.4 2005/04/14 19:46:33 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
 #define __ART_PARSER_DEFINITION_ITEM_H__
 
 #include "art_parser_base.h"
+#include "art_parser_node_list.h"
 
 namespace ART {
 namespace parser {
@@ -37,9 +38,9 @@ virtual	never_ptr<const object>
 };	// end class def_body_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// definition body is just a list of definition items
 typedef	node_list<const def_body_item>	def_body_item_list;
 
+/// definition body is just a list of definition items
 class definition_body : public def_body_item_list {
 protected:
 	typedef	def_body_item_list		parent;
@@ -63,15 +64,15 @@ public:
  */
 class language_body : public def_body_item {
 protected:
-	excl_ptr<const token_keyword>	tag;	///< what language
+	excl_ptr<const generic_keyword_type>	tag;	///< what language
 public:
 	explicit
-	language_body(const token_keyword* t);
+	language_body(const generic_keyword_type* t);
 
 virtual	~language_body();
 
 virtual language_body*
-	attach_tag(token_keyword* t);
+	attach_tag(generic_keyword_type* t);
 
 virtual	ostream&
 	what(ostream& o) const = 0;

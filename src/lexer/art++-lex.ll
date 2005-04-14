@@ -1,7 +1,7 @@
 /**
  *	\file "art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.12 2005/03/02 00:29:01 fang Exp $
+ *	$Id: art++-lex.ll,v 1.13 2005/04/14 19:46:35 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -102,6 +102,12 @@ NEWLINE_UPDATE(void) {
 
 static inline void
 KEYWORD_UPDATE(void) {
+	yylval._keyword_position = new keyword_position(yytext, current);
+	TOKEN_UPDATE();
+}
+
+static inline void
+LINKAGE_UPDATE(void) {
 	yylval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE();
 }
 
@@ -138,6 +144,12 @@ PBOOL_TYPE_UPDATE(void) {
 static inline void
 MULTICHAR_UPDATE(void) {
 	yylval._token_string = new token_string(yytext); TOKEN_UPDATE();
+}
+
+static inline void
+NODE_POSITION_UPDATE(void) {
+	yylval._node_position = new node_position(yytext, current);
+	TOKEN_UPDATE();
 }
 
 static inline void
@@ -235,11 +247,13 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
+/* UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]	*/
+UNICHARTOKEN	[<>*%/|!?~&^+-]
+POSITIONTOKEN	[][(){},.;:=#]
 
-AT		"@"
-POUND		"#"
-DOLLAR		"$"
+/* AT		"@"	*/
+/* POUND		"#"	*/
+/* DOLLAR		"$"	*/
 
 PLUSPLUS	"++"
 MINUSMINUS	"--"
@@ -255,6 +269,8 @@ EXTRACT		"<<"
 FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
+
+/** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
 BEGINPROB	"%["
 ENDPROB		"]%"
@@ -323,24 +339,27 @@ EXPORT		"export"
 {GE}		{ MULTICHAR_UPDATE(); return GE; }
 {EQUAL}		{ MULTICHAR_UPDATE(); return EQUAL; }
 {NOTEQUAL}	{ MULTICHAR_UPDATE(); return NOTEQUAL; }
-{THICKBAR}	{ MULTICHAR_UPDATE(); return THICKBAR; }
-{SCOPE}		{ MULTICHAR_UPDATE(); return SCOPE; }
-{RANGE}		{ MULTICHAR_UPDATE(); return RANGE; }
 {IMPLIES}	{ MULTICHAR_UPDATE(); return IMPLIES; }
 {RARROW}	{ MULTICHAR_UPDATE(); return RARROW; }
-{BEGINLOOP}	{ MULTICHAR_UPDATE(); return BEGINLOOP; }
-{BEGINPROB}	{ MULTICHAR_UPDATE(); return BEGINPROB; }
-{ENDPROB}	{ MULTICHAR_UPDATE(); return ENDPROB; }
 {PLUSPLUS}	{ MULTICHAR_UPDATE(); return PLUSPLUS; }
 {MINUSMINUS}	{ MULTICHAR_UPDATE(); return MINUSMINUS; }
-{DEFINEOP}	{ MULTICHAR_UPDATE(); return DEFINEOP; }
 {LOGICAL_AND}	{ MULTICHAR_UPDATE(); return LOGICAL_AND; }
 {LOGICAL_OR}	{ MULTICHAR_UPDATE(); return LOGICAL_OR; }
 {INSERT}	{ MULTICHAR_UPDATE(); return INSERT; }
 {EXTRACT}	{ MULTICHAR_UPDATE(); return EXTRACT; }
 
+{BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
+{BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }
+{ENDPROB}	{ NODE_POSITION_UPDATE(); return ENDPROB; }
+{THICKBAR}	{ NODE_POSITION_UPDATE(); return THICKBAR; }
+{SCOPE}		{ NODE_POSITION_UPDATE(); return SCOPE; }
+{RANGE}		{ NODE_POSITION_UPDATE(); return RANGE; }
+{DEFINEOP}	{ NODE_POSITION_UPDATE(); return DEFINEOP; }
+
 {UNICHARTOKEN}	{ yylval._token_char = new token_char(yytext[0]); 
 			TOKEN_UPDATE(); return yytext[0]; }
+
+{POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
 
 {NAMESPACE}	{ KEYWORD_UPDATE(); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(); return OPEN; }
@@ -362,16 +381,16 @@ EXPORT		"export"
 {SET}		{ KEYWORD_UPDATE(); return SET; }
 {GET}		{ KEYWORD_UPDATE(); return GET; }
 {ENUM}		{ KEYWORD_UPDATE(); return ENUM; }
+{CHANNEL}	{ KEYWORD_UPDATE(); return CHANNEL; }
 {INT_TYPE}	{ INT_TYPE_UPDATE(); return INT_TYPE; }
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(); return BOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(); return PBOOL_TYPE; }
-{CHANNEL}	{ KEYWORD_UPDATE(); return CHANNEL; }
 {TRUE}		{ BOOL_UPDATE(); return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE(); return BOOL_FALSE; }
-{EXTERN}	{ KEYWORD_UPDATE(); return EXTERN; }
-{STATIC}	{ KEYWORD_UPDATE(); return STATIC; }
-{EXPORT}	{ KEYWORD_UPDATE(); return EXPORT; }
+{EXTERN}	{ LINKAGE_UPDATE(); return EXTERN; }
+{STATIC}	{ LINKAGE_UPDATE(); return STATIC; }
+{EXPORT}	{ LINKAGE_UPDATE(); return EXPORT; }
 
 {WHITESPACE}	TOKEN_UPDATE();
 {NEWLINE}	NEWLINE_UPDATE();

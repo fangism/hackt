@@ -1,6 +1,50 @@
 "ChangeLog"
 
+2005-04-14	David Fang	<fangism@users.sourceforge.net>
+	* ARTXX-00-01-04-main-00-22-merged-parser-02-05:
+	  Merged parser-02 branch, through revision -05.  
+
+
+2005-04-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-05:
+	  Clean-up, making USE_NEW_NODE_LIST permanent.  
+	  (Removed old "AST/art_parser.tcc")
+
+
+2005-04-10	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-03:
+	  Replaced most token_keyword with faster keyword_position, 
+	  	which still stores redundant strings, using a fixed-length
+		char array[12].  
+
+	* ARTXX-00-01-04-main-00-21-parser-02-04:
+	  Enabled chunk-map pooling of most (terminal) token classes.
+
+
+2005-04-09	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-02:
+	  Modified parser to use node_position for syntactic sugar tokens
+		  such as characters and short symbol strings.
+	  Enabled USE_NEW_NODE_LIST in "AST/art_parser_fwd.h".
+	  art_parser.tcc can be replaced by art_parser_node_list.tcc.
+		No more delimiter lists, but open/close list-wrappers kept.
+	  Replaced most non-essential token_char and token_string with
+		  node_position (using char_punctuation_type, etc...)
+	  Fixed typo bug in "util/numeric/integer_traits.h".
+	
+
 2005-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-01:
+	  New branch for parser/AST-related improvements.  
+	  Plans include: stripping unnecessary token information, 
+		saving only position, token pooling for effective reclamation, 
+		replacing node_list class template with simpler one.
+	  This revision just added conditional code for USE_NEW_NODE_LIST, 
+		in preparation for upcoming changes, and is disabled.  
 
 	* ARTXX-00-01-04-main-00-20:
 	  Upgraded param_expression_assignments to use template.  

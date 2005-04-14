@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.3 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_fwd.h,v 1.4 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -21,14 +21,11 @@ class token_char;
 class token_string;
 class token_identifier;
 class token_keyword;
+class node_position;
+class keyword_position;
 
-#if 0
 template <class T>
-class node_list_base;			// defined in "art_parser.tcc"
-#endif
-
-template <class T, const char[] = none>
-class node_list;			// defined in "art_parser.tcc"
+class node_list;			// defined in "art_parser_node_list.h"
 
 class expr_list;
 class root_item;
@@ -146,6 +143,11 @@ class token_bool_type;
 class token_paramtype;
 class token_pbool_type;
 class token_pint_type;
+
+//-----------------------------------------------------------------------------
+typedef	node_position		char_punctuation_type;
+typedef	node_position		string_punctuation_type;
+typedef	keyword_position	generic_keyword_type;
 
 //-----------------------------------------------------------------------------
 // declared in "Object/art_context.h"

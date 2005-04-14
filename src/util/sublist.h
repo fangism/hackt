@@ -1,11 +1,11 @@
 /**
 	\file "sublist.h"
 	Wrapper class interface for list slices, that behave like lists.  
-	$Id: sublist.h,v 1.5 2004/12/05 05:07:25 fang Exp $
+	$Id: sublist.h,v 1.6 2005/04/14 19:46:36 fang Exp $
  */
 
-#ifndef	__SUBLIST_H__
-#define	__SUBLIST_H__
+#ifndef	__UTIL_SUBLIST_H__
+#define	__UTIL_SUBLIST_H__
 
 #include "STL/list.h"
 
@@ -23,6 +23,7 @@ namespace util {
  */
 SUBLIST_TEMPLATE_SIGNATURE
 class sublist {
+	typedef	sublist<T>				this_type;
 public:
 	typedef	LIST_NAMESPACE::list<T>			list_type;
 	typedef	typename list_type::iterator		iterator;
@@ -60,7 +61,7 @@ public:
 	// no default constructor because the_list is a reference
 
 	/** Standard copy constructor */
-	sublist(const sublist<T>& l);
+	sublist(const this_type& l);
 
 	/**
 		Implicit constructor to covert from a list to a list slice.  
@@ -130,5 +131,5 @@ public:
 }	// end namespace util
 //=============================================================================
 
-#endif	//	__SUBLIST_H__
+#endif	// __UTIL_SUBLIST_H__
 

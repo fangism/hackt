@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.2 2005/02/25 07:23:56 fang Exp $
+	$Id: art_parser_type.h,v 1.3 2005/04/14 19:46:35 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_H__
@@ -47,14 +47,14 @@ virtual	never_ptr<const object>
 };	// end class type_id
 
 //-----------------------------------------------------------------------------
-typedef node_list<const concrete_type_ref,comma>	data_type_ref_list_base;
+typedef node_list<const concrete_type_ref>		data_type_ref_list_base;
 	// consider making concrete_datatype_ref sub-class
 	// or overriding class's check_build
 
 /// list of base data types
 class data_type_ref_list : public data_type_ref_list_base {
 protected:
-	typedef	data_type_ref_list_base			parent;
+	typedef	data_type_ref_list_base			parent_type;
 public:
 	explicit
 	data_type_ref_list(const concrete_type_ref* c);
@@ -66,11 +66,11 @@ public:
 /// full base channel type, including base type list
 class chan_type : public type_base {
 protected:
-	const excl_ptr<const token_keyword>	chan;	///< keyword "channel"
+	const excl_ptr<const generic_keyword_type>	chan;	///< keyword "channel"
 	const excl_ptr<const token_char>	dir;	///< port direction: in or out
 	excl_ptr<const data_type_ref_list>	dtypes;	///< data types communicated
 public:
-	chan_type(const token_keyword* c, const token_char* d = NULL, 
+	chan_type(const generic_keyword_type* c, const token_char* d = NULL, 
 		const data_type_ref_list* t = NULL);
 
 virtual	~chan_type();

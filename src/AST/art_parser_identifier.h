@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.2 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_identifier.h,v 1.3 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef __ART_PARSER_IDENTIFIER_H__
@@ -16,7 +16,7 @@ using namespace util::memory;		// for experimental pointer classes
 
 namespace parser {
 //=============================================================================
-typedef	node_list<const token_identifier,scope>	qualified_id_base;
+typedef	node_list<const token_identifier>	qualified_id_base;
 
 /**
 	Generalized scoped identifier, referring to a type or instance.  
@@ -33,12 +33,12 @@ typedef	node_list<const token_identifier,scope>	qualified_id_base;
  */
 class qualified_id : public qualified_id_base {
 protected:
-	typedef	qualified_id_base		parent;
+	typedef	qualified_id_base		parent_type;
 public:
-	typedef	parent::iterator		iterator;
-	typedef	parent::const_iterator		const_iterator;
-	typedef	parent::reverse_iterator	reverse_iterator;
-	typedef	parent::const_reverse_iterator	const_reverse_iterator;
+	typedef	parent_type::iterator		iterator;
+	typedef	parent_type::const_iterator	const_iterator;
+	typedef	parent_type::reverse_iterator	reverse_iterator;
+	typedef	parent_type::const_reverse_iterator	const_reverse_iterator;
 protected:
 	/**
 		Indicates whether identifier is absolute, meaning
@@ -46,7 +46,7 @@ protected:
 		as opposed to inner scope outward (relative).
 		Particularly useful for disambiguation.
 	 */
-	excl_ptr<const token_string>			absolute;
+	excl_ptr<const string_punctuation_type>			absolute;
 public:
 	explicit
 	qualified_id(const token_identifier* n);
@@ -69,17 +69,16 @@ virtual	line_position
 virtual	never_ptr<const object>
 	check_build(context& c) const;
 
-using parent::begin;
-using parent::end;
-using parent::empty;
-
-// overshadow parent's
-virtual	qualified_id*
-	append(terminal* d, token_identifier* n);
+using parent_type::begin;
+using parent_type::end;
+using parent_type::empty;
+using parent_type::push_back;
+using parent_type::pop_back;
+using parent_type::pop_front;
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 	qualified_id*
-	force_absolute(const token_string* s);
+	force_absolute(const string_punctuation_type* s);
 
 	bool
 	is_absolute(void) const { return absolute; }
@@ -200,7 +199,7 @@ public:
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 	qualified_id*
-	force_absolute(const token_string* s);
+	force_absolute(const string_punctuation_type* s);
 
 	bool
 	is_absolute(void) const;

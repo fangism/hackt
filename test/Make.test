@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.8 2005/02/27 22:54:34 fang Exp $
+#	$Id: Make.test,v 1.9 2005/04/14 19:46:36 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -68,7 +68,7 @@ CLEANFILES += $(TESTS) \
 	$(ARTC_TEST_SUBJECTS:=.stderr.filter) \
 	$(ARTC_TEST_PASSES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison.filter) \
-	$(BISON_OUTPUTS:=.stderr.bison.diff) \
+	$(BISON_OUTPUTS:=.bison.diff) \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump) \
 	$(ARTOBJ_TEST_SUBJECTS:=.indump) \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump.filter) \

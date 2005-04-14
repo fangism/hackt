@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_statement.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_statement.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_statement.h,v 1.2 2005/04/14 19:46:35 fang Exp $
  */
 
 #ifndef __ART_PARSER_STATEMENT_H__
@@ -85,12 +85,13 @@ protected:
 	excl_ptr<const terminal>	op;		///< operation
 	excl_ptr<const expr>		rhs;		///< source expression
 #else
-	const expr*		lhs;		///< destination
-	const terminal*		op;		///< operation
-	const expr*		rhs;		///< source expression
+	const expr*			lhs;		///< destination
+	const char_punctuation_type*	op;		///< operation
+	const expr*			rhs;		///< source expression
 #endif
 public:
-	assign_stmt(const expr* left, const terminal* o, const expr* right);
+	assign_stmt(const expr* left, const char_punctuation_type* o,
+		const expr* right);
 #if 0
 	assign_stmt(excl_ptr<const expr> left, excl_ptr<const terminal> o,
 		excl_ptr<const expr> right);
@@ -119,7 +120,7 @@ virtual	line_position
 	const expr*
 	release_lhs(void);
 
-	const terminal*
+	const char_punctuation_type*
 	release_op(void);
 
 	const expr*

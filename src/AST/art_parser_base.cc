@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.17 2005/03/06 22:45:48 fang Exp $
+	$Id: art_parser_base.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -16,10 +16,6 @@
 #include <exception>
 #include <iostream>
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
-#include "art_parser.tcc"
-
 #include "art_parser_expr_base.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
@@ -28,6 +24,7 @@
 #include "art_parser_identifier.h"
 #include "art_parser_statement.h"
 #include "art_parser_definition_item.h"
+#include "art_parser_node_list.tcc"
 
 #include "art_context.h"
 #include "art_object_definition_base.h"
@@ -209,7 +206,7 @@ ostream& operator << (ostream& o, const type_id& id) {
 // class chan_type method definitions
 
 CONSTRUCTOR_INLINE
-chan_type::chan_type(const token_keyword* c, const token_char* d, 
+chan_type::chan_type(const generic_keyword_type* c, const token_char* d, 
 		const data_type_ref_list* t) : type_base(),
 		chan(c), dir(d), dtypes(t) {
 	NEVER_NULL(c);
@@ -337,7 +334,7 @@ incdec_stmt::rightmost(void) const {
 // class assign_stmt method definitions
 
 CONSTRUCTOR_INLINE
-assign_stmt::assign_stmt(const expr* left, const terminal* o, 
+assign_stmt::assign_stmt(const expr* left, const char_punctuation_type* o, 
 		const expr* right) : statement(),
 		lhs(left), op(o), rhs(right) {
 	NEVER_NULL(lhs); NEVER_NULL(op); NEVER_NULL(rhs);
@@ -380,9 +377,9 @@ assign_stmt::release_lhs(void) {
 	return ret;
 }
 
-const terminal*
+const char_punctuation_type*
 assign_stmt::release_op(void) {
-	const terminal* ret = op;
+	const char_punctuation_type* ret = op;
 	op = NULL;
 	return ret;
 }
@@ -431,7 +428,7 @@ definition_body::~definition_body() { }
 // class language_body methd definitions
 
 CONSTRUCTOR_INLINE
-language_body::language_body(const token_keyword* t) :
+language_body::language_body(const generic_keyword_type* t) :
 		def_body_item(), tag(t) {
 }
 
@@ -439,9 +436,9 @@ DESTRUCTOR_INLINE
 language_body::~language_body() { }
 
 language_body*
-language_body::attach_tag(token_keyword* t) {
+language_body::attach_tag(generic_keyword_type* t) {
 	// need to safe-delete first?  nah...
-	tag = excl_ptr<const token_keyword>(t);
+	tag = excl_ptr<const generic_keyword_type>(t);
 	NEVER_NULL(tag);
 	return this;
 }
@@ -468,14 +465,13 @@ language_body::leftmost(void) const {
  */
 CONSTRUCTOR_INLINE
 namespace_body::namespace_body(
-		const token_keyword* s, const token_identifier* n, 
-		const terminal* l, const root_body* b,
-		const terminal* r, const terminal* c) :
+		const generic_keyword_type* s, const token_identifier* n, 
+		const root_body* b, const char_punctuation_type* c) :
 		root_item(),       
-		ns(s), name(n), lb(l), body(b), rb(r), semi(c) {
-	NEVER_NULL(ns); NEVER_NULL(name); NEVER_NULL(lb);
+		ns(s), name(n), body(b), semi(c) {
+	NEVER_NULL(ns); NEVER_NULL(name);
 	// body may be NULL
-	NEVER_NULL(rb); NEVER_NULL(semi);
+	NEVER_NULL(semi);	// don't really care about syntax sugar
 }
 
 /// destructor
@@ -503,9 +499,9 @@ namespace_body::leftmost(void) const {
 line_position
 namespace_body::rightmost(void) const {
 	if (semi)	return semi->rightmost();
-	else if (rb)	return rb->rightmost();
+//	else if (rb)	return rb->rightmost();
 	else if (body)	return body->rightmost();
-	else if (lb)	return lb->rightmost();
+//	else if (lb)	return lb->rightmost();
 	else		return name->rightmost();
 }
 
@@ -559,7 +555,7 @@ namespace_id::rightmost(void) const {
 }
 
 qualified_id*
-namespace_id::force_absolute(const token_string* s) {
+namespace_id::force_absolute(const string_punctuation_type* s) {
 	return qid->force_absolute(s);
 }
 
@@ -593,8 +589,8 @@ operator << (ostream& o, const namespace_id& id) {
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const token_keyword* o, const namespace_id* i, 
-		const token_char* s) : root_item(),
+		const generic_keyword_type* o, const namespace_id* i, 
+		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(NULL), alias(NULL), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
 }
@@ -609,12 +605,13 @@ using_namespace::using_namespace(
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const token_keyword* o, const namespace_id* i, 
-		const token_keyword* a, const token_identifier* n, 
-		const token_char* s) : root_item(),
+		const generic_keyword_type* o, const namespace_id* i, 
+		const generic_keyword_type* a, const token_identifier* n, 
+		const char_punctuation_type* s) : root_item(),
 		open(o), id(i), as(a), alias(n), semi(s) {
 	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);
 	NEVER_NULL(alias); NEVER_NULL(semi);
+	// get rid of non-essentials...
 }
 
 /// default destructor
@@ -789,50 +786,9 @@ concrete_type_ref::check_build(context& c) const {
 // class data_type_ref_list method definitions
 
 data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
-		parent(c) { }
+		parent_type(c) { }
 
 data_type_ref_list::~data_type_ref_list() { }
-
-//=============================================================================
-#if 0
-// moved to "art_parser_instance.cc"
-// class guarded_definition_body method definitions
-
-CONSTRUCTOR_INLINE
-guarded_definition_body::guarded_definition_body(const expr* e, 
-		const terminal* a, const definition_body* b) :
-		instance_management(), guard(e), arrow(a), body(b) {
-	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
-}
-
-DESTRUCTOR_INLINE
-guarded_definition_body::~guarded_definition_body() {
-}
-
-ostream&
-guarded_definition_body::what(ostream& o) const {
-	return o << "(guarded-def-body)";
-}
-
-line_position
-guarded_definition_body::leftmost(void) const {
-	return guard->leftmost();
-}
-
-line_position
-guarded_definition_body::rightmost(void) const {
-	return body->rightmost();
-}
-
-//=============================================================================
-// class guarded_definition_body_list method definitions
-
-guarded_definition_body_list::guarded_definition_body_list(
-		const guarded_definition_body* g) :
-		parent(g) { }
-
-guarded_definition_body_list::~guarded_definition_body_list() { }
-#endif
 
 //=============================================================================
 }	// end namespace parser

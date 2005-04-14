@@ -1,20 +1,21 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.10 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_prs.cc,v 1.11 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
 #define	__ART_PARSER_PRS_CC__
 
 #include <iostream>
-#include "art_parser.tcc"
+
 #include "art_parser_prs.h"
 #include "art_parser_expr.h"		// for id_expr
 #include "art_parser_range.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
 #include "art_parser_token_string.h"
+#include "art_parser_node_list.tcc"
 
 #include "what.h"
 
@@ -81,10 +82,10 @@ rule::check_build(context& c) const {
 //=============================================================================
 // class loop method definitions
 
-loop::loop(const token_char* l, const token_char* c1,
-		const token_identifier* id, const token_char* c2, 
-		const range* b, const token_char* c3, 
-		const rule_list* rl, const token_char* r) :
+loop::loop(const char_punctuation_type* l, const char_punctuation_type* c1,
+		const token_identifier* id, const char_punctuation_type* c2, 
+		const range* b, const char_punctuation_type* c3, 
+		const rule_list* rl, const char_punctuation_type* r) :
 		body_item(), 
 		lp(l), col1(c1), index(id), col2(c2), bounds(b), 
 		col3(c3), rules(rl), rp(r) {
@@ -120,7 +121,7 @@ loop::check_build(context& c) const {
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(const token_keyword* t, const rule_list* r) :
+body::body(const generic_keyword_type* t, const rule_list* r) :
 		language_body(t), rules(r) {
 	if (r) NEVER_NULL(rules);
 }
@@ -150,10 +151,11 @@ body::check_build(context& c) const {
 //=============================================================================
 // class op_loop method definitions
 
-op_loop::op_loop(const token_char* l, const token_char* o, const token_char* c1,
-		const token_identifier* id, const token_char* c2, 
-		const range* b, const token_char* c3, 
-		const expr* e, const token_char* r) :
+op_loop::op_loop(const char_punctuation_type* l, const token_char* o,
+		const char_punctuation_type* c1,
+		const token_identifier* id, const char_punctuation_type* c2, 
+		const range* b, const char_punctuation_type* c3, 
+		const expr* e, const char_punctuation_type* r) :
 		expr(), 
 		lp(l), op(o), col1(c1), index(id), col2(c2), bounds(b), 
 		col3(c3), ex(e), rp(r) {

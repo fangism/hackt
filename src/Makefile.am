@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.52 2005/03/11 20:50:29 fang Exp $
+#	$Id: Makefile.am,v 1.53 2005/04/14 19:46:32 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -106,13 +106,12 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_prs_fwd.h \
 	AST/art_parser_delim.h \
 	AST/art_parser.h \
-	AST/art_parser.tcc \
+	AST/art_parser_node_list.h \
 	AST/art_parser_node_list.tcc \
 	AST/art_parser_definition_item.h \
 	AST/art_parser_expr_base.h \
 	AST/art_parser_expr_list.h \
 	AST/art_parser_identifier.h \
-	AST/art_parser_node_list.h \
 	AST/art_parser_range.h \
 	AST/art_parser_range_list.h \
 	AST/art_parser_root.h \

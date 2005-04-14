@@ -1,7 +1,7 @@
 # "DevelopmentPlan.dot"
 
 digraph G {
-size="7,10";
+size="9,10";
 
 ARTXX_00_01_04		[shape=box, style=filled, label="ART++ 0.1.4"];
 ARTXX_00_01_04_b	[shape=box, style=filled, fillcolor=green, 
@@ -11,11 +11,15 @@ ARTXX_00_01_05		[shape=box, label="HACKT 0.1.5"];
 
 DOCS_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow, 
 				label="language spec.\ndocumentation"];
-PARSER_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow,
+PARSER_00_01_04		[shape=ellipse, style=filled, 
 				label="general parser\nimprovements"];
-LEX_00_01_04		[shape=ellipse, label="lexer token positions"];
-TOKENPOOL_00_01_04	[shape=ellipse, label="token pooling"];
-NODELIST_00_01_04	[shape=ellipse, label="node-list template"];
+LEX_00_01_04		[shape=ellipse, style=filled,
+				label="lexer token\npositions"];
+TOKENPOOL_00_01_04	[shape=ellipse, style=filled, label="token pooling"];
+NODELIST_00_01_04	[shape=ellipse, style=filled, 
+				label="node-list\ntemplate"];
+PARSER_B_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
+				label="parser phase 2"];
 UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
 ALIAS_00_01_04		[shape=ellipse, style=filled, label="alias connection"];
 PORT_00_01_04		[shape=ellipse, label="port connection"];
@@ -30,7 +34,8 @@ EXTTEMPLATE_00_01_04	[shape=ellipse, label="extended\ntemplate signatures"];
 CONNECTEQ_00_01_04	[shape=ellipse, label="connection\ntype-equivalence"];
 CFLAT_00_01_04		[shape=ellipse, label="CFLAT backward\ncompatbility"];
 PRS_00_01_04		[shape=ellipse, label="PRS type-check"];
-ERRORTREE_00_01_04	[shape=ellipse, label="error tree construction"];
+ERRORTREE_00_01_04	[shape=ellipse, label="error tree\nconstruction"];
+MULTIPARSE_00_01_04	[shape=ellipse, label="multiple\nmodular parsers"];
 
 ARTXX_00_01_04 -> DOCS_00_01_04;
 ARTXX_00_01_04 -> PARSER_00_01_04;
@@ -38,6 +43,9 @@ ARTXX_00_01_04 -> ALIAS_00_01_04;
 PARSER_00_01_04 -> LEX_00_01_04;
 PARSER_00_01_04 -> TOKENPOOL_00_01_04;
 PARSER_00_01_04 -> NODELIST_00_01_04;
+LEX_00_01_04 -> PARSER_B_00_01_04;
+TOKENPOOL_00_01_04 -> PARSER_B_00_01_04;
+NODELIST_00_01_04 -> PARSER_B_00_01_04;
 ALIAS_00_01_04 -> PORT_00_01_04;
 PORT_00_01_04 -> UNIQUE_00_01_04;
 MEMBER_00_01_04 -> UNIQUE_00_01_04;
@@ -54,7 +62,7 @@ ARTXX_00_01_04_b -> TYPEREF_00_01_04;
 TYPEREF_00_01_04 -> ARTXX_00_01_04_c;
 TYPEDEF_00_01_04 -> UNIQUE_00_01_04;
 TYPEDEF_00_01_04 -> EXTTEMPLATE_00_01_04;
-PARSER_00_01_04 -> PRS_00_01_04;
+PARSER_B_00_01_04 -> PRS_00_01_04;
 UNIQUE_00_01_04 -> PRS_00_01_04;
 
 ARTXX_00_01_04_c -> ARTXX_00_01_05;
@@ -63,6 +71,8 @@ ARTXX_00_01_04_c -> CFLAT_00_01_04;
 CONNECTEQ_00_01_04 -> ARTXX_00_01_04_c;
 DOCS_00_01_04 -> ARTXX_00_01_05;
 ERRORTREE_00_01_04 -> ARTXX_00_01_05;
+PARSER_B_00_01_04 -> MULTIPARSE_00_01_04;
+MULTIPARSE_00_01_04 -> ARTXX_00_01_05;
 
 CHP_00_01_05		[shape=ellipse, label="CHP type-check"];
 CHPSYNTH_00_01_05	[shape=ellipse, label="CHP synthesis"];

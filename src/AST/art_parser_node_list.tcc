@@ -2,7 +2,7 @@
 	\file "art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.4 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.5 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_LIST_TCC__
@@ -12,7 +12,6 @@
 
 #include "STL/list.tcc"
 
-// #include "art_parser_debug.h"
 #include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
 #include "art_parser_node_position.h"
 #include "art_context.h"
@@ -56,15 +55,31 @@ namespace parser {
 using util::what;
 USING_STACKTRACE
 
+//-----------------------------------------------------------------------------
+// default definitions for syntax
+
+template <class L>
+const char node_list_traits<L>::open[] = "(";
+
+template <class L>
+const char node_list_traits<L>::close[] = ")";
+
+template <class L>
+const char node_list_traits<L>::delim[] = ", ";
+
+//-----------------------------------------------------------------------------
 /// default empty constructor
 NODE_LIST_TEMPLATE_SIGNATURE
-node_list<T>::node_list() : nodes(), open(NULL), close(NULL) {
-}
+node_list<T>::node_list() : nodes(), open(NULL), close(NULL) { }
+
+/// default destructor
+NODE_LIST_TEMPLATE_SIGNATURE
+node_list<T>::~node_list() { }
 
 /// constructor initialized with first element
 NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T>::node_list(const T* n) : nodes(), open(NULL), close(NULL) {
-	push_back(value_type(n));
+	nodes.push_back(value_type(n));
 }
 
 //-----------------------------------------------------------------------------
@@ -91,6 +106,7 @@ node_list<T>::what(ostream& o) const {
 }
 
 //-----------------------------------------------------------------------------
+#if 0
 NODE_LIST_TEMPLATE_SIGNATURE
 void
 node_list<T>::push_back(const T* p) {
@@ -100,10 +116,18 @@ node_list<T>::push_back(const T* p) {
 //-----------------------------------------------------------------------------
 NODE_LIST_TEMPLATE_SIGNATURE
 void
+node_list<T>::push_front(const T* p) {
+	nodes.push_front(value_type(p));
+}
+
+//-----------------------------------------------------------------------------
+NODE_LIST_TEMPLATE_SIGNATURE
+void
 node_list<T>::wrap(const node_position* b, const node_position* e) {
 	open = excl_ptr<const node_position>(b);
 	close = excl_ptr<const node_position>(e);
 }
+#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -144,8 +168,9 @@ node_list<T>::check_build(context& c) const {
 }
 
 //-----------------------------------------------------------------------------
-#if 0
 /**
+	OBSOLETE: because lists contain count_ptrs, no need to release.
+
 	Releases memory owned by the list and copies over to the destination
 	list.  
 	Ownership of element pointers must be transferrable, hence
@@ -154,18 +179,16 @@ node_list<T>::check_build(context& c) const {
 	unusable after this operation.  
 	\param dest the destination list.  
  */
-NODE_LIST_BASE_TEMPLATE_SIGNATURE
+NODE_LIST_TEMPLATE_SIGNATURE
 void
-node_list_base<T>::release_append(node_list_base<T>& dest) {
+node_list<T>::release_append(this_type& dest) {
 	iterator i = this->begin();
 	for ( ; i!=this->end(); i++) {
 		// will release each element
-		dest.push_back(*i);		// will this actually release?
-//		push_back(excl_ptr<const T>(*i));	// implicit
-//		push_back(some_ptr<const T>(excl_ptr<const T>(*i)));
+		dest.nodes.push_back(*i);	// will this actually release?
+		INVARIANT(!*i);
 	}
 }
-#endif
 
 //=============================================================================
 // for class node_list<>

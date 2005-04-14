@@ -1,18 +1,19 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.9 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_chp.cc,v 1.10 2005/04/14 19:46:33 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
 #define	__ART_PARSER_CHP_CC__
 
 #include <iostream>
-#include "art_parser.tcc"
+
 #include "art_parser_chp.h"
 #include "art_parser_expr_list.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
+#include "art_parser_node_list.tcc"
 
 #include "what.h"
 
@@ -57,7 +58,7 @@ statement::~statement() { }
 // class body method definitions
 
 CONSTRUCTOR_INLINE
-body::body(const token_keyword* t, const stmt_list* s) :
+body::body(const generic_keyword_type* t, const stmt_list* s) :
 		language_body(t), stmts(s) {
 	if(s) NEVER_NULL(stmts);
 }
@@ -135,10 +136,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(else_clause)
 // class skip method definitions
 
 CONSTRUCTOR_INLINE
-skip::skip(const token_keyword* s) : statement(),
-		token_keyword(IS_A(const token_keyword*, s)->c_str()) {
-	// transfers string contents
-	excl_ptr<const token_keyword> delete_me(s);
+skip::skip(const generic_keyword_type* s) : statement(), kw(s) {
+	NEVER_NULL(kw);
 }
 
 DESTRUCTOR_INLINE
@@ -150,12 +149,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(skip)
 
 line_position
 skip::leftmost(void) const {
-	return token_keyword::leftmost();
+	return kw->leftmost();
 }
 
 line_position
 skip::rightmost(void) const {
-	return token_keyword::rightmost();
+	return kw->rightmost();
 }
 
 never_ptr<const object>
@@ -169,11 +168,9 @@ skip::check_build(context& c) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(const terminal* l, const expr* c, const terminal* r) :
-		statement(),
-		lb(IS_A(const terminal*, l)),
-		cond(IS_A(const expr*, c)),
-		rb(IS_A(const terminal*, r)) {
+wait::wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r) :
+		statement(), lb(l), cond(c), rb(l) {
 	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
 }
 
@@ -292,7 +289,7 @@ communication::leftmost(void) const {
 
 CONSTRUCTOR_INLINE
 comm_list::comm_list(const communication* c) :
-		statement(), comm_list_base(c) {
+		statement(), parent_type(c) {
 }
 
 DESTRUCTOR_INLINE
@@ -303,12 +300,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(comm_list)
 
 line_position
 comm_list::leftmost(void) const {
-	return comm_list_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 comm_list::rightmost(void) const {
-	return comm_list_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -382,7 +379,7 @@ selection::~selection() { }
 
 CONSTRUCTOR_INLINE
 det_selection::det_selection(const guarded_command* n) :
-		selection(), det_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -392,12 +389,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
 line_position
 det_selection::leftmost(void) const {
-	return det_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 det_selection::rightmost(void) const {
-	return det_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -411,7 +408,7 @@ det_selection::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 nondet_selection::nondet_selection(const guarded_command* n) :
-		selection(), nondet_sel_base(n) {
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -421,12 +418,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
 line_position
 nondet_selection::leftmost(void) const {
-	return nondet_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 nondet_selection::rightmost(void) const {
-	return nondet_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -439,8 +436,8 @@ nondet_selection::check_build(context& c) const {
 // class prob_selection method definitions
 
 CONSTRUCTOR_INLINE
-prob_selection::prob_selection(const guarded_command* n) : selection(),
-		prob_sel_base(n) {
+prob_selection::prob_selection(const guarded_command* n) :
+		selection(), parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -450,12 +447,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
 
 line_position
 prob_selection::leftmost(void) const {
-	return prob_sel_base::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 prob_selection::rightmost(void) const {
-	return prob_sel_base::rightmost();
+	return parent_type::rightmost();
 }
 
 never_ptr<const object>
@@ -525,7 +522,7 @@ do_until::check_build(context& c) const {
 // class log method definitions
 
 CONSTRUCTOR_INLINE
-log::log(const token_keyword* l, const expr_list* n) : statement(),
+log::log(const generic_keyword_type* l, const expr_list* n) : statement(),
 		lc(l), args(n) {
 	NEVER_NULL(lc); NEVER_NULL(args);
 }
@@ -554,11 +551,20 @@ log::check_build(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
+#if 1
+template class node_list<const statement>;	// CHP::stmt_list
+template class node_list<const guarded_command>;	// CHP::det_sel_base
+							// CHP::prob_sel_base
+							// CHP::nondet_sel_base
+	// actually distinguish these types for the sake of printing?
+template class node_list<const communication>;	// CHP::comm_list_base
+#else
 template class node_list<const statement,semicolon>;	// CHP::stmt_list
 template class node_list<const guarded_command,thickbar>;	// CHP::det_sel_base
 							// CHP::prob_sel_base
 template class node_list<const guarded_command,colon>;	// CHP::nondet_sel_base
 template class node_list<const communication,comma>;	// CHP::comm_list_base
+#endif
 
 //=============================================================================
 }	// end namespace CHP

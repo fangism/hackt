@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.15 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_formal.cc,v 1.16 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -16,16 +16,13 @@
 #include <exception>
 #include <iostream>
 
-// #include "art_parser_debug.h"
-// #include "art_switches.h"
-#include "art_parser.tcc"
-
 #include "art_parser_formal.h"
 #include "art_parser_expr_base.h"
 #include "art_parser_range_list.h"
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
 #include "art_parser_type.h"
+#include "art_parser_node_list.tcc"
 
 #include "art_context.h"
 #include "art_object_type_ref_base.h"
@@ -94,7 +91,8 @@ data_param_id::check_build(context& c) const {
 //=============================================================================
 // class data_param_id_list method definitions
 
-data_param_id_list::data_param_id_list(const data_param_id* d) : parent(d) { }
+data_param_id_list::data_param_id_list(const data_param_id* d) :
+		parent_type(d) { }
 
 data_param_id_list::~data_param_id_list() { }
 
@@ -133,7 +131,7 @@ data_param_decl::check_build(context& c) const {
 // class data_param_decl_list method definitions
 
 data_param_decl_list::data_param_decl_list(const data_param_decl* d) :
-		parent(d) { }
+		parent_type(d) { }
 
 data_param_decl_list::~data_param_decl_list() { }
 
@@ -209,7 +207,7 @@ port_formal_id::check_build(context& c) const {
 // class port_formal_id_list method definitions
 
 port_formal_id_list::port_formal_id_list(const port_formal_id* p) :
-		parent(p) { }
+		parent_type(p) { }
 
 port_formal_id_list::~port_formal_id_list() { }
 
@@ -272,10 +270,10 @@ port_formal_decl::check_build(context& c) const {
 //=============================================================================
 // class port_formal_decl_list method definitions
 
-port_formal_decl_list::port_formal_decl_list() : parent() { }
+port_formal_decl_list::port_formal_decl_list() : parent_type() { }
 
 port_formal_decl_list::port_formal_decl_list(const port_formal_decl* p) :
-		parent(p) { }
+		parent_type(p) { }
 
 port_formal_decl_list::~port_formal_decl_list() { }
 
@@ -293,7 +291,7 @@ port_formal_decl_list::~port_formal_decl_list() { }
  */
 CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
-		const dense_range_list* d, const token_char* e, 
+		const dense_range_list* d, const char_punctuation_type* e, 
 		const expr* v) : 
 		node(), name(n), dim(d), eq(e), dflt(v) {
 	NEVER_NULL(name);
@@ -383,7 +381,7 @@ template_formal_id::check_build(context& c) const {
 // class template_formal_id_list method definitions
 
 template_formal_id_list::template_formal_id_list(const template_formal_id* t) :
-		parent(t) { }
+		parent_type(t) { }
 
 template_formal_id_list::~template_formal_id_list() { }
 
@@ -448,7 +446,7 @@ template_formal_decl::check_build(context& c) const {
 
 template_formal_decl_list::template_formal_decl_list(
 		const template_formal_decl* t) :
-		parent(t) { }
+		parent_type(t) { }
 
 template_formal_decl_list::~template_formal_decl_list() { }
 

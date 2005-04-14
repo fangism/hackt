@@ -1,7 +1,7 @@
 /**
 	\file "memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.3 2005/03/06 04:36:48 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.4 2005/04/14 19:46:36 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -63,6 +63,11 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
+#if 0
+	cerr << "diff = " << diff <<
+		", offset = " << offset <<
+		", chunk_size = " << chunk_size << endl;
+#endif
 	INVARIANT(offset < chunk_size);	// else doesn't belong to this chunk!
 	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
 	// was actually allocated and not already freed
@@ -186,6 +191,7 @@ CHUNK_MAP_POOL_CLASS::allocate(void) {
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 void
 CHUNK_MAP_POOL_CLASS::deallocate(pointer p) {
+	NEVER_NULL(p);
 	INVARIANT(!chunk_map.empty());
 	// see "list_vector.h" for similar code.
 	alloc_map_iterator entry = chunk_map.upper_bound(p);
@@ -193,12 +199,17 @@ CHUNK_MAP_POOL_CLASS::deallocate(pointer p) {
 	INVARIANT(entry != chunk_map.begin());	// else out of bounds
 	entry--;
 	const chunk_set_iterator use_chunk = entry->second;
+	// INVARIANT(&*use_chunk);
 	if (use_chunk->full()) {
 		// deallocating an entry will qualify it for the avail_set
 		// because it will not be full thereafter.
 		avail_set.insert(&*use_chunk);
 	}
 	INVARIANT(p >= use_chunk->start_address());
+#if 0
+	this->status(cerr);
+	cerr << "about to delete " << p << endl;
+#endif
 	use_chunk->deallocate(p);
 	if (use_chunk->empty()) {
 		// whole chunk is free, eagerly release the chunk's memory

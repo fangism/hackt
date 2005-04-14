@@ -1,11 +1,11 @@
 /**
 	\file "sublist.tcc"
 	Template method definitions for sublist.
-	$Id: sublist.tcc,v 1.1 2004/12/05 05:07:25 fang Exp $
+	$Id: sublist.tcc,v 1.2 2005/04/14 19:46:36 fang Exp $
  */
 
-#ifndef	__SUBLIST_TCC__
-#define	__SUBLIST_TCC__
+#ifndef	__UTIL_SUBLIST_TCC__
+#define	__UTIL_SUBLIST_TCC__
 
 // #include "list.tcc"
 // not needed because we only need the list iterator
@@ -71,5 +71,5 @@ sublist<T>::betail(void) {
 //=============================================================================
 }	// end namespace util
 
-#endif	// __SUBLIST_TCC__
+#endif	// __UTIL_SUBLIST_TCC__
 

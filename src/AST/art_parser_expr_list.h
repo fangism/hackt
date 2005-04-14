@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_list.h,v 1.2 2005/02/25 07:23:55 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.3 2005/04/14 19:46:33 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_LIST_H__
@@ -21,7 +21,7 @@ namespace parser {
 	template args and actuals.  
 
  */
-typedef node_list<const expr,comma>			expr_list_base;
+typedef node_list<const expr>				expr_list_base;
 
 /**
 	General parser expression list.  
@@ -30,7 +30,7 @@ typedef node_list<const expr,comma>			expr_list_base;
  */
 class expr_list : public expr_list_base {
 protected:
-	typedef	expr_list_base			parent;
+	typedef	expr_list_base			parent_type;
 public:
 	expr_list();
 
@@ -42,8 +42,8 @@ virtual	~expr_list();
 virtual	ostream&
 	what(ostream& o) const;
 
-	using parent::leftmost;
-	using parent::rightmost;
+	using parent_type::leftmost;
+	using parent_type::rightmost;
 
 virtual	never_ptr<const object>
 	check_build(context& c) const;

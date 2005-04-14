@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.9 2005/02/27 22:11:58 fang Exp $
+	$Id: art_parser_instance.h,v 1.10 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef __ART_PARSER_INSTANCE_H__
@@ -57,18 +57,22 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
+typedef	node_list<const expr>			alias_list_base;
+
 /**
 	A list of lvalue expressions aliased/connected together.  
  */
-class alias_list : public instance_management, 
-		public node_list<const expr,alias> {
+class alias_list : public instance_management, public alias_list_base {
 private:
-	typedef node_list<const expr,alias>		alias_list_base;
+	typedef alias_list_base			parent_type;
 public:
 	explicit
 	alias_list(const expr* e);
 
 	~alias_list();
+
+	using parent_type::size;
+	using parent_type::push_front;
 
 	ostream&
 	what(ostream& o) const;
@@ -139,14 +143,14 @@ virtual	never_ptr<const object>
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const instance_base,comma>	instance_id_list_base;
+typedef	node_list<const instance_base>		instance_id_list_base;
 
 /**
 	Instance identifier list.  
  */
 class instance_id_list : public instance_id_list_base {
 protected:
-	typedef	instance_id_list_base		parent;
+	typedef	instance_id_list_base		parent_type;
 public:
 	explicit
 	instance_id_list(const instance_base* i);
@@ -190,10 +194,11 @@ protected:
 		List of instance_base.  
 	 */
 	const excl_ptr<const instance_id_list>		ids;
-	const excl_ptr<const terminal>			semi;
+	const excl_ptr<const char_punctuation_type>	semi;
 public:
 	instance_declaration(const concrete_type_ref* t, 
-		const instance_id_list* i, const terminal* s = NULL);
+		const instance_id_list* i,
+		const char_punctuation_type* s = NULL);
 
 	~instance_declaration();
 
@@ -219,10 +224,10 @@ class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;		// inherited
 //	const excl_ptr<const expr_list>		actuals;	// inherited
-	const excl_ptr<const terminal>		semi;	///< semicolon (optional)
+	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon (optional)
 public:
 	instance_connection(const token_identifier* i, const expr_list* a, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~instance_connection();
 
@@ -255,10 +260,10 @@ protected:
 		but must be scalar.  
 	 */
 	const excl_ptr<const expr>		lvalue;
-	const excl_ptr<const terminal>		semi;
+	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	connection_statement(const expr* l, const expr_list* a, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~connection_statement();
 
@@ -287,10 +292,10 @@ class instance_alias : public instance_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
 	const excl_ptr<const alias_list>	aliases;
-	const excl_ptr<const terminal>		semi;	///< semicolon
+	const excl_ptr<const char_punctuation_type>		semi;	///< semicolon
 public:
 	instance_alias(const token_identifier* i, alias_list* al, 
-		const terminal* s = NULL);
+		const char_punctuation_type* s = NULL);
 
 	~instance_alias();
 
@@ -311,19 +316,20 @@ public:
 /// class for loop instantiations, to be unrolled in the build phase
 class loop_instantiation : public instance_management {
 protected:
-	const excl_ptr<const terminal>		lp;
-	const excl_ptr<const terminal>		delim;
-	const excl_ptr<const token_identifier>	index;
-	const excl_ptr<const terminal>		colon1;
-	const excl_ptr<const range>		rng;
-	const excl_ptr<const terminal>		colon2;
-	const excl_ptr<const definition_body>	body;
-	const excl_ptr<const terminal>		rp;
+	const excl_ptr<const char_punctuation_type>	lp;
+	const excl_ptr<const char_punctuation_type>	delim;
+	const excl_ptr<const token_identifier>		index;
+	const excl_ptr<const char_punctuation_type>	colon1;
+	const excl_ptr<const range>			rng;
+	const excl_ptr<const char_punctuation_type>	colon2;
+	const excl_ptr<const definition_body>		body;
+	const excl_ptr<const char_punctuation_type>	rp;
 public:
-	loop_instantiation(const terminal* l, const terminal* d, 
-		const token_identifier* i, const terminal* c1, 
-		const range* g, const terminal* c2, 
-		const definition_body* b, const terminal* r);
+	loop_instantiation(const char_punctuation_type* l,
+		const char_punctuation_type* d, 
+		const token_identifier* i, const char_punctuation_type* c1, 
+		const range* g, const char_punctuation_type* c2, 
+		const definition_body* b, const char_punctuation_type* r);
 
 	~loop_instantiation();
 
@@ -371,7 +377,7 @@ public:
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const guarded_definition_body,thickbar>
+typedef	node_list<const guarded_definition_body>
 		guarded_definition_body_list_base;
 
 /**
@@ -379,7 +385,7 @@ typedef	node_list<const guarded_definition_body,thickbar>
  */
 class guarded_definition_body_list : public guarded_definition_body_list_base {
 protected:
-	typedef	guarded_definition_body_list_base		parent;
+	typedef	guarded_definition_body_list_base		parent_type;
 public:
 	explicit
 	guarded_definition_body_list(const guarded_definition_body* g);

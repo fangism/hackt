@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.21 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_token.cc,v 1.22 2005/04/14 19:46:35 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -11,9 +11,6 @@
 #include <cstdio>		// for sprintf
 #include <cstring>		// for a few C-string functions
 #include <exception>
-
-// #include "art_switches.h"
-// #include "art_parser_debug.h"
 
 #include "art_parser_token.h"
 #include "art_parser_token_char.h"
@@ -28,7 +25,6 @@
 
 #include "what.h"
 #include "stacktrace.h"
-// #include "memory/list_vector_pool.tcc"
 #include "memory/chunk_map_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
@@ -133,7 +129,6 @@ token_char::~token_char() { }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(token_char, 1024)
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_char)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -163,6 +158,8 @@ token_int::token_int(const long v) : terminal(), expr(), val(v) { }
 DESTRUCTOR_INLINE
 token_int::~token_int() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int)
 
 /**
 	Performs string comparison for an integer token.
@@ -215,6 +212,8 @@ token_float::token_float(const double v) : terminal(), expr(), val(v) { }
 DESTRUCTOR_INLINE
 token_float::~token_float() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_float)
 
 /**
 	Performs string comparison for a floating-point token.
@@ -296,6 +295,8 @@ token_identifier::token_identifier(const token_identifier& i) :
 DESTRUCTOR_INLINE
 token_identifier::~token_identifier() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_identifier)
 
 ostream&
 token_identifier::what(ostream& o) const {
@@ -383,6 +384,8 @@ token_bool(const char* tf) : token_keyword(tf), expr() {
 DESTRUCTOR_INLINE
 token_bool:: ~token_bool() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool)
+
 ostream&
 token_bool::what(ostream& o) const {
 	return o << "bool: " << AS_A(const string&, *this);
@@ -422,6 +425,8 @@ token_else(const char* e) : token_keyword(e), expr() {
 
 DESTRUCTOR_INLINE
 token_else:: ~token_else() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_else)
 
 ostream&
 token_else::what(ostream& o) const {
@@ -550,6 +555,8 @@ token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
+
 never_ptr<const object>
 token_bool_type::check_build(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
@@ -566,6 +573,8 @@ token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
+
 never_ptr<const object>
 token_int_type::check_build(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
@@ -581,6 +590,8 @@ token_pbool_type::token_pbool_type(const char* dt) : token_paramtype(dt) { }
 
 DESTRUCTOR_INLINE
 token_pbool_type::~token_pbool_type() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 
 /**
 	Return pointer to the definition, 
@@ -604,6 +615,8 @@ token_pint_type::token_pint_type(const char* dt) : token_paramtype(dt) { }
 
 DESTRUCTOR_INLINE
 token_pint_type::~token_pint_type() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 
 /**
 	Let caller resolve to concrete type reference with the definition.  

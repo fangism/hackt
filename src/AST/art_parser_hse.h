@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.8 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_hse.h,v 1.9 2005/04/14 19:46:34 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -45,7 +45,7 @@ virtual	never_ptr<const object>
 #endif
 };	// end class statement
 
-typedef	node_list<const statement,semicolon>	stmt_list;
+typedef	node_list<const statement>		stmt_list;
 
 //=============================================================================
 /// HSE body is just a list of statements
@@ -53,7 +53,7 @@ class body : public language_body {
 protected:
 	const excl_ptr<const stmt_list>	stmts;	///< list of HSE statements
 public:
-	body(const token_keyword* t, const stmt_list* s);
+	body(const generic_keyword_type* t, const stmt_list* s);
 	~body();
 
 	ostream&
@@ -117,14 +117,16 @@ public:
 
 //=============================================================================
 /// HSE skip statement
-class skip : public statement, public token_keyword {
+class skip : public statement {
+private:
+	const excl_ptr<const generic_keyword_type>	kw;
 public:
 /**
 	Constructor takes a plain keyword token and re-wraps the string
 	containing "skip", which effectively casts this as a sub-class.  
  */
 	explicit
-	skip(const token_keyword* s);
+	skip(const generic_keyword_type* s);
 
 	~skip();
 
@@ -139,7 +141,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	token_keyword::where;
+// using	token_keyword::where;
 
 #if 1
 	never_ptr<const object>
@@ -151,11 +153,12 @@ using	token_keyword::where;
 /// HSE wait contains just an expression
 class wait : public statement {
 protected:
-	const excl_ptr<const terminal>	lb;
-	const excl_ptr<const expr>	cond;
-	const excl_ptr<const terminal>	rb;
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const expr>			cond;
+	const excl_ptr<const char_punctuation_type>	rb;
 public:
-	wait(const terminal* l, const expr* c, const terminal* r);
+	wait(const char_punctuation_type* l, const expr* c,
+		const char_punctuation_type* r);
 
 	~wait();
 
@@ -217,11 +220,12 @@ virtual	ostream&
 };	// end class selection
 
 //=============================================================================
+typedef	node_list<const guarded_command>		det_selection_list_base;
+
 /// container for deterministic selection statement
-class det_selection : public selection, 
-		public node_list<const guarded_command,thickbar> {
+class det_selection : public selection, public det_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,thickbar>	det_sel_base;
+	typedef	det_selection_list_base			parent_type;
 public:
 	explicit
 	det_selection(const guarded_command* n);
@@ -237,7 +241,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	det_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>
@@ -246,11 +250,12 @@ using	det_sel_base::where;
 };	// end class det_selection
 
 //=============================================================================
+typedef node_list<const guarded_command>	nondet_selection_list_base;
+
 /// container for non-deterministic selection statement
-class nondet_selection : public selection, 
-		public node_list<const guarded_command,colon> {
+class nondet_selection : public selection, public nondet_selection_list_base {
 private:
-	typedef	node_list<const guarded_command,colon>	nondet_sel_base;
+	typedef	nondet_selection_list_base		parent_type;
 public:
 	explicit
 	nondet_selection(const guarded_command* n);
@@ -266,7 +271,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	nondet_sel_base::where;
+using	parent_type::where;
 
 #if 1
 	never_ptr<const object>
