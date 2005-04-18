@@ -29,6 +29,7 @@ noinst_PROGRAMS = \
 	deque_iterator_test \
 	hash_qmap_test \
 	discrete_interval_set_test \
+	EBCO_test \
 	integer_traits_test \
 	new_functor_test \
 	list_vector_test \
@@ -68,6 +69,7 @@ list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
 chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
+EBCO_test_SOURCES = EBCO_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
 maplikeset_test_SOURCES = maplikeset_test.cc

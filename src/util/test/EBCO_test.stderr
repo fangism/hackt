@@ -1,0 +1,7 @@
+sizeof(A) = 1
+sizeof(B) = 1
+sizeof(C) = 1
+sizeof(D) = 1
+sizeof(AB) = 1
+sizeof(CD) = 1
+sizeof(ABCD) = 1
