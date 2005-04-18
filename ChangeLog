@@ -1,6 +1,16 @@
 "ChangeLog"
 
+2005-04-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-24:
+	  From now on, revision details should be written to
+		directories' ChangeLogs.  This ChangeLog will only contain
+		high-level summaries.  (It's just been getting too cluttered.)
+	  Added: dox/lang/ChangeLog, src/ChangeLog.
+
+
 2005-04-14	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-23:
 	  Bring code up to speed with gcc-4 (20050409).
 	  Compiles and runs cleanly with gcc-3.3 through 4.0 on
@@ -10,6 +20,7 @@
 
 
 2005-04-14	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-22-merged-parser-02-05:
 	  Merged parser-02 branch, through revision -05.  
 

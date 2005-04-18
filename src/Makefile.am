@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.53 2005/04/14 19:46:32 fang Exp $
+#	$Id: Makefile.am,v 1.54 2005/04/18 22:41:00 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -472,6 +472,8 @@ EXTRA_DIST = \
 	util/TODO \
 	util/STL/README \
 	util/obsolete/README \
+	ChangeLog \
+	NOTES \
 	wc-l
 
 TESTS = art_persistent_table
