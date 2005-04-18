@@ -1,0 +1,9 @@
+"ChangeLog"
+
+2005-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* Added much discussion and notes on the issues with template
+	  specializations.  
+
+	* This ChangeLog file was born.  
+

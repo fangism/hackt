@@ -1,8 +1,14 @@
 "TODO"
 
-Document everything.
+Look into latex grammar-formatting packages, 
+also operational and denotational semantics would be nice.
+
+Document EVERYTHING.
 
 Index terms, at least when they are introduced.
 
 Grammar appendix.  
+
+Rename language to HOORCD: Heirarchical Object-ORiented Circuit Description
+	(by release 0.1.5)
 

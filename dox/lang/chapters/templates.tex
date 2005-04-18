@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.6 2005/02/27 22:06:04 fang Exp $
+%	$Id: templates.tex,v 1.7 2005/04/18 22:40:54 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -148,7 +148,9 @@ connection-equivalent.
 (Note the recursive definition.)
 Connectibility implies collectibility, but not vice versa.  
 
+TODO: denotational semantics
 
+\begin{comment}
 \textbf{OUTDATED:}
 Two templated types are equivalence if and only if:
 \begin{itemize}
@@ -162,6 +164,7 @@ The third and fourth criteria are not necessary equivalent.
 The ports of a template definition need not depend on template
 parameters themselves, as is the case with defining 
 cyclic source sequences for a channel.  
+\end{comment}
 
 \textbf{DEBATE:} (Resolved, see above: NEW)
 Should the fourth criterion be required for type-equivalence, 
@@ -176,12 +179,127 @@ However, at unroll-time, all parameters must be resolved
 and type-equivalence can be precisely determined.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Type Parameters}
+\label{sec:templates:typeparam}
+
+\textbf{NOTE:} This section is in consideration for future extension.  
+
+Up to this point, the template parameters covered are 
+\emph{valued} parameters.  
+We now introduce \emph{type} parameters.  
+
+Some examples:
+
+\begin{itemize}
+\item \ttt{template <datatype D> defproc ...}
+\item \ttt{template <chan C> defproc ...}
+\item \ttt{template <proc P> defproc ...}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Template Template Parameters}
+\label{sec:templates:ttp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Template Specialization}
+\label{sec:templates:spec}
+
+Also partial specializations.  
+
+See Section~\ref{sec:templates:bind} for the complicated issues regarding
+template specialization.  
+
+\textbf{RESOLVE:}
+Should we impose any restrictions on whether or not template definitions
+may be specialized, and if so, where?  
+
+For example: forcing all forward declarations of specializations for 
+a particular definition family would solve the problem of 
+specialization coherence, but would make such a family of definitions
+unextendable for future specializations -- not all specializations
+can be declared up-front!  
+Implementation consideration:
+For definition families consisting of primarily specializations (genericless),
+this can introduce a lot of overhead in having to process specializations
+irrelevant to a particular compilation unit.  
+
+Impose constraints on definitions, perhaps some invariant constraints and
+relations between generic and specialized definitions?  (e.g. contains same
+named instances)  But this would unnecessarily restrict variations in
+implementation of certain definitions.  
+
+Forward declarations of specializations.  
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Template Argument Deduction}
+\label{sec:templates:deduction}
+
+Not having to specify every (or any) template arguments.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definition Bindings}
+\label{sec:templates:bind}
+
+Specialization introduces a whole new aspect of complication to the language.  
+When a definition is used to instantiate an object, should it be 
+instantiated with the best-fit definition seen?  
+In C++, the notion of \emph{point-of-instantiation} is used to 
+select the definition.  [cite]
+Roughly, it says that only definitions that are available (complete)
+before the point in the translation unit are considered for instantiation.  
+This introduces potential headaches when different translation units
+see different available definitions at different points of instantiation, 
+i.e. C++ has no mechanism for enforcing consistent use of specializations
+across translation units.  
+The benefit of compile-time binding of definitions is that type-checking
+of template definitions and uses may be done entirely at compile-time
+per translation unit.  
+
+\artxx uses the unroll-phase as the point-of-instantiation for all 
+instances, when all instances are bound to their proper definitions.  
+The consequence of such a choice is that compile-time type checking
+is \emph{very} limited with respect to template definitions.  
+[Discuss implementation issues.]
+
+\textbf{RESOLVE:}
+Should the following example be accepted or rejected (as a compilation unit)?
+
+\begin{verbatim}
+template <pbool B>
+defproc foo() { }
+
+foo<true> bar;
+bool b = bar.x;
+\end{verbatim}
+
+What if another compilation unit provides a specialization for 
+\ttt{foo<true>} with a \ttt{bool} member \ttt{x}?
+
+\textbf{PROPOSAL:}
+A separate bind-phase to allow full type-checking of a compilation unit
+(perhaps with references to available definition families).  
+
+\textbf{IDEA:}
+Allow introduction of new template specializations that
+\emph{do not interfere} with pre-determined bindings.  
+Rationale: many full-specializations are introduced for one-time use and
+do not interfere with other instantiations' bindings.  
+
+\emph{Binding} an instantiation to a definition is recursive: i.e.
+all members and sub-instances of a bound instantiation must already be bound.  
+Implementation issue: bind-if-possible to automatically bind dependent
+instantiations.  
+
+Implementation option: eager or early binding to force 
+definition binding and thus allow type-checking of a 
+compilation unit that uses template definitions.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future}
 \label{sec:templates:future}
-
-Template template arguments?  (*shudder*)
-
-Template specialization?
 
 Compile-time checking of templates, directives.  
 

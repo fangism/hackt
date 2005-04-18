@@ -41,7 +41,7 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	chapters/linkage.tex \
 	chapters/CHP.tex \
 	chapters/PRS.tex \
-	TODO
+	TODO ChangeLog
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
