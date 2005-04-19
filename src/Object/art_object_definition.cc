@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.39 2005/03/11 08:47:25 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.40 2005/04/19 02:26:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -85,7 +85,7 @@ definition_base::null(NULL);
  */
 inline
 definition_base::definition_base() :
-		object(), persistent(), 
+		persistent(), object(), 
 		template_formals_map(), 
 		template_formals_list(), 
 		defined(false) {

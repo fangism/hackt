@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.13 2005/03/11 08:47:31 fang Exp $
+	$Id: art_object_namespace.h,v 1.14 2005/04/19 02:26:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_H__
@@ -67,7 +67,9 @@ using util::bad_bool;
 	process definitions, and namespaces do not contain formals or
 	naked language bodies.  
  */
-class scopespace : virtual public object, virtual public persistent {
+class scopespace :
+//		virtual public object, 
+		virtual public persistent {
 protected:	// typedefs -- keep these here for re-use
 
 	/**
@@ -194,8 +196,10 @@ protected:
 public:
 virtual	~scopespace();
 
+#if 0
 virtual	ostream&
 	what(ostream& o) const = 0;
+#endif
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
@@ -285,7 +289,7 @@ virtual	void
 /**
 	Namespace container class.  
  */
-class name_space : public scopespace {
+class name_space : public object, public scopespace {
 private:
 	typedef	name_space			this_type;
 	// list of pointers to other opened namespaces (and their aliases)

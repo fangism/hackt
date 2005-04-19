@@ -1,7 +1,7 @@
 /**
 	\file "art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.21 2005/03/11 08:47:30 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.22 2005/04/19 02:26:41 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_NAMESPACE_CC__
@@ -150,7 +150,8 @@ using util::persistent_traits;
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : 
-		object(), persistent(), used_id_map() {
+//		object(), 
+		persistent(), used_id_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -724,6 +725,7 @@ name_space::null(NULL);
 	Private empty constructor, just allocate with bogus fields.
  */
 name_space::name_space() :
+		object(), 
 		scopespace(), key(), parent(),
 		open_spaces(), open_aliases() {
 }
@@ -737,9 +739,8 @@ name_space::name_space() :
 	\param p pointer to the parent namespace.  
  */
 name_space::name_space(const string& n, never_ptr<const name_space> p) : 
-		scopespace(), 
-		key(n), 
-		parent(p), 
+		object(), 
+		scopespace(), key(n), parent(p), 
 		open_spaces(), open_aliases() {
 }
 
@@ -752,6 +753,7 @@ name_space::name_space(const string& n, never_ptr<const name_space> p) :
 	default arguments (NULL) for class object formals.  
  */
 name_space::name_space(const string& n) :
+		object(), 
 		scopespace(), 
 		key(n), 
 		parent(NULL), 

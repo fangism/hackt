@@ -5,5 +5,8 @@
 	* Added much discussion and notes on the issues with template
 	  specializations.  
 
+	* Added some notes about definitions regarding definition families
+	  and layout maps.  Templates, of course, complicate things.  
+
 	* This ChangeLog file was born.  
 

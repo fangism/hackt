@@ -1,6 +1,6 @@
 % "chapters/types.tex"
 
-%	$Id: types.tex,v 1.5 2004/12/01 02:50:05 fang Exp $
+%	$Id: types.tex,v 1.6 2005/04/19 02:26:37 fang Exp $
 
 \chapter{Types}
 \label{sec:types}
@@ -23,8 +23,8 @@ initialized before they are used.
 Using uninitialized parameters is an error.  
 
 
-We cover templates more in-depth in Chapter blah.  
-ART++ supports parametric types, or templates, much like C++. 
+We cover templates more in-depth in Chapter~\ref{sec:templates}.  
+\artxx supports parametric types, or templates, much like C++. 
 Terminology: a template definition (or just template)
 is a parameterized definition.  
 User-defined datatypes, channels, and processes may be parameterized.  
@@ -36,14 +36,66 @@ Later we may add support for template template arguments, muahahaha.
 \section{Definitions}
 \label{sec:types:definition}
 
+random notes, please pardon the lack of order...
+we really need to re-organize this document, I know.
+
+Consider introducing templates up front...
+
+Describe definition and type-system, bottom-up, from instantiations?
+
+TODO: make the following distinctions:
+A physical definition corresponds to the complete description of
+a particular implementation.  
+Physical definition has its own 
+\emph{concrete layout map} 
+\index{concrete layout map} 
+that translates name (possibly with index) to offset.  
+(Users never directly deal with concrete layout maps.)  
+Non-template definitions have only one trivially-generated 
+concrete layout map.  
+Template definitions, however, may have multiple \emph{layout map templates}, 
+among which one is selected to generate a concrete layout map for
+each instantiation.  
+Layout templates are just value- and type-parameterized layout descriptions.  
+(Multiple layout templates arise from partial and full specializations; 
+a generic template definition contributes one layout template.)
+
+
 A \emph{type} can either be a reference to a non-template definition
 (which may be built-in) or a reference to a template definition
 with a set of parameters.  
 
+\textbf{STALE:}
 Two (non-template) types are equivalent if and only if 
 they refer to the same non-template definition.  
 In Chapter~\ref{sec:templates} we extend the notion of type-equivalence
 to cover types with templates.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Physical Layout}
+\label{sec:types:definition:layout}
+
+Definitions of physical entities invariably contain some table mapping
+a logical member or port name to the location of the desired member.  
+Such is the typical implementation of data structures in traditional
+programming languages.  
+Non-template definitions have only one table.  
+
+Chapter~\ref{sec:templates} discusses how templates affects this 
+view of structures' layout tables.  
+Template definitions introduce \emph{table-templates}
+(necessary when members' types and sizes depend on template parameters).  
+Each complete template definition (all arguments supplied) 
+uses follows one table-template to generate a final layout table.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Names}
+\label{sec:types:definition:name}
+
+The \emph{name} of a plain non-template definition refers to the
+one definition only.  (OK, that made no sense whatsoever.)
+The name of a template definition, however, refers to a \emph{family}
+of definitions.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Completeness and Usability}
@@ -62,6 +114,8 @@ In \artxx, there are three levels of completeness for definitions.
 	and its body has been defined.  
 \end{enumerate}
 
+NOTE: what about definition bindings?
+
 Since type information only refers to template parameters, 
 a type may refer to any declared definition.  
 
@@ -69,13 +123,15 @@ a type may refer to any declared definition.
 \subsection{Instantiation}
 \label{sec:types:completeness:instantiation}
 
-An instantiation is the creation of 
+An instantiation is the creation of definition into a physical object.  
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Connection}
 \label{sec:types:completeness:connection}
 
 See Chapter~\ref{sec:connections}.  
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Typedefs}
 \label{sec:types:completeness:typedefs}
 
