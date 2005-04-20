@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.14 2005/04/19 02:26:41 fang Exp $
+	$Id: art_object_definition_base.h,v 1.15 2005/04/20 03:27:22 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -55,9 +55,8 @@ using namespace util::memory;
 	All definitions are potentially templatable.  
  */
 class definition_base :
-		// virtual
-		public object, 
-		virtual public persistent {
+		virtual public persistent, 
+		public object {
 public:
 	/**
 		Table of template formals.  

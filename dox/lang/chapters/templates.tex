@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.7 2005/04/18 22:40:54 fang Exp $
+%	$Id: templates.tex,v 1.8 2005/04/20 03:27:22 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -12,6 +12,16 @@
 -- Bjarne Stroustrup
 }
 \end{flushright}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Terminology}
+\label{sec:templates:terms}
+
+\emph{arity} of a template signature is the number of parameters, 
+or degrees of freedom.  
+Non-template definitions are said to have arity zero.  
+Later we will also refer to the arity of template specializations.  
+We will use $|A|$ to denote the arity of a template (including specialization).  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Forward declarations}
@@ -206,6 +216,10 @@ Some examples:
 \section{Template Specialization}
 \label{sec:templates:spec}
 
+Semantic contraint:
+The forward declaration of a general template must precede any declaration
+of any specialization with the same family (same name).  
+
 Also partial specializations.  
 
 See Section~\ref{sec:templates:bind} for the complicated issues regarding
@@ -232,6 +246,22 @@ implementation of certain definitions.
 
 Forward declarations of specializations.  
 
+\textbf{RESOLVE:}
+Do ports of specialized definitions have to match that of the 
+generic template definition?  Members certainly need not.  
+What are the implications on argument type-checking?
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Partial Ordering of Specializations}
+\label{sec:templates:partialorder}
+
+Partial and full specializations for a given template definition
+may be defined on a partial order.  
+Specializations $A$ and $B$ are ordered $A < B$ if and only if
+all template parameters that satisfy $A$ also satisfy $B$ and $|A| < |B|$.  
+(In English, ...)
+If $|A| = |B|$, and $A \neq B$, then $A$ and $B$ are not comparable.  
+Examples, please.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Template Argument Deduction}
@@ -278,6 +308,22 @@ bool b = bar.x;
 What if another compilation unit provides a specialization for 
 \ttt{foo<true>} with a \ttt{bool} member \ttt{x}?
 
+Likewise, consider the following similar example:
+
+\begin{verbatim}
+template <pbool B>
+defproc foo(bool b) { }
+
+foo<true> bar;
+bool b = bar.x;
+\end{verbatim}
+
+It is conceivable for a specialization to be defined later without
+$b$ as a bool port.  
+Should the last connection statement be accepted at compile-time?
+If so, does that constrain the specializations that may be introduced later?
+
+
 \textbf{PROPOSAL:}
 A separate bind-phase to allow full type-checking of a compilation unit
 (perhaps with references to available definition families).  
@@ -296,6 +342,15 @@ instantiations.
 Implementation option: eager or early binding to force 
 definition binding and thus allow type-checking of a 
 compilation unit that uses template definitions.  
+
+\textbf{IMPLEMENTATION:}
+Is there a need to track the instantiation statements that \emph{used}
+particular specializations?  Need to somehow catch inconsistent views
+of specializations...
+
+\textbf{BOTTOM LINE:}
+Type-references to template definitions MUST have a consistent
+view of definitions at instantiation (unroll) time.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future}

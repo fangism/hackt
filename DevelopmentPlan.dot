@@ -20,12 +20,17 @@ NODELIST_00_01_04	[shape=ellipse, style=filled,
 				label="node-list\ntemplate"];
 PARSER_B_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
 				label="parser phase 2"];
+MULTIFILE_00_01_04	[shape=ellipse, label="multi-file input"];
+IMPORT_00_01_05		[shape=ellipse, label="import/exporting"];
 UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
 ALIAS_00_01_04		[shape=ellipse, style=filled, label="alias connection"];
 PORT_00_01_04		[shape=ellipse, label="port connection"];
 MEMBER_00_01_04		[shape=ellipse, label="member reference\nunrolling"];
 TYPEDEF_00_01_04	[shape=ellipse, label="typedef unrolling\nresolution"];
-DEFLAYOUT_00_01_04	[shape=ellipse, label="definition layout"];
+DEFFAMILY_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow, 
+				label="definition families"];
+DEFLAYOUT_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow, 
+				label="definition layout"];
 INSTSTMT_00_01_04	[shape=ellipse, style=filled, 
 				label="rework inst. stmt.\ntemplates"];
 TYPEREF_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
@@ -51,6 +56,7 @@ PORT_00_01_04 -> UNIQUE_00_01_04;
 MEMBER_00_01_04 -> UNIQUE_00_01_04;
 UNIQUE_00_01_04 -> ARTXX_00_01_04_c;
 ARTXX_00_01_04_b -> DEFLAYOUT_00_01_04;
+ARTXX_00_01_04_b -> DEFFAMILY_00_01_04;
 EXTTEMPLATE_00_01_04 -> CONNECTEQ_00_01_04;
 ARTXX_00_01_04 -> TYPEDEF_00_01_04;
 DEFLAYOUT_00_01_04 -> MEMBER_00_01_04;
@@ -63,6 +69,8 @@ TYPEREF_00_01_04 -> ARTXX_00_01_04_c;
 TYPEDEF_00_01_04 -> UNIQUE_00_01_04;
 TYPEDEF_00_01_04 -> EXTTEMPLATE_00_01_04;
 PARSER_B_00_01_04 -> PRS_00_01_04;
+PARSER_B_00_01_04 -> MULTIFILE_00_01_04;
+MULTIFILE_00_01_04 -> IMPORT_00_01_05;
 UNIQUE_00_01_04 -> PRS_00_01_04;
 
 ARTXX_00_01_04_c -> ARTXX_00_01_05;

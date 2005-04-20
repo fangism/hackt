@@ -27,6 +27,7 @@ ps-local: $(PSS)
 EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	artxx.bib artxx.tex \
 	chapters/preface.tex \
+	chapters/goals.tex \
 	chapters/intro.tex \
 	chapters/types.tex \
 	chapters/expressions.tex \
@@ -51,11 +52,15 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 	@$(ECHO) "Generating auto-dependencies $@..."
 	@if [ -f $@ ] ; then \
 		$(MAKETEXDEPEND) $< > $@.new ; \
-		if $(DIFF) -q $@ $@.new ; then \
+		if ! $(DIFF) -q $@ $@.new ; then \
 			mv -f $@.new $@ ; \
+			$(ECHO) "Updated $@." ; \
 		else 	$(RM) $@.new ; \
+			$(ECHO) "$@ is unchanged."; \
+			$(TOUCH) $@; \
 		fi > /dev/null ; \
 	else	$(MAKETEXDEPEND) $< > $@ ; \
+		$(ECHO) "Created $@." ; \
 	fi
 
 
