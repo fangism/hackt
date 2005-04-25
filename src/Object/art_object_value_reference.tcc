@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.2 2005/03/11 08:47:32 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.3 2005/04/25 22:02:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -40,6 +40,8 @@
 
 // experimental: suppressing automatic instantiation of template code
 #include "art_object_extern_templates.h"
+
+#include "persistent.h"
 
 #if 0
 #include "what.tcc"
@@ -95,6 +97,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 #endif
+#include "using_ostream.h"
 USING_STACKTRACE
 using util::persistent_traits;
 
