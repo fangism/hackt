@@ -1,14 +1,14 @@
 /**
 	\file "art_object_expr_gcc41death.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_gcc41death.h,v 1.1.2.1 2005/04/25 22:10:35 fang Exp $
+	$Id: art_object_expr_gcc41death.h,v 1.1.2.2 2005/04/26 00:13:08 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_GCC41DEATH_H__
 #define __ART_OBJECT_EXPR_GCC41DEATH_H__
 
-#include "persistent.h"
-#include "memory/count_ptr.h"
+#include "persistent_gcc41death.h"
+#include "memory/count_ptr_gcc41death.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -61,7 +61,17 @@ public:
 	what(ostream& o) const;
 
 public:
-	PERSISTENT_METHODS_DECLARATIONS
+#if 0
+        void
+        write_object(const persistent_object_manager&, ostream&) const;
+#endif
+        void
+        load_object(const persistent_object_manager&, istream&);
+#if 0
+        void
+        collect_transient_info(persistent_object_manager&) const;
+#endif
+
 };	// end class dynamic_index_list
 
 //=============================================================================

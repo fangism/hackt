@@ -1,14 +1,20 @@
 /**
 	\file "persistent_object_manager_gcc41death.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager_gcc41death.tcc,v 1.1.2.1 2005/04/25 22:10:37 fang Exp $
+	$Id: persistent_object_manager_gcc41death.tcc,v 1.1.2.2 2005/04/26 00:13:10 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
 #include "persistent_object_manager_gcc41death.h"
-#include "IO_utils.h"
+// #include "memory/pointer_manipulator.h"
+// #include "IO_utils.h"
+// #include <cassert>
+extern "C" {
+extern void __eprintf (const char *, const char *, unsigned, const char *)
+    __attribute__ ((noreturn));
+}
 
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
@@ -30,14 +36,19 @@ persistent_object_manager::__read_pointer(istream& f,
 #if 1		// ICE
 	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
-	unsigned long i;
-	read_value(f, i);
-	INVARIANT(check_reconstruction_table_range(i));
+	unsigned long i = 0;
+//	read_value(f, i);	// not needed to ICE!
+	check_reconstruction_table_range(i);	// was INVARIANT
 	const std::pair<persistent*, visit_info*> pv(lookup_ptr_visit_info(i));
 	persistent* const o(pv.first);
 	// for this to work, pointer_type must be a raw_pointer
 	const_cast<P&>(ptr) = dynamic_cast<pointer_type>(o);
-	if (o) assert(ptr);		// ICE!!!
+//	if (o) assert(ptr);		// ICE!!!
+	if (o)
+		((void) ((ptr) ? 0 :
+			(__eprintf ("%s:%u: failed assertion `%s'\n",
+			"util/persistent_object_manager_gcc41death.tcc",
+			46, "ptr"), 0)));
 	return pv.second;
 #else
 	return NULL;
@@ -75,7 +86,11 @@ persistent_object_manager::__read_pointer(istream& f,
 	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 	// not reference here, use a local copy first!
+#if 0
 	const pointer_type p = pointer_manipulator::get_pointer(ptr);
+#else
+	const pointer_type p(NULL);
+#endif
 	const return_type ret = __read_pointer(f, p, __pointer_category(p));
 	if (p) {
 		size_t* c = lookup_ref_count(p);
