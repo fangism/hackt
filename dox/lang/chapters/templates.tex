@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.8 2005/04/20 03:27:22 fang Exp $
+%	$Id: templates.tex,v 1.9 2005/04/29 01:07:45 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -103,7 +103,7 @@ process, channel, and datatype template definitions in \artxx.
 \label{sec:templates:default}
 
 In C++, default values can only appear as a suffix formal parameter list.  
-In \artxx\ we allow default values in any position of the formal 
+In \artxx, we allow default values in any position of the formal 
 parameter list.  
 However, each defaulting argument position in a type reference
 must be given a placeholder (a blank space between commas), 
@@ -126,8 +126,10 @@ one wishes to declare sparse or dense collections of the same
 logical type while allowing some internal variation.  
 For example, ROM cells hard-wired to $0$ or $1$ are permitted
 in the same collection, and would be templated with one relaxed 
-parameter for the cell's value.  
-The user has the freedom to decide what parameters may be ignored.  
+parameter for the cell's value\footnote{
+The motivation for this comes from the fact that in CAST, 
+environment sources could not be arrayed if they differed in values.}.
+The user has the freedom to decide what parameters considered relaxed.  
 
 The proposed syntax for distinguishing the two types of parameters is:
 
@@ -149,10 +151,11 @@ are still required but empty.
 There are two levels of type equivalence.  
 Two entities are \emph{collection-equivalent} or \emph{collectible}
 if their underlying template type is the same and their 
-strict parameters are equivalent.  
+strict parameters are equivalent, 
+but not necessarily their relaxed parameters.  
 Two entities are \emph{connection-equivalent} or \emph{connectible}
-if they are collectible and their public interface 
-(port-for-port) is connectible, i.e., 
+if they are collectible, their relaxed parameters are equivalent, 
+and their public interface (port-for-port) is connectible, i.e., 
 the dimensions, sizes, and strict types of the ports are themselves, 
 connection-equivalent.  
 (Note the recursive definition.)
@@ -235,7 +238,7 @@ specialization coherence, but would make such a family of definitions
 unextendable for future specializations -- not all specializations
 can be declared up-front!  
 Implementation consideration:
-For definition families consisting of primarily specializations (genericless),
+For definition families consisting of only specializations (genericless),
 this can introduce a lot of overhead in having to process specializations
 irrelevant to a particular compilation unit.  
 
@@ -288,7 +291,7 @@ The benefit of compile-time binding of definitions is that type-checking
 of template definitions and uses may be done entirely at compile-time
 per translation unit.  
 
-\artxx uses the unroll-phase as the point-of-instantiation for all 
+\artxx\ uses the unroll-phase as the point-of-instantiation for all 
 instances, when all instances are bound to their proper definitions.  
 The consequence of such a choice is that compile-time type checking
 is \emph{very} limited with respect to template definitions.  

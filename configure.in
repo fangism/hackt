@@ -1,7 +1,7 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
 #
-#	$Id: configure.in,v 1.17 2005/03/02 00:28:59 fang Exp $
+#	$Id: configure.in,v 1.18 2005/04/29 01:07:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -27,9 +27,9 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 # Disabling shared library linking may speed up beta-testing and building.  
 # AC_DISABLE_SHARED
 
-AC_PROG_LIBTOOL
 # This takes care of many standard C[++] compiler configuration checks.  
-# AC_PROG_RANLIB
+AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
@@ -53,6 +53,7 @@ AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
 AC_CHECK_TYPES([ptrdiff_t])
+AC_CHECK_FUNCS([sqrt])
 
 # library functions
 AC_FUNC_ERROR_AT_LINE

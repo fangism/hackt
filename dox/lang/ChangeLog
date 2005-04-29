@@ -1,5 +1,10 @@
 "ChangeLog"
 
+2005-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* Minor clarifications about types.  
+
+
 2005-04-19	David Fang		<fangism@users.sourceforge.net>
 
 	* More notes on template definitions, specializations.  

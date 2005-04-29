@@ -2,7 +2,7 @@
 	\file "art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.6 2005/03/11 08:47:29 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.7 2005/04/29 01:07:45 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -527,24 +527,6 @@ INSTANCE_COLLECTION_CLASS::make_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-persistent*
-INSTANCE_COLLECTION_CLASS::construct_empty(const int i) {
-	switch(i) {
-		case 0: return new instance_array<Tag,0>();
-		case 1: return new instance_array<Tag,1>();
-		case 2: return new instance_array<Tag,2>();
-		case 3: return new instance_array<Tag,3>();
-		case 4: return new instance_array<Tag,4>();
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
@@ -580,7 +562,7 @@ INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o, const instance_alias<Tag,D>& b) {
 	INVARIANT(b.valid());
-	return o << '(' << class_traits<Tag>::tag_name << "-alias-" << D << ")";
+	return o << '(' << class_traits<Tag>::tag_name << "-alias-" << D << ')';
 }
 
 //=============================================================================
@@ -642,25 +624,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::instantiate_indices(
-		const const_range_list& ranges) {
+INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
-#if 0
-	NEVER_NULL(i);
-	// indices is a range_expr_list (base class)
-	// resolve into constants now using const_range_list
-	// if unable, (b/c uninitialized) then report error
-	const_range_list ranges;        // initially empty
-	if (!i->resolve_ranges(ranges).good) {
-		// ranges is passed and returned by reference
-		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
-		i->dump(cerr) << endl;
-		THROW_EXIT;
-	}
-	// else success
-#endif
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class

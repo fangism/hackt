@@ -3,6 +3,32 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-04-28:
+	Tackling structure definition layout:
+	Definition-identifiers are really references to
+	concrete definition collections (in the case of templates), 
+	corresponding to content layout.  
+	Regarding specializations:
+		I think it would be best if we avoid specializations
+		at this point.  However, to plan for them in the future, 
+		we should make sure that the shortcut we choose does
+		not preclude partial and full specializations of definitions.  
+	Regarding the hash_map of identifiers local to a definition:
+		For now, without specialization is ok as is.
+		Later, each specialization definition will need its own map.  
+	Note however, that instantiation may be conditional, so
+		each concrete definition should have its own layout map.  
+	Generate these layout maps on-demand during unroll/instantiation.  
+	When considering template actual parameters, 
+		strict and relaxed parameters are considered equal
+		and part of the distinction process.  
+		It is possible for relaxed parameters to affect the
+		layout of a concrete definition.  
+		Consequence: many redundant and identical layouts kept...
+			(this is unavoidable for semanctic correctness)
+	TODO soon: update parser to accommodate relaxed and strict parameters.
+
+//=============================================================================
 2005-04-10:
 	front-end:
 	parser: multiple-parsers, possibly multiple-lexers
@@ -52,7 +78,7 @@ Added FIX_DEBUG predefine-style switch to pointer_classes.h,
 	FIXED: is safe to remove this conditional macro (2005-01-11)
 	Even if ONLY sticky_ptr is fixed, there is still problem!
 	Problem was failed ownership transfer leading to 
-		premature deallocation, and implicit defaul copy-constructor, 
+		premature deallocation, and implicit default copy-constructor, 
 		which gives wrong behavior.  
 	Produce (emulate) test cases?
 
