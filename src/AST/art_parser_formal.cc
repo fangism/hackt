@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.16 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_formal.cc,v 1.16.4.1 2005/04/29 20:42:45 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -47,6 +47,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_id, "(port-formal-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_decl, "(port-formal-decl)")
 SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_id, "(template-formal-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl, "(template-formal-decl)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl_list_pair, "(template-formal-decl-list-pair)")
 }
 
 //=============================================================================
@@ -444,11 +445,71 @@ template_formal_decl::check_build(context& c) const {
 //=============================================================================
 // class template_formal_decl_list method definitions
 
+template_formal_decl_list::template_formal_decl_list() : parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_formal_decl_list::template_formal_decl_list(
 		const template_formal_decl* t) :
 		parent_type(t) { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_formal_decl_list::~template_formal_decl_list() { }
+
+//=============================================================================
+// struct template_formal_decl_list_pair method definitions
+
+/**
+	\param s the set of strictly matched template parameters, 
+		may be empty, but not NULL.
+	\param r the set of relaxed template parameters, may be NULL.
+ */
+template_formal_decl_list_pair::template_formal_decl_list_pair(
+		const template_formal_decl_list* s,
+		const template_formal_decl_list* r) :
+		first(s), second(r) {
+	NEVER_NULL(first);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Default destructor
+template_formal_decl_list_pair::~template_formal_decl_list_pair() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_formal_decl_list_pair)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_formal_decl_list_pair::leftmost(void) const {
+	return first->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_formal_decl_list_pair::rightmost(void) const {
+	if (second)	return second->rightmost();
+	else		return first->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: implement for real.
+	Sequentially check each template formal.  
+	Need to distinguish between strict and relaxed parameters for the sake
+	of creating the appropriate fundamental type reference?
+	DEPENDS: on updating ART::entity::type_reference_base.
+ */
+never_ptr<const object>
+template_formal_decl_list_pair::check_build(context& c) const {
+	never_ptr<const object> ret;
+	c.strict_template_parameters();
+	ret = first->check_build(c);
+	if (second) {
+		c.relaxed_template_parameters();
+		return second->check_build(c);
+	} else {
+		return ret;
+	}
+}
 
 //=============================================================================
 }	// end namespace parser

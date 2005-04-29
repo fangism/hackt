@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16 2005/04/14 19:46:35 fang Exp $
+	$Id: art++-parse.yy,v 1.16.4.1 2005/04/29 20:42:50 fang Exp $
  */
 
 %{
@@ -38,10 +38,6 @@ using namespace ART::parser;
 util::memory::excl_ptr<root_body> AST_root;
 #endif
 
-/*
-useful typedefs are defined in art_parser.h
-macros: d = delimiter, n = node, b = begin, e = end, l = list
-*/
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
 #define	DELETE_TOKEN(tok)		delete tok
@@ -218,6 +214,7 @@ extern const char* const yyrule[];
 	port_formal_decl*	_port_formal_decl;
 	port_formal_id_list*	_port_formal_id_list;
 	port_formal_id*		_port_formal_id;
+	template_formal_decl_list_pair*	_template_formal_decl_list_pair;
 	template_formal_decl_list*	_template_formal_decl_list;
 	template_formal_decl*	_template_formal_decl;
 	template_formal_id_list*	_template_formal_id_list;
@@ -462,7 +459,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_user_data_type_prototype>	declare_datatype_proto
 %type	<_user_chan_type_prototype>	declare_chan_proto
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
-%type	<_template_formal_decl_list>	template_specification optional_template_specification
+%type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
+%type	<_template_formal_decl_list_pair>	template_specification optional_template_specification
 %type	<_template_formal_decl>	template_formal_decl
 %type	<_template_formal_id_list>	template_formal_id_list
 %type	<_template_formal_id>	template_formal_id
@@ -682,7 +680,13 @@ type_alias
 template_specification
 	: TEMPLATE template_formal_decl_list_in_angles
 		/* too damn lazy to keep around keyword... */
-		{ delete $1; $$ = $2; }
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, NULL); }
+	| TEMPLATE template_formal_decl_list_optional_in_angles
+	  template_formal_decl_list_in_angles
+		/* second set of formals is for relaxed parameters */
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, $3); }
 	;
 
 optional_template_specification
@@ -747,6 +751,14 @@ concrete_type_ref
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
 		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
+	;
+
+template_formal_decl_list_optional_in_angles
+	: template_formal_decl_list
+		{ $$ = $1; }
+	| '<' '>'
+		{ $$ = new template_formal_decl_list();
+		  WRAP_ANGLE_LIST($1, $$, $2); }
 	;
 
 /** OBSOLETE

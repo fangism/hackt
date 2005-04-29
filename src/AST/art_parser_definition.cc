@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_definition.cc,v 1.18.4.1 2005/04/29 20:42:44 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -101,10 +101,13 @@ signature_base::~signature_base() {
 
 CONSTRUCTOR_INLINE
 user_data_type_prototype::user_data_type_prototype(
-	const template_formal_decl_list* tf, const generic_keyword_type* df, 
-	const token_identifier* n, const string_punctuation_type* dp, 
-	const concrete_type_ref* b, 
-	const data_param_decl_list* p, const char_punctuation_type* s) :
+		const template_formal_decl_list_pair* tf,
+		const generic_keyword_type* df, 
+		const token_identifier* n,
+		const string_punctuation_type* dp, 
+		const concrete_type_ref* b, 
+		const data_param_decl_list* p,
+		const char_punctuation_type* s) :
 		prototype(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
 		semi(s) {
@@ -151,7 +154,8 @@ user_data_type_prototype::check_build(context& c) const {
 // class user_data_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_def::user_data_type_def(const template_formal_decl_list* tf, 
+user_data_type_def::user_data_type_def(
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
@@ -353,7 +357,7 @@ enum_def::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n,
 		const string_punctuation_type* dp, 
 		const chan_type* b, const data_param_decl_list* p) :
@@ -385,7 +389,7 @@ user_chan_type_signature::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* s) :
@@ -422,7 +426,8 @@ user_chan_type_prototype::check_build(context& c) const {
 // class user_chan_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf, 
+user_chan_type_def::user_chan_type_def(
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
@@ -461,7 +466,7 @@ user_chan_type_def::check_build(context& c) const {
 // class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_signature::process_signature(const template_formal_decl_list* tf, 
+process_signature::process_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
 		signature_base(tf,i), def(d), ports(p) {
@@ -530,7 +535,7 @@ process_signature::check_build(context& c) const {
 // class process_prototype method definitions
 
 CONSTRUCTOR_INLINE
-process_prototype::process_prototype(const template_formal_decl_list* tf, 
+process_prototype::process_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p,
 		const char_punctuation_type* s) :
@@ -570,7 +575,7 @@ process_prototype::check_build(context& c) const {
 // class process_def method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(const template_formal_decl_list* tf, 
+process_def::process_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b) :
 		definition(),
@@ -625,7 +630,7 @@ process_def::check_build(context& c) const {
 // class user_data_type_signature method definitions
 
 user_data_type_signature::user_data_type_signature(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 
@@ -653,7 +658,7 @@ user_data_type_signature::check_build(context& c) const {
 //=============================================================================
 // class typedef_alias method definitions
 
-typedef_alias::typedef_alias(const template_formal_decl_list* t,
+typedef_alias::typedef_alias(const template_formal_decl_list_pair* t,
 		const generic_keyword_type* k, const concrete_type_ref* b,
 		const token_identifier* i, const char_punctuation_type* s) :
 		def_body_item(), root_item(), 

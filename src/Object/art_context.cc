@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.27 2005/03/11 08:47:24 fang Exp $
+ 	$Id: art_context.cc,v 1.27.6.1 2005/04/29 20:42:48 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -58,7 +58,8 @@ context::context(module& m) :
 		sequential_scope_stack(), 
 		object_stack(), 
 		global_namespace(m.get_global_namespace()), 
-		master_instance_list(m.instance_management_list)
+		master_instance_list(m.instance_management_list), 
+		strict_template_mode(true)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -783,9 +784,9 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: write it, finish it -- what about arrays?
-	Using the current_type_reference, 
-	adds a template formal parameter.  
+	TODO: write it, finish it -- what about arrays?
+	TODO: distinguish between strict and relaxed template formals.  
+	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
 	For now, only allow parameters.  
@@ -811,9 +812,11 @@ context::add_template_formal(const token_identifier& id,
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
 	NEVER_NULL(inst_stmt);
-	// instance is constructed and added in add_instance
+	// formal instance is constructed and added in add_instance
 	never_ptr<const instance_collection_base>
-		inst_base(current_prototype->add_template_formal(
+		inst_base(
+			// depends on strict_template_mode
+			current_prototype->add_template_formal(
 			inst_stmt, id));
 		// same as current_named_scope? perhaps assert check?
 

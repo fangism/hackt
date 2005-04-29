@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-01:
+	  Updated parser to extend template formal signature to 
+	  include (optional) list of relaxed parameters.  
+	  In transient state: currently type-checking treats
+	  both formal lists as one unified list, even though it is now
+	  implemented as a pair of lists in the AST.  
+	  The definition structure has not been updated yet.  
+
+
 2005-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ART::entity::scopespace is no longer : virtual public object, 

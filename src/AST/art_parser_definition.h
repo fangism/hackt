@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.10 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_definition.h,v 1.10.4.1 2005/04/29 20:42:45 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -53,10 +53,10 @@ virtual	~prototype();
  */
 class signature_base : virtual public node {
 protected:
-	const excl_ptr<const template_formal_decl_list>	temp_spec;
+	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;
 	const excl_ptr<const token_identifier>		id;
 public:
-	signature_base(const template_formal_decl_list* tf, 
+	signature_base(const template_formal_decl_list_pair* tf, 
 		const token_identifier* i) :
 		node(), temp_spec(tf), id(i) { }
 
@@ -83,7 +83,7 @@ protected:
 	 */
 	const excl_ptr<const port_formal_decl_list>	ports;
 public:
-	process_signature(const template_formal_decl_list* tf, 
+	process_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
@@ -103,7 +103,7 @@ class process_prototype : public prototype, public process_signature {
 protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon token
 public:
-	process_prototype(const template_formal_decl_list* tf, 
+	process_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p,
 		const char_punctuation_type* s);
@@ -134,7 +134,7 @@ protected:
 //	const excl_ptr<const port_formal_decl_list>	ports;	//  inherited
 	const excl_ptr<const definition_body>		body;	///< definition body
 public:
-	process_def(const template_formal_decl_list*, 
+	process_def(const template_formal_decl_list_pair*, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b);
 
@@ -163,7 +163,7 @@ protected:
 	const excl_ptr<const data_param_decl_list>
 						params;	///< implementation type
 public:
-	user_data_type_signature(const template_formal_decl_list* tf, 
+	user_data_type_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 	// or concrete_datatype_ref
@@ -182,7 +182,7 @@ class user_data_type_prototype : public prototype,
 protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
-	user_data_type_prototype(const template_formal_decl_list* tf, 
+	user_data_type_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p,
@@ -218,7 +218,7 @@ protected:
 	const excl_ptr<const language_body>	getb;	///< get body
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
 public:
-	user_data_type_def(const template_formal_decl_list* tf, 
+	user_data_type_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, 
@@ -347,7 +347,7 @@ protected:
 	const excl_ptr<const data_param_decl_list>
 						params;	///< the implementation type
 public:
-	user_chan_type_signature(const template_formal_decl_list* tf, 
+	user_chan_type_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p);
@@ -365,7 +365,7 @@ class user_chan_type_prototype : public prototype,
 protected:
 	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
-	user_chan_type_prototype(const template_formal_decl_list* tf, 
+	user_chan_type_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* s);
@@ -400,7 +400,7 @@ protected:
 	const excl_ptr<const language_body>	recvb;	///< get body
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
 public:
-	user_chan_type_def(const template_formal_decl_list* tf, 
+	user_chan_type_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, 
@@ -428,13 +428,13 @@ public:
 
 class typedef_alias : public def_body_item, public root_item {
 protected:
-	const excl_ptr<const template_formal_decl_list>	temp_spec;
+	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;
 	const excl_ptr<const generic_keyword_type>		td;
 	const excl_ptr<const concrete_type_ref>		base;
 	const excl_ptr<const token_identifier>		id;
 	const excl_ptr<const char_punctuation_type>		semi;
 public:
-	typedef_alias(const template_formal_decl_list* t, 
+	typedef_alias(const template_formal_decl_list_pair* t, 
 		const generic_keyword_type* k, const concrete_type_ref* b, 
 		const token_identifier* i, const char_punctuation_type* s);
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.10 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_formal.h,v 1.10.4.1 2005/04/29 20:42:45 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -282,14 +282,41 @@ class template_formal_decl_list : public template_formal_decl_list_base {
 protected:
 	typedef	template_formal_decl_list_base		parent_type;
 public:
+	template_formal_decl_list();
+
 	explicit
 	template_formal_decl_list(const template_formal_decl* t);
 
 	~template_formal_decl_list();
 };	// end class template_formal_decl_list
 
-//=============================================================================
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pair of template formal lists, the first being for strict parameters, 
+	the second list for relaxed parameters.  
+ */
+struct template_formal_decl_list_pair : public node {
+	const excl_ptr<const template_formal_decl_list>	first;
+	const excl_ptr<const template_formal_decl_list>	second;
 
+	template_formal_decl_list_pair(const template_formal_decl_list*,
+		const template_formal_decl_list*);
+	~template_formal_decl_list_pair();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& c) const;
+};	// end class template_formal_decl_list_pair
+
+//=============================================================================
 }	// end namespace parser
 }	// end namespace ART
 

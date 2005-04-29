@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.4 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_fwd.h,v 1.4.4.1 2005/04/29 20:42:45 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -104,6 +104,7 @@ class template_formal_id;
 class template_formal_id_list;
 class template_formal_decl;
 class template_formal_decl_list;
+struct template_formal_decl_list_pair;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_instance.h"
