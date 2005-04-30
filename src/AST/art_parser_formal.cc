@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.16.4.1 2005/04/29 20:42:45 fang Exp $
+	$Id: art_parser_formal.cc,v 1.16.4.2 2005/04/30 21:27:25 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
 #define	__ART_PARSER_FORMAL_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed

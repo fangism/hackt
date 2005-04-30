@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_base.cc,v 1.18.4.1 2005/04/30 21:27:24 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
 #define	__ART_PARSER_BASE_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -715,6 +717,7 @@ concrete_type_ref::check_build(context& c) const {
 
 	// check template arguments, if given
 	if (temp_spec) {
+		STACKTRACE("checking template arguments (temp_spec)");
 		// FINISH ME!!!!!!!!!!
 		// using current_definition_reference
 		temp_spec->check_build(c);
@@ -755,6 +758,7 @@ concrete_type_ref::check_build(context& c) const {
 		}
 		c.set_current_fundamental_type(type_ref);
 	} else {
+		STACKTRACE("empty template arguments (!temp_spec)");
 		// if no args are supplied, 
 		// make sure that the definition doesn't require template args!
 		// Now allows default values for unsupplied arguments.  

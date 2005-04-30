@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.12 2005/03/06 22:45:48 fang Exp $
+	$Id: art_main.cc,v 1.12.12.1 2005/04/30 21:27:20 fang Exp $
  */
 
 #include <iostream>
@@ -43,6 +43,7 @@ if (root) {
 	// the symbol tables will selectively retain info from the syntax tree
 	// need to build global table first, then pass it in context
 try {
+	STACKTRACE("root->check_build()");
 	top = root->check_build(the_context);
 }
 catch (...) {

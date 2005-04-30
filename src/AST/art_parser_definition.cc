@@ -2,11 +2,13 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.18.4.1 2005/04/29 20:42:44 fang Exp $
+	$Id: art_parser_definition.cc,v 1.18.4.2 2005/04/30 21:27:25 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
 #define	__ART_PARSER_DEFINITION_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed

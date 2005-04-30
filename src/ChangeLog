@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-02:
+	  Substituted old template_formals_list and _map in definition_base
+	  with a template_formals_manager (basically wrapper around the former)
+	  and split up single formal parameter list into a 
+	  strict list and relaxed list.  
+	  Many definition_base method calls now just wrap around calls
+	  to template_formals_manager methods.  
+	  As a consequence, the binary format of all definitions
+	  has been extended by one pointer-list.  
+	  Since none of the current test-cases use relaxed parameters, 
+	  the object sizes (per definition) were increased by 4 bytes, 
+	  the sizeof(size_t) for '0' representing an empty list.  
+
+		+ Some type-check error messages have been improved.  
+
+
 2005-04-28	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-01:

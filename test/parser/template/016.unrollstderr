@@ -2,23 +2,23 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300700	module__	0	0	36
-	2	 0x3300170	namespc_	0	36	64
-	3	 0x3302000	procdefn	0	64	131
-	4	 0x3806050	pintcoll	0	131	168
-	5	 0x3803600	pintinst	0	168	184
-	6	 0x3302090	spiref__	0	184	204
-	7	 0x380609c	pintcoll	0	204	253
-	8	 0x3803610	pintinst	0	253	269
-	9	 0x2708024	cnstpi__	0	269	281
-	10	 0x33020a4	dintcoll	0	281	326
-	11	 0x3804800	datainst	0	326	346
-	12	 0x3300720	datatprf	0	346	362
-	13	 0x3302100	datadefn	0	362	394
-	14	 0x3302164	dprmlst_	0	394	410
-	15	 0x3302190	spiref__	0	410	430
-	16	 0x3805a00	piassign	0	430	450
-	17	 0x33021c0	spiref__	0	450	470
+	1	 0x3101fb0	module__	0	0	36
+	2	 0x3100144	namespc_	0	36	64
+	3	 0x3101fd0	procdefn	0	64	135
+	4	 0x3101f64	pintcoll	0	135	172
+	5	 0x3102050	pintinst	0	172	188
+	6	 0x3102080	spiref__	0	188	208
+	7	 0x3102094	pintcoll	0	208	257
+	8	 0x31020e0	pintinst	0	257	273
+	9	 0x2496024	cnstpi__	0	273	285
+	10	 0x31020f4	dintcoll	0	285	330
+	11	 0x3102150	datainst	0	330	350
+	12	 0x3102170	datatprf	0	350	366
+	13	 0x3102180	datadefn	0	366	402
+	14	 0x31021e4	dprmlst_	0	402	418
+	15	 0x3102210	spiref__	0	418	438
+	16	 0x3800c00	piassign	0	438	458
+	17	 0x3102240	spiref__	0	458	478
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

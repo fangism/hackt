@@ -2,22 +2,22 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x2c006f0	module__	0	0	40
-	2	 0x2c00170	namespc_	0	40	72
-	3	 0x2c01eb4	proccoll	1	72	171
-	4	 0x2c00710	procinst	0	171	191
-	5	 0x2c01f00	proctprf	0	191	207
-	6	 0x2c01e40	procdefn	0	207	243
-	7	 0x2c01f14	crnglst_	0	243	263
-	8	 0x2c01f20	proctprf	0	263	279
-	9	 0x2c01f34	proccoll	1	279	377
-	10	 0x2c01f80	procinst	0	377	397
-	11	 0x2c01fa0	proctprf	0	397	413
-	12	 0x2c01fb4	crnglst_	0	413	433
-	13	 0x2c01fc0	proctprf	0	433	449
-	14	 0x2c01fd0	prcalias	0	449	469
-	15	 0x2c01ffc	sprocref	0	469	489
-	16	 0x2c0201c	sprocref	0	489	509
+	1	 0x3101e50	module__	0	0	40
+	2	 0x3100144	namespc_	0	40	72
+	3	 0x3101e74	proccoll	1	72	171
+	4	 0x3101ec0	procinst	0	171	191
+	5	 0x3101ee0	proctprf	0	191	207
+	6	 0x3101ef0	procdefn	0	207	247
+	7	 0x3101f74	crnglst_	0	247	267
+	8	 0x3101f80	proctprf	0	267	283
+	9	 0x3101f94	proccoll	1	283	381
+	10	 0x3101fe0	procinst	0	381	401
+	11	 0x3102000	proctprf	0	401	417
+	12	 0x3102014	crnglst_	0	417	437
+	13	 0x3102020	proctprf	0	437	453
+	14	 0x3102030	prcalias	0	453	473
+	15	 0x310205c	sprocref	0	473	493
+	16	 0x310207c	sprocref	0	493	513
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

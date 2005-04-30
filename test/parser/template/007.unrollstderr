@@ -2,27 +2,27 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3302584	module__	0	0	28
-	2	 0x3300170	namespc_	0	28	52
-	3	 0x33025a0	procdefn	0	52	108
-	4	 0x3806450	pintcoll	0	108	145
-	5	 0x3803004	pintinst	0	145	161
-	6	 0x3302614	dintcoll	1	161	196
-	7	 0x3804604	datainst	0	196	216
-	8	 0x3302664	datatprf	0	216	232
-	9	 0x3302670	datadefn	0	232	264
-	10	 0x33026d4	dprmlst_	0	264	280
-	11	 0x269a024	cnstpi__	0	280	292
-	12	 0x33026e4	drnglst_	0	292	308
-	13	 0x3302704	dynrng__	0	308	324
-	14	 0x269a038	cnstpi__	0	324	336
-	15	 0x3302728	arithexp	0	336	353
-	16	 0x3302748	arithexp	0	353	370
-	17	 0x3302768	arithexp	0	370	387
-	18	 0x269a04c	cnstpi__	0	387	399
-	19	 0x3302790	spiref__	0	399	419
-	20	 0x269a060	cnstpi__	0	419	431
-	21	 0x269a074	cnstpi__	0	431	443
+	1	 0x3102560	module__	0	0	28
+	2	 0x3100144	namespc_	0	28	52
+	3	 0x3102580	procdefn	0	52	112
+	4	 0x3102604	pintcoll	0	112	149
+	5	 0x3102650	pintinst	0	149	165
+	6	 0x3102664	dintcoll	1	165	200
+	7	 0x31026b0	datainst	0	200	220
+	8	 0x31026d0	datatprf	0	220	236
+	9	 0x31026e0	datadefn	0	236	272
+	10	 0x3102744	dprmlst_	0	272	288
+	11	 0x2496024	cnstpi__	0	288	300
+	12	 0x3102754	drnglst_	0	300	316
+	13	 0x3102774	dynrng__	0	316	332
+	14	 0x2496038	cnstpi__	0	332	344
+	15	 0x3102798	arithexp	0	344	361
+	16	 0x31027b8	arithexp	0	361	378
+	17	 0x31027d8	arithexp	0	378	395
+	18	 0x249604c	cnstpi__	0	395	407
+	19	 0x3102800	spiref__	0	407	427
+	20	 0x2496060	cnstpi__	0	427	439
+	21	 0x2496074	cnstpi__	0	439	451
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
