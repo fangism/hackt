@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.40.4.2 2005/04/30 21:27:25 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.40.4.3 2005/05/01 20:32:52 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -515,10 +515,10 @@ definition_base::make_fundamental_type_reference(void) const {
 		must be modifiable for used_id_map
  */
 never_ptr<const instance_collection_base>
-definition_base::add_template_formal(
+definition_base::add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id) {
-	STACKTRACE("definition_base::add_template_formal()");
+	STACKTRACE("definition_base::add_strict_template_formal()");
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
@@ -550,7 +550,6 @@ definition_base::add_template_formal(
 
 #if USE_TEMPLATE_FORMALS_MANAGER
 	template_formals.add_strict_template_formal(pf);
-//	template_formals.add_relaxed_template_formal(pf);
 #else
 	template_formals_list.push_back(pf);
 	template_formals_map[id] = pf;
@@ -561,6 +560,38 @@ definition_base::add_template_formal(
 	// later return a never_ptr<>
 	return pf;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_TEMPLATE_FORMALS_MANAGER
+/**
+	Same as add_strict_template_formal, except distinguished as
+	a relaxed template formal parameter.  
+ */
+never_ptr<const instance_collection_base>
+definition_base::add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> i, 
+		const token_identifier& id) {
+	STACKTRACE("definition_base::add_relaxed_template_formal()");
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	} 
+	}
+	scopespace* ss = IS_A(scopespace*, this);
+	NEVER_NULL(ss);
+	const never_ptr<const param_instance_collection>
+		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);	// consistency check
+	template_formals.add_relaxed_template_formal(pf);
+	INVARIANT(lookup_template_formal(id));
+	return pf;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

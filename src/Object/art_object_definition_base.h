@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.15.4.1 2005/04/30 21:27:26 fang Exp $
+	$Id: art_object_definition_base.h,v 1.15.4.2 2005/05/01 20:32:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -232,9 +232,22 @@ virtual	good_bool
 	TO DO: This function should be pure virtual and belong 
 		to a different interface!
  */
+#if USE_TEMPLATE_FORMALS_MANAGER
 virtual	never_ptr<const instance_collection_base>
-	add_template_formal(const never_ptr<instantiation_statement_base> f, 
+	add_strict_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
+
+virtual	never_ptr<const instance_collection_base>
+	add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id);
+#else
+virtual	never_ptr<const instance_collection_base>
+	add_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id);
+#endif
 
 /**
 	Really, only some definitions should have ports...
@@ -248,6 +261,7 @@ virtual	bool
 	exclude_object(const used_id_map_type::value_type& i) const;
 #endif
 
+#if !USE_TEMPLATE_FORMALS_MANAGER
 private:
 	void
 	collect_template_formal_pointers(persistent_object_manager& m) const;
@@ -259,6 +273,7 @@ private:
 	void
 	load_object_template_formals(const persistent_object_manager& m, 
 		istream&);
+#endif
 
 protected:
 	void

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.1.2.1 2005/04/30 21:27:26 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.1.2.2 2005/05/01 20:32:53 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -143,6 +143,25 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+private:
+	static
+	ostream&
+	dump_formals_list(ostream& o, const template_formals_list_type&);
+
+	static
+	good_bool
+	partial_check_null_template_argument(const template_formals_list_type&);
+
+	static
+	bool
+	equivalent_template_formals_lists(const template_formals_list_type&, 
+		const template_formals_list_type&, const string&);
+
+	static
+	void
+	load_template_formals_list(const persistent_object_manager&, 
+		template_formals_map_type&, template_formals_list_type&);
 
 };	// end class template_formals_manager
 

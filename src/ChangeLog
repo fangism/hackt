@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-03:
+	  Parser context now adds template formals to either the 
+	  strict parameter list or the relaxed parameter list.  
+	  Some minor re-organization to reuse code in template_formals_manager.
+	  TODO: Type-references template arguments need to be split into
+	  strict and relaxed.  
+
+
 2005-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-02:

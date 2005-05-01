@@ -1,7 +1,7 @@
 /**
 	\file "art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.1.2.1 2005/04/30 21:27:26 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.1.2.2 2005/05/01 20:32:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -48,6 +48,23 @@ template_formals_manager::~template_formals_manager() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+template_formals_manager::dump_formals_list(ostream& o, 
+		const template_formals_list_type& l) {
+	indent tfl_ind(o);
+	o << '<' << endl;	// continued from last print
+	template_formals_list_type::const_iterator i = l.begin();
+	const template_formals_list_type::const_iterator e = l.end();
+	for ( ; i!=e; i++) {
+		// sanity check
+		NEVER_NULL(*i);
+		INVARIANT((*i)->is_template_formal());
+		(*i)->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << '>' << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 template_formals_manager::dump(ostream& o) const {
 	STACKTRACE("template_formals_manager::dump_template_formals()");
 	// sanity check
@@ -55,6 +72,7 @@ template_formals_manager::dump(ostream& o) const {
 		+relaxed_template_formals_list.size()
 		== template_formals_map.size());
 	if (!strict_template_formals_list.empty()) {
+#if 0
 		indent tfl_ind(o);
 		o << '<' << endl;	// continued from last print
 		template_formals_list_type::const_iterator
@@ -68,12 +86,16 @@ template_formals_manager::dump(ostream& o) const {
 			(*i)->dump(o << auto_indent) << endl;
 		}
 		o << auto_indent << '>' << endl;
+#else
+		dump_formals_list(o, strict_template_formals_list);
+#endif
 	}
 	if (!relaxed_template_formals_list.empty()) {
 		// need to be able to read that this is the second param list
 		if (strict_template_formals_list.empty()) {
 			o << "<>" << endl;	// continued from last print
 		}
+#if 0
 		indent tfl_ind(o);
 		o << auto_indent << '<' << endl;
 		template_formals_list_type::const_iterator
@@ -87,6 +109,9 @@ template_formals_manager::dump(ostream& o) const {
 			(*i)->dump(o << auto_indent) << endl;
 		}
 		o << auto_indent << '>' << endl;
+#else
+		dump_formals_list(o, relaxed_template_formals_list);
+#endif
 	}
 	return o;
 }
@@ -186,6 +211,38 @@ template_formals_manager::lookup_template_formal_position(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Partial check on one of the template parameter lists:
+	Used for checking when a type should have null template arguments.  
+	Really just a special case of general template argument checking.  
+	\return true if this definition is not templated, 
+		or the template formals signature is empty, 
+		or default parameters are available for all formals.  
+ */
+good_bool
+template_formals_manager::partial_check_null_template_argument(
+		const template_formals_list_type& l) {
+	if (!l.empty()) {
+		// make sure each formal has a default parameter value
+		// starting with strict formal parameters
+		template_formals_list_type::const_iterator i = l.begin();
+		for ( ; i!=l.end(); i++) {
+			const never_ptr<const param_instance_collection> p(*i);
+			NEVER_NULL(p);
+			p.must_be_a<const param_instance_collection>();
+			// if any formal is missing a default value, then this 
+			// definition cannot have null template arguments
+			if (!(*p).default_value()) {
+				return good_bool(false);
+			}
+			// else continue;       // keep checking
+		}
+	}
+	// else an empty parameter list is acceptable
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Used for checking when a type should have null template arguments.  
 	Really just a special case of general template argument checking.  
 	\return true if this definition is not templated, 
@@ -195,6 +252,7 @@ template_formals_manager::lookup_template_formal_position(
 good_bool
 template_formals_manager::check_null_template_argument(void) const {
 	STACKTRACE("template_formals_manager::check_null_template_argument()");
+#if 0
 	if (!strict_template_formals_list.empty()) {
 		// make sure each formal has a default parameter value
 		// starting with strict formal parameters
@@ -228,6 +286,45 @@ template_formals_manager::check_null_template_argument(void) const {
 	}
 	// if we've reached end of both lists, we're good!
 	return good_bool(true);
+#else
+	if (!partial_check_null_template_argument(
+			strict_template_formals_list).good) {
+		return good_bool(false);
+	} else if (!partial_check_null_template_argument(
+			relaxed_template_formals_list).good) {
+		return good_bool(false);
+	} else	return good_bool(true);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre size of lists l and r are the same.  
+ */
+bool
+template_formals_manager::equivalent_template_formals_lists(
+		const template_formals_list_type& l, 
+		const template_formals_list_type& r, 
+		const string& err_msg) {
+	template_formals_list_type::const_iterator i = l.begin();
+	template_formals_list_type::const_iterator j = r.begin();
+	for ( ; i!=l.end() && j!=r.end(); i++, j++) {
+		const never_ptr<const param_instance_collection> itf(*i);
+		const never_ptr<const param_instance_collection> jtf(*j);
+		NEVER_NULL(itf);        // template formals not optional
+		NEVER_NULL(jtf);        // template formals not optional
+		// only type and size need to be equal, not name
+		if (!itf->template_formal_equivalent(jtf)) {
+			// useful error message goes here
+			cerr << err_msg << endl;
+			// specifically, which one?
+			return false;
+		}
+		// else continue checking
+	}
+	// sanity check, we made sure sizes match.
+	INVARIANT(i == l.end() && j == r.end());
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,6 +361,7 @@ template_formals_manager::equivalent_template_formals(
 	}
 	if (err)
 		return false;
+#if 0
 	template_formals_list_type::const_iterator
 		i = strict_template_formals_list.begin();
 	template_formals_list_type::const_iterator j = dsl.begin();
@@ -284,6 +382,14 @@ template_formals_manager::equivalent_template_formals(
 	}
 	// sanity check, we made sure sizes match.
 	INVARIANT(i == strict_template_formals_list.end() && j == dsl.end());
+#else
+	if (!equivalent_template_formals_lists(
+			strict_template_formals_list, dsl, 
+			"ERROR: strict template formals do not match!")) {
+		return false;
+	}
+#endif
+#if 0
 	i = relaxed_template_formals_list.begin();
 	j = drl.begin();
 	for ( ; i!=relaxed_template_formals_list.end() && j!=drl.end(); i++, j++) {
@@ -303,6 +409,11 @@ template_formals_manager::equivalent_template_formals(
 	}
 	INVARIANT(i == relaxed_template_formals_list.end() && j == drl.end());
 	return true;
+#else
+	else	return equivalent_template_formals_lists(
+			relaxed_template_formals_list, drl, 
+			"ERROR: relaxed template formals do not match!");
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -311,6 +422,7 @@ template_formals_manager::equivalent_template_formals(
 		that is subdivided into strict and relaxed parameters.  
 	TEMPORARY (wrong):
 		Just check strict formal parameter list only.  
+	TODO: also check relaxed parameter list.
 	Certifies the template arguments against this definition's
 	template signature.  
 	This also replaces NULL arguments in the list with defaults
@@ -500,6 +612,29 @@ template_formals_manager::write_object_base_fake(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Loads one of the lists.  
+	\param l list of template formals, already loaded with pointers.  
+ */
+void
+template_formals_manager::load_template_formals_list(
+		const persistent_object_manager& m, 
+		template_formals_map_type& the_map, 
+		template_formals_list_type& l) {
+	template_formals_list_type::const_iterator iter = l.begin();
+	const template_formals_list_type::const_iterator end = l.end();
+	for ( ; iter!=end; iter++) {
+		STACKTRACE("for-loop: load a map entry");
+		const template_formals_value_type inst_ptr = *iter;
+		NEVER_NULL(inst_ptr);
+		// we need to load the instantiation to use its key!
+		m.load_object_once(const_cast<param_instance_collection*>(
+			&*inst_ptr));
+		the_map[inst_ptr->get_name()] = inst_ptr;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: eliminate code duplication, add some static methods.
 	Template formals are loaded in list order.
 	Remember that the redundant hash_map also needs to be reconstructed.  
@@ -513,6 +648,7 @@ template_formals_manager::load_object_base(
 	m.read_pointer_list(f, strict_template_formals_list);
 	m.read_pointer_list(f, relaxed_template_formals_list);
 	// then copy list into hash_map to synchronize
+#if 0
 	template_formals_list_type::const_iterator
 		iter = strict_template_formals_list.begin();
 	template_formals_list_type::const_iterator
@@ -538,6 +674,12 @@ template_formals_manager::load_object_base(
 			&*inst_ptr));
 		template_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
+#else
+	load_template_formals_list(m, template_formals_map, 
+		strict_template_formals_list);
+	load_template_formals_list(m, template_formals_map, 
+		relaxed_template_formals_list);
+#endif
 	INVARIANT(strict_template_formals_list.size()
 		+relaxed_template_formals_list.size()
 		== template_formals_map.size());
