@@ -2,12 +2,13 @@
 
 include $(top_srcdir)/Make.stddef
 
-DVIPS = dvips
+# commented definitions are set by configure
+# DVIPS = dvips
 PSNUP = psnup
-LATEX = latex
-PDFLATEX = pdflatex
-BIBTEX = bibtex
-MAKEINDEX = makeindex
+# LATEX = latex
+# PDFLATEX = pdflatex
+# BIBTEX = bibtex
+# MAKEINDEX = makeindex
 MAKETEXDEPEND = $(AWK) -f $(srcdir)/maketexdepend.awk \
 	-v script=$(srcdir)/maketexdepend.awk -v srcdir=$(srcdir) \
 	-v readable=1 -v extensions="pdf dvi depend" -v touch=0

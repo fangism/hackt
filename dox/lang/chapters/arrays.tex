@@ -1,6 +1,6 @@
 % "chapters/arrays.tex"
 
-%	$Id: arrays.tex,v 1.3 2004/12/01 02:50:03 fang Exp $
+%	$Id: arrays.tex,v 1.3.64.1 2005/05/02 20:21:24 fang Exp $
 
 \chapter{Arrays}
 \label{sec:arrays}
@@ -147,13 +147,60 @@ Implicit array references that do not satisfy this are considered errors.
 
 [tons of examples]
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\subsection{Complex aggregates}
-\label{sec:arrays:references:aggregate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Complex aggregates}
+\label{sec:arrays:aggregate}
 
-Quite advanced, not yet implemented.  
+Quite advanced, semantics not yet implemented.  
 
 Splicing, concatenating, building higher dimensions... oh my.  
+
+\noindent
+\tit{complex-expr-term}
+: \tit{array-construction}
+$|$ \tit{loop-concatenation}
+$|$ \tit{simple-expr}
+
+The following subsections explain the array-related constructs.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Array concatenation}
+\label{sec:arrays:aggregate:concatenation}
+
+The syntax for concatenating arrays:
+
+\noindent
+\tit{array-concatenation}\\
+: \tit{array-concatenation} \ttt{\#} \tit{complex-expr-term}\\
+$|$ \tit{complex-expr-term}
+
+Example:
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Array construction}
+\label{sec:arrays:aggregate:construction}
+
+The syntax for building higher-dimension arrays:
+
+\tit{array-construction} : \ttt{\{} \tit{array-concatenation} \ttt{\}} 
+
+This construct takes an $N$-dimension array and produces an 
+$N+1$-dimension array of size $1\times\cdots$.
+
+Example:
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Loop concatenation}
+\label{sec:arrays:aggregate:loopcat}
+
+The syntax for loop-style concatenation:
+
+\ttt{( \# :} \tit{identifier} \ttt{:} \tit{range} \ttt{:}
+	\tit{complex-expr-term} \ttt{)}
+
+Example:
+
+Denotational and operation semantics, please.
 
 Requiring size-equivalence (not range-equivalence) for construction.
 Remapping of indices.  

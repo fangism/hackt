@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.9 2005/04/29 01:07:45 fang Exp $
+%	$Id: templates.tex,v 1.9.2.1 2005/05/02 20:21:24 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -191,6 +191,63 @@ and allow non-equivalent types to pass.
 However, at unroll-time, all parameters must be resolved
 and type-equivalence can be precisely determined.  
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Examples}
+\label{sec:templates:equivalence:examples}
+
+The following example illustrates how one might describe a ROM array
+using relaxed template arguments.
+
+\begin{verbatim}
+template <> <pbool VAL>
+defproc ROMcell(...) { ... }
+
+template <pint X, Y> <pbool V[X][Y]>
+defproc ROMarray(...) {
+  ROMcell<> x[X][Y];  // <> is optional
+  // can't reference x[i][j].member yet 
+  // because instance types are incomplete
+  (i:X:
+    (j:Y: x[i][j] <V[i][j]> (...); )
+  )
+  // from here, may reference x[i][j].member
+}
+
+ROMarray <2,3>
+    <{{false}#{true}#{false}}#
+    {{true}#{false}#{true}}>
+  a;
+\end{verbatim}
+
+This following example shows how one would declare an array of sources
+(like for a test environment):
+
+\begin{verbatim}
+template <pint N>
+defchan e1of (...) {...}
+
+template <pint N> <pint M; pint V[M]>
+defproc source_e1of (e1of<N> c) {...}
+
+e1of<4> C[10];
+source_e1of<4> CS[10];  // instances' types are incomplete
+CS[0] <1, {2}> (C[0]);  // can complete types and connect
+CS[1] <3, {2}#{0}#{1}> (C[1]);
+CS[2] <2, {1}#{0}> (C[2]);
+...
+\end{verbatim}
+
+We could have also declared the array of sources with sparse instantiation, 
+as long as the strict template arguments match:
+\begin{verbatim}
+source_e1of<4> <1, {2}> CS[0..0](C[0]);
+  // this determines the entire collection's strict parameters
+  // but sets the relaxed parameters for only the indexed range
+source_e1of<4> <3, {2}#{0}#{1}> CS[1..1](C[1]);
+source_e1of<4> <2, {1}#{0}> CS[2..2](C[2]);
+...
+\end{verbatim}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type Parameters}
 \label{sec:templates:typeparam}
@@ -214,6 +271,7 @@ Some examples:
 \section{Template Template Parameters}
 \label{sec:templates:ttp}
 
+Punt, I mean it.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Template Specialization}
