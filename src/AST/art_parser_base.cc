@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18.4.1 2005/04/30 21:27:24 fang Exp $
+	$Id: art_parser_base.cc,v 1.18.4.2 2005/05/02 20:21:44 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -46,6 +46,8 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::root_item, "(root_item)")
+SPECIALIZE_UTIL_WHAT(ART::parser::def_body_item, "(def-body-item)")
 SPECIALIZE_UTIL_WHAT(ART::parser::type_id, "(type-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::chan_type, "(chan-type)")
 SPECIALIZE_UTIL_WHAT(ART::parser::incdec_stmt, "(inc/dec-stmt)")

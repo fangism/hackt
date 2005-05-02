@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16.4.1 2005/04/29 20:42:50 fang Exp $
+	$Id: art++-parse.yy,v 1.16.4.2 2005/05/02 20:21:48 fang Exp $
  */
 
 %{
@@ -149,6 +149,13 @@ extern const char* const yyrule[];
 
 %}
 
+/**
+	NOTE: to use the following union definition, which will be
+	summarized in "art++-parse-prefix.h" (generated), 
+	you will need to include "art_parser_fwd.h" first
+	(with using namespace ART::parser;) to provide forward
+	declarations of the union-members' types.  
+ */
 %union {
 /**
 	Use this universal symbol type for both lexer and parser.  
@@ -754,7 +761,7 @@ template_formal_decl_list_in_angles
 	;
 
 template_formal_decl_list_optional_in_angles
-	: template_formal_decl_list
+	: template_formal_decl_list_in_angles
 		{ $$ = $1; }
 	| '<' '>'
 		{ $$ = new template_formal_decl_list();

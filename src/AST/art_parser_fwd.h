@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.4.4.1 2005/04/29 20:42:45 fang Exp $
+	$Id: art_parser_fwd.h,v 1.4.4.2 2005/05/02 20:21:45 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -28,6 +28,7 @@ template <class T>
 class node_list;			// defined in "art_parser_node_list.h"
 
 class expr_list;
+class template_argument_list_pair;
 class root_item;
 class root_body;
 class qualified_id;

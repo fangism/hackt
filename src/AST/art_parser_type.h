@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.3 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_type.h,v 1.3.4.1 2005/05/02 20:21:46 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_H__
@@ -100,7 +100,10 @@ class concrete_type_ref : public node {
 protected:
 	/** definition name base */
 	const excl_ptr<const type_base>			base;
-	/** optional template arguments */
+	/**
+		Optional template arguments.
+		TODO: Needs to be split into strict and relaxed arguments.  
+	 */
 	const excl_ptr<const expr_list>			temp_spec;
 public:
 	explicit

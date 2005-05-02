@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr_list.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_list.h,v 1.3 2005/04/14 19:46:33 fang Exp $
+	Base set of classes parser expression lists.  
+	$Id: art_parser_expr_list.h,v 1.3.4.1 2005/05/02 20:21:45 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_LIST_H__
@@ -48,6 +48,33 @@ virtual	ostream&
 virtual	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class expr_list
+
+//=============================================================================
+/**
+	Contains a strict template argument list and a relaxed template
+	argument list.  
+ */
+class template_argument_list_pair : public node {
+protected:
+	const excl_ptr<const expr_list>		strict_args;
+	const excl_ptr<const expr_list>		relaxed_args;
+public:
+	template_argument_list_pair(const expr_list*, const expr_list*);
+	~template_argument_list_pair();
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	never_ptr<const object>
+	check_build(context& c) const;
+
+};	// end class template_argument_list_pair
 
 //=============================================================================
 }	// end namespace parser

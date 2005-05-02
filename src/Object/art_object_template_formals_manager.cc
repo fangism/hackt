@@ -1,7 +1,7 @@
 /**
 	\file "art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.1.2.2 2005/05/01 20:32:53 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.1.2.3 2005/05/02 20:21:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -688,4 +688,13 @@ template_formals_manager::load_object_base(
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#if 0
+// doesn't actually save space
+namespace std {
+// explicit template class instantiation
+template class
+vector<ART::entity::template_formals_manager::template_formals_value_type>;
+}	// end namespace std
+#endif
 

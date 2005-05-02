@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_expr.cc,v 1.18.4.1 2005/05/02 20:21:45 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -38,6 +38,7 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::expr, "(expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::paren_expr, "(paren-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")

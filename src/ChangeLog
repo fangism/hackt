@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-04:
+	  Updated ART::parser::node_list::what() message (and test cases).
+	  Created class ART::parser::template_argument_list_pair, but unused.
+	  Added util/type_traits.h for convenience and compatibility.  
+	  Some more parser implementation notes in src/parser/NOTES.  
+	  Standardized header inclusion in parser/{yacc,bison}-union-hack.awk.
+
+
 2005-05-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-03:

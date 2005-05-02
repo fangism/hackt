@@ -1,7 +1,7 @@
 /**
 	\file "art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.1.2.2 2005/05/01 20:32:53 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.1.2.3 2005/05/02 20:21:47 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -65,7 +65,7 @@ public:
 		Using vector instead of list, for constant-time
 		position computation, via iterator distance.  
 	 */
-	typedef	std::vector<template_formals_value_type>
+	typedef	vector<template_formals_value_type>
 					template_formals_list_type;
 protected:
 	/**
@@ -168,6 +168,16 @@ private:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#if 0
+// doesn't actually save space...
+namespace std {
+// to suppress implicit instantiation of template class
+
+extern template class
+vector<ART::entity::template_formals_manager::template_formals_value_type>;
+}	// end namespace std
+#endif
 
 #endif	// __ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
 

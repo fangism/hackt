@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "yacc-union-type.awk"
 # David Fang, 2004
-#	$Id: yacc-union-type.awk,v 1.4 2005/03/02 00:29:02 fang Exp $
+#	$Id: yacc-union-type.awk,v 1.4.18.1 2005/05/02 20:21:49 fang Exp $
 
 # DISCLAIMER:
 # Not guaranteed to work on 'bison -y' output, 
@@ -102,8 +102,8 @@ BEGIN {
 
 #	print "#include \"y.tab.h\"";	# for YYSTYPE
 #		but is not always named y.tab.h! add to the "include" variable
-	print "#include <assert.h>";
-#	print "#include <iostream.h>";
+	print "#include <cassert>";
+#	print "#include <iostream>";
 	print "";
 
 	process_union(yaccfile);
