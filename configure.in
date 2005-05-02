@@ -1,7 +1,7 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
 #
-#	$Id: configure.in,v 1.18 2005/04/29 01:07:41 fang Exp $
+#	$Id: configure.in,v 1.18.2.1 2005/05/02 20:20:56 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -90,6 +90,18 @@ AM_CONDITIONAL(HAVE_DOT, test "$DOT" = dot)
 
 AC_CHECK_PROG([LATEX], latex, latex)
 AM_CONDITIONAL(HAVE_LATEX, test "$LATEX" = latex)
+
+AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
+AM_CONDITIONAL(HAVE_PDFLATEX, test "$PDFLATEX" = pdflatex)
+
+AC_CHECK_PROG([DVIPS], dvips, dvips)
+AM_CONDITIONAL(HAVE_DVIPS, test "$DVIPS" = dvips)
+
+AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
+AM_CONDITIONAL(HAVE_BIBTEX, test "$BIBTEX" = bibtex)
+
+AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
+AM_CONDITIONAL(HAVE_MAKEINDEX, test "$MAKEINDEX" = makeindex)
 
 AC_CONFIG_FILES([
 	Makefile
