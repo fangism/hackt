@@ -2,7 +2,7 @@
 
 namespace J {
 
-};
+}
 
 open J as K;
 

@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2005/02/27 22:54:59 fang Exp $
+#	$Id: Makefile.am,v 1.6.22.1 2005/05/03 03:35:27 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -8,12 +8,14 @@ SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 ARTC_TEST_FAILURES = \
 	    003 005 \
 	010 013 014 019 \
-	020 023 024 025
+	020 023 024 025 027 028
 
 ARTC_TEST_PASSES = \
 	001 002 004 006 007 008 009 \
 	011 012 015 016 017 018 \
-	021 022
+	021 022 026
+
+BISON_OUTPUTS = 027 028
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.10 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_hse.cc,v 1.10.4.1 2005/05/03 03:35:15 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -162,10 +162,9 @@ skip::check_build(context& c) const {
 // class wait method definitions
 
 CONSTRUCTOR_INLINE
-wait::wait(const char_punctuation_type* l, const expr* c,
-		const char_punctuation_type* r) :
-		statement(), lb(l), cond(c), rb(r) {
-	NEVER_NULL(cond); NEVER_NULL(lb); NEVER_NULL(rb);
+wait::wait(const expr* c) :
+		statement(), cond(c) {
+	NEVER_NULL(cond);
 }
 
 DESTRUCTOR_INLINE
@@ -175,12 +174,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(wait)
 
 line_position
 wait::leftmost(void) const {
-	return lb->leftmost();
+	return cond->leftmost();
 }
 
 line_position
 wait::rightmost(void) const {
-	return rb->rightmost();
+	return cond->rightmost();
 }
 
 never_ptr<const object>

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16.4.2 2005/05/02 20:21:48 fang Exp $
+	$Id: art++-parse.yy,v 1.16.4.3 2005/05/03 03:35:17 fang Exp $
  */
 
 %{
@@ -257,7 +257,7 @@ extern const char* const yyrule[];
 	alias_list*		_alias_list;
 
 	expr*			_expr;
-	paren_expr*		_paren_expr;
+/*	paren_expr*		_paren_expr;	*/
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
@@ -282,6 +282,8 @@ extern const char* const yyrule[];
 	array_concatenation*	_array_concatenation;
 	loop_concatenation*	_loop_concatenation;
 	array_construction*	_array_construction;
+	type_completion_statement*	_type_completion_statement;
+	type_completion_connection_statement*	_type_completion_connection_statement;
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
@@ -504,6 +506,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
+%type	<_type_completion_statement>	instance_type_completion_statement
+%type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	rvalue_optional_alias_list
 %type	<_alias_list>	alias_list
@@ -642,16 +646,19 @@ namespace_item
 
 namespace_management
 	/* C++ style classes require semicolon, but not afer namespace */
-	: NAMESPACE ID '{' top_root '}' ';'
+	/* really the NAMESPACE and OPEN keyword tokens may be discarded */
+	: NAMESPACE ID '{' top_root '}'
 		{ if (!$4)
 			$4 = new root_body(NULL);
 		  WRAP_LIST($3, $4, $5);
-		  $$ = new namespace_body($1, $2, $4, $6); }
+		  $$ = new namespace_body($1, $2, $4); }
 	/* or C++ style: using namespace blah; */
 	| OPEN namespace_id AS ID ';'
-		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
+		{ $$ = new using_namespace($1, $2, $4);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
 	| OPEN namespace_id ';'
-		{ $$ = new using_namespace($1, $2, $3); }
+		{ $$ = new using_namespace($1, $2);
+		  DELETE_TOKEN($3); }
 	/* ever close namespace? */
 	;
 
@@ -680,7 +687,8 @@ prototype_declaration
 type_alias
 /* C-style typedef, but allowing templates */
 	: optional_template_specification TYPEDEF physical_type_ref ID ';'
-		{ $$ = new typedef_alias($1, $2, $3, $4, $5); }
+		{ $$ = new typedef_alias($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 /*	other proposal, use {deftype,defchan,defproc} new<> = old<> */
 	;
 
@@ -722,7 +730,8 @@ def_or_proc
 declare_proc_proto
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens ';'
-		{ $$ = new process_prototype($1, $2, $3, $4, $5); }
+		{ $$ = new process_prototype($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 	;
 
 defproc
@@ -936,8 +945,8 @@ declare_datatype_proto
 /*	  base_data_type */
 	  data_type_ref		/* base? */
           data_param_decl_list_in_parens ';'
-		{ $$ = new user_data_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 
 defdatatype
@@ -964,7 +973,7 @@ get_body
 
 declare_enum
 	: ENUM ID ';'
-		{ $$ = new enum_prototype($1, $2, $3); }
+		{ $$ = new enum_prototype($1, $2); DELETE_TOKEN($3); }
 	;
 
 defenum
@@ -987,8 +996,8 @@ enum_member_list
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
 	  data_param_decl_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 	
 defchan
@@ -1090,6 +1099,8 @@ optional_definition_body
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_statement { $$ = $1; }	/* connection of ports */
+	| instance_type_completion_statement { $$ = $1; }
+	| instance_type_completion_connection_statement { $$ = $1; }
 	| alias_list '=' expr ';'
 		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
 			/* alias connection */
@@ -1099,7 +1110,8 @@ instance_item
 
 loop_instantiation
 	: '(' ';' ID ':' range ':' definition_body ')'
-		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new loop_instantiation($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 conditional_instantiation
@@ -1111,7 +1123,8 @@ conditional_instantiation
 type_instance_declaration
 	/* type template is included in type_id, and is part of the type */
 	: type_id instance_id_list ';'
-		{ $$ = new instance_declaration($1, $2, $3); }
+		{ $$ = new instance_declaration($1, $2);
+		  DELETE_TOKEN($3); }
 	;
 
 instance_id_list
@@ -1142,7 +1155,22 @@ connection_statement
 	are brackets part of the array/membership chain? */
 	: member_index_expr connection_actuals_list ';'
 		/* can this first id be scoped and/or membered? */
-		{ $$ = new connection_statement($1, $2, $3); }
+		{ $$ = new connection_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+/* completing the relaxed template arguments of an instance */
+instance_type_completion_statement
+	: index_expr shift_expr_optional_list_in_angles ';'
+		{ $$ = new type_completion_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+instance_type_completion_connection_statement
+	: index_expr shift_expr_optional_list_in_angles 
+		connection_actuals_list ';'
+		{ $$ = new type_completion_connection_statement($1, $2, $3);
+		  DELETE_TOKEN($4); }
 	;
 
 rvalue_optional_alias_list
@@ -1256,7 +1284,8 @@ chp_do_until
 chp_wait
 	/* wait for expr to become true */
 	: '[' expr ']'
-		{ $$ = new CHP::wait($1, $2, $3); }
+		{ $$ = new CHP::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 chp_selection
@@ -1280,8 +1309,7 @@ chp_nondet_guarded_command_list
 	| chp_guarded_command ':' chp_guarded_command
 	/* can't have else clause in non-deterministic selection? */
 		{ $$ = new CHP::nondet_selection($1);
-		  APPEND_LIST($$, $2, $3);
-		}
+		  APPEND_LIST($$, $2, $3); }
 	;
 
 chp_matched_det_guarded_command_list
@@ -1391,7 +1419,8 @@ hse_do_until
 
 hse_wait
 	: '[' expr ']'
-		{ $$ = new HSE::wait($1, $2, $3); }
+		{ $$ = new HSE::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 hse_selection
@@ -1463,7 +1492,8 @@ prs_body_item
 
 prs_loop
 	: '(' ':' ID ':' range ':' prs_body ')'
-		{ $$ = new PRS::loop($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new PRS::loop($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 single_prs
@@ -1493,7 +1523,7 @@ prs_expr
 
 prs_paren_expr
 	: '(' prs_expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 prs_unary_expr
@@ -1540,7 +1570,7 @@ prs_or_loop
 ******************************************************************************/
 paren_expr
 	: '(' expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 /***

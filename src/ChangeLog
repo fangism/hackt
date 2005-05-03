@@ -2,6 +2,23 @@
 
 2005-05-02	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-27-template-01-05:
+	  Updated grammar to include instance type completion, 
+	  where array instances may have their types completed
+	  with relaxed template arguments (after array is declared with 
+	  strict template arguments).  
+	  (Includes type_completion + connection statement.)
+	  check_build for these new classes is yet unimplemented.
+	  GRAMMAR UPDATE: removed semicolon after namespace close-brace.
+	  Not keeping around silly semicolons in AST structures, 
+		deleting useless tokens immediately in parser.  
+	  Tests updated accordingly.
+	  TODO: re-update all tests with YACC=/usr/bin/yacc configuration.  
+		(been forgetting to do this for a long time...)
+
+
+2005-05-02	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-27-template-01-04:
 	  Updated ART::parser::node_list::what() message (and test cases).
 	  Created class ART::parser::template_argument_list_pair, but unused.

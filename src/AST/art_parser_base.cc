@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18.4.2 2005/05/02 20:21:44 fang Exp $
+	$Id: art_parser_base.cc,v 1.18.4.3 2005/05/03 03:35:14 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -465,17 +465,16 @@ language_body::leftmost(void) const {
 	\param l the left brace.  
 	\param b the body (contents), may be NULL.  
 	\param r the right brace.  
-	\param c the semicolon.  
  */
 CONSTRUCTOR_INLINE
 namespace_body::namespace_body(
 		const generic_keyword_type* s, const token_identifier* n, 
-		const root_body* b, const char_punctuation_type* c) :
+		const root_body* b) :
 		root_item(),       
-		ns(s), name(n), body(b), semi(c) {
+		ns(s), name(n), body(b) {
 	NEVER_NULL(ns); NEVER_NULL(name);
 	// body may be NULL
-	NEVER_NULL(semi);	// don't really care about syntax sugar
+//	NEVER_NULL(semi);	// don't really care about syntax sugar
 }
 
 /// destructor
@@ -502,9 +501,9 @@ namespace_body::leftmost(void) const {
 
 line_position
 namespace_body::rightmost(void) const {
-	if (semi)	return semi->rightmost();
+//	if (semi)	return semi->rightmost();
 //	else if (rb)	return rb->rightmost();
-	else if (body)	return body->rightmost();
+	if (body)	return body->rightmost();
 //	else if (lb)	return lb->rightmost();
 	else		return name->rightmost();
 }
@@ -589,14 +588,12 @@ operator << (ostream& o, const namespace_id& id) {
 	Constructor for using_namespace directive.  
 	\param o the "open" keyword.  
 	\param i the id_expr qualified identifier.  
-	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const generic_keyword_type* o, const namespace_id* i, 
-		const char_punctuation_type* s) : root_item(),
-		open(o), id(i), as(NULL), alias(NULL), semi(s) {
-	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
+		const generic_keyword_type* o, const namespace_id* i) :
+		root_item(), open(o), id(i), alias(NULL) {
+	NEVER_NULL(open); NEVER_NULL(id);
 }
 
 /**
@@ -605,17 +602,13 @@ using_namespace::using_namespace(
 	\param i the id_expr qualified identifier.  
 	\param a the "as" keyword.  
 	\param n the alias name.  
-	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
 		const generic_keyword_type* o, const namespace_id* i, 
-		const generic_keyword_type* a, const token_identifier* n, 
-		const char_punctuation_type* s) : root_item(),
-		open(o), id(i), as(a), alias(n), semi(s) {
-	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);
-	NEVER_NULL(alias); NEVER_NULL(semi);
-	// get rid of non-essentials...
+		const token_identifier* n) :
+		root_item(), open(o), id(i), alias(n) {
+	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(alias);
 }
 
 /// default destructor
@@ -632,9 +625,7 @@ using_namespace::leftmost(void) const {
 
 line_position
 using_namespace::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else if (alias)	return alias->rightmost();
-	else if (as)	return as->rightmost();
+	if (alias)	return alias->rightmost();
 	else		return id->rightmost();
 }
 

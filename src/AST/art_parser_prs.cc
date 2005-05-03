@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.11 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_prs.cc,v 1.11.4.1 2005/05/03 03:35:16 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -82,13 +82,12 @@ rule::check_build(context& c) const {
 //=============================================================================
 // class loop method definitions
 
-loop::loop(const char_punctuation_type* l, const char_punctuation_type* c1,
-		const token_identifier* id, const char_punctuation_type* c2, 
-		const range* b, const char_punctuation_type* c3, 
+loop::loop(const char_punctuation_type* l,
+		const token_identifier* id, const range* b,
 		const rule_list* rl, const char_punctuation_type* r) :
 		body_item(), 
-		lp(l), col1(c1), index(id), col2(c2), bounds(b), 
-		col3(c3), rules(rl), rp(r) {
+		lp(l), index(id), bounds(b), 
+		rules(rl), rp(r) {
 	NEVER_NULL(index); NEVER_NULL(bounds); NEVER_NULL(rules);
 }
 
@@ -100,7 +99,6 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop)
 line_position
 loop::leftmost(void) const {
 	if (lp)		return lp->leftmost();
-	else if (col1)	return col1->leftmost();
 	else		return index->leftmost();
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.18.4.1 2005/05/02 20:21:45 fang Exp $
+	$Id: art_parser_expr.cc,v 1.18.4.2 2005/05/03 03:35:15 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -40,7 +40,6 @@
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::expr, "(expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
-SPECIALIZE_UTIL_WHAT(ART::parser::paren_expr, "(paren-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::id_expr, "(id-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::range, "(range)")
@@ -114,6 +113,7 @@ expr_list::check_build(context& c) const {
 }
 
 //=============================================================================
+#if 0
 // class paren_expr method definitions
 
 CONSTRUCTOR_INLINE
@@ -144,6 +144,7 @@ never_ptr<const object>
 paren_expr::check_build(context& c) const {
 	return e->check_build(c);
 }
+#endif
 
 //=============================================================================
 // class qualified_id method definitions

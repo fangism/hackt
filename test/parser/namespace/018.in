@@ -2,14 +2,14 @@
 
 namespace W {
 	namespace X {
-		namespace B { };
-	};
-	namespace Y { };
+		namespace B { }
+	}
+	namespace Y { }
 	namespace Z {
 		namespace A {
 			open X::B;
 			// won't find it in A or Z, will find in W
-		};
-	};
-};
+		}
+	}
+}
 

@@ -1,0 +1,13 @@
+// should pass: declarations of processes with relaxed template parameters
+
+template <pbool A> <pint K>
+defproc foo() {
+	pint J = K;
+}
+
+// without strict parameters, empty strict list is required
+template <> <pint K>
+defproc bar() {
+	pint J = K;
+}
+

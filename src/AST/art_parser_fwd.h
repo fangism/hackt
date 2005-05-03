@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.4.4.2 2005/05/02 20:21:45 fang Exp $
+	$Id: art_parser_fwd.h,v 1.4.4.3 2005/05/03 03:35:15 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -48,7 +48,7 @@ class language_body;
 class namespace_body;
 class using_namespace;
 class instance_management;
-class template_argument_list;
+// class template_argument_list;
 class concrete_type_ref;
 
 //-----------------------------------------------------------------------------
@@ -73,7 +73,6 @@ class typedef_alias;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_expr.h"
-class paren_expr;
 class id_expr;
 class range;
 class range_list;
@@ -125,6 +124,8 @@ class loop_instantiation;
 class guarded_definition_body;
 class guarded_definition_body_list;
 class conditional_instantiation;
+class type_completion_statement;
+class type_completion_connection_statement;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_token.h"

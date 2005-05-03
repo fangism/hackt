@@ -1,2 +1,2 @@
 ERROR: port formals do not match!
-new declaration for "foo" doesn't match previous declaration.  ERROR! [15:2..30]
+new declaration for "foo" doesn't match previous declaration.  ERROR! [15:2..29]

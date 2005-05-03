@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.18.4.2 2005/04/30 21:27:25 fang Exp $
+	$Id: art_parser_definition.cc,v 1.18.4.3 2005/05/03 03:35:14 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -108,12 +108,9 @@ user_data_type_prototype::user_data_type_prototype(
 		const token_identifier* n,
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 
-		const data_param_decl_list* p,
-		const char_punctuation_type* s) :
+		const data_param_decl_list* p) :
 		prototype(), 
-		user_data_type_signature(tf, df, n, dp, b, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		user_data_type_signature(tf, df, n, dp, b, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -130,8 +127,7 @@ user_data_type_prototype::leftmost(void) const {
 
 line_position
 user_data_type_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return params->rightmost();
+	return params->rightmost();
 }
 
 never_ptr<const object>
@@ -249,8 +245,8 @@ enum_signature::check_build(context& c) const {
 // class enum_prototype method definitions
 
 enum_prototype::enum_prototype(const generic_keyword_type* e, 
-		const token_identifier* i, const char_punctuation_type* s) :
-		prototype(), enum_signature(e, i), semi(s) {
+		const token_identifier* i) :
+		prototype(), enum_signature(e, i) {
 }
 
 enum_prototype::~enum_prototype() { }
@@ -265,8 +261,7 @@ enum_prototype::leftmost(void) const {
 
 line_position
 enum_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return id->rightmost();
+	return id->rightmost();
 }
 
 /**
@@ -394,11 +389,9 @@ user_chan_type_prototype::user_chan_type_prototype(
 		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
-		const data_param_decl_list* p, const char_punctuation_type* s) :
+		const data_param_decl_list* p) :
 		prototype(), 
-		user_chan_type_signature(tf, df, n, dp, b, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		user_chan_type_signature(tf, df, n, dp, b, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -414,8 +407,7 @@ user_chan_type_prototype::leftmost(void) const {
 
 line_position
 user_chan_type_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return params->rightmost();
+	return params->rightmost();
 }
 
 never_ptr<const object>
@@ -539,12 +531,9 @@ process_signature::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 process_prototype::process_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
-		const port_formal_decl_list* p,
-		const char_punctuation_type* s) :
+		const port_formal_decl_list* p) :
 		prototype(),
-		process_signature(tf, d, i, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		process_signature(tf, d, i, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -561,7 +550,7 @@ process_prototype::leftmost(void) const {
 
 line_position
 process_prototype::rightmost(void) const {
-	return semi->rightmost();
+	return ports->rightmost();
 }
 
 /**
@@ -662,9 +651,9 @@ user_data_type_signature::check_build(context& c) const {
 
 typedef_alias::typedef_alias(const template_formal_decl_list_pair* t,
 		const generic_keyword_type* k, const concrete_type_ref* b,
-		const token_identifier* i, const char_punctuation_type* s) :
+		const token_identifier* i) :
 		def_body_item(), root_item(), 
-		temp_spec(t), td(k), base(b), id(i), semi(s) {
+		temp_spec(t), td(k), base(b), id(i) {
 	NEVER_NULL(base); NEVER_NULL(id);
 }
 
@@ -681,8 +670,7 @@ typedef_alias::leftmost(void) const {
 
 line_position
 typedef_alias::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return id->rightmost();
+	return id->rightmost();
 }
 
 /**

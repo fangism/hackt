@@ -1,3 +1,3 @@
 ERROR: number of strict template formal parameters doesn't match! (0 vs. 1)
 ERROR: template formals do not match!  
-new declaration for "foo" doesn't match previous declaration.  ERROR! [6:1..14]
+new declaration for "foo" doesn't match previous declaration.  ERROR! [6:1..13]

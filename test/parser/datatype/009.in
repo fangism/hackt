@@ -1,5 +1,5 @@
 // should fail on re-use of identifier
 
-namespace X { };
+namespace X { }
 int W, X, Y, Z;		// die on X
 

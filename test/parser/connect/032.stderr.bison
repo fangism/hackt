@@ -1,7 +1,7 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	list<(root_item)>: (process-prototype) ... [3:1--5:34]
+0	list<(root_item)>: (process-prototype) ... [3:1--5:33]
 22	(type-ref) [7:1..6]
 35	list<(declaration-id)>: (declaration-id): identifier: load ... [7:8..11]
 112	. [7:12]
