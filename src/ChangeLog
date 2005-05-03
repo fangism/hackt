@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-06:
+	  Parser awk scripts: factored out common subroutines into
+	  separate scripts, so now need to invoke awk -f with co-dependent
+	  scripts.  This reduces duplicate maintenance on these files, 
+	  which will soon be modified, at the cost of having to keep around
+	  more script files.  
+
+
 2005-05-02	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-05:

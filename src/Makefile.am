@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.54.4.2 2005/05/02 20:21:38 fang Exp $
+#	$Id: Makefile.am,v 1.54.4.3 2005/05/03 19:51:08 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -384,7 +384,8 @@ $(ARTXX_PARSE_OUTPUT): parser/art++-parse.h
 
 $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) $? | \
+	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
+		-f $(srcdir)/parser/common-output-to-C.awk $? | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
@@ -420,7 +421,8 @@ parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-par
 		$(ECHO) "parser/art++.types is empty!" ; \
 		exit 1 ; \
 	fi
-	$(AWK) -f $(YACC_UNION_SCRIPT) \
+	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
+		-f $(YACC_UNION_SCRIPT) \
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
 
@@ -463,8 +465,10 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 
 EXTRA_DIST = \
 	parser/lexyacc-prefix.awk \
+	parser/common-output-to-C.awk \
 	parser/yacc-output-to-C.awk \
 	parser/bison-output-to-C.awk \
+	parser/common-union-type.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
