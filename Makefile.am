@@ -2,12 +2,12 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.12 2005/02/27 22:54:04 fang Exp $
+#	$Id: Makefile.am,v 1.13 2005/05/04 19:31:37 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = src test . dox/lang
+SUBDIRS = src test . dox
 
 include $(top_srcdir)/Make.stddef
 

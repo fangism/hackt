@@ -1,6 +1,14 @@
 "ChangeLog"
 
-2005-05-01	David Fang	<fangism@users.sourceforge.net>
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-29:
+	  Re-organized dox subdirectory, making room for new documents.
+	  Factored out common Makefile-ism into the dox/mk directory, 
+	  including maketexdepend business and suffix rules into Make.latex.  
+
+
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-28-merged-template-01-09:
 	  Merged revisions from -template-01 branch.  

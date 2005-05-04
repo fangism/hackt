@@ -1,19 +1,7 @@
 # "dox/lang/Makefile.am"
+#	$Id: Makefile.am,v 1.14 2005/05/04 19:31:42 fang Exp $
 
-include $(top_srcdir)/Make.stddef
-
-# commented definitions are set by configure
-# DVIPS = dvips
-PSNUP = psnup
-# LATEX = latex
-# PDFLATEX = pdflatex
-# BIBTEX = bibtex
-# MAKEINDEX = makeindex
-MAKETEXDEPEND = $(AWK) -f $(srcdir)/maketexdepend.awk \
-	-v script=$(srcdir)/maketexdepend.awk -v srcdir=$(srcdir) \
-	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
-
-SUFFIXES = .ps .dvi .tex .pdf .depend
+include $(top_srcdir)/dox/mk/Make.latex
 
 PDFS = artxx.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -25,7 +13,7 @@ pdf-local: $(PDFS)
 ps-local: $(PSS)
 
 # have to add these by hand? :S
-EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
+EXTRA_DIST = \
 	artxx.bib artxx.tex \
 	chapters/preface.tex \
 	chapters/goals.tex \
@@ -48,77 +36,4 @@ EXTRA_DIST = maketexdepend.awk maketexdepend.tex \
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
 -include artxx.depend
-
-.tex.depend:
-	@$(ECHO) "Generating auto-dependencies $@..."
-	@if [ -f $@ ] ; then \
-		$(MAKETEXDEPEND) $< > $@.new ; \
-		if ! $(DIFF) -q $@ $@.new ; then \
-			mv -f $@.new $@ ; \
-			$(ECHO) "Updated $@." ; \
-		else 	$(RM) $@.new ; \
-			$(ECHO) "$@ is unchanged."; \
-			$(TOUCH) $@; \
-		fi > /dev/null ; \
-	else	$(MAKETEXDEPEND) $< > $@ ; \
-		$(ECHO) "Created $@." ; \
-	fi
-
-
-.tex.dvi:
-	@$(ECHO) "Generating $@..."
-	@$(LATEX) $< > /dev/null < /dev/null
-	@if $(GREP) "TeX capacity" $*.log; \
-		then $(ECHO) SHIT ; \
-	fi
-	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
-	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
-		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
-		$(LATEX) $< > /dev/null < /dev/null; \
-		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
-		if $(GREP) "TeX capacity" $*.log; \
-			then $(ECHO) SHIT; \
-		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
-			$(ECHO); $(ECHO) "Citation warnings, third LaTeX pass..."; \
-			$(LATEX) $< > /dev/null < /dev/null; \
-		fi; \
-		($(GREP) 'LaTeX Warn' $*.log || ($(ECHO) > /dev/null)); \
-	fi
-	@$(ECHO) "$@ completed."
-
-.tex.pdf:
-	@$(ECHO) "Generating $@..."
-	@$(PDFLATEX) $< > /dev/null < /dev/null
-	@if $(GREP) "TeX capacity" $*.log; \
-		then $(ECHO) SHIT ; \
-	fi
-	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
-	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
-		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
-		$(PDFLATEX) $< > /dev/null < /dev/null; \
-		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
-		if $(GREP) "TeX capacity" $*.log; \
-			then $(ECHO) SHIT; \
-		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
-			$(ECHO); $(ECHO) "Citation warnings, third LaTeX pass..."; \
-			$(PDFLATEX) $< > /dev/null < /dev/null; \
-		fi; \
-		($(GREP) 'LaTeX Warn' $*.log || ($(ECHO) > /dev/null)); \
-	fi
-	@$(ECHO) "$@ completed."
-
-.dvi.ps:
-	$(DVIPS) $< -o $@
-
-clean-bib:
-	-$(RM) *.bbl *.blg
-
-clean-index:
-	-$(RM) *.idx *.ind *.ilg *.out
-
-clean-local: clean-bib clean-index
-	-$(RM) *.aux *.log *.toc *.depend
-	-$(RM) *.ps *.dvi *.pdf
 

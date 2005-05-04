@@ -1,0 +1,21 @@
+# "dox/objfmt/Makefile.am"
+#	$Id: Makefile.am,v 1.1 2005/05/04 19:31:44 fang Exp $
+
+include $(top_srcdir)/dox/mk/Make.latex
+
+PDFS = objfmt.pdf
+PSS = $(PDFS:.pdf=.ps)
+
+# all-local: pdf-local ps-local
+
+pdf-local: $(PDFS)
+
+ps-local: $(PSS)
+
+# have to add these by hand? :S
+EXTRA_DIST = objfmt.tex
+
+# need GNU make for the following:
+# automatically generated dependencies in this (built) dir
+-include objfmt.depend
+
