@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.10.4.3 2005/05/04 05:06:29 fang Exp $
+	$Id: art_parser_definition.h,v 1.10.4.4 2005/05/04 17:23:17 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_H__
@@ -51,21 +51,13 @@ virtual	~prototype();
 	All definitions and prototypes may potentially contain a
 	template signature.  
  */
-class signature_base
-#if USE_MOTHER_NODE
-	: virtual public node
-#endif
-{
+class signature_base {
 protected:
 	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;
 	const excl_ptr<const token_identifier>		id;
 public:
 	signature_base(const template_formal_decl_list_pair* tf, 
-		const token_identifier* i) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
-		temp_spec(tf), id(i) { }
+		const token_identifier* i) : temp_spec(tf), id(i) { }
 
 virtual	~signature_base();
 

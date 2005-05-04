@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-09:
+	  Clean up of previous release: expurgated ART::parser::node!
+
+
 2005-05-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-08:

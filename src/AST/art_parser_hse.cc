@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.10.4.2 2005/05/04 05:06:30 fang Exp $
+	$Id: art_parser_hse.cc,v 1.10.4.3 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_CC__
@@ -46,11 +46,7 @@ namespace HSE {
 // class statement method definitions
 
 CONSTRUCTOR_INLINE
-statement::statement()
-#if USE_MOTHER_NODE
-	: node()
-#endif
-	{ }
+statement::statement() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
@@ -87,9 +83,6 @@ body::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 guarded_command::guarded_command(const hse_expr* g, const terminal* a, 
 		const stmt_list* c) : 
-#if USE_MOTHER_NODE
-		node(), 
-#endif
 		guard(g),
 		// remember, may be keyword: else   
 		arrow(a), command(c) {

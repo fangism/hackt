@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.9.4.2 2005/05/04 05:06:31 fang Exp $
+	$Id: art_parser_prs.h,v 1.9.4.3 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -26,11 +26,7 @@ class body;
 
 //=============================================================================
 /// a single production rule
-class body_item
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class body_item {
 protected:
 	// no members
 public:

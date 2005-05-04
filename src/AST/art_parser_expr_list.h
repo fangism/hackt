@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.3.4.2 2005/05/04 05:06:30 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.3.4.3 2005/05/04 17:23:18 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_LIST_H__
@@ -54,11 +54,7 @@ virtual	never_ptr<const object>
 	Contains a strict template argument list and a relaxed template
 	argument list.  
  */
-class template_argument_list_pair
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class template_argument_list_pair {
 protected:
 	const excl_ptr<const expr_list>		strict_args;
 	const excl_ptr<const expr_list>		relaxed_args;

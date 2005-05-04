@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.8.4.2 2005/05/04 05:06:29 fang Exp $
+	$Id: art_parser_chp.h,v 1.8.4.3 2005/05/04 17:23:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -25,11 +25,7 @@ typedef	expr	chp_expr;
 
 //=============================================================================
 /// CHP statement base class
-class statement
-#if USE_MOTHER_NODE
-	: virtual public node
-#endif
-{
+class statement {
 public:
 	statement();
 
@@ -76,11 +72,7 @@ using	language_body::leftmost;
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
-class guarded_command
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class guarded_command {
 protected:
 	const excl_ptr<const chp_expr>	guard;		///< guard expression
 	const excl_ptr<const terminal>	arrow;		///< right-arrow
@@ -203,10 +195,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if USE_MOTHER_NODE
-using	assign_stmt::where;
-#endif
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -235,10 +223,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if USE_MOTHER_NODE
-using	incdec_stmt::where;
-#endif
 
 #if 1
 	never_ptr<const object>
@@ -289,10 +273,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if USE_MOTHER_NODE
-using	comm_list_base::where;
-#endif
 
 #if 1
 	never_ptr<const object>
@@ -380,10 +360,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if USE_MOTHER_NODE
-using	parent_type::where;
-#endif
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -412,10 +388,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if USE_MOTHER_NODE
-using	parent_type::where;
-#endif
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -443,10 +415,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if USE_MOTHER_NODE
-using	parent_type::where;
-#endif
 
 #if 1
 	never_ptr<const object>

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16.4.5 2005/05/04 05:06:32 fang Exp $
+	$Id: art++-parse.yy,v 1.16.4.6 2005/05/04 17:23:23 fang Exp $
  */
 
 %{
@@ -157,7 +157,8 @@ extern const char* const yyrule[];
 	declarations of the union-members' types.  
  */
 %union {
-/**
+/***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	Use this universal symbol type for both lexer and parser.  
 	The reason we stick to a single abstract type as opposed to 
 	a union is so that in error handling, we don't have to keep track
@@ -170,10 +171,10 @@ extern const char* const yyrule[];
 	sanity type checks in the constructors for the various classes.  
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
- */
-/*	ART::parser::node*	n;		*/
+***/
 
 /***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	It is not safe to refer to the node* n member of the union
 	even if all of the below members of the union are 
 	somehow derived from node, because their virtual tables differ.  
@@ -1974,6 +1975,8 @@ complex_aggregate_reference_list
 	reclaimed upon exit().  (This is a good exercise anyhow.)
 	We are currently assuming that no other handler will
 	take care of deleting the pointers on the stack.  
+
+	OBSOLETE COMMENT, after removing mother-node type.  
 	Because the union-pointer resolution can only return
 	one type, the base type, the mother destructor, 
 	ART::parser::node::~node(), must be virtual.  

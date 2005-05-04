@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18.4.4 2005/05/04 05:06:28 fang Exp $
+	$Id: art_parser_base.cc,v 1.18.4.5 2005/05/04 17:23:16 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -81,46 +81,6 @@ const char pound[] = "#";	///< delimiter for node_list template argument
 // eventually token keywords here too? or "art_parser_token.cc"
 
 //=============================================================================
-#if USE_MOTHER_NODE
-// class node method definitions
-
-#if 0
-/** 
-	Destructor kept here because vtable is not generated on 
-	darwin-gcc-3.3 if it is inlined in the header.  
- */
-node::~node() { }
-#endif
-
-void
-node::bogus(void) const {
-}
-
-/// reports location spanned by a node in the source file
-inline
-line_range
-node::where(void) const {
-	return line_range(leftmost(), rightmost());
-}
-
-#if 0
-/**
-	Default type-checker and object builder does nothing.  
-	Should be re-implemented in all terminal subclasses.  
-	Eventually make this pure virtual.  
-	Should really take a context&...
- */
-never_ptr<const object>
-node::check_build(context& c) const {
-	// We DO want to print this message, even in regression testing. 
-	what(cerr << c.auto_indent() << 
-		"check_build() not implemented yet for ");
-	return c.top_namespace();
-}
-#endif
-#endif	// USE_MOTHER_NODE
-
-//=============================================================================
 // class root_item method definitions
 
 #if 0
@@ -159,12 +119,8 @@ type_base::~type_base() { }
 	Also deletes expression list argument after transfering list.  
  */
 CONSTRUCTOR_INLINE
-type_id::type_id(const qualified_id* b) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
-		base(b) {
-	assert(base);
+type_id::type_id(const qualified_id* b) : base(b) {
+	NEVER_NULL(base);
 }
 
 DESTRUCTOR_INLINE
@@ -536,11 +492,7 @@ namespace_body::check_build(context& c) const {
 //=============================================================================
 // class namespace_id method definitions
 
-namespace_id::namespace_id(qualified_id* i) :
-#if USE_MOTHER_NODE
-		node(), 
-#endif
-		qid(i) {
+namespace_id::namespace_id(qualified_id* i) : qid(i) {
 	NEVER_NULL(qid);
 }
 
@@ -658,9 +610,6 @@ if (alias) {
 
 CONSTRUCTOR_INLINE
 concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
-#if USE_MOTHER_NODE
-		node(), 
-#endif
 		base(n), temp_spec(t) {
 	NEVER_NULL(base);
 }

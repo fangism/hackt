@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.16.4.3 2005/05/04 05:06:30 fang Exp $
+	$Id: art_parser_formal.cc,v 1.16.4.4 2005/05/04 17:23:18 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -62,11 +62,7 @@ USING_STACKTRACE
 // class data_param_id method definitions
 
 data_param_id::data_param_id(const token_identifier* i, 
-		const dense_range_list* d) :
-#if USE_MOTHER_NODE
-		node(), 
-#endif
-		id(i), dim(d) {
+		const dense_range_list* d) : id(i), dim(d) {
 	NEVER_NULL(id);
 	// dim is optional
 }
@@ -106,11 +102,7 @@ data_param_id_list::~data_param_id_list() { }
 // class data_param_decl method definitions
 
 data_param_decl::data_param_decl(const concrete_type_ref* t, 
-		const data_param_id_list* il) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
-		type(t), ids(il) {
+		const data_param_id_list* il) : type(t), ids(il) {
 	NEVER_NULL(type);
 	NEVER_NULL(ids);
 }
@@ -149,11 +141,7 @@ data_param_decl_list::~data_param_decl_list() { }
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const token_identifier* n,
-		const dense_range_list* d) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
-		name(n), dim(d) {
+		const dense_range_list* d) : name(n), dim(d) {
 	NEVER_NULL(name);
 	// dim may be NULL
 }
@@ -228,11 +216,7 @@ port_formal_id_list::~port_formal_id_list() { }
 
 CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(const concrete_type_ref* t, 
-		const port_formal_id_list* i) : 
-#if USE_MOTHER_NODE
-		node(),
-#endif
-		type(t), ids(i) {
+		const port_formal_id_list* i) : type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
@@ -308,9 +292,6 @@ CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
 		const dense_range_list* d, const char_punctuation_type* e, 
 		const expr* v) : 
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		name(n), dim(d), eq(e), dflt(v) {
 	NEVER_NULL(name);
 	// dim may be NULL
@@ -410,9 +391,6 @@ CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(
 		const token_paramtype* t, 	// why not concrete_type_ref?
 		const template_formal_id_list* i) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }

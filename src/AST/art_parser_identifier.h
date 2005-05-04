@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.3.4.1 2005/05/04 05:06:31 fang Exp $
+	$Id: art_parser_identifier.h,v 1.3.4.2 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef __ART_PARSER_IDENTIFIER_H__
@@ -168,11 +168,7 @@ using parent::empty;
 	chain as the namespace path prefix.  
 	e.g. for A::B::C, search for namespace match of A::B with member C.  
  */
-class namespace_id
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class namespace_id {
 protected:
 	/**
 		Wraps around a qualified_id.  

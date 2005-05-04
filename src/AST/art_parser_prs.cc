@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.11.4.2 2005/05/04 05:06:31 fang Exp $
+	$Id: art_parser_prs.cc,v 1.11.4.3 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_CC__
@@ -38,15 +38,9 @@ namespace PRS {
 //=============================================================================
 // class body_item method definitions
 
-body_item::body_item()
-#if USE_MOTHER_NODE
-	: node()
-#endif
-	{
-}
+body_item::body_item() { }
 
-body_item::~body_item() {
-}
+body_item::~body_item() { }
 
 //=============================================================================
 // class rule method definitions

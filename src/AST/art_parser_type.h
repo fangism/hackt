@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.3.4.2 2005/05/04 05:06:32 fang Exp $
+	$Id: art_parser_type.h,v 1.3.4.3 2005/05/04 17:23:20 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_H__
@@ -96,11 +96,7 @@ virtual	never_ptr<const object>
 	Reference to a concrete type, i.e. definition with its
 	template parameters specified (if applicable).
  */
-class concrete_type_ref
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class concrete_type_ref {
 protected:
 	/** definition name base */
 	const excl_ptr<const type_base>			base;

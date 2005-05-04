@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.1.22.1 2005/05/04 05:06:30 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.1.22.2 2005/05/04 17:23:18 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_BASE_H__
@@ -33,11 +33,7 @@ namespace parser {
 	Expressions may be terminal or nonterminal.
 	Defined in "art_parser_expr.h".
  */
-class expr
-#if USE_MOTHER_NODE
-	: virtual public node
-#endif
-{
+class expr {
 public:
 	expr() { }
 virtual ~expr() { }

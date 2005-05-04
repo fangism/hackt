@@ -1,7 +1,7 @@
 /**
 	"art_parser_node_position.h"
 	Node whose sole purpose is to record a position of a token.  
-	$Id: art_parser_node_position.h,v 1.3.4.1 2005/05/04 05:06:31 fang Exp $
+	$Id: art_parser_node_position.h,v 1.3.4.2 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_POSITION_H__
@@ -22,11 +22,7 @@ using lexer::token_position;
 	sizeof this object == 16, includes text field.
 	Appropriate for strings shorter than 4 characters, like punctuation.  
  */
-class node_position
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class node_position {
 	typedef	node_position		this_type;
 public:
 	enum { MAXLEN = 4 };
@@ -44,18 +40,12 @@ public:
 		but it is less portable.  :(  Thus, we do it by hand.  
 	 */
 	node_position(const char* s, const line_position& p) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		position(p) {
 		strncpy(text, s, MAXLEN);
 		text[MAXLEN-1] = 0;
 	}
 
 	node_position(const char* s, const token_position& p) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		position(p.line, p.col) {
 		strncpy(text, s, MAXLEN);
 		text[MAXLEN-1] = 0;
@@ -90,11 +80,7 @@ public:
 	grammar production rule.
 	String length limit is 12.  
  */
-class keyword_position
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class keyword_position {
 	typedef	keyword_position	this_type;
 public:
 	enum { MAXLEN = 12 };
@@ -102,18 +88,12 @@ public:
 	char				text[MAXLEN];
 public:
 	keyword_position(const char* s, const line_position& p) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		position(p) {
 		strncpy(text, s, MAXLEN);
 		text[MAXLEN-1] = 0;
 	}
 
 	keyword_position(const char* s, const token_position& p) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		position(p.line, p.col) {
 		strncpy(text, s, MAXLEN);
 		text[MAXLEN-1] = 0;

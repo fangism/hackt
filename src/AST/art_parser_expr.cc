@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.18.4.3 2005/05/04 05:06:29 fang Exp $
+	$Id: art_parser_expr.cc,v 1.18.4.4 2005/05/04 17:23:17 fang Exp $
  */
 
 #ifndef	__ART_PARSER_EXPR_CC__
@@ -157,9 +157,6 @@ qualified_id::qualified_id(const token_identifier* n) :
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const qualified_id& i) :
-#if USE_MOTHER_NODE
-		node(), 
-#endif
 		parent_type(i), absolute(NULL) {
 #if DEBUG_ID_EXPR
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
@@ -307,9 +304,6 @@ id_expr::id_expr(qualified_id* i) : expr(), qid(i) {
 }
 
 id_expr::id_expr(const id_expr& i) :
-#if USE_MOTHER_NODE
-		node(),
-#endif
 		expr(), qid(new qualified_id(*i.qid)) {
 	NEVER_NULL(qid);
 }

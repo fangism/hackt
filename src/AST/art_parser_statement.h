@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_statement.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_statement.h,v 1.2.4.1 2005/05/04 05:06:31 fang Exp $
+	$Id: art_parser_statement.h,v 1.2.4.2 2005/05/04 17:23:20 fang Exp $
  */
 
 #ifndef __ART_PARSER_STATEMENT_H__
@@ -16,17 +16,9 @@ namespace parser {
 	Base class for statements (assignments, increment, decrement...)
 	Assertion: all statements are nonterminals.  
  */
-class statement
-#if USE_MOTHER_NODE
-	: virtual public node
-#endif
-{
+class statement {
 public:
-#if USE_MOTHER_NODE
-	statement() : node() { }
-#else
 	statement() { }
-#endif
 
 virtual	~statement() { }
 

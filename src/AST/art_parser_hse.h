@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.9.4.2 2005/05/04 05:06:30 fang Exp $
+	$Id: art_parser_hse.h,v 1.9.4.3 2005/05/04 17:23:19 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -25,11 +25,7 @@ typedef	expr	hse_expr;
 
 //=============================================================================
 /// HSE statement base class
-class statement
-#if USE_MOTHER_NODE
-	: virtual public node
-#endif
-{
+class statement {
 public:
 	statement();
 virtual	~statement();
@@ -76,11 +72,7 @@ using	language_body::leftmost;
 
 //=============================================================================
 /// HSE guarded command contains an expression condition and body
-class guarded_command
-#if USE_MOTHER_NODE
-	: public node
-#endif
-{
+class guarded_command {
 protected:
 	const excl_ptr<const hse_expr>	guard;		///< guard expression
 	const excl_ptr<const terminal>	arrow;		///< right-arrow
@@ -207,10 +199,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if USE_MOTHER_NODE
-using	incdec_stmt::where;
-#endif
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -251,10 +239,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if USE_MOTHER_NODE
-using	parent_type::where;
-#endif
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -282,10 +266,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if USE_MOTHER_NODE
-using	parent_type::where;
-#endif
 
 #if 1
 	never_ptr<const object>
