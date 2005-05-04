@@ -2,6 +2,17 @@
 
 2005-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-27-template-01-07:
+	  Auto-generated parser helper code (union) no longer needs to 
+	  return a mother pointer (node*).  
+	  It 'virtually' implements the two neceessary functions in two
+	  giganormous function pointer tables (delete, what_where).  
+	  (A virtual virtual call!)
+	  Soon, going to remove ART::parser::node!
+
+
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-27-template-01-06:
 	  Parser awk scripts: factored out common subroutines into
 	  separate scripts, so now need to invoke awk -f with co-dependent

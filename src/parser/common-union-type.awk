@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.1.2.1 2005/05/03 19:51:13 fang Exp $
+#	$Id: common-union-type.awk,v 1.1.2.2 2005/05/04 02:47:56 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -100,7 +100,12 @@ BEGIN {
 #	print "#include \"y.tab.h\"";	# for YYSTYPE
 #		but is not always named y.tab.h! add to the "include" variable
 	print "#include <cassert>";
-#	print "#include <iostream>";
+	print "#include <iostream>";
+	# apologies: this header is hard-coded for this project
+	print "#include \"lexer/art_lex.h\"";
+	print "";
+	print "using std::ostream;";
+	print "using namespace ART::lexer;";
 	print "";
 
 	process_union(yaccfile);
@@ -133,6 +138,8 @@ BEGIN {
 	print "};";
 	print "";
 
+if (0) {
+	# OBSOLETE
 	print "/**";
 	print "\tUse this function to resolve the union member type.";
 	print "\t\\param u the union object to resolve.";
@@ -146,6 +153,7 @@ BEGIN {
 	print type "*";
 	print "yy_union_lookup(const YYSTYPE& u, const int c);";
 	print "";
+}
 }
 
 function process_union(file, 
@@ -263,14 +271,35 @@ function string_char_to_int(char,
 
 END {
 
+	print "static const char* null_what = \"(null) \";";
+	print "";
+
 	for (mid in type_of) {
 		type_str = type_of[mid];
 		gsub("[*]", "", type_str);
 		gsub("::", "_", type_str);
+
+		# returns the desired union member
 		print "static " type "* yy_union_get_" type_str \
 			"(const YYSTYPE& u) {";
 #		print "\tcerr << "\"" type_str "\";";
 		print "\treturn u." mid ";";
+		print "}";
+
+		# properly deletes the selected union member
+		print "static void yy_union_delete_" type_str \
+			"(const YYSTYPE& u) {";
+		print "\tif (u." mid ")";
+		print "\t\tdelete u." mid ";";	#" u." mid " = NULL;";
+		print "}";
+
+		# dumps a name associated with the member type
+		# and location of token
+		print "static ostream& yy_union_what_where_" type_str \
+			"(const YYSTYPE& u, ostream& o) {";
+		print "\treturn (u." mid ") ? u." mid "->what(o) << \" \" <<";
+		print "\t\t\tline_range(u." mid "->leftmost(), u." mid "->rightmost()) :";
+		print "\t\to << null_what;";
 		print "}";
 	}
 	print "";
@@ -282,7 +311,10 @@ END {
 		else print "\tNULL, ";
 	}
 	print " };";
-	print "static " type "* (*yy_union_get[" member_count "])(const YYSTYPE&) = {"
+
+	# function-table for returning base pointer type.
+	# This may become obsolete.  
+	print "static " type "* (*yy_union_get[" member_count "])(const YYSTYPE&) = {";
 	for (i=0; i<member_count; i++) {
 		type_str = type_of[member_id_array[i]];
 		gsub("[*]", "", type_str);
@@ -291,9 +323,32 @@ END {
 	}
 	print "};";	# end of array of function pointers
 	print "";
-	print "/* definition of yy_union_resolve() */";
-	print type "*";
-	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
+
+	# function-table for deleting pointer (like virtual destructor)
+	print "static void (*yy_union_delete[" member_count "])(const YYSTYPE&) = {";
+	for (i=0; i<member_count; i++) {
+		type_str = type_of[member_id_array[i]];
+		gsub("[*]", "", type_str);
+		gsub("::", "_", type_str);
+		print "\t&yy_union_delete_" type_str ", ";
+	}
+	print "};";	# end of array of function pointers
+	print "";
+
+	# This section implements an interface that's specific to this project.
+	print "static ostream& (*yy_union_what_where[" member_count "])(const YYSTYPE&, ostream&) = {";
+	for (i=0; i<member_count; i++) {
+		type_str = type_of[member_id_array[i]];
+		gsub("[*]", "", type_str);
+		gsub("::", "_", type_str);
+		print "\t&yy_union_what_where_" type_str ", ";
+	}
+	print "};";	# end of array of function pointers
+	print "";
+
+	# returns the appropriate index into the local function tables
+	print "static int";
+	print "yy_union_resolve_index(const short i, const short j) {";
 	print "/* function body really starts here */";
 	print "const yy_state_map_link* iter = yysma[i];";
 	print "/* sequentially compare state keys */";
@@ -306,26 +361,97 @@ END {
 		print "\tconst int i = iter->type_enum;";
 		print "\tassert(i >= 0);";
 		print "\tassert(i < " member_count ");";
-		print "\t" type "* ret = (*yy_union_get[i])(u);";
-		print "\treturn ret;";
+		print "\treturn i;";
 	print "} else {";
-		print "\treturn NULL;";
+		print "\treturn -1;\t// error, not found";
 	print "}";
 	print "}";
 	print "";
 
-# a union resolution lookup using yychar
-	print type "*";
-	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
+	# returns the appropriate index into the local function tables
+	print "static int";
+	print "yy_union_lookup_index(const int c) {";
 	print "\tif (c >= 0 && c < " token_enum ") {";
-	print "\t\tconst int i = token_to_type_enum_map[c];";
-	print "\t\tassert(i >= 0);";
-	print "\t\tassert(i < " member_count ");";
-	print "\t\treturn (*yy_union_get[i])(u);";
+		print "\t\tconst int i = token_to_type_enum_map[c];";
+		print "\t\tassert(i >= 0);";
+		print "\t\tassert(i < " member_count ");";
+		print "\t\treturn i;";
 	print "\t} else {";	# else is garbage yychar value, just drop it
-	print "\t\treturn NULL;";
+	print "\t\treturn -1;";
 	print "\t}";
 	print "}";
 	print "";
+
+if (0) {
+	# OBSOLETE
+	# yy_union_resolve
+	print "/* definition of yy_union_resolve() */";
+	print type "*";
+	print "yy_union_resolve(const YYSTYPE& u, const short i, const short j) {";
+#	print "/* function body really starts here */";
+#	print "const yy_state_map_link* iter = yysma[i];";
+#	print "/* sequentially compare state keys */";
+#	print "while (iter) {";
+#	print "\tif(iter->state == j) break;";
+#	print "\titer = iter->next;";
+#	print "} /* end while */";
+#	print "if (iter && iter->state == j) {";
+#		print "\t/* then we've found a match, return appropriately wrapped pointer */";
+#		print "\tconst int k = iter->type_enum;";
+#		print "\tassert(k >= 0);";
+#		print "\tassert(k < " member_count ");";
+#		print "\t" type "* ret = (*yy_union_get[k])(u);";
+#		print "\treturn ret;";
+#	print "} else {";
+#		print "\treturn NULL;";
+#	print "}";
+
+	print "\tconst int k = yy_union_resolve_index(i, j);";
+	print "\treturn (*yy_union_get[k])(u);";
+	print "}";
+	print "";
+
+	# a union resolution lookup using yychar
+	print type "*";
+	print "yy_union_lookup(const YYSTYPE& u, const int c) {";
+#	print "\tif (c >= 0 && c < " token_enum ") {";
+#		print "\t\tconst int i = token_to_type_enum_map[c];";
+#		print "\t\tassert(i >= 0);";
+#		print "\t\tassert(i < " member_count ");";
+#		print "\t\treturn (*yy_union_get[i])(u);";
+#	print "\t} else {";	# else is garbage yychar value, just drop it
+#	print "\t\treturn NULL;";
+#	print "\t}";
+	print "\tconst int k = yy_union_lookup_index(c);";
+	print "\treturn (k >= 0) ? (*yy_union_get[k])(u) : NULL;";
+	print "}";
+	print "";
+}
+# end OBSOLETE
+
+	print "ostream&";
+	print "yy_union_resolve_dump(const YYSTYPE& u, const short i, const short j, ostream& o) {";
+	print "\treturn (*yy_union_what_where[yy_union_resolve_index(i,j)])(u,o);";
+	print "}";
+	print "";
+
+	print "ostream&";
+	print "yy_union_lookup_dump(const YYSTYPE& u, const int c, ostream& o) {";
+	print "\treturn (*yy_union_what_where[yy_union_lookup_index(c)])(u,o);";
+	print "}";
+	print "";
+
+	print "void";
+	print "yy_union_resolve_delete(const YYSTYPE& u, const short i, const short j) {";
+	print "\t(*yy_union_delete[yy_union_resolve_index(i,j)])(u);";
+	print "}";
+	print "";
+
+	print "void";
+	print "yy_union_lookup_delete(const YYSTYPE& u, const int c) {";
+	print "\t(*yy_union_delete[yy_union_lookup_index(c)])(u);";
+	print "}";
+	print "";
+
 }
 
