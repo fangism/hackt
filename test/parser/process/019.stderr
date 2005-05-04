@@ -1,14 +1,14 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(node_list): (template-formal-decl) ... [3:10..41]
-26	keyword: defproc [4:1..7]
-89	identifier: barbar [4:9..14]
-143	(node_list): ... [4:15..16]
-199	end-of-file
-in state 199, possible rules are:
-	declare_proc_proto : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . ';'  (26)
-	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . '{' optional_definition_body '}'  (27)
+0	(template-formal-decl-list-pair) [3:10..41]
+34	keyword: defproc [4:1..7]
+112	identifier: barbar [4:9..14]
+181	list<(port-formal-decl)>: ... [4:15..16]
+254	end-of-file
+in state 254, possible rules are:
+	declare_proc_proto : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . ';'  (31)
+	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . '{' optional_definition_body '}'  (32)
 acceptable tokens are: 
 	';' (shift)
 	'{' (shift)

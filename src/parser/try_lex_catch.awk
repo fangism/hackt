@@ -4,7 +4,7 @@
 # hint: this filter/patch should be applied BEFORE changing 
 # names to a different prefix other than "yy".
 
-/char.*YYLEX/ {
+/char.*=.*YYLEX/ || /char.*=.*yylex/ {
 	print "\ttry {";
 	print $0;
 	print "\t} catch (...) {";
@@ -14,5 +14,5 @@
 	print "\t}";
 }
 
-!/char.*YYLEX/ { print; }
+!/char.*=.*YYLEX/ && !/char.*=.*yylex/ { print; }
 

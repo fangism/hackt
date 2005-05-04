@@ -2,16 +2,16 @@ parse error: syntax error
 parser stacks:
 state	value
 0	keyword: template [3:1..8]
-8	< [3:10]
-87	(node_list): (template-formal-decl) ... [3:11..24]
-148	; [3:25]
-207	paramtype: pbool [3:27..31]
-150	identifier: water [3:33..37]
-208	(node_list): (namespace-id): H ... [3:39..45]
-240	keyword: defproc [4:1..7]
-in state 240, possible rules are:
-	optional_dense_range_list : dense_range_list .  (250)
-	dense_range_list : dense_range_list . bracketed_dense_range  (252)
+12	< [3:10]
+102	list<(template-formal-decl)>: (template-formal-decl) ... [3:11..24]
+169	; [3:25]
+244	paramtype: pbool [3:27..31]
+171	identifier: water [3:33..37]
+245	list<(expr)>: (id-expr): H ... [3:39..45]
+279	keyword: defproc [4:1..7]
+in state 279, possible rules are:
+	optional_dense_range_list : dense_range_list .  (281)
+	dense_range_list : dense_range_list . bracketed_dense_range  (283)
 acceptable tokens are: 
 	')' (reduce)
 	',' (reduce)

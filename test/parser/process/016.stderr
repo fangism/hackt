@@ -2,16 +2,16 @@ parse error: syntax error
 parser stacks:
 state	value
 0	keyword: template [3:1..8]
-8	< [3:10]
-87	paramtype: pint [3:11..14]
-150	(node_list): (template-formal-id): identifier: milk ... [3:16..19]
-209	, [3:20]
-243	identifier: tea [3:22..24]
-208	keyword: defproc [4:1..7]
-in state 208, possible rules are:
-	template_formal_id : ID . optional_dense_range_list  (38)
-	template_formal_id : ID . optional_dense_range_list '=' shift_expr  (39)
-	optional_dense_range_list : .  (251)
+12	< [3:10]
+102	paramtype: pint [3:11..14]
+171	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
+246	, [3:20]
+282	identifier: tea [3:22..24]
+245	keyword: defproc [4:1..7]
+in state 245, possible rules are:
+	template_formal_id : ID . optional_dense_range_list  (43)
+	template_formal_id : ID . optional_dense_range_list '=' shift_expr  (44)
+	optional_dense_range_list : .  (282)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

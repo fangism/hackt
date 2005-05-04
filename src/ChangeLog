@@ -2,6 +2,12 @@
 
 2005-05-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-30:
+	  Updated parser/try_lex_catch.awk to also work with yacc output.  
+
+	* ARTXX-00-01-04-main-00-28-merged-template-01-09:
+	  Merged -template-01 revisions back to trunk.  
+
 	* ARTXX-00-01-04-main-00-27-template-01-09:
 	  Clean up of previous release: expurgated ART::parser::node!
 

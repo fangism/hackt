@@ -2,12 +2,12 @@ parse error: syntax error
 parser stacks:
 state	value
 0	keyword: template [3:1..8]
-8	< [3:10]
-82	paramtype: pint [3:11..14]
-140	(node_list): (template-formal-id): identifier: milk ... [3:16..19]
-194	, [3:20]
-225	keyword: defproc [4:1..7]
-in state 225, possible rules are:
-	template_formal_id_list : template_formal_id_list ',' . template_formal_id  (34)
+12	< [3:10]
+102	paramtype: pint [3:11..14]
+171	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
+246	, [3:20]
+282	keyword: defproc [4:1..7]
+in state 282, possible rules are:
+	template_formal_id_list : template_formal_id_list ',' . template_formal_id  (41)
 acceptable tokens are: 
 	ID (shift)

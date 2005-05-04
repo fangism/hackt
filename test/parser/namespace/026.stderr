@@ -6,7 +6,7 @@ state	value
 94	{ [3:20]
 160	end-of-file
 in state 160, possible rules are:
-	namespace_management : NAMESPACE ID '{' . top_root '}' ';'  (12)
+	namespace_management : NAMESPACE ID '{' . top_root '}'  (12)
 	top_root : .  (3)
 	optional_template_specification : .  (27)
 acceptable tokens are: 

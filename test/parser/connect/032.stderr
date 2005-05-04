@@ -1,15 +1,15 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(node_list): (process-prototype) ... [3:1--5:34]
+0	list<(root_item)>: (process-prototype) ... [3:1--5:33]
 22	(type-ref) [7:1..6]
 37	identifier: load [7:8..11]
-109	. [7:12]
-in state 109, possible rules are:
-	instance_id_item : ID . sparse_range_list  (102)
-	instance_id_item : ID .  (103)
-	instance_id_item : ID . connection_actuals_list  (104)
-	instance_id_item : ID . '=' rvalue_optional_alias_list  (105)
+113	. [7:12]
+in state 113, possible rules are:
+	instance_id_item : ID . sparse_range_list  (107)
+	instance_id_item : ID .  (108)
+	instance_id_item : ID . connection_actuals_list  (109)
+	instance_id_item : ID . '=' rvalue_optional_alias_list  (110)
 acceptable tokens are: 
 	'(' (shift)
 	',' (reduce)

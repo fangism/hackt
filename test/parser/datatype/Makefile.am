@@ -1,5 +1,5 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2005/02/27 22:54:45 fang Exp $
+#	$Id: Makefile.am,v 1.7 2005/05/04 23:39:07 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -28,7 +28,7 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS = 017 018 019 020
+BISON_OUTPUTS = 015 017 018 019 020
 
 # define empty, let template Makefile add to it
 EXTRA_DIST =
