@@ -2,7 +2,7 @@
 	\file "art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.5 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.6 2005/05/04 17:54:11 fang Exp $
  */
 
 #ifndef	__ART_PARSER_NODE_LIST_TCC__
@@ -19,6 +19,7 @@
 
 #include "what.tcc"
 #include "stacktrace.h"
+#include "type_traits.h"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -93,7 +94,13 @@ ostream&
 node_list<T>::what(ostream& o) const {
 	// print first item to get type
 	const_iterator i = this->begin();
+#if 0
 	o << "(node_list): ";
+#else
+	o << "list<" <<
+		util::what<typename util::remove_const<T>::type>::name() <<
+		">: ";
+#endif
 	if (i == this->end()) {
 //		o << "<empty> ";
 	} else if (*i) { 

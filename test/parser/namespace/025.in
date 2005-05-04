@@ -1,10 +1,10 @@
 // should pass
 
 namespace A {
-	namespace B { };
-};
+	namespace B { }
+}
 
 namespace X {
 	open A;
 	open B;			// should find as A::B
-};
+}

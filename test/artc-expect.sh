@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artc-expect.sh"
-#	$Id: artc-expect.sh,v 1.5 2005/01/28 19:59:00 fang Exp $
+#	$Id: artc-expect.sh,v 1.6 2005/05/04 17:54:15 fang Exp $
 
 # $1 is the executable, expecting input from stdin
 # $2 is the path to the source directory, which is not necessarily ./
@@ -50,7 +50,7 @@ if [ -s $bldroot.diff ] ; then
 		else
 			touch $bldroot.stderr.bison.filter
 		fi
-		diff $bldroot.stderr.bison.filter $bldroot.test.filter 2>&1 | cat > $bldroot.bison.diff
+		diff -u $bldroot.stderr.bison.filter $bldroot.test.filter 2>&1 | cat > $bldroot.bison.diff
 		if ! [ -s $bldroot.bison.diff ] ; then
 			mv -f $bldroot.bison.diff $bldroot.diff
 		else

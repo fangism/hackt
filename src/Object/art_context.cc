@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.27 2005/03/11 08:47:24 fang Exp $
+ 	$Id: art_context.cc,v 1.28 2005/05/04 17:54:12 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -58,7 +58,8 @@ context::context(module& m) :
 		sequential_scope_stack(), 
 		object_stack(), 
 		global_namespace(m.get_global_namespace()), 
-		master_instance_list(m.instance_management_list)
+		master_instance_list(m.instance_management_list), 
+		strict_template_mode(true)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -130,7 +131,7 @@ context::open_namespace(const token_identifier& id) {
 	} else {
 		// leave current_namespace as it is
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -165,7 +166,7 @@ context::using_namespace(const qualified_id& id) {
 		current_namespace->add_using_directive(id);
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -182,7 +183,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 		ret(current_namespace->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -213,7 +214,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 		type_error_count++;
 		// additional error message isn't really necessary...
 //		cerr << endl << "ERROR in context::add_declaration().  ";
-//		cerr << d->where() << endl;	// caller will do
+//		cerr << where(*d) << endl;	// caller will do
 		// For now, we intentionally delete the bad definition, 
 		// though later, it may be useful for precise error messages.
 		INVARIANT(d);
@@ -246,7 +247,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	if (ed) {
 		if (ed->is_defined()) {
 			cerr << ename << " is already defined!  attempted "
-				"redefinition at " << ename.where() << endl;
+				"redefinition at " << where(ename) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -256,7 +257,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << ename.where() << endl;
+		cerr << where(ename) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -282,7 +283,7 @@ context::add_enum_member(const token_identifier& em) {
 		return good_bool(true);
 	} else {
 		cerr << "enum " << ed->get_name() << " already has a member "
-			"named " << em << ".  ERROR! " << em.where() << endl;
+			"named " << em << ".  ERROR! " << where(em) << endl;
 		type_error_count++;
 		THROW_EXIT;
 		return good_bool(false);
@@ -318,7 +319,7 @@ context::open_process_definition(const token_identifier& pname) {
 	if (pd) {
 		if (pd->is_defined()) {
 			cerr << pname << " is already defined!  attempted "
-				"redefinition at " << pname.where() << endl;
+				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -329,7 +330,7 @@ context::open_process_definition(const token_identifier& pname) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << pname.where() << endl;
+		cerr << where(pname) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -764,7 +765,7 @@ context::add_instance(const token_identifier& id,
 	// adds non-const back-reference
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -783,9 +784,9 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: write it, finish it -- what about arrays?
-	Using the current_type_reference, 
-	adds a template formal parameter.  
+	TODO: write it, finish it -- what about arrays?
+	TODO: distinguish between strict and relaxed template formals.  
+	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
 	For now, only allow parameters.  
@@ -811,14 +812,24 @@ context::add_template_formal(const token_identifier& id,
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
 	NEVER_NULL(inst_stmt);
-	// instance is constructed and added in add_instance
-	never_ptr<const instance_collection_base>
-		inst_base(current_prototype->add_template_formal(
-			inst_stmt, id));
+	// formal instance is constructed and added in add_instance
+	const never_ptr<const instance_collection_base>
+		inst_base(
+			// depends on strict_template_mode
+#if USE_TEMPLATE_FORMALS_MANAGER
+			(strict_template_mode) ?
+			current_prototype->add_strict_template_formal(
+				inst_stmt, id) :
+			current_prototype->add_relaxed_template_formal(
+				inst_stmt, id)
+#else
+			current_prototype->add_template_formal(inst_stmt, id)
+#endif
+			);
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -833,7 +844,7 @@ context::add_template_formal(const token_identifier& id,
 		if (!pic->assign_default_value(d).good) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
-				", type/size mismatch!  " << id.where() << endl;
+				", type/size mismatch!  " << where(id) << endl;
 			type_error_count++;
 			THROW_EXIT;
 		}
@@ -887,7 +898,7 @@ context::add_port_formal(const token_identifier& id,
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}

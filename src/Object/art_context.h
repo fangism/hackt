@@ -2,7 +2,7 @@
 	\file "art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.13 2005/03/01 04:50:54 fang Exp $
+	$Id: art_context.h,v 1.14 2005/05/04 17:54:12 fang Exp $
  */
 
 #ifndef __ART_CONTEXT_H__
@@ -162,6 +162,7 @@ public:
 	const never_ptr<name_space>		global_namespace;
 //	const never_ptr<const name_space>	global_namespace;
 
+
 protected:
 	/**
 		Consider a stack of contexts for instance_management_lists.
@@ -180,6 +181,16 @@ protected:
 	// sequential_scope::instance_management_list_type&
 	list<sticky_ptr<const instance_management_base> >&
 						master_instance_list;
+
+	/**
+		Stupid implementation of switching between
+		strict and relaxed template parameters. 
+		This flag is manipulated by the methods:
+			strict_template_parameters(), 
+			relaxed_template_parameters().
+		This flag is read by add_template_formals().  
+	 */
+	bool					strict_template_mode;
 
 public:
 	context(module& m);
@@ -367,6 +378,12 @@ public:
 
 	string
 	auto_indent(void) const;
+
+	void
+	strict_template_parameters(void) { strict_template_mode = true; }
+
+	void
+	relaxed_template_parameters(void) { strict_template_mode = false; }
 
 private:
 	void

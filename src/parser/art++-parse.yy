@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16 2005/04/14 19:46:35 fang Exp $
+	$Id: art++-parse.yy,v 1.17 2005/05/04 17:54:13 fang Exp $
  */
 
 %{
@@ -38,10 +38,6 @@ using namespace ART::parser;
 util::memory::excl_ptr<root_body> AST_root;
 #endif
 
-/*
-useful typedefs are defined in art_parser.h
-macros: d = delimiter, n = node, b = begin, e = end, l = list
-*/
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
 #define	DELETE_TOKEN(tok)		delete tok
@@ -153,8 +149,16 @@ extern const char* const yyrule[];
 
 %}
 
-%union {
 /**
+	NOTE: to use the following union definition, which will be
+	summarized in "art++-parse-prefix.h" (generated), 
+	you will need to include "art_parser_fwd.h" first
+	(with using namespace ART::parser;) to provide forward
+	declarations of the union-members' types.  
+ */
+%union {
+/***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	Use this universal symbol type for both lexer and parser.  
 	The reason we stick to a single abstract type as opposed to 
 	a union is so that in error handling, we don't have to keep track
@@ -167,10 +171,10 @@ extern const char* const yyrule[];
 	sanity type checks in the constructors for the various classes.  
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
- */
-	ART::parser::node*	n;
+***/
 
 /***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	It is not safe to refer to the node* n member of the union
 	even if all of the below members of the union are 
 	somehow derived from node, because their virtual tables differ.  
@@ -218,6 +222,7 @@ extern const char* const yyrule[];
 	port_formal_decl*	_port_formal_decl;
 	port_formal_id_list*	_port_formal_id_list;
 	port_formal_id*		_port_formal_id;
+	template_formal_decl_list_pair*	_template_formal_decl_list_pair;
 	template_formal_decl_list*	_template_formal_decl_list;
 	template_formal_decl*	_template_formal_decl;
 	template_formal_id_list*	_template_formal_id_list;
@@ -253,7 +258,7 @@ extern const char* const yyrule[];
 	alias_list*		_alias_list;
 
 	expr*			_expr;
-	paren_expr*		_paren_expr;
+/*	paren_expr*		_paren_expr;	*/
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
@@ -278,6 +283,8 @@ extern const char* const yyrule[];
 	array_concatenation*	_array_concatenation;
 	loop_concatenation*	_loop_concatenation;
 	array_construction*	_array_construction;
+	type_completion_statement*	_type_completion_statement;
+	type_completion_connection_statement*	_type_completion_connection_statement;
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
@@ -339,8 +346,10 @@ static void yyerror(const char* msg);	// ancient compiler rejects
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
  */
-extern	node* yy_union_resolve(const YYSTYPE& u, const short i, const short j);
-extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
 
 static
 void
@@ -462,7 +471,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_user_data_type_prototype>	declare_datatype_proto
 %type	<_user_chan_type_prototype>	declare_chan_proto
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
-%type	<_template_formal_decl_list>	template_specification optional_template_specification
+%type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
+%type	<_template_formal_decl_list_pair>	template_specification optional_template_specification
 %type	<_template_formal_decl>	template_formal_decl
 %type	<_template_formal_id_list>	template_formal_id_list
 %type	<_template_formal_id>	template_formal_id
@@ -499,6 +509,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
+%type	<_type_completion_statement>	instance_type_completion_statement
+%type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	rvalue_optional_alias_list
 %type	<_alias_list>	alias_list
@@ -637,16 +649,19 @@ namespace_item
 
 namespace_management
 	/* C++ style classes require semicolon, but not afer namespace */
-	: NAMESPACE ID '{' top_root '}' ';'
+	/* really the NAMESPACE and OPEN keyword tokens may be discarded */
+	: NAMESPACE ID '{' top_root '}'
 		{ if (!$4)
 			$4 = new root_body(NULL);
 		  WRAP_LIST($3, $4, $5);
-		  $$ = new namespace_body($1, $2, $4, $6); }
+		  $$ = new namespace_body($1, $2, $4); }
 	/* or C++ style: using namespace blah; */
 	| OPEN namespace_id AS ID ';'
-		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
+		{ $$ = new using_namespace($1, $2, $4);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
 	| OPEN namespace_id ';'
-		{ $$ = new using_namespace($1, $2, $3); }
+		{ $$ = new using_namespace($1, $2);
+		  DELETE_TOKEN($3); }
 	/* ever close namespace? */
 	;
 
@@ -675,14 +690,21 @@ prototype_declaration
 type_alias
 /* C-style typedef, but allowing templates */
 	: optional_template_specification TYPEDEF physical_type_ref ID ';'
-		{ $$ = new typedef_alias($1, $2, $3, $4, $5); }
+		{ $$ = new typedef_alias($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 /*	other proposal, use {deftype,defchan,defproc} new<> = old<> */
 	;
 
 template_specification
 	: TEMPLATE template_formal_decl_list_in_angles
 		/* too damn lazy to keep around keyword... */
-		{ delete $1; $$ = $2; }
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, NULL); }
+	| TEMPLATE template_formal_decl_list_optional_in_angles
+	  template_formal_decl_list_in_angles
+		/* second set of formals is for relaxed parameters */
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, $3); }
 	;
 
 optional_template_specification
@@ -711,7 +733,8 @@ def_or_proc
 declare_proc_proto
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens ';'
-		{ $$ = new process_prototype($1, $2, $3, $4, $5); }
+		{ $$ = new process_prototype($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 	;
 
 defproc
@@ -747,6 +770,14 @@ concrete_type_ref
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
 		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
+	;
+
+template_formal_decl_list_optional_in_angles
+	: template_formal_decl_list_in_angles
+		{ $$ = $1; }
+	| '<' '>'
+		{ $$ = new template_formal_decl_list();
+		  WRAP_ANGLE_LIST($1, $$, $2); }
 	;
 
 /** OBSOLETE
@@ -917,8 +948,8 @@ declare_datatype_proto
 /*	  base_data_type */
 	  data_type_ref		/* base? */
           data_param_decl_list_in_parens ';'
-		{ $$ = new user_data_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 
 defdatatype
@@ -945,7 +976,7 @@ get_body
 
 declare_enum
 	: ENUM ID ';'
-		{ $$ = new enum_prototype($1, $2, $3); }
+		{ $$ = new enum_prototype($1, $2); DELETE_TOKEN($3); }
 	;
 
 defenum
@@ -968,8 +999,8 @@ enum_member_list
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
 	  data_param_decl_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 	
 defchan
@@ -1071,6 +1102,8 @@ optional_definition_body
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_statement { $$ = $1; }	/* connection of ports */
+	| instance_type_completion_statement { $$ = $1; }
+	| instance_type_completion_connection_statement { $$ = $1; }
 	| alias_list '=' expr ';'
 		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
 			/* alias connection */
@@ -1080,7 +1113,8 @@ instance_item
 
 loop_instantiation
 	: '(' ';' ID ':' range ':' definition_body ')'
-		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new loop_instantiation($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 conditional_instantiation
@@ -1092,7 +1126,8 @@ conditional_instantiation
 type_instance_declaration
 	/* type template is included in type_id, and is part of the type */
 	: type_id instance_id_list ';'
-		{ $$ = new instance_declaration($1, $2, $3); }
+		{ $$ = new instance_declaration($1, $2);
+		  DELETE_TOKEN($3); }
 	;
 
 instance_id_list
@@ -1123,7 +1158,22 @@ connection_statement
 	are brackets part of the array/membership chain? */
 	: member_index_expr connection_actuals_list ';'
 		/* can this first id be scoped and/or membered? */
-		{ $$ = new connection_statement($1, $2, $3); }
+		{ $$ = new connection_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+/* completing the relaxed template arguments of an instance */
+instance_type_completion_statement
+	: index_expr shift_expr_optional_list_in_angles ';'
+		{ $$ = new type_completion_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+instance_type_completion_connection_statement
+	: index_expr shift_expr_optional_list_in_angles 
+		connection_actuals_list ';'
+		{ $$ = new type_completion_connection_statement($1, $2, $3);
+		  DELETE_TOKEN($4); }
 	;
 
 rvalue_optional_alias_list
@@ -1237,7 +1287,8 @@ chp_do_until
 chp_wait
 	/* wait for expr to become true */
 	: '[' expr ']'
-		{ $$ = new CHP::wait($1, $2, $3); }
+		{ $$ = new CHP::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 chp_selection
@@ -1261,8 +1312,7 @@ chp_nondet_guarded_command_list
 	| chp_guarded_command ':' chp_guarded_command
 	/* can't have else clause in non-deterministic selection? */
 		{ $$ = new CHP::nondet_selection($1);
-		  APPEND_LIST($$, $2, $3);
-		}
+		  APPEND_LIST($$, $2, $3); }
 	;
 
 chp_matched_det_guarded_command_list
@@ -1372,7 +1422,8 @@ hse_do_until
 
 hse_wait
 	: '[' expr ']'
-		{ $$ = new HSE::wait($1, $2, $3); }
+		{ $$ = new HSE::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 hse_selection
@@ -1444,7 +1495,8 @@ prs_body_item
 
 prs_loop
 	: '(' ':' ID ':' range ':' prs_body ')'
-		{ $$ = new PRS::loop($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new PRS::loop($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 single_prs
@@ -1474,7 +1526,7 @@ prs_expr
 
 prs_paren_expr
 	: '(' prs_expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 prs_unary_expr
@@ -1521,7 +1573,7 @@ prs_or_loop
 ******************************************************************************/
 paren_expr
 	: '(' expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 /***
@@ -1923,6 +1975,8 @@ complex_aggregate_reference_list
 	reclaimed upon exit().  (This is a good exercise anyhow.)
 	We are currently assuming that no other handler will
 	take care of deleting the pointers on the stack.  
+
+	OBSOLETE COMMENT, after removing mother-node type.  
 	Because the union-pointer resolution can only return
 	one type, the base type, the mother destructor, 
 	ART::parser::node::~node(), must be virtual.  
@@ -1934,21 +1988,16 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const YYSTYPE yylval) {
 	const short* s;
 	const YYSTYPE* v;
-	node* resolved_node = NULL;
 	s=yyss+1;
 	v=yyvs+1;
 	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
 		if (v) {
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				delete resolved_node;
+			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
 	if (!at_eof()) {
 		// free the last token (if not EOF)
-		resolved_node = yy_union_lookup(yylval, yychar);
-		if (resolved_node)
-			delete resolved_node;
+		yy_union_lookup_delete(yylval, yychar);
 	}
 }
 
@@ -2004,7 +2053,6 @@ static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	const short* s;
 	const YYSTYPE* v;
-	node* resolved_node = NULL;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
@@ -2030,12 +2078,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		// from the previous state
 		/* assert(v); can have NULL on stack? yes. */
 		if (v) {
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				resolved_node->what(cerr << '\t') << " "
-					<< resolved_node->where();
-			else
-				cerr << "\t(null) ";
+			yy_union_resolve_dump(*v, *(s-1), *s, cerr << '\t');
 		} else {
 			cerr << "\t(null) ";
 		}
@@ -2043,19 +2086,14 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	}
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
-//	assert(resolved_node);
 //	NULL check not necessarily valid if last token normally returned NULL
 	if (at_eof()) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
 //		token type returned.  
-//		can't use: yy_union_resolve(yylval, *(s-1), *s);
-
-		resolved_node = yy_union_lookup(yylval, yychar);
-		assert(resolved_node);
-		(resolved_node->what(cerr << "\t") << " ")
-			<< resolved_node->where();
+//		can't use: yy_union_resolve_dump(yylval, *(s-1), *s, ...);
+		yy_union_lookup_dump(yylval, yychar, cerr << '\t');
 	}
 	cerr << endl;
 

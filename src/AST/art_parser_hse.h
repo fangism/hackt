@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.9 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_hse.h,v 1.10 2005/05/04 17:54:10 fang Exp $
  */
 
 #ifndef	__ART_PARSER_HSE_H__
@@ -25,7 +25,7 @@ typedef	expr	hse_expr;
 
 //=============================================================================
 /// HSE statement base class
-class statement : virtual public node {
+class statement {
 public:
 	statement();
 virtual	~statement();
@@ -72,7 +72,7 @@ using	language_body::leftmost;
 
 //=============================================================================
 /// HSE guarded command contains an expression condition and body
-class guarded_command : public node {
+class guarded_command {
 protected:
 	const excl_ptr<const hse_expr>	guard;		///< guard expression
 	const excl_ptr<const terminal>	arrow;		///< right-arrow
@@ -153,12 +153,12 @@ public:
 /// HSE wait contains just an expression
 class wait : public statement {
 protected:
-	const excl_ptr<const char_punctuation_type>	lb;
+//	const excl_ptr<const char_punctuation_type>	lb;
 	const excl_ptr<const expr>			cond;
-	const excl_ptr<const char_punctuation_type>	rb;
+//	const excl_ptr<const char_punctuation_type>	rb;
 public:
-	wait(const char_punctuation_type* l, const expr* c,
-		const char_punctuation_type* r);
+	explicit
+	wait(const expr* c);
 
 	~wait();
 
@@ -198,8 +198,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-using	incdec_stmt::where;
 
 #if 1
 	never_ptr<const object>
@@ -241,8 +239,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	parent_type::where;
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -270,8 +266,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-using	parent_type::where;
 
 #if 1
 	never_ptr<const object>

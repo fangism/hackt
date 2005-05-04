@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.16 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_formal.cc,v 1.17 2005/05/04 17:54:10 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
 #define	__ART_PARSER_FORMAL_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -47,6 +49,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_id, "(port-formal-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_decl, "(port-formal-decl)")
 SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_id, "(template-formal-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl, "(template-formal-decl)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl_list_pair, "(template-formal-decl-list-pair)")
 }
 
 //=============================================================================
@@ -59,8 +62,7 @@ USING_STACKTRACE
 // class data_param_id method definitions
 
 data_param_id::data_param_id(const token_identifier* i, 
-		const dense_range_list* d) :
-		node(), id(i), dim(d) {
+		const dense_range_list* d) : id(i), dim(d) {
 	NEVER_NULL(id);
 	// dim is optional
 }
@@ -100,8 +102,7 @@ data_param_id_list::~data_param_id_list() { }
 // class data_param_decl method definitions
 
 data_param_decl::data_param_decl(const concrete_type_ref* t, 
-		const data_param_id_list* il) :
-		node(), type(t), ids(il) {
+		const data_param_id_list* il) : type(t), ids(il) {
 	NEVER_NULL(type);
 	NEVER_NULL(ids);
 }
@@ -140,8 +141,7 @@ data_param_decl_list::~data_param_decl_list() { }
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const token_identifier* n,
-		const dense_range_list* d)
-		: node(), name(n), dim(d) {
+		const dense_range_list* d) : name(n), dim(d) {
 	NEVER_NULL(name);
 	// dim may be NULL
 }
@@ -189,7 +189,7 @@ port_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
-				dim->where() << endl;
+				where(*dim) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
@@ -216,8 +216,7 @@ port_formal_id_list::~port_formal_id_list() { }
 
 CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(const concrete_type_ref* t, 
-		const port_formal_id_list* i) : 
-		node(), type(t), ids(i) {
+		const port_formal_id_list* i) : type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
@@ -260,7 +259,7 @@ port_formal_decl::check_build(context& c) const {
 		// error catching?
 	} else {
 		cerr << "ERROR with concrete-type in port formal decl. at "
-			<< type->where() << endl;
+			<< where(*type) << endl;
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -293,7 +292,7 @@ CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
 		const dense_range_list* d, const char_punctuation_type* e, 
 		const expr* v) : 
-		node(), name(n), dim(d), eq(e), dflt(v) {
+		name(n), dim(d), eq(e), dflt(v) {
 	NEVER_NULL(name);
 	// dim may be NULL
 	if (eq) NEVER_NULL(dflt);
@@ -349,7 +348,7 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in default value expression " <<
-				dflt->where() << endl;
+				where(*dflt) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const param_expr>
@@ -364,7 +363,7 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
-				dim->where() << endl;
+				where(*dim) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
@@ -392,7 +391,7 @@ CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(
 		const token_paramtype* t, 	// why not concrete_type_ref?
 		const template_formal_id_list* i) :
-		node(), type(t), ids(i) {
+		type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
@@ -426,7 +425,7 @@ template_formal_decl::check_build(context& c) const {
 		def(c.get_current_definition_reference());
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
-			type->where() << endl;
+			where(*type) << endl;
 		THROW_EXIT;
 	}
 	c.set_current_fundamental_type(def->make_fundamental_type_reference());
@@ -444,11 +443,81 @@ template_formal_decl::check_build(context& c) const {
 //=============================================================================
 // class template_formal_decl_list method definitions
 
+template_formal_decl_list::template_formal_decl_list() : parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_formal_decl_list::template_formal_decl_list(
 		const template_formal_decl* t) :
 		parent_type(t) { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_formal_decl_list::~template_formal_decl_list() { }
+
+//=============================================================================
+// struct template_formal_decl_list_pair method definitions
+
+/**
+	\param s the set of strictly matched template parameters, 
+		may be empty, but not NULL.
+	\param r the set of relaxed template parameters, may be NULL.
+ */
+template_formal_decl_list_pair::template_formal_decl_list_pair(
+		const template_formal_decl_list* s,
+		const template_formal_decl_list* r) :
+		first(s), second(r) {
+	NEVER_NULL(first);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Default destructor
+template_formal_decl_list_pair::~template_formal_decl_list_pair() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_formal_decl_list_pair)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_formal_decl_list_pair::leftmost(void) const {
+	return first->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_formal_decl_list_pair::rightmost(void) const {
+	if (second)	return second->rightmost();
+	else		return first->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: implement for real.
+	Sequentially check each template formal.  
+	Need to distinguish between strict and relaxed parameters for the sake
+	of creating the appropriate fundamental type reference?
+	DEPENDS: on updating ART::entity::type_reference_base.
+ */
+never_ptr<const object>
+template_formal_decl_list_pair::check_build(context& c) const {
+	never_ptr<const object> ret;
+	c.strict_template_parameters();
+	ret = first->check_build(c);
+	if (second) {
+		c.relaxed_template_parameters();
+		return second->check_build(c);
+	} else {
+		return ret;
+	}
+}
+
+//=============================================================================
+// explicit class template instantiations
+
+template class node_list<const data_param_id>;
+template class node_list<const data_param_decl>;
+template class node_list<const port_formal_id>;
+template class node_list<const port_formal_decl>;
+template class node_list<const template_formal_id>;
+template class node_list<const template_formal_decl>;
 
 //=============================================================================
 }	// end namespace parser

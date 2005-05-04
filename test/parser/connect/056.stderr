@@ -2,4 +2,4 @@ Types do not match! got: int<32> and: bool<>.
 ERROR: actual instance reference 3 of port connection doesn't match the formal type/size.
 	got: bool<>, expected: int<32>
 At least one error in port connection.  
-HALT: at least one error in port connection list.  [12:1..17]
+HALT: at least one error in port connection list.  [12:1..16]

@@ -2,7 +2,7 @@
 	\file "art_parser_token_string.h"
 	Base set of classes for the ART parser.  
 	These classes are implemented in "art_parser_token.cc"
-	$Id: art_parser_token_string.h,v 1.2 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_token_string.h,v 1.3 2005/05/04 17:54:11 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_STRING_H__
@@ -30,10 +30,10 @@ class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
 	explicit
-	token_string(const char* s) : node(), string(s), terminal() { }
+	token_string(const char* s) : string(s), terminal() { }
 
 	/// default copy-constructor
-	token_string(const token_string& s) : node(), string(s), terminal() { }
+	token_string(const token_string& s) : string(s), terminal() { }
 
 virtual ~token_string() { }
 
@@ -59,10 +59,10 @@ class token_identifier : public token_string, public expr {
 	typedef	token_identifier	this_type;
 public:
 	explicit
-	token_identifier(const char* s) : node(), token_string(s), expr() { }
+	token_identifier(const char* s) : token_string(s), expr() { }
 
 	token_identifier(const token_identifier& i) :
-		node(), token_string(i), expr() { }
+		token_string(i), expr() { }
 
 	~token_identifier() { }
 

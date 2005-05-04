@@ -1,6 +1,6 @@
 // should fail opening identifier that is not a namespace
 
-namespace X { };
+namespace X { }
 int y;
 
 open X;

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.10 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_expr.h,v 1.11 2005/05/04 17:54:10 fang Exp $
  */
 
 #ifndef __ART_PARSER_EXPR_H__
@@ -14,36 +14,6 @@ namespace ART {
 namespace parser {
 //=============================================================================
 // class expr defined in "art_parser.h"
-
-//=============================================================================
-/**
-	An expression in parentheses, for all purposes, parens may be ignored.
-	Pretty retarded, class is just a wrapper containing paren tokens.  
-	Consider discarding later.  
- */
-class paren_expr : public expr {
-protected:
-	const excl_ptr<const char_punctuation_type>	lp;	///< left parenthesis
-	const excl_ptr<const expr>		e;	///< enclosed expression
-	const excl_ptr<const char_punctuation_type>	rp;	///< right parenthesis
-public:
-	paren_expr(const char_punctuation_type* l, const expr* n, 
-		const char_punctuation_type* r);
-
-	~paren_expr();
-
-	ostream&
-	what(ostream& o) const;
-
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-
-	never_ptr<const object>
-	check_build(context& c) const;
-};	// end class paren_expr
 
 //=============================================================================
 /**

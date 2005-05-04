@@ -1,3 +1,3 @@
-ERROR: template formals do not match!
+ERROR: strict template formals do not match!
 ERROR: template formals do not match!  
-new declaration for "foo" doesn't match previous declaration.  ERROR! [7:1..14]
+new declaration for "foo" doesn't match previous declaration.  ERROR! [7:1..13]

@@ -1,6 +1,6 @@
 % "artxx.tex"
 
-%	$Id: artxx.tex,v 1.9 2005/04/20 03:27:19 fang Exp $
+%	$Id: artxx.tex,v 1.10 2005/05/04 17:54:08 fang Exp $
 
 \documentclass[12pt]{book}
 
@@ -36,6 +36,15 @@
 
 \makeindex
 
+% PAGE FORMATTING
+\setlength{\oddsidemargin}{.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{0in}
+% \setlength{\topskip}{0in}
+% \setlength{\footskip}{0in}
+\setlength{\textwidth}{6in}
+\setlength{\textheight}{8.5in}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\tit}[1]{\textit{#1}}
@@ -56,6 +65,15 @@
 
 \ifpdf\pdfbookmark[0]{Title Page}{title}\fi
 \maketitle
+
+% trying to correct odd even margins...
+\begin{comment}
+\clearpage
+\centerline{This page is intentionally left blank.}
+\clearpage
+\centerline{So is this page}
+\clearpage
+\end{comment}
 
 \ifpdf\pdfbookmark[0]{Table of Contents}{toc}\fi
 \tableofcontents

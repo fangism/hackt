@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.15 2005/04/20 03:27:22 fang Exp $
+	$Id: art_object_definition_base.h,v 1.16 2005/05/04 17:54:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -19,6 +19,12 @@
 #include "memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
+#define	USE_TEMPLATE_FORMALS_MANAGER		1
+
+#if USE_TEMPLATE_FORMALS_MANAGER
+#include "art_object_template_formals_manager.h"
+#endif
+
 namespace ART {
 // forward declarations from outside namespaces
 namespace parser {
@@ -30,13 +36,7 @@ namespace parser {
 using parser::token_identifier;
 
 //=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
-//=============================================================================
 // USING_LIST
 using std::string;
 using std::istream;
@@ -58,6 +58,14 @@ class definition_base :
 		virtual public persistent, 
 		public object {
 public:
+#if USE_TEMPLATE_FORMALS_MANAGER
+	typedef	template_formals_manager::template_formals_value_type
+					template_formals_value_type;
+	typedef	template_formals_manager::template_formals_map_type
+					template_formals_map_type;
+	typedef	template_formals_manager::template_formals_list_type
+					template_formals_list_type;
+#else
 	/**
 		Table of template formals.  
 		Needs to be ordered for argument checking, 
@@ -88,19 +96,21 @@ public:
 	 */
 	typedef	std::vector<template_formals_value_type>
 					template_formals_list_type;
+#endif
+
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
 
 protected:
-//	const string			key;
-//	const never_ptr<const name_space>	parent;
-
-protected:
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals_manager	template_formals;
+#else
 	/** subset of used_id_map, must be coherent with list */
 	template_formals_map_type	template_formals_map;
 	/** subset of used_id_map, must be coherent with map */
 	template_formals_list_type	template_formals_list;
+#endif
 
 	/**
 		Whether or not this definition is complete or only declared.  
@@ -222,9 +232,22 @@ virtual	good_bool
 	TO DO: This function should be pure virtual and belong 
 		to a different interface!
  */
+#if USE_TEMPLATE_FORMALS_MANAGER
 virtual	never_ptr<const instance_collection_base>
-	add_template_formal(const never_ptr<instantiation_statement_base> f, 
+	add_strict_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
+
+virtual	never_ptr<const instance_collection_base>
+	add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id);
+#else
+virtual	never_ptr<const instance_collection_base>
+	add_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id);
+#endif
 
 /**
 	Really, only some definitions should have ports...
@@ -238,6 +261,7 @@ virtual	bool
 	exclude_object(const used_id_map_type::value_type& i) const;
 #endif
 
+#if !USE_TEMPLATE_FORMALS_MANAGER
 private:
 	void
 	collect_template_formal_pointers(persistent_object_manager& m) const;
@@ -249,6 +273,7 @@ private:
 	void
 	load_object_template_formals(const persistent_object_manager& m, 
 		istream&);
+#endif
 
 protected:
 	void
@@ -269,7 +294,12 @@ public:
 };	// end class definition_base
 
 //=============================================================================
-/// actual values passed
+/**
+	actual values passed
+	This needs to be updated to include a pair of paramater lists.
+	For strict and relaxed template arguments.  
+	(Although an argument is an argument.)
+ */
 typedef	definition_base::template_actuals_map_type
 		template_actuals_map_type;
 

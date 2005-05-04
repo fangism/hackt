@@ -1,5 +1,108 @@
 "ChangeLog"
 
+2005-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-09:
+	  Clean up of previous release: expurgated ART::parser::node!
+
+
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-08:
+	  It is done.  ART::parser::node (and all its evils) have been phased
+	  out, in favor of a cleaner token class heirarchy.  
+	  Not a single test broke!
+	  This revision has commented out the evil, next revision will
+	  clean up.  
+
+
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-07:
+	  Auto-generated parser helper code (union) no longer needs to 
+	  return a mother pointer (node*).  
+	  It 'virtually' implements the two neceessary functions in two
+	  giganormous function pointer tables (delete, what_where).  
+	  (A virtual virtual call!)
+	  Soon, going to remove ART::parser::node!
+
+
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-06:
+	  Parser awk scripts: factored out common subroutines into
+	  separate scripts, so now need to invoke awk -f with co-dependent
+	  scripts.  This reduces duplicate maintenance on these files, 
+	  which will soon be modified, at the cost of having to keep around
+	  more script files.  
+
+
+2005-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-05:
+	  Updated grammar to include instance type completion, 
+	  where array instances may have their types completed
+	  with relaxed template arguments (after array is declared with 
+	  strict template arguments).  
+	  (Includes type_completion + connection statement.)
+	  check_build for these new classes is yet unimplemented.
+	  GRAMMAR UPDATE: removed semicolon after namespace close-brace.
+	  Not keeping around silly semicolons in AST structures, 
+		deleting useless tokens immediately in parser.  
+	  Tests updated accordingly.
+	  TODO: re-update all tests with YACC=/usr/bin/yacc configuration.  
+		(been forgetting to do this for a long time...)
+
+
+2005-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-04:
+	  Updated ART::parser::node_list::what() message (and test cases).
+	  Created class ART::parser::template_argument_list_pair, but unused.
+	  Added util/type_traits.h for convenience and compatibility.  
+	  Some more parser implementation notes in src/parser/NOTES.  
+	  Standardized header inclusion in parser/{yacc,bison}-union-hack.awk.
+
+
+2005-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-03:
+	  Parser context now adds template formals to either the 
+	  strict parameter list or the relaxed parameter list.  
+	  Some minor re-organization to reuse code in template_formals_manager.
+	  TODO: Type-references template arguments need to be split into
+	  strict and relaxed.  
+
+
+2005-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-02:
+	  Substituted old template_formals_list and _map in definition_base
+	  with a template_formals_manager (basically wrapper around the former)
+	  and split up single formal parameter list into a 
+	  strict list and relaxed list.  
+	  Many definition_base method calls now just wrap around calls
+	  to template_formals_manager methods.  
+	  As a consequence, the binary format of all definitions
+	  has been extended by one pointer-list.  
+	  Since none of the current test-cases use relaxed parameters, 
+	  the object sizes (per definition) were increased by 4 bytes, 
+	  the sizeof(size_t) for '0' representing an empty list.  
+
+		+ Some type-check error messages have been improved.  
+
+
+2005-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-01:
+	  Updated parser to extend template formal signature to 
+	  include (optional) list of relaxed parameters.  
+	  In transient state: currently type-checking treats
+	  both formal lists as one unified list, even though it is now
+	  implemented as a pair of lists in the AST.  
+	  The definition structure has not been updated yet.  
+
+
 2005-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ART::entity::scopespace is no longer : virtual public object, 

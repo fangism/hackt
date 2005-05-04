@@ -1,11 +1,13 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_base.cc,v 1.19 2005/05/04 17:54:09 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
 #define	__ART_PARSER_BASE_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -44,6 +46,8 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
+SPECIALIZE_UTIL_WHAT(ART::parser::root_item, "(root_item)")
+SPECIALIZE_UTIL_WHAT(ART::parser::def_body_item, "(def-body-item)")
 SPECIALIZE_UTIL_WHAT(ART::parser::type_id, "(type-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::chan_type, "(chan-type)")
 SPECIALIZE_UTIL_WHAT(ART::parser::incdec_stmt, "(inc/dec-stmt)")
@@ -75,44 +79,6 @@ const char alias[] = "=";	///< delimiter for node_list template argument
 const char pound[] = "#";	///< delimiter for node_list template argument
 
 // eventually token keywords here too? or "art_parser_token.cc"
-
-//=============================================================================
-// class node method definitions
-
-#if 0
-/** 
-	Destructor kept here because vtable is not generated on 
-	darwin-gcc-3.3 if it is inlined in the header.  
- */
-node::~node() { }
-#endif
-
-void
-node::bogus(void) const {
-}
-
-/// reports location spanned by a node in the source file
-inline
-line_range
-node::where(void) const {
-	return line_range(leftmost(), rightmost());
-}
-
-#if 0
-/**
-	Default type-checker and object builder does nothing.  
-	Should be re-implemented in all terminal subclasses.  
-	Eventually make this pure virtual.  
-	Should really take a context&...
- */
-never_ptr<const object>
-node::check_build(context& c) const {
-	// We DO want to print this message, even in regression testing. 
-	what(cerr << c.auto_indent() << 
-		"check_build() not implemented yet for ");
-	return c.top_namespace();
-}
-#endif
 
 //=============================================================================
 // class root_item method definitions
@@ -153,9 +119,8 @@ type_base::~type_base() { }
 	Also deletes expression list argument after transfering list.  
  */
 CONSTRUCTOR_INLINE
-type_id::type_id(const qualified_id* b) : node(),
-		base(b) {
-	assert(base);
+type_id::type_id(const qualified_id* b) : base(b) {
+	NEVER_NULL(base);
 }
 
 DESTRUCTOR_INLINE
@@ -461,17 +426,16 @@ language_body::leftmost(void) const {
 	\param l the left brace.  
 	\param b the body (contents), may be NULL.  
 	\param r the right brace.  
-	\param c the semicolon.  
  */
 CONSTRUCTOR_INLINE
 namespace_body::namespace_body(
 		const generic_keyword_type* s, const token_identifier* n, 
-		const root_body* b, const char_punctuation_type* c) :
+		const root_body* b) :
 		root_item(),       
-		ns(s), name(n), body(b), semi(c) {
+		ns(s), name(n), body(b) {
 	NEVER_NULL(ns); NEVER_NULL(name);
 	// body may be NULL
-	NEVER_NULL(semi);	// don't really care about syntax sugar
+//	NEVER_NULL(semi);	// don't really care about syntax sugar
 }
 
 /// destructor
@@ -498,9 +462,9 @@ namespace_body::leftmost(void) const {
 
 line_position
 namespace_body::rightmost(void) const {
-	if (semi)	return semi->rightmost();
+//	if (semi)	return semi->rightmost();
 //	else if (rb)	return rb->rightmost();
-	else if (body)	return body->rightmost();
+	if (body)	return body->rightmost();
 //	else if (lb)	return lb->rightmost();
 	else		return name->rightmost();
 }
@@ -528,7 +492,7 @@ namespace_body::check_build(context& c) const {
 //=============================================================================
 // class namespace_id method definitions
 
-namespace_id::namespace_id(qualified_id* i) : node(), qid(i) {
+namespace_id::namespace_id(qualified_id* i) : qid(i) {
 	NEVER_NULL(qid);
 }
 
@@ -585,14 +549,12 @@ operator << (ostream& o, const namespace_id& id) {
 	Constructor for using_namespace directive.  
 	\param o the "open" keyword.  
 	\param i the id_expr qualified identifier.  
-	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
-		const generic_keyword_type* o, const namespace_id* i, 
-		const char_punctuation_type* s) : root_item(),
-		open(o), id(i), as(NULL), alias(NULL), semi(s) {
-	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(semi);
+		const generic_keyword_type* o, const namespace_id* i) :
+		root_item(), open(o), id(i), alias(NULL) {
+	NEVER_NULL(open); NEVER_NULL(id);
 }
 
 /**
@@ -601,17 +563,13 @@ using_namespace::using_namespace(
 	\param i the id_expr qualified identifier.  
 	\param a the "as" keyword.  
 	\param n the alias name.  
-	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
 using_namespace::using_namespace(
 		const generic_keyword_type* o, const namespace_id* i, 
-		const generic_keyword_type* a, const token_identifier* n, 
-		const char_punctuation_type* s) : root_item(),
-		open(o), id(i), as(a), alias(n), semi(s) {
-	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(as);
-	NEVER_NULL(alias); NEVER_NULL(semi);
-	// get rid of non-essentials...
+		const token_identifier* n) :
+		root_item(), open(o), id(i), alias(n) {
+	NEVER_NULL(open); NEVER_NULL(id); NEVER_NULL(alias);
 }
 
 /// default destructor
@@ -628,9 +586,7 @@ using_namespace::leftmost(void) const {
 
 line_position
 using_namespace::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else if (alias)	return alias->rightmost();
-	else if (as)	return as->rightmost();
+	if (alias)	return alias->rightmost();
 	else		return id->rightmost();
 }
 
@@ -654,7 +610,7 @@ if (alias) {
 
 CONSTRUCTOR_INLINE
 concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
-		node(), base(n), temp_spec(t) {
+		base(n), temp_spec(t) {
 	NEVER_NULL(base);
 }
 
@@ -708,13 +664,14 @@ concrete_type_ref::check_build(context& c) const {
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
-			"ERROR! " << base->where() << endl;
+			"ERROR! " << where(*base) << endl;
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	}
 
 	// check template arguments, if given
 	if (temp_spec) {
+		STACKTRACE("checking template arguments (temp_spec)");
 		// FINISH ME!!!!!!!!!!
 		// using current_definition_reference
 		temp_spec->check_build(c);
@@ -731,7 +688,7 @@ concrete_type_ref::check_build(context& c) const {
 		if (!o)	{
 			cerr << "concrete_type_ref: "
 				"bad template args!  ERROR " 
-				<< temp_spec->where() << endl;
+				<< where(*temp_spec) << endl;
 			THROW_EXIT;		// temporary
 			return return_type(NULL);
 		} 
@@ -742,7 +699,7 @@ concrete_type_ref::check_build(context& c) const {
 			tpl = ol->make_param_expr_list();
 		if (!tpl) {
 			cerr << "ERROR building template parameter "
-				"expression list.  " << temp_spec->where()
+				"expression list.  " << where(*temp_spec)
 				<< endl;
 			THROW_EXIT;		// temporary
 		}
@@ -750,17 +707,19 @@ concrete_type_ref::check_build(context& c) const {
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {
 			cerr << "ERROR making complete type reference.  "
-				<< where() << endl;
+				<< where(*this) << endl;
 			THROW_EXIT;
 		}
 		c.set_current_fundamental_type(type_ref);
 	} else {
+		STACKTRACE("empty template arguments (!temp_spec)");
 		// if no args are supplied, 
 		// make sure that the definition doesn't require template args!
 		// Now allows default values for unsupplied arguments.  
 		if(!d->check_null_template_argument().good) {
 			cerr << "definition expecting template arguments "
-				"where none were given!  " << where() << endl;
+				"where none were given!  " <<
+				where(*this) << endl;
 			THROW_EXIT;		// temporary
 			return never_ptr<const object>(NULL);
 		} else {
@@ -768,7 +727,7 @@ concrete_type_ref::check_build(context& c) const {
 				type_ref(d->make_fundamental_type_reference());
 			if (!type_ref) {
 				cerr << "ERROR making complete type reference.  "
-					<< where() << endl;
+					<< where(*this) << endl;
 				THROW_EXIT;
 			}
 			c.set_current_fundamental_type(type_ref);
@@ -789,6 +748,12 @@ data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 		parent_type(c) { }
 
 data_type_ref_list::~data_type_ref_list() { }
+
+//=============================================================================
+// explicit class template instantiations
+
+template class node_list<const concrete_type_ref>;
+template class node_list<const root_item>;
 
 //=============================================================================
 }	// end namespace parser

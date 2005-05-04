@@ -3,4 +3,4 @@
 int foo;
 namespace bar {
 	int foo;		// is ok
-};
+}

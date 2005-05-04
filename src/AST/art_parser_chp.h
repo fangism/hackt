@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.8 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_chp.h,v 1.9 2005/05/04 17:54:09 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_H__
@@ -25,7 +25,7 @@ typedef	expr	chp_expr;
 
 //=============================================================================
 /// CHP statement base class
-class statement : virtual public node {
+class statement {
 public:
 	statement();
 
@@ -72,7 +72,7 @@ using	language_body::leftmost;
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
-class guarded_command : public node {
+class guarded_command {
 protected:
 	const excl_ptr<const chp_expr>	guard;		///< guard expression
 	const excl_ptr<const terminal>	arrow;		///< right-arrow
@@ -148,12 +148,12 @@ public:
 /// CHP wait contains just an expression
 class wait : public statement {
 protected:
-	const excl_ptr<const char_punctuation_type>	lb;	///< left bracket
+//	const excl_ptr<const char_punctuation_type>	lb;	///< left bracket
 	const excl_ptr<const expr>			cond;	///< wait until condition
-	const excl_ptr<const char_punctuation_type>	rb;	///< right bracket
+//	const excl_ptr<const char_punctuation_type>	rb;	///< right bracket
 public:
-	wait(const char_punctuation_type* l, const expr* c,
-		const char_punctuation_type* r);
+	explicit
+	wait(const expr* c);
 
 	~wait();
 
@@ -195,8 +195,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	assign_stmt::where;
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -225,8 +223,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-using	incdec_stmt::where;
 
 #if 1
 	never_ptr<const object>
@@ -277,8 +273,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-using	comm_list_base::where;
 
 #if 1
 	never_ptr<const object>
@@ -366,8 +360,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	parent_type::where;
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -396,8 +388,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-using	parent_type::where;
-
 #if 1
 	never_ptr<const object>
 	check_build(context& ) const;
@@ -425,8 +415,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-using	parent_type::where;
 
 #if 1
 	never_ptr<const object>

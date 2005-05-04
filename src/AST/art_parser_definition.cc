@@ -2,11 +2,13 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.18 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_definition.cc,v 1.19 2005/05/04 17:54:09 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
 #define	__ART_PARSER_DEFINITION_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -101,14 +103,14 @@ signature_base::~signature_base() {
 
 CONSTRUCTOR_INLINE
 user_data_type_prototype::user_data_type_prototype(
-	const template_formal_decl_list* tf, const generic_keyword_type* df, 
-	const token_identifier* n, const string_punctuation_type* dp, 
-	const concrete_type_ref* b, 
-	const data_param_decl_list* p, const char_punctuation_type* s) :
+		const template_formal_decl_list_pair* tf,
+		const generic_keyword_type* df, 
+		const token_identifier* n,
+		const string_punctuation_type* dp, 
+		const concrete_type_ref* b, 
+		const data_param_decl_list* p) :
 		prototype(), 
-		user_data_type_signature(tf, df, n, dp, b, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		user_data_type_signature(tf, df, n, dp, b, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -125,8 +127,7 @@ user_data_type_prototype::leftmost(void) const {
 
 line_position
 user_data_type_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return params->rightmost();
+	return params->rightmost();
 }
 
 never_ptr<const object>
@@ -151,7 +152,8 @@ user_data_type_prototype::check_build(context& c) const {
 // class user_data_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_data_type_def::user_data_type_def(const template_formal_decl_list* tf, 
+user_data_type_def::user_data_type_def(
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
@@ -232,7 +234,7 @@ enum_signature::check_build(context& c) const {
 		ret(c.add_declaration(ed));
 	if (!ret) {
 		// error handling?
-		cerr << where() << endl;
+		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
 	return ret;
@@ -243,8 +245,8 @@ enum_signature::check_build(context& c) const {
 // class enum_prototype method definitions
 
 enum_prototype::enum_prototype(const generic_keyword_type* e, 
-		const token_identifier* i, const char_punctuation_type* s) :
-		prototype(), enum_signature(e, i), semi(s) {
+		const token_identifier* i) :
+		prototype(), enum_signature(e, i) {
 }
 
 enum_prototype::~enum_prototype() { }
@@ -259,8 +261,7 @@ enum_prototype::leftmost(void) const {
 
 line_position
 enum_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return id->rightmost();
+	return id->rightmost();
 }
 
 /**
@@ -353,7 +354,7 @@ enum_def::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_chan_type_signature::user_chan_type_signature(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n,
 		const string_punctuation_type* dp, 
 		const chan_type* b, const data_param_decl_list* p) :
@@ -385,14 +386,12 @@ user_chan_type_signature::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 user_chan_type_prototype::user_chan_type_prototype(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
-		const data_param_decl_list* p, const char_punctuation_type* s) :
+		const data_param_decl_list* p) :
 		prototype(), 
-		user_chan_type_signature(tf, df, n, dp, b, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		user_chan_type_signature(tf, df, n, dp, b, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -408,8 +407,7 @@ user_chan_type_prototype::leftmost(void) const {
 
 line_position
 user_chan_type_prototype::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return params->rightmost();
+	return params->rightmost();
 }
 
 never_ptr<const object>
@@ -422,7 +420,8 @@ user_chan_type_prototype::check_build(context& c) const {
 // class user_chan_type_def method definitions
 
 CONSTRUCTOR_INLINE
-user_chan_type_def::user_chan_type_def(const template_formal_decl_list* tf, 
+user_chan_type_def::user_chan_type_def(
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
@@ -461,7 +460,7 @@ user_chan_type_def::check_build(context& c) const {
 // class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_signature::process_signature(const template_formal_decl_list* tf, 
+process_signature::process_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
 		signature_base(tf,i), def(d), ports(p) {
@@ -498,7 +497,7 @@ process_signature::check_build(context& c) const {
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
-			cerr << temp_spec->where() << endl;
+			cerr << where(*temp_spec) << endl;
 			THROW_EXIT;
 		}
 	}
@@ -519,7 +518,7 @@ process_signature::check_build(context& c) const {
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
 	if (!o) {
-		cerr << where() << endl;
+		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
 	return o;
@@ -530,14 +529,11 @@ process_signature::check_build(context& c) const {
 // class process_prototype method definitions
 
 CONSTRUCTOR_INLINE
-process_prototype::process_prototype(const template_formal_decl_list* tf, 
+process_prototype::process_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
-		const port_formal_decl_list* p,
-		const char_punctuation_type* s) :
+		const port_formal_decl_list* p) :
 		prototype(),
-		process_signature(tf, d, i, p), 
-		semi(s) {
-	NEVER_NULL(semi);
+		process_signature(tf, d, i, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -554,7 +550,7 @@ process_prototype::leftmost(void) const {
 
 line_position
 process_prototype::rightmost(void) const {
-	return semi->rightmost();
+	return ports->rightmost();
 }
 
 /**
@@ -570,7 +566,7 @@ process_prototype::check_build(context& c) const {
 // class process_def method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(const template_formal_decl_list* tf, 
+process_def::process_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b) :
 		definition(),
@@ -606,7 +602,7 @@ process_def::check_build(context& c) const {
 	if (!o) {
 		cerr << "ERROR checking signature for process "
 			<< get_name() << " doesn\'t match that of "
-			"previous declaration!  " << where() << endl;
+			"previous declaration!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 
@@ -625,7 +621,7 @@ process_def::check_build(context& c) const {
 // class user_data_type_signature method definitions
 
 user_data_type_signature::user_data_type_signature(
-		const template_formal_decl_list* tf, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
 		const concrete_type_ref* b, 
@@ -653,11 +649,11 @@ user_data_type_signature::check_build(context& c) const {
 //=============================================================================
 // class typedef_alias method definitions
 
-typedef_alias::typedef_alias(const template_formal_decl_list* t,
+typedef_alias::typedef_alias(const template_formal_decl_list_pair* t,
 		const generic_keyword_type* k, const concrete_type_ref* b,
-		const token_identifier* i, const char_punctuation_type* s) :
+		const token_identifier* i) :
 		def_body_item(), root_item(), 
-		temp_spec(t), td(k), base(b), id(i), semi(s) {
+		temp_spec(t), td(k), base(b), id(i) {
 	NEVER_NULL(base); NEVER_NULL(id);
 }
 
@@ -674,8 +670,7 @@ typedef_alias::leftmost(void) const {
 
 line_position
 typedef_alias::rightmost(void) const {
-	if (semi)	return semi->rightmost();
-	else		return id->rightmost();
+	return id->rightmost();
 }
 
 /**
@@ -707,7 +702,7 @@ typedef_alias::check_build(context& c) const {
 		d(o.is_a<const definition_base>());
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
-			"ERROR!  " << basedef->where() << endl;
+			"ERROR!  " << where(*basedef) << endl;
 		THROW_EXIT;
 	}
 	// need to worry about resetting definition reference?
@@ -728,7 +723,7 @@ if (base->get_temp_spec()) {
 		// will add template_formals to the alias
 		if (!o) {
 			cerr << "ERROR in template formals of typedef!  "
-				<< temp_spec->where() << endl;
+				<< where(*temp_spec) << endl;
 			THROW_EXIT;
 		}
 	}
@@ -743,7 +738,7 @@ if (base->get_temp_spec()) {
 		ftr(c.get_current_fundamental_type());
 	if (!ftr) {
 		cerr << "ERROR resolving concrete type reference in typedef!  "
-			<< base->where() << endl;
+			<< where(*base) << endl;
 		THROW_EXIT;
 	}
 	// must reset because not making instances
@@ -756,7 +751,7 @@ if (base->get_temp_spec()) {
 	// else safe to alias type
 	bool b = tdb->assign_typedef(ftr_ex);
 	if (!b) {
-		cerr << "ERROR assigning typedef!  " << where() << endl;
+		cerr << "ERROR assigning typedef!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 	// let context add the complete alias to the scope
@@ -767,13 +762,13 @@ if (base->get_temp_spec()) {
 	// restriction: temp_spec for this definition must be empty or null.  
 	if (temp_spec) {
 		cerr << "ERROR: pure definition alias cannot have "
-			"a template signature.  " << where() << endl;
+			"a template signature.  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 	// issue warning about this interpretation?
 	const good_bool b(c.alias_definition(d, *id));
 	if (!b.good) {
-		cerr << id->where() << endl;
+		cerr << where(*id) << endl;
 		THROW_EXIT;
 		return never_ptr<const object>(NULL);
 	}
@@ -784,6 +779,8 @@ if (base->get_temp_spec()) {
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
+
+template class node_list<const def_body_item>;
 
 //=============================================================================
 }	// end namespace parser

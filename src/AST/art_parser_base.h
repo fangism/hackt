@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.21 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_base.h,v 1.22 2005/05/04 17:54:09 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -56,73 +56,29 @@ namespace parser {
 class context;		// defined in "Object/art_context.h"
 
 //=============================================================================
-/// the abstract base class for parser nodes, universal return type
-/**
-	The mother class.  
-	Rather than have to rely on unions in the lexer and parser, 
-	we prefer to use a single type of node for manipulation.  
-	This will be useful when we wish to dump the parser's value stack
-	in error reporting and debugging.  
-	All immediate subclasses of node must be virtually inherited.  
- */
-class node {
-private:
-/**
-	Rule regarding g++ emission of vtables:
-	"If the class declares any non-inline, non-pure virtual functions, 
-	the first one is chosen as the "key method" for the class, 
-	and the vtable is only emitted in the translation unit where 
-	the key method is defined."
-	This bogus method is defined in "art_parser_base.cc".
- */
-virtual	void
-	bogus(void) const;
-public:
-
-/** Standard virtual destructor, mother-of-all virtual destructors */
-virtual	~node() { }
+// The mother `node' class has been deprecated and removed, sorry Mum.  
+//=============================================================================
 
 /**
-	Shows representation without recursive descent.  
-	Derived classes of non-terminals should just print their type name.  
-	\param o the output stream.  
-	\return the output stream.
+	This is the interface that must be implemented by all AST classes.  
+	What? Where? and of course, a destructor for deleting.  
  */
-virtual	ostream&
-	what(ostream& o) const = 0;
+#define	PURE_VIRTUAL_NODE_METHODS					\
+virtual	ostream& what(ostream& o) const = 0;				\
+virtual	line_position leftmost(void) const = 0;				\
+virtual	line_position rightmost(void) const = 0;
 
 /**
-	Shows the position where the node's subtree starts.  
-	\return the starting position.
+	Generic way of finding the span of an AST construct, appropriate
+	for both terminals and non-terminal nodes.  
+	\param t the AST node in question.  
  */
-virtual	line_position
-	leftmost(void) const = 0;
-
-/**
-	Shows the position where the node's subtree ends.  
-	\return the ending position.
- */
-virtual	line_position
-	rightmost(void) const = 0;
-
-/**
-	Shows the range of file position covered by a particular node's
-	subtree.  
- */
-virtual	line_range
-	where(void) const;
-
-#if 0
-/**
-	Type-check and return a usable ART::entity::object, which 
-	contains a hierarchical symbol table.  
-	TODO: this should really be different for each node type.  
-	\return pointer to resulting object.  
- */
-virtual	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-};	// end class node
+template <class T>
+inline
+line_range
+where(const T& t) {
+	return lexer::line_range(t.leftmost(), t.rightmost());
+}
 
 //=============================================================================
 }	// end namespace parser

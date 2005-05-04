@@ -1,0 +1,5 @@
+// should fail: no empty template param lists
+
+template <pbool A> <>
+defproc foo() { }
+

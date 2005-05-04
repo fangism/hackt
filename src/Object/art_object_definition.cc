@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.40 2005/04/19 02:26:41 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.41 2005/05/04 17:54:12 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_CC__
@@ -86,8 +86,12 @@ definition_base::null(NULL);
 inline
 definition_base::definition_base() :
 		persistent(), object(), 
+#if USE_TEMPLATE_FORMALS_MANAGER
+		template_formals(), 
+#else
 		template_formals_map(), 
 		template_formals_list(), 
+#endif
 		defined(false) {
 	// synchronize template formals with used_id_map
 }
@@ -110,7 +114,11 @@ ostream&
 definition_base::dump(ostream& o) const {
 	const string key = get_key();
 	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.dump(o);
+#else
 	dump_template_formals(o);
+#endif
 	return o;
 }
 
@@ -126,6 +134,7 @@ definition_base::pair_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_TEMPLATE_FORMALS_MANAGER
 /**
 	Sequentially prints template formal parameters.  
  */
@@ -136,7 +145,7 @@ definition_base::dump_template_formals(ostream& o) const {
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	if (!template_formals_list.empty()) {
 		indent tfl_ind(o);
-		o << "<" << endl;	// continued from last print
+		o << '<' << endl;	// continued from last print
 		template_formals_list_type::const_iterator
 			i = template_formals_list.begin();
 		const template_formals_list_type::const_iterator
@@ -147,12 +156,15 @@ definition_base::dump_template_formals(ostream& o) const {
 			INVARIANT((*i)->is_template_formal());
 			(*i)->dump(o << auto_indent) << endl;
 		}
-		o << auto_indent << ">" << endl;
+		o << auto_indent << '>' << endl;
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+UNVEIL LATER
 /**
 	Creates a map from template formals to actual values.  
 	Precondition: list passed by reference must be initially empty.
@@ -197,6 +209,7 @@ if (cpl) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -204,8 +217,12 @@ if (cpl) {
  */
 never_ptr<const param_instance_collection>
 definition_base::lookup_template_formal(const string& id) const {
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.lookup_template_formal(id);
+#else
 	return static_cast<const template_formals_map_type&>
 		(template_formals_map)[id];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -215,6 +232,9 @@ definition_base::lookup_template_formal(const string& id) const {
  */
 size_t
 definition_base::lookup_template_formal_position(const string& id) const {
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.lookup_template_formal_position(id);
+#else
 	const never_ptr<const param_instance_collection>
 		pp(lookup_template_formal(id));
 	const template_formals_list_type::const_iterator
@@ -223,6 +243,7 @@ definition_base::lookup_template_formal_position(const string& id) const {
 	return (pp) ? distance(pb,
 			std::find(pb, template_formals_list.end(), pp)) +1
 		: 0;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -245,7 +266,10 @@ definition_base::lookup_object_here(const string& id) const {
  */
 good_bool
 definition_base::check_null_template_argument(void) const {
-//	STACKTRACE("definition_base::check_null_template_argument()");
+	STACKTRACE("definition_base::check_null_template_argument()");
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.check_null_template_argument();
+#else
 	if (template_formals_list.empty())
 		return good_bool(true);
 	// else make sure each formal has a default parameter value
@@ -264,6 +288,7 @@ definition_base::check_null_template_argument(void) const {
 	}
 	// if we've reached end of list, we're good!
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -285,6 +310,10 @@ bool
 definition_base::equivalent_template_formals(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.equivalent_template_formals(
+		d->template_formals);
+#else
 	const template_formals_list_type& dtemp = d->template_formals_list;
 	if (template_formals_list.size() != dtemp.size()) {
 		// useful error message here
@@ -311,6 +340,7 @@ definition_base::equivalent_template_formals(
 	// sanity check, we made sure sizes match.
 	INVARIANT(i == template_formals_list.end() && j == dtemp.end());
 	return true;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,6 +374,9 @@ definition_base::get_qualified_name(void) const {
 good_bool
 definition_base::certify_template_arguments(
 		const never_ptr<dynamic_param_expr_list> ta) const {
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.certify_template_arguments(ta);
+#else
 if (ta) {
 	// first, number of arguments must match
 	const size_t a_size = ta->size();
@@ -412,6 +445,7 @@ if (ta) {
 	// null, or every formal has default values.  
 	return check_null_template_argument();
 }
+#endif	// USE_TEMPLATE_FORMALS_MANAGER
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -428,12 +462,16 @@ definition_base::certify_port_actuals(const object_list& ol) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: replace with pair of parameter lists
 	Prerequisiste for calling this: must satisfy
 		check_null_template_arguments.  
 	\returns a list of default parameter expressions.  
  */
 excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
+#if USE_TEMPLATE_FORMALS_MANAGER
+	return template_formals.make_default_template_arguments();
+#else
 	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
 	INVARIANT(check_null_template_argument().good);
 	if (template_formals_list.empty())
@@ -449,6 +487,7 @@ definition_base::make_default_template_arguments(void) const {
 	}
 	// should transfer ownership
 	return ret;
+#endif	// USE_TEMPLATE_FORMALS_MANAGER
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -476,10 +515,10 @@ definition_base::make_fundamental_type_reference(void) const {
 		must be modifiable for used_id_map
  */
 never_ptr<const instance_collection_base>
-definition_base::add_template_formal(
+definition_base::add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id) {
-	STACKTRACE("definition_base::add_template_formal()");
+	STACKTRACE("definition_base::add_strict_template_formal()");
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
@@ -509,14 +548,50 @@ definition_base::add_template_formal(
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.add_strict_template_formal(pf);
+#else
 	template_formals_list.push_back(pf);
 	template_formals_map[id] = pf;
+#endif
 
 	// sanity check
 	INVARIANT(lookup_template_formal(id));
 	// later return a never_ptr<>
 	return pf;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_TEMPLATE_FORMALS_MANAGER
+/**
+	Same as add_strict_template_formal, except distinguished as
+	a relaxed template formal parameter.  
+ */
+never_ptr<const instance_collection_base>
+definition_base::add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> i, 
+		const token_identifier& id) {
+	STACKTRACE("definition_base::add_relaxed_template_formal()");
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	} 
+	}
+	scopespace* ss = IS_A(scopespace*, this);
+	NEVER_NULL(ss);
+	const never_ptr<const param_instance_collection>
+		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);	// consistency check
+	template_formals.add_relaxed_template_formal(pf);
+	INVARIANT(lookup_template_formal(id));
+	return pf;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -533,6 +608,7 @@ definition_base::add_port_formal(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_TEMPLATE_FORMALS_MANAGER
 /**
 	Note: calling this is unnecessary if one guarantees that
 	the template formals are a strict subset of the used_id_map.  
@@ -551,6 +627,7 @@ definition_base::collect_template_formal_pointers(
 		(*iter)->collect_transient_info(m);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -559,10 +636,15 @@ definition_base::collect_template_formal_pointers(
 void
 definition_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.collect_transient_info_base(m);
+#else
 	collect_template_formal_pointers(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_TEMPLATE_FORMALS_MANAGER
 /**
 	Template formals will need to be in list order.
 	Just write out the list, the hash_qmap is redundant.  
@@ -575,6 +657,7 @@ definition_base::write_object_template_formals(
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 	m.write_pointer_list(o, template_formals_list);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -587,7 +670,11 @@ definition_base::write_object_base_fake(
 	// this is a non-member function, emulating write_object_base
 	static const bool fake_defined = false;	// value doesn't matter
 	write_value(o, fake_defined);
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals_manager::write_object_base_fake(m, o);
+#else
 	m.write_pointer_list(o, dummy);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -595,10 +682,15 @@ void
 definition_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	write_value(o, defined);
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.write_object_base(m, o);
+#else
 	write_object_template_formals(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_TEMPLATE_FORMALS_MANAGER
 /**
 	Template formals are loaded in list order.
 	Remember that the redundant hash_map also needs to be reconstructed.  
@@ -627,13 +719,18 @@ definition_base::load_object_template_formals(
 	}
 	INVARIANT(template_formals_list.size() == template_formals_map.size());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 definition_base::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	read_value(f, defined);
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.load_object_base(m, f);
+#else
 	load_object_template_formals(m, f);
+#endif
 }
 
 //=============================================================================
@@ -664,7 +761,11 @@ typedef_base::get_qualified_name(void) const {
 ostream&
 typedef_base::dump(ostream& o) const {
 	what(o) << ": " << get_key();
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.dump(o) << " = ";
+#else
 	dump_template_formals(o) << " = ";
+#endif
 	get_base_type_ref()->dump(o);
 	return o;
 }
@@ -1195,8 +1296,13 @@ built_in_datatype_def::add_template_formal(
 		return never_ptr<const instance_collection_base>(NULL);
 	}
 
+#if USE_TEMPLATE_FORMALS_MANAGER
+	template_formals.add_strict_template_formal(pf);
+//	template_formals.add_relaxed_template_formal(pf);
+#else
 	template_formals_list.push_back(pf);
 	template_formals_map[pf->hash_string()] = pf;
+#endif
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the template_formals_list!
 	// template_formals_list and _map are strict subsets of used_id_map

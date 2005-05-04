@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.54 2005/04/18 22:41:00 fang Exp $
+#	$Id: Makefile.am,v 1.55 2005/05/04 17:54:09 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -148,6 +148,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
+	Object/art_object_template_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc
@@ -304,6 +305,7 @@ UTIL_HEADER_FILES = \
 	util/string_fwd.h \
 	util/sublist.h \
 	util/sublist.tcc \
+	util/type_traits.h \
 	util/unique_list.h \
 	util/unique_list.tcc \
 	util/using_istream.h \
@@ -382,7 +384,8 @@ $(ARTXX_PARSE_OUTPUT): parser/art++-parse.h
 
 $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) $? | \
+	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
+		-f $(srcdir)/parser/common-output-to-C.awk $? | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 
@@ -409,7 +412,6 @@ GET_START_TOKEN_ENUM = \
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
 		-v include="art_parser.h art++-parse-prefix.h" \
 		-v namespace=ART::parser \
-		-v type=ART::parser::node \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
@@ -418,7 +420,8 @@ parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-par
 		$(ECHO) "parser/art++.types is empty!" ; \
 		exit 1 ; \
 	fi
-	$(AWK) -f $(YACC_UNION_SCRIPT) \
+	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
+		-f $(YACC_UNION_SCRIPT) \
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
 
@@ -461,8 +464,10 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 
 EXTRA_DIST = \
 	parser/lexyacc-prefix.awk \
+	parser/common-output-to-C.awk \
 	parser/yacc-output-to-C.awk \
 	parser/bison-output-to-C.awk \
+	parser/common-union-type.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \

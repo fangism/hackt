@@ -35,7 +35,19 @@ void yyerror(const char*);
 	* Explain the global vs. local variable hackery: yacc vs. bison.
 
 	* We actually bother to deallocate tokens on the parser symbol
-	stack before exit(1)-ing.  Just showing off the power of my hacks.  
+	  stack before exit(1)-ing.  Just showing off the power of my hacks.  
+
+	TODO (2005-05-01):
+	rewrite {yacc,bison}-union-hack.awk to eliminate returning
+	ART::parser::node* mother pointer type.
+	All we really ever need with node* is de-allocation (delete), 
+	what(ostream&) and where()... NOTHING ELSE.
+	So just add new function tables in the style of yy_union_resolve.
+	Get rid of the original, which returns the mother pointer type.  
+	define: yyunion_what_where(ostream&);
+	Consequence (benefit): eliminate node as mother base class of tokens!
+	Token classes only need to meet the interface requirements.
+
 
 ===============================================================================
 Interface:

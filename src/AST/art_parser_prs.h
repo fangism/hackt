@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.9 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_prs.h,v 1.10 2005/05/04 17:54:11 fang Exp $
  */
 
 #ifndef	__ART_PARSER_PRS_H__
@@ -26,13 +26,22 @@ class body;
 
 //=============================================================================
 /// a single production rule
-class body_item : public node {
+class body_item {
 protected:
 	// no members
 public:
 	body_item();
 
 virtual	~body_item();
+
+virtual	ostream&
+	what(ostream& o) const = 0;
+
+virtual	line_position
+	leftmost(void) const = 0;
+
+virtual	line_position
+	rightmost(void) const = 0;
 
 #if 1
 virtual	never_ptr<const object>
@@ -78,17 +87,16 @@ public:
 class loop : public body_item {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-	const excl_ptr<const char_punctuation_type>	col1;
+//	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>	index;
-	const excl_ptr<const char_punctuation_type>	col2;
+//	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>		bounds;
-	const excl_ptr<const char_punctuation_type>	col3;
+//	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const rule_list>		rules;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
-	loop(const char_punctuation_type* l, const char_punctuation_type* c1,
-		const token_identifier* id, const char_punctuation_type* c2, 
-		const range* b, const char_punctuation_type* c3, 
+	loop(const char_punctuation_type* l,
+		const token_identifier* id, const range* b,
 		const rule_list* rl, const char_punctuation_type* r);
 
 	~loop();

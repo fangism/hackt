@@ -3,6 +3,14 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-04-29:
+	We had a VLSI group meeting on "the big picture of tools."
+	Concern: certain synthesis-class tools will want to 
+	automatically generate or modify definition and instance objects.  
+	How will templates complicate things?
+	Think about the hooks...
+
+//=============================================================================
 2005-04-28:
 	Tackling structure definition layout:
 	Definition-identifiers are really references to

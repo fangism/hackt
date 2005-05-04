@@ -2,13 +2,13 @@
 
 namespace W {
 	namespace X {
-		namespace B { };
-	};
-	namespace Y { };
+		namespace B { }
+	}
+	namespace Y { }
 	namespace Z {
 		namespace A {
 			open Z;
-		};
-	};
-};
+		}
+	}
+}
 

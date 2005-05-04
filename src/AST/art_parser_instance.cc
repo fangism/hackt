@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.21 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_instance.cc,v 1.22 2005/05/04 17:54:11 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -17,6 +17,7 @@
 #include <iostream>
 
 #include "art_parser_instance.h"
+#include "art_parser_expr.h"		// for index_expr
 #include "art_parser_expr_list.h"
 #include "art_parser_range_list.h"
 #include "art_parser_token_string.h"
@@ -63,6 +64,10 @@ SPECIALIZE_UTIL_WHAT(ART::parser::guarded_definition_body,
 	"(guarded-def-body)")
 SPECIALIZE_UTIL_WHAT(ART::parser::conditional_instantiation, 
 	"(conditional-instance)")
+SPECIALIZE_UTIL_WHAT(ART::parser::type_completion_statement, 
+	"(type-completion)")
+SPECIALIZE_UTIL_WHAT(ART::parser::type_completion_connection_statement, 
+	"(type-completion-connection)")
 }
 
 //=============================================================================
@@ -182,7 +187,7 @@ if (size() > 0) {		// non-empty
 		// forbid object writing if there are any errors.  
 		if (!exass) {
 			cerr << "HALT: at least one error in the "
-				"assignment list.  " << where() << endl;
+				"assignment list.  " << where(*this) << endl;
 			THROW_EXIT;
 		} else {
 			excl_ptr<const param_expression_assignment>
@@ -198,7 +203,7 @@ if (size() > 0) {		// non-empty
 		// also type-checks connections
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "
-				<< where() << endl;
+				<< where(*this) << endl;
 			THROW_EXIT;
 		} else {
 			excl_ptr<const instance_reference_connection>
@@ -332,7 +337,7 @@ instance_base::check_build(context& c) const {
 	const never_ptr<const instance_collection_base>
 		inst(c.add_instance(*id));	// check return value?
 	if (!inst) {
-		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
 	}
 	// need current_instance?  no, not using as reference.
@@ -384,7 +389,7 @@ instance_array::check_build(context& c) const {
 		// expect constructed (sparse) range_list on object stack
 		if (!o) {
 			cerr << "ERROR in dimensions!  " << 
-				ranges->where() << endl;
+				where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<object_list>
@@ -395,7 +400,7 @@ instance_array::check_build(context& c) const {
 			d(ol->make_sparse_range_list());
 		if (!d) {
 			cerr << "ERROR in building sparse range list!  "
-				<< ranges->where() << endl;
+				<< where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const never_ptr<const instance_collection_base>
@@ -422,15 +427,13 @@ instance_id_list::~instance_id_list() { }
 	identifiers to instantiation.  
 	\param t the base type (no array).  
 	\param i the identifier list (may contain arrays).
-	\param s the terminating semicolon.  
  */
 CONSTRUCTOR_INLINE
 instance_declaration::instance_declaration(const concrete_type_ref* t, 
-	const instance_id_list* i, const char_punctuation_type* s) :
+		const instance_id_list* i) :
 		instance_management(),
-		type(t), ids(i), semi(s) {
+		type(t), ids(i) {
 	NEVER_NULL(type);
-	NEVER_NULL(ids);
 }
 
 DESTRUCTOR_INLINE
@@ -446,7 +449,7 @@ instance_declaration::leftmost(void) const {
 
 line_position
 instance_declaration::rightmost(void) const {
-	return semi->rightmost();
+	return ids->rightmost();
 }
 
 never_ptr<const object>
@@ -463,7 +466,7 @@ instance_declaration::check_build(context& c) const {
 		ids->check_build(c);		// return value?
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "
-			<< type->where() << endl;
+			<< where(*type) << endl;
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
@@ -507,7 +510,7 @@ instance_connection::check_build(context& c) const {
 		o(instance_base::check_build(c));
 	if (!o) {
 		// instance_base already prints error message...
-//		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+//		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		THROW_EXIT;
 		return return_type(NULL);
 	}
@@ -525,7 +528,7 @@ instance_connection::check_build(context& c) const {
 	obj = c.pop_top_object_stack();
 	if (!obj) {
 		cerr << "ERROR in object_list produced at "
-			<< actuals_base::where() << endl;
+			<< where(*actuals) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
@@ -536,7 +539,7 @@ instance_connection::check_build(context& c) const {
 		port_con = obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
-			<< where() << endl;
+			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
@@ -552,9 +555,8 @@ instance_connection::check_build(context& c) const {
 // class connection_statement method definitions
 
 CONSTRUCTOR_INLINE
-connection_statement::connection_statement(const expr* l, const expr_list* a, 
-		const char_punctuation_type* s) :
-		actuals_base(a), lvalue(l), semi(s) {
+connection_statement::connection_statement(const expr* l, const expr_list* a) :
+		actuals_base(a), lvalue(l) {
 	NEVER_NULL(lvalue);
 }
 
@@ -571,8 +573,7 @@ connection_statement::leftmost(void) const {
 
 line_position
 connection_statement::rightmost(void) const {
-	if (semi) return semi->rightmost();
-	else return actuals->rightmost();
+	return actuals->rightmost();
 }
 
 /**
@@ -586,7 +587,7 @@ connection_statement::check_build(context& c) const {
 	count_ptr<const object> o(c.pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
-			"connection_statement at " << lvalue->where() << endl;
+			"connection_statement at " << where(*lvalue) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const simple_instance_reference>
@@ -598,7 +599,7 @@ connection_statement::check_build(context& c) const {
 	o = c.pop_top_object_stack();
 	if (!o) {
 		cerr << "ERROR in object_list produced at "
-			<< actuals_base::where() << endl;
+			<< where(*actuals) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
@@ -609,7 +610,7 @@ connection_statement::check_build(context& c) const {
 		port_con = obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
-			<< where() << endl;
+			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
@@ -699,15 +700,12 @@ instance_alias::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 loop_instantiation::loop_instantiation(const char_punctuation_type* l,
-		const char_punctuation_type* d, 
-		const token_identifier* i, const char_punctuation_type* c1, 
-		const range* g, const char_punctuation_type* c2, 
+		const token_identifier* i, const range* g,
 		const definition_body* b, const char_punctuation_type* r) :
 		instance_management(),
-		lp(l), delim(d), index(i), colon1(c1), 
-		rng(g), colon2(c2), body(b), rp(r) {
-	NEVER_NULL(lp); NEVER_NULL(delim); NEVER_NULL(index);
-	NEVER_NULL(colon); NEVER_NULL(rng); NEVER_NULL(body); NEVER_NULL(lp);
+		lp(l), index(i), rng(g), body(b), rp(r) {
+	NEVER_NULL(lp); NEVER_NULL(index);
+	NEVER_NULL(rng); NEVER_NULL(body); NEVER_NULL(lp);
 }
 
 DESTRUCTOR_INLINE
@@ -718,16 +716,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_instantiation)
 
 line_position
 loop_instantiation::leftmost(void) const {
-	if (lp) return lp->leftmost();
-	else return delim->leftmost();
+	return lp->leftmost();
 }
 
 line_position
 loop_instantiation::rightmost(void) const {
-	if (rp) return rp->rightmost();
-	else if (body) return body->rightmost();
-	else if (colon2) return colon2->rightmost();
-	else return rng->rightmost();
+	return rp->rightmost();
 }
 
 never_ptr<const object>
@@ -810,6 +804,71 @@ conditional_instantiation::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 #endif
+
+//=============================================================================
+// class type_completion_statement method definitions
+
+type_completion_statement::type_completion_statement(const index_expr* ir, 
+		const expr_list* ta) : inst_ref(ir), args(ta) {
+	NEVER_NULL(inst_ref);
+	NEVER_NULL(args);
+}
+
+type_completion_statement::~type_completion_statement() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(type_completion_statement)
+
+line_position
+type_completion_statement::leftmost(void) const {
+	return inst_ref->leftmost();
+}
+
+line_position
+type_completion_statement::rightmost(void) const {
+	return args->rightmost();
+}
+
+never_ptr<const object>
+type_completion_statement::check_build(context& c) const {
+	cerr << "FANG, write type_completion_statement::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+//=============================================================================
+// class type_completion_connection_statement method definitions
+
+type_completion_connection_statement::type_completion_connection_statement(
+		const index_expr* ir, const expr_list* ta, const expr_list* p) :
+		type_completion_statement(ir, ta), 
+		actuals_base(p) {
+}
+
+type_completion_connection_statement::~type_completion_connection_statement() {
+}
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(type_completion_connection_statement)
+
+line_position
+type_completion_connection_statement::leftmost(void) const {
+	return type_completion_statement::leftmost();
+}
+
+line_position
+type_completion_connection_statement::rightmost(void) const {
+	return actuals_base::rightmost();
+}
+
+never_ptr<const object>
+type_completion_connection_statement::check_build(context& c) const {
+	cerr << "FANG, write type_completion_connection_statement::check_build()!" << endl;
+	return never_ptr<const object>(NULL);
+}
+
+//=============================================================================
+// explicit template class instantiations
+
+template class node_list<const instance_base>;
+template class node_list<const guarded_definition_body>;
 
 //=============================================================================
 }	// end namespace parser

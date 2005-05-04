@@ -14,5 +14,5 @@ namespace fang {
 
 	defproc foo(my_node a, b, c);	// actually equivalent!
 
-};
+}
 

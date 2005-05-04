@@ -2,12 +2,12 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300650	module__	0	0	32
-	2	 0x3300170	namespc_	0	32	60
-	3	 0x3300670	enumdefn	0	60	109
-	4	 0x33006c4	enumcoll	0	109	149
-	5	 0x3804800	datainst	0	149	169
-	6	 0x3300720	datatprf	0	169	185
+	1	 0x3100ee0	module__	0	0	32
+	2	 0x3100144	namespc_	0	32	60
+	3	 0x3100f00	enumdefn	0	60	113
+	4	 0x3100f64	enumcoll	0	113	153
+	5	 0x3100fc0	datainst	0	153	173
+	6	 0x3100fe0	datatprf	0	173	189
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

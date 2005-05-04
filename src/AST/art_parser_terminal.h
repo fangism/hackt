@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_terminal.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.3 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_terminal.h,v 1.4 2005/05/04 17:54:11 fang Exp $
  */
 
 #ifndef __ART_PARSER_TERMINAL_H__
@@ -26,19 +26,29 @@ namespace parser {
 //=============================================================================
 /**
 	Abstract base class for terminal tokens, mainly to be used by lexer.  
+
+	Rule regarding g++ emission of vtables:
+	"If the class declares any non-inline, non-pure virtual functions, 
+	the first one is chosen as the "key method" for the class, 
+	and the vtable is only emitted in the translation unit where 
+	the key method is defined."
+	This bogus method is defined in "art_parser_token.cc".
  */
-class terminal : virtual public node {
+class terminal {
 protected:
 /// The position in the file where token was found.  (pos.off is unused)
 	line_position	pos;
 // file name will be kept separate?
 protected:
 ///	base constructor always records the current position of the token
-	terminal() : node(), pos(current) { }
+	terminal() : pos(current) { }
 
 public:
 ///	standard virtual destructor
 virtual	~terminal() { }
+
+// so the virtual table will be emitted in the module where this is defined.
+virtual	void bogus(void) const;
 
 public:
 virtual	int

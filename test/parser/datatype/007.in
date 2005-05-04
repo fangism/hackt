@@ -2,11 +2,11 @@
 
 namespace bar {
 	int foo;
-};
+}
 
 int foo;			// is ok
 
 namespace ick {
 	int foo;
-};
+}
 

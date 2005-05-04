@@ -2,7 +2,7 @@
 
 namespace J {
 
-};
+}
 
 open J as K;
 
@@ -10,9 +10,9 @@ open K as L;
 
 // fine up to here
 
-namespace J { };	// re-open and close
+namespace J { }		// re-open and close
 
 namespace L {		// BAD, name already as an alias
 
-};
+}
 

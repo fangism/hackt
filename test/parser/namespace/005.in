@@ -4,6 +4,6 @@ namespace yo {
 	namespace yo {
 		namespace yo {
 			int whazzup;
-		};
-	};
-};
+		}
+	}
+}

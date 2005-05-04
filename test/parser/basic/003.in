@@ -2,5 +2,5 @@
 
 namespace rajit {
 int parser;
-};
+}
 

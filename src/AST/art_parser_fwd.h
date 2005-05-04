@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.4 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_fwd.h,v 1.5 2005/05/04 17:54:10 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -14,7 +14,6 @@ namespace parser {
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_base.h"
-class node;
 class expr;
 class terminal;
 class token_char;
@@ -28,6 +27,7 @@ template <class T>
 class node_list;			// defined in "art_parser_node_list.h"
 
 class expr_list;
+class template_argument_list_pair;
 class root_item;
 class root_body;
 class qualified_id;
@@ -47,7 +47,7 @@ class language_body;
 class namespace_body;
 class using_namespace;
 class instance_management;
-class template_argument_list;
+// class template_argument_list;
 class concrete_type_ref;
 
 //-----------------------------------------------------------------------------
@@ -72,7 +72,6 @@ class typedef_alias;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_expr.h"
-class paren_expr;
 class id_expr;
 class range;
 class range_list;
@@ -104,6 +103,7 @@ class template_formal_id;
 class template_formal_id_list;
 class template_formal_decl;
 class template_formal_decl_list;
+struct template_formal_decl_list_pair;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_instance.h"
@@ -123,6 +123,8 @@ class loop_instantiation;
 class guarded_definition_body;
 class guarded_definition_body_list;
 class conditional_instantiation;
+class type_completion_statement;
+class type_completion_connection_statement;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_token.h"

@@ -1,0 +1,13 @@
+// should fail: no empty template param lists
+
+template <>
+defproc foo() { }
+
+/**
+template <>
+	by itself is not allowed.  
+
+Parser will complain about expecting '<' because the only case where
+an <> is allowed is when a <relaxed formal> list follows immediately.  
+**/
+

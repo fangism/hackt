@@ -1,7 +1,7 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(node_list): (instance-decl) ... [3:1..18]
+0	(node_list): (instance-decl) ... [3:1..16]
 22	keyword: namespace [5:1..9]
 9	identifier: more_arrays [5:11..21]
 94	{ [5:23]

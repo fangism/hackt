@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-05-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-28-merged-template-01-09:
+	  Merged revisions from -template-01 branch.  
+	  Summary: added front-end language support for strict+relaxed
+		template parameters.  
+	  	Re-worked parser and AST (and scripts), eliminating
+			need for ART::parser:node.  
+		TODO: implement strict and relaxed template argument checks.  
+	  Will return to this branch as -template-02 in the near future.  
+	  Some of the revisions of this branch just had to be merged to trunk.
+
+
+2005-05-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-04:
+	  Added more latex-related conditionals to configure.in.  
+
+
 2005-04-28	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27:

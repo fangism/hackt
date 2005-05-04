@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.4 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.5 2005/05/04 17:54:10 fang Exp $
  */
 
 #ifndef __ART_PARSER_DEFINITION_ITEM_H__
@@ -18,9 +18,9 @@ namespace parser {
 	All definition body items are root_item.
 	Except language_body...
  */
-class def_body_item : virtual public node {
+class def_body_item {
 public:
-	def_body_item() : node() { }
+	def_body_item() { }
 
 virtual	~def_body_item() { }
 
