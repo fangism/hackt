@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.16.4.2 2005/04/30 21:27:25 fang Exp $
+	$Id: art_parser_formal.cc,v 1.16.4.3 2005/05/04 05:06:30 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FORMAL_CC__
@@ -63,7 +63,10 @@ USING_STACKTRACE
 
 data_param_id::data_param_id(const token_identifier* i, 
 		const dense_range_list* d) :
-		node(), id(i), dim(d) {
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		id(i), dim(d) {
 	NEVER_NULL(id);
 	// dim is optional
 }
@@ -104,7 +107,10 @@ data_param_id_list::~data_param_id_list() { }
 
 data_param_decl::data_param_decl(const concrete_type_ref* t, 
 		const data_param_id_list* il) :
-		node(), type(t), ids(il) {
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		type(t), ids(il) {
 	NEVER_NULL(type);
 	NEVER_NULL(ids);
 }
@@ -143,8 +149,11 @@ data_param_decl_list::~data_param_decl_list() { }
 
 CONSTRUCTOR_INLINE
 port_formal_id::port_formal_id(const token_identifier* n,
-		const dense_range_list* d)
-		: node(), name(n), dim(d) {
+		const dense_range_list* d) :
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		name(n), dim(d) {
 	NEVER_NULL(name);
 	// dim may be NULL
 }
@@ -192,7 +201,7 @@ port_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
-				dim->where() << endl;
+				where(*dim) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
@@ -220,7 +229,10 @@ port_formal_id_list::~port_formal_id_list() { }
 CONSTRUCTOR_INLINE
 port_formal_decl::port_formal_decl(const concrete_type_ref* t, 
 		const port_formal_id_list* i) : 
-		node(), type(t), ids(i) {
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
@@ -263,7 +275,7 @@ port_formal_decl::check_build(context& c) const {
 		// error catching?
 	} else {
 		cerr << "ERROR with concrete-type in port formal decl. at "
-			<< type->where() << endl;
+			<< where(*type) << endl;
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -296,7 +308,10 @@ CONSTRUCTOR_INLINE
 template_formal_id::template_formal_id(const token_identifier* n, 
 		const dense_range_list* d, const char_punctuation_type* e, 
 		const expr* v) : 
-		node(), name(n), dim(d), eq(e), dflt(v) {
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		name(n), dim(d), eq(e), dflt(v) {
 	NEVER_NULL(name);
 	// dim may be NULL
 	if (eq) NEVER_NULL(dflt);
@@ -352,7 +367,7 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in default value expression " <<
-				dflt->where() << endl;
+				where(*dflt) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const param_expr>
@@ -367,7 +382,7 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
 			cerr << "ERROR in array dimensions " <<
-				dim->where() << endl;
+				where(*dim) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<const range_expr_list>
@@ -395,7 +410,10 @@ CONSTRUCTOR_INLINE
 template_formal_decl::template_formal_decl(
 		const token_paramtype* t, 	// why not concrete_type_ref?
 		const template_formal_id_list* i) :
-		node(), type(t), ids(i) {
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		type(t), ids(i) {
 	NEVER_NULL(type); NEVER_NULL(ids);
 }
 
@@ -429,7 +447,7 @@ template_formal_decl::check_build(context& c) const {
 		def(c.get_current_definition_reference());
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
-			type->where() << endl;
+			where(*type) << endl;
 		THROW_EXIT;
 	}
 	c.set_current_fundamental_type(def->make_fundamental_type_reference());
@@ -512,6 +530,16 @@ template_formal_decl_list_pair::check_build(context& c) const {
 		return ret;
 	}
 }
+
+//=============================================================================
+// explicit class template instantiations
+
+template class node_list<const data_param_id>;
+template class node_list<const data_param_decl>;
+template class node_list<const port_formal_id>;
+template class node_list<const port_formal_decl>;
+template class node_list<const template_formal_id>;
+template class node_list<const template_formal_decl>;
 
 //=============================================================================
 }	// end namespace parser

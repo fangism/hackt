@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.27.6.2 2005/05/01 20:32:52 fang Exp $
+ 	$Id: art_context.cc,v 1.27.6.3 2005/05/04 05:06:32 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -131,7 +131,7 @@ context::open_namespace(const token_identifier& id) {
 	} else {
 		// leave current_namespace as it is
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -166,7 +166,7 @@ context::using_namespace(const qualified_id& id) {
 		current_namespace->add_using_directive(id);
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -183,7 +183,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 		ret(current_namespace->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -214,7 +214,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 		type_error_count++;
 		// additional error message isn't really necessary...
 //		cerr << endl << "ERROR in context::add_declaration().  ";
-//		cerr << d->where() << endl;	// caller will do
+//		cerr << where(*d) << endl;	// caller will do
 		// For now, we intentionally delete the bad definition, 
 		// though later, it may be useful for precise error messages.
 		INVARIANT(d);
@@ -247,7 +247,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	if (ed) {
 		if (ed->is_defined()) {
 			cerr << ename << " is already defined!  attempted "
-				"redefinition at " << ename.where() << endl;
+				"redefinition at " << where(ename) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -257,7 +257,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << ename.where() << endl;
+		cerr << where(ename) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -283,7 +283,7 @@ context::add_enum_member(const token_identifier& em) {
 		return good_bool(true);
 	} else {
 		cerr << "enum " << ed->get_name() << " already has a member "
-			"named " << em << ".  ERROR! " << em.where() << endl;
+			"named " << em << ".  ERROR! " << where(em) << endl;
 		type_error_count++;
 		THROW_EXIT;
 		return good_bool(false);
@@ -319,7 +319,7 @@ context::open_process_definition(const token_identifier& pname) {
 	if (pd) {
 		if (pd->is_defined()) {
 			cerr << pname << " is already defined!  attempted "
-				"redefinition at " << pname.where() << endl;
+				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -330,7 +330,7 @@ context::open_process_definition(const token_identifier& pname) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << pname.where() << endl;
+		cerr << where(pname) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -765,7 +765,7 @@ context::add_instance(const token_identifier& id,
 	// adds non-const back-reference
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -829,7 +829,7 @@ context::add_template_formal(const token_identifier& id,
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -844,7 +844,7 @@ context::add_template_formal(const token_identifier& id,
 		if (!pic->assign_default_value(d).good) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
-				", type/size mismatch!  " << id.where() << endl;
+				", type/size mismatch!  " << where(id) << endl;
 			type_error_count++;
 			THROW_EXIT;
 		}
@@ -898,7 +898,7 @@ context::add_port_formal(const token_identifier& id,
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}

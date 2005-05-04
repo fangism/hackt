@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_root.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root.h,v 1.4 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_root.h,v 1.4.12.1 2005/05/04 05:06:31 fang Exp $
  */
 
 #ifndef __ART_PARSER_ROOT_H__
@@ -18,9 +18,17 @@ namespace parser {
 	in namespaces.  
 	Assertion: all root items are nonterminals.  
  */
-class root_item : virtual public node {
+class root_item
+#if USE_MOTHER_NODE
+	: virtual public node
+#endif
+{
 public:
+#if USE_MOTHER_NODE
 	root_item() : node() { }
+#else
+	root_item() { }
+#endif
 
 virtual	~root_item() { }
 

@@ -2,7 +2,7 @@
 	\file "art_parser_token_string.h"
 	Base set of classes for the ART parser.  
 	These classes are implemented in "art_parser_token.cc"
-	$Id: art_parser_token_string.h,v 1.2 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_token_string.h,v 1.2.4.1 2005/05/04 05:06:32 fang Exp $
  */
 
 #ifndef __ART_PARSER_TOKEN_STRING_H__
@@ -30,10 +30,18 @@ class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
 	explicit
-	token_string(const char* s) : node(), string(s), terminal() { }
+	token_string(const char* s) : 
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		string(s), terminal() { }
 
 	/// default copy-constructor
-	token_string(const token_string& s) : node(), string(s), terminal() { }
+	token_string(const token_string& s) : 
+#if USE_MOTHER_NODE
+		node(),
+#endif
+		string(s), terminal() { }
 
 virtual ~token_string() { }
 
@@ -59,10 +67,17 @@ class token_identifier : public token_string, public expr {
 	typedef	token_identifier	this_type;
 public:
 	explicit
-	token_identifier(const char* s) : node(), token_string(s), expr() { }
+	token_identifier(const char* s) : 
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		token_string(s), expr() { }
 
 	token_identifier(const token_identifier& i) :
-		node(), token_string(i), expr() { }
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		token_string(i), expr() { }
 
 	~token_identifier() { }
 

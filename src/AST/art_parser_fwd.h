@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.4.4.3 2005/05/03 03:35:15 fang Exp $
+	$Id: art_parser_fwd.h,v 1.4.4.4 2005/05/04 05:06:30 fang Exp $
  */
 
 #ifndef	__ART_PARSER_FWD_H__
@@ -9,12 +9,16 @@
 
 #include "art_parser_delim.h"
 
+#define	USE_MOTHER_NODE		0
+
 namespace ART {
 namespace parser {
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_base.h"
+#if USE_MOTHER_NODE
 class node;
+#endif
 class expr;
 class terminal;
 class token_char;

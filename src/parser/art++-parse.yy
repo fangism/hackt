@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.16.4.4 2005/05/04 02:47:55 fang Exp $
+	$Id: art++-parse.yy,v 1.16.4.5 2005/05/04 05:06:32 fang Exp $
  */
 
 %{
@@ -171,7 +171,7 @@ extern const char* const yyrule[];
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
  */
-	ART::parser::node*	n;
+/*	ART::parser::node*	n;		*/
 
 /***
 	It is not safe to refer to the node* n member of the union
@@ -345,15 +345,10 @@ static void yyerror(const char* msg);	// ancient compiler rejects
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
  */
-#if 0
-extern	node* yy_union_resolve(const YYSTYPE& u, const short i, const short j);
-extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
-#else
 extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
 extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
 extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
 extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
-#endif
 
 static
 void
@@ -1990,31 +1985,16 @@ yyfreestacks(const short* yyss, const short* yyssp,
 		const YYSTYPE yylval) {
 	const short* s;
 	const YYSTYPE* v;
-#if 0
-	node* resolved_node = NULL;
-#endif
 	s=yyss+1;
 	v=yyvs+1;
 	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
 		if (v) {
-#if 0
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				delete resolved_node;
-#else
 			yy_union_resolve_delete(*v, *(s-1), *s);
-#endif
 		}
 	}
 	if (!at_eof()) {
 		// free the last token (if not EOF)
-#if 0
-		resolved_node = yy_union_lookup(yylval, yychar);
-		if (resolved_node)
-			delete resolved_node;
-#else
 		yy_union_lookup_delete(yylval, yychar);
-#endif
 	}
 }
 
@@ -2070,7 +2050,6 @@ static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	const short* s;
 	const YYSTYPE* v;
-	node* resolved_node = NULL;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
@@ -2096,16 +2075,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		// from the previous state
 		/* assert(v); can have NULL on stack? yes. */
 		if (v) {
-#if 0
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				resolved_node->what(cerr << '\t') << " "
-					<< resolved_node->where();
-			else
-				cerr << "\t(null) ";
-#else
 			yy_union_resolve_dump(*v, *(s-1), *s, cerr << '\t');
-#endif
 		} else {
 			cerr << "\t(null) ";
 		}
@@ -2113,23 +2083,14 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	}
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
-//	assert(resolved_node);
 //	NULL check not necessarily valid if last token normally returned NULL
 	if (at_eof()) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
 //		token type returned.  
-//		can't use: yy_union_resolve(yylval, *(s-1), *s);
-
-#if 0
-		resolved_node = yy_union_lookup(yylval, yychar);
-		assert(resolved_node);
-		(resolved_node->what(cerr << "\t") << " ")
-			<< resolved_node->where();
-#else
+//		can't use: yy_union_resolve_dump(yylval, *(s-1), *s, ...);
 		yy_union_lookup_dump(yylval, yychar, cerr << '\t');
-#endif
 	}
 	cerr << endl;
 

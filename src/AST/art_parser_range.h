@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.2 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_range.h,v 1.2.4.1 2005/05/04 05:06:31 fang Exp $
  */
 
 #ifndef __ART_PARSER_RANGE_H__
@@ -19,7 +19,11 @@ namespace parser {
 	Ranges are considered expressions, and consist of expressions.  
 	Class is final, no subclasses.  
  */
-class range : public node {
+class range
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	const excl_ptr<const expr>	lower;	///< inclusive lower bound
 	const excl_ptr<const string_punctuation_type>	op;	///< range operator token ".."

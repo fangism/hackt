@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.10.4.1 2005/04/29 20:42:45 fang Exp $
+	$Id: art_parser_formal.h,v 1.10.4.2 2005/05/04 05:06:30 fang Exp $
  */
 
 #ifndef __ART_PARSER_FORMAL_H__
@@ -16,7 +16,11 @@ namespace parser {
 /**
 	Class for port data (rather, members) of a user-defined channels.  
  */
-class data_param_id : public node {
+class data_param_id
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 	// should be called data_port_id
 protected:
 	const excl_ptr<const token_identifier>	id;
@@ -61,7 +65,11 @@ public:
 /**
 	Data parameter port declarations, grouped together by type.  
  */
-class data_param_decl : public node {
+class data_param_decl
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	/**
 		The base type of the data ports in this collection.  
@@ -110,7 +118,11 @@ public:
 	Single port formal identifier, 
 	with optional dimension array specification
  */
-class port_formal_id : public node {
+class port_formal_id
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	const excl_ptr<const token_identifier>	name;	///< formal name
 	const excl_ptr<const dense_range_list>	dim;	///< optional dimensions
@@ -150,7 +162,11 @@ public:
 /**
 	Port formal declaration contains a type and identifier list.
  */
-class port_formal_decl : public node {
+class port_formal_decl
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	const excl_ptr<const concrete_type_ref>		type;	///< formal base type
 	const excl_ptr<const port_formal_id_list>	ids;	///< identifier list
@@ -198,7 +214,11 @@ public:
 	with optional dimension array spec.  
 	Now with optional default argument expression.  
  */
-class template_formal_id : public node {
+class template_formal_id
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	const excl_ptr<const token_identifier>	name;	///< formal name
 	const excl_ptr<const dense_range_list>	dim;	///< optional dimensions
@@ -247,7 +267,11 @@ public:
 		Don't forget that its check build already
 		sets current_fundamental_type
  */
-class template_formal_decl : public node {
+class template_formal_decl
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 protected:
 	const excl_ptr<const token_paramtype>	type;	///< formal base type
 		// why not concrete_type_ref?
@@ -295,7 +319,11 @@ public:
 	Pair of template formal lists, the first being for strict parameters, 
 	the second list for relaxed parameters.  
  */
-struct template_formal_decl_list_pair : public node {
+struct template_formal_decl_list_pair
+#if USE_MOTHER_NODE
+	: public node
+#endif
+{
 	const excl_ptr<const template_formal_decl_list>	first;
 	const excl_ptr<const template_formal_decl_list>	second;
 

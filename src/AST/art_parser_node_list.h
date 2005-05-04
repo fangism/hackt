@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.6 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_node_list.h,v 1.6.4.1 2005/05/04 05:06:31 fang Exp $
  */
 
 #ifndef __ART_PARSER_NODE_LIST_H__
@@ -48,7 +48,11 @@ template <class T>
 	Delimiter is only useful for spitting out source.  
  */
 NODE_LIST_TEMPLATE_SIGNATURE
-class node_list : virtual public node {
+class node_list
+#if USE_MOTHER_NODE
+	: virtual public node
+#endif
+{
 	typedef	node_list<T>				this_type;
 protected:
 	// consider using a vector

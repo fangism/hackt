@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.10.4.1 2005/05/03 03:35:14 fang Exp $
+	$Id: art_parser_chp.cc,v 1.10.4.2 2005/05/04 05:06:29 fang Exp $
  */
 
 #ifndef	__ART_PARSER_CHP_CC__
@@ -49,7 +49,11 @@ namespace CHP {
 // class statement method definitions
 
 CONSTRUCTOR_INLINE
-statement::statement() : node() { }
+statement::statement()
+#if USE_MOTHER_NODE
+	: node()
+#endif
+	{ }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
@@ -86,7 +90,10 @@ body::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 guarded_command::guarded_command(const chp_expr* g, const terminal* a,
 		const stmt_list* c) : 
-		node(), guard(g),
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		guard(g),
 		// remember, may be keyword: else   
 		arrow(a), command(c) {
 	NEVER_NULL(guard);

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.18.4.3 2005/05/03 03:35:14 fang Exp $
+	$Id: art_parser_base.cc,v 1.18.4.4 2005/05/04 05:06:28 fang Exp $
  */
 
 #ifndef	__ART_PARSER_BASE_CC__
@@ -81,6 +81,7 @@ const char pound[] = "#";	///< delimiter for node_list template argument
 // eventually token keywords here too? or "art_parser_token.cc"
 
 //=============================================================================
+#if USE_MOTHER_NODE
 // class node method definitions
 
 #if 0
@@ -117,6 +118,7 @@ node::check_build(context& c) const {
 	return c.top_namespace();
 }
 #endif
+#endif	// USE_MOTHER_NODE
 
 //=============================================================================
 // class root_item method definitions
@@ -157,7 +159,10 @@ type_base::~type_base() { }
 	Also deletes expression list argument after transfering list.  
  */
 CONSTRUCTOR_INLINE
-type_id::type_id(const qualified_id* b) : node(),
+type_id::type_id(const qualified_id* b) :
+#if USE_MOTHER_NODE
+		node(),
+#endif
 		base(b) {
 	assert(base);
 }
@@ -531,7 +536,11 @@ namespace_body::check_build(context& c) const {
 //=============================================================================
 // class namespace_id method definitions
 
-namespace_id::namespace_id(qualified_id* i) : node(), qid(i) {
+namespace_id::namespace_id(qualified_id* i) :
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		qid(i) {
 	NEVER_NULL(qid);
 }
 
@@ -649,7 +658,10 @@ if (alias) {
 
 CONSTRUCTOR_INLINE
 concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
-		node(), base(n), temp_spec(t) {
+#if USE_MOTHER_NODE
+		node(), 
+#endif
+		base(n), temp_spec(t) {
 	NEVER_NULL(base);
 }
 
@@ -703,7 +715,7 @@ concrete_type_ref::check_build(context& c) const {
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "
-			"ERROR! " << base->where() << endl;
+			"ERROR! " << where(*base) << endl;
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	}
@@ -727,7 +739,7 @@ concrete_type_ref::check_build(context& c) const {
 		if (!o)	{
 			cerr << "concrete_type_ref: "
 				"bad template args!  ERROR " 
-				<< temp_spec->where() << endl;
+				<< where(*temp_spec) << endl;
 			THROW_EXIT;		// temporary
 			return return_type(NULL);
 		} 
@@ -738,7 +750,7 @@ concrete_type_ref::check_build(context& c) const {
 			tpl = ol->make_param_expr_list();
 		if (!tpl) {
 			cerr << "ERROR building template parameter "
-				"expression list.  " << temp_spec->where()
+				"expression list.  " << where(*temp_spec)
 				<< endl;
 			THROW_EXIT;		// temporary
 		}
@@ -746,7 +758,7 @@ concrete_type_ref::check_build(context& c) const {
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {
 			cerr << "ERROR making complete type reference.  "
-				<< where() << endl;
+				<< where(*this) << endl;
 			THROW_EXIT;
 		}
 		c.set_current_fundamental_type(type_ref);
@@ -757,7 +769,8 @@ concrete_type_ref::check_build(context& c) const {
 		// Now allows default values for unsupplied arguments.  
 		if(!d->check_null_template_argument().good) {
 			cerr << "definition expecting template arguments "
-				"where none were given!  " << where() << endl;
+				"where none were given!  " <<
+				where(*this) << endl;
 			THROW_EXIT;		// temporary
 			return never_ptr<const object>(NULL);
 		} else {
@@ -765,7 +778,7 @@ concrete_type_ref::check_build(context& c) const {
 				type_ref(d->make_fundamental_type_reference());
 			if (!type_ref) {
 				cerr << "ERROR making complete type reference.  "
-					<< where() << endl;
+					<< where(*this) << endl;
 				THROW_EXIT;
 			}
 			c.set_current_fundamental_type(type_ref);
@@ -786,6 +799,12 @@ data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 		parent_type(c) { }
 
 data_type_ref_list::~data_type_ref_list() { }
+
+//=============================================================================
+// explicit class template instantiations
+
+template class node_list<const concrete_type_ref>;
+template class node_list<const root_item>;
 
 //=============================================================================
 }	// end namespace parser

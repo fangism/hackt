@@ -2,7 +2,7 @@
 	\file "art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.18.4.3 2005/05/03 03:35:14 fang Exp $
+	$Id: art_parser_definition.cc,v 1.18.4.4 2005/05/04 05:06:29 fang Exp $
  */
 
 #ifndef	__ART_PARSER_DEFINITION_CC__
@@ -234,7 +234,7 @@ enum_signature::check_build(context& c) const {
 		ret(c.add_declaration(ed));
 	if (!ret) {
 		// error handling?
-		cerr << where() << endl;
+		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
 	return ret;
@@ -497,7 +497,7 @@ process_signature::check_build(context& c) const {
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
-			cerr << temp_spec->where() << endl;
+			cerr << where(*temp_spec) << endl;
 			THROW_EXIT;
 		}
 	}
@@ -518,7 +518,7 @@ process_signature::check_build(context& c) const {
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
 	if (!o) {
-		cerr << where() << endl;
+		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
 	return o;
@@ -602,7 +602,7 @@ process_def::check_build(context& c) const {
 	if (!o) {
 		cerr << "ERROR checking signature for process "
 			<< get_name() << " doesn\'t match that of "
-			"previous declaration!  " << where() << endl;
+			"previous declaration!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 
@@ -702,7 +702,7 @@ typedef_alias::check_build(context& c) const {
 		d(o.is_a<const definition_base>());
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
-			"ERROR!  " << basedef->where() << endl;
+			"ERROR!  " << where(*basedef) << endl;
 		THROW_EXIT;
 	}
 	// need to worry about resetting definition reference?
@@ -723,7 +723,7 @@ if (base->get_temp_spec()) {
 		// will add template_formals to the alias
 		if (!o) {
 			cerr << "ERROR in template formals of typedef!  "
-				<< temp_spec->where() << endl;
+				<< where(*temp_spec) << endl;
 			THROW_EXIT;
 		}
 	}
@@ -738,7 +738,7 @@ if (base->get_temp_spec()) {
 		ftr(c.get_current_fundamental_type());
 	if (!ftr) {
 		cerr << "ERROR resolving concrete type reference in typedef!  "
-			<< base->where() << endl;
+			<< where(*base) << endl;
 		THROW_EXIT;
 	}
 	// must reset because not making instances
@@ -751,7 +751,7 @@ if (base->get_temp_spec()) {
 	// else safe to alias type
 	bool b = tdb->assign_typedef(ftr_ex);
 	if (!b) {
-		cerr << "ERROR assigning typedef!  " << where() << endl;
+		cerr << "ERROR assigning typedef!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 	// let context add the complete alias to the scope
@@ -762,13 +762,13 @@ if (base->get_temp_spec()) {
 	// restriction: temp_spec for this definition must be empty or null.  
 	if (temp_spec) {
 		cerr << "ERROR: pure definition alias cannot have "
-			"a template signature.  " << where() << endl;
+			"a template signature.  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 	// issue warning about this interpretation?
 	const good_bool b(c.alias_definition(d, *id));
 	if (!b.good) {
-		cerr << id->where() << endl;
+		cerr << where(*id) << endl;
 		THROW_EXIT;
 		return never_ptr<const object>(NULL);
 	}
@@ -779,6 +779,8 @@ if (base->get_temp_spec()) {
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
+
+template class node_list<const def_body_item>;
 
 //=============================================================================
 }	// end namespace parser

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type_base.h,v 1.1 2005/02/22 08:15:21 fang Exp $
+	$Id: art_parser_type_base.h,v 1.1.22.1 2005/05/04 05:06:32 fang Exp $
  */
 
 #ifndef __ART_PARSER_TYPE_BASE_H__
@@ -17,9 +17,17 @@ namespace parser {
 	process...)
 	Does not include any template parameters.  
  */
-class type_base : virtual public node {
+class type_base
+#if USE_MOTHER_NODE
+	: virtual public node
+#endif
+{
 public:
+#if USE_MOTHER_NODE
 	type_base() : node() { }
+#else
+	type_base() { }
+#endif
 
 virtual	~type_base() { }
 

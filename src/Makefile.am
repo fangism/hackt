@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.54.4.3 2005/05/03 19:51:08 fang Exp $
+#	$Id: Makefile.am,v 1.54.4.4 2005/05/04 05:06:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -412,7 +412,6 @@ GET_START_TOKEN_ENUM = \
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
 		-v include="art_parser.h art++-parse-prefix.h" \
 		-v namespace=ART::parser \
-		-v type=ART::parser::node \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 

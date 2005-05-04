@@ -2,6 +2,16 @@
 
 2005-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-27-template-01-08:
+	  It is done.  ART::parser::node (and all its evils) have been phased
+	  out, in favor of a cleaner token class heirarchy.  
+	  Not a single test broke!
+	  This revision has commented out the evil, next revision will
+	  clean up.  
+
+
+2005-05-03	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-27-template-01-07:
 	  Auto-generated parser helper code (union) no longer needs to 
 	  return a mother pointer (node*).  

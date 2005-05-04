@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.21.4.1 2005/05/03 03:35:15 fang Exp $
+	$Id: art_parser_instance.cc,v 1.21.4.2 2005/05/04 05:06:31 fang Exp $
  */
 
 #ifndef	__ART_PARSER_INSTANCE_CC__
@@ -187,7 +187,7 @@ if (size() > 0) {		// non-empty
 		// forbid object writing if there are any errors.  
 		if (!exass) {
 			cerr << "HALT: at least one error in the "
-				"assignment list.  " << where() << endl;
+				"assignment list.  " << where(*this) << endl;
 			THROW_EXIT;
 		} else {
 			excl_ptr<const param_expression_assignment>
@@ -203,7 +203,7 @@ if (size() > 0) {		// non-empty
 		// also type-checks connections
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "
-				<< where() << endl;
+				<< where(*this) << endl;
 			THROW_EXIT;
 		} else {
 			excl_ptr<const instance_reference_connection>
@@ -337,7 +337,7 @@ instance_base::check_build(context& c) const {
 	const never_ptr<const instance_collection_base>
 		inst(c.add_instance(*id));	// check return value?
 	if (!inst) {
-		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
 	}
 	// need current_instance?  no, not using as reference.
@@ -389,7 +389,7 @@ instance_array::check_build(context& c) const {
 		// expect constructed (sparse) range_list on object stack
 		if (!o) {
 			cerr << "ERROR in dimensions!  " << 
-				ranges->where() << endl;
+				where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const count_ptr<object_list>
@@ -400,7 +400,7 @@ instance_array::check_build(context& c) const {
 			d(ol->make_sparse_range_list());
 		if (!d) {
 			cerr << "ERROR in building sparse range list!  "
-				<< ranges->where() << endl;
+				<< where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const never_ptr<const instance_collection_base>
@@ -466,7 +466,7 @@ instance_declaration::check_build(context& c) const {
 		ids->check_build(c);		// return value?
 	} else {
 		cerr << "ERROR with concrete-type to instantiate at "
-			<< type->where() << endl;
+			<< where(*type) << endl;
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
@@ -510,7 +510,7 @@ instance_connection::check_build(context& c) const {
 		o(instance_base::check_build(c));
 	if (!o) {
 		// instance_base already prints error message...
-//		cerr << "ERROR with " << *id << " at " << id->where() << endl;
+//		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		THROW_EXIT;
 		return return_type(NULL);
 	}
@@ -528,7 +528,7 @@ instance_connection::check_build(context& c) const {
 	obj = c.pop_top_object_stack();
 	if (!obj) {
 		cerr << "ERROR in object_list produced at "
-			<< actuals_base::where() << endl;
+			<< where(*actuals) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
@@ -539,7 +539,7 @@ instance_connection::check_build(context& c) const {
 		port_con = obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
-			<< where() << endl;
+			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
@@ -587,7 +587,7 @@ connection_statement::check_build(context& c) const {
 	count_ptr<const object> o(c.pop_top_object_stack());
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
-			"connection_statement at " << lvalue->where() << endl;
+			"connection_statement at " << where(*lvalue) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const simple_instance_reference>
@@ -599,7 +599,7 @@ connection_statement::check_build(context& c) const {
 	o = c.pop_top_object_stack();
 	if (!o) {
 		cerr << "ERROR in object_list produced at "
-			<< actuals_base::where() << endl;
+			<< where(*actuals) << endl;
 		THROW_EXIT;
 	}
 	const count_ptr<const object_list>
@@ -610,7 +610,7 @@ connection_statement::check_build(context& c) const {
 		port_con = obj_list->make_port_connection(inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
-			<< where() << endl;
+			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
 		excl_ptr<const instance_reference_connection>
@@ -863,6 +863,12 @@ type_completion_connection_statement::check_build(context& c) const {
 	cerr << "FANG, write type_completion_connection_statement::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+
+//=============================================================================
+// explicit template class instantiations
+
+template class node_list<const instance_base>;
+template class node_list<const guarded_definition_body>;
 
 //=============================================================================
 }	// end namespace parser

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.22 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_token.cc,v 1.22.4.1 2005/05/04 05:06:32 fang Exp $
  */
 
 #ifndef	__ART_PARSER_TOKEN_CC__
@@ -76,6 +76,9 @@ terminal::terminal() : node(), pos(current) {
 DESTRUCTOR_INLINE
 terminal::~terminal() { }
 #endif
+
+void
+terminal::bogus(void) const { }
 
 /// returns the position in file where this node starts
 inline

@@ -1,7 +1,7 @@
 /**
 	\file "art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.21 2005/03/06 22:45:49 fang Exp $
+	$Id: art_parser_base.h,v 1.21.12.1 2005/05/04 05:06:28 fang Exp $
  */
 
 #ifndef __ART_PARSER_BASE_H__
@@ -56,6 +56,7 @@ namespace parser {
 class context;		// defined in "Object/art_context.h"
 
 //=============================================================================
+#if USE_MOTHER_NODE
 /// the abstract base class for parser nodes, universal return type
 /**
 	The mother class.  
@@ -123,6 +124,21 @@ virtual	never_ptr<const object>
 	check_build(context& c) const;
 #endif
 };	// end class node
+#endif	// USE_MOTHER_NODE
+
+//=============================================================================
+
+#define	PURE_VIRTUAL_NODE_METHODS					\
+virtual	ostream& what(ostream& o) const = 0;				\
+virtual	line_position leftmost(void) const = 0;				\
+virtual	line_position rightmost(void) const = 0;
+
+template <class T>
+inline
+line_range
+where(const T& t) {
+	return lexer::line_range(t.leftmost(), t.rightmost());
+}
 
 //=============================================================================
 }	// end namespace parser
