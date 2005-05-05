@@ -1,0 +1,50 @@
+% "chapters/common.tex"
+%	$Id: common.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+
+\chapter{Common Primitives}
+\label{app:common}
+
+This appendix describes the formats of common sub-structures of
+the \hackt\ Object File Format.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Booleans}
+\label{sec:common:bool}
+
+Single boolean values are stored as one byte each.  
+Groups of bools, however may be compacted into the same byte (bit-fields), 
+as long as the reader and writer for a particular set of bools is consistent.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Strings}
+\label{app:common:strings}
+
+The binary format for strings is simply the length of the string (4B), 
+followed by the contents of the string.  
+Null-termination on write is not necessary because the length is known.  
+Upon reconstruction however, 
+the reader will automatically add null-termination.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Pointers}
+\label{app:common:pointers}
+
+All pointers (references to other persistent objects) are translated
+by the POM into an integer (4B), 
+the index of the object in the body section of the object file.  
+The obvious limitation of this is that there's a hard limit of 
+$2^{32}$ manageable objects.  
+Talk to me when you exceed this limit.  
+For the gory details on this subject, please refer to the entire
+``Fang's C++ Utility Belt'' document.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sequences}
+\label{app:common:sequence}
+
+The standard format of any sequence (list, array, etc.)
+is the number of elements (4B), followed by the data for each
+element in sequence.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

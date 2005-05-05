@@ -1,0 +1,27 @@
+% "chapters/root.tex"
+%	$Id: root.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+
+\chapter{The Root Object}
+\label{sec:root}
+
+(The root object is of type \ttt{ART::entity::module}.)
+This chapter describes the format of the root object from which
+all other subordinate objects may be reached.  
+
+The module format is summarized as follows:
+
+\begin{enumerate}
+\item string: an optional module name
+\item pointer: to the global (mother-of-all) namespace.
+	This contains non-sequential data for the design.  
+	Namespaces are described in Chapter~\ref{sec:namespace}.  
+\item bool: whether or not the module is fully unrolled
+	(Is this usable by tools past the front-end?)
+\item sequence of pointers: sequential instance management data, 
+	used primarily by the front-end compile phases.  
+	This is described in Chapter~\ref{sec:sequential}.  
+\end{enumerate}
+
+And that's all there is to it at this level.  
+(Why did I reserve an entire chapter for this?)
+

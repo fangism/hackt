@@ -1,0 +1,44 @@
+% "chapters/namespace.tex"
+%	$Id: namespace.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+
+\chapter{Namespace Format}
+\label{sec:namespace}
+
+This chapter describes the contents of namespace objects.  
+Namespace objects are recursive, they may contain other namespaces, 
+arbitrarily deep.  
+
+Each namespace contains the following data:
+
+\begin{enumerate}
+\item string: name of the namespace
+\item pointer: back-reference to parent namespace
+\item local symbol table to objects belonging to this namespace, 
+	described in Section~\ref{sec:namespace:table}.  
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Symbol Table}
+\label{sec:namespace:table}
+
+The symbol table for each namespace is just a map of names to
+objects (pointers) that belong to the namespace.  
+(The implementation is really irrelevant to the format.)
+Each entry of the symbol table is just a pointer to the 
+subordinate object belonging to the namespace.  
+
+But wait, where are the keys used to map or sort each object?
+The key is stored in each object belonging to the namespace.  
+Upon reconstruction, the deeper objects are reconstructed 
+before their map entry in the parent symbol table is re-established.  
+This eliminates the need to store the same strings twice.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Members}
+\label{sec:namespace:members}
+
+Aside from deeper namespaces, other namespace objects may include
+type definitions and physical instances.  
+Type definitions are described in Chapter~\ref{sec:definition}.
+Physical instances are described in Chapter~\ref{sec:instance}.
+

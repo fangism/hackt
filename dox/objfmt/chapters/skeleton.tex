@@ -1,0 +1,78 @@
+% "chapters/skeleton.tex"
+%	$Id: skeleton.tex,v 1.1 2005/05/05 03:14:32 fang Exp $
+
+\chapter{Skeleton}
+\label{sec:skeleton}
+
+The object file has a header and a body.  
+The header summarizes the objects contained in the body.  
+The header is managed by the POM.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Header}
+\label{sec:skeleton:header}
+
+Proposal: version number.  
+
+The first item in the header is an integer (4B) that declares the
+number of `objects' are contained in the file, which is the number
+of header entries that are listed in the header.  
+(This is the number of objects that are dynamically allocated on the heap
+during the POM's reconstruction phase.)
+
+Most of the remainder of the header contains a sequence of $N$ header entries, 
+one per object.  
+% For the purposes of pointer reconstruction, the header entries
+% are $1$-indexed, i.e. enumerated $1\ldots N$.  
+Each header entry is composed of the following fields:
+
+\begin{enumerate}
+\item (8B) Object type code, currently an 8-byte code uniquely identifying
+	the class or structure type.  
+\item (1B) Sub-type code, further refinement of the type.  
+\item (4B) Offset of the start this object (first byte).
+\item (4B) Offset of the end this object (last byte).
+\end{enumerate}
+
+(Yeah, I know, technically, the object's size is sufficient 
+for reconstruction... detail of implementation.)
+
+The first (0th) object entry corresponds to the null object, described below.  
+The object code for the null-type is 8-bytes of $0$s or null-characters, 
+the sub-type is $0$, and both offsets are also $0$.  
+
+The remaining objects are normal.  
+After the last object entry in the header, 
+there's a hard-coded \ttt{0xFFFF} whose sole purpose is alignment checking.  
+The offset after the alignment marker marks the end of the header
+and the start of the body.  
+The offsets associated with each object entry correspond to the 
+position of each objects binary data \emph{relative to this position}.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Body}
+\label{sec:skeleton:body}
+
+As mentioned before, 
+the first and 0th object in the body is actually a null object.  
+Since its start and end offsets are both $0$, no space is actually
+used to store it --- it doesn't exist.  
+
+The remainder of the body is just binary data segmented according to the
+offsets in the header.  
+After initial object allocation, each object calls its own binary translator
+on its segment of data to reconstruct itself.  
+
+The only other special object is the body is the 1st (real) object.  
+This is the \emph{root object} \index{root object} for the entire file, 
+returned by the POM upon completion of loading.  
+The next chapter describes the format of the root object.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Footer}
+\label{sec:skeleton:footer}
+
+Optional, not yet implemented.  
+May contain checksum, signature, or history of program invocations, etc...
+
+

@@ -1,6 +1,5 @@
 % "objfmt.tex"
-
-%	$Id: objfmt.tex,v 1.1 2005/05/04 19:31:44 fang Exp $
+%	$Id: objfmt.tex,v 1.2 2005/05/05 03:14:30 fang Exp $
 
 \documentclass[12pt]{book}
 
@@ -46,6 +45,7 @@
 \setlength{\textheight}{8.5in}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\hackt}{HACKT}
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\tit}[1]{\textit{#1}}
 \newcommand{\tbf}[1]{\textbf{#1}}
@@ -55,7 +55,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-\title{ART++ Object File Format}
+\title{The HACKT Object File Format}
 \author{David Fang}
 
 \ifpdf\pdfbookmark[0]{Title Page}{title}\fi
@@ -66,13 +66,22 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \input chapters/...
+\input chapters/intro
+\input chapters/skeleton
+\input chapters/root
+\input chapters/namespace
+\input chapters/definition
+\input chapters/instance
+\input chapters/sequential
+
+\appendix
+\input chapters/common
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
 % \maketexdependadd{objfmt.bib}
-% \bibliography{fangutil}
+% \bibliography{objfmt}
 
 \clearpage
 \ifpdf\pdfbookmark[0]{Index}{index}\fi
