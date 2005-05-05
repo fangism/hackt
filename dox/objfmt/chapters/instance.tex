@@ -1,6 +1,76 @@
 % "chapter/instance.tex"
-%	$Id: instance.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+%	$Id: instance.tex,v 1.2 2005/05/05 23:23:18 fang Exp $
 
 \chapter{Physical Instances}
 \label{sec:instance}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Virtual vs. physical instances}
+
+Heirarchical names handled by the front-end correspond to virtual instances.  
+Virtual instances are an indirection to physical instances.  
+Multiple virtual instances may alias to the same physical instance.  
+(Nomenclature: virtual instances are currently called instance aliases
+	in the compiler implementation --- get the names straight!)
+
+Only afer all connections have been unrolled and established are the 
+unique physical instances created.  
+This step of unique instance creation is the final step of the 
+front-end compiler.  
+
+\tbf{Implementation:}
+Concern: this expanded form is only useful to a subset of the tools, 
+such as simulators and analyzers.  
+The expanded form is going to be large, which is undesirable for 
+the tools that don't need it.  
+Consider: The final unique creation phase should be tool-specific, 
+but provide a library function for it.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Instance Collections}
+\label{sec:instance:collection}
+
+Every instance name may refer to either a single (scalar, 0-dimensional)
+virtual instance, or a higher-dimension array (up to 4) of virtual instances.  
+When we refer to instance collections, we also include the case for
+0-dimensional instances.  
+
+The contents of an instance collection is summarized as follows:
+
+\begin{enumerate}
+\item pointer: back-reference to parent namespace
+\item string: name of this instance collection
+\item sequence of indices that are \emph{actually unrolled}
+	during the unique creation phase.  
+\end{enumerate}
+
+Prior to the creation phase, the sequence of indices may be empty.  
+
+In addition, the following subtypes have additional fields stored with 
+the instance collections:
+
+\begin{itemize}
+\item Process: contains an additional process type reference.  
+\item Channel: contains an additional channel type reference.  
+\item Data: contains an additional data type reference.  
+\item int: contains a integer (4B) width parameter
+\item bool: nothing else
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Virtual Instances}
+\label{sec:instance:virtual}
+
+\subsection{Process VI}
+\label{sec:instance:virtual:proc}
+
+\subsection{Channel VI}
+\label{sec:instance:virtual:chan}
+
+\subsection{Data VI}
+\label{sec:instance:virtual:data}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Physical Instances}
+\label{sec:instance:physical}
 

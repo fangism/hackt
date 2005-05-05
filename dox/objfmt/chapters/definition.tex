@@ -1,7 +1,7 @@
 % "chapters/definition.tex"
-%	$Id: definition.tex,v 1.2 2005/05/05 17:59:37 fang Exp $
+%	$Id: definition.tex,v 1.3 2005/05/05 23:23:18 fang Exp $
 
-\chapter{Type Definitions}
+\chapter{Definitions and Types}
 \label{sec:definition}
 
 NOTE: This chapter is very incomplete.  
@@ -11,32 +11,39 @@ formals: a strict parameter list and a relaxed parameter list.
 The template parameter list format is summarized
 in Section~\ref{sec:definition:template}.  
 
-\subsubsection{Data type definitions}
-
+All definitions start with the following data:
 \begin{enumerate}
 \item string: name
 \item pointer: back-reference to parent namespace
 \item Template parameters (Section~\ref{sec:definition:template})
+\end{enumerate}
+
+The sub-types of definitions extend the fields:
+
+\subsubsection{Data type definitions}
+\begin{enumerate}
 \item ...
 \end{enumerate}
 
 \subsubsection{Channel type definitions}
 \begin{enumerate}
-\item string: name
-\item pointer: back-reference to parent namespace
-\item Template parameters
 \item ...
 \end{enumerate}
 
 \subsubsection{Process type definitions}
 \begin{enumerate}
-\item string: name
-\item pointer: back-reference to parent namespace
-\item Template parameters
 \item Sequence of public ports
 \item Symbol table: same as described in Section~\ref{sec:namespace:table}
 \item Sequential instance management for unrolling (internal connections)
 \end{enumerate}
+
+Definitions contain member layout maps, 
+one \emph{per unique tuple} of template arguments.  
+Before type-checking is complete, the list of layout maps will be empty.  
+After unrolling (before expansion), 
+each definition will be populated with layout maps for each 
+unique tuple of parameters that it is invoked with.  
+(Does NOT exhaustively check all possible values --- impossible.)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Template Parameters}
@@ -60,11 +67,15 @@ accessible to the outside.
 
 Typedefs are aliases to defined types.  
 Typedefs may also contain template parameters.  
+Typedefs' symbol tables should contain only template formal parameters
+	and public port parameters, i.e. no additional local symbols.  
 
 \begin{enumerate}
 \item Template parameters
 \item pointer: to base type reference (Section~\ref{sec:definition:typeref})
 \end{enumerate}
+
+Incidentally, typedefs are sub-typed for processes, channels, data-types.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type References}
@@ -76,6 +87,18 @@ Type references contain:
 \item string: name
 \item pointer: to parent namespace
 \item pointer: to a base definition
-\item sequence of template arguments
+\item sequence of template arguments that complete the type
 \end{enumerate}
+
+Incidentally, type references are sub-typed for 
+processes, channels, data-types.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Member Layout Maps}
+\label{sec:definition:layout}
+
+NOTE: Not yet implemented, in progress.  
+
+Each time a definition is used with fully specified parameters, 
+
 

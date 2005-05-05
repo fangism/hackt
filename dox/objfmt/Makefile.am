@@ -1,5 +1,5 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2005/05/05 03:14:30 fang Exp $
+#	$Id: Makefile.am,v 1.3 2005/05/05 23:23:16 fang Exp $
 
 include $(top_srcdir)/dox/mk/Make.latex
 
@@ -20,6 +20,7 @@ EXTRA_DIST = objfmt.tex \
 	chapters/namespace.tex \
 	chapters/definition.tex \
 	chapters/instance.tex \
+	chapters/value.tex \
 	chapters/sequential.tex \
 	chapters/common.tex
 
