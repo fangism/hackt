@@ -1,10 +1,81 @@
 % "chapters/definition.tex"
-%	$Id: definition.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+%	$Id: definition.tex,v 1.2 2005/05/05 17:59:37 fang Exp $
 
 \chapter{Type Definitions}
 \label{sec:definition}
 
 NOTE: This chapter is very incomplete.  
 
+All definitions types contain two (possibly empty) lists of template
+formals: a strict parameter list and a relaxed parameter list.  
+The template parameter list format is summarized
+in Section~\ref{sec:definition:template}.  
 
+\subsubsection{Data type definitions}
+
+\begin{enumerate}
+\item string: name
+\item pointer: back-reference to parent namespace
+\item Template parameters (Section~\ref{sec:definition:template})
+\item ...
+\end{enumerate}
+
+\subsubsection{Channel type definitions}
+\begin{enumerate}
+\item string: name
+\item pointer: back-reference to parent namespace
+\item Template parameters
+\item ...
+\end{enumerate}
+
+\subsubsection{Process type definitions}
+\begin{enumerate}
+\item string: name
+\item pointer: back-reference to parent namespace
+\item Template parameters
+\item Sequence of public ports
+\item Symbol table: same as described in Section~\ref{sec:namespace:table}
+\item Sequential instance management for unrolling (internal connections)
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Template Parameters}
+\label{sec:definition:template}
+
+Template parameters contain two lists of pointers of parameters, 
+that may include formal values, or formal type parameters.  
+(All pointers here are also registered with the symbol table.)  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Process Ports}
+\label{sec:definition:ports}
+
+List of pointers to physical instances (collections) that are publicly
+accessible to the outside.  
+(All pointers here are also registered with the symbol table.)  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Typedefs}
+\label{sec:definition:typedef}
+
+Typedefs are aliases to defined types.  
+Typedefs may also contain template parameters.  
+
+\begin{enumerate}
+\item Template parameters
+\item pointer: to base type reference (Section~\ref{sec:definition:typeref})
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Type References}
+\label{sec:definition:typeref}
+
+Type references contain:
+
+\begin{enumerate}
+\item string: name
+\item pointer: to parent namespace
+\item pointer: to a base definition
+\item sequence of template arguments
+\end{enumerate}
 
