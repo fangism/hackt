@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.9 2005/02/27 22:54:17 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.10 2005/05/06 02:51:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PROC_H__
@@ -17,7 +17,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 /**
-	An actual instantiated instance of an enum.
+	An actual instantiated instance of an process.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
 	Needs to be pool allocated for efficient unique construction. 

@@ -1,19 +1,11 @@
 % "chapters/common.tex"
-%	$Id: common.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+%	$Id: common.tex,v 1.2 2005/05/06 02:51:22 fang Exp $
 
 \chapter{Common Primitives}
 \label{app:common}
 
 This appendix describes the formats of common sub-structures of
 the \hackt\ Object File Format.  
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Booleans}
-\label{sec:common:bool}
-
-Single boolean values are stored as one byte each.  
-Groups of bools, however may be compacted into the same byte (bit-fields), 
-as long as the reader and writer for a particular set of bools is consistent.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Strings}
@@ -47,4 +39,68 @@ is the number of elements (4B), followed by the data for each
 element in sequence.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Expressions}
+\label{app:common:expr}
+
+The storage for all forms of expressions follow straight from the 
+language itself.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Booleans}
+\label{sec:common:expr:pbool}
+
+Single boolean values are stored as one byte each.  
+Groups of bools, however may be compacted into the same byte (bit-fields), 
+as long as the reader and writer for a particular set of bools is consistent.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Integers}
+\label{sec:common:expr:pint}
+
+Integers are stored as 4 bytes each, unless noted otherwise.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Floating-point}
+\label{app:common:expr:float}
+
+Haven't added support for floating-point values yet.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Indices}
+\label{app:common:expr:index}
+
+An index is just a sequence of pointers to integer-expressions.  
+Currently, the size limit is 4, the limit of number of dimensions
+supported by the compiler.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Ranges}
+\label{app:common:expr:range}
+
+A range is a pair of pointers to integer-expressions.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Binary expressions}
+\label{app:common:expr:binary}
+
+All binary expressions are stored as:
+
+\begin{enumerate}
+\item char: representing the operation
+\item pointer to left operand expression
+\item pointer to right operand expression
+\end{enumerate}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Unary expressions}
+\label{app:common:expr:unary}
+
+All unary expressions are stored as:
+
+\begin{enumerate}
+\item char: representing the operation
+\item pointer to operand expression
+\end{enumerate}
+
+
 

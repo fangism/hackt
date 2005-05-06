@@ -2,7 +2,7 @@
 	\file "art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.10 2005/02/27 22:54:17 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.11 2005/05/06 02:51:23 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
@@ -17,7 +17,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 /**
-	An actual instantiated instance of an enum.
+	An actual instantiated instance of a struct.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */

@@ -1,5 +1,5 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2005/05/05 23:23:16 fang Exp $
+#	$Id: Makefile.am,v 1.4 2005/05/06 02:51:21 fang Exp $
 
 include $(top_srcdir)/dox/mk/Make.latex
 
@@ -22,7 +22,8 @@ EXTRA_DIST = objfmt.tex \
 	chapters/instance.tex \
 	chapters/value.tex \
 	chapters/sequential.tex \
-	chapters/common.tex
+	chapters/common.tex \
+	ChangeLog
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir

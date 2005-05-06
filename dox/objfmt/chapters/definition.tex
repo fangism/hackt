@@ -1,5 +1,5 @@
 % "chapters/definition.tex"
-%	$Id: definition.tex,v 1.3 2005/05/05 23:23:18 fang Exp $
+%	$Id: definition.tex,v 1.4 2005/05/06 02:51:22 fang Exp $
 
 \chapter{Definitions and Types}
 \label{sec:definition}
@@ -34,7 +34,8 @@ The sub-types of definitions extend the fields:
 \begin{enumerate}
 \item Sequence of public ports
 \item Symbol table: same as described in Section~\ref{sec:namespace:table}
-\item Sequential instance management for unrolling (internal connections)
+\item Sequential instance management for unrolling (internal connections), 
+	as described in Chapter~\ref{sec:sequential}
 \end{enumerate}
 
 Definitions contain member layout maps, 
@@ -49,17 +50,19 @@ unique tuple of parameters that it is invoked with.
 \section{Template Parameters}
 \label{sec:definition:template}
 
-Template parameters contain two lists of pointers of parameters, 
-that may include formal values, or formal type parameters.  
-(All pointers here are also registered with the symbol table.)  
+Template parameters contain two sequences (lists) of pointers of parameters, 
+that may include formal values, 
+or formal type parameters (not yet implemented).  
+(All formal parameters in these lists are also 
+registered with the local symbol table.)  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Process Ports}
 \label{sec:definition:ports}
 
-List of pointers to physical instances (collections) that are publicly
-accessible to the outside.  
-(All pointers here are also registered with the symbol table.)  
+Ports are implemented as a sequence (list) of pointers to 
+physical instances (collections) that are publicly accessible to the outside.  
+(All referenced instances here are also registered with the symbol table.)  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Typedefs}
@@ -71,6 +74,8 @@ Typedefs' symbol tables should contain only template formal parameters
 	and public port parameters, i.e. no additional local symbols.  
 
 \begin{enumerate}
+\item string: name
+\item pointer: to parent namespace
 \item Template parameters
 \item pointer: to base type reference (Section~\ref{sec:definition:typeref})
 \end{enumerate}
@@ -84,14 +89,15 @@ Incidentally, typedefs are sub-typed for processes, channels, data-types.
 Type references contain:
 
 \begin{enumerate}
-\item string: name
-\item pointer: to parent namespace
 \item pointer: to a base definition
-\item sequence of template arguments that complete the type
+\item pair sequence of template arguments that complete the type
+	(first pair of strict arguments, second pair for relaxed arguments)
 \end{enumerate}
 
 Incidentally, type references are sub-typed for 
 processes, channels, data-types.  
+There is no different in content except that the base definition's
+type is restricted to the respective subtype.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Member Layout Maps}
@@ -99,6 +105,18 @@ processes, channels, data-types.
 
 NOTE: Not yet implemented, in progress.  
 
-Each time a definition is used with fully specified parameters, 
+Each time a template definition is `used' with fully specified parameters 
+(a complete type), it is fully type-checked with those parameter values.  
+If the type-check passes, it creates a layout map, whose purpose is
+to translate member references into data offsets.  
+(Those offsets are used to \emph{address} the 
+appropriate (physical) sub-instance.  
+
+A member layout map entry consists of a string (name of member)
+and an offset (integer).  
+
+(Subtype layout maps by process, channel, data?
+Depends on how physical instances are structured, 
+see Chapter~\ref{sec:instance}.)
 
 

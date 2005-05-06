@@ -1,0 +1,13 @@
+"README"
+
+The subdirectories contain documents of various uses.
+
+latex/ contains the Doxygen-generated code reference manual, 
+	a real tree-killer and only useful for code-hackers.  
+html/ contains the Doxygen-generated web-page for the code manual.
+lang/ contains the ART++ (soon to be called HOORCD) language specification.
+util/ contains documentation for using Fang's C++ Utility Library.
+objfmt/ contains the documentation describing the intermediate object
+	format used by the front-end HACKT compiler, intended as
+	an interface to other developing tools.  
+
