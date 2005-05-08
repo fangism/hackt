@@ -2,7 +2,7 @@
 	\file "art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.2 2005/02/27 22:54:13 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.3 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
@@ -163,16 +163,6 @@ public:
 };	// end class instance_alias_info
 
 //-----------------------------------------------------------------------------
-#if 0
-/**
-	Trying typedef of the alias_base class.  
-	Remember that this contains a pointer to the next alias!
-	Thus the aliases that derive from this are responsible
-	for managing the persistence of the continuation pointers!
- */
-typedef	ring_node_derived<instance_alias_info>
-						instance_alias_base;
-#endif
 
 template <class Tag>
 ostream&
@@ -218,12 +208,8 @@ public:
 		Dimension-specific container type, 
 		should be sub-type of instance_collection_generic_type;
 	 */
-#if 0
-	typedef	typename class_traits<Tag>::instance_array<D>::type
-#else
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_array<D>::type
-#endif
 							container_type;
 
 	typedef	typename class_traits<Tag>::instance_alias_base_type
@@ -273,14 +259,6 @@ public:
 	void
 	dump_alias(ostream& o) const;
 
-#if 0
-	// compare keys
-	bool
-	operator < (const this_type& b) const {
-		return key < b.key;
-	}
-#endif
-
 	/**
 		Use with maplikeset_element requires comparison operator.  
 		Not sure if this is the correct thing to do.  
@@ -291,12 +269,6 @@ public:
 	operator == (const parent_type& p) const {
 		return this->contains(p);
 	}
-
-#if 0
-	friend
-	ostream&
-	operator << <>(ostream&, const instance_alias<D>&);
-#endif
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
@@ -321,12 +293,8 @@ public:
 					instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
-#if 0
-	typedef	typename class_traits<Tag>::instance_array<0>::type
-#else
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_array<0>::type
-#endif
 							container_type;
 public:
 	~instance_alias();

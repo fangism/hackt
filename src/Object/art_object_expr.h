@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.23 2005/03/11 08:47:27 fang Exp $
+	$Id: art_object_expr.h,v 1.24 2005/05/08 20:50:42 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -72,36 +72,18 @@ public:
 	bool
 	must_be_initialized(void) const;
 
-#if 0
-	list<const param_expr&>
-	get_const_ref_list(void) const;
-#else
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
 
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
-#endif
 
 	bool
 	is_static_constant(void) const;
 
 	bool
 	is_loop_independent(void) const;
-#if 0
-private:
-	bool
-	may_be_equivalent_const(const const_param_expr_list& p) const;
 
-	bool
-	may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_const(const const_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-#endif
 	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const;
 public:

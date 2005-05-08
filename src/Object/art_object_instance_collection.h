@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.6 2005/03/11 08:47:29 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.7 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -386,12 +386,8 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
-#if 0
-	typedef	typename class_traits<Tag>::instance_alias<0>::type
-#else
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_alias<0>::type
-#endif
 							instance_type;
 private:
 	instance_type					the_instance;

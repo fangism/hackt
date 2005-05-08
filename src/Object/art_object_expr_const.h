@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.12 2005/03/11 08:47:27 fang Exp $
+	$Id: art_object_expr_const.h,v 1.13 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -135,36 +135,17 @@ public:
 	bool
 	must_be_initialized(void) const;
 
-#if 0
-	list<const param_expr&>
-	get_const_ref_list(void) const;
-#else
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
 
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
-#endif
 
 	bool
 	is_static_constant(void) const { return true; }
 
 	bool
 	is_loop_independent(void) const { return true; }
-#if 0
-private:
-	bool
-	may_be_equivalent_const(const const_param_expr_list& p) const;
-
-	bool
-	may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_const(const const_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-#endif
 
 	excl_ptr<const_param_expr_list>
 	unroll_resolve(const unroll_context&) const;

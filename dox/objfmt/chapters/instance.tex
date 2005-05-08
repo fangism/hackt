@@ -1,5 +1,5 @@
 % "chapter/instance.tex"
-%	$Id: instance.tex,v 1.3 2005/05/06 02:51:22 fang Exp $
+%	$Id: instance.tex,v 1.4 2005/05/08 20:50:41 fang Exp $
 
 \chapter{Instances}
 \label{sec:instance}
@@ -40,7 +40,7 @@ The contents of an instance collection is summarized as follows:
 \begin{enumerate}
 \item pointer: back-reference to parent namespace
 \item string: name of this instance collection
-\item map of virtual instance that are 
+\item map of virtual instances that are 
 	\emph{actually unrolled} during the unique creation phase.  
 	Each individual virtual instance contains
 	the index with which it is associated.
@@ -90,10 +90,12 @@ All virtual instances have the following data in common:
 \begin{enumerate}
 \item multidimensional index used to associate with the collection
 	of which it is a member (only if non-scalar)
-\item pointer: alias connection to the next of its kind.
-	(Connections are maintained as circular linked lists
-	of virtual instances of the same type.  
-	This way, all aliases are reachable from each other.)
+\item pointer: alias connection to the next instance
+	of its kind\footnote{Connections are maintained 
+	as circular linked lists of virtual instances of the same type.  
+	This way, all aliases are reachable from each other.
+	If it is not aliased to another instance yet, 
+	then the pointer refers to this object, a self-reference.}.
 \item pointer: to the unique physical instance 
 	(spawned only after the unique creation phase)
 \item pointer: back-reference to the collection of which this is a member
@@ -130,13 +132,30 @@ be done by default.)
 \section{Instance References}
 \label{sec:instance:reference}
 
-Instance references contain a pointer to an instance collection
-and an optional index expression.  
+Instance references contain the following data:
+
+\begin{enumerate}
+\item integer (4B): an index into the instantiation statement list
+	indicating which statements were in effect (visible) at the
+	point of reference.  (This is for catching errors that cannot
+	be statically resolved.)
+\item pointer to the (subtype-specific) referenced (virtual) instance collection
+\item pointer to list of index pointers, 
+	where the individual index pointers may be 
+	pointers to single integers or integer ranges.  
+\end{enumerate}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Member Instance References}
 \label{sec:instance:reference:member}
 
-Blah, blah, blah...
+Member instance references contain the following data:
+
+\begin{enumerate}
+\item pointer to the enclosing instance reference (generic)
+\item pointer to the (subtype-specific) instance collection 
+	that is a member of the enclosing instance reference.  
+	(Membership must be name-checked.)
+\end{enumerate}
 
 

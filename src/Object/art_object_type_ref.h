@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.21 2005/03/11 08:47:31 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.22 2005/05/08 20:50:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_H__
@@ -26,30 +26,6 @@ using namespace util::memory;	// for experimental pointer classes
 // class fundamental_type_reference declared in "art_object_base.h"
 
 //=============================================================================
-#if 0
-MAY BE OBSOLETE
-/**
-	Class for reference to a collection or array of fundamental types.
-	Or should we allow collective_types to contain collective_types?
-	Depends on whether or not gramma allows both styles of arrays:
-	x[i][j] vs. x[i,j], and whether or not they are equivalent.  
- */
-class collective_type_reference : public type_reference_base {
-protected:
-	// don't own these members
-	never_ptr<const type_reference_base>	base;
-	never_ptr<const array_index_list>		dim;
-public:
-	collective_type_reference(const type_reference_base& b, 
-		never_ptr<const array_index_list> d);
-	~collective_type_reference();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-};	// end class collective_type_reference
-#endif
-
-//-----------------------------------------------------------------------------
 /**
 	Reference to a data-type definition.  
 	Includes optional template parameters.  

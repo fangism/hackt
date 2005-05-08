@@ -1,5 +1,5 @@
 % "chapters/intro.tex"
-%	$Id: intro.tex,v 1.1 2005/05/05 03:14:31 fang Exp $
+%	$Id: intro.tex,v 1.2 2005/05/08 20:50:41 fang Exp $
 
 \chapter{Introduction}
 \label{sec:intro}
@@ -24,6 +24,14 @@ with information handled by other tools.
 With \hackt, we provide a mechanism for passing and storing arbitrary data 
 between tool invocations.  
 
-One of the objectives of the file format is to minimize the amount
+The first objective of establishing this format is to provide
+derivative tools access to all information in the full design hierarchy, 
+enabling manipulation of information in definitions and individual instances.  
+A lesser objective of the file format is to minimize the amount
 of stored data, i.e. eliminate redundantly redundant redundancy.  
+
+To resolve:
+For all structures described in this document, 
+what debug information should be stored (source file, line, offset)?
+This could potentially encumber the object file a lot...
 

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.18 2005/03/04 06:19:56 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.19 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_H__
@@ -71,12 +71,7 @@ virtual	~instance_reference();
 	ostream&
 	what(ostream&) const;
 
-#if 0
-	ostream&
-	dump(ostream&) const;
-#else
 	using parent_type::dump;
-#endif
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;

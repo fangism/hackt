@@ -2,7 +2,7 @@
 	\file "art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.4 2005/03/11 20:50:30 fang Exp $
+	$Id: art_object_classification_details.h,v 1.5 2005/05/08 20:50:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -436,17 +436,6 @@ struct class_traits<pint_tag> {
 	typedef	pint_instance			instance_type;
 	typedef	pint_value_type			value_type;
 
-#if 0
-	typedef	pint_instance_alias_base	instance_alias_base_type;
-
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
-	template <size_t D>
-	struct instance_alias {
-		typedef	entity::instance_alias<tag_type,D>	type;
-	};
-#endif
-
 	typedef	pint_instance_collection	instance_collection_generic_type;
 	typedef	instance_collection_generic_type
 						value_collection_generic_type;
@@ -471,20 +460,14 @@ struct class_traits<pint_tag> {
 	typedef	param_instance_reference	instance_reference_parent_type;
 	typedef	pint_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
-#if 0
-	typedef	pint_member_instance_reference
-						member_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
-						alias_collection_type;
-#else
+
 	typedef	never_ptr<pint_instance>	value_reference_ptr_type;
 	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
 	typedef	pint_expression_assignment	expression_assignment_type;
 	typedef	param_expression_assignment	expression_assignment_parent_type;
 	enum { assignment_chunk_size = 32 };
-#endif
-	// need real type here!
+
 	typedef	void			value_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;
@@ -502,17 +485,6 @@ struct class_traits<pbool_tag> {
 	static const char			value_type_name[];
 	typedef	pbool_instance			instance_type;
 	typedef	pbool_value_type		value_type;
-
-#if 0
-	typedef	pbool_instance_alias_base	instance_alias_base_type;
-
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
-	template <size_t D>
-	struct instance_alias {
-		typedef	entity::instance_alias<tag_type,D>	type;
-	};
-#endif
 
 	typedef	pbool_instance_collection	instance_collection_generic_type;
 	typedef	instance_collection_generic_type
@@ -538,20 +510,14 @@ struct class_traits<pbool_tag> {
 	typedef	param_instance_reference	instance_reference_parent_type;
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
-#if 0
-	typedef	pbool_member_instance_reference
-						member_instance_reference_type;
-	typedef	packed_array_generic<pbool_value_type, instance_alias_base_ptr_type>
-						alias_collection_type;
-#else
+
 	typedef	never_ptr<pbool_instance>	value_reference_ptr_type;
 	typedef	packed_array_generic<pbool_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
 	typedef	pbool_expression_assignment	expression_assignment_type;
 	typedef	param_expression_assignment	expression_assignment_parent_type;
 	enum { assignment_chunk_size = 64 };
-#endif
-	// need real type here!
+
 	typedef	void			value_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.28 2005/03/11 08:47:26 fang Exp $
+	$Id: art_object_definition.h,v 1.29 2005/05/08 20:50:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_H__
@@ -348,12 +348,6 @@ protected:
 public:
 	built_in_datatype_def(never_ptr<const name_space> o, const string& n);
 
-#if 0
-	// special case for int_def built-in definition object
-	built_in_datatype_def(never_ptr<const name_space> o, const string& n, 
-		excl_ptr<param_instance_collection> p);
-#endif
-
 	~built_in_datatype_def();
 
 	ostream&
@@ -393,8 +387,6 @@ public:
 	// intercepted and replaced by data_type_reference::load_object
 	PERSISTENT_METHODS_DECLARATIONS
 	// thus we need only collect and write...
-//	void collect_transient_info(persistent_object_manager& m) const;
-//	void write_object(const persistent_object_manager& m) const;
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);

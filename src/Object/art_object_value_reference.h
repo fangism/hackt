@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.2 2005/03/11 08:47:32 fang Exp $
+	$Id: art_object_value_reference.h,v 1.3 2005/05/08 20:50:44 fang Exp $
  */
 
 #ifndef __ART_OBJECT_VALUE_REFERENCE_H__
@@ -171,11 +171,9 @@ public:
 		}
 	};	// end class assigner
 
-#if 1
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
-#endif
 
 protected:
 	using parent_type::collect_transient_info_base;

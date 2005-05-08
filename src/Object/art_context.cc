@@ -2,7 +2,7 @@
 	\file "art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.28 2005/05/04 17:54:12 fang Exp $
+ 	$Id: art_context.cc,v 1.29 2005/05/08 20:50:41 fang Exp $
  */
 
 #ifndef	__ART_CONTEXT_CC__
@@ -816,15 +816,11 @@ context::add_template_formal(const token_identifier& id,
 	const never_ptr<const instance_collection_base>
 		inst_base(
 			// depends on strict_template_mode
-#if USE_TEMPLATE_FORMALS_MANAGER
 			(strict_template_mode) ?
 			current_prototype->add_strict_template_formal(
 				inst_stmt, id) :
 			current_prototype->add_relaxed_template_formal(
 				inst_stmt, id)
-#else
-			current_prototype->add_template_formal(inst_stmt, id)
-#endif
 			);
 		// same as current_named_scope? perhaps assert check?
 

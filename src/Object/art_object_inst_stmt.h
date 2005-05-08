@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.13 2005/03/11 08:47:28 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.14 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_STMT_H__
@@ -57,10 +57,6 @@ private:
 private:
 	instantiation_statement();
 public:
-#if 0
-	explicit
-	instantiation_statement(const index_collection_item_ptr_type&);
-#endif
 
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i);

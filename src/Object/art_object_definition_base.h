@@ -1,7 +1,7 @@
 /**
 	\file "art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.16 2005/05/04 17:54:12 fang Exp $
+	$Id: art_object_definition_base.h,v 1.17 2005/05/08 20:50:42 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_DEFINITION_BASE_H__
@@ -19,11 +19,7 @@
 #include "memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
-#define	USE_TEMPLATE_FORMALS_MANAGER		1
-
-#if USE_TEMPLATE_FORMALS_MANAGER
 #include "art_object_template_formals_manager.h"
-#endif
 
 namespace ART {
 // forward declarations from outside namespaces
@@ -58,59 +54,19 @@ class definition_base :
 		virtual public persistent, 
 		public object {
 public:
-#if USE_TEMPLATE_FORMALS_MANAGER
 	typedef	template_formals_manager::template_formals_value_type
 					template_formals_value_type;
 	typedef	template_formals_manager::template_formals_map_type
 					template_formals_map_type;
 	typedef	template_formals_manager::template_formals_list_type
 					template_formals_list_type;
-#else
-	/**
-		Table of template formals.  
-		Needs to be ordered for argument checking, 
-		and have fast lookup, thus hashlist.  
-		Remember: template formals are accessible to the rest 
-		of the body and to the port formals as well.  
-		For now, the contained type is datatype_instance_collection
-			which is generalized to include the paramater types
-			pbool and pint, not to be confused with the data 
-			types bool and int.  
-		In the far future, prepare to extend template formals to 
-			include abstract types of processes, channels and 
-			data types in template argument list.  
-			*shudder*
-			It'd be nice to be able to swap instance arguments
-			that preserve specified interfaces...
-		May need hashqlist, for const-queryable hash structure!!!
-	**/
-	typedef	never_ptr<const param_instance_collection>
-					template_formals_value_type;
-	// double-maintenance...
-	typedef	hash_qmap<string, template_formals_value_type>
-					template_formals_map_type;
-
-	/**
-		Using vector instead of list, for constant-time
-		position computation, via iterator distance.  
-	 */
-	typedef	std::vector<template_formals_value_type>
-					template_formals_list_type;
-#endif
 
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
 
 protected:
-#if USE_TEMPLATE_FORMALS_MANAGER
 	template_formals_manager	template_formals;
-#else
-	/** subset of used_id_map, must be coherent with list */
-	template_formals_map_type	template_formals_map;
-	/** subset of used_id_map, must be coherent with map */
-	template_formals_list_type	template_formals_list;
-#endif
 
 	/**
 		Whether or not this definition is complete or only declared.  
@@ -232,7 +188,6 @@ virtual	good_bool
 	TO DO: This function should be pure virtual and belong 
 		to a different interface!
  */
-#if USE_TEMPLATE_FORMALS_MANAGER
 virtual	never_ptr<const instance_collection_base>
 	add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
@@ -242,12 +197,6 @@ virtual	never_ptr<const instance_collection_base>
 	add_relaxed_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
-#else
-virtual	never_ptr<const instance_collection_base>
-	add_template_formal(
-		const never_ptr<instantiation_statement_base> f, 
-		const token_identifier& id);
-#endif
 
 /**
 	Really, only some definitions should have ports...
@@ -259,20 +208,6 @@ virtual	never_ptr<const instance_collection_base>
 #if 0
 virtual	bool
 	exclude_object(const used_id_map_type::value_type& i) const;
-#endif
-
-#if !USE_TEMPLATE_FORMALS_MANAGER
-private:
-	void
-	collect_template_formal_pointers(persistent_object_manager& m) const;
-
-	void
-	write_object_template_formals(const persistent_object_manager& m, 
-		ostream&) const;
-
-	void
-	load_object_template_formals(const persistent_object_manager& m, 
-		istream&);
 #endif
 
 protected:

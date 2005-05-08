@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.8 2005/03/11 08:47:27 fang Exp $
+	$Id: art_object_expr_base.h,v 1.9 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -124,12 +124,6 @@ virtual	bool
 
 virtual	bool
 	must_be_initialized(void) const = 0;
-
-/** return a compatible list for comparison */
-#if 0
-virtual	list<const param_expr&>
-	get_const_ref_list(void) const = 0;
-#endif
 
 virtual	bool
 	may_be_equivalent(const param_expr_list& p) const = 0;
@@ -281,7 +275,6 @@ virtual	bool
  */
 class range_expr_list : public object, public persistent {
 protected:
-//	never_ptr<const instance_collection_base>	owner;
 public:
 	range_expr_list() : object(), persistent() { }
 

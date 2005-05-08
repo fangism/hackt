@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.18 2005/03/11 08:47:30 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.19 2005/05/08 20:50:44 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
@@ -72,18 +72,6 @@ namespace memory {
 //=============================================================================
 namespace ART {
 namespace entity {
-#if 0
-#include "using_ostream.h"
-USING_UTIL_COMPOSE
-using util::dereference;
-using std::mem_fun_ref;
-using util::indent;
-using util::auto_indent;
-USING_STACKTRACE
-using util::write_value;
-using util::read_value;
-using util::persistent_traits;
-#endif
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

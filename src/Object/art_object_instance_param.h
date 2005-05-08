@@ -1,7 +1,7 @@
 /**
 	\file "art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.16 2005/03/11 08:47:30 fang Exp $
+	$Id: art_object_instance_param.h,v 1.17 2005/05/08 20:50:43 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
@@ -246,20 +246,6 @@ public:
 		}
 	}
 
-#if 0
-	// no longer used
-	struct is_valid {
-		/** for unary predication */
-		bool
-		operator () (const pint_instance& pi) const { return pi.valid; }
-
-		/** for validity accumulation */
-		bool
-		operator () (const bool b, const pint_instance& pi) const {
-			return b && pi.valid;
-		}
-	};	// end struct is_valid
-#endif
 };	// end struct pint_instance
 
 bool

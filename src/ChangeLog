@@ -1,11 +1,19 @@
 "ChangeLog"
 
+2005-05-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-33 (main trunk):
+	  Cleaned up conditional code
+	  (should've been committed in -template-01 branch).
+	  Also removed some dusty obsolete code snippets.  
+
+
 2005-05-04	David Fang		<fangism@users.sourceforge.net>
 
-	* ARTXX-00-01-04-main-00-30:
+	* ARTXX-00-01-04-main-00-30 (main trunk):
 	  Updated parser/try_lex_catch.awk to also work with yacc output.  
 
-	* ARTXX-00-01-04-main-00-28-merged-template-01-09:
+	* ARTXX-00-01-04-main-00-28-merged-template-01-09 (main trunk):
 	  Merged -template-01 revisions back to trunk.  
 
 	* ARTXX-00-01-04-main-00-27-template-01-09:
