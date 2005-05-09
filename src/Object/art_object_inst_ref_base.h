@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.8 2005/03/01 04:50:56 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.9 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_BASE_H__
@@ -50,9 +50,6 @@ virtual	ostream&
 
 virtual never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
-
-virtual	string
-	hash_string(void) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -243,6 +240,9 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 	ostream&
+	dump_brief(ostream& o) const;
+
+	ostream&
 	dump(ostream& o) const;
 
 	ostream&
@@ -256,9 +256,6 @@ virtual never_ptr<const instance_collection_base>
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
-
-virtual	string
-	hash_string(void) const;
 
 	// need not be virtual
 	bool

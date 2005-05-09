@@ -2,31 +2,31 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102b60	module__	0	0	28
+	1	 0x3102cf0	module__	0	0	28
 	2	 0x3100144	namespc_	0	28	56
-	3	 0x3102b80	procdefn	0	56	120
-	4	 0x3102c04	dintcoll	1	120	155
-	5	 0x3102c50	datainst	0	155	175
-	6	 0x3102c70	datatprf	0	175	191
-	7	 0x3102c80	datadefn	0	191	227
-	8	 0x3102ce4	dprmlst_	0	227	243
-	9	 0x2496024	cnstpi__	0	243	255
-	10	 0x3102cf4	drnglst_	0	255	271
-	11	 0x3102d14	dynrng__	0	271	287
-	12	 0x2496038	cnstpi__	0	287	299
-	13	 0x3102d38	arithexp	0	299	316
-	14	 0x3102d60	spiref__	0	316	336
-	15	 0x3102d74	pintcoll	0	336	373
-	16	 0x3102dc0	pintinst	0	373	389
-	17	 0x249604c	cnstpi__	0	389	401
-	18	 0x3102dd0	procdefn	0	401	465
-	19	 0x3102e54	pintcoll	0	465	502
-	20	 0x3102ea0	pintinst	0	502	518
-	21	 0x3102eb4	dintcoll	0	518	558
-	22	 0x3102f10	datainst	0	558	578
-	23	 0x3102f30	datatprf	0	578	594
-	24	 0x3102f44	dprmlst_	0	594	610
-	25	 0x3102f70	spiref__	0	610	630
+	3	 0x3102d10	procdefn	0	56	120
+	4	 0x3102d94	dintcoll	1	120	155
+	5	 0x3102de0	datainst	0	155	175
+	6	 0x3102e00	datatprf	0	175	191
+	7	 0x3102e10	datadefn	0	191	227
+	8	 0x3102e74	dprmlst_	0	227	243
+	9	 0x2469024	cnstpi__	0	243	255
+	10	 0x3102e84	drnglst_	0	255	271
+	11	 0x3102ea4	dynrng__	0	271	287
+	12	 0x2469038	cnstpi__	0	287	299
+	13	 0x3102ec8	arithexp	0	299	316
+	14	 0x3102ef0	spiref__	0	316	336
+	15	 0x3102f04	pintcoll	0	336	373
+	16	 0x3102f50	pintinst	0	373	389
+	17	 0x246904c	cnstpi__	0	389	401
+	18	 0x3102f60	procdefn	0	401	465
+	19	 0x3102fe4	pintcoll	0	465	502
+	20	 0x3103030	pintinst	0	502	518
+	21	 0x3103044	dintcoll	0	518	558
+	22	 0x31030a0	datainst	0	558	578
+	23	 0x31030c0	datatprf	0	578	594
+	24	 0x31030d4	dprmlst_	0	594	610
+	25	 0x3103100	spiref__	0	610	630
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -40,11 +40,11 @@ In namespace "", we have: {
       pint<> N
       >
       (
-        int<pint-inst-ref N> ick
+        int<pint-inst-ref ::bar::N> ick
       )
       In definition "bar", we have: {
         N = pint<> N
-        ick = int<pint-inst-ref N> ick
+        ick = int<pint-inst-ref ::bar::N> ick
       }
 
     foo = process-definition (declared) foo<

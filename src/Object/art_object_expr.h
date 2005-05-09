@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.24 2005/05/08 20:50:42 fang Exp $
+	$Id: art_object_expr.h,v 1.25 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_H__
@@ -113,9 +113,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
 
 	using parent_type::begin;
 	using parent_type::end;
@@ -248,10 +245,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -328,10 +325,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -431,10 +428,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -538,10 +535,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -640,10 +637,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -732,9 +729,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;		// unused?
 
 	bool
 	may_be_initialized(void) const {

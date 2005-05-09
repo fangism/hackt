@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102430	module__	0	0	28
+	1	 0x31025c0	module__	0	0	28
 	2	 0x3100144	namespc_	0	28	56
-	3	 0x3102450	procdefn	0	56	132
-	4	 0x31023e4	pboolcol	0	132	162
-	5	 0x31024d0	pboolins	0	162	178
-	6	 0x31024e4	pintcoll	0	178	215
-	7	 0x3102530	pintinst	0	215	231
-	8	 0x3102560	spiref__	0	231	251
-	9	 0x3102574	pintcoll	0	251	288
-	10	 0x31025c0	pintinst	0	288	304
+	3	 0x31025e0	procdefn	0	56	132
+	4	 0x3102574	pboolcol	0	132	162
+	5	 0x3102660	pboolins	0	162	178
+	6	 0x3102674	pintcoll	0	178	215
+	7	 0x31026c0	pintinst	0	215	231
+	8	 0x31026f0	spiref__	0	231	251
+	9	 0x3102704	pintcoll	0	251	288
+	10	 0x3102750	pintinst	0	288	304
 	11	 0x3800c00	piassign	0	304	324
-	12	 0x31025f0	spiref__	0	324	344
-	13	 0x3102600	procdefn	0	344	408
-	14	 0x3102684	pintcoll	0	408	445
-	15	 0x31026d0	pintinst	0	445	461
-	16	 0x3102700	spiref__	0	461	481
-	17	 0x3102714	pintcoll	0	481	518
-	18	 0x3102760	pintinst	0	518	534
+	12	 0x3102780	spiref__	0	324	344
+	13	 0x3102790	procdefn	0	344	408
+	14	 0x3102814	pintcoll	0	408	445
+	15	 0x3102860	pintinst	0	445	461
+	16	 0x3102890	spiref__	0	461	481
+	17	 0x31028a4	pintcoll	0	481	518
+	18	 0x31028f0	pintinst	0	518	534
 	19	 0x3800c10	piassign	0	534	554
-	20	 0x3102790	spiref__	0	554	574
+	20	 0x3102920	spiref__	0	554	574
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -38,7 +38,7 @@ In namespace "", we have: {
       (
       )
       In definition "bar", we have: {
-        J = pint<> J (init = pint-inst-ref K)
+        J = pint<> J (init = pint-inst-ref ::bar::K)
         K = pint<> K
       }
 
@@ -52,7 +52,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
         A = pbool<> A
-        J = pint<> J (init = pint-inst-ref K)
+        J = pint<> J (init = pint-inst-ref ::foo::K)
         K = pint<> K
       }
 

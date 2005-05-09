@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.9 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_expr_base.h,v 1.10 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_BASE_H__
@@ -41,9 +41,6 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
-
-virtual	string
-	hash_string(void) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -165,9 +162,6 @@ virtual	ostream&
 virtual	ostream&
 	dump(ostream& o) const = 0;
 
-virtual	string
-	hash_string(void) const = 0;
-
 virtual size_t
 	dimensions(void) const = 0;
 
@@ -223,9 +217,6 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
-
-virtual	string
-	hash_string(void) const = 0;
 
 /** NOT THE SAME **/
 virtual	size_t
@@ -326,10 +317,10 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
+	dump_brief(ostream& o) const = 0;
 
-virtual	string
-	hash_string(void) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -405,10 +396,10 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
+	dump_brief(ostream& o) const = 0;
 
-virtual	string
-	hash_string(void) const = 0;
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -498,10 +489,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const;		// temporary
-
-virtual	string
-	hash_string(void) const = 0;
+	dump(ostream& o) const = 0;
 
 /**
 	A range is always 0-dimensional, which is not the same

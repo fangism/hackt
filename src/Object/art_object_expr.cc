@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.42 2005/03/11 08:47:26 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.43 2005/05/09 18:49:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_EXPR_CC__
@@ -1033,16 +1033,14 @@ pint_const::~pint_const() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pint_const::dump(ostream& o) const {
-	return o << hash_string();
+pint_const::dump_brief(ostream& o) const {
+	return dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-pint_const::hash_string(void) const {
-	ostringstream o;
-	o << val;
-	return o.str();
+ostream&
+pint_const::dump(ostream& o) const {
+	return o << val;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1189,14 +1187,14 @@ pbool_const::pbool_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pbool_const::dump(ostream& o) const {
-	return o << hash_string();
+pbool_const::dump_brief(ostream& o) const {
+	return dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-pbool_const::hash_string(void) const {
-	return (val) ? "true" : "false";
+ostream&
+pbool_const::dump(ostream& o) const {
+	return o << ((val) ? "true" : "false");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1302,16 +1300,15 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pint_unary_expr::dump(ostream& o) const {
-	// parentheses? check operator precedence
-	return ex->dump(o << op);
+pint_unary_expr::dump_brief(ostream& o) const {
+	return ex->dump_brief(o << op);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-pint_unary_expr::hash_string(void) const {
-//	return op +ex->hash_string();
-	return ex->hash_string() +op;
+ostream&
+pint_unary_expr::dump(ostream& o) const {
+	// parentheses? check operator precedence
+	return ex->dump(o << op);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1482,15 +1479,16 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pbool_unary_expr::dump(ostream& o) const {
+pbool_unary_expr::dump_brief(ostream& o) const {
 	// parentheses?
-	return ex->dump(o << op);
+	return ex->dump_brief(o << op);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-pbool_unary_expr::hash_string(void) const {
-	return ex->hash_string() +op;
+ostream&
+pbool_unary_expr::dump(ostream& o) const {
+	// parentheses?
+	return ex->dump(o << op);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1691,9 +1689,9 @@ arith_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-arith_expr::hash_string(void) const {
-	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
+ostream&
+arith_expr::dump_brief(ostream& o) const {
+	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1963,14 +1961,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-relational_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+relational_expr::dump_brief(ostream& o) const {
+	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-relational_expr::hash_string(void) const {
-	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
+ostream&
+relational_expr::dump(ostream& o) const {
+	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2196,14 +2194,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-logical_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+logical_expr::dump_brief(ostream& o) const {
+	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-logical_expr::hash_string(void) const {
-	return lx->hash_string() +reverse_op_map[op] +rx->hash_string();
+ostream&
+logical_expr::dump(ostream& o) const {
+	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2391,15 +2389,18 @@ pint_range::pint_range(const pint_range& pr) :
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_range)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
-pint_range::dump(ostream& o) const {
-	return o << '[' << hash_string() << ']';
+pint_range::dump_brief(ostream& o) const {
+	return dump(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-pint_range::hash_string(void) const {
-	return lower->hash_string() + ".." +upper->hash_string();
+ostream&
+pint_range::dump(ostream& o) const {
+	return upper->dump_brief(
+		lower->dump_brief(o << '[') << "..") << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2600,6 +2601,14 @@ const_range::const_range(const parent_type& r) :
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+ostream&
+const_range::dump_brief(ostream& o) const {
+	return dump(o);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range::dump(ostream& o) const {
 	if (empty())
@@ -2609,27 +2618,13 @@ const_range::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-const_range::hash_string(void) const {
-	ostringstream o;
-	dump(o);		// will include braces?
-	return o.str();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns whether or not two intervals overlap.  
+	\return r other range to compare.  
 	\return overlap range.
  */
 const_range
 const_range::static_overlap(const const_range& r) const {
-#if 0
-	// DEBUG
-	cerr << "In const_range::static_overlap with this = "
-		<< this << " .interval = " << interval << endl;
-	r.dump(cerr << "const const_range& r = ") << endl;
-#endif
-
 	interval_type temp(first, second);
 	interval_type temp2(r.first, r.second);
 	temp.intersect(temp2);
@@ -2755,12 +2750,6 @@ range_expr::range_expr() : index_expr() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range_expr::~range_expr() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-range_expr::dump(ostream& o) const {
-	return o << hash_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3500,23 +3489,16 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_index_list::dump(ostream& o) const {
-	return o << hash_string();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-const_index_list::hash_string(void) const {
-	string ret;
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		const bool b = (i->is_a<const pint_expr>());
-		if (b) ret += '[';
-		ret += (*i)->hash_string();
-		if (b) ret += ']';
+		if (b) o << '[';
+		(*i)->dump(o);
+		if (b) o << ']';
 	}
-	return ret;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3827,22 +3809,16 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_index_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_index_list::dump(ostream& o) const {
-	return o << hash_string();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-dynamic_index_list::hash_string(void) const {
-	string ret;
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		const bool b = (i->is_a<const pint_expr>());
-		if (b) ret += '[';
-		ret += (*i)->hash_string();
-		if (b) ret += ']';
+		if (b) o << '[';
+		(*i)->dump(o);
+		if (b) o << ']';
 	}
-	return ret;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

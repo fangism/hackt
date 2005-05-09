@@ -2,20 +2,20 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3101b30	module__	0	0	32
+	1	 0x3101cc0	module__	0	0	32
 	2	 0x3100144	namespc_	0	32	60
-	3	 0x3101b50	procdefn	0	60	131
-	4	 0x3101ae4	pintcoll	0	131	168
-	5	 0x3101bd0	pintinst	0	168	184
-	6	 0x3101c00	spiref__	0	184	204
-	7	 0x3101c14	pintcoll	0	204	253
-	8	 0x3101c60	pintinst	0	253	269
-	9	 0x3101c74	dintcoll	0	269	314
-	10	 0x3101cd0	datainst	0	314	334
-	11	 0x3101cf0	datatprf	0	334	350
-	12	 0x3101d00	datadefn	0	350	386
-	13	 0x3101d64	dprmlst_	0	386	402
-	14	 0x3101d90	spiref__	0	402	422
+	3	 0x3101ce0	procdefn	0	60	131
+	4	 0x3101c74	pintcoll	0	131	168
+	5	 0x3101d60	pintinst	0	168	184
+	6	 0x3101d90	spiref__	0	184	204
+	7	 0x3101da4	pintcoll	0	204	253
+	8	 0x3101df0	pintinst	0	253	269
+	9	 0x3101e04	dintcoll	0	269	314
+	10	 0x3101e60	datainst	0	314	334
+	11	 0x3101e80	datatprf	0	334	350
+	12	 0x3101e90	datadefn	0	350	386
+	13	 0x3101ef4	dprmlst_	0	386	402
+	14	 0x3101f20	spiref__	0	402	422
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -28,13 +28,13 @@ In namespace "", we have: {
     default_width = pint^0 default_width value: ?
   Definitions:
     something_wide = process-definition (defined) something_wide<
-      pint<> W (default = pint-inst-ref default_width)
+      pint<> W (default = pint-inst-ref ::default_width)
       >
       (
       )
       In definition "something_wide", we have: {
-        W = pint<> W (default = pint-inst-ref default_width)
-        wide_int = int<pint-inst-ref W> wide_int
+        W = pint<> W (default = pint-inst-ref ::default_width)
+        wide_int = int<pint-inst-ref ::something_wide::W> wide_int
       }
 
 }

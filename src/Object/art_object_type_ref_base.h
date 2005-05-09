@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.8 2005/05/08 20:50:44 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.9 2005/05/09 18:49:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
@@ -90,9 +90,6 @@ virtual never_ptr<const definition_base>
 
 	string
 	get_qualified_name(void) const;
-
-	string
-	hash_string(void) const;
 
 	excl_ptr<param_expr_list>
 	get_copy_template_params(void) const;

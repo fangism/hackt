@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.3 2005/04/25 22:02:55 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.4 2005/05/09 18:49:56 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -43,22 +43,6 @@
 
 #include "persistent.h"
 
-#if 0
-#include "what.tcc"
-#include "STL/list.tcc"
-#include "qmap.tcc"
-#include "stacktrace.h"
-#include "static_trace.h"
-#include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.tcc"
-// #include "memory/pointer_classes.h"
-#include "sstream.h"			// for ostringstring, used by dump
-#include "discrete_interval_set.tcc"
-#include "compose.h"
-#include "conditional.h"		// for compare_if
-#include "ptrs_functional.h"
-#include "dereference.h"
-#endif
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -83,20 +67,6 @@ namespace entity {
 //=============================================================================
 // #include "using_ostream.h"
 using namespace util::memory;
-#if 0
-USING_UTIL_COMPOSE
-USING_UTIL_OPERATIONS
-using util::discrete_interval_set;
-using std::_Select1st;
-using std::_Select2nd;
-using std::mem_fun_ref;
-using util::dereference;
-using std::ostringstream;
-using util::write_value;
-using util::read_value;
-using util::write_string;
-using util::read_string;
-#endif
 #include "using_ostream.h"
 USING_STACKTRACE
 using util::persistent_traits;
@@ -171,15 +141,15 @@ VALUE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-VALUE_REFERENCE_CLASS::dump(ostream& o) const {
-	return grandparent_type::dump(o);
+VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
+	return grandparent_type::dump_brief(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_REFERENCE_TEMPLATE_SIGNATURE
-string
-VALUE_REFERENCE_CLASS::hash_string(void) const {
-	return grandparent_type::hash_string();
+ostream&
+VALUE_REFERENCE_CLASS::dump(ostream& o) const {
+	return grandparent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

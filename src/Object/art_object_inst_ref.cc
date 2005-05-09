@@ -1,7 +1,7 @@
 /**
 	\file "art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.26 2005/03/06 22:45:51 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.27 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_INST_REF_CC__
@@ -570,13 +570,31 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump, but without type information.  
+	This is used primarily for printing value-reference expressions, 
+	to reduce information clutter.  
+	We dump the full qualified name to disambiguate potentially 
+	conflicting identifiers.  
+	\param o the output stream.
+	\return the output stream.
+ */
 ostream&
-simple_instance_reference::dump(ostream& o) const {
-	what(o) << " " << get_inst_base()->get_name();
+simple_instance_reference::dump_brief(ostream& o) const {
+	o << get_inst_base()->get_qualified_name();
 	if (array_indices) {
 		array_indices->dump(o);
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump_brief, but with type information.  
+ */
+ostream&
+simple_instance_reference::dump(ostream& o) const {
+	return dump_brief(what(o) << " ");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -608,16 +626,6 @@ simple_instance_reference::dump_type_size(ostream& o) const {
 		o << "{" << dimensions() << "-dim}";
 	}
 	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-simple_instance_reference::hash_string(void) const {
-	string ret(get_inst_base()->get_qualified_name());
-	if (array_indices) {
-		ret += array_indices->hash_string();
-	}
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

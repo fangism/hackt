@@ -1,16 +1,15 @@
 /**
 	\file "art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.3 2005/05/08 20:50:42 fang Exp $
+	$Id: art_object_const_collection.h,v 1.4 2005/05/09 18:49:53 fang Exp $
  */
 
 #ifndef __ART_OBJECT_CONST_COLLECTION_H__
 #define __ART_OBJECT_CONST_COLLECTION_H__
 
 #include "art_object_fwd.h"
-// #include "art_object_expr_base.h"
 #include "packed_array.h"
-// #include "memory/list_vector_pool_fwd.h"
+// #include "memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -77,10 +76,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const;

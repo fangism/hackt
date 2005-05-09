@@ -1,7 +1,7 @@
 /**
 	\file "art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.13 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_expr_const.h,v 1.14 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef __ART_OBJECT_EXPR_CONST_H__
@@ -49,9 +49,6 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
-
-virtual	string
-	hash_string(void) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -221,9 +218,6 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	string
-	hash_string(void) const;
-
 /** NOT THE SAME **/
 	size_t
 	size(void) const;
@@ -391,10 +385,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -512,10 +506,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -655,9 +649,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
 
 	const_range
 	static_overlap(const const_range& r) const;

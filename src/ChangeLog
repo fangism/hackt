@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-05-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-34 (main trunk):
+	  Cleaned up old hash_string code (useless).  
+	  Improved some expr/inst_ref dump code to be more verbose, 
+		qualifying names of value-references.  
+
+
 2005-05-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-33 (main trunk):

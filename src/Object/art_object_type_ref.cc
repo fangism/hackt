@@ -1,7 +1,7 @@
 /**
 	\file "art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.30 2005/03/11 08:47:31 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.31 2005/05/09 18:49:55 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_TYPE_REF_CC__
@@ -76,24 +76,7 @@ fundamental_type_reference::~fundamental_type_reference() {
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
 //	STACKTRACE("fundamental_type_reference::dump()");
-	return o << hash_string();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Evaluates type reference as a flat string, for caching purposes.  
-	We unconditionally add the <> to the key even if there is no template
-	specifier to guarantee that hash_string for a type-reference 
-	cannot collide with the hash string for the non-templated definition.  
-	Should we use fully qualified names for hashing?
-	\return string to be used for hashing.  
- */
-string
-fundamental_type_reference::hash_string(void) const {
-//	STACKTRACE("fundamental_type_reference::hash_string()");
-	// use fully qualified?  for hashing, no.
-	// possible collision case?
-	return get_base_def()->get_name() +template_param_string();
+	return o << get_base_def()->get_name() +template_param_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.3 2005/05/08 20:50:44 fang Exp $
+	$Id: art_object_value_reference.h,v 1.4 2005/05/09 18:49:56 fang Exp $
  */
 
 #ifndef __ART_OBJECT_VALUE_REFERENCE_H__
@@ -72,9 +72,14 @@ public:
 	what(ostream& o) const;
 
 	ostream&
+	dump_brief(ostream& o) const;
+
+	ostream&
 	dump(ostream& o) const;
 
+#if 0
 	using parent_type::dump;
+#endif
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
@@ -93,9 +98,6 @@ public:
 
 	good_bool
 	initialize(const init_arg_type& i);
-
-	string
-	hash_string(void) const;
 
 	// try these
 	// using param_instance_reference::may_be_initialized;

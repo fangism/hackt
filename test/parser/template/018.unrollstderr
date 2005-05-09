@@ -2,33 +2,33 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102eb0	module__	0	0	28
+	1	 0x3103040	module__	0	0	28
 	2	 0x3100144	namespc_	0	28	52
-	3	 0x3102ed0	procdefn	0	52	131
-	4	 0x3102e64	pintcoll	2	131	164
-	5	 0x3102f50	pintinst	0	164	180
-	6	 0x3102f64	drnglst_	0	180	200
-	7	 0x3102f84	dynrng__	0	200	216
-	8	 0x2496024	cnstpi__	0	216	228
-	9	 0x3102fa8	arithexp	0	228	245
-	10	 0x3102fd0	spiref__	0	245	265
-	11	 0x3102fe4	pintcoll	0	265	302
-	12	 0x3103030	pintinst	0	302	318
-	13	 0x2496038	cnstpi__	0	318	330
-	14	 0x3103054	dynrng__	0	330	346
-	15	 0x249604c	cnstpi__	0	346	358
-	16	 0x3103078	arithexp	0	358	375
-	17	 0x31030a0	spiref__	0	375	395
-	18	 0x2496060	cnstpi__	0	395	407
-	19	 0x31030b4	dintcoll	0	407	449
-	20	 0x3103110	datainst	0	449	469
-	21	 0x3103130	datatprf	0	469	485
-	22	 0x3103140	datadefn	0	485	521
-	23	 0x31031a4	dprmlst_	0	521	537
-	24	 0x31031d0	spiref__	0	537	557
-	25	 0x31031e4	cindlst_	0	557	577
-	26	 0x2496074	cnstpi__	0	577	589
-	27	 0x2496088	cnstpi__	0	589	601
+	3	 0x3103060	procdefn	0	52	131
+	4	 0x3102ff4	pintcoll	2	131	164
+	5	 0x31030e0	pintinst	0	164	180
+	6	 0x31030f4	drnglst_	0	180	200
+	7	 0x3103114	dynrng__	0	200	216
+	8	 0x2469024	cnstpi__	0	216	228
+	9	 0x3103138	arithexp	0	228	245
+	10	 0x3103160	spiref__	0	245	265
+	11	 0x3103174	pintcoll	0	265	302
+	12	 0x31031c0	pintinst	0	302	318
+	13	 0x2469038	cnstpi__	0	318	330
+	14	 0x31031e4	dynrng__	0	330	346
+	15	 0x246904c	cnstpi__	0	346	358
+	16	 0x3103208	arithexp	0	358	375
+	17	 0x3103230	spiref__	0	375	395
+	18	 0x2469060	cnstpi__	0	395	407
+	19	 0x3103244	dintcoll	0	407	449
+	20	 0x31032a0	datainst	0	449	469
+	21	 0x31032c0	datatprf	0	469	485
+	22	 0x31032d0	datadefn	0	485	521
+	23	 0x3103334	dprmlst_	0	521	537
+	24	 0x3103360	spiref__	0	537	557
+	25	 0x3103374	cindlst_	0	557	577
+	26	 0x2469074	cnstpi__	0	577	589
+	27	 0x2469088	cnstpi__	0	589	601
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
@@ -53,7 +53,7 @@ In namespace "", we have: {
         }
 
         N = pint<> N
-        first = int<pint-inst-ref M[0][0]> first
+        first = int<pint-inst-ref ::the_matrix::M[0][0]> first
       }
 
 }

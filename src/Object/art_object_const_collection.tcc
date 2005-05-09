@@ -1,7 +1,7 @@
 /**
 	\file "art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.2 2005/03/11 08:47:25 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.3 2005/05/09 18:49:54 fang Exp $
  */
 
 #ifndef	__ART_OBJECT_CONST_COLLECTION_TCC__
@@ -153,11 +153,9 @@ CONST_COLLECTION_CLASS::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
-string
-CONST_COLLECTION_CLASS::hash_string(void) const {
-	cerr << "FANG, write CONST_COLLECTION_CLASS::hash_string()!" << endl;
-	THROW_EXIT;
-	return string();
+ostream&
+CONST_COLLECTION_CLASS::dump_brief(ostream& o) const {
+	return dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
