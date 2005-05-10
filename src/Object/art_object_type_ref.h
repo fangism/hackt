@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.23 2005/05/10 04:51:20 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.23.2.1 2005/05/10 20:25:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -37,6 +37,7 @@ private:
 	typedef	datatype_definition_base		definition_type;
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
+	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 	/**
 		Reference to data type definition, which may be a 
@@ -55,7 +56,7 @@ public:
 	data_type_reference(const definition_ptr_type td);
 
 	data_type_reference(const definition_ptr_type td, 
-		excl_ptr<const param_expr_list>& pl);
+		template_args_ptr_type& pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 
 	// virtualize if something derives from this
@@ -99,6 +100,7 @@ private:
 	typedef	channel_type_reference			this_type;
 	typedef	fundamental_type_reference		parent_type;
 protected:
+	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
@@ -110,7 +112,7 @@ public:
 
 	channel_type_reference(
 		const never_ptr<const channel_definition_base> td, 
-		excl_ptr<const param_expr_list>& pl);
+		template_args_ptr_type& pl);
 
 	~channel_type_reference();
 
@@ -145,6 +147,7 @@ private:
 	typedef	process_definition_base			definition_type;
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
+	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 // should be const?  reference to base definition shouldn't change...
 	never_ptr<const process_definition_base>	base_proc_def;
@@ -157,7 +160,7 @@ public:
 
 	process_type_reference(
 		const never_ptr<const process_definition_base> td, 
-		excl_ptr<const param_expr_list>& pl);
+		template_args_ptr_type& pl);
 		// not gcc-2.95.3 friendly default argument = NULL
 
 	~process_type_reference();

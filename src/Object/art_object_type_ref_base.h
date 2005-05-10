@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.10 2005/05/10 04:51:20 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.10.2.1 2005/05/10 20:25:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -12,6 +12,12 @@
 #include "util/persistent.h"		// for persistent object interface
 
 #include "Object/art_object_definition_base.h"
+
+#define	USE_NEW_TEMPLATE_ACTUALS		0
+
+#if USE_NEW_TEMPLATE_ACTUALS
+#include "Object/art_object_template_actuals.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -56,7 +62,12 @@ virtual	~type_reference_base() { }
 	instance_collection family of classes...
  */
 class fundamental_type_reference : public type_reference_base {
+public:
+	typedef	excl_ptr<const param_expr_list>	template_args_ptr_type;
 protected:
+#if USE_NEW_TEMPLATE_ACTUALS
+	template_actuals			template_args;
+#else
 	/**
 		Optional set of template parameters with which a
 		type is instantiated.  
@@ -66,13 +77,19 @@ protected:
 		This is owned, and thus must be deleted.  
 		Const?
 	 */
-	excl_ptr<const param_expr_list>		template_params;
+	template_args_ptr_type			template_params;
+#endif
 
 protected:
 	fundamental_type_reference();
 public:
+#if USE_NEW_TEMPLATE_ACTUALS
+	fundamental_type_reference(template_args_ptr_type&, 
+		template_args_ptr_type&);
+#else
 	explicit
-	fundamental_type_reference(excl_ptr<const param_expr_list>& pl);
+	fundamental_type_reference(template_args_ptr_type&);
+#endif
 
 virtual	~fundamental_type_reference();
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.32 2005/05/10 04:51:20 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.32.2.1 2005/05/10 20:25:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -58,7 +58,7 @@ using util::persistent_traits;
 // class fundamental_type_reference method definitions
 
 fundamental_type_reference::fundamental_type_reference(
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		type_reference_base(), template_params(pl) {
 }
 
@@ -376,7 +376,7 @@ data_type_reference::data_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
 		const definition_ptr_type td, 
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	NEVER_NULL(base_type_def);
@@ -420,7 +420,7 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_params) {
-		excl_ptr<const param_expr_list>
+		template_args_ptr_type
 			actuals = template_params->unroll_resolve(c)
 				.as_a_xfer<const param_expr_list>();
 		if (actuals) {
@@ -569,7 +569,7 @@ channel_type_reference::channel_type_reference() :
  */
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd, 
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		fundamental_type_reference(pl), 
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
@@ -676,7 +676,7 @@ process_type_reference::process_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd, 
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	NEVER_NULL(base_proc_def);
@@ -712,7 +712,7 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_params) {
-		excl_ptr<const param_expr_list>
+		template_args_ptr_type
 			actuals = template_params->unroll_resolve(c)
 				.as_a_xfer<const param_expr_list>();
 		if (actuals) {

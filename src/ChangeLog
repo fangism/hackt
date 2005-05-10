@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2005-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-01:
+	  This branch is intended to rework the way expression checking
+	  is done by the parser, replacing the archaic check_build
+	  in an orderly manner with object-specific interfaces and routines.
+	  In particular, this branch deals with expression checking.  
+	  The main goal is to delete the old context::object_stack mechanism
+	  used to construct hierarchical expression objects.  
+	  This first revision deleted the useless parser::postfix_expr class.  
+	  As a result, parser::index_expr is directly derived
+	  from parser::expr.
+	  After this branch is complete, we can work on fixing
+	  type-references (w.r.t. strict and relaxed templates) in
+	  a cleaner fashion.  
+
+
 2005-05-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35 (main trunk):

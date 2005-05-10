@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.1 2005/05/10 20:25:00 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -766,6 +766,7 @@ prefix_expr::check_build(context& c) const {
 }
 
 //=============================================================================
+#if 0
 // class postfix_expr method definitions
 
 CONSTRUCTOR_INLINE
@@ -785,6 +786,7 @@ line_position
 postfix_expr::rightmost(void) const {
 	return op->rightmost();
 }
+#endif
 
 //=============================================================================
 // class member_expr method definitions
@@ -887,8 +889,8 @@ member_expr::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 index_expr::index_expr(const expr* l, const range_list* i) :
-		postfix_expr(l, NULL),
-		ranges(i) {
+		expr(), base(l), ranges(i) {
+	NEVER_NULL(base);
 	NEVER_NULL(ranges);
 }
 
@@ -896,6 +898,11 @@ DESTRUCTOR_INLINE
 index_expr::~index_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(index_expr)
+
+line_position
+index_expr::leftmost(void) const {
+	return base->leftmost();
+}
 
 line_position
 index_expr::rightmost(void) const {
@@ -932,12 +939,12 @@ index_expr::check_build(context& c) const {
 	}
 	NEVER_NULL(index_list_obj);
 
-	e->check_build(c);
+	base->check_build(c);
 	// should result in an instance_reference on the stack.  
 	const count_ptr<object> base_obj(c.pop_top_object_stack());
 	if (!base_obj) {
 		cerr << "ERROR in base instance_reference!  "
-			<< where(*e) << endl;
+			<< where(*base) << endl;
 		THROW_EXIT;
 	}
 

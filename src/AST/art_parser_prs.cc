@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.13 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_prs.cc,v 1.13.2.1 2005/05/10 20:25:02 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -51,7 +51,8 @@ rule::rule(const expr* g, const terminal* a,
 		body_item(), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
-	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
+	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
+//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
 //	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 

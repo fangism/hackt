@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.12 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_expr.h,v 1.12.2.1 2005/05/10 20:25:01 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -56,6 +56,8 @@ public:
 //	with typedefs, follow to canonical
 	never_ptr<const object>
 	check_build(context& c) const;
+
+//	CHECK_EXPR_PROTO;
 
 	never_ptr<const qualified_id>
 	get_id(void) const { return qid; }
@@ -112,22 +114,26 @@ virtual	never_ptr<const object>
 class prefix_expr : public unary_expr {
 public:
 	prefix_expr(const terminal* o, const expr* n);
-virtual	~prefix_expr();
+	~prefix_expr();
 
-virtual	ostream&
+	ostream&
 	what(ostream& o) const;
 
-virtual	line_position
+	line_position
 	leftmost(void) const;
 
-virtual	line_position
+	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
+	never_ptr<const object>
 	check_build(context& c) const;
+
+//	CHECK_EXPR_PROTO;
+
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Postfix unary expressions.  
 	Members should be virtual, b/c there are children classes.  
@@ -150,6 +156,7 @@ virtual	line_position
 virtual	never_ptr<const object>
 	check_build(context& c) const = 0;
 };	// end class postfix_expr
+#endif
 
 //-----------------------------------------------------------------------------
 /// class for member (of user-defined type) expressions
@@ -185,9 +192,10 @@ public:
 //-----------------------------------------------------------------------------
 /// class for array indexing, with support for multiple dimensions and ranges
 // final class?
-class index_expr : public postfix_expr {
+class index_expr : public expr {
 protected:
-	const excl_ptr<const range_list>	ranges;		///< index
+	const excl_ptr<const expr>		base;	///< the argument expr
+	const excl_ptr<const range_list>	ranges;	///< index
 public:
 	index_expr(const expr* l, const range_list* i);
 
@@ -195,6 +203,9 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
 
 	line_position
 	rightmost(void) const;
